@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::LinkSigBinary
-static const char *LinkSigBinary =
+inline constexpr const char LinkSigBinary[] =
 R"doc(Encodes a second-generation knot/link signature using a small-memory
 byte-based encoding.
 
@@ -45,7 +45,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::LinkSigData
-static const char *LinkSigData =
+inline constexpr const char LinkSigData[] =
 R"doc(Holds all the data required to reconstruct a single connected
 component of a link diagram. This is a halfway point between link
 diagrams and knot/link signatures: the data is purely numerical,
@@ -81,7 +81,7 @@ possible, even when passing or returning objects by value.
     to your code.)doc";
 
 // Docstring regina::python::doc::LinkSigPrintable
-static const char *LinkSigPrintable =
+inline constexpr const char LinkSigPrintable[] =
 R"doc(Encodes both first-generation and second-generation knot/link
 signatures as printable strings.
 
@@ -114,7 +114,7 @@ Python:
 namespace LinkSigBinary_ {
 
 // Docstring regina::python::doc::LinkSigBinary_::asString
-static const char *asString =
+inline constexpr const char asString[] =
 R"doc(Re-encodes the given binary signature as a string-based second-
 generation signature (using the LinkSigPrintable encoding), which uses
 only printable characters from the 7-bit ASCII range.
@@ -144,7 +144,7 @@ Returns:
     as a printable string using the LinkSigPrintable encoding.)doc";
 
 // Docstring regina::python::doc::LinkSigBinary_::encode
-static const char *encode =
+inline constexpr const char encode[] =
 R"doc(Encodes a single connected diagram component.
 
 Precondition:
@@ -164,7 +164,7 @@ Returns:
     the given data encoded as a knot/link signature.)doc";
 
 // Docstring regina::python::doc::LinkSigBinary_::encodeEmpty
-static const char *encodeEmpty =
+inline constexpr const char encodeEmpty[] =
 R"doc(Encodes the signature of the empty link.
 
 For LinkSigBinary (unlike Regina's string-based encodings), this will
@@ -174,14 +174,14 @@ Returns:
     the signature of the empty link.)doc";
 
 // Docstring regina::python::doc::LinkSigBinary_::encodeUnknot
-static const char *encodeUnknot =
+inline constexpr const char encodeUnknot[] =
 R"doc(Encodes the signature of the zero-crossing unknot diagram.
 
 Returns:
     the signature of the zero-crossing unknot.)doc";
 
 // Docstring regina::python::doc::LinkSigBinary_::length
-static const char *length =
+inline constexpr const char length[] =
 R"doc(Precomputes the length of the signature that encodes the given
 connected diagram component.
 
@@ -206,7 +206,7 @@ Returns:
 namespace LinkSigData_ {
 
 // Docstring regina::python::doc::LinkSigData_::Term
-static const char *Term =
+inline constexpr const char Term[] =
 R"doc(An integer triple ``(crossing_index, strand, crossing_sign)``,
 describing a single step in the traversal along some topological link
 component.
@@ -225,7 +225,7 @@ Python:
     set by calling ``LinkSigData::traversal()``.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares two sets of diagram component data. Such comparisons are
 useful when creating a signature for a disconnected link diagram.
 
@@ -250,10 +250,10 @@ Returns:
     the result of the comparison between this and the given data.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::__copy
-static const char *__copy = R"doc(Makes a new deep copy of the given data set.)doc";
+inline constexpr const char __copy[] = R"doc(Makes a new deep copy of the given data set.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given diagram component data hold
 identical information.
 
@@ -261,7 +261,7 @@ Returns:
     ``True`` if and only if this and the given data are identical.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new data set for the given connected link diagram, using a
 labelling that minimises the sequence of triples. See the LinkSigData
 class notes for details on how this ordering works.
@@ -291,7 +291,7 @@ Parameter ``rotationOptions``:
     cannot be empty.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given diagram component data sets.
 
 This global routine simply calls LinkSigData::swap(); it is provided
@@ -304,7 +304,7 @@ Parameter ``b``:
     the second component data set whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::sequence
-static const char *sequence =
+inline constexpr const char sequence[] =
 R"doc(Gives read-only access to the full sequence of triples that describe
 this diagram component.
 
@@ -316,7 +316,7 @@ Returns:
     a reference to the full sequence of triples.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the total number of crossings in the connected diagram
 component that this data set describes.
 
@@ -324,7 +324,7 @@ Returns:
     the total number of crossings.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given diagram component data.
 
 This routine will behave correctly if *other* is in fact this data
@@ -338,7 +338,7 @@ Parameter ``other``:
 namespace LinkSigData_::Term_ {
 
 // Docstring regina::python::doc::LinkSigData_::Term_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares two triples, using the same ordering as described in the
 LinkSigData class notes.
 
@@ -356,17 +356,17 @@ Returns:
     the result of the comparison between this and the given triple.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::Term_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given triple are identical.
 
 Returns:
     ``True`` if and only if this and the given triple are identical.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::Term_::crossing
-static const char *crossing = R"doc(The zero-based crossing index.)doc";
+inline constexpr const char crossing[] = R"doc(The zero-based crossing index.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::Term_::makeSentinel
-static const char *makeSentinel =
+inline constexpr const char makeSentinel[] =
 R"doc(Sets this to be a sentinel triple ``(n, 0, 0)``, as described in the
 LinkSigData class notes, where *n* is the total number of crossings in
 the diagram component being described.
@@ -376,17 +376,17 @@ Parameter ``size``:
     integer *n* that is used above).)doc";
 
 // Docstring regina::python::doc::LinkSigData_::Term_::sign
-static const char *sign = R"doc(±1 indicating the sign of the crossing.)doc";
+inline constexpr const char sign[] = R"doc(±1 indicating the sign of the crossing.)doc";
 
 // Docstring regina::python::doc::LinkSigData_::Term_::strand
-static const char *strand = R"doc(0 or 1 for the lower or upper strand respectively.)doc";
+inline constexpr const char strand[] = R"doc(0 or 1 for the lower or upper strand respectively.)doc";
 
 }
 
 namespace LinkSigPrintable_ {
 
 // Docstring regina::python::doc::LinkSigPrintable_::encode
-static const char *encode =
+inline constexpr const char encode[] =
 R"doc(Encodes a single connected diagram component.
 
 Precondition:
@@ -407,7 +407,7 @@ Returns:
     signature.)doc";
 
 // Docstring regina::python::doc::LinkSigPrintable_::encodeEmpty
-static const char *encodeEmpty =
+inline constexpr const char encodeEmpty[] =
 R"doc(Encodes the signature of the empty link.
 
 Note that LinkSigPrintable does _not_ return an empty signature for
@@ -417,7 +417,7 @@ Returns:
     the signature of the empty link.)doc";
 
 // Docstring regina::python::doc::LinkSigPrintable_::encodeUnknot
-static const char *encodeUnknot =
+inline constexpr const char encodeUnknot[] =
 R"doc(Encodes the signature of the zero-crossing unknot diagram.
 
 LinkSigPrintable will return the signature ``a`` in this case.
@@ -426,7 +426,7 @@ Returns:
     the signature of the zero-crossing unknot.)doc";
 
 // Docstring regina::python::doc::LinkSigPrintable_::generation
-static const char *generation =
+inline constexpr const char generation[] =
 R"doc(Identifies whether the given signature is a first-generation or
 second-generation signature, as encoded by LinkSigPrintable.
 
@@ -465,7 +465,7 @@ Returns:
     values 0, 1 or 2.)doc";
 
 // Docstring regina::python::doc::LinkSigPrintable_::length
-static const char *length =
+inline constexpr const char length[] =
 R"doc(Precomputes the length of the signature that encodes the given
 connected diagram component.
 

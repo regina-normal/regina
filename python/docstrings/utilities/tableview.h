@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TableView
-constexpr const char *TableView =
+inline constexpr const char TableView[] =
 R"doc(A lightweight object that can be used for random access to all
 elements of a given multi-dimensional table.
 
@@ -74,7 +74,7 @@ Template parameter ``dim``:
 namespace TableView_ {
 
 // Docstring regina::python::doc::TableView_::__array
-constexpr const char *__array =
+inline constexpr const char __array[] =
 R"doc(Returns the requested sub-array of a multi-dimensional array, or the
 requested element of a one-dimensional array.
 
@@ -98,10 +98,10 @@ Returns:
     the (*index*)th sub-array.)doc";
 
 // Docstring regina::python::doc::TableView_::__copy
-constexpr const char *__copy = R"doc(Creates a new copy of the given table view.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given table view.)doc";
 
 // Docstring regina::python::doc::TableView_::__eq
-constexpr const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given table view are accessing the
 same underlying C-style array.
 
@@ -118,7 +118,7 @@ Returns:
     underlying C-style array.)doc";
 
 // Docstring regina::python::doc::TableView_::__iter__
-constexpr const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all sub-arrays (for a multi-dimensional
 array), or all elements (for a one-dimensional array).
 
@@ -134,7 +134,7 @@ Returns:
     an iterator over the subarrays or elements of this table.)doc";
 
 // Docstring regina::python::doc::TableView_::size
-constexpr const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the size of this array, across all of the array dimensions.
 
 This returns a sequence (*s_1*, *s_2*, ..., *s_dim*), where *dim* is

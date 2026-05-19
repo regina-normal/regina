@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::AngleAlg
-static const char *AngleAlg =
+inline constexpr const char AngleAlg[] =
 R"doc(Represents options and variants of algorithms for enumerating various
 types of angle structures on 3-manifold triangulations. This
 enumeration type is used with angle structure enumeration routines,
@@ -27,7 +27,7 @@ braces ``{}`` to indicate no flags at all (which is equivalent to
 passing ``AngleAlg::Default``).)doc";
 
 // Docstring regina::python::doc::__bor
-static const char *__bor =
+inline constexpr const char __bor[] =
 R"doc(Returns the bitwise OR of the two given flags.
 
 Parameter ``lhs``:
@@ -42,7 +42,7 @@ Returns:
 namespace AngleAlg_ {
 
 // Docstring regina::python::doc::AngleAlg_::Custom
-static const char *Custom =
+inline constexpr const char Custom[] =
 R"doc(Indicates that an angle structure list was built using a customised
 algorithm. In such cases, no further details on the algorithm are
 available.
@@ -51,7 +51,7 @@ If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
 // Docstring regina::python::doc::AngleAlg_::DD
-static const char *DD =
+inline constexpr const char DD[] =
 R"doc(When enumerating vertex or taut angle structures, this flag indicates
 that a modified double description method should be used.
 
@@ -61,13 +61,13 @@ vertex angle structures (not just taut structures).
 This flag is incompatible with Tree.)doc";
 
 // Docstring regina::python::doc::AngleAlg_::Default
-static const char *Default =
+inline constexpr const char Default[] =
 R"doc(An empty flag, indicating to an enumeration routine that it should use
 its default behaviour. The numeric value of this flag is zero (i.e.,
 it has no effect when combined with other flags using bitwise OR).)doc";
 
 // Docstring regina::python::doc::AngleAlg_::Legacy
-static const char *Legacy =
+inline constexpr const char Legacy[] =
 R"doc(Indicates that an angle structure list was enumerated using an older
 version of Regina (6.0.1 or earlier).
 
@@ -79,7 +79,7 @@ If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
 // Docstring regina::python::doc::AngleAlg_::Tree
-static const char *Tree =
+inline constexpr const char Tree[] =
 R"doc(When enumerating taut angle structures, this flag indicates that the
 tree traversal algorithm should be used.
 

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SurfaceFilter
-static const char *SurfaceFilter =
+inline constexpr const char SurfaceFilter[] =
 R"doc(A packet that accepts or rejects normal surfaces. Different subclasses
 of SurfaceFilter represent different filtering methods.
 
@@ -41,7 +41,7 @@ only copy/swap the filter content, not the packet infrastructure
 listeners).)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination
-static const char *SurfaceFilterCombination =
+inline constexpr const char SurfaceFilterCombination[] =
 R"doc(A normal surface filter that simply combines other filters. This
 filter will combine, using boolean *and* or *or*, all of the filters
 that are immediate children of this packet. This packet may have
@@ -60,7 +60,7 @@ packet infrastructure (e.g., they do not touch packet labels, or the
 packet tree, or event listeners).)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties
-static const char *SurfaceFilterProperties =
+inline constexpr const char SurfaceFilterProperties[] =
 R"doc(A normal surface filter that filters by basic properties of the normal
 surface.
 
@@ -81,7 +81,7 @@ packet tree, or event listeners).)doc";
 namespace SurfaceFilterCombination_ {
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given filter.
 
 Like all packet types, this only copies the filter content, not the
@@ -90,12 +90,12 @@ will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates a new surface filter that accepts all normal surfaces. This
 will be an *and* filter.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given filter use the same boolean
 operation.
 
@@ -107,7 +107,7 @@ Returns:
     boolean operation.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given combination filters.
 
 This global routine simply calls SurfaceFilterCombination::swap(); it
@@ -121,7 +121,7 @@ Parameter ``b``:
     the second filter whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::setUsesAnd
-static const char *setUsesAnd =
+inline constexpr const char setUsesAnd[] =
 R"doc(Sets whether this is an *and* or an *or* combination.
 
 Parameter ``value``:
@@ -129,7 +129,7 @@ Parameter ``value``:
     this is to be an *or* combination.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given filter.
 
 Like all packet types, this only swaps the filter content, not the
@@ -140,7 +140,7 @@ Parameter ``other``:
     the filter whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination_::usesAnd
-static const char *usesAnd =
+inline constexpr const char usesAnd[] =
 R"doc(Determines whether this is an *and* or an *or* combination.
 
 Returns:
@@ -152,7 +152,7 @@ Returns:
 namespace SurfaceFilterProperties_ {
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given filter.
 
 Like all packet types, this only copies the filter content, not the
@@ -161,10 +161,10 @@ will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::__default
-static const char *__default = R"doc(Creates a new surface filter that accepts all normal surfaces.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new surface filter that accepts all normal surfaces.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given filter are configured to filter on
 the same set of constraints.
 
@@ -181,7 +181,7 @@ Returns:
     ``True`` if and only if this and the given filters are identical.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::addEulerChar
-static const char *addEulerChar =
+inline constexpr const char addEulerChar[] =
 R"doc(Adds the given Euler characteristic to the set of allowable Euler
 characteristics. See eulerChars() for further details.
 
@@ -189,7 +189,7 @@ Parameter ``ec``:
     the new allowable Euler characteristic.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::compactness
-static const char *compactness =
+inline constexpr const char compactness[] =
 R"doc(Returns the set of allowable compactness properties. Note that this is
 a subset of ``{ true, false }``. Any surface whose compactness
 property is not in this set will not be accepted by this filter.
@@ -198,7 +198,7 @@ Returns:
     the set of allowable compactness properties.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::countEulerChars
-static const char *countEulerChars =
+inline constexpr const char countEulerChars[] =
 R"doc(Returns the number of allowable Euler characteristics. See
 eulerChars() for further details.
 
@@ -206,7 +206,7 @@ Returns:
     the number of allowable Euler characteristics.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::eulerChar
-static const char *eulerChar =
+inline constexpr const char eulerChar[] =
 R"doc(Returns the allowable Euler characteristic at the given index in the
 set. See eulerChars() for further details.
 
@@ -218,7 +218,7 @@ Returns:
     the requested allowable Euler characteristic.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::eulerChars
-static const char *eulerChars =
+inline constexpr const char eulerChars[] =
 R"doc(Returns the set of allowable Euler characteristics. Any surface whose
 Euler characteristic is not in this set will not be accepted by this
 filter. The set will be given in ascending order with no element
@@ -230,7 +230,7 @@ Returns:
     the set of allowable Euler characteristics.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given property-based filters.
 
 This global routine simply calls SurfaceFilterProperties::swap(); it
@@ -244,7 +244,7 @@ Parameter ``b``:
     the second filter whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::orientability
-static const char *orientability =
+inline constexpr const char orientability[] =
 R"doc(Returns the set of allowable orientabilities. Note that this is a
 subset of ``{ true, false }``. Any surface whose orientability is not
 in this set will not be accepted by this filter.
@@ -253,7 +253,7 @@ Returns:
     the set of allowable orientabilities.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::realBoundary
-static const char *realBoundary =
+inline constexpr const char realBoundary[] =
 R"doc(Returns the set of allowable has-real-boundary properties. Note that
 this is a subset of ``{ true, false }``. Any surface whose has-real-
 boundary property is not in this set will not be accepted by this
@@ -263,7 +263,7 @@ Returns:
     the set of allowable has-real-boundary properties.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::removeAllEulerChars
-static const char *removeAllEulerChars =
+inline constexpr const char removeAllEulerChars[] =
 R"doc(Empties the set of allowable Euler characteristics. See eulerChars()
 for further details.
 
@@ -271,7 +271,7 @@ Note that this will mean that this filter will allow *any* Euler
 characteristic to pass.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::removeEulerChar
-static const char *removeEulerChar =
+inline constexpr const char removeEulerChar[] =
 R"doc(Removes the given Euler characteristic from the set of allowable Euler
 characteristics. See eulerChars() for further details.
 
@@ -285,7 +285,7 @@ Parameter ``ec``:
     the allowable Euler characteristic to remove.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::setCompactness
-static const char *setCompactness =
+inline constexpr const char setCompactness[] =
 R"doc(Sets the set of allowable compactness properties. See compactness()
 for further details.
 
@@ -293,7 +293,7 @@ Parameter ``value``:
     the new set of allowable compactness properties.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::setEulerChars
-static const char *setEulerChars =
+inline constexpr const char setEulerChars[] =
 R"doc(Sets the allowable Euler characteristics to be all integers in the
 given iterator range. See eulerChars() for further details.
 
@@ -311,7 +311,7 @@ Parameter ``endEuler``:
     characteristics.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::setOrientability
-static const char *setOrientability =
+inline constexpr const char setOrientability[] =
 R"doc(Sets the set of allowable orientabilities. See orientability() for
 further details.
 
@@ -319,7 +319,7 @@ Parameter ``value``:
     the new set of allowable orientabilities.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::setRealBoundary
-static const char *setRealBoundary =
+inline constexpr const char setRealBoundary[] =
 R"doc(Sets the set of allowable has-real-boundary properties. See
 realBoundary() for further details.
 
@@ -327,7 +327,7 @@ Parameter ``value``:
     the new set of allowable has-real-boundary properties.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given filter.
 
 Like all packet types, this only swaps the filter content, not the
@@ -342,7 +342,7 @@ Parameter ``other``:
 namespace SurfaceFilter_ {
 
 // Docstring regina::python::doc::SurfaceFilter_::accept
-static const char *accept =
+inline constexpr const char accept[] =
 R"doc(Decides whether or not the given normal surface is accepted by this
 filter.
 
@@ -356,7 +356,7 @@ Returns:
     filter.)doc";
 
 // Docstring regina::python::doc::SurfaceFilter_::filterType
-static const char *filterType =
+inline constexpr const char filterType[] =
 R"doc(Returns the unique integer ID corresponding to the filtering method
 that is this particular subclass of SurfaceFilter.
 
@@ -364,7 +364,7 @@ Returns:
     the unique integer filtering method ID.)doc";
 
 // Docstring regina::python::doc::SurfaceFilter_::filterTypeName
-static const char *filterTypeName =
+inline constexpr const char filterTypeName[] =
 R"doc(Returns a string description of the filtering method that is this
 particular subclass of SurfaceFilter.
 

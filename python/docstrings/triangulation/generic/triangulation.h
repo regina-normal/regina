@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Triangulation
-constexpr const char *Triangulation =
+inline constexpr const char Triangulation[] =
 R"doc(A *dim*-dimensional triangulation, built by gluing together
 *dim*-dimensional simplices along their `(dim-1)`-dimensional facets.
 Typically (but not necessarily) such triangulations are used to
@@ -119,7 +119,7 @@ Template parameter ``dim``:
 namespace Triangulation_ {
 
 // Docstring regina::python::doc::Triangulation_::__copy
-constexpr const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given triangulation.
 
 This will also clone any computed properties (such as homology,
@@ -137,13 +137,13 @@ Parameter ``src``:
     the triangulation to copy.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__default
-constexpr const char *__default =
+inline constexpr const char __default[] =
 R"doc(Default constructor.
 
 Creates an empty triangulation.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__init
-constexpr const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new copy of the given triangulation, with the option of
 whether or not to clone its computed properties and/or locks also.
 
@@ -177,7 +177,7 @@ Parameter ``cloneLocks``:
     triangulation should have no locks at all.)doc";
 
 // Docstring regina::python::doc::Triangulation_::swap
-constexpr const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given triangulation.
 
 All top-dimensional simplices that belong to this triangulation will

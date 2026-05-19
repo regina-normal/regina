@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::DiscType
-static const char *DiscType =
+inline constexpr const char DiscType[] =
 R"doc(Identifies a single normal or almost normal disc type within a
 triangulation, where the numbering scheme for disc types is left up to
 the user.
@@ -44,7 +44,7 @@ functions.)doc";
 namespace DiscType_ {
 
 // Docstring regina::python::doc::DiscType_::__as_bool
-static const char *__as_bool =
+inline constexpr const char __as_bool[] =
 R"doc(Returns ``True`` if this disc type is non-null.
 
 The implementation will assume that a non-null disc type has non-
@@ -54,7 +54,7 @@ Returns:
     ``True`` if and only if this is not a null disc type.)doc";
 
 // Docstring regina::python::doc::DiscType_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares two disc types. Types are ordered first by *tetrahedron* and
 then by *type*. The null disc type is considered less than all
 "meaningful" disc types.
@@ -70,13 +70,13 @@ Returns:
     the result of the comparison between this and the given disc type.)doc";
 
 // Docstring regina::python::doc::DiscType_::__copy
-static const char *__copy = R"doc(Creates a copy of the given disc type.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a copy of the given disc type.)doc";
 
 // Docstring regina::python::doc::DiscType_::__default
-static const char *__default = R"doc(Creates a new null disc type, as described in the class notes.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new null disc type, as described in the class notes.)doc";
 
 // Docstring regina::python::doc::DiscType_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given disc type are identical.
 
 Regarding null disc types: two null DiscType objects that were both
@@ -89,7 +89,7 @@ Returns:
     ``False`` if they are different.)doc";
 
 // Docstring regina::python::doc::DiscType_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new disc type initialised with the given values.
 
 Parameter ``newTetIndex``:

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-constexpr const char *Face =
+inline constexpr const char Face[] =
 R"doc(Represents a *subdim*-face in the skeleton of a *dim*-dimensional
 triangulation. There are two substantially different cases:
 

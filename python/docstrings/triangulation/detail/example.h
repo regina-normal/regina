@@ -14,7 +14,7 @@ namespace regina::python::doc {
 namespace detail {
 
 // Docstring regina::python::doc::detail::ExampleBase
-constexpr const char *ExampleBase =
+inline constexpr const char ExampleBase[] =
 R"doc(Provides core functionality for constructing example *dim*-dimensional
 triangulations.
 
@@ -36,14 +36,14 @@ Template parameter ``dim``:
 namespace detail::ExampleBase_ {
 
 // Docstring regina::python::doc::detail::ExampleBase_::ball
-constexpr const char *ball =
+inline constexpr const char ball[] =
 R"doc(Returns a one-simplex triangulation of the *dim*-ball.
 
 Returns:
     a one-simplex *dim*-ball.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::ballBundle
-constexpr const char *ballBundle =
+inline constexpr const char ballBundle[] =
 R"doc(Returns a triangulation of the product space ``B^(dim-1) × S¹``.
 
 * In odd dimensions this will use one simplex, and will therefore be
@@ -59,7 +59,7 @@ Returns:
     the product ``B^(dim-1) × S¹``.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::doubleCone
-constexpr const char *doubleCone =
+inline constexpr const char doubleCone[] =
 R"doc(Returns a double cone over the given (*dim-1*)-dimensional
 triangulation.
 
@@ -92,7 +92,7 @@ Returns:
     a double cone over the given triangulation.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::simplicialSphere
-constexpr const char *simplicialSphere =
+inline constexpr const char simplicialSphere[] =
 R"doc(Returns the standard (*dim*+2)-simplex triangulation of the
 *dim*-sphere as the boundary of a (*dim*+1)-simplex.
 
@@ -104,7 +104,7 @@ Returns:
     the standard simplicial *dim*-sphere.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::singleCone
-constexpr const char *singleCone =
+inline constexpr const char singleCone[] =
 R"doc(Returns a single cone over the given (*dim-1*)-dimensional
 triangulation.
 
@@ -127,7 +127,7 @@ Returns:
     a single cone over the given triangulation.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::sphere
-constexpr const char *sphere =
+inline constexpr const char sphere[] =
 R"doc(Returns a two-simplex triangulation of the *dim*-sphere.
 
 Although the sphere is orientable, this triangulation will _not_ be
@@ -137,7 +137,7 @@ Returns:
     a two-simplex *dim*-sphere.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::sphereBundle
-constexpr const char *sphereBundle =
+inline constexpr const char sphereBundle[] =
 R"doc(Returns a two-simplex triangulation of the product space ``S^(dim-1) ×
 S¹``.
 
@@ -149,7 +149,7 @@ Returns:
     the product ``S^(dim-1) × S¹``.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::twistedBallBundle
-constexpr const char *twistedBallBundle =
+inline constexpr const char twistedBallBundle[] =
 R"doc(Returns a triangulation of the twisted product space ``B^(dim-1) x~
 S¹``. This will use one simplex in even dimensions, or two simplices
 in odd dimensions.
@@ -158,7 +158,7 @@ Returns:
     the twisted product ``B^(dim-1) x~ S¹``.)doc";
 
 // Docstring regina::python::doc::detail::ExampleBase_::twistedSphereBundle
-constexpr const char *twistedSphereBundle =
+inline constexpr const char twistedSphereBundle[] =
 R"doc(Returns a two-simplex triangulation of the twisted product space
 ``S^(dim-1) x~ S¹``.
 

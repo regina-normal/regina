@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TautEnumeration
-static const char *TautEnumeration =
+inline constexpr const char TautEnumeration[] =
 R"doc(The main entry point for the tree traversal algorithm to enumerate all
 taut angle structures in a 3-manifold triangulation. For the analogous
 algorithm to enumerate vertex normal or almost normal surfaces, see
@@ -80,7 +80,7 @@ Template parameter ``IntType``:
     to your code.)doc";
 
 // Docstring regina::python::doc::TreeEnumeration
-static const char *TreeEnumeration =
+inline constexpr const char TreeEnumeration[] =
 R"doc(The main entry point for the tree traversal algorithm to enumerate all
 vertex normal or almost normal surfaces in a 3-manifold triangulation.
 For the analogous algorithm to enumerate taut angle structures, see
@@ -179,7 +179,7 @@ Template parameter ``IntType``:
     to your code.)doc";
 
 // Docstring regina::python::doc::TreeSingleSoln
-static const char *TreeSingleSoln =
+inline constexpr const char TreeSingleSoln[] =
 R"doc(The main entry point for the tree traversal / branching algorithm to
 locate a single non-trivial normal surface satisfying given
 constraints within a 3-manifold triangulation. The constraints are
@@ -303,7 +303,7 @@ Template parameter ``IntType``:
     to your code.)doc";
 
 // Docstring regina::python::doc::TreeTraversal
-static const char *TreeTraversal =
+inline constexpr const char TreeTraversal[] =
 R"doc(A base class for searches that employ the tree traversal algorithm for
 enumerating and locating vertex normal surfaces and taut angle
 structures. Users should not use this base class directly; instead use
@@ -430,7 +430,7 @@ Template parameter ``IntType``:
 namespace TautEnumeration_ {
 
 // Docstring regina::python::doc::TautEnumeration_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new object for running the tree traversal algorithm.
 
 This prepares the algorithm; in order to run the algorithm and
@@ -474,7 +474,7 @@ Parameter ``banArgs``:
     constraint classes, this list of arguments is empty.)doc";
 
 // Docstring regina::python::doc::TautEnumeration_::next
-static const char *next =
+inline constexpr const char next[] =
 R"doc(An incremental step in the enumeration algorithm that runs forward
 until it finds the next solution. Specifically: this continues the
 enumeration from the current point until either it finds the next taut
@@ -525,7 +525,7 @@ Returns:
     found.)doc";
 
 // Docstring regina::python::doc::TautEnumeration_::run
-static const char *run =
+inline constexpr const char run[] =
 R"doc(Runs the complete tree traversal algorithm to enumerate all taut angle
 structures.
 
@@ -585,7 +585,7 @@ Returns:
     completion.)doc";
 
 // Docstring regina::python::doc::TautEnumeration_::solutions
-static const char *solutions =
+inline constexpr const char solutions[] =
 R"doc(Returns the total number of taut angle structures found thus far in
 the tree traversal search.
 
@@ -598,7 +598,7 @@ Returns:
     the number of solutions found so far.)doc";
 
 // Docstring regina::python::doc::TautEnumeration_::writeStructure
-static const char *writeStructure =
+inline constexpr const char writeStructure[] =
 R"doc(A callback function that writes to standard output the full angle
 structure coordinates of the taut angle structure at the current point
 in the given tree traversal search. You can use this as the callback
@@ -635,7 +635,7 @@ Returns:
     tree traversal).)doc";
 
 // Docstring regina::python::doc::TautEnumeration_::writeTypes
-static const char *writeTypes =
+inline constexpr const char writeTypes[] =
 R"doc(A callback function that writes to standard output the type vector at
 the current point in the given tree traversal search. You can use this
 as the callback *action* that is passed to run().
@@ -665,7 +665,7 @@ Returns:
 namespace TreeEnumeration_ {
 
 // Docstring regina::python::doc::TreeEnumeration_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new object for running the tree traversal algorithm.
 
 This prepares the algorithm; in order to run the algorithm and
@@ -721,7 +721,7 @@ Parameter ``banArgs``:
     constraint classes, this list of arguments is empty.)doc";
 
 // Docstring regina::python::doc::TreeEnumeration_::next
-static const char *next =
+inline constexpr const char next[] =
 R"doc(An incremental step in the tree traversal algorithm that runs forward
 until it finds the next solution. Specifically: this continues the
 tree traversal from the current point until either it finds the next
@@ -771,7 +771,7 @@ Returns:
     search has now finished and no more vertex surfaces were found.)doc";
 
 // Docstring regina::python::doc::TreeEnumeration_::run
-static const char *run =
+inline constexpr const char run[] =
 R"doc(Runs the complete tree traversal algorithm to enumerate vertex normal
 or almost normal surfaces.
 
@@ -832,7 +832,7 @@ Returns:
     completion.)doc";
 
 // Docstring regina::python::doc::TreeEnumeration_::solutions
-static const char *solutions =
+inline constexpr const char solutions[] =
 R"doc(Returns the total number of vertex normal or almost normal surfaces
 found thus far in the tree traversal search.
 
@@ -845,7 +845,7 @@ Returns:
     the number of solutions found so far.)doc";
 
 // Docstring regina::python::doc::TreeEnumeration_::writeSurface
-static const char *writeSurface =
+inline constexpr const char writeSurface[] =
 R"doc(A callback function that writes to standard output the full triangle-
 quadrilateral coordinates of the vertex normal or almost normal
 surface at the current point in the given tree traversal search. You
@@ -880,7 +880,7 @@ Returns:
     tree traversal).)doc";
 
 // Docstring regina::python::doc::TreeEnumeration_::writeTypes
-static const char *writeTypes =
+inline constexpr const char writeTypes[] =
 R"doc(A callback function that writes to standard output the type vector at
 the current point in the given tree traversal search. You can use this
 as the callback *action* that is passed to run().
@@ -910,7 +910,7 @@ Returns:
 namespace TreeSingleSoln_ {
 
 // Docstring regina::python::doc::TreeSingleSoln_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new object for running the tree traversal / branching
 algorithm to locate a non-trivial surface that satisfies the chosen
 constraints.
@@ -956,7 +956,7 @@ Parameter ``banArgs``:
     constraint classes, this list of arguments is empty.)doc";
 
 // Docstring regina::python::doc::TreeSingleSoln_::cancel
-static const char *cancel =
+inline constexpr const char cancel[] =
 R"doc(Cancels the current find() operation.
 
 This may be called from another thread (it is thread-safe). If called,
@@ -964,7 +964,7 @@ it signals that if find() is currently running then it should be
 cancelled at the earliest convenient opportunity.)doc";
 
 // Docstring regina::python::doc::TreeSingleSoln_::find
-static const char *find =
+inline constexpr const char find[] =
 R"doc(Runs the tree traversal algorithm until it finds some non-trivial
 surface that satisfies the chosen constraints, or else proves that no
 such solution exists.
@@ -994,7 +994,7 @@ Returns:
 namespace TreeTraversal_ {
 
 // Docstring regina::python::doc::TreeTraversal_::buildStructure
-static const char *buildStructure =
+inline constexpr const char buildStructure[] =
 R"doc(Reconstructs the full taut angle structure that is represented by the
 type vector at the current stage of the search. This routine is for
 use only with taut angle structures, not normal or almost normal
@@ -1024,7 +1024,7 @@ Returns:
     of the search.)doc";
 
 // Docstring regina::python::doc::TreeTraversal_::buildSurface
-static const char *buildSurface =
+inline constexpr const char buildSurface[] =
 R"doc(Reconstructs the full normal surface that is represented by the type
 vector at the current stage of the search. This routine is for use
 only with normal (or almost normal) surfaces, not taut angle
@@ -1061,7 +1061,7 @@ Returns:
     search.)doc";
 
 // Docstring regina::python::doc::TreeTraversal_::supported
-static const char *supported =
+inline constexpr const char supported[] =
 R"doc(Indicates whether the given normal surface or angle structure vector
 encoding is supported by this tree traversal infrastructure. Any
 restrictions imposed by the LPConstraint and BanConstraint template
@@ -1079,7 +1079,7 @@ Returns:
     ``True`` if and only if the given vector encoding is supported.)doc";
 
 // Docstring regina::python::doc::TreeTraversal_::typeString
-static const char *typeString =
+inline constexpr const char typeString[] =
 R"doc(Returns the current type vector in string form. There will be no
 spaces between the types.
 
@@ -1089,7 +1089,7 @@ Returns:
     the type vector in string form.)doc";
 
 // Docstring regina::python::doc::TreeTraversal_::visited
-static const char *visited =
+inline constexpr const char visited[] =
 R"doc(Returns the total number of nodes in the search tree that we have
 visited thus far in the tree traversal. This figure might grow much
 faster than the number of solutions, since it also counts traversals

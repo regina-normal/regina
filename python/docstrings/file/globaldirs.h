@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::GlobalDirs
-static const char *GlobalDirs =
+inline constexpr const char GlobalDirs[] =
 R"doc(Provides global routines that return directories in which various
 components of Regina are installed on the system.
 
@@ -31,7 +31,7 @@ even exist.)doc";
 namespace GlobalDirs_ {
 
 // Docstring regina::python::doc::GlobalDirs_::census
-static const char *census =
+inline constexpr const char census[] =
 R"doc(Returns the directory containing the large machine-encoded census data
 files. These data files are not human-browsable: instead they are
 built for fast performance and small size. Users can access them by
@@ -50,7 +50,7 @@ Returns:
     Regina's calculation engine data directory.)doc";
 
 // Docstring regina::python::doc::GlobalDirs_::data
-static const char *data =
+inline constexpr const char data[] =
 R"doc(Returns the directory containing miscellaneous data files for internal
 use Regina's calculation engine.
 
@@ -70,7 +70,7 @@ Returns:
     Regina's calculation engine data directory.)doc";
 
 // Docstring regina::python::doc::GlobalDirs_::deduceDirs
-static const char *deduceDirs =
+inline constexpr const char deduceDirs[] =
 R"doc(Ask Regina to deduce where its supporting files are installed.
 
 You should call either setDirs() or deduceDirs() at runtime if Regina
@@ -115,7 +115,7 @@ Parameter ``executable``:
     currently being run.)doc";
 
 // Docstring regina::python::doc::GlobalDirs_::engineDocs
-static const char *engineDocs =
+inline constexpr const char engineDocs[] =
 R"doc(Returns the directory in which API documentation for Regina's
 calculation engine is installed.
 
@@ -141,7 +141,7 @@ Returns:
     Regina's calculation engine documentation directory.)doc";
 
 // Docstring regina::python::doc::GlobalDirs_::examples
-static const char *examples =
+inline constexpr const char examples[] =
 R"doc(Returns the directory in which example data files (including the
 smaller but human-browsable census data files) are installed.
 
@@ -161,7 +161,7 @@ Returns:
     Regina's example and census data directory.)doc";
 
 // Docstring regina::python::doc::GlobalDirs_::home
-static const char *home =
+inline constexpr const char home[] =
 R"doc(Returns Regina's primary home directory on the system. This directory
 should contains subdirectories *data*, *icons*/, *examples*/ and so
 on.
@@ -179,7 +179,7 @@ Returns:
     Regina's primary home directory.)doc";
 
 // Docstring regina::python::doc::GlobalDirs_::pythonModule
-static const char *pythonModule =
+inline constexpr const char pythonModule[] =
 R"doc(Returns the directory in which Regina's python module is installed, or
 the empty string if the module is installed in python's standard site-
 packages directory.
@@ -194,7 +194,7 @@ Returns:
     Regina's python module directory.)doc";
 
 // Docstring regina::python::doc::GlobalDirs_::setDirs
-static const char *setDirs =
+inline constexpr const char setDirs[] =
 R"doc(Tells Regina explicitly where its supporting files are installed.
 
 You should call either setDirs() or deduceDirs() at runtime if Regina

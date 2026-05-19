@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::MaxAdmissible
-static const char *MaxAdmissible =
+inline constexpr const char MaxAdmissible[] =
 R"doc(Used to enumerate all maximal admissible faces of a polyhedral cone
 under a given set of admissibility constraints. See the routine
 enumerate() for details.
@@ -23,7 +23,7 @@ this class should ever be created.)doc";
 namespace MaxAdmissible_ {
 
 // Docstring regina::python::doc::MaxAdmissible_::enumerate
-static const char *enumerate =
+inline constexpr const char enumerate[] =
 R"doc(Enumerates all maximal admissible faces of the given polyhedral cone.
 The cone must be the intersection of the non-negative orthant in some
 Euclidean space ``R^n`` with a linear subspace.

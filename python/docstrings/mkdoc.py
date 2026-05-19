@@ -25,24 +25,6 @@ from multiprocessing import cpu_count
 
 __version__ = "2.6.2.dev1.regina"
 
-INLINE_FILES = [
-    '../../engine/census/gluingperms.h',
-    '../../engine/core/output.h',
-    '../../engine/triangulation/example.h',
-    '../../engine/triangulation/isosigencoding.h',
-    '../../engine/triangulation/isosigtype.h',
-    '../../engine/utilities/flags.h',
-    '../../engine/utilities/listview.h',
-    '../../engine/utilities/snapshot.h',
-    '../../engine/utilities/tableview.h'
-]
-
-INLINE_DIRS = [
-    '../../engine/triangulation/alias',
-    '../../engine/triangulation/detail',
-    '../../engine/triangulation/generic'
-]
-
 RECURSE_LIST = [
     CursorKind.TRANSLATION_UNIT,
     CursorKind.NAMESPACE,
@@ -119,7 +101,6 @@ CPP_OPERATORS = OrderedDict(
 errors_detected = False
 docstring_width = int(70)
 
-inline = False
 printed = []
 
 class NoFilenamesError(ValueError):
@@ -873,18 +854,9 @@ def extract_all(args):
     parameters, filenames = read_args(args)
     output = []
 
-    global errors_detected, inline
+    global errors_detected
     for filename in filenames:
-        inline = (filename in INLINE_FILES)
-        if not inline:
-            for d in INLINE_DIRS:
-                if filename.startswith(d + '/'):
-                    inline = True
-                    break
-        if inline:
-            print('Processing "%s" (inline) ..' % filename, file=sys.stderr)
-        else:
-            print('Processing "%s" ..' % filename, file=sys.stderr)
+        print('Processing "%s" ..' % filename, file=sys.stderr)
         try:
             index = cindex.Index(
                 cindex.conf.lib.clang_createIndex(False, True))
@@ -934,14 +906,9 @@ namespace regina::python::doc {
         if namespace:
             full_namespace = full_namespace + '::' + namespace
         print('\n// Docstring %s::%s' % (full_namespace, name), file=out_file)
-        if inline:
-            print('constexpr const char *%s =%sR"doc(%s)doc";' %
-                  (name, '\n' if '\n' in comment else ' ', comment), \
-                  file=out_file)
-        else:
-            print('static const char *%s =%sR"doc(%s)doc";' %
-                  (name, '\n' if '\n' in comment else ' ', comment), \
-                  file=out_file)
+        print('inline constexpr const char %s[] =%sR"doc(%s)doc";' %
+              (name, '\n' if '\n' in comment else ' ', comment), \
+              file=out_file)
 
     if namespace_prev:
         print('\n}', file=out_file)

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TriSolidTorus
-static const char *TriSolidTorus =
+inline constexpr const char TriSolidTorus[] =
 R"doc(Represents a three-tetrahedron triangular solid torus in a
 triangulation. A three-tetrahedron triangular solid torus is a three-
 tetrahedron triangular prism with its two ends identified.
@@ -57,10 +57,10 @@ function recognise().)doc";
 namespace TriSolidTorus_ {
 
 // Docstring regina::python::doc::TriSolidTorus_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 specific presentation of a triangular solid torus.
 
@@ -86,7 +86,7 @@ Returns:
     same specific presentation of a triangular solid torus.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::areAnnuliLinkedAxis
-static const char *areAnnuliLinkedAxis =
+inline constexpr const char areAnnuliLinkedAxis[] =
 R"doc(Determines whether the two given annuli are linked in a particular
 fashion by a layered chain.
 
@@ -118,7 +118,7 @@ Returns:
     are linked as described, or 0 otherwise.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::areAnnuliLinkedMajor
-static const char *areAnnuliLinkedMajor =
+inline constexpr const char areAnnuliLinkedMajor[] =
 R"doc(Determines whether the two given annuli are linked in a particular
 fashion by a layered chain.
 
@@ -149,7 +149,7 @@ Returns:
     are linked as described, or 0 otherwise.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls TriSolidTorus::swap(); it is provided
@@ -162,7 +162,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::isAnnulusSelfIdentified
-static const char *isAnnulusSelfIdentified =
+inline constexpr const char isAnnulusSelfIdentified[] =
 R"doc(Determines whether the two triangles of the requested annulus are
 glued to each other.
 
@@ -188,7 +188,7 @@ Returns:
     glued together.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given tetrahedron forms part of a three-tetrahedron
 triangular solid torus with its vertices playing the given roles in
 the solid torus.
@@ -217,14 +217,14 @@ Returns:
     roles.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::tetrahedron
-static const char *tetrahedron =
+inline constexpr const char tetrahedron[] =
 R"doc(Returns the requested tetrahedron in this solid torus. See the general
 class notes for further details.
 
@@ -236,7 +236,7 @@ Returns:
     the requested tetrahedron.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus_::vertexRoles
-static const char *vertexRoles =
+inline constexpr const char vertexRoles[] =
 R"doc(Returns a permutation represeting the role that each vertex of the
 requested tetrahedron plays in the solid torus. The permutation
 returned (call this ``p``) maps 0, 1, 2 and 3 to the four vertices of

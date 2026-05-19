@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::LayeredLoop
-static const char *LayeredLoop =
+inline constexpr const char LayeredLoop[] =
 R"doc(Represents a layered loop component of a triangulation.
 
 A layered loop is a layered chain of *n* tetrahedra whose bottom
@@ -50,10 +50,10 @@ function recognise().)doc";
 namespace LayeredLoop_ {
 
 // Docstring regina::python::doc::LayeredLoop_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of layered loop.
 
@@ -74,7 +74,7 @@ Returns:
     same type of layered loop.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls LayeredLoop::swap(); it is provided
@@ -87,7 +87,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::hinge
-static const char *hinge =
+inline constexpr const char hinge[] =
 R"doc(Returns the requested hinge edge of this layered loop. See the general
 class notes for further details. If there is only one hinge but
 parameter *which* is 1, ``None`` will be returned.
@@ -99,7 +99,7 @@ Returns:
     the requested hinge edge.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::isTwisted
-static const char *isTwisted =
+inline constexpr const char isTwisted[] =
 R"doc(Determines if this layered loop contains a twist. See the general
 class notes for further details.
 
@@ -107,7 +107,7 @@ Returns:
     ``True`` if and only if this layered loop contains a twist.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::length
-static const char *length =
+inline constexpr const char length[] =
 R"doc(Returns the length of this layered loop. See the general class notes
 for further details.
 
@@ -115,7 +115,7 @@ Returns:
     the length of this layered loop.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is a layered loop.
 
 This function returns by (smart) pointer for consistency with
@@ -130,7 +130,7 @@ Returns:
     the given component is not a layered loop.)doc";
 
 // Docstring regina::python::doc::LayeredLoop_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:

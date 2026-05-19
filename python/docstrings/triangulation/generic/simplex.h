@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-constexpr const char *Face =
+inline constexpr const char Face[] =
 R"doc(Represents a top-dimensional simplex in a *dim*-manifold
 triangulation.
 

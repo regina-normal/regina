@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::GraphPair
-static const char *GraphPair =
+inline constexpr const char GraphPair[] =
 R"doc(Represents a closed graph manifold formed by joining two bounded
 Seifert fibred spaces along a common torus.
 
@@ -53,7 +53,7 @@ sized) amount of data to be copied even in a move operation.)doc";
 namespace GraphPair_ {
 
 // Docstring regina::python::doc::GraphPair_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares representations of two graph manifolds according to an
 aesthetic ordering.
 
@@ -82,10 +82,10 @@ Returns:
     representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::GraphPair_::__copy
-static const char *__copy = R"doc(Creates a clone of the given graph manifold.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given graph manifold.)doc";
 
 // Docstring regina::python::doc::GraphPair_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same graph manifold.
 
@@ -104,7 +104,7 @@ Returns:
     identical presentations of the same graph manifold.)doc";
 
 // Docstring regina::python::doc::GraphPair_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new graph manifold as a pair of joined Seifert fibred
 spaces. The two bounded Seifert fibred spaces and the four elements of
 the 2-by-2 matching matrix are all passed separately. The elements of
@@ -143,7 +143,7 @@ Parameter ``mat11``:
     the (1,1) element of the matching matrix.)doc";
 
 // Docstring regina::python::doc::GraphPair_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new graph manifold from a pair of bounded Seifert fibred
 spaces, which are moved instead of copied.
 
@@ -178,7 +178,7 @@ Parameter ``mat11``:
     the (1,1) element of the matching matrix.)doc";
 
 // Docstring regina::python::doc::GraphPair_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a new graph manifold as a pair of joined Seifert fibred
 spaces. The two bounded Seifert fibred spaces and the entire 2-by-2
 matching matrix are each passed separately.
@@ -201,7 +201,7 @@ Parameter ``matchingReln``:
     the 2-by-2 matching matrix.)doc";
 
 // Docstring regina::python::doc::GraphPair_::__init_4
-static const char *__init_4 =
+inline constexpr const char __init_4[] =
 R"doc(Creates a new graph manifold from a pair of bounded Seifert fibred
 spaces, which are moved instead of copied.
 
@@ -227,7 +227,7 @@ Parameter ``matchingReln``:
     the 2-by-2 matching matrix.)doc";
 
 // Docstring regina::python::doc::GraphPair_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given graph manifolds.
 
 This global routine simply calls GraphPair::swap(); it is provided so
@@ -240,7 +240,7 @@ Parameter ``b``:
     the second graph manifold whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::GraphPair_::matchingReln
-static const char *matchingReln =
+inline constexpr const char matchingReln[] =
 R"doc(Returns a reference to the 2-by-2 matrix describing how the two
 Seifert fibred spaces are joined together. See the class notes for
 details on precisely how this matrix is represented.
@@ -249,7 +249,7 @@ Returns:
     a reference to the matching matrix.)doc";
 
 // Docstring regina::python::doc::GraphPair_::sfs
-static const char *sfs =
+inline constexpr const char sfs[] =
 R"doc(Returns a reference to one of the two bounded Seifert fibred spaces
 that are joined together.
 
@@ -261,7 +261,7 @@ Returns:
     a reference to the requested Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::GraphPair_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given graph manifold.
 
 Parameter ``other``:

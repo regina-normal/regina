@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Text
-static const char *Text =
+inline constexpr const char Text[] =
 R"doc(A packet representing a text string.
 
 Like all packet types, this class does not support C++ move semantics
@@ -25,7 +25,7 @@ tree, or event listeners).)doc";
 namespace Text_ {
 
 // Docstring regina::python::doc::Text_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given text packet.
 
 Like all packet types, this only copies the text content, not the
@@ -34,10 +34,10 @@ will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::Text_::__default
-static const char *__default = R"doc(Initialises the packet to the empty string.)doc";
+inline constexpr const char __default[] = R"doc(Initialises the packet to the empty string.)doc";
 
 // Docstring regina::python::doc::Text_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given packet contain the same text.
 
 Parameter ``other``:
@@ -48,14 +48,14 @@ Returns:
     text.)doc";
 
 // Docstring regina::python::doc::Text_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Initialises the packet to the given string.
 
 Parameter ``text``:
     the new value for the packet.)doc";
 
 // Docstring regina::python::doc::Text_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given text packets.
 
 This global routine simply calls Text::swap(); it is provided so that
@@ -68,14 +68,14 @@ Parameter ``b``:
     the second text packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Text_::setText
-static const char *setText =
+inline constexpr const char setText[] =
 R"doc(Sets the packet data to the given string.
 
 Parameter ``text``:
     the new value for the packet.)doc";
 
 // Docstring regina::python::doc::Text_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given text packet.
 
 Like all packet types, this only swaps the text content, not the
@@ -86,7 +86,7 @@ Parameter ``other``:
     the text packet whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::Text_::text
-static const char *text =
+inline constexpr const char text[] =
 R"doc(Returns the string stored in the packet.
 
 Returns:

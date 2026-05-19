@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-static const char *Face =
+inline constexpr const char Face[] =
 R"doc(Represents a triangle within a 2-manifold triangulation.
 
 This class is typically referred to by the aliases Simplex<2> or
@@ -37,13 +37,13 @@ of by the Triangulation to which they belong.)doc";
 namespace Face_ {
 
 // Docstring regina::python::doc::Face_::adjacentEdge
-static const char *adjacentEdge =
+inline constexpr const char adjacentEdge[] =
 R"doc(A dimension-specific alias for adjacentFacet().
 
 See adjacentFacet() for further information.)doc";
 
 // Docstring regina::python::doc::Face_::adjacentTriangle
-static const char *adjacentTriangle =
+inline constexpr const char adjacentTriangle[] =
 R"doc(A dimension-specific alias for adjacentSimplex().
 
 See adjacentSimplex() for further information.)doc";

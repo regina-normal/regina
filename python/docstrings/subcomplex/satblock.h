@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SatBlock
-static const char *SatBlock =
+inline constexpr const char SatBlock[] =
 R"doc(Represents a saturated block in a Seifert fibred space. A saturated
 block is a connected set of tetrahedra built from a subset of fibres
 (no fibres may enter or exit the boundary of the block). In addition,
@@ -80,7 +80,7 @@ their locations in memory define them. See SatRegion for further
 details.)doc";
 
 // Docstring regina::python::doc::SatBlockModel
-static const char *SatBlockModel =
+inline constexpr const char SatBlockModel[] =
 R"doc(Contains an explicit triangulation of a saturated block along with the
 accompanying saturated block description.
 
@@ -101,7 +101,7 @@ SatCube::model(), and so on.)doc";
 namespace SatBlockModel_ {
 
 // Docstring regina::python::doc::SatBlockModel_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given model. This will induce a deep copy of
 both the triangulation and the block structure.
 
@@ -109,7 +109,7 @@ Parameter ``src``:
     the model to copy.)doc";
 
 // Docstring regina::python::doc::SatBlockModel_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object model saturated blocks of
 the same type with the same combinatorial parameters.
 
@@ -132,14 +132,14 @@ Returns:
     block type with the same combinatorial parameters.)doc";
 
 // Docstring regina::python::doc::SatBlockModel_::block
-static const char *block =
+inline constexpr const char block[] =
 R"doc(Returns the structure of the saturated block.
 
 Returns:
     the block structure.)doc";
 
 // Docstring regina::python::doc::SatBlockModel_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given models.
 
 This global routine simply calls SatBlockModel::swap(); it is provided
@@ -152,14 +152,14 @@ Parameter ``b``:
     the second model whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SatBlockModel_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given model.
 
 Parameter ``other``:
     the model whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::SatBlockModel_::triangulation
-static const char *triangulation =
+inline constexpr const char triangulation[] =
 R"doc(Returns the triangulation of the saturated block.
 
 Returns:
@@ -170,7 +170,7 @@ Returns:
 namespace SatBlock_ {
 
 // Docstring regina::python::doc::SatBlock_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares saturated blocks according to an aesthetic ordering.
 
 The only purpose of this routine is to implement a consistent ordering
@@ -197,7 +197,7 @@ Returns:
     ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::SatBlock_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent saturated
 blocks of the same type with the same combinatorial parameters.
 
@@ -225,7 +225,7 @@ Returns:
     of the same type with the same parameters.)doc";
 
 // Docstring regina::python::doc::SatBlock_::abbr
-static const char *abbr =
+inline constexpr const char abbr[] =
 R"doc(Returns an abbreviated name or symbol for this block. This name will
 reflect the particular block type, but may not provide thorough
 details.
@@ -241,7 +241,7 @@ Returns:
     an abbreviated name for this block.)doc";
 
 // Docstring regina::python::doc::SatBlock_::adjacentAnnulus
-static const char *adjacentAnnulus =
+inline constexpr const char adjacentAnnulus[] =
 R"doc(Returns which specific annulus of the adjacent block is listed as
 being adjacent to the given boundary annulus of this block.
 
@@ -258,7 +258,7 @@ Returns:
     adjacent along this annulus.)doc";
 
 // Docstring regina::python::doc::SatBlock_::adjacentBackwards
-static const char *adjacentBackwards =
+inline constexpr const char adjacentBackwards[] =
 R"doc(Returns whether the adjacency along the given boundary annulus of this
 block is backwards. See the class notes for a discussion of backwards
 adjacencies.
@@ -276,7 +276,7 @@ Returns:
     if it is not.)doc";
 
 // Docstring regina::python::doc::SatBlock_::adjacentBlock
-static const char *adjacentBlock =
+inline constexpr const char adjacentBlock[] =
 R"doc(Returns the saturated block listed as being adjacent to the given
 boundary annulus of this block.
 
@@ -289,7 +289,7 @@ Returns:
     is no adjacent block listed.)doc";
 
 // Docstring regina::python::doc::SatBlock_::adjacentReflected
-static const char *adjacentReflected =
+inline constexpr const char adjacentReflected[] =
 R"doc(Returns whether the adjacency along the given boundary annulus of this
 block is reflected. See the class notes for a discussion of reflected
 adjacencies.
@@ -307,7 +307,7 @@ Returns:
     if it is not.)doc";
 
 // Docstring regina::python::doc::SatBlock_::adjustSFS
-static const char *adjustSFS =
+inline constexpr const char adjustSFS[] =
 R"doc(Adjusts the given Seifert fibred space to insert the contents of this
 saturated block. In particular, the space should be adjusted as though
 an ordinary solid torus (base orbifold a disc, no twists or
@@ -351,7 +351,7 @@ Parameter ``reflect``:
     should be inserted directly.)doc";
 
 // Docstring regina::python::doc::SatBlock_::annulus
-static const char *annulus =
+inline constexpr const char annulus[] =
 R"doc(Returns details of the requested annulus on the boundary of this
 saturated block. Annuli are numbered from 0 to countAnnuli()-1 as
 described in the class notes.
@@ -364,14 +364,14 @@ Returns:
     a reference to the requested boundary annulus.)doc";
 
 // Docstring regina::python::doc::SatBlock_::countAnnuli
-static const char *countAnnuli =
+inline constexpr const char countAnnuli[] =
 R"doc(Returns the number of annuli on the boundary of this saturated block.
 
 Returns:
     the number of boundary annuli.)doc";
 
 // Docstring regina::python::doc::SatBlock_::hasAdjacentBlock
-static const char *hasAdjacentBlock =
+inline constexpr const char hasAdjacentBlock[] =
 R"doc(Returns whether there is another saturated block listed as being
 adjacent to the given boundary annulus of this block.
 
@@ -384,7 +384,7 @@ Returns:
     listed, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::SatBlock_::nextBoundaryAnnulus
-static const char *nextBoundaryAnnulus =
+inline constexpr const char nextBoundaryAnnulus[] =
 R"doc(Finds the next (or previous) boundary annulus around from this,
 treating all adjacent blocks as part of a single large saturated
 region.
@@ -462,7 +462,7 @@ Returns:
     is horizontally reflected (see above for details on reflections).)doc";
 
 // Docstring regina::python::doc::SatBlock_::twistedBoundary
-static const char *twistedBoundary =
+inline constexpr const char twistedBoundary[] =
 R"doc(Is the ring of boundary annuli twisted to form a long Mobius strip?
 
 Recall from the class notes that the twist occurs between boundary

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::PrismSpec
-static const char *PrismSpec =
+inline constexpr const char PrismSpec[] =
 R"doc(Specifies a single triangular prism in a tetrahedron.
 
 If a tetrahedron contains normal quads, slicing along these quads
@@ -30,13 +30,13 @@ Precondition:
 namespace PrismSpec_ {
 
 // Docstring regina::python::doc::PrismSpec_::__copy
-static const char *__copy = R"doc(Creates a new prism specifier that is a clone of the given specifier.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new prism specifier that is a clone of the given specifier.)doc";
 
 // Docstring regina::python::doc::PrismSpec_::__default
-static const char *__default = R"doc(Creates a new uninitialised prism specifier.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new uninitialised prism specifier.)doc";
 
 // Docstring regina::python::doc::PrismSpec_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given prism specifier contain identical
 information.
 
@@ -45,7 +45,7 @@ Returns:
     identical information.)doc";
 
 // Docstring regina::python::doc::PrismSpec_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new prism specifier containing the given values.
 
 Parameter ``newTetIndex``:

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SnapPeaCensusTri
-static const char *SnapPeaCensusTri =
+inline constexpr const char SnapPeaCensusTri[] =
 R"doc(Represents a 3-manifold triangulation from the SnapPea cusped census.
 
 The SnapPea cusped census is the census of cusped hyperbolic
@@ -57,10 +57,10 @@ function recognise().)doc";
 namespace SnapPeaCensusTri_ {
 
 // Docstring regina::python::doc::SnapPeaCensusTri_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusTri_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 triangulation from the SnapPea census.
 
@@ -83,7 +83,7 @@ Returns:
     same SnapPea census triangulation.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusTri_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls SnapPeaCensusTri::swap(); it is
@@ -97,7 +97,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusTri_::index
-static const char *index =
+inline constexpr const char index[] =
 R"doc(Returns the index of this triangulation within its particular section
 of the SnapPea census. Note that indices for each section begin
 counting at zero.
@@ -106,7 +106,7 @@ Returns:
     the index of this triangulation within its section.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusTri_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is one of the smallest
 SnapPea census triangulations.
 
@@ -128,7 +128,7 @@ Returns:
     census triangulations recognised by this routine.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusTri_::section
-static const char *section =
+inline constexpr const char section[] =
 R"doc(Returns the section of the SnapPea census to which this triangulation
 belongs. This will be one of the section constants defined in this
 class.
@@ -137,7 +137,7 @@ Returns:
     the section of the SnapPea census.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusTri_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:

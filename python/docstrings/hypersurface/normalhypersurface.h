@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::NormalHypersurface
-static const char *NormalHypersurface =
+inline constexpr const char NormalHypersurface[] =
 R"doc(Represents a single normal hypersurface in a 4-manifold triangulation.
 
 The normal hypersurface is described internally by an integer vector
@@ -63,7 +63,7 @@ possible, even when passing or returning objects by value.)doc";
 namespace NormalHypersurface_ {
 
 // Docstring regina::python::doc::NormalHypersurface_::__add
-static const char *__add =
+inline constexpr const char __add[] =
 R"doc(Returns the sum of this and the given hypersurface. This will combine
 all tetrahedra and/or prisms from both surfaces.
 
@@ -84,7 +84,7 @@ Returns:
     the sum of both normal hypersurfaces.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares this against the given surface under a total ordering of all
 normal hypersurfaces.
 
@@ -121,10 +121,10 @@ Returns:
     considered equal under this comparison.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given normal hypersurface.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given normal hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given hypersurface in fact represent
 the same normal hypersurface.
 
@@ -156,7 +156,7 @@ Returns:
     hypersurface, or ``False`` if not.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__imul
-static const char *__imul =
+inline constexpr const char __imul[] =
 R"doc(Converts this hypersurface into the given integer multiple of itself.
 
 The internal vector encoding used by this hypersurface will not
@@ -170,7 +170,7 @@ Returns:
     a reference to this hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new copy of the given normal hypersurface, but relocated to
 the given triangulation.
 
@@ -191,7 +191,7 @@ Parameter ``triangulation``:
     the triangulation in which this new hypersurface will reside.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Create the empty hypersurface within the given triangulation.
 
 All normal coordinates will be zero.
@@ -200,7 +200,7 @@ Parameter ``triang``:
     the triangulation in which this normal hypersurface resides.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a new normal hypersurface inside the given triangulation with
 the given coordinate vector, using the given vector encoding.
 
@@ -238,7 +238,7 @@ Parameter ``vector``:
     a vector containing the coordinates of the normal hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__init_4
-static const char *__init_4 =
+inline constexpr const char __init_4[] =
 R"doc(Creates a new normal hypersurface inside the given triangulation with
 the given coordinate vector, using the given coordinate system.
 
@@ -280,7 +280,7 @@ Parameter ``vector``:
     a vector containing the coordinates of the normal hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Returns the given integer multiple of this hypersurface.
 
 The resulting hypersurface will use the same internal vector encoding
@@ -294,7 +294,7 @@ Returns:
     the resulting multiple of this hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::doubleHypersurface
-static const char *doubleHypersurface =
+inline constexpr const char doubleHypersurface[] =
 R"doc(Deprecated routine that returns the double of this hypersurface.
 
 .. deprecated::
@@ -306,7 +306,7 @@ Returns:
     the double of this normal hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::edgeWeight
-static const char *edgeWeight =
+inline constexpr const char edgeWeight[] =
 R"doc(Returns the number of times this normal hypersurface crosses the given
 edge.
 
@@ -320,7 +320,7 @@ Returns:
     edge.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::embedded
-static const char *embedded =
+inline constexpr const char embedded[] =
 R"doc(Determines whether this hypersurface is embedded. This is true if and
 only if the surface contains no conflicting prism types.
 
@@ -328,7 +328,7 @@ Returns:
     ``True`` if and only if this hypersurface is embedded.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::encoding
-static const char *encoding =
+inline constexpr const char encoding[] =
 R"doc(Returns the specific integer vector encoding that this hypersurface
 uses internally. This is the encoding that should be used to interpret
 vector().
@@ -340,7 +340,7 @@ Returns:
     the internal vector encoding.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given normal hypersurfaces. This is a fast
 (constant time) operation.
 
@@ -355,7 +355,7 @@ Parameter ``b``:
     the second normal hypersurface whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::hasRealBoundary
-static const char *hasRealBoundary =
+inline constexpr const char hasRealBoundary[] =
 R"doc(Determines if this hypersurface has any real boundary, that is,
 whether it meets any boundary tetrahedra of the triangulation.
 
@@ -367,7 +367,7 @@ Returns:
     ``True`` if and only if this hypersurface has real boundary.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::homology
-static const char *homology =
+inline constexpr const char homology[] =
 R"doc(Returns the first homology group of this hypersurface.
 
 There is an important caveat regarding invalid 4-manifold
@@ -393,7 +393,7 @@ Returns:
     the first homology group.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isCompact
-static const char *isCompact =
+inline constexpr const char isCompact[] =
 R"doc(Determines if this normal hypersurface is compact (has finitely many
 pieces).
 
@@ -405,7 +405,7 @@ Returns:
     ``True`` if and only if this normal hypersurface is compact.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isConnected
-static const char *isConnected =
+inline constexpr const char isConnected[] =
 R"doc(Returns whether or not this hypersurface is connected.
 
 For our purposes, the empty hypersurface is considered to be
@@ -427,12 +427,12 @@ Returns:
     hypersurface is disconnected.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isEmpty
-static const char *isEmpty =
+inline constexpr const char isEmpty[] =
 R"doc(Determines if this normal hypersurface is empty (has no pieces
 whatsoever).)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isNormalEdgeLink
-static const char *isNormalEdgeLink =
+inline constexpr const char isNormalEdgeLink[] =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the normalised link of a single edge.
 
@@ -477,7 +477,7 @@ Returns:
     of these links are thin, as described above.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isNormalTetrahedronLink
-static const char *isNormalTetrahedronLink =
+inline constexpr const char isNormalTetrahedronLink[] =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the normalised link of a single tetrahedron.
 
@@ -525,7 +525,7 @@ Returns:
     of these links are thin, as described above.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isNormalTriangleLink
-static const char *isNormalTriangleLink =
+inline constexpr const char isNormalTriangleLink[] =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the normalised link of a single triangle.
 
@@ -573,7 +573,7 @@ Returns:
     of these links are thin, as described above.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isOrientable
-static const char *isOrientable =
+inline constexpr const char isOrientable[] =
 R"doc(Returns whether or not this hypersurface is orientable.
 
 For our purposes, the empty hypersurface is considered to be
@@ -595,7 +595,7 @@ Returns:
     hypersurface is non-orientable.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isThinEdgeLink
-static const char *isThinEdgeLink =
+inline constexpr const char isThinEdgeLink[] =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the thin link of a single edge.
 
@@ -622,7 +622,7 @@ Returns:
     of a single thin edge link.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isThinTetrahedronLink
-static const char *isThinTetrahedronLink =
+inline constexpr const char isThinTetrahedronLink[] =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the thin link of a single tetrahedron.
 
@@ -656,7 +656,7 @@ Returns:
     multiple of this hypersurface, as described above.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isThinTriangleLink
-static const char *isThinTriangleLink =
+inline constexpr const char isThinTriangleLink[] =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the thin link of a single triangle.
 
@@ -689,7 +689,7 @@ Returns:
     multiple of this hypersurface, as described above.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isTwoSided
-static const char *isTwoSided =
+inline constexpr const char isTwoSided[] =
 R"doc(Returns whether or not this hypersurface is two-sided.
 
 For our purposes, the empty hypersurface is considered to be two-
@@ -711,7 +711,7 @@ Returns:
     hypersurface is one-sided.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isVertexLink
-static const char *isVertexLink =
+inline constexpr const char isVertexLink[] =
 R"doc(Determines whether or not a positive rational multiple of this
 hypersurface is the link of a single vertex.
 
@@ -729,7 +729,7 @@ Returns:
     of a single vertex link.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::isVertexLinking
-static const char *isVertexLinking =
+inline constexpr const char isVertexLinking[] =
 R"doc(Determines whether or not this hypersurface is vertex linking. A
 _vertex linking_ hypersurface contains only tetrahedra.
 
@@ -745,7 +745,7 @@ Returns:
     ``True`` if and only if this hypersurface is vertex linking.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::locallyCompatible
-static const char *locallyCompatible =
+inline constexpr const char locallyCompatible[] =
 R"doc(Determines whether this and the given hypersurface are locally
 compatible. Local compatibility means that, within each individual
 pentachoron of the triangulation, it is possible to arrange the normal
@@ -779,7 +779,7 @@ Returns:
     ``False`` if they are not.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::name
-static const char *name =
+inline constexpr const char name[] =
 R"doc(Returns the name associated with this normal hypersurface. Names are
 optional and need not be unique. The default name for a hypersurface
 is the empty string.
@@ -788,7 +788,7 @@ Returns:
     the name of associated with this hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::prisms
-static const char *prisms =
+inline constexpr const char prisms[] =
 R"doc(Returns the number of prism pieces of the given type in this normal
 hypersurface. A prism piece type is identified by specifying a
 pentachoron and an edge of that pentachoron; prisms of this type will
@@ -809,7 +809,7 @@ Returns:
     the number of prism pieces of the given type.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::reconstructTetrahedra
-static const char *reconstructTetrahedra =
+inline constexpr const char reconstructTetrahedra[] =
 R"doc(Reconstructs the tetrahedron coordinates in the given integer vector.
 
 The given vector must represent a normal hypersurface within the given
@@ -836,7 +836,7 @@ Returns:
     the new encoding used by the modified *vector*.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::scaleDown
-static const char *scaleDown =
+inline constexpr const char scaleDown[] =
 R"doc(Converts this hypersurface into its smallest positive rational
 multiple with integer coordinates.
 
@@ -852,7 +852,7 @@ Returns:
     This will always be strictly positive.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::setName
-static const char *setName =
+inline constexpr const char setName[] =
 R"doc(Sets the name associated with this normal hypersurface. Names are
 optional and need not be unique. The default name for a hypersurface
 is the empty string.
@@ -861,7 +861,7 @@ Parameter ``name``:
     the new name to associate with this hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given normal hypersurface. This is
 a fast (constant time) operation.
 
@@ -876,7 +876,7 @@ Parameter ``other``:
     this.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::tetrahedra
-static const char *tetrahedra =
+inline constexpr const char tetrahedra[] =
 R"doc(Returns the number of tetrahedron pieces of the given type in this
 normal hypersurface. A tetrahedron piece type is identified by
 specifying a pentachoron and a vertex of that pentachoron that the
@@ -895,7 +895,7 @@ Returns:
     the number of tetrahedron pieces of the given type.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::triangulate
-static const char *triangulate =
+inline constexpr const char triangulate[] =
 R"doc(Returns a 3-manifold triangulation describing this normal
 hypersurface.
 
@@ -911,7 +911,7 @@ Returns:
     a triangulation of this normal hypersurface.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::triangulation
-static const char *triangulation =
+inline constexpr const char triangulation[] =
 R"doc(Returns the triangulation in which this normal hypersurface resides.
 
 This will be a snapshot frozen in time of the triangulation that was
@@ -937,7 +937,7 @@ Returns:
     a reference to the underlying triangulation.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::vector
-static const char *vector =
+inline constexpr const char vector[] =
 R"doc(Gives read-only access to the integer vector that Regina uses
 internally to represent this hypersurface.
 
@@ -961,7 +961,7 @@ Returns:
     the underlying integer vector.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface_::writeXMLData
-static const char *writeXMLData =
+inline constexpr const char writeXMLData[] =
 R"doc(Writes a chunk of XML containing this normal hypersurface and all of
 its properties. This routine will be called from within
 NormalHypersurfaces::writeXMLPacketData().

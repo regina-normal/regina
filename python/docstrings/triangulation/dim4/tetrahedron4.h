@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-static const char *Face =
+inline constexpr const char Face[] =
 R"doc(Represents a tetrahedron in the skeleton of a 4-manifold
 triangulation.
 
@@ -33,7 +33,7 @@ of by the Triangulation to which they belong.)doc";
 namespace Face_ {
 
 // Docstring regina::python::doc::Face_::linkingSurface
-static const char *linkingSurface =
+inline constexpr const char linkingSurface[] =
 R"doc(Returns the link of this tetrahedron as a normal hypersurface.
 
 Constructing the link of a tetrahedron begins with building the

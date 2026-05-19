@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::BlockedSFS
-static const char *BlockedSFS =
+inline constexpr const char BlockedSFS[] =
 R"doc(Represents a blocked Seifert fibred space (possibly with boundary).
 This is a particular type of triangulation of a Seifert fibred space,
 where this triangulation is formed from a single saturated region. A
@@ -37,7 +37,7 @@ copying or moving) is via the static member function recognise().)doc";
 namespace BlockedSFS_ {
 
 // Docstring regina::python::doc::BlockedSFS_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given structure. This will induce a deep
 copy of *src*.
 
@@ -45,7 +45,7 @@ Parameter ``src``:
     the structure to copy.)doc";
 
 // Docstring regina::python::doc::BlockedSFS_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of blocked Seifert fibred space.
 
@@ -68,7 +68,7 @@ Returns:
     same type of blocked Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::BlockedSFS_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls BlockedSFS::swap(); it is provided so
@@ -81,7 +81,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::BlockedSFS_::isPluggedIBundle
-static const char *isPluggedIBundle =
+inline constexpr const char isPluggedIBundle[] =
 R"doc(Determines whether this triangulation is a plugged thin I-bundle or a
 plugged thick I-bundle. These structures are described in "Structures
 of small closed non-orientable 3-manifold triangulations", Benjamin A.
@@ -92,7 +92,7 @@ Returns:
     is of this form, or ``None`` if it is not.)doc";
 
 // Docstring regina::python::doc::BlockedSFS_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a blocked Seifert fibred
 space.
 
@@ -109,7 +109,7 @@ Returns:
     Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::BlockedSFS_::region
-static const char *region =
+inline constexpr const char region[] =
 R"doc(Returns details of the single saturated region that fills this
 triangulation.
 
@@ -117,7 +117,7 @@ Returns:
     the single saturated region.)doc";
 
 // Docstring regina::python::doc::BlockedSFS_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:

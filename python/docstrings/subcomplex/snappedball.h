@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SnappedBall
-static const char *SnappedBall =
+inline constexpr const char SnappedBall[] =
 R"doc(Represents a snapped 3-ball in a triangulation. A snapped 3-ball is a
 single tetrahedron with two faces glued to each other to form a 3-ball
 with a two triangle boundary.
@@ -31,10 +31,10 @@ function recognise().)doc";
 namespace SnappedBall_ {
 
 // Docstring regina::python::doc::SnappedBall_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 specific presentation of a snapped 3-ball.
 
@@ -59,7 +59,7 @@ Returns:
     same specific presentation of a snapped 3-ball.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::boundaryFace
-static const char *boundaryFace =
+inline constexpr const char boundaryFace[] =
 R"doc(Returns one of the two tetrahedron faces that forms the boundary of
 this snapped ball.
 
@@ -74,7 +74,7 @@ Returns:
     the corresponding face number in the tetrahedron.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::equatorEdge
-static const char *equatorEdge =
+inline constexpr const char equatorEdge[] =
 R"doc(Returns the edge that forms the equator of the boundary sphere of this
 ball.
 
@@ -82,7 +82,7 @@ Returns:
     the corresponding edge number in the tetrahedron.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls SnappedBall::swap(); it is provided
@@ -95,14 +95,14 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::internalEdge
-static const char *internalEdge =
+inline constexpr const char internalEdge[] =
 R"doc(Returns the edge internal to this snapped ball.
 
 Returns:
     the corresponding edge number in the tetrahedron.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::internalFace
-static const char *internalFace =
+inline constexpr const char internalFace[] =
 R"doc(Returns one of the two tetrahedron faces internal to this snapped
 ball.
 
@@ -117,7 +117,7 @@ Returns:
     the corresponding face number in the tetrahedron.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given tetrahedron forms a snapped 3-ball within a
 triangulation. The ball need not be the entire triangulation; the
 boundary triangles may be glued to something else (or to each other).
@@ -138,14 +138,14 @@ Returns:
     if the given tetrahedron is not a snapped 3-ball.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::SnappedBall_::tetrahedron
-static const char *tetrahedron =
+inline constexpr const char tetrahedron[] =
 R"doc(Returns the tetrahedron that forms this snapped ball.
 
 Returns:

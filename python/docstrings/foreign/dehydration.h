@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::readDehydrationList
-static const char *readDehydrationList =
+inline constexpr const char readDehydrationList[] =
 R"doc(Reads a list of dehydrated triangulations from the given text file.
 The file should contain one dehydration string per line. These strings
 will be rehydrated as described in Triangulation<3>::rehydrate().

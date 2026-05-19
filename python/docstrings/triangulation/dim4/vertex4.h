@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-static const char *Face =
+inline constexpr const char Face[] =
 R"doc(Represents a vertex in the skeleton of a 4-manifold triangulation.
 
 This is a specialisation of the generic Face class template; see the
@@ -32,7 +32,7 @@ of by the Triangulation to which they belong.)doc";
 namespace Face_ {
 
 // Docstring regina::python::doc::Face_::buildLink
-static const char *buildLink =
+inline constexpr const char buildLink[] =
 R"doc(Returns a full 3-manifold triangulation describing the link of this
 vertex.
 
@@ -76,7 +76,7 @@ Returns:
     the read-only triangulated link of this vertex.)doc";
 
 // Docstring regina::python::doc::Face_::buildLinkInclusion
-static const char *buildLinkInclusion =
+inline constexpr const char buildLinkInclusion[] =
 R"doc(Returns details of how the tetrahedra are labelled in the link of this
 vertex. This is a companion function to buildLink(), which returns a
 full 3-manifold triangulation of the vertex link.
@@ -109,7 +109,7 @@ Returns:
     link.)doc";
 
 // Docstring regina::python::doc::Face_::isIdeal
-static const char *isIdeal =
+inline constexpr const char isIdeal[] =
 R"doc(Determines if this vertex is an ideal vertex. To be an ideal, a vertex
 must (i) be valid, and (ii) have a closed vertex link that is not a
 3-sphere.
@@ -118,7 +118,7 @@ Returns:
     ``True`` if and only if this is an ideal vertex.)doc";
 
 // Docstring regina::python::doc::Face_::linkingSurface
-static const char *linkingSurface =
+inline constexpr const char linkingSurface[] =
 R"doc(Returns the link of this vertex as a normal hypersurface.
 
 Note that vertex linking hypersurfaces only ever contain tetrahedra

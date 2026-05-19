@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SigCensus
-static const char *SigCensus =
+inline constexpr const char SigCensus[] =
 R"doc(A class responsible for building censuses of splitting surface
 signatures.
 
@@ -24,7 +24,7 @@ See formCensus() for further information.)doc";
 namespace SigCensus_ {
 
 // Docstring regina::python::doc::SigCensus_::formCensus
-static const char *formCensus =
+inline constexpr const char formCensus[] =
 R"doc(Forms a census of all splitting surface signatures of the given order.
 The order of a signature is the number of quads in the corresponding
 splitting surface.

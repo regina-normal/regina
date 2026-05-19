@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::LayeredLensSpace
-static const char *LayeredLensSpace =
+inline constexpr const char LayeredLensSpace[] =
 R"doc(Represents a layered lens space component of a triangulation. A
 layered lens space is considered to be any layered solid torus glued
 to a degenerate (2,1,1) layered solid torus (i.e., a one-triangle
@@ -37,10 +37,10 @@ function recognise().)doc";
 namespace LayeredLensSpace_ {
 
 // Docstring regina::python::doc::LayeredLensSpace_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of layered lens space.
 
@@ -64,7 +64,7 @@ Returns:
     same type of layered lens space.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls LayeredLensSpace::swap(); it is
@@ -78,7 +78,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::isSnapped
-static const char *isSnapped =
+inline constexpr const char isSnapped[] =
 R"doc(Determines if the layered solid torus that forms the basis for this
 lens space is snapped shut (folded closed without a twist).
 
@@ -86,7 +86,7 @@ Returns:
     ``True`` if and only if the torus is snapped shut.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::isTwisted
-static const char *isTwisted =
+inline constexpr const char isTwisted[] =
 R"doc(Determines if the layered solid torus that forms the basis for this
 lens space is twisted shut (folded closed with a twist).
 
@@ -94,7 +94,7 @@ Returns:
     ``True`` if and only if the torus is twisted shut.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::mobiusBoundaryGroup
-static const char *mobiusBoundaryGroup =
+inline constexpr const char mobiusBoundaryGroup[] =
 R"doc(Determines which edge of the layered solid torus is glued to the
 boundary of the mobius strip (i.e., the weight 2 edge of the
 degenerate (2,1,1) layered solid torus). The return value will be one
@@ -107,21 +107,21 @@ Returns:
     mobius strip boundary is glued.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::p
-static const char *p =
+inline constexpr const char p[] =
 R"doc(Returns the first parameter *p* of this lens space L(p,q).
 
 Returns:
     the first parameter *p*.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::q
-static const char *q =
+inline constexpr const char q[] =
 R"doc(Returns the second parameter *q* of this lens space L(p,q).
 
 Returns:
     the second parameter *q*.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is a layered lens
 space.
 
@@ -137,14 +137,14 @@ Returns:
     ``None`` if the given component is not a layered lens space.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace_::torus
-static const char *torus =
+inline constexpr const char torus[] =
 R"doc(Returns the layered solid torus to which the mobius strip is glued.
 
 Returns:

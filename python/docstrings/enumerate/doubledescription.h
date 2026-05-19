@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::DoubleDescription
-static const char *DoubleDescription =
+inline constexpr const char DoubleDescription[] =
 R"doc(Implements a modified double description method for polytope vertex
 enumeration. For details of the underlying algorithm, see "Optimizing
 the double description method for normal surface enumeration",
@@ -24,7 +24,7 @@ this class should ever be created.)doc";
 namespace DoubleDescription_ {
 
 // Docstring regina::python::doc::DoubleDescription_::enumerate
-static const char *enumerate =
+inline constexpr const char enumerate[] =
 R"doc(Determines the extremal rays of the intersection of the
 *n*-dimensional non-negative orthant with the given linear subspace.
 The resulting rays will be of the class *Ray*, and will be passed into

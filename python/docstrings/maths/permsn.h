@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::PermSn
-static const char *PermSn =
+inline constexpr const char PermSn[] =
 R"doc(A lightweight array-like object that supports fast lookup and
 iteration for permutations on *n* objects.
 
@@ -83,7 +83,7 @@ Template parameter ``codeType``:
 namespace PermSn_ {
 
 // Docstring regina::python::doc::PermSn_::__array
-static const char *__array =
+inline constexpr const char __array[] =
 R"doc(Returns the permutation at the given index in *Sn*, according to the
 chosen ordering.
 
@@ -102,7 +102,7 @@ Returns:
     the corresponding permutation.)doc";
 
 // Docstring regina::python::doc::PermSn_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(A trivial equality test that always returns ``True``.
 
 Since PermSn contains no data of its own, any two PermSn objects of
@@ -113,7 +113,7 @@ Returns:
     ``True``, always.)doc";
 
 // Docstring regina::python::doc::PermSn_::__iter__
-static const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all permutations of *n* objects.
 
 See the PermSn class notes for further details on how iteration works.
@@ -122,7 +122,7 @@ Returns:
     an iterator over all permutations of *n* objects.)doc";
 
 // Docstring regina::python::doc::PermSn_::iterator
-static const char *iterator =
+inline constexpr const char iterator[] =
 R"doc(An iterator over all permutations of *n* objects.
 
 See the PermSn class notes for further details on how iteration works.
@@ -163,7 +163,7 @@ it changes according to both *n* and your programming language:
   ``PermSn4_Sign.iterator.__next__()``.)doc";
 
 // Docstring regina::python::doc::PermSn_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the total number of permutations of *n* objects. This is of
 course just ``n!``.
 
@@ -179,7 +179,7 @@ Returns:
 namespace PermSn_::iterator_ {
 
 // Docstring regina::python::doc::PermSn_::iterator_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates a begin iterator.
 
 This iterator will point to the identity permutation. So, for example,
@@ -187,7 +187,7 @@ if you are iterating over ``Perm<n>::Sn``, then this iterator will be
 equal to ``Perm<n>::Sn.begin()``.)doc";
 
 // Docstring regina::python::doc::PermSn_::iterator_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Compares this with the given iterator for equality.
 
 To be considered equal, two iterators must both be dereferencable and
@@ -197,7 +197,7 @@ Returns:
     ``True`` if and only if the two iterators are equal.)doc";
 
 // Docstring regina::python::doc::PermSn_::iterator_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates either a begin or end iterator.
 
 If no arguments are given or if *valid* is ``True``, then this
@@ -214,7 +214,7 @@ Parameter ``valid``:
     should be an end iterator.)doc";
 
 // Docstring regina::python::doc::PermSn_::iterator_::__next__
-static const char *__next__ =
+inline constexpr const char __next__[] =
 R"doc(Returns the current permutation and increments this iterator.
 
 Exception ``StopIteration``:
@@ -229,7 +229,7 @@ Returns:
 namespace detail {
 
 // Docstring regina::python::doc::detail::PermSubSn
-static const char *PermSubSn =
+inline constexpr const char PermSubSn[] =
 R"doc(A lightweight array-like object that indexes smaller permutations
 within larger permutation groups; that is, it embeds the group *S_m*
 inside *S_n* for some ``n > m``.
@@ -295,7 +295,7 @@ Template parameter ``order``:
 namespace detail::PermSubSn_ {
 
 // Docstring regina::python::doc::detail::PermSubSn_::__array
-static const char *__array =
+inline constexpr const char __array[] =
 R"doc(Returns the permutation at the given index.
 
 This is a permutation on *m* objects being returned as the larger type
@@ -313,7 +313,7 @@ Returns:
     the corresponding permutation of *m* objects.)doc";
 
 // Docstring regina::python::doc::detail::PermSubSn_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(A trivial equality test that always returns ``True``.
 
 Since PermSubSn contains no data of its own, any two PermSubSn objects
@@ -324,7 +324,7 @@ Returns:
     ``True``, always.)doc";
 
 // Docstring regina::python::doc::detail::PermSubSn_::at
-static const char *at =
+inline constexpr const char at[] =
 R"doc(Returns the permutation at the given index.
 
 This is a permutation on *m* objects being returned as the larger type
@@ -338,7 +338,7 @@ Returns:
     the corresponding permutation of *m* objects.)doc";
 
 // Docstring regina::python::doc::detail::PermSubSn_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the total number of permutations on *m* objects. This of
 course is just ``m!``.
 

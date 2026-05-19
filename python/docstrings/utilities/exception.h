@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::DivisionByZero
-static const char *DivisionByZero =
+inline constexpr const char DivisionByZero[] =
 R"doc(An exception thrown when Regina encounters an attempted division by
 zero.
 
@@ -21,7 +21,7 @@ for DivisionByZero takes no arguments - you do not need to (and indeed
 cannot) supply a text description.)doc";
 
 // Docstring regina::python::doc::FailedPrecondition
-static const char *FailedPrecondition =
+inline constexpr const char FailedPrecondition[] =
 R"doc(An exception thrown when a function detects that its preconditions
 have been violated.
 
@@ -34,7 +34,7 @@ All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::FileError
-static const char *FileError =
+inline constexpr const char FileError[] =
 R"doc(An exception thrown when trying to access data from the filesystem.
 
 This could occur, for instance, when trying to read data from the
@@ -44,7 +44,7 @@ All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::ImpossibleScenario
-static const char *ImpossibleScenario =
+inline constexpr const char ImpossibleScenario[] =
 R"doc(An exception thrown when an unexpected scenario arises that should
 never be possible.
 
@@ -62,7 +62,7 @@ All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::IntegerOverflow
-static const char *IntegerOverflow =
+inline constexpr const char IntegerOverflow[] =
 R"doc(An exception thrown when the result of some calculation cannot fit
 into an appropriate native C++ integer type.
 
@@ -71,7 +71,7 @@ for IntegerOverflow takes no arguments - you do not need to (and
 indeed cannot) supply a text description.)doc";
 
 // Docstring regina::python::doc::InvalidArgument
-static const char *InvalidArgument =
+inline constexpr const char InvalidArgument[] =
 R"doc(An exception thrown when invalid or unsupported arguments are passed
 into a function.
 
@@ -84,7 +84,7 @@ All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::InvalidInput
-static const char *InvalidInput =
+inline constexpr const char InvalidInput[] =
 R"doc(An exception thrown when a function reads unexpected or incomplete
 data from an input stream (or more generally, an input source).
 
@@ -92,7 +92,7 @@ All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::LockViolation
-static const char *LockViolation =
+inline constexpr const char LockViolation[] =
 R"doc(An exception thrown when an attempt is made to violate a simplex or
 facet lock. See Simplex<dim>::lock() and Simplex<dim>::lockFacet() for
 further details on simplex/facet locks and what restrictions they
@@ -102,7 +102,7 @@ All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::NoSolution
-static const char *NoSolution =
+inline constexpr const char NoSolution[] =
 R"doc(An exception thrown when Regina has certified that a mathematical
 problem has no solution.
 
@@ -110,14 +110,14 @@ Note that the constructor for this exception class follows a different
 pattern from most of Regina's exception classes.)doc";
 
 // Docstring regina::python::doc::NotImplemented
-static const char *NotImplemented =
+inline constexpr const char NotImplemented[] =
 R"doc(An exception thrown when some functionality is not yet implemented.
 
 All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::NumericalError
-static const char *NumericalError =
+inline constexpr const char NumericalError[] =
 R"doc(An exception thrown when Regina encounters some kind of numerical or
 arithmetical error.
 
@@ -128,7 +128,7 @@ All member functions follow the same pattern as the parent class
 ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::ReginaException
-static const char *ReginaException =
+inline constexpr const char ReginaException[] =
 R"doc(A base class for all of the exceptions that are thrown by Regina's
 native mathematical code.
 
@@ -144,7 +144,7 @@ Python:
     This uses Python's ``RuntimeError`` as its base class.)doc";
 
 // Docstring regina::python::doc::SnapPeaIsNull
-static const char *SnapPeaIsNull =
+inline constexpr const char SnapPeaIsNull[] =
 R"doc(An exception thrown when the SnapPea kernel is asked to work with a
 null SnapPea triangulation.
 
@@ -160,7 +160,7 @@ Note that the constructor for this exception class follows a different
 pattern from most of Regina's exception classes.)doc";
 
 // Docstring regina::python::doc::SnapPeaUnsolvedCase
-static const char *SnapPeaUnsolvedCase =
+inline constexpr const char SnapPeaUnsolvedCase[] =
 R"doc(An exception thrown when the SnapPea kernel is not able to perform
 some computation.
 
@@ -175,7 +175,7 @@ All member functions follow the same pattern as the (grand)parent
 class ReginaException, and are not documented again here.)doc";
 
 // Docstring regina::python::doc::UnsolvedCase
-static const char *UnsolvedCase =
+inline constexpr const char UnsolvedCase[] =
 R"doc(An exception thrown when a mathematical function is not able to solve
 a particular instance of a problem.
 
@@ -185,40 +185,40 @@ ReginaException, and are not documented again here.)doc";
 namespace DivisionByZero_ {
 
 // Docstring regina::python::doc::DivisionByZero_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
 
 // Docstring regina::python::doc::DivisionByZero_::__default
-static const char *__default = R"doc(Creates a new exception with a stock error message.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new exception with a stock error message.)doc";
 
 }
 
 namespace IntegerOverflow_ {
 
 // Docstring regina::python::doc::IntegerOverflow_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
 
 // Docstring regina::python::doc::IntegerOverflow_::__default
-static const char *__default = R"doc(Creates a new exception with a stock error message.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new exception with a stock error message.)doc";
 
 }
 
 namespace NoSolution_ {
 
 // Docstring regina::python::doc::NoSolution_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
 
 // Docstring regina::python::doc::NoSolution_::__default
-static const char *__default = R"doc(Creates a new exception with a stock error message.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new exception with a stock error message.)doc";
 
 }
 
 namespace ReginaException_ {
 
 // Docstring regina::python::doc::ReginaException_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
 
 // Docstring regina::python::doc::ReginaException_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new exception with the given error message.
 
 This constructor may throw std::bad_alloc.
@@ -227,7 +227,7 @@ Parameter ``msg``:
     a human-readable description of the error.)doc";
 
 // Docstring regina::python::doc::ReginaException_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new exception with the given error message.
 
 This constructor may throw std::bad_alloc.
@@ -240,10 +240,10 @@ Parameter ``msg``:
 namespace SnapPeaIsNull_ {
 
 // Docstring regina::python::doc::SnapPeaIsNull_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
 
 // Docstring regina::python::doc::SnapPeaIsNull_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new exception, and marks it as having occurred within the
 given Regina function.
 

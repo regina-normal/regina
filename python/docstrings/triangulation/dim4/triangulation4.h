@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Triangulation
-static const char *Triangulation =
+inline constexpr const char Triangulation[] =
 R"doc(Represents a 4-dimensional triangulation, typically of a 4-manifold.
 
 This is a specialisation of the generic Triangulation class template;
@@ -34,7 +34,7 @@ possible, even when passing or returning objects by value.)doc";
 namespace Triangulation_ {
 
 // Docstring regina::python::doc::Triangulation_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given triangulation.
 
 This will also clone any computed properties (such as homology,
@@ -52,13 +52,13 @@ Parameter ``src``:
     the triangulation to copy.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Default constructor.
 
 Creates an empty triangulation.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new copy of the given triangulation, with the option of
 whether or not to clone its computed properties and/or locks also.
 
@@ -96,7 +96,7 @@ Parameter ``cloneLocks``:
     triangulation should have no locks at all.)doc";
 
 // Docstring regina::python::doc::Triangulation_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc("Magic" constructor that tries to find some way to interpret the given
 string as a triangulation.
 
@@ -115,7 +115,7 @@ Parameter ``description``:
     a string that describes a 4-manifold triangulation.)doc";
 
 // Docstring regina::python::doc::Triangulation_::collapseEdge
-static const char *collapseEdge =
+inline constexpr const char collapseEdge[] =
 R"doc(If possible, performs an edge collapse move upon the given edge. This
 involves collapsing the edge to a point, merging its two endpoints
 together, and flattening all of the pentachora that contain it. The
@@ -169,7 +169,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::collapseEdge_2
-static const char *collapseEdge_2 =
+inline constexpr const char collapseEdge_2[] =
 R"doc(Deprecated routine that tests for and optionally performs an edge
 collapse move upon the given edge of this triangulation.
 
@@ -208,13 +208,13 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::countBoundaryTetrahedra
-static const char *countBoundaryTetrahedra =
+inline constexpr const char countBoundaryTetrahedra[] =
 R"doc(A dimension-specific alias for countBoundaryFacets().
 
 See countBoundaryFacets() for further information.)doc";
 
 // Docstring regina::python::doc::Triangulation_::eulerCharManifold
-static const char *eulerCharManifold =
+inline constexpr const char eulerCharManifold[] =
 R"doc(Returns the Euler characteristic of the corresponding compact
 manifold.
 
@@ -243,7 +243,7 @@ Returns:
     the Euler characteristic of the corresponding compact manifold.)doc";
 
 // Docstring regina::python::doc::Triangulation_::fourFourMove
-static const char *fourFourMove =
+inline constexpr const char fourFourMove[] =
 R"doc(Deprecated routine that tests for and optionally performes a 4-4 move
 about the given edge of this triangulation.
 
@@ -283,7 +283,7 @@ Author:
     Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::has44
-static const char *has44 =
+inline constexpr const char has44[] =
 R"doc(Determines whether it is possible to perform a 4-4 move about the
 given edge of this triangulation, without violating any simplex and/or
 facet locks.
@@ -301,13 +301,13 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::hasBoundaryTetrahedra
-static const char *hasBoundaryTetrahedra =
+inline constexpr const char hasBoundaryTetrahedra[] =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
 
 // Docstring regina::python::doc::Triangulation_::hasCollapseEdge
-static const char *hasCollapseEdge =
+inline constexpr const char hasCollapseEdge[] =
 R"doc(Determines whether it is possible to collapse the given edge of this
 triangulation, without violating any simplex and/or facet locks.
 
@@ -324,7 +324,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::hasOpenBook
-static const char *hasOpenBook =
+inline constexpr const char hasOpenBook[] =
 R"doc(Determines whether it is possible to perform a book opening move about
 the given tetrahedron of this triangulation, without violating any
 facet locks.
@@ -342,7 +342,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::hasSnapEdge
-static const char *hasSnapEdge =
+inline constexpr const char hasSnapEdge[] =
 R"doc(Determines whether it is possible to snap together the endpoints of
 the given edge of this triangulation.
 
@@ -359,7 +359,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::idealToFinite
-static const char *idealToFinite =
+inline constexpr const char idealToFinite[] =
 R"doc(Alias for truncateIdeal(), which truncates all ideal or invalid
 vertices to convert these into real boundary components.
 
@@ -380,7 +380,7 @@ Returns:
     ``True`` if and only if the triangulation was changed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::intelligentSimplify
-static const char *intelligentSimplify =
+inline constexpr const char intelligentSimplify[] =
 R"doc(Deprecated alias for simplify(), which attempts to simplify this
 triangulation as intelligently as possible using relatively fast
 heuristics.
@@ -399,7 +399,7 @@ Returns:
     ``True`` if and only if the triangulation was changed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::intersectionForm
-static const char *intersectionForm =
+inline constexpr const char intersectionForm[] =
 R"doc(Returns the intersection form of this 4-manifold.
 
 The intersection form is stored as a square matrix with respect to an
@@ -432,7 +432,7 @@ Returns:
     the intersection form of this 4-manifold.)doc";
 
 // Docstring regina::python::doc::Triangulation_::isClosed
-static const char *isClosed =
+inline constexpr const char isClosed[] =
 R"doc(Determines if this triangulation is closed. This is the case if and
 only if it has no boundary components.
 
@@ -444,7 +444,7 @@ Returns:
     ``True`` if and only if this triangulation is closed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::isIdeal
-static const char *isIdeal =
+inline constexpr const char isIdeal[] =
 R"doc(Determines if this triangulation is ideal.
 
 A triangulation is ideal if and only if (i) the triangulation is
@@ -460,7 +460,7 @@ Returns:
     ``True`` if and only if this triangulation is ideal.)doc";
 
 // Docstring regina::python::doc::Triangulation_::linkingSurface
-static const char *linkingSurface =
+inline constexpr const char linkingSurface[] =
 R"doc(Returns the link of the given face as a normal hypersurface.
 
 Constructing the link of a face begins with building the frontier of a
@@ -489,7 +489,7 @@ Returns:
     thin (i.e., no additional normalisation steps were required).)doc";
 
 // Docstring regina::python::doc::Triangulation_::move44
-static const char *move44 =
+inline constexpr const char move44[] =
 R"doc(If possible, performs a 4-4 move about the given edge of this
 triangulation. This involves replacing the four pentachora joined
 along that edge with four new pentachora joined along a different (and
@@ -538,31 +538,31 @@ Author:
     Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::newPentachora
-static const char *newPentachora =
+inline constexpr const char newPentachora[] =
 R"doc(A dimension-specific alias for newSimplices().
 
 See newSimplices() for further information.)doc";
 
 // Docstring regina::python::doc::Triangulation_::newPentachora_2
-static const char *newPentachora_2 =
+inline constexpr const char newPentachora_2[] =
 R"doc(A dimension-specific alias for newSimplices().
 
 See newSimplices() for further information.)doc";
 
 // Docstring regina::python::doc::Triangulation_::newPentachoron
-static const char *newPentachoron =
+inline constexpr const char newPentachoron[] =
 R"doc(A dimension-specific alias for newSimplex().
 
 See newSimplex() for further information.)doc";
 
 // Docstring regina::python::doc::Triangulation_::newPentachoron_2
-static const char *newPentachoron_2 =
+inline constexpr const char newPentachoron_2[] =
 R"doc(A dimension-specific alias for newSimplex().
 
 See newSimplex() for further information.)doc";
 
 // Docstring regina::python::doc::Triangulation_::openBook
-static const char *openBook =
+inline constexpr const char openBook[] =
 R"doc(If possible, performs a book opening move about the given tetrahedron.
 This involves taking a tetrahedron that meets the boundary along
 precisely one, two or three triangles, and ungluing it to create two
@@ -617,7 +617,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::openBook_2
-static const char *openBook_2 =
+inline constexpr const char openBook_2[] =
 R"doc(Deprecated routine that tests for and optionally performs a book
 opening move about the given tetrahedron of this triangulation.
 
@@ -655,7 +655,7 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::removeAllPentachora
-static const char *removeAllPentachora =
+inline constexpr const char removeAllPentachora[] =
 R"doc(A dimension-specific alias for removeAllSimplices().
 
 See removeAllSimplices() for further information.
@@ -667,7 +667,7 @@ Exception ``LockViolation``:
     details on how such locks work and what their implications are.)doc";
 
 // Docstring regina::python::doc::Triangulation_::removePentachoron
-static const char *removePentachoron =
+inline constexpr const char removePentachoron[] =
 R"doc(A dimension-specific alias for removeSimplex().
 
 See removeSimplex() for further information.
@@ -682,7 +682,7 @@ Parameter ``pent``:
     the pentachoron to remove.)doc";
 
 // Docstring regina::python::doc::Triangulation_::removePentachoronAt
-static const char *removePentachoronAt =
+inline constexpr const char removePentachoronAt[] =
 R"doc(A dimension-specific alias for removeSimplexAt().
 
 See removeSimplexAt() for further information.
@@ -698,7 +698,7 @@ Parameter ``index``:
     size()-1 inclusive.)doc";
 
 // Docstring regina::python::doc::Triangulation_::retriangulate
-static const char *retriangulate =
+inline constexpr const char retriangulate[] =
 R"doc(Explores all triangulations that can be reached from this via Pachner
 moves, without exceeding a given number of additional pentachora.
 
@@ -838,7 +838,7 @@ Returns:
     completion.)doc";
 
 // Docstring regina::python::doc::Triangulation_::simplify
-static const char *simplify =
+inline constexpr const char simplify[] =
 R"doc(Attempts to simplify this triangulation as intelligently as possible
 using relatively fast heuristics. Specifically, this routine will
 attempt to reduce the number of pentachora in the triangulation.
@@ -900,7 +900,7 @@ Returns:
     changed if and only if the number of pentachora was reduced.)doc";
 
 // Docstring regina::python::doc::Triangulation_::simplifyExhaustive
-static const char *simplifyExhaustive =
+inline constexpr const char simplifyExhaustive[] =
 R"doc(Attempts to simplify this triangulation using a slow but exhaustive
 search through the Pachner graph. This routine is more powerful but
 much slower than simplify().
@@ -1000,7 +1000,7 @@ Returns:
     simplified to fewer pentachora.)doc";
 
 // Docstring regina::python::doc::Triangulation_::simplifyToLocalMinimum
-static const char *simplifyToLocalMinimum =
+inline constexpr const char simplifyToLocalMinimum[] =
 R"doc(Uses all known simplification moves to reduce the triangulation
 monotonically to some local minimum number of pentachora.
 
@@ -1045,7 +1045,7 @@ Returns:
     performing such a change.)doc";
 
 // Docstring regina::python::doc::Triangulation_::simplifyUpDown
-static const char *simplifyUpDown =
+inline constexpr const char simplifyUpDown[] =
 R"doc(Attempts to simplify this triangulation by making increasingly long
 sequences of 2-4 moves and then attempting to simplify back down. This
 is a relatively fast and powerful well-climbing heuristic that can be
@@ -1099,7 +1099,7 @@ Author:
     Rhuaidi Burke)doc";
 
 // Docstring regina::python::doc::Triangulation_::snapEdge
-static const char *snapEdge =
+inline constexpr const char snapEdge[] =
 R"doc(If possible, performs an edge snap move about the given edge. This
 involves snapping together the endpoints of the edge, and thereby
 reducing the number of vertices in this triangulation by one (but at
@@ -1162,7 +1162,7 @@ Author:
     Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::snapEdge_2
-static const char *snapEdge_2 =
+inline constexpr const char snapEdge_2[] =
 R"doc(Deprecated routine that tests for and optionally performs an edge snap
 move upon the given edge of this triangulation.
 
@@ -1203,7 +1203,7 @@ Author:
     Alex He)doc";
 
 // Docstring regina::python::doc::Triangulation_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given triangulation.
 
 All pentachora that belong to this triangulation will be moved to
@@ -1227,7 +1227,7 @@ Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::Triangulation_::truncateIdeal
-static const char *truncateIdeal =
+inline constexpr const char truncateIdeal[] =
 R"doc(Truncates all ideal or invalid vertices, converting these into real
 boundary components make from unglued facets of pentachora.
 
@@ -1254,7 +1254,7 @@ Returns:
     ``True`` if and only if the triangulation was changed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::with44
-static const char *with44 =
+inline constexpr const char with44[] =
 R"doc(If possible, returns the triangulation obtained by performing a 4-4
 move about the given edge of this triangulation. If such a move is not
 allowed, or if such a move would violate any simplex and/or facet
@@ -1276,7 +1276,7 @@ Returns:
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withCollapseEdge
-static const char *withCollapseEdge =
+inline constexpr const char withCollapseEdge[] =
 R"doc(If possible, returns the triangulation obtained by collapsing the
 given edge of this triangulation. If such a move is not allowed, or if
 such a move would violate any simplex and/or facet locks, then this
@@ -1298,7 +1298,7 @@ Returns:
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withOpenBook
-static const char *withOpenBook =
+inline constexpr const char withOpenBook[] =
 R"doc(If possible, returns the triangulation obtained by performing a book
 opening move about the given tetrahedron of this triangulation. If
 such a move is not allowed, or if such a move would violate any facet
@@ -1320,7 +1320,7 @@ Returns:
     or no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation_::withSnapEdge
-static const char *withSnapEdge =
+inline constexpr const char withSnapEdge[] =
 R"doc(If possible, returns the triangulation obtained by snapping together
 the endpoints of the given edge of this triangulation. If such a move
 is not allowed, then this routine returns no value.

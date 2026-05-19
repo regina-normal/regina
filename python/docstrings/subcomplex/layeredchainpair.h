@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::LayeredChainPair
-static const char *LayeredChainPair =
+inline constexpr const char LayeredChainPair[] =
 R"doc(Represents a layered chain pair component of a triangulation.
 
 A layered chain pair consists of two layered chains (as described by
@@ -51,10 +51,10 @@ function recognise().)doc";
 namespace LayeredChainPair_ {
 
 // Docstring regina::python::doc::LayeredChainPair_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::LayeredChainPair_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of layered chain pair.
 
@@ -77,7 +77,7 @@ Returns:
     same type of layered chain pair.)doc";
 
 // Docstring regina::python::doc::LayeredChainPair_::chain
-static const char *chain =
+inline constexpr const char chain[] =
 R"doc(Returns the requested layered chain used to form this structure. If
 the two chains have different lengths, the shorter chain will be chain
 0 and the longer chain will be chain 1.
@@ -89,7 +89,7 @@ Returns:
     the requested layered chain.)doc";
 
 // Docstring regina::python::doc::LayeredChainPair_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls LayeredChainPair::swap(); it is
@@ -103,7 +103,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredChainPair_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is a layered chain
 pair.
 
@@ -119,7 +119,7 @@ Returns:
     ``None`` if the given component is not a layered chain pair.)doc";
 
 // Docstring regina::python::doc::LayeredChainPair_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:

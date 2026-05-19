@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::ProgressTracker
-static const char *ProgressTracker =
+inline constexpr const char ProgressTracker[] =
 R"doc(Manages percentage-based progress tracking and cancellation polling
 for long operations.
 
@@ -28,7 +28,7 @@ the progress of the individual stages. The weights of all stages
 should sum to 1.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerBase
-static const char *ProgressTrackerBase =
+inline constexpr const char ProgressTrackerBase[] =
 R"doc(The base class for Regina's progress tracking classes.
 
 These classes manage progress tracking and cancellation polling for
@@ -115,7 +115,7 @@ underlying object, and so they cannot be copied, moved or swapped.
     based or open-ended progress tracking respectively).)doc";
 
 // Docstring regina::python::doc::ProgressTrackerObjective
-static const char *ProgressTrackerObjective =
+inline constexpr const char ProgressTrackerObjective[] =
 R"doc(Manages objective-based progress tracking and cancellation polling for
 open-ended operations.
 
@@ -131,7 +131,7 @@ the constructor, and there is no particular "end point" that we are
 aiming for.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerOpen
-static const char *ProgressTrackerOpen =
+inline constexpr const char ProgressTrackerOpen[] =
 R"doc(Manages numerical progress tracking and cancellation polling for open-
 ended operations.
 
@@ -148,7 +148,7 @@ often unknown until the operation has finished.)doc";
 namespace ProgressTrackerBase_ {
 
 // Docstring regina::python::doc::ProgressTrackerBase_::cancel
-static const char *cancel =
+inline constexpr const char cancel[] =
 R"doc(Indicates to the writing thread that the user wishes to cancel the
 operation. The writing thread might not detect and/or respond to this
 request immediately (or indeed ever), and so the reading thread should
@@ -158,7 +158,7 @@ up and destroys this progress tracker.
 This is typically called by the reading thread.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerBase_::description
-static const char *description =
+inline constexpr const char description[] =
 R"doc(Returns the human-readable description of the current stage.
 
 This is typically called by the reading thread.
@@ -167,7 +167,7 @@ Returns:
     ``the`` current stage description.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerBase_::descriptionChanged
-static const char *descriptionChanged =
+inline constexpr const char descriptionChanged[] =
 R"doc(Queries whether the stage description has changed since the last call
 to descriptionChanged(). If this is the first time
 descriptionChanged() is called, the result will be ``True``.
@@ -178,7 +178,7 @@ Returns:
     ``True`` if and only if the stage description has changed.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerBase_::isCancelled
-static const char *isCancelled =
+inline constexpr const char isCancelled[] =
 R"doc(Queries whether the reading thread has made a request for the writing
 thread to cancel the operation; in other words, whether cancel() has
 been called.
@@ -189,7 +189,7 @@ Returns:
     ``True`` if and only if a cancellation request has been made.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerBase_::isFinished
-static const char *isFinished =
+inline constexpr const char isFinished[] =
 R"doc(Queries whether the writing thread has finished all processing. This
 will eventually return ``True`` regardless of whether the processing
 finished naturally or was cancelled by the reading thread.
@@ -201,7 +201,7 @@ Returns:
     processing.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerBase_::setFinished
-static const char *setFinished =
+inline constexpr const char setFinished[] =
 R"doc(Used by the writing thread to indicate that it has finished all
 processing. The stage description will be updated to indicate that the
 operation is finished.
@@ -219,7 +219,7 @@ This is typically called by the writing thread.
 namespace ProgressTrackerObjective_ {
 
 // Docstring regina::python::doc::ProgressTrackerObjective_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new progress tracker. This sets a sensible state description
 (which declares that the operation is initialising), and sets the
 objective to the given value.
@@ -230,7 +230,7 @@ Parameter ``objective``:
     the initial value for the objective.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerObjective_::newStage
-static const char *newStage =
+inline constexpr const char newStage[] =
 R"doc(Used by the writing thread to indicate that it has moved on to a new
 stage of processing. The objective value will be left unchanged.
 
@@ -242,7 +242,7 @@ Parameter ``desc``:
     stop).)doc";
 
 // Docstring regina::python::doc::ProgressTrackerObjective_::objective
-static const char *objective =
+inline constexpr const char objective[] =
 R"doc(Returns the current value of the objective.
 
 This is typically called by the reading thread.
@@ -251,7 +251,7 @@ Returns:
     the current objective value.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerObjective_::objectiveChanged
-static const char *objectiveChanged =
+inline constexpr const char objectiveChanged[] =
 R"doc(Queries whether the objective value has changed since the last call to
 objectiveChanged(). If this is the first time objectiveChanged() is
 called, the result will be ``True``.
@@ -262,7 +262,7 @@ Returns:
     ``True`` if and only if the objective value has changed.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerObjective_::setFinished
-static const char *setFinished =
+inline constexpr const char setFinished[] =
 R"doc(Used by the writing thread to indicate that it has finished all
 processing. The objective value will be left unchanged, but the stage
 description will be updated to indicate that the operation is
@@ -271,7 +271,7 @@ finished.
 This is typically called by the writing thread.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerObjective_::setObjective
-static const char *setObjective =
+inline constexpr const char setObjective[] =
 R"doc(Used by the writing thread to indicate that a new objective value has
 been obtained.
 
@@ -289,7 +289,7 @@ Returns:
 namespace ProgressTrackerOpen_ {
 
 // Docstring regina::python::doc::ProgressTrackerOpen_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates a new progress tracker. This sets a sensible state description
 (which declares that the operation is initialising), and marks the
 current progress as zero steps completed.
@@ -297,7 +297,7 @@ current progress as zero steps completed.
 This is typically called by the reading thread.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerOpen_::incSteps
-static const char *incSteps =
+inline constexpr const char incSteps[] =
 R"doc(Used by the writing thread to indicate that one more step has been
 completed.
 
@@ -308,7 +308,7 @@ Returns:
     if cancel() has been called (typically by the reading thread).)doc";
 
 // Docstring regina::python::doc::ProgressTrackerOpen_::incSteps_2
-static const char *incSteps_2 =
+inline constexpr const char incSteps_2[] =
 R"doc(Used by the writing thread to indicate that some number of additional
 steps have been completed.
 
@@ -323,7 +323,7 @@ Returns:
     if cancel() has been called (typically by the reading thread).)doc";
 
 // Docstring regina::python::doc::ProgressTrackerOpen_::newStage
-static const char *newStage =
+inline constexpr const char newStage[] =
 R"doc(Used by the writing thread to indicate that it has moved on to a new
 stage of processing. The number of steps completed will be left
 unchanged.
@@ -336,7 +336,7 @@ Parameter ``desc``:
     stop).)doc";
 
 // Docstring regina::python::doc::ProgressTrackerOpen_::setFinished
-static const char *setFinished =
+inline constexpr const char setFinished[] =
 R"doc(Used by the writing thread to indicate that it has finished all
 processing. The total number of steps completed will be left
 unchanged, but the stage description will be updated to indicate that
@@ -345,7 +345,7 @@ the operation is finished.
 This is typically called by the writing thread.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerOpen_::steps
-static const char *steps =
+inline constexpr const char steps[] =
 R"doc(Returns the number of steps completed throughout the entire operation.
 This counts the progress across all stages (both current and
 previous).
@@ -356,7 +356,7 @@ Returns:
     the current number of steps completed.)doc";
 
 // Docstring regina::python::doc::ProgressTrackerOpen_::stepsChanged
-static const char *stepsChanged =
+inline constexpr const char stepsChanged[] =
 R"doc(Queries whether the number of steps completed has changed since the
 last call to stepsChanged(). If this is the first time stepsChanged()
 is called, the result will be ``True``.
@@ -371,7 +371,7 @@ Returns:
 namespace ProgressTracker_ {
 
 // Docstring regina::python::doc::ProgressTracker_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates a new progress tracker. This sets a sensible state description
 (which declares that the operation is initialising), and marks the
 current progress as zero percent complete.
@@ -379,7 +379,7 @@ current progress as zero percent complete.
 This is typically called by the reading thread.)doc";
 
 // Docstring regina::python::doc::ProgressTracker_::newStage
-static const char *newStage =
+inline constexpr const char newStage[] =
 R"doc(Used by the writing thread to indicate that it has moved on to a new
 stage of processing. The percentage progress through the current stage
 will automatically be set to 100.
@@ -397,7 +397,7 @@ Parameter ``weight``:
     weights of _all_ stages must sum to 1 in total.)doc";
 
 // Docstring regina::python::doc::ProgressTracker_::percent
-static const char *percent =
+inline constexpr const char percent[] =
 R"doc(Returns the percentage progress through the entire operation. This
 combines the progress through the current stage with all previous
 stages, taking into account the relative weights that the writing
@@ -409,7 +409,7 @@ Returns:
     the current percentage progress.)doc";
 
 // Docstring regina::python::doc::ProgressTracker_::percentChanged
-static const char *percentChanged =
+inline constexpr const char percentChanged[] =
 R"doc(Queries whether the percentage progress has changed since the last
 call to percentChanged(). If this is the first time percentChanged()
 is called, the result will be ``True``.
@@ -420,7 +420,7 @@ Returns:
     ``True`` if and only if the percentage progress has changed.)doc";
 
 // Docstring regina::python::doc::ProgressTracker_::setFinished
-static const char *setFinished =
+inline constexpr const char setFinished[] =
 R"doc(Used by the writing thread to indicate that it has finished all
 processing. The percentage progress through both the current stage and
 the entire operation will automatically be set to 100, and the stage
@@ -430,7 +430,7 @@ finished.
 This is typically called by the writing thread.)doc";
 
 // Docstring regina::python::doc::ProgressTracker_::setPercent
-static const char *setPercent =
+inline constexpr const char setPercent[] =
 R"doc(Used by the writing thread to indicate the level of progress through
 the current stage.
 

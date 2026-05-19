@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Qitmask1
-static const char *Qitmask1 =
+inline constexpr const char Qitmask1[] =
 R"doc(A small but extremely fast "base 4 bitmask" class that can store up to
 ``8 * sizeof(T)`` "qits", each equal to 0, 1, 2 or 3.
 
@@ -44,7 +44,7 @@ Python:
     (if necessary).)doc";
 
 // Docstring regina::python::doc::Qitmask2
-static const char *Qitmask2 =
+inline constexpr const char Qitmask2[] =
 R"doc(A small but extremely fast "base 4 bitmask" class that can store up to
 ``16 * sizeof(T)`` "qits", each equal to 0, 1, 2 or 3.
 
@@ -78,20 +78,20 @@ Python:
 namespace Qitmask1_ {
 
 // Docstring regina::python::doc::Qitmask1_::__copy
-static const char *__copy = R"doc(Creates a clone of the given qitmask.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given qitmask.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::__default
-static const char *__default = R"doc(Creates a new qitmask with all qits set to 0.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new qitmask with all qits set to 0.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given qitmask are identical.
 
 Returns:
     ``True`` if and only if this and the given qitmask are identical.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::__iadd
-static const char *__iadd =
+inline constexpr const char __iadd[] =
 R"doc(Sets this to the sum of this and the given qitmask. Each pair of qits
 is added modulo 4 (so, for instance, 2 + 3 = 1).
 
@@ -102,7 +102,7 @@ Returns:
     a reference to this qitmask.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::__isub
-static const char *__isub =
+inline constexpr const char __isub[] =
 R"doc(Sets this to the difference of this and the given qitmask. Each pair
 of qits is subtracted modulo 4 (so, for instance, 1 - 3 = 2).
 
@@ -113,14 +113,14 @@ Returns:
     a reference to this qitmask.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::empty
-static const char *empty =
+inline constexpr const char empty[] =
 R"doc(Determines whether this qitmask contains all zeroes.
 
 Returns:
     ``True`` if every qit is zero, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::get
-static const char *get =
+inline constexpr const char get[] =
 R"doc(Returns the value of the given qit in this qitmask.
 
 Parameter ``index``:
@@ -132,7 +132,7 @@ Returns:
     3.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::has3
-static const char *has3 =
+inline constexpr const char has3[] =
 R"doc(Determines whether this qitmask contains at least one qit with value
 3.
 
@@ -140,7 +140,7 @@ Returns:
     ``True`` if at least one qit is 3, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::hasNonZeroMatch
-static const char *hasNonZeroMatch =
+inline constexpr const char hasNonZeroMatch[] =
 R"doc(Determines whether there is some index at which both this and the
 given qitmask both have non-zero qits. That is, there is some index
 *i* for which ``get(i)`` and ``other.get(i)`` are both non-zero.
@@ -158,17 +158,17 @@ Returns:
     have non-zero qits, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::nonEmpty
-static const char *nonEmpty =
+inline constexpr const char nonEmpty[] =
 R"doc(Determines whether this qitmask contains at least one non-zero qit.
 
 Returns:
     ``True`` if at least one qit is non-zero, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::reset
-static const char *reset = R"doc(Sets all qits of this qitmask to 0.)doc";
+inline constexpr const char reset[] = R"doc(Sets all qits of this qitmask to 0.)doc";
 
 // Docstring regina::python::doc::Qitmask1_::set
-static const char *set =
+inline constexpr const char set[] =
 R"doc(Sets the given qit of this qitmask to the given value.
 
 Parameter ``index``:
@@ -184,20 +184,20 @@ Parameter ``value``:
 namespace Qitmask2_ {
 
 // Docstring regina::python::doc::Qitmask2_::__copy
-static const char *__copy = R"doc(Creates a clone of the given qitmask.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given qitmask.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::__default
-static const char *__default = R"doc(Creates a new qitmask with all qits set to 0.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new qitmask with all qits set to 0.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given qitmask are identical.
 
 Returns:
     ``True`` if and only if this and the given qitmask are identical.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::__iadd
-static const char *__iadd =
+inline constexpr const char __iadd[] =
 R"doc(Sets this to the sum of this and the given qitmask. Each pair of qits
 is added modulo 4 (so, for instance, 2 + 3 = 1).
 
@@ -208,7 +208,7 @@ Returns:
     a reference to this qitmask.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::__isub
-static const char *__isub =
+inline constexpr const char __isub[] =
 R"doc(Sets this to the difference of this and the given qitmask. Each pair
 of qits is subtracted modulo 4 (so, for instance, 1 - 3 = 2).
 
@@ -219,14 +219,14 @@ Returns:
     a reference to this qitmask.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::empty
-static const char *empty =
+inline constexpr const char empty[] =
 R"doc(Determines whether this qitmask contains all zeroes.
 
 Returns:
     ``True`` if every qit is zero, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::get
-static const char *get =
+inline constexpr const char get[] =
 R"doc(Returns the value of the given qit in this qitmask.
 
 Parameter ``index``:
@@ -238,7 +238,7 @@ Returns:
     3.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::has3
-static const char *has3 =
+inline constexpr const char has3[] =
 R"doc(Determines whether this qitmask contains at least one qit with value
 3.
 
@@ -246,7 +246,7 @@ Returns:
     ``True`` if at least one qit is 3, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::hasNonZeroMatch
-static const char *hasNonZeroMatch =
+inline constexpr const char hasNonZeroMatch[] =
 R"doc(Determines whether there is some index at which both this and the
 given qitmask both have non-zero qits. That is, there is some index
 *i* for which ``get(i)`` and ``other.get(i)`` are both non-zero.
@@ -264,17 +264,17 @@ Returns:
     have non-zero qits, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::nonEmpty
-static const char *nonEmpty =
+inline constexpr const char nonEmpty[] =
 R"doc(Determines whether this qitmask contains at least one non-zero qit.
 
 Returns:
     ``True`` if at least one qit is non-zero, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::reset
-static const char *reset = R"doc(Sets all qits of this qitmask to 0.)doc";
+inline constexpr const char reset[] = R"doc(Sets all qits of this qitmask to 0.)doc";
 
 // Docstring regina::python::doc::Qitmask2_::set
-static const char *set =
+inline constexpr const char set[] =
 R"doc(Sets the given qit of this qitmask to the given value.
 
 Parameter ``index``:

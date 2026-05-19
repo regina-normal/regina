@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SigPartialIsomorphism
-static const char *SigPartialIsomorphism =
+inline constexpr const char SigPartialIsomorphism[] =
 R"doc(Represents a partial isomorphism between two splitting surface
 signatures. See class Signature for details on splitting surface
 signatures.
@@ -39,14 +39,14 @@ possible, even when passing or returning objects by value.)doc";
 namespace SigPartialIsomorphism_ {
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a copy of the given partial isomorphism.
 
 Parameter ``iso``:
     the partial isomorphism to copy.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given partial isomorphism are
 identical.
 
@@ -57,7 +57,7 @@ Returns:
     ``True`` if and only if this and *other* are identical.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new partial isomorphism that maps no cycles or symbols. This
 empty isomorphism is designed to be extended at some later point.
 
@@ -67,7 +67,7 @@ Parameter ``newDir``:
     cycles keep their original direction.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::compareWith
-static const char *compareWith =
+inline constexpr const char compareWith[] =
 R"doc(Lexicographically compares the results of applying this and the given
 isomorphism to the given signature.
 
@@ -99,7 +99,7 @@ Returns:
     to its image under the given isomorphism respectively.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::compareWithIdentity
-static const char *compareWithIdentity =
+inline constexpr const char compareWithIdentity[] =
 R"doc(Lexicographically compares the results of applying this and the
 identity isomorphism to the given signature.
 
@@ -124,7 +124,7 @@ Returns:
     to its image under the identity isomorphism respectively.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given partial isomorphisms.
 
 This global routine simply calls SigPartialIsomorphism::swap(); it is
@@ -138,7 +138,7 @@ Parameter ``b``:
     the second partial isomorphism whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::makeCanonical
-static const char *makeCanonical =
+inline constexpr const char makeCanonical[] =
 R"doc(Rearranges the cycle images so that this isomorphism when applied to
 the given signature produces a new signature that is in canonical
 form.
@@ -157,7 +157,7 @@ Parameter ``fromCycleGroup``:
     cycles are mapped by this partial isomorphism.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given partial isomorphism.
 
 It does not matter if this and the given partial isomorphism work with

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::LensSpace
-static const char *LensSpace =
+inline constexpr const char LensSpace[] =
 R"doc(Represents a general lens space.
 
 The lens space ``L(p,q)`` is the 3-manifold you get by ``p/q`` Dehn
@@ -33,7 +33,7 @@ manifold classes.)doc";
 namespace LensSpace_ {
 
 // Docstring regina::python::doc::LensSpace_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares representations of two lens spaces according to an aesthetic
 ordering.
 
@@ -62,10 +62,10 @@ Returns:
     representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::LensSpace_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given lens space.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given lens space.)doc";
 
 // Docstring regina::python::doc::LensSpace_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given lens space have the same
 presentation.
 
@@ -84,7 +84,7 @@ Returns:
     same presentation (i.e., are homeomorphic).)doc";
 
 // Docstring regina::python::doc::LensSpace_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new lens space with the given parameters. See the class
 notes for details.
 
@@ -99,7 +99,7 @@ Parameter ``q``:
     are no range restrictions whatsoever on this parameter.)doc";
 
 // Docstring regina::python::doc::LensSpace_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given lens spaces.
 
 This global routine simply calls LensSpace::swap(); it is provided so
@@ -112,7 +112,7 @@ Parameter ``b``:
     the second lens space whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LensSpace_::p
-static const char *p =
+inline constexpr const char p[] =
 R"doc(Returns the first parameter *p* of this lens space L(p,q). See the
 class notes for details.
 
@@ -120,7 +120,7 @@ Returns:
     the first parameter.)doc";
 
 // Docstring regina::python::doc::LensSpace_::q
-static const char *q =
+inline constexpr const char q[] =
 R"doc(Returns the second parameter *q* of this lens space L(p,q). See the
 class notes for details.
 
@@ -130,7 +130,7 @@ means it might not be the value of *q* that was used to initialise
 this lens space.)doc";
 
 // Docstring regina::python::doc::LensSpace_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given lens space.
 
 Parameter ``other``:

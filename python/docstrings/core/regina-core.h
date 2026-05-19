@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Algorithm
-static const char *Algorithm =
+inline constexpr const char Algorithm[] =
 R"doc(Represents various classes of algorithms that Regina can use for
 computations. A function that takes an Algorithm argument need not
 support all types of algorithm - if an unsupported algorithm is passed
@@ -28,10 +28,10 @@ constructor, which can take a combination of flags of the specialised
 algorithm type NormalAlg.)doc";
 
 // Docstring regina::python::doc::Language
-static const char *Language = R"doc(Represents different programming languages that Regina supports.)doc";
+inline constexpr const char Language[] = R"doc(Represents different programming languages that Regina supports.)doc";
 
 // Docstring regina::python::doc::maxDim
-static const char *maxDim =
+inline constexpr const char maxDim[] =
 R"doc(Indicates the largest dimension of triangulation that Regina can work
 with.
 
@@ -48,7 +48,7 @@ See also:
     standardDim())doc";
 
 // Docstring regina::python::doc::maxPermDegree
-static const char *maxPermDegree =
+inline constexpr const char maxPermDegree[] =
 R"doc(Indicates the largest degree of permutation that Regina natively
 supports.
 
@@ -63,7 +63,7 @@ Returns:
     Regina's largest supported degree of permutation.)doc";
 
 // Docstring regina::python::doc::standardDim
-static const char *standardDim =
+inline constexpr const char standardDim[] =
 R"doc(Indicates whether the given dimension is one of Regina's _standard
 dimensions_ for triangulations.
 
@@ -89,7 +89,7 @@ See also:
     maxDim())doc";
 
 // Docstring regina::python::doc::supportedDim
-static const char *supportedDim =
+inline constexpr const char supportedDim[] =
 R"doc(Indicates whether this build of Regina supports triangulations of the
 given dimension.
 
@@ -118,19 +118,19 @@ See also:
 namespace Algorithm_ {
 
 // Docstring regina::python::doc::Algorithm_::Backtrack
-static const char *Backtrack =
+inline constexpr const char Backtrack[] =
 R"doc(An optimised backtracking algorithm. This typically works over some
 search tree (often of exponential size or worse), but include
 significant optimisations to prune the search tree and/or cache
 computations where possible.)doc";
 
 // Docstring regina::python::doc::Algorithm_::Default
-static const char *Default =
+inline constexpr const char Default[] =
 R"doc(The default algorithm. Here Regina will choose whichever algorithm it
 thinks (rightly or wrongly) is most appropriate.)doc";
 
 // Docstring regina::python::doc::Algorithm_::Naive
-static const char *Naive =
+inline constexpr const char Naive[] =
 R"doc(A naive algorithm. This typically works directly with the underlying
 definitions (e.g., computing Turaev-Viro as a state sum), without
 further optimisations.
@@ -141,7 +141,7 @@ further optimisations.
     suitable for "real" applications.)doc";
 
 // Docstring regina::python::doc::Algorithm_::Treewidth
-static const char *Treewidth =
+inline constexpr const char Treewidth[] =
 R"doc(A treewidth-based algorithm. Typically this uses dynamic programming
 over a tree decomposition of some underlying graph. Such algorithms
 are often fast for triangulations or links with small treewidth, but
@@ -152,7 +152,7 @@ may require large amounts of memory.)doc";
 namespace Language_ {
 
 // Docstring regina::python::doc::Language_::Current
-static const char *Current =
+inline constexpr const char Current[] =
 R"doc(The programming language currently being used.
 
 When writing C++ code, this is equivalent to Language::Cxx. When using
@@ -166,10 +166,10 @@ the Python bindings, this is equivalent to Language::Python.
     an example of where this issue arises and how it is resolved.)doc";
 
 // Docstring regina::python::doc::Language_::Cxx
-static const char *Cxx = R"doc(The C++ programming language.)doc";
+inline constexpr const char Cxx[] = R"doc(The C++ programming language.)doc";
 
 // Docstring regina::python::doc::Language_::Python
-static const char *Python = R"doc(The Python programming language.)doc";
+inline constexpr const char Python[] = R"doc(The Python programming language.)doc";
 
 }
 

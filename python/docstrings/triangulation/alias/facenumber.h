@@ -14,7 +14,7 @@ namespace regina::python::doc {
 namespace alias {
 
 // Docstring regina::python::doc::alias::FaceNumber
-constexpr const char *FaceNumber =
+inline constexpr const char FaceNumber[] =
 R"doc(Helper class that provides a dimension-specific alias for face(),
 where reasonable.
 
@@ -30,31 +30,31 @@ sufficiently small.)doc";
 namespace alias::FaceNumber_ {
 
 // Docstring regina::python::doc::alias::FaceNumber_::edge
-constexpr const char *edge =
+inline constexpr const char edge[] =
 R"doc(A dimension-specific alias for face().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::alias::FaceNumber_::pentachoron
-constexpr const char *pentachoron =
+inline constexpr const char pentachoron[] =
 R"doc(A dimension-specific alias for face().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::alias::FaceNumber_::tetrahedron
-constexpr const char *tetrahedron =
+inline constexpr const char tetrahedron[] =
 R"doc(A dimension-specific alias for face().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::alias::FaceNumber_::triangle
-constexpr const char *triangle =
+inline constexpr const char triangle[] =
 R"doc(A dimension-specific alias for face().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::alias::FaceNumber_::vertex
-constexpr const char *vertex =
+inline constexpr const char vertex[] =
 R"doc(A dimension-specific alias for face().
 
 See face() for further information.)doc";

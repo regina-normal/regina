@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Census
-static const char *Census =
+inline constexpr const char Census[] =
 R"doc(A utility class used to search for triangulations across one or more
 3-manifold census databases.
 
@@ -29,13 +29,13 @@ various static lookup() routines.
     to lookup() from other threads.)doc";
 
 // Docstring regina::python::doc::CensusDB
-static const char *CensusDB =
+inline constexpr const char CensusDB[] =
 R"doc(Stores the location and description of one of Regina's in-built census
 databases.
 
 A census database stores a list of key-value pairs. The keys are
-isomorphism signatures of triangulations (currently first-generation
-signatures as returned by ``Triangulation<dim>::isoSig()``, but see
+isomorphism signatures of triangulations (currently second-generation
+signatures as returned by ``Triangulation<dim>::neoSig()``, but see
 the notes below). The values are human-readable names (typically the
 names of the triangulations and/or the names of the underlying
 manifolds). A key may appear multiple times (associated with different
@@ -47,8 +47,8 @@ routines, which searches all of Regina's in-built databases using the
 correct type of search key(s). There are two reasons for this:
 
 * The _keys_ used for census databases are subject to change in future
-  versions of Regina. Currently these keys are first-generation
-  isomorphism signatures.
+  versions of Regina. Currently (as of Regina 8.0) these keys are
+  second-generation isomorphism signatures.
 
 * The _format_ used to store census databases is an internal
   implementation detail, also subject to change in future releases of
@@ -62,7 +62,7 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
 // Docstring regina::python::doc::CensusHit
-static const char *CensusHit =
+inline constexpr const char CensusHit[] =
 R"doc(Stores a single "hit" indicating that some given triangulation has
 been located in one of Regina's in-built census databases.
 
@@ -78,10 +78,10 @@ possible, even when passing or returning objects by value.)doc";
 namespace CensusDB_ {
 
 // Docstring regina::python::doc::CensusDB_::__copy
-static const char *__copy = R"doc(Creates a new clone of the given database reference.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new clone of the given database reference.)doc";
 
 // Docstring regina::python::doc::CensusDB_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Tests whether this and the given object represent the same database.
 
 Two databases are considered the same if they have identical filenames
@@ -96,7 +96,7 @@ Returns:
     same database.)doc";
 
 // Docstring regina::python::doc::CensusDB_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new reference to one of Regina's census databases.
 
 This constructor will not run any checks (e.g., it will not verify
@@ -113,7 +113,7 @@ Parameter ``desc``:
     used.)doc";
 
 // Docstring regina::python::doc::CensusDB_::desc
-static const char *desc =
+inline constexpr const char desc[] =
 R"doc(Returns a human-readable description of this database.
 
 The description could (for instance) be shown to users when giving a
@@ -124,14 +124,14 @@ Returns:
     the database description.)doc";
 
 // Docstring regina::python::doc::CensusDB_::filename
-static const char *filename =
+inline constexpr const char filename[] =
 R"doc(Returns the filename where this database is stored.
 
 Returns:
     the database filename.)doc";
 
 // Docstring regina::python::doc::CensusDB_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given database references.
 
 This global routine simply calls CensusDB::swap(); it is provided so
@@ -144,7 +144,7 @@ Parameter ``b``:
     the second database reference whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::CensusDB_::lookupKey
-static const char *lookupKey =
+inline constexpr const char lookupKey[] =
 R"doc(Searches for the given key in this database.
 
 For each match that is found (if any), this routine will call *action*
@@ -183,8 +183,8 @@ Python:
 
 Template parameter ``generation``:
     the generation of isomorphism signature that you are passing in
-    the argument *isoSig*. Currently *generation* _must_ be 1, since
-    Regina's databases currently use first-generation isomorphism
+    the argument *isoSig*. Currently *generation* _must_ be 2, since
+    Regina's databases currently use second-generation isomorphism
     signatures as their keys.
 
 Parameter ``isoSig``:
@@ -202,7 +202,7 @@ Returns:
     the return value will be ``True``.)doc";
 
 // Docstring regina::python::doc::CensusDB_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given database reference.
 
 Parameter ``other``:
@@ -213,10 +213,10 @@ Parameter ``other``:
 namespace CensusHit_ {
 
 // Docstring regina::python::doc::CensusHit_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given census hit.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given census hit.)doc";
 
 // Docstring regina::python::doc::CensusHit_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Tests whether this and the given object represent the same census hit.
 
 Two census hits are considered the same if they have the same human-
@@ -230,7 +230,7 @@ Returns:
     ``True`` if and only if this and the given hit are the same.)doc";
 
 // Docstring regina::python::doc::CensusHit_::db
-static const char *db =
+inline constexpr const char db[] =
 R"doc(Returns details of the census database in which the triangulation was
 found.
 
@@ -238,7 +238,7 @@ Returns:
     the database for this hit.)doc";
 
 // Docstring regina::python::doc::CensusHit_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given census hits.
 
 This global routine simply calls CensusHit::swap(); it is provided so
@@ -251,7 +251,7 @@ Parameter ``b``:
     the second census hit whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::CensusHit_::name
-static const char *name =
+inline constexpr const char name[] =
 R"doc(Returns the human-readable name associated with the triangulation in
 the database. This typically contains the name of the triangulation
 and/or the name of the underlying manifold.
@@ -260,7 +260,7 @@ Returns:
     the human-readable name for this hit.)doc";
 
 // Docstring regina::python::doc::CensusHit_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given census hit.
 
 Parameter ``other``:
@@ -271,13 +271,13 @@ Parameter ``other``:
 namespace Census_ {
 
 // Docstring regina::python::doc::Census_::lookup
-static const char *lookup =
+inline constexpr const char lookup[] =
 R"doc(Searches for the given triangulation through all of Regina's in-built
 census databases.
 
 Internally, the census databases store isomorphism signatures as
-opposed to fully fleshed-out triangulations. If you already have the
-isomorphism signature of the triangulation, then you can call the
+opposed to fully fleshed-out triangulations. If you already have an
+isomorphism signature for the triangulation, then you can call the
 variant lookup(const std::string&) instead, which (if your signature
 is of the right generation) will be faster since it avoids some extra
 overhead.
@@ -301,7 +301,7 @@ Returns:
     a list of all database matches.)doc";
 
 // Docstring regina::python::doc::Census_::lookup_2
-static const char *lookup_2 =
+inline constexpr const char lookup_2[] =
 R"doc(Searches for the given triangulation through all of Regina's in-built
 census databases.
 

@@ -14,7 +14,7 @@ namespace regina::python::doc {
 namespace alias {
 
 // Docstring regina::python::doc::alias::IsomorphismImage
-constexpr const char *IsomorphismImage =
+inline constexpr const char IsomorphismImage[] =
 R"doc(Helper class that provides dimension-specific aliases for both const
 and non-const versions of ``simpImage(size_t)`` and
 ``facetPerm(size_t)``, where reasonable, for isomorphisms in dimension
@@ -33,61 +33,61 @@ these aliases are only provided for sufficiently small *dim*.)doc";
 namespace alias::IsomorphismImage_ {
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::edgePerm
-constexpr const char *edgePerm =
+inline constexpr const char edgePerm[] =
 R"doc(A dimension-specific alias for facetPerm().
 
 See facetPerm() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::facePerm
-constexpr const char *facePerm =
+inline constexpr const char facePerm[] =
 R"doc(A dimension-specific alias for facetPerm().
 
 See facetPerm() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::pentImage
-constexpr const char *pentImage =
+inline constexpr const char pentImage[] =
 R"doc(A dimension-specific alias for simpImage().
 
 See simpImage() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::setEdgePerm
-constexpr const char *setEdgePerm =
+inline constexpr const char setEdgePerm[] =
 R"doc(A dimension-specific alias for setFacetPerm().
 
 See setFacetPerm() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::setFacePerm
-constexpr const char *setFacePerm =
+inline constexpr const char setFacePerm[] =
 R"doc(A dimension-specific alias for setFacetPerm().
 
 See setFacetPerm() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::setPentImage
-constexpr const char *setPentImage =
+inline constexpr const char setPentImage[] =
 R"doc(A dimension-specific alias for setSimpImage().
 
 See setSimpImage() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::setTetImage
-constexpr const char *setTetImage =
+inline constexpr const char setTetImage[] =
 R"doc(A dimension-specific alias for setSimpImage().
 
 See setSimpImage() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::setTriImage
-constexpr const char *setTriImage =
+inline constexpr const char setTriImage[] =
 R"doc(A dimension-specific alias for setSimpImage().
 
 See setSimpImage() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::tetImage
-constexpr const char *tetImage =
+inline constexpr const char tetImage[] =
 R"doc(A dimension-specific alias for simpImage().
 
 See simpImage() for further information.)doc";
 
 // Docstring regina::python::doc::alias::IsomorphismImage_::triImage
-constexpr const char *triImage =
+inline constexpr const char triImage[] =
 R"doc(A dimension-specific alias for simpImage().
 
 See simpImage() for further information.)doc";

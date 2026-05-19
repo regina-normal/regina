@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::NormalSurface
-static const char *NormalSurface =
+inline constexpr const char NormalSurface[] =
 R"doc(Represents a single normal surface in a 3-manifold triangulation.
 
 The normal surface is described internally by an integer vector
@@ -63,7 +63,7 @@ possible, even when passing or returning objects by value.)doc";
 namespace NormalSurface_ {
 
 // Docstring regina::python::doc::NormalSurface_::__add
-static const char *__add =
+inline constexpr const char __add[] =
 R"doc(Returns the sum of this and the given surface. This will combine all
 triangles, quadrilaterals and/or octagons from both surfaces.
 
@@ -84,7 +84,7 @@ Returns:
     the sum of both normal surfaces.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares this against the given surface under a total ordering of all
 normal and almost normal surfaces.
 
@@ -121,10 +121,10 @@ Returns:
     equal under this comparison.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given normal surface.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given normal surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given surface in fact represent the
 same normal (or almost normal) surface.
 
@@ -156,7 +156,7 @@ Returns:
     normal surface, or ``False`` if not.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__imul
-static const char *__imul =
+inline constexpr const char __imul[] =
 R"doc(Converts this surface into the given integer multiple of itself.
 
 The internal vector encoding used by this surface will not change.
@@ -169,7 +169,7 @@ Returns:
     a reference to this surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new copy of the given normal surface, but relocated to the
 given triangulation.
 
@@ -190,7 +190,7 @@ Parameter ``triangulation``:
     the triangulation in which this new surface will reside.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Create the empty surface within the given triangulation.
 
 All normal coordinates will be zero.
@@ -199,7 +199,7 @@ Parameter ``triang``:
     the triangulation in which this normal surface resides.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a new normal surface inside the given triangulation with the
 given coordinate vector, using the given vector encoding.
 
@@ -236,7 +236,7 @@ Parameter ``vector``:
     a vector containing the coordinates of the normal surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__init_4
-static const char *__init_4 =
+inline constexpr const char __init_4[] =
 R"doc(Creates a new normal surface inside the given triangulation with the
 given coordinate vector, using the given coordinate system.
 
@@ -278,7 +278,7 @@ Parameter ``vector``:
     a vector containing the coordinates of the normal surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Returns the given integer multiple of this surface.
 
 The resulting surface will use the same internal vector encoding as
@@ -292,7 +292,7 @@ Returns:
     the resulting multiple of this surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::arcs
-static const char *arcs =
+inline constexpr const char arcs[] =
 R"doc(Returns the number of arcs in which this normal surface intersects the
 given triangle in the given direction.
 
@@ -311,7 +311,7 @@ Returns:
     triangle with the given arc type.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::boundaryIntersections
-static const char *boundaryIntersections =
+inline constexpr const char boundaryIntersections[] =
 R"doc(Computes the information about the boundary slopes of this surface at
 each cusp of the triangulation. This is for use with spun-normal
 surfaces (since for closed surfaces all boundary slopes are zero).
@@ -382,7 +382,7 @@ Returns:
     described above.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::components
-static const char *components =
+inline constexpr const char components[] =
 R"doc(Splits this surface into connected components.
 
 A list of connected components will be returned. These components will
@@ -413,7 +413,7 @@ Returns:
     the list of connected components.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::couldBeAlmostNormal
-static const char *couldBeAlmostNormal =
+inline constexpr const char couldBeAlmostNormal[] =
 R"doc(Indicates whether the internal vector encoding for this surface
 supports almost normal surfaces.
 
@@ -431,7 +431,7 @@ Returns:
     ``True`` if the internal encoding supports almost normal surfaces.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::couldBeNonCompact
-static const char *couldBeNonCompact =
+inline constexpr const char couldBeNonCompact[] =
 R"doc(Indicates whether the internal vector encoding for this surface
 supports non-compact surfaces. Non-compact surfaces are surfaces that
 contain infinitely many discs (i.e., spun-normal surfaces).
@@ -450,7 +450,7 @@ Returns:
     ``True`` if the internal encoding supports almost normal surfaces.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::countBoundaries
-static const char *countBoundaries =
+inline constexpr const char countBoundaries[] =
 R"doc(Returns the number of disjoint boundary curves on this surface.
 
 This routine caches its results, which means that once it has been
@@ -483,7 +483,7 @@ Author:
     Alex He)doc";
 
 // Docstring regina::python::doc::NormalSurface_::crush
-static const char *crush =
+inline constexpr const char crush[] =
 R"doc(Crushes this surface to a point in the underlying triangulation and
 returns the result as a new triangulation. The original triangulation
 is not changed.
@@ -532,7 +532,7 @@ Returns:
     the resulting crushed triangulation.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::cutAlong
-static const char *cutAlong =
+inline constexpr const char cutAlong[] =
 R"doc(Cuts the underlying triangulation along this surface and returns the
 result as a new triangulation. The original triangulation is not
 changed.
@@ -570,7 +570,7 @@ Returns:
     the resulting cut-open triangulation.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::disjoint
-static const char *disjoint =
+inline constexpr const char disjoint[] =
 R"doc(Determines whether this and the given surface can be placed within the
 surrounding triangulation so that they do not intersect anywhere at
 all, without changing either normal isotopy class.
@@ -611,7 +611,7 @@ Returns:
     intersect at some point.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::doubleSurface
-static const char *doubleSurface =
+inline constexpr const char doubleSurface[] =
 R"doc(Deprecated routine that returns the double of this surface.
 
 .. deprecated::
@@ -623,7 +623,7 @@ Returns:
     the double of this normal surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::edgeWeight
-static const char *edgeWeight =
+inline constexpr const char edgeWeight[] =
 R"doc(Returns the number of times this normal surface crosses the given
 edge.
 
@@ -636,7 +636,7 @@ Returns:
     the number of times this normal surface crosses the given edge.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::embedded
-static const char *embedded =
+inline constexpr const char embedded[] =
 R"doc(Determines whether this surface is embedded. This is true if and only
 if the surface contains no conflicting quadrilateral and/or octagon
 types.
@@ -645,7 +645,7 @@ Returns:
     ``True`` if and only if this surface is embedded.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::encoding
-static const char *encoding =
+inline constexpr const char encoding[] =
 R"doc(Returns the specific integer vector encoding that this surface uses
 internally. This is the encoding that should be used to interpret
 vector().
@@ -657,7 +657,7 @@ Returns:
     the internal vector encoding.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::eulerChar
-static const char *eulerChar =
+inline constexpr const char eulerChar[] =
 R"doc(Returns the Euler characteristic of this surface.
 
 For properly embedded surfaces, this is of course just the ordinary
@@ -682,7 +682,7 @@ Returns:
     the Euler characteristic.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given normal surfaces. This is a fast
 (constant time) operation.
 
@@ -696,7 +696,7 @@ Parameter ``b``:
     the second normal surface whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::hasMultipleOctDiscs
-static const char *hasMultipleOctDiscs =
+inline constexpr const char hasMultipleOctDiscs[] =
 R"doc(Determines if this normal surface has more than one octagonal disc. It
 may be assumed that at most one octagonal disc _type_ exists in this
 surface. This routine will return ``True`` if an octagonal type does
@@ -710,7 +710,7 @@ Returns:
     and its coordinate is greater than one.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::hasRealBoundary
-static const char *hasRealBoundary =
+inline constexpr const char hasRealBoundary[] =
 R"doc(Determines if this surface has any real boundary, that is, whether it
 meets any boundary triangles of the triangulation.
 
@@ -722,7 +722,7 @@ Returns:
     ``True`` if and only if this surface has real boundary.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isCentral
-static const char *isCentral =
+inline constexpr const char isCentral[] =
 R"doc(Determines whether or not this surface is a central surface. A
 *central* surface is a compact surface containing at most one normal
 or almost normal disc per tetrahedron. If this surface is central, the
@@ -737,7 +737,7 @@ Returns:
     central surface, or 0 if it is not a central surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isCompact
-static const char *isCompact =
+inline constexpr const char isCompact[] =
 R"doc(Determines if this normal surface is compact (has finitely many
 discs).
 
@@ -749,7 +749,7 @@ Returns:
     ``True`` if and only if this normal surface is compact.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isCompressingDisc
-static const char *isCompressingDisc =
+inline constexpr const char isCompressingDisc[] =
 R"doc(Determines whether this surface represents a compressing disc in the
 underlying 3-manifold.
 
@@ -794,7 +794,7 @@ Returns:
     this surface is not a compressing disc.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isConnected
-static const char *isConnected =
+inline constexpr const char isConnected[] =
 R"doc(Returns whether or not this surface is connected.
 
 For our purposes, the empty surface is considered to be connected.
@@ -827,10 +827,10 @@ Returns:
     surface is disconnected.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isEmpty
-static const char *isEmpty = R"doc(Determines if this normal surface is empty (has no discs whatsoever).)doc";
+inline constexpr const char isEmpty[] = R"doc(Determines if this normal surface is empty (has no discs whatsoever).)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isIncompressible
-static const char *isIncompressible =
+inline constexpr const char isIncompressible[] =
 R"doc(Determines whether this is an incompressible surface within the
 surrounding 3-manifold. At present, this routine is only implemented
 for surfaces embedded within _closed_ and _irreducible_ 3-manifold
@@ -881,7 +881,7 @@ Returns:
     surface is not incompressible (or if it is a sphere).)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isNormalEdgeLink
-static const char *isNormalEdgeLink =
+inline constexpr const char isNormalEdgeLink[] =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the normalised link of a single edge.
 
@@ -926,7 +926,7 @@ Returns:
     these links are thin, as described above.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isNormalTriangleLink
-static const char *isNormalTriangleLink =
+inline constexpr const char isNormalTriangleLink[] =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the normalised link of a single triangle.
 
@@ -972,7 +972,7 @@ Returns:
     these links are thin, as described above.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isOrientable
-static const char *isOrientable =
+inline constexpr const char isOrientable[] =
 R"doc(Returns whether or not this surface is orientable.
 
 For our purposes, the empty surface is considered to be orientable.
@@ -1005,7 +1005,7 @@ Returns:
     surface is non-orientable.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isSplitting
-static const char *isSplitting =
+inline constexpr const char isSplitting[] =
 R"doc(Determines whether or not this surface is a splitting surface. A
 *splitting* surface is a compact surface containing precisely one quad
 per tetrahedron and no other normal (or almost normal) discs.
@@ -1017,7 +1017,7 @@ Returns:
     ``True`` if and only if this is a splitting surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isThinEdgeLink
-static const char *isThinEdgeLink =
+inline constexpr const char isThinEdgeLink[] =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the thin link of a single edge.
 
@@ -1048,7 +1048,7 @@ Returns:
     multiple of this surface, as described above.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isThinTriangleLink
-static const char *isThinTriangleLink =
+inline constexpr const char isThinTriangleLink[] =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the thin link of a single triangle.
 
@@ -1081,7 +1081,7 @@ Returns:
     multiple of this surface, as described above.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isTwoSided
-static const char *isTwoSided =
+inline constexpr const char isTwoSided[] =
 R"doc(Returns whether or not this surface is two-sided.
 
 For our purposes, the empty surface is considered to be two-sided.
@@ -1114,7 +1114,7 @@ Returns:
     surface is one-sided.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isVertexLink
-static const char *isVertexLink =
+inline constexpr const char isVertexLink[] =
 R"doc(Determines whether or not a positive rational multiple of this surface
 is the link of a single vertex.
 
@@ -1132,7 +1132,7 @@ Returns:
     link.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::isVertexLinking
-static const char *isVertexLinking =
+inline constexpr const char isVertexLinking[] =
 R"doc(Determines whether or not this surface is vertex linking. A _vertex
 linking_ surface contains only triangles.
 
@@ -1148,7 +1148,7 @@ Returns:
     ``True`` if and only if this surface is vertex linking.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::locallyCompatible
-static const char *locallyCompatible =
+inline constexpr const char locallyCompatible[] =
 R"doc(Determines whether this and the given surface are locally compatible.
 Local compatibility means that, within each individual tetrahedron of
 the triangulation, it is possible to arrange the normal discs of both
@@ -1186,7 +1186,7 @@ Returns:
     if they are not.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::name
-static const char *name =
+inline constexpr const char name[] =
 R"doc(Returns the name associated with this normal surface. Names are
 optional and need not be unique. The default name for a surface is the
 empty string.
@@ -1195,7 +1195,7 @@ Returns:
     the name of associated with this surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::normal
-static const char *normal =
+inline constexpr const char normal[] =
 R"doc(Determines whether this surface contains only triangle and/or
 quadrilateral discs. This is to distinguish normal surfaces from more
 general surfaces such as almost normal surfaces (which also contain
@@ -1212,7 +1212,7 @@ Returns:
     and/or quadrilaterals.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::octPosition
-static const char *octPosition =
+inline constexpr const char octPosition[] =
 R"doc(Determines the first coordinate position at which this surface has a
 non-zero octagonal coordinate. In other words, if this routine returns
 the disc type *t*, then the octagonal coordinate returned by
@@ -1234,7 +1234,7 @@ Returns:
     disc type if there is no such coordinate.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::octs
-static const char *octs =
+inline constexpr const char octs[] =
 R"doc(Returns the number of octagonal discs of the given type in this normal
 surface.
 
@@ -1263,7 +1263,7 @@ Returns:
     the number of octagonal discs of the given type.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::quads
-static const char *quads =
+inline constexpr const char quads[] =
 R"doc(Returns the number of quadrilateral discs of the given type in this
 normal surface.
 
@@ -1291,7 +1291,7 @@ Returns:
     the number of quadrilateral discs of the given type.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::reconstructTriangles
-static const char *reconstructTriangles =
+inline constexpr const char reconstructTriangles[] =
 R"doc(Reconstructs the triangle coordinates in the given integer vector.
 
 The given vector must represent a normal surface within the given
@@ -1318,7 +1318,7 @@ Returns:
     the new encoding used by the modified *vector*.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::removeOcts
-static const char *removeOcts =
+inline constexpr const char removeOcts[] =
 R"doc(Returns an isotopic normal surface that contains no octagons, placed
 within a homeomorphic (but possibly different) triangulation.
 
@@ -1361,7 +1361,7 @@ Returns:
     above.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::scaleDown
-static const char *scaleDown =
+inline constexpr const char scaleDown[] =
 R"doc(Converts this surface into its smallest positive rational multiple
 with integer coordinates.
 
@@ -1378,7 +1378,7 @@ Returns:
     always be strictly positive.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::setName
-static const char *setName =
+inline constexpr const char setName[] =
 R"doc(Sets the name associated with this normal surface. Names are optional
 and need not be unique. The default name for a surface is the empty
 string.
@@ -1387,7 +1387,7 @@ Parameter ``name``:
     the new name to associate with this surface.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given normal surface. This is a
 fast (constant time) operation.
 
@@ -1400,7 +1400,7 @@ Parameter ``other``:
     the normal surface whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::triangles
-static const char *triangles =
+inline constexpr const char triangles[] =
 R"doc(Returns the number of triangular discs of the given type in this
 normal surface. A triangular disc type is identified by specifying a
 tetrahedron and a vertex of that tetrahedron that the triangle
@@ -1419,7 +1419,7 @@ Returns:
     the number of triangular discs of the given type.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::triangulation
-static const char *triangulation =
+inline constexpr const char triangulation[] =
 R"doc(Returns the triangulation in which this normal surface resides.
 
 This will be a snapshot frozen in time of the triangulation that was
@@ -1445,7 +1445,7 @@ Returns:
     a reference to the underlying triangulation.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::vector
-static const char *vector =
+inline constexpr const char vector[] =
 R"doc(Gives read-only access to the integer vector that Regina uses
 internally to represent this surface.
 
@@ -1469,7 +1469,7 @@ Returns:
     the underlying integer vector.)doc";
 
 // Docstring regina::python::doc::NormalSurface_::writeXMLData
-static const char *writeXMLData =
+inline constexpr const char writeXMLData[] =
 R"doc(Writes a chunk of XML containing this normal surface and all of its
 properties. This routine will be called from within
 NormalSurfaces::writeXMLPacketData().

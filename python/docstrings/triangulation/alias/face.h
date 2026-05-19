@@ -14,7 +14,7 @@ namespace regina::python::doc {
 namespace alias {
 
 // Docstring regina::python::doc::alias::SimplexVoid
-constexpr const char *SimplexVoid =
+inline constexpr const char SimplexVoid[] =
 R"doc(Helper class that provides a dimension-specific alias for simplex(),
 where reasonable.
 
@@ -30,19 +30,19 @@ sufficiently small.)doc";
 namespace alias::SimplexVoid_ {
 
 // Docstring regina::python::doc::alias::SimplexVoid_::pentachoron
-constexpr const char *pentachoron =
+inline constexpr const char pentachoron[] =
 R"doc(A dimension-specific alias for simplex().
 
 See simplex() for further information.)doc";
 
 // Docstring regina::python::doc::alias::SimplexVoid_::tetrahedron
-constexpr const char *tetrahedron =
+inline constexpr const char tetrahedron[] =
 R"doc(A dimension-specific alias for simplex().
 
 See simplex() for further information.)doc";
 
 // Docstring regina::python::doc::alias::SimplexVoid_::triangle
-constexpr const char *triangle =
+inline constexpr const char triangle[] =
 R"doc(A dimension-specific alias for simplex().
 
 See simplex() for further information.)doc";

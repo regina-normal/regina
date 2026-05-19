@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SatCube
-static const char *SatCube =
+inline constexpr const char SatCube[] =
 R"doc(A saturated block that is a six-tetrahedron cube.
 
 There are several ways of triangulating a cube with six tetrahedra;
@@ -33,7 +33,7 @@ SatBlockModel class), and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
 // Docstring regina::python::doc::SatLST
-static const char *SatLST =
+inline constexpr const char SatLST[] =
 R"doc(A saturated block that is a layered solid torus. See the
 LayeredSolidTorus class for details.
 
@@ -48,7 +48,7 @@ SatRegion class, and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
 // Docstring regina::python::doc::SatLayering
-static const char *SatLayering =
+inline constexpr const char SatLayering[] =
 R"doc(A degenerate saturated block that is a single tetrahedron wrapped
 around so that two opposite edges touch. This forms a degenerate one-
 tetrahedron solid torus that is pinched along a single meridinal
@@ -80,7 +80,7 @@ SatRegion class, and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
 // Docstring regina::python::doc::SatMobius
-static const char *SatMobius =
+inline constexpr const char SatMobius[] =
 R"doc(A degenerate zero-tetrahedron saturated block that corresponds to
 attaching a Mobius band to a single annulus boundary.
 
@@ -103,7 +103,7 @@ SatRegion class, and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
 // Docstring regina::python::doc::SatReflectorStrip
-static const char *SatReflectorStrip =
+inline constexpr const char SatReflectorStrip[] =
 R"doc(A saturated block that is a reflector strip.
 
 A reflector strip is a ring of triangular prisms arranged end-to-end,
@@ -136,7 +136,7 @@ SatBlockModel class), and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
 // Docstring regina::python::doc::SatTriPrism
-static const char *SatTriPrism =
+inline constexpr const char SatTriPrism[] =
 R"doc(A saturated block that is a three-tetrahedron triangular prism.
 
 Such a prism may be of major type or of minor type. In a _major_ type
@@ -156,7 +156,7 @@ SatRegion for further details.)doc";
 namespace SatCube_ {
 
 // Docstring regina::python::doc::SatCube_::model
-static const char *model =
+inline constexpr const char model[] =
 R"doc(Creates a new model of a cube block.
 
 Returns:
@@ -167,14 +167,14 @@ Returns:
 namespace SatLST_ {
 
 // Docstring regina::python::doc::SatLST_::lst
-static const char *lst =
+inline constexpr const char lst[] =
 R"doc(Returns details of the layered solid torus that this block represents.
 
 Returns:
     details of the layered solid torus.)doc";
 
 // Docstring regina::python::doc::SatLST_::roles
-static const char *roles =
+inline constexpr const char roles[] =
 R"doc(Describes how the layered solid torus is attached to the boundary
 annulus.
 
@@ -201,7 +201,7 @@ Returns:
 namespace SatLayering_ {
 
 // Docstring regina::python::doc::SatLayering_::overHorizontal
-static const char *overHorizontal =
+inline constexpr const char overHorizontal[] =
 R"doc(Does this describe a layering over the horizontal edge of the boundary
 annulus, or a layering over the diagonal edge?
 
@@ -213,7 +213,7 @@ diagonal in this context.)doc";
 namespace SatMobius_ {
 
 // Docstring regina::python::doc::SatMobius_::position
-static const char *position =
+inline constexpr const char position[] =
 R"doc(Describes how the Mobius band is attached to the boundary annulus.
 
 The class notes discuss the weight two edge of the Mobius band (or
@@ -244,7 +244,7 @@ Returns:
 namespace SatReflectorStrip_ {
 
 // Docstring regina::python::doc::SatReflectorStrip_::model
-static const char *model =
+inline constexpr const char model[] =
 R"doc(Creates a new model of a reflector strip block.
 
 Parameter ``length``:
@@ -264,7 +264,7 @@ Returns:
 namespace SatTriPrism_ {
 
 // Docstring regina::python::doc::SatTriPrism_::isMajor
-static const char *isMajor =
+inline constexpr const char isMajor[] =
 R"doc(Is this prism of major type or minor type? See the class notes for
 further details.
 
@@ -277,7 +277,7 @@ Returns:
     minor type.)doc";
 
 // Docstring regina::python::doc::SatTriPrism_::model
-static const char *model =
+inline constexpr const char model[] =
 R"doc(Creates a new model of a triangular prism block.
 
 Parameter ``major``:

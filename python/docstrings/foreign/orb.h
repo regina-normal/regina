@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::readOrb
-static const char *readOrb =
+inline constexpr const char readOrb[] =
 R"doc(Reads a triangulation from the given Orb / Casson file. A new
 triangulation packet will be returned.
 

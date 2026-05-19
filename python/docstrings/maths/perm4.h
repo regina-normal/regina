@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Perm
-static const char *Perm =
+inline constexpr const char Perm[] =
 R"doc(Represents a permutation of {0,1,2,3}. This is a specialisation of the
 generic Perm template: it is highly optimised, and also offers some
 additional functionality. Amongst other things, this permutation class
@@ -75,7 +75,7 @@ Python:
 namespace Perm_ {
 
 // Docstring regina::python::doc::Perm_::S4Index
-static const char *S4Index =
+inline constexpr const char S4Index[] =
 R"doc(Returns the index of this permutation in the Perm<4>::Sn array.
 
 This is a dimension-specific alias for SnIndex(). In general, for
@@ -90,7 +90,7 @@ Returns:
     Perm<4>::Sn[i]. This will be between 0 and 23 inclusive.)doc";
 
 // Docstring regina::python::doc::Perm_::SnIndex
-static const char *SnIndex =
+inline constexpr const char SnIndex[] =
 R"doc(Returns the index of this permutation in the Perm<4>::Sn array.
 
 See Sn for further information on how these permutations are indexed.
@@ -100,7 +100,7 @@ Returns:
     Perm<4>::Sn[i]. This will be between 0 and 23 inclusive.)doc";
 
 // Docstring regina::python::doc::Perm_::__array
-static const char *__array =
+inline constexpr const char __array[] =
 R"doc(Determines the image of the given integer under this permutation.
 
 Parameter ``source``:
@@ -111,7 +111,7 @@ Returns:
     the image of *source*.)doc";
 
 // Docstring regina::python::doc::Perm_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares two permutations according to which appears earlier in the
 array Perm<4>::Sn.
 
@@ -132,17 +132,17 @@ Returns:
     *Sn*.)doc";
 
 // Docstring regina::python::doc::Perm_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a permutation that is a clone of the given permutation.
 
 Parameter ``cloneMe``:
     the permutation to clone.)doc";
 
 // Docstring regina::python::doc::Perm_::__default
-static const char *__default = R"doc(Creates the identity permutation.)doc";
+inline constexpr const char __default[] = R"doc(Creates the identity permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this is equal to the given permutation. This is true if
 and only if both permutations have the same images for 0, 1, 2 and 3.
 
@@ -150,7 +150,7 @@ Returns:
     ``True`` if and only if this and the given permutation are equal.)doc";
 
 // Docstring regina::python::doc::Perm_::__inc
-static const char *__inc =
+inline constexpr const char __inc[] =
 R"doc(A postincrement operator that changes this to be the next permutation
 in the array Perm<4>::Sn. If this is the last such permutation then
 this will wrap around to become the first permutation in Perm<4>::Sn,
@@ -164,7 +164,7 @@ Returns:
     a copy of this permutation before the increment took place.)doc";
 
 // Docstring regina::python::doc::Perm_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates the transposition of *a* and *b*. Note that *a* and *b* need
 not be distinct.
 
@@ -178,7 +178,7 @@ Parameter ``b``:
     the element to switch with *a*.)doc";
 
 // Docstring regina::python::doc::Perm_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a permutation mapping (0,1,2,3) to (*a*,*b*,*c*,*d*)
 respectively.
 
@@ -198,7 +198,7 @@ Parameter ``d``:
     the desired image of 3.)doc";
 
 // Docstring regina::python::doc::Perm_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a permutation mapping *i* to *image*[i] for each *i* =
 0,1,2,3.
 
@@ -209,7 +209,7 @@ Parameter ``image``:
     the array of images.)doc";
 
 // Docstring regina::python::doc::Perm_::__init_4
-static const char *__init_4 =
+inline constexpr const char __init_4[] =
 R"doc(Creates a permutation mapping (*a0*,*b0*,*c0*,*d0*) to
 (*a1*,*b1*,*c1*,*d1*) respectively.
 
@@ -241,7 +241,7 @@ Parameter ``d1``:
     the desired image of *d0*.)doc";
 
 // Docstring regina::python::doc::Perm_::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Returns the composition of this permutation with the given
 permutation. If this permutation is *p*, the resulting permutation
 will be *p*∘*q*, and will satisfy ``(p*q)[x] == p[q[x]]``.
@@ -253,7 +253,7 @@ Returns:
     the composition of both permutations.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedComp
-static const char *cachedComp =
+inline constexpr const char cachedComp[] =
 R"doc(An alias for the composition operator, provided to assist with writing
 generic code.
 
@@ -286,7 +286,7 @@ Returns:
     the composition of both permutations.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedComp_2
-static const char *cachedComp_2 =
+inline constexpr const char cachedComp_2[] =
 R"doc(Deprecated alias for using the composition operator twice, provided to
 assist with writing generic code.
 
@@ -315,7 +315,7 @@ Returns:
     the composition of both permutations.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedConjugate
-static const char *cachedConjugate =
+inline constexpr const char cachedConjugate[] =
 R"doc(An alias for conjugate(), provided to assist with writing generic
 code.
 
@@ -345,7 +345,7 @@ Returns:
     the conjugate of this permutation by *q*.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedInverse
-static const char *cachedInverse =
+inline constexpr const char cachedInverse[] =
 R"doc(An alias for inverse(), provided to assist with writing generic code.
 
 This specialised Perm<4> class does not use precomputation for its
@@ -371,7 +371,7 @@ Returns:
     the inverse of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedOrder
-static const char *cachedOrder =
+inline constexpr const char cachedOrder[] =
 R"doc(An alias for order(), provided to assist with writing generic code.
 
 This specialised Perm<4> class does not use precomputation for its
@@ -397,7 +397,7 @@ Returns:
     the order of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::cachedPow
-static const char *cachedPow =
+inline constexpr const char cachedPow[] =
 R"doc(An alias for pow(), provided to assist with writing generic code.
 
 This specialised Perm<4> class does not use precomputation for its
@@ -426,7 +426,7 @@ Returns:
     this permutation raised to the power of *exp*.)doc";
 
 // Docstring regina::python::doc::Perm_::clear
-static const char *clear =
+inline constexpr const char clear[] =
 R"doc(Resets the images of all integers from *from* onwards to the identity
 map.
 
@@ -443,7 +443,7 @@ Parameter ``from``:
     between 0 and 4 inclusive.)doc";
 
 // Docstring regina::python::doc::Perm_::compareWith
-static const char *compareWith =
+inline constexpr const char compareWith[] =
 R"doc(Lexicographically compares the images of (0,1,2,3) under this and the
 given permutation.
 
@@ -460,7 +460,7 @@ Returns:
     greater image.)doc";
 
 // Docstring regina::python::doc::Perm_::conjugate
-static const char *conjugate =
+inline constexpr const char conjugate[] =
 R"doc(Computes the conjugate of this permutation by *q*.
 
 Specifically, calling ``p.conjugate(q)`` is equivalent to computing
@@ -475,7 +475,7 @@ Returns:
     the conjugate of this permutation by *q*.)doc";
 
 // Docstring regina::python::doc::Perm_::contract
-static const char *contract =
+inline constexpr const char contract[] =
 R"doc(Restricts a *k*-element permutation to a 4-element permutation, where
 ``k > 4``.
 
@@ -494,7 +494,7 @@ Returns:
     the same permutation restricted to a permutation on 4 elements.)doc";
 
 // Docstring regina::python::doc::Perm_::extend
-static const char *extend =
+inline constexpr const char extend[] =
 R"doc(Extends a *k*-element permutation to a 4-element permutation, where
 ``2 ≤ k < 4``.
 
@@ -509,7 +509,7 @@ Returns:
     the same permutation expressed as a permutation on four elements.)doc";
 
 // Docstring regina::python::doc::Perm_::fromImagePack
-static const char *fromImagePack =
+inline constexpr const char fromImagePack[] =
 R"doc(Creates a permutation from the given image pack.
 
 See the class notes for more information on image packs, and how they
@@ -528,7 +528,7 @@ Returns:
     the permutation represented by the given image pack.)doc";
 
 // Docstring regina::python::doc::Perm_::fromPermCode1
-static const char *fromPermCode1 =
+inline constexpr const char fromPermCode1[] =
 R"doc(Creates a permutation from the given first-generation permutation
 code.
 
@@ -548,7 +548,7 @@ Returns:
     the permutation represented by the given code.)doc";
 
 // Docstring regina::python::doc::Perm_::fromPermCode2
-static const char *fromPermCode2 =
+inline constexpr const char fromPermCode2[] =
 R"doc(Creates a permutation from the given second-generation permutation
 code.
 
@@ -566,7 +566,7 @@ Returns:
     the permutation represented by the given code.)doc";
 
 // Docstring regina::python::doc::Perm_::hash
-static const char *hash =
+inline constexpr const char hash[] =
 R"doc(Hashes this permutation to a non-negative integer, allowing it to be
 used for keys in hash tables.
 
@@ -584,7 +584,7 @@ Returns:
     the integer hash of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::imagePack
-static const char *imagePack =
+inline constexpr const char imagePack[] =
 R"doc(Returns the image pack that represents this permutation.
 
 See the class notes for more information on image packs, and how they
@@ -596,14 +596,14 @@ Returns:
     the image pack for this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::inverse
-static const char *inverse =
+inline constexpr const char inverse[] =
 R"doc(Finds the inverse of this permutation.
 
 Returns:
     the inverse of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::isConjugacyMinimal
-static const char *isConjugacyMinimal =
+inline constexpr const char isConjugacyMinimal[] =
 R"doc(Is this permutation minimal in its conjugacy class?
 
 Here "minimal" means that, amongst all its conjugates, this
@@ -619,7 +619,7 @@ Returns:
     conjugacy class.)doc";
 
 // Docstring regina::python::doc::Perm_::isIdentity
-static const char *isIdentity =
+inline constexpr const char isIdentity[] =
 R"doc(Determines if this is the identity permutation. This is true if and
 only if each of 0, 1, 2 and 3 is mapped to itself.
 
@@ -627,7 +627,7 @@ Returns:
     ``True`` if and only if this is the identity permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::isImagePack
-static const char *isImagePack =
+inline constexpr const char isImagePack[] =
 R"doc(Determines whether the given argument is the image pack of some
 4-element permutation.
 
@@ -643,7 +643,7 @@ Returns:
     ``True`` if and only if *pack* is a valid image pack.)doc";
 
 // Docstring regina::python::doc::Perm_::isPermCode1
-static const char *isPermCode1 =
+inline constexpr const char isPermCode1[] =
 R"doc(Determines whether the given character is a valid first-generation
 permutation code. Valid first-generation codes can be passed to
 setPermCode1() or fromPermCode1(), and are returned by permCode1().
@@ -661,7 +661,7 @@ Returns:
     permutation code.)doc";
 
 // Docstring regina::python::doc::Perm_::isPermCode2
-static const char *isPermCode2 =
+inline constexpr const char isPermCode2[] =
 R"doc(Determines whether the given character is a valid second-generation
 permutation code. Valid second-generation codes can be passed to
 setPermCode2() or fromPermCode2(), and are returned by permCode2().
@@ -677,7 +677,7 @@ Returns:
     generation permutation code.)doc";
 
 // Docstring regina::python::doc::Perm_::order
-static const char *order =
+inline constexpr const char order[] =
 R"doc(Returns the order of this permutation.
 
 In other words; this routine returns the smallest positive integer *k*
@@ -687,7 +687,7 @@ Returns:
     the order of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::orderedS4Index
-static const char *orderedS4Index =
+inline constexpr const char orderedS4Index[] =
 R"doc(Returns the lexicographical index of this permutation. This will be
 the index of this permutation in the Perm<4>::orderedSn array.
 
@@ -704,7 +704,7 @@ Returns:
     between 0 and 23 inclusive.)doc";
 
 // Docstring regina::python::doc::Perm_::orderedSnIndex
-static const char *orderedSnIndex =
+inline constexpr const char orderedSnIndex[] =
 R"doc(Returns the lexicographical index of this permutation. This will be
 the index of this permutation in the Perm<4>::orderedSn array.
 
@@ -715,7 +715,7 @@ Returns:
     between 0 and 23 inclusive.)doc";
 
 // Docstring regina::python::doc::Perm_::pairs
-static const char *pairs =
+inline constexpr const char pairs[] =
 R"doc(Returns the induced permutation on all six _pairs_ of elements from
 0,1,2,3.
 
@@ -733,7 +733,7 @@ Returns:
     the induced permutation on six pairs of elements.)doc";
 
 // Docstring regina::python::doc::Perm_::permCode1
-static const char *permCode1 =
+inline constexpr const char permCode1[] =
 R"doc(Returns the first-generation code representing this permutation. This
 code is sufficient to reproduce the entire permutation.
 
@@ -749,7 +749,7 @@ Returns:
     the first-generation permutation code.)doc";
 
 // Docstring regina::python::doc::Perm_::permCode2
-static const char *permCode2 =
+inline constexpr const char permCode2[] =
 R"doc(Returns the second-generation code representing this permutation. This
 code is sufficient to reproduce the entire permutation.
 
@@ -763,7 +763,7 @@ Returns:
     the second-generation permutation code.)doc";
 
 // Docstring regina::python::doc::Perm_::pow
-static const char *pow =
+inline constexpr const char pow[] =
 R"doc(Computes the given power of this permutation.
 
 This routine runs in constant time.
@@ -775,7 +775,7 @@ Returns:
     this permutation raised to the power of *exp*.)doc";
 
 // Docstring regina::python::doc::Perm_::pre
-static const char *pre =
+inline constexpr const char pre[] =
 R"doc(Determines the preimage of the given integer under this permutation.
 
 Parameter ``image``:
@@ -786,7 +786,7 @@ Returns:
     the preimage of *image*.)doc";
 
 // Docstring regina::python::doc::Perm_::precompute
-static const char *precompute =
+inline constexpr const char precompute[] =
 R"doc(A do-nothing routine that assists with writing generic code.
 
 This specialised Perm<4> class does not use precomputation for its
@@ -807,7 +807,7 @@ if called multiple times (since any call after the first will do
 nothing).)doc";
 
 // Docstring regina::python::doc::Perm_::rand
-static const char *rand =
+inline constexpr const char rand[] =
 R"doc(Returns a random permutation on four elements. All permutations are
 returned with equal probability.
 
@@ -830,7 +830,7 @@ Returns:
     a random permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::reverse
-static const char *reverse =
+inline constexpr const char reverse[] =
 R"doc(Finds the reverse of this permutation.
 
 Here _reverse_ means that we reverse the images of 0,...,3. In other
@@ -838,7 +838,7 @@ words, if permutation *q* is the reverse of *p*, then ``p[i] == q[3 -
 i]`` for all *i*.)doc";
 
 // Docstring regina::python::doc::Perm_::rot
-static const char *rot =
+inline constexpr const char rot[] =
 R"doc(Returns the *i*th rotation. This maps *k* to *k* + *i* (mod 4) for all
 *k*.
 
@@ -849,7 +849,7 @@ Returns:
     the *i*th rotation.)doc";
 
 // Docstring regina::python::doc::Perm_::setPermCode1
-static const char *setPermCode1 =
+inline constexpr const char setPermCode1[] =
 R"doc(Sets this permutation to that represented by the given first-
 generation permutation code.
 
@@ -867,7 +867,7 @@ Parameter ``code``:
     this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::setPermCode2
-static const char *setPermCode2 =
+inline constexpr const char setPermCode2[] =
 R"doc(Sets this permutation to that represented by the given second-
 generation permutation code.
 
@@ -883,14 +883,14 @@ Parameter ``code``:
     this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::sign
-static const char *sign =
+inline constexpr const char sign[] =
 R"doc(Determines the sign of this permutation.
 
 Returns:
     1 if this permutation is even, or -1 if this permutation is odd.)doc";
 
 // Docstring regina::python::doc::Perm_::str
-static const char *str =
+inline constexpr const char str[] =
 R"doc(Returns a string representation of this permutation. The
 representation will consist of four adjacent digits representing the
 images of 0, 1, 2 and 3 respectively. An example of a string
@@ -900,7 +900,7 @@ Returns:
     a string representation of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::tightDecoding
-static const char *tightDecoding =
+inline constexpr const char tightDecoding[] =
 R"doc(Reconstructs a permutation from its given tight encoding. See the page
 on tight encodings for details.
 
@@ -924,7 +924,7 @@ Returns:
     the permutation represented by the given tight encoding.)doc";
 
 // Docstring regina::python::doc::Perm_::tightEncoding
-static const char *tightEncoding =
+inline constexpr const char tightEncoding[] =
 R"doc(Returns the tight encoding of this permutation. See the page on tight
 encodings for details.
 
@@ -939,7 +939,7 @@ Returns:
     the resulting encoded string.)doc";
 
 // Docstring regina::python::doc::Perm_::trunc
-static const char *trunc =
+inline constexpr const char trunc[] =
 R"doc(Returns a prefix of the string representation of this permutation,
 containing only the images of the first *len* integers.
 
@@ -952,7 +952,7 @@ Returns:
     permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::trunc2
-static const char *trunc2 =
+inline constexpr const char trunc2[] =
 R"doc(Returns a string representation of this permutation with only the
 images of 0 and 1. The resulting string will therefore have length
 two.
@@ -961,7 +961,7 @@ Returns:
     a truncated string representation of this permutation.)doc";
 
 // Docstring regina::python::doc::Perm_::trunc3
-static const char *trunc3 =
+inline constexpr const char trunc3[] =
 R"doc(Returns a string representation of this permutation with only the
 images of 0, 1 and 2 included. The resulting string will therefore
 have length three.

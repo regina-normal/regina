@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl
-static const char *DiscSetSurfaceDataImpl =
+inline constexpr const char DiscSetSurfaceDataImpl[] =
 R"doc(Stores a piece of data alongside every normal disc within a particular
 normal surface.
 
@@ -43,7 +43,7 @@ Python:
     type DiscSetTet).)doc";
 
 // Docstring regina::python::doc::DiscSetTet
-static const char *DiscSetTet =
+inline constexpr const char DiscSetTet[] =
 R"doc(Represents a set of normal discs inside a single tetrahedron. The
 numbers of discs of each type are stored in this structure, so
 querying them is fast regardless of the underlying normal surface
@@ -62,7 +62,7 @@ functions.
     exception.)doc";
 
 // Docstring regina::python::doc::DiscSpec
-static const char *DiscSpec =
+inline constexpr const char DiscSpec[] =
 R"doc(Specifies a single normal or almost normal disc within a normal or
 almost normal surface.
 
@@ -106,7 +106,7 @@ Precondition:
     tetrahedron can be represented by a native ``size_t``.)doc";
 
 // Docstring regina::python::doc::DiscSpecIterator
-static const char *DiscSpecIterator =
+inline constexpr const char DiscSpecIterator[] =
 R"doc(A forward iterator used for running through all normal discs in a
 normal surface.
 
@@ -134,7 +134,7 @@ Python:
     throws a ``StopException`` if there are no more discs to return.)doc";
 
 // Docstring regina::python::doc::discOrientationFollowsEdge
-static const char *discOrientationFollowsEdge =
+inline constexpr const char discOrientationFollowsEdge[] =
 R"doc(Determines whether or not the natural boundary orientation of a normal
 disc of the given type follows the given directed normal arc. Natural
 boundary orientation is defined by arrays regina::triDiscArcs,
@@ -157,7 +157,7 @@ Parameter ``edgeEnd``:
     the end vertex of the edge to which the normal arc is parallel.)doc";
 
 // Docstring regina::python::doc::numberDiscsAwayFromVertex
-static const char *numberDiscsAwayFromVertex =
+inline constexpr const char numberDiscsAwayFromVertex[] =
 R"doc(Determines whether or not normal discs of the given type are numbered
 away from the given vertex.
 
@@ -177,7 +177,7 @@ Returns:
 namespace DiscSetSurfaceDataImpl_ {
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given set of normal discs.
 
 The data for each disc will be copied using the copy assignment
@@ -187,7 +187,7 @@ Parameter ``src``:
     the disc set to copy.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given set have the same number of
 discs of each type in each tetrahedron, and contain the same data for
 corresponding discs.
@@ -207,7 +207,7 @@ Returns:
     above.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new disc set corresponding to the discs of the given normal
 surface. The data for each disc will be initialised using its default
 constructor.
@@ -230,7 +230,7 @@ Parameter ``surface``:
     the normal surface whose discs we shall use.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::__iter__
-static const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all normal discs in the underlying
 normal surface.
 
@@ -246,7 +246,7 @@ Returns:
     an iterator over all normal discs.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::adjacentDisc
-static const char *adjacentDisc =
+inline constexpr const char adjacentDisc[] =
 R"doc(Determines which normal disc is adjacent to the given normal disc
 along the given directed normal arc in the surface described by this
 disc set.
@@ -271,7 +271,7 @@ Returns:
     there is no adjacent disc.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given disc sets.
 
 This global routine simply calls DiscSetSurfaceDataImpl::swap(); it is
@@ -285,7 +285,7 @@ Parameter ``b``:
     the second disc set whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::nDiscs
-static const char *nDiscs =
+inline constexpr const char nDiscs[] =
 R"doc(Determines the number of discs of the given type inside the given
 tetrahedron.
 
@@ -301,21 +301,21 @@ Returns:
     tetrahedron.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::nTets
-static const char *nTets =
+inline constexpr const char nTets[] =
 R"doc(Returns the number of tetrahedra in the underlying triangulation.
 
 Returns:
     the number of tetrahedra.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given disc set.
 
 Parameter ``other``:
     the disc set whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl_::tetDiscs
-static const char *tetDiscs =
+inline constexpr const char tetDiscs[] =
 R"doc(Returns the specific set of discs living inside the given tetrahedron.
 
 Parameter ``tetIndex``:
@@ -329,14 +329,14 @@ Returns:
 namespace DiscSetTet_ {
 
 // Docstring regina::python::doc::DiscSetTet_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given set of normal discs.
 
 Parameter ``src``:
     the disc set to copy.)doc";
 
 // Docstring regina::python::doc::DiscSetTet_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given set have the same number of
 discs of each type.
 
@@ -348,7 +348,7 @@ Returns:
     above.)doc";
 
 // Docstring regina::python::doc::DiscSetTet_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new set of normal discs corresponding to the discs of the
 given normal surface that lie within the given tetrahedron.
 
@@ -370,7 +370,7 @@ Parameter ``tetIndex``:
     normal surface.)doc";
 
 // Docstring regina::python::doc::DiscSetTet_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new set of normal discs where the number of discs of each
 type is explicitly given.
 
@@ -405,7 +405,7 @@ Parameter ``oct2``:
     the number of octahedral discs of type 2.)doc";
 
 // Docstring regina::python::doc::DiscSetTet_::arcFromDisc
-static const char *arcFromDisc =
+inline constexpr const char arcFromDisc[] =
 R"doc(Determines which normal arc of a given type on a given face of this
 tetrahedron corresponds to the given normal disc.
 
@@ -437,7 +437,7 @@ Returns:
     0 from the tetrahedron vertex outwards.)doc";
 
 // Docstring regina::python::doc::DiscSetTet_::discFromArc
-static const char *discFromArc =
+inline constexpr const char discFromArc[] =
 R"doc(Determines which normal disc in this tetrahedron meets the given
 normal arc on the given face.
 
@@ -468,7 +468,7 @@ Returns:
     (between 0 and ``nDiscs(discType)-1`` inclusive).)doc";
 
 // Docstring regina::python::doc::DiscSetTet_::nDiscs
-static const char *nDiscs =
+inline constexpr const char nDiscs[] =
 R"doc(Determines the number of discs of the given type inside this
 tetrahedron.
 
@@ -484,7 +484,7 @@ Returns:
 namespace DiscSpecIterator_ {
 
 // Docstring regina::python::doc::DiscSpecIterator_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given iterator are equal.
 
 Two iterators are considered equal if (i) they were constructed from
@@ -499,7 +499,7 @@ Returns:
     ``True`` if and only if this and the given iterator are equal.)doc";
 
 // Docstring regina::python::doc::DiscSpecIterator_::__next__
-static const char *__next__ =
+inline constexpr const char __next__[] =
 R"doc(Returns the current DiscSpec and increments this iterator.
 
 Exception ``StopIteration``:
@@ -514,13 +514,13 @@ Returns:
 namespace DiscSpec_ {
 
 // Docstring regina::python::doc::DiscSpec_::__copy
-static const char *__copy = R"doc(Creates a new clone of the given disc specifier.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new clone of the given disc specifier.)doc";
 
 // Docstring regina::python::doc::DiscSpec_::__default
-static const char *__default = R"doc(Creates a new uninitialised disc specifier.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new uninitialised disc specifier.)doc";
 
 // Docstring regina::python::doc::DiscSpec_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given disc specifier contain identical
 information.
 
@@ -529,7 +529,7 @@ Returns:
     identical information.)doc";
 
 // Docstring regina::python::doc::DiscSpec_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new disc specifier containing the given values.
 
 Parameter ``newTetIndex``:

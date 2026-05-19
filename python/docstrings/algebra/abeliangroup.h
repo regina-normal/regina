@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::AbelianGroup
-static const char *AbelianGroup =
+inline constexpr const char AbelianGroup[] =
 R"doc(Represents a finitely generated abelian group.
 
 The torsion elements of the group are stored in terms of their
@@ -30,7 +30,7 @@ possible, even when passing or returning objects by value.)doc";
 namespace AbelianGroup_ {
 
 // Docstring regina::python::doc::AbelianGroup_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares this against the given group under a total ordering of all
 abelian groups.
 
@@ -58,13 +58,13 @@ Returns:
     the result of the comparison between this and the given group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__copy
-static const char *__copy = R"doc(Creates a clone of the given group.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__default
-static const char *__default = R"doc(Creates a new trivial group.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new trivial group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given abelian group are isomorphic.
 
 Since the AbelianGroup class stores _only_ the invariants required to
@@ -81,14 +81,14 @@ Returns:
     ``True`` if and only if the two groups are isomorphic.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a free abelian group of the given rank.
 
 Parameter ``rank``:
     the rank of the new group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new group with the given rank and invariant factors.
 
 The invariant factors should be given as a sequence ``d0, d1, ...``,
@@ -116,7 +116,7 @@ Parameter ``endInvFac``:
     factors.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates the abelian group defined by the given presentation matrix.
 
 Each column of the matrix represents a generator, and each row of the
@@ -130,7 +130,7 @@ Parameter ``presentation``:
     a presentation matrix for the new group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__init_4
-static const char *__init_4 =
+inline constexpr const char __init_4[] =
 R"doc(Creates an abelian group as the homology of a chain complex. The
 abelian group is the kernel of *M* modulo the image of *N*.
 
@@ -165,7 +165,7 @@ Parameter ``N``:
     one takes the image of when computing homology.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::__init_5
-static const char *__init_5 =
+inline constexpr const char __init_5[] =
 R"doc(Creates an abelian group as the homology of a chain complex, using
 mod-*p* coefficients. The abelian group is the kernel of *M* modulo
 the image of *N*.
@@ -209,7 +209,7 @@ Author:
     Ryan Budney)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::addGroup
-static const char *addGroup =
+inline constexpr const char addGroup[] =
 R"doc(Adds the abelian group defined by the given presentation to this
 group. Note that this routine might be slow since calculating the new
 invariant factors is not trivial.
@@ -219,14 +219,14 @@ Parameter ``presentation``:
     where each column represents a generator and each row a relation.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::addGroup_2
-static const char *addGroup_2 =
+inline constexpr const char addGroup_2[] =
 R"doc(Adds the given abelian group to this group.
 
 Parameter ``group``:
     the group to add to this one.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::addRank
-static const char *addRank =
+inline constexpr const char addRank[] =
 R"doc(Increments the rank of the group by the given integer. This integer
 may be positive, negative or zero.
 
@@ -239,7 +239,7 @@ Parameter ``extraRank``:
     the extra rank to add; this defaults to 1.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::addTorsion
-static const char *addTorsion =
+inline constexpr const char addTorsion[] =
 R"doc(Adds the given torsion element to the group.
 
 As of Regina 7.0, this routine is much faster than it used to be. In
@@ -255,7 +255,7 @@ Parameter ``degree``:
     positive.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::countInvariantFactors
-static const char *countInvariantFactors =
+inline constexpr const char countInvariantFactors[] =
 R"doc(Returns the number of invariant factors that describe the torsion
 elements of this group. See the AbelianGroup class notes for further
 details.
@@ -264,7 +264,7 @@ Returns:
     the number of invariant factors.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given abelian groups.
 
 This global routine simply calls AbelianGroup::swap(); it is provided
@@ -277,7 +277,7 @@ Parameter ``rhs``:
     the group whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::invariantFactor
-static const char *invariantFactor =
+inline constexpr const char invariantFactor[] =
 R"doc(Returns the given invariant factor describing the torsion elements of
 this group. See the AbelianGroup class notes for further details.
 
@@ -292,7 +292,7 @@ Returns:
     the requested invariant factor.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::isFree
-static const char *isFree =
+inline constexpr const char isFree[] =
 R"doc(Determines whether this is the free abelian group of the given rank.
 
 Parameter ``r``:
@@ -303,21 +303,21 @@ Returns:
     *r*.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::isTrivial
-static const char *isTrivial =
+inline constexpr const char isTrivial[] =
 R"doc(Determines whether this is the trivial (zero) group.
 
 Returns:
     ``True`` if and only if this is the trivial group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::isZ
-static const char *isZ =
+inline constexpr const char isZ[] =
 R"doc(Determines whether this is the infinite cyclic group (Z).
 
 Returns:
     ``True`` if and only if this is the infinite cyclic group.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::isZn
-static const char *isZn =
+inline constexpr const char isZn[] =
 R"doc(Determines whether this is the non-trivial cyclic group on the given
 number of elements.
 
@@ -333,7 +333,7 @@ Returns:
     ``True`` if and only if this is the cyclic group Z_n.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::rank
-static const char *rank =
+inline constexpr const char rank[] =
 R"doc(Returns the rank of the group. This is the number of included copies
 of *Z*.
 
@@ -350,14 +350,14 @@ Returns:
     the number of included copies of *Z*.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given abelian group.
 
 Parameter ``other``:
     the group whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::torsionRank
-static const char *torsionRank =
+inline constexpr const char torsionRank[] =
 R"doc(Returns the rank in the group of the torsion term of given degree. If
 the given degree is *d*, this routine will return the largest *m* for
 which *m*Z_*d* is a subgroup of this group.
@@ -376,7 +376,7 @@ Returns:
     the rank in the group of the given torsion term.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::torsionRank_2
-static const char *torsionRank_2 =
+inline constexpr const char torsionRank_2[] =
 R"doc(Returns the rank in the group of the torsion term of given degree. If
 the given degree is *d*, this routine will return the largest *m* for
 which *m*Z_*d* is a subgroup of this group.
@@ -395,7 +395,7 @@ Returns:
     the rank in the group of the given torsion term.)doc";
 
 // Docstring regina::python::doc::AbelianGroup_::writeXMLData
-static const char *writeXMLData =
+inline constexpr const char writeXMLData[] =
 R"doc(Writes a chunk of XML containing this abelian group.
 
 Python:

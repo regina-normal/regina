@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::bitsRequired
-static const char *bitsRequired =
+inline constexpr const char bitsRequired[] =
 R"doc(Returns the number of bits required to store integers in the range
 ``0,...,n-1``. This is simply the number of bits in the binary
 expansion of ``n-1``.
@@ -30,7 +30,7 @@ Returns:
     the number of bits required to store ``0,...,n-1``.)doc";
 
 // Docstring regina::python::doc::nextPowerOfTwo
-static const char *nextPowerOfTwo =
+inline constexpr const char nextPowerOfTwo[] =
 R"doc(Returns the smallest integer power of two that is greater than or
 equal to the given argument *n*.
 
@@ -54,7 +54,7 @@ Returns:
     the smallest integer power of two that is ``≥ n``.)doc";
 
 // Docstring regina::python::doc::supportsNativeIntegerSize
-static const char *supportsNativeIntegerSize =
+inline constexpr const char supportsNativeIntegerSize[] =
 R"doc(Determines whether Regina is able to access native C++ integers of the
 given size.
 

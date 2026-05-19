@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::RandomEngine
-static const char *RandomEngine =
+inline constexpr const char RandomEngine[] =
 R"doc(Offers threadsafe access to Regina's global uniform random bit
 generator.
 
@@ -66,7 +66,7 @@ Python:
 namespace RandomEngine_ {
 
 // Docstring regina::python::doc::RandomEngine_::rand
-static const char *rand =
+inline constexpr const char rand[] =
 R"doc(A convenience function that returns a random integer modulo *range*,
 in a thread-safe manner. The result will be between 0 and (*range* -
 1) inclusive, and all such integers should be returned with equal
@@ -88,7 +88,7 @@ Returns:
     a random integer between 0 and (*range* - 1) inclusive.)doc";
 
 // Docstring regina::python::doc::RandomEngine_::reseedWithDefault
-static const char *reseedWithDefault =
+inline constexpr const char reseedWithDefault[] =
 R"doc(Reseeds the global uniform random bit generator using the default
 seed. This should make the sequence of random bits completely
 predictable between runs of the same program on the same machine.
@@ -103,7 +103,7 @@ This routine is thread-safe, and it locks the internal mutex while it
 runs.)doc";
 
 // Docstring regina::python::doc::RandomEngine_::reseedWithHardware
-static const char *reseedWithHardware =
+inline constexpr const char reseedWithHardware[] =
 R"doc(Reseeds the global uniform random bit generator using hardware
 entropy. This should make the sequence of random bits unpredictable
 (and, in particular, different between runs of your program).

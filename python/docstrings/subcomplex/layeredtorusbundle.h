@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::LayeredTorusBundle
-static const char *LayeredTorusBundle =
+inline constexpr const char LayeredTorusBundle[] =
 R"doc(Describes a layered torus bundle. This is a triangulation of a torus
 bundle over the circle formed as follows.
 
@@ -47,10 +47,10 @@ function recognise().)doc";
 namespace LayeredTorusBundle_ {
 
 // Docstring regina::python::doc::LayeredTorusBundle_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of layered torus bundle.
 
@@ -78,7 +78,7 @@ Returns:
     same type of layered torus bundle.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::core
-static const char *core =
+inline constexpr const char core[] =
 R"doc(Returns the ``T × I`` triangulation at the core of this layered torus
 bundle. This is the product ``T × I`` whose boundaries are joined
 (possibly via some layering of tetrahedra).
@@ -94,7 +94,7 @@ Returns:
     the core ``T × I`` triangulation.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::coreIso
-static const char *coreIso =
+inline constexpr const char coreIso[] =
 R"doc(Returns the isomorphism describing how the core ``T × I`` appears as a
 subcomplex of this layered torus bundle.
 
@@ -112,7 +112,7 @@ Returns:
     bundle.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls LayeredTorusBundle::swap(); it is
@@ -126,7 +126,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::layeringReln
-static const char *layeringReln =
+inline constexpr const char layeringReln[] =
 R"doc(Returns a 2-by-2 matrix describing how the layering of tetrahedra
 relates curves on the two torus boundaries of the core ``T × I``.
 
@@ -186,7 +186,7 @@ Returns:
     boundary curves of the core ``T × I``.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a layered torus bundle.
 
 This function returns by (smart) pointer for consistency with
@@ -201,7 +201,7 @@ Returns:
     ``None`` if the given triangulation is not a layered torus bundle.)doc";
 
 // Docstring regina::python::doc::LayeredTorusBundle_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:

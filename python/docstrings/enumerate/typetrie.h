@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TypeTrie
-static const char *TypeTrie =
+inline constexpr const char TypeTrie[] =
 R"doc(A trie that stores a set of type vectors of a fixed length.
 
 This class forms part of the tree traversal algorithm for enumerating
@@ -56,7 +56,7 @@ Python:
 namespace TypeTrie_ {
 
 // Docstring regina::python::doc::TypeTrie_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given trie. This will induce a deep copy of
 *src*.
 
@@ -64,10 +64,10 @@ Parameter ``src``:
     the trie to copy.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::__default
-static const char *__default = R"doc(Creates an empty trie.)doc";
+inline constexpr const char __default[] = R"doc(Creates an empty trie.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given trie store exactly the same type
 vectors.
 
@@ -78,10 +78,10 @@ Returns:
     ``True`` if and only if both tries store the same type vectors.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::clear
-static const char *clear = R"doc(Resets this to the empty trie.)doc";
+inline constexpr const char clear[] = R"doc(Resets this to the empty trie.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::dominates
-static const char *dominates =
+inline constexpr const char dominates[] =
 R"doc(Determines whether the given type vector dominates any vector in this
 trie.
 
@@ -107,7 +107,7 @@ Returns:
     this trie.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given tries.
 
 Parameter ``a``:
@@ -117,7 +117,7 @@ Parameter ``b``:
     the second trie whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::insert
-static const char *insert =
+inline constexpr const char insert[] =
 R"doc(Inserts the given type vector into this trie.
 
 Precondition:
@@ -138,7 +138,7 @@ Parameter ``len``:
     the number of elements in the given type vector.)doc";
 
 // Docstring regina::python::doc::TypeTrie_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given trie.
 
 Parameter ``other``:

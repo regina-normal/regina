@@ -11,15 +11,6 @@
 namespace regina::python::doc {
 
 
-namespace detail {
-
-// Docstring regina::python::doc::detail::Strings
-inline constexpr const char Strings[] =
-R"doc(Contains a collection of compile-time constant strings that describe
-features of the dimension *dim*.)doc";
-
-}
-
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SnappedTwoSphere
-static const char *SnappedTwoSphere =
+inline constexpr const char SnappedTwoSphere[] =
 R"doc(Represents a 2-sphere made from two snapped 3-balls in a
 triangulation. This occurs when two snapped 3-balls are glued together
 at their equators (note that this gluing does not have to extend to
@@ -35,10 +35,10 @@ moving) is via the static member function recognise().)doc";
 namespace SnappedTwoSphere_ {
 
 // Docstring regina::python::doc::SnappedTwoSphere_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::SnappedTwoSphere_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 specific presentation of a snapped 2-sphere.
 
@@ -59,7 +59,7 @@ Returns:
     same specific presentation of a snapped 2-sphere.)doc";
 
 // Docstring regina::python::doc::SnappedTwoSphere_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the two given tetrahedra together form a snapped
 2-sphere.
 
@@ -83,7 +83,7 @@ Returns:
     ``None`` if the given tetrahedra do not form a snapped 2-sphere.)doc";
 
 // Docstring regina::python::doc::SnappedTwoSphere_::recognise_2
-static const char *recognise_2 =
+inline constexpr const char recognise_2[] =
 R"doc(Determines if the two given snapped 3-balls together form a snapped
 2-sphere.
 
@@ -112,7 +112,7 @@ Returns:
     2-sphere.)doc";
 
 // Docstring regina::python::doc::SnappedTwoSphere_::snappedBall
-static const char *snappedBall =
+inline constexpr const char snappedBall[] =
 R"doc(Returns one of the two snapped 3-balls whose equators are joined.
 
 Parameter ``index``:

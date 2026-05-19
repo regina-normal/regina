@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::BoundaryComponent
-constexpr const char *BoundaryComponent =
+inline constexpr const char BoundaryComponent[] =
 R"doc(A component of the boundary of a *dim*-manifold triangulation.
 
 Regina recognises three types of boundary components:

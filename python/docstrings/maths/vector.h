@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Vector
-static const char *Vector =
+inline constexpr const char Vector[] =
 R"doc(An optimised vector class of elements from a given ring T. Various
 mathematical vector operations are available.
 
@@ -53,7 +53,7 @@ Python:
 namespace Vector_ {
 
 // Docstring regina::python::doc::Vector_::__add
-static const char *__add =
+inline constexpr const char __add[] =
 R"doc(Adds the given vector to this vector, and returns the result. This
 vector will not be changed.
 
@@ -67,7 +67,7 @@ Returns:
     the sum ``this + other``.)doc";
 
 // Docstring regina::python::doc::Vector_::__array
-static const char *__array =
+inline constexpr const char __array[] =
 R"doc(Returns the element at the given index in the vector. A constant
 reference to the element is returned; the element may not be altered.
 
@@ -81,7 +81,7 @@ Returns:
     the vector element at the given index.)doc";
 
 // Docstring regina::python::doc::Vector_::__array_2
-static const char *__array_2 =
+inline constexpr const char __array_2[] =
 R"doc(Gives write access to the element at the given index in the vector.
 
 Precondition:
@@ -94,14 +94,14 @@ Returns:
     a reference to the vector element at the given index.)doc";
 
 // Docstring regina::python::doc::Vector_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new vector that is a clone of the given vector.
 
 Parameter ``src``:
     the vector to clone.)doc";
 
 // Docstring regina::python::doc::Vector_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this vector is equal to the given vector.
 
 It is safe to call this operator if this and the given vector have
@@ -114,7 +114,7 @@ Returns:
     ``True`` if and only if the this and the given vector are equal.)doc";
 
 // Docstring regina::python::doc::Vector_::__iadd
-static const char *__iadd =
+inline constexpr const char __iadd[] =
 R"doc(Adds the given vector to this vector. This vector will be changed
 directly. This behaves correctly in the case where *other* is
 ``this``.
@@ -129,7 +129,7 @@ Returns:
     a reference to this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__imul
-static const char *__imul =
+inline constexpr const char __imul[] =
 R"doc(Multiplies this vector by the given scalar. This vector will be
 changed directly.
 
@@ -140,7 +140,7 @@ Returns:
     a reference to this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new vector.
 
 All entries will be initialised using their default constructors. In
@@ -156,7 +156,7 @@ Parameter ``size``:
     the number of elements in the new vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new vector and initialises every element to the given value.
 
 Parameter ``size``:
@@ -166,7 +166,7 @@ Parameter ``initValue``:
     the value to assign to every element of the vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a new vector containing a deep copy of the given sequence of
 elements.
 
@@ -185,7 +185,7 @@ Parameter ``end``:
     elements.)doc";
 
 // Docstring regina::python::doc::Vector_::__init_4
-static const char *__init_4 =
+inline constexpr const char __init_4[] =
 R"doc(Creates a new clone of the given vector, which may hold objects of a
 different type.
 
@@ -200,7 +200,7 @@ Parameter ``src``:
     the vector to clone.)doc";
 
 // Docstring regina::python::doc::Vector_::__isub
-static const char *__isub =
+inline constexpr const char __isub[] =
 R"doc(Subtracts the given vector from this vector. This vector will be
 changed directly. This behaves correctly in the case where *other* is
 ``this``.
@@ -215,14 +215,14 @@ Returns:
     a reference to this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__iter__
-static const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over the elements of this vector.
 
 Returns:
     an iterator over the elements of this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Multiplies this vector by the given scalar, and returns the result.
 This vector will not be changed.
 
@@ -233,7 +233,7 @@ Returns:
     the product ``this * factor``.)doc";
 
 // Docstring regina::python::doc::Vector_::__mul_2
-static const char *__mul_2 =
+inline constexpr const char __mul_2[] =
 R"doc(Calculates the dot product of this vector and the given vector.
 
 Precondition:
@@ -246,7 +246,7 @@ Returns:
     the dot product of this and the given vector.)doc";
 
 // Docstring regina::python::doc::Vector_::__sub
-static const char *__sub =
+inline constexpr const char __sub[] =
 R"doc(Subtracts the given vector from this vector, and returns the result.
 This vector will not be changed.
 
@@ -260,7 +260,7 @@ Returns:
     the difference ``this - other``.)doc";
 
 // Docstring regina::python::doc::Vector_::addCopies
-static const char *addCopies =
+inline constexpr const char addCopies[] =
 R"doc(Adds the given multiple of the given vector to this vector. This
 behaves correctly in the case where *other* is ``this``.
 
@@ -274,14 +274,14 @@ Parameter ``multiple``:
     the multiple of *other* to be added to this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::elementSum
-static const char *elementSum =
+inline constexpr const char elementSum[] =
 R"doc(Returns the sum of all elements of this vector.
 
 Returns:
     the sum of the elements of this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given vectors.
 
 This global routine simply calls Vector<T>::swap(); it is provided so
@@ -294,17 +294,17 @@ Parameter ``b``:
     the second vector whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Vector_::isZero
-static const char *isZero =
+inline constexpr const char isZero[] =
 R"doc(Determines whether this is the zero vector.
 
 Returns:
     ``True`` if and only if all elements of the vector are zero.)doc";
 
 // Docstring regina::python::doc::Vector_::negate
-static const char *negate = R"doc(Negates every element of this vector.)doc";
+inline constexpr const char negate[] = R"doc(Negates every element of this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::norm
-static const char *norm =
+inline constexpr const char norm[] =
 R"doc(Returns the norm of this vector. This is the dot product of the vector
 with itself.
 
@@ -312,7 +312,7 @@ Returns:
     the norm of this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::scaleDown
-static const char *scaleDown =
+inline constexpr const char scaleDown[] =
 R"doc(Scales this vector down by the greatest common divisor of all its
 elements. The resulting vector will be the smallest multiple of the
 original that maintains integral entries, and these entries will have
@@ -330,7 +330,7 @@ Returns:
     original elements). This will be strictly positive.)doc";
 
 // Docstring regina::python::doc::Vector_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of elements in the vector.
 
 Python:
@@ -341,7 +341,7 @@ Returns:
     the vector size.)doc";
 
 // Docstring regina::python::doc::Vector_::subtractCopies
-static const char *subtractCopies =
+inline constexpr const char subtractCopies[] =
 R"doc(Subtracts the given multiple of the given vector to this vector. This
 behaves correctly in the case where *other* is ``this``.
 
@@ -356,14 +356,14 @@ Parameter ``multiple``:
     the multiple of *other* to be subtracted from this vector.)doc";
 
 // Docstring regina::python::doc::Vector_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given vector.
 
 Parameter ``other``:
     the vector whose contents are to be swapped with this.)doc";
 
 // Docstring regina::python::doc::Vector_::unit
-static const char *unit =
+inline constexpr const char unit[] =
 R"doc(Returns the given unit vector.
 
 The vector will have length *dimension*. The element in position

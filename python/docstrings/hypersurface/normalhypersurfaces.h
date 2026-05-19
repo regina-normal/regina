@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::NormalHypersurfaces
-static const char *NormalHypersurfaces =
+inline constexpr const char NormalHypersurfaces[] =
 R"doc(A collection of normal hypersurfaces in a 4-manifold triangulation.
 
 There are some important changes to this class as of Regina 7.0:
@@ -64,7 +64,7 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
 // Docstring regina::python::doc::makeEmbeddedConstraints
-static const char *makeEmbeddedConstraints =
+inline constexpr const char makeEmbeddedConstraints[] =
 R"doc(Generates the validity constraints representing the condition that
 normal hypersurfaces be embedded. The validity constraints will be
 expressed relative to the given coordinate system.
@@ -86,7 +86,7 @@ Returns:
     the set of validity constraints.)doc";
 
 // Docstring regina::python::doc::makeMatchingEquations
-static const char *makeMatchingEquations =
+inline constexpr const char makeMatchingEquations[] =
 R"doc(Generates the set of normal hypersurface matching equations for the
 given triangulation using the given coordinate system.
 
@@ -125,7 +125,7 @@ Returns:
 namespace NormalHypersurfaces_ {
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__array
-static const char *__array =
+inline constexpr const char __array[] =
 R"doc(Returns the hypersurface at the requested index in this list. This is
 identical to calling hypersurface().
 
@@ -137,10 +137,10 @@ Returns:
     the normal hypersurface at the requested index in this list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__copy
-static const char *__copy = R"doc(Constructs a new copy of the given list.)doc";
+inline constexpr const char __copy[] = R"doc(Constructs a new copy of the given list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given list contain the same set of
 normal hypersurfaces.
 
@@ -174,7 +174,7 @@ Returns:
     hypersurfaces, or ``False`` if not.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(A unified constructor for enumerating various classes of normal
 hypersurfaces within a given triangulation.
 
@@ -274,7 +274,7 @@ Parameter ``tracker``:
     ``None`` if no progress reporting is required.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::__iter__
-static const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over the normal hypersurfaces in this list.
 
 In Python, a normal hypersurface list can be treated as an iterable
@@ -290,7 +290,7 @@ Returns:
     an iterator over the normal hypersurfaces in this list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::algorithm
-static const char *algorithm =
+inline constexpr const char algorithm[] =
 R"doc(Returns details of the algorithm that was used to enumerate this list.
 
 These may not be the same algorithm flags that were passed to the
@@ -303,7 +303,7 @@ Returns:
     details of the algorithm used to enumerate this list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::allowsNonCompact
-static const char *allowsNonCompact =
+inline constexpr const char allowsNonCompact[] =
 R"doc(Determines if the coordinate system that was used for enumeration
 allows for non-compact hypersurfaces.
 
@@ -316,7 +316,7 @@ Returns:
     supported.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::coords
-static const char *coords =
+inline constexpr const char coords[] =
 R"doc(Returns the coordinate system that was originally used to enumerate
 the hypersurfaces in this list.
 
@@ -324,7 +324,7 @@ Returns:
     the coordinate system used.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given lists.
 
 This global routine simply calls NormalHypersurfaces::swap(); it is
@@ -345,7 +345,7 @@ Parameter ``rhs``:
     the list whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::hypersurface
-static const char *hypersurface =
+inline constexpr const char hypersurface[] =
 R"doc(Returns the hypersurface at the requested index in this list. This is
 identical to using the square bracket operator.
 
@@ -357,7 +357,7 @@ Returns:
     the normal hypersurface at the requested index in this list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::isEmbeddedOnly
-static const char *isEmbeddedOnly =
+inline constexpr const char isEmbeddedOnly[] =
 R"doc(Returns whether this list is known to contain only embedded normal
 hypersurfaces.
 
@@ -371,7 +371,7 @@ Returns:
     embedded hypersurfaces, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::recreateMatchingEquations
-static const char *recreateMatchingEquations =
+inline constexpr const char recreateMatchingEquations[] =
 R"doc(Returns the matching equations that were used to create this normal
 hypersurface list. This matrix is not cached: multiple calls to this
 routine will result in the construction of multiple matrices. This
@@ -392,7 +392,7 @@ Returns:
     list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of hypersurfaces stored in this list.
 
 Python:
@@ -403,7 +403,7 @@ Returns:
     the number of hypersurfaces.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::sort
-static const char *sort =
+inline constexpr const char sort[] =
 R"doc(Sorts the hypersurfaces in this list according to the given criterion.
 
 This sort is stable, i.e., hypersurfaces that are equivalent under the
@@ -422,7 +422,7 @@ Parameter ``comp``:
     list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given list.
 
 This routine will behave correctly if *other* is in fact this list.
@@ -436,7 +436,7 @@ Parameter ``other``:
     the list whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::triangulation
-static const char *triangulation =
+inline constexpr const char triangulation[] =
 R"doc(Returns the triangulation in which these normal hypersurfaces live.
 
 This will be a snapshot frozen in time of the triangulation that was
@@ -469,7 +469,7 @@ Returns:
     a reference to the underlying triangulation.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::vectors
-static const char *vectors =
+inline constexpr const char vectors[] =
 R"doc(Returns a Python iterable object that iterates over the raw vectors
 for all hypersurfaces in this list. For example:
 
@@ -483,7 +483,7 @@ Returns:
     an iterator over the normal hypersurfaces in this list.)doc";
 
 // Docstring regina::python::doc::NormalHypersurfaces_::which
-static const char *which =
+inline constexpr const char which[] =
 R"doc(Returns details of which normal hypersurfaces this list represents
 within the underlying triangulation.
 

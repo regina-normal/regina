@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TxICore
-static const char *TxICore =
+inline constexpr const char TxICore[] =
 R"doc(Provides a triangulation of the product ``T × I`` (the product of the
 torus and the interval). Generally these triangulations are only one
 tetrahedron thick (i.e., a "thin I-bundle"), though this is not a
@@ -43,7 +43,7 @@ all of the usual copy, move and swap operations. See each subclass for
 details.)doc";
 
 // Docstring regina::python::doc::TxIDiagonalCore
-static const char *TxIDiagonalCore =
+inline constexpr const char TxIDiagonalCore[] =
 R"doc(One of a family of thin ``T × I`` triangulations that typically appear
 at the centres of layered torus bundles. Different triangulations in
 this family use different numbers of tetrahedra, with the larger
@@ -108,7 +108,7 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
 // Docstring regina::python::doc::TxIParallelCore
-static const char *TxIParallelCore =
+inline constexpr const char TxIParallelCore[] =
 R"doc(A specific six-tetrahedron TxICore triangulation that does not fit
 neatly into other families.
 
@@ -143,7 +143,7 @@ possible, even when passing or returning objects by value.)doc";
 namespace TxICore_ {
 
 // Docstring regina::python::doc::TxICore_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given ``T × I`` triangulation are of the
 same type and have the same parameters.
 
@@ -158,7 +158,7 @@ Returns:
     the same type and have the same parameters.)doc";
 
 // Docstring regina::python::doc::TxICore_::bdryReln
-static const char *bdryReln =
+inline constexpr const char bdryReln[] =
 R"doc(Returns a 2-by-2 matrix describing the α and β curves on a torus
 boundary in terms of specific tetrahedron edges.
 
@@ -189,7 +189,7 @@ Returns:
     edges.)doc";
 
 // Docstring regina::python::doc::TxICore_::bdryRoles
-static const char *bdryRoles =
+inline constexpr const char bdryRoles[] =
 R"doc(Describes which tetrahedron vertices play which roles in the upper and
 lower boundary triangles.
 
@@ -236,7 +236,7 @@ Returns:
     real tetrahedron vertex numbers.)doc";
 
 // Docstring regina::python::doc::TxICore_::bdryTet
-static const char *bdryTet =
+inline constexpr const char bdryTet[] =
 R"doc(Determines which tetrahedron provides the requested boundary triangle.
 
 Recall that the ``T × I`` triangulation has two torus boundaries, each
@@ -260,7 +260,7 @@ Parameter ``whichTri``:
     second boundary triangle should be examined.)doc";
 
 // Docstring regina::python::doc::TxICore_::core
-static const char *core =
+inline constexpr const char core[] =
 R"doc(Returns a full copy of the ``T × I`` triangulation that this object
 describes.
 
@@ -272,7 +272,7 @@ Returns:
     the full triangulation.)doc";
 
 // Docstring regina::python::doc::TxICore_::name
-static const char *name =
+inline constexpr const char name[] =
 R"doc(Returns the name of this specific triangulation of ``T × I`` as a
 human-readable string.
 
@@ -280,7 +280,7 @@ Returns:
     the name of this triangulation.)doc";
 
 // Docstring regina::python::doc::TxICore_::parallelReln
-static const char *parallelReln =
+inline constexpr const char parallelReln[] =
 R"doc(Returns a 2-by-2 matrix describing the parallel relationship between
 the upper and lower boundary curves.
 
@@ -307,7 +307,7 @@ Returns:
     the relationship between the upper and lower boundary curves.)doc";
 
 // Docstring regina::python::doc::TxICore_::texName
-static const char *texName =
+inline constexpr const char texName[] =
 R"doc(Returns the name of this specific triangulation of ``T × I`` in TeX
 format. No leading or trailing dollar signs will be included.
 
@@ -319,10 +319,10 @@ Returns:
 namespace TxIDiagonalCore_ {
 
 // Docstring regina::python::doc::TxIDiagonalCore_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given ``T × I`` triangulation.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given ``T × I`` triangulation.)doc";
 
 // Docstring regina::python::doc::TxIDiagonalCore_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new ``T × I`` triangulation with the given parameters.
 
 Parameter ``size``:
@@ -334,7 +334,7 @@ Parameter ``k``:
     must be between 1 and (*size* - 5) inclusive.)doc";
 
 // Docstring regina::python::doc::TxIDiagonalCore_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given ``T × I`` triangulations.
 
 This global routine simply calls TxIDiagonalCore::swap(); it is
@@ -349,14 +349,14 @@ Parameter ``rhs``:
     the triangulation whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::TxIDiagonalCore_::k
-static const char *k =
+inline constexpr const char k[] =
 R"doc(Returns the additional parameter *k* as described in the class notes.
 
 Returns:
     the additional parameter *k*.)doc";
 
 // Docstring regina::python::doc::TxIDiagonalCore_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the total number of tetrahedra in this ``T × I``
 triangulation.
 
@@ -364,7 +364,7 @@ Returns:
     the total number of tetrahedra.)doc";
 
 // Docstring regina::python::doc::TxIDiagonalCore_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given ``T × I`` triangulation.
 
 Parameter ``other``:
@@ -375,7 +375,7 @@ Parameter ``other``:
 namespace TxIParallelCore_ {
 
 // Docstring regina::python::doc::TxIParallelCore_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given ``T × I`` triangulation.
 
 Since there is only one triangulation of this type, the copy
@@ -383,10 +383,10 @@ constructor will give the same end result as the default constructor
 (but using a different algorithm).)doc";
 
 // Docstring regina::python::doc::TxIParallelCore_::__default
-static const char *__default = R"doc(Creates a new copy of this ``T × I`` triangulation.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new copy of this ``T × I`` triangulation.)doc";
 
 // Docstring regina::python::doc::TxIParallelCore_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given ``T × I`` triangulations.
 
 This global routine simply calls TxIParallelCore::swap(); it is
@@ -401,7 +401,7 @@ Parameter ``rhs``:
     the triangulation whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::TxIParallelCore_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given ``T × I`` triangulation.
 
 Parameter ``other``:

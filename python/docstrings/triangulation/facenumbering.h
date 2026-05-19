@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::FaceNumbering
-static const char *FaceNumbering =
+inline constexpr const char FaceNumbering[] =
 R"doc(Specifies how *subdim*-faces are numbered within a *dim*-dimensional
 simplex.
 
@@ -63,7 +63,7 @@ Template parameter ``subdim``:
     the dimension of the faces that we are numbering.)doc";
 
 // Docstring regina::python::doc::faceOppositeEdge
-static const char *faceOppositeEdge =
+inline constexpr const char faceOppositeEdge[] =
 R"doc(Returns the (*dim*-2)-face number that is opposite the edge joining
 vertices *i* and *j* in a *dim*-dimensional simplex.
 
@@ -96,7 +96,7 @@ Returns:
 namespace FaceNumbering_ {
 
 // Docstring regina::python::doc::FaceNumbering_::containsVertex
-static const char *containsVertex =
+inline constexpr const char containsVertex[] =
 R"doc(Tests whether the given *subdim*-face of a *dim*-dimensional simplex
 contains the given vertex of the simplex.
 
@@ -113,7 +113,7 @@ Returns:
     vertex.)doc";
 
 // Docstring regina::python::doc::FaceNumbering_::faceNumber
-static const char *faceNumber =
+inline constexpr const char faceNumber[] =
 R"doc(Identifies which *subdim*-face in a *dim*-dimensional simplex is
 represented by the first (*subdim* + 1) elements of the given
 permutation.
@@ -138,7 +138,7 @@ Returns:
     will be between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.)doc";
 
 // Docstring regina::python::doc::FaceNumbering_::faceNumber_2
-static const char *faceNumber_2 =
+inline constexpr const char faceNumber_2[] =
 R"doc(Identifies which edge in a *dim*-dimensional simplex joins the two
 given vertices of the simplex.
 
@@ -162,7 +162,7 @@ Returns:
     This will be between 0 and ``(dim+1 choose 2)-1`` inclusive.)doc";
 
 // Docstring regina::python::doc::FaceNumbering_::ordering
-static const char *ordering =
+inline constexpr const char ordering[] =
 R"doc(Given a *subdim*-face number within a *dim*-dimensional simplex,
 returns the corresponding canonical ordering of the simplex vertices.
 

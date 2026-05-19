@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-static const char *Face =
+inline constexpr const char Face[] =
 R"doc(Represents a pentachoron (a 4-dimensional simplex) within a 4-manifold
 triangulation.
 
@@ -39,7 +39,7 @@ of by the Triangulation to which they belong.)doc";
 namespace Face_ {
 
 // Docstring regina::python::doc::Face_::adjacentPentachoron
-static const char *adjacentPentachoron =
+inline constexpr const char adjacentPentachoron[] =
 R"doc(A dimension-specific alias for adjacentSimplex().
 
 See adjacentSimplex() for further information.)doc";

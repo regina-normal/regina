@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Component
-static const char *Component =
+inline constexpr const char Component[] =
 R"doc(Represents a connected component of a 4-manifold triangulation.
 
 This is a specialisation of the generic Component class template; see
@@ -35,13 +35,13 @@ of by the Triangulation to which they belong.)doc";
 namespace Component_ {
 
 // Docstring regina::python::doc::Component_::countBoundaryTetrahedra
-static const char *countBoundaryTetrahedra =
+inline constexpr const char countBoundaryTetrahedra[] =
 R"doc(A dimension-specific alias for countBoundaryFacets().
 
 See countBoundaryFacets() for further information.)doc";
 
 // Docstring regina::python::doc::Component_::countFaces
-static const char *countFaces =
+inline constexpr const char countFaces[] =
 R"doc(Returns the number of *subdim*-faces in this component, where the face
 dimension does not need to be known until runtime.
 
@@ -66,7 +66,7 @@ Returns:
     the number of *subdim*-faces.)doc";
 
 // Docstring regina::python::doc::Component_::face
-static const char *face =
+inline constexpr const char face[] =
 R"doc(Returns the requested *subdim*-face in this component, in a way that
 is optimised for Python programmers.
 
@@ -105,7 +105,7 @@ Returns:
     the requested face.)doc";
 
 // Docstring regina::python::doc::Component_::faces
-static const char *faces =
+inline constexpr const char faces[] =
 R"doc(Returns an object that allows iteration through and random access to
 all *subdim*-faces in this component, in a way that is optimised for
 Python programmers.
@@ -135,13 +135,13 @@ Returns:
     access to the list of all *subdim*-faces.)doc";
 
 // Docstring regina::python::doc::Component_::hasBoundaryTetrahedra
-static const char *hasBoundaryTetrahedra =
+inline constexpr const char hasBoundaryTetrahedra[] =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
 
 // Docstring regina::python::doc::Component_::isClosed
-static const char *isClosed =
+inline constexpr const char isClosed[] =
 R"doc(Determines if this component is closed. This is the case if and only
 if it has no boundary.
 
@@ -153,7 +153,7 @@ Returns:
     ``True`` if and only if this component is closed.)doc";
 
 // Docstring regina::python::doc::Component_::isIdeal
-static const char *isIdeal =
+inline constexpr const char isIdeal[] =
 R"doc(Determines if this component is ideal. This is the case if and only if
 it contains an ideal vertex as described by Vertex<4>::isIdeal().
 

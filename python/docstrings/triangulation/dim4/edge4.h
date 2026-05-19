@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-static const char *Face =
+inline constexpr const char Face[] =
 R"doc(Represents an edge in the skeleton of a 4-manifold triangulation.
 
 This is a specialisation of the generic Face class template; see the
@@ -32,7 +32,7 @@ the Triangulation to which they belong.)doc";
 namespace Face_ {
 
 // Docstring regina::python::doc::Face_::buildLink
-static const char *buildLink =
+inline constexpr const char buildLink[] =
 R"doc(Returns a full 2-manifold triangulation describing the link of this
 edge.
 
@@ -75,7 +75,7 @@ Returns:
     the read-only triangulated link of this edge.)doc";
 
 // Docstring regina::python::doc::Face_::buildLinkInclusion
-static const char *buildLinkInclusion =
+inline constexpr const char buildLinkInclusion[] =
 R"doc(Returns details of how the triangles are labelled in the link of this
 edge. This is a companion function to buildLink(), which returns a
 full 2-manifold triangulation of the edge link.
@@ -109,7 +109,7 @@ Returns:
     details of how buildLink() labels the triangles of the edge link.)doc";
 
 // Docstring regina::python::doc::Face_::linkingSurface
-static const char *linkingSurface =
+inline constexpr const char linkingSurface[] =
 R"doc(Returns the link of this edge as a normal hypersurface.
 
 Constructing the link of a edge begins with building the frontier of a

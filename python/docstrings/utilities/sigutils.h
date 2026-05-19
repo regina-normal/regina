@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Base64BitDecoder
-static const char *Base64BitDecoder =
+inline constexpr const char Base64BitDecoder[] =
 R"doc(A helper class for reading signatures that use base64 encodings, but
 that pack information as tightly as possible into bits whilst ignoring
 boundaries between different base64 characters. See Base64BitEncoder
@@ -47,7 +47,7 @@ Python:
     ``Base64BitDecoder``.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder
-static const char *Base64BitEncoder =
+inline constexpr const char Base64BitEncoder[] =
 R"doc(A helper class for writing signatures that pack information as tightly
 as possible into bits whilst ignoring byte/character boundaries, but
 then writes its actual output as a printable base64 string.
@@ -77,7 +77,7 @@ swapped.
     files.)doc";
 
 // Docstring regina::python::doc::Base64Decoder
-static const char *Base64Decoder =
+inline constexpr const char Base64Decoder[] =
 R"doc(A helper class for reading signatures that use base64 encodings. These
 are (in particular) used in the encodings for Regina's first-
 generation isomorphism signatures and knot signatures.
@@ -109,7 +109,7 @@ Python:
     ``Base64Decoder``.)doc";
 
 // Docstring regina::python::doc::Base64Encoder
-static const char *Base64Encoder =
+inline constexpr const char Base64Encoder[] =
 R"doc(A helper class for writing signatures that use base64 encodings. These
 are (in particular) used in the encodings for Regina's first-
 generation isomorphism signatures and knot signatures.
@@ -131,7 +131,7 @@ or swapped.
     files.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoding
-static const char *Base64SigEncoding =
+inline constexpr const char Base64SigEncoding[] =
 R"doc(A deprecated set of helper tools for signatures that use base64
 encodings. These are (in particular) used in the default encodings for
 Regina's own isomorphism signatures and knot signatures.
@@ -151,7 +151,7 @@ This base64 encoding uses the characters: ``a..zA..Z0..9+-``
     handling.)doc";
 
 // Docstring regina::python::doc::BitDecoder
-static const char *BitDecoder =
+inline constexpr const char BitDecoder[] =
 R"doc(A helper class for reading signatures that pack information as tightly
 as possible into bits, with no regard for boundaries between bytes in
 the final signature.
@@ -176,7 +176,7 @@ Python:
     ``BitDecoder``.)doc";
 
 // Docstring regina::python::doc::BitEncoder
-static const char *BitEncoder =
+inline constexpr const char BitEncoder[] =
 R"doc(A helper class for writing signatures that pack information as tightly
 as possible into bits, with no regard for boundaries between bytes in
 the final signature.
@@ -198,7 +198,7 @@ swapped.)doc";
 namespace Base64BitDecoder_ {
 
 // Docstring regina::python::doc::Base64BitDecoder_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new decoder for the given encoded string.
 
 The string itself should be passed as an iterator range. This iterator
@@ -221,7 +221,7 @@ Parameter ``stripWhitespace``:
     string.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::decodeBit
-static const char *decodeBit =
+inline constexpr const char decodeBit[] =
 R"doc(Returns the next bit in the encoded sequence.
 
 Exception ``InvalidInput``:
@@ -232,7 +232,7 @@ Returns:
     that was read is 0.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::decodeBitmask
-static const char *decodeBitmask =
+inline constexpr const char decodeBitmask[] =
 R"doc(Decodes a sequence of bits, and returns them in the form of a bitmask.
 
 Exception ``InvalidInput``:
@@ -247,7 +247,7 @@ Returns:
     stored in the bitmask in order from bit 0.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::decodeInt
-static const char *decodeInt =
+inline constexpr const char decodeInt[] =
 R"doc(Decodes a sequence of bits, and returns them in the form of a native
 unsigned integer.
 
@@ -269,7 +269,7 @@ Parameter ``bits``:
     stored in order from the least significant bit.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::decodeSize
-static const char *decodeSize =
+inline constexpr const char decodeSize[] =
 R"doc(Decodes a non-negative integer value that has been stored in some
 number of whole base64 characters, without knowing in advance how many
 base64 characters were used to encode it. This integer value must have
@@ -307,7 +307,7 @@ Returns:
     the integer that was decoded.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::flushChar
-static const char *flushChar =
+inline constexpr const char flushChar[] =
 R"doc(Skips past unread bits until we reach the next base64 character
 boundary.
 
@@ -319,7 +319,7 @@ Exception ``InvalidInput``:
     At least one of the bits that was skipped was set.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::maybeDone
-static const char *maybeDone =
+inline constexpr const char maybeDone[] =
 R"doc(Determines if the current position _could_ have reached the end of the
 encoded bit sequence. The word "maybe" acknowledges that the precise
 end of the bit sequence is often unclear (since the sequence is
@@ -339,7 +339,7 @@ Returns:
     sequence, as described above.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::noMoreBits
-static const char *noMoreBits =
+inline constexpr const char noMoreBits[] =
 R"doc(Determines if there are no more available bits to read.
 
 This will return ``True`` when we have already read all six bits from
@@ -349,7 +349,7 @@ Returns:
     ``True`` if and only if there are no more available bits.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::peek
-static const char *peek =
+inline constexpr const char peek[] =
 R"doc(Returns the base64 character at the current position in the encoded
 string, assuming that this position is at a character boundary. The
 current position will not move (i.e., the character that is returned
@@ -369,7 +369,7 @@ Returns:
     characters available.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::remainingBits
-static const char *remainingBits =
+inline constexpr const char remainingBits[] =
 R"doc(Returns the number of bits that can still be read from the encoded
 string, counting from the current position onwards.
 
@@ -380,7 +380,7 @@ Returns:
     the number of bits remaining.)doc";
 
 // Docstring regina::python::doc::Base64BitDecoder_::skip
-static const char *skip =
+inline constexpr const char skip[] =
 R"doc(Advances to the next position in the encoded base64 string, assuming
 that the current position is at a character boundary.
 
@@ -401,10 +401,10 @@ Precondition:
 namespace Base64BitEncoder_ {
 
 // Docstring regina::python::doc::Base64BitEncoder_::__default
-static const char *__default = R"doc(Creates a new encoder, with an empty base64 string.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new encoder, with an empty base64 string.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::encodeBit
-static const char *encodeBit =
+inline constexpr const char encodeBit[] =
 R"doc(Encodes the given boolean as a single bit.
 
 Parameter ``bit``:
@@ -412,7 +412,7 @@ Parameter ``bit``:
     encode the bit 0.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::encodeBitmask
-static const char *encodeBitmask =
+inline constexpr const char encodeBitmask[] =
 R"doc(Encodes a sequence of bits, taken from the given bitmask.
 
 Parameter ``bits``:
@@ -424,7 +424,7 @@ Parameter ``nBits``:
     the total number of bits to encode.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::encodeInt
-static const char *encodeInt =
+inline constexpr const char encodeInt[] =
 R"doc(Encodes a sequence of bits, all taken from a single native unsigned
 integer.
 
@@ -444,7 +444,7 @@ Parameter ``nBits``:
     positive.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::encodeSize
-static const char *encodeSize =
+inline constexpr const char encodeSize[] =
 R"doc(Encodes the given non-negative integer across some number of whole
 base64 characters, without knowing in advance how many characters will
 be required.
@@ -477,7 +477,7 @@ Parameter ``size``:
     the non-negative integer to encode.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::flushAndAppend
-static const char *flushAndAppend =
+inline constexpr const char flushAndAppend[] =
 R"doc(Advances the position of the encoder to the next character boundary if
 necessary, and then appends the given character verbatim to the
 encoded string.
@@ -495,7 +495,7 @@ Parameter ``c``:
     printable.)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::flushChar
-static const char *flushChar =
+inline constexpr const char flushChar[] =
 R"doc(Advances the position of the encoder to the next character boundary,
 if it is not at one already.
 
@@ -506,7 +506,7 @@ written - it will write that pending character immediately (as though
 the remaining bits were all zero).)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::reserveBits
-static const char *reserveBits =
+inline constexpr const char reserveBits[] =
 R"doc(Pre-allocates the given amount of space for the entire encoding, as
 measured in bits.
 
@@ -523,7 +523,7 @@ Parameter ``capacity``:
     just the portion that is not yet encoded).)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::reserveChars
-static const char *reserveChars =
+inline constexpr const char reserveChars[] =
 R"doc(Pre-allocates the given amount of space for the entire encoding, as
 measured in characters.
 
@@ -540,7 +540,7 @@ Parameter ``capacity``:
     portion that is not yet encoded).)doc";
 
 // Docstring regina::python::doc::Base64BitEncoder_::str
-static const char *str =
+inline constexpr const char str[] =
 R"doc(Moves the final encoded base64 string out of this encoder.
 
 After calling this function, this encoder object will be unusable.
@@ -553,7 +553,7 @@ Returns:
 namespace Base64Decoder_ {
 
 // Docstring regina::python::doc::Base64Decoder_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new decoder for the given encoded string.
 
 The string itself should be passed as an iterator range. This iterator
@@ -589,7 +589,7 @@ Parameter ``stripWhitespace``:
     string.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::decode
-static const char *decode =
+inline constexpr const char decode[] =
 R"doc(Converts a single base64 character into its corresponding 6-bit
 integer.
 
@@ -605,7 +605,7 @@ Returns:
     inclusive.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::decodeBitmask
-static const char *decodeBitmask =
+inline constexpr const char decodeBitmask[] =
 R"doc(Decodes a sequence of bits, and returns these in the form of a
 bitmask. The bits would typically have been encoded using
 Base64Encoder::encodeBitmask() with the same *nBits* argument.
@@ -629,7 +629,7 @@ Returns:
     a bitmask holding the bits that were decoded.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::decodeInt
-static const char *decodeInt =
+inline constexpr const char decodeInt[] =
 R"doc(Decodes the next non-negative integer value, assuming this uses a
 fixed number of base64 characters. This integer value would typically
 have been encoded using Base64Encoder::encodeInt(), using the same
@@ -663,7 +663,7 @@ Returns:
     the integer that was decoded.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::decodeInts
-static const char *decodeInts =
+inline constexpr const char decodeInts[] =
 R"doc(Decodes a sequence of non-negative integer values, assuming that each
 individual value uses a fixed number of base64 characters, and returns
 these as an array of native C++ integers. Each integer to be decoded
@@ -701,7 +701,7 @@ Returns:
     the sequence of integers that were decoded.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::decodeSingle
-static const char *decodeSingle =
+inline constexpr const char decodeSingle[] =
 R"doc(Decodes the 6-bit integer value represented by the next single base64
 character.
 
@@ -720,7 +720,7 @@ Returns:
     inclusive.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::decodeSize
-static const char *decodeSize =
+inline constexpr const char decodeSize[] =
 R"doc(Decodes the next non-negative integer value (typically representing
 the size of some object), without knowing in advance how many base64
 characters were used to encode it. This integer value must have been
@@ -749,7 +749,7 @@ Returns:
     above.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::decodeTrits
-static const char *decodeTrits =
+inline constexpr const char decodeTrits[] =
 R"doc(Decodes three trits from a single base64 character, and returns these
 as a fixed-size array. A _trit_ is either 0, 1 or 2.
 
@@ -764,7 +764,7 @@ Returns:
     an array containing the three trits that were decoded.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::done
-static const char *done =
+inline constexpr const char done[] =
 R"doc(Determines whether the current position has reached the end of the
 string.
 
@@ -785,7 +785,7 @@ Returns:
     string.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::done_2
-static const char *done_2 =
+inline constexpr const char done_2[] =
 R"doc(Deprecated routine that determines whether the current position has
 reached the end of the string, optionally ignoring any final
 whitespace.
@@ -812,7 +812,7 @@ Returns:
     string.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::isValid
-static const char *isValid =
+inline constexpr const char isValid[] =
 R"doc(Is the given character one of the printable base64 characters
 recognised by this class?
 
@@ -824,7 +824,7 @@ Returns:
     described in the class notes.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::peek
-static const char *peek =
+inline constexpr const char peek[] =
 R"doc(Returns the character at the current position in the encoded string.
 The current position will not move (i.e., the character that is
 returned will remain available to be read again later).
@@ -834,7 +834,7 @@ Returns:
     characters available.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::remaining
-static const char *remaining =
+inline constexpr const char remaining[] =
 R"doc(Returns the number of characters remaining in the encoded string,
 counting from the current position onwards.
 
@@ -845,21 +845,21 @@ Returns:
     the number of characters remaining.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::skip
-static const char *skip =
+inline constexpr const char skip[] =
 R"doc(Advances to the next position in the encoded string.
 
 Precondition:
     The current position has not yet reached the end of the string.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::skipWhitespace
-static const char *skipWhitespace =
+inline constexpr const char skipWhitespace[] =
 R"doc(Moves the current position past any whitespace.
 
 The movement will stop upon reaching either a non-whitespace character
 or the end of the string.)doc";
 
 // Docstring regina::python::doc::Base64Decoder_::unreadBitDecoder
-static const char *unreadBitDecoder =
+inline constexpr const char unreadBitDecoder[] =
 R"doc(Returns a bitwise decoder for the range of base64 characters that this
 decoder has not yet read.
 
@@ -881,10 +881,10 @@ Returns:
 namespace Base64Encoder_ {
 
 // Docstring regina::python::doc::Base64Encoder_::__default
-static const char *__default = R"doc(Creates a new encoder, with an empty base64 string.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new encoder, with an empty base64 string.)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::append
-static const char *append =
+inline constexpr const char append[] =
 R"doc(Appends the given character verbatim to this encoding.
 
 Parameter ``c``:
@@ -893,7 +893,7 @@ Parameter ``c``:
     printable.)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::encodeBitmask
-static const char *encodeBitmask =
+inline constexpr const char encodeBitmask[] =
 R"doc(Encodes a sequence of bits.
 
 The bits will be packed into base64 characters, six at a time. For
@@ -912,7 +912,7 @@ Parameter ``nBits``:
     the number of bits to encode.)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::encodeInt
-static const char *encodeInt =
+inline constexpr const char encodeInt[] =
 R"doc(Encodes the given non-negative native C++ integer using a fixed number
 of base64 characters.
 
@@ -938,7 +938,7 @@ Parameter ``nChars``:
     obtained through an earlier call to encodeSize().)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::encodeInts
-static const char *encodeInts =
+inline constexpr const char encodeInts[] =
 R"doc(Encodes a sequence of non-negative native C++ integers (given by an
 input range), each using a fixed number of base64 characters.
 
@@ -965,7 +965,7 @@ Parameter ``charsPerInt``:
     this would be obtained through an earlier call to encodeSize().)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::encodeSingle
-static const char *encodeSingle =
+inline constexpr const char encodeSingle[] =
 R"doc(Encodes the given 6-bit integer using a single base64 character.
 
 The inverse to this routine is Base64Decoder::decodeSingle().
@@ -981,7 +981,7 @@ Parameter ``c``:
     an integer between 0 and 63 inclusive.)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::encodeSize
-static const char *encodeSize =
+inline constexpr const char encodeSize[] =
 R"doc(Encodes the given non-negative integer (typically representing the
 size of some object), without knowing in advance how many base64
 characters will be required.
@@ -1008,7 +1008,7 @@ Returns:
     between 0 and *size* inclusive.)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::encodeTrits
-static const char *encodeTrits =
+inline constexpr const char encodeTrits[] =
 R"doc(Encodes a sequence of trits (given by an input range). A _trit_ is
 either 0, 1 or 2.
 
@@ -1029,7 +1029,7 @@ Parameter ``trits``:
     must be 0, 1 or 2.)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::integerWidth
-static const char *integerWidth =
+inline constexpr const char integerWidth[] =
 R"doc(Returns the smallest number of base64 characters required to encode
 any integer between 0 and *size* inclusive.
 
@@ -1040,7 +1040,7 @@ Returns:
     the number of base64 characters required.)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::reserve
-static const char *reserve =
+inline constexpr const char reserve[] =
 R"doc(Pre-allocates the given amount of space for the entire base64
 encoding.
 
@@ -1057,7 +1057,7 @@ Parameter ``capacity``:
     portion that is not yet encoded).)doc";
 
 // Docstring regina::python::doc::Base64Encoder_::str
-static const char *str =
+inline constexpr const char str[] =
 R"doc(Returns the base64 encoding that has been constructed thus far.
 
 Returns:
@@ -1068,7 +1068,7 @@ Returns:
 namespace Base64SigEncoding_ {
 
 // Docstring regina::python::doc::Base64SigEncoding_::decodeInt
-static const char *decodeInt =
+inline constexpr const char decodeInt[] =
 R"doc(Read the integer that is encoded at the beginning of the given base64
 string.
 
@@ -1101,7 +1101,7 @@ Returns:
     the native integer that was encoded.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoding_::decodeSingle
-static const char *decodeSingle =
+inline constexpr const char decodeSingle[] =
 R"doc(Determine the integer value represented by the given base64 character.
 
 The inverse to this routine is encodeSingle().
@@ -1115,7 +1115,7 @@ Returns:
     inclusive.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoding_::decodeTrits
-static const char *decodeTrits =
+inline constexpr const char decodeTrits[] =
 R"doc(Decodes a single base64 character into three trits, and returns these
 as a fixed-size array. A _trit_ is either 0, 1 or 2.
 
@@ -1130,7 +1130,7 @@ Returns:
     given base64 character.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoding_::encodeInt
-static const char *encodeInt =
+inline constexpr const char encodeInt[] =
 R"doc(Append a base64 encoding of the given native C++ integer to the given
 string. The integer will be broken into *nChars* distinct 6-bit
 blocks, and the lowest-significance blocks will be written first.
@@ -1155,7 +1155,7 @@ Parameter ``nChars``:
     the number of base64 characters to use.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoding_::encodeSingle
-static const char *encodeSingle =
+inline constexpr const char encodeSingle[] =
 R"doc(Determine the base64 character that represents the given integer
 value.
 
@@ -1168,7 +1168,7 @@ Returns:
     the corresponding printable base64 character.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoding_::encodeTrits
-static const char *encodeTrits =
+inline constexpr const char encodeTrits[] =
 R"doc(Returns a single base64 character that encodes up to three trits,
 given using a fixed-size array. A _trit_ is either 0, 1 or 2.
 
@@ -1190,7 +1190,7 @@ Returns:
     the resulting printable base64 character.)doc";
 
 // Docstring regina::python::doc::Base64SigEncoding_::isValid
-static const char *isValid =
+inline constexpr const char isValid[] =
 R"doc(Is the given character a valid base64 character?
 
 Returns:
@@ -1202,7 +1202,7 @@ Returns:
 namespace BitDecoder_ {
 
 // Docstring regina::python::doc::BitDecoder_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new decoder for the given encoded byte sequence.
 
 The byte sequence should be passed as an iterator range. This iterator
@@ -1223,7 +1223,7 @@ Parameter ``endEncoding``:
     sequence.)doc";
 
 // Docstring regina::python::doc::BitDecoder_::decodeBit
-static const char *decodeBit =
+inline constexpr const char decodeBit[] =
 R"doc(Returns the next bit in the encoded sequence.
 
 Exception ``InvalidInput``:
@@ -1234,7 +1234,7 @@ Returns:
     that was read is 0.)doc";
 
 // Docstring regina::python::doc::BitDecoder_::decodeBitmask
-static const char *decodeBitmask =
+inline constexpr const char decodeBitmask[] =
 R"doc(Decodes a sequence of bits, and returns them in the form of a bitmask.
 
 Exception ``InvalidInput``:
@@ -1249,7 +1249,7 @@ Returns:
     stored in the bitmask in order from bit 0.)doc";
 
 // Docstring regina::python::doc::BitDecoder_::decodeInt
-static const char *decodeInt =
+inline constexpr const char decodeInt[] =
 R"doc(Decodes a sequence of bits, and returns them in the form of a native
 unsigned integer.
 
@@ -1272,7 +1272,7 @@ Parameter ``bits``:
     stored in order from the least significant bit.)doc";
 
 // Docstring regina::python::doc::BitDecoder_::flushByte
-static const char *flushByte =
+inline constexpr const char flushByte[] =
 R"doc(Skips past unread bits until we reach the next byte boundary.
 
 This routine will test that all bits that are skipped are off;
@@ -1283,7 +1283,7 @@ Exception ``InvalidInput``:
     At least one of the bits that was skipped was set.)doc";
 
 // Docstring regina::python::doc::BitDecoder_::maybeDone
-static const char *maybeDone =
+inline constexpr const char maybeDone[] =
 R"doc(Determines if the current position _could_ have reached the end of the
 encoded bit sequence. The word "maybe" acknowledges that the precise
 end of the bit sequence is often unclear (since the sequence is
@@ -1303,7 +1303,7 @@ Returns:
     sequence, as described above.)doc";
 
 // Docstring regina::python::doc::BitDecoder_::noMoreBits
-static const char *noMoreBits =
+inline constexpr const char noMoreBits[] =
 R"doc(Determines if there are no more available bits to read.
 
 This will return ``True`` when we have already read all eight bits
@@ -1313,7 +1313,7 @@ Returns:
     ``True`` if and only if there are no more available bits.)doc";
 
 // Docstring regina::python::doc::BitDecoder_::remainingBits
-static const char *remainingBits =
+inline constexpr const char remainingBits[] =
 R"doc(Returns the number of bits that can still be read from the encoded
 sequence, counting from the current position onwards.
 
@@ -1328,10 +1328,10 @@ Returns:
 namespace BitEncoder_ {
 
 // Docstring regina::python::doc::BitEncoder_::__default
-static const char *__default = R"doc(Creates a new encoder, with an empty byte sequence.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new encoder, with an empty byte sequence.)doc";
 
 // Docstring regina::python::doc::BitEncoder_::bytes
-static const char *bytes =
+inline constexpr const char bytes[] =
 R"doc(Moves the final encoded byte sequence out of this encoder.
 
 After calling this function, this encoder object will be unusable.
@@ -1340,7 +1340,7 @@ Returns:
     the final encoded byte sequence.)doc";
 
 // Docstring regina::python::doc::BitEncoder_::encodeBit
-static const char *encodeBit =
+inline constexpr const char encodeBit[] =
 R"doc(Encodes the given boolean as a single bit.
 
 Parameter ``bit``:
@@ -1348,7 +1348,7 @@ Parameter ``bit``:
     encode the bit 0.)doc";
 
 // Docstring regina::python::doc::BitEncoder_::encodeBitmask
-static const char *encodeBitmask =
+inline constexpr const char encodeBitmask[] =
 R"doc(Encodes a sequence of bits, taken from the given bitmask.
 
 Parameter ``bits``:
@@ -1360,7 +1360,7 @@ Parameter ``nBits``:
     the total number of bits to encode.)doc";
 
 // Docstring regina::python::doc::BitEncoder_::encodeInt
-static const char *encodeInt =
+inline constexpr const char encodeInt[] =
 R"doc(Encodes a sequence of bits, all taken from a single native unsigned
 integer.
 
@@ -1380,7 +1380,7 @@ Parameter ``nBits``:
     positive.)doc";
 
 // Docstring regina::python::doc::BitEncoder_::reserveBits
-static const char *reserveBits =
+inline constexpr const char reserveBits[] =
 R"doc(Pre-allocates the given amount of space for the entire encoding, as
 measured in bits.
 
@@ -1397,7 +1397,7 @@ Parameter ``capacity``:
     just the portion that is not yet encoded).)doc";
 
 // Docstring regina::python::doc::BitEncoder_::reserveBytes
-static const char *reserveBytes =
+inline constexpr const char reserveBytes[] =
 R"doc(Pre-allocates the given amount of space for the entire encoding, as
 measured in bytes.
 

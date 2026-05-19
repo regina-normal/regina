@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Primes
-static const char *Primes =
+inline constexpr const char Primes[] =
 R"doc(A helper class for finding primes and factorising integers.
 
 This class has two functions: (i) to maintain a list of known primes,
@@ -50,7 +50,7 @@ Author:
 namespace Primes_ {
 
 // Docstring regina::python::doc::Primes_::prime
-static const char *prime =
+inline constexpr const char prime[] =
 R"doc(Returns the requested prime (or suspected prime). More specifically,
 this routine returns the (*which* + 1)th smallest prime. Thus prime(0)
 returns 2, prime(1) returns 3, prime(2) returns 5, and so on.
@@ -80,7 +80,7 @@ Returns:
     too large and *autoGrow* was ``False``.)doc";
 
 // Docstring regina::python::doc::Primes_::primeDecomp
-static const char *primeDecomp =
+inline constexpr const char primeDecomp[] =
 R"doc(Returns the prime factorisation of the given integer as a list of
 individual primes (or suspected primes).
 
@@ -125,7 +125,7 @@ Returns:
     the list of prime factors as described above.)doc";
 
 // Docstring regina::python::doc::Primes_::primePowerDecomp
-static const char *primePowerDecomp =
+inline constexpr const char primePowerDecomp[] =
 R"doc(Returns the prime factorisation of the given integer as a list of
 prime powers (or suspected prime powers).
 
@@ -174,7 +174,7 @@ Returns:
     the list of prime power factors as described above.)doc";
 
 // Docstring regina::python::doc::Primes_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of primes (or suspected primes) currently stored.
 
 Primes that are already stored can be accessed instantly; primes

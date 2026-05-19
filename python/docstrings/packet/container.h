@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Container
-static const char *Container =
+inline constexpr const char Container[] =
 R"doc(A packet that simply contains other packets. Such a packet contains no
 real data.
 
@@ -28,7 +28,7 @@ content of their own.)doc";
 namespace Container_ {
 
 // Docstring regina::python::doc::Container_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Copy constructor that does nothing.
 
 This is only here for consistency with the other packet types. Like
@@ -38,10 +38,10 @@ will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::Container_::__default
-static const char *__default = R"doc(Default constructor.)doc";
+inline constexpr const char __default[] = R"doc(Default constructor.)doc";
 
 // Docstring regina::python::doc::Container_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Constructs a new container with the given packet label.
 
 This constructor is (for example) helpful when you are building a
@@ -52,7 +52,7 @@ Parameter ``label``:
     the packet label for this new container.)doc";
 
 // Docstring regina::python::doc::Container_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swap function for container packets that does nothing.
 
 This is only here for consistency with the other packet types. For
@@ -61,7 +61,7 @@ have no "real" content of their own. See the member function
 Container::swap() for further explanation.)doc";
 
 // Docstring regina::python::doc::Container_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swap function that does nothing.
 
 This is only here for consistency with the other packet types. Like

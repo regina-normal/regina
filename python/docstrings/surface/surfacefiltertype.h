@@ -12,19 +12,19 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SurfaceFilterType
-static const char *SurfaceFilterType =
+inline constexpr const char SurfaceFilterType[] =
 R"doc(Represents different types of filter classes that can be used to
 filter lists of normal surfaces in 3-manifold triangulations.)doc";
 
 namespace SurfaceFilterType_ {
 
 // Docstring regina::python::doc::SurfaceFilterType_::Combination
-static const char *Combination =
+inline constexpr const char Combination[] =
 R"doc(Represents the SurfaceFilterCombination subclass: a filter that
 combines other filters using boolean AND or OR.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterType_::LegacyDefault
-static const char *LegacyDefault =
+inline constexpr const char LegacyDefault[] =
 R"doc(A legacy constant representing a do-nothing filter that accepts any
 normal surface.
 
@@ -34,7 +34,7 @@ used in practice (in particular, filters of this type could not be
 created through the GUI).)doc";
 
 // Docstring regina::python::doc::SurfaceFilterType_::Properties
-static const char *Properties =
+inline constexpr const char Properties[] =
 R"doc(Represents the SurfaceFilterProperties subclass: a filter that
 examines simple properties of a normal surface.)doc";
 

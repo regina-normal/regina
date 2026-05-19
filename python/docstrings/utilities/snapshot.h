@@ -12,13 +12,13 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SnapshotWriteError
-constexpr const char *SnapshotWriteError =
+inline constexpr const char SnapshotWriteError[] =
 R"doc(An exception thrown when someone tries to modify the read-only deep
 copy taken by a snapshot. See the Snapshot class notes for more
 information.)doc";
 
 // Docstring regina::python::doc::Snapshottable
-constexpr const char *Snapshottable =
+inline constexpr const char Snapshottable[] =
 R"doc(A base class for images of type *T* that can be snapshotted at a
 particular moment in time.
 
@@ -58,20 +58,20 @@ Python:
 namespace SnapshotWriteError_ {
 
 // Docstring regina::python::doc::SnapshotWriteError_::__copy
-constexpr const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
 
 // Docstring regina::python::doc::SnapshotWriteError_::__default
-constexpr const char *__default = R"doc(Creates a new exception.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new exception.)doc";
 
 // Docstring regina::python::doc::SnapshotWriteError_::what
-constexpr const char *what = R"doc(Returns a human-readable description of the error that occurred.)doc";
+inline constexpr const char what[] = R"doc(Returns a human-readable description of the error that occurred.)doc";
 
 }
 
 namespace Snapshottable_ {
 
 // Docstring regina::python::doc::Snapshottable_::isReadOnlySnapshot
-constexpr const char *isReadOnlySnapshot =
+inline constexpr const char isReadOnlySnapshot[] =
 R"doc(Determines if this object is a read-only deep copy that was created by
 a snapshot.
 

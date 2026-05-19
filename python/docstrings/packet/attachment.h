@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Attachment
-static const char *Attachment =
+inline constexpr const char Attachment[] =
 R"doc(A packet that can hold an arbitrary file attachment.
 
 The attachment is stored as a block of data in memory. If the
@@ -42,7 +42,7 @@ expanded in Regina 7.0 to allow for any kind of file to be attached.)doc";
 namespace Attachment_ {
 
 // Docstring regina::python::doc::Attachment_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new deep copy of the given attachment.
 
 Like all packet types, this only copies the content of the attachment,
@@ -57,14 +57,14 @@ Parameter ``src``:
     the attachment packet whose contents should be copied.)doc";
 
 // Docstring regina::python::doc::Attachment_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates a packet with no attachment stored.
 
 Until some content is assigned (e.g., by the assignment operator, or
 by a non-trivial call to reset()), isNull() will return ``True``.)doc";
 
 // Docstring regina::python::doc::Attachment_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given attachment hold identical data.
 
 The filenames will not be compared.
@@ -81,7 +81,7 @@ Returns:
     identical data.)doc";
 
 // Docstring regina::python::doc::Attachment_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new attachment containing the contents of the given file.
 
 The file will be read immediately, but no ongoing link will be
@@ -107,7 +107,7 @@ Parameter ``pathname``:
     the full pathname of the attachment to read.)doc";
 
 // Docstring regina::python::doc::Attachment_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new attachment containing the given binary data.
 
 The *data* array must contain a block of binary data, of *size* bytes.
@@ -151,7 +151,7 @@ Parameter ``filename``:
     filename() for details on how this string will be used.)doc";
 
 // Docstring regina::python::doc::Attachment_::data
-static const char *data =
+inline constexpr const char data[] =
 R"doc(Returns a pointer to the block of raw data that forms this attachment.
 The number of bytes in this block can be found by calling size().
 
@@ -168,7 +168,7 @@ Returns:
     the raw attachment data.)doc";
 
 // Docstring regina::python::doc::Attachment_::extension
-static const char *extension =
+inline constexpr const char extension[] =
 R"doc(Returns the extension of the filename associated with this attachment.
 
 The user interface may use the result of filename() and/or extension()
@@ -186,7 +186,7 @@ Returns:
     the extension of the filename for this attachment.)doc";
 
 // Docstring regina::python::doc::Attachment_::filename
-static const char *filename =
+inline constexpr const char filename[] =
 R"doc(Returns the filename associated with this attachment. Typically this
 would be a filename only, with no path information.
 
@@ -205,7 +205,7 @@ Returns:
     the filename associated with this attachment.)doc";
 
 // Docstring regina::python::doc::Attachment_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given attachment packets.
 
 This global routine simply calls Attachment::swap(); it is provided so
@@ -218,7 +218,7 @@ Parameter ``b``:
     the second attachment packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Attachment_::isNull
-static const char *isNull =
+inline constexpr const char isNull[] =
 R"doc(Determines whether this packet is currently holding a non-empty
 attachment.
 
@@ -227,14 +227,14 @@ Returns:
     attachment.)doc";
 
 // Docstring regina::python::doc::Attachment_::reset
-static const char *reset =
+inline constexpr const char reset[] =
 R"doc(Empties this packet so that no attachment is stored. After calling
 this routine, isNull() will return ``True``.
 
 The old data will be deallocated if required.)doc";
 
 // Docstring regina::python::doc::Attachment_::reset_2
-static const char *reset_2 =
+inline constexpr const char reset_2[] =
 R"doc(Refills this attachment packet with the given binary data. The old
 data will be deallocated if required.
 
@@ -271,7 +271,7 @@ Parameter ``filename``:
     details on how this string will be used.)doc";
 
 // Docstring regina::python::doc::Attachment_::save
-static const char *save =
+inline constexpr const char save[] =
 R"doc(Saves the contents of this attachment to the given file.
 
 If this packet does not currently hold a non-empty attachment (i.e.,
@@ -291,7 +291,7 @@ Returns:
     otherwise.)doc";
 
 // Docstring regina::python::doc::Attachment_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the size of this attachment in bytes.
 
 If this packet does not currently hold a non-empty attachment (i.e.,
@@ -301,7 +301,7 @@ Returns:
     the number of bytes.)doc";
 
 // Docstring regina::python::doc::Attachment_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given attachment.
 
 Like all packet types, this only swaps the content of the attachments,

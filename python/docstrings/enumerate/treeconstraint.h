@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::BanBoundary
-static const char *BanBoundary =
+inline constexpr const char BanBoundary[] =
 R"doc(A class that bans normal disc types that meet the boundary of the
 underlying triangulation. No disc types are marked at all.
 
@@ -56,7 +56,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::BanConstraintBase
-static const char *BanConstraintBase =
+inline constexpr const char BanConstraintBase[] =
 R"doc(A base class for additional banning and marking constraints that we
 can place on tree traversal algorithms. This is used with
 TreeEnumeration, TreeSingleSoln and related algorithms for enumerating
@@ -141,7 +141,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::BanEdge
-static const char *BanEdge =
+inline constexpr const char BanEdge[] =
 R"doc(A class that bans normal disc types that meet a particular edge of the
 underlying triangulation. No disc types are marked at all.
 
@@ -185,7 +185,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::BanNone
-static const char *BanNone =
+inline constexpr const char BanNone[] =
 R"doc(A do-nothing class that bans no coordinates and marks no coordinates.
 
 This is intended to act as a drop-in replacement for a "real"
@@ -223,7 +223,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::BanTorusBoundary
-static const char *BanTorusBoundary =
+inline constexpr const char BanTorusBoundary[] =
 R"doc(A class that bans and marks disc types associated with torus boundary
 components. Here we refer exclusively to real torus boundary
 components (not ideal vertices with torus cusps). Specifically:
@@ -274,7 +274,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::LPConstraintAPI
-static const char *LPConstraintAPI =
+inline constexpr const char LPConstraintAPI[] =
 R"doc(A documentation-only class describing the expected behaviour of linear
 constraint types.
 
@@ -343,7 +343,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::LPConstraintEulerPositive
-static const char *LPConstraintEulerPositive =
+inline constexpr const char LPConstraintEulerPositive[] =
 R"doc(A class that constraints the tableaux of normal surface matching
 equations to ensure that Euler characteristic is strictly positive.
 
@@ -391,7 +391,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::LPConstraintEulerZero
-static const char *LPConstraintEulerZero =
+inline constexpr const char LPConstraintEulerZero[] =
 R"doc(A class that constraints the tableaux of normal surface matching
 equations to ensure that Euler characteristic is zero.
 
@@ -434,7 +434,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::LPConstraintNonSpun
-static const char *LPConstraintNonSpun =
+inline constexpr const char LPConstraintNonSpun[] =
 R"doc(A class that constraints the tableaux of normal surface matching
 equations to ensure that normal surfaces in an ideal triangulation are
 compact (thereby avoiding spun normal surfaces with infinitely many
@@ -494,7 +494,7 @@ Python:
     to your code.)doc";
 
 // Docstring regina::python::doc::LPConstraintNone
-static const char *LPConstraintNone =
+inline constexpr const char LPConstraintNone[] =
 R"doc(A do-nothing class that imposes no additional linear constraints on
 the tableaux of normal surface or angle structure matching equations.
 
@@ -530,7 +530,7 @@ Python:
 namespace BanBoundary_ {
 
 // Docstring regina::python::doc::BanBoundary_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Constructs a new set of banning and marking constraints.
 
 This base class constructor will construct the *banned_* and *marked_*
@@ -550,7 +550,7 @@ Parameter ``init``:
 namespace BanConstraintBase_ {
 
 // Docstring regina::python::doc::BanConstraintBase_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given object ban and mark the same tableaux
 coordinates as each other.
 
@@ -572,7 +572,7 @@ Returns:
     tableaux coordinates, as described above.)doc";
 
 // Docstring regina::python::doc::BanConstraintBase_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Constructs a new set of banning and marking constraints.
 
 This base class constructor will create *banned_* and *marked_* arrays
@@ -589,7 +589,7 @@ Parameter ``init``:
     task.)doc";
 
 // Docstring regina::python::doc::BanConstraintBase_::enforceBans
-static const char *enforceBans =
+inline constexpr const char enforceBans[] =
 R"doc(Enforces all bans described by this class in the given tableaux.
 Specifically, for each banned coordinate, this routine calls
 LPData::constrainZero() on the corresponding coordinate column.
@@ -598,7 +598,7 @@ Parameter ``lp``:
     the tableaux in which to enforce the bans.)doc";
 
 // Docstring regina::python::doc::BanConstraintBase_::marked
-static const char *marked =
+inline constexpr const char marked[] =
 R"doc(Identifies whether the given column of the tableaux corresponds to a
 marked coordinate (e.g., a marked normal disc type).
 
@@ -613,7 +613,7 @@ Returns:
     coordinate.)doc";
 
 // Docstring regina::python::doc::BanConstraintBase_::supported
-static const char *supported =
+inline constexpr const char supported[] =
 R"doc(Indicates whether the given coordinate system is supported by this
 constraint class.
 
@@ -644,7 +644,7 @@ Returns:
 namespace BanEdge_ {
 
 // Docstring regina::python::doc::BanEdge_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Constructs a new set of banning and marking constraints.
 
 This base class constructor will construct the *banned_* and *marked_*
@@ -666,7 +666,7 @@ Parameter ``edge``:
 namespace BanTorusBoundary_ {
 
 // Docstring regina::python::doc::BanTorusBoundary_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Constructs a new set of banning and marking constraints.
 
 This base class constructor will construct the *banned_* and *marked_*
@@ -684,7 +684,7 @@ Parameter ``init``:
 namespace LPConstraintAPI_ {
 
 // Docstring regina::python::doc::LPConstraintAPI_::addRows
-static const char *addRows =
+inline constexpr const char addRows[] =
 R"doc(Explicitly builds equations for the linear function(s) constrained by
 this class. Specifically, this routine takes an array of columns in
 the initial tableaux and fills in the necessary coefficient data.
@@ -769,7 +769,7 @@ Parameter ``columnPerm``:
     ``LPInitialTableaux<...>::columnPerm()``.)doc";
 
 // Docstring regina::python::doc::LPConstraintAPI_::supported
-static const char *supported =
+inline constexpr const char supported[] =
 R"doc(Indicates whether the given vector encoding is supported by this
 constraint class.
 
@@ -796,7 +796,7 @@ Returns:
     this specific constraint class.)doc";
 
 // Docstring regina::python::doc::LPConstraintAPI_::verify
-static const char *verify =
+inline constexpr const char verify[] =
 R"doc(Ensures that the given normal surface satisfies the extra constraints
 described by this class.
 
@@ -818,7 +818,7 @@ Returns:
     or ``False`` if it does not.)doc";
 
 // Docstring regina::python::doc::LPConstraintAPI_::verify_2
-static const char *verify_2 =
+inline constexpr const char verify_2[] =
 R"doc(Ensures that the given angle structure satisfies the extra constraints
 described by this class.
 

@@ -14,7 +14,7 @@ namespace regina::python::doc {
 namespace detail {
 
 // Docstring regina::python::doc::detail::ComponentBase
-constexpr const char *ComponentBase =
+inline constexpr const char ComponentBase[] =
 R"doc(Helper class that provides core functionality for a connected
 component of a *dim*-manifold triangulation.
 
@@ -42,7 +42,7 @@ Template parameter ``dim``:
 namespace detail::ComponentBase_ {
 
 // Docstring regina::python::doc::detail::ComponentBase_::boundaryComponent
-constexpr const char *boundaryComponent =
+inline constexpr const char boundaryComponent[] =
 R"doc(Returns the boundary component at the given index in this component.
 
 Note that the index of a boundary component within this component may
@@ -56,7 +56,7 @@ Returns:
     the requested boundary component.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::boundaryComponents
-constexpr const char *boundaryComponents =
+inline constexpr const char boundaryComponents[] =
 R"doc(Returns an object that allows iteration through and random access to
 all boundary components in this component.
 
@@ -84,14 +84,14 @@ Returns:
     access to the list of all boundary components.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::countBoundaryComponents
-constexpr const char *countBoundaryComponents =
+inline constexpr const char countBoundaryComponents[] =
 R"doc(Returns the number of boundary components in this component.
 
 Returns:
     the number of boundary components.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::countBoundaryFacets
-constexpr const char *countBoundaryFacets =
+inline constexpr const char countBoundaryFacets[] =
 R"doc(Returns the number of boundary facets in this component.
 
 A boundary facet is a (*dim*-1)-dimensional facet of a top-dimensional
@@ -104,13 +104,13 @@ Returns:
     the total number of boundary facets.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::countEdges
-constexpr const char *countEdges =
+inline constexpr const char countEdges[] =
 R"doc(A dimension-specific alias for countFaces<1>().
 
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::countFacets
-constexpr const char *countFacets =
+inline constexpr const char countFacets[] =
 R"doc(Returns the number of `(dim-1)`-faces in this component.
 
 This is available (and constant time) for components in all
@@ -121,43 +121,43 @@ Returns:
     the number of `(dim-1)`-faces.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::countPentachora
-constexpr const char *countPentachora =
+inline constexpr const char countPentachora[] =
 R"doc(A dimension-specific alias for countFaces<4>().
 
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::countTetrahedra
-constexpr const char *countTetrahedra =
+inline constexpr const char countTetrahedra[] =
 R"doc(A dimension-specific alias for countFaces<3>().
 
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::countTriangles
-constexpr const char *countTriangles =
+inline constexpr const char countTriangles[] =
 R"doc(A dimension-specific alias for countFaces<2>().
 
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::countVertices
-constexpr const char *countVertices =
+inline constexpr const char countVertices[] =
 R"doc(A dimension-specific alias for countFaces<0>().
 
 See countFaces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::edge
-constexpr const char *edge =
+inline constexpr const char edge[] =
 R"doc(A dimension-specific alias for face<1>().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::edges
-constexpr const char *edges =
+inline constexpr const char edges[] =
 R"doc(A dimension-specific alias for faces<1>().
 
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::hasBoundaryFacets
-constexpr const char *hasBoundaryFacets =
+inline constexpr const char hasBoundaryFacets[] =
 R"doc(Determines if this component has any boundary facets.
 
 This routine returns ``True`` if and only if this component contains
@@ -168,7 +168,7 @@ Returns:
     ``True`` if and only if this component has boundary facet(s).)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::hasLocks
-constexpr const char *hasLocks =
+inline constexpr const char hasLocks[] =
 R"doc(Identifies whether any top-dimensional simplices in this component
 and/or any of their facets are locked.
 
@@ -183,7 +183,7 @@ Returns:
     dimensional simplex within this component.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::index
-constexpr const char *index =
+inline constexpr const char index[] =
 R"doc(Returns the index of this component within the underlying
 triangulation.
 
@@ -191,7 +191,7 @@ Returns:
     the index of this component.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::isOrientable
-constexpr const char *isOrientable =
+inline constexpr const char isOrientable[] =
 R"doc(Determines if this component is orientable.
 
 This routine runs in constant time (since orientability is determined
@@ -201,7 +201,7 @@ Returns:
     ``True`` if and only if this component is orientable.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::isValid
-constexpr const char *isValid =
+inline constexpr const char isValid[] =
 R"doc(Determines if this component is valid.
 
 This uses the same criteria as Triangulation<dim>::isValid(); see the
@@ -215,20 +215,20 @@ Returns:
     ``True`` if and only if this component is valid.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::pentachora
-constexpr const char *pentachora =
+inline constexpr const char pentachora[] =
 R"doc(A dimension-specific alias for faces<4>(), or an alias for simplices()
 in dimension *dim* = 4.
 
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::pentachoron
-constexpr const char *pentachoron =
+inline constexpr const char pentachoron[] =
 R"doc(A dimension-specific alias for face<4>().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::simplex
-constexpr const char *simplex =
+inline constexpr const char simplex[] =
 R"doc(Returns the top-dimensional simplex at the given index in this
 component.
 
@@ -243,7 +243,7 @@ Returns:
     the *index*th top-dimensional simplex.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::simplices
-constexpr const char *simplices =
+inline constexpr const char simplices[] =
 R"doc(Returns an object that allows iteration through and random access to
 all top-dimensional simplices in this component.
 
@@ -271,53 +271,53 @@ Returns:
     access to the list of all top-dimensional simplices.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::size
-constexpr const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of top-dimensional simplices in this component.
 
 Returns:
     the number of top-dimensional simplices.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::tetrahedra
-constexpr const char *tetrahedra =
+inline constexpr const char tetrahedra[] =
 R"doc(A dimension-specific alias for faces<3>(), or an alias for simplices()
 in dimension *dim* = 3.
 
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::tetrahedron
-constexpr const char *tetrahedron =
+inline constexpr const char tetrahedron[] =
 R"doc(A dimension-specific alias for face<3>().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::triangle
-constexpr const char *triangle =
+inline constexpr const char triangle[] =
 R"doc(A dimension-specific alias for face<2>().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::triangles
-constexpr const char *triangles =
+inline constexpr const char triangles[] =
 R"doc(A dimension-specific alias for faces<2>(), or an alias for simplices()
 in dimension *dim* = 2.
 
 See faces() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::triangulation
-constexpr const char *triangulation =
+inline constexpr const char triangulation[] =
 R"doc(Returns the triangulation to which this component belongs.
 
 Returns:
     a reference to the triangulation containing this component.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::vertex
-constexpr const char *vertex =
+inline constexpr const char vertex[] =
 R"doc(A dimension-specific alias for face<0>().
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::ComponentBase_::vertices
-constexpr const char *vertices =
+inline constexpr const char vertices[] =
 R"doc(A dimension-specific alias for faces<0>().
 
 See faces() for further information.)doc";

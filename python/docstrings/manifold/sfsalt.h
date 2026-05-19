@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SFSAlt
-static const char *SFSAlt =
+inline constexpr const char SFSAlt[] =
 R"doc(Provides an alternative representation of a single bounded Seifert
 fibred space. Such alternatives are made possible by altering the
 curves made by the fibre and base orbifold on a boundary torus.
@@ -67,10 +67,10 @@ amount of data to be copied even in a move operation.)doc";
 namespace SFSAlt_ {
 
 // Docstring regina::python::doc::SFSAlt_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given alternative.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given alternative.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given alternative representation have
 identical presentations.
 
@@ -88,7 +88,7 @@ Returns:
     identical presentations, as described above.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a "basic" alternative representation for the given Seifert
 fibred space. This will:
 
@@ -110,7 +110,7 @@ Parameter ``original``:
     of alternative representations.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new alternative representation from the given alternative
 representation. The changes will include:
 
@@ -158,7 +158,7 @@ Parameter ``negate``:
     without reflecting, as described above.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::alt
-static const char *alt =
+inline constexpr const char alt[] =
 R"doc(Returns the alternative representation of the original Seifert fibred
 space.
 
@@ -166,7 +166,7 @@ Returns:
     the alternative representation.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::alt_2
-static const char *alt_2 =
+inline constexpr const char alt_2[] =
 R"doc(Returns a non-const reference to the alternative representation of the
 original Seifert fibred space.
 
@@ -174,7 +174,7 @@ Returns:
     the alternative representation.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::alt_3
-static const char *alt_3 =
+inline constexpr const char alt_3[] =
 R"doc(Returns an rvalue reference to the alternative representation of the
 original Seifert fibred space.
 
@@ -182,7 +182,7 @@ Returns:
     the alternative representation.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::altSet
-static const char *altSet =
+inline constexpr const char altSet[] =
 R"doc(Returns a set of alternatives for the given Seifert fibred space.
 These will consist of (1) the alternative *base* created by passing
 the original Seifert fibred space to the SFSAlt constructor; and (2)
@@ -208,7 +208,7 @@ Returns:
     the resulting set of alternative representations for *sfs*.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::canNegate
-static const char *canNegate =
+inline constexpr const char canNegate[] =
 R"doc(Determines whether the SFSAlt class constructor will be able to negate
 all exceptional fibres without reflecting the underlying Seifert
 fibred space.
@@ -227,7 +227,7 @@ Returns:
     argument to ``True`` in the SFSAlt class constructor.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::conversion
-static const char *conversion =
+inline constexpr const char conversion[] =
 R"doc(Returns the conversion matrix for this alternative space. This matrix
 describes the fibre and base curves of the alternative space on the
 first boundary torus in terms of the fibre and base curves of the
@@ -243,7 +243,7 @@ Returns:
     the conversion matrix for this alternative space.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given alternative representations of
 Seifert fibred spaces.
 
@@ -257,7 +257,7 @@ Parameter ``b``:
     the second alternative whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::reflected
-static const char *reflected =
+inline constexpr const char reflected[] =
 R"doc(Returns whether or not a reflection was used when creating this
 alternative space. This determines the conversion between boundary
 curves for all boundary tori after the first.
@@ -279,7 +279,7 @@ Returns:
     space, or ``False`` if no reflection was used.)doc";
 
 // Docstring regina::python::doc::SFSAlt_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given alternative.
 
 Parameter ``other``:

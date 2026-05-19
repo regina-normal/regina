@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Cut
-static const char *Cut =
+inline constexpr const char Cut[] =
 R"doc(A cut that separates a triangulation, facet pairing or link diagram
 into two pieces. This is essentially the same concept as a cut in
 graph theory.
@@ -57,7 +57,7 @@ possible, even when passing or returning objects by value.)doc";
 namespace Cut_ {
 
 // Docstring regina::python::doc::Cut_::__call
-static const char *__call =
+inline constexpr const char __call[] =
 R"doc(Partitions the given triangulation using this cut.
 
 This routine will return _two_ triangulations: the first will contain
@@ -93,7 +93,7 @@ Returns:
     partition.)doc";
 
 // Docstring regina::python::doc::Cut_::__call_2
-static const char *__call_2 =
+inline constexpr const char __call_2[] =
 R"doc(Partitions the given facet pairing using this cut.
 
 This routine will return _two_ facet pairings: the first will contain
@@ -131,14 +131,14 @@ Returns:
     partition.)doc";
 
 // Docstring regina::python::doc::Cut_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given cut.
 
 Parameter ``src``:
     the cut to copy.)doc";
 
 // Docstring regina::python::doc::Cut_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given cut are identical.
 
 Two cuts are considered identical if they describe the same partition
@@ -154,7 +154,7 @@ Returns:
     ``True`` if and only if this and the given cut are identical.)doc";
 
 // Docstring regina::python::doc::Cut_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new trivial cut on the given number of nodes.
 
 All nodes will be on side 0.
@@ -163,7 +163,7 @@ Parameter ``size``:
     the number of nodes in the underlying graph-like object.)doc";
 
 // Docstring regina::python::doc::Cut_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new cut with the given partition sizes.
 
 The total number of nodes under consideration will be ``side0 +
@@ -177,7 +177,7 @@ Parameter ``side1``:
     the number of nodes on side 1 of the partition.)doc";
 
 // Docstring regina::python::doc::Cut_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a new cut using the given partition.
 
 Here a cut on *n* nodes is described by a sequence of *n* integers,
@@ -203,7 +203,7 @@ Parameter ``end``:
     sides.)doc";
 
 // Docstring regina::python::doc::Cut_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given cuts.
 
 This global routine simply calls Cut::swap(); it is provided so that
@@ -216,7 +216,7 @@ Parameter ``b``:
     the second cut whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Cut_::inc
-static const char *inc =
+inline constexpr const char inc[] =
 R"doc(Converts this into the next cut of the same size.
 
 The total number of nodes will stay the same, but the number on each
@@ -241,7 +241,7 @@ Returns:
     iteration.)doc";
 
 // Docstring regina::python::doc::Cut_::incFixedSizes
-static const char *incFixedSizes =
+inline constexpr const char incFixedSizes[] =
 R"doc(Converts this into the next cut with the same partition sizes.
 
 Specifically, the number of nodes on each side of the partition will
@@ -267,7 +267,7 @@ Returns:
     iteration.)doc";
 
 // Docstring regina::python::doc::Cut_::inclusion
-static const char *inclusion =
+inline constexpr const char inclusion[] =
 R"doc(Returns the relationships between simplex numbers before and after
 this cut is used to partition a triangulation or facet pairing into
 two pieces.
@@ -299,7 +299,7 @@ Returns:
     the two inclusion maps corresponding to this partition.)doc";
 
 // Docstring regina::python::doc::Cut_::isTrivial
-static const char *isTrivial =
+inline constexpr const char isTrivial[] =
 R"doc(Determines whether this cut places all nodes on the same side of the
 partition.
 
@@ -308,7 +308,7 @@ Returns:
     ``False`` if both sides of the partition are non-empty.)doc";
 
 // Docstring regina::python::doc::Cut_::set
-static const char *set =
+inline constexpr const char set[] =
 R"doc(Allows you to set which side of the partition the given node lies on.
 
 Exception ``InvalidArgument``:
@@ -323,7 +323,7 @@ Parameter ``newSide``:
     must be either 0 or 1.)doc";
 
 // Docstring regina::python::doc::Cut_::side
-static const char *side =
+inline constexpr const char side[] =
 R"doc(Indicates which side of the partition the given node lies on.
 
 Parameter ``node``:
@@ -335,7 +335,7 @@ Returns:
     1.)doc";
 
 // Docstring regina::python::doc::Cut_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the total number of nodes in the underlying graph-like object.
 
 In particular, if you are working with a triangulation or facet
@@ -345,7 +345,7 @@ Returns:
     the total number of nodes.)doc";
 
 // Docstring regina::python::doc::Cut_::size_2
-static const char *size_2 =
+inline constexpr const char size_2[] =
 R"doc(Returns the number of nodes on the given side of the partition
 described by this cut.
 
@@ -367,14 +367,14 @@ Returns:
     the number of nodes on the given side.)doc";
 
 // Docstring regina::python::doc::Cut_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given cut.
 
 Parameter ``other``:
     the cut whose contents are to be swapped with this.)doc";
 
 // Docstring regina::python::doc::Cut_::weight
-static const char *weight =
+inline constexpr const char weight[] =
 R"doc(Returns the weight of this cut with respect to the dual graph of the
 given triangulation. This is the number of gluings in the given
 triangulation that cross the partition described by this cut.
@@ -398,7 +398,7 @@ Returns:
     the weight of this cut with respect to *tri*.)doc";
 
 // Docstring regina::python::doc::Cut_::weight_2
-static const char *weight_2 =
+inline constexpr const char weight_2[] =
 R"doc(Returns the weight of this cut with respect to the given facet
 pairing. This is the number of matchings between facets of simplices
 in the given pairing that cross the partition described by this cut.
@@ -422,7 +422,7 @@ Returns:
     the weight of this cut with respect to *pairing*.)doc";
 
 // Docstring regina::python::doc::Cut_::weight_3
-static const char *weight_3 =
+inline constexpr const char weight_3[] =
 R"doc(Returns the weight of this cut with respect to the given link diagram.
 This is the number of arcs in the link diagram that cross the
 partition described by this cut.
@@ -440,7 +440,7 @@ Returns:
     the weight of this cut with respect to *link*.)doc";
 
 // Docstring regina::python::doc::Cut_::weight_4
-static const char *weight_4 =
+inline constexpr const char weight_4[] =
 R"doc(Returns the weight of this cut with respect to the given model link
 graph. This is the number of arcs in the graph that cross the
 partition described by this cut.

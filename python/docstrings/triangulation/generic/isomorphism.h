@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Isomorphism
-constexpr const char *Isomorphism =
+inline constexpr const char Isomorphism[] =
 R"doc(Represents a combinatorial isomorphism from one *dim*-manifold
 triangulation into another.
 
@@ -65,7 +65,7 @@ Template parameter ``dim``:
 namespace Isomorphism_ {
 
 // Docstring regina::python::doc::Isomorphism_::__array
-constexpr const char *__array =
+inline constexpr const char __array[] =
 R"doc(Determines the image of the given source simplex facet under this
 isomorphism. This operator returns by value: it cannot be used to
 alter the isomorphism.
@@ -79,7 +79,7 @@ Returns:
     the image of the source simplex facet under this isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__call
-constexpr const char *__call =
+inline constexpr const char __call[] =
 R"doc(Applies this isomorphism to the given triangulation, and returns the
 result as a new triangulation.
 
@@ -117,7 +117,7 @@ Returns:
     the new isomorphic triangulation.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__call_2
-constexpr const char *__call_2 =
+inline constexpr const char __call_2[] =
 R"doc(Returns the image of the given facet-of-simplex under this
 isomorphism.
 
@@ -152,7 +152,7 @@ Returns:
     the image of *f* under this isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__call_3
-constexpr const char *__call_3 =
+inline constexpr const char __call_3[] =
 R"doc(Applies this isomorphism to the given facet pairing, and returns the
 result as a new facet pairing.
 
@@ -184,14 +184,14 @@ Returns:
     the new isomorphic facet pairing.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__copy
-constexpr const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a copy of the given isomorphism.
 
 Parameter ``src``:
     the isomorphism to copy.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__eq
-constexpr const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given isomorphism are identical.
 
 Two isomorphisms are considered _identical_ if they act on the same
@@ -215,7 +215,7 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__inc
-constexpr const char *__inc =
+inline constexpr const char __inc[] =
 R"doc(A preincrement operator that changes this to be the next isomorphism
 in an iteration through all possible isomorphisms of this size.
 
@@ -240,7 +240,7 @@ Returns:
     a reference to this isomorphism after the increment.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__init
-constexpr const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new isomorphism with no initialisation. The images of the
 simplices and their vertices must be explicitly set using simpImage()
 and facetPerm().
@@ -254,7 +254,7 @@ Parameter ``nSimplices``:
     with this isomorphism. This is allowed to be zero.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__mul
-constexpr const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Returns the composition of this isomorphism with the given
 isomorphism.
 
@@ -273,7 +273,7 @@ Returns:
     the composition of both isomorphisms.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::__mul_2
-constexpr const char *__mul_2 =
+inline constexpr const char __mul_2[] =
 R"doc(Returns the composition of this isomorphism with the given
 isomorphism.
 
@@ -292,7 +292,7 @@ Returns:
     the composition of both isomorphisms.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::apply
-constexpr const char *apply =
+inline constexpr const char apply[] =
 R"doc(Deprecated routine that applies this isomorphism to the given
 triangulation, and returns the result as a new triangulation.
 
@@ -323,7 +323,7 @@ Returns:
     the new isomorphic triangulation.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::applyInPlace
-constexpr const char *applyInPlace =
+inline constexpr const char applyInPlace[] =
 R"doc(Deprecated routine that applies this isomorphism to the given
 triangulation, modifying the given triangulation directly.
 
@@ -350,7 +350,7 @@ Parameter ``tri``:
     the triangulation to which this isomorphism should be applied.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::facetPerm
-constexpr const char *facetPerm =
+inline constexpr const char facetPerm[] =
 R"doc(Determines the permutation that is applied to the (*dim* + 1) facets
 of the given source simplex under this isomorphism. Facet *i* of
 source simplex *sourceSimp* will be mapped to face
@@ -368,7 +368,7 @@ Returns:
     the permutation applied to the facets of the source simplex.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::global_swap
-constexpr const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given isomorphisms.
 
 This global routine simply calls Isomorphism<dim>::swap(); it is
@@ -382,7 +382,7 @@ Parameter ``b``:
     the second isomorphism whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::identity
-constexpr const char *identity =
+inline constexpr const char identity[] =
 R"doc(Returns the identity isomorphism for the given number of simplices.
 This isomorphism sends every simplex and every vertex to itself.
 
@@ -394,7 +394,7 @@ Returns:
     the identity isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::inverse
-constexpr const char *inverse =
+inline constexpr const char inverse[] =
 R"doc(Returns the inverse of this isomorphism.
 
 Precondition:
@@ -408,7 +408,7 @@ Returns:
     the inverse isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::isEven
-constexpr const char *isEven =
+inline constexpr const char isEven[] =
 R"doc(Determines whether or not this is an even isomorphism.
 
 In an even isomorphism, every facet/vertex permutation is even.
@@ -419,7 +419,7 @@ Returns:
     ``True`` if this is an even isomorphism, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::isIdentity
-constexpr const char *isIdentity =
+inline constexpr const char isIdentity[] =
 R"doc(Determines whether or not this is an identity isomorphism.
 
 In an identity isomorphism, each simplex image is itself, and within
@@ -430,7 +430,7 @@ Returns:
     otherwise.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::random
-constexpr const char *random =
+inline constexpr const char random[] =
 R"doc(Returns a random isomorphism for the given number of simplices. This
 isomorphism will reorder simplices 0 to ``nSimplices-1`` in a random
 fashion, and for each simplex a random permutation of its (*dim* + 1)
@@ -456,7 +456,7 @@ Returns:
     the new random isomorphism.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::setFacetPerm
-constexpr const char *setFacetPerm =
+inline constexpr const char setFacetPerm[] =
 R"doc(Python-only routine that sets the permutation that is applied to the
 (*dim* + 1) facets of the given source simplex under this isomorphism.
 Facet *i* of source simplex *sourceSimp* will be mapped to facet
@@ -475,7 +475,7 @@ Parameter ``perm``:
     source simplex.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::setSimpImage
-constexpr const char *setSimpImage =
+inline constexpr const char setSimpImage[] =
 R"doc(Python-only routine that sets the image of the given source simplex to
 the given value under this isomorphism.
 
@@ -496,7 +496,7 @@ Parameter ``image``:
     should map to.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::simpImage
-constexpr const char *simpImage =
+inline constexpr const char simpImage[] =
 R"doc(Determines the image of the given source simplex under this
 isomorphism.
 
@@ -513,7 +513,7 @@ Returns:
     to.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::size
-constexpr const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of simplices in the source triangulation associated
 with this isomorphism. Note that this is always less than or equal to
 the number of simplices in the destination triangulation.
@@ -526,7 +526,7 @@ Returns:
     the number of simplices in the source triangulation.)doc";
 
 // Docstring regina::python::doc::Isomorphism_::swap
-constexpr const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given isomorphism.
 
 It does not matter if this and the given isomorphism use different

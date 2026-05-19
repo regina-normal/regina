@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::ValidityConstraints
-static const char *ValidityConstraints =
+inline constexpr const char ValidityConstraints[] =
 R"doc(Represents a set of combinatorial validity constraints for use with
 polytope vertex enumeration.
 
@@ -78,10 +78,10 @@ possible, even when passing or returning objects by value.)doc";
 namespace ValidityConstraints_ {
 
 // Docstring regina::python::doc::ValidityConstraints_::__copy
-static const char *__copy = R"doc(Creates a clone of the given constraint set.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given constraint set.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given set contain the same
 constraints.
 
@@ -104,7 +104,7 @@ Returns:
     constraints.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates an empty set of validity constraints for vectors with the
 given block structure.
 
@@ -137,7 +137,7 @@ Parameter ``reserveGlobal``:
     leave this as 0 (the default).)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::addGlobal
-static const char *addGlobal =
+inline constexpr const char addGlobal[] =
 R"doc(Adds one new global constraint to this set.
 
 A call to addGlobal() will add a single global constraint, using
@@ -164,7 +164,7 @@ Parameter ``end``:
     coordinates to constraint within each block.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::addLocal
-static const char *addLocal =
+inline constexpr const char addLocal[] =
 R"doc(Adds a new family of local constraints to this set.
 
 A single call to addLocal() will effectively add one local constraint
@@ -189,7 +189,7 @@ Parameter ``end``:
     coordinates to constraint within each block.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::bitmasks
-static const char *bitmasks =
+inline constexpr const char bitmasks[] =
 R"doc(Returns the list of all individual validity constraints, each
 expressed as a bitmask of the given length.
 
@@ -221,7 +221,7 @@ Returns:
     constraints.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::bitmasks_2
-static const char *bitmasks_2 =
+inline constexpr const char bitmasks_2[] =
 R"doc(Returns the list of all individual validity constraints, each
 expressed as a bitmask of the smallest possible length.
 
@@ -256,7 +256,7 @@ Returns:
     constraints.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given constraint sets.
 
 This global routine simply calls ValidityConstraints::swap(); it is
@@ -270,7 +270,7 @@ Parameter ``b``:
     the second constraint set whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given constraint set.
 
 Parameter ``other``:

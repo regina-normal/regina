@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TrieSet
-static const char *TrieSet =
+inline constexpr const char TrieSet[] =
 R"doc(A trie-like data structure for storing and retriving sets. This class
 is useful when the _elements_ of these sets are taken from a fairly
 small universe, but where the _number_ of sets being stored can be
@@ -53,7 +53,7 @@ possible, even when passing or returning objects by value.)doc";
 namespace TrieSet_ {
 
 // Docstring regina::python::doc::TrieSet_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given collection. This will induce a deep
 copy of *src*.
 
@@ -61,10 +61,10 @@ Parameter ``src``:
     the collection of sets to copy.)doc";
 
 // Docstring regina::python::doc::TrieSet_::__default
-static const char *__default = R"doc(Constructs an empty collection of sets.)doc";
+inline constexpr const char __default[] = R"doc(Constructs an empty collection of sets.)doc";
 
 // Docstring regina::python::doc::TrieSet_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given collection store exactly the
 same sets.
 
@@ -75,7 +75,7 @@ Returns:
     ``True`` if and only if both collections store the same sets.)doc";
 
 // Docstring regina::python::doc::TrieSet_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given collections.
 
 Parameter ``a``:
@@ -85,7 +85,7 @@ Parameter ``b``:
     the second collection of sets whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TrieSet_::hasExtraSuperset
-static const char *hasExtraSuperset =
+inline constexpr const char hasExtraSuperset[] =
 R"doc(Performs the particular superset search required by the double
 description method.
 
@@ -126,7 +126,7 @@ Returns:
     ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::TrieSet_::hasSubset
-static const char *hasSubset =
+inline constexpr const char hasSubset[] =
 R"doc(Determines whether this collection of sets contains any subset of the
 argument *superset*. Subsets need not be _proper_ subsets (so if an
 exact copy of *superset* is found in the tree then this will suffice).
@@ -151,7 +151,7 @@ Returns:
     ``True`` if a subset was found, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::TrieSet_::insert
-static const char *insert =
+inline constexpr const char insert[] =
 R"doc(Insert the given set into this collection. The same set may be insert
 into this collection multiple times (and this multiplicity will be
 recorded correctly).
@@ -162,7 +162,7 @@ Parameter ``entry``:
     the new set to insert.)doc";
 
 // Docstring regina::python::doc::TrieSet_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given collection.
 
 Parameter ``other``:

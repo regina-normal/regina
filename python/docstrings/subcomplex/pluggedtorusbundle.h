@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::PluggedTorusBundle
-static const char *PluggedTorusBundle =
+inline constexpr const char PluggedTorusBundle[] =
 R"doc(Describes a triangulation of a graph manifold formed by joining a
 bounded saturated region with a thin I-bundle over the torus, possibly
 with layerings in between.
@@ -82,7 +82,7 @@ copying or moving) is via the static member function recognise().)doc";
 namespace PluggedTorusBundle_ {
 
 // Docstring regina::python::doc::PluggedTorusBundle_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given structure. This will induce a deep
 copy of *src*.
 
@@ -90,7 +90,7 @@ Parameter ``src``:
     the structure to copy.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of plugged torus bundle.
 
@@ -121,7 +121,7 @@ Returns:
     same type of plugged torus bundle.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::bundle
-static const char *bundle =
+inline constexpr const char bundle[] =
 R"doc(Returns an isomorphic copy of the thin I-bundle that forms part of
 this triangulation. Like all objects of class TxICore, the thin
 I-bundle that is returned is an external object with its own separate
@@ -134,7 +134,7 @@ Returns:
     triangulation.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::bundleIso
-static const char *bundleIso =
+inline constexpr const char bundleIso[] =
 R"doc(Returns an isomorphism describing how the thin I-bundle forms a
 subcomplex of this triangulation.
 
@@ -152,7 +152,7 @@ Returns:
     tetrahedra of this triangulation.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls PluggedTorusBundle::swap(); it is
@@ -166,7 +166,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::matchingReln
-static const char *matchingReln =
+inline constexpr const char matchingReln[] =
 R"doc(Returns the matrix describing how the two torus boundaries of the
 saturated region are joined by the thin I-bundle and layerings. See
 the class notes above for details.
@@ -175,7 +175,7 @@ Returns:
     the matching relation between the two region boundaries.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a saturated region joined to
 a thin I-bundle via optional layerings, as described in the class
 notes above.
@@ -193,7 +193,7 @@ Returns:
     by this class.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::region
-static const char *region =
+inline constexpr const char region[] =
 R"doc(Returns the saturated region that forms part of this triangulation.
 The region refers directly to tetrahedra within this triangulation (as
 opposed to the thin I-bundle, which refers to a separate external
@@ -203,7 +203,7 @@ Returns:
     the saturated region.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:

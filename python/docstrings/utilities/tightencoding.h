@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TightEncodable
-static const char *TightEncodable =
+inline constexpr const char TightEncodable[] =
 R"doc(A base class that assists with support for tight encodings and
 corresponding decodings.
 
@@ -68,7 +68,7 @@ Python:
     hash() will be provided directly through the various subclasses.)doc";
 
 // Docstring regina::python::doc::tightDecoding
-static const char *tightDecoding =
+inline constexpr const char tightDecoding[] =
 R"doc(Reconstructs an integer or boolean from its given tight encoding. See
 the page on tight encodings for details.
 
@@ -113,7 +113,7 @@ Returns:
     the integer or boolean represented by the given tight encoding.)doc";
 
 // Docstring regina::python::doc::tightEncoding
-static const char *tightEncoding =
+inline constexpr const char tightEncoding[] =
 R"doc(Returns the tight encoding of the given native C++ integer. See the
 page on tight encodings for details.
 
@@ -132,7 +132,7 @@ Returns:
     the resulting encoded string.)doc";
 
 // Docstring regina::python::doc::tightEncoding_2
-static const char *tightEncoding_2 =
+inline constexpr const char tightEncoding_2[] =
 R"doc(Returns the tight encoding of the given boolean. See the page on tight
 encodings for details.
 
@@ -148,7 +148,7 @@ Returns:
 namespace TightEncodable_ {
 
 // Docstring regina::python::doc::TightEncodable_::hash
-static const char *hash =
+inline constexpr const char hash[] =
 R"doc(Hashes this object to a non-negative integer, allowing it to be used
 for keys in hash tables.
 
@@ -167,7 +167,7 @@ Returns:
     the integer hash of this object.)doc";
 
 // Docstring regina::python::doc::TightEncodable_::tightDecoding
-static const char *tightDecoding =
+inline constexpr const char tightDecoding[] =
 R"doc(Reconstructs an object of type *T* from its given tight encoding. See
 the page on tight encodings for details.
 
@@ -186,7 +186,7 @@ Returns:
     the object represented by the given tight encoding.)doc";
 
 // Docstring regina::python::doc::TightEncodable_::tightEncoding
-static const char *tightEncoding =
+inline constexpr const char tightEncoding[] =
 R"doc(Returns the tight encoding of this object. See the page on tight
 encodings for details.
 

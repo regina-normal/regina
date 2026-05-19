@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::PosOrder
-static const char *PosOrder =
+inline constexpr const char PosOrder[] =
 R"doc(A comparison object that sorts hyperplanes by position vectors. This
 ordering is described in "Optimizing the double description method for
 normal surface enumeration", B.A. Burton, Mathematics of Computation
@@ -36,7 +36,7 @@ swaps.)doc";
 namespace PosOrder_ {
 
 // Docstring regina::python::doc::PosOrder_::__call
-static const char *__call =
+inline constexpr const char __call[] =
 R"doc(Determines whether the hyperplane described by row *i* of the matrix
 is smaller than the hyperplane described by row *j*. Here "smaller" is
 defined by position vectors; see the PosOrder class notes for details.
@@ -55,10 +55,10 @@ Returns:
     smaller than the hyperplane described by row *j*.)doc";
 
 // Docstring regina::python::doc::PosOrder_::__copy
-static const char *__copy = R"doc(Creates a clone of the given helper objet.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given helper objet.)doc";
 
 // Docstring regina::python::doc::PosOrder_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new helper object for comparing hyperplanes.
 
 Parameter ``matrix``:

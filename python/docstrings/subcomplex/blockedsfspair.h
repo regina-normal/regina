@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::BlockedSFSPair
-static const char *BlockedSFSPair =
+inline constexpr const char BlockedSFSPair[] =
 R"doc(Represents a blocked pair of Seifert fibred spaces joined along a
 single connecting torus. This is a particular type of triangulation of
 a graph manifold, formed from two saturated regions whose torus
@@ -64,7 +64,7 @@ copying or moving) is via the static member function recognise().)doc";
 namespace BlockedSFSPair_ {
 
 // Docstring regina::python::doc::BlockedSFSPair_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given structure. This will induce a deep
 copy of *src*.
 
@@ -72,7 +72,7 @@ Parameter ``src``:
     the structure to copy.)doc";
 
 // Docstring regina::python::doc::BlockedSFSPair_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of blocked pair of Seifert fibred spaces.
 
@@ -97,7 +97,7 @@ Returns:
     same type of blocked pair of Seifert fibred spaces.)doc";
 
 // Docstring regina::python::doc::BlockedSFSPair_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls BlockedSFSPair::swap(); it is
@@ -110,7 +110,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::BlockedSFSPair_::matchingReln
-static const char *matchingReln =
+inline constexpr const char matchingReln[] =
 R"doc(Returns the matrix describing how the two saturated region boundaries
 are joined. Note that if a layering is placed between the two region
 boundaries, then any changes to the boundary relationships caused by
@@ -123,7 +123,7 @@ Returns:
     the matrix describing how the region boundaries are joined.)doc";
 
 // Docstring regina::python::doc::BlockedSFSPair_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a blocked pair of Seifert
 fibred spaces, as described by this class.
 
@@ -139,7 +139,7 @@ Returns:
     the given triangulation is not of this form.)doc";
 
 // Docstring regina::python::doc::BlockedSFSPair_::region
-static const char *region =
+inline constexpr const char region[] =
 R"doc(Returns details of one of the two bounded saturated regions that form
 this triangulation. See the class notes above for further information.
 
@@ -151,7 +151,7 @@ Returns:
     details of the requested saturated region.)doc";
 
 // Docstring regina::python::doc::BlockedSFSPair_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:

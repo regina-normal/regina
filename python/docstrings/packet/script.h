@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Script
-static const char *Script =
+inline constexpr const char Script[] =
 R"doc(A packet representing a Python script that can be run.
 
 A script consists of two parts: (i) the _text_, which contains the
@@ -68,7 +68,7 @@ packet tree, or event listeners).)doc";
 namespace Script_ {
 
 // Docstring regina::python::doc::Script_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given script packet.
 
 Like all packet types, this only copies the script content, not the
@@ -77,10 +77,10 @@ will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
 // Docstring regina::python::doc::Script_::__default
-static const char *__default = R"doc(Initialises to a script with no text and no variables.)doc";
+inline constexpr const char __default[] = R"doc(Initialises to a script with no text and no variables.)doc";
 
 // Docstring regina::python::doc::Script_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given script are identical.
 
 Here _identical_ means that both scripts contain exactly the same
@@ -96,7 +96,7 @@ Returns:
     ``True`` if and only if this and the given script are identical.)doc";
 
 // Docstring regina::python::doc::Script_::addVariable
-static const char *addVariable =
+inline constexpr const char addVariable[] =
 R"doc(Attempts to add a new variable to be associated with this script. If a
 variable with the given name is already stored, this routine will do
 nothing.
@@ -124,7 +124,7 @@ Returns:
     variable with the given name was already stored.)doc";
 
 // Docstring regina::python::doc::Script_::addVariableName
-static const char *addVariableName =
+inline constexpr const char addVariableName[] =
 R"doc(Adds a new variable to be associated with this script, changing its
 name if necessary. If the given variable name does not already exist
 as a variable name in this script, then it will be used without
@@ -150,21 +150,21 @@ Returns:
     be equal to *name*.)doc";
 
 // Docstring regina::python::doc::Script_::append
-static const char *append =
+inline constexpr const char append[] =
 R"doc(Adds the given text to the end of this script.
 
 Parameter ``extraText``:
     the text to add.)doc";
 
 // Docstring regina::python::doc::Script_::countVariables
-static const char *countVariables =
+inline constexpr const char countVariables[] =
 R"doc(Returns the number of variables associated with this script.
 
 Returns:
     the number of variables.)doc";
 
 // Docstring regina::python::doc::Script_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given script packets.
 
 This global routine simply calls Script::swap(); it is provided so
@@ -177,7 +177,7 @@ Parameter ``b``:
     the second script packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Script_::listenVariables
-static const char *listenVariables =
+inline constexpr const char listenVariables[] =
 R"doc(Registers the given packet listener to listen for events on all of
 packets identified by this script's variables.
 
@@ -193,10 +193,10 @@ Parameter ``listener``:
     variables.)doc";
 
 // Docstring regina::python::doc::Script_::removeAllVariables
-static const char *removeAllVariables = R"doc(Removes all variables associated with this script.)doc";
+inline constexpr const char removeAllVariables[] = R"doc(Removes all variables associated with this script.)doc";
 
 // Docstring regina::python::doc::Script_::removeVariable
-static const char *removeVariable =
+inline constexpr const char removeVariable[] =
 R"doc(Removes the variable stored with the given name. If no variable is
 stored with the given name, this routine will do nothing.
 
@@ -209,7 +209,7 @@ Parameter ``name``:
     sensitive.)doc";
 
 // Docstring regina::python::doc::Script_::removeVariable_2
-static const char *removeVariable_2 =
+inline constexpr const char removeVariable_2[] =
 R"doc(Removes the variable stored at the given index.
 
 .. warning::
@@ -221,7 +221,7 @@ Parameter ``index``:
     countVariables()-1 inclusive.)doc";
 
 // Docstring regina::python::doc::Script_::setText
-static const char *setText =
+inline constexpr const char setText[] =
 R"doc(Replaces the complete text of this script with the given string.
 
 Variables are not considered part of the text; you can get and set
@@ -231,7 +231,7 @@ Parameter ``newText``:
     the new text for this script.)doc";
 
 // Docstring regina::python::doc::Script_::setVariableName
-static const char *setVariableName =
+inline constexpr const char setVariableName[] =
 R"doc(Changes the name of an existing variable associated with this script.
 
 .. warning::
@@ -246,7 +246,7 @@ Parameter ``name``:
     the new name to assign to the variable.)doc";
 
 // Docstring regina::python::doc::Script_::setVariableValue
-static const char *setVariableValue =
+inline constexpr const char setVariableValue[] =
 R"doc(Changes the value of an existing variable associated with this script.
 
 Parameter ``index``:
@@ -259,7 +259,7 @@ Parameter ``value``:
     will be used.)doc";
 
 // Docstring regina::python::doc::Script_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given script packet.
 
 Like all packet types, this only swaps the script content, not the
@@ -270,7 +270,7 @@ Parameter ``other``:
     the script packet whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::Script_::text
-static const char *text =
+inline constexpr const char text[] =
 R"doc(Returns the complete text of this script.
 
 Variables are not considered part of the text; you can get and set
@@ -280,7 +280,7 @@ Returns:
     the complete text of this script.)doc";
 
 // Docstring regina::python::doc::Script_::unlistenVariables
-static const char *unlistenVariables =
+inline constexpr const char unlistenVariables[] =
 R"doc(Deregisters the given packet listener from listening for events on all
 of packets identified by this script's variables.
 
@@ -296,7 +296,7 @@ Parameter ``listener``:
     script variables.)doc";
 
 // Docstring regina::python::doc::Script_::variableIndex
-static const char *variableIndex =
+inline constexpr const char variableIndex[] =
 R"doc(Returns the index of the variable stored with the given name.
 
 Parameter ``name``:
@@ -309,7 +309,7 @@ Returns:
     the given name.)doc";
 
 // Docstring regina::python::doc::Script_::variableName
-static const char *variableName =
+inline constexpr const char variableName[] =
 R"doc(Returns the name of the requested variable associated with this
 script.
 
@@ -321,7 +321,7 @@ Returns:
     the name of the requested variable.)doc";
 
 // Docstring regina::python::doc::Script_::variableValue
-static const char *variableValue =
+inline constexpr const char variableValue[] =
 R"doc(Returns the value of the requested variable associated with this
 script. Variables may take the value ``None``.
 
@@ -333,7 +333,7 @@ Returns:
     the value of the requested variable.)doc";
 
 // Docstring regina::python::doc::Script_::variableValue_2
-static const char *variableValue_2 =
+inline constexpr const char variableValue_2[] =
 R"doc(Returns the value of the variable stored with the given name.
 Variables may take the value ``None``.
 

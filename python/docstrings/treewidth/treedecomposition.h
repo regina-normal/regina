@@ -12,10 +12,10 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::BagComparison
-static const char *BagComparison = R"doc(Indicates the relationship between two bags in a tree decomposition.)doc";
+inline constexpr const char BagComparison[] = R"doc(Indicates the relationship between two bags in a tree decomposition.)doc";
 
 // Docstring regina::python::doc::NiceType
-static const char *NiceType =
+inline constexpr const char NiceType[] =
 R"doc(Used to indicate the type of each bag in a _nice_ tree decomposition.
 
 A nice tree decomposition is produced by calling
@@ -34,7 +34,7 @@ TreeBag::niceType() and TreeBag::niceIndex() for how to access this
 information for each bag.)doc";
 
 // Docstring regina::python::doc::TreeBag
-static const char *TreeBag =
+inline constexpr const char TreeBag[] =
 R"doc(Represents a single bag in a tree decomposition.
 
 The class TreeDecomposition is used to build, manipulate and iterate
@@ -81,7 +81,7 @@ never responsible for their memory management; this is all taken care
 of by the TreeDecomposition to which they belong.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition
-static const char *TreeDecomposition =
+inline constexpr const char TreeDecomposition[] =
 R"doc(Represents a tree decomposition of a graph.
 
 Whilst this class can be used to build tree decompositions of
@@ -163,7 +163,7 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
 // Docstring regina::python::doc::TreeDecompositionAlg
-static const char *TreeDecompositionAlg =
+inline constexpr const char TreeDecompositionAlg[] =
 R"doc(Indicates which algorithm should be used to compute a tree
 decomposition of a graph.
 
@@ -173,29 +173,29 @@ Regina.)doc";
 namespace BagComparison_ {
 
 // Docstring regina::python::doc::BagComparison_::Equal
-static const char *Equal = R"doc(Indicates that the two bags have identical contents.)doc";
+inline constexpr const char Equal[] = R"doc(Indicates that the two bags have identical contents.)doc";
 
 // Docstring regina::python::doc::BagComparison_::Subset
-static const char *Subset = R"doc(Indicates that the first bag is a strict subset of the second.)doc";
+inline constexpr const char Subset[] = R"doc(Indicates that the first bag is a strict subset of the second.)doc";
 
 // Docstring regina::python::doc::BagComparison_::Superset
-static const char *Superset = R"doc(Indicates that the first bag is a strict superset of the second.)doc";
+inline constexpr const char Superset[] = R"doc(Indicates that the first bag is a strict superset of the second.)doc";
 
 // Docstring regina::python::doc::BagComparison_::Unrelated
-static const char *Unrelated = R"doc(Indicates that neither bag is a subset of the other.)doc";
+inline constexpr const char Unrelated[] = R"doc(Indicates that neither bag is a subset of the other.)doc";
 
 }
 
 namespace NiceType_ {
 
 // Docstring regina::python::doc::NiceType_::Forget
-static const char *Forget =
+inline constexpr const char Forget[] =
 R"doc(Indicates a forget bag. A _forget_ bag has only one child bag. It
 contains all of the nodes in this child bag except for exactly one
 missing node, and contains no other nodes besides these.)doc";
 
 // Docstring regina::python::doc::NiceType_::Introduce
-static const char *Introduce =
+inline constexpr const char Introduce[] =
 R"doc(Indicates an introduce bag. An _introduce_ bag has only one child bag.
 It contains all of the nodes in this child bag plus exactly one new
 node, and contains no other nodes besides these.
@@ -205,12 +205,12 @@ considered to be an introduce bag. In this case, the leaf bag contains
 exactly one node.)doc";
 
 // Docstring regina::python::doc::NiceType_::Join
-static const char *Join =
+inline constexpr const char Join[] =
 R"doc(Indicates a join bag. A _join_ bag has exactly two child bags, where
 the join bag and both of its child bags are all identical.)doc";
 
 // Docstring regina::python::doc::NiceType_::None
-static const char *None =
+inline constexpr const char None[] =
 R"doc(Indicates that either the underlying tree decomposition is not nice,
 or the details of the nice tree decomposition have not yet been
 computed.)doc";
@@ -220,7 +220,7 @@ computed.)doc";
 namespace TreeBag_ {
 
 // Docstring regina::python::doc::TreeBag_::children
-static const char *children =
+inline constexpr const char children[] =
 R"doc(Returns the first child of this bag in the underlying rooted tree.
 
 If a bag has no children, then children() will be ``None``. If a bag
@@ -233,7 +233,7 @@ Returns:
     (i.e., it has no children).)doc";
 
 // Docstring regina::python::doc::TreeBag_::compare
-static const char *compare =
+inline constexpr const char compare[] =
 R"doc(Determines if there is a subset/superset relationship between this and
 the given bag.
 
@@ -257,7 +257,7 @@ Returns:
     the relationship between the two bags, as outlined above.)doc";
 
 // Docstring regina::python::doc::TreeBag_::contains
-static const char *contains =
+inline constexpr const char contains[] =
 R"doc(Queries whether a given graph node is contained in this bag.
 
 Suppose this is a bag in a tree decomposition of some graph *G*, whose
@@ -271,7 +271,7 @@ Returns:
     ``True`` if and only if the given node is in this bag.)doc";
 
 // Docstring regina::python::doc::TreeBag_::element
-static const char *element =
+inline constexpr const char element[] =
 R"doc(Used to query the individual graph nodes stored in this bag.
 
 Suppose this is a bag in a tree decomposition of some graph *G*, whose
@@ -289,7 +289,7 @@ Returns:
     the number of the corresponding node stored in this bag.)doc";
 
 // Docstring regina::python::doc::TreeBag_::index
-static const char *index =
+inline constexpr const char index[] =
 R"doc(Returns the index of this bag within the full tree decomposition.
 
 Suppose the entire tree decomposition contains *n* bags. Then these
@@ -309,7 +309,7 @@ Returns:
     will be between 0 and ``d.size()-1`` inclusive.)doc";
 
 // Docstring regina::python::doc::TreeBag_::isLeaf
-static const char *isLeaf =
+inline constexpr const char isLeaf[] =
 R"doc(Determines if this is a leaf bag. A leaf bag is a bag with no children
 in the underlying tree.
 
@@ -319,7 +319,7 @@ Returns:
     ``True`` if and only if this is a leaf bag.)doc";
 
 // Docstring regina::python::doc::TreeBag_::next
-static const char *next =
+inline constexpr const char next[] =
 R"doc(Used for a postfix iteration through all of the bags in a tree
 decomposition. Amongst other things, a _postfix_ iteration is one in
 which all of the children of any bag *b* will be processed before *b*
@@ -348,7 +348,7 @@ Returns:
     root bag).)doc";
 
 // Docstring regina::python::doc::TreeBag_::nextPrefix
-static const char *nextPrefix =
+inline constexpr const char nextPrefix[] =
 R"doc(Used for a prefix iteration through all of the bags in a tree
 decomposition. Amongst other things, a _prefix_ iteration is one in
 which each bag will be processed before any of its children.
@@ -372,7 +372,7 @@ Returns:
     ``None`` if this is the final bag in such an iteration.)doc";
 
 // Docstring regina::python::doc::TreeBag_::niceIndex
-static const char *niceIndex =
+inline constexpr const char niceIndex[] =
 R"doc(Returns additional details on the role that an introduce or forget bag
 plays in a nice tree decomposition.
 
@@ -397,7 +397,7 @@ Returns:
     NiceType::Introduce or NiceType::Forget).)doc";
 
 // Docstring regina::python::doc::TreeBag_::niceType
-static const char *niceType =
+inline constexpr const char niceType[] =
 R"doc(Returns the role that this bag plays in a nice tree decomposition, if
 this information is known.
 
@@ -426,7 +426,7 @@ Returns:
     structure has not been computed).)doc";
 
 // Docstring regina::python::doc::TreeBag_::parent
-static const char *parent =
+inline constexpr const char parent[] =
 R"doc(Returns the parent of this bag in the underlying rooted tree.
 
 Returns:
@@ -434,7 +434,7 @@ Returns:
     the tree.)doc";
 
 // Docstring regina::python::doc::TreeBag_::sibling
-static const char *sibling =
+inline constexpr const char sibling[] =
 R"doc(Returns the next sibling of this bag in the underlying rooted tree.
 
 Specifically, if the parent of this bag has many children, then
@@ -449,7 +449,7 @@ Returns:
     the final child of the parent bag, or (ii) this is the root bag.)doc";
 
 // Docstring regina::python::doc::TreeBag_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of graph nodes stored in this bag.
 
 Suppose this is a bag in a tree decomposition of some graph *G*. Then
@@ -460,7 +460,7 @@ Returns:
     the number of graph nodes in this bag.)doc";
 
 // Docstring regina::python::doc::TreeBag_::subtype
-static const char *subtype =
+inline constexpr const char subtype[] =
 R"doc(Deprecated function that returns additional details on the role that
 an introduce or forget bag plays in a nice tree decomposition.
 
@@ -475,7 +475,7 @@ Returns:
     NiceType::Introduce or NiceType::Forget).)doc";
 
 // Docstring regina::python::doc::TreeBag_::type
-static const char *type =
+inline constexpr const char type[] =
 R"doc(Deprecated function that returns the role that this bag plays in a
 nice tree decomposition, if this information is known.
 
@@ -501,7 +501,7 @@ Returns:
 namespace TreeDecompositionAlg_ {
 
 // Docstring regina::python::doc::TreeDecompositionAlg_::Upper
-static const char *Upper =
+inline constexpr const char Upper[] =
 R"doc(Indicates that a fast upper bound algorithm should be used.
 
 This does not promise to find a tree decomposition of smallest
@@ -514,7 +514,7 @@ choice for users who just want a good tree decomposition and want it
 quickly, without needing to know the details of how it was produced.)doc";
 
 // Docstring regina::python::doc::TreeDecompositionAlg_::UpperGreedyFillIn
-static const char *UpperGreedyFillIn =
+inline constexpr const char UpperGreedyFillIn[] =
 R"doc(Indicates that the greedy fill-in heuristic should be used.
 
 This does not promise to find a tree decomposition of smallest
@@ -532,7 +532,7 @@ the setting of face pairing graphs of 3-manifold triangulations.)doc";
 namespace TreeDecomposition_ {
 
 // Docstring regina::python::doc::TreeDecomposition_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Builds a new copy of the given tree decomposition.
 
 This will be a deep copy, in the sense that all of the bags of *src*
@@ -542,7 +542,7 @@ Parameter ``src``:
     the tree decomposition to clone.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given tree decomposition are
 identical.
 
@@ -559,7 +559,7 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Builds a tree decomposition of the facet pairing graph of the given
 triangulation.
 
@@ -579,7 +579,7 @@ Parameter ``alg``:
     exact algorithm or a fast greedy algorithm.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Builds a tree decomposition of the given facet pairing graph.
 
 The nodes of the graph will be numbered in the same way as the top-
@@ -598,7 +598,7 @@ Parameter ``alg``:
     exact algorithm or a fast greedy algorithm.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Builds a tree decomposition of the 4-valent multigraph corresponding
 to the given knot or link diagram.
 
@@ -614,7 +614,7 @@ Parameter ``alg``:
     exact algorithm or a fast greedy algorithm.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::__init_4
-static const char *__init_4 =
+inline constexpr const char __init_4[] =
 R"doc(Builds a tree decomposition of an arbitrary graph. The graph may be
 directed or undirected.
 
@@ -641,7 +641,7 @@ Parameter ``alg``:
     exact algorithm or a fast greedy algorithm.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::__init_5
-static const char *__init_5 =
+inline constexpr const char __init_5[] =
 R"doc(Builds a tree decomposition of an arbitrary graph. The graph may be
 directed or undirected.
 
@@ -672,7 +672,7 @@ Parameter ``alg``:
     exact algorithm or a fast greedy algorithm.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::bag
-static const char *bag =
+inline constexpr const char bag[] =
 R"doc(A slow (linear-time) routine that returns the bag at the given index.
 
 Recall that the bags in a tree decomposition are numbered
@@ -696,7 +696,7 @@ Returns:
     the bag with the given number.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::compress
-static const char *compress =
+inline constexpr const char compress[] =
 R"doc(Removes redundant bags from this tree decomposition.
 
 Specifically, this routine "compresses" the tree decomposition as
@@ -711,7 +711,7 @@ Returns:
     ``True`` if and only if the tree decomposition was changed.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::dot
-static const char *dot =
+inline constexpr const char dot[] =
 R"doc(Returns a Graphviz DOT representation of this tree decomposition. This
 string can be saved as a standalone DOT file, which in turn can be run
 through Graphviz in order to visualise the tree decomposition.
@@ -739,7 +739,7 @@ Returns:
     above.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::first
-static const char *first =
+inline constexpr const char first[] =
 R"doc(Used for a postfix iteration through all of the bags in the tree
 decomposition. Amongst other things, a _postfix_ iteration is one in
 which all of the children of any bag *b* will be processed before *b*
@@ -766,7 +766,7 @@ Returns:
     there are no bags (which means the underlying graph *G* is empty).)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::firstPrefix
-static const char *firstPrefix =
+inline constexpr const char firstPrefix[] =
 R"doc(Used for a prefix iteration through all of the bags in the tree
 decomposition. Amongst other things, a _prefix_ iteration is one in
 which each bag will be processed before any of its children.
@@ -792,7 +792,7 @@ Returns:
     there are no bags (which means the underlying graph *G* is empty).)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::fromPACE
-static const char *fromPACE =
+inline constexpr const char fromPACE[] =
 R"doc(Builds a tree decomposition from a string using the PACE text format.
 The text format is described in detail at
 https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
@@ -861,7 +861,7 @@ See also:
     https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given tree decompositions.
 
 This global routine simply calls TreeDecomposition::swap(); it is
@@ -875,7 +875,7 @@ Parameter ``b``:
     the second tree decomposition whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::makeNice
-static const char *makeNice =
+inline constexpr const char makeNice[] =
 R"doc(Converts this into a nice tree decomposition.
 
 A _nice_ tree decomposition is one in which every bag is one of the
@@ -948,7 +948,7 @@ Parameter ``heightHint``:
     array should be the number of nodes in the underlying graph.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::pace
-static const char *pace =
+inline constexpr const char pace[] =
 R"doc(Returns a text representation of this tree decomposition using the
 PACE text format. This text format is described in detail at
 https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ , and
@@ -969,7 +969,7 @@ See also:
     https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::reroot
-static const char *reroot =
+inline constexpr const char reroot[] =
 R"doc(Reverses child-parent relationships so that the given bag becomes the
 root of the tree decomposition.
 
@@ -990,7 +990,7 @@ Parameter ``newRoot``:
     This must already be a bag of this tree decomposition.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::reroot_2
-static const char *reroot_2 =
+inline constexpr const char reroot_2[] =
 R"doc(Reroots the tree by reversing child-parent relationships, in a way
 that minimises a maximum estimated processing cost amongst all bags.
 
@@ -1093,7 +1093,7 @@ Parameter ``costRoot``:
     for each bag being the new root. This array may be ``None``.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::root
-static const char *root =
+inline constexpr const char root[] =
 R"doc(Returns the bag at the root of the underlying tree.
 
 Returns:
@@ -1101,21 +1101,21 @@ Returns:
     underlying graph *G* is empty).)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of bags in this tree decomposition.
 
 Returns:
     the number of bags.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given tree decomposition.
 
 Parameter ``other``:
     the tree decomposition whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition_::width
-static const char *width =
+inline constexpr const char width[] =
 R"doc(Returns the width of this tree decomposition. This is one less than
 the size of the largest bag.
 

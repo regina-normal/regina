@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::GroupExpression
-static const char *GroupExpression =
+inline constexpr const char GroupExpression[] =
 R"doc(Represents an expression involving generators from a group
 presentation or a free group. An expression is represented as word,
 i.e, a sequence of powers of generators all of which are multiplied in
@@ -31,7 +31,7 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm
-static const char *GroupExpressionTerm =
+inline constexpr const char GroupExpressionTerm[] =
 R"doc(Represents a power of a generator in a group presentation.
 
 These objects are small enough to pass by value and swap with
@@ -39,7 +39,7 @@ std::swap(), with no need for any specialised move operations or swap
 functions.)doc";
 
 // Docstring regina::python::doc::GroupPresentation
-static const char *GroupPresentation =
+inline constexpr const char GroupPresentation[] =
 R"doc(Represents a finite presentation of a group.
 
 A presentation consists of a number of generators and a set of
@@ -54,7 +54,7 @@ possible, even when passing or returning objects by value.)doc";
 namespace GroupExpressionTerm_ {
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares two terms lexicographically. Specifically, this operator
 imposes a total order on terms by comparing them lexicographically as
 (generator, exponent) pairs.
@@ -71,13 +71,13 @@ Returns:
     given term.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__copy
-static const char *__copy = R"doc(Creates a new term initialised to the given value.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new term initialised to the given value.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__default
-static const char *__default = R"doc(Creates a new uninitialised term.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new uninitialised term.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given term contain identical data.
 
 Returns:
@@ -85,7 +85,7 @@ Returns:
     generator and exponent.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__iadd
-static const char *__iadd =
+inline constexpr const char __iadd[] =
 R"doc(Attempts to merge this term with the given term. If both terms have
 the same generator, the two exponents will be added and stored in this
 term. If the generators are different, this routine will do nothing.
@@ -101,7 +101,7 @@ Returns:
     if the two terms have different generators.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new term initialised to the given value.
 
 Parameter ``gen``:
@@ -111,7 +111,7 @@ Parameter ``exp``:
     the exponent to which this generator is raised.)doc";
 
 // Docstring regina::python::doc::GroupExpressionTerm_::inverse
-static const char *inverse =
+inline constexpr const char inverse[] =
 R"doc(Returns the inverse of this term. The inverse has the same generator
 but a negated exponent.
 
@@ -125,13 +125,13 @@ Returns:
 namespace GroupExpression_ {
 
 // Docstring regina::python::doc::GroupExpression_::__copy
-static const char *__copy = R"doc(Creates a new expression that is a clone of the given expression.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new expression that is a clone of the given expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::__default
-static const char *__default = R"doc(Creates a new expression with no terms.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new expression with no terms.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Equality operator. Checks to see whether or not these two words
 represent the same literal string.
 
@@ -142,14 +142,14 @@ Returns:
     ``True`` if this and the given string literal are identical.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new expression containing a single term.
 
 Parameter ``term``:
     the term to use as the new expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new expression containing a single term.
 
 Parameter ``generator``:
@@ -159,7 +159,7 @@ Parameter ``exponent``:
     the exponent to which the given generator is raised in the term.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Attempts to interpret the given input string as a word in a group.
 Regina can recognise strings in the following four basic forms:
 
@@ -196,7 +196,7 @@ Parameter ``nGens``:
     constructor will not check whether generators are within range.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::__init_4
-static const char *__init_4 =
+inline constexpr const char __init_4[] =
 R"doc(Attempts to interpret the given input string as a word in a group.
 Regina can recognise strings in the following four basic forms:
 
@@ -233,14 +233,14 @@ Parameter ``nGens``:
     constructor will not check whether generators are within range.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::addTermFirst
-static const char *addTermFirst =
+inline constexpr const char addTermFirst[] =
 R"doc(Adds the given term to the beginning of this expression.
 
 Parameter ``term``:
     the term to add.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::addTermFirst_2
-static const char *addTermFirst_2 =
+inline constexpr const char addTermFirst_2[] =
 R"doc(Adds the given term to the beginning of this expression.
 
 Parameter ``generator``:
@@ -250,14 +250,14 @@ Parameter ``exponent``:
     the exponent to which the given generator is raised.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::addTermLast
-static const char *addTermLast =
+inline constexpr const char addTermLast[] =
 R"doc(Adds the given term to the end of this expression.
 
 Parameter ``term``:
     the term to add.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::addTermLast_2
-static const char *addTermLast_2 =
+inline constexpr const char addTermLast_2[] =
 R"doc(Adds the given term to the end of this expression.
 
 Parameter ``generator``:
@@ -267,7 +267,7 @@ Parameter ``exponent``:
     the exponent to which the given generator is raised.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::addTermsFirst
-static const char *addTermsFirst =
+inline constexpr const char addTermsFirst[] =
 R"doc(Multiplies this expression on the left by the given word. This
 expression will be modified directly.
 
@@ -275,7 +275,7 @@ Parameter ``word``:
     the word to multiply with this expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::addTermsLast
-static const char *addTermsLast =
+inline constexpr const char addTermsLast[] =
 R"doc(Multiplies this expression on the right by the given word. This
 expression will be modified directly.
 
@@ -283,7 +283,7 @@ Parameter ``word``:
     the word to multiply with this expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::countTerms
-static const char *countTerms =
+inline constexpr const char countTerms[] =
 R"doc(Returns the number of terms in this expression.
 
 For instance, the expression ``g1^2 g3^-1 g6`` contains three terms.
@@ -293,7 +293,7 @@ Returns:
     the number of terms.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::cycleLeft
-static const char *cycleLeft =
+inline constexpr const char cycleLeft[] =
 R"doc(Cycles this word by moving the rightmost term around to the leftmost.
 All other terms shift one step to the right.
 
@@ -301,7 +301,7 @@ If the word is of the form ``g_i1^j1 g_i2^j2 ... g_in^jn``, this
 converts it into the word ``g_in^jn g_i1^j1 g_i1^j1 ... g_in-1^jn-1``.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::cycleRight
-static const char *cycleRight =
+inline constexpr const char cycleRight[] =
 R"doc(Cycles this word by moving the leftmost term around to the rightmost.
 All other terms shift one step to the left.
 
@@ -309,12 +309,12 @@ If the word is of the form ``g_i1^j1 g_i2^j2 ... g_in^jn``, this
 converts it into the word ``g_i2^j2 ... g_in^jn g_i1^j1``.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::erase
-static const char *erase =
+inline constexpr const char erase[] =
 R"doc(Erases all terms from this this word. This effectively turns this word
 into the identity element.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::exponent
-static const char *exponent =
+inline constexpr const char exponent[] =
 R"doc(Returns the exponent corresonding to the term at the given index in
 this expression. Index 0 represents the first term, index 1 represents
 the second term and so on.
@@ -331,7 +331,7 @@ Returns:
     the requested exponent.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::generator
-static const char *generator =
+inline constexpr const char generator[] =
 R"doc(Returns the generator corresonding to the term at the given index in
 this expression. Index 0 represents the first term, index 1 represents
 the second term and so on.
@@ -348,7 +348,7 @@ Returns:
     the number of the requested generator.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given expressions.
 
 This global routine simply calls GroupExpression::swap(); it is
@@ -361,7 +361,7 @@ Parameter ``rhs``:
     the expression whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::inverse
-static const char *inverse =
+inline constexpr const char inverse[] =
 R"doc(Returns the inverse of this expression. The terms will be reversed and
 the exponents negated.
 
@@ -369,10 +369,10 @@ Returns:
     the inverse of this expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::invert
-static const char *invert = R"doc(Inverts this expression. Does not allocate or deallocate anything.)doc";
+inline constexpr const char invert[] = R"doc(Inverts this expression. Does not allocate or deallocate anything.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::isTrivial
-static const char *isTrivial =
+inline constexpr const char isTrivial[] =
 R"doc(Tests whether this is the trivial (unit) word.
 
 No attempt is made to remove redundant terms (so the word ``g g^-1``
@@ -382,7 +382,7 @@ Returns:
     ``True`` if and only if this is the trivial word.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::power
-static const char *power =
+inline constexpr const char power[] =
 R"doc(Returns this expression raised to the given power. The given exponent
 may be positive, zero or negative.
 
@@ -393,7 +393,7 @@ Returns:
     this expression raised to the given power.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::simplify
-static const char *simplify =
+inline constexpr const char simplify[] =
 R"doc(Simplifies this expression. Adjacent powers of the same generator will
 be combined, and terms with an exponent of zero will be removed. Note
 that it is _not_ assumed that the underlying group is abelian.
@@ -412,7 +412,7 @@ Returns:
     ``True`` if and only if this expression was changed.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::str
-static const char *str =
+inline constexpr const char str[] =
 R"doc(Returns a short text representation of this group expression, with a
 choice of either numbered generators or alphabetic generators.
 
@@ -441,7 +441,7 @@ Returns:
     a short text representation of this group expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::substitute
-static const char *substitute =
+inline constexpr const char substitute[] =
 R"doc(Replaces every occurrence of the given generator with the given
 substitute expression. If the given generator was found, the
 expression will be simplified once the substitution is complete.
@@ -465,7 +465,7 @@ Returns:
     ``True`` if and only if any substitutions were made.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::substitute_2
-static const char *substitute_2 =
+inline constexpr const char substitute_2[] =
 R"doc(Replaces every generator in this expression with the corresponding
 substitute expression from the given map.
 
@@ -493,14 +493,14 @@ Parameter ``cyclic``:
     cyclic; see simplify() for further details.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given expression.
 
 Parameter ``other``:
     the expression whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::term
-static const char *term =
+inline constexpr const char term[] =
 R"doc(Returns the term at the given index in this expression. Index 0
 represents the first term, index 1 represents the second term and so
 on.
@@ -517,7 +517,7 @@ Returns:
     the requested term.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::term_2
-static const char *term_2 =
+inline constexpr const char term_2[] =
 R"doc(Returns a constant reference to the term at the given index in this
 expression. Index 0 represents the first term, index 1 represents the
 second term and so on.
@@ -534,7 +534,7 @@ Returns:
     the requested term.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::terms
-static const char *terms =
+inline constexpr const char terms[] =
 R"doc(Returns the list of terms in this expression. These are the actual
 terms stored internally; any modifications made to this list will show
 up in the expression itself.
@@ -552,7 +552,7 @@ Returns:
     the list of terms.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::tex
-static const char *tex =
+inline constexpr const char tex[] =
 R"doc(Returns a TeX representation of this expression.
 
 The text representation will be of the form ``g_2^4 g_{13}^{-5} g_4``.
@@ -561,7 +561,7 @@ Returns:
     a TeX representation of this expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::utf8
-static const char *utf8 =
+inline constexpr const char utf8[] =
 R"doc(Returns a short text representation of this group expression using
 unicode characters, with a choice of either numbered generators or
 alphabetic generators.
@@ -586,7 +586,7 @@ Returns:
     a short text representation of this group expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::wordLength
-static const char *wordLength =
+inline constexpr const char wordLength[] =
 R"doc(Returns the length of the word, i.e. the number of letters with
 exponent +1 or -1 for which this word is expressable as a product.
 
@@ -600,7 +600,7 @@ Returns:
     the length of the word.)doc";
 
 // Docstring regina::python::doc::GroupExpression_::writeXMLData
-static const char *writeXMLData =
+inline constexpr const char writeXMLData[] =
 R"doc(Writes a chunk of XML containing this expression.
 
 Python:
@@ -614,17 +614,17 @@ Parameter ``out``:
 namespace GroupPresentation_ {
 
 // Docstring regina::python::doc::GroupPresentation_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a clone of the given group presentation.
 
 Parameter ``src``:
     the group presentation to clone.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::__default
-static const char *__default = R"doc(Creates a new presentation with no generators and no relations.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new presentation with no generators and no relations.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given group presentation are
 identical.
 
@@ -641,14 +641,14 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates the free group on the given number of generators.
 
 Parameter ``nGenerators``:
     the number of generators.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Constructor that allows you to directly pass an arbitrary number of
 relators in string format.
 
@@ -675,7 +675,7 @@ Parameter ``rels``:
     above.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::abelianRank
-static const char *abelianRank =
+inline constexpr const char abelianRank[] =
 R"doc(Computes the rank of the abelianisation of this group. This is the
 number of *Z* summands in the abelianisation (i.e., ignoring any
 torsion summands).
@@ -691,14 +691,14 @@ Returns:
     the rank of the abelianisation of this group.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::abelianisation
-static const char *abelianisation =
+inline constexpr const char abelianisation[] =
 R"doc(Computes the abelianisation of this group.
 
 Returns:
     the abelianisation of this group.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::addGenerator
-static const char *addGenerator =
+inline constexpr const char addGenerator[] =
 R"doc(Adds one or more generators to the group presentation. If the new
 presentation has *g* generators, the new generators will be numbered
 *g*-1, *g*-2 and so on.
@@ -710,7 +710,7 @@ Returns:
     the number of generators in the new presentation.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::addRelation
-static const char *addRelation =
+inline constexpr const char addRelation[] =
 R"doc(Adds the given relation to the group presentation. The relation must
 be of the form ``expression = 1``.
 
@@ -725,7 +725,7 @@ Parameter ``rel``:
     expression ``g1^2 g2``.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::compact
-static const char *compact =
+inline constexpr const char compact[] =
 R"doc(Returns a compact one-line representation of this group presentation,
 including details of all generators and relations.
 
@@ -740,21 +740,21 @@ Returns:
     a compact representation of this group presentation.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::countGenerators
-static const char *countGenerators =
+inline constexpr const char countGenerators[] =
 R"doc(Returns the number of generators in this group presentation.
 
 Returns:
     the number of generators.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::countRelations
-static const char *countRelations =
+inline constexpr const char countRelations[] =
 R"doc(Returns the number of relations in this group presentation.
 
 Returns:
     the number of relations.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::enumerateCovers
-static const char *enumerateCovers =
+inline constexpr const char enumerateCovers[] =
 R"doc(Enumerates all transitive representations of this group into the
 symmetric group *S(k)*. Each representation is produced exactly once
 up to conjugacy.
@@ -866,7 +866,7 @@ Returns:
     the total number of representations found.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::gap
-static const char *gap =
+inline constexpr const char gap[] =
 R"doc(Returns a sequence of GAP commands that create this group.
 
 GAP is a widely-used computational algebra system, and can be
@@ -886,7 +886,7 @@ Returns:
     a sequence of commands to create this group in GAP.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given group presentations.
 
 This global routine simply calls GroupPresentation::swap(); it is
@@ -900,7 +900,7 @@ Parameter ``rhs``:
     the presentation whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::homologicalAlignment
-static const char *homologicalAlignment =
+inline constexpr const char homologicalAlignment[] =
 R"doc(Rewrites the presentation so that generators of the group map to
 generators of the abelianisation, with any left-over generators
 mapping to zero (if possible). Consider this a _homological-alignment_
@@ -942,7 +942,7 @@ Returns:
     presentation was not changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::identifyAbelian
-static const char *identifyAbelian =
+inline constexpr const char identifyAbelian[] =
 R"doc(Attempts to determine if the group is abelian.
 
 A return value of ``True`` indicates that this routine successfully
@@ -970,7 +970,7 @@ Returns:
     result is inconclusive.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::identifySimplyIsomorphicTo
-static const char *identifySimplyIsomorphicTo =
+inline constexpr const char identifySimplyIsomorphicTo[] =
 R"doc(Attempts to prove that this and the given group presentation are
 _simply isomorphic_.
 
@@ -1002,7 +1002,7 @@ Returns:
     presentations are simply isomorphic, or ``False`` if it could not.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::incidence
-static const char *incidence =
+inline constexpr const char incidence[] =
 R"doc(Returns a matrix indicating which generators are used by which
 relations.
 
@@ -1018,7 +1018,7 @@ Returns:
     the incidence matrix between relators and generators.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::intelligentNielsen
-static const char *intelligentNielsen =
+inline constexpr const char intelligentNielsen[] =
 R"doc(Deprecated alias for nielsen(), which looks for Nielsen moves that
 will simplify the presentation.
 
@@ -1032,7 +1032,7 @@ Returns:
     changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::intelligentSimplify
-static const char *intelligentSimplify =
+inline constexpr const char intelligentSimplify[] =
 R"doc(Deprecated alias for simplify(), which attempts to simplify this group
 presentation as intelligently as possible without further input.
 
@@ -1046,7 +1046,7 @@ Returns:
     presentation was not changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::isValid
-static const char *isValid =
+inline constexpr const char isValid[] =
 R"doc(Tests whether all of the relations for the group are indeed words in
 the generators. This routine returns ``False`` if at least one relator
 uses an out-of-bound generator, and ``True`` otherwise.
@@ -1059,7 +1059,7 @@ Returns:
     generators.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::markedAbelianisation
-static const char *markedAbelianisation =
+inline constexpr const char markedAbelianisation[] =
 R"doc(Computes the abelianisation of this group. The coordinates in the
 chain complex correspond to the generators and relators for this
 group.
@@ -1068,7 +1068,7 @@ Returns:
     the abelianisation of this group.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::nielsen
-static const char *nielsen =
+inline constexpr const char nielsen[] =
 R"doc(Looks for Nielsen moves that will simplify the presentation. Performs
 one of the most-effective moves, if it can find any.
 
@@ -1094,7 +1094,7 @@ Returns:
     changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::nielsenCombine
-static const char *nielsenCombine =
+inline constexpr const char nielsenCombine[] =
 R"doc(Replaces a generator ``gi`` by either ``(gi)(gj)^k`` or ``(gj)^k(gi)``
 in the presentation. It it is the third type of Nielsen move one can
 apply to a presentation.
@@ -1127,7 +1127,7 @@ Returns:
     at least one relation.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::nielsenInvert
-static const char *nielsenInvert =
+inline constexpr const char nielsenInvert[] =
 R"doc(Replaces a generator in a presentation by its inverse, and recomputes
 the appropriate presentation. This is the second generator type of the
 automorphism group of a free group.
@@ -1143,7 +1143,7 @@ Returns:
     at least one relation.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::nielsenTransposition
-static const char *nielsenTransposition =
+inline constexpr const char nielsenTransposition[] =
 R"doc(Switches the generators in the presentation indexed by *i* and *j*
 respectively, and recomputes the appropriate presentation. It is one
 of the standard Nielsen moves, which is the first of three generator
@@ -1163,7 +1163,7 @@ Returns:
     at least one relation.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::prettyRewriting
-static const char *prettyRewriting =
+inline constexpr const char prettyRewriting[] =
 R"doc(An entirely cosmetic rewriting of the presentation, which is fast and
 superficial.
 
@@ -1203,7 +1203,7 @@ Returns:
     changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::proliferateRelators
-static const char *proliferateRelators =
+inline constexpr const char proliferateRelators[] =
 R"doc(A routine to help escape local wells when simplifying presentations,
 which may be useful when small cancellation theory can't find the
 simplest relators.
@@ -1231,7 +1231,7 @@ Parameter ``depth``:
     must be strictly positive.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::recogniseGroup
-static const char *recogniseGroup =
+inline constexpr const char recogniseGroup[] =
 R"doc(Attempts to recognise the group corresponding to this presentation.
 This routine is much more likely to be successful if you have already
 called simplify().
@@ -1270,7 +1270,7 @@ Returns:
     or an empty string if the group is not recognised.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::relation
-static const char *relation =
+inline constexpr const char relation[] =
 R"doc(Returns the relation at the given index in this group presentation.
 The relation will be of the form ``expresson = 1``.
 
@@ -1284,7 +1284,7 @@ Returns:
     expression ``g1^2 g2``.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::relations
-static const char *relations =
+inline constexpr const char relations[] =
 R"doc(Returns the list of all relations in this group presentation.
 
 Python:
@@ -1299,7 +1299,7 @@ Returns:
     the list of relations.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::relatorLength
-static const char *relatorLength =
+inline constexpr const char relatorLength[] =
 R"doc(The sum of the word lengths of the relators. Word lengths are
 computing using GroupExpression::wordLength(). Used as a coarse
 measure of the complexity of the presentation.
@@ -1308,7 +1308,7 @@ Returns:
     the sum of word lengths.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::simplify
-static const char *simplify =
+inline constexpr const char simplify[] =
 R"doc(Attempts to simplify this group presentation as intelligently as
 possible without further input.
 
@@ -1337,7 +1337,7 @@ Returns:
     presentation was not changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::simplifyAndConjugate
-static const char *simplifyAndConjugate =
+inline constexpr const char simplifyAndConjugate[] =
 R"doc(Uses small cancellation theory to reduce the input word, modulo
 conjugation, using the current presentation of the group. The input
 word will be modified directly.
@@ -1366,7 +1366,7 @@ Returns:
     ``True`` if and only if the input word was modified.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::smallCancellation
-static const char *smallCancellation =
+inline constexpr const char smallCancellation[] =
 R"doc(Attempts to simplify the group presentation using small cancellation
 theory. The simplification method is based on the Dehn algorithm for
 hyperbolic groups, i.e. small cancellation theory. This means we look
@@ -1398,14 +1398,14 @@ Returns:
     presentation was not changed.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given group presentation.
 
 Parameter ``other``:
     the group presentation whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::tex
-static const char *tex =
+inline constexpr const char tex[] =
 R"doc(Returns a TeX representation of this group presentation.
 
 The output will be of the form ``< generators | relators >``. There
@@ -1415,7 +1415,7 @@ Returns:
     a TeX representation of this group presentation.)doc";
 
 // Docstring regina::python::doc::GroupPresentation_::writeXMLData
-static const char *writeXMLData =
+inline constexpr const char writeXMLData[] =
 R"doc(Writes a chunk of XML containing this group presentation.
 
 Python:

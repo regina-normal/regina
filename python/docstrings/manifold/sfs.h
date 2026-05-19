@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::SFSFibre
-static const char *SFSFibre =
+inline constexpr const char SFSFibre[] =
 R"doc(Represents an exceptional (*alpha*, *beta*) fibre in a Seifert fibred
 space.
 
@@ -38,7 +38,7 @@ functions.
     may require more than just substituting class names).)doc";
 
 // Docstring regina::python::doc::SFSpace
-static const char *SFSpace =
+inline constexpr const char SFSpace[] =
 R"doc(Represents a general Seifert fibred space, which may be orientable or
 non-orientable. Punctures and reflector boundaries in the base
 orbifold are supported.
@@ -95,7 +95,7 @@ sized) amount of data to be copied even in a move operation.
 namespace SFSFibre_ {
 
 // Docstring regina::python::doc::SFSFibre_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares two exceptional fibres. Fibres are ordered first by *alpha*
 and then by *beta*.
 
@@ -110,13 +110,13 @@ Returns:
     the result of the comparison between this and the given fibre.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__copy
-static const char *__copy = R"doc(Creates a new exceptional fibre that is a clone of the given fibre.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new exceptional fibre that is a clone of the given fibre.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__default
-static const char *__default = R"doc(Creates a new uninitialised exceptional fibre.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new uninitialised exceptional fibre.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given exceptional fibre are identical. This
 requires both fibres to have the same values for *alpha* and the same
 values for *beta*.
@@ -125,7 +125,7 @@ Returns:
     ``True`` if and only if this and the given fibre are identical.)doc";
 
 // Docstring regina::python::doc::SFSFibre_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new exceptional fibre with the given parameters.
 
 Parameter ``newAlpha``:
@@ -141,13 +141,13 @@ Parameter ``newBeta``:
 namespace SFSpace_ {
 
 // Docstring regina::python::doc::SFSpace_::Class
-static const char *Class =
+inline constexpr const char Class[] =
 R"doc(Lists the six classes ``o1``, ``o2``, ``n1``, ``n2``, ``n3``, ``n4``
 for base orbifolds without boundaries, plus five classes ``bo1``,
 ``b02``, ``bn1``, ``bn2``, ``bn3`` for base orbifolds with boundaries.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares representations of two Seifert fibred spaces according to an
 aesthetic ordering.
 
@@ -176,15 +176,15 @@ Returns:
     space representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given Seifert fibred space.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates a new Seifert fibred space with base orbifold the 2-sphere and
 no exceptional fibres.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same Seifert fibred space.
 
@@ -203,7 +203,7 @@ Returns:
     identical presentations of the same Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::SFSpace_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new Seifert fibred space of the given class with the given
 base orbifold and no exceptional fibres.
 
@@ -252,7 +252,7 @@ Parameter ``reflectorsTwisted``:
     components described by *puncturesTwisted*.)doc";
 
 // Docstring regina::python::doc::SFSpace_::addCrosscap
-static const char *addCrosscap =
+inline constexpr const char addCrosscap[] =
 R"doc(Inserts a new crosscap into the base orbifold.
 
 This makes the base orbifold non-orientable, and increases its non-
@@ -271,7 +271,7 @@ Parameter ``fibreReversing``:
     default) if it should preserve the directions of the fibres.)doc";
 
 // Docstring regina::python::doc::SFSpace_::addHandle
-static const char *addHandle =
+inline constexpr const char addHandle[] =
 R"doc(Inserts a new handle into the base orbifold.
 
 This increases the orientable genus of the base orbifold by one, or
@@ -291,7 +291,7 @@ Parameter ``fibreReversing``:
     the fibres.)doc";
 
 // Docstring regina::python::doc::SFSpace_::addPuncture
-static const char *addPuncture =
+inline constexpr const char addPuncture[] =
 R"doc(Inserts one or more new punctures into the base orbifold. The
 punctures may be twisted or untwisted.
 
@@ -312,7 +312,7 @@ Parameter ``nPunctures``:
     the number of new punctures to insert.)doc";
 
 // Docstring regina::python::doc::SFSpace_::addReflector
-static const char *addReflector =
+inline constexpr const char addReflector[] =
 R"doc(Adds one or more new reflector boundary components to the base
 orbifold. The new reflector boundaries may be twisted or untwisted.
 
@@ -336,7 +336,7 @@ Parameter ``nReflectors``:
     the number of new reflector boundaries to add.)doc";
 
 // Docstring regina::python::doc::SFSpace_::baseClass
-static const char *baseClass =
+inline constexpr const char baseClass[] =
 R"doc(Returns which of the eleven predefined classes this space belongs to.
 The specific class indicates whether the base orbifold has punctures
 and/or reflector boundaries, whether the base orbifold is orientable,
@@ -352,7 +352,7 @@ Returns:
     the particular class to which this space belongs.)doc";
 
 // Docstring regina::python::doc::SFSpace_::baseGenus
-static const char *baseGenus =
+inline constexpr const char baseGenus[] =
 R"doc(Returns the genus of the base orbifold. All punctures and reflector
 boundaries in the base orbifold are ignored (i.e., they are treated as
 though they had been replaced with ordinary filled discs).
@@ -365,7 +365,7 @@ Returns:
     the genus of the base orbifold.)doc";
 
 // Docstring regina::python::doc::SFSpace_::baseOrientable
-static const char *baseOrientable =
+inline constexpr const char baseOrientable[] =
 R"doc(Returns whether or not the base surface is orientable. Reflector
 boundary components of the base orbifold are not considered here.
 
@@ -376,13 +376,13 @@ Returns:
     ``True`` if and only if the base surface is orientable.)doc";
 
 // Docstring regina::python::doc::SFSpace_::complementAllFibres
-static const char *complementAllFibres =
+inline constexpr const char complementAllFibres[] =
 R"doc(Replaces each exceptional fibre of the form (*alpha*, *beta*) with a
 fibre of the form (*alpha*, *alpha* - *beta*). The obstruction
 constant *b* is not touched.)doc";
 
 // Docstring regina::python::doc::SFSpace_::fibre
-static const char *fibre =
+inline constexpr const char fibre[] =
 R"doc(Returns the requested exceptional fibre. Fibres are stored in sorted
 order by *alpha* (the index) and then by *beta*. See the SFSpace class
 notes for details.
@@ -399,7 +399,7 @@ Returns:
     the requested fibre.)doc";
 
 // Docstring regina::python::doc::SFSpace_::fibreCount
-static const char *fibreCount =
+inline constexpr const char fibreCount[] =
 R"doc(Returns the number of exceptional fibres in this Seifert fibred space.
 
 Note that the obstruction parameter *b* is not included in this count.
@@ -409,7 +409,7 @@ Returns:
     the number of exceptional fibres.)doc";
 
 // Docstring regina::python::doc::SFSpace_::fibreNegating
-static const char *fibreNegating =
+inline constexpr const char fibreNegating[] =
 R"doc(Returns whether or not we can negate an exceptional fibre by passing
 it around the interior of the base orbifold. That is, this routine
 determines whether a (*p*, *q*) exceptional fibre can become a (*p*,
@@ -432,14 +432,14 @@ Returns:
     described above.)doc";
 
 // Docstring regina::python::doc::SFSpace_::fibreReversing
-static const char *fibreReversing =
+inline constexpr const char fibreReversing[] =
 R"doc(Returns whether or not this space contains any fibre-reversing paths.
 
 Returns:
     ``True`` if and only if a fibre-reversing path exists.)doc";
 
 // Docstring regina::python::doc::SFSpace_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given Seifert fibred spaces.
 
 This global routine simply calls SFSpace::swap(); it is provided so
@@ -452,7 +452,7 @@ Parameter ``b``:
     the second space whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SFSpace_::insertFibre
-static const char *insertFibre =
+inline constexpr const char insertFibre[] =
 R"doc(Adds the given fibre to this Seifert fibred space.
 
 This may be an exceptional fibre (*alpha* > 1) or it may be a regular
@@ -473,7 +473,7 @@ Parameter ``fibre``:
     fibre must be coprime.)doc";
 
 // Docstring regina::python::doc::SFSpace_::insertFibre_2
-static const char *insertFibre_2 =
+inline constexpr const char insertFibre_2[] =
 R"doc(Adds the given fibre to this Seifert fibred space.
 
 This may be an exceptional fibre (*alpha* > 1) or it may be a regular
@@ -497,7 +497,7 @@ Parameter ``beta``:
     common factors with the first parameter *alpha*.)doc";
 
 // Docstring regina::python::doc::SFSpace_::isLensSpace
-static const char *isLensSpace =
+inline constexpr const char isLensSpace[] =
 R"doc(Determines if this Seifert fibred space is a Lens space.
 
 Returns:
@@ -505,7 +505,7 @@ Returns:
     if this is not a Lens space.)doc";
 
 // Docstring regina::python::doc::SFSpace_::obstruction
-static const char *obstruction =
+inline constexpr const char obstruction[] =
 R"doc(Returns the obstruction constant *b* for this Seifert fibred space.
 
 The obstruction constant corresponds to the insertion of an additional
@@ -519,7 +519,7 @@ Returns:
     the obstruction constant *b*.)doc";
 
 // Docstring regina::python::doc::SFSpace_::punctures
-static const char *punctures =
+inline constexpr const char punctures[] =
 R"doc(Returns the total number of punctures in the base orbifold. In other
 words, this routine returns the total number of real torus or Klein
 bottle boundary components in the overall 3-manifold.
@@ -536,7 +536,7 @@ Returns:
     the total number of punctures.)doc";
 
 // Docstring regina::python::doc::SFSpace_::punctures_2
-static const char *punctures_2 =
+inline constexpr const char punctures_2[] =
 R"doc(Returns the number of punctures of the given type in the base
 orbifold. In other words, this routine returns the number of real
 boundary components of the given type in the overall 3-manifold.
@@ -559,7 +559,7 @@ Returns:
     the number of punctures of the given type.)doc";
 
 // Docstring regina::python::doc::SFSpace_::reduce
-static const char *reduce =
+inline constexpr const char reduce[] =
 R"doc(Reduces the parameters of this Seifert fibred space to a simpler form
 if possible, without changing the underlying fibration.
 
@@ -582,7 +582,7 @@ Parameter ``mayReflect``:
     3-manifold, or ``False`` if we are not.)doc";
 
 // Docstring regina::python::doc::SFSpace_::reflect
-static const char *reflect =
+inline constexpr const char reflect[] =
 R"doc(Replaces this space with its mirror image. Specifically, all
 exceptional fibres and the obstruction constant *b* will be negated.
 Note that the obstruction constant will generally undergo further
@@ -600,7 +600,7 @@ curve will be reflected.
     orientable manifolds).)doc";
 
 // Docstring regina::python::doc::SFSpace_::reflectors
-static const char *reflectors =
+inline constexpr const char reflectors[] =
 R"doc(Returns the total number of reflector boundary components of the base
 orbifold. This includes both twisted and untwisted reflector
 boundaries.
@@ -609,7 +609,7 @@ Returns:
     the total number of reflector boundary components.)doc";
 
 // Docstring regina::python::doc::SFSpace_::reflectors_2
-static const char *reflectors_2 =
+inline constexpr const char reflectors_2[] =
 R"doc(Returns the number of reflector boundary components of the given type
 in the base orbifold. This either counts only twisted reflector
 boundaries, or only untwisted reflector boundaries.
@@ -623,7 +623,7 @@ Returns:
     the number of reflector boundaries of the given type.)doc";
 
 // Docstring regina::python::doc::SFSpace_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given Seifert fibred space.
 
 Parameter ``other``:
@@ -634,70 +634,70 @@ Parameter ``other``:
 namespace SFSpace_::Class_ {
 
 // Docstring regina::python::doc::SFSpace_::Class_::bn1
-static const char *bn1 =
+inline constexpr const char bn1[] =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is non-orientable, and that it contains no fibre-
 reversing paths.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::bn2
-static const char *bn2 =
+inline constexpr const char bn2[] =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is non-orientable, and that its fibre-reversing
 paths correspond precisely to its orientation-reversing paths.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::bn3
-static const char *bn3 =
+inline constexpr const char bn3[] =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is non-orientable, that it contains at least one
 fibre-reversing path, and that its fibre-reversing paths do not
 correspond precisely to its orientation-reversing paths.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::bo1
-static const char *bo1 =
+inline constexpr const char bo1[] =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is orientable, and that it contains no fibre-
 reversing paths.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::bo2
-static const char *bo2 =
+inline constexpr const char bo2[] =
 R"doc(Indicates that the base orbifold contains punctures and/or reflector
 boundaries, that it is orientable, and that it contains at least one
 fibre-reversing path.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::n1
-static const char *n1 =
+inline constexpr const char n1[] =
 R"doc(Indicates that the base orbifold is non-orientable with no punctures
 or reflector boundaries, and that none of its generators give fibre-
 reversing paths.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::n2
-static const char *n2 =
+inline constexpr const char n2[] =
 R"doc(Indicates that the base orbifold is non-orientable with no punctures
 or reflector boundaries, and that all of its generators give fibre-
 reversing paths.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::n3
-static const char *n3 =
+inline constexpr const char n3[] =
 R"doc(Indicates that the base orbifold is non-orientable with no punctures
 or reflector boundaries, that it has non-orientable genus at least
 two, and that precisely one of its generators gives a fibre-reversing
 path.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::n4
-static const char *n4 =
+inline constexpr const char n4[] =
 R"doc(Indicates that the base orbifold is non-orientable with no punctures
 or reflector boundaries, that it has non-orientable genus at least
 three, and that precisely two of its generators give fibre-reversing
 paths.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::o1
-static const char *o1 =
+inline constexpr const char o1[] =
 R"doc(Indicates that the base orbifold is orientable with no punctures or
 reflector boundaries, and that none of its generators give fibre-
 reversing paths.)doc";
 
 // Docstring regina::python::doc::SFSpace_::Class_::o2
-static const char *o2 =
+inline constexpr const char o2[] =
 R"doc(Indicates that the base orbifold is orientable with no punctures or
 reflector boundaries, and that all of its generators give fibre-
 reversing paths.)doc";

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup
-static const char *HomMarkedAbelianGroup =
+inline constexpr const char HomMarkedAbelianGroup[] =
 R"doc(Represents a homomorphism of finitely generated abelian groups.
 
 One initializes such a homomorphism by providing:
@@ -44,7 +44,7 @@ Author:
     Ryan Budney)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup
-static const char *MarkedAbelianGroup =
+inline constexpr const char MarkedAbelianGroup[] =
 R"doc(Represents a finitely generated abelian group given by a chain
 complex.
 
@@ -118,10 +118,10 @@ Author:
 namespace HomMarkedAbelianGroup_ {
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::__copy
-static const char *__copy = R"doc(Creates a clone of the given homomorphism.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Constructs a homomorphism from two marked abelian groups and a matrix
 that indicates where the generators are sent. The roles of the two
 groups and the matrix are described in detail in the
@@ -154,7 +154,7 @@ Parameter ``mat``:
     the matrix that describes the homomorphism from *dom* to *ran*.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Returns the composition of two homomorphisms.
 
 Precondition:
@@ -169,7 +169,7 @@ Returns:
     the composite homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::__mul_2
-static const char *__mul_2 =
+inline constexpr const char __mul_2[] =
 R"doc(Returns the composition of two homomorphisms.
 
 Precondition:
@@ -184,35 +184,35 @@ Returns:
     the composite homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::codomain
-static const char *codomain =
+inline constexpr const char codomain[] =
 R"doc(Returns the codomain of this homomorphism.
 
 Returns:
     the codomain that was used to define the homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::cokernel
-static const char *cokernel =
+inline constexpr const char cokernel[] =
 R"doc(Returns the cokernel of this homomorphism.
 
 Returns:
     the cokernel of the homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::definingMatrix
-static const char *definingMatrix =
+inline constexpr const char definingMatrix[] =
 R"doc(Returns the defining matrix for the homomorphism.
 
 Returns:
     the matrix that was used to define the homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::domain
-static const char *domain =
+inline constexpr const char domain[] =
 R"doc(Returns the domain of this homomorphism.
 
 Returns:
     the domain that was used to define the homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::evalCC
-static const char *evalCC =
+inline constexpr const char evalCC[] =
 R"doc(Evaluate the image of a vector under this homomorphism, using the
 original chain complexes' coordinates. This involves multiplication by
 the defining matrix.
@@ -231,7 +231,7 @@ Returns:
     coordinates, of length codomain().M().columns().)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::evalSNF
-static const char *evalSNF =
+inline constexpr const char evalSNF[] =
 R"doc(Evaluate the image of a vector under this homomorphism, using the
 Smith normal form coordinates. This is just multiplication by the
 reduced matrix.
@@ -253,7 +253,7 @@ Returns:
     coordinates, of length codomain().snfRank().)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given homomorphisms.
 
 This global routine simply calls HomMarkedAbelianGroup::swap(); it is
@@ -267,14 +267,14 @@ Parameter ``rhs``:
     the homomorphism whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::image
-static const char *image =
+inline constexpr const char image[] =
 R"doc(Returns the image of this homomorphism.
 
 Returns:
     the image of the homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::inverseHom
-static const char *inverseHom =
+inline constexpr const char inverseHom[] =
 R"doc(Returns the inverse to a HomMarkedAbelianGroup. If this homomorphism
 is not invertible, this routine returns the zero homomorphism.
 
@@ -290,7 +290,7 @@ Returns:
     invertible.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::isChainMap
-static const char *isChainMap =
+inline constexpr const char isChainMap[] =
 R"doc(Determines whether this and the given homomorphism together form a
 chain map.
 
@@ -314,7 +314,7 @@ Returns:
     commutes.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::isCycleMap
-static const char *isCycleMap =
+inline constexpr const char isCycleMap[] =
 R"doc(Is this at least a cycle map? If not, pretty much any further
 computations you try with this class will be give you nothing more
 than carefully-crafted garbage. Technically, this routine only checks
@@ -325,14 +325,14 @@ Returns:
     ``True`` if and only if this is a chain map.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::isEpic
-static const char *isEpic =
+inline constexpr const char isEpic[] =
 R"doc(Is this an epic homomorphism?
 
 Returns:
     true if this homomorphism is epic.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::isIdentity
-static const char *isIdentity =
+inline constexpr const char isIdentity[] =
 R"doc(Is this the identity automorphism?
 
 Returns:
@@ -341,35 +341,35 @@ Returns:
     identity.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::isIsomorphism
-static const char *isIsomorphism =
+inline constexpr const char isIsomorphism[] =
 R"doc(Is this an isomorphism?
 
 Returns:
     true if this homomorphism is an isomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::isMonic
-static const char *isMonic =
+inline constexpr const char isMonic[] =
 R"doc(Is this a monic homomorphism?
 
 Returns:
     true if this homomorphism is monic.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::isZero
-static const char *isZero =
+inline constexpr const char isZero[] =
 R"doc(Is this the zero map?
 
 Returns:
     true if this homomorphism is the zero map.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::kernel
-static const char *kernel =
+inline constexpr const char kernel[] =
 R"doc(Returns the kernel of this homomorphism.
 
 Returns:
     the kernel of the homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::reducedMatrix
-static const char *reducedMatrix =
+inline constexpr const char reducedMatrix[] =
 R"doc(Returns the internal reduced matrix representing the homomorphism.
 This is where the rows/columns of the matrix represent first the
 torsion summands in the order of the invariant factors, and then the
@@ -386,7 +386,7 @@ Returns:
     a copy of the internal representation of the homomorphism.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::summary
-static const char *summary =
+inline constexpr const char summary[] =
 R"doc(Returns a very brief summary of the type of map. This will state some
 basic properties of the homomorphism, such as:
 
@@ -406,14 +406,14 @@ Returns:
     a brief summary.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given homomorphism.
 
 Parameter ``other``:
     the homomorphism whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::HomMarkedAbelianGroup_::torsionSubgroup
-static const char *torsionSubgroup =
+inline constexpr const char torsionSubgroup[] =
 R"doc(Returns a HomMarkedAbelianGroup representing the induced map on the
 torsion subgroups.)doc";
 
@@ -422,10 +422,10 @@ torsion subgroups.)doc";
 namespace MarkedAbelianGroup_ {
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::__copy
-static const char *__copy = R"doc(Creates a clone of the given group.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given group.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given group were formed from identical
 chain complex constructions.
 
@@ -441,7 +441,7 @@ Returns:
     identical chain complex definitions.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a marked abelian group from a chain complex. This constructor
 assumes you are interested in homology with integer coefficents.
 
@@ -470,7 +470,7 @@ Parameter ``N``:
     one takes the image of when computing homology.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a marked abelian group from a chain complex with coefficients
 in Z_p.
 
@@ -505,7 +505,7 @@ Parameter ``pcoeff``:
     constructor that just takes two matrices).)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a free `Z_p`-module of a given rank using the direct sum of
 the standard chain complex ``0 --> Z --p--> Z --> 0``. This group is
 isomorphic to ``n Z_p``. Moreover, if constructed using the matrices-
@@ -521,7 +521,7 @@ Parameter ``p``:
     module.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::asBoundary
-static const char *asBoundary =
+inline constexpr const char asBoundary[] =
 R"doc(Expresses the given vector as a boundary in the chain complex.
 
 .. warning::
@@ -544,7 +544,7 @@ Returns:
     a vector *v* such that ``N×v=bdry``.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::boundaryOf
-static const char *boundaryOf =
+inline constexpr const char boundaryOf[] =
 R"doc(Computes the differential of the given vector in the chain complex
 whose kernel is the cycles. In other words, this routine returns
 ``M×chain``, where *M* is the "right" matrix passed to the class
@@ -561,7 +561,7 @@ Returns:
     the differential, expressed as a vector of length M.rows().)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::ccRank
-static const char *ccRank =
+inline constexpr const char ccRank[] =
 R"doc(Returns the rank of the chain complex supporting the homology
 computation.
 
@@ -573,7 +573,7 @@ Returns:
     the rank of the chain complex.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::ccRep
-static const char *ccRep =
+inline constexpr const char ccRep[] =
 R"doc(A combination of freeRep and torsionRep, this routine takes a group
 element expressed in SNF coordinates and returns a corresponding
 vector in the original chain complex.
@@ -594,7 +594,7 @@ Returns:
     a corresponding vector in chain complex coordinates.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::ccRep_2
-static const char *ccRep_2 =
+inline constexpr const char ccRep_2[] =
 R"doc(A combination of freeRep() and torsionRep() that expresses a group
 element as a vector in the original chain complex.
 
@@ -620,7 +620,7 @@ Returns:
     a corresponding vector in chain complex coordinates.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::coefficients
-static const char *coefficients =
+inline constexpr const char coefficients[] =
 R"doc(Returns the coefficients used for the computation of homology. That
 is, this routine returns the integer *p* where we use coefficients in
 Z_p. If we use coefficients in the integers Z, then this routine
@@ -630,7 +630,7 @@ Returns:
     the coefficients used in the homology calculation.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::countInvariantFactors
-static const char *countInvariantFactors =
+inline constexpr const char countInvariantFactors[] =
 R"doc(Returns the number of invariant factors that describe the torsion
 elements of this group. This is the minimal number of torsion
 generators. See the MarkedAbelianGroup class notes for further
@@ -640,7 +640,7 @@ Returns:
     the number of invariant factors.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::cycleGen
-static const char *cycleGen =
+inline constexpr const char cycleGen[] =
 R"doc(Returns the requested generator of the cycles, i.e., the kernel of the
 "right" matrix *M* in the chain complex.
 
@@ -661,7 +661,7 @@ Returns:
     complex coordinates.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::cycleProjection
-static const char *cycleProjection =
+inline constexpr const char cycleProjection[] =
 R"doc(Projects an element of the chain complex to the subspace of cycles.
 
 .. warning::
@@ -679,7 +679,7 @@ Returns:
     a corresponding vector, also in the chain complex coordinates.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::cycleProjection_2
-static const char *cycleProjection_2 =
+inline constexpr const char cycleProjection_2[] =
 R"doc(Projects a standard basis vector of the chain complex to the subspace
 of cycles.
 
@@ -699,7 +699,7 @@ Returns:
     the resulting projection, in the chain complex coordinates.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::cycleRank
-static const char *cycleRank =
+inline constexpr const char cycleRank[] =
 R"doc(Returns the number of generators of the kernel of *M*, where *M* is
 the "right" matrix used to define the chain complex.
 
@@ -707,7 +707,7 @@ Returns:
     the number of generators of ker(*M*).)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::freeRep
-static const char *freeRep =
+inline constexpr const char freeRep[] =
 R"doc(Returns the requested free generator of this group, represented in the
 original chain complex defining the group.
 
@@ -730,7 +730,7 @@ Returns:
     coordinates.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given abelian groups.
 
 This global routine simply calls MarkedAbelianGroup::swap(); it is
@@ -744,7 +744,7 @@ Parameter ``rhs``:
     the group whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::invariantFactor
-static const char *invariantFactor =
+inline constexpr const char invariantFactor[] =
 R"doc(Returns the given invariant factor describing the torsion elements of
 this group. See the MarkedAbelianGroup class notes for further
 details.
@@ -760,7 +760,7 @@ Returns:
     the requested invariant factor.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::isBoundary
-static const char *isBoundary =
+inline constexpr const char isBoundary[] =
 R"doc(Determines whether the given vector represents a boundary in the chain
 complex.
 
@@ -771,7 +771,7 @@ Returns:
     ``True`` if and only if the given vector represents a boundary.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::isCycle
-static const char *isCycle =
+inline constexpr const char isCycle[] =
 R"doc(Determines whether the given vector represents a cycle in the chain
 complex.
 
@@ -782,7 +782,7 @@ Returns:
     ``True`` if and only if the given vector represents a cycle.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::isIsomorphicTo
-static const char *isIsomorphicTo =
+inline constexpr const char isIsomorphicTo[] =
 R"doc(Determines whether this and the given abelian group are isomorphic.
 
 Parameter ``other``:
@@ -792,21 +792,21 @@ Returns:
     ``True`` if and only if the two groups are isomorphic.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::isTrivial
-static const char *isTrivial =
+inline constexpr const char isTrivial[] =
 R"doc(Determines whether this is the trivial (zero) group.
 
 Returns:
     ``True`` if and only if this is the trivial group.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::isZ
-static const char *isZ =
+inline constexpr const char isZ[] =
 R"doc(Determines whether this is the infinite cyclic group (Z).
 
 Returns:
     ``True`` if and only if this is the infinite cyclic group.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::m
-static const char *m =
+inline constexpr const char m[] =
 R"doc(Returns the "right" matrix that was used to define the chain complex.
 Our group was defined as the kernel of *M* modulo the image of *N*.
 This is the matrix *M*.
@@ -819,7 +819,7 @@ Returns:
     a reference to the defining matrix *M*.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::n
-static const char *n =
+inline constexpr const char n[] =
 R"doc(Returns the "left" matrix that was used to define the chain complex.
 Our group was defined as the kernel of *M* modulo the image of *N*.
 This is the matrix *N*.
@@ -832,7 +832,7 @@ Returns:
     a reference to the defining matrix *N*.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::rank
-static const char *rank =
+inline constexpr const char rank[] =
 R"doc(Returns the rank of the group. This is the number of included copies
 of *Z*.
 
@@ -844,7 +844,7 @@ Returns:
     the rank of the group.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::snfRank
-static const char *snfRank =
+inline constexpr const char snfRank[] =
 R"doc(Returns the minimum number of generators for this group.
 
 This is the dimension of a vector in SNF coordinates. It will always
@@ -854,7 +854,7 @@ Returns:
     the minimum number of generators.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::snfRep
-static const char *snfRep =
+inline constexpr const char snfRep[] =
 R"doc(Expresses the given cycle as a combination of free and torsion
 generators.
 
@@ -891,14 +891,14 @@ Returns:
     coordinates.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given group.
 
 Parameter ``other``:
     the group whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::torsionInclusion
-static const char *torsionInclusion =
+inline constexpr const char torsionInclusion[] =
 R"doc(Returns a map representing the inclusion of the torsion subgroup into
 this group.
 
@@ -906,7 +906,7 @@ Returns:
     the inclusion map for the torsion subgroup.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::torsionRank
-static const char *torsionRank =
+inline constexpr const char torsionRank[] =
 R"doc(Returns the rank in the group of the torsion term of given degree. If
 the given degree is *d*, this routine will return the largest *m* for
 which *m*Z_*d* is a subgroup of this group.
@@ -925,7 +925,7 @@ Returns:
     the rank in the group of the given torsion term.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::torsionRank_2
-static const char *torsionRank_2 =
+inline constexpr const char torsionRank_2[] =
 R"doc(Returns the rank in the group of the torsion term of given degree. If
 the given degree is *d*, this routine will return the largest *m* for
 which *m*Z_*d* is a subgroup of this group.
@@ -944,7 +944,7 @@ Returns:
     the rank in the group of the given torsion term.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::torsionRep
-static const char *torsionRep =
+inline constexpr const char torsionRep[] =
 R"doc(Returns the requested generator of the torsion subgroup, represented
 in the original chain complex defining the group.
 
@@ -967,14 +967,14 @@ Returns:
     coordinates.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::torsionSubgroup
-static const char *torsionSubgroup =
+inline constexpr const char torsionSubgroup[] =
 R"doc(Returns the torsion subgroup of this group.
 
 Returns:
     the torsion subgroup.)doc";
 
 // Docstring regina::python::doc::MarkedAbelianGroup_::unmarked
-static const char *unmarked =
+inline constexpr const char unmarked[] =
 R"doc(Returns just the underlying abelian group, without any of the chain
 complex information.
 

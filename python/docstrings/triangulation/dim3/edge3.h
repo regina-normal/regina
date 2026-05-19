@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Face
-static const char *Face =
+inline constexpr const char Face[] =
 R"doc(Represents an edge in the skeleton of a 3-manifold triangulation.
 
 This is a specialisation of the generic Face class template; see the
@@ -32,7 +32,7 @@ the Triangulation to which they belong.)doc";
 namespace Face_ {
 
 // Docstring regina::python::doc::Face_::linkingSurface
-static const char *linkingSurface =
+inline constexpr const char linkingSurface[] =
 R"doc(Returns the link of this edge as a normal surface.
 
 Constructing the link of a edge begins with building the frontier of a

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::ChildIterator
-static const char *ChildIterator =
+inline constexpr const char ChildIterator[] =
 R"doc(A forward iterator for iterating through all immediate children of a
 given packet.
 
@@ -42,7 +42,7 @@ Python:
     the classes where *const_* is ``False``).)doc";
 
 // Docstring regina::python::doc::Packet
-static const char *Packet =
+inline constexpr const char Packet[] =
 R"doc(Represents a packet of information that may be individually edited or
 operated upon. Packets are stored in a tree structure, with
 child/parent relationships; the root of the tree represents a complete
@@ -170,7 +170,7 @@ mathematical content, not the packet infrastructure (e.g., they do not
 touch packet labels, or the packet tree, or event listeners).)doc";
 
 // Docstring regina::python::doc::PacketChildren
-static const char *PacketChildren =
+inline constexpr const char PacketChildren[] =
 R"doc(A lightweight object that gives access to all immediate children of a
 given packet.
 
@@ -217,7 +217,7 @@ Python:
     the classes where *const_* is ``False``).)doc";
 
 // Docstring regina::python::doc::PacketData
-static const char *PacketData =
+inline constexpr const char PacketData[] =
 R"doc(A lightweight helper class that allows an object of type *Held* to
 connect with the wrapped packet class that contains it.
 
@@ -237,7 +237,7 @@ Python:
     provided directly through the various subclasses.)doc";
 
 // Docstring regina::python::doc::PacketDescendants
-static const char *PacketDescendants =
+inline constexpr const char PacketDescendants[] =
 R"doc(A lightweight object that gives access to all strict descendants of a
 given packet.
 
@@ -284,7 +284,7 @@ Python:
     exclusively uses the classes where *const_* is ``False``).)doc";
 
 // Docstring regina::python::doc::PacketListener
-static const char *PacketListener =
+inline constexpr const char PacketListener[] =
 R"doc(An object that can be registered to listen for packet events.
 
 A packet listener can be registered to listen for events on a packet
@@ -361,7 +361,7 @@ Python:
     occur, just as they would for a native C++ subclass.)doc";
 
 // Docstring regina::python::doc::PacketOf
-static const char *PacketOf =
+inline constexpr const char PacketOf[] =
 R"doc(A packet that stores a mathematical object of type *Held*.
 
 This is the class used for all of Regina's _wrapped packet types_. See
@@ -407,7 +407,7 @@ Template parameter ``Held``:
     PacketHeldType.)doc";
 
 // Docstring regina::python::doc::PacketShell
-static const char *PacketShell =
+inline constexpr const char PacketShell[] =
 R"doc(Gives access to the final remains of a packet that is in the process
 of being destroyed. The main use of this class is to pass packet
 details to the callback function
@@ -428,7 +428,7 @@ swap functions. Copies of a PacketShell will give access to the
 remains of the same underlying packet.)doc";
 
 // Docstring regina::python::doc::SubtreeIterator
-static const char *SubtreeIterator =
+inline constexpr const char SubtreeIterator[] =
 R"doc(A forward iterator for iterating through the entire packet subtree
 rooted at a given packet.
 
@@ -460,7 +460,7 @@ Python:
     the classes where *const_* is ``False``).)doc";
 
 // Docstring regina::python::doc::make_packet
-static const char *make_packet =
+inline constexpr const char make_packet[] =
 R"doc(Converts a temporary *Held* object into a new wrapped packet, without
 making a deep copy. The data will be moved out of *src* (using the
 *Held* move constructor).
@@ -490,7 +490,7 @@ Returns:
     the new wrapped packet.)doc";
 
 // Docstring regina::python::doc::make_packet_2
-static const char *make_packet_2 =
+inline constexpr const char make_packet_2[] =
 R"doc(Converts a temporary *Held* object into a new wrapped packet, without
 making a deep copy. The data will be moved out of *src* (using the
 *Held* move constructor).
@@ -523,7 +523,7 @@ Returns:
     the new wrapped packet.)doc";
 
 // Docstring regina::python::doc::open
-static const char *open =
+inline constexpr const char open[] =
 R"doc(Reads a Regina data file, and returns the corresponding packet tree.
 This uses Regina's native XML file format; it does not matter whether
 the XML file is compressed or uncompressed.
@@ -555,14 +555,14 @@ Returns:
 namespace ChildIterator_ {
 
 // Docstring regina::python::doc::ChildIterator_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Tests whether this and the given iterator are equal.
 
 Returns:
     true if and only if the two iterators are equal.)doc";
 
 // Docstring regina::python::doc::ChildIterator_::__next__
-static const char *__next__ =
+inline constexpr const char __next__[] =
 R"doc(Returns the current child packet and increments this iterator.
 
 Exception ``StopIteration``:
@@ -577,7 +577,7 @@ Returns:
 namespace PacketChildren_ {
 
 // Docstring regina::python::doc::PacketChildren_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object are designed to iterate
 over children of the same parent packet.
 
@@ -586,7 +586,7 @@ Returns:
     children of the same packet.)doc";
 
 // Docstring regina::python::doc::PacketChildren_::__iter__
-static const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all immediate child packets.
 
 Returns:
@@ -597,7 +597,7 @@ Returns:
 namespace PacketData_ {
 
 // Docstring regina::python::doc::PacketData_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Copy constructor that ignores its argument, and instead sets *heldBy_*
 to PacketHeldBy::None. This is because *heldBy_* stores information
 about the C++ type of _this_ object, not the object being copied.
@@ -606,10 +606,10 @@ This constructor is provided so that *Held* can (if it wants) use an
 implicitly-declared copy or move constructor.)doc";
 
 // Docstring regina::python::doc::PacketData_::__default
-static const char *__default = R"doc(Default constructor that sets *heldBy_* to PacketHeldBy::None.)doc";
+inline constexpr const char __default[] = R"doc(Default constructor that sets *heldBy_* to PacketHeldBy::None.)doc";
 
 // Docstring regina::python::doc::PacketData_::anonID
-static const char *anonID =
+inline constexpr const char anonID[] =
 R"doc(A unique string ID that can be used in place of a packet ID.
 
 This is an alternative to Packet::internalID(), and is designed for
@@ -640,7 +640,7 @@ Returns:
     a unique ID that identifies this object.)doc";
 
 // Docstring regina::python::doc::PacketData_::packet
-static const char *packet =
+inline constexpr const char packet[] =
 R"doc(Returns the packet that holds this data, if there is one.
 
 If this object is being held by a packet *p* of type PacketOf<Held>,
@@ -672,7 +672,7 @@ Returns:
     (directly) held by a packet.)doc";
 
 // Docstring regina::python::doc::PacketData_::packet_2
-static const char *packet_2 =
+inline constexpr const char packet_2[] =
 R"doc(Returns the packet that holds this data, if there is one.
 
 See the non-const version of this function for further details, and in
@@ -688,7 +688,7 @@ Returns:
 namespace PacketDescendants_ {
 
 // Docstring regina::python::doc::PacketDescendants_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object are designed to iterate
 over strict descendants of the same packet.
 
@@ -697,7 +697,7 @@ Returns:
     descendants of the same packet.)doc";
 
 // Docstring regina::python::doc::PacketDescendants_::__iter__
-static const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all strict descendant packets.
 
 Returns:
@@ -708,7 +708,7 @@ Returns:
 namespace PacketListener_ {
 
 // Docstring regina::python::doc::PacketListener_::childToBeAdded
-static const char *childToBeAdded =
+inline constexpr const char childToBeAdded[] =
 R"doc(Called before a child packet is to be inserted directly beneath the
 packet. Once the child is inserted, childWasAdded() will be called
 also.
@@ -722,7 +722,7 @@ Parameter ``child``:
     the child packet to be added.)doc";
 
 // Docstring regina::python::doc::PacketListener_::childToBeRemoved
-static const char *childToBeRemoved =
+inline constexpr const char childToBeRemoved[] =
 R"doc(Called before a child packet is to be removed from directly beneath
 the packet. Once the child is removed, childWasRemoved() will be
 called also.
@@ -743,7 +743,7 @@ Parameter ``child``:
     the child packet to be removed.)doc";
 
 // Docstring regina::python::doc::PacketListener_::childToBeRenamed
-static const char *childToBeRenamed =
+inline constexpr const char childToBeRenamed[] =
 R"doc(Called before one of this packet's immediate children has its label or
 tags changed. Before this change, childToBeRenamed() will be called
 also.
@@ -760,7 +760,7 @@ See also:
     packetToBeRenamed())doc";
 
 // Docstring regina::python::doc::PacketListener_::childWasAdded
-static const char *childWasAdded =
+inline constexpr const char childWasAdded[] =
 R"doc(Called after a child packet has been inserted directly beneath the
 packet. Before this child is added, childToBeAdded() will be called
 also.
@@ -774,7 +774,7 @@ Parameter ``child``:
     the child packet that was added.)doc";
 
 // Docstring regina::python::doc::PacketListener_::childWasRemoved
-static const char *childWasRemoved =
+inline constexpr const char childWasRemoved[] =
 R"doc(Called after a child packet has been removed from directly beneath the
 packet. Before the child is removed, childToBeRemoved() will be called
 also.
@@ -795,7 +795,7 @@ Parameter ``child``:
     the child packet that was removed.)doc";
 
 // Docstring regina::python::doc::PacketListener_::childWasRenamed
-static const char *childWasRenamed =
+inline constexpr const char childWasRenamed[] =
 R"doc(Called after one of this packet's immediate children has its label or
 tags changed. Before this change, childToBeRenamed() will be called
 also.
@@ -812,7 +812,7 @@ See also:
     packetWasRenamed())doc";
 
 // Docstring regina::python::doc::PacketListener_::childrenToBeReordered
-static const char *childrenToBeReordered =
+inline constexpr const char childrenToBeReordered[] =
 R"doc(Called before the child packets directly beneath the packet are to be
 reordered. Once the reordering is done, childrenWereReordered() will
 be called also.
@@ -823,7 +823,7 @@ Parameter ``packet``:
     the packet being listened to.)doc";
 
 // Docstring regina::python::doc::PacketListener_::childrenWereReordered
-static const char *childrenWereReordered =
+inline constexpr const char childrenWereReordered[] =
 R"doc(Called after the child packets directly beneath the packet have been
 reordered. Before this reordering is done, childrenToBeReordered()
 will be called also.
@@ -834,7 +834,7 @@ Parameter ``packet``:
     the packet being listened to.)doc";
 
 // Docstring regina::python::doc::PacketListener_::isListening
-static const char *isListening =
+inline constexpr const char isListening[] =
 R"doc(Determines whether this object is listening for events on any packets
 at all.
 
@@ -843,7 +843,7 @@ Returns:
     packet.)doc";
 
 // Docstring regina::python::doc::PacketListener_::packetBeingDestroyed
-static const char *packetBeingDestroyed =
+inline constexpr const char packetBeingDestroyed[] =
 R"doc(Called as the packet is being destroyed.
 
 By the time this function is called, we are already inside the Packet
@@ -871,7 +871,7 @@ Parameter ``packet``:
     gives access to the packet being listened to.)doc";
 
 // Docstring regina::python::doc::PacketListener_::packetToBeChanged
-static const char *packetToBeChanged =
+inline constexpr const char packetToBeChanged[] =
 R"doc(Called before the contents of the packet are to be changed. Once the
 contents are changed, packetWasChanged() will be called also.
 
@@ -881,7 +881,7 @@ Parameter ``packet``:
     the packet being listened to.)doc";
 
 // Docstring regina::python::doc::PacketListener_::packetToBeRenamed
-static const char *packetToBeRenamed =
+inline constexpr const char packetToBeRenamed[] =
 R"doc(Called before the packet label or tags are to be changed. Once the
 label or tags are changed, packetWasRenamed() will be called also.
 
@@ -894,7 +894,7 @@ See also:
     childToBeRenamed())doc";
 
 // Docstring regina::python::doc::PacketListener_::packetWasChanged
-static const char *packetWasChanged =
+inline constexpr const char packetWasChanged[] =
 R"doc(Called after the contents of the packet have been changed. Before the
 contents are changed, packetToBeChanged() will be called also.
 
@@ -904,7 +904,7 @@ Parameter ``packet``:
     the packet being listened to.)doc";
 
 // Docstring regina::python::doc::PacketListener_::packetWasRenamed
-static const char *packetWasRenamed =
+inline constexpr const char packetWasRenamed[] =
 R"doc(Called after the packet label or tags have been changed. Before the
 label or tags are changed, packetToBeRenamed() will be called also.
 
@@ -917,7 +917,7 @@ See also:
     childWasRenamed())doc";
 
 // Docstring regina::python::doc::PacketListener_::unlisten
-static const char *unlisten =
+inline constexpr const char unlisten[] =
 R"doc(Unregisters this listener from all packets to which it is currently
 listening.)doc";
 
@@ -926,7 +926,7 @@ listening.)doc";
 namespace PacketOf_ {
 
 // Docstring regina::python::doc::PacketOf_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given packet.
 
 Like all packet types, this only copies the mathematical content, not
@@ -938,7 +938,7 @@ Parameter ``src``:
     the packet whose contents should be copied.)doc";
 
 // Docstring regina::python::doc::PacketOf_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates a new packet.
 
 The *Held* object that it contains will be constructed using the
@@ -948,7 +948,7 @@ The packet will not be inserted into any packet tree, and will have an
 empty packet label.)doc";
 
 // Docstring regina::python::doc::PacketOf_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new packet containing a deep copy of the given data.
 
 The packet will not be inserted into any packet tree, and will have an
@@ -958,7 +958,7 @@ Parameter ``data``:
     the object to copy.)doc";
 
 // Docstring regina::python::doc::PacketOf_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Moves the given data into this new packet. This will typically be much
 faster than a deep copy, since it uses the move constructor for
 *Held*.
@@ -972,7 +972,7 @@ Parameter ``data``:
     the object to move.)doc";
 
 // Docstring regina::python::doc::PacketOf_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a new packet using one of *Held*'s own constructors.
 
 The given arguments *args* will be forwarded directly to the
@@ -998,7 +998,7 @@ Parameter ``args``:
 namespace PacketShell_ {
 
 // Docstring regina::python::doc::PacketShell_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a copy of the given shell. Both shells will refer to the same
 underlying packet.
 
@@ -1006,7 +1006,7 @@ Parameter ``shell``:
     the shell to clone.)doc";
 
 // Docstring regina::python::doc::PacketShell_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Identifies if this and the given shell refer to the same underlying
 packet.
 
@@ -1017,7 +1017,7 @@ Returns:
     ``True`` if and only if both shells refer to the same packet.)doc";
 
 // Docstring regina::python::doc::PacketShell_::__eq_2
-static const char *__eq_2 =
+inline constexpr const char __eq_2[] =
 R"doc(Identifies if this shell refers to the given packet.
 
 This test can also be used the other way around (with Packet on the
@@ -1030,14 +1030,14 @@ Returns:
     ``True`` if and only if this shell refers to the given packet.)doc";
 
 // Docstring regina::python::doc::PacketShell_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new shell referring to the given packet.
 
 Parameter ``packet``:
     the packet to refer to.)doc";
 
 // Docstring regina::python::doc::PacketShell_::hasTag
-static const char *hasTag =
+inline constexpr const char hasTag[] =
 R"doc(Determines whether this packet has the given associated tag.
 
 See Packet::tags() for further details on packet tags.
@@ -1049,7 +1049,7 @@ Returns:
     ``True`` if the given tag is found, ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::PacketShell_::hasTags
-static const char *hasTags =
+inline constexpr const char hasTags[] =
 R"doc(Determines whether this packet has any associated tags at all.
 
 See Packet::tags() for further details on packet tags.
@@ -1058,7 +1058,7 @@ Returns:
     ``True`` if this packet has any tags, ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::PacketShell_::humanLabel
-static const char *humanLabel =
+inline constexpr const char humanLabel[] =
 R"doc(Returns the label associated with this individual packet, adjusted if
 necessary for human-readable output.
 
@@ -1069,7 +1069,7 @@ Returns:
     this individual packet's label.)doc";
 
 // Docstring regina::python::doc::PacketShell_::internalID
-static const char *internalID =
+inline constexpr const char internalID[] =
 R"doc(Returns a unique string ID that identifies this packet.
 
 The user has no control over this ID and it is not human readable, but
@@ -1082,7 +1082,7 @@ Returns:
     a unique ID that identifies this packet.)doc";
 
 // Docstring regina::python::doc::PacketShell_::label
-static const char *label =
+inline constexpr const char label[] =
 R"doc(Returns the label associated with this individual packet.
 
 See Packet::label() and Packet::humanLabel() for further details on
@@ -1096,7 +1096,7 @@ Returns:
     this individual packet's label.)doc";
 
 // Docstring regina::python::doc::PacketShell_::tags
-static const char *tags =
+inline constexpr const char tags[] =
 R"doc(Returns the set of all tags associated with this packet.
 
 See Packet::tags() for further details on packet tags.
@@ -1116,7 +1116,7 @@ Returns:
 namespace Packet_ {
 
 // Docstring regina::python::doc::Packet_::__iter__
-static const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over the packets in the subtree rooted at
 this packet.
 
@@ -1148,7 +1148,7 @@ Returns:
     an iterator over the subtree rooted at this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::addTag
-static const char *addTag =
+inline constexpr const char addTag[] =
 R"doc(Associates the given tag with this packet.
 
 Each packet can have an arbitrary set of string tags associated with
@@ -1170,7 +1170,7 @@ Returns:
     the given tag was already present beforehand.)doc";
 
 // Docstring regina::python::doc::Packet_::adornedLabel
-static const char *adornedLabel =
+inline constexpr const char adornedLabel[] =
 R"doc(Returns the label of this packet adorned with the given string.
 
 An adornment typically shows how a packet has been created and/or
@@ -1196,7 +1196,7 @@ Returns:
     a copy of the packet label with the given adornment.)doc";
 
 // Docstring regina::python::doc::Packet_::append
-static const char *append =
+inline constexpr const char append[] =
 R"doc(Inserts the given packet as the last child of this packet.
 
 This packet will take ownership of *child*, in the sense that every
@@ -1223,7 +1223,7 @@ Parameter ``child``:
     the child to insert.)doc";
 
 // Docstring regina::python::doc::Packet_::children
-static const char *children =
+inline constexpr const char children[] =
 R"doc(Returns a lightweight object for iterating through the immediate
 children of this packet.
 
@@ -1259,7 +1259,7 @@ Returns:
     an object for iterating through the children of this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::children_2
-static const char *children_2 =
+inline constexpr const char children_2[] =
 R"doc(Returns a lightweight object for iterating through the immediate
 children of this packet.
 
@@ -1287,7 +1287,7 @@ Returns:
     an object for iterating through the children of this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::cloneAsSibling
-static const char *cloneAsSibling =
+inline constexpr const char cloneAsSibling[] =
 R"doc(Clones this packet (and possibly its descendants), assigns to it a
 suitable unused label and inserts the clone into the tree as a sibling
 of this packet.
@@ -1326,7 +1326,7 @@ Returns:
     parent.)doc";
 
 // Docstring regina::python::doc::Packet_::countChildren
-static const char *countChildren =
+inline constexpr const char countChildren[] =
 R"doc(Returns the number of immediate children of this packet. Grandchildren
 and so on are not counted.
 
@@ -1334,7 +1334,7 @@ Returns:
     the number of immediate children.)doc";
 
 // Docstring regina::python::doc::Packet_::countDescendants
-static const char *countDescendants =
+inline constexpr const char countDescendants[] =
 R"doc(Returns the total number of strict descendants of this packet. This
 includes children, grandchildren and so on. This packet is not
 included in the count.
@@ -1343,7 +1343,7 @@ Returns:
     the total number of strict descendants.)doc";
 
 // Docstring regina::python::doc::Packet_::descendants
-static const char *descendants =
+inline constexpr const char descendants[] =
 R"doc(Returns a lightweight object for iterating through all strict
 descendants of this packet in the packet tree.
 
@@ -1387,7 +1387,7 @@ Returns:
     packet.)doc";
 
 // Docstring regina::python::doc::Packet_::descendants_2
-static const char *descendants_2 =
+inline constexpr const char descendants_2[] =
 R"doc(Returns a lightweight object for iterating through all strict
 descendants of this packet in the packet tree.
 
@@ -1423,7 +1423,7 @@ Returns:
     packet.)doc";
 
 // Docstring regina::python::doc::Packet_::findPacketLabel
-static const char *findPacketLabel =
+inline constexpr const char findPacketLabel[] =
 R"doc(Finds the packet with the requested label in the tree or subtree for
 which this packet is matriarch. Note that label comparisons are case
 sensitive.
@@ -1436,7 +1436,7 @@ Returns:
     such packet.)doc";
 
 // Docstring regina::python::doc::Packet_::findPacketLabel_2
-static const char *findPacketLabel_2 =
+inline constexpr const char findPacketLabel_2[] =
 R"doc(Finds the packet with the requested label in the tree or subtree for
 which this packet is matriarch. Note that label comparisons are case
 sensitive.
@@ -1449,7 +1449,7 @@ Returns:
     such packet.)doc";
 
 // Docstring regina::python::doc::Packet_::firstChild
-static const char *firstChild =
+inline constexpr const char firstChild[] =
 R"doc(Determines the first child of this packet in the tree structure.
 
 This routine takes small constant time.
@@ -1458,7 +1458,7 @@ Returns:
     the first child packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::firstTreePacket
-static const char *firstTreePacket =
+inline constexpr const char firstTreePacket[] =
 R"doc(Finds the first packet of the requested type in a complete depth-first
 iteration of the tree structure. Note that this packet **must** be the
 matriarch of the entire tree.
@@ -1475,7 +1475,7 @@ Returns:
     requested type.)doc";
 
 // Docstring regina::python::doc::Packet_::firstTreePacket_2
-static const char *firstTreePacket_2 =
+inline constexpr const char firstTreePacket_2[] =
 R"doc(Finds the first packet of the requested type in a complete depth-first
 iteration of the tree structure. Note that this packet **must** be the
 matriarch of the entire tree.
@@ -1492,7 +1492,7 @@ Returns:
     requested type.)doc";
 
 // Docstring regina::python::doc::Packet_::fullName
-static const char *fullName =
+inline constexpr const char fullName[] =
 R"doc(Returns a descriptive text string for the packet. The string is of the
 form *label (packet-type)*.
 
@@ -1503,7 +1503,7 @@ Returns:
     the descriptive text string.)doc";
 
 // Docstring regina::python::doc::Packet_::hasParent
-static const char *hasParent =
+inline constexpr const char hasParent[] =
 R"doc(Determines if this packet has a parent in the tree structure.
 
 This is equivalent to, but slightly faster than, testing whether
@@ -1513,7 +1513,7 @@ Returns:
     ``if`` and only if this packet has a parent.)doc";
 
 // Docstring regina::python::doc::Packet_::hasTag
-static const char *hasTag =
+inline constexpr const char hasTag[] =
 R"doc(Determines whether this packet has the given associated tag.
 
 Each packet can have an arbitrary set of string tags associated with
@@ -1531,7 +1531,7 @@ Returns:
     ``True`` if the given tag is found, ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Packet_::hasTags
-static const char *hasTags =
+inline constexpr const char hasTags[] =
 R"doc(Determines whether this packet has any associated tags at all.
 
 Each packet can have an arbitrary set of string tags associated with
@@ -1546,7 +1546,7 @@ Returns:
     ``True`` if this packet has any tags, ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Packet_::humanLabel
-static const char *humanLabel =
+inline constexpr const char humanLabel[] =
 R"doc(Returns the label associated with this individual packet, adjusted if
 necessary for human-readable output.
 
@@ -1561,7 +1561,7 @@ Returns:
     this individual packet's label.)doc";
 
 // Docstring regina::python::doc::Packet_::insert
-static const char *insert =
+inline constexpr const char insert[] =
 R"doc(Inserts the given packet as a child of this packet at the given
 location in this packet's child list.
 
@@ -1598,7 +1598,7 @@ Parameter ``prevChild``:
     this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::insertChildAfter
-static const char *insertChildAfter =
+inline constexpr const char insertChildAfter[] =
 R"doc(Deprecated routine that inserts the given packet as a child of this
 packet at the given location in this packet's child list.
 
@@ -1631,7 +1631,7 @@ Parameter ``prevChild``:
     this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::insertChildFirst
-static const char *insertChildFirst =
+inline constexpr const char insertChildFirst[] =
 R"doc(Deprecated routine that inserts the given packet as the first child of
 this packet.
 
@@ -1655,7 +1655,7 @@ Parameter ``child``:
     the child to insert.)doc";
 
 // Docstring regina::python::doc::Packet_::insertChildLast
-static const char *insertChildLast =
+inline constexpr const char insertChildLast[] =
 R"doc(Deprecated routine that inserts the given packet as the last child of
 this packet.
 
@@ -1679,7 +1679,7 @@ Parameter ``child``:
     the child to insert.)doc";
 
 // Docstring regina::python::doc::Packet_::internalID
-static const char *internalID =
+inline constexpr const char internalID[] =
 R"doc(Returns a unique string ID that identifies this packet.
 
 The user has no control over this ID, and it is not human readable. It
@@ -1702,7 +1702,7 @@ Returns:
     a unique ID that identifies this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::isAncestorOf
-static const char *isAncestorOf =
+inline constexpr const char isAncestorOf[] =
 R"doc(Determines if this packet is equal to or an ancestor of the given
 packet in the tree structure.
 
@@ -1714,7 +1714,7 @@ Returns:
     ``descendant``.)doc";
 
 // Docstring regina::python::doc::Packet_::isListening
-static const char *isListening =
+inline constexpr const char isListening[] =
 R"doc(Determines whether the given packet listener is currently listening
 for events on this packet. See the PacketListener class notes for
 details.
@@ -1727,7 +1727,7 @@ Returns:
     packet, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Packet_::label
-static const char *label =
+inline constexpr const char label[] =
 R"doc(Returns the label associated with this individual packet. An example
 is ``MyTriangulation``.
 
@@ -1735,7 +1735,7 @@ Returns:
     this individual packet's label.)doc";
 
 // Docstring regina::python::doc::Packet_::lastChild
-static const char *lastChild =
+inline constexpr const char lastChild[] =
 R"doc(Determines the last child of this packet in the tree structure.
 
 This routine takes small constant time.
@@ -1744,7 +1744,7 @@ Returns:
     the last child packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::levelsDownTo
-static const char *levelsDownTo =
+inline constexpr const char levelsDownTo[] =
 R"doc(Counts the number of levels between this packet and its given
 descendant in the tree structure. If ``descendant`` is this packet,
 the number of levels is zero.
@@ -1764,7 +1764,7 @@ Returns:
     the number of levels difference.)doc";
 
 // Docstring regina::python::doc::Packet_::levelsUpTo
-static const char *levelsUpTo =
+inline constexpr const char levelsUpTo[] =
 R"doc(Counts the number of levels between this packet and its given ancestor
 in the tree structure. If ``ancestor`` is this packet, the number of
 levels is zero.
@@ -1784,7 +1784,7 @@ Returns:
     the number of levels difference.)doc";
 
 // Docstring regina::python::doc::Packet_::listen
-static const char *listen =
+inline constexpr const char listen[] =
 R"doc(Registers the given packet listener to listen for events on this
 packet. See the PacketListener class notes for details.
 
@@ -1796,7 +1796,7 @@ Returns:
     ``False`` if the given listener was already registered beforehand.)doc";
 
 // Docstring regina::python::doc::Packet_::makeOrphan
-static const char *makeOrphan =
+inline constexpr const char makeOrphan[] =
 R"doc(Cuts this packet away from its parent in the tree structure and
 instead makes it the root of its own tree. The tree information for
 both this packet and its parent will be updated.
@@ -1819,7 +1819,7 @@ This routine takes small constant time. It is safe to use regardless
 of whether this packet currently has a parent or not.)doc";
 
 // Docstring regina::python::doc::Packet_::moveDown
-static const char *moveDown =
+inline constexpr const char moveDown[] =
 R"doc(Moves this packet the given number of steps towards the end of its
 sibling list. If the number of steps is larger than the greatest
 possible movement, the packet will be moved to the very end of its
@@ -1834,19 +1834,19 @@ Parameter ``steps``:
     the number of steps down to move.)doc";
 
 // Docstring regina::python::doc::Packet_::moveToFirst
-static const char *moveToFirst =
+inline constexpr const char moveToFirst[] =
 R"doc(Moves this packet to be the first in its sibling list.
 
 This routine takes small constant time.)doc";
 
 // Docstring regina::python::doc::Packet_::moveToLast
-static const char *moveToLast =
+inline constexpr const char moveToLast[] =
 R"doc(Moves this packet to be the last in its sibling list.
 
 This routine takes small constant time.)doc";
 
 // Docstring regina::python::doc::Packet_::moveUp
-static const char *moveUp =
+inline constexpr const char moveUp[] =
 R"doc(Moves this packet the given number of steps towards the beginning of
 its sibling list. If the number of steps is larger than the greatest
 possible movement, the packet will be moved to the very beginning of
@@ -1861,7 +1861,7 @@ Parameter ``steps``:
     the number of steps up to move.)doc";
 
 // Docstring regina::python::doc::Packet_::nextSibling
-static const char *nextSibling =
+inline constexpr const char nextSibling[] =
 R"doc(Determines the next sibling of this packet in the tree structure. This
 is the child of the parent that follows this packet.
 
@@ -1871,7 +1871,7 @@ Returns:
     the next sibling of this packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::nextTreePacket
-static const char *nextTreePacket =
+inline constexpr const char nextTreePacket[] =
 R"doc(Finds the next packet after this in a complete depth-first iteration
 of the entire tree structure to which this packet belongs. Note that
 this packet need not be the tree matriarch.
@@ -1885,7 +1885,7 @@ Returns:
     iteration.)doc";
 
 // Docstring regina::python::doc::Packet_::nextTreePacket_2
-static const char *nextTreePacket_2 =
+inline constexpr const char nextTreePacket_2[] =
 R"doc(Finds the next packet after this in a complete depth-first iteration
 of the entire tree structure to which this packet belongs. Note that
 this packet need not be the tree matriarch.
@@ -1899,7 +1899,7 @@ Returns:
     iteration.)doc";
 
 // Docstring regina::python::doc::Packet_::nextTreePacket_3
-static const char *nextTreePacket_3 =
+inline constexpr const char nextTreePacket_3[] =
 R"doc(Finds the next packet after this of the requested type in a complete
 depth-first iteration of the entire tree structure. Note that this
 packet need not be the tree matriarch. The order of tree searching is
@@ -1913,7 +1913,7 @@ Returns:
     the requested type in such an iteration.)doc";
 
 // Docstring regina::python::doc::Packet_::nextTreePacket_4
-static const char *nextTreePacket_4 =
+inline constexpr const char nextTreePacket_4[] =
 R"doc(Finds the next packet after this of the requested type in a complete
 depth-first iteration of the entire tree structure. Note that this
 packet need not be the tree matriarch. The order of tree searching is
@@ -1927,7 +1927,7 @@ Returns:
     the requested type in such an iteration.)doc";
 
 // Docstring regina::python::doc::Packet_::parent
-static const char *parent =
+inline constexpr const char parent[] =
 R"doc(Determines the parent packet in the tree structure.
 
 This routine takes small constant time.
@@ -1936,7 +1936,7 @@ Returns:
     the parent packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::prepend
-static const char *prepend =
+inline constexpr const char prepend[] =
 R"doc(Inserts the given packet as the first child of this packet.
 
 This packet will take ownership of *child*, in the sense that every
@@ -1963,7 +1963,7 @@ Parameter ``child``:
     the child to insert.)doc";
 
 // Docstring regina::python::doc::Packet_::prevSibling
-static const char *prevSibling =
+inline constexpr const char prevSibling[] =
 R"doc(Determines the previous sibling of this packet in the tree structure.
 This is the child of the parent that precedes this packet.
 
@@ -1973,7 +1973,7 @@ Returns:
     the previous sibling of this packet, or ``None`` if there is none.)doc";
 
 // Docstring regina::python::doc::Packet_::removeAllTags
-static const char *removeAllTags =
+inline constexpr const char removeAllTags[] =
 R"doc(Removes all associated tags from this packet.
 
 Each packet can have an arbitrary set of string tags associated with
@@ -1985,7 +1985,7 @@ distinct, i.e., a particular tag cannot be associated more than once
 with the same packet.)doc";
 
 // Docstring regina::python::doc::Packet_::removeTag
-static const char *removeTag =
+inline constexpr const char removeTag[] =
 R"doc(Removes the association of the given tag with this packet.
 
 Each packet can have an arbitrary set of string tags associated with
@@ -2004,7 +2004,7 @@ Returns:
     tag was not actually associated with this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::reparent
-static const char *reparent =
+inline constexpr const char reparent[] =
 R"doc(Cuts this packet away from its parent in the tree structure, and
 inserts it as a child of the given packet instead.
 
@@ -2039,14 +2039,14 @@ Parameter ``first``:
     inserted as the last child.)doc";
 
 // Docstring regina::python::doc::Packet_::root
-static const char *root =
+inline constexpr const char root[] =
 R"doc(Determines the root of the tree to which this packet belongs.
 
 Returns:
     the matriarch of the packet tree.)doc";
 
 // Docstring regina::python::doc::Packet_::samePacket
-static const char *samePacket =
+inline constexpr const char samePacket[] =
 R"doc(Determines whether this and the given object refer to the same packet.
 
 This is exactly the same as testing whether the underlying Packet
@@ -2073,7 +2073,7 @@ Returns:
     same underlying packet.)doc";
 
 // Docstring regina::python::doc::Packet_::save
-static const char *save =
+inline constexpr const char save[] =
 R"doc(Saves the subtree rooted at this packet to the given Regina data file,
 using Regina's native XML file format. The XML file may be optionally
 compressed (Regina can happily read both compressed and uncompressed
@@ -2109,14 +2109,14 @@ Returns:
     ``True`` if and only if the file was successfully written.)doc";
 
 // Docstring regina::python::doc::Packet_::setLabel
-static const char *setLabel =
+inline constexpr const char setLabel[] =
 R"doc(Sets the label associated with this individual packet.
 
 Parameter ``label``:
     the new label to give this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::sortChildren
-static const char *sortChildren =
+inline constexpr const char sortChildren[] =
 R"doc(Sorts the immediate children of this packet according to their packet
 labels. Note that this routine is not recursive (for instance,
 grandchildren will not be sorted within each child packet).
@@ -2125,7 +2125,7 @@ This routine takes quadratic time in the number of immediate children
 (and it's slow quadratic at that).)doc";
 
 // Docstring regina::python::doc::Packet_::swapWithNextSibling
-static const char *swapWithNextSibling =
+inline constexpr const char swapWithNextSibling[] =
 R"doc(Swaps this packet with its next sibling in the sequence of children
 beneath their common parent packet. Calling this routine is equivalent
 to calling moveDown().
@@ -2136,7 +2136,7 @@ If this packet has no next sibling then this routine safely does
 nothing.)doc";
 
 // Docstring regina::python::doc::Packet_::tags
-static const char *tags =
+inline constexpr const char tags[] =
 R"doc(Returns the set of all tags associated with this packet.
 
 Each packet can have an arbitrary set of string tags associated with
@@ -2154,7 +2154,7 @@ Returns:
     the set of all tags associated with this packet.)doc";
 
 // Docstring regina::python::doc::Packet_::totalTreeSize
-static const char *totalTreeSize =
+inline constexpr const char totalTreeSize[] =
 R"doc(Determines the total number of packets in the tree or subtree for
 which this packet is matriarch. This packet is included in the count.
 
@@ -2162,7 +2162,7 @@ Returns:
     the total tree or subtree size.)doc";
 
 // Docstring regina::python::doc::Packet_::transferChildren
-static const char *transferChildren =
+inline constexpr const char transferChildren[] =
 R"doc(Cuts all of this packet's children out of the packet tree, and
 reinserts them as children of the given packet instead.
 
@@ -2189,7 +2189,7 @@ Parameter ``newParent``:
     the new parent beneath which the children will be inserted.)doc";
 
 // Docstring regina::python::doc::Packet_::type
-static const char *type =
+inline constexpr const char type[] =
 R"doc(Returns the unique integer ID representing this type of packet. This
 is the same for all packets of this class.
 
@@ -2197,7 +2197,7 @@ Returns:
     the packet type ID.)doc";
 
 // Docstring regina::python::doc::Packet_::typeName
-static const char *typeName =
+inline constexpr const char typeName[] =
 R"doc(Returns an English name for this type of packet. An example is
 ``Triangulation3``. This is the same for all packets of this class.
 
@@ -2205,7 +2205,7 @@ Returns:
     the packet type name.)doc";
 
 // Docstring regina::python::doc::Packet_::unlisten
-static const char *unlisten =
+inline constexpr const char unlisten[] =
 R"doc(Unregisters the given packet listener so that it no longer listens for
 events on this packet. See the PacketListener class notes for details.
 
@@ -2218,7 +2218,7 @@ Returns:
     place.)doc";
 
 // Docstring regina::python::doc::Packet_::writeXMLFile
-static const char *writeXMLFile =
+inline constexpr const char writeXMLFile[] =
 R"doc(Writes the subtree rooted at this packet to the given output stream in
 Regina's native XML file format. Ths is similar to calling save(),
 except that (i) the user has a more flexible choice of output stream,
@@ -2248,7 +2248,7 @@ Parameter ``format``:
 namespace SubtreeIterator_ {
 
 // Docstring regina::python::doc::SubtreeIterator_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Tests whether this and the given iterator are equal.
 
 This routine only compares the packets that each iterator is currently
@@ -2258,7 +2258,7 @@ Returns:
     true if and only if the two iterators are equal.)doc";
 
 // Docstring regina::python::doc::SubtreeIterator_::__iter__
-static const char *__iter__ =
+inline constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all members of the relevant packet
 subtree.
 
@@ -2266,7 +2266,7 @@ Returns:
     an iterator over all members of the relevant packet subtree.)doc";
 
 // Docstring regina::python::doc::SubtreeIterator_::__next__
-static const char *__next__ =
+inline constexpr const char __next__[] =
 R"doc(Returns the current packet in the subtree and increments this
 iterator.
 

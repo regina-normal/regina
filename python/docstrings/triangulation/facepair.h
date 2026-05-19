@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::FacePair
-static const char *FacePair =
+inline constexpr const char FacePair[] =
 R"doc(Represents a pair of tetrahedron face numbers.
 
 Note that we are not storing triangle numbers in a triangulation
@@ -37,7 +37,7 @@ functions.)doc";
 namespace FacePair_ {
 
 // Docstring regina::python::doc::FacePair_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares two face pairs lexicographically.
 
 This generates all of the usual comparison operators, including ``<``,
@@ -52,10 +52,10 @@ Returns:
     given face pair.)doc";
 
 // Docstring regina::python::doc::FacePair_::__copy
-static const char *__copy = R"doc(Creates a new face pair that is a clone of the given pair.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new face pair that is a clone of the given pair.)doc";
 
 // Docstring regina::python::doc::FacePair_::__dec
-static const char *__dec =
+inline constexpr const char __dec[] =
 R"doc(Decrements this face pair. It will be set to the previous face pair in
 the lexicographical ordering, or to a before-the-start value if there
 are no previous face pairs.
@@ -73,17 +73,17 @@ Returns:
     a copy of this object before the change took place.)doc";
 
 // Docstring regina::python::doc::FacePair_::__default
-static const char *__default = R"doc(Creates a new face pair (0,1).)doc";
+inline constexpr const char __default[] = R"doc(Creates a new face pair (0,1).)doc";
 
 // Docstring regina::python::doc::FacePair_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given face pair are equal.
 
 Returns:
     ``True`` if and only if this and the given pair are equal.)doc";
 
 // Docstring regina::python::doc::FacePair_::__inc
-static const char *__inc =
+inline constexpr const char __inc[] =
 R"doc(Increments this face pair. It will be set to the following face pair
 in the lexicographical ordering, or to a past-the-end value if there
 are no more face pairs.
@@ -101,7 +101,7 @@ Returns:
     a copy of this object before the change took place.)doc";
 
 // Docstring regina::python::doc::FacePair_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new face pair from the two given face numbers. The two given
 numbers need not be in any particular order.
 
@@ -116,7 +116,7 @@ Parameter ``second``:
     the second face number in the new pair.)doc";
 
 // Docstring regina::python::doc::FacePair_::commonEdge
-static const char *commonEdge =
+inline constexpr const char commonEdge[] =
 R"doc(Identifies the tetrahedron edge that is common to both faces in this
 pair.
 
@@ -131,7 +131,7 @@ Returns:
     the edge that belongs to both faces in this pair.)doc";
 
 // Docstring regina::python::doc::FacePair_::complement
-static const char *complement =
+inline constexpr const char complement[] =
 R"doc(Returns the complement of this face pair. The complement is the pair
 containing the two faces not included in this face pair.
 
@@ -142,21 +142,21 @@ Returns:
     the complement of this face pair.)doc";
 
 // Docstring regina::python::doc::FacePair_::isBeforeStart
-static const char *isBeforeStart =
+inline constexpr const char isBeforeStart[] =
 R"doc(Determines if this face pair represents a before-the-start value.
 
 Returns:
     ``True`` if and only if this face pair is before-the-start.)doc";
 
 // Docstring regina::python::doc::FacePair_::isPastEnd
-static const char *isPastEnd =
+inline constexpr const char isPastEnd[] =
 R"doc(Determines if this face pair represents a past-the-end value.
 
 Returns:
     ``True`` if and only if this face pair is past-the-end.)doc";
 
 // Docstring regina::python::doc::FacePair_::lower
-static const char *lower =
+inline constexpr const char lower[] =
 R"doc(Returns the smaller of the two face numbers in this pair.
 
 Precondition:
@@ -166,7 +166,7 @@ Returns:
     the lower face number.)doc";
 
 // Docstring regina::python::doc::FacePair_::oppositeEdge
-static const char *oppositeEdge =
+inline constexpr const char oppositeEdge[] =
 R"doc(Identifies the tetrahedron edge that belongs to neither of the two
 faces in this pair.
 
@@ -181,7 +181,7 @@ Returns:
     the edge that does not belong to either of these two faces.)doc";
 
 // Docstring regina::python::doc::FacePair_::upper
-static const char *upper =
+inline constexpr const char upper[] =
 R"doc(Returns the larger of the two face numbers in this pair.
 
 Precondition:

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::HilbertCD
-static const char *HilbertCD =
+inline constexpr const char HilbertCD[] =
 R"doc(Implements a modified Contejean-Devie algorithm for enumerating
 Hilbert bases. This is based on the stack-based algorithm described in
 "An efficient incremental algorithm for solving systems of linear
@@ -32,7 +32,7 @@ this class should ever be created.
 namespace HilbertCD_ {
 
 // Docstring regina::python::doc::HilbertCD_::enumerate
-static const char *enumerate =
+inline constexpr const char enumerate[] =
 R"doc(Determines the Hilbert basis that generates all integer points in the
 intersection of the *n*-dimensional non-negative orthant with some
 linear subspace. The resulting basis elements will be of the class

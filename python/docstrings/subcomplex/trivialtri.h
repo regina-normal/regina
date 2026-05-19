@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TrivialTri
-static const char *TrivialTri =
+inline constexpr const char TrivialTri[] =
 R"doc(Represents one of a few particular hard-coded trivial triangulations
 that do not belong to any of the other larger families.
 
@@ -30,10 +30,10 @@ function recognise().)doc";
 namespace TrivialTri_ {
 
 // Docstring regina::python::doc::TrivialTri_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::TrivialTri_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of trivial triangulation.
 
@@ -54,7 +54,7 @@ Returns:
     same type of trivial triangulation.)doc";
 
 // Docstring regina::python::doc::TrivialTri_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls TrivialTri::swap(); it is provided so
@@ -67,7 +67,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TrivialTri_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is one of the trivial
 triangulations recognised by this class.
 
@@ -84,14 +84,14 @@ Returns:
     this class.)doc";
 
 // Docstring regina::python::doc::TrivialTri_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::TrivialTri_::type
-static const char *type =
+inline constexpr const char type[] =
 R"doc(Returns the specific trivial triangulation being represented.
 
 Returns:

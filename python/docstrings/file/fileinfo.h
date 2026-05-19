@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::FileInfo
-static const char *FileInfo =
+inline constexpr const char FileInfo[] =
 R"doc(Stores information about a Regina data file, including file format and
 version.
 
@@ -33,10 +33,10 @@ possible, even when passing or returning objects by value.)doc";
 namespace FileInfo_ {
 
 // Docstring regina::python::doc::FileInfo_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given file information.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given file information.)doc";
 
 // Docstring regina::python::doc::FileInfo_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given file information describe the
 same format and version.
 
@@ -56,14 +56,14 @@ Returns:
     describe the same format and version, as described above.)doc";
 
 // Docstring regina::python::doc::FileInfo_::engine
-static const char *engine =
+inline constexpr const char engine[] =
 R"doc(Returns the version of the calculation engine that wrote this file.
 
 Returns:
     the engine version for this file.)doc";
 
 // Docstring regina::python::doc::FileInfo_::format
-static const char *format =
+inline constexpr const char format[] =
 R"doc(Returns which of Regina's file formats the data file uses.
 
 In particular, this encodes which generation of XML the file uses, but
@@ -73,7 +73,7 @@ Returns:
     the file format.)doc";
 
 // Docstring regina::python::doc::FileInfo_::formatDescription
-static const char *formatDescription =
+inline constexpr const char formatDescription[] =
 R"doc(Returns a human-readable description of the file format used by the
 data file.
 
@@ -84,7 +84,7 @@ Returns:
     a description of the file format.)doc";
 
 // Docstring regina::python::doc::FileInfo_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given file information objects.
 
 This global routine simply calls FileInfo::swap(); it is provided so
@@ -97,7 +97,7 @@ Parameter ``b``:
     the object whose contents should be swapped with *a*.)doc";
 
 // Docstring regina::python::doc::FileInfo_::identify
-static const char *identify =
+inline constexpr const char identify[] =
 R"doc(Return information about the given Regina data file.
 
 Internationalisation:
@@ -115,7 +115,7 @@ Returns:
     or ``None`` if the file type could not be identified.)doc";
 
 // Docstring regina::python::doc::FileInfo_::isCompressed
-static const char *isCompressed =
+inline constexpr const char isCompressed[] =
 R"doc(Returns whether this file is stored in compressed format. Currently
 this option only applies to XML data files.
 
@@ -123,14 +123,14 @@ Returns:
     ``True`` if this file is compressed or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::FileInfo_::isInvalid
-static const char *isInvalid =
+inline constexpr const char isInvalid[] =
 R"doc(Returns whether the file metadata could not be read.
 
 Returns:
     ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::FileInfo_::pathname
-static const char *pathname =
+inline constexpr const char pathname[] =
 R"doc(Returns the pathname of the data file being described.
 
 Internationalisation:
@@ -143,7 +143,7 @@ Returns:
     the pathname.)doc";
 
 // Docstring regina::python::doc::FileInfo_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given file information.
 
 Parameter ``other``:

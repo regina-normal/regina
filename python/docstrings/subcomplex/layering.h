@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Layering
-static const char *Layering =
+inline constexpr const char Layering[] =
 R"doc(Represents a layering of zero or more tetrahedra upon a torus
 boundary.
 
@@ -81,14 +81,14 @@ functions.)doc";
 namespace Layering_ {
 
 // Docstring regina::python::doc::Layering_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given layering structure.
 
 The new structure will describe the same layering within the same
 underlying triangulation.)doc";
 
 // Docstring regina::python::doc::Layering_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 layering.
 
@@ -115,7 +115,7 @@ Returns:
     same layering, as described above.)doc";
 
 // Docstring regina::python::doc::Layering_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new trivial (zero-tetrahedron) layering upon the given
 boundary.
 
@@ -140,7 +140,7 @@ Parameter ``roles1``:
     three vertices of tetrahedron *bdry1*.)doc";
 
 // Docstring regina::python::doc::Layering_::boundaryReln
-static const char *boundaryReln =
+inline constexpr const char boundaryReln[] =
 R"doc(Returns a 2-by-2 matrix describing the relationship between curves on
 the old and new boundary tori. Note that this relationship will often
 be non-trivial, since one of the key reasons for layering is to modify
@@ -187,7 +187,7 @@ Returns:
     the matrix relating the old and new boundary curves.)doc";
 
 // Docstring regina::python::doc::Layering_::extend
-static const char *extend =
+inline constexpr const char extend[] =
 R"doc(Examines whether one or more additional tetrahedra have been layered
 upon the current new boundary.
 
@@ -205,7 +205,7 @@ Returns:
     the number of additional layered tetrahedra that were discovered.)doc";
 
 // Docstring regina::python::doc::Layering_::extendOne
-static const char *extendOne =
+inline constexpr const char extendOne[] =
 R"doc(Examines whether a single additional tetrahedron has been layered upon
 the current new boundary.
 
@@ -226,7 +226,7 @@ Returns:
     structure was extended accordingly, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Layering_::matchesTop
-static const char *matchesTop =
+inline constexpr const char matchesTop[] =
 R"doc(Determines whether the new torus boundary of this structure is
 identified with the given torus boundary. In other words, this routine
 determines whether the new torus boundary of this structure and the
@@ -311,7 +311,7 @@ Returns:
     of this structure, or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::Layering_::newBoundaryRoles
-static const char *newBoundaryRoles =
+inline constexpr const char newBoundaryRoles[] =
 R"doc(Returns the permutations that describe the new boundary triangles.
 These refer to the final boundary after layerings have been performed.
 
@@ -325,7 +325,7 @@ Returns:
     the requested permutation describing the new boundary.)doc";
 
 // Docstring regina::python::doc::Layering_::newBoundaryTet
-static const char *newBoundaryTet =
+inline constexpr const char newBoundaryTet[] =
 R"doc(Returns the tetrahedra that provide the new boundary triangles. These
 belong to the final boundary after layerings have been performed.
 
@@ -339,7 +339,7 @@ Returns:
     the requested tetrahedron of the new boundary.)doc";
 
 // Docstring regina::python::doc::Layering_::oldBoundaryRoles
-static const char *oldBoundaryRoles =
+inline constexpr const char oldBoundaryRoles[] =
 R"doc(Returns the permutations that describe the old boundary triangles.
 These refer to the original boundary before any layerings take place.
 
@@ -353,7 +353,7 @@ Returns:
     the requested permutation describing the old boundary.)doc";
 
 // Docstring regina::python::doc::Layering_::oldBoundaryTet
-static const char *oldBoundaryTet =
+inline constexpr const char oldBoundaryTet[] =
 R"doc(Returns the tetrahedra that provide the old boundary triangles. These
 belong to the original boundary before any layerings take place.
 
@@ -367,7 +367,7 @@ Returns:
     the requested tetrahedron of the old boundary.)doc";
 
 // Docstring regina::python::doc::Layering_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of individual tetrahedra that have been layered
 onto the original boundary, according to the data stored in this
 structure.

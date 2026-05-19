@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::LayeredSolidTorus
-static const char *LayeredSolidTorus =
+inline constexpr const char LayeredSolidTorus[] =
 R"doc(Represents a layered solid torus in a triangulation. A layered solid
 torus must contain at least one tetrahedron.
 
@@ -36,10 +36,10 @@ function recognise().)doc";
 namespace LayeredSolidTorus_ {
 
 // Docstring regina::python::doc::LayeredSolidTorus_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same type
 of layered solid torus.
 
@@ -67,7 +67,7 @@ Returns:
     same type of layered solid torus.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::base
-static const char *base =
+inline constexpr const char base[] =
 R"doc(Returns the tetrahedron that is glued to itself at the base of this
 layered solid torus.
 
@@ -75,7 +75,7 @@ Returns:
     the base tetrahedron.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::baseEdge
-static const char *baseEdge =
+inline constexpr const char baseEdge[] =
 R"doc(Returns the requested edge of the base tetrahedron belonging to the
 given group. The layering identifies the six edges of the base
 tetrahedron into a group of three, a group of two and a single
@@ -103,7 +103,7 @@ Returns:
     this will be between 0 and 5 inclusive.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::baseEdgeGroup
-static const char *baseEdgeGroup =
+inline constexpr const char baseEdgeGroup[] =
 R"doc(Returns the group that the given edge of the base tetrahedron belongs
 to. See baseEdge() for further details about groups.
 
@@ -118,7 +118,7 @@ Returns:
     the group to which the given edge belongs; this will be 1, 2 or 3.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::baseFace
-static const char *baseFace =
+inline constexpr const char baseFace[] =
 R"doc(Returns one of the two faces of the base tetrahedron that are glued to
 each other.
 
@@ -130,7 +130,7 @@ Returns:
     between 0 and 3 inclusive.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::flatten
-static const char *flatten =
+inline constexpr const char flatten[] =
 R"doc(Flattens this layered solid torus to a Mobius band. A new modified
 triangulation is returned; the original triangulation that contains
 this layered solid torus will be left unchanged.
@@ -157,7 +157,7 @@ Returns:
     flattened to a Mobius band.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls LayeredSolidTorus::swap(); it is
@@ -171,7 +171,7 @@ Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::meridinalCuts
-static const char *meridinalCuts =
+inline constexpr const char meridinalCuts[] =
 R"doc(Returns the number of times the meridinal disc of the torus cuts the
 top level tetrahedron edges in the given group. See topEdge() for
 further details about groups.
@@ -184,7 +184,7 @@ Returns:
     group.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component forms a layered solid
 torus in its entirity.
 
@@ -205,7 +205,7 @@ Returns:
     ``None`` if the given component is not a layered solid torus.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::recogniseFromBase
-static const char *recogniseFromBase =
+inline constexpr const char recogniseFromBase[] =
 R"doc(Determines if the given tetrahedron forms the base of a layered solid
 torus within a triangulation. The torus need not be the entire
 triangulation; the top level tetrahedron of the torus may be glued to
@@ -228,7 +228,7 @@ Returns:
     solid torus.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::recogniseFromTop
-static const char *recogniseFromTop =
+inline constexpr const char recogniseFromTop[] =
 R"doc(Determines if the given tetrahedron forms the top level tetrahedron of
 a layered solid torus, with the two given faces of this tetrahedron
 representing the boundary of the layered solid torus.
@@ -266,21 +266,21 @@ Returns:
     the top level of a layered solid torus.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of tetrahedra in this layered solid torus.
 
 Returns:
     the number of tetrahedra.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::topEdge
-static const char *topEdge =
+inline constexpr const char topEdge[] =
 R"doc(Returns the requested edge of the top level tetrahedron belonging to
 the given group. The layering reduces five of the top level
 tetrahedron edges to three boundary edges of the solid torus; this
@@ -314,7 +314,7 @@ Returns:
     given index was 1).)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::topEdgeGroup
-static const char *topEdgeGroup =
+inline constexpr const char topEdgeGroup[] =
 R"doc(Returns the group that the given edge of the top level tetrahedron
 belongs to. See topEdge() for further details about groups.
 
@@ -331,7 +331,7 @@ Returns:
     the unique edge in the top tetrahedron not on the torus boundary).)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::topFace
-static const char *topFace =
+inline constexpr const char topFace[] =
 R"doc(Returns one of the two faces of the top level tetrahedron that form
 the boundary of this layered solid torus.
 
@@ -343,7 +343,7 @@ Returns:
     be between 0 and 3 inclusive.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::topLevel
-static const char *topLevel =
+inline constexpr const char topLevel[] =
 R"doc(Returns the top level tetrahedron in this layered solid torus. This is
 the tetrahedron that would be on the boundary of the torus if the
 torus were the entire manifold.
@@ -352,7 +352,7 @@ Returns:
     the top level tetrahedron.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus_::transform
-static const char *transform =
+inline constexpr const char transform[] =
 R"doc(Adjusts the details of this layered solid torus according to the given
 isomorphism between triangulations.
 

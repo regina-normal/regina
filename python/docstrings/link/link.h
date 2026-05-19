@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Crossing
-static const char *Crossing =
+inline constexpr const char Crossing[] =
 R"doc(Represents a single crossing in a link diagram. The two strands of the
 link that run over and under the crossing respectively can be accessed
 through routines such as over(), under(), upper(), lower(), and
@@ -53,14 +53,14 @@ never responsible for their memory management; this is all taken care
 of by the Link to which they belong.)doc";
 
 // Docstring regina::python::doc::Framing
-static const char *Framing =
+inline constexpr const char Framing[] =
 R"doc(Indicates one of the standard framings of a knot or link. Here a
 _framing_ refers to a choice of normal vector field along the knot or
 link. Equivalently, a framing refers to a choice of longitude on the
 torus bounding each component of the link.)doc";
 
 // Docstring regina::python::doc::Link
-static const char *Link =
+inline constexpr const char Link[] =
 R"doc(Represents a combinatorial diagram of a directed knot or link.
 
 Regina uses the word _link_ to refer to links with any number of
@@ -138,7 +138,7 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
 // Docstring regina::python::doc::StrandRef
-static const char *StrandRef =
+inline constexpr const char StrandRef[] =
 R"doc(A reference to one of the two strands of a link that pass each other
 at a crossing.
 
@@ -175,7 +175,7 @@ functions.)doc";
 namespace Crossing_ {
 
 // Docstring regina::python::doc::Crossing_::chordIndex
-static const char *chordIndex =
+inline constexpr const char chordIndex[] =
 R"doc(Returns the chord index of this crossing in a knot diagram.
 
 The _chord index_ examines all of the other crossings that are passed
@@ -213,7 +213,7 @@ Returns:
     the chord index of this crossing.)doc";
 
 // Docstring regina::python::doc::Crossing_::index
-static const char *index =
+inline constexpr const char index[] =
 R"doc(Returns the index of this crossing within the overall link. If the
 link contains *n* crossings, then the index will be a number between 0
 and *n*-1 inclusive.
@@ -226,7 +226,7 @@ Returns:
     the index of this crossing.)doc";
 
 // Docstring regina::python::doc::Crossing_::lower
-static const char *lower =
+inline constexpr const char lower[] =
 R"doc(Returns a reference to the strand running under this crossing. This is
 equivalent to directly constructing StrandRef(``this``, 0).
 
@@ -236,7 +236,7 @@ Returns:
     a reference to the lower strand for this crossing.)doc";
 
 // Docstring regina::python::doc::Crossing_::next
-static const char *next =
+inline constexpr const char next[] =
 R"doc(Returns the crossing reference that immediately follows this when
 walking forward in the direction of the link along one of the two
 strands that pass at this crossing. Which strand we follow is
@@ -254,7 +254,7 @@ Returns:
     strand.)doc";
 
 // Docstring regina::python::doc::Crossing_::over
-static const char *over =
+inline constexpr const char over[] =
 R"doc(Returns a reference to the strand running over this crossing. This is
 equivalent to directly constructing StrandRef(``this``, 1).
 
@@ -264,7 +264,7 @@ Returns:
     a reference to the upper strand for this crossing.)doc";
 
 // Docstring regina::python::doc::Crossing_::prev
-static const char *prev =
+inline constexpr const char prev[] =
 R"doc(Returns the crossing reference that immediately precedes this when
 walking backward against the direction of the link along one of the
 two strands that pass at this crossing. Which strand we follow is
@@ -282,7 +282,7 @@ Returns:
     strand.)doc";
 
 // Docstring regina::python::doc::Crossing_::sign
-static const char *sign =
+inline constexpr const char sign[] =
 R"doc(Returns the sign of this crossing. This will be +1 for a positive
 crossing, or -1 for a negative crossing.
 
@@ -293,7 +293,7 @@ Returns:
     the sign of this crossing.)doc";
 
 // Docstring regina::python::doc::Crossing_::strand
-static const char *strand =
+inline constexpr const char strand[] =
 R"doc(Returns a reference to one of the two strands of the link that pass
 each other at this crossing. This is equivalent to directly
 constructing StrandRef(``this``, *which*).
@@ -309,7 +309,7 @@ Returns:
     a reference to the given strand at this crossing.)doc";
 
 // Docstring regina::python::doc::Crossing_::under
-static const char *under =
+inline constexpr const char under[] =
 R"doc(Returns a reference to the strand running under this crossing. This is
 equivalent to directly constructing StrandRef(``this``, 0).
 
@@ -319,7 +319,7 @@ Returns:
     a reference to the lower strand for this crossing.)doc";
 
 // Docstring regina::python::doc::Crossing_::upper
-static const char *upper =
+inline constexpr const char upper[] =
 R"doc(Returns a reference to the strand running over this crossing. This is
 equivalent to directly constructing StrandRef(``this``, 1).
 
@@ -333,7 +333,7 @@ Returns:
 namespace Framing_ {
 
 // Docstring regina::python::doc::Framing_::Blackboard
-static const char *Blackboard =
+inline constexpr const char Blackboard[] =
 R"doc(Indicates the _blackboard framing_, which is specific to the knot/link
 projection.
 
@@ -343,7 +343,7 @@ longitudes whose projections do not intersect the original link
 diagram.)doc";
 
 // Docstring regina::python::doc::Framing_::Seifert
-static const char *Seifert =
+inline constexpr const char Seifert[] =
 R"doc(Indicates the _Seifert framing_, which is defined algebraically and is
 independent of the knot/link projection.
 
@@ -369,7 +369,7 @@ Some alternative definitions for classical links:
 namespace Link_ {
 
 // Docstring regina::python::doc::Link_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Constructs a new copy of the given link.
 
 This will clone any computed properties (such as Jones polynomial and
@@ -381,10 +381,10 @@ Parameter ``copy``:
     the link to copy.)doc";
 
 // Docstring regina::python::doc::Link_::__default
-static const char *__default = R"doc(Constructs an empty link. This will have zero components.)doc";
+inline constexpr const char __default[] = R"doc(Constructs an empty link. This will have zero components.)doc";
 
 // Docstring regina::python::doc::Link_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this link diagram is combinatorially identical to the
 given link diagram.
 
@@ -410,14 +410,14 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::Link_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Constructs the unlink with the given number of components.
 
 Parameter ``unknots``:
     the number of (unknotted) components in the new unlink.)doc";
 
 // Docstring regina::python::doc::Link_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Constructs a new copy of the given link, with the option of whether or
 not to clone its computed properties also.
 
@@ -430,7 +430,7 @@ Parameter ``cloneProps``:
     the new link should have all properties marked as unknown.)doc";
 
 // Docstring regina::python::doc::Link_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc("Magic" constructor that tries to find some way to interpret the given
 string as a link.
 
@@ -461,7 +461,7 @@ Parameter ``description``:
     a string that describes a knot or link.)doc";
 
 // Docstring regina::python::doc::Link_::affineIndex
-static const char *affineIndex =
+inline constexpr const char affineIndex[] =
 R"doc(Returns the affine index polynomial of this knot. This polynomial
 invariant is described in L.H. Kauffman, "An affine index polynomial
 invariant of virtual knots", J. Knot Theory Ramifications 22 (2013),
@@ -489,7 +489,7 @@ Returns:
     the affine index polynomial.)doc";
 
 // Docstring regina::python::doc::Link_::alexander
-static const char *alexander =
+inline constexpr const char alexander[] =
 R"doc(Returns the Alexander polynomial of this classical knot.
 
 At present, Regina only computes Alexander polynomials for classical
@@ -522,7 +522,7 @@ Returns:
     the Alexander polynomial of this knot.)doc";
 
 // Docstring regina::python::doc::Link_::arrow
-static const char *arrow =
+inline constexpr const char arrow[] =
 R"doc(Returns the normalised arrow polynomial of this link.
 
 The arrow polynomial is a generalisation of the Kauffman bracket for
@@ -591,7 +591,7 @@ Returns:
     calculation was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::bracket
-static const char *bracket =
+inline constexpr const char bracket[] =
 R"doc(Returns the Kauffman bracket polynomial of this link diagram.
 
 Note that the bracket polynomial is not an invariant - it is preserved
@@ -664,7 +664,7 @@ Returns:
     was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::bracket_2
-static const char *bracket_2 =
+inline constexpr const char bracket_2[] =
 R"doc(Deprecated routine that returns the Kauffman bracket polynomial of
 this link diagram, using a single thread and an explicit progress
 tracker.
@@ -703,7 +703,7 @@ Returns:
     was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::brief
-static const char *brief =
+inline constexpr const char brief[] =
 R"doc(Outputs this link in Regina's own brief write-only format. This format
 is concise, but contains enough information to manually reconstruct
 the complete link diagram.
@@ -750,14 +750,14 @@ Returns:
     a description of this link in Regina's brief format.)doc";
 
 // Docstring regina::python::doc::Link_::change
-static const char *change =
+inline constexpr const char change[] =
 R"doc(Switches the upper and lower strands of the given crossing.
 
 Parameter ``c``:
     the crossing to change.)doc";
 
 // Docstring regina::python::doc::Link_::changeAll
-static const char *changeAll =
+inline constexpr const char changeAll[] =
 R"doc(Switches the upper and lower strands of every crossing in the diagram.
 As a result, the sign of every crossing will also change.
 
@@ -768,7 +768,7 @@ In the language of Jeremy Green's virtual knot tables, this operation
 is a _vertical_ mirror image.)doc";
 
 // Docstring regina::python::doc::Link_::complement
-static const char *complement =
+inline constexpr const char complement[] =
 R"doc(Returns an ideal triangulation of the complement of this link diagram.
 The triangulation will have one ideal vertex for each link component.
 
@@ -815,7 +815,7 @@ Returns:
     the complement of this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::component
-static const char *component =
+inline constexpr const char component[] =
 R"doc(Returns a strand in the given component of this link.
 
 Components are individual circles embedded in the ambient 3-manifold
@@ -841,7 +841,7 @@ Returns:
     crossings.)doc";
 
 // Docstring regina::python::doc::Link_::component_2
-static const char *component_2 =
+inline constexpr const char component_2[] =
 R"doc(Returns the starting strand for the link component containing the
 given strand.
 
@@ -876,7 +876,7 @@ Returns:
     the starting strand for the link component containing *s*.)doc";
 
 // Docstring regina::python::doc::Link_::components
-static const char *components =
+inline constexpr const char components[] =
 R"doc(Returns an object that allows iteration through and random access to
 all components of this link.
 
@@ -910,7 +910,7 @@ Returns:
     access to the list of all components.)doc";
 
 // Docstring regina::python::doc::Link_::componentsByStrand
-static const char *componentsByStrand =
+inline constexpr const char componentsByStrand[] =
 R"doc(Returns a sequence that maps strand IDs to link component numbers.
 
 This sequence will have length ``2n``, where *n* is the number of
@@ -940,7 +940,7 @@ Returns:
     a sequence mapping strand IDs to component numbers.)doc";
 
 // Docstring regina::python::doc::Link_::composeWith
-static const char *composeWith =
+inline constexpr const char composeWith[] =
 R"doc(Forms the composition of this with the given link. This link will be
 altered directly, and the given link will be left unchanged.
 
@@ -969,7 +969,7 @@ Parameter ``other``:
     the link with which this should be composed.)doc";
 
 // Docstring regina::python::doc::Link_::connected
-static const char *connected =
+inline constexpr const char connected[] =
 R"doc(Determines whether the two given crossings are connected in the link
 diagram, if we treat each crossing as a 4-way intersection.
 
@@ -1003,7 +1003,7 @@ Returns:
     ``True`` if and only if the two given crossings are connected.)doc";
 
 // Docstring regina::python::doc::Link_::countComponents
-static const char *countComponents =
+inline constexpr const char countComponents[] =
 R"doc(Returns the number of components in this link.
 
 This is the number of circles embedded in the ambient 3-manifold (it
@@ -1014,7 +1014,7 @@ Returns:
     the number of components.)doc";
 
 // Docstring regina::python::doc::Link_::countDiagramComponents
-static const char *countDiagramComponents =
+inline constexpr const char countDiagramComponents[] =
 R"doc(Returns the total number of connected diagram components.
 
 As with diagramComponents(), this routine is interested in connected
@@ -1029,14 +1029,14 @@ Returns:
     the total number of connected diagram components.)doc";
 
 // Docstring regina::python::doc::Link_::countTrivialComponents
-static const char *countTrivialComponents =
+inline constexpr const char countTrivialComponents[] =
 R"doc(Returns the number of zero-crossing unknot components in this link.
 
 Returns:
     the number of zero-crossing unknot components.)doc";
 
 // Docstring regina::python::doc::Link_::crossing
-static const char *crossing =
+inline constexpr const char crossing[] =
 R"doc(Returns a pointer to the crossing at the given index within this link.
 
 For a link with *n* crossings, the crossings are numbered from 0 to
@@ -1056,7 +1056,7 @@ Returns:
     the crossing at the given index.)doc";
 
 // Docstring regina::python::doc::Link_::crossings
-static const char *crossings =
+inline constexpr const char crossings[] =
 R"doc(Returns an object that allows iteration through and random access to
 all crossings within this link.
 
@@ -1083,7 +1083,7 @@ Returns:
     access to the list of all crossings.)doc";
 
 // Docstring regina::python::doc::Link_::diagramComponentIndices
-static const char *diagramComponentIndices =
+inline constexpr const char diagramComponentIndices[] =
 R"doc(Returns an array that maps crossing numbers to connected diagram
 components.
 
@@ -1118,7 +1118,7 @@ Returns:
     diagram components (including the trivial ones).)doc";
 
 // Docstring regina::python::doc::Link_::diagramComponents
-static const char *diagramComponents =
+inline constexpr const char diagramComponents[] =
 R"doc(Returns the connected components of this link diagram as individual
 standalone links.
 
@@ -1169,7 +1169,7 @@ Returns:
     diagram.)doc";
 
 // Docstring regina::python::doc::Link_::dt
-static const char *dt =
+inline constexpr const char dt[] =
 R"doc(Exports this classical knot in either numerical or alphabetical
 Dowker-Thistlethwaite notation, returning a string.
 
@@ -1256,7 +1256,7 @@ Returns:
     the Dowker-Thistlethwaite notation for this knot diagram.)doc";
 
 // Docstring regina::python::doc::Link_::dtData
-static const char *dtData =
+inline constexpr const char dtData[] =
 R"doc(Exports this classical knot in numerical Dowker-Thistlethwaite
 notation, returning a vector of integers.
 
@@ -1283,7 +1283,7 @@ Returns:
     form.)doc";
 
 // Docstring regina::python::doc::Link_::dumpConstruction
-static const char *dumpConstruction =
+inline constexpr const char dumpConstruction[] =
 R"doc(Deprecated routine that returns C++ code to reconstruct this link.
 
 .. deprecated::
@@ -1297,7 +1297,7 @@ Returns:
     the C++ code that was generated.)doc";
 
 // Docstring regina::python::doc::Link_::extendedGroup
-static const char *extendedGroup =
+inline constexpr const char extendedGroup[] =
 R"doc(Returns the extended group of this link, as defined by Silver and
 Williams.
 
@@ -1338,7 +1338,7 @@ Returns:
     the extended group of this link.)doc";
 
 // Docstring regina::python::doc::Link_::extendedGroups
-static const char *extendedGroups =
+inline constexpr const char extendedGroups[] =
 R"doc(Returns the extended groups of this link and its mirror image.
 
 The extended group is defined by Silver and Williams for use with
@@ -1378,7 +1378,7 @@ Returns:
     Silver-Williams presentations, as described above.)doc";
 
 // Docstring regina::python::doc::Link_::fromDT
-static const char *fromDT =
+inline constexpr const char fromDT[] =
 R"doc(Creates a new classical knot from either alphabetical or numerical
 Dowker-Thistlethwaite notation, presented as a string.
 
@@ -1437,7 +1437,7 @@ Returns:
     the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::fromDT_2
-static const char *fromDT_2 =
+inline constexpr const char fromDT_2[] =
 R"doc(Creates a new classical knot from numerical Dowker-Thistlethwaite
 notation, presented as an integer sequence.
 
@@ -1486,7 +1486,7 @@ Returns:
     the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::fromData
-static const char *fromData =
+inline constexpr const char fromData[] =
 R"doc(Creates a new classical or virtual link from information about its
 crossings and components.
 
@@ -1563,7 +1563,7 @@ Returns:
     the reconstructed link.)doc";
 
 // Docstring regina::python::doc::Link_::fromGauss
-static const char *fromGauss =
+inline constexpr const char fromGauss[] =
 R"doc(Creates a new classical knot from a classical Gauss code, presented as
 a string.
 
@@ -1632,7 +1632,7 @@ Returns:
     the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::fromGauss_2
-static const char *fromGauss_2 =
+inline constexpr const char fromGauss_2[] =
 R"doc(Creates a new classical knot from a classical Gauss code, presented as
 an integer sequence.
 
@@ -1678,7 +1678,7 @@ Returns:
     the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::fromJenkins
-static const char *fromJenkins =
+inline constexpr const char fromJenkins[] =
 R"doc(Creates a new classical or virtual link from Bob Jenkins' format,
 presented as a string.
 
@@ -1720,7 +1720,7 @@ Returns:
     the reconstructed link.)doc";
 
 // Docstring regina::python::doc::Link_::fromJenkins_2
-static const char *fromJenkins_2 =
+inline constexpr const char fromJenkins_2[] =
 R"doc(Creates a new classical or virtual link from Bob Jenkins' format,
 presented as an integer sequence.
 
@@ -1753,7 +1753,7 @@ Returns:
     the reconstructed link.)doc";
 
 // Docstring regina::python::doc::Link_::fromKnotSig
-static const char *fromKnotSig =
+inline constexpr const char fromKnotSig[] =
 R"doc(Deprecated alias for fromSig(), to recover a classical or virtual link
 diagram from a string-based knot/link signature.
 
@@ -1773,7 +1773,7 @@ Returns:
     the reconstructed link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::fromOrientedGauss
-static const char *fromOrientedGauss =
+inline constexpr const char fromOrientedGauss[] =
 R"doc(Creates a new classical or virtual knot from an "oriented" variant of
 the Gauss code, presented as string.
 
@@ -1828,7 +1828,7 @@ Returns:
     the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::fromOrientedGauss_2
-static const char *fromOrientedGauss_2 =
+inline constexpr const char fromOrientedGauss_2[] =
 R"doc(Creates a new classical or virtual knot from an "oriented" variant of
 the Gauss code, presented as a sequence of string tokens.
 
@@ -1876,7 +1876,7 @@ Returns:
     the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::fromPD
-static const char *fromPD =
+inline constexpr const char fromPD[] =
 R"doc(Creates a new classical or virtual link from a planar diagram code,
 presented as a string.
 
@@ -1975,7 +1975,7 @@ Returns:
     the reconstructed link.)doc";
 
 // Docstring regina::python::doc::Link_::fromPD_2
-static const char *fromPD_2 =
+inline constexpr const char fromPD_2[] =
 R"doc(Creates a new classical or virtual link from a planar diagram code,
 presented as a sequence of 4-tuples.
 
@@ -2024,7 +2024,7 @@ Returns:
     the reconstructed link.)doc";
 
 // Docstring regina::python::doc::Link_::fromSig
-static const char *fromSig =
+inline constexpr const char fromSig[] =
 R"doc(Recovers a classical or virtual link diagram from a string-based
 knot/link signature. This may be either a first-generation signature
 (computed via ``knotSig()``), or a second-generation signature
@@ -2053,7 +2053,7 @@ Returns:
     the reconstructed link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::fromSig_2
-static const char *fromSig_2 =
+inline constexpr const char fromSig_2[] =
 R"doc(Recovers a classical or virtual link diagram from a binary second-
 generation knot/link signature. This signature would typically have
 been computed via ``neoSig<LinkSigBinary>()``.
@@ -2085,7 +2085,7 @@ Returns:
     the reconstructed link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::fromSignedGauss
-static const char *fromSignedGauss =
+inline constexpr const char fromSignedGauss[] =
 R"doc(Creates a new classical or virtual knot from a "signed" variant of the
 Gauss code, presented as string.
 
@@ -2141,7 +2141,7 @@ Returns:
     the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::fromSignedGauss_2
-static const char *fromSignedGauss_2 =
+inline constexpr const char fromSignedGauss_2[] =
 R"doc(Creates a new classical or virtual knot from a "signed" variant of the
 Gauss code, presented as a sequence of string tokens.
 
@@ -2190,7 +2190,7 @@ Returns:
     the reconstructed knot.)doc";
 
 // Docstring regina::python::doc::Link_::gauss
-static const char *gauss =
+inline constexpr const char gauss[] =
 R"doc(Returns a classical Gauss code for this knot, presented as a string.
 
 Classical Gauss codes essentially describe the 4-valent graph of a
@@ -2259,7 +2259,7 @@ Returns:
     a classical Gauss code as described above.)doc";
 
 // Docstring regina::python::doc::Link_::gaussData
-static const char *gaussData =
+inline constexpr const char gaussData[] =
 R"doc(Returns a classical Gauss code for this knot, presented as a vector of
 integers.
 
@@ -2279,7 +2279,7 @@ Returns:
     a classical Gauss code for this knot in machine-readable form.)doc";
 
 // Docstring regina::python::doc::Link_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given links.
 
 This global routine simply calls Link::swap(); it is provided so that
@@ -2299,7 +2299,7 @@ Parameter ``rhs``:
     the link whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::Link_::graft
-static const char *graft =
+inline constexpr const char graft[] =
 R"doc(Grafts the two given arcs of this link together, possibly making this
 a virtual link in the process.
 
@@ -2363,7 +2363,7 @@ Parameter ``second``:
     the second of the two arcs to graft together.)doc";
 
 // Docstring regina::python::doc::Link_::graph
-static const char *graph =
+inline constexpr const char graph[] =
 R"doc(Returns the 4-valent graph that models this link diagram, along with
 the local embedding of the graph into the surface that contains the
 diagram.
@@ -2387,7 +2387,7 @@ Returns:
     the graph that models this link.)doc";
 
 // Docstring regina::python::doc::Link_::group
-static const char *group =
+inline constexpr const char group[] =
 R"doc(Returns the link group, as constructed from the Wirtinger
 presentation.
 
@@ -2446,7 +2446,7 @@ Returns:
     the group of this link.)doc";
 
 // Docstring regina::python::doc::Link_::groups
-static const char *groups =
+inline constexpr const char groups[] =
 R"doc(Returns the two groups constructed from the Wirtinger presentation for
 this link and its mirror image. This function is intended for use with
 virtual links, where these two groups might not be isomorphic.
@@ -2500,7 +2500,7 @@ Returns:
     Wirtinger presentations, as described above.)doc";
 
 // Docstring regina::python::doc::Link_::hasR1
-static const char *hasR1 =
+inline constexpr const char hasR1[] =
 R"doc(Determines whether it is possible to perform a type I Reidemeister
 move at the given location to remove a crossing.
 
@@ -2519,7 +2519,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasR1_2
-static const char *hasR1_2 =
+inline constexpr const char hasR1_2[] =
 R"doc(Determines whether it is possible to perform a type I Reidemeister
 move at the given location to add a new crossing.
 
@@ -2548,7 +2548,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasR2
-static const char *hasR2 =
+inline constexpr const char hasR2[] =
 R"doc(Determines whether it is possible to perform a type II Reidemeister
 move at the given location to remove two crossings.
 
@@ -2568,7 +2568,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasR2_2
-static const char *hasR2_2 =
+inline constexpr const char hasR2_2[] =
 R"doc(Determines whether it is possible to perform a type II Reidemeister
 move at the given location to remove two crossings.
 
@@ -2588,7 +2588,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasR2_3
-static const char *hasR2_3 =
+inline constexpr const char hasR2_3[] =
 R"doc(Determines whether it is possible to perform a classical type II
 Reidemeister move at the given location to add two new crossings by
 pushing two different strands over one another.
@@ -2637,7 +2637,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasR2Virtual
-static const char *hasR2Virtual =
+inline constexpr const char hasR2Virtual[] =
 R"doc(Determines whether it is possible to perform a virtual type II
 Reidemeister move at the given location to add two new crossings by
 pushing two different strands over one another.
@@ -2679,7 +2679,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasR2Virtual_2
-static const char *hasR2Virtual_2 =
+inline constexpr const char hasR2Virtual_2[] =
 R"doc(Determines whether it is possible to perform a virtual type II
 Reidemeister move at the given location to add two new crossings by
 pushing the same strand over itself from opposite sides.
@@ -2712,7 +2712,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasR3
-static const char *hasR3 =
+inline constexpr const char hasR3[] =
 R"doc(Determines whether it is possible to perform a type III Reidemeister
 move at the given location.
 
@@ -2737,7 +2737,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasR3_2
-static const char *hasR3_2 =
+inline constexpr const char hasR3_2[] =
 R"doc(Determines whether it is possible to perform a type III Reidemeister
 move at the given location.
 
@@ -2763,7 +2763,7 @@ Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
 // Docstring regina::python::doc::Link_::hasReducingPass
-static const char *hasReducingPass =
+inline constexpr const char hasReducingPass[] =
 R"doc(Tests whether this classical link has a pass move that will reduce the
 number of crossings.
 
@@ -2793,7 +2793,7 @@ Returns:
     number of crossings.)doc";
 
 // Docstring regina::python::doc::Link_::homfly
-static const char *homfly =
+inline constexpr const char homfly[] =
 R"doc(Returns the HOMFLY-PT polynomial of this classical link, as a
 polynomial in *alpha* and *z*.
 
@@ -2847,7 +2847,7 @@ Returns:
     calculation was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::homflyAZ
-static const char *homflyAZ =
+inline constexpr const char homflyAZ[] =
 R"doc(Returns the HOMFLY-PT polynomial of this classical link, as a
 polynomial in *alpha* and *z*.
 
@@ -2933,7 +2933,7 @@ Returns:
     calculation was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::homflyAZtoLM
-static const char *homflyAZtoLM =
+inline constexpr const char homflyAZtoLM[] =
 R"doc(Converts between the (*alpha*, *z*) and (*l*, *m*) representations of
 the HOMFLY-PT polynomial.
 
@@ -2954,7 +2954,7 @@ Returns:
     class Laurent2<Integer>.)doc";
 
 // Docstring regina::python::doc::Link_::homflyLM
-static const char *homflyLM =
+inline constexpr const char homflyLM[] =
 R"doc(Returns the HOMFLY-PT polynomial of this classical link, as a
 polynomial in *l* and *m*.
 
@@ -3038,7 +3038,7 @@ Returns:
     calculation was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::improveTreewidth
-static const char *improveTreewidth =
+inline constexpr const char improveTreewidth[] =
 R"doc(Attempts to rewrite this link diagram to become one with a smaller
 width tree decomposition. Regina does not compute treewidth precisely
 (and indeed, this is an NP-hard problem); instead what it tries to
@@ -3153,7 +3153,7 @@ Returns:
     give a smaller-width greedy tree decomposition.)doc";
 
 // Docstring regina::python::doc::Link_::insertLink
-static const char *insertLink =
+inline constexpr const char insertLink[] =
 R"doc(Inserts a copy of the given link into this link.
 
 The crossings and components of *source* will be copied into this
@@ -3168,7 +3168,7 @@ Parameter ``source``:
     the link whose copy will be inserted.)doc";
 
 // Docstring regina::python::doc::Link_::insertTorusLink
-static const char *insertTorusLink =
+inline constexpr const char insertTorusLink[] =
 R"doc(Inserts a new (*p*, *q*) torus link into this link.
 
 The parameters *p* and *q* must be non-negative, but they do not need
@@ -3198,7 +3198,7 @@ Parameter ``positive``:
     positive, or ``False`` if they should be negative.)doc";
 
 // Docstring regina::python::doc::Link_::intelligentSimplify
-static const char *intelligentSimplify =
+inline constexpr const char intelligentSimplify[] =
 R"doc(Deprecated alias for simplify(), which attempts to simplify this link
 diagram as intelligently as possible using fast and greedy heuristics.
 
@@ -3211,7 +3211,7 @@ Returns:
     simplified.)doc";
 
 // Docstring regina::python::doc::Link_::isAlternating
-static const char *isAlternating =
+inline constexpr const char isAlternating[] =
 R"doc(Returns whether this link diagram is alternating.
 
 Note that this routine cannot tell whether the _link_ is alternating
@@ -3226,7 +3226,7 @@ Returns:
     is a non-alternating diagram.)doc";
 
 // Docstring regina::python::doc::Link_::isClassical
-static const char *isClassical =
+inline constexpr const char isClassical[] =
 R"doc(Determines whether this link diagram is classical (that is, planar). A
 link diagram that is _not_ classical cannot be drawn in the plane
 without the addition of virtual crossings.
@@ -3255,7 +3255,7 @@ Returns:
     planar).)doc";
 
 // Docstring regina::python::doc::Link_::isConnected
-static const char *isConnected =
+inline constexpr const char isConnected[] =
 R"doc(Determines whether this link diagram is connected, if we treat each
 crossing as a 4-way intersection.
 
@@ -3302,7 +3302,7 @@ Returns:
     ``True`` if and only if this link diagram is connected.)doc";
 
 // Docstring regina::python::doc::Link_::isEmpty
-static const char *isEmpty =
+inline constexpr const char isEmpty[] =
 R"doc(Determines whether this link is empty. An empty link is one with no
 components at all.
 
@@ -3310,7 +3310,7 @@ Returns:
     ``True`` if and only if this link is empty.)doc";
 
 // Docstring regina::python::doc::Link_::jenkins
-static const char *jenkins =
+inline constexpr const char jenkins[] =
 R"doc(Exports this link using Bob Jenkins' text format, returning a single
 string.
 
@@ -3377,7 +3377,7 @@ Returns:
     a description of this link using Jenkins' text format.)doc";
 
 // Docstring regina::python::doc::Link_::jenkinsData
-static const char *jenkinsData =
+inline constexpr const char jenkinsData[] =
 R"doc(Exports this link using Bob Jenkins' text format, returning a vector
 of integers.
 
@@ -3398,7 +3398,7 @@ Returns:
     readable form.)doc";
 
 // Docstring regina::python::doc::Link_::jones
-static const char *jones =
+inline constexpr const char jones[] =
 R"doc(Returns the Jones polynomial of this link, but with all exponents
 doubled.
 
@@ -3488,7 +3488,7 @@ Returns:
     was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::jones_2
-static const char *jones_2 =
+inline constexpr const char jones_2[] =
 R"doc(Deprecated routine that returns the Jones polynomial of this link with
 all exponents doubled, using a single thread and an explicit progress
 tracker.
@@ -3527,7 +3527,7 @@ Returns:
     was cancelled via the given progress tracker.)doc";
 
 // Docstring regina::python::doc::Link_::knotSig
-static const char *knotSig =
+inline constexpr const char knotSig[] =
 R"doc(Constructs the first-generation signature for this knot or link
 diagram. This is identical to calling ``sig<1>()``.
 
@@ -3572,7 +3572,7 @@ Returns:
     the first-generation signature for this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::knowsAlexander
-static const char *knowsAlexander =
+inline constexpr const char knowsAlexander[] =
 R"doc(Is the Alexander polynomial of this knot already known (or trivial to
 determine)? See alexander() for further details.
 
@@ -3597,7 +3597,7 @@ Returns:
     satisfied.)doc";
 
 // Docstring regina::python::doc::Link_::knowsArrow
-static const char *knowsArrow =
+inline constexpr const char knowsArrow[] =
 R"doc(Is the normalised arrow polynomial of this link already known (or
 trivial to determine)? See arrow() for further details.
 
@@ -3617,7 +3617,7 @@ Returns:
     to calculate.)doc";
 
 // Docstring regina::python::doc::Link_::knowsBracket
-static const char *knowsBracket =
+inline constexpr const char knowsBracket[] =
 R"doc(Is the Kauffman bracket polynomial of this link diagram already known
 (or trivial to determine)? See bracket() for further details.
 
@@ -3634,7 +3634,7 @@ Returns:
     to calculate.)doc";
 
 // Docstring regina::python::doc::Link_::knowsHomfly
-static const char *knowsHomfly =
+inline constexpr const char knowsHomfly[] =
 R"doc(Is the HOMFLY-PT polynomial of this link already known (or trivial to
 determine)? See homflyAZ() and homflyLM() for further details.
 
@@ -3660,7 +3660,7 @@ Returns:
     homflyLM() are satisfied.)doc";
 
 // Docstring regina::python::doc::Link_::knowsJones
-static const char *knowsJones =
+inline constexpr const char knowsJones[] =
 R"doc(Is the Jones polynomial of this link already known (or trivial to
 determine)? See jones() for further details.
 
@@ -3677,7 +3677,7 @@ Returns:
     to calculate.)doc";
 
 // Docstring regina::python::doc::Link_::linking
-static const char *linking =
+inline constexpr const char linking[] =
 R"doc(Returns the linking number of this link, or throws an exception if it
 is not an integer.
 
@@ -3703,7 +3703,7 @@ Returns:
     the linking number.)doc";
 
 // Docstring regina::python::doc::Link_::linking2
-static const char *linking2 =
+inline constexpr const char linking2[] =
 R"doc(Returns twice the linking number of this link, which is always an
 integer for both classical and virtual links.
 
@@ -3723,7 +3723,7 @@ Returns:
     twice the linking number.)doc";
 
 // Docstring regina::python::doc::Link_::longComplement
-static const char *longComplement =
+inline constexpr const char longComplement[] =
 R"doc(Treats this as a long knot, and returns a triangulation of the
 complement with mixed real/ideal boundary.
 
@@ -3786,7 +3786,7 @@ Returns:
     described above.)doc";
 
 // Docstring regina::python::doc::Link_::makeAlternating
-static const char *makeAlternating =
+inline constexpr const char makeAlternating[] =
 R"doc(Changes a subset of crossings to convert this into an alternating link
 diagram. Here, "changing" a crossing means switching its upper and
 lower strands (so this operation may change this into a topologically
@@ -3813,7 +3813,7 @@ Returns:
     is a virtual link diagram that cannot be made alternating.)doc";
 
 // Docstring regina::python::doc::Link_::makeVirtual
-static const char *makeVirtual =
+inline constexpr const char makeVirtual[] =
 R"doc(Converts the given classical crossing into a virtual crossing.
 
 This essentially adds a handle to the surface in which the diagram is
@@ -3843,7 +3843,7 @@ Parameter ``crossing``:
     the (classical) crossing that should be made virtual.)doc";
 
 // Docstring regina::python::doc::Link_::moveContentsTo
-static const char *moveContentsTo =
+inline constexpr const char moveContentsTo[] =
 R"doc(Moves the contents of this link into the given destination link,
 leaving this link empty but otherwise usable.
 
@@ -3871,7 +3871,7 @@ Parameter ``dest``:
     the link into which the contents of this link should be moved.)doc";
 
 // Docstring regina::python::doc::Link_::neoSig
-static const char *neoSig =
+inline constexpr const char neoSig[] =
 R"doc(Constructs the second-generation signature for this knot or link
 diagram. This is identical to calling ``sig<2, Encoding>()``.
 
@@ -3926,7 +3926,7 @@ Returns:
     default), or ByteSequence for a binary encoding.)doc";
 
 // Docstring regina::python::doc::Link_::niceTreeDecomposition
-static const char *niceTreeDecomposition =
+inline constexpr const char niceTreeDecomposition[] =
 R"doc(Returns a nice tree decomposition of the 4-valent multigraph formed by
 this link diagram. This can (for example) be used in implementing
 algorithms that are fixed-parameter tractable in the treewidth of this
@@ -3952,7 +3952,7 @@ Returns:
     a nice tree decomposition of this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::oddWrithe
-static const char *oddWrithe =
+inline constexpr const char oddWrithe[] =
 R"doc(Returns the odd writhe, or self-linking number, of this knot.
 
 The _odd writhe_ is an invariant of virtual knots, which sums the
@@ -3976,7 +3976,7 @@ Returns:
     the odd writhe of this knot.)doc";
 
 // Docstring regina::python::doc::Link_::orientedGauss
-static const char *orientedGauss =
+inline constexpr const char orientedGauss[] =
 R"doc(Returns an oriented Gauss code for this knot, presented as a string.
 
 The oriented Gauss code, based on a format used by Andreeva et al., is
@@ -4041,7 +4041,7 @@ Returns:
     an oriented Gauss code as described above.)doc";
 
 // Docstring regina::python::doc::Link_::orientedGaussData
-static const char *orientedGaussData =
+inline constexpr const char orientedGaussData[] =
 R"doc(Returns an oriented Gauss code for this knot, presented as a vector of
 string tokens.
 
@@ -4069,7 +4069,7 @@ Returns:
     an oriented Gauss code for this knot in machine-readable form.)doc";
 
 // Docstring regina::python::doc::Link_::overForComponent
-static const char *overForComponent =
+inline constexpr const char overForComponent[] =
 R"doc(Locates an over-crossing within the same link component as the given
 strand. The choice of _which_ over-crossing is returned will be
 arbitrary (i.e., it might not be the _first_ over-crossing).
@@ -4085,7 +4085,7 @@ Returns:
     beneath the rest of the diagram).)doc";
 
 // Docstring regina::python::doc::Link_::pace
-static const char *pace =
+inline constexpr const char pace[] =
 R"doc(Returns a text representation of the underlying 4-valent multigraph
 for this link diagram, using the PACE text format. This format is
 described in detail at
@@ -4129,7 +4129,7 @@ See also:
     https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/)doc";
 
 // Docstring regina::python::doc::Link_::parallel
-static const char *parallel =
+inline constexpr const char parallel[] =
 R"doc(Returns *k* cables of this link, all parallel to each other using the
 given framing.
 
@@ -4154,7 +4154,7 @@ Returns:
     *k* parallel copies of this link.)doc";
 
 // Docstring regina::python::doc::Link_::parityProjection
-static const char *parityProjection =
+inline constexpr const char parityProjection[] =
 R"doc(Returns the parity projection of this knot.
 
 This is an operation on virtual knots, which removes all crossings
@@ -4207,7 +4207,7 @@ Returns:
     the resulting parity projection of this knot.)doc";
 
 // Docstring regina::python::doc::Link_::pd
-static const char *pd =
+inline constexpr const char pd[] =
 R"doc(Returns a planar diagram code for this link, presented as a string.
 
 Planar diagram codes encode the local information at each crossing,
@@ -4298,7 +4298,7 @@ Returns:
     the planar diagram code, as described above.)doc";
 
 // Docstring regina::python::doc::Link_::pdAmbiguous
-static const char *pdAmbiguous =
+inline constexpr const char pdAmbiguous[] =
 R"doc(Determines whether this link has any components whose orientations
 cannot be recovered from a planar diagram code.
 
@@ -4318,7 +4318,7 @@ Returns:
     one crossing and consists entirely of over-crossings.)doc";
 
 // Docstring regina::python::doc::Link_::pdData
-static const char *pdData =
+inline constexpr const char pdData[] =
 R"doc(Returns a planar diagram code for this link, presented as vector of
 4-tuples.
 
@@ -4337,7 +4337,7 @@ Returns:
     the planar diagram code in machine-readable form.)doc";
 
 // Docstring regina::python::doc::Link_::r1
-static const char *r1 =
+inline constexpr const char r1[] =
 R"doc(If possible, performs a type I Reidemeister move to remove a crossing
 at the given location. If such a move is not allowed, then this
 routine does nothing.
@@ -4370,7 +4370,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r1_2
-static const char *r1_2 =
+inline constexpr const char r1_2[] =
 R"doc(If possible, performs a type I Reidemeister move to add a new crossing
 at the given location. If such a move is not allowed, then this
 routine does nothing.
@@ -4420,7 +4420,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r1_3
-static const char *r1_3 =
+inline constexpr const char r1_3[] =
 R"doc(Deprecated routine that tests for and optionally performs a type I
 Reidemeister move to remove a crossing.
 
@@ -4463,7 +4463,7 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::r1_4
-static const char *r1_4 =
+inline constexpr const char r1_4[] =
 R"doc(Deprecated routine that tests for and optionally performs a type I
 Reidemeister move to add a new crossing.
 
@@ -4510,7 +4510,7 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2
-static const char *r2 =
+inline constexpr const char r2[] =
 R"doc(If possible, performs a type II Reidemeister move to remove two
 crossings at the given location. If such a move is not allowed, then
 this routine does nothing.
@@ -4553,7 +4553,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2_2
-static const char *r2_2 =
+inline constexpr const char r2_2[] =
 R"doc(If possible, performs a type II Reidemeister move to remove two
 crossings at the given location. If such a move is not allowed, then
 this routine does nothing.
@@ -4599,7 +4599,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2_3
-static const char *r2_3 =
+inline constexpr const char r2_3[] =
 R"doc(If possible, performs a classical type II Reidemeister move to add two
 new crossings by pushing two different strands over one another. If
 such a move is not allowed, then this routine does nothing.
@@ -4689,7 +4689,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2_4
-static const char *r2_4 =
+inline constexpr const char r2_4[] =
 R"doc(Deprecated routine that tests for and optionally performs a type II
 Reidemeister move to remove two crossings.
 
@@ -4733,7 +4733,7 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2_5
-static const char *r2_5 =
+inline constexpr const char r2_5[] =
 R"doc(Deprecated routine that tests for and optionally performs a type II
 Reidemeister move to remove two crossings.
 
@@ -4777,7 +4777,7 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2_6
-static const char *r2_6 =
+inline constexpr const char r2_6[] =
 R"doc(Deprecated routine that tests for and optionally performs a classical
 type II Reidemeister move to add two new crossings by pushing two
 different strands over one another.
@@ -4836,7 +4836,7 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2Virtual
-static const char *r2Virtual =
+inline constexpr const char r2Virtual[] =
 R"doc(If possible, performs a virtual type II Reidemeister move to add two
 new crossings by pushing two different strands over one another. If
 such a move is not allowed, then this routine does nothing.
@@ -4898,7 +4898,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r2Virtual_2
-static const char *r2Virtual_2 =
+inline constexpr const char r2Virtual_2[] =
 R"doc(If possible, performs a virtual type II Reidemeister move to add two
 new crossings by pushing the same strand over itself from opposite
 sides. If such a move is not allowed, then this routine does nothing.
@@ -4965,7 +4965,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r3
-static const char *r3 =
+inline constexpr const char r3[] =
 R"doc(If possible, performs a type III Reidemeister move at the given
 location. If such a move is not allowed, then this routine does
 nothing.
@@ -5013,7 +5013,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r3_2
-static const char *r3_2 =
+inline constexpr const char r3_2[] =
 R"doc(If possible, performs a type III Reidemeister move at the given
 location. If such a move is not allowed, then this routine does
 nothing.
@@ -5064,7 +5064,7 @@ Returns:
     performed.)doc";
 
 // Docstring regina::python::doc::Link_::r3_3
-static const char *r3_3 =
+inline constexpr const char r3_3[] =
 R"doc(Deprecated routine that tests for and optionally performs a type III
 Reidemeister move.
 
@@ -5107,7 +5107,7 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::r3_4
-static const char *r3_4 =
+inline constexpr const char r3_4[] =
 R"doc(Deprecated routine that tests for and optionally performs a type III
 Reidemeister move.
 
@@ -5151,7 +5151,7 @@ Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Link_::reflect
-static const char *reflect =
+inline constexpr const char reflect[] =
 R"doc(Converts this link into its reflection.
 
 This routine changes the sign of every crossing, but leaves the upper
@@ -5167,7 +5167,7 @@ In the language of Jeremy Green's virtual knot tables, this operation
 is a _horizontal_ mirror image.)doc";
 
 // Docstring regina::python::doc::Link_::resolve
-static const char *resolve =
+inline constexpr const char resolve[] =
 R"doc(Resolves the given crossing. The two incoming strands will switch
 connections with the two outgoing strands, with the result that the
 given crossing is removed entirely.
@@ -5180,7 +5180,7 @@ Parameter ``c``:
     the crossing to resolve.)doc";
 
 // Docstring regina::python::doc::Link_::reverse
-static const char *reverse =
+inline constexpr const char reverse[] =
 R"doc(Reverses the orientation of every component of this link.
 
 This routine preserves both the sign and the upper/lower positions at
@@ -5189,7 +5189,7 @@ strands and vice versa (so next() becomes prev(), and prev() becomes
 next()).)doc";
 
 // Docstring regina::python::doc::Link_::reverse_2
-static const char *reverse_2 =
+inline constexpr const char reverse_2[] =
 R"doc(Reverses the orientation of just the link component that contains the
 given strand. Other components of the link will not be modified.
 
@@ -5203,7 +5203,7 @@ Parameter ``component``:
     nothing.)doc";
 
 // Docstring regina::python::doc::Link_::rewrite
-static const char *rewrite =
+inline constexpr const char rewrite[] =
 R"doc(Explores all link diagrams that can be reached from this via classical
 Reidemeister moves, without exceeding a given number of additional
 crossings.
@@ -5362,7 +5362,7 @@ Returns:
     completion.)doc";
 
 // Docstring regina::python::doc::Link_::rewriteVirtual
-static const char *rewriteVirtual =
+inline constexpr const char rewriteVirtual[] =
 R"doc(Explores all link diagrams that can be reached from this via classical
 and/or virtual Reidemeister moves, without exceeding a given number of
 additional crossings.
@@ -5431,7 +5431,7 @@ Returns:
     completion.)doc";
 
 // Docstring regina::python::doc::Link_::rotate
-static const char *rotate =
+inline constexpr const char rotate[] =
 R"doc(Rotates this link diagram, effectively flipping the surface that
 contains it "upside-down".
 
@@ -5453,7 +5453,7 @@ Jeremy Green's virtual knot tables, this is the composition of both a
 vertical and a horizontal mirror image.)doc";
 
 // Docstring regina::python::doc::Link_::seifertCircles
-static const char *seifertCircles =
+inline constexpr const char seifertCircles[] =
 R"doc(Returns the number of Seifert circles for this link diagram. This is
 the number of circles obtained when we smooth every crossing in a way
 that respects the orientations of the strands.
@@ -5466,7 +5466,7 @@ Returns:
     the number of Seifert circles.)doc";
 
 // Docstring regina::python::doc::Link_::selfFrame
-static const char *selfFrame =
+inline constexpr const char selfFrame[] =
 R"doc(Adds trivial twists to this link to ensure that each component has
 zero writhe. Here the _writhe_ of a component *c* is the sum of the
 signs of all crossings at which *c* crosses itself.
@@ -5480,7 +5480,7 @@ Returns:
     component already had zero writhe to begin with.)doc";
 
 // Docstring regina::python::doc::Link_::sig
-static const char *sig =
+inline constexpr const char sig[] =
 R"doc(Constructs the _signature_ for this knot or link diagram.
 
 Most users will not need to use this routine, which is extremely
@@ -5614,7 +5614,7 @@ Returns:
     binary encodings.)doc";
 
 // Docstring regina::python::doc::Link_::signedGauss
-static const char *signedGauss =
+inline constexpr const char signedGauss[] =
 R"doc(Returns a signed Gauss code for this knot, presented as a string.
 
 The signed Gauss code, as described by Kauffman, modifies the
@@ -5682,7 +5682,7 @@ Returns:
     a signed Gauss code as described above.)doc";
 
 // Docstring regina::python::doc::Link_::signedGaussData
-static const char *signedGaussData =
+inline constexpr const char signedGaussData[] =
 R"doc(Returns a signed Gauss code for this knot, presented as a vector of
 string tokens.
 
@@ -5710,7 +5710,7 @@ Returns:
     a signed Gauss code for this knot in machine-readable form.)doc";
 
 // Docstring regina::python::doc::Link_::simplify
-static const char *simplify =
+inline constexpr const char simplify[] =
 R"doc(Attempts to simplify this link diagram as intelligently as possible
 using fast and greedy heuristics. Specifically, this routine tries
 combinations of Reidemeister moves with the aim of reducing the number
@@ -5743,7 +5743,7 @@ Returns:
     simplified.)doc";
 
 // Docstring regina::python::doc::Link_::simplifyExhaustive
-static const char *simplifyExhaustive =
+inline constexpr const char simplifyExhaustive[] =
 R"doc(Attempts to simplify this link diagram using a slow but exhaustive
 search through the Reidemeister graph. This routine is more powerful
 but much slower than simplify().
@@ -5845,7 +5845,7 @@ Returns:
     to fewer crossings.)doc";
 
 // Docstring regina::python::doc::Link_::simplifyToLocalMinimum
-static const char *simplifyToLocalMinimum =
+inline constexpr const char simplifyToLocalMinimum[] =
 R"doc(Uses type I and II Reidemeister moves to reduce the link monotonically
 to some local minimum number of crossings.
 
@@ -5878,7 +5878,7 @@ Returns:
     if it determines that it is capable of performing such a change.)doc";
 
 // Docstring regina::python::doc::Link_::size
-static const char *size =
+inline constexpr const char size[] =
 R"doc(Returns the number of crossings in this link.
 
 Note that a link can have more components than crossings (since it may
@@ -5888,7 +5888,7 @@ Returns:
     the number of crossings.)doc";
 
 // Docstring regina::python::doc::Link_::source
-static const char *source =
+inline constexpr const char source[] =
 R"doc(Returns C++ or Python source code that can be used to reconstruct this
 link.
 
@@ -5906,7 +5906,7 @@ Returns:
     the source code that was generated.)doc";
 
 // Docstring regina::python::doc::Link_::strand
-static const char *strand =
+inline constexpr const char strand[] =
 R"doc(Returns the strand in the link with the given integer ID.
 
 Each strand ID is of the form 2*c*+*s*, where *c* is the index of the
@@ -5924,7 +5924,7 @@ See also:
     StrandRef::id())doc";
 
 // Docstring regina::python::doc::Link_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given link.
 
 All crossings that belong to this link will be moved to *other*, and
@@ -5946,7 +5946,7 @@ Parameter ``other``:
     the link whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::Link_::translate
-static const char *translate =
+inline constexpr const char translate[] =
 R"doc(Translates a crossing from some other link into the corresponding
 crossing in this link.
 
@@ -5972,7 +5972,7 @@ Returns:
     the corresponding crossing in this link.)doc";
 
 // Docstring regina::python::doc::Link_::translate_2
-static const char *translate_2 =
+inline constexpr const char translate_2[] =
 R"doc(Translates a strand reference from some other link into the
 corresponding strand reference from this link.
 
@@ -5999,7 +5999,7 @@ Returns:
     the corresponding strand reference for this link.)doc";
 
 // Docstring regina::python::doc::Link_::underForComponent
-static const char *underForComponent =
+inline constexpr const char underForComponent[] =
 R"doc(Locates an under-crossing within the same link component as the given
 strand. The choice of _which_ under-crossing is returned will be
 arbitrary (i.e., it might not be the _first_ under-crossing).
@@ -6015,7 +6015,7 @@ Returns:
     above the rest of the diagram).)doc";
 
 // Docstring regina::python::doc::Link_::useTreeDecomposition
-static const char *useTreeDecomposition =
+inline constexpr const char useTreeDecomposition[] =
 R"doc(Instructs Regina to use the given tree decomposition as the starting
 point whenever it needs a tree decomposition for this link.
 
@@ -6044,7 +6044,7 @@ Parameter ``td``:
     link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::virtualGenus
-static const char *virtualGenus =
+inline constexpr const char virtualGenus[] =
 R"doc(Determines the virtual genus of this link diagram. The virtual genus
 is the smallest genus of closed orientable surface in which the
 diagram embeds.
@@ -6063,7 +6063,7 @@ Returns:
     the virtual genus of this link diagram.)doc";
 
 // Docstring regina::python::doc::Link_::whiteheadDouble
-static const char *whiteheadDouble =
+inline constexpr const char whiteheadDouble[] =
 R"doc(Returns the untwisted positive or negative Whitehead double of this
 knot.
 
@@ -6100,7 +6100,7 @@ Returns:
     the requested untwisted Whitehead double of this knot.)doc";
 
 // Docstring regina::python::doc::Link_::withR1
-static const char *withR1 =
+inline constexpr const char withR1[] =
 R"doc(If possible, returns the diagram obtained by performing a type I
 Reidemeister move at the given location to remove a crossing. If such
 a move is not allowed, then this routine returns no value.
@@ -6123,7 +6123,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR1_2
-static const char *withR1_2 =
+inline constexpr const char withR1_2[] =
 R"doc(If possible, returns the diagram obtained by performing a type I
 Reidemeister move at the given location to add a new crossing. If such
 a move is not allowed, then this routine returns no value.
@@ -6156,7 +6156,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2
-static const char *withR2 =
+inline constexpr const char withR2[] =
 R"doc(If possible, returns the diagram obtained by performing a type II
 Reidemeister move at the given location to remove two crossings. If
 such a move is not allowed, then this routine returns no value.
@@ -6180,7 +6180,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2_2
-static const char *withR2_2 =
+inline constexpr const char withR2_2[] =
 R"doc(If possible, returns the diagram obtained by performing a type II
 Reidemeister move at the given location to remove two crossings. If
 such a move is not allowed, then this routine returns no value.
@@ -6204,7 +6204,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2_3
-static const char *withR2_3 =
+inline constexpr const char withR2_3[] =
 R"doc(If possible, returns the diagram obtained by performing a classical
 type II Reidemeister move at the given location to add two new
 crossings by pushing two different strands over one another. If such a
@@ -6251,7 +6251,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2Virtual
-static const char *withR2Virtual =
+inline constexpr const char withR2Virtual[] =
 R"doc(If possible, returns the diagram obtained by performing a virtual type
 II Reidemeister move at the given location to add two new crossings by
 pushing two different strands over one another. If such a move is not
@@ -6297,7 +6297,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR2Virtual_2
-static const char *withR2Virtual_2 =
+inline constexpr const char withR2Virtual_2[] =
 R"doc(If possible, returns the diagram obtained by performing a virtual type
 II Reidemeister move at the given location to add two new crossings by
 pushing the same strand over itself from opposite sides. If such a
@@ -6335,7 +6335,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR3
-static const char *withR3 =
+inline constexpr const char withR3[] =
 R"doc(If possible, returns the diagram obtained by performing a type III
 Reidemeister move at the given location. If such a move is not
 allowed, then this routine returns no value.
@@ -6364,7 +6364,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::withR3_2
-static const char *withR3_2 =
+inline constexpr const char withR3_2[] =
 R"doc(If possible, returns the diagram obtained by performing a type III
 Reidemeister move at the given location. If such a move is not
 allowed, then this routine returns no value.
@@ -6394,7 +6394,7 @@ Returns:
     no value if the requested move cannot be performed.)doc";
 
 // Docstring regina::python::doc::Link_::writhe
-static const char *writhe =
+inline constexpr const char writhe[] =
 R"doc(Returns the writhe of this link diagram.
 
 This is _not_ an invariant of the link; instead it depends on the
@@ -6406,7 +6406,7 @@ Returns:
     the writhe.)doc";
 
 // Docstring regina::python::doc::Link_::writheOfComponent
-static const char *writheOfComponent =
+inline constexpr const char writheOfComponent[] =
 R"doc(Returns the writhe of a single component of this link diagram.
 
 This is the writhe of the diagram when all _other_ components are
@@ -6431,7 +6431,7 @@ Returns:
     the given strand is a null strand.)doc";
 
 // Docstring regina::python::doc::Link_::writheOfComponent_2
-static const char *writheOfComponent_2 =
+inline constexpr const char writheOfComponent_2[] =
 R"doc(Returns the writhe of a single component of this link diagram.
 
 This is the writhe of the diagram when all _other_ components are
@@ -6454,7 +6454,7 @@ Returns:
 namespace StrandRef_ {
 
 // Docstring regina::python::doc::StrandRef_::__as_bool
-static const char *__as_bool =
+inline constexpr const char __as_bool[] =
 R"doc(Tests whether this is a non-null reference.
 
 Returns:
@@ -6463,10 +6463,10 @@ Returns:
     reference.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given strand reference.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given strand reference.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__dec
-static const char *__dec =
+inline constexpr const char __dec[] =
 R"doc(Moves this reference backward against the direction of the link until
 it reaches the previous crossing. (Of course, if the link contains a
 trivial twist then this may in fact return to the same crossing but
@@ -6486,14 +6486,14 @@ Returns:
     a copy of this object before the change took place.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Initialises this to a null reference.
 
 The pointer returned by crossing() will be ``None``, and the integer
 returned by strand() will be 0.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Tests whether this and the given reference are identical.
 
 Two references are identical if and only if they return the same
@@ -6510,7 +6510,7 @@ Returns:
     identical.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__inc
-static const char *__inc =
+inline constexpr const char __inc[] =
 R"doc(Moves this reference forward along the direction of the link until it
 reaches the next crossing. (Of course, if the link contains a trivial
 twist then this may in fact return to the same crossing but the other
@@ -6530,7 +6530,7 @@ Returns:
     a copy of this object before the change took place.)doc";
 
 // Docstring regina::python::doc::StrandRef_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Initialises this to the given strand of the given crossing.
 
 The given crossing may be ``None``, in which case this will become a
@@ -6547,7 +6547,7 @@ Parameter ``strand``:
     the strand running over the crossing.)doc";
 
 // Docstring regina::python::doc::StrandRef_::crossing
-static const char *crossing =
+inline constexpr const char crossing[] =
 R"doc(The crossing that this reference points to.
 
 The information returned by crossing() and strand() together pinpoint
@@ -6557,7 +6557,7 @@ Returns:
     the crossing, or ``None`` if this is a null reference.)doc";
 
 // Docstring regina::python::doc::StrandRef_::id
-static const char *id =
+inline constexpr const char id[] =
 R"doc(An integer that uniquely identifies this strand within the link.
 
 This integer will be 2*c*+*s*, where *c* is the index of the crossing,
@@ -6571,14 +6571,14 @@ Returns:
     the unique ID of this strand within the link.)doc";
 
 // Docstring regina::python::doc::StrandRef_::jump
-static const char *jump =
+inline constexpr const char jump[] =
 R"doc(Jumps to the other strand at the same crossing.
 
 This reference will be changed directly. The crossing will remain the
 same, but the strand will switch from lower to upper or vice versa.)doc";
 
 // Docstring regina::python::doc::StrandRef_::next
-static const char *next =
+inline constexpr const char next[] =
 R"doc(Returns the crossing reference that comes immediately after this when
 walking forward along the direction of the link.
 
@@ -6595,7 +6595,7 @@ Returns:
     the crossing reference that follows this.)doc";
 
 // Docstring regina::python::doc::StrandRef_::prev
-static const char *prev =
+inline constexpr const char prev[] =
 R"doc(Returns the crossing reference that comes immediately before this when
 walking backward against the direction of the link.
 
@@ -6612,14 +6612,14 @@ Returns:
     the crossing reference that precedes this.)doc";
 
 // Docstring regina::python::doc::StrandRef_::reset
-static const char *reset =
+inline constexpr const char reset[] =
 R"doc(Converts this into a null reference.
 
 The pointer returned by crossing() will be ``None``, and the integer
 returned by strand() will be 0.)doc";
 
 // Docstring regina::python::doc::StrandRef_::strand
-static const char *strand =
+inline constexpr const char strand[] =
 R"doc(Indicates whether this reference points to the upper or lower strand
 of the relevant crossing.
 

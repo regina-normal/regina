@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::TorusBundle
-static const char *TorusBundle =
+inline constexpr const char TorusBundle[] =
 R"doc(Represents a torus bundle over the circle. This is expressed as the
 product of the torus and the interval, with the two torus boundaries
 identified according to some specified monodromy.
@@ -41,15 +41,15 @@ manifold classes.)doc";
 namespace TorusBundle_ {
 
 // Docstring regina::python::doc::TorusBundle_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given torus bundle.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given torus bundle.)doc";
 
 // Docstring regina::python::doc::TorusBundle_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates a new trivial torus bundle over the circle. In other words,
 this routine creates a torus bundle with the identity monodromy.)doc";
 
 // Docstring regina::python::doc::TorusBundle_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same torus bundle.
 
@@ -66,7 +66,7 @@ Returns:
     identical presentations of the same torus bundle.)doc";
 
 // Docstring regina::python::doc::TorusBundle_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new torus bundle over the circle using the given monodromy.
 
 Precondition:
@@ -80,7 +80,7 @@ Parameter ``monodromy``:
     identified. See the class notes for details.)doc";
 
 // Docstring regina::python::doc::TorusBundle_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new torus bundle over the circle using the given monodromy.
 The four elements of the monodromy matrix are passed separately. They
 combine to give the full monodromy matrix *M* as follows:
@@ -111,7 +111,7 @@ Parameter ``mon11``:
     the (1,1) element of the monodromy matrix.)doc";
 
 // Docstring regina::python::doc::TorusBundle_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given torus bundles.
 
 This global routine simply calls TorusBundle::swap(); it is provided
@@ -124,7 +124,7 @@ Parameter ``b``:
     the second torus bundle whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TorusBundle_::monodromy
-static const char *monodromy =
+inline constexpr const char monodromy[] =
 R"doc(Returns the monodromy describing how the upper and lower torus
 boundaries are identified. See the class notes for details.
 
@@ -132,7 +132,7 @@ Returns:
     the monodromy for this torus bundle.)doc";
 
 // Docstring regina::python::doc::TorusBundle_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given torus bundle.
 
 Parameter ``other``:

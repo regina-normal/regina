@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Matrix3D
-static const char *Matrix3D =
+inline constexpr const char Matrix3D[] =
 R"doc(Represents a linear transformation in three-dimensional space, as
 represented by a real 3-by-3 matrix.
 
@@ -45,7 +45,7 @@ Template parameter ``Real``:
     the floating-point type to use for all storage and computation.)doc";
 
 // Docstring regina::python::doc::Rotation3D
-static const char *Rotation3D =
+inline constexpr const char Rotation3D[] =
 R"doc(Represents a rotation about the origin in real three-dimensional
 space.
 
@@ -104,7 +104,7 @@ Template parameter ``Real``:
     the floating-point type to use for all storage and computation.)doc";
 
 // Docstring regina::python::doc::Segment3D
-static const char *Segment3D =
+inline constexpr const char Segment3D[] =
 R"doc(Represents a line segment in 3-dimensional space, defined by its two
 endpoints *u* and *v*.
 
@@ -129,7 +129,7 @@ Template parameter ``Real``:
     the floating-point type to use for all storage and computation.)doc";
 
 // Docstring regina::python::doc::Vector3D
-static const char *Vector3D =
+inline constexpr const char Vector3D[] =
 R"doc(Represents a vector in real three-dimensional space. This class is
 also used to represent a single 3-D point.
 
@@ -150,7 +150,7 @@ Template parameter ``Real``:
 namespace Matrix3D_ {
 
 // Docstring regina::python::doc::Matrix3D_::__array
-static const char *__array =
+inline constexpr const char __array[] =
 R"doc(Gives read-write access to a single row of this matrix.
 
 This means that the entry in row *r*, column *c* can be accessed as
@@ -164,7 +164,7 @@ Returns:
     the requested row.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::__array_2
-static const char *__array_2 =
+inline constexpr const char __array_2[] =
 R"doc(Gives read-only access to a single row of this matrix.
 
 This means that the entry in row *r*, column *c* can be accessed as
@@ -178,13 +178,13 @@ Returns:
     row.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given matrix.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given matrix.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::__default
-static const char *__default = R"doc(Creates the identity matrix.)doc";
+inline constexpr const char __default[] = R"doc(Creates the identity matrix.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given matrix are equal.
 
 .. warning::
@@ -198,7 +198,7 @@ Returns:
     ``True`` if and only if the two matrices are equal.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::__imul
-static const char *__imul =
+inline constexpr const char __imul[] =
 R"doc(Composes this with the given transformation, which is to be applied
 first. This transformation will be changed directly.
 
@@ -217,7 +217,7 @@ Returns:
     a reference to this transformation.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new matrix containin the given entries.
 
 Parameter ``m00``:
@@ -248,7 +248,7 @@ Parameter ``m22``:
     the entry in row 2, column 2.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Returns the composition of this and the given transformation.
 
 Composition of transformations is _not_ commutative. Here we follow
@@ -265,7 +265,7 @@ Returns:
     the composition of this and the given transformation.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::__mul_2
-static const char *__mul_2 =
+inline constexpr const char __mul_2[] =
 R"doc(Returns the image of the given vector under this transformation.
 
 Recall that vectors are treated as _column_ vectors. That is, if this
@@ -280,7 +280,7 @@ Returns:
     the result of applying this transformation to the given vector.)doc";
 
 // Docstring regina::python::doc::Matrix3D_::inverse
-static const char *inverse =
+inline constexpr const char inverse[] =
 R"doc(Returns the inverse of this transformation.
 
 Precondition:
@@ -295,7 +295,7 @@ Returns:
 namespace Rotation3D_ {
 
 // Docstring regina::python::doc::Rotation3D_::__array
-static const char *__array =
+inline constexpr const char __array[] =
 R"doc(Returns the given quaternion coordinate for this rotation.
 
 Parameter ``index``:
@@ -306,15 +306,15 @@ Returns:
     the corresponding quaternion coordinate.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given rotation.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given rotation.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__default
-static const char *__default =
+inline constexpr const char __default[] =
 R"doc(Creates the identity rotation. This is the operation that does not
 rotate at all.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given rotation have the same quaternion
 coordinates.
 
@@ -330,7 +330,7 @@ Returns:
     coordinates.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__imul
-static const char *__imul =
+inline constexpr const char __imul[] =
 R"doc(Composes this with the given rotation, which is to be applied first.
 This rotation will be changed directly.
 
@@ -355,7 +355,7 @@ Returns:
     a reference to this rotation.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new rotation from the given quaternion coordinates.
 
 As described in the class notes, these coordinates do not need to be
@@ -385,7 +385,7 @@ Parameter ``d``:
     notes.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Returns the composition of this and the given rotation.
 
 Composition of 3-D rotations is _not_ commutative. Here we follow the
@@ -408,7 +408,7 @@ Returns:
     the composition of this and the given rotation.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::__mul_2
-static const char *__mul_2 =
+inline constexpr const char __mul_2[] =
 R"doc(Returns the image of the given vector under this rotation.
 
 .. warning::
@@ -426,7 +426,7 @@ Returns:
     the result of applying this rotation to the given vector.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::inverse
-static const char *inverse =
+inline constexpr const char inverse[] =
 R"doc(Returns the inverse to this rotation.
 
 This rotates around the same axis by negative the original angle.
@@ -439,7 +439,7 @@ Returns:
     the inverse rotation.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::matrix
-static const char *matrix =
+inline constexpr const char matrix[] =
 R"doc(Returns the 3-dimensional transformation matrix for this rotation.
 
 The result will be a 3-by-3 matrix ``M``, which can be used to rotate
@@ -454,7 +454,7 @@ Returns:
     the corresponding 3-dimensional rotation matrix.)doc";
 
 // Docstring regina::python::doc::Rotation3D_::normalise
-static const char *normalise =
+inline constexpr const char normalise[] =
 R"doc(Rescales all four quaternion coordinates by the same positive constant
 so that the quaternion coordinates become normalised.
 
@@ -471,7 +471,7 @@ Specifically, after this operation:
 namespace Segment3D_ {
 
 // Docstring regina::python::doc::Segment3D_::__add
-static const char *__add =
+inline constexpr const char __add[] =
 R"doc(Returns the translation of this line segment by the given vector.
 
 Parameter ``translation``:
@@ -481,13 +481,13 @@ Returns:
     the translated copy of this line segment.)doc";
 
 // Docstring regina::python::doc::Segment3D_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given line segment.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given line segment.)doc";
 
 // Docstring regina::python::doc::Segment3D_::__default
-static const char *__default = R"doc(Creates a new line segment whose endpoints are uninitialised.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new line segment whose endpoints are uninitialised.)doc";
 
 // Docstring regina::python::doc::Segment3D_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given line segment have the same endpoints,
 in the same order.
 
@@ -504,7 +504,7 @@ Returns:
     *v*.)doc";
 
 // Docstring regina::python::doc::Segment3D_::__iadd
-static const char *__iadd =
+inline constexpr const char __iadd[] =
 R"doc(Translates this line segment by the given vector.
 
 Parameter ``translation``:
@@ -514,7 +514,7 @@ Returns:
     a reference to this line segment, which will be modified directly.)doc";
 
 // Docstring regina::python::doc::Segment3D_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new line segment with the given endpoints.
 
 Parameter ``u``:
@@ -524,7 +524,7 @@ Parameter ``v``:
     the second endpoint.)doc";
 
 // Docstring regina::python::doc::Segment3D_::__isub
-static const char *__isub =
+inline constexpr const char __isub[] =
 R"doc(Translates this line segment by the negative of the given vector.
 
 Parameter ``translation``:
@@ -534,7 +534,7 @@ Returns:
     a reference to this line segment, which will be modified directly.)doc";
 
 // Docstring regina::python::doc::Segment3D_::__sub
-static const char *__sub =
+inline constexpr const char __sub[] =
 R"doc(Returns the translation of this line segment by the negative of the
 given vector.
 
@@ -545,7 +545,7 @@ Returns:
     the translated copy of this line segment.)doc";
 
 // Docstring regina::python::doc::Segment3D_::closest
-static const char *closest =
+inline constexpr const char closest[] =
 R"doc(Computes the closest point on this line segment to the given point.
 
 This routine does respect the limits defined by the two endpoints of
@@ -565,21 +565,21 @@ Returns:
     words, ``point(𝜆)``.)doc";
 
 // Docstring regina::python::doc::Segment3D_::length
-static const char *length =
+inline constexpr const char length[] =
 R"doc(Returns the length of this line segment.
 
 Returns:
     the length of this line segment.)doc";
 
 // Docstring regina::python::doc::Segment3D_::midpoint
-static const char *midpoint =
+inline constexpr const char midpoint[] =
 R"doc(Returns the midpoint of this line segment.
 
 Returns:
     the midpoint of this line segment.)doc";
 
 // Docstring regina::python::doc::Segment3D_::point
-static const char *point =
+inline constexpr const char point[] =
 R"doc(Returns the point on this line segment represented by the given real
 number 𝜆.
 
@@ -600,17 +600,17 @@ Returns:
     the corresponding point ``𝜆v + (1-𝜆)u``.)doc";
 
 // Docstring regina::python::doc::Segment3D_::u
-static const char *u = R"doc(The first endpoint (u) of this line segment.)doc";
+inline constexpr const char u[] = R"doc(The first endpoint (u) of this line segment.)doc";
 
 // Docstring regina::python::doc::Segment3D_::v
-static const char *v = R"doc(The second endpoint (v) of this line segment.)doc";
+inline constexpr const char v[] = R"doc(The second endpoint (v) of this line segment.)doc";
 
 }
 
 namespace Vector3D_ {
 
 // Docstring regina::python::doc::Vector3D_::__add
-static const char *__add =
+inline constexpr const char __add[] =
 R"doc(Returns the sum of this and the given vector.
 
 Parameter ``rhs``:
@@ -620,13 +620,13 @@ Returns:
     the sum of this and the given vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given vector.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a new copy of the given vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__default
-static const char *__default = R"doc(Creates a new vector whose coordinates are uninitialised.)doc";
+inline constexpr const char __default[] = R"doc(Creates a new vector whose coordinates are uninitialised.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__div
-static const char *__div =
+inline constexpr const char __div[] =
 R"doc(Returns a copy of this vector scaled down by the given factor.
 Specifically, the coordinates of the vector that is returned will be
 the coordinates of this vector divided by *scale*.
@@ -638,7 +638,7 @@ Returns:
     a rescaled copy of this vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines if this and the given vector have the same coordinates.
 
 .. warning::
@@ -652,7 +652,7 @@ Returns:
     ``True`` if and only if the two vectors are equal.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__iadd
-static const char *__iadd =
+inline constexpr const char __iadd[] =
 R"doc(Adds the given vector to this vector.
 
 Parameter ``rhs``:
@@ -662,7 +662,7 @@ Returns:
     a reference to this vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__idiv
-static const char *__idiv =
+inline constexpr const char __idiv[] =
 R"doc(Scales this vector down by the given factor. Specifically, all
 coordinates of this vector will be divided by *scale*.
 
@@ -673,7 +673,7 @@ Returns:
     a reference to this vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__imul
-static const char *__imul =
+inline constexpr const char __imul[] =
 R"doc(Scales this vector up by the given factor. Specifically, all
 coordinates of this vector will be multiplied by *scale*.
 
@@ -684,7 +684,7 @@ Returns:
     a reference to this vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new vector with the given coordinates.
 
 Parameter ``x``:
@@ -697,7 +697,7 @@ Parameter ``z``:
     the third (z) coordinate.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new vector with the given coordinates.
 
 Parameter ``coordinates``:
@@ -705,7 +705,7 @@ Parameter ``coordinates``:
     respectively.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__isub
-static const char *__isub =
+inline constexpr const char __isub[] =
 R"doc(Subtracts the given vector from this vector.
 
 Parameter ``rhs``:
@@ -715,7 +715,7 @@ Returns:
     a reference to this vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Returns a copy of this vector scaled up by the given factor.
 Specifically, the coordinates of the vector that is returned will be
 the coordinates of this vector multiplied by *scale*.
@@ -727,7 +727,7 @@ Returns:
     a rescaled copy of this vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__mul_2
-static const char *__mul_2 =
+inline constexpr const char __mul_2[] =
 R"doc(Returns the inner product of this and the given vector.
 
 Parameter ``rhs``:
@@ -737,7 +737,7 @@ Returns:
     the inner product of this vector and *rhs*.)doc";
 
 // Docstring regina::python::doc::Vector3D_::__sub
-static const char *__sub =
+inline constexpr const char __sub[] =
 R"doc(Returns the difference obtained from this vector minus the given
 vector.
 
@@ -751,7 +751,7 @@ Returns:
     the difference obtained from this minus the given vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::distance
-static const char *distance =
+inline constexpr const char distance[] =
 R"doc(Returns the distance between this and the given point in 3-D space.
 
 The naming and description of this function assume that both this and
@@ -764,7 +764,7 @@ Returns:
     the distance between this and the given point.)doc";
 
 // Docstring regina::python::doc::Vector3D_::length
-static const char *length =
+inline constexpr const char length[] =
 R"doc(Returns the length of this vector.
 
 If this object represents a single 3-D point, then this function
@@ -774,7 +774,7 @@ Returns:
     the length of this vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::midpoint
-static const char *midpoint =
+inline constexpr const char midpoint[] =
 R"doc(Returns the midpoint between this and the given point.
 
 The naming and description of this function assume that both this and
@@ -786,20 +786,20 @@ Returns:
     the midpoint between this and the given point.)doc";
 
 // Docstring regina::python::doc::Vector3D_::operator_array
-static const char *operator_array =
+inline constexpr const char operator_array[] =
 R"doc(Casts this point to a standard C++ array.
 
 Returns:
     a three-element array containing *x*, *y* and *z* (in that order).)doc";
 
 // Docstring regina::python::doc::Vector3D_::x
-static const char *x = R"doc(The first (x) coordinate of the vector.)doc";
+inline constexpr const char x[] = R"doc(The first (x) coordinate of the vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::y
-static const char *y = R"doc(The second (y) coordinate of the vector.)doc";
+inline constexpr const char y[] = R"doc(The second (y) coordinate of the vector.)doc";
 
 // Docstring regina::python::doc::Vector3D_::z
-static const char *z = R"doc(The third (z) coordinate of the vector.)doc";
+inline constexpr const char z[] = R"doc(The third (z) coordinate of the vector.)doc";
 
 }
 

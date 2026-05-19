@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::GraphTriple
-static const char *GraphTriple =
+inline constexpr const char GraphTriple[] =
 R"doc(Represents a closed graph manifold formed by joining three bounded
 Seifert fibred spaces along their torus boundaries.
 
@@ -103,7 +103,7 @@ sized) amount of data to be copied even in a move operation.
 namespace GraphTriple_ {
 
 // Docstring regina::python::doc::GraphTriple_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares representations of two graph manifolds according to an
 aesthetic ordering.
 
@@ -132,10 +132,10 @@ Returns:
     representation should be ordered with respect to each other.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::__copy
-static const char *__copy = R"doc(Creates a clone of the given graph manifold.)doc";
+inline constexpr const char __copy[] = R"doc(Creates a clone of the given graph manifold.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same graph manifold.
 
@@ -154,7 +154,7 @@ Returns:
     identical presentations of the same graph manifold.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Creates a new graph manifold from three bounded Seifert fibred spaces,
 as described in the class notes. The three Seifert fibred spaces and
 both 2-by-2 matching matrices are passed separately.
@@ -187,7 +187,7 @@ Parameter ``matchingReln1``:
     *centre* are joined.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a new graph manifold from three bounded Seifert fibred spaces,
 which are moved instead of copied.
 
@@ -223,7 +223,7 @@ Parameter ``matchingReln1``:
     *centre* are joined.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::centre
-static const char *centre =
+inline constexpr const char centre[] =
 R"doc(Returns a reference to the central space. This is the Seifert fibred
 space with two boundary components, to which the two end spaces are
 joined. See the class notes for further discussion.
@@ -232,7 +232,7 @@ Returns:
     a reference to the requested Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::end
-static const char *end =
+inline constexpr const char end[] =
 R"doc(Returns a reference to one of the two end spaces. These are the
 Seifert fibred spaces with just one boundary component, to be joined
 to the central space. See the class notes for further discussion.
@@ -245,7 +245,7 @@ Returns:
     a reference to the requested Seifert fibred space.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given graph manifolds.
 
 This global routine simply calls GraphTriple::swap(); it is provided
@@ -258,7 +258,7 @@ Parameter ``b``:
     the second graph manifold whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::matchingReln
-static const char *matchingReln =
+inline constexpr const char matchingReln[] =
 R"doc(Returns a reference to the 2-by-2 matrix describing how the two
 requested bounded Seifert fibred spaces are joined together. See the
 class notes for details on precisely how these matrices are
@@ -279,7 +279,7 @@ Returns:
     a reference to the requested matching matrix.)doc";
 
 // Docstring regina::python::doc::GraphTriple_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given graph manifold.
 
 Parameter ``other``:

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::readSigList
-static const char *readSigList =
+inline constexpr const char readSigList[] =
 R"doc(Reads a list of signatures of triangulations or link diagrams from the
 given text file, and reconstructs the corresponding mathematical
 objects in a new packet tree. The file should contain one signature

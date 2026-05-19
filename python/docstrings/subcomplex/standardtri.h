@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::StandardTriangulation
-static const char *StandardTriangulation =
+inline constexpr const char StandardTriangulation[] =
 R"doc(Describes a triangulation or subcomplex of a triangulation whose
 structure is well-understood. This is an abstract base class: its
 subclasses correspond to different combinatorial constructions
@@ -48,7 +48,7 @@ Each subclass of StandardTriangulation:
 namespace StandardTriangulation_ {
 
 // Docstring regina::python::doc::StandardTriangulation_::homology
-static const char *homology =
+inline constexpr const char homology[] =
 R"doc(Returns the expected first homology group of this triangulation, if
 such a routine has been implemented.
 
@@ -90,7 +90,7 @@ Returns:
     functionality has been implemented.)doc";
 
 // Docstring regina::python::doc::StandardTriangulation_::manifold
-static const char *manifold =
+inline constexpr const char manifold[] =
 R"doc(Returns the 3-manifold represented by this triangulation, if such a
 recognition routine has been implemented. If the 3-manifold cannot be
 recognised then this routine will return ``None``.
@@ -107,7 +107,7 @@ Returns:
     the underlying 3-manifold.)doc";
 
 // Docstring regina::python::doc::StandardTriangulation_::name
-static const char *name =
+inline constexpr const char name[] =
 R"doc(Returns the name of this specific triangulation as a human-readable
 string.
 
@@ -115,7 +115,7 @@ Returns:
     the name of this triangulation.)doc";
 
 // Docstring regina::python::doc::StandardTriangulation_::recognise
-static const char *recognise =
+inline constexpr const char recognise[] =
 R"doc(Determines whether the given component represents one of the standard
 triangulations understood by Regina. The list of recognised
 triangulations is expected to grow between releases.
@@ -138,7 +138,7 @@ Returns:
     is recognised, or ``None`` otherwise.)doc";
 
 // Docstring regina::python::doc::StandardTriangulation_::recognise_2
-static const char *recognise_2 =
+inline constexpr const char recognise_2[] =
 R"doc(Determines whether the given triangulation represents one of the
 standard triangulations understood by Regina. The list of recognised
 triangulations is expected to grow between releases.
@@ -160,7 +160,7 @@ Returns:
     triangulation is recognised, or ``None`` otherwise.)doc";
 
 // Docstring regina::python::doc::StandardTriangulation_::texName
-static const char *texName =
+inline constexpr const char texName[] =
 R"doc(Returns the name of this specific triangulation in TeX format. No
 leading or trailing dollar signs will be included.
 

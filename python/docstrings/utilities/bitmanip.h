@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::BitManipulator
-static const char *BitManipulator =
+inline constexpr const char BitManipulator[] =
 R"doc(An optimised class for bitwise analysis and manipulation of native C++
 integer types.
 
@@ -38,7 +38,7 @@ Template parameter ``T``:
 namespace BitManipulator_ {
 
 // Docstring regina::python::doc::BitManipulator_::bits
-static const char *bits =
+inline constexpr const char bits[] =
 R"doc(Returns the number of bits that are set to 1 in the given integer.
 
 The implementation uses ``std::popcount()`` where possible, and a
@@ -52,7 +52,7 @@ Returns:
     the number of bits that are set.)doc";
 
 // Docstring regina::python::doc::BitManipulator_::firstBit
-static const char *firstBit =
+inline constexpr const char firstBit[] =
 R"doc(Returns the index of the first ``True`` bit in the given integer, or
 -1 if the given integer is zero. Bits are indexed from 0 upwards,
 starting at the least significant bit.
@@ -65,7 +65,7 @@ Returns:
     ``True`` bits.)doc";
 
 // Docstring regina::python::doc::BitManipulator_::lastBit
-static const char *lastBit =
+inline constexpr const char lastBit[] =
 R"doc(Returns the index of the last ``True`` bit in the given integer, or -1
 if the given integer is zero. Bits are indexed from 0 upwards,
 starting at the least significant bit.
@@ -78,7 +78,7 @@ Returns:
     ``True`` bits.)doc";
 
 // Docstring regina::python::doc::BitManipulator_::swapBits
-static const char *swapBits =
+inline constexpr const char swapBits[] =
 R"doc(Returns a copy of the given integer with two bits swapped. Bits are
 indexed from 0 upwards, starting at the least significant bit.
 

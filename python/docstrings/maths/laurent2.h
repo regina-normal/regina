@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::Laurent2
-static const char *Laurent2 =
+inline constexpr const char Laurent2[] =
 R"doc(Represents a Laurent polynomial in the two variables *x*, *y* with
 coefficients of type *T*. A Laurent polynomial differs from an
 ordinary polynomial in that it allows negative exponents (so, for
@@ -40,7 +40,7 @@ Template parameter ``T``:
     constructor).)doc";
 
 // Docstring regina::python::doc::__add
-static const char *__add =
+inline constexpr const char __add[] =
 R"doc(Adds the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -56,7 +56,7 @@ Returns:
     the sum of both polynomials.)doc";
 
 // Docstring regina::python::doc::__add_2
-static const char *__add_2 =
+inline constexpr const char __add_2[] =
 R"doc(Adds the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -72,7 +72,7 @@ Returns:
     the sum of both polynomials.)doc";
 
 // Docstring regina::python::doc::__add_3
-static const char *__add_3 =
+inline constexpr const char __add_3[] =
 R"doc(Adds the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -88,7 +88,7 @@ Returns:
     the sum of both polynomials.)doc";
 
 // Docstring regina::python::doc::__add_4
-static const char *__add_4 =
+inline constexpr const char __add_4[] =
 R"doc(Adds the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -104,7 +104,7 @@ Returns:
     the sum of both polynomials.)doc";
 
 // Docstring regina::python::doc::__div
-static const char *__div =
+inline constexpr const char __div[] =
 R"doc(Divides the given polynomial by the given scalar constant.
 
 This uses the division operator /= for the coefficient type *T*.
@@ -126,7 +126,7 @@ Returns:
     the quotient of the given polynomial by the given scalar.)doc";
 
 // Docstring regina::python::doc::__mul
-static const char *__mul =
+inline constexpr const char __mul[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.
 
 The scalar is simply of type *T*; we use the identical type
@@ -143,7 +143,7 @@ Returns:
     the product of the given polynomial and scalar.)doc";
 
 // Docstring regina::python::doc::__mul_2
-static const char *__mul_2 =
+inline constexpr const char __mul_2[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.
 
 The scalar is simply of type *T*; we use the identical type
@@ -160,7 +160,7 @@ Returns:
     the product of the given polynomial and scalar.)doc";
 
 // Docstring regina::python::doc::__mul_3
-static const char *__mul_3 =
+inline constexpr const char __mul_3[] =
 R"doc(Multiplies the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -176,7 +176,7 @@ Returns:
     the product of both polynomials.)doc";
 
 // Docstring regina::python::doc::__sub
-static const char *__sub =
+inline constexpr const char __sub[] =
 R"doc(Returns the negative of the given polynomial.
 
 Parameter ``arg``:
@@ -186,7 +186,7 @@ Returns:
     the negative of *arg*.)doc";
 
 // Docstring regina::python::doc::__sub_2
-static const char *__sub_2 =
+inline constexpr const char __sub_2[] =
 R"doc(Subtracts the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -202,7 +202,7 @@ Returns:
     the first polynomial minus the second.)doc";
 
 // Docstring regina::python::doc::__sub_3
-static const char *__sub_3 =
+inline constexpr const char __sub_3[] =
 R"doc(Subtracts the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -218,7 +218,7 @@ Returns:
     the first polynomial minus the second.)doc";
 
 // Docstring regina::python::doc::__sub_4
-static const char *__sub_4 =
+inline constexpr const char __sub_4[] =
 R"doc(Subtracts the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -234,7 +234,7 @@ Returns:
     the first polynomial minus the second.)doc";
 
 // Docstring regina::python::doc::__sub_5
-static const char *__sub_5 =
+inline constexpr const char __sub_5[] =
 R"doc(Subtracts the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -252,7 +252,7 @@ Returns:
 namespace Laurent2_ {
 
 // Docstring regina::python::doc::Laurent2_::__call
-static const char *__call =
+inline constexpr const char __call[] =
 R"doc(Returns the given coefficient of this polynomial. There are no
 restrictions on the exponents *xExp* and *yExp*.
 
@@ -276,7 +276,7 @@ Returns:
     the coefficient of the term with the given exponents.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__cmp
-static const char *__cmp =
+inline constexpr const char __cmp[] =
 R"doc(Compares this against the given polynomial under a total ordering of
 all two-variable Laurent polynomials.
 
@@ -301,7 +301,7 @@ Returns:
     polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__copy
-static const char *__copy =
+inline constexpr const char __copy[] =
 R"doc(Creates a new copy of the given polynomial.
 
 This constructor induces a deep copy of *value*.
@@ -315,10 +315,10 @@ Parameter ``value``:
     the polynomial to clone.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__default
-static const char *__default = R"doc(Creates the zero polynomial.)doc";
+inline constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__eq
-static const char *__eq =
+inline constexpr const char __eq[] =
 R"doc(Tests whether this and the given polynomial are equal.
 
 Parameter ``rhs``:
@@ -328,7 +328,7 @@ Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__iadd
-static const char *__iadd =
+inline constexpr const char __iadd[] =
 R"doc(Adds the given polynomial to this.
 
 This and the given polynomial need not have the same range of non-zero
@@ -341,7 +341,7 @@ Returns:
     a reference to this polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__idiv
-static const char *__idiv =
+inline constexpr const char __idiv[] =
 R"doc(Divides this polynomial by the given constant.
 
 This uses the division operator /= for the coefficient type *T*.
@@ -356,7 +356,7 @@ Returns:
     a reference to this polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__imul
-static const char *__imul =
+inline constexpr const char __imul[] =
 R"doc(Multiplies this polynomial by the given constant.
 
 Parameter ``scalar``:
@@ -366,7 +366,7 @@ Returns:
     a reference to this polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__imul_2
-static const char *__imul_2 =
+inline constexpr const char __imul_2[] =
 R"doc(Multiplies this by the given polynomial.
 
 This and the given polynomial need not have the same range of non-zero
@@ -379,7 +379,7 @@ Returns:
     a reference to this polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__init
-static const char *__init =
+inline constexpr const char __init[] =
 R"doc(Deprecated constructor that creates the polynomial ``x^d y^e`` for the
 given exponents *d* and *e*.
 
@@ -398,7 +398,7 @@ Parameter ``yExp``:
     the exponent *e*, which is attached to *y*.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__init_2
-static const char *__init_2 =
+inline constexpr const char __init_2[] =
 R"doc(Creates a copy of the given polynomial with all terms multiplied by
 ``x^d y^e`` for some integers *d* and *e*.
 
@@ -414,7 +414,7 @@ Parameter ``yShift``:
     the integer *e*, which will be added to all exponents for *y*.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__init_3
-static const char *__init_3 =
+inline constexpr const char __init_3[] =
 R"doc(Creates a new polynomial from the given collection of coefficients.
 
 The coefficients should be presented as a collection of tuples of the
@@ -441,7 +441,7 @@ Parameter ``end``:
     coefficients.)doc";
 
 // Docstring regina::python::doc::Laurent2_::__isub
-static const char *__isub =
+inline constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
 
 This and the given polynomial need not have the same range of non-zero
@@ -454,7 +454,7 @@ Returns:
     a reference to this polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::global_swap
-static const char *global_swap =
+inline constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given polynomials.
 
 This global routine simply calls Laurent2<T>::swap(); it is provided
@@ -467,10 +467,10 @@ Parameter ``b``:
     the second polynomial whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Laurent2_::init
-static const char *init = R"doc(Sets this to become the zero polynomial.)doc";
+inline constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::init_2
-static const char *init_2 =
+inline constexpr const char init_2[] =
 R"doc(Deprecated function that sets this to become the polynomial ``x^d
 y^e`` for the given exponents *d* and *e*.
 
@@ -487,7 +487,7 @@ Parameter ``yExp``:
     the new exponent *e*, which is attached to *y*.)doc";
 
 // Docstring regina::python::doc::Laurent2_::initExp
-static const char *initExp =
+inline constexpr const char initExp[] =
 R"doc(Sets this to become the polynomial ``x^d y^e`` for the given exponents
 *d* and *e*.
 
@@ -498,27 +498,27 @@ Parameter ``yExp``:
     the new exponent *e*, which is attached to *y*.)doc";
 
 // Docstring regina::python::doc::Laurent2_::invertX
-static const char *invertX =
+inline constexpr const char invertX[] =
 R"doc(Replaces ``x`` with ``x^-1`` in this polynomial. This polynomial is
 changed directly.)doc";
 
 // Docstring regina::python::doc::Laurent2_::invertY
-static const char *invertY =
+inline constexpr const char invertY[] =
 R"doc(Replaces ``y`` with ``y^-1`` in this polynomial. This polynomial is
 changed directly.)doc";
 
 // Docstring regina::python::doc::Laurent2_::isZero
-static const char *isZero =
+inline constexpr const char isZero[] =
 R"doc(Returns whether this is the zero polynomial.
 
 Returns:
     ``True`` if and only if this is the zero polynomial.)doc";
 
 // Docstring regina::python::doc::Laurent2_::negate
-static const char *negate = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
+inline constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
 
 // Docstring regina::python::doc::Laurent2_::set
-static const char *set =
+inline constexpr const char set[] =
 R"doc(Changes the given coefficient of this polynomial.
 
 There are no restrictions on the exponents *xExp* and *yExp*, and the
@@ -541,7 +541,7 @@ Parameter ``value``:
     the new value of the corresponding coefficient.)doc";
 
 // Docstring regina::python::doc::Laurent2_::str
-static const char *str =
+inline constexpr const char str[] =
 R"doc(Returns this polynomial as a human-readable string, using the given
 variable names instead of ``x`` and ``y``.
 
@@ -561,7 +561,7 @@ Returns:
     this polynomial as a human-readable string.)doc";
 
 // Docstring regina::python::doc::Laurent2_::swap
-static const char *swap =
+inline constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given polynomial. This is a fast
 (constant time) operation.
 
@@ -572,7 +572,7 @@ Parameter ``other``:
     the polynomial whose contents should be swapped with this.)doc";
 
 // Docstring regina::python::doc::Laurent2_::utf8
-static const char *utf8 =
+inline constexpr const char utf8[] =
 R"doc(Returns this polynomial as a human-readable string using unicode
 characters, using the given variable names instead of ``x`` and ``y``.
 
