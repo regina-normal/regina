@@ -11,8 +11,61 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::GraphConstraint
-inline constexpr const char GraphConstraint[] =
+// Docstring regina::python::doc::__bor
+inline constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
+
+// Docstring regina::python::doc::global_swap_ModelLinkGraph
+inline constexpr const char global_swap_ModelLinkGraph[] =
+R"doc(Swaps the contents of the two given graphs.
+
+This global routine simply calls ModelLinkGraph::swap(); it is
+provided so that ModelLinkGraph meets the C++ Swappable requirements.
+
+See ModelLinkGraph::swap() for more details.
+
+Parameter ``lhs``:
+    the graph whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the graph whose contents should be swapped with *lhs*.)doc";
+
+struct GraphConstraint {
+
+// Docstring regina::python::doc::GraphConstraint::All
+static constexpr const char All[] = R"doc(Indicates that all graph embeddings should be generated.)doc";
+
+// Docstring regina::python::doc::GraphConstraint::NoTwists
+static constexpr const char NoTwists[] =
+R"doc(Indicates that only graph embeddings without twists should be
+generated.
+
+By a _twist_, we mean that the embedding has some node with two
+adjacent arcs connected together. An embedding that fails this
+constraint must always model knot or links with twists that can be
+undone using type I Reidemeister moves.)doc";
+
+// Docstring regina::python::doc::GraphConstraint::SingleTraversal
+static constexpr const char SingleTraversal[] =
+R"doc(Indicates that only graph embeddings with a single traversal should be
+generated. That is, for every embedding *e* that is generated,
+``e.countTraversals()`` should be precisely 1.
+
+An embedding that satisfies this constraint must always model knots
+(classical or virtual). An embedding that fails this constraint must
+either be empty, or must always model multiple-component links.)doc";
+
+// Docstring regina::python::doc::GraphConstraint::__class
+static constexpr const char __class[] =
 R"doc(Represents different classes of graph embeddings that one might want
 to generate. Specifically, this enumeration type is used with the
 routine ModelLinkGraph::generateAllEmbeddings().
@@ -27,8 +80,12 @@ constants ``(flag1 | flag2)``, or empty braces ``{}`` to indicate no
 flags at all (which is equivalent to passing
 ``GraphConstraint::All``).)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph
-inline constexpr const char ModelLinkGraph[] =
+}; // struct GraphConstraint
+
+struct ModelLinkGraph {
+
+// Docstring regina::python::doc::ModelLinkGraph::__class
+static constexpr const char __class[] =
 R"doc(Represents an undirected 4-valent graph with a specific embedding in
 some closed orientable surface. This class only stores the graph and a
 local description of the embedding (i.e., a cyclic ordering of arcs
@@ -58,643 +115,18 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraphArc
-inline constexpr const char ModelLinkGraphArc[] =
-R"doc(A reference to an outgoing edge from a node of a model graph for a
-knot or link.
-
-Edges of model graphs are not directed, and so the same edge will
-appear twice as a ModelLinkGraphArc (once from each of its endpoints).
-
-This class is a simple wrapper that stores (i) a pointer to the
-relevant node of the graph; and (ii) an integer to denote which of the
-four outgoing arcs we are using from that node. Recall that the four
-outgoing arcs for each node are indexed in clockwise order.
-
-A "null arc" is one whose node is the null pointer.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells
-inline constexpr const char ModelLinkGraphCells[] =
-R"doc(Describes the cellular decomposition of a closed orientable surface
-induced by a 4-valent graph embedded within it.
-
-The graph is represented by an object of type ModelLinkGraph, which
-encodes a local embedding of the graph within the surface (i.e., a
-cyclic ordering of arcs around each graph node). The nodes and arcs of
-this graph form the vertices and edges of the cellular decomposition,
-and the 2-cells are topological discs whose boundaries follow these
-nodes and arcs according to their local embeddings. The main purpose
-of this class is to deduce and describe those 2-cells.
-
-As of Regina 7.4, this class can now work with graphs that are non-
-planar (resulting in a surface with positive genus), disconnected
-(resulting in a surface that is likewise disconnected), and/or empty
-(resulting in an empty surface).
-
-Cellular decompositions do not support value semantics: they cannot be
-copied, swapped, or manually constructed. Instead they are computed
-properties of model graphs, and are only accessible via const
-reference through the member function ModelLinkGraph::cells().)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphNode
-inline constexpr const char ModelLinkGraphNode[] =
-R"doc(Represents a single node in a model graph for a knot or link.
-
-If a graph has *n* nodes, then these are numbered 0,...,*n*-1. The
-number assigned to this node can be accessed by calling index(). Note
-that nodes may be reindexed when other nodes are added or removed - if
-you wish to track a particular node through such operations then you
-should use a pointer to the relevant ModelLinkGraphNode instead.
-
-Graph nodes do not support value semantics: they cannot be copied,
-swapped, or manually constructed. Their location in memory defines
-them, and they are often passed and compared by pointer. End users are
-never responsible for their memory management; this is all taken care
-of by the ModelLinkGraph to which they belong.)doc";
-
-// Docstring regina::python::doc::__bor
-inline constexpr const char __bor[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
-namespace GraphConstraint_ {
-
-// Docstring regina::python::doc::GraphConstraint_::All
-inline constexpr const char All[] = R"doc(Indicates that all graph embeddings should be generated.)doc";
-
-// Docstring regina::python::doc::GraphConstraint_::NoTwists
-inline constexpr const char NoTwists[] =
-R"doc(Indicates that only graph embeddings without twists should be
-generated.
-
-By a _twist_, we mean that the embedding has some node with two
-adjacent arcs connected together. An embedding that fails this
-constraint must always model knot or links with twists that can be
-undone using type I Reidemeister moves.)doc";
-
-// Docstring regina::python::doc::GraphConstraint_::SingleTraversal
-inline constexpr const char SingleTraversal[] =
-R"doc(Indicates that only graph embeddings with a single traversal should be
-generated. That is, for every embedding *e* that is generated,
-``e.countTraversals()`` should be precisely 1.
-
-An embedding that satisfies this constraint must always model knots
-(classical or virtual). An embedding that fails this constraint must
-either be empty, or must always model multiple-component links.)doc";
-
-}
-
-namespace ModelLinkGraphArc_ {
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::__as_bool
-inline constexpr const char __as_bool[] =
-R"doc(Tests whether this is a non-null arc.
-
-Returns:
-    ``True`` if this is not a null arc (i.e., node() does not return a
-    null pointer), or ``False`` if this is a null arc.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given arc reference.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::__dec
-inline constexpr const char __dec[] =
-R"doc(Changes to the previous outgoing link arc from the same node.
-
-This effectively rotates the arc in an anticlockwise direction around
-the node. In particular, it decrements the value returned by arc(),
-modulo 4.
-
-This is a postdecrement operator: the object will be changed, but a
-copy of the original arc will be returned.
-
-Precondition:
-    This is not a null arc, i.e., node() does not return ``None``.
-
-Python:
-    This routine is available under the name dec().
-
-Returns:
-    a copy of this object before the change took place.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::__default
-inline constexpr const char __default[] =
-R"doc(Initialises this to a null arc.
-
-The pointer returned by node() will be ``None``, and the integer
-returned by arc() will be 0.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::__eq
-inline constexpr const char __eq[] =
-R"doc(Tests whether this and the given arc reference are identical.
-
-Two references are identical if and only if they return the same
-values for both node() and arc().
-
-.. warning::
-    If you create a null arc by calling ModelLinkGraphArc(``None``,
-    *i*) for some non-zero *i*, then this will _not_ be considered
-    equal to the null arc created by calling ModelLinkGraphArc(),
-    since the latter is equivalent to calling
-    ModelLinkGraphArc(``None``, 0).
-
-Returns:
-    ``True`` if and only if this and the given arc reference are
-    identical.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::__inc
-inline constexpr const char __inc[] =
-R"doc(Changes to the next outgoing link arc from the same node.
-
-This effectively rotates the arc in a clockwise direction around the
-node. In particular, it increments the value returned by arc(), modulo
-4.
-
-This is a postincrement operator: the object will be changed, but a
-copy of the original arc will be returned.
-
-Precondition:
-    This is not a null arc, i.e., node() does not return ``None``.
-
-Python:
-    This routine is available under the name inc().
-
-Returns:
-    a copy of this object before the change took place.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::__init
-inline constexpr const char __init[] =
-R"doc(Initialises this to the given arc exiting the given node of a model
-graph.
-
-Recall that the four arcs exiting a node are numbered 0,1,2,3 in a
-clockwise order around the node.
-
-The given node may be ``None``, in which case this will become a null
-arc. If you are creating a null arc, then it is highly recommended
-that you pass *arc* as 0 also, so that comparison tests treat this
-null reference as equal to a null reference created by the zero-
-argument constructor.
-
-Parameter ``node``:
-    the node of the model graph that this arc exits.
-
-Parameter ``arc``:
-    an integer in the range 0 to 3 inclusive, indicating which of the
-    four arcs exiting *node* this represents.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::arc
-inline constexpr const char arc[] =
-R"doc(Indicates which arc this is amongst the four arcs exiting the
-underlying node of the model graph.
-
-For each node of a model graph, the four arcs exiting that node are
-numbered 0,1,2,3 in a clockwise order.
-
-Returns:
-    an integer between 0 and 3 inclusive indicating one of the four
-    arcs exiting node().)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::next
-inline constexpr const char next[] =
-R"doc(Returns the next arc after this when walking through the graph as
-though it were a link, in a direction away from the current node.
-
-This routine will move to the other endpoint of the graph edge
-described by this arc, and will then return the *opposite* arc at the
-resulting node (i.e., not just pointing backwards along the same
-edge).
-
-For any arc *a*, calling ``a.next()`` is equivalent to calling
-``a.traverse().opposite()``.
-
-Precondition:
-    This is not a null arc, i.e., node() does not return ``None``.
-
-Returns:
-    the next arc after this when walking through the graph as though
-    it were a link.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::node
-inline constexpr const char node[] =
-R"doc(The node of the model graph from which this arc exits.
-
-Returns:
-    the corresponding node, or ``None`` if this is a null arc.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::opposite
-inline constexpr const char opposite[] =
-R"doc(Returns the arc that exits the same node as this, but from the
-opposite side.
-
-Recall that the four arcs exiting each node are numbered in clockwise
-order. The return value will therefore have the same node() as this,
-but its arc() value will be two more than this (modulo 4).
-
-Note that, for any arc *a*, ``a.opposite().opposite()`` is identical
-to *a*.
-
-Precondition:
-    This is not a null arc, i.e., node() does not return ``None``.
-
-Returns:
-    the opposite arc exiting the same node.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::prev
-inline constexpr const char prev[] =
-R"doc(Returns the previous arc before this when walking through the graph as
-though it were a link, in a direction away from the current node.
-
-This routine will jump to the opposite arc at the current node, and
-then move to the other endpoint of the graph edge described by that
-opposite arc.
-
-For any arc *a*, calling ``a.prev()`` is equivalent to calling
-``a.opposite().traverse()``.
-
-Precondition:
-    This is not a null arc, i.e., node() does not return ``None``.
-
-Returns:
-    the previous arc before this when walking through the graph as
-    though it were a link.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphArc_::traverse
-inline constexpr const char traverse[] =
-R"doc(Returns the same edge of the model graph, but seen from the other
-endpoint.
-
-Recall that each undirected edge of a model graph has two
-corresponding ModelLinkGraphArc objects, one for each of its
-endpoints. If this object represents one of these arcs for some
-underlying edge of the graph, then then return value represents the
-other.
-
-Note that, for any arc *a*, ``a.traverse().traverse()`` is identical
-to *a*.
-
-Precondition:
-    This is not a null arc, i.e., node() does not return ``None``.
-
-Returns:
-    the arc at the other end of the underlying edge of the model
-    graph.)doc";
-
-}
-
-namespace ModelLinkGraphCells_ {
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines if this and the given cellular decomposition are
-combinatorially identical.
-
-Here "identical" means that both decompositions have the same number
-of cells, these cells are presented in the same order, and their
-boundaries enter and exit the same numbered arcs of the same numbered
-nodes, using the same directions of traversal and the same starting
-points on each cell boundary.
-
-Parameter ``other``:
-    the cellular decomposition to compare with this.
-
-Returns:
-    ``True`` if and only if the two cellular decompositions are
-    combinatorially identical.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::arc
-inline constexpr const char arc[] =
-R"doc(Returns the given arc along the boundary of the given 2-cell.
-
-For each cell, the arcs along the boundary are given in order as you
-walk anticlockwise around the cell (so the cell is on the left of each
-arc as you walk around the cell boundary).
-
-Each arc is described in the form of an _outgoing_ arc from some node
-of the underlying graph (so if the return ModelLinkGraphArc is *a*
-then this describes an outgoing arc from a.node()). It follows that,
-if the underlying graph has *n* nodes, then each of the 4*n* possible
-ModelLinkGraphArc values appears exactly once as ``arc(cell, which)``
-for some integers *cell* and *which*.
-
-Parameter ``cell``:
-    indicates which cell to query; this must be between 0 and
-    countCells()-1 inclusive.
-
-Parameter ``which``:
-    indicates which arc along the boundary of the corresponding cell
-    to return; this must be between 0 and ``size(cell)-1`` inclusive.
-
-Returns:
-    the requested arc on the boundary of the given 2-cell.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::arcs
-inline constexpr const char arcs[] =
-R"doc(Returns an object that allows iteration through and random access to
-all arcs along the boundary of the given 2-cell.
-
-Suppose that the *i*th cell is a *k*-gon. Then this object gives
-access to the *k* arcs along the boundary of the *i*th cell in the
-same order as described by arc(); that is, walking anticlockwise
-around the cell boundary with the cell to the left of each arc.
-
-The object that is returned is lightweight, and can be happily copied
-by value. The C++ type of the object is subject to change, so C++
-users should use ``auto`` (just like this declaration does).
-
-The returned object is guaranteed to be a lightweight view type from
-the ``std::ranges`` library, which means it supports range-based
-``for`` loops. The elements of the list will be read-only objects of
-type ModelLinkGraphArc, and so your code might look like:
-
-```
-for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }
-```
-
-Using ``arcs(cell)`` is equivalent to iterating over the iterator
-range (``begin(cell)``, ``end(cell)``). Using arcs() generates a tiny
-amount of extra overhead, but you may also find it more readable.
-
-Parameter ``cell``:
-    indicates which cell to query; this must be between 0 and
-    countCells()-1 inclusive.
-
-Returns:
-    access to the list of all arcs along the boundary of the given
-    cell.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::cell
-inline constexpr const char cell[] =
-R"doc(Returns the 2-cell that lies to the left of the given arc.
-
-Specifically, this function returns the number of the cell that lies
-to the left of the given arc as you walk along it away from
-``arc.node()``.
-
-For any arc *a*, calling ``arc(cell(a), cellPos(a))`` will return the
-same arc *a* again.
-
-Parameter ``arc``:
-    the given arc of the underlying graph.
-
-Returns:
-    the number of the cell that lies to the left of the given arc;
-    this will be an integer between 0 and ``countCells()-1``
-    inclusive.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::cellPos
-inline constexpr const char cellPos[] =
-R"doc(Returns where the given arc appears along the boundary of the 2-cell
-to its left.
-
-Consider the cell *c* to the left of the given arc as you follow the
-arc away from ``arc.node()``. The routine arc() can be used to
-enumerate the sequence of arcs along the boundary of this cell *c*, in
-order as you walk anticlockwise around the cell boundary. The purpose
-of this routine is to identify _where_ in this sequence the given arc
-occurs.
-
-For any arc *a*, calling ``arc(cell(a), cellPos(a))`` will return the
-same arc *a* again.
-
-Parameter ``arc``:
-    the given arc of the underlying graph.
-
-Returns:
-    the position of the given arc on the boundary of the cell to its
-    left; this will be an integer between 0 and ``size(cell(arc))-1``
-    inclusive.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::countArcs
-inline constexpr const char countArcs[] =
-R"doc(Returns the total number of directed arcs in the underlying graph.
-This is always four times the number of nodes in the graph.
-
-Recall that each undirected edge of the graph corresponds to two
-directed arcs (one exiting each endpoint of the edge).
-
-Returns:
-    the total number of directed arcs.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::countCells
-inline constexpr const char countCells[] =
-R"doc(Returns the total number of 2-cells in this cellular decomposition.
-
-In the common case where this surface is the 2-sphere (i.e., the
-underlying graph models a knot diagram), this will be exactly two more
-than the number of nodes in the underlying graph.
-
-.. note::
-    As of Regina 7.4, this routine will only return 0 when the
-    underlying graph is empty (and so this surface is empty also). In
-    previous versions of Regina, this routine also returned 0 if the
-    graph was non-planar (a scenario that was previously unsupported).
-
-Returns:
-    the total number of 2-cells.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::countComponents
-inline constexpr const char countComponents[] =
-R"doc(Returns the number of connected components in this surface. This will
-be the same as the number of components of the underlying graph.
-
-Returns:
-    the number of connected components.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::countEdges
-inline constexpr const char countEdges[] =
-R"doc(Returns the total number of (undirected) edges in this cellular
-decomposition. This is always twice the number of nodes in the
-underlying graph.
-
-Returns:
-    the total number of edges.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::countNodes
-inline constexpr const char countNodes[] =
-R"doc(Returns the total number of vertices in this cellular decomposition;
-that is, the total number of nodes in the underlying graph.
-
-Returns:
-    the total number of nodes.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::genus
-inline constexpr const char genus[] =
-R"doc(Returns the genus of this closed orientable surface. If the surface
-has multiple components then this will sum the genus over each
-component.
-
-Returns:
-    the genus of this surface.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphCells_::size
-inline constexpr const char size[] =
-R"doc(Returns the number of arcs aloung the boundary of the given 2-cell. If
-the given cell is a *k*-gon, then this routine returns the integer
-*k*.
-
-Parameter ``cell``:
-    indicates which cell to query; this must be between 0 and
-    countCells()-1 inclusive.
-
-Returns:
-    the size of the correpsonding 2-cell.)doc";
-
-}
-
-namespace ModelLinkGraphNode_ {
-
-// Docstring regina::python::doc::ModelLinkGraphNode_::adj
-inline constexpr const char adj[] =
-R"doc(Returns the arc at the other end of the given graph edge that exits
-this node.
-
-Let *e* be the undirected edge of the underlying model graph that
-corresponds to the given outgoing arc from this node. Recall that
-there are two ModelLinkGraphArc objects corresponding to *e*, one for
-each of its endpoints. One of these will be
-ModelLinkGraphArc(``this``, *which*); this routine returns the _other_
-object, which is the ModelLinkGraphArc describing the other endpoint
-of *e*.
-
-Note that for a node *n*, calling ``n.adj(i)`` is equivalent to
-calling ``n.arc(i).traverse()``.
-
-Parameter ``which``:
-    an integer in the range 0 to 3 inclusive, indicating which of the
-    four arcs exiting this node we should examine.
-
-Returns:
-    a reference to the other end of the same undirected edge of the
-    underlying model graph.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphNode_::arc
-inline constexpr const char arc[] =
-R"doc(Returns a reference to one of the four arcs of the graph that exit
-this node. This is equivalent to directly constructing
-ModelLinkGraphArc(``this``, *which*).
-
-The four arcs exiting this node are numbered 0,1,2,3 in a clockwise
-order around the node.
-
-Parameter ``which``:
-    an integer in the range 0 to 3 inclusive, indicating which of the
-    four arcs exiting this node we should return.
-
-Returns:
-    a reference to the corresponding arc exiting this node.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphNode_::bigons
-inline constexpr const char bigons[] =
-R"doc(Returns the number of embedded bigons in the dual cell decomposition
-that are incident with this node.
-
-Here _embedded_ means that we do not count bigons where both vertices
-are the same. Note that a _non-embedded_ incident bigon would imply
-that all four arcs at this node were joined together to form two
-loops, each bounding its own 1-gon (which models a 1-crossing unknot
-component of a link diagram).
-
-Returns:
-    the number of incident embedded bigons, which will be between 0
-    and 4 inclusive.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphNode_::index
-inline constexpr const char index[] =
-R"doc(Returns the index of this node within the overall graph. If the graph
-contains *n* nodes, then the index will be a number between 0 and
-*n*-1 inclusive.
-
-.. warning::
-    The index of this node might change if other nodes are added or
-    removed.
-
-Returns:
-    the index of this node.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphNode_::loops
-inline constexpr const char loops[] =
-R"doc(Returns the number of loops incident with this node.
-
-Regarding loops versus 1-gons:
-
-* For a planar 4-valent graph (i.e., a graph that models a classical
-  link diagram), every loop bounds a 1-gon in the dual cell
-  decomposition, and vice versa. In particular, for a planar graph, at
-  every node we have ``0 ≤ monogons() == loops() ≤ 2``.
-
-* For a non-planar graph (which could be used to model a virtual link
-  diagram), there could be loops that do not bound 1-gons. So, for a
-  non-planar graph, the only guarantee we have at each node is that
-  ``0 ≤ monogons() ≤ loops() ≤ 2``.
-
-Returns:
-    the number of incident loops, which will be between 0 and 2
-    inclusive.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphNode_::monogons
-inline constexpr const char monogons[] =
-R"doc(Returns the number of 1-gons in the dual cell decomposition that are
-incident with this node.
-
-Regarding loops versus 1-gons:
-
-* For a planar 4-valent graph (i.e., a graph that models a classical
-  link diagram), every loop bounds a 1-gon in the dual cell
-  decomposition, and vice versa. In particular, for a planar graph, at
-  every node we have ``0 ≤ monogons() == loops() ≤ 2``.
-
-* For a non-planar graph (which could be used to model a virtual link
-  diagram), there could be loops that do not bound 1-gons. So, for a
-  non-planar graph, the only guarantee we have at each node is that
-  ``0 ≤ monogons() ≤ loops() ≤ 2``.
-
-Returns:
-    the number of incident 1-gons, which will be between 0 and 2
-    inclusive.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraphNode_::triangles
-inline constexpr const char triangles[] =
-R"doc(Returns the number of embedded triangles in the dual cell
-decomposition that are incident with this node.
-
-Here _embedded_ means that we do not count triangles where two
-vertices are the same. Note that a _non-embedded_ incident triangle
-would imply that the underlying graph contains a loop bounding a 1-gon
-(which models a trivial twist in a link diagram).
-
-Returns:
-    the number of incident embedded triangles, which will be between 0
-    and 4 inclusive.)doc";
-
-}
-
-namespace ModelLinkGraph_ {
-
-// Docstring regina::python::doc::ModelLinkGraph_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::ModelLinkGraph::__copy
+static constexpr const char __copy[] =
 R"doc(Constructs a new copy of the given graph.
 
 Parameter ``copy``:
     the graph to copy.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::__default
-inline constexpr const char __default[] = R"doc(Constructs an empty graph.)doc";
+// Docstring regina::python::doc::ModelLinkGraph::__default
+static constexpr const char __default[] = R"doc(Constructs an empty graph.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::ModelLinkGraph::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this graph is combinatorially identical to the given
 graph.
 
@@ -709,8 +141,8 @@ Returns:
     ``True`` if and only if the two graphs are combinatorially
     identical.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::ModelLinkGraph::__init
+static constexpr const char __init[] =
 R"doc(Constructs the graph that models the given link.
 
 Any zero-component unknot components of the link will be ignored.
@@ -724,8 +156,8 @@ Using this constructor is identical to calling Link::graph().
 Parameter ``link``:
     the link that this new graph will model.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::ModelLinkGraph::__init_2
+static constexpr const char __init_2[] =
 R"doc("Magic" constructor that tries to find some way to interpret the given
 string as a 4-valent graph with embedding.
 
@@ -745,8 +177,8 @@ Exception ``InvalidArgument``:
 Parameter ``description``:
     a string that describes a 4-valent graph with embedding.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::canonical
-inline constexpr const char canonical[] =
+// Docstring regina::python::doc::ModelLinkGraph::canonical
+static constexpr const char canonical[] =
 R"doc(Returns the canonical relabelling of this graph.
 
 Here "relabelling" allows for any combination of:
@@ -780,8 +212,8 @@ Parameter ``allowReflection``:
 Returns:
     the canonical relabelling of this graph.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::canonicalPlantri
-inline constexpr const char canonicalPlantri[] =
+// Docstring regina::python::doc::ModelLinkGraph::canonicalPlantri
+static constexpr const char canonicalPlantri[] =
 R"doc(Outputs a text representation of this graph in a variant of the
 _plantri_ ASCII format, using a canonical relabelling of nodes and
 arcs, and with optional compression.
@@ -854,8 +286,8 @@ Returns:
     an optionally compressed _plantri_ ASCII representation of this
     graph.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::cells
-inline constexpr const char cells[] =
+// Docstring regina::python::doc::ModelLinkGraph::cells
+static constexpr const char cells[] =
 R"doc(Returns the cellular decomposition of the closed orientable surface in
 which this graph embeds. This will be the decomposition induced by
 this graph; in particular, it will be formed from discs bounded by the
@@ -880,8 +312,8 @@ Returns:
     the induced cellular decomposition of the surface in which this
     graph embeds.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::countComponents
-inline constexpr const char countComponents[] =
+// Docstring regina::python::doc::ModelLinkGraph::countComponents
+static constexpr const char countComponents[] =
 R"doc(Returns the number of connected components in this graph.
 
 .. warning::
@@ -896,8 +328,8 @@ R"doc(Returns the number of connected components in this graph.
 Returns:
     the number of connected components.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::countTraversals
-inline constexpr const char countTraversals[] =
+// Docstring regina::python::doc::ModelLinkGraph::countTraversals
+static constexpr const char countTraversals[] =
 R"doc(Returns the number of traversals in this graph.
 
 A _traversal_ is a closed path through the graph that always enters
@@ -910,8 +342,8 @@ This routine runs in linear time (and the result is not cached).
 Returns:
     the number of traversals.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::extendedPlantri
-inline constexpr const char extendedPlantri[] =
+// Docstring regina::python::doc::ModelLinkGraph::extendedPlantri
+static constexpr const char extendedPlantri[] =
 R"doc(Outputs this graph using Regina's extended variant of the _plantri_
 text format, which is better suited for non-planar graphs.
 
@@ -958,8 +390,8 @@ Exception ``FailedPrecondition``:
 Returns:
     a representation of this graph in the extended _plantri_ format.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::findFlype
-inline constexpr const char findFlype[] =
+// Docstring regina::python::doc::ModelLinkGraph::findFlype
+static constexpr const char findFlype[] =
 R"doc(Identifies the smallest flype that can be performed on this graph from
 the given starting location.
 
@@ -1016,8 +448,8 @@ Returns:
     flype beginning at *from*, or a pair of null arcs if there are no
     suitable pairs (*left*, *right*).)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::flype
-inline constexpr const char flype[] =
+// Docstring regina::python::doc::ModelLinkGraph::flype
+static constexpr const char flype[] =
 R"doc(Performs a flype on this graph at the given location.
 
 A _flype_ is an operation on a disc in the plane. The boundary of the
@@ -1130,8 +562,8 @@ Parameter ``right``:
 Returns:
     the graph obtained by performing the flype.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::flype_2
-inline constexpr const char flype_2[] =
+// Docstring regina::python::doc::ModelLinkGraph::flype_2
+static constexpr const char flype_2[] =
 R"doc(Performs the smallest possible flype on this graph from the given
 starting location.
 
@@ -1162,8 +594,8 @@ Parameter ``from``:
 Returns:
     the graph obtained by performing the flype.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::fromExtendedPlantri
-inline constexpr const char fromExtendedPlantri[] =
+// Docstring regina::python::doc::ModelLinkGraph::fromExtendedPlantri
+static constexpr const char fromExtendedPlantri[] =
 R"doc(Builds a graph from a text representation using Regina's extended
 variant of the _plantri_ format, which is better suited for non-planar
 graphs.
@@ -1194,8 +626,8 @@ Parameter ``text``:
 Returns:
     the resulting graph.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::fromPlantri
-inline constexpr const char fromPlantri[] =
+// Docstring regina::python::doc::ModelLinkGraph::fromPlantri
+static constexpr const char fromPlantri[] =
 R"doc(Builds a graph from a line of _plantri_ output, using Regina's variant
 of the _plantri_ ASCII format.
 
@@ -1295,8 +727,8 @@ Parameter ``plantri``:
 Returns:
     the resulting graph.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::generateAllEmbeddings
-inline constexpr const char generateAllEmbeddings[] =
+// Docstring regina::python::doc::ModelLinkGraph::generateAllEmbeddings
+static constexpr const char generateAllEmbeddings[] =
 R"doc(Generates all possible local embeddings of the given 4-valent graph
 into some closed orientable surface.
 
@@ -1386,8 +818,8 @@ Parameter ``args``:
     any additional arguments that should be passed to *action*,
     following the initial graph argument.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::generateAllLinks
-inline constexpr const char generateAllLinks[] =
+// Docstring regina::python::doc::ModelLinkGraph::generateAllLinks
+static constexpr const char generateAllLinks[] =
 R"doc(Exhaustively generates all link diagrams that are modelled by this
 graph, up to reversal of individual link components. If this graph has
 *n* nodes, then there will be ``2^n`` link diagrams generated in
@@ -1444,8 +876,8 @@ Parameter ``args``:
     any additional arguments that should be passed to *action*,
     following the initial link diagram argument.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::generateAnyLink
-inline constexpr const char generateAnyLink[] =
+// Docstring regina::python::doc::ModelLinkGraph::generateAnyLink
+static constexpr const char generateAnyLink[] =
 R"doc(Generates an arbitrary link diagram that is modelled by this graph.
 
 All link diagrams modelled by this graph are identical up to switching
@@ -1464,8 +896,8 @@ In the link diagram that is generated, crossing *k* will always
 correspond to node *k* of this graph. If this graph is non-planar,
 then the resulting link diagram will be virtual.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::generateMinimalLinks
-inline constexpr const char generateMinimalLinks[] =
+// Docstring regina::python::doc::ModelLinkGraph::generateMinimalLinks
+static constexpr const char generateMinimalLinks[] =
 R"doc(Exhaustively generates potentially-minimal link diagrams that are
 modelled by this graph.
 
@@ -1547,8 +979,8 @@ Parameter ``args``:
     any additional arguments that should be passed to *action*,
     following the initial link diagram argument.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::genus
-inline constexpr const char genus[] =
+// Docstring regina::python::doc::ModelLinkGraph::genus
+static constexpr const char genus[] =
 R"doc(Returns the genus of the closed orientable surface in which this graph
 embeds.
 
@@ -1564,23 +996,8 @@ all components.
 Returns:
     the genus of the surface in which this graph embeds.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given graphs.
-
-This global routine simply calls ModelLinkGraph::swap(); it is
-provided so that ModelLinkGraph meets the C++ Swappable requirements.
-
-See ModelLinkGraph::swap() for more details.
-
-Parameter ``lhs``:
-    the graph whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the graph whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::ModelLinkGraph_::insertGraph
-inline constexpr const char insertGraph[] =
+// Docstring regina::python::doc::ModelLinkGraph::insertGraph
+static constexpr const char insertGraph[] =
 R"doc(Inserts a copy of the given graph into this graph.
 
 The nodes of *source* will be copied into this graph, and placed after
@@ -1593,8 +1010,8 @@ This routine behaves correctly when *source* is this graph.
 Parameter ``source``:
     the graph whose copy will be inserted.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::isConnected
-inline constexpr const char isConnected[] =
+// Docstring regina::python::doc::ModelLinkGraph::isConnected
+static constexpr const char isConnected[] =
 R"doc(Identifies whether this graph is connected.
 
 For the purposes of this routine, an empty graph is considered to be
@@ -1607,24 +1024,24 @@ connected.
 Returns:
     ``True`` if and only if this graph is connected.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::isEmpty
-inline constexpr const char isEmpty[] =
+// Docstring regina::python::doc::ModelLinkGraph::isEmpty
+static constexpr const char isEmpty[] =
 R"doc(Determines whether this graph is empty. An empty graph is one with no
 nodes at all.
 
 Returns:
     ``True`` if and only if this graph is empty.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::isSimple
-inline constexpr const char isSimple[] =
+// Docstring regina::python::doc::ModelLinkGraph::isSimple
+static constexpr const char isSimple[] =
 R"doc(Identifies whether this graph is simple; that is, has no loops or
 multiple edges.
 
 Returns:
     ``True`` if and only if this graph is simple.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::moveContentsTo
-inline constexpr const char moveContentsTo[] =
+// Docstring regina::python::doc::ModelLinkGraph::moveContentsTo
+static constexpr const char moveContentsTo[] =
 R"doc(Moves the contents of this graph into the given destination graph,
 leaving this graph empty but otherwise usable.
 
@@ -1650,8 +1067,8 @@ Precondition:
 Parameter ``dest``:
     the graph into which the contents of this graph should be moved.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::node
-inline constexpr const char node[] =
+// Docstring regina::python::doc::ModelLinkGraph::node
+static constexpr const char node[] =
 R"doc(Returns the node at the given index within this graph.
 
 For a graph with *n* nodes, the nodes are numbered from 0 to *n*-1
@@ -1670,8 +1087,8 @@ Parameter ``index``:
 Returns:
     the node at the given index.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::nodes
-inline constexpr const char nodes[] =
+// Docstring regina::python::doc::ModelLinkGraph::nodes
+static constexpr const char nodes[] =
 R"doc(Returns an object that allows iteration through and random access to
 all nodes in this graph.
 
@@ -1697,8 +1114,8 @@ only, and to call nodes() again each time you need it.
 Returns:
     access to the list of all nodes.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::plantri
-inline constexpr const char plantri[] =
+// Docstring regina::python::doc::ModelLinkGraph::plantri
+static constexpr const char plantri[] =
 R"doc(Outputs this graph in a variant of the ASCII text format used by
 _plantri_.
 
@@ -1787,8 +1204,8 @@ Exception ``FailedPrecondition``:
 Returns:
     a _plantri_ format ASCII representation of this graph.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::randomise
-inline constexpr const char randomise[] =
+// Docstring regina::python::doc::ModelLinkGraph::randomise
+static constexpr const char randomise[] =
 R"doc(Randomly relabels this graph in an orientation-preserving manner.
 
 The nodes will be relabelled arbitrarily. Around each node, the four
@@ -1799,22 +1216,22 @@ without reflection).
 This routine is thread-safe, and uses RandomEngine for its random
 number generation.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::reflect
-inline constexpr const char reflect[] =
+// Docstring regina::python::doc::ModelLinkGraph::reflect
+static constexpr const char reflect[] =
 R"doc(Converts this graph into its reflection.
 
 This routine simply reverses (and also cycles) the order of outgoing
 arcs around every node.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::ModelLinkGraph::size
+static constexpr const char size[] =
 R"doc(Returns the number of nodes in this graph.
 
 Returns:
     the number of nodes.)doc";
 
-// Docstring regina::python::doc::ModelLinkGraph_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::ModelLinkGraph::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given graph.
 
 All nodes that belong to this graph will be moved to *other*, and all
@@ -1828,7 +1245,590 @@ This routine will behave correctly if *other* is in fact this graph.
 Parameter ``other``:
     the graph whose contents should be swapped with this.)doc";
 
-}
+}; // struct ModelLinkGraph
+
+struct ModelLinkGraphArc {
+
+// Docstring regina::python::doc::ModelLinkGraphArc::__as_bool
+static constexpr const char __as_bool[] =
+R"doc(Tests whether this is a non-null arc.
+
+Returns:
+    ``True`` if this is not a null arc (i.e., node() does not return a
+    null pointer), or ``False`` if this is a null arc.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::__class
+static constexpr const char __class[] =
+R"doc(A reference to an outgoing edge from a node of a model graph for a
+knot or link.
+
+Edges of model graphs are not directed, and so the same edge will
+appear twice as a ModelLinkGraphArc (once from each of its endpoints).
+
+This class is a simple wrapper that stores (i) a pointer to the
+relevant node of the graph; and (ii) an integer to denote which of the
+four outgoing arcs we are using from that node. Recall that the four
+outgoing arcs for each node are indexed in clockwise order.
+
+A "null arc" is one whose node is the null pointer.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given arc reference.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::__dec
+static constexpr const char __dec[] =
+R"doc(Changes to the previous outgoing link arc from the same node.
+
+This effectively rotates the arc in an anticlockwise direction around
+the node. In particular, it decrements the value returned by arc(),
+modulo 4.
+
+This is a postdecrement operator: the object will be changed, but a
+copy of the original arc will be returned.
+
+Precondition:
+    This is not a null arc, i.e., node() does not return ``None``.
+
+Python:
+    This routine is available under the name dec().
+
+Returns:
+    a copy of this object before the change took place.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::__default
+static constexpr const char __default[] =
+R"doc(Initialises this to a null arc.
+
+The pointer returned by node() will be ``None``, and the integer
+returned by arc() will be 0.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::__eq
+static constexpr const char __eq[] =
+R"doc(Tests whether this and the given arc reference are identical.
+
+Two references are identical if and only if they return the same
+values for both node() and arc().
+
+.. warning::
+    If you create a null arc by calling ModelLinkGraphArc(``None``,
+    *i*) for some non-zero *i*, then this will _not_ be considered
+    equal to the null arc created by calling ModelLinkGraphArc(),
+    since the latter is equivalent to calling
+    ModelLinkGraphArc(``None``, 0).
+
+Returns:
+    ``True`` if and only if this and the given arc reference are
+    identical.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::__inc
+static constexpr const char __inc[] =
+R"doc(Changes to the next outgoing link arc from the same node.
+
+This effectively rotates the arc in a clockwise direction around the
+node. In particular, it increments the value returned by arc(), modulo
+4.
+
+This is a postincrement operator: the object will be changed, but a
+copy of the original arc will be returned.
+
+Precondition:
+    This is not a null arc, i.e., node() does not return ``None``.
+
+Python:
+    This routine is available under the name inc().
+
+Returns:
+    a copy of this object before the change took place.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::__init
+static constexpr const char __init[] =
+R"doc(Initialises this to the given arc exiting the given node of a model
+graph.
+
+Recall that the four arcs exiting a node are numbered 0,1,2,3 in a
+clockwise order around the node.
+
+The given node may be ``None``, in which case this will become a null
+arc. If you are creating a null arc, then it is highly recommended
+that you pass *arc* as 0 also, so that comparison tests treat this
+null reference as equal to a null reference created by the zero-
+argument constructor.
+
+Parameter ``node``:
+    the node of the model graph that this arc exits.
+
+Parameter ``arc``:
+    an integer in the range 0 to 3 inclusive, indicating which of the
+    four arcs exiting *node* this represents.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::arc
+static constexpr const char arc[] =
+R"doc(Indicates which arc this is amongst the four arcs exiting the
+underlying node of the model graph.
+
+For each node of a model graph, the four arcs exiting that node are
+numbered 0,1,2,3 in a clockwise order.
+
+Returns:
+    an integer between 0 and 3 inclusive indicating one of the four
+    arcs exiting node().)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::next
+static constexpr const char next[] =
+R"doc(Returns the next arc after this when walking through the graph as
+though it were a link, in a direction away from the current node.
+
+This routine will move to the other endpoint of the graph edge
+described by this arc, and will then return the *opposite* arc at the
+resulting node (i.e., not just pointing backwards along the same
+edge).
+
+For any arc *a*, calling ``a.next()`` is equivalent to calling
+``a.traverse().opposite()``.
+
+Precondition:
+    This is not a null arc, i.e., node() does not return ``None``.
+
+Returns:
+    the next arc after this when walking through the graph as though
+    it were a link.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::node
+static constexpr const char node[] =
+R"doc(The node of the model graph from which this arc exits.
+
+Returns:
+    the corresponding node, or ``None`` if this is a null arc.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::opposite
+static constexpr const char opposite[] =
+R"doc(Returns the arc that exits the same node as this, but from the
+opposite side.
+
+Recall that the four arcs exiting each node are numbered in clockwise
+order. The return value will therefore have the same node() as this,
+but its arc() value will be two more than this (modulo 4).
+
+Note that, for any arc *a*, ``a.opposite().opposite()`` is identical
+to *a*.
+
+Precondition:
+    This is not a null arc, i.e., node() does not return ``None``.
+
+Returns:
+    the opposite arc exiting the same node.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::prev
+static constexpr const char prev[] =
+R"doc(Returns the previous arc before this when walking through the graph as
+though it were a link, in a direction away from the current node.
+
+This routine will jump to the opposite arc at the current node, and
+then move to the other endpoint of the graph edge described by that
+opposite arc.
+
+For any arc *a*, calling ``a.prev()`` is equivalent to calling
+``a.opposite().traverse()``.
+
+Precondition:
+    This is not a null arc, i.e., node() does not return ``None``.
+
+Returns:
+    the previous arc before this when walking through the graph as
+    though it were a link.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphArc::traverse
+static constexpr const char traverse[] =
+R"doc(Returns the same edge of the model graph, but seen from the other
+endpoint.
+
+Recall that each undirected edge of a model graph has two
+corresponding ModelLinkGraphArc objects, one for each of its
+endpoints. If this object represents one of these arcs for some
+underlying edge of the graph, then then return value represents the
+other.
+
+Note that, for any arc *a*, ``a.traverse().traverse()`` is identical
+to *a*.
+
+Precondition:
+    This is not a null arc, i.e., node() does not return ``None``.
+
+Returns:
+    the arc at the other end of the underlying edge of the model
+    graph.)doc";
+
+}; // struct ModelLinkGraphArc
+
+struct ModelLinkGraphCells {
+
+// Docstring regina::python::doc::ModelLinkGraphCells::__class
+static constexpr const char __class[] =
+R"doc(Describes the cellular decomposition of a closed orientable surface
+induced by a 4-valent graph embedded within it.
+
+The graph is represented by an object of type ModelLinkGraph, which
+encodes a local embedding of the graph within the surface (i.e., a
+cyclic ordering of arcs around each graph node). The nodes and arcs of
+this graph form the vertices and edges of the cellular decomposition,
+and the 2-cells are topological discs whose boundaries follow these
+nodes and arcs according to their local embeddings. The main purpose
+of this class is to deduce and describe those 2-cells.
+
+As of Regina 7.4, this class can now work with graphs that are non-
+planar (resulting in a surface with positive genus), disconnected
+(resulting in a surface that is likewise disconnected), and/or empty
+(resulting in an empty surface).
+
+Cellular decompositions do not support value semantics: they cannot be
+copied, swapped, or manually constructed. Instead they are computed
+properties of model graphs, and are only accessible via const
+reference through the member function ModelLinkGraph::cells().)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::__eq
+static constexpr const char __eq[] =
+R"doc(Determines if this and the given cellular decomposition are
+combinatorially identical.
+
+Here "identical" means that both decompositions have the same number
+of cells, these cells are presented in the same order, and their
+boundaries enter and exit the same numbered arcs of the same numbered
+nodes, using the same directions of traversal and the same starting
+points on each cell boundary.
+
+Parameter ``other``:
+    the cellular decomposition to compare with this.
+
+Returns:
+    ``True`` if and only if the two cellular decompositions are
+    combinatorially identical.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::arc
+static constexpr const char arc[] =
+R"doc(Returns the given arc along the boundary of the given 2-cell.
+
+For each cell, the arcs along the boundary are given in order as you
+walk anticlockwise around the cell (so the cell is on the left of each
+arc as you walk around the cell boundary).
+
+Each arc is described in the form of an _outgoing_ arc from some node
+of the underlying graph (so if the return ModelLinkGraphArc is *a*
+then this describes an outgoing arc from a.node()). It follows that,
+if the underlying graph has *n* nodes, then each of the 4*n* possible
+ModelLinkGraphArc values appears exactly once as ``arc(cell, which)``
+for some integers *cell* and *which*.
+
+Parameter ``cell``:
+    indicates which cell to query; this must be between 0 and
+    countCells()-1 inclusive.
+
+Parameter ``which``:
+    indicates which arc along the boundary of the corresponding cell
+    to return; this must be between 0 and ``size(cell)-1`` inclusive.
+
+Returns:
+    the requested arc on the boundary of the given 2-cell.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::arcs
+static constexpr const char arcs[] =
+R"doc(Returns an object that allows iteration through and random access to
+all arcs along the boundary of the given 2-cell.
+
+Suppose that the *i*th cell is a *k*-gon. Then this object gives
+access to the *k* arcs along the boundary of the *i*th cell in the
+same order as described by arc(); that is, walking anticlockwise
+around the cell boundary with the cell to the left of each arc.
+
+The object that is returned is lightweight, and can be happily copied
+by value. The C++ type of the object is subject to change, so C++
+users should use ``auto`` (just like this declaration does).
+
+The returned object is guaranteed to be a lightweight view type from
+the ``std::ranges`` library, which means it supports range-based
+``for`` loops. The elements of the list will be read-only objects of
+type ModelLinkGraphArc, and so your code might look like:
+
+```
+for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }
+```
+
+Using ``arcs(cell)`` is equivalent to iterating over the iterator
+range (``begin(cell)``, ``end(cell)``). Using arcs() generates a tiny
+amount of extra overhead, but you may also find it more readable.
+
+Parameter ``cell``:
+    indicates which cell to query; this must be between 0 and
+    countCells()-1 inclusive.
+
+Returns:
+    access to the list of all arcs along the boundary of the given
+    cell.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::cell
+static constexpr const char cell[] =
+R"doc(Returns the 2-cell that lies to the left of the given arc.
+
+Specifically, this function returns the number of the cell that lies
+to the left of the given arc as you walk along it away from
+``arc.node()``.
+
+For any arc *a*, calling ``arc(cell(a), cellPos(a))`` will return the
+same arc *a* again.
+
+Parameter ``arc``:
+    the given arc of the underlying graph.
+
+Returns:
+    the number of the cell that lies to the left of the given arc;
+    this will be an integer between 0 and ``countCells()-1``
+    inclusive.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::cellPos
+static constexpr const char cellPos[] =
+R"doc(Returns where the given arc appears along the boundary of the 2-cell
+to its left.
+
+Consider the cell *c* to the left of the given arc as you follow the
+arc away from ``arc.node()``. The routine arc() can be used to
+enumerate the sequence of arcs along the boundary of this cell *c*, in
+order as you walk anticlockwise around the cell boundary. The purpose
+of this routine is to identify _where_ in this sequence the given arc
+occurs.
+
+For any arc *a*, calling ``arc(cell(a), cellPos(a))`` will return the
+same arc *a* again.
+
+Parameter ``arc``:
+    the given arc of the underlying graph.
+
+Returns:
+    the position of the given arc on the boundary of the cell to its
+    left; this will be an integer between 0 and ``size(cell(arc))-1``
+    inclusive.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::countArcs
+static constexpr const char countArcs[] =
+R"doc(Returns the total number of directed arcs in the underlying graph.
+This is always four times the number of nodes in the graph.
+
+Recall that each undirected edge of the graph corresponds to two
+directed arcs (one exiting each endpoint of the edge).
+
+Returns:
+    the total number of directed arcs.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::countCells
+static constexpr const char countCells[] =
+R"doc(Returns the total number of 2-cells in this cellular decomposition.
+
+In the common case where this surface is the 2-sphere (i.e., the
+underlying graph models a knot diagram), this will be exactly two more
+than the number of nodes in the underlying graph.
+
+.. note::
+    As of Regina 7.4, this routine will only return 0 when the
+    underlying graph is empty (and so this surface is empty also). In
+    previous versions of Regina, this routine also returned 0 if the
+    graph was non-planar (a scenario that was previously unsupported).
+
+Returns:
+    the total number of 2-cells.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::countComponents
+static constexpr const char countComponents[] =
+R"doc(Returns the number of connected components in this surface. This will
+be the same as the number of components of the underlying graph.
+
+Returns:
+    the number of connected components.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::countEdges
+static constexpr const char countEdges[] =
+R"doc(Returns the total number of (undirected) edges in this cellular
+decomposition. This is always twice the number of nodes in the
+underlying graph.
+
+Returns:
+    the total number of edges.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::countNodes
+static constexpr const char countNodes[] =
+R"doc(Returns the total number of vertices in this cellular decomposition;
+that is, the total number of nodes in the underlying graph.
+
+Returns:
+    the total number of nodes.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::genus
+static constexpr const char genus[] =
+R"doc(Returns the genus of this closed orientable surface. If the surface
+has multiple components then this will sum the genus over each
+component.
+
+Returns:
+    the genus of this surface.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphCells::size
+static constexpr const char size[] =
+R"doc(Returns the number of arcs aloung the boundary of the given 2-cell. If
+the given cell is a *k*-gon, then this routine returns the integer
+*k*.
+
+Parameter ``cell``:
+    indicates which cell to query; this must be between 0 and
+    countCells()-1 inclusive.
+
+Returns:
+    the size of the correpsonding 2-cell.)doc";
+
+}; // struct ModelLinkGraphCells
+
+struct ModelLinkGraphNode {
+
+// Docstring regina::python::doc::ModelLinkGraphNode::__class
+static constexpr const char __class[] =
+R"doc(Represents a single node in a model graph for a knot or link.
+
+If a graph has *n* nodes, then these are numbered 0,...,*n*-1. The
+number assigned to this node can be accessed by calling index(). Note
+that nodes may be reindexed when other nodes are added or removed - if
+you wish to track a particular node through such operations then you
+should use a pointer to the relevant ModelLinkGraphNode instead.
+
+Graph nodes do not support value semantics: they cannot be copied,
+swapped, or manually constructed. Their location in memory defines
+them, and they are often passed and compared by pointer. End users are
+never responsible for their memory management; this is all taken care
+of by the ModelLinkGraph to which they belong.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphNode::adj
+static constexpr const char adj[] =
+R"doc(Returns the arc at the other end of the given graph edge that exits
+this node.
+
+Let *e* be the undirected edge of the underlying model graph that
+corresponds to the given outgoing arc from this node. Recall that
+there are two ModelLinkGraphArc objects corresponding to *e*, one for
+each of its endpoints. One of these will be
+ModelLinkGraphArc(``this``, *which*); this routine returns the _other_
+object, which is the ModelLinkGraphArc describing the other endpoint
+of *e*.
+
+Note that for a node *n*, calling ``n.adj(i)`` is equivalent to
+calling ``n.arc(i).traverse()``.
+
+Parameter ``which``:
+    an integer in the range 0 to 3 inclusive, indicating which of the
+    four arcs exiting this node we should examine.
+
+Returns:
+    a reference to the other end of the same undirected edge of the
+    underlying model graph.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphNode::arc
+static constexpr const char arc[] =
+R"doc(Returns a reference to one of the four arcs of the graph that exit
+this node. This is equivalent to directly constructing
+ModelLinkGraphArc(``this``, *which*).
+
+The four arcs exiting this node are numbered 0,1,2,3 in a clockwise
+order around the node.
+
+Parameter ``which``:
+    an integer in the range 0 to 3 inclusive, indicating which of the
+    four arcs exiting this node we should return.
+
+Returns:
+    a reference to the corresponding arc exiting this node.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphNode::bigons
+static constexpr const char bigons[] =
+R"doc(Returns the number of embedded bigons in the dual cell decomposition
+that are incident with this node.
+
+Here _embedded_ means that we do not count bigons where both vertices
+are the same. Note that a _non-embedded_ incident bigon would imply
+that all four arcs at this node were joined together to form two
+loops, each bounding its own 1-gon (which models a 1-crossing unknot
+component of a link diagram).
+
+Returns:
+    the number of incident embedded bigons, which will be between 0
+    and 4 inclusive.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphNode::index
+static constexpr const char index[] =
+R"doc(Returns the index of this node within the overall graph. If the graph
+contains *n* nodes, then the index will be a number between 0 and
+*n*-1 inclusive.
+
+.. warning::
+    The index of this node might change if other nodes are added or
+    removed.
+
+Returns:
+    the index of this node.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphNode::loops
+static constexpr const char loops[] =
+R"doc(Returns the number of loops incident with this node.
+
+Regarding loops versus 1-gons:
+
+* For a planar 4-valent graph (i.e., a graph that models a classical
+  link diagram), every loop bounds a 1-gon in the dual cell
+  decomposition, and vice versa. In particular, for a planar graph, at
+  every node we have ``0 ≤ monogons() == loops() ≤ 2``.
+
+* For a non-planar graph (which could be used to model a virtual link
+  diagram), there could be loops that do not bound 1-gons. So, for a
+  non-planar graph, the only guarantee we have at each node is that
+  ``0 ≤ monogons() ≤ loops() ≤ 2``.
+
+Returns:
+    the number of incident loops, which will be between 0 and 2
+    inclusive.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphNode::monogons
+static constexpr const char monogons[] =
+R"doc(Returns the number of 1-gons in the dual cell decomposition that are
+incident with this node.
+
+Regarding loops versus 1-gons:
+
+* For a planar 4-valent graph (i.e., a graph that models a classical
+  link diagram), every loop bounds a 1-gon in the dual cell
+  decomposition, and vice versa. In particular, for a planar graph, at
+  every node we have ``0 ≤ monogons() == loops() ≤ 2``.
+
+* For a non-planar graph (which could be used to model a virtual link
+  diagram), there could be loops that do not bound 1-gons. So, for a
+  non-planar graph, the only guarantee we have at each node is that
+  ``0 ≤ monogons() ≤ loops() ≤ 2``.
+
+Returns:
+    the number of incident 1-gons, which will be between 0 and 2
+    inclusive.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraphNode::triangles
+static constexpr const char triangles[] =
+R"doc(Returns the number of embedded triangles in the dual cell
+decomposition that are incident with this node.
+
+Here _embedded_ means that we do not count triangles where two
+vertices are the same. Note that a _non-embedded_ incident triangle
+would imply that the underlying graph contains a loop bounding a 1-gon
+(which models a trivial twist in a link diagram).
+
+Returns:
+    the number of incident embedded triangles, which will be between 0
+    and 4 inclusive.)doc";
+
+}; // struct ModelLinkGraphNode
 
 } // namespace regina::python::doc
 

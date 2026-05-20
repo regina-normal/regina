@@ -44,7 +44,7 @@ void addIsomorphism4(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Isomorphism)
     RDOC_SCOPE_BASE(alias::IsomorphismImage)
 
-    auto c = pybind11::class_<Isomorphism<4>>(m, "Isomorphism4", rdoc_scope)
+    auto c = pybind11::class_<Isomorphism<4>>(m, "Isomorphism4", rdoc::__class)
         .def(pybind11::init<const Isomorphism<4>&>(), rdoc::__copy)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def("swap", &Isomorphism<4>::swap, rdoc::swap)
@@ -95,7 +95,7 @@ void addIsomorphism4(pybind11::module_& m) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Isomorphism<4>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Isomorphism<4>, Isomorphism);
 
     RDOC_SCOPE_END
 }

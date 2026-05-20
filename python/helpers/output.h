@@ -97,11 +97,11 @@ template <RichStringifiable T, typename... options>
 void add_output_rich(pybind11::class_<T, options...>& c,
         ReprStyle style = ReprStyle::Detailed) {
     c.def("str", pybind11::overload_cast<>(&T::str, pybind11::const_),
-        doc::Output_::str);
+        doc::Output::str);
     c.def("utf8", pybind11::overload_cast<>(&T::utf8, pybind11::const_),
-        doc::Output_::utf8);
+        doc::Output::utf8);
     c.def("detail", pybind11::overload_cast<>(&T::detail, pybind11::const_),
-        doc::Output_::detail);
+        doc::Output::detail);
 
     c.def("__str__", pybind11::overload_cast<>(&T::str, pybind11::const_));
 

@@ -63,7 +63,7 @@ namespace {
 void addPrimes(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Primes)
 
-    auto c = pybind11::class_<Primes>(m, "Primes", rdoc_scope)
+    auto c = pybind11::class_<Primes>(m, "Primes", rdoc::__class)
         .def_static("size", &Primes::size, rdoc::size)
         .def_static("prime", &Primes::prime,
             pybind11::arg(), pybind11::arg("autoGrow") = true,

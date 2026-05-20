@@ -72,9 +72,9 @@ template <PacketHeldType Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     auto c = pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
             std::shared_ptr<regina::PacketOf<Held>>>(m, className,
-            doc::PacketOf)
+            doc::PacketOf::__class)
         .def(pybind11::init<const Held&>(), // also takes PacketOf<Held>
-            doc::PacketOf_::__init)
+            doc::PacketOf::__init)
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
     regina::python::add_output_rich(c);
@@ -144,8 +144,8 @@ void add_packet_data(Class& classWrapper) {
     using DataType = regina::PacketData<typename Class::type>;
     classWrapper
         .def("packet", pybind11::overload_cast<>(&DataType::packet),
-            doc::PacketData_::packet)
-        .def("anonID", &DataType::anonID, doc::PacketData_::anonID)
+            doc::PacketData::packet)
+        .def("anonID", &DataType::anonID, doc::PacketData::anonID)
         ;
 }
 

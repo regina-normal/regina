@@ -121,7 +121,7 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
     RDOC_SCOPE_BEGIN(Flags)
 
     auto f = pybind11::class_<Flags>(m,
-            ("Flags_" + enumName).c_str(), rdoc_scope)
+            ("Flags_" + enumName).c_str(), rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<Enum>(), rdoc::__init)
         .def(pybind11::init<const Flags&>(), rdoc::__copy)

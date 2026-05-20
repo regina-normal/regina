@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::BlockedSFS
-inline constexpr const char BlockedSFS[] =
+// Docstring regina::python::doc::global_swap_BlockedSFS
+inline constexpr const char global_swap_BlockedSFS[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls BlockedSFS::swap(); it is provided so
+that BlockedSFS meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct BlockedSFS {
+
+// Docstring regina::python::doc::BlockedSFS::__class
+static constexpr const char __class[] =
 R"doc(Represents a blocked Seifert fibred space (possibly with boundary).
 This is a particular type of triangulation of a Seifert fibred space,
 where this triangulation is formed from a single saturated region. A
@@ -34,18 +49,16 @@ possible, even when passing or returning objects by value. Note,
 however, that the only way to create objects of this class (aside from
 copying or moving) is via the static member function recognise().)doc";
 
-namespace BlockedSFS_ {
-
-// Docstring regina::python::doc::BlockedSFS_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::BlockedSFS::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given structure. This will induce a deep
 copy of *src*.
 
 Parameter ``src``:
     the structure to copy.)doc";
 
-// Docstring regina::python::doc::BlockedSFS_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::BlockedSFS::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of blocked Seifert fibred space.
 
@@ -67,21 +80,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of blocked Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::BlockedSFS_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls BlockedSFS::swap(); it is provided so
-that BlockedSFS meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::BlockedSFS_::isPluggedIBundle
-inline constexpr const char isPluggedIBundle[] =
+// Docstring regina::python::doc::BlockedSFS::isPluggedIBundle
+static constexpr const char isPluggedIBundle[] =
 R"doc(Determines whether this triangulation is a plugged thin I-bundle or a
 plugged thick I-bundle. These structures are described in "Structures
 of small closed non-orientable 3-manifold triangulations", Benjamin A.
@@ -91,8 +91,8 @@ Returns:
     the name of the plugged thin/thick I-bundle, if the triangulation
     is of this form, or ``None`` if it is not.)doc";
 
-// Docstring regina::python::doc::BlockedSFS_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::BlockedSFS::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a blocked Seifert fibred
 space.
 
@@ -108,22 +108,22 @@ Returns:
     space, or ``None`` if the given triangulation is not a blocked
     Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::BlockedSFS_::region
-inline constexpr const char region[] =
+// Docstring regina::python::doc::BlockedSFS::region
+static constexpr const char region[] =
 R"doc(Returns details of the single saturated region that fills this
 triangulation.
 
 Returns:
     the single saturated region.)doc";
 
-// Docstring regina::python::doc::BlockedSFS_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::BlockedSFS::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct BlockedSFS
 
 } // namespace regina::python::doc
 

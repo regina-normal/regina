@@ -45,7 +45,7 @@ using regina::Triangulation;
 void addCensus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(CensusDB)
 
-    auto db = pybind11::class_<CensusDB>(m, "CensusDB", rdoc_scope)
+    auto db = pybind11::class_<CensusDB>(m, "CensusDB", rdoc::__class)
         .def(pybind11::init<const std::string&, const std::string&>(),
             rdoc::__init)
         .def(pybind11::init<const CensusDB&>(), rdoc::__copy)
@@ -70,11 +70,11 @@ void addCensus(pybind11::module_& m) {
     });
     regina::python::add_eq_operators(db, rdoc::__eq);
 
-    regina::python::add_global_swap<CensusDB>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, CensusDB);
 
     RDOC_SCOPE_SWITCH(CensusHit)
 
-    auto h = pybind11::class_<CensusHit>(m, "CensusHit", rdoc_scope)
+    auto h = pybind11::class_<CensusHit>(m, "CensusHit", rdoc::__class)
         .def(pybind11::init<const CensusHit&>(), rdoc::__copy)
         .def("swap", &CensusDB::swap, rdoc::swap)
         .def("name", &CensusHit::name, rdoc::name)
@@ -87,11 +87,11 @@ void addCensus(pybind11::module_& m) {
     });
     regina::python::add_eq_operators(h, rdoc::__eq);
 
-    regina::python::add_global_swap<CensusHit>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, CensusHit);
 
     RDOC_SCOPE_SWITCH(Census)
 
-    auto c = pybind11::class_<Census>(m, "Census", rdoc_scope)
+    auto c = pybind11::class_<Census>(m, "Census", rdoc::__class)
         .def_static("lookup",
             overload_cast<const Triangulation<3>&>(&Census::lookup),
             rdoc::lookup)

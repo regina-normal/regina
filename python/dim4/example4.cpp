@@ -43,7 +43,7 @@ void addExample4(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Example)
     RDOC_SCOPE_BASE(detail::ExampleBase)
 
-    auto c = pybind11::class_<Example<4>>(m, "Example4", rdoc_scope)
+    auto c = pybind11::class_<Example<4>>(m, "Example4", rdoc::__class)
         .def_static("sphere", &Example<4>::sphere, rbase::sphere)
         .def_static("simplicialSphere", &Example<4>::simplicialSphere,
             rbase::simplicialSphere)

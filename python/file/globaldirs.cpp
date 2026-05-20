@@ -39,7 +39,7 @@ using regina::GlobalDirs;
 void addGlobalDirs(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GlobalDirs)
 
-    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs", rdoc_scope)
+    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs", rdoc::__class)
         .def_static("home", &GlobalDirs::home, rdoc::home)
         .def_static("pythonModule", &GlobalDirs::pythonModule,
             rdoc::pythonModule)

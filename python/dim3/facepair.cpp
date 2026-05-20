@@ -39,7 +39,7 @@ using regina::FacePair;
 void addFacePair(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(FacePair)
 
-    auto c = pybind11::class_<FacePair>(m, "FacePair", rdoc_scope)
+    auto c = pybind11::class_<FacePair>(m, "FacePair", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<int, int>(), rdoc::__init)
         .def(pybind11::init<const FacePair&>(), rdoc::__copy)

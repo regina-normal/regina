@@ -41,7 +41,7 @@ void addSpiralSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SpiralSolidTorus)
 
     auto c = pybind11::class_<SpiralSolidTorus, regina::StandardTriangulation>
-            (m, "SpiralSolidTorus", rdoc_scope)
+            (m, "SpiralSolidTorus", rdoc::__class)
         .def(pybind11::init<const SpiralSolidTorus&>(), rdoc::__copy)
         .def("swap", &SpiralSolidTorus::swap, rdoc::swap)
         .def("size", &SpiralSolidTorus::size, rdoc::size)
@@ -58,7 +58,7 @@ void addSpiralSolidTorus(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<SpiralSolidTorus>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SpiralSolidTorus);
 
     RDOC_SCOPE_END
 }

@@ -45,7 +45,7 @@ void addNormalHypersurface(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(NormalHypersurface)
 
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const NormalHypersurface&>(), rdoc::__copy)
         .def(pybind11::init<const NormalHypersurface&,
             const Triangulation<4>&>(), rdoc::__init)
@@ -158,7 +158,7 @@ void addNormalHypersurface(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
 
-    regina::python::add_global_swap<NormalHypersurface>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, NormalHypersurface);
 
     RDOC_SCOPE_END
 }

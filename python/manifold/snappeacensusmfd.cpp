@@ -40,7 +40,7 @@ void addSnapPeaCensusManifold(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnapPeaCensusManifold)
 
     auto c = pybind11::class_<SnapPeaCensusManifold, regina::Manifold>
-            (m, "SnapPeaCensusManifold", rdoc_scope)
+            (m, "SnapPeaCensusManifold", rdoc::__class)
         .def(pybind11::init<char, size_t>(), rdoc::__init)
         .def(pybind11::init<const SnapPeaCensusManifold&>(), rdoc::__copy)
         .def("swap", &SnapPeaCensusManifold::swap, rdoc::swap)
@@ -55,8 +55,7 @@ void addSnapPeaCensusManifold(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<SnapPeaCensusManifold>(m,
-        rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SnapPeaCensusManifold);
 
     RDOC_SCOPE_END
 }

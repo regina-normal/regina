@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Face
-inline constexpr const char Face[] =
+struct Face {
+
+// Docstring regina::python::doc::Face::__class
+static constexpr const char __class[] =
 R"doc(Represents a *subdim*-face in the skeleton of a *dim*-dimensional
 triangulation. There are two substantially different cases:
 
@@ -78,6 +80,8 @@ Template parameter ``dim``:
 
 Template parameter ``subdim``:
     the dimension of the faces that this class represents.)doc";
+
+}; // struct Face
 
 } // namespace regina::python::doc
 

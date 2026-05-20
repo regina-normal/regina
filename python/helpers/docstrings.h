@@ -48,26 +48,15 @@
  * ...
  * RDOC_SCOPE_END
  *
- * Each begin/switch will set the namespace alias rdoc, either to
- * regina::python::doc if you are using ..._MAIN, or to
- * regina::python::doc::s_ if you are using ..._SCOPE(s).
+ * Each begin/switch will set the alias rdoc to either the namespace
+ * regina::python::doc if you are using ..._MAIN, or to the struct
+ * regina::python::doc::s if you are using ..._SCOPE(s).
  *
  * You can then access each individual docstring as rdoc::name.
  *
- * If you are within a ..._SCOPE(s) block and s is the name of a
- * class/struct/etc., then rdoc refers to the namespace containing the
- * _members_ of s (which uses a trailing underscore, as noted above),
- * and rdoc_scope is an alias for the docstring for s itself (which has
- * no trailing underscore).
- *
- * If you have an inner class/enum/etc. that is declared within some outer
- * class/struct, then you can use RDOC_SCOPE_INNER_BEGIN(s) or
- * RDOC_SCOPE_INNER_SWITCH(s), with a matching RDOC_SCOPE_INNER_END.
- * This must be placed inside the outer BEGIN ... END block: it will preserve
- * the outer \a rdoc namespace and \a rdoc_scope string declarations, and will
- * declare a new namespace alias \a rdoc_inner and string \a rdoc_inner_scope
- * for working with \a s.  Such inner scopes can (at present) only be nested
- * one level deep.
+ * If you are within a ..._SCOPE(s) block and \a s is the name of a
+ * class/struct/etc., then `rdoc::member` refers to the docstring for
+ * `s::member`, and `rdoc::__class` refers to the docstring for \a s itself.
  *
  * If you are within a ..._SCOPE(c) block for some class c and you also wish to
  * access docstrings for one or more of its base classes b1,b2,..., then you
@@ -89,8 +78,7 @@
  * can be searched (and ideally _fixed_) before each formal Regina release.
  */
 #define RDOC_SCOPE_BEGIN(scope)  { \
-    const char* rdoc_scope = regina::python::doc::scope; \
-    namespace rdoc = regina::python::doc::scope ## _; \
+    using rdoc = regina::python::doc::scope; \
     namespace rdoc_global = regina::python::doc;
 #define RDOC_SCOPE_BEGIN_MAIN    { \
     namespace rdoc = regina::python::doc;
@@ -98,21 +86,15 @@
 #define RDOC_SCOPE_SWITCH_MAIN   } RDOC_SCOPE_BEGIN_MAIN
 #define RDOC_SCOPE_END           }
 
-#define RDOC_SCOPE_INNER_BEGIN(scope)  { \
-    const char* rdoc_inner_scope = rdoc::scope; \
-    namespace rdoc_inner = rdoc::scope ## _;
-#define RDOC_SCOPE_INNER_SWITCH(scope) } RDOC_SCOPE_INNER_BEGIN(scope)
-#define RDOC_SCOPE_INNER_END           }
-
 #define RDOC_SCOPE_BASE(base) \
-    namespace rbase = regina::python::doc::base ##_;
+    using rbase = regina::python::doc::base;
 #define RDOC_SCOPE_BASE_2(base, base2) \
-    namespace rbase = regina::python::doc::base ##_; \
-    namespace rbase2 = regina::python::doc::base2 ##_;
+    using rbase = regina::python::doc::base; \
+    using rbase2 = regina::python::doc::base2;
 #define RDOC_SCOPE_BASE_3(base, base2, base3) \
-    namespace rbase = regina::python::doc::base ##_; \
-    namespace rbase2 = regina::python::doc::base2 ##_; \
-    namespace rbase3 = regina::python::doc::base3 ##_;
+    using rbase = regina::python::doc::base; \
+    using rbase2 = regina::python::doc::base2; \
+    using rbase3 = regina::python::doc::base3;
 
 #define RDOC_TODO regina::python::doc::common::todo
 

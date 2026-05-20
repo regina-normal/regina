@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Face
-inline constexpr const char Face[] =
+struct Face {
+
+// Docstring regina::python::doc::Face::__class
+static constexpr const char __class[] =
 R"doc(Represents a pentachoron (a 4-dimensional simplex) within a 4-manifold
 triangulation.
 
@@ -36,15 +38,13 @@ them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
 of by the Triangulation to which they belong.)doc";
 
-namespace Face_ {
-
-// Docstring regina::python::doc::Face_::adjacentPentachoron
-inline constexpr const char adjacentPentachoron[] =
+// Docstring regina::python::doc::Face::adjacentPentachoron
+static constexpr const char adjacentPentachoron[] =
 R"doc(A dimension-specific alias for adjacentSimplex().
 
 See adjacentSimplex() for further information.)doc";
 
-}
+}; // struct Face
 
 } // namespace regina::python::doc
 

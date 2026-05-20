@@ -49,7 +49,7 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     RDOC_SCOPE_BASE_2(detail::FaceEmbeddingBase, alias::FaceNumber)
 
     auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName,
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<regina::Simplex<dim>*, regina::Perm<dim + 1>>(),
             rdoc::__init)
         .def(pybind11::init<const FaceEmbedding<dim, subdim>&>(), rdoc::__copy)
@@ -79,7 +79,8 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<regina::Face<dim, subdim>>(m, name, rdoc::Face)
+    auto c = pybind11::class_<regina::Face<dim, subdim>>(m, name,
+            rdoc::Face::__class)
         .def("isValid", &Face<dim, subdim>::isValid, rbase::isValid)
         // Only standard dimensions offer hasBadLink().
         .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification,

@@ -11,8 +11,38 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Matrix3D
-inline constexpr const char Matrix3D[] =
+struct Matrix3D {
+
+// Docstring regina::python::doc::Matrix3D::__array
+static constexpr const char __array[] =
+R"doc(Gives read-write access to a single row of this matrix.
+
+This means that the entry in row *r*, column *c* can be accessed as
+``matrix[r][c]`` (where *r* and *c* are each 0, 1 or 2).
+
+Parameter ``row``:
+    the index of the requested row; this must be 0, 1 or 2.
+
+Returns:
+    a reference to the three-element array containing the elements of
+    the requested row.)doc";
+
+// Docstring regina::python::doc::Matrix3D::__array_2
+static constexpr const char __array_2[] =
+R"doc(Gives read-only access to a single row of this matrix.
+
+This means that the entry in row *r*, column *c* can be accessed as
+``matrix[r][c]`` (where *r* and *c* are each 0, 1 or 2).
+
+Parameter ``row``:
+    the index of the requested row; this must be 0, 1 or 2.
+
+Returns:
+    a three-element array containing the elements of the requested
+    row.)doc";
+
+// Docstring regina::python::doc::Matrix3D::__class
+static constexpr const char __class[] =
 R"doc(Represents a linear transformation in three-dimensional space, as
 represented by a real 3-by-3 matrix.
 
@@ -44,8 +74,136 @@ Python:
 Template parameter ``Real``:
     the floating-point type to use for all storage and computation.)doc";
 
-// Docstring regina::python::doc::Rotation3D
-inline constexpr const char Rotation3D[] =
+// Docstring regina::python::doc::Matrix3D::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given matrix.)doc";
+
+// Docstring regina::python::doc::Matrix3D::__default
+static constexpr const char __default[] = R"doc(Creates the identity matrix.)doc";
+
+// Docstring regina::python::doc::Matrix3D::__eq
+static constexpr const char __eq[] =
+R"doc(Determines if this and the given matrix are equal.
+
+.. warning::
+    Equality and inequailty testing, while supported, is extremely
+    fragile, since it relies on floating-point comparisons.
+
+Parameter ``other``:
+    the matrix to compare with this.
+
+Returns:
+    ``True`` if and only if the two matrices are equal.)doc";
+
+// Docstring regina::python::doc::Matrix3D::__imul
+static constexpr const char __imul[] =
+R"doc(Composes this with the given transformation, which is to be applied
+first. This transformation will be changed directly.
+
+Composition of transformations is _not_ commutative. Here we follow
+the same convention as used elsewhere in Regina (e.g., by Regina's
+permutation classes): writing ``s *= t`` indicates that we should
+apply transformation ``t`` first, followed by transformation ``s``,
+and then change ``s`` to store the resulting composition. This is
+consistent with the order in which we multiply the underlying 3-by-3
+matrices.
+
+Parameter ``rhs``:
+    the transformation to apply before this.
+
+Returns:
+    a reference to this transformation.)doc";
+
+// Docstring regina::python::doc::Matrix3D::__init
+static constexpr const char __init[] =
+R"doc(Creates a new matrix containin the given entries.
+
+Parameter ``m00``:
+    the entry in row 0, column 0.
+
+Parameter ``m01``:
+    the entry in row 0, column 1.
+
+Parameter ``m02``:
+    the entry in row 0, column 2.
+
+Parameter ``m10``:
+    the entry in row 1, column 0.
+
+Parameter ``m11``:
+    the entry in row 1, column 1.
+
+Parameter ``m12``:
+    the entry in row 1, column 2.
+
+Parameter ``m20``:
+    the entry in row 2, column 0.
+
+Parameter ``m21``:
+    the entry in row 2, column 1.
+
+Parameter ``m22``:
+    the entry in row 2, column 2.)doc";
+
+// Docstring regina::python::doc::Matrix3D::__mul
+static constexpr const char __mul[] =
+R"doc(Returns the composition of this and the given transformation.
+
+Composition of transformations is _not_ commutative. Here we follow
+the same convention as used elsewhere in Regina (e.g., by Regina's
+permutation classes): the product ``s * t`` indicates that we should
+apply transformation ``t`` first, followed by transformation ``s``.
+This is also consistent with the order in which we multiply the
+underlying 3-by-3 matrices.
+
+Parameter ``rhs``:
+    the transformation to apply before this.
+
+Returns:
+    the composition of this and the given transformation.)doc";
+
+// Docstring regina::python::doc::Matrix3D::__mul_2
+static constexpr const char __mul_2[] =
+R"doc(Returns the image of the given vector under this transformation.
+
+Recall that vectors are treated as _column_ vectors. That is, if this
+transformation has matrix ``M`` and the given vector represents the
+column vector ``v``, then the result will be the column vector ``M *
+v``.
+
+Parameter ``vector``:
+    the 3-D vector to rotate.
+
+Returns:
+    the result of applying this transformation to the given vector.)doc";
+
+// Docstring regina::python::doc::Matrix3D::inverse
+static constexpr const char inverse[] =
+R"doc(Returns the inverse of this transformation.
+
+Precondition:
+    This transformation is invertible; that is, the underlying 3-by-3
+    matrix does not have determinant zero.
+
+Returns:
+    the inverse transformation.)doc";
+
+}; // struct Matrix3D
+
+struct Rotation3D {
+
+// Docstring regina::python::doc::Rotation3D::__array
+static constexpr const char __array[] =
+R"doc(Returns the given quaternion coordinate for this rotation.
+
+Parameter ``index``:
+    indicates which coordinate to return; this must be between 0 and 3
+    inclusive.
+
+Returns:
+    the corresponding quaternion coordinate.)doc";
+
+// Docstring regina::python::doc::Rotation3D::__class
+static constexpr const char __class[] =
 R"doc(Represents a rotation about the origin in real three-dimensional
 space.
 
@@ -103,218 +261,16 @@ Python:
 Template parameter ``Real``:
     the floating-point type to use for all storage and computation.)doc";
 
-// Docstring regina::python::doc::Segment3D
-inline constexpr const char Segment3D[] =
-R"doc(Represents a line segment in 3-dimensional space, defined by its two
-endpoints *u* and *v*.
+// Docstring regina::python::doc::Rotation3D::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given rotation.)doc";
 
-The points on this line segment are precisely those points of the form
-``𝜆v + (1-𝜆)u``, where 𝜆 is any real number between 0 and 1 inclusive.
-
-Degenerate segments (whose two endpoints are the same) are explicitly
-supported by this class.
-
-See Regina's notes on 3-D geometry for important information,
-including the inexact floating-point nature of the Vector3D class, and
-the right-handedness of Regina's coordinate system.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.
-
-Python:
-    The template parameter *Real* is ``double``.
-
-Template parameter ``Real``:
-    the floating-point type to use for all storage and computation.)doc";
-
-// Docstring regina::python::doc::Vector3D
-inline constexpr const char Vector3D[] =
-R"doc(Represents a vector in real three-dimensional space. This class is
-also used to represent a single 3-D point.
-
-See Regina's notes on 3-D geometry for important information,
-including the inexact floating-point nature of the Vector3D class, and
-the right-handedness of Regina's coordinate system.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.
-
-Python:
-    The template parameter *Real* is ``double``.
-
-Template parameter ``Real``:
-    the floating-point type to use for all storage and computation.)doc";
-
-namespace Matrix3D_ {
-
-// Docstring regina::python::doc::Matrix3D_::__array
-inline constexpr const char __array[] =
-R"doc(Gives read-write access to a single row of this matrix.
-
-This means that the entry in row *r*, column *c* can be accessed as
-``matrix[r][c]`` (where *r* and *c* are each 0, 1 or 2).
-
-Parameter ``row``:
-    the index of the requested row; this must be 0, 1 or 2.
-
-Returns:
-    a reference to the three-element array containing the elements of
-    the requested row.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::__array_2
-inline constexpr const char __array_2[] =
-R"doc(Gives read-only access to a single row of this matrix.
-
-This means that the entry in row *r*, column *c* can be accessed as
-``matrix[r][c]`` (where *r* and *c* are each 0, 1 or 2).
-
-Parameter ``row``:
-    the index of the requested row; this must be 0, 1 or 2.
-
-Returns:
-    a three-element array containing the elements of the requested
-    row.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given matrix.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::__default
-inline constexpr const char __default[] = R"doc(Creates the identity matrix.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines if this and the given matrix are equal.
-
-.. warning::
-    Equality and inequailty testing, while supported, is extremely
-    fragile, since it relies on floating-point comparisons.
-
-Parameter ``other``:
-    the matrix to compare with this.
-
-Returns:
-    ``True`` if and only if the two matrices are equal.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::__imul
-inline constexpr const char __imul[] =
-R"doc(Composes this with the given transformation, which is to be applied
-first. This transformation will be changed directly.
-
-Composition of transformations is _not_ commutative. Here we follow
-the same convention as used elsewhere in Regina (e.g., by Regina's
-permutation classes): writing ``s *= t`` indicates that we should
-apply transformation ``t`` first, followed by transformation ``s``,
-and then change ``s`` to store the resulting composition. This is
-consistent with the order in which we multiply the underlying 3-by-3
-matrices.
-
-Parameter ``rhs``:
-    the transformation to apply before this.
-
-Returns:
-    a reference to this transformation.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::__init
-inline constexpr const char __init[] =
-R"doc(Creates a new matrix containin the given entries.
-
-Parameter ``m00``:
-    the entry in row 0, column 0.
-
-Parameter ``m01``:
-    the entry in row 0, column 1.
-
-Parameter ``m02``:
-    the entry in row 0, column 2.
-
-Parameter ``m10``:
-    the entry in row 1, column 0.
-
-Parameter ``m11``:
-    the entry in row 1, column 1.
-
-Parameter ``m12``:
-    the entry in row 1, column 2.
-
-Parameter ``m20``:
-    the entry in row 2, column 0.
-
-Parameter ``m21``:
-    the entry in row 2, column 1.
-
-Parameter ``m22``:
-    the entry in row 2, column 2.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::__mul
-inline constexpr const char __mul[] =
-R"doc(Returns the composition of this and the given transformation.
-
-Composition of transformations is _not_ commutative. Here we follow
-the same convention as used elsewhere in Regina (e.g., by Regina's
-permutation classes): the product ``s * t`` indicates that we should
-apply transformation ``t`` first, followed by transformation ``s``.
-This is also consistent with the order in which we multiply the
-underlying 3-by-3 matrices.
-
-Parameter ``rhs``:
-    the transformation to apply before this.
-
-Returns:
-    the composition of this and the given transformation.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::__mul_2
-inline constexpr const char __mul_2[] =
-R"doc(Returns the image of the given vector under this transformation.
-
-Recall that vectors are treated as _column_ vectors. That is, if this
-transformation has matrix ``M`` and the given vector represents the
-column vector ``v``, then the result will be the column vector ``M *
-v``.
-
-Parameter ``vector``:
-    the 3-D vector to rotate.
-
-Returns:
-    the result of applying this transformation to the given vector.)doc";
-
-// Docstring regina::python::doc::Matrix3D_::inverse
-inline constexpr const char inverse[] =
-R"doc(Returns the inverse of this transformation.
-
-Precondition:
-    This transformation is invertible; that is, the underlying 3-by-3
-    matrix does not have determinant zero.
-
-Returns:
-    the inverse transformation.)doc";
-
-}
-
-namespace Rotation3D_ {
-
-// Docstring regina::python::doc::Rotation3D_::__array
-inline constexpr const char __array[] =
-R"doc(Returns the given quaternion coordinate for this rotation.
-
-Parameter ``index``:
-    indicates which coordinate to return; this must be between 0 and 3
-    inclusive.
-
-Returns:
-    the corresponding quaternion coordinate.)doc";
-
-// Docstring regina::python::doc::Rotation3D_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given rotation.)doc";
-
-// Docstring regina::python::doc::Rotation3D_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::Rotation3D::__default
+static constexpr const char __default[] =
 R"doc(Creates the identity rotation. This is the operation that does not
 rotate at all.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Rotation3D::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given rotation have the same quaternion
 coordinates.
 
@@ -329,8 +285,8 @@ Returns:
     ``True`` if and only if the two rotations have the same quaternion
     coordinates.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::__imul
-inline constexpr const char __imul[] =
+// Docstring regina::python::doc::Rotation3D::__imul
+static constexpr const char __imul[] =
 R"doc(Composes this with the given rotation, which is to be applied first.
 This rotation will be changed directly.
 
@@ -354,8 +310,8 @@ Parameter ``rhs``:
 Returns:
     a reference to this rotation.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Rotation3D::__init
+static constexpr const char __init[] =
 R"doc(Creates a new rotation from the given quaternion coordinates.
 
 As described in the class notes, these coordinates do not need to be
@@ -384,8 +340,8 @@ Parameter ``d``:
     corresponding to ``z sin θ/2`` from the discussion in the class
     notes.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::__mul
-inline constexpr const char __mul[] =
+// Docstring regina::python::doc::Rotation3D::__mul
+static constexpr const char __mul[] =
 R"doc(Returns the composition of this and the given rotation.
 
 Composition of 3-D rotations is _not_ commutative. Here we follow the
@@ -407,8 +363,8 @@ Parameter ``rhs``:
 Returns:
     the composition of this and the given rotation.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::__mul_2
-inline constexpr const char __mul_2[] =
+// Docstring regina::python::doc::Rotation3D::__mul_2
+static constexpr const char __mul_2[] =
 R"doc(Returns the image of the given vector under this rotation.
 
 .. warning::
@@ -425,8 +381,8 @@ Parameter ``vector``:
 Returns:
     the result of applying this rotation to the given vector.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::inverse
-inline constexpr const char inverse[] =
+// Docstring regina::python::doc::Rotation3D::inverse
+static constexpr const char inverse[] =
 R"doc(Returns the inverse to this rotation.
 
 This rotates around the same axis by negative the original angle.
@@ -438,8 +394,8 @@ resulting rotation will have its coordinates scaled by λ also.
 Returns:
     the inverse rotation.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::matrix
-inline constexpr const char matrix[] =
+// Docstring regina::python::doc::Rotation3D::matrix
+static constexpr const char matrix[] =
 R"doc(Returns the 3-dimensional transformation matrix for this rotation.
 
 The result will be a 3-by-3 matrix ``M``, which can be used to rotate
@@ -453,8 +409,8 @@ called beforehand.
 Returns:
     the corresponding 3-dimensional rotation matrix.)doc";
 
-// Docstring regina::python::doc::Rotation3D_::normalise
-inline constexpr const char normalise[] =
+// Docstring regina::python::doc::Rotation3D::normalise
+static constexpr const char normalise[] =
 R"doc(Rescales all four quaternion coordinates by the same positive constant
 so that the quaternion coordinates become normalised.
 
@@ -466,12 +422,12 @@ Specifically, after this operation:
 * the four quaternion coordinates ``(a,b,c,d)`` will satisfy ``a^2 +
   b^2 + c^2 + d^2 = 1``.)doc";
 
-}
+}; // struct Rotation3D
 
-namespace Segment3D_ {
+struct Segment3D {
 
-// Docstring regina::python::doc::Segment3D_::__add
-inline constexpr const char __add[] =
+// Docstring regina::python::doc::Segment3D::__add
+static constexpr const char __add[] =
 R"doc(Returns the translation of this line segment by the given vector.
 
 Parameter ``translation``:
@@ -480,14 +436,39 @@ Parameter ``translation``:
 Returns:
     the translated copy of this line segment.)doc";
 
-// Docstring regina::python::doc::Segment3D_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given line segment.)doc";
+// Docstring regina::python::doc::Segment3D::__class
+static constexpr const char __class[] =
+R"doc(Represents a line segment in 3-dimensional space, defined by its two
+endpoints *u* and *v*.
 
-// Docstring regina::python::doc::Segment3D_::__default
-inline constexpr const char __default[] = R"doc(Creates a new line segment whose endpoints are uninitialised.)doc";
+The points on this line segment are precisely those points of the form
+``𝜆v + (1-𝜆)u``, where 𝜆 is any real number between 0 and 1 inclusive.
 
-// Docstring regina::python::doc::Segment3D_::__eq
-inline constexpr const char __eq[] =
+Degenerate segments (whose two endpoints are the same) are explicitly
+supported by this class.
+
+See Regina's notes on 3-D geometry for important information,
+including the inexact floating-point nature of the Vector3D class, and
+the right-handedness of Regina's coordinate system.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Python:
+    The template parameter *Real* is ``double``.
+
+Template parameter ``Real``:
+    the floating-point type to use for all storage and computation.)doc";
+
+// Docstring regina::python::doc::Segment3D::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given line segment.)doc";
+
+// Docstring regina::python::doc::Segment3D::__default
+static constexpr const char __default[] = R"doc(Creates a new line segment whose endpoints are uninitialised.)doc";
+
+// Docstring regina::python::doc::Segment3D::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given line segment have the same endpoints,
 in the same order.
 
@@ -503,8 +484,8 @@ Returns:
     endpoints *u*, and both segments have identical second endpoints
     *v*.)doc";
 
-// Docstring regina::python::doc::Segment3D_::__iadd
-inline constexpr const char __iadd[] =
+// Docstring regina::python::doc::Segment3D::__iadd
+static constexpr const char __iadd[] =
 R"doc(Translates this line segment by the given vector.
 
 Parameter ``translation``:
@@ -513,8 +494,8 @@ Parameter ``translation``:
 Returns:
     a reference to this line segment, which will be modified directly.)doc";
 
-// Docstring regina::python::doc::Segment3D_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Segment3D::__init
+static constexpr const char __init[] =
 R"doc(Creates a new line segment with the given endpoints.
 
 Parameter ``u``:
@@ -523,8 +504,8 @@ Parameter ``u``:
 Parameter ``v``:
     the second endpoint.)doc";
 
-// Docstring regina::python::doc::Segment3D_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Segment3D::__isub
+static constexpr const char __isub[] =
 R"doc(Translates this line segment by the negative of the given vector.
 
 Parameter ``translation``:
@@ -533,8 +514,8 @@ Parameter ``translation``:
 Returns:
     a reference to this line segment, which will be modified directly.)doc";
 
-// Docstring regina::python::doc::Segment3D_::__sub
-inline constexpr const char __sub[] =
+// Docstring regina::python::doc::Segment3D::__sub
+static constexpr const char __sub[] =
 R"doc(Returns the translation of this line segment by the negative of the
 given vector.
 
@@ -544,8 +525,8 @@ Parameter ``translation``:
 Returns:
     the translated copy of this line segment.)doc";
 
-// Docstring regina::python::doc::Segment3D_::closest
-inline constexpr const char closest[] =
+// Docstring regina::python::doc::Segment3D::closest
+static constexpr const char closest[] =
 R"doc(Computes the closest point on this line segment to the given point.
 
 This routine does respect the limits defined by the two endpoints of
@@ -564,22 +545,22 @@ Returns:
     to *p* on this segment is the point ``𝜆v + (1-𝜆)u``; in other
     words, ``point(𝜆)``.)doc";
 
-// Docstring regina::python::doc::Segment3D_::length
-inline constexpr const char length[] =
+// Docstring regina::python::doc::Segment3D::length
+static constexpr const char length[] =
 R"doc(Returns the length of this line segment.
 
 Returns:
     the length of this line segment.)doc";
 
-// Docstring regina::python::doc::Segment3D_::midpoint
-inline constexpr const char midpoint[] =
+// Docstring regina::python::doc::Segment3D::midpoint
+static constexpr const char midpoint[] =
 R"doc(Returns the midpoint of this line segment.
 
 Returns:
     the midpoint of this line segment.)doc";
 
-// Docstring regina::python::doc::Segment3D_::point
-inline constexpr const char point[] =
+// Docstring regina::python::doc::Segment3D::point
+static constexpr const char point[] =
 R"doc(Returns the point on this line segment represented by the given real
 number 𝜆.
 
@@ -599,18 +580,18 @@ Parameter ``lambda``:
 Returns:
     the corresponding point ``𝜆v + (1-𝜆)u``.)doc";
 
-// Docstring regina::python::doc::Segment3D_::u
-inline constexpr const char u[] = R"doc(The first endpoint (u) of this line segment.)doc";
+// Docstring regina::python::doc::Segment3D::u
+static constexpr const char u[] = R"doc(The first endpoint (u) of this line segment.)doc";
 
-// Docstring regina::python::doc::Segment3D_::v
-inline constexpr const char v[] = R"doc(The second endpoint (v) of this line segment.)doc";
+// Docstring regina::python::doc::Segment3D::v
+static constexpr const char v[] = R"doc(The second endpoint (v) of this line segment.)doc";
 
-}
+}; // struct Segment3D
 
-namespace Vector3D_ {
+struct Vector3D {
 
-// Docstring regina::python::doc::Vector3D_::__add
-inline constexpr const char __add[] =
+// Docstring regina::python::doc::Vector3D::__add
+static constexpr const char __add[] =
 R"doc(Returns the sum of this and the given vector.
 
 Parameter ``rhs``:
@@ -619,14 +600,33 @@ Parameter ``rhs``:
 Returns:
     the sum of this and the given vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given vector.)doc";
+// Docstring regina::python::doc::Vector3D::__class
+static constexpr const char __class[] =
+R"doc(Represents a vector in real three-dimensional space. This class is
+also used to represent a single 3-D point.
 
-// Docstring regina::python::doc::Vector3D_::__default
-inline constexpr const char __default[] = R"doc(Creates a new vector whose coordinates are uninitialised.)doc";
+See Regina's notes on 3-D geometry for important information,
+including the inexact floating-point nature of the Vector3D class, and
+the right-handedness of Regina's coordinate system.
 
-// Docstring regina::python::doc::Vector3D_::__div
-inline constexpr const char __div[] =
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Python:
+    The template parameter *Real* is ``double``.
+
+Template parameter ``Real``:
+    the floating-point type to use for all storage and computation.)doc";
+
+// Docstring regina::python::doc::Vector3D::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given vector.)doc";
+
+// Docstring regina::python::doc::Vector3D::__default
+static constexpr const char __default[] = R"doc(Creates a new vector whose coordinates are uninitialised.)doc";
+
+// Docstring regina::python::doc::Vector3D::__div
+static constexpr const char __div[] =
 R"doc(Returns a copy of this vector scaled down by the given factor.
 Specifically, the coordinates of the vector that is returned will be
 the coordinates of this vector divided by *scale*.
@@ -637,8 +637,8 @@ Parameter ``scale``:
 Returns:
     a rescaled copy of this vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Vector3D::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given vector have the same coordinates.
 
 .. warning::
@@ -651,8 +651,8 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if the two vectors are equal.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__iadd
-inline constexpr const char __iadd[] =
+// Docstring regina::python::doc::Vector3D::__iadd
+static constexpr const char __iadd[] =
 R"doc(Adds the given vector to this vector.
 
 Parameter ``rhs``:
@@ -661,8 +661,8 @@ Parameter ``rhs``:
 Returns:
     a reference to this vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__idiv
-inline constexpr const char __idiv[] =
+// Docstring regina::python::doc::Vector3D::__idiv
+static constexpr const char __idiv[] =
 R"doc(Scales this vector down by the given factor. Specifically, all
 coordinates of this vector will be divided by *scale*.
 
@@ -672,8 +672,8 @@ Parameter ``scale``:
 Returns:
     a reference to this vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__imul
-inline constexpr const char __imul[] =
+// Docstring regina::python::doc::Vector3D::__imul
+static constexpr const char __imul[] =
 R"doc(Scales this vector up by the given factor. Specifically, all
 coordinates of this vector will be multiplied by *scale*.
 
@@ -683,8 +683,8 @@ Parameter ``scale``:
 Returns:
     a reference to this vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Vector3D::__init
+static constexpr const char __init[] =
 R"doc(Creates a new vector with the given coordinates.
 
 Parameter ``x``:
@@ -696,16 +696,16 @@ Parameter ``y``:
 Parameter ``z``:
     the third (z) coordinate.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::Vector3D::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new vector with the given coordinates.
 
 Parameter ``coordinates``:
     an array whose three elements are the *x*, *y* and *z* coordinate
     respectively.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Vector3D::__isub
+static constexpr const char __isub[] =
 R"doc(Subtracts the given vector from this vector.
 
 Parameter ``rhs``:
@@ -714,8 +714,8 @@ Parameter ``rhs``:
 Returns:
     a reference to this vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__mul
-inline constexpr const char __mul[] =
+// Docstring regina::python::doc::Vector3D::__mul
+static constexpr const char __mul[] =
 R"doc(Returns a copy of this vector scaled up by the given factor.
 Specifically, the coordinates of the vector that is returned will be
 the coordinates of this vector multiplied by *scale*.
@@ -726,8 +726,8 @@ Parameter ``scale``:
 Returns:
     a rescaled copy of this vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__mul_2
-inline constexpr const char __mul_2[] =
+// Docstring regina::python::doc::Vector3D::__mul_2
+static constexpr const char __mul_2[] =
 R"doc(Returns the inner product of this and the given vector.
 
 Parameter ``rhs``:
@@ -736,8 +736,8 @@ Parameter ``rhs``:
 Returns:
     the inner product of this vector and *rhs*.)doc";
 
-// Docstring regina::python::doc::Vector3D_::__sub
-inline constexpr const char __sub[] =
+// Docstring regina::python::doc::Vector3D::__sub
+static constexpr const char __sub[] =
 R"doc(Returns the difference obtained from this vector minus the given
 vector.
 
@@ -750,8 +750,8 @@ Parameter ``rhs``:
 Returns:
     the difference obtained from this minus the given vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::distance
-inline constexpr const char distance[] =
+// Docstring regina::python::doc::Vector3D::distance
+static constexpr const char distance[] =
 R"doc(Returns the distance between this and the given point in 3-D space.
 
 The naming and description of this function assume that both this and
@@ -763,8 +763,8 @@ Computing ``a.distance(b)`` is equivalent to computing
 Returns:
     the distance between this and the given point.)doc";
 
-// Docstring regina::python::doc::Vector3D_::length
-inline constexpr const char length[] =
+// Docstring regina::python::doc::Vector3D::length
+static constexpr const char length[] =
 R"doc(Returns the length of this vector.
 
 If this object represents a single 3-D point, then this function
@@ -773,8 +773,8 @@ returns the distance of this point from the origin.
 Returns:
     the length of this vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::midpoint
-inline constexpr const char midpoint[] =
+// Docstring regina::python::doc::Vector3D::midpoint
+static constexpr const char midpoint[] =
 R"doc(Returns the midpoint between this and the given point.
 
 The naming and description of this function assume that both this and
@@ -785,23 +785,23 @@ Computing ``a.midpoint(b)`` is equivalent to computing ``(a+b)/2``.
 Returns:
     the midpoint between this and the given point.)doc";
 
-// Docstring regina::python::doc::Vector3D_::operator_array
-inline constexpr const char operator_array[] =
+// Docstring regina::python::doc::Vector3D::operator_array
+static constexpr const char operator_array[] =
 R"doc(Casts this point to a standard C++ array.
 
 Returns:
     a three-element array containing *x*, *y* and *z* (in that order).)doc";
 
-// Docstring regina::python::doc::Vector3D_::x
-inline constexpr const char x[] = R"doc(The first (x) coordinate of the vector.)doc";
+// Docstring regina::python::doc::Vector3D::x
+static constexpr const char x[] = R"doc(The first (x) coordinate of the vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::y
-inline constexpr const char y[] = R"doc(The second (y) coordinate of the vector.)doc";
+// Docstring regina::python::doc::Vector3D::y
+static constexpr const char y[] = R"doc(The second (y) coordinate of the vector.)doc";
 
-// Docstring regina::python::doc::Vector3D_::z
-inline constexpr const char z[] = R"doc(The third (z) coordinate of the vector.)doc";
+// Docstring regina::python::doc::Vector3D::z
+static constexpr const char z[] = R"doc(The third (z) coordinate of the vector.)doc";
 
-}
+}; // struct Vector3D
 
 } // namespace regina::python::doc
 

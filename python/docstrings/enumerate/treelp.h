@@ -11,13 +11,76 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::LPConstraintType
-inline constexpr const char LPConstraintType[] =
+// Docstring regina::python::doc::global_swap_LPData
+inline constexpr const char global_swap_LPData[] =
+R"doc(Swaps the contents of the given tableaux.
+
+This global routine simply calls LPData<Constraint, IntType>::swap();
+it is provided so that LPData<Constraint, IntType> meets the C++
+Swappable requirements.
+
+Parameter ``a``:
+    the first tableaux whose contents should be swapped.
+
+Parameter ``b``:
+    the second tableaux whose contents should be swapped.)doc";
+
+// Docstring regina::python::doc::global_swap_LPInitialTableaux
+inline constexpr const char global_swap_LPInitialTableaux[] =
+R"doc(Swaps the contents of the given matrices.
+
+This global routine simply calls
+LPInitialTableaux<Constraint>::swap(); it is provided so that
+LPInitialTableaux<Constraint> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
+
+// Docstring regina::python::doc::global_swap_LPMatrix
+inline constexpr const char global_swap_LPMatrix[] =
+R"doc(Swaps the contents of the given matrices.
+
+This global routine simply calls LPMatrix<IntType>::swap(); it is
+provided so that LPMatrix<IntType> meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
+
+struct LPConstraintType {
+
+// Docstring regina::python::doc::LPConstraintType::Positive
+static constexpr const char Positive[] =
+R"doc(Indicates a constraint that requires some linear function to be
+strictly positive.
+
+A constraint of this type would typically be enforced by calling
+LPData::constrainPositive().)doc";
+
+// Docstring regina::python::doc::LPConstraintType::Zero
+static constexpr const char Zero[] =
+R"doc(Indicates a constraint that requires some linear function to be zero.
+
+A constraint of this type would typically be enforced by calling
+LPData::constrainZero().)doc";
+
+// Docstring regina::python::doc::LPConstraintType::__class
+static constexpr const char __class[] =
 R"doc(Indicates whether a linear constraint describes an equality or an
 inequality. This is used with Regina's linear programming machinery.)doc";
 
-// Docstring regina::python::doc::LPData
-inline constexpr const char LPData[] =
+}; // struct LPConstraintType
+
+struct LPData {
+
+// Docstring regina::python::doc::LPData::__class
+static constexpr const char __class[] =
 R"doc(Stores an intermediate tableaux for the dual simplex method, and
 contains all of the core machinery for using the dual simplex method.
 
@@ -160,8 +223,300 @@ Template parameter ``IntType``:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::LPInitialTableaux
-inline constexpr const char LPInitialTableaux[] =
+// Docstring regina::python::doc::LPData::__default
+static constexpr const char __default[] =
+R"doc(Constructs a new tableaux. You _must_ call reserve() before doing
+anything else with this tableaux.)doc";
+
+// Docstring regina::python::doc::LPData::columns
+static constexpr const char columns[] =
+R"doc(Returns the number of columns in this tableaux.
+
+Note that, if we are imposing extra constraints through the
+LPConstraint template parameter, then there will be extra variables to
+enforce these, and so the number of columns will be larger than in the
+original matching equation matrix.
+
+Returns:
+    the number of columns.)doc";
+
+// Docstring regina::python::doc::LPData::constrainOct
+static constexpr const char constrainOct[] =
+R"doc(Declares that two quadrilateral coordinates within a tetrahedron are
+to be combined into a single octagon coordinate, for use with almost
+normal surfaces, and constrains the system accordingly.
+
+This constrains the system in several ways, as discussed in detail in
+the LPData class notes. In theory, we set the two quadrilateral
+coordinates to be equal, and also insist that the number of octagons
+be strictly positive. In practice, we do this through several changes
+of variable; see the LPData class notes for a detailed discussion of
+precisely how the variables and tableaux will change.
+
+This routine will work even if one of the given quadrilateral
+variables has already been deactivated, but in this case the routine
+will immediately set the system to infeasible and return.
+
+This routine is not used with angle structure coordinates.
+
+Precondition:
+    This is the first time constrainOct() has been called on this
+    tableaux. This is because this class can only handle one octagon
+    type in the entire system.
+
+Precondition:
+    Variables *quad1* and *quad2* represent different quadrilateral
+    coordinates in the same tetrahedron of the underlying
+    triangulation.
+
+.. warning::
+    If you have previously called constrainPositive() or
+    constrainOct() on one of the given variables, then these prior
+    routines will have performed a change of variable. Any new call to
+    constrainOct() involving this same variable will constrain the
+    _new_ variable, not the original, and so might not have the
+    intended effect.
+
+Parameter ``quad1``:
+    one of the two quadrilateral types that we combine to form the new
+    octagon type. This should be a column index with respect to this
+    tableaux (i.e., it must take into account any permutation of
+    columns from the original matching equations).
+
+Parameter ``quad2``:
+    the other of the two quadrilateral types that we combine to form
+    the new octagon type. Again this should be a column index with
+    respect to this tableaux.)doc";
+
+// Docstring regina::python::doc::LPData::constrainPositive
+static constexpr const char constrainPositive[] =
+R"doc(Constrains this system further by constraining the given variable to
+be strictly positive. We do this using a change of variable that
+effectively replaces x_pos with the new variable x'_pos = x_pos - 1
+(which we simply constrain to be non-negative as usual). See the
+LPData class notes for details.
+
+This routine will work even if the given variable has already been
+deactivated, but in this case the routine will immediately set the
+system to infeasible and return.
+
+.. warning::
+    If you have previously called constrainPositive() or
+    constrainOct() on this variable, then these prior routines will
+    have performed a change of variable. Any new call to
+    constrainPositive() on this same variable will constrain the _new_
+    variable, not the original, and so might not have the intended
+    effect.
+
+Parameter ``pos``:
+    the index of the variable that is to be constrained as positive.
+    This must be between 0 and origTableaux_->columns()-1 inclusive.
+    The index should be with respect to this tableaux (i.e., it must
+    take into account any permutation of columns from the original
+    matching equations).)doc";
+
+// Docstring regina::python::doc::LPData::constrainZero
+static constexpr const char constrainZero[] =
+R"doc(Constrains this system further by setting the given variable to zero
+and deactivating it. See the LPData class notes for details.
+
+This routine will work even if the given variable has already been
+deactivated (and it will do nothing in this case).
+
+.. warning::
+    If you have previously called constrainPositive() or
+    constrainOct() on this variable, then these prior routines will
+    have performed a change of variable. Any new call to
+    constraintZero() on this same variable will constraint the _new_
+    variable, not the original, and so might not have the intended
+    effect.
+
+Parameter ``pos``:
+    the index of the variable that is to be set to zero. This must be
+    between 0 and origTableaux_->columns()-1 inclusive. The index
+    should be with respect to this tableaux (i.e., it must take into
+    account any permutation of columns from the original matching
+    equations).)doc";
+
+// Docstring regina::python::doc::LPData::coordinateColumns
+static constexpr const char coordinateColumns[] =
+R"doc(Returns the number of columns in this tableaux that correspond to
+normal coordinates or angle structure coordinates. This is precisely
+the number of columns in the original matrix of matching equations.
+
+Returns:
+    the number of normal or angle structure coordinate columns.)doc";
+
+// Docstring regina::python::doc::LPData::extractSolution
+static constexpr const char extractSolution[] =
+R"doc(Extracts the values of the individual variables from the current
+basis, with some modifications (as described below). The values of the
+variables will be returned in vector form, using type *Ray*.
+
+The modifications are as follows:
+
+* We extract variables that correspond to the original matching
+  equations obtained from the underlying triangulation, _not_ the
+  current tableaux and _not_ even the original starting tableaux. In
+  other words, when we fill the resulting vector, we undo the column
+  permutation described by LPInitialTableaux::columnPerm(), and we
+  undo any changes of variable that were caused by calls to
+  constrainPositive() and/or constrainOct().
+
+* To ensure that the variables are all integers, we scale the
+  resulting vector by the smallest positive rational multiple for
+  which all elements of the vector are integers.
+
+This routine is not used as an internal part of the tree traversal
+algorithm; instead it is offered as a helper routine for
+reconstructing the normal surfaces or angle structures that result.
+
+Precondition:
+    No individual coordinate column has had more than one call to
+    either of constrainPositive() or constrainOct() (otherwise the
+    coordinate will not be correctly reconstructed). Any additional
+    columns arising from the LPConstraint template parameter are
+    exempt from this requirement.
+
+Python:
+    The type vector should be passed as a Python list of integers (for
+    example, in the enumeration of normal surfaces, there would be one
+    integer per tetrahedron, each equal to 0, 1, 2 or 3). The template
+    parameter *Ray* is taken to be Vector<Integer>.
+
+Template parameter ``Ray``:
+    the vector type to use to return the extracted values. The
+    ``std::common_type_t`` constraint on *Ray* ensures that no
+    information will be lost (e.g., through overflow) when converting
+    integers to the element type for *Ray*.
+
+Parameter ``type``:
+    the type vector corresponding to the current state of this
+    tableaux, indicating which variables were previously fixed as
+    positive via calls to constrainPositive(). This is necessary
+    because LPData does not keep such historical data on its own. The
+    order of these types should be with respect to the permuted
+    columns (i.e., it should reflect the columns as they are stored in
+    this tableaux, not the original matching equations). As a special
+    case, when extracting a strict angle structure one may pass *type*
+    = ``None``, in which case this routine will assume that _every_
+    coordinate was constrained as positive.
+
+Returns:
+    a vector containing the values of all the variables. This vector
+    will have length origTableaux_->coordinateColumns().)doc";
+
+// Docstring regina::python::doc::LPData::initClone
+static constexpr const char initClone[] =
+R"doc(Initialises this tableaux to be a clone of the given tableaux. This is
+used in the tree traversal algorithm as we work our way down the
+search tree, and child nodes "inherit" tableaux from their parent
+nodes.
+
+Precondition:
+    reserve() has already been called.
+
+Parameter ``parent``:
+    the tableaux to clone.)doc";
+
+// Docstring regina::python::doc::LPData::initStart
+static constexpr const char initStart[] =
+R"doc(Initialises this tableaux by beginning at the original starting
+tableaux and working our way to any feasible basis.
+
+This routine also explicitly enforces the additional constraints from
+the LPConstraint template parameter (i.e., this routine is responsible
+for forcing the corresponding linear function(s) to be zero or
+strictly positive as appropriate).
+
+It is possible that a feasible basis cannot be found; you should test
+isFeasible() after running this routine to see whether this is the
+case.
+
+Precondition:
+    reserve() has already been called.)doc";
+
+// Docstring regina::python::doc::LPData::isActive
+static constexpr const char isActive[] =
+R"doc(Determines whether the given variable is currently active. See the
+LPData class notes for details.
+
+Parameter ``pos``:
+    the index of the variable to query. This must be between 0 and
+    origTableaux_->columns()-1 inclusive. The index should be with
+    respect to this tableaux (i.e., it must take into account any
+    permutation of columns from the original matching equations).)doc";
+
+// Docstring regina::python::doc::LPData::isFeasible
+static constexpr const char isFeasible[] =
+R"doc(Returns whether or not this system is feasible.
+
+A system may become infeasible when we add too many extra constraints
+on the variables (such as forcing them to be positive, or setting them
+to zero); see the LPData class notes for details on these constraints.
+
+.. warning::
+    As explained in the class notes, if this system is infeasible then
+    any queries or operations (other than calling isFeasible() itself)
+    are undefined.
+
+Returns:
+    ``True`` if this system is feasible, or ``False`` if it is
+    infeasible.)doc";
+
+// Docstring regina::python::doc::LPData::reserve
+static constexpr const char reserve[] =
+R"doc(Reserves enough memory for this tableaux to work with. You _must_ call
+this routine before doing anything else with this tableaux.
+
+The data in this tableaux will not be initialised, and the contents
+and behaviour of this tableaux will remain undefined until you call
+one of the initialisation routines initStart() or initClone().
+
+Parameter ``origTableaux``:
+    the original starting tableaux that holds the adjusted matrix of
+    matching equations, before the tree traversal algorithm began.)doc";
+
+// Docstring regina::python::doc::LPData::sign
+static constexpr const char sign[] =
+R"doc(Returns the sign of the given variable under the current basis. This
+does _not_ attempt to "undo" any changes of variable caused by prior
+calls to constrainPositive() or constrainOct(); it simply tests the
+sign of the variable in the given column of the tableaux in its
+current form.
+
+Specifically: if the given variable is inactive or non-basic, this
+routine returns zero. If the given variable is in the basis, this
+routine returns the sign of the corresponding integer on the right-
+hand side of the tableaux.
+
+Parameter ``pos``:
+    the index of the variable to query. This must be between 0 and
+    origTableaux_->columns()-1 inclusive. The index should be with
+    respect to this tableaux (i.e., it must take into account any
+    permutation of columns from the original matching equations).
+
+Returns:
+    the sign of the variable as described above; this will be either
+    1, 0 or -1.)doc";
+
+// Docstring regina::python::doc::LPData::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given tableaux.
+
+It does not matter if the two tableaux have different sizes, or if one
+or both is unintialised; if so then these properties will be swapped
+also.
+
+Parameter ``other``:
+    the tableaux whose contents should be swapped with this.)doc";
+
+}; // struct LPData
+
+struct LPInitialTableaux {
+
+// Docstring regina::python::doc::LPInitialTableaux::__class
+static constexpr const char __class[] =
 R"doc(Stores an adjusted matrix of homogeneous linear matching equations
 based on a given triangulation, in sparse form. Typically these will
 be the normal surface matching equations in some coordinate system, or
@@ -255,8 +610,266 @@ Python:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::LPMatrix
-inline constexpr const char LPMatrix[] =
+// Docstring regina::python::doc::LPInitialTableaux::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given matrix.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::__init
+static constexpr const char __init[] =
+R"doc(Construts this adjusted sparse matrix of matching equations.
+
+Note that LPInitialTableaux does not copy the given triangulation; it
+merely keeps a reference to it. The triangulation should not change
+during the lifespan of this object.
+
+Precondition:
+    The given triangulation is non-empty.
+
+Exception ``InvalidArgument``:
+    It was not possible to add the extra constraints from the
+    LPConstraint template argument, due to an error which should have
+    been preventable with the right checks in advance. Such exceptions
+    are generated by the *Constraint* class, and so you should consult
+    the class documentation for your chosen *Constraint* template
+    argument to see if this is a possibility.
+
+Exception ``InvalidArgument``:
+    It was not possible to add the extra constraints from the
+    LPConstraint template argument, due to an error that was
+    "genuinely" unforseeable. Again, such exceptions are generated by
+    your chosen *Constraint* class, and you should consult its
+    documentation to see if this is a possibility.
+
+Parameter ``tri``:
+    the underlying 3-manifold triangulation.
+
+Parameter ``enc``:
+    the normal surface vector encoding that we are using for our
+    enumeration task. This may be any valid NormalEncoding object,
+    including the special angle structure encoding.
+
+Parameter ``enumeration``:
+    ``True`` if we should optimise the tableaux for a full enumeration
+    of vertex surfaces or taut angle structures, or ``False`` if we
+    should optimise the tableaux for an existence test (such as
+    searching for a non-trivial normal disc or sphere, or a strict
+    angle structure).)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::columnPerm
+static constexpr const char columnPerm[] =
+R"doc(Returns the permutation that describes how the columns of the matching
+equation matrix were reordered. This permutation maps column numbers
+in this adjusted matching equation matrix to column numbers in the
+original (unmodified) matching equation matrix that was originally
+derived from the triangulation.
+
+The permutation is returned as an array of columns() integers, such
+that column *i* of this adjusted matrix corresponds to column
+``columnPerm()[i]`` of the original matrix.
+
+If you are imposing additional constraints through the LPConstraint
+template parameter, then the corresponding extra variables will be
+included in the permutation; however, these are never moved and will
+always remain the rightmost variables in this system (i.e., the
+columns of highest index).
+
+As well as the requirement that this is a genuine permutation of
+0,...,columns()-1, this array will also adhere to the following
+constraints. In the following discussion, *n* refers to the number of
+tetrahedra in the underlying triangulation.
+
+* The quadrilateral coordinate columns must appear as the first 3*n*
+  columns of the adjusted matrix. In particular, when working in the
+  7*n*-dimensional standard normal coordinate system, the remaining
+  4*n* triangle coordinate columns must appear last.
+
+* The quadrilateral coordinate columns must be grouped by tetrahedron
+  and ordered by quadrilateral type. In other words, for each *i* =
+  0,...,*n*-1, there will be some tetrahedron *j* for which the three
+  columns 3*i*, 3*i*+1 and 3*i*+2 refer to the quadrilaterals in
+  tetrahedron *j* of types 0, 1 and 2 respectively. Phrased loosely,
+  we are allowed to reorder the tetrahedra, but not the quadrilateral
+  coordinates within each tetrahedron.
+
+* The triangle coordinate columns (if we are working in standard
+  normal coordinates) must likewise be grouped by tetrahedron, and
+  these tetrahedra must appear in the same order as for the
+  quadrilateral types. In other words, for each *i* = 0,...,*n*-1, the
+  quadrilateral columns 3*i*, 3*i*+1 and 3*i*+2 and the triangle
+  columns 3*n*+4*i*, 3*n*+4*i*+1, 3*n*+4*i*+2 and 3*n*+4*i*+3 all
+  refer to the same tetrahedron.
+
+* For angle structure coordinates, the constraints are analogous to
+  those for quadrilateral coordinates: the angle coordinates must be
+  grouped by tetrahedron and ordered by angle type, and the final
+  scaling coordinate must remain last.
+
+Python:
+    This routine returns a Python list.
+
+Returns:
+    details of the permutation describing how columns were reordered.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::columns
+static constexpr const char columns[] =
+R"doc(Returns the number of columns in this matrix.
+
+Note that, if we are imposing extra constraints through the
+LPConstraint template parameter, then there will be extra variables to
+enforce these, and so the number of columns will be larger than in the
+original matching equation matrix.
+
+Returns:
+    the number of columns.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::coordinateColumns
+static constexpr const char coordinateColumns[] =
+R"doc(Returns the number of columns that correspond to normal coordinates or
+angle structure coordinates. This is precisely the number of columns
+in the original matrix of matching equations.
+
+Returns:
+    the number of normal or angle structure coordinate columns.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::fillInitialTableaux
+static constexpr const char fillInitialTableaux[] =
+R"doc(Fills the given matrix with the contents of this matrix. This
+effectively copies this sparse but highly specialised matrix
+representation into a dense but more flexible matrix representation.
+
+Precondition:
+    The given matrix has already been initialised to size rank() *
+    columns(), and all of its elements have already been set to zero.
+    Note that this can all be arranged by calling the constructor
+    LPMatrix::LPMatrix(size_t, size_t).
+
+Parameter ``m``:
+    the matrix to fill.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::multColByRow
+static constexpr const char multColByRow[] =
+R"doc(Computes the inner product of (i) the given row of the given matrix
+with (ii) the given column of this matrix.
+
+This routine is optimised to use the sparse representation of columns
+in this matrix.
+
+Precondition:
+    The given matrix *m* has precisely rank() columns.
+
+Parameter ``m``:
+    the matrix whose row we will use in the inner product.
+
+Parameter ``mRow``:
+    the row of the matrix *m* to use in the inner product.
+
+Parameter ``thisCol``:
+    the column of this matrix to use in the inner product.
+
+Returns:
+    the resulting inner product.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::multColByRowOct
+static constexpr const char multColByRowOct[] =
+R"doc(A variant of multColByRow() that takes into account any adjustments to
+the tableaux that are required when this is a quadrilateral column
+being used to represent an octagon type.
+
+The LPData class offers support for octagonal almost normal surfaces,
+in which exactly one tetrahedron is allowed to have exactly one
+octagon type. We represent such an octagon as a _pair_ of incompatible
+quadrilaterals within the same tetrahedron. See the LPData class notes
+for details on how this works.
+
+In some settings where we are using additional constraints through the
+LPConstraint template parameter, these extra constraints behave
+differently in the presence of octagons (i.e., the coefficient of the
+octagon type is not just the sum of coefficients of the two
+constituent quadrilateral types). This routine effectively allows us
+to adjust the tableaux accordingly.
+
+Specifically: this routine computes the inner product of (i) the given
+row of the given matrix with (ii) the given column of this matrix. We
+assume that the given column of this matrix describes one of the two
+quadrilateral coordinates in some tetrahedron that together form an
+octagon type, and (via the information given by
+Constraint::octAdjustment) we implicitly adjust the coefficients of
+our extra constraints accordingly.
+
+This routine is optimised to use the sparse representation of columns
+in this matrix.
+
+This routine is not used with angle structure coordinates.
+
+Precondition:
+    The given matrix *m* has precisely rank() columns.
+
+Precondition:
+    Column *thisCol* of this matrix describes one of the two
+    quadrilateral coordinates that are being combined to form an
+    octagon type within some tetrahedron.
+
+Parameter ``m``:
+    the matrix whose row we will use in the adjusted inner product.
+
+Parameter ``mRow``:
+    the row of the matrix *m* to use in the adjusted inner product.
+
+Parameter ``thisCol``:
+    the column of this matrix to use in the adjusted inner product.
+
+Returns:
+    the resulting adjusted inner product.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::rank
+static constexpr const char rank[] =
+R"doc(Returns the rank of this matrix.
+
+Note that, if we are imposing extra constraints through the
+LPConstraint template parameter, then there will be extra variables to
+enforce these, and so the rank will be larger than the rank of the
+original matching equation matrix.
+
+Returns:
+    the matrix rank.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given matrix.
+
+It does not matter if the two matrices have different sizes, and/or
+work with different vector encodings; if so then these properties will
+be swapped also.
+
+Parameter ``other``:
+    the matrix whose contents should be swapped with this.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::system
+static constexpr const char system[] =
+R"doc(Returns the broad class of vector encodings that this tableaux works
+with. This broad class is deduced from the vector encoding that was
+passed to the class constructor, and it completely determines which
+matching equations were generated as a result.
+
+See the LPInitialTableaux class notes for more information on these
+three broad classes and how they affect the tableaux.
+
+Returns:
+    the class of vector encodings used by this tableaux.)doc";
+
+// Docstring regina::python::doc::LPInitialTableaux::tri
+static constexpr const char tri[] =
+R"doc(Returns the underlying 3-manifold triangulation from which the
+matching equations were derived.
+
+Returns:
+    the underlying triangulation.)doc";
+
+}; // struct LPInitialTableaux
+
+struct LPMatrix {
+
+// Docstring regina::python::doc::LPMatrix::__class
+static constexpr const char __class[] =
 R"doc(A matrix class for use with linear programming.
 
 This class is used in the tree traversal algorithms for enumerating
@@ -313,645 +926,15 @@ Python:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::LPSystem
-inline constexpr const char LPSystem[] =
-R"doc(Indicates which broad class of vector encodings a particular tableaux
-is designed to work with. This type is used by Regina's linear
-programming machinery, and in particular by the LPInitialTableaux
-class.
-
-By "broad class of vector encodings", we allow only three options:
-
-* _standard_ encodings, which cover all normal surface encodings that
-  include triangle coordinates, and where the tableaux holds triangle
-  and quadrilateral columns but nothing else;
-
-* _quad_ encodings, which cover all normal surface encodings that do
-  not include triangle coordinates, and where the tableaux holds
-  quadrilateral columns but nothing else;
-
-* _angle_ encodings, which cover angle structure encodings, and where
-  the tableaux holds angle columns as well as a single scaling column.
-
-When working with almost normal coordinate systems, we represent
-octagons as pairs of intersecting quadrilaterals; see the LPData class
-notes for more information on how this works. This means, for example,
-that the coordinate system NormalCoords::AlmostNormal will fall under
-the class of standard encodings, and NormalCoords::QuadOct will fall
-under the class of quad encodings.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.)doc";
-
-namespace LPConstraintType_ {
-
-// Docstring regina::python::doc::LPConstraintType_::Positive
-inline constexpr const char Positive[] =
-R"doc(Indicates a constraint that requires some linear function to be
-strictly positive.
-
-A constraint of this type would typically be enforced by calling
-LPData::constrainPositive().)doc";
-
-// Docstring regina::python::doc::LPConstraintType_::Zero
-inline constexpr const char Zero[] =
-R"doc(Indicates a constraint that requires some linear function to be zero.
-
-A constraint of this type would typically be enforced by calling
-LPData::constrainZero().)doc";
-
-}
-
-namespace LPData_ {
-
-// Docstring regina::python::doc::LPData_::__default
-inline constexpr const char __default[] =
-R"doc(Constructs a new tableaux. You _must_ call reserve() before doing
-anything else with this tableaux.)doc";
-
-// Docstring regina::python::doc::LPData_::columns
-inline constexpr const char columns[] =
-R"doc(Returns the number of columns in this tableaux.
-
-Note that, if we are imposing extra constraints through the
-LPConstraint template parameter, then there will be extra variables to
-enforce these, and so the number of columns will be larger than in the
-original matching equation matrix.
-
-Returns:
-    the number of columns.)doc";
-
-// Docstring regina::python::doc::LPData_::constrainOct
-inline constexpr const char constrainOct[] =
-R"doc(Declares that two quadrilateral coordinates within a tetrahedron are
-to be combined into a single octagon coordinate, for use with almost
-normal surfaces, and constrains the system accordingly.
-
-This constrains the system in several ways, as discussed in detail in
-the LPData class notes. In theory, we set the two quadrilateral
-coordinates to be equal, and also insist that the number of octagons
-be strictly positive. In practice, we do this through several changes
-of variable; see the LPData class notes for a detailed discussion of
-precisely how the variables and tableaux will change.
-
-This routine will work even if one of the given quadrilateral
-variables has already been deactivated, but in this case the routine
-will immediately set the system to infeasible and return.
-
-This routine is not used with angle structure coordinates.
-
-Precondition:
-    This is the first time constrainOct() has been called on this
-    tableaux. This is because this class can only handle one octagon
-    type in the entire system.
-
-Precondition:
-    Variables *quad1* and *quad2* represent different quadrilateral
-    coordinates in the same tetrahedron of the underlying
-    triangulation.
-
-.. warning::
-    If you have previously called constrainPositive() or
-    constrainOct() on one of the given variables, then these prior
-    routines will have performed a change of variable. Any new call to
-    constrainOct() involving this same variable will constrain the
-    _new_ variable, not the original, and so might not have the
-    intended effect.
-
-Parameter ``quad1``:
-    one of the two quadrilateral types that we combine to form the new
-    octagon type. This should be a column index with respect to this
-    tableaux (i.e., it must take into account any permutation of
-    columns from the original matching equations).
-
-Parameter ``quad2``:
-    the other of the two quadrilateral types that we combine to form
-    the new octagon type. Again this should be a column index with
-    respect to this tableaux.)doc";
-
-// Docstring regina::python::doc::LPData_::constrainPositive
-inline constexpr const char constrainPositive[] =
-R"doc(Constrains this system further by constraining the given variable to
-be strictly positive. We do this using a change of variable that
-effectively replaces x_pos with the new variable x'_pos = x_pos - 1
-(which we simply constrain to be non-negative as usual). See the
-LPData class notes for details.
-
-This routine will work even if the given variable has already been
-deactivated, but in this case the routine will immediately set the
-system to infeasible and return.
-
-.. warning::
-    If you have previously called constrainPositive() or
-    constrainOct() on this variable, then these prior routines will
-    have performed a change of variable. Any new call to
-    constrainPositive() on this same variable will constrain the _new_
-    variable, not the original, and so might not have the intended
-    effect.
-
-Parameter ``pos``:
-    the index of the variable that is to be constrained as positive.
-    This must be between 0 and origTableaux_->columns()-1 inclusive.
-    The index should be with respect to this tableaux (i.e., it must
-    take into account any permutation of columns from the original
-    matching equations).)doc";
-
-// Docstring regina::python::doc::LPData_::constrainZero
-inline constexpr const char constrainZero[] =
-R"doc(Constrains this system further by setting the given variable to zero
-and deactivating it. See the LPData class notes for details.
-
-This routine will work even if the given variable has already been
-deactivated (and it will do nothing in this case).
-
-.. warning::
-    If you have previously called constrainPositive() or
-    constrainOct() on this variable, then these prior routines will
-    have performed a change of variable. Any new call to
-    constraintZero() on this same variable will constraint the _new_
-    variable, not the original, and so might not have the intended
-    effect.
-
-Parameter ``pos``:
-    the index of the variable that is to be set to zero. This must be
-    between 0 and origTableaux_->columns()-1 inclusive. The index
-    should be with respect to this tableaux (i.e., it must take into
-    account any permutation of columns from the original matching
-    equations).)doc";
-
-// Docstring regina::python::doc::LPData_::coordinateColumns
-inline constexpr const char coordinateColumns[] =
-R"doc(Returns the number of columns in this tableaux that correspond to
-normal coordinates or angle structure coordinates. This is precisely
-the number of columns in the original matrix of matching equations.
-
-Returns:
-    the number of normal or angle structure coordinate columns.)doc";
-
-// Docstring regina::python::doc::LPData_::extractSolution
-inline constexpr const char extractSolution[] =
-R"doc(Extracts the values of the individual variables from the current
-basis, with some modifications (as described below). The values of the
-variables will be returned in vector form, using type *Ray*.
-
-The modifications are as follows:
-
-* We extract variables that correspond to the original matching
-  equations obtained from the underlying triangulation, _not_ the
-  current tableaux and _not_ even the original starting tableaux. In
-  other words, when we fill the resulting vector, we undo the column
-  permutation described by LPInitialTableaux::columnPerm(), and we
-  undo any changes of variable that were caused by calls to
-  constrainPositive() and/or constrainOct().
-
-* To ensure that the variables are all integers, we scale the
-  resulting vector by the smallest positive rational multiple for
-  which all elements of the vector are integers.
-
-This routine is not used as an internal part of the tree traversal
-algorithm; instead it is offered as a helper routine for
-reconstructing the normal surfaces or angle structures that result.
-
-Precondition:
-    No individual coordinate column has had more than one call to
-    either of constrainPositive() or constrainOct() (otherwise the
-    coordinate will not be correctly reconstructed). Any additional
-    columns arising from the LPConstraint template parameter are
-    exempt from this requirement.
-
-Python:
-    The type vector should be passed as a Python list of integers (for
-    example, in the enumeration of normal surfaces, there would be one
-    integer per tetrahedron, each equal to 0, 1, 2 or 3). The template
-    parameter *Ray* is taken to be Vector<Integer>.
-
-Template parameter ``Ray``:
-    the vector type to use to return the extracted values. The
-    ``std::common_type_t`` constraint on *Ray* ensures that no
-    information will be lost (e.g., through overflow) when converting
-    integers to the element type for *Ray*.
-
-Parameter ``type``:
-    the type vector corresponding to the current state of this
-    tableaux, indicating which variables were previously fixed as
-    positive via calls to constrainPositive(). This is necessary
-    because LPData does not keep such historical data on its own. The
-    order of these types should be with respect to the permuted
-    columns (i.e., it should reflect the columns as they are stored in
-    this tableaux, not the original matching equations). As a special
-    case, when extracting a strict angle structure one may pass *type*
-    = ``None``, in which case this routine will assume that _every_
-    coordinate was constrained as positive.
-
-Returns:
-    a vector containing the values of all the variables. This vector
-    will have length origTableaux_->coordinateColumns().)doc";
-
-// Docstring regina::python::doc::LPData_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given tableaux.
-
-This global routine simply calls LPData<Constraint, IntType>::swap();
-it is provided so that LPData<Constraint, IntType> meets the C++
-Swappable requirements.
-
-Parameter ``a``:
-    the first tableaux whose contents should be swapped.
-
-Parameter ``b``:
-    the second tableaux whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::LPData_::initClone
-inline constexpr const char initClone[] =
-R"doc(Initialises this tableaux to be a clone of the given tableaux. This is
-used in the tree traversal algorithm as we work our way down the
-search tree, and child nodes "inherit" tableaux from their parent
-nodes.
-
-Precondition:
-    reserve() has already been called.
-
-Parameter ``parent``:
-    the tableaux to clone.)doc";
-
-// Docstring regina::python::doc::LPData_::initStart
-inline constexpr const char initStart[] =
-R"doc(Initialises this tableaux by beginning at the original starting
-tableaux and working our way to any feasible basis.
-
-This routine also explicitly enforces the additional constraints from
-the LPConstraint template parameter (i.e., this routine is responsible
-for forcing the corresponding linear function(s) to be zero or
-strictly positive as appropriate).
-
-It is possible that a feasible basis cannot be found; you should test
-isFeasible() after running this routine to see whether this is the
-case.
-
-Precondition:
-    reserve() has already been called.)doc";
-
-// Docstring regina::python::doc::LPData_::isActive
-inline constexpr const char isActive[] =
-R"doc(Determines whether the given variable is currently active. See the
-LPData class notes for details.
-
-Parameter ``pos``:
-    the index of the variable to query. This must be between 0 and
-    origTableaux_->columns()-1 inclusive. The index should be with
-    respect to this tableaux (i.e., it must take into account any
-    permutation of columns from the original matching equations).)doc";
-
-// Docstring regina::python::doc::LPData_::isFeasible
-inline constexpr const char isFeasible[] =
-R"doc(Returns whether or not this system is feasible.
-
-A system may become infeasible when we add too many extra constraints
-on the variables (such as forcing them to be positive, or setting them
-to zero); see the LPData class notes for details on these constraints.
-
-.. warning::
-    As explained in the class notes, if this system is infeasible then
-    any queries or operations (other than calling isFeasible() itself)
-    are undefined.
-
-Returns:
-    ``True`` if this system is feasible, or ``False`` if it is
-    infeasible.)doc";
-
-// Docstring regina::python::doc::LPData_::reserve
-inline constexpr const char reserve[] =
-R"doc(Reserves enough memory for this tableaux to work with. You _must_ call
-this routine before doing anything else with this tableaux.
-
-The data in this tableaux will not be initialised, and the contents
-and behaviour of this tableaux will remain undefined until you call
-one of the initialisation routines initStart() or initClone().
-
-Parameter ``origTableaux``:
-    the original starting tableaux that holds the adjusted matrix of
-    matching equations, before the tree traversal algorithm began.)doc";
-
-// Docstring regina::python::doc::LPData_::sign
-inline constexpr const char sign[] =
-R"doc(Returns the sign of the given variable under the current basis. This
-does _not_ attempt to "undo" any changes of variable caused by prior
-calls to constrainPositive() or constrainOct(); it simply tests the
-sign of the variable in the given column of the tableaux in its
-current form.
-
-Specifically: if the given variable is inactive or non-basic, this
-routine returns zero. If the given variable is in the basis, this
-routine returns the sign of the corresponding integer on the right-
-hand side of the tableaux.
-
-Parameter ``pos``:
-    the index of the variable to query. This must be between 0 and
-    origTableaux_->columns()-1 inclusive. The index should be with
-    respect to this tableaux (i.e., it must take into account any
-    permutation of columns from the original matching equations).
-
-Returns:
-    the sign of the variable as described above; this will be either
-    1, 0 or -1.)doc";
-
-// Docstring regina::python::doc::LPData_::swap
-inline constexpr const char swap[] =
-R"doc(Swaps the contents of this and the given tableaux.
-
-It does not matter if the two tableaux have different sizes, or if one
-or both is unintialised; if so then these properties will be swapped
-also.
-
-Parameter ``other``:
-    the tableaux whose contents should be swapped with this.)doc";
-
-}
-
-namespace LPInitialTableaux_ {
-
-// Docstring regina::python::doc::LPInitialTableaux_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given matrix.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::__init
-inline constexpr const char __init[] =
-R"doc(Construts this adjusted sparse matrix of matching equations.
-
-Note that LPInitialTableaux does not copy the given triangulation; it
-merely keeps a reference to it. The triangulation should not change
-during the lifespan of this object.
-
-Precondition:
-    The given triangulation is non-empty.
-
-Exception ``InvalidArgument``:
-    It was not possible to add the extra constraints from the
-    LPConstraint template argument, due to an error which should have
-    been preventable with the right checks in advance. Such exceptions
-    are generated by the *Constraint* class, and so you should consult
-    the class documentation for your chosen *Constraint* template
-    argument to see if this is a possibility.
-
-Exception ``InvalidArgument``:
-    It was not possible to add the extra constraints from the
-    LPConstraint template argument, due to an error that was
-    "genuinely" unforseeable. Again, such exceptions are generated by
-    your chosen *Constraint* class, and you should consult its
-    documentation to see if this is a possibility.
-
-Parameter ``tri``:
-    the underlying 3-manifold triangulation.
-
-Parameter ``enc``:
-    the normal surface vector encoding that we are using for our
-    enumeration task. This may be any valid NormalEncoding object,
-    including the special angle structure encoding.
-
-Parameter ``enumeration``:
-    ``True`` if we should optimise the tableaux for a full enumeration
-    of vertex surfaces or taut angle structures, or ``False`` if we
-    should optimise the tableaux for an existence test (such as
-    searching for a non-trivial normal disc or sphere, or a strict
-    angle structure).)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::columnPerm
-inline constexpr const char columnPerm[] =
-R"doc(Returns the permutation that describes how the columns of the matching
-equation matrix were reordered. This permutation maps column numbers
-in this adjusted matching equation matrix to column numbers in the
-original (unmodified) matching equation matrix that was originally
-derived from the triangulation.
-
-The permutation is returned as an array of columns() integers, such
-that column *i* of this adjusted matrix corresponds to column
-``columnPerm()[i]`` of the original matrix.
-
-If you are imposing additional constraints through the LPConstraint
-template parameter, then the corresponding extra variables will be
-included in the permutation; however, these are never moved and will
-always remain the rightmost variables in this system (i.e., the
-columns of highest index).
-
-As well as the requirement that this is a genuine permutation of
-0,...,columns()-1, this array will also adhere to the following
-constraints. In the following discussion, *n* refers to the number of
-tetrahedra in the underlying triangulation.
-
-* The quadrilateral coordinate columns must appear as the first 3*n*
-  columns of the adjusted matrix. In particular, when working in the
-  7*n*-dimensional standard normal coordinate system, the remaining
-  4*n* triangle coordinate columns must appear last.
-
-* The quadrilateral coordinate columns must be grouped by tetrahedron
-  and ordered by quadrilateral type. In other words, for each *i* =
-  0,...,*n*-1, there will be some tetrahedron *j* for which the three
-  columns 3*i*, 3*i*+1 and 3*i*+2 refer to the quadrilaterals in
-  tetrahedron *j* of types 0, 1 and 2 respectively. Phrased loosely,
-  we are allowed to reorder the tetrahedra, but not the quadrilateral
-  coordinates within each tetrahedron.
-
-* The triangle coordinate columns (if we are working in standard
-  normal coordinates) must likewise be grouped by tetrahedron, and
-  these tetrahedra must appear in the same order as for the
-  quadrilateral types. In other words, for each *i* = 0,...,*n*-1, the
-  quadrilateral columns 3*i*, 3*i*+1 and 3*i*+2 and the triangle
-  columns 3*n*+4*i*, 3*n*+4*i*+1, 3*n*+4*i*+2 and 3*n*+4*i*+3 all
-  refer to the same tetrahedron.
-
-* For angle structure coordinates, the constraints are analogous to
-  those for quadrilateral coordinates: the angle coordinates must be
-  grouped by tetrahedron and ordered by angle type, and the final
-  scaling coordinate must remain last.
-
-Python:
-    This routine returns a Python list.
-
-Returns:
-    details of the permutation describing how columns were reordered.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::columns
-inline constexpr const char columns[] =
-R"doc(Returns the number of columns in this matrix.
-
-Note that, if we are imposing extra constraints through the
-LPConstraint template parameter, then there will be extra variables to
-enforce these, and so the number of columns will be larger than in the
-original matching equation matrix.
-
-Returns:
-    the number of columns.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::coordinateColumns
-inline constexpr const char coordinateColumns[] =
-R"doc(Returns the number of columns that correspond to normal coordinates or
-angle structure coordinates. This is precisely the number of columns
-in the original matrix of matching equations.
-
-Returns:
-    the number of normal or angle structure coordinate columns.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::fillInitialTableaux
-inline constexpr const char fillInitialTableaux[] =
-R"doc(Fills the given matrix with the contents of this matrix. This
-effectively copies this sparse but highly specialised matrix
-representation into a dense but more flexible matrix representation.
-
-Precondition:
-    The given matrix has already been initialised to size rank() *
-    columns(), and all of its elements have already been set to zero.
-    Note that this can all be arranged by calling the constructor
-    LPMatrix::LPMatrix(size_t, size_t).
-
-Parameter ``m``:
-    the matrix to fill.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given matrices.
-
-This global routine simply calls
-LPInitialTableaux<Constraint>::swap(); it is provided so that
-LPInitialTableaux<Constraint> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::multColByRow
-inline constexpr const char multColByRow[] =
-R"doc(Computes the inner product of (i) the given row of the given matrix
-with (ii) the given column of this matrix.
-
-This routine is optimised to use the sparse representation of columns
-in this matrix.
-
-Precondition:
-    The given matrix *m* has precisely rank() columns.
-
-Parameter ``m``:
-    the matrix whose row we will use in the inner product.
-
-Parameter ``mRow``:
-    the row of the matrix *m* to use in the inner product.
-
-Parameter ``thisCol``:
-    the column of this matrix to use in the inner product.
-
-Returns:
-    the resulting inner product.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::multColByRowOct
-inline constexpr const char multColByRowOct[] =
-R"doc(A variant of multColByRow() that takes into account any adjustments to
-the tableaux that are required when this is a quadrilateral column
-being used to represent an octagon type.
-
-The LPData class offers support for octagonal almost normal surfaces,
-in which exactly one tetrahedron is allowed to have exactly one
-octagon type. We represent such an octagon as a _pair_ of incompatible
-quadrilaterals within the same tetrahedron. See the LPData class notes
-for details on how this works.
-
-In some settings where we are using additional constraints through the
-LPConstraint template parameter, these extra constraints behave
-differently in the presence of octagons (i.e., the coefficient of the
-octagon type is not just the sum of coefficients of the two
-constituent quadrilateral types). This routine effectively allows us
-to adjust the tableaux accordingly.
-
-Specifically: this routine computes the inner product of (i) the given
-row of the given matrix with (ii) the given column of this matrix. We
-assume that the given column of this matrix describes one of the two
-quadrilateral coordinates in some tetrahedron that together form an
-octagon type, and (via the information given by
-Constraint::octAdjustment) we implicitly adjust the coefficients of
-our extra constraints accordingly.
-
-This routine is optimised to use the sparse representation of columns
-in this matrix.
-
-This routine is not used with angle structure coordinates.
-
-Precondition:
-    The given matrix *m* has precisely rank() columns.
-
-Precondition:
-    Column *thisCol* of this matrix describes one of the two
-    quadrilateral coordinates that are being combined to form an
-    octagon type within some tetrahedron.
-
-Parameter ``m``:
-    the matrix whose row we will use in the adjusted inner product.
-
-Parameter ``mRow``:
-    the row of the matrix *m* to use in the adjusted inner product.
-
-Parameter ``thisCol``:
-    the column of this matrix to use in the adjusted inner product.
-
-Returns:
-    the resulting adjusted inner product.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::rank
-inline constexpr const char rank[] =
-R"doc(Returns the rank of this matrix.
-
-Note that, if we are imposing extra constraints through the
-LPConstraint template parameter, then there will be extra variables to
-enforce these, and so the rank will be larger than the rank of the
-original matching equation matrix.
-
-Returns:
-    the matrix rank.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::swap
-inline constexpr const char swap[] =
-R"doc(Swaps the contents of this and the given matrix.
-
-It does not matter if the two matrices have different sizes, and/or
-work with different vector encodings; if so then these properties will
-be swapped also.
-
-Parameter ``other``:
-    the matrix whose contents should be swapped with this.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::system
-inline constexpr const char system[] =
-R"doc(Returns the broad class of vector encodings that this tableaux works
-with. This broad class is deduced from the vector encoding that was
-passed to the class constructor, and it completely determines which
-matching equations were generated as a result.
-
-See the LPInitialTableaux class notes for more information on these
-three broad classes and how they affect the tableaux.
-
-Returns:
-    the class of vector encodings used by this tableaux.)doc";
-
-// Docstring regina::python::doc::LPInitialTableaux_::tri
-inline constexpr const char tri[] =
-R"doc(Returns the underlying 3-manifold triangulation from which the
-matching equations were derived.
-
-Returns:
-    the underlying triangulation.)doc";
-
-}
-
-namespace LPMatrix_ {
-
-// Docstring regina::python::doc::LPMatrix_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::LPMatrix::__default
+static constexpr const char __default[] =
 R"doc(Creates an uninitialised matrix with no memory storage.
 
 You _must_ call reserve() and then either initClone() or
 initIdentity() before this matrix will become initialised.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::LPMatrix::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given matrix are equal.
 
 Two matrices are equal if and only if their dimensions are the same,
@@ -967,8 +950,8 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if the two matrices are equal.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::LPMatrix::__init
+static constexpr const char __init[] =
 R"doc(Creates a fully initialised *rows* by *cols* matrix with all elements
 set to zero.
 
@@ -984,8 +967,8 @@ Parameter ``cols``:
     the number of columns in the new matrix. This must be strictly
     positive.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::columns
-inline constexpr const char columns[] =
+// Docstring regina::python::doc::LPMatrix::columns
+static constexpr const char columns[] =
 R"doc(Returns the number of columns in this matrix. This relates to the
 currently assigned matrix size, not the total amount of memory that
 was originally reserved.
@@ -993,8 +976,8 @@ was originally reserved.
 Returns:
     the number of columns.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::combRow
-inline constexpr const char combRow[] =
+// Docstring regina::python::doc::LPMatrix::combRow
+static constexpr const char combRow[] =
 R"doc(Applies a particular row operation to this matrix.
 
 Specifically, row *dest* will be replaced with the linear combination:
@@ -1026,8 +1009,8 @@ Parameter ``src``:
 Parameter ``div``:
     the integer to divide the final row by. This must be non-zero.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::combRowAndNorm
-inline constexpr const char combRowAndNorm[] =
+// Docstring regina::python::doc::LPMatrix::combRowAndNorm
+static constexpr const char combRowAndNorm[] =
 R"doc(Applies a particular row operation to this matrix, and then
 normalises.
 
@@ -1059,8 +1042,8 @@ Returns:
     the positive gcd that row *dest* was scaled down by, or 0 if row
     *dest* is entirely zero.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::entry
-inline constexpr const char entry[] =
+// Docstring regina::python::doc::LPMatrix::entry
+static constexpr const char entry[] =
 R"doc(Returns a read-write reference to the given element of this matrix.
 
 Python:
@@ -1080,8 +1063,8 @@ Parameter ``col``:
     the column of the requested element. This must be between 0 and
     columns()-1 inclusive.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::entry_2
-inline constexpr const char entry_2[] =
+// Docstring regina::python::doc::LPMatrix::entry_2
+static constexpr const char entry_2[] =
 R"doc(Returns a read-only reference to the given element of this matrix.
 
 Parameter ``row``:
@@ -1092,22 +1075,8 @@ Parameter ``col``:
     the column of the requested element. This must be between 0 and
     columns()-1 inclusive.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given matrices.
-
-This global routine simply calls LPMatrix<IntType>::swap(); it is
-provided so that LPMatrix<IntType> meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::LPMatrix_::initClone
-inline constexpr const char initClone[] =
+// Docstring regina::python::doc::LPMatrix::initClone
+static constexpr const char initClone[] =
 R"doc(Initialises this matrix to a copy of the given matrix.
 
 This matrix does not yet need to be initialised, but it does need to
@@ -1128,8 +1097,8 @@ Precondition:
 Parameter ``clone``:
     the matrix to copy.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::initIdentity
-inline constexpr const char initIdentity[] =
+// Docstring regina::python::doc::LPMatrix::initIdentity
+static constexpr const char initIdentity[] =
 R"doc(Initialises this matrix to the identity matrix of the given size.
 
 This matrix does not yet need to be initialised, but it does need to
@@ -1151,16 +1120,16 @@ Parameter ``size``:
     the number of rows, and also the number of columns, that will be
     assigned to this matrix. This must be strictly positive.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::negateRow
-inline constexpr const char negateRow[] =
+// Docstring regina::python::doc::LPMatrix::negateRow
+static constexpr const char negateRow[] =
 R"doc(Negates all elements in the given row of this matrix.
 
 Parameter ``row``:
     the row whose elements should be negated. This must be between 0
     and rows()-1 inclusive.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::reserve
-inline constexpr const char reserve[] =
+// Docstring regina::python::doc::LPMatrix::reserve
+static constexpr const char reserve[] =
 R"doc(Reserves enough space to store the elements of a *maxRows* by
 *maxCols* matrix. This is just an upper bound: your matrix may end up
 using fewer elements than this, but it cannot use more.
@@ -1187,8 +1156,8 @@ Parameter ``maxCols``:
     an upper bound on the number of columns that you will need for
     this matrix. This must be strictly positive.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::rows
-inline constexpr const char rows[] =
+// Docstring regina::python::doc::LPMatrix::rows
+static constexpr const char rows[] =
 R"doc(Returns the number of rows in this matrix. This relates to the
 currently assigned matrix size, not the total amount of memory that
 was originally reserved.
@@ -1196,8 +1165,8 @@ was originally reserved.
 Returns:
     the number of rows.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::set
-inline constexpr const char set[] =
+// Docstring regina::python::doc::LPMatrix::set
+static constexpr const char set[] =
 R"doc(Python-only routine that sets the given element of this matrix.
 
 Python:
@@ -1219,8 +1188,8 @@ Parameter ``col``:
 Parameter ``value``:
     the new entry to place in the given row and column.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::LPMatrix::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given matrix.
 
 It does not matter if the two matrices have different sizes, or if one
@@ -1230,8 +1199,8 @@ also.
 Parameter ``other``:
     the matrix whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::LPMatrix_::swapRows
-inline constexpr const char swapRows[] =
+// Docstring regina::python::doc::LPMatrix::swapRows
+static constexpr const char swapRows[] =
 R"doc(Swaps the two given rows of this matrix. The two arguments *r1* and
 *r2* may be equal (in which case the matrix will be left unchanged).
 
@@ -1243,15 +1212,46 @@ Parameter ``r2``:
     the index of the second row to swap. This must be between 0 and
     rows()-1 inclusive.)doc";
 
-}
+}; // struct LPMatrix
 
-namespace LPSystem_ {
+struct LPSystem {
 
-// Docstring regina::python::doc::LPSystem_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given class of vector encodings.)doc";
+// Docstring regina::python::doc::LPSystem::__class
+static constexpr const char __class[] =
+R"doc(Indicates which broad class of vector encodings a particular tableaux
+is designed to work with. This type is used by Regina's linear
+programming machinery, and in particular by the LPInitialTableaux
+class.
 
-// Docstring regina::python::doc::LPSystem_::__eq
-inline constexpr const char __eq[] =
+By "broad class of vector encodings", we allow only three options:
+
+* _standard_ encodings, which cover all normal surface encodings that
+  include triangle coordinates, and where the tableaux holds triangle
+  and quadrilateral columns but nothing else;
+
+* _quad_ encodings, which cover all normal surface encodings that do
+  not include triangle coordinates, and where the tableaux holds
+  quadrilateral columns but nothing else;
+
+* _angle_ encodings, which cover angle structure encodings, and where
+  the tableaux holds angle columns as well as a single scaling column.
+
+When working with almost normal coordinate systems, we represent
+octagons as pairs of intersecting quadrilaterals; see the LPData class
+notes for more information on how this works. This means, for example,
+that the coordinate system NormalCoords::AlmostNormal will fall under
+the class of standard encodings, and NormalCoords::QuadOct will fall
+under the class of quad encodings.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.)doc";
+
+// Docstring regina::python::doc::LPSystem::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given class of vector encodings.)doc";
+
+// Docstring regina::python::doc::LPSystem::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same class
 of vector encodings.
 
@@ -1262,8 +1262,8 @@ Returns:
     ``True`` if and only if both objects represent the same class of
     encodings.)doc";
 
-// Docstring regina::python::doc::LPSystem_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::LPSystem::__init
+static constexpr const char __init[] =
 R"doc(Identifies which class of vector encodings the given encoding falls
 into.
 
@@ -1272,8 +1272,8 @@ Parameter ``enc``:
     NormalEncoding object, including the special angle structure
     encoding.)doc";
 
-// Docstring regina::python::doc::LPSystem_::angle
-inline constexpr const char angle[] =
+// Docstring regina::python::doc::LPSystem::angle
+static constexpr const char angle[] =
 R"doc(Identifies whether this is the class of encodings that represent angle
 structures.
 
@@ -1282,8 +1282,8 @@ Exactly one of normal() and angle() will return ``True``.
 Returns:
     ``True`` if this is the class of angle encodings.)doc";
 
-// Docstring regina::python::doc::LPSystem_::coords
-inline constexpr const char coords[] =
+// Docstring regina::python::doc::LPSystem::coords
+static constexpr const char coords[] =
 R"doc(Returns the number of coordinate columns that a tableaux will use for
 this class of vector encodings, with respect to a particular
 triangulation.
@@ -1294,8 +1294,8 @@ Parameter ``nTet``:
 Returns:
     the corresponding number of coordinate columns in the tableaux.)doc";
 
-// Docstring regina::python::doc::LPSystem_::normal
-inline constexpr const char normal[] =
+// Docstring regina::python::doc::LPSystem::normal
+static constexpr const char normal[] =
 R"doc(Identifies whether this is one of the two classes of encodings that
 represent normal or almost normal surfaces.
 
@@ -1308,8 +1308,8 @@ Returns:
     ``True`` if this is a class of normal or almost normal surface
     encodings.)doc";
 
-// Docstring regina::python::doc::LPSystem_::quad
-inline constexpr const char quad[] =
+// Docstring regina::python::doc::LPSystem::quad
+static constexpr const char quad[] =
 R"doc(Identifies whether this is the class of quad encodings.
 
 Exactly one of standard(), quad() and angle() will return ``True``.
@@ -1317,8 +1317,8 @@ Exactly one of standard(), quad() and angle() will return ``True``.
 Returns:
     ``True`` if this is the class of quad encodings.)doc";
 
-// Docstring regina::python::doc::LPSystem_::standard
-inline constexpr const char standard[] =
+// Docstring regina::python::doc::LPSystem::standard
+static constexpr const char standard[] =
 R"doc(Identifies whether this is the class of standard encodings.
 
 Exactly one of standard(), quad() and angle() will return ``True``.
@@ -1326,7 +1326,7 @@ Exactly one of standard(), quad() and angle() will return ``True``.
 Returns:
     ``True`` if this is the class of standard encodings.)doc";
 
-}
+}; // struct LPSystem
 
 } // namespace regina::python::doc
 

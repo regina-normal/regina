@@ -127,9 +127,9 @@ a new Python session.)doc");
     using EqualityType = regina::python::EqualityType;
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<EqualityType>(m, "EqualityType", "enum.Enum",
-        rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<EqualityType>(m, "EqualityType", rdoc_scope)
+    pybind11::enum_<EqualityType>(m, "EqualityType", rdoc::__class)
 #endif
         .value("ByValue", EqualityType::ByValue, rdoc::ByValue)
         .value("ByReference", EqualityType::ByReference, rdoc::ByReference)
@@ -221,9 +221,9 @@ Returns:
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::Algorithm>(m, "Algorithm", "enum.Enum",
-        rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::Algorithm>(m, "Algorithm", rdoc_scope)
+    pybind11::enum_<regina::Algorithm>(m, "Algorithm", rdoc::__class)
 #endif
         .value("Default", regina::Algorithm::Default, rdoc::Default)
         .value("Backtrack", regina::Algorithm::Backtrack, rdoc::Backtrack)
@@ -244,9 +244,9 @@ Returns:
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::Language>(m, "Language", "enum.Enum",
-        rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::Language>(m, "Language", rdoc_scope)
+    pybind11::enum_<regina::Language>(m, "Language", rdoc::__class)
 #endif
         .value("Cxx", regina::Language::Cxx, rdoc::Cxx)
         .value("Python", regina::Language::Python, rdoc::Python)
@@ -265,9 +265,9 @@ Returns:
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::TriangleType>(m, "TriangleType",
-        "enum.Enum", rdoc_scope)
+            "enum.Enum", rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::TriangleType>(m, "TriangleType", rdoc_scope)
+    pybind11::enum_<regina::TriangleType>(m, "TriangleType", rdoc::__class)
 #endif
         .value("Unknown", regina::TriangleType::Unknown, rdoc::Unknown)
         .value("Triangle", regina::TriangleType::Triangle, rdoc::Triangle)

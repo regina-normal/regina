@@ -45,7 +45,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
 
     RDOC_SCOPE_BEGIN(IntegerBase)
 
-    auto c = pybind11::class_<Int>(m, className, rdoc_scope)
+    auto c = pybind11::class_<Int>(m, className, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<long>(), rdoc::__init)
         .def(pybind11::init<const Int&>(), rdoc::__copy)
@@ -180,7 +180,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
 
     m.def("tightEncoding", static_cast<std::string(&)(Int)>(
         regina::tightEncoding), rdoc_global::tightEncoding_ReginaInteger);
-    regina::python::add_global_swap<Int>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Int, IntegerBase);
 
     RDOC_SCOPE_END
 

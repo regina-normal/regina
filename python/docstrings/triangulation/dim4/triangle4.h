@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Face
-inline constexpr const char Face[] =
+struct Face {
+
+// Docstring regina::python::doc::Face::__class
+static constexpr const char __class[] =
 R"doc(Represents a triangle in the skeleton of a 4-manifold triangulation.
 
 This is a specialisation of the generic Face class template; see the
@@ -29,10 +31,8 @@ them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
 of by the Triangulation to which they belong.)doc";
 
-namespace Face_ {
-
-// Docstring regina::python::doc::Face_::linkingSurface
-inline constexpr const char linkingSurface[] =
+// Docstring regina::python::doc::Face::linkingSurface
+static constexpr const char linkingSurface[] =
 R"doc(Returns the link of this triangle as a normal hypersurface.
 
 Constructing the link of a triangle begins with building the frontier
@@ -54,7 +54,7 @@ Returns:
     hypersurface, and *thin* is ``True`` if and only if this link is
     thin (i.e., no additional normalisation steps were required).)doc";
 
-}
+}; // struct Face
 
 } // namespace regina::python::doc
 

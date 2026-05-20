@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::LayeredLoop
-inline constexpr const char LayeredLoop[] =
+// Docstring regina::python::doc::global_swap_LayeredLoop
+inline constexpr const char global_swap_LayeredLoop[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls LayeredLoop::swap(); it is provided
+so that LayeredLoop meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct LayeredLoop {
+
+// Docstring regina::python::doc::LayeredLoop::__class
+static constexpr const char __class[] =
 R"doc(Represents a layered loop component of a triangulation.
 
 A layered loop is a layered chain of *n* tetrahedra whose bottom
@@ -47,13 +62,11 @@ StandardTriangulation subclasses. Note that the only way to create
 these objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
-namespace LayeredLoop_ {
+// Docstring regina::python::doc::LayeredLoop::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::LayeredLoop_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::LayeredLoop_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::LayeredLoop::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of layered loop.
 
@@ -73,21 +86,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered loop.)doc";
 
-// Docstring regina::python::doc::LayeredLoop_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls LayeredLoop::swap(); it is provided
-so that LayeredLoop meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::LayeredLoop_::hinge
-inline constexpr const char hinge[] =
+// Docstring regina::python::doc::LayeredLoop::hinge
+static constexpr const char hinge[] =
 R"doc(Returns the requested hinge edge of this layered loop. See the general
 class notes for further details. If there is only one hinge but
 parameter *which* is 1, ``None`` will be returned.
@@ -98,24 +98,24 @@ Parameter ``which``:
 Returns:
     the requested hinge edge.)doc";
 
-// Docstring regina::python::doc::LayeredLoop_::isTwisted
-inline constexpr const char isTwisted[] =
+// Docstring regina::python::doc::LayeredLoop::isTwisted
+static constexpr const char isTwisted[] =
 R"doc(Determines if this layered loop contains a twist. See the general
 class notes for further details.
 
 Returns:
     ``True`` if and only if this layered loop contains a twist.)doc";
 
-// Docstring regina::python::doc::LayeredLoop_::length
-inline constexpr const char length[] =
+// Docstring regina::python::doc::LayeredLoop::length
+static constexpr const char length[] =
 R"doc(Returns the length of this layered loop. See the general class notes
 for further details.
 
 Returns:
     the length of this layered loop.)doc";
 
-// Docstring regina::python::doc::LayeredLoop_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::LayeredLoop::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is a layered loop.
 
 This function returns by (smart) pointer for consistency with
@@ -129,14 +129,14 @@ Returns:
     a structure containing details of the layered loop, or ``None`` if
     the given component is not a layered loop.)doc";
 
-// Docstring regina::python::doc::LayeredLoop_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::LayeredLoop::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct LayeredLoop
 
 } // namespace regina::python::doc
 

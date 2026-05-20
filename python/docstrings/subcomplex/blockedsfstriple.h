@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::BlockedSFSTriple
-inline constexpr const char BlockedSFSTriple[] =
+// Docstring regina::python::doc::global_swap_BlockedSFSTriple
+inline constexpr const char global_swap_BlockedSFSTriple[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls BlockedSFSTriple::swap(); it is
+provided so that BlockedSFSTriple meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct BlockedSFSTriple {
+
+// Docstring regina::python::doc::BlockedSFSTriple::__class
+static constexpr const char __class[] =
 R"doc(Represents a blocked sequence of three Seifert fibred spaces joined
 along connecting tori. This is a particular type of triangulation of a
 graph manifold, formed from three saturated regions whose various
@@ -99,18 +115,16 @@ possible, even when passing or returning objects by value. Note,
 however, that the only way to create objects of this class (aside from
 copying or moving) is via the static member function recognise().)doc";
 
-namespace BlockedSFSTriple_ {
-
-// Docstring regina::python::doc::BlockedSFSTriple_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::BlockedSFSTriple::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given structure. This will induce a deep
 copy of *src*.
 
 Parameter ``src``:
     the structure to copy.)doc";
 
-// Docstring regina::python::doc::BlockedSFSTriple_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::BlockedSFSTriple::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of blocked sequence of three Seifert fibred spaces.
 
@@ -134,8 +148,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of blocked sequence of three Seifert fibred spaces.)doc";
 
-// Docstring regina::python::doc::BlockedSFSTriple_::centre
-inline constexpr const char centre[] =
+// Docstring regina::python::doc::BlockedSFSTriple::centre
+static constexpr const char centre[] =
 R"doc(Returns details of the central saturated region, as described in the
 class notes above. This is the saturated region with two boundary
 annuli, each of which is joined to one of the end regions.
@@ -143,8 +157,8 @@ annuli, each of which is joined to one of the end regions.
 Returns:
     details of the central region.)doc";
 
-// Docstring regina::python::doc::BlockedSFSTriple_::end
-inline constexpr const char end[] =
+// Docstring regina::python::doc::BlockedSFSTriple::end
+static constexpr const char end[] =
 R"doc(Returns details of the requested end region, as described in the class
 notes above. The end regions are the two saturated regions with one
 boundary annulus each, which are both joined to the central region.
@@ -157,22 +171,8 @@ Parameter ``which``:
 Returns:
     details of the requested end region.)doc";
 
-// Docstring regina::python::doc::BlockedSFSTriple_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls BlockedSFSTriple::swap(); it is
-provided so that BlockedSFSTriple meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::BlockedSFSTriple_::matchingReln
-inline constexpr const char matchingReln[] =
+// Docstring regina::python::doc::BlockedSFSTriple::matchingReln
+static constexpr const char matchingReln[] =
 R"doc(Returns the matrix describing how the given end region is joined to
 the central region. Note that if a layering is placed between the two
 respective region boundaries, then any changes to the boundary
@@ -192,8 +192,8 @@ Returns:
     the matrix describing how the requested region boundaries are
     joined.)doc";
 
-// Docstring regina::python::doc::BlockedSFSTriple_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::BlockedSFSTriple::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a blocked sequence of three
 Seifert fibred spaces, as described in the class notes above.
 
@@ -208,14 +208,14 @@ Returns:
     a structure containing details of the blocked triple, or ``None``
     if the given triangulation is not of this form.)doc";
 
-// Docstring regina::python::doc::BlockedSFSTriple_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::BlockedSFSTriple::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct BlockedSFSTriple
 
 } // namespace regina::python::doc
 

@@ -11,10 +11,8 @@
 namespace regina::python::doc {
 
 
-namespace FacetPairing_ {
-
-// Docstring regina::python::doc::FacetPairing_::global_swap
-inline constexpr const char global_swap[] =
+// Docstring regina::python::doc::global_swap_FacetPairing
+inline constexpr const char global_swap_FacetPairing[] =
 R"doc(Swaps the contents of the given facet pairings.
 
 This global routine simply calls FacetPairing<dim>::swap(); it is
@@ -27,39 +25,12 @@ Parameter ``a``:
 Parameter ``b``:
     the second facet pairing whose contents should be swapped.)doc";
 
-}
-
 namespace detail {
 
-// Docstring regina::python::doc::detail::FacetPairingBase
-inline constexpr const char FacetPairingBase[] =
-R"doc(Provides core functionality for facet pairings (that is, dual graphs)
-of *dim*-dimensional triangulations.
+struct FacetPairingBase {
 
-Such a facet pairing is represented by the class FacetPairing<dim>,
-which uses this as a base class. End users should not need to refer to
-FacetPairingBase directly.
-
-See the FacetPairing class notes for further information.
-
-Both this class and the "end user" class FacetPairing<dim> implement
-C++ move semantics, and FacetPairing<dim> also adheres to the C++
-Swappable requirement. These classes are designed to avoid deep copies
-wherever possible, even when passing or returning objects by value.
-
-Python:
-    This base class is not present, but the "end user" class
-    FacetPairing<dim> is.
-
-Template parameter ``dim``:
-    the dimension of the triangulation.)doc";
-
-}
-
-namespace detail::FacetPairingBase_ {
-
-// Docstring regina::python::doc::detail::FacetPairingBase_::__array
-inline constexpr const char __array[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::__array
+static constexpr const char __array[] =
 R"doc(Returns the other facet to which the given simplex facet is paired.
 This is a convenience operator whose behaviour is identical to that of
 dest(const FacetSpec<dim>&).
@@ -81,15 +52,38 @@ Parameter ``source``:
 Returns:
     the other facet to which the given facet is paired.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::__class
+static constexpr const char __class[] =
+R"doc(Provides core functionality for facet pairings (that is, dual graphs)
+of *dim*-dimensional triangulations.
+
+Such a facet pairing is represented by the class FacetPairing<dim>,
+which uses this as a base class. End users should not need to refer to
+FacetPairingBase directly.
+
+See the FacetPairing class notes for further information.
+
+Both this class and the "end user" class FacetPairing<dim> implement
+C++ move semantics, and FacetPairing<dim> also adheres to the C++
+Swappable requirement. These classes are designed to avoid deep copies
+wherever possible, even when passing or returning objects by value.
+
+Python:
+    This base class is not present, but the "end user" class
+    FacetPairing<dim> is.
+
+Template parameter ``dim``:
+    the dimension of the triangulation.)doc";
+
+// Docstring regina::python::doc::detail::FacetPairingBase::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given facet pairing.
 
 Parameter ``src``:
     the facet pairing to clone.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given facet pairing are identical.
 
 Parameter ``other``:
@@ -99,8 +93,8 @@ Returns:
     ``True`` if and only if this and the given facet pairing are
     identical.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::__init
+static constexpr const char __init[] =
 R"doc(Creates the facet pairing of given triangulation. This is the facet
 pairing that describes how the facets of simplices in the given
 triangulation are joined together, as described in the class notes.
@@ -111,8 +105,8 @@ Precondition:
 Parameter ``tri``:
     the triangulation whose facet pairing should be constructed.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::__init_2
+static constexpr const char __init_2[] =
 R"doc(Reads a new facet pairing from the given input stream. This routine
 reads data in the format written by textRep().
 
@@ -128,8 +122,8 @@ Exception ``InvalidInput``:
 Parameter ``in``:
     the input stream from which to read.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::canonical
-inline constexpr const char canonical[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::canonical
+static constexpr const char canonical[] =
 R"doc(Returns the canonical form of this facet pairing, along with one
 isomorphism that transforms this pairing into canonial form.
 
@@ -150,8 +144,8 @@ Returns:
     a pair (*c*, *iso*), where *c* is the canonical form and *iso* is
     one isomorphism that converts this facet pairing into *c*.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::canonicalAll
-inline constexpr const char canonicalAll[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::canonicalAll
+static constexpr const char canonicalAll[] =
 R"doc(Returns the canonical form of this facet pairing, along with the list
 of all isomorphisms that transform this pairing into canonial form.
 
@@ -175,8 +169,8 @@ Returns:
     is the list of all isomorphisms that convert this facet pairing
     into *c*.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::dest
-inline constexpr const char dest[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::dest
+static constexpr const char dest[] =
 R"doc(Returns the other facet to which the given simplex facet is paired. If
 the given facet is left deliberately unmatched, the value returned
 will be boundary (as returned by FacetSpec<dim>::isBoundary()).
@@ -195,8 +189,8 @@ Parameter ``source``:
 Returns:
     the other facet to which the given facet is paired.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::dest_2
-inline constexpr const char dest_2[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::dest_2
+static constexpr const char dest_2[] =
 R"doc(Returns the other facet to which the given simplex facet is paired. If
 the given facet is left deliberately unmatched, the value returned
 will be boundary (as returned by FacetSpec<dim>::isBoundary()).
@@ -216,8 +210,8 @@ Parameter ``facet``:
 Returns:
     the other facet to which the given facet is paired.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::divideConnected
-inline constexpr const char divideConnected[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::divideConnected
+static constexpr const char divideConnected[] =
 R"doc(Returns a cut that divides this facet pairing into two connected
 pieces, both of size at least *minSide*.
 
@@ -245,8 +239,8 @@ Returns:
     the best possible cut as described above, or ``None`` if no such
     cut exists.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::dot
-inline constexpr const char dot[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::dot
+static constexpr const char dot[] =
 R"doc(Returns a Graphviz DOT representation of the graph that describes this
 facet pairing.
 
@@ -300,8 +294,8 @@ Parameter ``labels``:
 Returns:
     the output of writeDot(), as outlined above.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::dotHeader
-inline constexpr const char dotHeader[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::dotHeader
+static constexpr const char dotHeader[] =
 R"doc(Returns header information for a Graphviz DOT file that will describe
 the graphs for one or more facet pairings. See the dot() documentation
 for further information on such graphs.
@@ -337,8 +331,8 @@ Returns:
 See also:
     http://www.graphviz.org/)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::findAllPairings
-inline constexpr const char findAllPairings[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::findAllPairings
+static constexpr const char findAllPairings[] =
 R"doc(Generates all possible facet pairings satisfying the given
 constraints. Only connected facet pairings (pairings in which each
 simplex can be reached from each other via a series of individual
@@ -426,8 +420,8 @@ Parameter ``args``:
     following the initial facet pairing argument and the optional
     automorphism argument.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::findAutomorphisms
-inline constexpr const char findAutomorphisms[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::findAutomorphisms
+static constexpr const char findAutomorphisms[] =
 R"doc(Returns the set of all combinatorial automorphisms of this facet
 pairing, assuming the pairing is already in canonical form.
 
@@ -447,8 +441,8 @@ Precondition:
 Returns:
     the list of all automorphisms.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::fromTextRep
-inline constexpr const char fromTextRep[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::fromTextRep
+static constexpr const char fromTextRep[] =
 R"doc(Reconstructs a facet pairing from a text-based representation. This
 text-based representation must be in the format produced by routine
 textRep().
@@ -464,8 +458,8 @@ Parameter ``rep``:
 Returns:
     the corresponding facet pairing.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::hasMultiEdge
-inline constexpr const char hasMultiEdge[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::hasMultiEdge
+static constexpr const char hasMultiEdge[] =
 R"doc(Determines whether the underlying graph for this facet pairing
 contains an edge of multiplicity *k*, where *k* does not need to be
 known until runtime.
@@ -490,8 +484,8 @@ Returns:
     ``True`` if and only if the underyling graph has an edge of
     multiplicity *k*.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::isCanonical
-inline constexpr const char isCanonical[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::isCanonical
+static constexpr const char isCanonical[] =
 R"doc(Determines whether this facet pairing is in canonical form.
 
 See the FacetPairing class notes for more information on isomorphisms,
@@ -505,13 +499,13 @@ Precondition:
 Returns:
     ``True`` if and only if this facet pairing is in canonical form.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::isClosed
-inline constexpr const char isClosed[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::isClosed
+static constexpr const char isClosed[] =
 R"doc(Determines whether this facet pairing is closed. A closed facet
 pairing has no unmatched facets.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::isConnected
-inline constexpr const char isConnected[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::isConnected
+static constexpr const char isConnected[] =
 R"doc(Determines whether this facet pairing is connected.
 
 A facet pairing is _connected_ if it is possible to reach any simplex
@@ -523,8 +517,8 @@ connected.
 Returns:
     ``True`` if and only if this pairing is connected.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::isUnmatched
-inline constexpr const char isUnmatched[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::isUnmatched
+static constexpr const char isUnmatched[] =
 R"doc(Determines whether the given simplex facet has been left deliberately
 unmatched.
 
@@ -539,8 +533,8 @@ Returns:
     ``True`` if the given facet has been left unmatched, or ``False``
     if the given facet is paired with some other facet.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::isUnmatched_2
-inline constexpr const char isUnmatched_2[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::isUnmatched_2
+static constexpr const char isUnmatched_2[] =
 R"doc(Determines whether the given simplex facet has been left deliberately
 unmatched.
 
@@ -556,8 +550,8 @@ Returns:
     ``True`` if the given facet has been left unmatched, or ``False``
     if the given facet is paired with some other facet.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::size
+static constexpr const char size[] =
 R"doc(Returns the number of simplices whose facets are described by this
 facet pairing.
 
@@ -568,15 +562,15 @@ Python:
 Returns:
     the number of simplices under consideration.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given facet pairing.
 
 Parameter ``other``:
     the facet pairing whose contents are to be swapped with this.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::textRep
-inline constexpr const char textRep[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::textRep
+static constexpr const char textRep[] =
 R"doc(Returns a text-based representation that can be used to reconstruct
 this facet pairing. This reconstruction is done through the routine
 fromTextRep().
@@ -589,8 +583,8 @@ The string returned will contain no newlines.
 Returns:
     a text-based representation of this facet pairing.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase_::toTextRep
-inline constexpr const char toTextRep[] =
+// Docstring regina::python::doc::detail::FacetPairingBase::toTextRep
+static constexpr const char toTextRep[] =
 R"doc(Deprecated routine that returns a text-based representation that can
 be used to reconstruct this facet pairing.
 
@@ -601,7 +595,9 @@ be used to reconstruct this facet pairing.
 Returns:
     a text-based representation of this facet pairing.)doc";
 
-}
+}; // struct FacetPairingBase
+
+} // namespace detail
 
 } // namespace regina::python::doc
 

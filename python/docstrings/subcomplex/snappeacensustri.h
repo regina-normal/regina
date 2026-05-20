@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SnapPeaCensusTri
-inline constexpr const char SnapPeaCensusTri[] =
+// Docstring regina::python::doc::global_swap_SnapPeaCensusTri
+inline constexpr const char global_swap_SnapPeaCensusTri[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls SnapPeaCensusTri::swap(); it is
+provided so that SnapPeaCensusTri meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct SnapPeaCensusTri {
+
+// Docstring regina::python::doc::SnapPeaCensusTri::__class
+static constexpr const char __class[] =
 R"doc(Represents a 3-manifold triangulation from the SnapPea cusped census.
 
 The SnapPea cusped census is the census of cusped hyperbolic
@@ -54,13 +70,11 @@ StandardTriangulation subclasses. Note that the only way to create
 these objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
-namespace SnapPeaCensusTri_ {
+// Docstring regina::python::doc::SnapPeaCensusTri::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusTri_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::SnapPeaCensusTri_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::SnapPeaCensusTri::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 triangulation from the SnapPea census.
 
@@ -82,22 +96,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same SnapPea census triangulation.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusTri_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls SnapPeaCensusTri::swap(); it is
-provided so that SnapPeaCensusTri meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::SnapPeaCensusTri_::index
-inline constexpr const char index[] =
+// Docstring regina::python::doc::SnapPeaCensusTri::index
+static constexpr const char index[] =
 R"doc(Returns the index of this triangulation within its particular section
 of the SnapPea census. Note that indices for each section begin
 counting at zero.
@@ -105,8 +105,8 @@ counting at zero.
 Returns:
     the index of this triangulation within its section.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusTri_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::SnapPeaCensusTri::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is one of the smallest
 SnapPea census triangulations.
 
@@ -127,8 +127,8 @@ Returns:
     or ``None`` if the given component is not one of the few SnapPea
     census triangulations recognised by this routine.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusTri_::section
-inline constexpr const char section[] =
+// Docstring regina::python::doc::SnapPeaCensusTri::section
+static constexpr const char section[] =
 R"doc(Returns the section of the SnapPea census to which this triangulation
 belongs. This will be one of the section constants defined in this
 class.
@@ -136,14 +136,14 @@ class.
 Returns:
     the section of the SnapPea census.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusTri_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::SnapPeaCensusTri::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct SnapPeaCensusTri
 
 } // namespace regina::python::doc
 

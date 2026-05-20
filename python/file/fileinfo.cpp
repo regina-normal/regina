@@ -39,7 +39,7 @@ using regina::FileInfo;
 void addFileInfo(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(FileInfo)
 
-    auto c = pybind11::class_<FileInfo>(m, "FileInfo", rdoc_scope)
+    auto c = pybind11::class_<FileInfo>(m, "FileInfo", rdoc::__class)
         .def(pybind11::init<const FileInfo&>(), rdoc::__copy)
         .def("pathname", &FileInfo::pathname, rdoc::pathname)
         .def("format", &FileInfo::format, rdoc::format)
@@ -54,7 +54,7 @@ void addFileInfo(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<FileInfo>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, FileInfo);
 
     RDOC_SCOPE_END
 }

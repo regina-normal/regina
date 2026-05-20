@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SnapPeaCensusManifold
-inline constexpr const char SnapPeaCensusManifold[] =
+// Docstring regina::python::doc::global_swap_SnapPeaCensusManifold
+inline constexpr const char global_swap_SnapPeaCensusManifold[] =
+R"doc(Swaps the contents of the two given SnapPea census manifolds.
+
+This global routine simply calls SnapPeaCensusManifold::swap(); it is
+provided so that SnapPeaCensusManifold meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first census manifold whose contents should be swapped.
+
+Parameter ``b``:
+    the second census manifold whose contents should be swapped.)doc";
+
+struct SnapPeaCensusManifold {
+
+// Docstring regina::python::doc::SnapPeaCensusManifold::__class
+static constexpr const char __class[] =
 R"doc(Represents a 3-manifold from the SnapPea cusped census.
 
 The SnapPea cusped census is the census of cusped hyperbolic
@@ -51,13 +67,11 @@ as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
 manifold classes.)doc";
 
-namespace SnapPeaCensusManifold_ {
+// Docstring regina::python::doc::SnapPeaCensusManifold::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given SnapPea census manifold.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusManifold_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given SnapPea census manifold.)doc";
-
-// Docstring regina::python::doc::SnapPeaCensusManifold_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::SnapPeaCensusManifold::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 3-manifold from the SnapPea census.
 
@@ -73,8 +87,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same SnapPea census manifold.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusManifold_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::SnapPeaCensusManifold::__init
+static constexpr const char __init[] =
 R"doc(Creates a new SnapPea census manifold with the given parameters.
 
 Parameter ``section``:
@@ -87,22 +101,8 @@ Parameter ``index``:
     and so this index must be between 0 and *k*-1, where *k* is the
     total number of manifolds in the given section.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusManifold_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given SnapPea census manifolds.
-
-This global routine simply calls SnapPeaCensusManifold::swap(); it is
-provided so that SnapPeaCensusManifold meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first census manifold whose contents should be swapped.
-
-Parameter ``b``:
-    the second census manifold whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::SnapPeaCensusManifold_::index
-inline constexpr const char index[] =
+// Docstring regina::python::doc::SnapPeaCensusManifold::index
+static constexpr const char index[] =
 R"doc(Returns the index of this manifold within its particular section of
 the SnapPea census. Note that indices for each section begin counting
 at zero.
@@ -110,8 +110,8 @@ at zero.
 Returns:
     the index of this manifold within its section.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusManifold_::section
-inline constexpr const char section[] =
+// Docstring regina::python::doc::SnapPeaCensusManifold::section
+static constexpr const char section[] =
 R"doc(Returns the section of the SnapPea census to which this manifold
 belongs. This will be one of the section constants defined in this
 class.
@@ -119,14 +119,14 @@ class.
 Returns:
     the section of the SnapPea census.)doc";
 
-// Docstring regina::python::doc::SnapPeaCensusManifold_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::SnapPeaCensusManifold::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given SnapPea census manifold.
 
 Parameter ``other``:
     the census manifold whose contents should be swapped with this.)doc";
 
-}
+}; // struct SnapPeaCensusManifold
 
 } // namespace regina::python::doc
 

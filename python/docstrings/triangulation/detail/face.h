@@ -11,8 +11,55 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TriangleType
-inline constexpr const char TriangleType[] =
+struct TriangleType {
+
+// Docstring regina::python::doc::TriangleType::Cone
+static constexpr const char Cone[] =
+R"doc(Specifies a triangle with two edges identified to form a cone. The
+apex of the cone is not identified with the other two vertices, and
+the base of the cone is not identified with the other two edges.)doc";
+
+// Docstring regina::python::doc::TriangleType::DunceHat
+static constexpr const char DunceHat[] =
+R"doc(Specifies a triangle with all three edges identified, some via
+orientation-preserving and some via orientation-reversing gluings.)doc";
+
+// Docstring regina::python::doc::TriangleType::Horn
+static constexpr const char Horn[] =
+R"doc(Specifies a triangle with two edges identified to form a cone, and
+with all three vertices identified. The base of the cone is not
+identified with the other two edges.)doc";
+
+// Docstring regina::python::doc::TriangleType::L31
+static constexpr const char L31[] =
+R"doc(Specifies a triangle with all three edges identified using
+orientation-reversing gluings. Note that this forms a spine for the
+lens space ``L(3,1)``.)doc";
+
+// Docstring regina::python::doc::TriangleType::Mobius
+static constexpr const char Mobius[] =
+R"doc(Specifies a triangle with two edges identified to form a Möbius band.
+The boundary of the Möbius band is not identified with the other two
+edges.)doc";
+
+// Docstring regina::python::doc::TriangleType::Parachute
+static constexpr const char Parachute[] =
+R"doc(Specifies a triangle with three identified vertices, but no edge
+identifications.)doc";
+
+// Docstring regina::python::doc::TriangleType::Scarf
+static constexpr const char Scarf[] =
+R"doc(Specifies a triangle with two identified vertices, and no other edge
+or vertex identifications.)doc";
+
+// Docstring regina::python::doc::TriangleType::Triangle
+static constexpr const char Triangle[] = R"doc(Specifies a triangle with no identified vertices or edges.)doc";
+
+// Docstring regina::python::doc::TriangleType::Unknown
+static constexpr const char Unknown[] = R"doc(Indicates that the triangle type has not yet been determined.)doc";
+
+// Docstring regina::python::doc::TriangleType::__class
+static constexpr const char __class[] =
 R"doc(The combinatorial _type_ of a triangle, which indicates how the
 vertices and edges of the triangle are identified together. Here the
 vertices of the triangle are considered unlabelled (so a relabelling
@@ -21,59 +68,14 @@ will not change the combinatorial type).
 This is the result of calling ``f.triangleType()``, where *f* is a
 2-face within a triangulation of any dimension ≥ 3.)doc";
 
-namespace TriangleType_ {
-
-// Docstring regina::python::doc::TriangleType_::Cone
-inline constexpr const char Cone[] =
-R"doc(Specifies a triangle with two edges identified to form a cone. The
-apex of the cone is not identified with the other two vertices, and
-the base of the cone is not identified with the other two edges.)doc";
-
-// Docstring regina::python::doc::TriangleType_::DunceHat
-inline constexpr const char DunceHat[] =
-R"doc(Specifies a triangle with all three edges identified, some via
-orientation-preserving and some via orientation-reversing gluings.)doc";
-
-// Docstring regina::python::doc::TriangleType_::Horn
-inline constexpr const char Horn[] =
-R"doc(Specifies a triangle with two edges identified to form a cone, and
-with all three vertices identified. The base of the cone is not
-identified with the other two edges.)doc";
-
-// Docstring regina::python::doc::TriangleType_::L31
-inline constexpr const char L31[] =
-R"doc(Specifies a triangle with all three edges identified using
-orientation-reversing gluings. Note that this forms a spine for the
-lens space ``L(3,1)``.)doc";
-
-// Docstring regina::python::doc::TriangleType_::Mobius
-inline constexpr const char Mobius[] =
-R"doc(Specifies a triangle with two edges identified to form a Möbius band.
-The boundary of the Möbius band is not identified with the other two
-edges.)doc";
-
-// Docstring regina::python::doc::TriangleType_::Parachute
-inline constexpr const char Parachute[] =
-R"doc(Specifies a triangle with three identified vertices, but no edge
-identifications.)doc";
-
-// Docstring regina::python::doc::TriangleType_::Scarf
-inline constexpr const char Scarf[] =
-R"doc(Specifies a triangle with two identified vertices, and no other edge
-or vertex identifications.)doc";
-
-// Docstring regina::python::doc::TriangleType_::Triangle
-inline constexpr const char Triangle[] = R"doc(Specifies a triangle with no identified vertices or edges.)doc";
-
-// Docstring regina::python::doc::TriangleType_::Unknown
-inline constexpr const char Unknown[] = R"doc(Indicates that the triangle type has not yet been determined.)doc";
-
-}
+}; // struct TriangleType
 
 namespace detail {
 
-// Docstring regina::python::doc::detail::FaceBase
-inline constexpr const char FaceBase[] =
+struct FaceBase {
+
+// Docstring regina::python::doc::detail::FaceBase::__class
+static constexpr const char __class[] =
 R"doc(Helper class that provides core functionality for a *subdim*-face in
 the skeleton of a *dim*-dimensional triangulation.
 
@@ -98,34 +100,8 @@ Template parameter ``dim``:
 Template parameter ``subdim``:
     the dimension of the faces that this class represents.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase
-inline constexpr const char FaceEmbeddingBase[] =
-R"doc(Helper class that provides core functionality for describing how a
-*subdim*-face of a *dim*-dimensional triangulation appears within each
-top-dimensional simplex.
-
-Each such appearance is described by a FaceEmbedding<dim, subdim>
-object, which uses this as a base class. End users should not need to
-refer to FaceEmbeddingBase directly.
-
-See the FaceEmbedding template class notes for further information.
-
-Python:
-    This base class is not present, but the "end user" class
-    FaceEmbedding<dim, subdim> is.
-
-Template parameter ``dim``:
-    the dimension of the underlying triangulation.
-
-Template parameter ``subdim``:
-    the dimension of the faces of the underlying triangulation.)doc";
-
-}
-
-namespace detail::FaceBase_ {
-
-// Docstring regina::python::doc::detail::FaceBase_::__iter__
-inline constexpr const char __iter__[] =
+// Docstring regina::python::doc::detail::FaceBase::__iter__
+static constexpr const char __iter__[] =
 R"doc(Provides Python support for iterating through all appearances of this
 face within the various top-dimensional simplices of the underlying
 triangulation.
@@ -160,8 +136,8 @@ for i in range(face.degree()):
 Returns:
     an iterator over all the appearances of this face.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::back
-inline constexpr const char back[] =
+// Docstring regina::python::doc::detail::FaceBase::back
+static constexpr const char back[] =
 R"doc(Returns the last appearance of this face within a top-dimensional
 simplex of the underlying triangulation.
 
@@ -177,8 +153,8 @@ appearances of this face on the (*dim*-1)-dimensional boundary.
 Returns:
     details of the last appearance.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::boundaryComponent
-inline constexpr const char boundaryComponent[] =
+// Docstring regina::python::doc::detail::FaceBase::boundaryComponent
+static constexpr const char boundaryComponent[] =
 R"doc(Returns the boundary component of the triangulation to which this face
 belongs.
 
@@ -198,15 +174,15 @@ Returns:
     face does not lie entirely within the boundary of the
     triangulation.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::component
-inline constexpr const char component[] =
+// Docstring regina::python::doc::detail::FaceBase::component
+static constexpr const char component[] =
 R"doc(Returns the component of the triangulation to which this face belongs.
 
 Returns:
     the component containing this face.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::degree
-inline constexpr const char degree[] =
+// Docstring regina::python::doc::detail::FaceBase::degree
+static constexpr const char degree[] =
 R"doc(Returns the degree of this face. This is the number of different ways
 in which the face appears within the various top-dimensional simplices
 of the underlying triangulation.
@@ -218,20 +194,20 @@ routine.
 Returns:
     the degree of this face.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::edge
-inline constexpr const char edge[] =
+// Docstring regina::python::doc::detail::FaceBase::edge
+static constexpr const char edge[] =
 R"doc(A dimension-specific alias for face<1>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::edgeMapping
-inline constexpr const char edgeMapping[] =
+// Docstring regina::python::doc::detail::FaceBase::edgeMapping
+static constexpr const char edgeMapping[] =
 R"doc(A dimension-specific alias for faceMapping<1>().
 
 See faceMapping() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::embedding
-inline constexpr const char embedding[] =
+// Docstring regina::python::doc::detail::FaceBase::embedding
+static constexpr const char embedding[] =
 R"doc(Returns one of the ways in which this face appears within a top-
 dimensional simplex of the underlying triangulation.
 
@@ -251,8 +227,8 @@ Parameter ``index``:
 Returns:
     details of the requested appearance.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::embeddings
-inline constexpr const char embeddings[] =
+// Docstring regina::python::doc::detail::FaceBase::embeddings
+static constexpr const char embeddings[] =
 R"doc(Returns an object that allows iteration through and random access to
 all of the ways in which this face appears within a top-dimensional
 simplex of the underlying triangulation.
@@ -299,8 +275,8 @@ Returns:
     access to the list of all appearances of this face within a top-
     dimensional simplex of the underlying triangulation.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::face
-inline constexpr const char face[] =
+// Docstring regina::python::doc::detail::FaceBase::face
+static constexpr const char face[] =
 R"doc(Returns the *lowerdim*-face of the underlying triangulation that
 appears as the given *lowerdim*-dimensional subface of this face.
 
@@ -337,8 +313,8 @@ Parameter ``face``:
 Returns:
     the corresponding *lowerdim*-face of the triangulation.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::faceMapping
-inline constexpr const char faceMapping[] =
+// Docstring regina::python::doc::detail::FaceBase::faceMapping
+static constexpr const char faceMapping[] =
 R"doc(Examines the given *lowerdim*-dimensional subface of this face, and
 returns the mapping between the underlying *lowerdim*-face of the
 triangulation and the individual vertices of this face.
@@ -401,8 +377,8 @@ Returns:
     a mapping from the vertices of the underlying *lowerdim*-face of
     the triangulation to the vertices of this *subdim*-face.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::formsCone
-inline constexpr const char formsCone[] =
+// Docstring regina::python::doc::detail::FaceBase::formsCone
+static constexpr const char formsCone[] =
 R"doc(For triangles, determines whether this face is wrapped up to form a
 cone, possibly with or without additional identifications between its
 vertices and/or edges.
@@ -417,8 +393,8 @@ cached when first computed.
 Returns:
     ``True`` if and only if this triangle forms a cone.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::formsMobiusBand
-inline constexpr const char formsMobiusBand[] =
+// Docstring regina::python::doc::detail::FaceBase::formsMobiusBand
+static constexpr const char formsMobiusBand[] =
 R"doc(For triangles, determines whether this face is wrapped up to form a
 Möbius band, possibly with or without additional identifications
 between its vertices and/or edges.
@@ -433,8 +409,8 @@ cached when first computed.
 Returns:
     ``True`` if and only if this triangle forms a Mobius band.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::front
-inline constexpr const char front[] =
+// Docstring regina::python::doc::detail::FaceBase::front
+static constexpr const char front[] =
 R"doc(Returns the first appearance of this face within a top-dimensional
 simplex of the underlying triangulation.
 
@@ -450,8 +426,8 @@ appearances of this face on the (*dim*-1)-dimensional boundary.
 Returns:
     details of the first appearance.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::hasBadIdentification
-inline constexpr const char hasBadIdentification[] =
+// Docstring regina::python::doc::detail::FaceBase::hasBadIdentification
+static constexpr const char hasBadIdentification[] =
 R"doc(Determines if this face is identified with itself under a non-identity
 permutation. For example, if this face is an edge then this routine
 tests whether the edge is identified with itself in reverse.
@@ -465,8 +441,8 @@ Returns:
     ``True`` if and only if this face is identified with itself under
     a non-identity permutation.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::hasBadLink
-inline constexpr const char hasBadLink[] =
+// Docstring regina::python::doc::detail::FaceBase::hasBadLink
+static constexpr const char hasBadLink[] =
 R"doc(Determines if this face does not have an appropriate link. See
 condition (2) in the documentation for isValid() for a full
 description of what "appropriate" means.
@@ -483,8 +459,8 @@ Returns:
     ``True`` if the link of this face is not appropriate (thereby
     making the face invalid), or ``False`` if the link is appropriate.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::inMaximalForest
-inline constexpr const char inMaximalForest[] =
+// Docstring regina::python::doc::detail::FaceBase::inMaximalForest
+static constexpr const char inMaximalForest[] =
 R"doc(Determines whether a codimension-1-face represents a dual edge in the
 maximal forest that has been chosen for the dual 1-skeleton of the
 triangulation.
@@ -515,15 +491,15 @@ Returns:
     ``True`` if and only if this (*dim*-1)-face represents a dual edge
     in the maximal forest.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::index
-inline constexpr const char index[] =
+// Docstring regina::python::doc::detail::FaceBase::index
+static constexpr const char index[] =
 R"doc(Returns the index of this face within the underlying triangulation.
 
 Returns:
     the index of this face.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::isBoundary
-inline constexpr const char isBoundary[] =
+// Docstring regina::python::doc::detail::FaceBase::isBoundary
+static constexpr const char isBoundary[] =
 R"doc(Determines if this face lies entirely on the boundary of the
 triangulation.
 
@@ -534,8 +510,8 @@ considered to be on the boundary.
 Returns:
     ``True`` if and only if this face lies on the boundary.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::isLinkOrientable
-inline constexpr const char isLinkOrientable[] =
+// Docstring regina::python::doc::detail::FaceBase::isLinkOrientable
+static constexpr const char isLinkOrientable[] =
 R"doc(Determines if the link of this face is orientable.
 
 This routine is fast: it uses pre-computed information, and does not
@@ -548,8 +524,8 @@ identification.
 Returns:
     ``True`` if and only if the link is orientable.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::isLocked
-inline constexpr const char isLocked[] =
+// Docstring regina::python::doc::detail::FaceBase::isLocked
+static constexpr const char isLocked[] =
 R"doc(Determines whether this codimension-1-face is locked.
 
 Essentially, locking a face of dimension (*dim*-1) means that the face
@@ -566,16 +542,16 @@ across an entire triangulation.
 Returns:
     ``True`` if and only if this (*dim*-1)-face is locked.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::isLoop
-inline constexpr const char isLoop[] =
+// Docstring regina::python::doc::detail::FaceBase::isLoop
+static constexpr const char isLoop[] =
 R"doc(For edges, determines whether this face is a loop. A _loop_ is an edge
 whose two endpoints are identified.
 
 Returns:
     ``True`` if and only if this edge is a loop.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::isValid
-inline constexpr const char isValid[] =
+// Docstring regina::python::doc::detail::FaceBase::isValid
+static constexpr const char isValid[] =
 R"doc(Determines if this face is valid.
 
 There are several conditions that might make a *subdim*-face of a
@@ -614,8 +590,8 @@ Returns:
     for non-standard dimensions *dim*, returns ``True`` if and only if
     this face is valid according to condition (1).)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::join
-inline constexpr const char join[] =
+// Docstring regina::python::doc::detail::FaceBase::join
+static constexpr const char join[] =
 R"doc(For boundary facets, joins this to another boundary facet using the
 given gluing.
 
@@ -662,8 +638,8 @@ Parameter ``gluing``:
     boundary facet will map to the inherent vertices of the given
     boundary facet across the new gluing.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::lock
-inline constexpr const char lock[] =
+// Docstring regina::python::doc::detail::FaceBase::lock
+static constexpr const char lock[] =
 R"doc(Locks this codimension-1-face.
 
 Essentially, locking a face of dimension (*dim*-1) means that the face
@@ -681,44 +657,44 @@ the simplices on either side of this (*dim*-1)-face.
 
 It is safe to call this function even if this face is already locked.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::pentachoron
-inline constexpr const char pentachoron[] =
+// Docstring regina::python::doc::detail::FaceBase::pentachoron
+static constexpr const char pentachoron[] =
 R"doc(A dimension-specific alias for face<4>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::pentachoronMapping
-inline constexpr const char pentachoronMapping[] =
+// Docstring regina::python::doc::detail::FaceBase::pentachoronMapping
+static constexpr const char pentachoronMapping[] =
 R"doc(A dimension-specific alias for faceMapping<4>().
 
 See faceMapping() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::tetrahedron
-inline constexpr const char tetrahedron[] =
+// Docstring regina::python::doc::detail::FaceBase::tetrahedron
+static constexpr const char tetrahedron[] =
 R"doc(A dimension-specific alias for face<3>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::tetrahedronMapping
-inline constexpr const char tetrahedronMapping[] =
+// Docstring regina::python::doc::detail::FaceBase::tetrahedronMapping
+static constexpr const char tetrahedronMapping[] =
 R"doc(A dimension-specific alias for faceMapping<3>().
 
 See faceMapping() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::triangle
-inline constexpr const char triangle[] =
+// Docstring regina::python::doc::detail::FaceBase::triangle
+static constexpr const char triangle[] =
 R"doc(A dimension-specific alias for face<2>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::triangleMapping
-inline constexpr const char triangleMapping[] =
+// Docstring regina::python::doc::detail::FaceBase::triangleMapping
+static constexpr const char triangleMapping[] =
 R"doc(A dimension-specific alias for faceMapping<2>().
 
 See faceMapping() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::triangleSubtype
-inline constexpr const char triangleSubtype[] =
+// Docstring regina::python::doc::detail::FaceBase::triangleSubtype
+static constexpr const char triangleSubtype[] =
 R"doc(For triangles, returns the vertex or edge number in this face that
 plays a special role for this triangle's combinatorial type. Note that
 only some triangle types have a special vertex or edge. The triangle
@@ -736,8 +712,8 @@ Returns:
     or -1 if this triangle's combinatorial type has no special vertex
     or edge.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::triangleType
-inline constexpr const char triangleType[] =
+// Docstring regina::python::doc::detail::FaceBase::triangleType
+static constexpr const char triangleType[] =
 R"doc(For triangles, returns the combinatorial type of this face. This will
 be one of the eight shapes described by the TriangleType enumeration,
 which indicates how the edges and vertices of the triangle are
@@ -754,15 +730,15 @@ Returns:
     the combinatorial type of this triangle. This routine will never
     return TriangleType::Unknown.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::triangulation
-inline constexpr const char triangulation[] =
+// Docstring regina::python::doc::detail::FaceBase::triangulation
+static constexpr const char triangulation[] =
 R"doc(Returns the triangulation to which this face belongs.
 
 Returns:
     a reference to the triangulation containing this face.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::unlock
-inline constexpr const char unlock[] =
+// Docstring regina::python::doc::detail::FaceBase::unlock
+static constexpr const char unlock[] =
 R"doc(Unlocks this codimension-1-face.
 
 Essentially, locking a face of dimension (*dim*-1) means that the face
@@ -779,31 +755,53 @@ See Triangulation<dim>::unlockAll() for a convenient way to unlock all
 top-dimensional simplices and (*dim*-1)-faces across an entire
 triangulation.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::vertex
-inline constexpr const char vertex[] =
+// Docstring regina::python::doc::detail::FaceBase::vertex
+static constexpr const char vertex[] =
 R"doc(A dimension-specific alias for face<0>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceBase_::vertexMapping
-inline constexpr const char vertexMapping[] =
+// Docstring regina::python::doc::detail::FaceBase::vertexMapping
+static constexpr const char vertexMapping[] =
 R"doc(A dimension-specific alias for faceMapping<0>().
 
 See faceMapping() for further information.)doc";
 
-}
+}; // struct FaceBase
 
-namespace detail::FaceEmbeddingBase_ {
+struct FaceEmbeddingBase {
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::__class
+static constexpr const char __class[] =
+R"doc(Helper class that provides core functionality for describing how a
+*subdim*-face of a *dim*-dimensional triangulation appears within each
+top-dimensional simplex.
+
+Each such appearance is described by a FaceEmbedding<dim, subdim>
+object, which uses this as a base class. End users should not need to
+refer to FaceEmbeddingBase directly.
+
+See the FaceEmbedding template class notes for further information.
+
+Python:
+    This base class is not present, but the "end user" class
+    FaceEmbedding<dim, subdim> is.
+
+Template parameter ``dim``:
+    the dimension of the underlying triangulation.
+
+Template parameter ``subdim``:
+    the dimension of the faces of the underlying triangulation.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given object.
 
 Parameter ``cloneMe``:
     the object to copy.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::__eq
+static constexpr const char __eq[] =
 R"doc(Tests whether this and the given object are identical.
 
 Here _identical_ means that two FaceEmbedding objects refer to the
@@ -830,8 +828,8 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if both object are identical.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::__init
+static constexpr const char __init[] =
 R"doc(Creates a new object containing the given data.
 
 Parameter ``simplex``:
@@ -844,8 +842,8 @@ Parameter ``vertices``:
     See vertices() for details of how this permutation should be
     structured.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase_::face
-inline constexpr const char face[] =
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::face
+static constexpr const char face[] =
 R"doc(Returns the corresponding face number of simplex(). This identifies
 which face of the top-dimensional simplex simplex() refers to the
 underlying *subdim*-face of the triangulation.
@@ -858,8 +856,8 @@ Returns:
     the corresponding face number of the top-dimensional simplex. This
     will be between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase_::simplex
-inline constexpr const char simplex[] =
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex
+static constexpr const char simplex[] =
 R"doc(Returns the top-dimensional simplex in which the underlying
 *subdim*-face of the triangulation is contained.
 
@@ -870,8 +868,8 @@ tetrahedron() in the case *dim* = 3).
 Returns:
     the top-dimensional simplex.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase_::vertices
-inline constexpr const char vertices[] =
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::vertices
+static constexpr const char vertices[] =
 R"doc(Maps vertices (0,...,*subdim*) of the underlying *subdim*-face of the
 triangulation to the corresponding vertex numbers of simplex().
 
@@ -902,7 +900,9 @@ Returns:
     a mapping from the vertices of the underlying *subdim*-face to the
     corresponding vertices of simplex().)doc";
 
-}
+}; // struct FaceEmbeddingBase
+
+} // namespace detail
 
 } // namespace regina::python::doc
 

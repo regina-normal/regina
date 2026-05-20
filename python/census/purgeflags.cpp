@@ -49,7 +49,7 @@ void addPurgeFlags(pybind11::module_& m) {
                 rdoc::NonMinimalHyp },
             { "P2Reducible", regina::CensusPurge::P2Reducible,
                 rdoc::P2Reducible }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc_global::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 

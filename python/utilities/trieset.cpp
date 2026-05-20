@@ -48,7 +48,7 @@ using Bitmask128 = Bitmask2<uint64_t>;
 void addTrieSet(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TrieSet)
 
-    auto c = pybind11::class_<TrieSet>(m, "TrieSet", rdoc_scope)
+    auto c = pybind11::class_<TrieSet>(m, "TrieSet", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const TrieSet&>(), rdoc::__copy)
         .def("swap", &TrieSet::swap, rdoc::swap)
@@ -100,7 +100,7 @@ void addTrieSet(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<TrieSet>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, TrieSet);
 
     RDOC_SCOPE_END
 }

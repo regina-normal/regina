@@ -83,7 +83,7 @@ namespace regina {
 void add3D(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Vector3D)
 
-    auto v = pybind11::class_<Vector3D<double>>(m, "Vector3D", rdoc_scope)
+    auto v = pybind11::class_<Vector3D<double>>(m, "Vector3D", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Vector3D<double>&>(), rdoc::__copy)
         .def(pybind11::init<double, double, double>(), rdoc::__init)
@@ -109,7 +109,8 @@ void add3D(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(Segment3D)
 
-    auto seg = pybind11::class_<Segment3D<double>>(m, "Segment3D", rdoc_scope)
+    auto seg = pybind11::class_<Segment3D<double>>(m, "Segment3D",
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Segment3D<double>&>(), rdoc::__copy)
         .def(pybind11::init<const Vector3D<double>&, const Vector3D<double>&>(),
@@ -130,7 +131,7 @@ void add3D(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(Matrix3D)
 
-    auto mat = pybind11::class_<Matrix3D<double>>(m, "Matrix3D", rdoc_scope)
+    auto mat = pybind11::class_<Matrix3D<double>>(m, "Matrix3D", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Matrix3D<double>&>(), rdoc::__copy)
         .def(pybind11::init<double, double, double, double, double, double,
@@ -187,7 +188,8 @@ Be aware of the inherent risks of floating-point comparisons.)doc");
 
     RDOC_SCOPE_SWITCH(Rotation3D)
 
-    auto r = pybind11::class_<Rotation3D<double>>(m, "Rotation3D", rdoc_scope)
+    auto r = pybind11::class_<Rotation3D<double>>(m, "Rotation3D",
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Rotation3D<double>&>(), rdoc::__copy)
         .def(pybind11::init<double, double, double, double>(), rdoc::__init)

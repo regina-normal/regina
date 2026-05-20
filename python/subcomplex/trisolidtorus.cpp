@@ -41,7 +41,7 @@ void addTriSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TriSolidTorus)
 
     auto c = pybind11::class_<TriSolidTorus, regina::StandardTriangulation>
-            (m, "TriSolidTorus", rdoc_scope)
+            (m, "TriSolidTorus", rdoc::__class)
         .def(pybind11::init<const TriSolidTorus&>(), rdoc::__copy)
         .def("swap", &TriSolidTorus::swap, rdoc::swap)
         .def("tetrahedron", &TriSolidTorus::tetrahedron,
@@ -58,7 +58,7 @@ void addTriSolidTorus(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<TriSolidTorus>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, TriSolidTorus);
 
     RDOC_SCOPE_END
 }

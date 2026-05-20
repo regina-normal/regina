@@ -42,7 +42,7 @@ template <int dim> requires (regina::supportedDim(dim))
 void addIsomorphism(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(Isomorphism)
 
-    auto c = pybind11::class_<Isomorphism<dim>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Isomorphism<dim>>(m, name, rdoc::__class)
         .def(pybind11::init<const Isomorphism<dim>&>(), rdoc::__copy)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def("swap", &Isomorphism<dim>::swap, rdoc::swap)
@@ -87,7 +87,7 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Isomorphism<dim>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Isomorphism<dim>, Isomorphism);
 
     RDOC_SCOPE_END
 }

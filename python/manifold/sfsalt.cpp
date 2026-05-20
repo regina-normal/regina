@@ -41,7 +41,7 @@ using regina::SFSpace;
 void addSFSAlt(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SFSAlt)
 
-    auto s = pybind11::class_<SFSAlt>(m, "SFSAlt", rdoc_scope)
+    auto s = pybind11::class_<SFSAlt>(m, "SFSAlt", rdoc::__class)
         .def(pybind11::init<const SFSpace&>(), rdoc::__init)
         .def(pybind11::init<const SFSAlt&, bool, bool>(),
             pybind11::arg(), pybind11::arg(), pybind11::arg("negate") = false,
@@ -58,7 +58,7 @@ void addSFSAlt(pybind11::module_& m) {
     regina::python::add_output_rich(s);
     regina::python::add_eq_operators(s, rdoc::__eq);
 
-    regina::python::add_global_swap<SFSAlt>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SFSAlt);
 
     RDOC_SCOPE_END
 }

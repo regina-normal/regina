@@ -50,7 +50,7 @@ using regina::Triangulation;
 void addCut(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Cut)
 
-    auto c = pybind11::class_<Cut>(m, "Cut", rdoc_scope)
+    auto c = pybind11::class_<Cut>(m, "Cut", rdoc::__class)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
         .def(pybind11::init<const Cut&>(), rdoc::__copy)
@@ -231,7 +231,7 @@ void addCut(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Cut>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Cut);
 
     RDOC_SCOPE_END
 }

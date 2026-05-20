@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SatBlock
-inline constexpr const char SatBlock[] =
+// Docstring regina::python::doc::global_swap_SatBlockModel
+inline constexpr const char global_swap_SatBlockModel[] =
+R"doc(Swaps the contents of the two given models.
+
+This global routine simply calls SatBlockModel::swap(); it is provided
+so that SatBlockModel meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first model whose contents should be swapped.
+
+Parameter ``b``:
+    the second model whose contents should be swapped.)doc";
+
+struct SatBlock {
+
+// Docstring regina::python::doc::SatBlock::__class
+static constexpr const char __class[] =
 R"doc(Represents a saturated block in a Seifert fibred space. A saturated
 block is a connected set of tetrahedra built from a subset of fibres
 (no fibres may enter or exit the boundary of the block). In addition,
@@ -79,98 +94,8 @@ SatRegion class (or in special cases the SatBlockModel class), and
 their locations in memory define them. See SatRegion for further
 details.)doc";
 
-// Docstring regina::python::doc::SatBlockModel
-inline constexpr const char SatBlockModel[] =
-R"doc(Contains an explicit triangulation of a saturated block along with the
-accompanying saturated block description.
-
-This class is designed to work with SatRegion::findStarterBlock(),
-which uses such models as potential starting points for its search.
-The ultimate aim here is to identify regions within triangulations
-that are formed by joining saturated blocks together along their
-boundary annuli.
-
-This class implements C++ move semantics and adheres to the C++
-Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value. Note,
-however, that you cannot create generate your own models manually
-(aside from copying or moving); instead you will need to use block-
-specific factory routines such as SatTriPrism::model(),
-SatCube::model(), and so on.)doc";
-
-namespace SatBlockModel_ {
-
-// Docstring regina::python::doc::SatBlockModel_::__copy
-inline constexpr const char __copy[] =
-R"doc(Creates a new copy of the given model. This will induce a deep copy of
-both the triangulation and the block structure.
-
-Parameter ``src``:
-    the model to copy.)doc";
-
-// Docstring regina::python::doc::SatBlockModel_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines whether this and the given object model saturated blocks of
-the same type with the same combinatorial parameters.
-
-This is equivalent to testing whether the blocks returned by block()
-compare as equal. See SatBlock::operator==() for further details on
-what this comparison means.
-
-Assuming you created your models using the block-specific factory
-routines (SatTriPrism::model(), SatCube::model(), etc.), if two models
-compare as equal then their triangulations should be combinatorially
-identical. At the time of writing, the converse is also true: all
-models created from non-equal blocks yield non-identical (and moreover
-non-isomorphic) triangulations.
-
-Parameter ``other``:
-    the model to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given object model the same
-    block type with the same combinatorial parameters.)doc";
-
-// Docstring regina::python::doc::SatBlockModel_::block
-inline constexpr const char block[] =
-R"doc(Returns the structure of the saturated block.
-
-Returns:
-    the block structure.)doc";
-
-// Docstring regina::python::doc::SatBlockModel_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given models.
-
-This global routine simply calls SatBlockModel::swap(); it is provided
-so that SatBlockModel meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first model whose contents should be swapped.
-
-Parameter ``b``:
-    the second model whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::SatBlockModel_::swap
-inline constexpr const char swap[] =
-R"doc(Swaps the contents of this and the given model.
-
-Parameter ``other``:
-    the model whose contents should be swapped with this.)doc";
-
-// Docstring regina::python::doc::SatBlockModel_::triangulation
-inline constexpr const char triangulation[] =
-R"doc(Returns the triangulation of the saturated block.
-
-Returns:
-    the block triangulation.)doc";
-
-}
-
-namespace SatBlock_ {
-
-// Docstring regina::python::doc::SatBlock_::__cmp
-inline constexpr const char __cmp[] =
+// Docstring regina::python::doc::SatBlock::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares saturated blocks according to an aesthetic ordering.
 
 The only purpose of this routine is to implement a consistent ordering
@@ -196,8 +121,8 @@ Returns:
     a result that indicates how this and the given block should be
     ordered with respect to each other.)doc";
 
-// Docstring regina::python::doc::SatBlock_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::SatBlock::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent saturated
 blocks of the same type with the same combinatorial parameters.
 
@@ -224,8 +149,8 @@ Returns:
     ``True`` if and only if this and the given object represent blocks
     of the same type with the same parameters.)doc";
 
-// Docstring regina::python::doc::SatBlock_::abbr
-inline constexpr const char abbr[] =
+// Docstring regina::python::doc::SatBlock::abbr
+static constexpr const char abbr[] =
 R"doc(Returns an abbreviated name or symbol for this block. This name will
 reflect the particular block type, but may not provide thorough
 details.
@@ -240,8 +165,8 @@ Parameter ``tex``:
 Returns:
     an abbreviated name for this block.)doc";
 
-// Docstring regina::python::doc::SatBlock_::adjacentAnnulus
-inline constexpr const char adjacentAnnulus[] =
+// Docstring regina::python::doc::SatBlock::adjacentAnnulus
+static constexpr const char adjacentAnnulus[] =
 R"doc(Returns which specific annulus of the adjacent block is listed as
 being adjacent to the given boundary annulus of this block.
 
@@ -257,8 +182,8 @@ Returns:
     the corresponding annulus number on the other block that is
     adjacent along this annulus.)doc";
 
-// Docstring regina::python::doc::SatBlock_::adjacentBackwards
-inline constexpr const char adjacentBackwards[] =
+// Docstring regina::python::doc::SatBlock::adjacentBackwards
+static constexpr const char adjacentBackwards[] =
 R"doc(Returns whether the adjacency along the given boundary annulus of this
 block is backwards. See the class notes for a discussion of backwards
 adjacencies.
@@ -275,8 +200,8 @@ Returns:
     ``True`` if the corresponding adjacency is backwards, or ``False``
     if it is not.)doc";
 
-// Docstring regina::python::doc::SatBlock_::adjacentBlock
-inline constexpr const char adjacentBlock[] =
+// Docstring regina::python::doc::SatBlock::adjacentBlock
+static constexpr const char adjacentBlock[] =
 R"doc(Returns the saturated block listed as being adjacent to the given
 boundary annulus of this block.
 
@@ -288,8 +213,8 @@ Returns:
     the other block adjacent along this annulus, or ``None`` if there
     is no adjacent block listed.)doc";
 
-// Docstring regina::python::doc::SatBlock_::adjacentReflected
-inline constexpr const char adjacentReflected[] =
+// Docstring regina::python::doc::SatBlock::adjacentReflected
+static constexpr const char adjacentReflected[] =
 R"doc(Returns whether the adjacency along the given boundary annulus of this
 block is reflected. See the class notes for a discussion of reflected
 adjacencies.
@@ -306,8 +231,8 @@ Returns:
     ``True`` if the corresponding adjacency is reflected, or ``False``
     if it is not.)doc";
 
-// Docstring regina::python::doc::SatBlock_::adjustSFS
-inline constexpr const char adjustSFS[] =
+// Docstring regina::python::doc::SatBlock::adjustSFS
+static constexpr const char adjustSFS[] =
 R"doc(Adjusts the given Seifert fibred space to insert the contents of this
 saturated block. In particular, the space should be adjusted as though
 an ordinary solid torus (base orbifold a disc, no twists or
@@ -350,8 +275,8 @@ Parameter ``reflect``:
     ``True`` if this block is to be reflected, or ``False`` if it
     should be inserted directly.)doc";
 
-// Docstring regina::python::doc::SatBlock_::annulus
-inline constexpr const char annulus[] =
+// Docstring regina::python::doc::SatBlock::annulus
+static constexpr const char annulus[] =
 R"doc(Returns details of the requested annulus on the boundary of this
 saturated block. Annuli are numbered from 0 to countAnnuli()-1 as
 described in the class notes.
@@ -363,15 +288,15 @@ Parameter ``which``:
 Returns:
     a reference to the requested boundary annulus.)doc";
 
-// Docstring regina::python::doc::SatBlock_::countAnnuli
-inline constexpr const char countAnnuli[] =
+// Docstring regina::python::doc::SatBlock::countAnnuli
+static constexpr const char countAnnuli[] =
 R"doc(Returns the number of annuli on the boundary of this saturated block.
 
 Returns:
     the number of boundary annuli.)doc";
 
-// Docstring regina::python::doc::SatBlock_::hasAdjacentBlock
-inline constexpr const char hasAdjacentBlock[] =
+// Docstring regina::python::doc::SatBlock::hasAdjacentBlock
+static constexpr const char hasAdjacentBlock[] =
 R"doc(Returns whether there is another saturated block listed as being
 adjacent to the given boundary annulus of this block.
 
@@ -383,8 +308,8 @@ Returns:
     ``True`` if the given boundary annulus has an adjacent block
     listed, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::SatBlock_::nextBoundaryAnnulus
-inline constexpr const char nextBoundaryAnnulus[] =
+// Docstring regina::python::doc::SatBlock::nextBoundaryAnnulus
+static constexpr const char nextBoundaryAnnulus[] =
 R"doc(Finds the next (or previous) boundary annulus around from this,
 treating all adjacent blocks as part of a single large saturated
 region.
@@ -461,8 +386,8 @@ Returns:
     reflected; and *refHoriz* is ``True`` iff the next annulus around
     is horizontally reflected (see above for details on reflections).)doc";
 
-// Docstring regina::python::doc::SatBlock_::twistedBoundary
-inline constexpr const char twistedBoundary[] =
+// Docstring regina::python::doc::SatBlock::twistedBoundary
+static constexpr const char twistedBoundary[] =
 R"doc(Is the ring of boundary annuli twisted to form a long Mobius strip?
 
 Recall from the class notes that the twist occurs between boundary
@@ -472,7 +397,82 @@ Returns:
     ``True`` if the ring of boundary annuli is twisted, or ``False``
     if not.)doc";
 
-}
+}; // struct SatBlock
+
+struct SatBlockModel {
+
+// Docstring regina::python::doc::SatBlockModel::__class
+static constexpr const char __class[] =
+R"doc(Contains an explicit triangulation of a saturated block along with the
+accompanying saturated block description.
+
+This class is designed to work with SatRegion::findStarterBlock(),
+which uses such models as potential starting points for its search.
+The ultimate aim here is to identify regions within triangulations
+that are formed by joining saturated blocks together along their
+boundary annuli.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value. Note,
+however, that you cannot create generate your own models manually
+(aside from copying or moving); instead you will need to use block-
+specific factory routines such as SatTriPrism::model(),
+SatCube::model(), and so on.)doc";
+
+// Docstring regina::python::doc::SatBlockModel::__copy
+static constexpr const char __copy[] =
+R"doc(Creates a new copy of the given model. This will induce a deep copy of
+both the triangulation and the block structure.
+
+Parameter ``src``:
+    the model to copy.)doc";
+
+// Docstring regina::python::doc::SatBlockModel::__eq
+static constexpr const char __eq[] =
+R"doc(Determines whether this and the given object model saturated blocks of
+the same type with the same combinatorial parameters.
+
+This is equivalent to testing whether the blocks returned by block()
+compare as equal. See SatBlock::operator==() for further details on
+what this comparison means.
+
+Assuming you created your models using the block-specific factory
+routines (SatTriPrism::model(), SatCube::model(), etc.), if two models
+compare as equal then their triangulations should be combinatorially
+identical. At the time of writing, the converse is also true: all
+models created from non-equal blocks yield non-identical (and moreover
+non-isomorphic) triangulations.
+
+Parameter ``other``:
+    the model to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given object model the same
+    block type with the same combinatorial parameters.)doc";
+
+// Docstring regina::python::doc::SatBlockModel::block
+static constexpr const char block[] =
+R"doc(Returns the structure of the saturated block.
+
+Returns:
+    the block structure.)doc";
+
+// Docstring regina::python::doc::SatBlockModel::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given model.
+
+Parameter ``other``:
+    the model whose contents should be swapped with this.)doc";
+
+// Docstring regina::python::doc::SatBlockModel::triangulation
+static constexpr const char triangulation[] =
+R"doc(Returns the triangulation of the saturated block.
+
+Returns:
+    the block triangulation.)doc";
+
+}; // struct SatBlockModel
 
 } // namespace regina::python::doc
 

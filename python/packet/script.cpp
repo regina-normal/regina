@@ -31,7 +31,7 @@
 #include <pybind11/pybind11.h>
 #include "packet/script.h"
 #include "../helpers.h"
-#include "../docstrings/packet/packet.h" // for Packet_::append
+#include "../docstrings/packet/packet.h" // for Packet::append
 #include "../docstrings/packet/script.h"
 
 using pybind11::overload_cast;
@@ -41,7 +41,7 @@ void addScript(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Script)
 
     auto c = pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
-            m, "Script", rdoc_scope)
+            m, "Script", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Script&>(), rdoc::__copy)
         .def("swap", &Script::swap, rdoc::swap)
@@ -50,7 +50,7 @@ void addScript(pybind11::module_& m) {
         // We define Packet::append() again, since otherwise this is
         // hidden by the binding for Script::append().
         .def("append", &regina::Packet::append,
-            regina::python::doc::Packet_::append)
+            regina::python::doc::Packet::append)
         .def("append", &Script::append, rdoc::append)
         .def("countVariables", &Script::countVariables, rdoc::countVariables)
         .def("variableName", &Script::variableName, rdoc::variableName)
@@ -97,7 +97,7 @@ void addScript(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::packet_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Script>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Script);
 
     RDOC_SCOPE_END
 }

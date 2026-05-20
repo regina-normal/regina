@@ -11,21 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::AngleAlg
-inline constexpr const char AngleAlg[] =
-R"doc(Represents options and variants of algorithms for enumerating various
-types of angle structures on 3-manifold triangulations. This
-enumeration type is used with angle structure enumeration routines,
-such as the AngleStructures class constructor.
-
-These values can be combined using the bitwise OR operator (resulting
-in an object of type ``Flags<AngleAlg>``). In particular, if a
-hypersurface enumeration function takes an argument of type
-``Flags<AngleAlg>``, then you can pass a single AngleAlg constant, or
-a bitwise combination of such constants ``(flag1 | flag2)``, or empty
-braces ``{}`` to indicate no flags at all (which is equivalent to
-passing ``AngleAlg::Default``).)doc";
-
 // Docstring regina::python::doc::__bor
 inline constexpr const char __bor[] =
 R"doc(Returns the bitwise OR of the two given flags.
@@ -39,10 +24,10 @@ Parameter ``rhs``:
 Returns:
     the combination of both flags.)doc";
 
-namespace AngleAlg_ {
+struct AngleAlg {
 
-// Docstring regina::python::doc::AngleAlg_::Custom
-inline constexpr const char Custom[] =
+// Docstring regina::python::doc::AngleAlg::Custom
+static constexpr const char Custom[] =
 R"doc(Indicates that an angle structure list was built using a customised
 algorithm. In such cases, no further details on the algorithm are
 available.
@@ -50,8 +35,8 @@ available.
 If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
-// Docstring regina::python::doc::AngleAlg_::DD
-inline constexpr const char DD[] =
+// Docstring regina::python::doc::AngleAlg::DD
+static constexpr const char DD[] =
 R"doc(When enumerating vertex or taut angle structures, this flag indicates
 that a modified double description method should be used.
 
@@ -60,14 +45,14 @@ vertex angle structures (not just taut structures).
 
 This flag is incompatible with Tree.)doc";
 
-// Docstring regina::python::doc::AngleAlg_::Default
-inline constexpr const char Default[] =
+// Docstring regina::python::doc::AngleAlg::Default
+static constexpr const char Default[] =
 R"doc(An empty flag, indicating to an enumeration routine that it should use
 its default behaviour. The numeric value of this flag is zero (i.e.,
 it has no effect when combined with other flags using bitwise OR).)doc";
 
-// Docstring regina::python::doc::AngleAlg_::Legacy
-inline constexpr const char Legacy[] =
+// Docstring regina::python::doc::AngleAlg::Legacy
+static constexpr const char Legacy[] =
 R"doc(Indicates that an angle structure list was enumerated using an older
 version of Regina (6.0.1 or earlier).
 
@@ -78,8 +63,8 @@ information is available.
 If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
-// Docstring regina::python::doc::AngleAlg_::Tree
-inline constexpr const char Tree[] =
+// Docstring regina::python::doc::AngleAlg::Tree
+static constexpr const char Tree[] =
 R"doc(When enumerating taut angle structures, this flag indicates that the
 tree traversal algorithm should be used.
 
@@ -95,7 +80,22 @@ knot theory and 3-manifold topology", Algorithmica 65 (2013), pp.
 
 This flag is incompatible with DD.)doc";
 
-}
+// Docstring regina::python::doc::AngleAlg::__class
+static constexpr const char __class[] =
+R"doc(Represents options and variants of algorithms for enumerating various
+types of angle structures on 3-manifold triangulations. This
+enumeration type is used with angle structure enumeration routines,
+such as the AngleStructures class constructor.
+
+These values can be combined using the bitwise OR operator (resulting
+in an object of type ``Flags<AngleAlg>``). In particular, if a
+hypersurface enumeration function takes an argument of type
+``Flags<AngleAlg>``, then you can pass a single AngleAlg constant, or
+a bitwise combination of such constants ``(flag1 | flag2)``, or empty
+braces ``{}`` to indicate no flags at all (which is equivalent to
+passing ``AngleAlg::Default``).)doc";
+
+}; // struct AngleAlg
 
 } // namespace regina::python::doc
 

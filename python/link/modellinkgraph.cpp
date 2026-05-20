@@ -50,12 +50,12 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
             { "NoTwists", regina::GraphConstraint::NoTwists, rdoc::NoTwists },
             { "SingleTraversal", regina::GraphConstraint::SingleTraversal,
                 rdoc::SingleTraversal }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc_global::__bor);
 
     RDOC_SCOPE_SWITCH(ModelLinkGraphArc)
 
     auto a = pybind11::class_<ModelLinkGraphArc>(m, "ModelLinkGraphArc",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<ModelLinkGraphNode*, int>(), rdoc::__init)
         .def(pybind11::init<const ModelLinkGraphArc&>(), rdoc::__copy)
@@ -80,7 +80,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(ModelLinkGraphNode)
 
     auto n = pybind11::class_<ModelLinkGraphNode>(m, "ModelLinkGraphNode",
-            rdoc_scope)
+            rdoc::__class)
         .def("index", &ModelLinkGraphNode::index, rdoc::index)
         .def("arc", &ModelLinkGraphNode::arc, rdoc::arc)
         .def("adj", &ModelLinkGraphNode::adj, rdoc::adj)
@@ -94,7 +94,8 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
 
     RDOC_SCOPE_SWITCH(ModelLinkGraph)
 
-    auto g = pybind11::class_<ModelLinkGraph>(m, "ModelLinkGraph", rdoc_scope)
+    auto g = pybind11::class_<ModelLinkGraph>(m, "ModelLinkGraph",
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const regina::Link&>(), rdoc::__init)
         .def(pybind11::init<const std::string&>(), rdoc::__init_2)
@@ -161,7 +162,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_tight_encoding(g);
     regina::python::add_eq_operators(g, rdoc::__eq);
 
-    regina::python::add_global_swap<ModelLinkGraph>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, ModelLinkGraph);
 
     regina::python::addStdView<decltype(ModelLinkGraph().nodes())>(internal,
         "ModelLinkGraph_nodes");
@@ -169,7 +170,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(ModelLinkGraphCells)
 
     auto c = pybind11::class_<ModelLinkGraphCells>(m, "ModelLinkGraphCells",
-            rdoc_scope)
+            rdoc::__class)
         .def("countCells", &ModelLinkGraphCells::countCells, rdoc::countCells)
         .def("countEdges", &ModelLinkGraphCells::countEdges, rdoc::countEdges)
         .def("countArcs", &ModelLinkGraphCells::countArcs, rdoc::countArcs)

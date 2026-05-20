@@ -43,7 +43,7 @@ using regina::Rational;
 void addCyclotomic(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Cyclotomic)
 
-    auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic", rdoc_scope)
+    auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, int>(), rdoc::__init_2)
@@ -97,7 +97,7 @@ void addCyclotomic(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Cyclotomic>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Cyclotomic);
 
     RDOC_SCOPE_END
 }

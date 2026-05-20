@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::IsoSigBinary
-inline constexpr const char IsoSigBinary[] =
+// Docstring regina::python::doc::global_swap_IsoSigData
+inline constexpr const char global_swap_IsoSigData[] =
+R"doc(Swaps the contents of the given triangulation component data sets.
+
+This global routine simply calls ``IsoSigData<generation,
+dim>::swap()``; it is provided so that IsoSigData meets the C++
+Swappable requirements.
+
+Parameter ``a``:
+    the first component data set whose contents should be swapped.
+
+Parameter ``b``:
+    the second component data set whose contents should be swapped.)doc";
+
+struct IsoSigBinary {
+
+// Docstring regina::python::doc::IsoSigBinary::__class
+static constexpr const char __class[] =
 R"doc(Encodes isomorphism signatures using small-memory byte-based
 encodings. This encoding method is _only_ available for second-
 generation signatures, not first-generation signatures.
@@ -46,8 +62,94 @@ Python:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::IsoSigClassic
-inline constexpr const char IsoSigClassic[] =
+// Docstring regina::python::doc::IsoSigBinary::asString
+static constexpr const char asString[] =
+R"doc(Re-encodes the given binary signature as a string-based second-
+generation signature (using the IsoSigPrintable encoding), which uses
+only printable characters from the 7-bit ASCII range.
+
+Calling ``printable(sig)`` is significantly more efficient than
+calling ``Triangulation<dim>::fromSig(sig).neoSig()`` (with an
+appropriate orientation argument if necessary), and should give the
+same result.
+
+If *sig* is an oriented signature, then this re-encoding will preserve
+the orientation.
+
+Precondition:
+    The argument *sig* is indeed a second-generation isomorphism
+    signature of a <i>dim</i/>-dimensional triangulation, encoded via
+    IsoSigBinary. This will _not_ be checked thoroughly (though some
+    minimal checks will be done).
+
+Python:
+    Python does not support C++ templates. Instead, the dimension
+    *dim* should be passed as a second runtime argument; for example,
+    ``IsoSigBinary.asString(sig, 3)``.
+
+Exception ``InvalidArgument``:
+    It was detected that *sig* was not a valid second-generation
+    isomorphism signature of a <i>dim</i/>-dimensional triangulation
+    encoded via IsoSigBinary. Again, this will not be checked
+    thoroughly; this exception will only be thrown if the violation is
+    sufficiently obvious that it is picked up during the re-encoding
+    process.
+
+Parameter ``sig``:
+    the second-generation signature of some <i>dim</i/>-dimensional
+    triangulation, encoded as a byte sequence using the IsoSigBinary
+    encoding.
+
+Returns:
+    the second-generation signature of the same triangulation, encoded
+    as a printable string using the IsoSigPrintable encoding.)doc";
+
+// Docstring regina::python::doc::IsoSigBinary::encode
+static constexpr const char encode[] =
+R"doc(Encodes a single connected component of a *dim*-dimensional
+triangulation as a second-generation isomorphism signature.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the given gluings table encoded as a second-generation signature.)doc";
+
+// Docstring regina::python::doc::IsoSigBinary::encodeEmpty
+static constexpr const char encodeEmpty[] =
+R"doc(Encodes the isomorphism signature of the empty triangulation.
+
+For IsoSigBinary (unlike Regina's string-based encodings), this will
+simply be an empty sequence.
+
+Returns:
+    the isomorphism signature of the empty triangulation.)doc";
+
+// Docstring regina::python::doc::IsoSigBinary::length
+static constexpr const char length[] =
+R"doc(Precomputes the length of the second-generation isomorphism signature
+that encodes the given connected component.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the length of the second-generation signature that encodes *data*.)doc";
+
+}; // struct IsoSigBinary
+
+struct IsoSigClassic {
+
+// Docstring regina::python::doc::IsoSigClassic::__class
+static constexpr const char __class[] =
 R"doc(A slow isomorphism signature type that is consistent with the original
 isomorphism signatures that were first introduced in Regina 4.90.
 
@@ -89,8 +191,61 @@ Python:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::IsoSigData1
-inline constexpr const char IsoSigData1[] =
+// Docstring regina::python::doc::IsoSigClassic::__init
+static constexpr const char __init[] =
+R"doc(Initialises this "iterator" to the first candidate pair ``(s, p)`` for
+the given triangulation component.
+
+Parameter ``component``:
+    the triangulation component that we are examining.
+
+Parameter ``oriented``:
+    ``True`` if you are creating an oriented signature, or ``False``
+    if you are creating an unoriented signature.)doc";
+
+// Docstring regina::python::doc::IsoSigClassic::next
+static constexpr const char next[] =
+R"doc(Advances this "iterator" to the next candidate pair ``(s, p)``.
+
+Precondition:
+    This "iterator" is holding a valid candidate pair ``(s, p)``; that
+    is, next() has not yet returned ``False``.
+
+Returns:
+    ``True`` if this was successful, or ``False`` if there are no more
+    candidate pairs.)doc";
+
+// Docstring regina::python::doc::IsoSigClassic::perm
+static constexpr const char perm[] =
+R"doc(Returns the current starting labelling *p* of the vertices of the
+current starting simplex *s*. This maps the vertices of *s* to the
+"canonical" labels ``0,1,...,dim``.
+
+Precondition:
+    This "iterator" is holding a valid candidate pair ``(s, p)``; that
+    is, next() has not yet returned ``False``.
+
+Returns:
+    the starting labelling *p*.)doc";
+
+// Docstring regina::python::doc::IsoSigClassic::simplex
+static constexpr const char simplex[] =
+R"doc(Returns the index of the current starting simplex *s* within the
+relevant triangulation component.
+
+Precondition:
+    This "iterator" is holding a valid candidate pair ``(s, p)``; that
+    is, next() has not yet returned ``False``.
+
+Returns:
+    the index within the component of the starting simplex *s*.)doc";
+
+}; // struct IsoSigClassic
+
+struct IsoSigData1 {
+
+// Docstring regina::python::doc::IsoSigData1::__class
+static constexpr const char __class[] =
 R"doc(Holds the combinatorial data required to reconstruct a single non-
 empty connected component of a *dim*-dimensional triangulation, up to
 relabelling, for use with first-generation isomorphism signatures as
@@ -180,8 +335,189 @@ possible, even when passing or returning objects by value.
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::IsoSigData2
-inline constexpr const char IsoSigData2[] =
+// Docstring regina::python::doc::IsoSigData1::__copy
+static constexpr const char __copy[] = R"doc(Makes a new deep copy of the given data set.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::__eq
+static constexpr const char __eq[] =
+R"doc(Determines whether this and the given triangulation component data
+hold identical information.
+
+Returns:
+    ``True`` if and only if this and the given data are identical.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::__init
+static constexpr const char __init[] =
+R"doc(Allocates space for a data set for the given triangulation component.
+
+The arrays that make up this data set will be initialised to the
+correct sizes, but the individual array elements will be left
+uninitialised. You will need to call fillFrom() before this data set
+can be used (i.e., before any other methods are called).
+
+Parameter ``component``:
+    the triangulation component that we intend to encode.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::adjacentGluings
+static constexpr const char adjacentGluings[] =
+R"doc(Gives read-only access to the array of gluing permutations, as
+described in the class notes.
+
+The length of this array will be the number of facets of top-
+dimensional simplices of type 2 (as described in the class notes).
+
+Each element of this array holds the ordered ``S_n`` index of the
+gluing permutation for the relevant facet. Note that, in constrast to
+second-generation signatures, here we used the ordered ``S_n`` index
+and not the plain ``S_n`` index.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing permutations.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::adjacentSimplices
+static constexpr const char adjacentSimplices[] =
+R"doc(Gives read-only access to the array of gluing destinations, as
+described in the class notes.
+
+The length of this array will be the number of facets of top-
+dimensional simplices of type 2 (as described in the class notes).
+
+Each element of this array corresponds to some facet *f* of type 2,
+and indicates the index of the top-dimensional simplex containing the
+partner facet to which *f* is glued.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing destinations.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::facetTypes
+static constexpr const char facetTypes[] =
+R"doc(Gives read-only access to the array of facet types, as described in
+the class notes.
+
+This will be an array of integers 0, 1 or 2, corresponding to the
+facets of top-dimensional simplices that we step through in order as
+described in the class notes. Facets that are glued to "old" partner
+facets (i.e., facets that represent internal `(dim-1)`-faces of the
+triangulation and have already been seen from the other side) are not
+represented at all in this array.
+
+Each integer in the array indicates whether a particular facet of a
+top-dimensional simplex is boundary (0), glued to a "new" partner
+facet of a previously-unseen simplex (1), or glued to a "new" partner
+facet belonging to a simplex that has already been seen before (2).
+
+The length of the array will be the total number of `(dim-1)`-faces in
+the triangulation component being encoded.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of facet types.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::fillFrom
+static constexpr const char fillFrom[] =
+R"doc(Determines the (unique) canonical labelling of the triangulation
+component for a particular choice of simplex 0 and vertices
+``0,...,dim``, and fills this structure with the corresponding
+compressed gluings table.
+
+See the class notes for full details on canonical labellings. In the
+gluings table that we build here, *simplex* will be labelled as
+simplex 0, and its vertices ``vertices[0],...,vertices[dim]`` will be
+labelled as vertices ``0,...,dim``.
+
+This routine may be (and typically will be) called many times for
+different choices of *simplex* and *vertices*; this is perfectly safe,
+and each subsequent call to fillFrom() will overwrite the previously-
+stored gluings table.
+
+Precondition:
+    The given simplex belongs to the triangulation component that was
+    originally passed to the IsoSigData constructor.
+
+Precondition:
+    If the isomorphism *relabelling* is non-null, then it must have
+    been constructed for *size* top-dimensional simplices, where
+    *size* is the size of the entire _triangulation_, not just the
+    component being encoded.
+
+Parameter ``simplex``:
+    any top-dimensional simplex in the triangulation component being
+    encoded.
+
+Parameter ``vertices``:
+    any ordering of the vertices of the given simplex.
+
+Parameter ``relabelling``:
+    if non-null, this isomorphism will be filled with the isomorphism
+    from the original triangulation to the canonical labelling. If the
+    underlying triangulation has multiple components, then only the
+    information relating to this component will be changed; other
+    simplex/vertex images in *relabelling* will be left untouched.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::hasLocks
+static constexpr const char hasLocks[] =
+R"doc(Indicates whether the triangulation component being encoded has any
+simplex or facet locks.
+
+This will be ``True`` if and only if the array returned by locks() is
+non-empty.
+
+Returns:
+    a reference to the (possibly empty) array of lock masks.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::locks
+static constexpr const char locks[] =
+R"doc(Gives read-only access to the array of lock masks, as described in the
+class notes.
+
+If the triangulation component being encoded has no simplex or facet
+locks, then this will be an empty array. Otherwise it will be an array
+whose length is the total number of top-dimensional simplices in the
+component, and whose elements are the lock masks for the individual
+simplices (as indicated by `Simplex<dim>`::lockMask()`).
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of lock masks.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::size
+static constexpr const char size[] =
+R"doc(Returns the total number of top-dimensional simplices in the connected
+triangulation component that this data set describes.
+
+Returns:
+    the total number of top-dimensional simplices.)doc";
+
+// Docstring regina::python::doc::IsoSigData1::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given triangulation component data.
+
+This routine will behave correctly if *other* is in fact this data
+set.
+
+Parameter ``other``:
+    the component data whose contents should be swapped with this.)doc";
+
+}; // struct IsoSigData1
+
+struct IsoSigData2 {
+
+// Docstring regina::python::doc::IsoSigData2::__class
+static constexpr const char __class[] =
 R"doc(Holds the combinatorial data required to reconstruct a single non-
 empty connected component of a *dim*-dimensional triangulation, up to
 relabelling, for use with second-generation isomorphism signatures as
@@ -274,8 +610,218 @@ possible, even when passing or returning objects by value.
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::IsoSigDegrees
-inline constexpr const char IsoSigDegrees[] =
+// Docstring regina::python::doc::IsoSigData2::__cmp
+static constexpr const char __cmp[] =
+R"doc(Compares two sets of triangulation component data. Such comparisons
+are used by the signature algorithm when choosing a minimal canonical
+labelling, and also when choosing an ordering of components in
+disconnected triangulations.
+
+This generates all of the usual comparison operators, including ``<``,
+``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the component data to compare with this.
+
+Returns:
+    the result of the comparison between this and the given data.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::__copy
+static constexpr const char __copy[] = R"doc(Makes a new deep copy of the given data set.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::__eq
+static constexpr const char __eq[] =
+R"doc(Determines whether this and the given triangulation component data
+hold identical information.
+
+Returns:
+    ``True`` if and only if this and the given data are identical.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::adjacentGluings
+static constexpr const char adjacentGluings[] =
+R"doc(Gives read-only access to the array of gluing permutations, as
+described in the class notes.
+
+The length of this array will be the number of non-boundary facets of
+top-dimensional simplices of type B (as described in the class notes).
+
+Each element of this array holds the ``S_n`` index of the gluing
+permutation for the relevant facet. Note that, in contrast to first-
+generation signatures, here we use the plain ``S_n`` index and not the
+ordered ``S_n`` index.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing permutations.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::adjacentSimplices
+static constexpr const char adjacentSimplices[] =
+R"doc(Gives read-only access to the array of gluing destinations, as
+described in the class notes.
+
+The length of this array will be the number of facets of top-
+dimensional simplices of type B (as described in the class notes).
+
+Each element of this array corresponds to some facet *f* of type B,
+and indicates the index of the top-dimensional simplex containing the
+partner facet to which *f* is glued, or ``size()`` if *f* is a
+boundary facet.
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of gluing destinations.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::countFacetBits
+static constexpr const char countFacetBits[] =
+R"doc(Returns the precise length of the bitmask of facet types, as returned
+by facetTypes(). This will be the total number of `(dim-1)`-faces in
+the underlying triangulation component, as described in the class
+notes.
+
+This routine is provided because IsoSigData does not keep a reference
+to the component itself, and because Bitmask does not encode its
+precise length.
+
+Returns:
+    the length of the bitmask of facet types.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::facetTypes
+static constexpr const char facetTypes[] =
+R"doc(Gives read-only access to the bitmask of facet types, as described in
+the class notes.
+
+The bits correspond to the facets of top-dimensional simplices that we
+step through as described in the class notes, but are stored in
+_reverse_ order; this ensures that ``Bitmask::numericalComp()`` treats
+the first facet (not the last) as most significant. Facets that are
+glued to "old" partner facets (i.e., facets that represent internal
+`(dim-1)`-faces of the triangulation and have already been seen from
+the other side) are not represented at all in this bitmask.
+
+Each bit is set if and only if the corresponding facet is of type B
+(i.e., either boundary, or glued to a "new" partner facet belonging to
+a simplex that has already been seen before).
+
+The length of the bitmask will be the total number of `(dim-1)`-faces
+in the triangulation component being described.
+
+Python:
+    This routine returns a deep copy (not a reference), for
+    consistency with the array-based query routines in this class.
+
+Returns:
+    a reference to the bitmask of facet types.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::hasLocks
+static constexpr const char hasLocks[] =
+R"doc(Indicates whether the triangulation component being encoded has any
+simplex or facet locks.
+
+This will be ``True`` if and only if the array returned by locks() is
+non-empty.
+
+Returns:
+    ``True`` if and only if there are simplex and/or facet locks.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::isOriented
+static constexpr const char isOriented[] =
+R"doc(Determines whether the labelling that this data set encodes is
+oriented.
+
+This will be ``True`` if and only if all permutations in
+adjacentGluings() are odd.
+
+Returns:
+    ``True`` if and only if this labelling is oriented.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::locks
+static constexpr const char locks[] =
+R"doc(Gives read-only access to the array of lock masks, as described in the
+class notes.
+
+If the triangulation component being encoded has no simplex or facet
+locks, then this will be an empty array. Otherwise it will be an array
+whose length is the total number of top-dimensional simplices in the
+component, and whose elements are the lock masks for the individual
+simplices (as indicated by `Simplex<dim>`::lockMask()`).
+
+Python:
+    This routine returns a deep copy (not a reference), in the form of
+    a Python list.
+
+Returns:
+    a reference to the array of lock masks.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::minimal
+static constexpr const char minimal[] =
+R"doc(Chooses a canonical labelling for the given triangulation component
+that minimises the compressed gluings table.
+
+The minimisation will use the inherent ordering of IsoSigData.
+
+Python:
+    Python does not support C++ templates. Instead, you should pass
+    *Type* as the first runtime argument; that is, ``minimal(type,
+    component, oriented, relabelling)``.
+
+Template parameter ``Type``:
+    an isomorphism signature type, which will be used to determine
+    which labellings are considered "canonical".
+
+Parameter ``component``:
+    the triangulation component that this data set should represent.
+
+Parameter ``oriented``:
+    indicates whether we are building an oriented isomorphism
+    signature (``True``), or an unoriented signature (``False``). If
+    this is ``True`` and if *comp* is oriented, then the relabelling
+    that is chosen will be orientation-preserving.
+
+Parameter ``relabelling``:
+    if non-null, this isomorphism will be filled with the isomorphism
+    from the original triangulation to the chosen labelling. If the
+    underlying triangulation has multiple components, then only the
+    information relating to this component will be changed; other
+    simplex/vertex images in *relabelling* will be left untouched.
+
+Returns:
+    the data set that describes the minimal labelling, as described
+    above.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::size
+static constexpr const char size[] =
+R"doc(Returns the total number of top-dimensional simplices in the connected
+triangulation component that this data set describes.
+
+Returns:
+    the total number of top-dimensional simplices.)doc";
+
+// Docstring regina::python::doc::IsoSigData2::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given triangulation component data.
+
+This routine will behave correctly if *other* is in fact this data
+set.
+
+Parameter ``other``:
+    the component data whose contents should be swapped with this.)doc";
+
+}; // struct IsoSigData2
+
+struct IsoSigDegrees {
+
+// Docstring regina::python::doc::IsoSigDegrees::__class
+static constexpr const char __class[] =
 R"doc(A faster isomorphism signature type based on degree sequences of
 *subdim*-faces.
 
@@ -317,8 +863,61 @@ Python:
     you do not need any extra arguments since this signature type is
     the default.)doc";
 
-// Docstring regina::python::doc::IsoSigPrintable
-inline constexpr const char IsoSigPrintable[] =
+// Docstring regina::python::doc::IsoSigDegrees::__init
+static constexpr const char __init[] =
+R"doc(Initialises this "iterator" to the first candidate pair ``(s, p)`` for
+the given triangulation component.
+
+Parameter ``component``:
+    the triangulation component that we are examining.
+
+Parameter ``oriented``:
+    ``True`` if you are creating an oriented signature, or ``False``
+    if you are creating an unoriented signature.)doc";
+
+// Docstring regina::python::doc::IsoSigDegrees::next
+static constexpr const char next[] =
+R"doc(Advances this "iterator" to the next candidate pair ``(s, p)``.
+
+Precondition:
+    This "iterator" is holding a valid candidate pair ``(s, p)``; that
+    is, next() has not yet returned ``False``.
+
+Returns:
+    ``True`` if this was successful, or ``False`` if there are no more
+    candidate pairs.)doc";
+
+// Docstring regina::python::doc::IsoSigDegrees::perm
+static constexpr const char perm[] =
+R"doc(Returns the current starting labelling *p* of the vertices of the
+current starting simplex *s*. This maps the vertices of *s* to the
+"canonical" labels ``0,1,...,dim``.
+
+Precondition:
+    This "iterator" is holding a valid candidate pair ``(s, p)``; that
+    is, next() has not yet returned ``False``.
+
+Returns:
+    the starting labelling *p*.)doc";
+
+// Docstring regina::python::doc::IsoSigDegrees::simplex
+static constexpr const char simplex[] =
+R"doc(Returns the index of the current starting simplex *s* within the
+relevant triangulation component.
+
+Precondition:
+    This "iterator" is holding a valid candidate pair ``(s, p)``; that
+    is, next() has not yet returned ``False``.
+
+Returns:
+    the index within the component of the starting simplex *s*.)doc";
+
+}; // struct IsoSigDegrees
+
+struct IsoSigPrintable {
+
+// Docstring regina::python::doc::IsoSigPrintable::__class
+static constexpr const char __class[] =
 R"doc(Encodes both first-generation and second-generation isomorphism
 signatures as printable strings. This is the default encoding used by
 both ``Triangulation<dim>::isoSig()`` and
@@ -363,731 +962,8 @@ Python:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-// Docstring regina::python::doc::IsoSigPrintableLockFree
-inline constexpr const char IsoSigPrintableLockFree[] =
-R"doc(Encodes both first-generation and second-generation isomorphism
-signatures as printable strings, ignoring any simplex and/or facet
-locks.
-
-Like IsoSigPrintable, this encoding represents an isomorphism
-signature as a ``std::string`` using only printable characters from
-the 7-bit ASCII range. For first-generation signatures, this is
-exactly the same as the printable encoding that was used with Regina ≤
-7.3.x, before locks were implemented.
-
-See the IsoSigEncoding concept documentation for general details on
-encodings for isomorphism signatures.
-
-This class is designed to be used as a template parameter for
-signature routines in the class ``Triangulation<dim>``, including
-``isoSig()``, ``neoSig()``, ``isoSigDetail()``, and
-``neoSigDetail()``. Typical users would have no need to call any
-functions from this encoding class directly.
-
-Python:
-    To use this encoding in Python, pass IsoSigPrintableLockFree as a
-    runtime argument to the relevant ``Triangulation<dim>`` signature
-    function (e.g., ``isoSig()`` or ``neoSig()``).
-
-.. warning::
-    The API for this class or function has not yet been finalised.
-    This means that the interface may change in new versions of
-    Regina, without maintaining backward compatibility. If you use
-    this class directly in your own code, please check the detailed
-    changelog with each new release to see if you need to make changes
-    to your code.)doc";
-
-namespace IsoSigBinary_ {
-
-// Docstring regina::python::doc::IsoSigBinary_::asString
-inline constexpr const char asString[] =
-R"doc(Re-encodes the given binary signature as a string-based second-
-generation signature (using the IsoSigPrintable encoding), which uses
-only printable characters from the 7-bit ASCII range.
-
-Calling ``printable(sig)`` is significantly more efficient than
-calling ``Triangulation<dim>::fromSig(sig).neoSig()`` (with an
-appropriate orientation argument if necessary), and should give the
-same result.
-
-If *sig* is an oriented signature, then this re-encoding will preserve
-the orientation.
-
-Precondition:
-    The argument *sig* is indeed a second-generation isomorphism
-    signature of a <i>dim</i/>-dimensional triangulation, encoded via
-    IsoSigBinary. This will _not_ be checked thoroughly (though some
-    minimal checks will be done).
-
-Python:
-    Python does not support C++ templates. Instead, the dimension
-    *dim* should be passed as a second runtime argument; for example,
-    ``IsoSigBinary.asString(sig, 3)``.
-
-Exception ``InvalidArgument``:
-    It was detected that *sig* was not a valid second-generation
-    isomorphism signature of a <i>dim</i/>-dimensional triangulation
-    encoded via IsoSigBinary. Again, this will not be checked
-    thoroughly; this exception will only be thrown if the violation is
-    sufficiently obvious that it is picked up during the re-encoding
-    process.
-
-Parameter ``sig``:
-    the second-generation signature of some <i>dim</i/>-dimensional
-    triangulation, encoded as a byte sequence using the IsoSigBinary
-    encoding.
-
-Returns:
-    the second-generation signature of the same triangulation, encoded
-    as a printable string using the IsoSigPrintable encoding.)doc";
-
-// Docstring regina::python::doc::IsoSigBinary_::encode
-inline constexpr const char encode[] =
-R"doc(Encodes a single connected component of a *dim*-dimensional
-triangulation as a second-generation isomorphism signature.
-
-Precondition:
-    The given component is non-empty, and uses a canonical labelling
-    in the sense described in the IsoSigData class notes.
-
-Parameter ``data``:
-    the compressed gluings table for the component to encode.
-
-Returns:
-    the given gluings table encoded as a second-generation signature.)doc";
-
-// Docstring regina::python::doc::IsoSigBinary_::encodeEmpty
-inline constexpr const char encodeEmpty[] =
-R"doc(Encodes the isomorphism signature of the empty triangulation.
-
-For IsoSigBinary (unlike Regina's string-based encodings), this will
-simply be an empty sequence.
-
-Returns:
-    the isomorphism signature of the empty triangulation.)doc";
-
-// Docstring regina::python::doc::IsoSigBinary_::length
-inline constexpr const char length[] =
-R"doc(Precomputes the length of the second-generation isomorphism signature
-that encodes the given connected component.
-
-Precondition:
-    The given component is non-empty, and uses a canonical labelling
-    in the sense described in the IsoSigData class notes.
-
-Parameter ``data``:
-    the compressed gluings table for the component to encode.
-
-Returns:
-    the length of the second-generation signature that encodes *data*.)doc";
-
-}
-
-namespace IsoSigClassic_ {
-
-// Docstring regina::python::doc::IsoSigClassic_::__init
-inline constexpr const char __init[] =
-R"doc(Initialises this "iterator" to the first candidate pair ``(s, p)`` for
-the given triangulation component.
-
-Parameter ``component``:
-    the triangulation component that we are examining.
-
-Parameter ``oriented``:
-    ``True`` if you are creating an oriented signature, or ``False``
-    if you are creating an unoriented signature.)doc";
-
-// Docstring regina::python::doc::IsoSigClassic_::next
-inline constexpr const char next[] =
-R"doc(Advances this "iterator" to the next candidate pair ``(s, p)``.
-
-Precondition:
-    This "iterator" is holding a valid candidate pair ``(s, p)``; that
-    is, next() has not yet returned ``False``.
-
-Returns:
-    ``True`` if this was successful, or ``False`` if there are no more
-    candidate pairs.)doc";
-
-// Docstring regina::python::doc::IsoSigClassic_::perm
-inline constexpr const char perm[] =
-R"doc(Returns the current starting labelling *p* of the vertices of the
-current starting simplex *s*. This maps the vertices of *s* to the
-"canonical" labels ``0,1,...,dim``.
-
-Precondition:
-    This "iterator" is holding a valid candidate pair ``(s, p)``; that
-    is, next() has not yet returned ``False``.
-
-Returns:
-    the starting labelling *p*.)doc";
-
-// Docstring regina::python::doc::IsoSigClassic_::simplex
-inline constexpr const char simplex[] =
-R"doc(Returns the index of the current starting simplex *s* within the
-relevant triangulation component.
-
-Precondition:
-    This "iterator" is holding a valid candidate pair ``(s, p)``; that
-    is, next() has not yet returned ``False``.
-
-Returns:
-    the index within the component of the starting simplex *s*.)doc";
-
-}
-
-namespace IsoSigData1_ {
-
-// Docstring regina::python::doc::IsoSigData1_::__copy
-inline constexpr const char __copy[] = R"doc(Makes a new deep copy of the given data set.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines whether this and the given triangulation component data
-hold identical information.
-
-Returns:
-    ``True`` if and only if this and the given data are identical.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::__init
-inline constexpr const char __init[] =
-R"doc(Allocates space for a data set for the given triangulation component.
-
-The arrays that make up this data set will be initialised to the
-correct sizes, but the individual array elements will be left
-uninitialised. You will need to call fillFrom() before this data set
-can be used (i.e., before any other methods are called).
-
-Parameter ``component``:
-    the triangulation component that we intend to encode.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::adjacentGluings
-inline constexpr const char adjacentGluings[] =
-R"doc(Gives read-only access to the array of gluing permutations, as
-described in the class notes.
-
-The length of this array will be the number of facets of top-
-dimensional simplices of type 2 (as described in the class notes).
-
-Each element of this array holds the ordered ``S_n`` index of the
-gluing permutation for the relevant facet. Note that, in constrast to
-second-generation signatures, here we used the ordered ``S_n`` index
-and not the plain ``S_n`` index.
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of gluing permutations.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::adjacentSimplices
-inline constexpr const char adjacentSimplices[] =
-R"doc(Gives read-only access to the array of gluing destinations, as
-described in the class notes.
-
-The length of this array will be the number of facets of top-
-dimensional simplices of type 2 (as described in the class notes).
-
-Each element of this array corresponds to some facet *f* of type 2,
-and indicates the index of the top-dimensional simplex containing the
-partner facet to which *f* is glued.
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of gluing destinations.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::facetTypes
-inline constexpr const char facetTypes[] =
-R"doc(Gives read-only access to the array of facet types, as described in
-the class notes.
-
-This will be an array of integers 0, 1 or 2, corresponding to the
-facets of top-dimensional simplices that we step through in order as
-described in the class notes. Facets that are glued to "old" partner
-facets (i.e., facets that represent internal `(dim-1)`-faces of the
-triangulation and have already been seen from the other side) are not
-represented at all in this array.
-
-Each integer in the array indicates whether a particular facet of a
-top-dimensional simplex is boundary (0), glued to a "new" partner
-facet of a previously-unseen simplex (1), or glued to a "new" partner
-facet belonging to a simplex that has already been seen before (2).
-
-The length of the array will be the total number of `(dim-1)`-faces in
-the triangulation component being encoded.
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of facet types.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::fillFrom
-inline constexpr const char fillFrom[] =
-R"doc(Determines the (unique) canonical labelling of the triangulation
-component for a particular choice of simplex 0 and vertices
-``0,...,dim``, and fills this structure with the corresponding
-compressed gluings table.
-
-See the class notes for full details on canonical labellings. In the
-gluings table that we build here, *simplex* will be labelled as
-simplex 0, and its vertices ``vertices[0],...,vertices[dim]`` will be
-labelled as vertices ``0,...,dim``.
-
-This routine may be (and typically will be) called many times for
-different choices of *simplex* and *vertices*; this is perfectly safe,
-and each subsequent call to fillFrom() will overwrite the previously-
-stored gluings table.
-
-Precondition:
-    The given simplex belongs to the triangulation component that was
-    originally passed to the IsoSigData constructor.
-
-Precondition:
-    If the isomorphism *relabelling* is non-null, then it must have
-    been constructed for *size* top-dimensional simplices, where
-    *size* is the size of the entire _triangulation_, not just the
-    component being encoded.
-
-Parameter ``simplex``:
-    any top-dimensional simplex in the triangulation component being
-    encoded.
-
-Parameter ``vertices``:
-    any ordering of the vertices of the given simplex.
-
-Parameter ``relabelling``:
-    if non-null, this isomorphism will be filled with the isomorphism
-    from the original triangulation to the canonical labelling. If the
-    underlying triangulation has multiple components, then only the
-    information relating to this component will be changed; other
-    simplex/vertex images in *relabelling* will be left untouched.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::hasLocks
-inline constexpr const char hasLocks[] =
-R"doc(Indicates whether the triangulation component being encoded has any
-simplex or facet locks.
-
-This will be ``True`` if and only if the array returned by locks() is
-non-empty.
-
-Returns:
-    a reference to the (possibly empty) array of lock masks.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::locks
-inline constexpr const char locks[] =
-R"doc(Gives read-only access to the array of lock masks, as described in the
-class notes.
-
-If the triangulation component being encoded has no simplex or facet
-locks, then this will be an empty array. Otherwise it will be an array
-whose length is the total number of top-dimensional simplices in the
-component, and whose elements are the lock masks for the individual
-simplices (as indicated by `Simplex<dim>`::lockMask()`).
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of lock masks.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::size
-inline constexpr const char size[] =
-R"doc(Returns the total number of top-dimensional simplices in the connected
-triangulation component that this data set describes.
-
-Returns:
-    the total number of top-dimensional simplices.)doc";
-
-// Docstring regina::python::doc::IsoSigData1_::swap
-inline constexpr const char swap[] =
-R"doc(Swaps the contents of this and the given triangulation component data.
-
-This routine will behave correctly if *other* is in fact this data
-set.
-
-Parameter ``other``:
-    the component data whose contents should be swapped with this.)doc";
-
-}
-
-namespace IsoSigData2_ {
-
-// Docstring regina::python::doc::IsoSigData2_::__cmp
-inline constexpr const char __cmp[] =
-R"doc(Compares two sets of triangulation component data. Such comparisons
-are used by the signature algorithm when choosing a minimal canonical
-labelling, and also when choosing an ordering of components in
-disconnected triangulations.
-
-This generates all of the usual comparison operators, including ``<``,
-``<=``, ``>``, and ``>=``.
-
-Python:
-    This spaceship operator ``x <=> y`` is not available, but the
-    other comparison operators that it generates _are_ available.
-
-Parameter ``rhs``:
-    the component data to compare with this.
-
-Returns:
-    the result of the comparison between this and the given data.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::__copy
-inline constexpr const char __copy[] = R"doc(Makes a new deep copy of the given data set.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines whether this and the given triangulation component data
-hold identical information.
-
-Returns:
-    ``True`` if and only if this and the given data are identical.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::adjacentGluings
-inline constexpr const char adjacentGluings[] =
-R"doc(Gives read-only access to the array of gluing permutations, as
-described in the class notes.
-
-The length of this array will be the number of non-boundary facets of
-top-dimensional simplices of type B (as described in the class notes).
-
-Each element of this array holds the ``S_n`` index of the gluing
-permutation for the relevant facet. Note that, in contrast to first-
-generation signatures, here we use the plain ``S_n`` index and not the
-ordered ``S_n`` index.
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of gluing permutations.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::adjacentSimplices
-inline constexpr const char adjacentSimplices[] =
-R"doc(Gives read-only access to the array of gluing destinations, as
-described in the class notes.
-
-The length of this array will be the number of facets of top-
-dimensional simplices of type B (as described in the class notes).
-
-Each element of this array corresponds to some facet *f* of type B,
-and indicates the index of the top-dimensional simplex containing the
-partner facet to which *f* is glued, or ``size()`` if *f* is a
-boundary facet.
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of gluing destinations.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::countFacetBits
-inline constexpr const char countFacetBits[] =
-R"doc(Returns the precise length of the bitmask of facet types, as returned
-by facetTypes(). This will be the total number of `(dim-1)`-faces in
-the underlying triangulation component, as described in the class
-notes.
-
-This routine is provided because IsoSigData does not keep a reference
-to the component itself, and because Bitmask does not encode its
-precise length.
-
-Returns:
-    the length of the bitmask of facet types.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::facetTypes
-inline constexpr const char facetTypes[] =
-R"doc(Gives read-only access to the bitmask of facet types, as described in
-the class notes.
-
-The bits correspond to the facets of top-dimensional simplices that we
-step through as described in the class notes, but are stored in
-_reverse_ order; this ensures that ``Bitmask::numericalComp()`` treats
-the first facet (not the last) as most significant. Facets that are
-glued to "old" partner facets (i.e., facets that represent internal
-`(dim-1)`-faces of the triangulation and have already been seen from
-the other side) are not represented at all in this bitmask.
-
-Each bit is set if and only if the corresponding facet is of type B
-(i.e., either boundary, or glued to a "new" partner facet belonging to
-a simplex that has already been seen before).
-
-The length of the bitmask will be the total number of `(dim-1)`-faces
-in the triangulation component being described.
-
-Python:
-    This routine returns a deep copy (not a reference), for
-    consistency with the array-based query routines in this class.
-
-Returns:
-    a reference to the bitmask of facet types.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::hasLocks
-inline constexpr const char hasLocks[] =
-R"doc(Indicates whether the triangulation component being encoded has any
-simplex or facet locks.
-
-This will be ``True`` if and only if the array returned by locks() is
-non-empty.
-
-Returns:
-    ``True`` if and only if there are simplex and/or facet locks.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::isOriented
-inline constexpr const char isOriented[] =
-R"doc(Determines whether the labelling that this data set encodes is
-oriented.
-
-This will be ``True`` if and only if all permutations in
-adjacentGluings() are odd.
-
-Returns:
-    ``True`` if and only if this labelling is oriented.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::locks
-inline constexpr const char locks[] =
-R"doc(Gives read-only access to the array of lock masks, as described in the
-class notes.
-
-If the triangulation component being encoded has no simplex or facet
-locks, then this will be an empty array. Otherwise it will be an array
-whose length is the total number of top-dimensional simplices in the
-component, and whose elements are the lock masks for the individual
-simplices (as indicated by `Simplex<dim>`::lockMask()`).
-
-Python:
-    This routine returns a deep copy (not a reference), in the form of
-    a Python list.
-
-Returns:
-    a reference to the array of lock masks.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::minimal
-inline constexpr const char minimal[] =
-R"doc(Chooses a canonical labelling for the given triangulation component
-that minimises the compressed gluings table.
-
-The minimisation will use the inherent ordering of IsoSigData.
-
-Python:
-    Python does not support C++ templates. Instead, you should pass
-    *Type* as the first runtime argument; that is, ``minimal(type,
-    component, oriented, relabelling)``.
-
-Template parameter ``Type``:
-    an isomorphism signature type, which will be used to determine
-    which labellings are considered "canonical".
-
-Parameter ``component``:
-    the triangulation component that this data set should represent.
-
-Parameter ``oriented``:
-    indicates whether we are building an oriented isomorphism
-    signature (``True``), or an unoriented signature (``False``). If
-    this is ``True`` and if *comp* is oriented, then the relabelling
-    that is chosen will be orientation-preserving.
-
-Parameter ``relabelling``:
-    if non-null, this isomorphism will be filled with the isomorphism
-    from the original triangulation to the chosen labelling. If the
-    underlying triangulation has multiple components, then only the
-    information relating to this component will be changed; other
-    simplex/vertex images in *relabelling* will be left untouched.
-
-Returns:
-    the data set that describes the minimal labelling, as described
-    above.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::size
-inline constexpr const char size[] =
-R"doc(Returns the total number of top-dimensional simplices in the connected
-triangulation component that this data set describes.
-
-Returns:
-    the total number of top-dimensional simplices.)doc";
-
-// Docstring regina::python::doc::IsoSigData2_::swap
-inline constexpr const char swap[] =
-R"doc(Swaps the contents of this and the given triangulation component data.
-
-This routine will behave correctly if *other* is in fact this data
-set.
-
-Parameter ``other``:
-    the component data whose contents should be swapped with this.)doc";
-
-}
-
-namespace IsoSigData_ {
-
-// Docstring regina::python::doc::IsoSigData_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given triangulation component data sets.
-
-This global routine simply calls ``IsoSigData<generation,
-dim>::swap()``; it is provided so that IsoSigData meets the C++
-Swappable requirements.
-
-Parameter ``a``:
-    the first component data set whose contents should be swapped.
-
-Parameter ``b``:
-    the second component data set whose contents should be swapped.)doc";
-
-}
-
-namespace IsoSigDegrees_ {
-
-// Docstring regina::python::doc::IsoSigDegrees_::__init
-inline constexpr const char __init[] =
-R"doc(Initialises this "iterator" to the first candidate pair ``(s, p)`` for
-the given triangulation component.
-
-Parameter ``component``:
-    the triangulation component that we are examining.
-
-Parameter ``oriented``:
-    ``True`` if you are creating an oriented signature, or ``False``
-    if you are creating an unoriented signature.)doc";
-
-// Docstring regina::python::doc::IsoSigDegrees_::next
-inline constexpr const char next[] =
-R"doc(Advances this "iterator" to the next candidate pair ``(s, p)``.
-
-Precondition:
-    This "iterator" is holding a valid candidate pair ``(s, p)``; that
-    is, next() has not yet returned ``False``.
-
-Returns:
-    ``True`` if this was successful, or ``False`` if there are no more
-    candidate pairs.)doc";
-
-// Docstring regina::python::doc::IsoSigDegrees_::perm
-inline constexpr const char perm[] =
-R"doc(Returns the current starting labelling *p* of the vertices of the
-current starting simplex *s*. This maps the vertices of *s* to the
-"canonical" labels ``0,1,...,dim``.
-
-Precondition:
-    This "iterator" is holding a valid candidate pair ``(s, p)``; that
-    is, next() has not yet returned ``False``.
-
-Returns:
-    the starting labelling *p*.)doc";
-
-// Docstring regina::python::doc::IsoSigDegrees_::simplex
-inline constexpr const char simplex[] =
-R"doc(Returns the index of the current starting simplex *s* within the
-relevant triangulation component.
-
-Precondition:
-    This "iterator" is holding a valid candidate pair ``(s, p)``; that
-    is, next() has not yet returned ``False``.
-
-Returns:
-    the index within the component of the starting simplex *s*.)doc";
-
-}
-
-namespace IsoSigPrintableLockFree_ {
-
-// Docstring regina::python::doc::IsoSigPrintableLockFree_::charsPerPerm
-inline constexpr const char charsPerPerm[] =
-R"doc(The number of characters that we use in our encoding to represent a
-single gluing permutation. This must be large enough to encode an
-index into Perm<dim+1>::Sn.
-
-Python:
-    Since Python does not support C++ templates, this constant is
-    accessible via a function
-    ``IsoSigPrintableLockFree.charsPerPerm(dim)``.)doc";
-
-// Docstring regina::python::doc::IsoSigPrintableLockFree_::encode
-inline constexpr const char encode[] =
-R"doc(Encodes a single connected component of a *dim*-dimensional
-triangulation as a first-generation isomorphism signature.
-
-Precondition:
-    The given component is non-empty, and uses a canonical labelling
-    in the sense described in the IsoSigData class notes.
-
-Parameter ``data``:
-    the compressed gluings table for the component to encode.
-
-Returns:
-    the given gluings table encoded as a first-generation signature.)doc";
-
-// Docstring regina::python::doc::IsoSigPrintableLockFree_::encode_2
-inline constexpr const char encode_2[] =
-R"doc(Encodes a single connected component of a *dim*-dimensional
-triangulation as a second-generation isomorphism signature.
-
-Precondition:
-    The given component is non-empty, and uses a canonical labelling
-    in the sense described in the IsoSigData class notes.
-
-Parameter ``data``:
-    the compressed gluings table for the component to encode.
-
-Returns:
-    the given gluings table encoded as a second-generation signature.)doc";
-
-// Docstring regina::python::doc::IsoSigPrintableLockFree_::encodeEmpty
-inline constexpr const char encodeEmpty[] =
-R"doc(Encodes the isomorphism signature of the empty *dim*-dimensional
-triangulation.
-
-Like IsoSigPrintable, this does _not_ return an empty signature for
-this; instead it returns the non-empty string ``a``.
-
-Returns:
-    the isomorphism signature of the empty triangulation.)doc";
-
-// Docstring regina::python::doc::IsoSigPrintableLockFree_::length
-inline constexpr const char length[] =
-R"doc(Precomputes the length of the first-generation isomorphism signature
-that encodes the given connected component.
-
-Precondition:
-    The given component is non-empty, and uses a canonical labelling
-    in the sense described in the IsoSigData class notes.
-
-Parameter ``data``:
-    the compressed gluings table for the component to encode.
-
-Returns:
-    the length of the first-generation signature that encodes *data*.)doc";
-
-// Docstring regina::python::doc::IsoSigPrintableLockFree_::length_2
-inline constexpr const char length_2[] =
-R"doc(Precomputes the length of the second-generation isomorphism signature
-that encodes the given connected component.
-
-Precondition:
-    The given component is non-empty, and uses a canonical labelling
-    in the sense described in the IsoSigData class notes.
-
-Parameter ``data``:
-    the compressed gluings table for the component to encode.
-
-Returns:
-    the length of the second-generation signature that encodes *data*.)doc";
-
-}
-
-namespace IsoSigPrintable_ {
-
-// Docstring regina::python::doc::IsoSigPrintable_::charsPerPerm
-inline constexpr const char charsPerPerm[] =
+// Docstring regina::python::doc::IsoSigPrintable::charsPerPerm
+static constexpr const char charsPerPerm[] =
 R"doc(The number of characters that we use in our encoding to represent a
 single gluing permutation. This must be large enough to encode an
 index into Perm<dim+1>::Sn.
@@ -1096,8 +972,8 @@ Python:
     Since Python does not support C++ templates, this constant is
     accessible via a function ``IsoSigPrintable.charsPerPerm(dim)``.)doc";
 
-// Docstring regina::python::doc::IsoSigPrintable_::encode
-inline constexpr const char encode[] =
+// Docstring regina::python::doc::IsoSigPrintable::encode
+static constexpr const char encode[] =
 R"doc(Encodes a single connected component of a *dim*-dimensional
 triangulation as a first-generation isomorphism signature.
 
@@ -1111,8 +987,8 @@ Parameter ``data``:
 Returns:
     the given gluings table encoded as a first-generation signature.)doc";
 
-// Docstring regina::python::doc::IsoSigPrintable_::encode_2
-inline constexpr const char encode_2[] =
+// Docstring regina::python::doc::IsoSigPrintable::encode_2
+static constexpr const char encode_2[] =
 R"doc(Encodes a single connected component of a *dim*-dimensional
 triangulation as a second-generation isomorphism signature.
 
@@ -1126,8 +1002,8 @@ Parameter ``data``:
 Returns:
     the given gluings table encoded as a second-generation signature.)doc";
 
-// Docstring regina::python::doc::IsoSigPrintable_::encodeEmpty
-inline constexpr const char encodeEmpty[] =
+// Docstring regina::python::doc::IsoSigPrintable::encodeEmpty
+static constexpr const char encodeEmpty[] =
 R"doc(Encodes the isomorphism signature of the empty *dim*-dimensional
 triangulation.
 
@@ -1137,8 +1013,8 @@ this; instead it returns the non-empty string ``a``.
 Returns:
     the isomorphism signature of the empty triangulation.)doc";
 
-// Docstring regina::python::doc::IsoSigPrintable_::generation
-inline constexpr const char generation[] =
+// Docstring regina::python::doc::IsoSigPrintable::generation
+static constexpr const char generation[] =
 R"doc(Identifies whether the given signature is a first-generation or
 second-generation signature, as encoded by IsoSigPrintable.
 
@@ -1183,8 +1059,8 @@ Returns:
     signature of any generation, this routine could return any of the
     values 0, 1 or 2.)doc";
 
-// Docstring regina::python::doc::IsoSigPrintable_::length
-inline constexpr const char length[] =
+// Docstring regina::python::doc::IsoSigPrintable::length
+static constexpr const char length[] =
 R"doc(Precomputes the length of the first-generation isomorphism signature
 that encodes the given connected component.
 
@@ -1198,8 +1074,8 @@ Parameter ``data``:
 Returns:
     the length of the first-generation signature that encodes *data*.)doc";
 
-// Docstring regina::python::doc::IsoSigPrintable_::length_2
-inline constexpr const char length_2[] =
+// Docstring regina::python::doc::IsoSigPrintable::length_2
+static constexpr const char length_2[] =
 R"doc(Precomputes the length of the second-generation isomorphism signature
 that encodes the given connected component.
 
@@ -1213,7 +1089,127 @@ Parameter ``data``:
 Returns:
     the length of the second-generation signature that encodes *data*.)doc";
 
-}
+}; // struct IsoSigPrintable
+
+struct IsoSigPrintableLockFree {
+
+// Docstring regina::python::doc::IsoSigPrintableLockFree::__class
+static constexpr const char __class[] =
+R"doc(Encodes both first-generation and second-generation isomorphism
+signatures as printable strings, ignoring any simplex and/or facet
+locks.
+
+Like IsoSigPrintable, this encoding represents an isomorphism
+signature as a ``std::string`` using only printable characters from
+the 7-bit ASCII range. For first-generation signatures, this is
+exactly the same as the printable encoding that was used with Regina ≤
+7.3.x, before locks were implemented.
+
+See the IsoSigEncoding concept documentation for general details on
+encodings for isomorphism signatures.
+
+This class is designed to be used as a template parameter for
+signature routines in the class ``Triangulation<dim>``, including
+``isoSig()``, ``neoSig()``, ``isoSigDetail()``, and
+``neoSigDetail()``. Typical users would have no need to call any
+functions from this encoding class directly.
+
+Python:
+    To use this encoding in Python, pass IsoSigPrintableLockFree as a
+    runtime argument to the relevant ``Triangulation<dim>`` signature
+    function (e.g., ``isoSig()`` or ``neoSig()``).
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
+// Docstring regina::python::doc::IsoSigPrintableLockFree::charsPerPerm
+static constexpr const char charsPerPerm[] =
+R"doc(The number of characters that we use in our encoding to represent a
+single gluing permutation. This must be large enough to encode an
+index into Perm<dim+1>::Sn.
+
+Python:
+    Since Python does not support C++ templates, this constant is
+    accessible via a function
+    ``IsoSigPrintableLockFree.charsPerPerm(dim)``.)doc";
+
+// Docstring regina::python::doc::IsoSigPrintableLockFree::encode
+static constexpr const char encode[] =
+R"doc(Encodes a single connected component of a *dim*-dimensional
+triangulation as a first-generation isomorphism signature.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the given gluings table encoded as a first-generation signature.)doc";
+
+// Docstring regina::python::doc::IsoSigPrintableLockFree::encode_2
+static constexpr const char encode_2[] =
+R"doc(Encodes a single connected component of a *dim*-dimensional
+triangulation as a second-generation isomorphism signature.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the given gluings table encoded as a second-generation signature.)doc";
+
+// Docstring regina::python::doc::IsoSigPrintableLockFree::encodeEmpty
+static constexpr const char encodeEmpty[] =
+R"doc(Encodes the isomorphism signature of the empty *dim*-dimensional
+triangulation.
+
+Like IsoSigPrintable, this does _not_ return an empty signature for
+this; instead it returns the non-empty string ``a``.
+
+Returns:
+    the isomorphism signature of the empty triangulation.)doc";
+
+// Docstring regina::python::doc::IsoSigPrintableLockFree::length
+static constexpr const char length[] =
+R"doc(Precomputes the length of the first-generation isomorphism signature
+that encodes the given connected component.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the length of the first-generation signature that encodes *data*.)doc";
+
+// Docstring regina::python::doc::IsoSigPrintableLockFree::length_2
+static constexpr const char length_2[] =
+R"doc(Precomputes the length of the second-generation isomorphism signature
+that encodes the given connected component.
+
+Precondition:
+    The given component is non-empty, and uses a canonical labelling
+    in the sense described in the IsoSigData class notes.
+
+Parameter ``data``:
+    the compressed gluings table for the component to encode.
+
+Returns:
+    the length of the second-generation signature that encodes *data*.)doc";
+
+}; // struct IsoSigPrintableLockFree
 
 } // namespace regina::python::doc
 

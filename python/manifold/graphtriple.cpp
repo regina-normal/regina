@@ -43,7 +43,7 @@ void addGraphTriple(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GraphTriple)
 
     auto c = pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const SFSpace&, const SFSpace&, const SFSpace&,
             const Matrix2&, const Matrix2&>(), rdoc::__init)
         .def(pybind11::init<const GraphTriple&>(), rdoc::__copy)
@@ -61,7 +61,7 @@ void addGraphTriple(pybind11::module_& m) {
     // from Manifold and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<GraphTriple>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, GraphTriple);
 
     RDOC_SCOPE_END
 }

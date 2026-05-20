@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Face
-inline constexpr const char Face[] =
+struct Face {
+
+// Docstring regina::python::doc::Face::__class
+static constexpr const char __class[] =
 R"doc(Represents a tetrahedron within a 3-manifold triangulation.
 
 This class is typically referred to by the aliases Simplex<3> or
@@ -35,21 +37,19 @@ them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
 of by the Triangulation to which they belong.)doc";
 
-namespace Face_ {
-
-// Docstring regina::python::doc::Face_::adjacentFace
-inline constexpr const char adjacentFace[] =
+// Docstring regina::python::doc::Face::adjacentFace
+static constexpr const char adjacentFace[] =
 R"doc(A dimension-specific alias for adjacentFacet().
 
 See adjacentFacet() for further information.)doc";
 
-// Docstring regina::python::doc::Face_::adjacentTetrahedron
-inline constexpr const char adjacentTetrahedron[] =
+// Docstring regina::python::doc::Face::adjacentTetrahedron
+static constexpr const char adjacentTetrahedron[] =
 R"doc(A dimension-specific alias for adjacentSimplex().
 
 See adjacentSimplex() for further information.)doc";
 
-}
+}; // struct Face
 
 } // namespace regina::python::doc
 

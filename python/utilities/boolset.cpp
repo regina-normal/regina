@@ -39,7 +39,7 @@ using regina::BoolSet;
 void addBoolSet(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BoolSet)
 
-    auto c = pybind11::class_<BoolSet>(m, "BoolSet", rdoc_scope)
+    auto c = pybind11::class_<BoolSet>(m, "BoolSet", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<bool>(), rdoc::__init)
         .def(pybind11::init<const BoolSet&>(), rdoc::__copy)

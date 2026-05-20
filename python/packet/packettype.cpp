@@ -45,9 +45,10 @@ void addPacketType(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PacketType)
 
 #if REGINA_PYBIND11_VERSION == 3
-    pybind11::native_enum<PacketType>(m, "PacketType", "enum.Enum", rdoc_scope)
+    pybind11::native_enum<PacketType>(m, "PacketType", "enum.Enum",
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<PacketType>(m, "PacketType", rdoc_scope)
+    pybind11::enum_<PacketType>(m, "PacketType", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -115,7 +116,8 @@ void addPacketType(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(PacketInfo)
 
-    auto i = pybind11::class_<regina::PacketInfo>(m, "PacketInfo", rdoc_scope)
+    auto i = pybind11::class_<regina::PacketInfo>(m, "PacketInfo",
+            rdoc::__class)
         .def_static("name", &regina::PacketInfo::name, rdoc::name)
         ;
     regina::python::no_eq_static(i);

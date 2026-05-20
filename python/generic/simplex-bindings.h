@@ -47,7 +47,8 @@ void addSimplex(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN_MAIN
     RDOC_SCOPE_BASE(detail::SimplexBase)
 
-    auto c = pybind11::class_<regina::Simplex<dim>>(m, name, rdoc::Face)
+    auto c = pybind11::class_<regina::Simplex<dim>>(m, name,
+            rdoc::Face::__class)
         .def("description", &Simplex<dim>::description, rbase::description)
         .def("setDescription", &Simplex<dim>::setDescription,
             rbase::setDescription)

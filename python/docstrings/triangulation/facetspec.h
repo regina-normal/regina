@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::FacetSpec
-inline constexpr const char FacetSpec[] =
+struct FacetSpec {
+
+// Docstring regina::python::doc::FacetSpec::__class
+static constexpr const char __class[] =
 R"doc(A lightweight class used to refer to a particular facet of a
 particular top-dimensional simplex in a *dim*-dimensional
 triangulation. Only the simplex index and the facet number are stored.
@@ -43,10 +45,8 @@ Python:
 Template parameter ``dim``:
     the dimension of the underlying triangulation.)doc";
 
-namespace FacetSpec_ {
-
-// Docstring regina::python::doc::FacetSpec_::__cmp
-inline constexpr const char __cmp[] =
+// Docstring regina::python::doc::FacetSpec::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares two specifiers, following the same ordering that is used for
 iteration.
 
@@ -69,16 +69,16 @@ Parameter ``rhs``:
 Returns:
     the result of the comparison between this and the given specifier.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::FacetSpec::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new specifier referring to the same simplex facet as the
 given specifier.
 
 Parameter ``cloneMe``:
     the specifier to clone.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::__dec
-inline constexpr const char __dec[] =
+// Docstring regina::python::doc::FacetSpec::__dec
+static constexpr const char __dec[] =
 R"doc(Decrements this specifier. It will be changed to point to the previous
 simplex facet.
 
@@ -95,13 +95,13 @@ Python:
 Returns:
     a copy of this specifier before it was decremented.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::FacetSpec::__default
+static constexpr const char __default[] =
 R"doc(Creates a new specifier with no initialisation. This specifier must be
 initialised before it is used.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::FacetSpec::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given specifier are identical.
 
 Parameter ``rhs``:
@@ -110,8 +110,8 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given specifier are equal.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::__inc
-inline constexpr const char __inc[] =
+// Docstring regina::python::doc::FacetSpec::__inc
+static constexpr const char __inc[] =
 R"doc(Increments this specifier. It will be changed to point to the next
 simplex facet.
 
@@ -128,8 +128,8 @@ Python:
 Returns:
     a copy of this specifier before it was incremented.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::FacetSpec::__init
+static constexpr const char __init[] =
 R"doc(Creates a new specifier referring to the given facet of the given
 simplex.
 
@@ -140,15 +140,15 @@ Parameter ``newSimp``:
 Parameter ``newFacet``:
     the given facet; this should be between 0 and *dim* inclusive.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::isBeforeStart
-inline constexpr const char isBeforeStart[] =
+// Docstring regina::python::doc::FacetSpec::isBeforeStart
+static constexpr const char isBeforeStart[] =
 R"doc(Determines if this specifier represents a before-the-start value.
 
 Returns:
     ``True`` if and only if this specifier is before-the-start.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::isBoundary
-inline constexpr const char isBoundary[] =
+// Docstring regina::python::doc::FacetSpec::isBoundary
+static constexpr const char isBoundary[] =
 R"doc(Determines if this specifier represents the overall boundary.
 
 Parameter ``nSimplices``:
@@ -160,8 +160,8 @@ Returns:
     ``True`` if and only if this specifier represents the overall
     boundary.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::isPastEnd
-inline constexpr const char isPastEnd[] =
+// Docstring regina::python::doc::FacetSpec::isPastEnd
+static constexpr const char isPastEnd[] =
 R"doc(Determines if this specifier represents a past-the-end value. You can
 optionally declare the overall boundary to be past-the-end as well as
 the already predefined past-the-end value.
@@ -178,11 +178,11 @@ Parameter ``boundaryAlso``:
 Returns:
     ``True`` if and only if this specifier is past-the-end.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::setBeforeStart
-inline constexpr const char setBeforeStart[] = R"doc(Sets this specifier to before-the-start.)doc";
+// Docstring regina::python::doc::FacetSpec::setBeforeStart
+static constexpr const char setBeforeStart[] = R"doc(Sets this specifier to before-the-start.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::setBoundary
-inline constexpr const char setBoundary[] =
+// Docstring regina::python::doc::FacetSpec::setBoundary
+static constexpr const char setBoundary[] =
 R"doc(Sets this specifier to the overall boundary.
 
 Parameter ``nSimplices``:
@@ -190,11 +190,11 @@ Parameter ``nSimplices``:
     boundary is represented in this specifier as simplex *nSimplices*,
     facet 0.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::setFirst
-inline constexpr const char setFirst[] = R"doc(Sets this specifier to the first facet of the first simplex.)doc";
+// Docstring regina::python::doc::FacetSpec::setFirst
+static constexpr const char setFirst[] = R"doc(Sets this specifier to the first facet of the first simplex.)doc";
 
-// Docstring regina::python::doc::FacetSpec_::setPastEnd
-inline constexpr const char setPastEnd[] =
+// Docstring regina::python::doc::FacetSpec::setPastEnd
+static constexpr const char setPastEnd[] =
 R"doc(Sets this specifier to past-the-end.
 
 Parameter ``nSimplices``:
@@ -202,7 +202,7 @@ Parameter ``nSimplices``:
     end is represented in this specifier as simplex *nSimplices*,
     facet 1.)doc";
 
-}
+}; // struct FacetSpec
 
 } // namespace regina::python::doc
 

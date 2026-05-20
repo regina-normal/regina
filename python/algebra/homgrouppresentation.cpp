@@ -47,7 +47,7 @@ void addHomGroupPresentation(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HomGroupPresentation)
 
     auto c = pybind11::class_<HomGroupPresentation>(m, "HomGroupPresentation",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<GroupPresentation, GroupPresentation,
             std::vector<GroupExpression>>(), rdoc::__init)
         .def(pybind11::init<GroupPresentation, GroupPresentation,
@@ -94,7 +94,7 @@ void addHomGroupPresentation(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<HomGroupPresentation>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, HomGroupPresentation);
 
     RDOC_SCOPE_END
 }

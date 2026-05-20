@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::BlockedSFSLoop
-inline constexpr const char BlockedSFSLoop[] =
+// Docstring regina::python::doc::global_swap_BlockedSFSLoop
+inline constexpr const char global_swap_BlockedSFSLoop[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls BlockedSFSLoop::swap(); it is
+provided so that BlockedSFSLoop meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct BlockedSFSLoop {
+
+// Docstring regina::python::doc::BlockedSFSLoop::__class
+static constexpr const char __class[] =
 R"doc(Represents a blocked Seifert fibred space with two boundary tori that
 are joined together. This is a particular type of triangulation of a
 graph manifold, formed from a single saturated region whose two torus
@@ -67,18 +82,16 @@ possible, even when passing or returning objects by value. Note,
 however, that the only way to create objects of this class (aside from
 copying or moving) is via the static member function recognise().)doc";
 
-namespace BlockedSFSLoop_ {
-
-// Docstring regina::python::doc::BlockedSFSLoop_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::BlockedSFSLoop::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given structure. This will induce a deep
 copy of *src*.
 
 Parameter ``src``:
     the structure to copy.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::BlockedSFSLoop::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of self-identified blocked Seifert fibred space.
 
@@ -101,21 +114,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of self-identified blocked Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls BlockedSFSLoop::swap(); it is
-provided so that BlockedSFSLoop meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::BlockedSFSLoop_::matchingReln
-inline constexpr const char matchingReln[] =
+// Docstring regina::python::doc::BlockedSFSLoop::matchingReln
+static constexpr const char matchingReln[] =
 R"doc(Returns the matrix describing how the two torus boundaries of the
 saturated region are joined. Note that if a layering is placed between
 the two boundary tori, then any changes to the boundary relationships
@@ -127,8 +127,8 @@ is presented.
 Returns:
     the matrix describing how the boundaries of the region are joined.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::BlockedSFSLoop::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a blocked Seifert fibred
 space with identified boundaries, as described by this class.
 
@@ -144,22 +144,22 @@ Returns:
     Seifert fibred space, or ``None`` if the given triangulation is
     not of this form.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::region
-inline constexpr const char region[] =
+// Docstring regina::python::doc::BlockedSFSLoop::region
+static constexpr const char region[] =
 R"doc(Returns details of the saturated region from which this triangulation
 is formed. See the class notes above for further information.
 
 Returns:
     details of the saturated region.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::BlockedSFSLoop::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct BlockedSFSLoop
 
 } // namespace regina::python::doc
 

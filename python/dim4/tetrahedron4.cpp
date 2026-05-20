@@ -50,7 +50,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         alias::SimplexVoid)
 
     auto e = pybind11::class_<FaceEmbedding<4, 3>>(m, "FaceEmbedding4_3",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>(),
             rdoc::__init)
         .def(pybind11::init<const TetrahedronEmbedding<4>&>(), rdoc::__copy)
@@ -69,7 +69,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3", rdoc_scope)
+    auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3", rdoc::__class)
         .def("index", &Tetrahedron<4>::index, rbase::index)
         .def("degree", &Tetrahedron<4>::degree, rbase::degree)
         .def("embedding", &Tetrahedron<4>::embedding, rbase::embedding)

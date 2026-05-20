@@ -42,9 +42,9 @@ void addFileFormat(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::FileFormat>(m, "FileFormat", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::FileFormat>(m, "FileFormat", rdoc_scope)
+    pybind11::enum_<regina::FileFormat>(m, "FileFormat", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif

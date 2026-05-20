@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Face
-inline constexpr const char Face[] =
+struct Face {
+
+// Docstring regina::python::doc::Face::__class
+static constexpr const char __class[] =
 R"doc(Represents a top-dimensional simplex in a *dim*-manifold
 triangulation.
 
@@ -59,6 +61,8 @@ Python:
 
 Template parameter ``dim``:
     the dimension of the underlying triangulation.)doc";
+
+}; // struct Face
 
 } // namespace regina::python::doc
 

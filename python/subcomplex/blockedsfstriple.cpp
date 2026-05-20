@@ -42,7 +42,7 @@ void addBlockedSFSTriple(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BlockedSFSTriple)
 
     auto c = pybind11::class_<BlockedSFSTriple, regina::StandardTriangulation>
-            (m, "BlockedSFSTriple", rdoc_scope)
+            (m, "BlockedSFSTriple", rdoc::__class)
         .def(pybind11::init<const BlockedSFSTriple&>(), rdoc::__copy)
         .def("swap", &BlockedSFSTriple::swap, rdoc::swap)
         .def("end", &BlockedSFSTriple::end,
@@ -57,7 +57,7 @@ void addBlockedSFSTriple(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<BlockedSFSTriple>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, BlockedSFSTriple);
 
     RDOC_SCOPE_END
 }

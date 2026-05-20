@@ -52,7 +52,7 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
         alias::SimplexVoid)
 
     auto e = pybind11::class_<FaceEmbedding<4, 2>>(m, "FaceEmbedding4_2",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>(),
             rdoc::__init)
         .def(pybind11::init<const TriangleEmbedding<4>&>(), rdoc::__copy)
@@ -70,7 +70,7 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2", rdoc_scope)
+    auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2", rdoc::__class)
         .def("index", &Triangle<4>::index, rbase::index)
         .def("embedding", &Triangle<4>::embedding, rbase::embedding)
         .def("embeddings", &Triangle<4>::embeddings, rbase::embeddings)

@@ -42,7 +42,7 @@ void addBlockedSFSLoop(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BlockedSFSLoop)
 
     auto c = pybind11::class_<BlockedSFSLoop, regina::StandardTriangulation>(
-            m, "BlockedSFSLoop", rdoc_scope)
+            m, "BlockedSFSLoop", rdoc::__class)
         .def(pybind11::init<const BlockedSFSLoop&>(), rdoc::__copy)
         .def("swap", &BlockedSFSLoop::swap, rdoc::swap)
         .def("region", &BlockedSFSLoop::region,
@@ -55,7 +55,7 @@ void addBlockedSFSLoop(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<BlockedSFSLoop>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, BlockedSFSLoop);
 
     RDOC_SCOPE_END
 }

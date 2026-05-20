@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::BitManipulator
-inline constexpr const char BitManipulator[] =
+struct BitManipulator {
+
+// Docstring regina::python::doc::BitManipulator::__class
+static constexpr const char __class[] =
 R"doc(An optimised class for bitwise analysis and manipulation of native C++
 integer types.
 
@@ -35,10 +37,8 @@ Template parameter ``T``:
     bits in *T* must be a power of two (which is true in practice for
     all native integer types on all typical modern hardware).)doc";
 
-namespace BitManipulator_ {
-
-// Docstring regina::python::doc::BitManipulator_::bits
-inline constexpr const char bits[] =
+// Docstring regina::python::doc::BitManipulator::bits
+static constexpr const char bits[] =
 R"doc(Returns the number of bits that are set to 1 in the given integer.
 
 The implementation uses ``std::popcount()`` where possible, and a
@@ -51,8 +51,8 @@ Parameter ``x``:
 Returns:
     the number of bits that are set.)doc";
 
-// Docstring regina::python::doc::BitManipulator_::firstBit
-inline constexpr const char firstBit[] =
+// Docstring regina::python::doc::BitManipulator::firstBit
+static constexpr const char firstBit[] =
 R"doc(Returns the index of the first ``True`` bit in the given integer, or
 -1 if the given integer is zero. Bits are indexed from 0 upwards,
 starting at the least significant bit.
@@ -64,8 +64,8 @@ Returns:
     the position of the first ``True`` bit, or -1 if there are no
     ``True`` bits.)doc";
 
-// Docstring regina::python::doc::BitManipulator_::lastBit
-inline constexpr const char lastBit[] =
+// Docstring regina::python::doc::BitManipulator::lastBit
+static constexpr const char lastBit[] =
 R"doc(Returns the index of the last ``True`` bit in the given integer, or -1
 if the given integer is zero. Bits are indexed from 0 upwards,
 starting at the least significant bit.
@@ -77,8 +77,8 @@ Returns:
     the position of the last ``True`` bit, or -1 if there are no
     ``True`` bits.)doc";
 
-// Docstring regina::python::doc::BitManipulator_::swapBits
-inline constexpr const char swapBits[] =
+// Docstring regina::python::doc::BitManipulator::swapBits
+static constexpr const char swapBits[] =
 R"doc(Returns a copy of the given integer with two bits swapped. Bits are
 indexed from 0 upwards, starting at the least significant bit.
 
@@ -97,7 +97,7 @@ Parameter ``index1``:
 Returns:
     a copy of *x* with bits *index0* and *index1* swapped.)doc";
 
-}
+}; // struct BitManipulator
 
 } // namespace regina::python::doc
 

@@ -114,7 +114,8 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
 
     auto c = pybind11::class_<Triangulation<3>,
-            std::shared_ptr<Triangulation<3>>>(m, "Triangulation3", rdoc_scope)
+            std::shared_ptr<Triangulation<3>>>(m, "Triangulation3",
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Triangulation<3>&>(), rdoc::__copy)
         .def(pybind11::init<const Triangulation<3>&, bool, bool>(),

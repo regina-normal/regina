@@ -11,8 +11,33 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Rational
-inline constexpr const char Rational[] =
+// Docstring regina::python::doc::global_swap_Rational
+inline constexpr const char global_swap_Rational[] =
+R"doc(Swaps the contents of the given rationals.
+
+This global routine simply calls Rational::swap(); it is provided so
+that Rational meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first rational whose contents should be swapped.
+
+Parameter ``b``:
+    the second rational whose contents should be swapped.)doc";
+
+struct Rational {
+
+// Docstring regina::python::doc::Rational::__add
+static constexpr const char __add[] =
+R"doc(Calculates the sum of two rationals. This rational is not changed.
+
+Parameter ``r``:
+    the rational to add to this.
+
+Returns:
+    the sum *this* + *r*.)doc";
+
+// Docstring regina::python::doc::Rational::__class
+static constexpr const char __class[] =
 R"doc(Represents an arbitrary precision rational number. Calculations with
 Rational objects will be exact.
 
@@ -39,20 +64,8 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-namespace Rational_ {
-
-// Docstring regina::python::doc::Rational_::__add
-inline constexpr const char __add[] =
-R"doc(Calculates the sum of two rationals. This rational is not changed.
-
-Parameter ``r``:
-    the rational to add to this.
-
-Returns:
-    the sum *this* + *r*.)doc";
-
-// Docstring regina::python::doc::Rational_::__cmp
-inline constexpr const char __cmp[] =
+// Docstring regina::python::doc::Rational::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares this to the given rational.
 
 This is a numerical comparison; that is, it uses the usual ordering of
@@ -70,18 +83,18 @@ Returns:
     the result of the numerical comparison between this and the given
     rational.)doc";
 
-// Docstring regina::python::doc::Rational_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Rational::__copy
+static constexpr const char __copy[] =
 R"doc(Initialises to the given rational value.
 
 Parameter ``value``:
     the new rational value of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::__default
-inline constexpr const char __default[] = R"doc(Initialises to 0/1.)doc";
+// Docstring regina::python::doc::Rational::__default
+static constexpr const char __default[] = R"doc(Initialises to 0/1.)doc";
 
-// Docstring regina::python::doc::Rational_::__div
-inline constexpr const char __div[] =
+// Docstring regina::python::doc::Rational::__div
+static constexpr const char __div[] =
 R"doc(Calculates the ratio of two rationals. This rational is not changed.
 
 Parameter ``r``:
@@ -90,8 +103,8 @@ Parameter ``r``:
 Returns:
     the ratio *this* / *r*.)doc";
 
-// Docstring regina::python::doc::Rational_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Rational::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this is equal to the given rational.
 
 Parameter ``compare``:
@@ -100,8 +113,8 @@ Parameter ``compare``:
 Returns:
     ``True`` if and only if this rational is equal to *compare*.)doc";
 
-// Docstring regina::python::doc::Rational_::__iadd
-inline constexpr const char __iadd[] =
+// Docstring regina::python::doc::Rational::__iadd
+static constexpr const char __iadd[] =
 R"doc(Adds the given rational to this. This rational is changed to reflect
 the result.
 
@@ -111,8 +124,8 @@ Parameter ``other``:
 Returns:
     a reference to this rational with its new value.)doc";
 
-// Docstring regina::python::doc::Rational_::__idiv
-inline constexpr const char __idiv[] =
+// Docstring regina::python::doc::Rational::__idiv
+static constexpr const char __idiv[] =
 R"doc(Divides this by the given rational. This rational is changed to
 reflect the result.
 
@@ -122,8 +135,8 @@ Parameter ``other``:
 Returns:
     a reference to this rational with its new value.)doc";
 
-// Docstring regina::python::doc::Rational_::__imul
-inline constexpr const char __imul[] =
+// Docstring regina::python::doc::Rational::__imul
+static constexpr const char __imul[] =
 R"doc(Multiplies the given rational by this. This rational is changed to
 reflect the result.
 
@@ -133,23 +146,23 @@ Parameter ``other``:
 Returns:
     a reference to this rational with its new value.)doc";
 
-// Docstring regina::python::doc::Rational_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Rational::__init
+static constexpr const char __init[] =
 R"doc(Initialises to the given integer value. The given integer may be
 infinite.
 
 Parameter ``value``:
     the new integer value of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::Rational::__init_2
+static constexpr const char __init_2[] =
 R"doc(Initialises to the given integer value.
 
 Parameter ``value``:
     the new integer value of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_3
-inline constexpr const char __init_3[] =
+// Docstring regina::python::doc::Rational::__init_3
+static constexpr const char __init_3[] =
 R"doc(Initialises to *num*/*den*.
 
 Precondition:
@@ -174,8 +187,8 @@ Parameter ``num``:
 Parameter ``den``:
     the new denominator.)doc";
 
-// Docstring regina::python::doc::Rational_::__init_4
-inline constexpr const char __init_4[] =
+// Docstring regina::python::doc::Rational::__init_4
+static constexpr const char __init_4[] =
 R"doc(Initialises to *num*/*den*.
 
 Precondition:
@@ -197,8 +210,8 @@ Parameter ``num``:
 Parameter ``den``:
     the new denominator.)doc";
 
-// Docstring regina::python::doc::Rational_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Rational::__isub
+static constexpr const char __isub[] =
 R"doc(Subtracts the given rational from this. This rational is changed to
 reflect the result.
 
@@ -208,8 +221,8 @@ Parameter ``other``:
 Returns:
     a reference to this rational with its new value.)doc";
 
-// Docstring regina::python::doc::Rational_::__mul
-inline constexpr const char __mul[] =
+// Docstring regina::python::doc::Rational::__mul
+static constexpr const char __mul[] =
 R"doc(Calculates the product of two rationals. This rational is not changed.
 
 Parameter ``r``:
@@ -218,8 +231,8 @@ Parameter ``r``:
 Returns:
     the product *this* * *r*.)doc";
 
-// Docstring regina::python::doc::Rational_::__sub
-inline constexpr const char __sub[] =
+// Docstring regina::python::doc::Rational::__sub
+static constexpr const char __sub[] =
 R"doc(Calculates the difference of two rationals. This rational is not
 changed.
 
@@ -229,24 +242,24 @@ Parameter ``r``:
 Returns:
     the difference *this* - *r*.)doc";
 
-// Docstring regina::python::doc::Rational_::__sub_2
-inline constexpr const char __sub_2[] =
+// Docstring regina::python::doc::Rational::__sub_2
+static constexpr const char __sub_2[] =
 R"doc(Determines the negative of this rational. This rational is not
 changed.
 
 Returns:
     the negative of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::abs
-inline constexpr const char abs[] =
+// Docstring regina::python::doc::Rational::abs
+static constexpr const char abs[] =
 R"doc(Determines the absolute value of this rational. This rational is not
 changed.
 
 Returns:
     the absolute value of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::denominator
-inline constexpr const char denominator[] =
+// Docstring regina::python::doc::Rational::denominator
+static constexpr const char denominator[] =
 R"doc(Returns the denominator of this rational. Note that rationals are
 always stored in lowest terms with non-negative denominator. Infinity
 will be stored as 1/0.
@@ -254,8 +267,8 @@ will be stored as 1/0.
 Returns:
     the denominator.)doc";
 
-// Docstring regina::python::doc::Rational_::doubleApprox
-inline constexpr const char doubleApprox[] =
+// Docstring regina::python::doc::Rational::doubleApprox
+static constexpr const char doubleApprox[] =
 R"doc(Attempts to convert this rational to a real number.
 
 If this rational can be approximated by a double (specifically, if it
@@ -277,34 +290,21 @@ Returns:
 Author:
     Ryan Budney, B.B.)doc";
 
-// Docstring regina::python::doc::Rational_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given rationals.
-
-This global routine simply calls Rational::swap(); it is provided so
-that Rational meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first rational whose contents should be swapped.
-
-Parameter ``b``:
-    the second rational whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Rational_::inverse
-inline constexpr const char inverse[] =
+// Docstring regina::python::doc::Rational::inverse
+static constexpr const char inverse[] =
 R"doc(Calculates the inverse of this rational. This rational is not changed.
 
 Returns:
     the inverse 1 / *this*.)doc";
 
-// Docstring regina::python::doc::Rational_::invert
-inline constexpr const char invert[] = R"doc(Inverts this rational. This rational is changed to reflect the result.)doc";
+// Docstring regina::python::doc::Rational::invert
+static constexpr const char invert[] = R"doc(Inverts this rational. This rational is changed to reflect the result.)doc";
 
-// Docstring regina::python::doc::Rational_::negate
-inline constexpr const char negate[] = R"doc(Negates this rational. This rational is changed to reflect the result.)doc";
+// Docstring regina::python::doc::Rational::negate
+static constexpr const char negate[] = R"doc(Negates this rational. This rational is changed to reflect the result.)doc";
 
-// Docstring regina::python::doc::Rational_::numerator
-inline constexpr const char numerator[] =
+// Docstring regina::python::doc::Rational::numerator
+static constexpr const char numerator[] =
 R"doc(Returns the numerator of this rational. Note that rationals are always
 stored in lowest terms with non-negative denominator. Infinity will be
 stored as 1/0.
@@ -312,8 +312,8 @@ stored as 1/0.
 Returns:
     the numerator.)doc";
 
-// Docstring regina::python::doc::Rational_::str
-inline constexpr const char str[] =
+// Docstring regina::python::doc::Rational::str
+static constexpr const char str[] =
 R"doc(Returns a string representation of this rational.
 
 For infinity and undefined rationals, the result will be ``Inf`` or
@@ -324,15 +324,15 @@ Otherwise the string returned will be in the form ``r/s``.
 Returns:
     a string representation of this rational.)doc";
 
-// Docstring regina::python::doc::Rational_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Rational::swap
+static constexpr const char swap[] =
 R"doc(Swaps the values of this and the given rational.
 
 Parameter ``other``:
     the rational whose value will be swapped with this.)doc";
 
-// Docstring regina::python::doc::Rational_::tex
-inline constexpr const char tex[] =
+// Docstring regina::python::doc::Rational::tex
+static constexpr const char tex[] =
 R"doc(Returns this rational as written using TeX formatting. No leading or
 trailing dollar signs will be included.
 
@@ -342,7 +342,7 @@ Returns:
 Author:
     Ryan Budney)doc";
 
-}
+}; // struct Rational
 
 } // namespace regina::python::doc
 

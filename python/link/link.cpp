@@ -58,9 +58,9 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::Framing>(m, "Framing", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::Framing>(m, "Framing", rdoc_scope)
+    pybind11::enum_<regina::Framing>(m, "Framing", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -77,7 +77,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
 
     RDOC_SCOPE_SWITCH(StrandRef)
 
-    auto s = pybind11::class_<StrandRef>(m, "StrandRef", rdoc_scope)
+    auto s = pybind11::class_<StrandRef>(m, "StrandRef", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<Crossing*, int>(), rdoc::__init)
         .def(pybind11::init<const StrandRef&>(), rdoc::__copy)
@@ -102,7 +102,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
 
     RDOC_SCOPE_SWITCH(Crossing)
 
-    auto c = pybind11::class_<Crossing>(m, "Crossing", rdoc_scope)
+    auto c = pybind11::class_<Crossing>(m, "Crossing", rdoc::__class)
         .def("index", &Crossing::index, rdoc::index)
         .def("sign", &Crossing::sign, rdoc::strand)
         .def("upper", &Crossing::upper, rdoc::upper)
@@ -120,7 +120,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(Link)
 
     auto l = pybind11::class_<Link, std::shared_ptr<Link>>(m, "Link",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<const Link&>(), rdoc::__copy)
@@ -739,7 +739,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_packet_constructor<const std::string&>(wrap,
         rdoc::__init_3);
 
-    regina::python::add_global_swap<Link>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Link);
 
     RDOC_SCOPE_END
 }

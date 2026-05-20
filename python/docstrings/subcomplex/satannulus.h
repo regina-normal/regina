@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SatAnnulus
-inline constexpr const char SatAnnulus[] =
+struct SatAnnulus {
+
+// Docstring regina::python::doc::SatAnnulus::__class
+static constexpr const char __class[] =
 R"doc(Represents an annulus formed from a pair of triangles in a Seifert
 fibred space. This annulus is saturated, i.e., a union of fibres. More
 than that, the fibres run parallel to the two boundary edges of the
@@ -89,18 +91,16 @@ Python:
     the saturated annulus *a* can be modified by calling
     ``a.setRoles(1, newRoles)``.)doc";
 
-namespace SatAnnulus_ {
+// Docstring regina::python::doc::SatAnnulus::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::SatAnnulus_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::SatAnnulus::__default
+static constexpr const char __default[] =
 R"doc(Creates a new uninitialised structure. Both tetrahedra will be set to
 null pointers.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::SatAnnulus::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether or not this and the given structure describe the
 same specific presentation of a saturated annulus.
 
@@ -119,8 +119,8 @@ Returns:
     ``True`` if and only if both structures describe the same specific
     presentation of a saturated annulus.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::SatAnnulus::__init
+static constexpr const char __init[] =
 R"doc(Creates a new structure initialised to the given values. See the class
 notes for what the various tetrahedra and permutations mean.
 
@@ -136,8 +136,8 @@ Parameter ``t1``:
 Parameter ``r1``:
     the permutation to assign to *roles*[1].)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::attachLST
-inline constexpr const char attachLST[] =
+// Docstring regina::python::doc::SatAnnulus::attachLST
+static constexpr const char attachLST[] =
 R"doc(Attaches a layered solid torus to the given saturated annulus. Instead
 of passing a SatAnnulus (which only offers const access to the
 underlying triangulation), you must pass the individual tetrahedra and
@@ -208,8 +208,8 @@ Parameter ``beta``:
     describes how the meridinal disc of the torus should cut the
     horizontal edges. Again this may be positive or negative.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::halfTurnRotation
-inline constexpr const char halfTurnRotation[] =
+// Docstring regina::python::doc::SatAnnulus::halfTurnRotation
+static constexpr const char halfTurnRotation[] =
 R"doc(Returns a 180 degree rotated representation of this annulus. This
 structure will not be changed. See rotateHalfTurn() for further
 details.
@@ -217,8 +217,8 @@ details.
 Returns:
     a new 180 degree rotation of this annulus.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::horizontalReflection
-inline constexpr const char horizontalReflection[] =
+// Docstring regina::python::doc::SatAnnulus::horizontalReflection
+static constexpr const char horizontalReflection[] =
 R"doc(Returns a left-to-right reflected representation of this annulus. This
 structure will not be changed. See reflectHorizontal() for further
 details.
@@ -226,8 +226,8 @@ details.
 Returns:
     a new left-to-right reflection of this annulus.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::image
-inline constexpr const char image[] =
+// Docstring regina::python::doc::SatAnnulus::image
+static constexpr const char image[] =
 R"doc(Returns the image of this annulus representation under the given
 isomorphism between triangulations. This annulus representation will
 not be changed. See transform() for further details.
@@ -241,8 +241,8 @@ Parameter ``iso``:
 Parameter ``newTri``:
     the triangulation to be used by the new annulus representation.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::isAdjacent
-inline constexpr const char isAdjacent[] =
+// Docstring regina::python::doc::SatAnnulus::isAdjacent
+static constexpr const char isAdjacent[] =
 R"doc(Determines whether this and the given annulus are adjacent, possibly
 modulo vertical or horizontal reflections. That is, this routine
 determines whether this and the given structure represent opposite
@@ -276,8 +276,8 @@ Returns:
     is required. If no adjacency was found at all, then both *refVert*
     and *refHoriz* will be ``False``.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::isJoined
-inline constexpr const char isJoined[] =
+// Docstring regina::python::doc::SatAnnulus::isJoined
+static constexpr const char isJoined[] =
 R"doc(Determines whether this and the given annulus are joined in some form,
 even if the fibres on each annulus are not consistent.
 
@@ -322,8 +322,8 @@ Returns:
     ``True`` if this and the given annulus are found to be joined, or
     ``False`` if they are not.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::isTwoSidedTorus
-inline constexpr const char isTwoSidedTorus[] =
+// Docstring regina::python::doc::SatAnnulus::isTwoSidedTorus
+static constexpr const char isTwoSidedTorus[] =
 R"doc(Determines whether this annulus has its boundaries identified to form
 an embedded two-sided torus within the surrounding triangulation.
 
@@ -342,8 +342,8 @@ Returns:
     ``True`` if this annulus forms an embedded two-sided torus as
     described above, or ``False`` if it does not.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::meetsBoundary
-inline constexpr const char meetsBoundary[] =
+// Docstring regina::python::doc::SatAnnulus::meetsBoundary
+static constexpr const char meetsBoundary[] =
 R"doc(Determines how many triangles of this annulus lie on the boundary of
 the triangulation.
 
@@ -355,8 +355,8 @@ Returns:
     the number of triangles of this annulus that lie on the boundary
     of the triangulation; this will be 0, 1 or 2.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::otherSide
-inline constexpr const char otherSide[] =
+// Docstring regina::python::doc::SatAnnulus::otherSide
+static constexpr const char otherSide[] =
 R"doc(Returns a representation of the same annulus from the other side. This
 structure will not be changed. See switchSides() for further details.
 
@@ -367,22 +367,22 @@ Precondition:
 Returns:
     a new representation of this annulus from the other side.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::reflectHorizontal
-inline constexpr const char reflectHorizontal[] =
+// Docstring regina::python::doc::SatAnnulus::reflectHorizontal
+static constexpr const char reflectHorizontal[] =
 R"doc(Performs a left-to-right reflection of this annulus representation.
 The vertical direction of the fibres will remain unchanged, but the
 first and second triangles will be switched (and the 0..2 markings
 changed to compensate).)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::reflectVertical
-inline constexpr const char reflectVertical[] =
+// Docstring regina::python::doc::SatAnnulus::reflectVertical
+static constexpr const char reflectVertical[] =
 R"doc(Reverses the direction of the vertical fibres in this annulus
 representation. The first and second triangles (as described in the
 class notes) will remain unchanged, but the markings 0 and 1 on each
 triangle will be switched.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::roles
-inline constexpr const char roles[] =
+// Docstring regina::python::doc::SatAnnulus::roles
+static constexpr const char roles[] =
 R"doc(A Python-only routine that allows you to query the *roles* field.
 
 The *roles* field describes how the two triangles that make up this
@@ -398,8 +398,8 @@ Returns:
     the permutation that describes how the given triangle matches up
     with the individual vertices of its corresponding tetrahedron.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::rotateHalfTurn
-inline constexpr const char rotateHalfTurn[] =
+// Docstring regina::python::doc::SatAnnulus::rotateHalfTurn
+static constexpr const char rotateHalfTurn[] =
 R"doc(Rotates the representation of this annulus by 180 degrees. This has
 the effect of switching the first and second triangles and also
 reversing the direction of the vertical fibres.
@@ -407,8 +407,8 @@ reversing the direction of the vertical fibres.
 Calling this routine is equivalent to calling reflectVertical() and
 then reflectHorizontal().)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::setRoles
-inline constexpr const char setRoles[] =
+// Docstring regina::python::doc::SatAnnulus::setRoles
+static constexpr const char setRoles[] =
 R"doc(A Python-only routine that allows you to set the *roles* field.
 
 The *roles* field describes how the two triangles that make up this
@@ -424,8 +424,8 @@ Parameter ``value``:
     the permutation that describes how the given triangle matches up
     with the individual vertices of its corresponding tetrahedron.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::setTet
-inline constexpr const char setTet[] =
+// Docstring regina::python::doc::SatAnnulus::setTet
+static constexpr const char setTet[] =
 R"doc(A Python-only routine that allows you to set the *tet* field.
 
 The *tet* field describes which two tetrahedra provide the two
@@ -439,8 +439,8 @@ Parameter ``which``:
 Parameter ``value``:
     the tetrahedron that provides the given triangle.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::switchSides
-inline constexpr const char switchSides[] =
+// Docstring regina::python::doc::SatAnnulus::switchSides
+static constexpr const char switchSides[] =
 R"doc(Converts this into a representation of the same annulus from the other
 side. The first and second triangles and their 0..2 markings (as
 described in the class notes) remain unchanged. However, the two
@@ -453,8 +453,8 @@ Precondition:
     Neither triangle of this annulus is a boundary triangle of the
     triangulation.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::tet
-inline constexpr const char tet[] =
+// Docstring regina::python::doc::SatAnnulus::tet
+static constexpr const char tet[] =
 R"doc(A Python-only routine that allows you to query the *tet* field.
 
 The *tet* field describes which two tetrahedra provide the two
@@ -468,8 +468,8 @@ Parameter ``which``:
 Returns:
     the tetrahedron that provides the given triangle.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::transform
-inline constexpr const char transform[] =
+// Docstring regina::python::doc::SatAnnulus::transform
+static constexpr const char transform[] =
 R"doc(Adjusts this annulus representation according to the given isomorphism
 between triangulations.
 
@@ -493,8 +493,8 @@ Parameter ``newTri``:
     the triangulation to be used by the updated annulus
     representation.)doc";
 
-// Docstring regina::python::doc::SatAnnulus_::verticalReflection
-inline constexpr const char verticalReflection[] =
+// Docstring regina::python::doc::SatAnnulus::verticalReflection
+static constexpr const char verticalReflection[] =
 R"doc(Returns a representation of this annulus in which the vertical
 direction of the fibres has been reversed. This structure will not be
 changed. See reflectVertical() for further details.
@@ -503,7 +503,7 @@ Returns:
     a new representation of this annulus in which fibres have been
     reversed.)doc";
 
-}
+}; // struct SatAnnulus
 
 } // namespace regina::python::doc
 

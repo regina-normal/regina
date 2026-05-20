@@ -11,8 +11,25 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::NamedPermGroup
-inline constexpr const char NamedPermGroup[] =
+struct NamedPermGroup {
+
+// Docstring regina::python::doc::NamedPermGroup::Alternating
+static constexpr const char Alternating[] =
+R"doc(Represents the alternating group on *n* elements, containing all
+``n!/2`` even permutations.)doc";
+
+// Docstring regina::python::doc::NamedPermGroup::Symmetric
+static constexpr const char Symmetric[] =
+R"doc(Represents the symmetric group on *n* elements, containing all ``n!``
+possible permutations.)doc";
+
+// Docstring regina::python::doc::NamedPermGroup::Trivial
+static constexpr const char Trivial[] =
+R"doc(Represents the trivial group on *n* elements, containing only the
+identity permutation.)doc";
+
+// Docstring regina::python::doc::NamedPermGroup::__class
+static constexpr const char __class[] =
 R"doc(Constants that represent particular well-known classes of permutation
 groups.
 
@@ -20,8 +37,12 @@ These constants are intended to be used with permutation groups on *n*
 elements for arbitrary *n*. (In particular, you can pass them to the
 PermGroup<n> constructor.))doc";
 
-// Docstring regina::python::doc::PermGroup
-inline constexpr const char PermGroup[] =
+}; // struct NamedPermGroup
+
+struct PermGroup {
+
+// Docstring regina::python::doc::PermGroup::__class
+static constexpr const char __class[] =
 R"doc(Represents a group of permutations on *n* elements. This is a subgroup
 of the symmetric group ``S_n``.
 
@@ -59,41 +80,20 @@ Template parameter ``cached``:
     have called Perm<n>::precompute() at least once in the lifetime of
     the program before using this class.)doc";
 
-namespace NamedPermGroup_ {
-
-// Docstring regina::python::doc::NamedPermGroup_::Alternating
-inline constexpr const char Alternating[] =
-R"doc(Represents the alternating group on *n* elements, containing all
-``n!/2`` even permutations.)doc";
-
-// Docstring regina::python::doc::NamedPermGroup_::Symmetric
-inline constexpr const char Symmetric[] =
-R"doc(Represents the symmetric group on *n* elements, containing all ``n!``
-possible permutations.)doc";
-
-// Docstring regina::python::doc::NamedPermGroup_::Trivial
-inline constexpr const char Trivial[] =
-R"doc(Represents the trivial group on *n* elements, containing only the
-identity permutation.)doc";
-
-}
-
-namespace PermGroup_ {
-
-// Docstring regina::python::doc::PermGroup_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::PermGroup::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given group.
 
 Parameter ``src``:
     the group to copy.)doc";
 
-// Docstring regina::python::doc::PermGroup_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::PermGroup::__default
+static constexpr const char __default[] =
 R"doc(Constructs the trivial group, containing only the identity
 permutation.)doc";
 
-// Docstring regina::python::doc::PermGroup_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::PermGroup::__eq
+static constexpr const char __eq[] =
 R"doc(Indicates whether this and the given group are identical.
 
 This does _not_ test group isomorphism, and it does _not_ test whether
@@ -112,8 +112,8 @@ Returns:
     ``True`` if and only if this and the given group contain the same
     permutations.)doc";
 
-// Docstring regina::python::doc::PermGroup_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::PermGroup::__init
+static constexpr const char __init[] =
 R"doc(Construct the given well-known permutation group. This constructor can
 (for example) be used to easily construct the symmetric or alternating
 group on *n* elements.
@@ -121,8 +121,8 @@ group on *n* elements.
 Parameter ``group``:
     indicates which well-known permutation group to construct.)doc";
 
-// Docstring regina::python::doc::PermGroup_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::PermGroup::__init_2
+static constexpr const char __init_2[] =
 R"doc(Constructs the symmetric group ``S_k``, formed from all permutations
 of 1,...,*k*. The elements (*k* + 1),...,*n* will remain fixed under
 all permutations in this group.
@@ -133,8 +133,8 @@ Parameter ``k``:
     indicates how many elements should be permuted; this must be
     between 0 and *n* inclusive.)doc";
 
-// Docstring regina::python::doc::PermGroup_::__init_3
-inline constexpr const char __init_3[] =
+// Docstring regina::python::doc::PermGroup::__init_3
+static constexpr const char __init_3[] =
 R"doc(Generates the subgroup of all elements in the given group that pass
 the given membership test.
 
@@ -177,8 +177,8 @@ Parameter ``args``:
     any additional arguments that should be passed to *test*,
     following the initial permutation argument.)doc";
 
-// Docstring regina::python::doc::PermGroup_::__iter__
-inline constexpr const char __iter__[] =
+// Docstring regina::python::doc::PermGroup::__iter__
+static constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over the elements of this group.
 
 The order of iteration is arbitrary, and may change in future releases
@@ -187,8 +187,8 @@ of Regina.
 Returns:
     an iterator over the elements of this group.)doc";
 
-// Docstring regina::python::doc::PermGroup_::centraliser
-inline constexpr const char centraliser[] =
+// Docstring regina::python::doc::PermGroup::centraliser
+static constexpr const char centraliser[] =
 R"doc(Returns the group of all permutations that fix the minimal
 representative of the given conjugacy class under conjugation.
 
@@ -212,8 +212,8 @@ Returns:
     the group of all permutations that leave rep() fixed under
     conjugation.)doc";
 
-// Docstring regina::python::doc::PermGroup_::contains
-inline constexpr const char contains[] =
+// Docstring regina::python::doc::PermGroup::contains
+static constexpr const char contains[] =
 R"doc(Determines whether the given permutation belongs to this group.
 
 Regardless of the size of this group, the running time for this
@@ -225,8 +225,21 @@ Parameter ``p``:
 Returns:
     ``True`` if and only if *p* belongs to this group.)doc";
 
-// Docstring regina::python::doc::PermGroup_::iterator
-inline constexpr const char iterator[] =
+// Docstring regina::python::doc::PermGroup::size
+static constexpr const char size[] =
+R"doc(Returns the total number of elements in this group.
+
+Python:
+    This is also used to implement the Python special method
+    __len__().
+
+Returns:
+    the size of this group.)doc";
+
+struct iterator {
+
+// Docstring regina::python::doc::PermGroup::iterator::__class
+static constexpr const char __class[] =
 R"doc(The iterator type for this group.
 
 Unlike most iterator types, the dereference operator for this iterator
@@ -245,23 +258,8 @@ directly as class members.
 Both *iterator* and *const_iterator* are the same type, since a
 PermGroup only offers read-only access to its group members.)doc";
 
-// Docstring regina::python::doc::PermGroup_::size
-inline constexpr const char size[] =
-R"doc(Returns the total number of elements in this group.
-
-Python:
-    This is also used to implement the Python special method
-    __len__().
-
-Returns:
-    the size of this group.)doc";
-
-}
-
-namespace PermGroup_::iterator_ {
-
-// Docstring regina::python::doc::PermGroup_::iterator_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::PermGroup::iterator::__eq
+static constexpr const char __eq[] =
 R"doc(Compares this with the given iterator for equality.
 
 To be considered equal, two iterators must be pointing to the same
@@ -278,8 +276,8 @@ Returns:
     ``True`` if the iterators point to the same permutation, or
     ``False`` if they do not.)doc";
 
-// Docstring regina::python::doc::PermGroup_::iterator_::__next__
-inline constexpr const char __next__[] =
+// Docstring regina::python::doc::PermGroup::iterator::__next__
+static constexpr const char __next__[] =
 R"doc(Returns the current permutation and increments this iterator.
 
 Exception ``StopIteration``:
@@ -289,7 +287,9 @@ Returns:
     the permutation that this iterator is pointing to, before the
     increment takes place.)doc";
 
-}
+}; // struct iterator
+
+}; // struct PermGroup
 
 } // namespace regina::python::doc
 

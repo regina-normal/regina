@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::HilbertPrimal
-inline constexpr const char HilbertPrimal[] =
+struct HilbertPrimal {
+
+// Docstring regina::python::doc::HilbertPrimal::__class
+static constexpr const char __class[] =
 R"doc(Implements a modified primal algorithm for enumerating Hilbert bases.
 This incorporates the primal algorithm described in "Normaliz:
 Algorithms for affine monoids and rational cones", Winfried Bruns and
@@ -30,10 +32,8 @@ for the entire space.
 All routines of interest within this class are static; no object of
 this class should ever be created.)doc";
 
-namespace HilbertPrimal_ {
-
-// Docstring regina::python::doc::HilbertPrimal_::enumerate
-inline constexpr const char enumerate[] =
+// Docstring regina::python::doc::HilbertPrimal::enumerate
+static constexpr const char enumerate[] =
 R"doc(Determines the Hilbert basis that generates all integer points in the
 intersection of the *n*-dimensional non-negative orthant with some
 linear subspace. The resulting basis vectors will be of the class
@@ -140,7 +140,7 @@ Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``None`` if no progress reporting is required.)doc";
 
-}
+}; // struct HilbertPrimal
 
 } // namespace regina::python::doc
 

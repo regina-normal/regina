@@ -61,7 +61,8 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
 
     auto c = pybind11::class_<Triangulation<4>,
-            std::shared_ptr<Triangulation<4>>>(m, "Triangulation4", rdoc_scope)
+            std::shared_ptr<Triangulation<4>>>(m, "Triangulation4",
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Triangulation<4>&>(), rdoc::__copy)
         .def(pybind11::init<const Triangulation<4>&, bool, bool>(),
@@ -628,10 +629,7 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_packet_constructor<const std::string&>(wrap,
         rdoc::__init_2);
 
-    // We cannot use add_global_swap() here, since add_global_swap() cannot
-    // resolve regina::swap to the templated triangulation swap function.
-    m.def("swap", static_cast<void(&)(Triangulation<4>&, Triangulation<4>&)>(
-        regina::swap), rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Triangulation<4>, Triangulation);
 
     RDOC_SCOPE_END
 

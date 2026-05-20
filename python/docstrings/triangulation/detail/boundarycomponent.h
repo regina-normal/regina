@@ -13,8 +13,10 @@ namespace regina::python::doc {
 
 namespace detail {
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase
-inline constexpr const char BoundaryComponentBase[] =
+struct BoundaryComponentBase {
+
+// Docstring regina::python::doc::detail::BoundaryComponentBase::__class
+static constexpr const char __class[] =
 R"doc(Helper class that provides core functionality for a boundary component
 of a *dim*-dimensional triangulation.
 
@@ -37,12 +39,8 @@ Python:
 Template parameter ``dim``:
     the dimension of the underlying triangulation.)doc";
 
-}
-
-namespace detail::BoundaryComponentBase_ {
-
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::build
-inline constexpr const char build[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::build
+static constexpr const char build[] =
 R"doc(Returns the full (*dim*-1)-dimensional triangulation of this boundary
 component. Note that this triangulation is read-only (though of course
 you can clone it and then operate upon the clone).
@@ -85,22 +83,22 @@ Precondition:
 Returns:
     the triangulation of this boundary component.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::component
-inline constexpr const char component[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::component
+static constexpr const char component[] =
 R"doc(Returns the connected component of the triangulation to which this
 boundary component belongs.
 
 Returns:
     the component containing this boundary component.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::countEdges
-inline constexpr const char countEdges[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::countEdges
+static constexpr const char countEdges[] =
 R"doc(A dimension-specific alias for countFaces<1>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::countFaces
-inline constexpr const char countFaces[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::countFaces
+static constexpr const char countFaces[] =
 R"doc(Returns the number of *subdim*-faces in this boundary component, where
 the face dimension does not need to be known until runtime.
 
@@ -121,14 +119,14 @@ Parameter ``subdim``:
 Returns:
     the number of *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::countPentachora
-inline constexpr const char countPentachora[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::countPentachora
+static constexpr const char countPentachora[] =
 R"doc(A dimension-specific alias for countFaces<4>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::countRidges
-inline constexpr const char countRidges[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::countRidges
+static constexpr const char countRidges[] =
 R"doc(Returns the number of (*dim*-2)-faces in this boundary component.
 
 If this is an ideal or invalid vertex boundary component, then this
@@ -137,38 +135,38 @@ routine will return 0.
 Returns:
     the number of (*dim*-2)-faces in this boundary component.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::countTetrahedra
-inline constexpr const char countTetrahedra[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::countTetrahedra
+static constexpr const char countTetrahedra[] =
 R"doc(A dimension-specific alias for countFaces<3>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::countTriangles
-inline constexpr const char countTriangles[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::countTriangles
+static constexpr const char countTriangles[] =
 R"doc(A dimension-specific alias for countFaces<2>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::countVertices
-inline constexpr const char countVertices[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::countVertices
+static constexpr const char countVertices[] =
 R"doc(A dimension-specific alias for countFaces<0>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::edge
-inline constexpr const char edge[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::edge
+static constexpr const char edge[] =
 R"doc(A dimension-specific alias for face<1>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::edges
-inline constexpr const char edges[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::edges
+static constexpr const char edges[] =
 R"doc(A dimension-specific alias for faces<1>().
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::eulerChar
-inline constexpr const char eulerChar[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::eulerChar
+static constexpr const char eulerChar[] =
 R"doc(Returns the Euler characteristic of this boundary component. If the
 boundary component consists of a single vertex and nothing else (e.g.,
 it is an ideal vertex), then the Euler characteristic of the vertex
@@ -203,8 +201,8 @@ almost certainly have bigger problems to deal with.
 Returns:
     the Euler characteristic of this boundary component.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::face
-inline constexpr const char face[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::face
+static constexpr const char face[] =
 R"doc(Returns the requested *subdim*-face in this boundary component, in a
 way that is optimised for Python programmers.
 
@@ -252,8 +250,8 @@ Parameter ``index``:
 Returns:
     the requested face.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::faces
-inline constexpr const char faces[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::faces
+static constexpr const char faces[] =
 R"doc(Returns an object that allows iteration through and random access to
 all *subdim*-faces in this boundary component, in a way that is
 optimised for Python programmers.
@@ -285,8 +283,8 @@ Parameter ``subdim``:
 Returns:
     access to the list of all *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::facet
-inline constexpr const char facet[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::facet
+static constexpr const char facet[] =
 R"doc(Returns the requested (*dim*-1)-face in this boundary component. These
 are the top-dimensional faces for a real boundary component.
 
@@ -305,8 +303,8 @@ Parameter ``index``:
 Returns:
     the requested face.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::facets
-inline constexpr const char facets[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::facets
+static constexpr const char facets[] =
 R"doc(Returns an object that allows iteration through and random access to
 all (*dim*-1)-faces in this boundary component.
 
@@ -333,16 +331,16 @@ only, and to call facets() again each time you need it.
 Returns:
     access to the list of all (*dim*-1)-faces.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::index
-inline constexpr const char index[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::index
+static constexpr const char index[] =
 R"doc(Returns the index of this boundary component in the underlying
 triangulation.
 
 Returns:
     the index of this boundary component.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::isIdeal
-inline constexpr const char isIdeal[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::isIdeal
+static constexpr const char isIdeal[] =
 R"doc(Determines if this boundary component is ideal. This is the case if
 and only if it consists of a single ideal vertex and no faces of any
 other dimensions.
@@ -366,8 +364,8 @@ one of isIdeal() and isInvalidVertex() will return ``True``.
 Returns:
     ``True`` if and only if this boundary component is ideal.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::isInvalidVertex
-inline constexpr const char isInvalidVertex[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::isInvalidVertex
+static constexpr const char isInvalidVertex[] =
 R"doc(Determines if this boundary component consists of a single invalid
 vertex and nothing else. In particular, such a boundary component must
 contain no faces of any positive dimension.
@@ -398,8 +396,8 @@ Returns:
     ``True`` if and only if this boundary component consists of a
     single invalid vertex and nothing else.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::isOrientable
-inline constexpr const char isOrientable[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::isOrientable
+static constexpr const char isOrientable[] =
 R"doc(Determines if this boundary component is orientable. If this is an
 ideal or invalid vertex boundary component, then the orientability of
 the corresponding vertex link is returned.
@@ -410,8 +408,8 @@ build a full triangulation of the boundary component.
 Returns:
     ``True`` if and only if this boundary component is orientable.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::isReal
-inline constexpr const char isReal[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::isReal
+static constexpr const char isReal[] =
 R"doc(Determines if this boundary component is real. This is the case if and
 only if it is formed from one or more (dim-1)-faces.
 
@@ -427,20 +425,20 @@ and invalid vertex boundary components.
 Returns:
     ``True`` if and only if this boundary component is real.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::pentachora
-inline constexpr const char pentachora[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::pentachora
+static constexpr const char pentachora[] =
 R"doc(A dimension-specific alias for faces<4>().
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::pentachoron
-inline constexpr const char pentachoron[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::pentachoron
+static constexpr const char pentachoron[] =
 R"doc(A dimension-specific alias for face<4>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::size
+static constexpr const char size[] =
 R"doc(Returns the number of (*dim*-1)-faces in this boundary component.
 These are the top-dimensional faces for a real boundary component.
 
@@ -450,51 +448,53 @@ routine will return 0.
 Returns:
     the number of (*dim*-1)-faces in this boundary component.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::tetrahedra
-inline constexpr const char tetrahedra[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::tetrahedra
+static constexpr const char tetrahedra[] =
 R"doc(A dimension-specific alias for faces<3>().
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::tetrahedron
-inline constexpr const char tetrahedron[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::tetrahedron
+static constexpr const char tetrahedron[] =
 R"doc(A dimension-specific alias for face<3>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::triangle
-inline constexpr const char triangle[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::triangle
+static constexpr const char triangle[] =
 R"doc(A dimension-specific alias for face<2>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::triangles
-inline constexpr const char triangles[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::triangles
+static constexpr const char triangles[] =
 R"doc(A dimension-specific alias for faces<2>().
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::triangulation
-inline constexpr const char triangulation[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::triangulation
+static constexpr const char triangulation[] =
 R"doc(Returns the triangulation to which this boundary component belongs.
 
 Returns:
     a reference to the triangulation containing this boundary
     component.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::vertex
-inline constexpr const char vertex[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::vertex
+static constexpr const char vertex[] =
 R"doc(A dimension-specific alias for face<0>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::BoundaryComponentBase_::vertices
-inline constexpr const char vertices[] =
+// Docstring regina::python::doc::detail::BoundaryComponentBase::vertices
+static constexpr const char vertices[] =
 R"doc(A dimension-specific alias for faces<0>().
 
 See faces() for further information.)doc";
 
-}
+}; // struct BoundaryComponentBase
+
+} // namespace detail
 
 } // namespace regina::python::doc
 

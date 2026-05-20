@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::PlugTriSolidTorus
-inline constexpr const char PlugTriSolidTorus[] =
+// Docstring regina::python::doc::global_swap_PlugTriSolidTorus
+inline constexpr const char global_swap_PlugTriSolidTorus[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls PlugTriSolidTorus::swap(); it is
+provided so that PlugTriSolidTorus meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct PlugTriSolidTorus {
+
+// Docstring regina::python::doc::PlugTriSolidTorus::__class
+static constexpr const char __class[] =
 R"doc(Represents a plugged triangular solid torus component of a
 triangulation. Such a component is obtained as follows.
 
@@ -61,13 +77,11 @@ StandardTriangulation subclasses. Note that the only way to create
 these objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
-namespace PlugTriSolidTorus_ {
+// Docstring regina::python::doc::PlugTriSolidTorus::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::PlugTriSolidTorus_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::PlugTriSolidTorus_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::PlugTriSolidTorus::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of plugged triangular solid torus.
 
@@ -90,8 +104,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of plugged triangular solid torus.)doc";
 
-// Docstring regina::python::doc::PlugTriSolidTorus_::chain
-inline constexpr const char chain[] =
+// Docstring regina::python::doc::PlugTriSolidTorus::chain
+static constexpr const char chain[] =
 R"doc(Returns the layered chain attached to the requested annulus on the
 boundary of the core triangular solid torus. If there is no attached
 layered chain, ``None`` will be returned.
@@ -105,8 +119,8 @@ Parameter ``annulus``:
 Returns:
     the corresponding layered chain.)doc";
 
-// Docstring regina::python::doc::PlugTriSolidTorus_::chainType
-inline constexpr const char chainType[] =
+// Docstring regina::python::doc::PlugTriSolidTorus::chainType
+static constexpr const char chainType[] =
 R"doc(Returns the way in which a layered chain is attached to the requested
 annulus on the boundary of the core triangular solid torus. This will
 be one of the chain type constants defined in this class.
@@ -118,15 +132,15 @@ Returns:
     the type of layered chain, or *CHAIN_NONE* if there is no layered
     chain attached to the requested annulus.)doc";
 
-// Docstring regina::python::doc::PlugTriSolidTorus_::core
-inline constexpr const char core[] =
+// Docstring regina::python::doc::PlugTriSolidTorus::core
+static constexpr const char core[] =
 R"doc(Returns the triangular solid torus at the core of this triangulation.
 
 Returns:
     the core triangular solid torus.)doc";
 
-// Docstring regina::python::doc::PlugTriSolidTorus_::equatorType
-inline constexpr const char equatorType[] =
+// Docstring regina::python::doc::PlugTriSolidTorus::equatorType
+static constexpr const char equatorType[] =
 R"doc(Returns which types of edges form the equator of the plug. In the
 absence of layered chains these will either all be major edges or all
 be minor edges.
@@ -141,22 +155,8 @@ Returns:
     the types of edges that form the equator of the plug; this will be
     one of the equator type constants defined in this class.)doc";
 
-// Docstring regina::python::doc::PlugTriSolidTorus_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls PlugTriSolidTorus::swap(); it is
-provided so that PlugTriSolidTorus meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::PlugTriSolidTorus_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::PlugTriSolidTorus::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is a plugged
 triangular solid torus.
 
@@ -172,14 +172,14 @@ Returns:
     torus, or ``None`` if the given component is not a plugged
     triangular solid torus.)doc";
 
-// Docstring regina::python::doc::PlugTriSolidTorus_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::PlugTriSolidTorus::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct PlugTriSolidTorus
 
 } // namespace regina::python::doc
 

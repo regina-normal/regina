@@ -83,7 +83,7 @@ using regina::Matrix2Row;
 void addMatrix2(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Matrix2)
 
-    auto c = pybind11::class_<Matrix2>(m, "Matrix2", rdoc_scope)
+    auto c = pybind11::class_<Matrix2>(m, "Matrix2", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Matrix2&>(), rdoc::__copy)
         .def(pybind11::init<long, long, long, long>(), rdoc::__init)
@@ -117,7 +117,7 @@ void addMatrix2(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_ostream(c);
 
-    regina::python::add_global_swap<Matrix2>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Matrix2);
 
     auto row = pybind11::class_<Matrix2Row>(c, "_Row",
 R"doc(Gives access to a single row of a 2-by-2 integer matrix.

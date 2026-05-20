@@ -42,7 +42,7 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(SpatialLink)
 
     auto l = pybind11::class_<SpatialLink, std::shared_ptr<SpatialLink>>(
-            m, "SpatialLink", rdoc_scope)
+            m, "SpatialLink", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const SpatialLink&>(), rdoc::__copy)
         .def(pybind11::init([](
@@ -97,7 +97,7 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
         "PacketOfSpatialLink");
     regina::python::add_packet_constructor<>(wrap, rdoc::__default);
 
-    regina::python::add_global_swap<SpatialLink>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SpatialLink);
 
     RDOC_SCOPE_END
 }

@@ -43,7 +43,7 @@ using regina::DiscSpecIterator;
 void addDisc(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(DiscSpec)
 
-    auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc_scope)
+    auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t, int, size_t>(), rdoc::__init)
         .def(pybind11::init<const DiscSpec&>(), rdoc::__copy)
@@ -63,7 +63,7 @@ void addDisc(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(DiscSetTet)
 
-    auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet", rdoc_scope)
+    auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet", rdoc::__class)
         .def(pybind11::init<const regina::NormalSurface&, size_t>(),
             rdoc::__init)
         .def(pybind11::init<size_t, size_t, size_t, size_t,
@@ -90,7 +90,8 @@ void addDisc(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(DiscSetSurfaceDataImpl)
 
-    auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface", rdoc_scope)
+    auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface",
+            rdoc::__class)
         .def(pybind11::init<const regina::NormalSurface&>(), rdoc::__init)
         .def(pybind11::init<const DiscSetSurface&>(), rdoc::__copy)
         .def("swap", &DiscSetSurface::swap, rdoc::swap)
@@ -117,12 +118,12 @@ void addDisc(pybind11::module_& m) {
     });
     regina::python::add_eq_operators(s, rdoc::__eq);
 
-    regina::python::add_global_swap<DiscSetSurface>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, DiscSetSurface, DiscSetSurfaceDataImpl);
 
     RDOC_SCOPE_SWITCH(DiscSpecIterator)
 
     auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(
-            m, "DiscSpecIterator", rdoc_scope)
+            m, "DiscSpecIterator", rdoc::__class)
         .def("__next__", [](DiscSpecIterator<DiscSetTet>& it) {
             if (! it.done())
                 return *it++;

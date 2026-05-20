@@ -43,7 +43,7 @@ void addProgressTracker(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(ProgressTrackerBase)
 
     auto c0 = pybind11::class_<ProgressTrackerBase>(m, "ProgressTrackerBase",
-            rdoc_scope)
+            rdoc::__class)
         .def("isFinished", &ProgressTrackerBase::isFinished, rdoc::isFinished)
         .def("descriptionChanged", &ProgressTrackerBase::descriptionChanged,
             rdoc::descriptionChanged)
@@ -60,7 +60,7 @@ void addProgressTracker(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ProgressTracker)
 
     auto c1 = pybind11::class_<ProgressTracker, ProgressTrackerBase>(
-            m, "ProgressTracker", rdoc_scope)
+            m, "ProgressTracker", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("percentChanged", &ProgressTracker::percentChanged,
             rdoc::percentChanged)
@@ -77,7 +77,7 @@ void addProgressTracker(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ProgressTrackerOpen)
 
     auto c2 = pybind11::class_<ProgressTrackerOpen, ProgressTrackerBase>(
-            m, "ProgressTrackerOpen", rdoc_scope)
+            m, "ProgressTrackerOpen", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("stepsChanged", &ProgressTrackerOpen::stepsChanged,
             rdoc::stepsChanged)
@@ -96,7 +96,7 @@ void addProgressTracker(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ProgressTrackerObjective)
 
     auto c3 = pybind11::class_<ProgressTrackerObjective, ProgressTrackerBase>(
-            m, "ProgressTrackerObjective", rdoc_scope)
+            m, "ProgressTrackerObjective", rdoc::__class)
         .def(pybind11::init<long>(), rdoc::__init)
         .def("objectiveChanged", &ProgressTrackerObjective::objectiveChanged,
             rdoc::objectiveChanged)

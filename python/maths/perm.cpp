@@ -50,7 +50,7 @@ template <int n>
 void addPerm(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(Perm)
 
-    auto c = pybind11::class_<Perm<n>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Perm<n>>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<int, int>(), rdoc::__init)
         .def(pybind11::init<const Perm<n>&>(), rdoc::__copy)
@@ -129,7 +129,7 @@ template <int n>
 void addPermClass(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(PermClass)
 
-    auto c = pybind11::class_<PermClass<n>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<PermClass<n>>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const PermClass<n>&>(), rdoc::__copy)
         .def("isIdentity", &PermClass<n>::isIdentity, rdoc::isIdentity)
@@ -158,9 +158,9 @@ void addPerm(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::PermCodeType>(m, "PermCodeType", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::PermCodeType>(m, "PermCodeType", rdoc_scope)
+    pybind11::enum_<regina::PermCodeType>(m, "PermCodeType", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -179,9 +179,9 @@ void addPerm(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::PermOrder>(m, "PermOrder", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::PermOrder>(m, "PermOrder", rdoc_scope)
+    pybind11::enum_<regina::PermOrder>(m, "PermOrder", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif

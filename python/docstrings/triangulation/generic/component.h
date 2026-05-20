@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Component
-inline constexpr const char Component[] =
+struct Component {
+
+// Docstring regina::python::doc::Component::__class
+static constexpr const char __class[] =
 R"doc(A connected component of a *dim*-manifold triangulation.
 
 Components are highly temporary: whenever a triangulation changes, all
@@ -38,6 +40,8 @@ Python:
 
 Template parameter ``dim``:
     the dimension of the underlying triangulation.)doc";
+
+}; // struct Component
 
 } // namespace regina::python::doc
 

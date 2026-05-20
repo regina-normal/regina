@@ -117,7 +117,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PacketChildren)
 
     auto c1 = pybind11::class_<PacketChildren<false>>(m, "PacketChildren",
-            rdoc_scope)
+            rdoc::__class)
         .def("__iter__", [](const PacketChildren<false>& c) {
             return c.begin();
         }, rdoc::__iter__)
@@ -127,7 +127,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(PacketDescendants)
 
     auto c2 = pybind11::class_<PacketDescendants<false>>(m, "PacketDescendants",
-            rdoc_scope)
+            rdoc::__class)
         .def("__iter__", [](const PacketDescendants<false>& d) {
             return d.begin();
         }, rdoc::__iter__)
@@ -137,7 +137,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ChildIterator)
 
     auto c3 = pybind11::class_<ChildIterator<false>>(m, "ChildIterator",
-            rdoc_scope)
+            rdoc::__class)
         .def("__next__", next<ChildIterator<false>>, rdoc::__next__)
         ;
     regina::python::add_eq_operators(c3, rdoc::__eq);
@@ -145,7 +145,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(SubtreeIterator)
 
     auto c4 = pybind11::class_<SubtreeIterator<false>>(m, "SubtreeIterator",
-            rdoc_scope)
+            rdoc::__class)
         .def("__iter__", [](pybind11::object const& it) {
             return it;
         }, rdoc::__iter__)
@@ -156,7 +156,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Packet)
 
     auto c = pybind11::class_<Packet, std::shared_ptr<Packet>>(m, "Packet",
-            rdoc_scope)
+            rdoc::__class)
         .def("type", &Packet::type, rdoc::type)
         .def("typeName", &Packet::typeName, rdoc::typeName)
         .def("label", &Packet::label, rdoc::label)
@@ -252,7 +252,7 @@ void addPacket(pybind11::module_& m) {
         .def("internalID", &Packet::internalID, rdoc::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {
             return (s == p);
-        }, pybind11::is_operator(), regina::python::doc::PacketShell_::__eq_2)
+        }, pybind11::is_operator(), regina::python::doc::PacketShell::__eq_2)
         .def("__ne__", [](const Packet* p, PacketShell s) {
             return (s != p);
         }, pybind11::is_operator(), regina::python::doc::common::neq_value)
@@ -270,7 +270,7 @@ void addPacket(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(PacketShell)
 
-    auto s = pybind11::class_<PacketShell>(m, "PacketShell", rdoc_scope)
+    auto s = pybind11::class_<PacketShell>(m, "PacketShell", rdoc::__class)
         .def(pybind11::init<const Packet*>(), rdoc::__init)
         .def(pybind11::init<const PacketShell&>(), rdoc::__copy)
         .def("label", &PacketShell::label, rdoc::label)
@@ -300,7 +300,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(PacketListener)
 
     auto l = pybind11::class_<PacketListener, PyPacketListener>(
-            m, "PacketListener", rdoc_scope)
+            m, "PacketListener", rdoc::__class)
         .def(pybind11::init<>(), // necessary for pure python subclasses
             "Default base class constructor that does nothing.")
         .def("isListening", &PacketListener::isListening, rdoc::isListening)

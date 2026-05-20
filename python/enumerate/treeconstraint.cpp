@@ -141,28 +141,29 @@ void addTreeConstraint(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
     addLPConstraint<LPConstraintNone>(m, "LPConstraintNone",
-        rdoc::LPConstraintNone);
+        rdoc::LPConstraintNone::__class);
     addLPConstraint<LPConstraintEulerPositive>(m, "LPConstraintEulerPositive",
-        rdoc::LPConstraintEulerPositive);
+        rdoc::LPConstraintEulerPositive::__class);
     addLPConstraint<LPConstraintEulerZero>(m, "LPConstraintEulerZero",
-        rdoc::LPConstraintEulerZero);
+        rdoc::LPConstraintEulerZero::__class);
     addLPConstraint<LPConstraintNonSpun>(m, "LPConstraintNonSpun",
-        rdoc::LPConstraintNonSpun);
+        rdoc::LPConstraintNonSpun::__class);
 
     // BanNone does not have its own constructor documentation, since it
     // behaves identically to the base class constructor.
-    addBanConstraint<BanNone>(m, "BanNone", rdoc::BanNone,
-        rdoc::BanConstraintBase_::__init);
+    addBanConstraint<BanNone>(m, "BanNone", rdoc::BanNone::__class,
+        rdoc::BanConstraintBase::__init);
 
     RDOC_SCOPE_SWITCH(BanBoundary)
-    addBanConstraint<BanBoundary>(m, "BanBoundary", rdoc_scope, rdoc::__init);
+    addBanConstraint<BanBoundary>(m, "BanBoundary", rdoc::__class,
+        rdoc::__init);
 
     RDOC_SCOPE_SWITCH(BanEdge)
-    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge", rdoc_scope,
+    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge", rdoc::__class,
         rdoc::__init);
 
     RDOC_SCOPE_SWITCH(BanTorusBoundary)
-    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary", rdoc_scope,
+    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary", rdoc::__class,
         rdoc::__init);
 
     RDOC_SCOPE_END

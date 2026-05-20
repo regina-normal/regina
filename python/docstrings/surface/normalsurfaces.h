@@ -11,82 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::NormalSurfaces
-inline constexpr const char NormalSurfaces[] =
-R"doc(A collection of normal surfaces in a 3-manifold triangulation.
-
-There are some important changes to this class as of Regina 7.0:
-
-* A normal surface list does _not_ need to be a child packet of the
-  underlying triangulation, and indeed does not need to interact with
-  the packet tree at all.
-
-* You are welcome to modify or even destroy the original
-  triangulation; if you do then this list will automatically make a
-  private copy of the original triangulation as an ongoing reference.
-  Different normal surface lists (and angle structure lists) can all
-  share the same private copy, so this is not an expensive process.
-
-* You should now create normal surface lists using the class
-  constructor (but which, unlike the old enumerate(), does not insert
-  the list into the packet tree). There is no need to use enumerate()
-  any more.
-
-Since Regina 7.0, this is no longer a "packet type" that can be
-inserted directly into the packet tree. Instead a normal surface list
-is now a standalone mathematatical object, which makes it slimmer and
-faster for ad-hoc use. The consequences of this are:
-
-* If you create your own NormalSurfaces object, it will not have any
-  of the usual packet infrastructure. You cannot add it into the
-  packet tree, and it will not support a label, tags, child/parent
-  packets, and/or event listeners.
-
-* To include an NormalSurfaces object in the packet tree, you must
-  create a new PacketOf<NormalSurfaces>. This _is_ a packet type, and
-  supports labels, tags, child/parent packets, and event listeners. It
-  derives from NormalSurfaces, and so inherits the full NormalSurfaces
-  interface.
-
-* If you are adding new functions to this class that edit the list,
-  you must still remember to create a PacketChangeSpan. This will
-  ensure that, if the list is being managed by a
-  PacketOf<NormalSurfaces>, then the appropriate packet change events
-  will be fired. All other events (aside from packetToBeChanged() and
-  packetWasChanged() are managed directly by the
-  PacketOf<NormalSurfaces> wrapper class.
-
-See the NormalSurface class notes for details of what to do when
-introducing a new coordinate system.
-
-This class implements C++ move semantics and adheres to the C++
-Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.)doc";
-
-// Docstring regina::python::doc::SurfaceExport
-inline constexpr const char SurfaceExport[] =
-R"doc(Used to describe a field, or a set of fields, that can be exported
-alongside a normal surface list. This enumeration type is used with
-export routines such as NormalSurfaces::saveCSVStandard() or
-NormalSurfaces::saveCSVEdgeWeight().
-
-This type describes fields to export _in addition_ to normal
-coordinates, not the normal coordinates themselves (which are always
-exported). Each field describes some property of a single normal
-surface, and corresponds to a single column in a table of normal
-surfaces.
-
-This enumeration names individual fields, as well as some common
-combinations of fields (such as ``None`` and ``All``). Fields can be
-combined using the bitwise OR operator (resulting in an object of type
-``Flags<SurfaceExport>``). In particular, if a surface export function
-takes an argument of type ``Flags<SurfaceExport>``, then you can pass
-a single SurfaceExport constant, or a bitwise combination of such
-constants ``(field1 | field2)``, or empty braces ``{}`` to indicate no
-fields at all.
-
-The list of available fields may grow with future releases of Regina.)doc";
-
 // Docstring regina::python::doc::__bor
 inline constexpr const char __bor[] =
 R"doc(Returns the bitwise OR of the two given flags.
@@ -99,6 +23,26 @@ Parameter ``rhs``:
 
 Returns:
     the combination of both flags.)doc";
+
+// Docstring regina::python::doc::global_swap_NormalSurfaces
+inline constexpr const char global_swap_NormalSurfaces[] =
+R"doc(Swaps the contents of the two given lists.
+
+This global routine simply calls NormalSurfaces::swap(); it is
+provided so that NormalSurfaces meets the C++ Swappable requirements.
+
+See NormalSurfaces::swap() for more details.
+
+.. note::
+    This swap function is _not_ marked ``noexcept``, since it fires
+    change events on both lists which may in turn call arbitrary code
+    via any registered packet listeners.
+
+Parameter ``lhs``:
+    the list whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the list whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::makeEmbeddedConstraints
 inline constexpr const char makeEmbeddedConstraints[] =
@@ -165,10 +109,10 @@ Parameter ``coords``:
 Returns:
     the resulting set of matching equations.)doc";
 
-namespace NormalSurfaces_ {
+struct NormalSurfaces {
 
-// Docstring regina::python::doc::NormalSurfaces_::__array
-inline constexpr const char __array[] =
+// Docstring regina::python::doc::NormalSurfaces::__array
+static constexpr const char __array[] =
 R"doc(Returns the surface at the requested index in this list. This is
 identical to calling surface().
 
@@ -179,11 +123,63 @@ Parameter ``index``:
 Returns:
     the normal surface at the requested index in this list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::__copy
-inline constexpr const char __copy[] = R"doc(Constructs a new copy of the given list.)doc";
+// Docstring regina::python::doc::NormalSurfaces::__class
+static constexpr const char __class[] =
+R"doc(A collection of normal surfaces in a 3-manifold triangulation.
 
-// Docstring regina::python::doc::NormalSurfaces_::__eq
-inline constexpr const char __eq[] =
+There are some important changes to this class as of Regina 7.0:
+
+* A normal surface list does _not_ need to be a child packet of the
+  underlying triangulation, and indeed does not need to interact with
+  the packet tree at all.
+
+* You are welcome to modify or even destroy the original
+  triangulation; if you do then this list will automatically make a
+  private copy of the original triangulation as an ongoing reference.
+  Different normal surface lists (and angle structure lists) can all
+  share the same private copy, so this is not an expensive process.
+
+* You should now create normal surface lists using the class
+  constructor (but which, unlike the old enumerate(), does not insert
+  the list into the packet tree). There is no need to use enumerate()
+  any more.
+
+Since Regina 7.0, this is no longer a "packet type" that can be
+inserted directly into the packet tree. Instead a normal surface list
+is now a standalone mathematatical object, which makes it slimmer and
+faster for ad-hoc use. The consequences of this are:
+
+* If you create your own NormalSurfaces object, it will not have any
+  of the usual packet infrastructure. You cannot add it into the
+  packet tree, and it will not support a label, tags, child/parent
+  packets, and/or event listeners.
+
+* To include an NormalSurfaces object in the packet tree, you must
+  create a new PacketOf<NormalSurfaces>. This _is_ a packet type, and
+  supports labels, tags, child/parent packets, and event listeners. It
+  derives from NormalSurfaces, and so inherits the full NormalSurfaces
+  interface.
+
+* If you are adding new functions to this class that edit the list,
+  you must still remember to create a PacketChangeSpan. This will
+  ensure that, if the list is being managed by a
+  PacketOf<NormalSurfaces>, then the appropriate packet change events
+  will be fired. All other events (aside from packetToBeChanged() and
+  packetWasChanged() are managed directly by the
+  PacketOf<NormalSurfaces> wrapper class.
+
+See the NormalSurface class notes for details of what to do when
+introducing a new coordinate system.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.)doc";
+
+// Docstring regina::python::doc::NormalSurfaces::__copy
+static constexpr const char __copy[] = R"doc(Constructs a new copy of the given list.)doc";
+
+// Docstring regina::python::doc::NormalSurfaces::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given list contain the same set of
 normal (or almost normal) surfaces.
 
@@ -215,8 +211,8 @@ Returns:
     ``True`` if both lists represent the same multiset of normal or
     almost normal surfaces, or ``False`` if not.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::NormalSurfaces::__init
+static constexpr const char __init[] =
 R"doc(A unified "enumeration constructor" for enumerating various classes of
 normal surfaces within a given triangulation.
 
@@ -314,8 +310,8 @@ Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``None`` if no progress reporting is required.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::NormalSurfaces::__init_2
+static constexpr const char __init_2[] =
 R"doc(A unified "transform constructor" for transforming one normal surface
 list into another.
 
@@ -361,8 +357,8 @@ Parameter ``src``:
 Parameter ``transform``:
     the specific transformation to apply.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::__init_3
-inline constexpr const char __init_3[] =
+// Docstring regina::python::doc::NormalSurfaces::__init_3
+static constexpr const char __init_3[] =
 R"doc(A "filter constructor" that creates a new list filled with those
 surfaces from the given list that pass the given filter.
 
@@ -380,8 +376,8 @@ Parameter ``src``:
 Parameter ``filter``:
     the filter to apply to the given list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::__iter__
-inline constexpr const char __iter__[] =
+// Docstring regina::python::doc::NormalSurfaces::__iter__
+static constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over the normal surfaces in this list.
 
 In Python, a normal surface list can be treated as an iterable object:
@@ -395,8 +391,8 @@ for s in list:
 Returns:
     an iterator over the normal surfaces in this list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::algorithm
-inline constexpr const char algorithm[] =
+// Docstring regina::python::doc::NormalSurfaces::algorithm
+static constexpr const char algorithm[] =
 R"doc(Returns details of the algorithm that was used to enumerate this list.
 
 These may not be the same algorithm flags that were passed to the
@@ -408,8 +404,8 @@ flags will be replaced with whatever algorithm was actually used.
 Returns:
     details of the algorithm used to enumerate this list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::allowsAlmostNormal
-inline constexpr const char allowsAlmostNormal[] =
+// Docstring regina::python::doc::NormalSurfaces::allowsAlmostNormal
+static constexpr const char allowsAlmostNormal[] =
 R"doc(Determines if the coordinate system that was used for enumeration
 allows for almost normal surfaces.
 
@@ -420,8 +416,8 @@ system that was used for enumeration.
 Returns:
     ``True`` if and only if almost normal surfaces are supported.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::allowsNonCompact
-inline constexpr const char allowsNonCompact[] =
+// Docstring regina::python::doc::NormalSurfaces::allowsNonCompact
+static constexpr const char allowsNonCompact[] =
 R"doc(Determines if the coordinate system that was used for enumeration
 allows for non-compact normal surfaces.
 
@@ -432,36 +428,16 @@ coordinate system that was used for enumeration.
 Returns:
     ``True`` if and only if non-compact normal surfaces are supported.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::coords
-inline constexpr const char coords[] =
+// Docstring regina::python::doc::NormalSurfaces::coords
+static constexpr const char coords[] =
 R"doc(Returns the coordinate system that was originally used to enumerate
 the surfaces in this list.
 
 Returns:
     the coordinate system used.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given lists.
-
-This global routine simply calls NormalSurfaces::swap(); it is
-provided so that NormalSurfaces meets the C++ Swappable requirements.
-
-See NormalSurfaces::swap() for more details.
-
-.. note::
-    This swap function is _not_ marked ``noexcept``, since it fires
-    change events on both lists which may in turn call arbitrary code
-    via any registered packet listeners.
-
-Parameter ``lhs``:
-    the list whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the list whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::NormalSurfaces_::isEmbeddedOnly
-inline constexpr const char isEmbeddedOnly[] =
+// Docstring regina::python::doc::NormalSurfaces::isEmbeddedOnly
+static constexpr const char isEmbeddedOnly[] =
 R"doc(Returns whether this list was constructed to contain only properly
 embedded surfaces.
 
@@ -474,8 +450,8 @@ Returns:
     ``True`` if this list was constructed to contain only properly
     embedded surfaces, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::recreateMatchingEquations
-inline constexpr const char recreateMatchingEquations[] =
+// Docstring regina::python::doc::NormalSurfaces::recreateMatchingEquations
+static constexpr const char recreateMatchingEquations[] =
 R"doc(Returns the matching equations that were used to create this normal
 surface list. The matrix is not cached: multiple calls to this routine
 will result in the construction of multiple matrices. This routine in
@@ -494,8 +470,8 @@ would not have been created in the first place.
 Returns:
     the matching equations used to create this normal surface list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::saveCSVEdgeWeight
-inline constexpr const char saveCSVEdgeWeight[] =
+// Docstring regina::python::doc::NormalSurfaces::saveCSVEdgeWeight
+static constexpr const char saveCSVEdgeWeight[] =
 R"doc(Exports the given list of normal surfaces as a plain text CSV (comma-
 separated value) file, using edge weight coordinates. CSV files are
 human-readable and human-editable, and are suitable for importing into
@@ -550,8 +526,8 @@ Parameter ``additionalFields``:
 Returns:
     ``True`` if the export was successful, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::saveCSVStandard
-inline constexpr const char saveCSVStandard[] =
+// Docstring regina::python::doc::NormalSurfaces::saveCSVStandard
+static constexpr const char saveCSVStandard[] =
 R"doc(Exports this list of normal surfaces as a plain text CSV (comma-
 separated value) file, using standard coordinates. CSV files are
 human-readable and human-editable, and are suitable for importing into
@@ -607,8 +583,8 @@ Parameter ``additionalFields``:
 Returns:
     ``True`` if the export was successful, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::NormalSurfaces::size
+static constexpr const char size[] =
 R"doc(Returns the number of surfaces stored in this list.
 
 Python:
@@ -618,8 +594,8 @@ Python:
 Returns:
     the number of surfaces.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::sort
-inline constexpr const char sort[] =
+// Docstring regina::python::doc::NormalSurfaces::sort
+static constexpr const char sort[] =
 R"doc(Sorts the surfaces in this list according to the given criterion.
 
 This sort is stable, i.e., surfaces that are equivalent under the
@@ -636,8 +612,8 @@ Parameter ``comp``:
     NormalSurface references, and returns ``True`` if and only if the
     first surface should appear before the second in the sorted list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::surface
-inline constexpr const char surface[] =
+// Docstring regina::python::doc::NormalSurfaces::surface
+static constexpr const char surface[] =
 R"doc(Returns the surface at the requested index in this list. This is
 identical to using the square bracket operator.
 
@@ -648,8 +624,8 @@ Parameter ``index``:
 Returns:
     the normal surface at the requested index in this list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::NormalSurfaces::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given list.
 
 This routine will behave correctly if *other* is in fact this list.
@@ -662,8 +638,8 @@ This routine will behave correctly if *other* is in fact this list.
 Parameter ``other``:
     the list whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::triangulation
-inline constexpr const char triangulation[] =
+// Docstring regina::python::doc::NormalSurfaces::triangulation
+static constexpr const char triangulation[] =
 R"doc(Returns the triangulation in which these normal surfaces live.
 
 This will be a snapshot frozen in time of the triangulation that was
@@ -694,8 +670,8 @@ The rules for using the triangulation() reference are:
 Returns:
     a reference to the underlying triangulation.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::vectors
-inline constexpr const char vectors[] =
+// Docstring regina::python::doc::NormalSurfaces::vectors
+static constexpr const char vectors[] =
 R"doc(Returns a Python iterable object that iterates over the raw vectors
 for all surfaces in this list. For example:
 
@@ -708,8 +684,8 @@ for v in list.vectors():
 Returns:
     an iterator over the normal surfaces in this list.)doc";
 
-// Docstring regina::python::doc::NormalSurfaces_::which
-inline constexpr const char which[] =
+// Docstring regina::python::doc::NormalSurfaces::which
+static constexpr const char which[] =
 R"doc(Returns details of which normal surfaces this list represents within
 the underlying triangulation.
 
@@ -722,26 +698,26 @@ have been removed.
 Returns:
     details of what this list represents.)doc";
 
-}
+}; // struct NormalSurfaces
 
-namespace SurfaceExport_ {
+struct SurfaceExport {
 
-// Docstring regina::python::doc::SurfaceExport_::All
-inline constexpr const char All[] =
+// Docstring regina::python::doc::SurfaceExport::All
+static constexpr const char All[] =
 R"doc(Indicates that all available fields should be exported, including the
 user-assigned surface name. Since the list of available fields may
 grow with future releases, the numerical value of this constant may
 change as a result.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::AllButName
-inline constexpr const char AllButName[] =
+// Docstring regina::python::doc::SurfaceExport::AllButName
+static constexpr const char AllButName[] =
 R"doc(Indicates that all available fields should be exported, except for the
 user-assigned surface name. Since the list of available fields may
 grow with future releases, the numerical value of this constant may
 change as a result.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::Bdry
-inline constexpr const char Bdry[] =
+// Docstring regina::python::doc::SurfaceExport::Bdry
+static constexpr const char Bdry[] =
 R"doc(Represents the calculated property of whether a surface is bounded. In
 most cases, this will be one of the strings "closed", "real bdry" or
 "infinite" (where "infinite" indicates a surface with infinitely many
@@ -753,24 +729,24 @@ around the meridian and *q* times around the longitude. See
 NormalSurface::boundaryIntersections() for further information on
 interpreting these values.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::Euler
-inline constexpr const char Euler[] =
+// Docstring regina::python::doc::SurfaceExport::Euler
+static constexpr const char Euler[] =
 R"doc(Represents the calculated Euler characteristic of a surface. This will
 be an integer, and will be left empty if the Euler characteristic
 cannot be computed.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::Link
-inline constexpr const char Link[] =
+// Docstring regina::python::doc::SurfaceExport::Link
+static constexpr const char Link[] =
 R"doc(Represents whether a surface is a single vertex link or a thin edge
 link. See NormalSurface::isVertexLink() and
 NormalSurface::isThinEdgeLink() for details. This will be written as a
 human-readable string.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::Name
-inline constexpr const char Name[] = R"doc(Represents the user-assigned surface name.)doc";
+// Docstring regina::python::doc::SurfaceExport::Name
+static constexpr const char Name[] = R"doc(Represents the user-assigned surface name.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::None
-inline constexpr const char None[] =
+// Docstring regina::python::doc::SurfaceExport::None
+static constexpr const char None[] =
 R"doc(Indicates that no fields should be exported (except for the normal
 coordinates, which are always exported).
 
@@ -778,27 +754,51 @@ Python:
     This constant is called ``Nil``, since ``None`` is a reserved word
     in Python.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::Orient
-inline constexpr const char Orient[] =
+// Docstring regina::python::doc::SurfaceExport::Orient
+static constexpr const char Orient[] =
 R"doc(Represents the calculated property of whether a surface is orientable.
 This will be the string ``TRUE`` or ``FALSE``, or will be left empty
 if the orientability cannot be computed.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::Sides
-inline constexpr const char Sides[] =
+// Docstring regina::python::doc::SurfaceExport::Sides
+static constexpr const char Sides[] =
 R"doc(Represents the calculated property of whether a surface is one-sided
 or two-sided. This will be the integer 1 or 2, or will be left empty
 if the "sidedness" cannot be computed.)doc";
 
-// Docstring regina::python::doc::SurfaceExport_::Type
-inline constexpr const char Type[] =
+// Docstring regina::python::doc::SurfaceExport::Type
+static constexpr const char Type[] =
 R"doc(Represents any additional high-level properties of a surface, such as
 whether it is a splitting surface or a central surface. This will be
 written as a human-readable string. This field is somewhat arbitrary,
 and the precise properties it describes are subject to change in
 future releases of Regina.)doc";
 
-}
+// Docstring regina::python::doc::SurfaceExport::__class
+static constexpr const char __class[] =
+R"doc(Used to describe a field, or a set of fields, that can be exported
+alongside a normal surface list. This enumeration type is used with
+export routines such as NormalSurfaces::saveCSVStandard() or
+NormalSurfaces::saveCSVEdgeWeight().
+
+This type describes fields to export _in addition_ to normal
+coordinates, not the normal coordinates themselves (which are always
+exported). Each field describes some property of a single normal
+surface, and corresponds to a single column in a table of normal
+surfaces.
+
+This enumeration names individual fields, as well as some common
+combinations of fields (such as ``None`` and ``All``). Fields can be
+combined using the bitwise OR operator (resulting in an object of type
+``Flags<SurfaceExport>``). In particular, if a surface export function
+takes an argument of type ``Flags<SurfaceExport>``, then you can pass
+a single SurfaceExport constant, or a bitwise combination of such
+constants ``(field1 | field2)``, or empty braces ``{}`` to indicate no
+fields at all.
+
+The list of available fields may grow with future releases of Regina.)doc";
+
+}; // struct SurfaceExport
 
 } // namespace regina::python::doc
 

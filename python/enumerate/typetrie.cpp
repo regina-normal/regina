@@ -40,7 +40,7 @@ template <int nTypes>
 void addTypeTrieFor(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TypeTrie)
 
-    auto c = pybind11::class_<TypeTrie<nTypes>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<TypeTrie<nTypes>>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const TypeTrie<nTypes>&>(), rdoc::__copy)
         .def("swap", &TypeTrie<nTypes>::swap, rdoc::swap)
@@ -96,7 +96,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<TypeTrie<nTypes>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, TypeTrie<nTypes>, TypeTrie);
 
     RDOC_SCOPE_END
 }

@@ -11,8 +11,40 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TxICore
-inline constexpr const char TxICore[] =
+// Docstring regina::python::doc::global_swap_TxIDiagonalCore
+inline constexpr const char global_swap_TxIDiagonalCore[] =
+R"doc(Swaps the contents of the two given ``T × I`` triangulations.
+
+This global routine simply calls TxIDiagonalCore::swap(); it is
+provided so that TxIDiagonalCore meets the C++ Swappable requirements.
+
+See TxIDiagonalCore::swap() for more details.
+
+Parameter ``lhs``:
+    the triangulation whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the triangulation whose contents should be swapped with *lhs*.)doc";
+
+// Docstring regina::python::doc::global_swap_TxIParallelCore
+inline constexpr const char global_swap_TxIParallelCore[] =
+R"doc(Swaps the contents of the two given ``T × I`` triangulations.
+
+This global routine simply calls TxIParallelCore::swap(); it is
+provided so that TxIParallelCore meets the C++ Swappable requirements.
+
+See TxIParallelCore::swap() for more details.
+
+Parameter ``lhs``:
+    the triangulation whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the triangulation whose contents should be swapped with *lhs*.)doc";
+
+struct TxICore {
+
+// Docstring regina::python::doc::TxICore::__class
+static constexpr const char __class[] =
 R"doc(Provides a triangulation of the product ``T × I`` (the product of the
 torus and the interval). Generally these triangulations are only one
 tetrahedron thick (i.e., a "thin I-bundle"), though this is not a
@@ -42,8 +74,184 @@ This is an abstract base class; however, the concrete subclasses offer
 all of the usual copy, move and swap operations. See each subclass for
 details.)doc";
 
-// Docstring regina::python::doc::TxIDiagonalCore
-inline constexpr const char TxIDiagonalCore[] =
+// Docstring regina::python::doc::TxICore::__eq
+static constexpr const char __eq[] =
+R"doc(Determines if this and the given ``T × I`` triangulation are of the
+same type and have the same parameters.
+
+If this returns ``True``, then the triangulations returned by core()
+should also be combinatorially identical.
+
+Parameter ``other``:
+    the ``T × I`` triangulation to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given triangulation are of
+    the same type and have the same parameters.)doc";
+
+// Docstring regina::python::doc::TxICore::bdryReln
+static constexpr const char bdryReln[] =
+R"doc(Returns a 2-by-2 matrix describing the α and β curves on a torus
+boundary in terms of specific tetrahedron edges.
+
+Consider the first triangle of the given boundary. Let *t* be the
+tetrahedron returned by bdryTet(*whichBdry*, 0) and let *p* be the
+permutation returned by bdryRoles(*whichBdry*, 0).
+
+Let *edge01* be the directed edge from vertex *p*[0] to *p*[1] of
+tetrahedron *t*, and let *edge02* be the directed edge from vertex
+*p*[0] to *p*[2] of tetrahedron *t*. Then the matrix returned by this
+routine describes how the directed edges *edge01* and *edge02* relate
+to the α and β curves on the given boundary. Specifically:
+
+```
+    [ α ]                  [ edge01 ]
+    [   ]  =  bdryReln() * [        ] .
+    [ β ]                  [ edge02 ]
+```
+
+It is guaranteed that this matrix has determinant +1 or -1.
+
+Parameter ``whichBdry``:
+    0 if the upper boundary should be examined, or 1 if the lower
+    boundary should be examined.
+
+Returns:
+    the relationship between the boundary curves and tetrahedron
+    edges.)doc";
+
+// Docstring regina::python::doc::TxICore::bdryRoles
+static constexpr const char bdryRoles[] =
+R"doc(Describes which tetrahedron vertices play which roles in the upper and
+lower boundary triangles.
+
+Each boundary torus contains two triangles, whose vertices can be
+numbered 0, 1 and 2 according to the following diagram. This diagram
+is completely symmetric, in that edges 1-2 are no more special than
+edges 0-2 or 0-1. The important observations are that edges 1-2 and
+2-1 of each triangle are identified, edges 0-2 and 2-0 of each
+triangle are identified and edges 0-1 and 1-0 of each triangle are
+identified.
+
+```
+          *--->>--*
+          |0  2 / |
+  First   |    / 1|  Second
+ triangle v   /   v triangle
+          |1 /    |
+          | / 2  0|
+          *--->>--*
+```
+
+This routine returns a permutation that maps these integers 0,1,2 to
+real tetrahedron vertices. Let *t* be the tetrahedron returned by
+bdryTet(*whichBdry*, *whichTri*) and let *p* be the permutation
+returned by bdryRoles(*whichBdry*, *whichTri*). Then vertices *p*[0],
+*p*[1] and *p*[2] of tetrahedron *t* correspond to the markings 0, 1
+and 2 respectively in the diagram above (and therefore the boundary
+triangle is face *p*[3] of the tetrahedron).
+
+The arguments to this routine affect whether we examine the upper or
+lower boundary and whether we examine the first or second triangle of
+this boundary
+
+Parameter ``whichBdry``:
+    0 if the upper boundary should be examined, or 1 if the lower
+    boundary should be examined.
+
+Parameter ``whichTri``:
+    0 if the first boundary triangle should be examined, or 1 if the
+    second boundary triangle should be examined.
+
+Returns:
+    the permutation mapping roles 0, 1 and 2 in the diagram above to
+    real tetrahedron vertex numbers.)doc";
+
+// Docstring regina::python::doc::TxICore::bdryTet
+static constexpr const char bdryTet[] =
+R"doc(Determines which tetrahedron provides the requested boundary triangle.
+
+Recall that the ``T × I`` triangulation has two torus boundaries, each
+consisting of two boundary triangles. This routine returns the
+specific tetrahedron that provides the given triangle of the given
+torus boundary.
+
+What is returned is the index number of the tetrahedron within the
+triangulation. To access the tetrahedron itself, you may call
+``core().tetrahedron(bdryTet(...))``.
+
+Note that the same tetrahedron may provide more than one boundary
+triangle.
+
+Parameter ``whichBdry``:
+    0 if the upper boundary should be examined, or 1 if the lower
+    boundary should be examined.
+
+Parameter ``whichTri``:
+    0 if the first boundary triangle should be examined, or 1 if the
+    second boundary triangle should be examined.)doc";
+
+// Docstring regina::python::doc::TxICore::core
+static constexpr const char core[] =
+R"doc(Returns a full copy of the ``T × I`` triangulation that this object
+describes.
+
+Successive calls to this routine will return a reference to the same
+triangulation (i.e., it is not recreated each time this function is
+called).
+
+Returns:
+    the full triangulation.)doc";
+
+// Docstring regina::python::doc::TxICore::name
+static constexpr const char name[] =
+R"doc(Returns the name of this specific triangulation of ``T × I`` as a
+human-readable string.
+
+Returns:
+    the name of this triangulation.)doc";
+
+// Docstring regina::python::doc::TxICore::parallelReln
+static constexpr const char parallelReln[] =
+R"doc(Returns a 2-by-2 matrix describing the parallel relationship between
+the upper and lower boundary curves.
+
+Let *a_u* and *b_u* be the upper α and β boundary curves. Suppose that
+the lower α is parallel to *w*.*a_u* + *x*.*b_u*, and that the lower β
+is parallel to *y*.*a_u* + *z*.*b_u*. Then the matrix returned will be
+
+```
+    [ w  x ]
+    [      ] .
+    [ y  z ]
+```
+
+In other words, if *a_l* and *b_l* are the lower α and β curves
+respectively, we have
+
+```
+    [ a_l ]                      [ a_u ]
+    [     ]  =  parallelReln() * [     ] .
+    [ b_l ]                      [ b_u ]
+```
+
+Returns:
+    the relationship between the upper and lower boundary curves.)doc";
+
+// Docstring regina::python::doc::TxICore::texName
+static constexpr const char texName[] =
+R"doc(Returns the name of this specific triangulation of ``T × I`` in TeX
+format. No leading or trailing dollar signs will be included.
+
+Returns:
+    the name of this triangulation in TeX format.)doc";
+
+}; // struct TxICore
+
+struct TxIDiagonalCore {
+
+// Docstring regina::python::doc::TxIDiagonalCore::__class
+static constexpr const char __class[] =
 R"doc(One of a family of thin ``T × I`` triangulations that typically appear
 at the centres of layered torus bundles. Different triangulations in
 this family use different numbers of tetrahedra, with the larger
@@ -107,8 +315,49 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::TxIParallelCore
-inline constexpr const char TxIParallelCore[] =
+// Docstring regina::python::doc::TxIDiagonalCore::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given ``T × I`` triangulation.)doc";
+
+// Docstring regina::python::doc::TxIDiagonalCore::__init
+static constexpr const char __init[] =
+R"doc(Creates a new ``T × I`` triangulation with the given parameters.
+
+Parameter ``size``:
+    the number of tetrahedra in this triangulation. This must be at
+    least 6.
+
+Parameter ``k``:
+    the additional parameter *k* as described in the class notes. This
+    must be between 1 and (*size* - 5) inclusive.)doc";
+
+// Docstring regina::python::doc::TxIDiagonalCore::k
+static constexpr const char k[] =
+R"doc(Returns the additional parameter *k* as described in the class notes.
+
+Returns:
+    the additional parameter *k*.)doc";
+
+// Docstring regina::python::doc::TxIDiagonalCore::size
+static constexpr const char size[] =
+R"doc(Returns the total number of tetrahedra in this ``T × I``
+triangulation.
+
+Returns:
+    the total number of tetrahedra.)doc";
+
+// Docstring regina::python::doc::TxIDiagonalCore::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given ``T × I`` triangulation.
+
+Parameter ``other``:
+    the triangulation whose contents should be swapped with this.)doc";
+
+}; // struct TxIDiagonalCore
+
+struct TxIParallelCore {
+
+// Docstring regina::python::doc::TxIParallelCore::__class
+static constexpr const char __class[] =
 R"doc(A specific six-tetrahedron TxICore triangulation that does not fit
 neatly into other families.
 
@@ -140,274 +389,25 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-namespace TxICore_ {
-
-// Docstring regina::python::doc::TxICore_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines if this and the given ``T × I`` triangulation are of the
-same type and have the same parameters.
-
-If this returns ``True``, then the triangulations returned by core()
-should also be combinatorially identical.
-
-Parameter ``other``:
-    the ``T × I`` triangulation to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given triangulation are of
-    the same type and have the same parameters.)doc";
-
-// Docstring regina::python::doc::TxICore_::bdryReln
-inline constexpr const char bdryReln[] =
-R"doc(Returns a 2-by-2 matrix describing the α and β curves on a torus
-boundary in terms of specific tetrahedron edges.
-
-Consider the first triangle of the given boundary. Let *t* be the
-tetrahedron returned by bdryTet(*whichBdry*, 0) and let *p* be the
-permutation returned by bdryRoles(*whichBdry*, 0).
-
-Let *edge01* be the directed edge from vertex *p*[0] to *p*[1] of
-tetrahedron *t*, and let *edge02* be the directed edge from vertex
-*p*[0] to *p*[2] of tetrahedron *t*. Then the matrix returned by this
-routine describes how the directed edges *edge01* and *edge02* relate
-to the α and β curves on the given boundary. Specifically:
-
-```
-    [ α ]                  [ edge01 ]
-    [   ]  =  bdryReln() * [        ] .
-    [ β ]                  [ edge02 ]
-```
-
-It is guaranteed that this matrix has determinant +1 or -1.
-
-Parameter ``whichBdry``:
-    0 if the upper boundary should be examined, or 1 if the lower
-    boundary should be examined.
-
-Returns:
-    the relationship between the boundary curves and tetrahedron
-    edges.)doc";
-
-// Docstring regina::python::doc::TxICore_::bdryRoles
-inline constexpr const char bdryRoles[] =
-R"doc(Describes which tetrahedron vertices play which roles in the upper and
-lower boundary triangles.
-
-Each boundary torus contains two triangles, whose vertices can be
-numbered 0, 1 and 2 according to the following diagram. This diagram
-is completely symmetric, in that edges 1-2 are no more special than
-edges 0-2 or 0-1. The important observations are that edges 1-2 and
-2-1 of each triangle are identified, edges 0-2 and 2-0 of each
-triangle are identified and edges 0-1 and 1-0 of each triangle are
-identified.
-
-```
-          *--->>--*
-          |0  2 / |
-  First   |    / 1|  Second
- triangle v   /   v triangle
-          |1 /    |
-          | / 2  0|
-          *--->>--*
-```
-
-This routine returns a permutation that maps these integers 0,1,2 to
-real tetrahedron vertices. Let *t* be the tetrahedron returned by
-bdryTet(*whichBdry*, *whichTri*) and let *p* be the permutation
-returned by bdryRoles(*whichBdry*, *whichTri*). Then vertices *p*[0],
-*p*[1] and *p*[2] of tetrahedron *t* correspond to the markings 0, 1
-and 2 respectively in the diagram above (and therefore the boundary
-triangle is face *p*[3] of the tetrahedron).
-
-The arguments to this routine affect whether we examine the upper or
-lower boundary and whether we examine the first or second triangle of
-this boundary
-
-Parameter ``whichBdry``:
-    0 if the upper boundary should be examined, or 1 if the lower
-    boundary should be examined.
-
-Parameter ``whichTri``:
-    0 if the first boundary triangle should be examined, or 1 if the
-    second boundary triangle should be examined.
-
-Returns:
-    the permutation mapping roles 0, 1 and 2 in the diagram above to
-    real tetrahedron vertex numbers.)doc";
-
-// Docstring regina::python::doc::TxICore_::bdryTet
-inline constexpr const char bdryTet[] =
-R"doc(Determines which tetrahedron provides the requested boundary triangle.
-
-Recall that the ``T × I`` triangulation has two torus boundaries, each
-consisting of two boundary triangles. This routine returns the
-specific tetrahedron that provides the given triangle of the given
-torus boundary.
-
-What is returned is the index number of the tetrahedron within the
-triangulation. To access the tetrahedron itself, you may call
-``core().tetrahedron(bdryTet(...))``.
-
-Note that the same tetrahedron may provide more than one boundary
-triangle.
-
-Parameter ``whichBdry``:
-    0 if the upper boundary should be examined, or 1 if the lower
-    boundary should be examined.
-
-Parameter ``whichTri``:
-    0 if the first boundary triangle should be examined, or 1 if the
-    second boundary triangle should be examined.)doc";
-
-// Docstring regina::python::doc::TxICore_::core
-inline constexpr const char core[] =
-R"doc(Returns a full copy of the ``T × I`` triangulation that this object
-describes.
-
-Successive calls to this routine will return a reference to the same
-triangulation (i.e., it is not recreated each time this function is
-called).
-
-Returns:
-    the full triangulation.)doc";
-
-// Docstring regina::python::doc::TxICore_::name
-inline constexpr const char name[] =
-R"doc(Returns the name of this specific triangulation of ``T × I`` as a
-human-readable string.
-
-Returns:
-    the name of this triangulation.)doc";
-
-// Docstring regina::python::doc::TxICore_::parallelReln
-inline constexpr const char parallelReln[] =
-R"doc(Returns a 2-by-2 matrix describing the parallel relationship between
-the upper and lower boundary curves.
-
-Let *a_u* and *b_u* be the upper α and β boundary curves. Suppose that
-the lower α is parallel to *w*.*a_u* + *x*.*b_u*, and that the lower β
-is parallel to *y*.*a_u* + *z*.*b_u*. Then the matrix returned will be
-
-```
-    [ w  x ]
-    [      ] .
-    [ y  z ]
-```
-
-In other words, if *a_l* and *b_l* are the lower α and β curves
-respectively, we have
-
-```
-    [ a_l ]                      [ a_u ]
-    [     ]  =  parallelReln() * [     ] .
-    [ b_l ]                      [ b_u ]
-```
-
-Returns:
-    the relationship between the upper and lower boundary curves.)doc";
-
-// Docstring regina::python::doc::TxICore_::texName
-inline constexpr const char texName[] =
-R"doc(Returns the name of this specific triangulation of ``T × I`` in TeX
-format. No leading or trailing dollar signs will be included.
-
-Returns:
-    the name of this triangulation in TeX format.)doc";
-
-}
-
-namespace TxIDiagonalCore_ {
-
-// Docstring regina::python::doc::TxIDiagonalCore_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given ``T × I`` triangulation.)doc";
-
-// Docstring regina::python::doc::TxIDiagonalCore_::__init
-inline constexpr const char __init[] =
-R"doc(Creates a new ``T × I`` triangulation with the given parameters.
-
-Parameter ``size``:
-    the number of tetrahedra in this triangulation. This must be at
-    least 6.
-
-Parameter ``k``:
-    the additional parameter *k* as described in the class notes. This
-    must be between 1 and (*size* - 5) inclusive.)doc";
-
-// Docstring regina::python::doc::TxIDiagonalCore_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given ``T × I`` triangulations.
-
-This global routine simply calls TxIDiagonalCore::swap(); it is
-provided so that TxIDiagonalCore meets the C++ Swappable requirements.
-
-See TxIDiagonalCore::swap() for more details.
-
-Parameter ``lhs``:
-    the triangulation whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the triangulation whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::TxIDiagonalCore_::k
-inline constexpr const char k[] =
-R"doc(Returns the additional parameter *k* as described in the class notes.
-
-Returns:
-    the additional parameter *k*.)doc";
-
-// Docstring regina::python::doc::TxIDiagonalCore_::size
-inline constexpr const char size[] =
-R"doc(Returns the total number of tetrahedra in this ``T × I``
-triangulation.
-
-Returns:
-    the total number of tetrahedra.)doc";
-
-// Docstring regina::python::doc::TxIDiagonalCore_::swap
-inline constexpr const char swap[] =
-R"doc(Swaps the contents of this and the given ``T × I`` triangulation.
-
-Parameter ``other``:
-    the triangulation whose contents should be swapped with this.)doc";
-
-}
-
-namespace TxIParallelCore_ {
-
-// Docstring regina::python::doc::TxIParallelCore_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::TxIParallelCore::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given ``T × I`` triangulation.
 
 Since there is only one triangulation of this type, the copy
 constructor will give the same end result as the default constructor
 (but using a different algorithm).)doc";
 
-// Docstring regina::python::doc::TxIParallelCore_::__default
-inline constexpr const char __default[] = R"doc(Creates a new copy of this ``T × I`` triangulation.)doc";
+// Docstring regina::python::doc::TxIParallelCore::__default
+static constexpr const char __default[] = R"doc(Creates a new copy of this ``T × I`` triangulation.)doc";
 
-// Docstring regina::python::doc::TxIParallelCore_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given ``T × I`` triangulations.
-
-This global routine simply calls TxIParallelCore::swap(); it is
-provided so that TxIParallelCore meets the C++ Swappable requirements.
-
-See TxIParallelCore::swap() for more details.
-
-Parameter ``lhs``:
-    the triangulation whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the triangulation whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::TxIParallelCore_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::TxIParallelCore::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given ``T × I`` triangulation.
 
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
 
-}
+}; // struct TxIParallelCore
 
 } // namespace regina::python::doc
 

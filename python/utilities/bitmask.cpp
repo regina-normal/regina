@@ -46,7 +46,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
     // Python docs are essentially the same we will just use Bitmask1 here.
     RDOC_SCOPE_BEGIN(Bitmask1)
 
-    auto c = pybind11::class_<B>(m, name, rdoc_scope)
+    auto c = pybind11::class_<B>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<const B&>(), rdoc::__copy)
@@ -97,7 +97,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
 void addBitmaskGeneric(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Bitmask)
 
-    auto c = pybind11::class_<Bitmask>(m, "Bitmask", rdoc_scope)
+    auto c = pybind11::class_<Bitmask>(m, "Bitmask", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<const Bitmask&>(), rdoc::__copy)
@@ -145,7 +145,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
 
-    regina::python::add_global_swap<Bitmask>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Bitmask);
 
     RDOC_SCOPE_END
 }

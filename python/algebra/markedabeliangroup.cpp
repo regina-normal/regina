@@ -46,7 +46,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(MarkedAbelianGroup)
 
     auto c1 = pybind11::class_<MarkedAbelianGroup>(m, "MarkedAbelianGroup",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const MatrixInt&, const MatrixInt&>(), rdoc::__init)
         .def(pybind11::init<const MatrixInt&, const MatrixInt&,
             const Integer&>(), rdoc::__init_2)
@@ -108,12 +108,12 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     regina::python::add_output_rich(c1);
     regina::python::add_eq_operators(c1, rdoc::__eq);
 
-    regina::python::add_global_swap<MarkedAbelianGroup>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, MarkedAbelianGroup);
 
     RDOC_SCOPE_SWITCH(HomMarkedAbelianGroup)
 
     auto c2 = pybind11::class_<HomMarkedAbelianGroup>(m,
-            "HomMarkedAbelianGroup", rdoc_scope)
+            "HomMarkedAbelianGroup", rdoc::__class)
         .def(pybind11::init<const MarkedAbelianGroup&,
                 const MarkedAbelianGroup&, const MatrixInt&>(), rdoc::__init)
         .def(pybind11::init<const HomMarkedAbelianGroup&>(), rdoc::__copy)
@@ -156,8 +156,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     // Let's not make a decision now that we might regret later.
     regina::python::disable_eq_operators(c2);
 
-    regina::python::add_global_swap<HomMarkedAbelianGroup>(m,
-        rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, HomMarkedAbelianGroup);
 
     RDOC_SCOPE_END
 }

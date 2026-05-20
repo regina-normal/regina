@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::FaceEmbedding
-inline constexpr const char FaceEmbedding[] =
+struct FaceEmbedding {
+
+// Docstring regina::python::doc::FaceEmbedding::__class
+static constexpr const char __class[] =
 R"doc(Details how a *subdim*-face of a *dim*-dimensional triangulation
 appears within each top-dimensional simplex.
 
@@ -60,17 +62,15 @@ Template parameter ``dim``:
 Template parameter ``subdim``:
     the dimension of the faces of the underlying triangulation.)doc";
 
-namespace FaceEmbedding_ {
-
-// Docstring regina::python::doc::FaceEmbedding_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::FaceEmbedding::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given object.
 
 Parameter ``cloneMe``:
     the object to copy.)doc";
 
-// Docstring regina::python::doc::FaceEmbedding_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::FaceEmbedding::__init
+static constexpr const char __init[] =
 R"doc(Creates a new object containing the given data.
 
 Parameter ``simplex``:
@@ -83,7 +83,7 @@ Parameter ``vertices``:
     See FaceEmbeddingBase::vertices() for details of how this
     permutation should be structured.)doc";
 
-}
+}; // struct FaceEmbedding
 
 } // namespace regina::python::doc
 

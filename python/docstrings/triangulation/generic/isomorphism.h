@@ -11,8 +11,143 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Isomorphism
-inline constexpr const char Isomorphism[] =
+// Docstring regina::python::doc::global_swap_Isomorphism
+inline constexpr const char global_swap_Isomorphism[] =
+R"doc(Swaps the contents of the given isomorphisms.
+
+This global routine simply calls Isomorphism<dim>::swap(); it is
+provided so that Isomorphism<dim> meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first isomorphism whose contents should be swapped.
+
+Parameter ``b``:
+    the second isomorphism whose contents should be swapped.)doc";
+
+struct Isomorphism {
+
+// Docstring regina::python::doc::Isomorphism::__array
+static constexpr const char __array[] =
+R"doc(Determines the image of the given source simplex facet under this
+isomorphism. This operator returns by value: it cannot be used to
+alter the isomorphism.
+
+Parameter ``source``:
+    the given source simplex facet; this must be one of the (*dim* +
+    1) facets of one of the size() simplices in the source
+    triangulation.
+
+Returns:
+    the image of the source simplex facet under this isomorphism.)doc";
+
+// Docstring regina::python::doc::Isomorphism::__call
+static constexpr const char __call[] =
+R"doc(Applies this isomorphism to the given triangulation, and returns the
+result as a new triangulation.
+
+An isomorphism represents a combinatorial map from a triangulation *T*
+to a triangulation *U*. This routine treats the given triangulation as
+the domain *T*, and returns the corresponding range *U*. The given
+triangulation *T* is not modified in any way.
+
+In more detail: A new triangulation *U* is returned, so that this
+isomorphism represents a one-to-one, onto and boundary complete
+isomorphism from *T* to *U*. That is, *T* and *U* will be
+combinatorially isomorphic triangulations, and this isomorphism
+describes the mapping from the simplices of *T* and their facets to
+the simplices of *U* and their facets.
+
+If the given triangulation *T* has any locks on top-dimensional
+simplices and/or their facets, then the resulting triangulation *U*
+will have matching locks that have been carried through the
+isomorphism correctly (i.e., the locks will be copied over to the
+appropriate destination simplices and/or facets).
+
+Precondition:
+    The simplex images are precisely 0,1,...,size()-1 in some order
+    (i.e., this isomorphism does not represent a mapping from a
+    smaller triangulation into a larger triangulation).
+
+Exception ``InvalidArgument``:
+    The number of top-dimensional simplices in the given triangulation
+    is not equal to size() for this isomorphism.
+
+Parameter ``tri``:
+    the triangulation to which this isomorphism should be applied.
+
+Returns:
+    the new isomorphic triangulation.)doc";
+
+// Docstring regina::python::doc::Isomorphism::__call_2
+static constexpr const char __call_2[] =
+R"doc(Returns the image of the given facet-of-simplex under this
+isomorphism.
+
+Specifically:
+
+* If ``f.simp`` is in the range 0,1,...,size()-1 inclusive (i.e., *f*
+  denotes a facet of an actual top-dimensional simplex), then this
+  routine will return an object denoting facet ``facetPerm(f.facet)``
+  of simplex ``simpImage(f.simp)``.
+
+* If ``f.simp`` is negative (i.e., *f* takes a before-the-start
+  value), or if ``f.simp`` is at least size() (i.e., *f* takes a
+  boundary or past-the-end value), then this routine will return *f*
+  unchanged (but see the precondition below).
+
+Precondition:
+    If this isomorphism maps a smaller triangulation into a larger
+    triangulation (in particular, if the simplex images under this
+    isomorphism are not just some reordering of 0,1,...,size()-1),
+    then *f* must not denote a boundary or past-the-end value. This is
+    because a boundary or past-the-end value is encoded by using a
+    past-the-end value of ``FacetSpec::simp``. If this isomorphism
+    maps into a larger triangulation then this past-the-end simplex
+    number would need to change, but the isomorphism does not actually
+    know what the new value of ``FacetSpec::simp`` should be.
+
+Parameter ``f``:
+    the facet-of-simplex which should be transformed by this
+    isomorphism.
+
+Returns:
+    the image of *f* under this isomorphism.)doc";
+
+// Docstring regina::python::doc::Isomorphism::__call_3
+static constexpr const char __call_3[] =
+R"doc(Applies this isomorphism to the given facet pairing, and returns the
+result as a new facet pairing.
+
+Although the Isomorphism class was designed to represent mappings
+between isomorphic triangulations, it can just as well describe
+mappings between isomorphic facet pairings. In particular, if *iso*
+represents this isomorphism and if *p* were the facet pairing of some
+triangulation *tri*, then ``iso(p)`` would be the facet pairing for
+the triangulation ``iso(tri)``. Of course, this routine works directly
+with the facet pairing, and does not actually construct any
+triangulations at all.
+
+This routine behaves correctly even if some facets of *p* are
+unmatched (i.e., if *p* models a triangulation with boundary facets).
+
+Precondition:
+    The simplex images are precisely 0,1,...,size()-1 in some order
+    (i.e., this isomorphism does not represent a mapping from a
+    smaller triangulation into a larger triangulation).
+
+Exception ``InvalidArgument``:
+    The number of top-dimensional simplices described by the given
+    facet pairing is not equal to size() for this isomorphism.
+
+Parameter ``p``:
+    the facet pairing to which this isomorphism should be applied.
+
+Returns:
+    the new isomorphic facet pairing.)doc";
+
+// Docstring regina::python::doc::Isomorphism::__class
+static constexpr const char __class[] =
 R"doc(Represents a combinatorial isomorphism from one *dim*-manifold
 triangulation into another.
 
@@ -62,136 +197,15 @@ Template parameter ``dim``:
     the dimension of the triangulations that this isomorphism class
     works with.)doc";
 
-namespace Isomorphism_ {
-
-// Docstring regina::python::doc::Isomorphism_::__array
-inline constexpr const char __array[] =
-R"doc(Determines the image of the given source simplex facet under this
-isomorphism. This operator returns by value: it cannot be used to
-alter the isomorphism.
-
-Parameter ``source``:
-    the given source simplex facet; this must be one of the (*dim* +
-    1) facets of one of the size() simplices in the source
-    triangulation.
-
-Returns:
-    the image of the source simplex facet under this isomorphism.)doc";
-
-// Docstring regina::python::doc::Isomorphism_::__call
-inline constexpr const char __call[] =
-R"doc(Applies this isomorphism to the given triangulation, and returns the
-result as a new triangulation.
-
-An isomorphism represents a combinatorial map from a triangulation *T*
-to a triangulation *U*. This routine treats the given triangulation as
-the domain *T*, and returns the corresponding range *U*. The given
-triangulation *T* is not modified in any way.
-
-In more detail: A new triangulation *U* is returned, so that this
-isomorphism represents a one-to-one, onto and boundary complete
-isomorphism from *T* to *U*. That is, *T* and *U* will be
-combinatorially isomorphic triangulations, and this isomorphism
-describes the mapping from the simplices of *T* and their facets to
-the simplices of *U* and their facets.
-
-If the given triangulation *T* has any locks on top-dimensional
-simplices and/or their facets, then the resulting triangulation *U*
-will have matching locks that have been carried through the
-isomorphism correctly (i.e., the locks will be copied over to the
-appropriate destination simplices and/or facets).
-
-Precondition:
-    The simplex images are precisely 0,1,...,size()-1 in some order
-    (i.e., this isomorphism does not represent a mapping from a
-    smaller triangulation into a larger triangulation).
-
-Exception ``InvalidArgument``:
-    The number of top-dimensional simplices in the given triangulation
-    is not equal to size() for this isomorphism.
-
-Parameter ``tri``:
-    the triangulation to which this isomorphism should be applied.
-
-Returns:
-    the new isomorphic triangulation.)doc";
-
-// Docstring regina::python::doc::Isomorphism_::__call_2
-inline constexpr const char __call_2[] =
-R"doc(Returns the image of the given facet-of-simplex under this
-isomorphism.
-
-Specifically:
-
-* If ``f.simp`` is in the range 0,1,...,size()-1 inclusive (i.e., *f*
-  denotes a facet of an actual top-dimensional simplex), then this
-  routine will return an object denoting facet ``facetPerm(f.facet)``
-  of simplex ``simpImage(f.simp)``.
-
-* If ``f.simp`` is negative (i.e., *f* takes a before-the-start
-  value), or if ``f.simp`` is at least size() (i.e., *f* takes a
-  boundary or past-the-end value), then this routine will return *f*
-  unchanged (but see the precondition below).
-
-Precondition:
-    If this isomorphism maps a smaller triangulation into a larger
-    triangulation (in particular, if the simplex images under this
-    isomorphism are not just some reordering of 0,1,...,size()-1),
-    then *f* must not denote a boundary or past-the-end value. This is
-    because a boundary or past-the-end value is encoded by using a
-    past-the-end value of ``FacetSpec::simp``. If this isomorphism
-    maps into a larger triangulation then this past-the-end simplex
-    number would need to change, but the isomorphism does not actually
-    know what the new value of ``FacetSpec::simp`` should be.
-
-Parameter ``f``:
-    the facet-of-simplex which should be transformed by this
-    isomorphism.
-
-Returns:
-    the image of *f* under this isomorphism.)doc";
-
-// Docstring regina::python::doc::Isomorphism_::__call_3
-inline constexpr const char __call_3[] =
-R"doc(Applies this isomorphism to the given facet pairing, and returns the
-result as a new facet pairing.
-
-Although the Isomorphism class was designed to represent mappings
-between isomorphic triangulations, it can just as well describe
-mappings between isomorphic facet pairings. In particular, if *iso*
-represents this isomorphism and if *p* were the facet pairing of some
-triangulation *tri*, then ``iso(p)`` would be the facet pairing for
-the triangulation ``iso(tri)``. Of course, this routine works directly
-with the facet pairing, and does not actually construct any
-triangulations at all.
-
-This routine behaves correctly even if some facets of *p* are
-unmatched (i.e., if *p* models a triangulation with boundary facets).
-
-Precondition:
-    The simplex images are precisely 0,1,...,size()-1 in some order
-    (i.e., this isomorphism does not represent a mapping from a
-    smaller triangulation into a larger triangulation).
-
-Exception ``InvalidArgument``:
-    The number of top-dimensional simplices described by the given
-    facet pairing is not equal to size() for this isomorphism.
-
-Parameter ``p``:
-    the facet pairing to which this isomorphism should be applied.
-
-Returns:
-    the new isomorphic facet pairing.)doc";
-
-// Docstring regina::python::doc::Isomorphism_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Isomorphism::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a copy of the given isomorphism.
 
 Parameter ``src``:
     the isomorphism to copy.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Isomorphism::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given isomorphism are identical.
 
 Two isomorphisms are considered _identical_ if they act on the same
@@ -214,8 +228,8 @@ Returns:
     ``True`` if and only if this and the given isomorphism are
     identical.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::__inc
-inline constexpr const char __inc[] =
+// Docstring regina::python::doc::Isomorphism::__inc
+static constexpr const char __inc[] =
 R"doc(A preincrement operator that changes this to be the next isomorphism
 in an iteration through all possible isomorphisms of this size.
 
@@ -239,8 +253,8 @@ Python:
 Returns:
     a reference to this isomorphism after the increment.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Isomorphism::__init
+static constexpr const char __init[] =
 R"doc(Creates a new isomorphism with no initialisation. The images of the
 simplices and their vertices must be explicitly set using simpImage()
 and facetPerm().
@@ -253,8 +267,8 @@ Parameter ``nSimplices``:
     the number of simplices in the source triangulation associated
     with this isomorphism. This is allowed to be zero.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::__mul
-inline constexpr const char __mul[] =
+// Docstring regina::python::doc::Isomorphism::__mul
+static constexpr const char __mul[] =
 R"doc(Returns the composition of this isomorphism with the given
 isomorphism.
 
@@ -272,8 +286,8 @@ Precondition:
 Returns:
     the composition of both isomorphisms.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::__mul_2
-inline constexpr const char __mul_2[] =
+// Docstring regina::python::doc::Isomorphism::__mul_2
+static constexpr const char __mul_2[] =
 R"doc(Returns the composition of this isomorphism with the given
 isomorphism.
 
@@ -291,8 +305,8 @@ Precondition:
 Returns:
     the composition of both isomorphisms.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::apply
-inline constexpr const char apply[] =
+// Docstring regina::python::doc::Isomorphism::apply
+static constexpr const char apply[] =
 R"doc(Deprecated routine that applies this isomorphism to the given
 triangulation, and returns the result as a new triangulation.
 
@@ -322,8 +336,8 @@ Parameter ``tri``:
 Returns:
     the new isomorphic triangulation.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::applyInPlace
-inline constexpr const char applyInPlace[] =
+// Docstring regina::python::doc::Isomorphism::applyInPlace
+static constexpr const char applyInPlace[] =
 R"doc(Deprecated routine that applies this isomorphism to the given
 triangulation, modifying the given triangulation directly.
 
@@ -349,8 +363,8 @@ Exception ``InvalidArgument``:
 Parameter ``tri``:
     the triangulation to which this isomorphism should be applied.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::facetPerm
-inline constexpr const char facetPerm[] =
+// Docstring regina::python::doc::Isomorphism::facetPerm
+static constexpr const char facetPerm[] =
 R"doc(Determines the permutation that is applied to the (*dim* + 1) facets
 of the given source simplex under this isomorphism. Facet *i* of
 source simplex *sourceSimp* will be mapped to face
@@ -367,22 +381,8 @@ Parameter ``sourceSimp``:
 Returns:
     the permutation applied to the facets of the source simplex.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given isomorphisms.
-
-This global routine simply calls Isomorphism<dim>::swap(); it is
-provided so that Isomorphism<dim> meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first isomorphism whose contents should be swapped.
-
-Parameter ``b``:
-    the second isomorphism whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Isomorphism_::identity
-inline constexpr const char identity[] =
+// Docstring regina::python::doc::Isomorphism::identity
+static constexpr const char identity[] =
 R"doc(Returns the identity isomorphism for the given number of simplices.
 This isomorphism sends every simplex and every vertex to itself.
 
@@ -393,8 +393,8 @@ Parameter ``nSimplices``:
 Returns:
     the identity isomorphism.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::inverse
-inline constexpr const char inverse[] =
+// Docstring regina::python::doc::Isomorphism::inverse
+static constexpr const char inverse[] =
 R"doc(Returns the inverse of this isomorphism.
 
 Precondition:
@@ -407,8 +407,8 @@ Precondition:
 Returns:
     the inverse isomorphism.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::isEven
-inline constexpr const char isEven[] =
+// Docstring regina::python::doc::Isomorphism::isEven
+static constexpr const char isEven[] =
 R"doc(Determines whether or not this is an even isomorphism.
 
 In an even isomorphism, every facet/vertex permutation is even.
@@ -418,8 +418,8 @@ result in an oriented relabelling of *T* with the same orientation.
 Returns:
     ``True`` if this is an even isomorphism, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::isIdentity
-inline constexpr const char isIdentity[] =
+// Docstring regina::python::doc::Isomorphism::isIdentity
+static constexpr const char isIdentity[] =
 R"doc(Determines whether or not this is an identity isomorphism.
 
 In an identity isomorphism, each simplex image is itself, and within
@@ -429,8 +429,8 @@ Returns:
     ``True`` if this is an identity isomorphism, or ``False``
     otherwise.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::random
-inline constexpr const char random[] =
+// Docstring regina::python::doc::Isomorphism::random
+static constexpr const char random[] =
 R"doc(Returns a random isomorphism for the given number of simplices. This
 isomorphism will reorder simplices 0 to ``nSimplices-1`` in a random
 fashion, and for each simplex a random permutation of its (*dim* + 1)
@@ -455,8 +455,8 @@ Parameter ``even``:
 Returns:
     the new random isomorphism.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::setFacetPerm
-inline constexpr const char setFacetPerm[] =
+// Docstring regina::python::doc::Isomorphism::setFacetPerm
+static constexpr const char setFacetPerm[] =
 R"doc(Python-only routine that sets the permutation that is applied to the
 (*dim* + 1) facets of the given source simplex under this isomorphism.
 Facet *i* of source simplex *sourceSimp* will be mapped to facet
@@ -474,8 +474,8 @@ Parameter ``perm``:
     the new permutation that should be applied to the facets of the
     source simplex.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::setSimpImage
-inline constexpr const char setSimpImage[] =
+// Docstring regina::python::doc::Isomorphism::setSimpImage
+static constexpr const char setSimpImage[] =
 R"doc(Python-only routine that sets the image of the given source simplex to
 the given value under this isomorphism.
 
@@ -495,8 +495,8 @@ Parameter ``image``:
     the index of the new destination simplex that the source simplex
     should map to.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::simpImage
-inline constexpr const char simpImage[] =
+// Docstring regina::python::doc::Isomorphism::simpImage
+static constexpr const char simpImage[] =
 R"doc(Determines the image of the given source simplex under this
 isomorphism.
 
@@ -512,8 +512,8 @@ Returns:
     the index of the destination simplex that the source simplex maps
     to.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::Isomorphism::size
+static constexpr const char size[] =
 R"doc(Returns the number of simplices in the source triangulation associated
 with this isomorphism. Note that this is always less than or equal to
 the number of simplices in the destination triangulation.
@@ -525,8 +525,8 @@ Python:
 Returns:
     the number of simplices in the source triangulation.)doc";
 
-// Docstring regina::python::doc::Isomorphism_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Isomorphism::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given isomorphism.
 
 It does not matter if this and the given isomorphism use different
@@ -535,7 +535,7 @@ numbers of simplices; if so then they will be adjusted accordingly.
 Parameter ``other``:
     the isomorphism whose contents are to be swapped with this.)doc";
 
-}
+}; // struct Isomorphism
 
 } // namespace regina::python::doc
 

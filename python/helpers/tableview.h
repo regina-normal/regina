@@ -121,7 +121,7 @@ void addTableView(pybind11::module_& internal) {
         tableViewElementName<Element> + "_" + std::to_string(dim1);
     auto c = pybind11::class_<T>(internal,
             (prefix + ... + ("_" + std::to_string(dim))).c_str(),
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const T&>(), rdoc::__copy)
         .def("size", &T::size, rdoc::size)
         .def("__len__", [](const T& view) {

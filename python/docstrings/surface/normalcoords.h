@@ -11,72 +11,17 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::NormalCoords
-inline constexpr const char NormalCoords[] =
-R"doc(Represents different coordinate systems that can be used for
-enumerating and/or displaying normal surfaces.
+struct NormalCoords {
 
-IDs 0-9999 are reserved for future use by Regina. If you are extending
-Regina to include your own coordinate system, you should choose an ID
-≥ 10000.)doc";
-
-// Docstring regina::python::doc::NormalEncoding
-inline constexpr const char NormalEncoding[] =
-R"doc(Indicates precisely how a normal surface is encoded by an integer
-vector.
-
-Normal surfaces do not always store their internal vectors in the same
-coordinate system that was used to enumerate the surfaces, and indeed
-an isolated surface does not know _how_ it was originally created.
-
-Therefore each normal surface keeps a small amount of data,
-represented by this class, so that it knows how to interpret its
-internal integer vector. This data also remembers properties of the
-enumeration process that can be used for optimisations (e.g., the
-knowledge that, even if the vector stores triangle coordinates, the
-surface cannot contain any vertex linking components).
-
-For convenience, there is also a special encoding that identifies an
-angle structure vector; this can be created via
-``NormalEncoding(NormalCoords::Angle)``, and can be recognised via
-storesAngles(). However, like NormalCoords::Angle itself, this special
-angle structure encoding does _not_ represent a normal surface, cannot
-be combined with other encodings, and must not be used with any of
-Regina's routines unless the documentation explicitly allows it.
-Specifically, any code that accepts a NormalEncoding argument may
-silently assume that the encoding is _not_ the special angle structure
-encoding, unless the documentation explicitly says otherwise.
-
-Encodings have the important property that any rational multiple of a
-normal surface *s* can always be stored using the same encoding as is
-used for *s*. (In particular, taking a rational multiple will not
-invalidate any of the property flags in the encoding.)
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.)doc";
-
-// Docstring regina::python::doc::NormalInfo
-inline constexpr const char NormalInfo[] =
-R"doc(A class used to query general information about different normal
-coordinate systems.
-
-This class has become much simpler and more stripped-down since Regina
-7.0. Much of the functionality that was available in this class in
-Regina 6.0.1 and earlier can now be accessed through the new
-NormalEncoding class.)doc";
-
-namespace NormalCoords_ {
-
-// Docstring regina::python::doc::NormalCoords_::AlmostNormal
-inline constexpr const char AlmostNormal[] =
+// Docstring regina::python::doc::NormalCoords::AlmostNormal
+static constexpr const char AlmostNormal[] =
 R"doc(Represents standard triangle-quadrilateral-octagon coordinates for
 octagonal almost normal surfaces.
 
 Regina can both enumerate and view surfaces in this coordinate system.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::Angle
-inline constexpr const char Angle[] =
+// Docstring regina::python::doc::NormalCoords::Angle
+static constexpr const char Angle[] =
 R"doc(Represents angle structure coordinates.
 
 This coordinate system is _not_ for use with normal surfaces: it
@@ -103,24 +48,24 @@ Precondition:
     routines unless they explicitly declare that NormalCoords::Angle
     is allowed.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::Arc
-inline constexpr const char Arc[] =
+// Docstring regina::python::doc::NormalCoords::Arc
+static constexpr const char Arc[] =
 R"doc(Represents triangle arc coordinates for normal surfaces.
 
 This coordinate system is for display only: Regina can view surfaces
 in this coordinate system, but it cannot use it to enumerate or create
 surfaces.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::Edge
-inline constexpr const char Edge[] =
+// Docstring regina::python::doc::NormalCoords::Edge
+static constexpr const char Edge[] =
 R"doc(Represents edge weight coordinates for normal surfaces.
 
 This coordinate system is for display only: Regina can view surfaces
 in this coordinate system, but it cannot use it to enumerate or create
 surfaces.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::LegacyAlmostNormal
-inline constexpr const char LegacyAlmostNormal[] =
+// Docstring regina::python::doc::NormalCoords::LegacyAlmostNormal
+static constexpr const char LegacyAlmostNormal[] =
 R"doc(Indicates that a list of almost normal surfaces was created using
 Regina 4.5.1 or earlier, where surfaces with more than one octagon of
 the same type were stripped out of the final solution set. As of
@@ -133,16 +78,16 @@ is only used for reading legacy data files. If you have a list that
 uses this system, you can just view the surfaces in standard almost
 normal coordinates (NormalCoords::AlmostNormal).)doc";
 
-// Docstring regina::python::doc::NormalCoords_::Quad
-inline constexpr const char Quad[] =
+// Docstring regina::python::doc::NormalCoords::Quad
+static constexpr const char Quad[] =
 R"doc(Represents quadrilateral coordinates for normal surfaces. For details,
 see "Normal surface Q-theory", Jeffrey L. Tollefson, Pacific J. Math.
 183 (1998), no. 2, 359--374.
 
 Regina can both enumerate and view surfaces in this coordinate system.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::QuadClosed
-inline constexpr const char QuadClosed[] =
+// Docstring regina::python::doc::NormalCoords::QuadClosed
+static constexpr const char QuadClosed[] =
 R"doc(Represents quadrilateral coordinates in ideal triangulations for
 enumerating closed surfaces only (thus excluding spun-normal
 surfaces). The coordinates themselves are identical to quadrilateral
@@ -179,8 +124,8 @@ Precondition:
     matching equations, and Regina will throw an UnsolvedCase
     exception if this requirement is not met.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::QuadOct
-inline constexpr const char QuadOct[] =
+// Docstring regina::python::doc::NormalCoords::QuadOct
+static constexpr const char QuadOct[] =
 R"doc(Represents quadrilateral-octagon coordinates for octagonal almost
 normal surfaces. For details, see "Quadrilateral-octagon coordinates
 for almost normal surfaces", Benjamin A. Burton, Experiment. Math. 19
@@ -188,8 +133,8 @@ for almost normal surfaces", Benjamin A. Burton, Experiment. Math. 19
 
 Regina can both enumerate and view surfaces in this coordinate system.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::QuadOctClosed
-inline constexpr const char QuadOctClosed[] =
+// Docstring regina::python::doc::NormalCoords::QuadOctClosed
+static constexpr const char QuadOctClosed[] =
 R"doc(Represents quadrilateral-octagon coordinates in ideal triangulations
 for enumerating closed surfaces only (thus excluding spun-almost
 normal surfaces). The coordinates themselves are identical to
@@ -223,19 +168,28 @@ Precondition:
     matching equations, and Regina will throw an UnsolvedCase
     exception if this requirement is not met.)doc";
 
-// Docstring regina::python::doc::NormalCoords_::Standard
-inline constexpr const char Standard[] =
+// Docstring regina::python::doc::NormalCoords::Standard
+static constexpr const char Standard[] =
 R"doc(Represents standard triangle-quadrilateral coordinates for normal
 surfaces.
 
 Regina can both enumerate and view surfaces in this coordinate system.)doc";
 
-}
+// Docstring regina::python::doc::NormalCoords::__class
+static constexpr const char __class[] =
+R"doc(Represents different coordinate systems that can be used for
+enumerating and/or displaying normal surfaces.
 
-namespace NormalEncoding_ {
+IDs 0-9999 are reserved for future use by Regina. If you are extending
+Regina to include your own coordinate system, you should choose an ID
+≥ 10000.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::__add
-inline constexpr const char __add[] =
+}; // struct NormalCoords
+
+struct NormalEncoding {
+
+// Docstring regina::python::doc::NormalEncoding::__add
+static constexpr const char __add[] =
 R"doc(Returns an encoding that could hold the sum of surfaces that use this
 and the given encoding.
 
@@ -253,11 +207,47 @@ Parameter ``rhs``:
 Returns:
     the "sum" of this and the given encoding, as defined above.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given encoding.)doc";
+// Docstring regina::python::doc::NormalEncoding::__class
+static constexpr const char __class[] =
+R"doc(Indicates precisely how a normal surface is encoded by an integer
+vector.
 
-// Docstring regina::python::doc::NormalEncoding_::__eq
-inline constexpr const char __eq[] =
+Normal surfaces do not always store their internal vectors in the same
+coordinate system that was used to enumerate the surfaces, and indeed
+an isolated surface does not know _how_ it was originally created.
+
+Therefore each normal surface keeps a small amount of data,
+represented by this class, so that it knows how to interpret its
+internal integer vector. This data also remembers properties of the
+enumeration process that can be used for optimisations (e.g., the
+knowledge that, even if the vector stores triangle coordinates, the
+surface cannot contain any vertex linking components).
+
+For convenience, there is also a special encoding that identifies an
+angle structure vector; this can be created via
+``NormalEncoding(NormalCoords::Angle)``, and can be recognised via
+storesAngles(). However, like NormalCoords::Angle itself, this special
+angle structure encoding does _not_ represent a normal surface, cannot
+be combined with other encodings, and must not be used with any of
+Regina's routines unless the documentation explicitly allows it.
+Specifically, any code that accepts a NormalEncoding argument may
+silently assume that the encoding is _not_ the special angle structure
+encoding, unless the documentation explicitly says otherwise.
+
+Encodings have the important property that any rational multiple of a
+normal surface *s* can always be stored using the same encoding as is
+used for *s*. (In particular, taking a rational multiple will not
+invalidate any of the property flags in the encoding.)
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.)doc";
+
+// Docstring regina::python::doc::NormalEncoding::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given encoding.)doc";
+
+// Docstring regina::python::doc::NormalEncoding::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given encoding are identical.
 
 Parameter ``other``:
@@ -266,8 +256,8 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if both encodings are identical.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::NormalEncoding::__init
+static constexpr const char __init[] =
 R"doc(Returns an encoding that precisely describes the given normal or
 almost normal coordinate system. This is the encoding that you would
 use with a "pen and paper" enumeration of surfaces in the given
@@ -299,15 +289,15 @@ details.
 Parameter ``coords``:
     one of Regina's normal or almost normal coordinate systems.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::block
-inline constexpr const char block[] =
+// Docstring regina::python::doc::NormalEncoding::block
+static constexpr const char block[] =
 R"doc(Returns the number of coordinates stored for each tetrahedron.
 
 Returns:
     the number of coordinates per tetrahedron.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::couldBeNonCompact
-inline constexpr const char couldBeNonCompact[] =
+// Docstring regina::python::doc::NormalEncoding::couldBeNonCompact
+static constexpr const char couldBeNonCompact[] =
 R"doc(Returns whether it is possible for a surface using this encoding to be
 non-compact. Here "non-compact" refers to a surface with infinitely
 many discs, such as a spun-normal surface. See
@@ -328,8 +318,8 @@ notes), this routine will return ``False``.
 Returns:
     ``True`` if it is possible that the surface might be non-compact.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::couldBeVertexLink
-inline constexpr const char couldBeVertexLink[] =
+// Docstring regina::python::doc::NormalEncoding::couldBeVertexLink
+static constexpr const char couldBeVertexLink[] =
 R"doc(Returns whether it is possible for a surface using this encoding to
 include one or more vertex linking components.
 
@@ -349,16 +339,16 @@ Returns:
     ``True`` if it is possible that the surface might contain one or
     more vertex linking components.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::empty
-inline constexpr const char empty[] =
+// Docstring regina::python::doc::NormalEncoding::empty
+static constexpr const char empty[] =
 R"doc(Returns an encoding that is suitable for representing the empty
 surface, whose normal coordinates are all zero.
 
 Returns:
     a suitable encoding for the empty surface.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::fromIntValue
-inline constexpr const char fromIntValue[] =
+// Docstring regina::python::doc::NormalEncoding::fromIntValue
+static constexpr const char fromIntValue[] =
 R"doc(Reconstructs an encoding from an integer value.
 
 This is a partner routine to intValue(): for any encoding *enc*, the
@@ -374,8 +364,8 @@ Parameter ``value``:
 Returns:
     the corresponding encoding.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::intValue
-inline constexpr const char intValue[] =
+// Docstring regina::python::doc::NormalEncoding::intValue
+static constexpr const char intValue[] =
 R"doc(Exports this encoding as an integer.
 
 The exact value of the integer is meant to be opaque, in the sense
@@ -392,8 +382,8 @@ It is guaranteed that 0 will never be the integer value of a
 Returns:
     an integer that represents this encoding.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::storesAngles
-inline constexpr const char storesAngles[] =
+// Docstring regina::python::doc::NormalEncoding::storesAngles
+static constexpr const char storesAngles[] =
 R"doc(Identifies whether this is the special angle structure encoding.
 
 This routine is used to recognise the "special case" encoding
@@ -402,8 +392,8 @@ represent a normal surface, and cannot be used anywhere in Regina
 unless explicitly allowed in the documentation. See the class notes
 for further details.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::storesOctagons
-inline constexpr const char storesOctagons[] =
+// Docstring regina::python::doc::NormalEncoding::storesOctagons
+static constexpr const char storesOctagons[] =
 R"doc(Returns whether this encoding explicitly stores octagon coordinates.
 
 For the special angle structure encoding (described in the class
@@ -412,8 +402,8 @@ notes), this routine will return ``False``.
 Returns:
     ``True`` if octagon coordinates are stored.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::storesTriangles
-inline constexpr const char storesTriangles[] =
+// Docstring regina::python::doc::NormalEncoding::storesTriangles
+static constexpr const char storesTriangles[] =
 R"doc(Returns whether this encoding explicitly stores triangle coordinates.
 
 For the special angle structure encoding (described in the class
@@ -422,8 +412,8 @@ notes), this routine will return ``False``.
 Returns:
     ``True`` if triangle coordinates are stored.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::valid
-inline constexpr const char valid[] =
+// Docstring regina::python::doc::NormalEncoding::valid
+static constexpr const char valid[] =
 R"doc(Returns whether this describes a vector encoding of normal or almost
 normal surfaces.
 
@@ -437,8 +427,8 @@ notes), this routine will return ``True``.
 Returns:
     ``True`` if and only if this is a valid encoding.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::withOctagons
-inline constexpr const char withOctagons[] =
+// Docstring regina::python::doc::NormalEncoding::withOctagons
+static constexpr const char withOctagons[] =
 R"doc(Returns an extension of this encoding that explicitly stores octagon
 coordinates.
 
@@ -457,8 +447,8 @@ Precondition:
 Returns:
     an extension of this encoding that stores octagon coordinates.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::withTriangles
-inline constexpr const char withTriangles[] =
+// Docstring regina::python::doc::NormalEncoding::withTriangles
+static constexpr const char withTriangles[] =
 R"doc(Returns an extension of this encoding that explicitly stores triangle
 coordinates.
 
@@ -477,8 +467,8 @@ Precondition:
 Returns:
     an extension of this encoding that stores triangle coordinates.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::withoutOctagons
-inline constexpr const char withoutOctagons[] =
+// Docstring regina::python::doc::NormalEncoding::withoutOctagons
+static constexpr const char withoutOctagons[] =
 R"doc(Returns a restricted version of this encoding that does not store
 octagon coordinates.
 
@@ -498,8 +488,8 @@ Returns:
     a restriction of this encoding that does not store octagon
     coordinates.)doc";
 
-// Docstring regina::python::doc::NormalEncoding_::withoutTriangles
-inline constexpr const char withoutTriangles[] =
+// Docstring regina::python::doc::NormalEncoding::withoutTriangles
+static constexpr const char withoutTriangles[] =
 R"doc(Returns a restricted version of this encoding that does not store
 triangle coordinates.
 
@@ -520,12 +510,22 @@ Returns:
     a restriction of this encoding that does not store triangle
     coordinates.)doc";
 
-}
+}; // struct NormalEncoding
 
-namespace NormalInfo_ {
+struct NormalInfo {
 
-// Docstring regina::python::doc::NormalInfo_::name
-inline constexpr const char name[] =
+// Docstring regina::python::doc::NormalInfo::__class
+static constexpr const char __class[] =
+R"doc(A class used to query general information about different normal
+coordinate systems.
+
+This class has become much simpler and more stripped-down since Regina
+7.0. Much of the functionality that was available in this class in
+Regina 6.0.1 and earlier can now be accessed through the new
+NormalEncoding class.)doc";
+
+// Docstring regina::python::doc::NormalInfo::name
+static constexpr const char name[] =
 R"doc(Returns the human-readable name of the given coordinate system.
 
 The first letter of the returned string will be upper-case, and all
@@ -541,7 +541,7 @@ Parameter ``coordSystem``:
 Returns:
     the name of the given coordinate system.)doc";
 
-}
+}; // struct NormalInfo
 
 } // namespace regina::python::doc
 

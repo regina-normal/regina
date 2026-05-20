@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::BoundaryComponent
-inline constexpr const char BoundaryComponent[] =
+struct BoundaryComponent {
+
+// Docstring regina::python::doc::BoundaryComponent::__class
+static constexpr const char __class[] =
 R"doc(A component of the boundary of a *dim*-manifold triangulation.
 
 Regina recognises three types of boundary components:
@@ -82,6 +84,8 @@ Python:
 
 Template parameter ``dim``:
     the dimension of the underlying triangulation.)doc";
+
+}; // struct BoundaryComponent
 
 } // namespace regina::python::doc
 

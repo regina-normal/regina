@@ -43,7 +43,7 @@ using regina::SatBlockModel;
 void addSatBlock(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SatBlock)
 
-    auto c = pybind11::class_<SatBlock>(m, "SatBlock", rdoc_scope)
+    auto c = pybind11::class_<SatBlock>(m, "SatBlock", rdoc::__class)
         .def("countAnnuli", &SatBlock::countAnnuli, rdoc::countAnnuli)
         .def("annulus", &SatBlock::annulus,
             pybind11::return_value_policy::reference_internal, rdoc::annulus)
@@ -85,7 +85,7 @@ void addSatBlock(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(SatBlockModel)
 
-    auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel", rdoc_scope)
+    auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel", rdoc::__class)
         .def(pybind11::init<const SatBlockModel&>(), rdoc::__copy)
         .def("swap", &SatBlockModel::swap, rdoc::swap)
         .def("triangulation", &SatBlockModel::triangulation,
@@ -95,7 +95,7 @@ void addSatBlock(pybind11::module_& m) {
     regina::python::add_output_rich(d);
     regina::python::add_eq_operators(d, rdoc::__eq);
 
-    regina::python::add_global_swap<SatBlockModel>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SatBlockModel);
 
     RDOC_SCOPE_END
 }

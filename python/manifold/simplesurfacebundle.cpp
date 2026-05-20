@@ -40,7 +40,7 @@ void addSimpleSurfaceBundle(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SimpleSurfaceBundle)
 
     auto c = pybind11::class_<SimpleSurfaceBundle, regina::Manifold>
-            (m, "SimpleSurfaceBundle", rdoc_scope)
+            (m, "SimpleSurfaceBundle", rdoc::__class)
         .def(pybind11::init<int>(), rdoc::__init)
         .def(pybind11::init<const SimpleSurfaceBundle&>(), rdoc::__copy)
         .def("swap", &SimpleSurfaceBundle::swap, rdoc::swap)
@@ -53,7 +53,7 @@ void addSimpleSurfaceBundle(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<SimpleSurfaceBundle>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SimpleSurfaceBundle);
 
     RDOC_SCOPE_END
 }

@@ -45,7 +45,7 @@ using regina::VectorLarge;
 void addHilbertPrimal(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HilbertPrimal)
 
-    auto c = pybind11::class_<HilbertPrimal>(m, "HilbertPrimal", rdoc_scope)
+    auto c = pybind11::class_<HilbertPrimal>(m, "HilbertPrimal", rdoc::__class)
         .def_static("enumerate", [](const std::function<void(VectorInt&&)>& a,
                 const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,

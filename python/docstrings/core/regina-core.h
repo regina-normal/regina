@@ -11,25 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Algorithm
-inline constexpr const char Algorithm[] =
-R"doc(Represents various classes of algorithms that Regina can use for
-computations. A function that takes an Algorithm argument need not
-support all types of algorithm - if an unsupported algorithm is passed
-then Regina will fall back to Algorithm::Default.
-
-This enumeration type does _not_ allow constants to be combined using
-the OR operator.
-
-For some computations where the user can exert more fine-grained
-control over the underlying algorithm, a more specialised enumeration
-type is used instead. For example, see the NormalSurfaces class
-constructor, which can take a combination of flags of the specialised
-algorithm type NormalAlg.)doc";
-
-// Docstring regina::python::doc::Language
-inline constexpr const char Language[] = R"doc(Represents different programming languages that Regina supports.)doc";
-
 // Docstring regina::python::doc::maxDim
 inline constexpr const char maxDim[] =
 R"doc(Indicates the largest dimension of triangulation that Regina can work
@@ -115,22 +96,22 @@ See also:
 See also:
     maxDim())doc";
 
-namespace Algorithm_ {
+struct Algorithm {
 
-// Docstring regina::python::doc::Algorithm_::Backtrack
-inline constexpr const char Backtrack[] =
+// Docstring regina::python::doc::Algorithm::Backtrack
+static constexpr const char Backtrack[] =
 R"doc(An optimised backtracking algorithm. This typically works over some
 search tree (often of exponential size or worse), but include
 significant optimisations to prune the search tree and/or cache
 computations where possible.)doc";
 
-// Docstring regina::python::doc::Algorithm_::Default
-inline constexpr const char Default[] =
+// Docstring regina::python::doc::Algorithm::Default
+static constexpr const char Default[] =
 R"doc(The default algorithm. Here Regina will choose whichever algorithm it
 thinks (rightly or wrongly) is most appropriate.)doc";
 
-// Docstring regina::python::doc::Algorithm_::Naive
-inline constexpr const char Naive[] =
+// Docstring regina::python::doc::Algorithm::Naive
+static constexpr const char Naive[] =
 R"doc(A naive algorithm. This typically works directly with the underlying
 definitions (e.g., computing Turaev-Viro as a state sum), without
 further optimisations.
@@ -140,19 +121,35 @@ further optimisations.
     experimentation. Due to their slow performance, they are not
     suitable for "real" applications.)doc";
 
-// Docstring regina::python::doc::Algorithm_::Treewidth
-inline constexpr const char Treewidth[] =
+// Docstring regina::python::doc::Algorithm::Treewidth
+static constexpr const char Treewidth[] =
 R"doc(A treewidth-based algorithm. Typically this uses dynamic programming
 over a tree decomposition of some underlying graph. Such algorithms
 are often fast for triangulations or links with small treewidth, but
 may require large amounts of memory.)doc";
 
-}
+// Docstring regina::python::doc::Algorithm::__class
+static constexpr const char __class[] =
+R"doc(Represents various classes of algorithms that Regina can use for
+computations. A function that takes an Algorithm argument need not
+support all types of algorithm - if an unsupported algorithm is passed
+then Regina will fall back to Algorithm::Default.
 
-namespace Language_ {
+This enumeration type does _not_ allow constants to be combined using
+the OR operator.
 
-// Docstring regina::python::doc::Language_::Current
-inline constexpr const char Current[] =
+For some computations where the user can exert more fine-grained
+control over the underlying algorithm, a more specialised enumeration
+type is used instead. For example, see the NormalSurfaces class
+constructor, which can take a combination of flags of the specialised
+algorithm type NormalAlg.)doc";
+
+}; // struct Algorithm
+
+struct Language {
+
+// Docstring regina::python::doc::Language::Current
+static constexpr const char Current[] =
 R"doc(The programming language currently being used.
 
 When writing C++ code, this is equivalent to Language::Cxx. When using
@@ -165,13 +162,16 @@ the Python bindings, this is equivalent to Language::Python.
     Language::Python. See the code for binding for Link::source() as
     an example of where this issue arises and how it is resolved.)doc";
 
-// Docstring regina::python::doc::Language_::Cxx
-inline constexpr const char Cxx[] = R"doc(The C++ programming language.)doc";
+// Docstring regina::python::doc::Language::Cxx
+static constexpr const char Cxx[] = R"doc(The C++ programming language.)doc";
 
-// Docstring regina::python::doc::Language_::Python
-inline constexpr const char Python[] = R"doc(The Python programming language.)doc";
+// Docstring regina::python::doc::Language::Python
+static constexpr const char Python[] = R"doc(The Python programming language.)doc";
 
-}
+// Docstring regina::python::doc::Language::__class
+static constexpr const char __class[] = R"doc(Represents different programming languages that Regina supports.)doc";
+
+}; // struct Language
 
 } // namespace regina::python::doc
 

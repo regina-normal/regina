@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::LayeredChain
-inline constexpr const char LayeredChain[] =
+// Docstring regina::python::doc::global_swap_LayeredChain
+inline constexpr const char global_swap_LayeredChain[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls LayeredChain::swap(); it is provided
+so that LayeredChain meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct LayeredChain {
+
+// Docstring regina::python::doc::LayeredChain::__class
+static constexpr const char __class[] =
 R"doc(Represents a layered chain in a triangulation.
 
 A layered chain is a set of *n* tetrahedra glued to each other by
@@ -54,13 +69,11 @@ as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
 StandardTriangulation subclasses.)doc";
 
-namespace LayeredChain_ {
+// Docstring regina::python::doc::LayeredChain::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::LayeredChain_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::LayeredChain::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of layered chain.
 
@@ -80,8 +93,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered chain.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::LayeredChain::__init
+static constexpr const char __init[] =
 R"doc(Creates a new layered chain containing only the given tetrahedron.
 This new layered chain will have index 1, but may be extended using
 extendAbove(), extendBelow() or extendMaximal().
@@ -94,15 +107,15 @@ Parameter ``vertexRoles``:
     play in the layered chain; this must be in the same format as the
     permutation returned by bottomVertexRoles() and topVertexRoles().)doc";
 
-// Docstring regina::python::doc::LayeredChain_::bottom
-inline constexpr const char bottom[] =
+// Docstring regina::python::doc::LayeredChain::bottom
+static constexpr const char bottom[] =
 R"doc(Returns the bottom tetrahedron of this layered chain.
 
 Returns:
     the bottom tetrahedron.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::bottomVertexRoles
-inline constexpr const char bottomVertexRoles[] =
+// Docstring regina::python::doc::LayeredChain::bottomVertexRoles
+static constexpr const char bottomVertexRoles[] =
 R"doc(Returns a permutation represeting the role that each vertex of the
 bottom tetrahedron plays in the layered chain. The permutation
 returned (call this ``p``) maps 0, 1, 2 and 3 to the four vertices of
@@ -117,8 +130,8 @@ Returns:
     a permutation representing the roles of the vertices of the bottom
     tetrahedron.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::extendAbove
-inline constexpr const char extendAbove[] =
+// Docstring regina::python::doc::LayeredChain::extendAbove
+static constexpr const char extendAbove[] =
 R"doc(Checks to see whether this layered chain can be extended to include
 the tetrahedron above the top tetrahedron (and still remain a layered
 chain). If so, this layered chain will be modified accordingly (note
@@ -128,8 +141,8 @@ change).
 Returns:
     ``True`` if and only if this layered chain was extended.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::extendBelow
-inline constexpr const char extendBelow[] =
+// Docstring regina::python::doc::LayeredChain::extendBelow
+static constexpr const char extendBelow[] =
 R"doc(Checks to see whether this layered chain can be extended to include
 the tetrahedron below the bottom tetrahedron (and still remain a
 layered chain). If so, this layered chain will be modified accordingly
@@ -139,8 +152,8 @@ tetrahedron will change).
 Returns:
     ``True`` if and only if this layered chain was extended.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::extendMaximal
-inline constexpr const char extendMaximal[] =
+// Docstring regina::python::doc::LayeredChain::extendMaximal
+static constexpr const char extendMaximal[] =
 R"doc(Extends this layered chain to a maximal length layered chain. Both
 extendAbove() and extendBelow() will be used until this layered chain
 can be extended no further.
@@ -148,28 +161,15 @@ can be extended no further.
 Returns:
     ``True`` if and only if this layered chain was extended.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls LayeredChain::swap(); it is provided
-so that LayeredChain meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::LayeredChain_::index
-inline constexpr const char index[] =
+// Docstring regina::python::doc::LayeredChain::index
+static constexpr const char index[] =
 R"doc(Returns the number of tetrahedra in this layered chain.
 
 Returns:
     the number of tetrahedra.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::invert
-inline constexpr const char invert[] =
+// Docstring regina::python::doc::LayeredChain::invert
+static constexpr const char invert[] =
 R"doc(Inverts this layered chain so the upper hinge becomes the lower and
 vice versa. The top and bottom tetrahedra will remain the top and
 bottom tetrahedra respectively.
@@ -181,8 +181,8 @@ chain.
 Note that only the representation of the chain is altered; the
 underlying triangulation is not changed.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::reverse
-inline constexpr const char reverse[] =
+// Docstring regina::python::doc::LayeredChain::reverse
+static constexpr const char reverse[] =
 R"doc(Reverses this layered chain so the top tetrahedron becomes the bottom
 and vice versa. The upper and lower hinges will remain the upper and
 lower hinges respectively.
@@ -194,22 +194,22 @@ chain.
 Note that only the representation of the chain is altered; the
 underlying triangulation is not changed.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::LayeredChain::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::top
-inline constexpr const char top[] =
+// Docstring regina::python::doc::LayeredChain::top
+static constexpr const char top[] =
 R"doc(Returns the top tetrahedron of this layered chain.
 
 Returns:
     the top tetrahedron.)doc";
 
-// Docstring regina::python::doc::LayeredChain_::topVertexRoles
-inline constexpr const char topVertexRoles[] =
+// Docstring regina::python::doc::LayeredChain::topVertexRoles
+static constexpr const char topVertexRoles[] =
 R"doc(Returns a permutation represeting the role that each vertex of the top
 tetrahedron plays in the layered chain. The permutation returned (call
 this ``p``) maps 0, 1, 2 and 3 to the four vertices of the top
@@ -224,7 +224,7 @@ Returns:
     a permutation representing the roles of the vertices of the top
     tetrahedron.)doc";
 
-}
+}; // struct LayeredChain
 
 } // namespace regina::python::doc
 

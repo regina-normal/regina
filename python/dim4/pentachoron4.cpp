@@ -42,7 +42,7 @@ void addPentachoron4(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Face)
     RDOC_SCOPE_BASE(detail::SimplexBase)
 
-    auto c = pybind11::class_<regina::Simplex<4>>(m, "Simplex4", rdoc_scope)
+    auto c = pybind11::class_<regina::Simplex<4>>(m, "Simplex4", rdoc::__class)
         .def("description", &Pentachoron<4>::description, rbase::description)
         .def("setDescription", &Pentachoron<4>::setDescription,
             rbase::setDescription)

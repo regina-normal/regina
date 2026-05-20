@@ -11,31 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Polynomial
-inline constexpr const char Polynomial[] =
-R"doc(Represents a single-variable polynomial with coefficients of type *T*.
-All exponents in the polynomial must be non-negative (so you can
-represent ``2+3x`` but not ``1+1/x``).
-
-The underlying storage method for this class is dense (i.e., all
-coefficients are explicitly stored, including zero coefficients).
-
-This class implements C++ move semantics and adheres to the C++
-Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
-
-Python:
-    The C++ types Polynomial<Integer> and Polynomial<Rational> are
-    available using the Python names PolynomialInt and
-    PolynomialRational respectively. The alias Polynomial is also
-    provided for the type Polynomial<Rational>.
-
-Template parameter ``T``:
-    the coefficient type. A typical coefficient type would be Integer
-    or Rational. Note that native C++ integer types are _not_
-    supported (since they have no zero-initialising default
-    constructor).)doc";
-
 // Docstring regina::python::doc::__add
 inline constexpr const char __add[] =
 R"doc(Adds the two given polynomials.
@@ -281,10 +256,23 @@ Parameter ``rhs``:
 Returns:
     the difference of the two given polynomials.)doc";
 
-namespace Polynomial_ {
+// Docstring regina::python::doc::global_swap_Polynomial
+inline constexpr const char global_swap_Polynomial[] =
+R"doc(Swaps the contents of the given polynomials.
 
-// Docstring regina::python::doc::Polynomial_::__array
-inline constexpr const char __array[] =
+This global routine simply calls Polynomial<T>::swap(); it is provided
+so that Polynomial<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first polynomial whose contents should be swapped.
+
+Parameter ``b``:
+    the second polynomial whose contents should be swapped.)doc";
+
+struct Polynomial {
+
+// Docstring regina::python::doc::Polynomial::__array
+static constexpr const char __array[] =
 R"doc(Returns the given coefficient of this polynomial.
 
 Python:
@@ -301,8 +289,33 @@ Parameter ``exp``:
 Returns:
     the coefficient of the given term.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Polynomial::__class
+static constexpr const char __class[] =
+R"doc(Represents a single-variable polynomial with coefficients of type *T*.
+All exponents in the polynomial must be non-negative (so you can
+represent ``2+3x`` but not ``1+1/x``).
+
+The underlying storage method for this class is dense (i.e., all
+coefficients are explicitly stored, including zero coefficients).
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.
+
+Python:
+    The C++ types Polynomial<Integer> and Polynomial<Rational> are
+    available using the Python names PolynomialInt and
+    PolynomialRational respectively. The alias Polynomial is also
+    provided for the type Polynomial<Rational>.
+
+Template parameter ``T``:
+    the coefficient type. A typical coefficient type would be Integer
+    or Rational. Note that native C++ integer types are _not_
+    supported (since they have no zero-initialising default
+    constructor).)doc";
+
+// Docstring regina::python::doc::Polynomial::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given polynomial.
 
 This constructor induces a deep copy of *value*.
@@ -315,11 +328,11 @@ copy constructor automatically.
 Parameter ``value``:
     the polynomial to clone.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__default
-inline constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
+// Docstring regina::python::doc::Polynomial::__default
+static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Polynomial::__eq
+static constexpr const char __eq[] =
 R"doc(Tests whether this and the given polynomial are equal.
 
 Parameter ``rhs``:
@@ -328,8 +341,8 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__iadd
-inline constexpr const char __iadd[] =
+// Docstring regina::python::doc::Polynomial::__iadd
+static constexpr const char __iadd[] =
 R"doc(Adds the given polynomial to this.
 
 The given polynomial need not have the same degree as this. Note that
@@ -348,8 +361,8 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__idiv
-inline constexpr const char __idiv[] =
+// Docstring regina::python::doc::Polynomial::__idiv
+static constexpr const char __idiv[] =
 R"doc(Divides this polynomial by the given constant.
 
 This uses the division operator /= for the coefficient type *T*.
@@ -363,8 +376,8 @@ Parameter ``scalar``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__idiv_2
-inline constexpr const char __idiv_2[] =
+// Docstring regina::python::doc::Polynomial::__idiv_2
+static constexpr const char __idiv_2[] =
 R"doc(Divides this by the given polynomial.
 
 More precisely: suppose there exist polynomials *q* and *r* with
@@ -398,8 +411,8 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__imul
-inline constexpr const char __imul[] =
+// Docstring regina::python::doc::Polynomial::__imul
+static constexpr const char __imul[] =
 R"doc(Multiplies this polynomial by the given constant.
 
 Parameter ``scalar``:
@@ -408,8 +421,8 @@ Parameter ``scalar``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__imul_2
-inline constexpr const char __imul_2[] =
+// Docstring regina::python::doc::Polynomial::__imul_2
+static constexpr const char __imul_2[] =
 R"doc(Multiplies this by the given polynomial.
 
 Parameter ``other``:
@@ -418,8 +431,8 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Polynomial::__init
+static constexpr const char __init[] =
 R"doc(Deprecated constructor that creates the polynomial ``x^d`` for the
 given degree *d*.
 
@@ -432,8 +445,8 @@ given degree *d*.
 Parameter ``degree``:
     the degree of the new polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::Polynomial::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new polynomial from the given sequence of coefficients. The
 coefficients should be given in order from the constant coefficient to
 the leading coefficient.
@@ -458,8 +471,8 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     coefficients.)doc";
 
-// Docstring regina::python::doc::Polynomial_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Polynomial::__isub
+static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
 
 The given polynomial need not have the same degree as this. Note that
@@ -472,8 +485,8 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::degree
-inline constexpr const char degree[] =
+// Docstring regina::python::doc::Polynomial::degree
+static constexpr const char degree[] =
 R"doc(Returns the degree of this polynomial. This is the largest exponent
 with a non-zero coefficient.
 
@@ -483,8 +496,8 @@ have degree zero.
 Returns:
     the degree of this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::divisionAlg
-inline constexpr const char divisionAlg[] =
+// Docstring regina::python::doc::Polynomial::divisionAlg
+static constexpr const char divisionAlg[] =
 R"doc(Divides this by the given divisor, and returns both the quotient and
 the remainder.
 
@@ -519,8 +532,8 @@ Parameter ``divisor``:
 Returns:
     a pair holding the quotient and remainder, as described above.)doc";
 
-// Docstring regina::python::doc::Polynomial_::gcdWithCoeffs
-inline constexpr const char gcdWithCoeffs[] =
+// Docstring regina::python::doc::Polynomial::gcdWithCoeffs
+static constexpr const char gcdWithCoeffs[] =
 R"doc(Calculates the greatest common divisor of this and the given
 polynomial, and finds a linear combination of these polynomials that
 gives this gcd.
@@ -547,24 +560,11 @@ Parameter ``v``:
     a polynomial whose contents will be destroyed and replaced with
     *v*, as described above.)doc";
 
-// Docstring regina::python::doc::Polynomial_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given polynomials.
+// Docstring regina::python::doc::Polynomial::init
+static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
 
-This global routine simply calls Polynomial<T>::swap(); it is provided
-so that Polynomial<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first polynomial whose contents should be swapped.
-
-Parameter ``b``:
-    the second polynomial whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Polynomial_::init
-inline constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Polynomial_::init_2
-inline constexpr const char init_2[] =
+// Docstring regina::python::doc::Polynomial::init_2
+static constexpr const char init_2[] =
 R"doc(Deprecated function that sets this to become the polynomial ``x^d``
 for the given degree *d*.
 
@@ -576,8 +576,8 @@ for the given degree *d*.
 Parameter ``degree``:
     the new degree of this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::init_3
-inline constexpr const char init_3[] =
+// Docstring regina::python::doc::Polynomial::init_3
+static constexpr const char init_3[] =
 R"doc(Sets this to become the polynomial described by the given sequence of
 coefficients. The coefficients should appear in order from the
 constant coefficient to the leading coefficient.
@@ -602,30 +602,30 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     coefficients.)doc";
 
-// Docstring regina::python::doc::Polynomial_::initExp
-inline constexpr const char initExp[] =
+// Docstring regina::python::doc::Polynomial::initExp
+static constexpr const char initExp[] =
 R"doc(Sets this to become the polynomial ``x^d`` for the given degree *d*.
 
 Parameter ``degree``:
     the new degree of this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::isMonic
-inline constexpr const char isMonic[] =
+// Docstring regina::python::doc::Polynomial::isMonic
+static constexpr const char isMonic[] =
 R"doc(Returns whether this polynomial is monic. A _monic_ polynomial is a
 non-zero polynomial whose leading coefficient is one.
 
 Returns:
     ``True`` if and only if this is monic.)doc";
 
-// Docstring regina::python::doc::Polynomial_::isZero
-inline constexpr const char isZero[] =
+// Docstring regina::python::doc::Polynomial::isZero
+static constexpr const char isZero[] =
 R"doc(Returns whether this is the zero polynomial.
 
 Returns:
     ``True`` if and only if this is the zero polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::leading
-inline constexpr const char leading[] =
+// Docstring regina::python::doc::Polynomial::leading
+static constexpr const char leading[] =
 R"doc(Returns the leading coefficient of this polynomial. If this is the
 zero polynomial, then the leading coefficient will be zero.
 
@@ -636,11 +636,11 @@ Python:
 Returns:
     the leading coefficient of this polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial_::negate
-inline constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
+// Docstring regina::python::doc::Polynomial::negate
+static constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
 
-// Docstring regina::python::doc::Polynomial_::set
-inline constexpr const char set[] =
+// Docstring regina::python::doc::Polynomial::set
+static constexpr const char set[] =
 R"doc(Changes the given coefficient of this polynomial.
 
 It is fine to set the leading coefficient to zero, though note that
@@ -662,8 +662,8 @@ Parameter ``exp``:
 Parameter ``value``:
     the new value of this coefficient.)doc";
 
-// Docstring regina::python::doc::Polynomial_::shift
-inline constexpr const char shift[] =
+// Docstring regina::python::doc::Polynomial::shift
+static constexpr const char shift[] =
 R"doc(Multiplies this polynomial by ``x^s`` for some integer *s*. This
 polynomial is changed directly.
 
@@ -674,8 +674,8 @@ simply disappear.
 Parameter ``s``:
     the power of *x* to multiply by.)doc";
 
-// Docstring regina::python::doc::Polynomial_::str
-inline constexpr const char str[] =
+// Docstring regina::python::doc::Polynomial::str
+static constexpr const char str[] =
 R"doc(Returns this polynomial as a human-readable string, using the given
 variable name instead of ``x``.
 
@@ -690,8 +690,8 @@ Parameter ``variable``:
 Returns:
     this polynomial as a human-readable string.)doc";
 
-// Docstring regina::python::doc::Polynomial_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Polynomial::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given polynomial. This is a fast
 (constant time) operation.
 
@@ -700,8 +700,8 @@ This and the given polynomial do not need to have the same degree.
 Parameter ``other``:
     the polynomial whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::Polynomial_::utf8
-inline constexpr const char utf8[] =
+// Docstring regina::python::doc::Polynomial::utf8
+static constexpr const char utf8[] =
 R"doc(Returns this polynomial as a human-readable string using unicode
 characters, using the given variable name instead of ``x``.
 
@@ -722,7 +722,7 @@ Parameter ``variable``:
 Returns:
     this polynomial as a unicode-enabled human-readable string.)doc";
 
-}
+}; // struct Polynomial
 
 } // namespace regina::python::doc
 

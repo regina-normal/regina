@@ -46,7 +46,7 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
 
     RDOC_SCOPE_BEGIN(GluingPerms)
 
-    auto c = pybind11::class_<GluingPerms<dim>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<GluingPerms<dim>>(m, name, rdoc::__class)
         .def(pybind11::init<const FacetPairing<dim>&>(), rdoc::__init)
         .def(pybind11::init<const GluingPerms<dim>&>(), rdoc::__copy)
         .def("swap", &GluingPerms<dim>::swap, rdoc::swap)
@@ -94,7 +94,7 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<GluingPerms<dim>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, GluingPerms<dim>, GluingPerms);
 
     RDOC_SCOPE_END
 }

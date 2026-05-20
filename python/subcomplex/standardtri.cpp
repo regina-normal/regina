@@ -44,7 +44,7 @@ void addStandardTriangulation(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(StandardTriangulation)
 
     auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation",
-            rdoc_scope)
+            rdoc::__class)
         .def("name", &StandardTriangulation::name, rdoc::name)
         .def("texName", &StandardTriangulation::texName, rdoc::texName)
         .def("manifold", &StandardTriangulation::manifold, rdoc::manifold)

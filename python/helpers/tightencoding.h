@@ -83,11 +83,11 @@ template <regina::InherentlyTightEncodable C, typename... options>
 requires (std::derived_from<C, regina::TightEncodable<C>>)
 void add_tight_encoding(pybind11::class_<C, options...>& c) {
     c.def("tightEncoding", &C::tightEncoding,
-        regina::python::doc::TightEncodable_::tightEncoding);
+        regina::python::doc::TightEncodable::tightEncoding);
     c.def("tightDecoding", &C::tightDecoding,
-        regina::python::doc::TightEncodable_::tightDecoding);
+        regina::python::doc::TightEncodable::tightDecoding);
     c.def("__hash__", &C::hash,
-        regina::python::doc::TightEncodable_::hash);
+        regina::python::doc::TightEncodable::hash);
 }
 
 } } // namespace regina::python

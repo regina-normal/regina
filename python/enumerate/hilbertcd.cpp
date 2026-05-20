@@ -41,7 +41,7 @@ using regina::VectorInt;
 void addHilbertCD(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HilbertCD)
 
-    auto c = pybind11::class_<HilbertCD>(m, "HilbertCD", rdoc_scope)
+    auto c = pybind11::class_<HilbertCD>(m, "HilbertCD", rdoc::__class)
         .def_static("enumerate", &HilbertCD::enumerate<VectorInt,
             const std::function<void(VectorInt&&)>&>,
             pybind11::arg("action"), pybind11::arg("subspace"),

@@ -41,7 +41,7 @@ void addLayeredTorusBundle(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredTorusBundle)
 
     auto c = pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
-            (m, "LayeredTorusBundle", rdoc_scope)
+            (m, "LayeredTorusBundle", rdoc::__class)
         .def(pybind11::init<const LayeredTorusBundle&>(), rdoc::__copy)
         .def("swap", &LayeredTorusBundle::swap, rdoc::swap)
         .def("core", &LayeredTorusBundle::core,
@@ -57,7 +57,7 @@ void addLayeredTorusBundle(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<LayeredTorusBundle>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, LayeredTorusBundle);
 
     RDOC_SCOPE_END
 }

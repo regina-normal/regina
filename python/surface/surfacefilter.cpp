@@ -44,7 +44,7 @@ void addSurfaceFilter(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SurfaceFilter)
 
     pybind11::class_<SurfaceFilter, regina::Packet,
-            std::shared_ptr<SurfaceFilter>>(m, "SurfaceFilter", rdoc_scope)
+            std::shared_ptr<SurfaceFilter>>(m, "SurfaceFilter", rdoc::__class)
         .def("accept", &SurfaceFilter::accept, rdoc::accept)
         .def("filterType", &SurfaceFilter::filterType, rdoc::filterType)
         .def("filterTypeName", &SurfaceFilter::filterTypeName,
@@ -56,7 +56,7 @@ void addSurfaceFilter(pybind11::module_& m) {
 
     auto c = pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterCombination>>
-            (m, "SurfaceFilterCombination", rdoc_scope)
+            (m, "SurfaceFilterCombination", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const SurfaceFilterCombination&>(), rdoc::__copy)
         .def("swap", &SurfaceFilterCombination::swap, rdoc::swap)
@@ -69,14 +69,13 @@ void addSurfaceFilter(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::packet_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<SurfaceFilterCombination>(m,
-        rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SurfaceFilterCombination);
 
     RDOC_SCOPE_SWITCH(SurfaceFilterProperties)
 
     auto p = pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterProperties>>
-            (m, "SurfaceFilterProperties", rdoc_scope)
+            (m, "SurfaceFilterProperties", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const SurfaceFilterProperties&>(), rdoc::__copy)
         .def("swap", &SurfaceFilterProperties::swap, rdoc::swap)
@@ -114,8 +113,7 @@ void addSurfaceFilter(pybind11::module_& m) {
     regina::python::add_output_rich(p);
     regina::python::packet_eq_operators(p, rdoc::__eq);
 
-    regina::python::add_global_swap<SurfaceFilterProperties>(m,
-        rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SurfaceFilterProperties);
 
     RDOC_SCOPE_END
 }

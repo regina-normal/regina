@@ -40,7 +40,7 @@ void addHandlebody(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Handlebody)
 
     auto c = pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<const Handlebody&>(), rdoc::__copy)
         .def("swap", &Handlebody::swap, rdoc::swap)
@@ -49,7 +49,7 @@ void addHandlebody(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<Handlebody>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Handlebody);
 
     RDOC_SCOPE_END
 }

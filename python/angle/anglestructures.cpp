@@ -51,7 +51,8 @@ void addAngleStructures(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(AngleStructures)
 
     auto l = pybind11::class_<AngleStructures,
-            std::shared_ptr<AngleStructures>>(m, "AngleStructures", rdoc_scope)
+            std::shared_ptr<AngleStructures>>(m, "AngleStructures",
+            rdoc::__class)
         .def(pybind11::init<const Triangulation<3>&, bool,
                 regina::Flags<regina::AngleAlg>, ProgressTracker*>(),
             pybind11::arg(),
@@ -104,7 +105,7 @@ void addAngleStructures(pybind11::module_& m) {
         pybind11::call_guard<GILScopedRelease>(),
         rdoc::__init);
 
-    regina::python::add_global_swap<AngleStructures>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, AngleStructures);
 
     RDOC_SCOPE_END
 }

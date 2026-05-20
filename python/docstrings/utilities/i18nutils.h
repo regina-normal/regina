@@ -13,15 +13,6 @@ namespace regina::python::doc {
 
 namespace i18n {
 
-// Docstring regina::python::doc::i18n::Locale
-inline constexpr const char Locale[] =
-R"doc(A simple class with static routines for querying information about the
-current locale.
-
-These routines use ::setlocale() to determine the current locale,
-which means they respect environment variables such as LANG and
-LC_ALL.)doc";
-
 // Docstring regina::python::doc::i18n::utf8ValidTo
 inline constexpr const char utf8ValidTo[] =
 R"doc(Identifies the longest prefix of the given string that is valid UTF-8.
@@ -54,19 +45,28 @@ Python:
 Returns:
     a pointer marking the end of the longest valid UTF-8 prefix.)doc";
 
-}
+struct Locale {
 
-namespace i18n::Locale_ {
+// Docstring regina::python::doc::i18n::Locale::__class
+static constexpr const char __class[] =
+R"doc(A simple class with static routines for querying information about the
+current locale.
 
-// Docstring regina::python::doc::i18n::Locale_::codeset
-inline constexpr const char codeset[] =
+These routines use ::setlocale() to determine the current locale,
+which means they respect environment variables such as LANG and
+LC_ALL.)doc";
+
+// Docstring regina::python::doc::i18n::Locale::codeset
+static constexpr const char codeset[] =
 R"doc(Returns the character encoding used in the current locale. This is a
 plain string, such as "UTF-8" or "ISO-8859-1".
 
 Returns:
     the character encoding for the current locale.)doc";
 
-}
+}; // struct Locale
+
+} // namespace i18n
 
 } // namespace regina::python::doc
 

@@ -38,7 +38,7 @@ void addContainer(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Container)
 
     auto c = pybind11::class_<Container, regina::Packet,
-            std::shared_ptr<Container>>(m, "Container", rdoc_scope)
+            std::shared_ptr<Container>>(m, "Container", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const std::string&>(), rdoc::__init)
         .def(pybind11::init<const Container&>(), rdoc::__copy)
@@ -48,7 +48,7 @@ void addContainer(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::packet_disable_eq_operators(c);
 
-    regina::python::add_global_swap<Container>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Container);
 
     RDOC_SCOPE_END
 }

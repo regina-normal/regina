@@ -11,8 +11,25 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Tangle
-inline constexpr const char Tangle[] =
+// Docstring regina::python::doc::global_swap_Tangle
+inline constexpr const char global_swap_Tangle[] =
+R"doc(Swaps the contents of the two given tangles.
+
+This global routine simply calls Tangle::swap(); it is provided so
+that Tangle meets the C++ Swappable requirements.
+
+See Tangle::swap() for more details.
+
+Parameter ``lhs``:
+    the tangle whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the tangle whose contents should be swapped with *lhs*.)doc";
+
+struct Tangle {
+
+// Docstring regina::python::doc::Tangle::__class
+static constexpr const char __class[] =
 R"doc(Represents a 2-tangle in the 3-ball. Regina does not allow closed
 components in a tangle; in other words, a tangle in Regina is a proper
 embedding of exactly two arcs in the 3-ball with the corresponding
@@ -55,23 +72,21 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-namespace Tangle_ {
-
-// Docstring regina::python::doc::Tangle_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Tangle::__copy
+static constexpr const char __copy[] =
 R"doc(Constructs a new copy of the given tangle.
 
 Parameter ``copy``:
     the tangle to copy.)doc";
 
-// Docstring regina::python::doc::Tangle_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::Tangle::__default
+static constexpr const char __default[] =
 R"doc(Constructs the zero tangle.
 
 This is the horizontal tangle with no crossings.)doc";
 
-// Docstring regina::python::doc::Tangle_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Tangle::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this tangle is combinatorially identical to the given
 tangle.
 
@@ -93,8 +108,8 @@ Returns:
     ``True`` if and only if the two tangles are combinatorially
     identical.)doc";
 
-// Docstring regina::python::doc::Tangle_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Tangle::__init
+static constexpr const char __init[] =
 R"doc(Constructs a tangle from the given number of twists.
 
 If *twists* is positive, then the new tangle will consist of *twists*
@@ -110,8 +125,8 @@ Parameter ``twists``:
     the number of twists to perform; this may be positive, negative or
     zero.)doc";
 
-// Docstring regina::python::doc::Tangle_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::Tangle::__init_2
+static constexpr const char __init_2[] =
 R"doc(Constructs a rational tangle with the given parameters. Here we use
 the following convention (following the description that Adams gives
 in _The Knot Book_):
@@ -133,8 +148,8 @@ Parameter ``den``:
     the denominator of the rational number that describes this tangle;
     this may be 0 (representing the infinity tangle).)doc";
 
-// Docstring regina::python::doc::Tangle_::__init_3
-inline constexpr const char __init_3[] =
+// Docstring regina::python::doc::Tangle::__init_3
+static constexpr const char __init_3[] =
 R"doc(Creates a tangle from two parallel copies of a classical knot.
 
 Specifically, the new tangle will consist of two parallel copies of
@@ -158,8 +173,8 @@ Precondition:
 Parameter ``knot``:
     the knot to break and duplicate to form this tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::add
-inline constexpr const char add[] =
+// Docstring regina::python::doc::Tangle::add
+static constexpr const char add[] =
 R"doc(Adds the given tangle to the right-hand side of this tangle.
 
 In Conway's notation, if this tangle is *t*, then this routine
@@ -181,8 +196,8 @@ Precondition:
 Parameter ``other``:
     the tangle to add to this.)doc";
 
-// Docstring regina::python::doc::Tangle_::begin
-inline constexpr const char begin[] =
+// Docstring regina::python::doc::Tangle::begin
+static constexpr const char begin[] =
 R"doc(Returns the crossing closest to the beginning of the given string.
 
 Recall from the class notes that string 0 is always attached to the
@@ -198,8 +213,8 @@ Returns:
     the crossing closest to the beginning of the given string, or a
     null reference if the given string contains no crossings.)doc";
 
-// Docstring regina::python::doc::Tangle_::box
-inline constexpr const char box[] =
+// Docstring regina::python::doc::Tangle::box
+static constexpr const char box[] =
 R"doc(Encloses this tangle with the four given tangles in a box
 configuration.
 
@@ -246,8 +261,8 @@ Parameter ``bottomLeft``:
 Parameter ``bottomRight``:
     the tangle to connect to the bottom-right corner of this.)doc";
 
-// Docstring regina::python::doc::Tangle_::brief
-inline constexpr const char brief[] =
+// Docstring regina::python::doc::Tangle::brief
+static constexpr const char brief[] =
 R"doc(Outputs this tangle in Regina's own brief write-only format. This
 format is concise, but contains enough information to manually
 reconstruct the complete tangle.
@@ -297,15 +312,15 @@ stream.
 Returns:
     a description of this tangle in Regina's brief format.)doc";
 
-// Docstring regina::python::doc::Tangle_::changeAll
-inline constexpr const char changeAll[] =
+// Docstring regina::python::doc::Tangle::changeAll
+static constexpr const char changeAll[] =
 R"doc(Switches the upper and lower strands of every crossing in the tangle.
 
 This operation corresponds to reflecting the tangle through the plane
 on which the diagram is drawn.)doc";
 
-// Docstring regina::python::doc::Tangle_::crossing
-inline constexpr const char crossing[] =
+// Docstring regina::python::doc::Tangle::crossing
+static constexpr const char crossing[] =
 R"doc(Returns a pointer to the crossing at the given index within this
 tangle.
 
@@ -325,8 +340,8 @@ Parameter ``index``:
 Returns:
     the crossing at the given index.)doc";
 
-// Docstring regina::python::doc::Tangle_::crossings
-inline constexpr const char crossings[] =
+// Docstring regina::python::doc::Tangle::crossings
+static constexpr const char crossings[] =
 R"doc(Returns an object that allows iteration through and random access to
 all crossings within this tangle.
 
@@ -352,8 +367,8 @@ only, and to call crossings() again each time you need it.
 Returns:
     access to the list of all crossings.)doc";
 
-// Docstring regina::python::doc::Tangle_::denClosure
-inline constexpr const char denClosure[] =
+// Docstring regina::python::doc::Tangle::denClosure
+static constexpr const char denClosure[] =
 R"doc(Forms the denominator closure of this tangle.
 
 This is the link created by joining the two left endpoints of this
@@ -362,8 +377,8 @@ tangle, and also joining the two right endpoints.
 Returns:
     the denominator closure of this tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::end
-inline constexpr const char end[] =
+// Docstring regina::python::doc::Tangle::end
+static constexpr const char end[] =
 R"doc(Returns the crossing closest to the end of the given string.
 
 Recall from the class notes that string 0 is always attached to the
@@ -379,8 +394,8 @@ Returns:
     the crossing closest to the end of the given string, or a null
     reference if the given string contains no crossings.)doc";
 
-// Docstring regina::python::doc::Tangle_::fromOrientedGauss
-inline constexpr const char fromOrientedGauss[] =
+// Docstring regina::python::doc::Tangle::fromOrientedGauss
+static constexpr const char fromOrientedGauss[] =
 R"doc(Creates a new tangle from an oriented Gauss code.
 
 Oriented Gauss codes for tangles are an extension of oriented Gauss
@@ -456,8 +471,8 @@ Parameter ``str``:
 Returns:
     the resulting tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::fromOrientedGauss_2
-inline constexpr const char fromOrientedGauss_2[] =
+// Docstring regina::python::doc::Tangle::fromOrientedGauss_2
+static constexpr const char fromOrientedGauss_2[] =
 R"doc(Creates a new tangle from an oriented Gauss code.
 
 Oriented Gauss codes for tangles are an extension of oriented Gauss
@@ -505,23 +520,8 @@ Parameter ``end``:
 Returns:
     the resulting tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given tangles.
-
-This global routine simply calls Tangle::swap(); it is provided so
-that Tangle meets the C++ Swappable requirements.
-
-See Tangle::swap() for more details.
-
-Parameter ``lhs``:
-    the tangle whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the tangle whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::Tangle_::hasR1
-inline constexpr const char hasR1[] =
+// Docstring regina::python::doc::Tangle::hasR1
+static constexpr const char hasR1[] =
 R"doc(Determines whether it is possible to perform a type I Reidemeister
 move at the given location to remove a crossing.
 
@@ -544,8 +544,8 @@ Parameter ``crossing``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::hasR2
-inline constexpr const char hasR2[] =
+// Docstring regina::python::doc::Tangle::hasR2
+static constexpr const char hasR2[] =
 R"doc(Determines whether it is possible to perform a type II Reidemeister
 move at the given location to remove two crossings.
 
@@ -568,8 +568,8 @@ Parameter ``arc``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::hasR2_2
-inline constexpr const char hasR2_2[] =
+// Docstring regina::python::doc::Tangle::hasR2_2
+static constexpr const char hasR2_2[] =
 R"doc(Determines whether it is possible to perform a type II Reidemeister
 move at the given location to remove two crossings.
 
@@ -592,15 +592,15 @@ Parameter ``crossing``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::negate
-inline constexpr const char negate[] =
+// Docstring regina::python::doc::Tangle::negate
+static constexpr const char negate[] =
 R"doc(Reflects this tangle through the diagonal axis running from the top-
 left to bottom-right corners of the diagram.
 
 In Conway's notation, this negates the tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::numClosure
-inline constexpr const char numClosure[] =
+// Docstring regina::python::doc::Tangle::numClosure
+static constexpr const char numClosure[] =
 R"doc(Forms the numerator closure of this tangle.
 
 This is the link created by joining the two top endpoints of this
@@ -609,8 +609,8 @@ tangle, and also joining the two bottom endpoints.
 Returns:
     the numerator closure of this tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::orientedGauss
-inline constexpr const char orientedGauss[] =
+// Docstring regina::python::doc::Tangle::orientedGauss
+static constexpr const char orientedGauss[] =
 R"doc(Outputs an oriented Gauss code for this tangle.
 
 Oriented Gauss codes for tangles are an extension of oriented Gauss
@@ -632,8 +632,8 @@ The string that is returned will not contain any newlines.
 Returns:
     an oriented Gauss code for this tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::r1
-inline constexpr const char r1[] =
+// Docstring regina::python::doc::Tangle::r1
+static constexpr const char r1[] =
 R"doc(If possible, performs a type I Reidemeister move to remove a crossing
 at the given location. If such a move is not allowed, then this
 routine does nothing.
@@ -659,8 +659,8 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::r1_2
-inline constexpr const char r1_2[] =
+// Docstring regina::python::doc::Tangle::r1_2
+static constexpr const char r1_2[] =
 R"doc(Deprecated routine that tests for and optionally performs a type I
 Reidemeister move to remove a crossing.
 
@@ -696,8 +696,8 @@ Parameter ``perform``:
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::r2
-inline constexpr const char r2[] =
+// Docstring regina::python::doc::Tangle::r2
+static constexpr const char r2[] =
 R"doc(If possible, performs a type II Reidemeister move to remove two
 crossings at the given location. If such a move is not allowed, then
 this routine does nothing.
@@ -724,8 +724,8 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::r2_2
-inline constexpr const char r2_2[] =
+// Docstring regina::python::doc::Tangle::r2_2
+static constexpr const char r2_2[] =
 R"doc(If possible, performs a type II Reidemeister move to remove two
 crossings at the given location. If such a move is not allowed, then
 this routine does nothing.
@@ -752,8 +752,8 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::r2_3
-inline constexpr const char r2_3[] =
+// Docstring regina::python::doc::Tangle::r2_3
+static constexpr const char r2_3[] =
 R"doc(Deprecated routine that tests for and optionally performs a type II
 Reidemeister move to remove two crossings.
 
@@ -790,8 +790,8 @@ Parameter ``perform``:
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::r2_4
-inline constexpr const char r2_4[] =
+// Docstring regina::python::doc::Tangle::r2_4
+static constexpr const char r2_4[] =
 R"doc(Deprecated routine that tests for and optionally performs a type II
 Reidemeister move to remove two crossings.
 
@@ -828,8 +828,8 @@ Parameter ``perform``:
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::simplifyToLocalMinimum
-inline constexpr const char simplifyToLocalMinimum[] =
+// Docstring regina::python::doc::Tangle::simplifyToLocalMinimum
+static constexpr const char simplifyToLocalMinimum[] =
 R"doc(Uses type I and II Reidemeister moves to reduce the tangle
 monotonically to some local minimum number of crossings. Type III
 Reidemeister moves (which do not reduce the number of crossings) are
@@ -854,15 +854,15 @@ Returns:
     *perform* is ``False``, this routine returns ``True`` if and only
     if it determines that it is capable of performing such a change.)doc";
 
-// Docstring regina::python::doc::Tangle_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::Tangle::size
+static constexpr const char size[] =
 R"doc(Returns the number of crossings in this tangle.
 
 Returns:
     the number of crossings.)doc";
 
-// Docstring regina::python::doc::Tangle_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Tangle::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given tangle.
 
 All crossings that belong to this tangle will be moved to *other*, and
@@ -877,8 +877,8 @@ This routine will behave correctly if *other* is in fact this tangle.
 Parameter ``other``:
     the tangle whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::Tangle_::translate
-inline constexpr const char translate[] =
+// Docstring regina::python::doc::Tangle::translate
+static constexpr const char translate[] =
 R"doc(Translates a crossing from some other tangle into the corresponding
 crossing in this tangle.
 
@@ -903,8 +903,8 @@ Parameter ``other``:
 Returns:
     the corresponding crossing in this tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::translate_2
-inline constexpr const char translate_2[] =
+// Docstring regina::python::doc::Tangle::translate_2
+static constexpr const char translate_2[] =
 R"doc(Translates a strand reference from some other tangle into the
 corresponding strand reference from this tangle.
 
@@ -930,16 +930,16 @@ Parameter ``other``:
 Returns:
     the corresponding strand reference for this tangle.)doc";
 
-// Docstring regina::python::doc::Tangle_::turn
-inline constexpr const char turn[] =
+// Docstring regina::python::doc::Tangle::turn
+static constexpr const char turn[] =
 R"doc(Rotates this tangle by 90 degrees.
 
 Parameter ``direction``:
     either 1 if the tangle should be rotated clockwise, or -1 if the
     tangle should be rotated anticlockwise.)doc";
 
-// Docstring regina::python::doc::Tangle_::twist
-inline constexpr const char twist[] =
+// Docstring regina::python::doc::Tangle::twist
+static constexpr const char twist[] =
 R"doc(Adds a twist to the right-hand end of this tangle.
 
 Parameter ``sign``:
@@ -948,8 +948,8 @@ Parameter ``sign``:
     should perform a negative twist (dragging the bottom-right
     endpoint up beneath the top-right endpoint).)doc";
 
-// Docstring regina::python::doc::Tangle_::type
-inline constexpr const char type[] =
+// Docstring regina::python::doc::Tangle::type
+static constexpr const char type[] =
 R"doc(Returns the type of this tangle.
 
 This will be one of the characters ``-``, ``|`` or ``x``, indicating a
@@ -958,8 +958,8 @@ horizontal, vertical or diagonal type as described in the class notes.
 Returns:
     the type of this crossing.)doc";
 
-// Docstring regina::python::doc::Tangle_::withR1
-inline constexpr const char withR1[] =
+// Docstring regina::python::doc::Tangle::withR1
+static constexpr const char withR1[] =
 R"doc(If possible, returns the diagram obtained by performing a type I
 Reidemeister move at the given location to remove a crossing. If such
 a move is not allowed, then this routine returns no value.
@@ -985,8 +985,8 @@ Returns:
     the new tangle diagram obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::withR2
-inline constexpr const char withR2[] =
+// Docstring regina::python::doc::Tangle::withR2
+static constexpr const char withR2[] =
 R"doc(If possible, returns the diagram obtained by performing a type II
 Reidemeister move at the given location to remove two crossings. If
 such a move is not allowed, then this routine returns no value.
@@ -1013,8 +1013,8 @@ Returns:
     the new tangle diagram obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::Tangle_::withR2_2
-inline constexpr const char withR2_2[] =
+// Docstring regina::python::doc::Tangle::withR2_2
+static constexpr const char withR2_2[] =
 R"doc(If possible, returns the diagram obtained by performing a type II
 Reidemeister move at the given location to remove two crossings. If
 such a move is not allowed, then this routine returns no value.
@@ -1041,7 +1041,7 @@ Returns:
     the new tangle diagram obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-}
+}; // struct Tangle
 
 } // namespace regina::python::doc
 

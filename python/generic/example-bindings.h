@@ -44,7 +44,7 @@ void addExample(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN_MAIN
     RDOC_SCOPE_BASE(detail::ExampleBase)
 
-    auto c = pybind11::class_<Example<dim>>(m, name, rdoc::Example)
+    auto c = pybind11::class_<Example<dim>>(m, name, rdoc::Example::__class)
         .def_static("sphere", &Example<dim>::sphere, rbase::sphere)
         .def_static("simplicialSphere", &Example<dim>::simplicialSphere,
             rbase::simplicialSphere)

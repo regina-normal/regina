@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::AugTriSolidTorus
-inline constexpr const char AugTriSolidTorus[] =
+// Docstring regina::python::doc::global_swap_AugTriSolidTorus
+inline constexpr const char global_swap_AugTriSolidTorus[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls AugTriSolidTorus::swap(); it is
+provided so that AugTriSolidTorus meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct AugTriSolidTorus {
+
+// Docstring regina::python::doc::AugTriSolidTorus::__class
+static constexpr const char __class[] =
 R"doc(Represents an augmented triangular solid torus component of a
 triangulation. Such a component is obtained as follows. Begin with a
 three-tetrahedron triangular solid torus (as described by
@@ -51,13 +67,11 @@ StandardTriangulation subclasses. Note that the only way to create
 these objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
-namespace AugTriSolidTorus_ {
+// Docstring regina::python::doc::AugTriSolidTorus::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::AugTriSolidTorus_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::AugTriSolidTorus::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of augmented triangular solid torus.
 
@@ -87,8 +101,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of augmented triangular solid torus.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::augTorus
-inline constexpr const char augTorus[] =
+// Docstring regina::python::doc::AugTriSolidTorus::augTorus
+static constexpr const char augTorus[] =
 R"doc(Returns the layered solid torus attached to the requested annulus on
 the boundary of the core triangular solid torus. If the layered solid
 torus is a degenerate (2,1,1) mobius band (i.e., the two triangles of
@@ -101,8 +115,8 @@ Parameter ``annulus``:
 Returns:
     the corresponding layered solid torus.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::chainLength
-inline constexpr const char chainLength[] =
+// Docstring regina::python::doc::AugTriSolidTorus::chainLength
+static constexpr const char chainLength[] =
 R"doc(Returns the number of tetrahedra in the layered chain linking two of
 the boundary annuli of the core triangular solid torus. Note that this
 count does not include any of the tetrahedra actually belonging to the
@@ -112,8 +126,8 @@ Returns:
     the number of tetrahedra in the layered chain, or 0 if there is no
     layered chain linking two boundary annuli.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::chainType
-inline constexpr const char chainType[] =
+// Docstring regina::python::doc::AugTriSolidTorus::chainType
+static constexpr const char chainType[] =
 R"doc(Returns the way in which a layered chain links two of the boundary
 annuli of the core triangular solid torus. This will be one of the
 chain type constants defined in this class.
@@ -122,15 +136,15 @@ Returns:
     the type of layered chain, or *CHAIN_NONE* if there is no layered
     chain linking two boundary annuli.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::core
-inline constexpr const char core[] =
+// Docstring regina::python::doc::AugTriSolidTorus::core
+static constexpr const char core[] =
 R"doc(Returns the triangular solid torus at the core of this triangulation.
 
 Returns:
     the core triangular solid torus.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::edgeGroupRoles
-inline constexpr const char edgeGroupRoles[] =
+// Docstring regina::python::doc::AugTriSolidTorus::edgeGroupRoles
+static constexpr const char edgeGroupRoles[] =
 R"doc(Returns a permutation describing the role played by each top level
 edge group of the layered solid torus glued to the requested annulus
 of the core triangular solid torus. See LayeredSolidTorus::topEdge()
@@ -154,22 +168,8 @@ Returns:
     a permutation describing the roles of the corresponding top level
     edge groups.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls AugTriSolidTorus::swap(); it is
-provided so that AugTriSolidTorus meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::AugTriSolidTorus_::hasLayeredChain
-inline constexpr const char hasLayeredChain[] =
+// Docstring regina::python::doc::AugTriSolidTorus::hasLayeredChain
+static constexpr const char hasLayeredChain[] =
 R"doc(Determines whether the core triangular solid torus has two of its
 boundary annuli linked by a layered chain as described in the general
 class notes.
@@ -178,8 +178,8 @@ Returns:
     ``True`` if and only if the layered chain described in the class
     notes is present.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::AugTriSolidTorus::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is an augmented
 triangular solid torus.
 
@@ -195,15 +195,15 @@ Returns:
     torus, or ``None`` if the given component is not an augmented
     triangular solid torus.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::AugTriSolidTorus::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::AugTriSolidTorus_::torusAnnulus
-inline constexpr const char torusAnnulus[] =
+// Docstring regina::python::doc::AugTriSolidTorus::torusAnnulus
+static constexpr const char torusAnnulus[] =
 R"doc(Returns the single boundary annulus of the core triangular solid torus
 to which a layered solid torus is attached. This routine is only
 meaningful if the other two annuli are linked by a layered chain.
@@ -216,7 +216,7 @@ Returns:
     or -1 if there is no layered chain (and thus all three annuli have
     layered solid tori attached).)doc";
 
-}
+}; // struct AugTriSolidTorus
 
 } // namespace regina::python::doc
 

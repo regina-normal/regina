@@ -56,7 +56,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
 
     auto l = pybind11::class_<NormalHypersurfaces,
             std::shared_ptr<NormalHypersurfaces>>(m, "NormalHypersurfaces",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const Triangulation<4>&, HyperCoords,
                 regina::Flags<regina::HyperList>,
                 regina::Flags<regina::HyperAlg>, ProgressTracker*>(),
@@ -117,7 +117,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         pybind11::call_guard<GILScopedRelease>(),
         rdoc::__init);
 
-    regina::python::add_global_swap<NormalHypersurfaces>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, NormalHypersurfaces);
 
     RDOC_SCOPE_END
 }

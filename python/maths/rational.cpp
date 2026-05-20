@@ -41,7 +41,7 @@ using regina::Rational;
 void addRational(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Rational)
 
-    auto c = pybind11::class_<Rational>(m, "Rational", rdoc_scope)
+    auto c = pybind11::class_<Rational>(m, "Rational", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Rational&>(), rdoc::__copy)
         .def(pybind11::init<const Integer&>(), rdoc::__init)
@@ -79,7 +79,7 @@ void addRational(pybind11::module_& m) {
     regina::python::add_cmp_operators(c, rdoc::__cmp);
     regina::python::add_output_ostream(c, regina::python::ReprStyle::Slim);
 
-    regina::python::add_global_swap<Rational>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Rational);
 
     RDOC_SCOPE_END
 

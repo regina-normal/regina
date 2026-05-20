@@ -53,14 +53,16 @@ using regina::Triangulation;
 void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN_MAIN
 
-    regina::python::registerReginaException<regina::SnapPeaFatalError>(m,
-        "SnapPeaFatalError", rdoc::SnapPeaFatalError, PyExc_RuntimeError);
-    regina::python::registerReginaException<regina::SnapPeaMemoryFull>(m,
-        "SnapPeaMemoryFull", rdoc::SnapPeaMemoryFull, PyExc_RuntimeError);
+    regina::python::registerReginaException<regina::SnapPeaFatalError>(
+        m, "SnapPeaFatalError", rdoc::SnapPeaFatalError::__class,
+        PyExc_RuntimeError);
+    regina::python::registerReginaException<regina::SnapPeaMemoryFull>(
+        m, "SnapPeaMemoryFull", rdoc::SnapPeaMemoryFull::__class,
+        PyExc_RuntimeError);
 
     RDOC_SCOPE_SWITCH(Cusp)
 
-    auto c1 = pybind11::class_<Cusp>(m, "Cusp", rdoc_scope)
+    auto c1 = pybind11::class_<Cusp>(m, "Cusp", rdoc::__class)
         .def(pybind11::init<const Cusp&>(), rdoc::__copy)
         .def("vertex", &Cusp::vertex,
             pybind11::return_value_policy::reference, rdoc::vertex)
@@ -75,7 +77,7 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
 
     auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
             std::shared_ptr<SnapPeaTriangulation>>(
-            m, "SnapPeaTriangulation", rdoc_scope)
+            m, "SnapPeaTriangulation", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const std::string&>(), rdoc::__init)
         .def(pybind11::init<const SnapPeaTriangulation&>(), rdoc::__copy)
@@ -201,32 +203,32 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
     regina::python::add_packet_constructor<const regina::Link&>(wrap,
         rdoc::__init_3);
 
-    RDOC_SCOPE_INNER_BEGIN(Solution)
-
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<SnapPeaTriangulation::Solution>(c2, "Solution",
-            "enum.Enum", rdoc_inner_scope)
+            "enum.Enum", rdoc::Solution::__class)
 #elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<SnapPeaTriangulation::Solution>(c2, "Solution",
-            rdoc_inner_scope)
+            rdoc::Solution::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
         .value("NotAttempted", SnapPeaTriangulation::Solution::NotAttempted,
-            rdoc_inner::NotAttempted)
+            rdoc::Solution::NotAttempted)
         .value("Geometric", SnapPeaTriangulation::Solution::Geometric,
-            rdoc_inner::Geometric)
+            rdoc::Solution::Geometric)
         .value("Nongeometric", SnapPeaTriangulation::Solution::Nongeometric,
-            rdoc_inner::Nongeometric)
-        .value("Flat", SnapPeaTriangulation::Solution::Flat, rdoc_inner::Flat)
+            rdoc::Solution::Nongeometric)
+        .value("Flat", SnapPeaTriangulation::Solution::Flat,
+            rdoc::Solution::Flat)
         .value("Degenerate", SnapPeaTriangulation::Solution::Degenerate,
-            rdoc_inner::Degenerate)
+            rdoc::Solution::Degenerate)
         .value("Other", SnapPeaTriangulation::Solution::Other,
-            rdoc_inner::Other)
+            rdoc::Solution::Other)
         // Note: we cannot use "None", since this is reserved in Python.
-        .value("Nil", SnapPeaTriangulation::Solution::None, rdoc_inner::None)
+        .value("Nil", SnapPeaTriangulation::Solution::None,
+            rdoc::Solution::None)
         .value("External", SnapPeaTriangulation::Solution::External,
-            rdoc_inner::External)
+            rdoc::Solution::External)
 #if REGINA_PYBIND11_VERSION == 3
         .finalize()
 #endif
@@ -244,21 +246,19 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
     c2.attr("no_solution") = SnapPeaTriangulation::Solution::None;
     c2.attr("externally_computed") = SnapPeaTriangulation::Solution::External;
 
-    RDOC_SCOPE_INNER_SWITCH(CoverEnumeration)
-
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<SnapPeaTriangulation::CoverEnumeration>(c2,
-            "CoverEnumeration", "enum.Enum", rdoc_inner_scope)
+            "CoverEnumeration", "enum.Enum", rdoc::CoverEnumeration::__class)
 #elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<SnapPeaTriangulation::CoverEnumeration>(c2,
-            "CoverEnumeration", rdoc_inner_scope)
+            "CoverEnumeration", rdoc::CoverEnumeration::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
         .value("Cyclic", SnapPeaTriangulation::CoverEnumeration::Cyclic,
-            rdoc_inner::Cyclic)
+            rdoc::CoverEnumeration::Cyclic)
         .value("All", SnapPeaTriangulation::CoverEnumeration::All,
-            rdoc_inner::All)
+            rdoc::CoverEnumeration::All)
 #if REGINA_PYBIND11_VERSION == 3
         .finalize()
 #endif
@@ -269,24 +269,23 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
     c2.attr("cyclic_covers") = SnapPeaTriangulation::CoverEnumeration::Cyclic;
     c2.attr("all_covers") = SnapPeaTriangulation::CoverEnumeration::All;
 
-    RDOC_SCOPE_INNER_SWITCH(Cover)
-
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<SnapPeaTriangulation::Cover>(c2, "Cover", "enum.Enum",
-            rdoc_inner_scope)
+            rdoc::Cover::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<SnapPeaTriangulation::Cover>(c2, "Cover", rdoc_inner_scope)
+    pybind11::enum_<SnapPeaTriangulation::Cover>(c2, "Cover",
+            rdoc::Cover::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
         .value("Unknown", SnapPeaTriangulation::Cover::Unknown,
-            rdoc_inner::Unknown)
+            rdoc::Cover::Unknown)
         .value("Irregular", SnapPeaTriangulation::Cover::Irregular,
-            rdoc_inner::Irregular)
+            rdoc::Cover::Irregular)
         .value("Regular", SnapPeaTriangulation::Cover::Regular,
-            rdoc_inner::Regular)
+            rdoc::Cover::Regular)
         .value("Cyclic", SnapPeaTriangulation::Cover::Cyclic,
-            rdoc_inner::Cyclic)
+            rdoc::Cover::Cyclic)
 #if REGINA_PYBIND11_VERSION == 3
         .finalize()
 #endif
@@ -299,17 +298,14 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
     c2.attr("regular_cover") = SnapPeaTriangulation::Cover::Regular;
     c2.attr("cyclic_cover") = SnapPeaTriangulation::Cover::Cyclic;
 
-    RDOC_SCOPE_INNER_END
-
-    regina::python::add_global_swap<SnapPeaTriangulation>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SnapPeaTriangulation);
 
     RDOC_SCOPE_SWITCH_MAIN
 
     // Now we can define the global swap for the parent Triangulation<3> class.
     // See the notes beneath the Triangulation<3> bindings as to why this had
     // to wait until *after* the SnapPeaTriangulation swap.
-    regina::python::add_global_swap<Triangulation<3>>(m,
-        rdoc::Triangulation_::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Triangulation<3>, Triangulation);
 
     RDOC_SCOPE_END
 }

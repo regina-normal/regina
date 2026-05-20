@@ -11,32 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Arrow
-inline constexpr const char Arrow[] =
-R"doc(Represents a multivariate polynomial of the type used by arrow
-polynomials of links.
-
-An arrow polynomial is a polynomial in the "ordinary variable" ``A``
-and a finite number of "diagram variables" ``K_1,K_2,...``. The
-ordinary variable may appear with any integer exponents, including
-negative exponents (as in a Laurent polynomial). The diagram variables
-may only appear with non-negative integer exponents (as in an ordinary
-polynomial). All of the variables commute, and all of the coefficients
-are integers.
-
-This class is implemented as a collection of Laurent polynomials in
-``A``, each attached to a different product of diagram variables
-``(K_1)^(a_1) (K_2)^(a_2) ...``. We represent each such product of
-diagram variables by the sequence of non-negative integers
-``a_1,a_2,...``, where the final integer is strictly positive; for the
-trivial product with no diagram variables at all we use the empty
-sequence. In the notes below we call such a sequence a _diagram
-sequence_.
-
-This class implements C++ move semantics and adheres to the C++
-Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.)doc";
-
 // Docstring regina::python::doc::__add
 inline constexpr const char __add[] =
 R"doc(Adds the two given polynomials.
@@ -220,10 +194,23 @@ Parameter ``rhs``:
 Returns:
     the difference of the two given polynomials.)doc";
 
-namespace Arrow_ {
+// Docstring regina::python::doc::global_swap_Arrow
+inline constexpr const char global_swap_Arrow[] =
+R"doc(Swaps the contents of the given polynomials.
 
-// Docstring regina::python::doc::Arrow_::__array
-inline constexpr const char __array[] =
+This global routine simply calls Arrow::swap(); it is provided so that
+Arrow meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first polynomial whose contents should be swapped.
+
+Parameter ``b``:
+    the second polynomial whose contents should be swapped.)doc";
+
+struct Arrow {
+
+// Docstring regina::python::doc::Arrow::__array
+static constexpr const char __array[] =
 R"doc(Returns the Laurent polynomial in ``A`` that is attached to the given
 product of diagram variables.
 
@@ -249,8 +236,34 @@ Returns:
     the Laurent polynomial attached to the given product of diagram
     variables.)doc";
 
-// Docstring regina::python::doc::Arrow_::__cmp
-inline constexpr const char __cmp[] =
+// Docstring regina::python::doc::Arrow::__class
+static constexpr const char __class[] =
+R"doc(Represents a multivariate polynomial of the type used by arrow
+polynomials of links.
+
+An arrow polynomial is a polynomial in the "ordinary variable" ``A``
+and a finite number of "diagram variables" ``K_1,K_2,...``. The
+ordinary variable may appear with any integer exponents, including
+negative exponents (as in a Laurent polynomial). The diagram variables
+may only appear with non-negative integer exponents (as in an ordinary
+polynomial). All of the variables commute, and all of the coefficients
+are integers.
+
+This class is implemented as a collection of Laurent polynomials in
+``A``, each attached to a different product of diagram variables
+``(K_1)^(a_1) (K_2)^(a_2) ...``. We represent each such product of
+diagram variables by the sequence of non-negative integers
+``a_1,a_2,...``, where the final integer is strictly positive; for the
+trivial product with no diagram variables at all we use the empty
+sequence. In the notes below we call such a sequence a _diagram
+sequence_.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.)doc";
+
+// Docstring regina::python::doc::Arrow::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares this against the given polynomial under a total ordering of
 all arrow polynomials.
 
@@ -274,17 +287,17 @@ Returns:
     the result of the comparison between this and the given
     polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Arrow::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given polynomial.
 
 This constructor induces a deep copy of the given polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::__default
-inline constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
+// Docstring regina::python::doc::Arrow::__default
+static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Arrow::__eq
+static constexpr const char __eq[] =
 R"doc(Tests whether this and the given polynomial are equal.
 
 Parameter ``rhs``:
@@ -293,8 +306,8 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
 
-// Docstring regina::python::doc::Arrow_::__eq_2
-inline constexpr const char __eq_2[] =
+// Docstring regina::python::doc::Arrow::__eq_2
+static constexpr const char __eq_2[] =
 R"doc(Tests whether this is equal to the given Laurent polynomial in *A*.
 
 For this to be true, this polynomial must not use any of the diagram
@@ -307,8 +320,8 @@ Returns:
     ``True`` if and only if this and the given Laurent polynomial are
     equal.)doc";
 
-// Docstring regina::python::doc::Arrow_::__iadd
-inline constexpr const char __iadd[] =
+// Docstring regina::python::doc::Arrow::__iadd
+static constexpr const char __iadd[] =
 R"doc(Adds the given polynomial to this.
 
 Parameter ``other``:
@@ -317,8 +330,8 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::__imul
-inline constexpr const char __imul[] =
+// Docstring regina::python::doc::Arrow::__imul
+static constexpr const char __imul[] =
 R"doc(Multiplies this polynomial by the given integer constant.
 
 Parameter ``scalar``:
@@ -327,8 +340,8 @@ Parameter ``scalar``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::__imul_2
-inline constexpr const char __imul_2[] =
+// Docstring regina::python::doc::Arrow::__imul_2
+static constexpr const char __imul_2[] =
 R"doc(Multiplies this arrow polynomial by the given Laurent polynomial in
 ``A``.
 
@@ -339,8 +352,8 @@ Parameter ``laurent``:
 Returns:
     a reference to this arrow polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::__imul_3
-inline constexpr const char __imul_3[] =
+// Docstring regina::python::doc::Arrow::__imul_3
+static constexpr const char __imul_3[] =
 R"doc(Multiplies this by the given polynomial.
 
 Parameter ``other``:
@@ -349,8 +362,8 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Arrow::__init
+static constexpr const char __init[] =
 R"doc(Creates a new polynomial from the given collection of diagram
 sequences and non-zero Laurent polynomials in *A*.
 
@@ -400,8 +413,8 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the collection of
     pairs.)doc";
 
-// Docstring regina::python::doc::Arrow_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::Arrow::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates the given Laurent polynomial in *A*.
 
 This polynomial will have no diagram variables at all.
@@ -410,8 +423,8 @@ Parameter ``laurent``:
     the value of this new polynomial, given as a Laurent polynomial in
     *A*.)doc";
 
-// Docstring regina::python::doc::Arrow_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Arrow::__isub
+static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
 
 Parameter ``other``:
@@ -420,24 +433,11 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given polynomials.
+// Docstring regina::python::doc::Arrow::init
+static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
 
-This global routine simply calls Arrow::swap(); it is provided so that
-Arrow meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first polynomial whose contents should be swapped.
-
-Parameter ``b``:
-    the second polynomial whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Arrow_::init
-inline constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Arrow_::initDiagram
-inline constexpr const char initDiagram[] =
+// Docstring regina::python::doc::Arrow::initDiagram
+static constexpr const char initDiagram[] =
 R"doc(Sets this to become the given product of diagram variables, using a
 deep copy.
 
@@ -453,22 +453,22 @@ Parameter ``d``:
     variables. If this sequence is non-empty, then its last entry
     should be strictly positive.)doc";
 
-// Docstring regina::python::doc::Arrow_::invertA
-inline constexpr const char invertA[] =
+// Docstring regina::python::doc::Arrow::invertA
+static constexpr const char invertA[] =
 R"doc(Replaces ``A`` with ``A^-1`` in this polynomial. This polynomial is
 changed directly.
 
 Calling this routine is equivalent to calling ``scaleUp(-1)``.)doc";
 
-// Docstring regina::python::doc::Arrow_::isZero
-inline constexpr const char isZero[] =
+// Docstring regina::python::doc::Arrow::isZero
+static constexpr const char isZero[] =
 R"doc(Returns whether this is the zero polynomial.
 
 Returns:
     ``True`` if and only if this is the zero polynomial.)doc";
 
-// Docstring regina::python::doc::Arrow_::multDiagram
-inline constexpr const char multDiagram[] =
+// Docstring regina::python::doc::Arrow::multDiagram
+static constexpr const char multDiagram[] =
 R"doc(Multiplies this polynomial by the given diagram variable.
 
 Specifically, if the given index is *i*, then this polynomial will be
@@ -482,11 +482,11 @@ Parameter ``index``:
     the index of the diagram variable to multiply by; this must be
     strictly positive.)doc";
 
-// Docstring regina::python::doc::Arrow_::negate
-inline constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
+// Docstring regina::python::doc::Arrow::negate
+static constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
 
-// Docstring regina::python::doc::Arrow_::scaleDown
-inline constexpr const char scaleDown[] =
+// Docstring regina::python::doc::Arrow::scaleDown
+static constexpr const char scaleDown[] =
 R"doc(Divides all exponents in this polynomial by *k* for some integer *k*.
 This is equivalent to replacing the variable ``A`` with ``A^(1/k)``.
 
@@ -506,8 +506,8 @@ Exception ``FailedPrecondition``:
 Parameter ``k``:
     the scaling factor to divide exponents by.)doc";
 
-// Docstring regina::python::doc::Arrow_::scaleUp
-inline constexpr const char scaleUp[] =
+// Docstring regina::python::doc::Arrow::scaleUp
+static constexpr const char scaleUp[] =
 R"doc(Multiplies all exponents of ``A`` in this polynomial by *k* for some
 integer *k*. This is equivalent to replacing the variable ``A`` with
 ``A^k``.
@@ -520,8 +520,8 @@ Precondition:
 Parameter ``k``:
     the scaling factor to multiply exponents by.)doc";
 
-// Docstring regina::python::doc::Arrow_::set
-inline constexpr const char set[] =
+// Docstring regina::python::doc::Arrow::set
+static constexpr const char set[] =
 R"doc(Changes the Laurent polynomial in ``A`` that is attached to the given
 product of diagram variables.
 
@@ -546,15 +546,15 @@ Parameter ``value``:
     the new Laurent polynomial that should be attached to the given
     product of diagram variables.)doc";
 
-// Docstring regina::python::doc::Arrow_::shift
-inline constexpr const char shift[] =
+// Docstring regina::python::doc::Arrow::shift
+static constexpr const char shift[] =
 R"doc(Multiplies this polynomial by ``A^s`` for some integer *s*.
 
 Parameter ``s``:
     the power of *A* to multiply by.)doc";
 
-// Docstring regina::python::doc::Arrow_::sumLaurent
-inline constexpr const char sumLaurent[] =
+// Docstring regina::python::doc::Arrow::sumLaurent
+static constexpr const char sumLaurent[] =
 R"doc(Returns the sum of all Laurent polynomials in ``A`` that are attached
 to each diagram sequence. This is the Laurent polynomial in ``A`` that
 would be obtained if we set each diagram variable ``K_i = 1``.
@@ -562,15 +562,15 @@ would be obtained if we set each diagram variable ``K_i = 1``.
 Returns:
     the sum of all attached Laurent polynomials in ``A``.)doc";
 
-// Docstring regina::python::doc::Arrow_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Arrow::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given polynomial. This is a fast
 (constant time) operation.
 
 Parameter ``other``:
     the polynomial whose contents should be swapped with this.)doc";
 
-}
+}; // struct Arrow
 
 } // namespace regina::python::doc
 

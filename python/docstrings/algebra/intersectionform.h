@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::IntersectionForm
-inline constexpr const char IntersectionForm[] =
+// Docstring regina::python::doc::global_swap_IntersectionForm
+inline constexpr const char global_swap_IntersectionForm[] =
+R"doc(Swaps the contents of the two given intersection forms.
+
+This global routine simply calls IntersectionForm::swap(); it is
+provided so that IntersectionForm meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the intersection form whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the intersection form whose contents should be swapped with *lhs*.)doc";
+
+struct IntersectionForm {
+
+// Docstring regina::python::doc::IntersectionForm::__class
+static constexpr const char __class[] =
 R"doc(Represents a symmetric bilinear integral form, which for Regina is
 typically the intersection form of a 4-manifold.
 
@@ -28,13 +44,11 @@ computed by the class constructor, and so querying them via routines
 such as rank(), signature(), even() or odd() is essentially
 instantaneous.)doc";
 
-namespace IntersectionForm_ {
+// Docstring regina::python::doc::IntersectionForm::__copy
+static constexpr const char __copy[] = R"doc(Creates a clone of the given intersection form.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a clone of the given intersection form.)doc";
-
-// Docstring regina::python::doc::IntersectionForm_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::IntersectionForm::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given bilinear form are represented by the
 same symmetric square integer matrices.
 
@@ -50,8 +64,8 @@ Returns:
     ``True`` if and only if this and the given bilinear form are
     represented by identical matrices.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::IntersectionForm::__init
+static constexpr const char __init[] =
 R"doc(Constructs the bilinear form described by the given symmetric square
 integer matrix.
 
@@ -71,8 +85,8 @@ Parameter ``form``:
     a symmetric square integer matrix that describes this bilinear
     form.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::even
-inline constexpr const char even[] =
+// Docstring regina::python::doc::IntersectionForm::even
+static constexpr const char even[] =
 R"doc(Returns ``True`` if and only if this bilinear form is of even type.
 
 A form *Q* is _even_ if and only if ``Q(x,x)`` is even for all *x*.
@@ -81,22 +95,8 @@ Returns:
     ``True`` if this bilinear form is of even type, or ``False`` if it
     is of odd type.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given intersection forms.
-
-This global routine simply calls IntersectionForm::swap(); it is
-provided so that IntersectionForm meets the C++ Swappable
-requirements.
-
-Parameter ``lhs``:
-    the intersection form whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the intersection form whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::IntersectionForm_::matrix
-inline constexpr const char matrix[] =
+// Docstring regina::python::doc::IntersectionForm::matrix
+static constexpr const char matrix[] =
 R"doc(Returns a symmetric square integer matrix that describes this bilinear
 form.
 
@@ -106,8 +106,8 @@ constructor.
 Returns:
     a matrix describing this bilinear form.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::odd
-inline constexpr const char odd[] =
+// Docstring regina::python::doc::IntersectionForm::odd
+static constexpr const char odd[] =
 R"doc(Returns ``True`` if and only if this bilinear form is of odd type.
 
 A form *Q* is _odd_ if and only if ``Q(x,x)`` is odd for some *x*.
@@ -116,16 +116,16 @@ Returns:
     ``True`` if this bilinear form is of odd type, or ``False`` if it
     is of even type.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::rank
-inline constexpr const char rank[] =
+// Docstring regina::python::doc::IntersectionForm::rank
+static constexpr const char rank[] =
 R"doc(Returns the rank of this bilinear form. This is the rank of the
 underlying symmetric square matrix.
 
 Returns:
     the rank of this bilinear form.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::signature
-inline constexpr const char signature[] =
+// Docstring regina::python::doc::IntersectionForm::signature
+static constexpr const char signature[] =
 R"doc(Returns the signature of this bilinear form. This is the number of
 positive eigenvalues minus the number of negative eigenvalues of the
 underlying symmetric square matrix.
@@ -133,14 +133,14 @@ underlying symmetric square matrix.
 Returns:
     the signature of this bilinear form.)doc";
 
-// Docstring regina::python::doc::IntersectionForm_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::IntersectionForm::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given intersection form.
 
 Parameter ``other``:
     the intersection form whose contents should be swapped with this.)doc";
 
-}
+}; // struct IntersectionForm
 
 } // namespace regina::python::doc
 

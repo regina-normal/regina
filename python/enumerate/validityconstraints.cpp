@@ -41,7 +41,7 @@ void addValidityConstraints(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(ValidityConstraints)
 
     auto c = pybind11::class_<ValidityConstraints>(m, "ValidityConstraints",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<int, size_t, size_t, size_t>(),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("reserveLocal") = 0,
@@ -68,7 +68,7 @@ void addValidityConstraints(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<ValidityConstraints>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, ValidityConstraints);
 
     RDOC_SCOPE_END
 }

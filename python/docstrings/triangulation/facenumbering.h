@@ -11,8 +11,41 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::FaceNumbering
-inline constexpr const char FaceNumbering[] =
+// Docstring regina::python::doc::faceOppositeEdge
+inline constexpr const char faceOppositeEdge[] =
+R"doc(Returns the (*dim*-2)-face number that is opposite the edge joining
+vertices *i* and *j* in a *dim*-dimensional simplex.
+
+This function is offered because its implementation is faster than
+working through the FaceNumbering class.
+
+The arguments *i* and *j* do not need to appear in ascending order.
+
+Python:
+    Python does not support templates. Instead, Python users should
+    call this function in the form ``faceOppositeEdge(dim, i, j)``;
+    that is, the template parameter *dim* becomes the first argument
+    of the function.
+
+Template parameter ``dim``:
+    the dimension of simplex that we are working with.
+
+Parameter ``i``:
+    the first vertex of an edge in a *dim*-dimensional simplex. This
+    must be between 0 and *dim* inclusive.
+
+Parameter ``j``:
+    the second vertex of an edge in a *dim*-dimensional simplex. This
+    must be between 0 and *dim* inclusive, and must be different from
+    *i*.
+
+Returns:
+    the number of the (*dim*-2)-face opposite the given edge.)doc";
+
+struct FaceNumbering {
+
+// Docstring regina::python::doc::FaceNumbering::__class
+static constexpr const char __class[] =
 R"doc(Specifies how *subdim*-faces are numbered within a *dim*-dimensional
 simplex.
 
@@ -62,41 +95,8 @@ Template parameter ``dim``:
 Template parameter ``subdim``:
     the dimension of the faces that we are numbering.)doc";
 
-// Docstring regina::python::doc::faceOppositeEdge
-inline constexpr const char faceOppositeEdge[] =
-R"doc(Returns the (*dim*-2)-face number that is opposite the edge joining
-vertices *i* and *j* in a *dim*-dimensional simplex.
-
-This function is offered because its implementation is faster than
-working through the FaceNumbering class.
-
-The arguments *i* and *j* do not need to appear in ascending order.
-
-Python:
-    Python does not support templates. Instead, Python users should
-    call this function in the form ``faceOppositeEdge(dim, i, j)``;
-    that is, the template parameter *dim* becomes the first argument
-    of the function.
-
-Template parameter ``dim``:
-    the dimension of simplex that we are working with.
-
-Parameter ``i``:
-    the first vertex of an edge in a *dim*-dimensional simplex. This
-    must be between 0 and *dim* inclusive.
-
-Parameter ``j``:
-    the second vertex of an edge in a *dim*-dimensional simplex. This
-    must be between 0 and *dim* inclusive, and must be different from
-    *i*.
-
-Returns:
-    the number of the (*dim*-2)-face opposite the given edge.)doc";
-
-namespace FaceNumbering_ {
-
-// Docstring regina::python::doc::FaceNumbering_::containsVertex
-inline constexpr const char containsVertex[] =
+// Docstring regina::python::doc::FaceNumbering::containsVertex
+static constexpr const char containsVertex[] =
 R"doc(Tests whether the given *subdim*-face of a *dim*-dimensional simplex
 contains the given vertex of the simplex.
 
@@ -112,8 +112,8 @@ Returns:
     ``True`` if and only if the given *subdim*-face contains the given
     vertex.)doc";
 
-// Docstring regina::python::doc::FaceNumbering_::faceNumber
-inline constexpr const char faceNumber[] =
+// Docstring regina::python::doc::FaceNumbering::faceNumber
+static constexpr const char faceNumber[] =
 R"doc(Identifies which *subdim*-face in a *dim*-dimensional simplex is
 represented by the first (*subdim* + 1) elements of the given
 permutation.
@@ -137,8 +137,8 @@ Returns:
     the corresponding *subdim*-face number in the *dim*-simplex. This
     will be between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.)doc";
 
-// Docstring regina::python::doc::FaceNumbering_::faceNumber_2
-inline constexpr const char faceNumber_2[] =
+// Docstring regina::python::doc::FaceNumbering::faceNumber_2
+static constexpr const char faceNumber_2[] =
 R"doc(Identifies which edge in a *dim*-dimensional simplex joins the two
 given vertices of the simplex.
 
@@ -161,8 +161,8 @@ Returns:
     the number of the simplex edge spanned by the two given vertices.
     This will be between 0 and ``(dim+1 choose 2)-1`` inclusive.)doc";
 
-// Docstring regina::python::doc::FaceNumbering_::ordering
-inline constexpr const char ordering[] =
+// Docstring regina::python::doc::FaceNumbering::ordering
+static constexpr const char ordering[] =
 R"doc(Given a *subdim*-face number within a *dim*-dimensional simplex,
 returns the corresponding canonical ordering of the simplex vertices.
 
@@ -194,7 +194,7 @@ Parameter ``face``:
 Returns:
     the corresponding canonical ordering of the simplex vertices.)doc";
 
-}
+}; // struct FaceNumbering
 
 } // namespace regina::python::doc
 

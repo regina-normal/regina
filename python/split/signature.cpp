@@ -40,7 +40,7 @@ using regina::Signature;
 void addSignature(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Signature)
 
-    auto c = pybind11::class_<Signature>(m, "Signature", rdoc_scope)
+    auto c = pybind11::class_<Signature>(m, "Signature", rdoc::__class)
         .def(pybind11::init<const std::string&>(), rdoc::__init)
         .def(pybind11::init<const Signature&>(), rdoc::__copy)
         .def("swap", &Signature::swap, rdoc::swap)
@@ -53,7 +53,7 @@ void addSignature(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Signature>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Signature);
 
     RDOC_SCOPE_END
 }

@@ -42,7 +42,7 @@ void addTriangle2(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Face)
     RDOC_SCOPE_BASE(detail::SimplexBase)
 
-    auto c = pybind11::class_<regina::Simplex<2>>(m, "Simplex2", rdoc_scope)
+    auto c = pybind11::class_<regina::Simplex<2>>(m, "Simplex2", rdoc::__class)
         .def("description", &Triangle<2>::description, rbase::description)
         .def("setDescription", &Triangle<2>::setDescription,
             rbase::setDescription)

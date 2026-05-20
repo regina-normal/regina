@@ -50,7 +50,7 @@ void addGroupPresentation(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GroupExpressionTerm)
 
     auto c1 = pybind11::class_<GroupExpressionTerm>(m, "GroupExpressionTerm",
-            rdoc_scope)
+            rdoc::__class)
         .def_readwrite("generator", &GroupExpressionTerm::generator)
         .def_readwrite("exponent", &GroupExpressionTerm::exponent)
         .def(pybind11::init<>(), rdoc::__default)
@@ -66,7 +66,7 @@ void addGroupPresentation(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(GroupExpression)
 
     auto c2 = pybind11::class_<GroupExpression>(m, "GroupExpression",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__init)
         .def(pybind11::init<size_t, long>(), rdoc::__init_2)
@@ -128,12 +128,12 @@ void addGroupPresentation(pybind11::module_& m) {
     regina::python::add_output_rich(c2);
     regina::python::add_eq_operators(c2, rdoc::__eq);
 
-    regina::python::add_global_swap<GroupExpression>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, GroupExpression);
 
     RDOC_SCOPE_SWITCH(GroupPresentation)
 
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const GroupPresentation&>(), rdoc::__copy)
         .def(pybind11::init<size_t>(), rdoc::__init)
@@ -247,7 +247,7 @@ void addGroupPresentation(pybind11::module_& m) {
     regina::python::add_output_rich(c3);
     regina::python::add_eq_operators(c3, rdoc::__eq);
 
-    regina::python::add_global_swap<GroupPresentation>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, GroupPresentation);
 
     RDOC_SCOPE_END
 }

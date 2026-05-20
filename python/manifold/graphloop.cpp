@@ -43,7 +43,7 @@ void addGraphLoop(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GraphLoop)
 
     auto c = pybind11::class_<GraphLoop, regina::Manifold>(m, "GraphLoop",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const SFSpace&, long, long, long, long>(),
             rdoc::__init)
         .def(pybind11::init<const SFSpace&, const Matrix2&>(), rdoc::__init_3)
@@ -60,7 +60,7 @@ void addGraphLoop(pybind11::module_& m) {
     // from Manifold and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<GraphLoop>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, GraphLoop);
 
     RDOC_SCOPE_END
 }

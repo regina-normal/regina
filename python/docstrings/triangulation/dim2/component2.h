@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Component
-inline constexpr const char Component[] =
+struct Component {
+
+// Docstring regina::python::doc::Component::__class
+static constexpr const char __class[] =
 R"doc(Represents a connected component of a 2-manifold triangulation.
 
 This is a specialisation of the generic Component class template; see
@@ -31,16 +33,14 @@ them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
 of by the Triangulation to which they belong.)doc";
 
-namespace Component_ {
-
-// Docstring regina::python::doc::Component_::countBoundaryEdges
-inline constexpr const char countBoundaryEdges[] =
+// Docstring regina::python::doc::Component::countBoundaryEdges
+static constexpr const char countBoundaryEdges[] =
 R"doc(A dimension-specific alias for countBoundaryFacets().
 
 See countBoundaryFacets() for further information.)doc";
 
-// Docstring regina::python::doc::Component_::countFaces
-inline constexpr const char countFaces[] =
+// Docstring regina::python::doc::Component::countFaces
+static constexpr const char countFaces[] =
 R"doc(Returns the number of *subdim*-faces in this component, where the face
 dimension does not need to be known until runtime.
 
@@ -64,8 +64,8 @@ Parameter ``subdim``:
 Returns:
     the number of *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::Component_::face
-inline constexpr const char face[] =
+// Docstring regina::python::doc::Component::face
+static constexpr const char face[] =
 R"doc(Returns the requested *subdim*-face in this component, in a way that
 is optimised for Python programmers.
 
@@ -103,8 +103,8 @@ Parameter ``index``:
 Returns:
     the requested face.)doc";
 
-// Docstring regina::python::doc::Component_::faces
-inline constexpr const char faces[] =
+// Docstring regina::python::doc::Component::faces
+static constexpr const char faces[] =
 R"doc(Returns an object that allows iteration through and random access to
 all *subdim*-faces in this component, in a way that is optimised for
 Python programmers.
@@ -133,21 +133,21 @@ Parameter ``subdim``:
 Returns:
     access to the list of all *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::Component_::hasBoundaryEdges
-inline constexpr const char hasBoundaryEdges[] =
+// Docstring regina::python::doc::Component::hasBoundaryEdges
+static constexpr const char hasBoundaryEdges[] =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
 
-// Docstring regina::python::doc::Component_::isClosed
-inline constexpr const char isClosed[] =
+// Docstring regina::python::doc::Component::isClosed
+static constexpr const char isClosed[] =
 R"doc(Determines if this component is closed. This is the case if and only
 if it has no boundary.
 
 Returns:
     ``True`` if and only if this component is closed.)doc";
 
-}
+}; // struct Component
 
 } // namespace regina::python::doc
 

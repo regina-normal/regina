@@ -50,7 +50,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(FacetPairing)
     RDOC_SCOPE_BASE(detail::FacetPairingBase)
 
-    auto c = pybind11::class_<regina::FacetPairing<dim>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<regina::FacetPairing<dim>>(m, name, rdoc::__class)
         .def(pybind11::init<const FacetPairing<dim>&>(), rdoc::__copy)
         .def(pybind11::init<const Triangulation<dim>&>(), rdoc::__init)
         .def("swap", &FacetPairing<dim>::swap, rbase::swap)
@@ -109,7 +109,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rbase::__eq);
 
-    regina::python::add_global_swap<FacetPairing<dim>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, FacetPairing<dim>, FacetPairing);
 
     RDOC_SCOPE_END
 }

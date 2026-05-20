@@ -43,7 +43,7 @@ template <regina::CoefficientDomain T>
 void addPolynomialOver(pybind11::module_& m, const char* className) {
     RDOC_SCOPE_BEGIN(Polynomial)
 
-    auto c = pybind11::class_<Polynomial<T>>(m, className, rdoc_scope)
+    auto c = pybind11::class_<Polynomial<T>>(m, className, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Polynomial<T>&>(), rdoc::__copy)
         .def(pybind11::init([](size_t exp) { // deprecated
@@ -109,7 +109,7 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Polynomial<T>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Polynomial<T>, Polynomial);
 
     RDOC_SCOPE_END
 }

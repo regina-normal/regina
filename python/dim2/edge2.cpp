@@ -50,7 +50,7 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         alias::SimplexVoid)
 
     auto e = pybind11::class_<FaceEmbedding<2, 1>>(m, "FaceEmbedding2_1",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<regina::Triangle<2>*, regina::Perm<3>>(),
             rdoc::__init)
         .def(pybind11::init<const EdgeEmbedding<2>&>(), rdoc::__copy)
@@ -70,7 +70,7 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1", rdoc::Face)
+    auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1", rdoc::Face::__class)
         .def("index", &Edge<2>::index, rbase::index)
         .def("isValid", &Edge<2>::isValid, rbase::isValid)
         .def("hasBadIdentification", &Edge<2>::hasBadIdentification,

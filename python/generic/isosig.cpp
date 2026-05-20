@@ -55,7 +55,8 @@ namespace regina::python {
 void addIsoSigEncodings(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(IsoSigPrintable)
 
-    auto p = pybind11::class_<IsoSigPrintable>(m, "IsoSigPrintable", rdoc_scope)
+    auto p = pybind11::class_<IsoSigPrintable>(m, "IsoSigPrintable",
+            rdoc::__class)
         .def_static("charsPerPerm", [](int dim) {
             try {
                 return regina::select_constexpr<2, regina::maxDim() + 1, int>(
@@ -80,7 +81,7 @@ void addIsoSigEncodings(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(IsoSigPrintableLockFree)
 
     auto f = pybind11::class_<IsoSigPrintableLockFree>(m,
-            "IsoSigPrintableLockFree", rdoc_scope)
+            "IsoSigPrintableLockFree", rdoc::__class)
         .def_static("charsPerPerm", [](int dim) {
             try {
                 return regina::select_constexpr<2, regina::maxDim() + 1, int>(
@@ -102,7 +103,7 @@ void addIsoSigEncodings(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(IsoSigBinary)
 
-    auto b = pybind11::class_<IsoSigBinary>(m, "IsoSigBinary", rdoc_scope)
+    auto b = pybind11::class_<IsoSigBinary>(m, "IsoSigBinary", rdoc::__class)
         .def_static("encodeEmpty", &IsoSigBinary::encodeEmpty,
             rdoc::encodeEmpty)
         .def_static("asString", [](const regina::ByteSequence& sig, int dim) {

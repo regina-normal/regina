@@ -11,8 +11,20 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TypeTrie
-inline constexpr const char TypeTrie[] =
+// Docstring regina::python::doc::global_swap_TypeTrie
+inline constexpr const char global_swap_TypeTrie[] =
+R"doc(Swaps the contents of the two given tries.
+
+Parameter ``a``:
+    the first trie whose contents should be swapped.
+
+Parameter ``b``:
+    the second trie whose contents should be swapped.)doc";
+
+struct TypeTrie {
+
+// Docstring regina::python::doc::TypeTrie::__class
+static constexpr const char __class[] =
 R"doc(A trie that stores a set of type vectors of a fixed length.
 
 This class forms part of the tree traversal algorithm for enumerating
@@ -53,21 +65,19 @@ Python:
     This is available only for the template parameters *nTypes* = 4
     and 7, under the names TypeTrie4 and TypeTrie7 respectively.)doc";
 
-namespace TypeTrie_ {
-
-// Docstring regina::python::doc::TypeTrie_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::TypeTrie::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given trie. This will induce a deep copy of
 *src*.
 
 Parameter ``src``:
     the trie to copy.)doc";
 
-// Docstring regina::python::doc::TypeTrie_::__default
-inline constexpr const char __default[] = R"doc(Creates an empty trie.)doc";
+// Docstring regina::python::doc::TypeTrie::__default
+static constexpr const char __default[] = R"doc(Creates an empty trie.)doc";
 
-// Docstring regina::python::doc::TypeTrie_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::TypeTrie::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given trie store exactly the same type
 vectors.
 
@@ -77,11 +87,11 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if both tries store the same type vectors.)doc";
 
-// Docstring regina::python::doc::TypeTrie_::clear
-inline constexpr const char clear[] = R"doc(Resets this to the empty trie.)doc";
+// Docstring regina::python::doc::TypeTrie::clear
+static constexpr const char clear[] = R"doc(Resets this to the empty trie.)doc";
 
-// Docstring regina::python::doc::TypeTrie_::dominates
-inline constexpr const char dominates[] =
+// Docstring regina::python::doc::TypeTrie::dominates
+static constexpr const char dominates[] =
 R"doc(Determines whether the given type vector dominates any vector in this
 trie.
 
@@ -106,18 +116,8 @@ Returns:
     ``True`` if and only if *vec* dominates some type vector stored in
     this trie.)doc";
 
-// Docstring regina::python::doc::TypeTrie_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given tries.
-
-Parameter ``a``:
-    the first trie whose contents should be swapped.
-
-Parameter ``b``:
-    the second trie whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::TypeTrie_::insert
-inline constexpr const char insert[] =
+// Docstring regina::python::doc::TypeTrie::insert
+static constexpr const char insert[] =
 R"doc(Inserts the given type vector into this trie.
 
 Precondition:
@@ -137,14 +137,14 @@ Parameter ``entry``:
 Parameter ``len``:
     the number of elements in the given type vector.)doc";
 
-// Docstring regina::python::doc::TypeTrie_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::TypeTrie::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given trie.
 
 Parameter ``other``:
     the trie whose contents should be swapped with this.)doc";
 
-}
+}; // struct TypeTrie
 
 } // namespace regina::python::doc
 

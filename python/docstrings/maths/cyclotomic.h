@@ -11,37 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Cyclotomic
-inline constexpr const char Cyclotomic[] =
-R"doc(Represents an element of a cyclotomic field.
-
-The cyclotomic field of order *n* extends the rationals with a
-primitive *n*th root of unity. This is isomorphic to the polynomial
-field ``ℚ[x]/Φ_n``, where ``Φ_n`` is the *n*th cyclotomic polynomial.
-
-Using this isomorphism, each element of the cyclotomic field can be
-uniquely represented as a rational polynomial of degree strictly less
-than ``deg(Φ_n) = φ(n)``, where ``φ`` denotes Euler's totient
-function. This class stores field elements using such a polynomial
-representation, and does _not_ store complex numbers directly. If you
-require the complex value of a field element (as a floating-point
-approximation), you can call evaluate().
-
-Each object of this class stores both the value of the field element
-and the order *n* of the underlying field. This means that you can
-freely work with elements of different fields simultaneously, though
-of course most operations (such as addition, multplication and so on)
-require all operands to belong to the same field.
-
-This class requires that the order *n* is strictly positive.
-
-This class implements C++ move semantics and adheres to the C++
-Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
-
-Although this class makes use of global data in its implementation,
-all of its methods are thread-safe.)doc";
-
 // Docstring regina::python::doc::__add
 inline constexpr const char __add[] =
 R"doc(Adds the two given cyclotomic field elements.
@@ -257,10 +226,23 @@ Parameter ``rhs``:
 Returns:
     the first field element minus the second.)doc";
 
-namespace Cyclotomic_ {
+// Docstring regina::python::doc::global_swap_Cyclotomic
+inline constexpr const char global_swap_Cyclotomic[] =
+R"doc(Swaps the contents of the given field elements.
 
-// Docstring regina::python::doc::Cyclotomic_::__array
-inline constexpr const char __array[] =
+This global routine simply calls Cyclotomic::swap(); it is provided so
+that Cyclotomic meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first field element whose contents should be swapped.
+
+Parameter ``b``:
+    the second field element whose contents should be swapped.)doc";
+
+struct Cyclotomic {
+
+// Docstring regina::python::doc::Cyclotomic::__array
+static constexpr const char __array[] =
 R"doc(Returns an individual rational coefficient of the polynomial
 representation of this field element.
 
@@ -283,8 +265,8 @@ Parameter ``exp``:
 Returns:
     a constant reference to the corresponding rational coefficient.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__array_2
-inline constexpr const char __array_2[] =
+// Docstring regina::python::doc::Cyclotomic::__array_2
+static constexpr const char __array_2[] =
 R"doc(Offers access to an individual rational coefficient of the polynomial
 representation of this field element.
 
@@ -310,8 +292,39 @@ Parameter ``exp``:
 Returns:
     a reference to the corresponding rational coefficient.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Cyclotomic::__class
+static constexpr const char __class[] =
+R"doc(Represents an element of a cyclotomic field.
+
+The cyclotomic field of order *n* extends the rationals with a
+primitive *n*th root of unity. This is isomorphic to the polynomial
+field ``ℚ[x]/Φ_n``, where ``Φ_n`` is the *n*th cyclotomic polynomial.
+
+Using this isomorphism, each element of the cyclotomic field can be
+uniquely represented as a rational polynomial of degree strictly less
+than ``deg(Φ_n) = φ(n)``, where ``φ`` denotes Euler's totient
+function. This class stores field elements using such a polynomial
+representation, and does _not_ store complex numbers directly. If you
+require the complex value of a field element (as a floating-point
+approximation), you can call evaluate().
+
+Each object of this class stores both the value of the field element
+and the order *n* of the underlying field. This means that you can
+freely work with elements of different fields simultaneously, though
+of course most operations (such as addition, multplication and so on)
+require all operands to belong to the same field.
+
+This class requires that the order *n* is strictly positive.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.
+
+Although this class makes use of global data in its implementation,
+all of its methods are thread-safe.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a copy of the given field element, within the same cyclotomic
 field.
 
@@ -320,8 +333,8 @@ This constructor induces a deep copy of *value*.
 Parameter ``value``:
     the field element to copy.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::Cyclotomic::__default
+static constexpr const char __default[] =
 R"doc(Creates an uninitialised field element.
 
 This element must be initialised using either init() or the assignment
@@ -330,8 +343,8 @@ operator before it can be used.
 The underlying cyclotomic field is not yet known; this will also be
 specified during the call to init() or the assignment operator.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Cyclotomic::__eq
+static constexpr const char __eq[] =
 R"doc(Tests whether or not this and the given argument are the same element
 of the same cyclotomic field.
 
@@ -351,8 +364,8 @@ Returns:
     ``True`` if and only if this and *rhs* are the same element of the
     same cyclotomic field.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__iadd
-inline constexpr const char __iadd[] =
+// Docstring regina::python::doc::Cyclotomic::__iadd
+static constexpr const char __iadd[] =
 R"doc(Adds the given field element to this.
 
 Precondition:
@@ -364,8 +377,8 @@ Parameter ``other``:
 Returns:
     a reference to this field element.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__idiv
-inline constexpr const char __idiv[] =
+// Docstring regina::python::doc::Cyclotomic::__idiv
+static constexpr const char __idiv[] =
 R"doc(Divides this field element by the given rational.
 
 This has the effect of dividing the polynomial representation by a
@@ -380,8 +393,8 @@ Parameter ``scalar``:
 Returns:
     a reference to this field element.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__idiv_2
-inline constexpr const char __idiv_2[] =
+// Docstring regina::python::doc::Cyclotomic::__idiv_2
+static constexpr const char __idiv_2[] =
 R"doc(Divides this by the given field element.
 
 Precondition:
@@ -396,8 +409,8 @@ Parameter ``other``:
 Returns:
     a reference to this field element.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__imul
-inline constexpr const char __imul[] =
+// Docstring regina::python::doc::Cyclotomic::__imul
+static constexpr const char __imul[] =
 R"doc(Multiplies this field element by the given rational.
 
 This has the effect of multiplying the polynomial representation by a
@@ -409,8 +422,8 @@ Parameter ``scalar``:
 Returns:
     a reference to this field element.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__imul_2
-inline constexpr const char __imul_2[] =
+// Docstring regina::python::doc::Cyclotomic::__imul_2
+static constexpr const char __imul_2[] =
 R"doc(Multiplies this by the given field element.
 
 Precondition:
@@ -422,16 +435,16 @@ Parameter ``other``:
 Returns:
     a reference to this field element.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Cyclotomic::__init
+static constexpr const char __init[] =
 R"doc(Creates the zero element of the given cyclotomic field.
 
 Parameter ``field``:
     the order of the underlying cyclotomic field; this must be
     strictly positive.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::Cyclotomic::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates the given integer element within the given cyclotomic field.
 
 The polynomial representation of this element will simply be an
@@ -444,8 +457,8 @@ Parameter ``field``:
 Parameter ``value``:
     the value of this element; that is, the integer constant.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__init_3
-inline constexpr const char __init_3[] =
+// Docstring regina::python::doc::Cyclotomic::__init_3
+static constexpr const char __init_3[] =
 R"doc(Creates the given rational element within the given cyclotomic field.
 
 The polynomial representation of this element will simply be a
@@ -458,8 +471,8 @@ Parameter ``field``:
 Parameter ``value``:
     the value of this element; that is, the rational constant.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__init_4
-inline constexpr const char __init_4[] =
+// Docstring regina::python::doc::Cyclotomic::__init_4
+static constexpr const char __init_4[] =
 R"doc(Creates a new field element from the given sequence of coefficients.
 The coefficients should describe the field element's polynomial
 representation, and should be given in order from the constant
@@ -487,8 +500,8 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     coefficients.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Cyclotomic::__isub
+static constexpr const char __isub[] =
 R"doc(Subtracts the given field element from this.
 
 Precondition:
@@ -500,8 +513,8 @@ Parameter ``other``:
 Returns:
     a reference to this field element.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::cyclotomic
-inline constexpr const char cyclotomic[] =
+// Docstring regina::python::doc::Cyclotomic::cyclotomic
+static constexpr const char cyclotomic[] =
 R"doc(Returns the *n*th cyclotomic polynomial ``Φ_n``.
 
 Cyclotomic polynomials are cached after they are computed, and so
@@ -526,8 +539,8 @@ Parameter ``n``:
 Returns:
     the cyclotomic polynomial ``Φ_n``.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::degree
-inline constexpr const char degree[] =
+// Docstring regina::python::doc::Cyclotomic::degree
+static constexpr const char degree[] =
 R"doc(Returns the degree of the polynomial that defines the underlying
 cyclotomic field.
 
@@ -546,8 +559,8 @@ Python:
 Returns:
     the degree of the polynomial that defines the underlying field.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::evaluate
-inline constexpr const char evaluate[] =
+// Docstring regina::python::doc::Cyclotomic::evaluate
+static constexpr const char evaluate[] =
 R"doc(Returns the value of this cyclotomic field element as a complex
 number.
 
@@ -583,8 +596,8 @@ Returns:
     a floating-point approximation of this cyclotomic field element as
     a complex number.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::field
-inline constexpr const char field[] =
+// Docstring regina::python::doc::Cyclotomic::field
+static constexpr const char field[] =
 R"doc(Returns the order *n* of the underlying cyclotomic field to which this
 element belongs.
 
@@ -595,21 +608,8 @@ constructor).
 Returns:
     the order of the underlying cyclotomic field.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given field elements.
-
-This global routine simply calls Cyclotomic::swap(); it is provided so
-that Cyclotomic meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first field element whose contents should be swapped.
-
-Parameter ``b``:
-    the second field element whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Cyclotomic_::init
-inline constexpr const char init[] =
+// Docstring regina::python::doc::Cyclotomic::init
+static constexpr const char init[] =
 R"doc(Initialises this to be the zero element of the given cyclotomic field.
 
 This is safe even if this element was previously initialised as an
@@ -620,8 +620,8 @@ Parameter ``field``:
     the order of the cyclotomic field to which this field element will
     now belong; this must be strictly positive.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::inverse
-inline constexpr const char inverse[] =
+// Docstring regina::python::doc::Cyclotomic::inverse
+static constexpr const char inverse[] =
 R"doc(Returns the inverse of this field element. This field element is not
 changed.
 
@@ -632,8 +632,8 @@ Precondition:
 Precondition:
     This field element is non-zero.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::invert
-inline constexpr const char invert[] =
+// Docstring regina::python::doc::Cyclotomic::invert
+static constexpr const char invert[] =
 R"doc(Inverts this field element. This field element is changed directly.
 
 Precondition:
@@ -643,11 +643,11 @@ Precondition:
 Precondition:
     This field element is non-zero.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::negate
-inline constexpr const char negate[] = R"doc(Negates this field element. This field element is changed directly.)doc";
+// Docstring regina::python::doc::Cyclotomic::negate
+static constexpr const char negate[] = R"doc(Negates this field element. This field element is changed directly.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::polynomial
-inline constexpr const char polynomial[] =
+// Docstring regina::python::doc::Cyclotomic::polynomial
+static constexpr const char polynomial[] =
 R"doc(Returns the full polynomial representation of this field element.
 
 The polynomial representation expresses this field element as a member
@@ -664,8 +664,8 @@ Precondition:
 Returns:
     the full polynomial representation of this field element.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::str
-inline constexpr const char str[] =
+// Docstring regina::python::doc::Cyclotomic::str
+static constexpr const char str[] =
 R"doc(Returns this field element as a human-readable string, using the given
 variable name instead of ``x``.
 
@@ -685,8 +685,8 @@ Parameter ``variable``:
 Returns:
     this field element as a human-readable string.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Cyclotomic::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given field element. This is a fast
 (constant time) operation.
 
@@ -697,8 +697,8 @@ The underlying fields (if different) will be swapped accordingly.
 Parameter ``other``:
     the field element whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::Cyclotomic_::utf8
-inline constexpr const char utf8[] =
+// Docstring regina::python::doc::Cyclotomic::utf8
+static constexpr const char utf8[] =
 R"doc(Returns this field element as a human-readable string using unicode
 characters, using the given variable name instead of ``x``.
 
@@ -724,7 +724,7 @@ Parameter ``variable``:
 Returns:
     this field element as a unicode-enabled human-readable string.)doc";
 
-}
+}; // struct Cyclotomic
 
 } // namespace regina::python::doc
 

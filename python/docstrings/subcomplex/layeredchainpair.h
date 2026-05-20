@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::LayeredChainPair
-inline constexpr const char LayeredChainPair[] =
+// Docstring regina::python::doc::global_swap_LayeredChainPair
+inline constexpr const char global_swap_LayeredChainPair[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls LayeredChainPair::swap(); it is
+provided so that LayeredChainPair meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct LayeredChainPair {
+
+// Docstring regina::python::doc::LayeredChainPair::__class
+static constexpr const char __class[] =
 R"doc(Represents a layered chain pair component of a triangulation.
 
 A layered chain pair consists of two layered chains (as described by
@@ -48,13 +64,11 @@ StandardTriangulation subclasses. Note that the only way to create
 these objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
-namespace LayeredChainPair_ {
+// Docstring regina::python::doc::LayeredChainPair::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::LayeredChainPair_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::LayeredChainPair_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::LayeredChainPair::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of layered chain pair.
 
@@ -76,8 +90,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered chain pair.)doc";
 
-// Docstring regina::python::doc::LayeredChainPair_::chain
-inline constexpr const char chain[] =
+// Docstring regina::python::doc::LayeredChainPair::chain
+static constexpr const char chain[] =
 R"doc(Returns the requested layered chain used to form this structure. If
 the two chains have different lengths, the shorter chain will be chain
 0 and the longer chain will be chain 1.
@@ -88,22 +102,8 @@ Parameter ``which``:
 Returns:
     the requested layered chain.)doc";
 
-// Docstring regina::python::doc::LayeredChainPair_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls LayeredChainPair::swap(); it is
-provided so that LayeredChainPair meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::LayeredChainPair_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::LayeredChainPair::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is a layered chain
 pair.
 
@@ -118,14 +118,14 @@ Returns:
     a structure containing details of the layered chain pair, or
     ``None`` if the given component is not a layered chain pair.)doc";
 
-// Docstring regina::python::doc::LayeredChainPair_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::LayeredChainPair::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct LayeredChainPair
 
 } // namespace regina::python::doc
 

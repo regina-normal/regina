@@ -44,7 +44,7 @@ void addIsomorphism3(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Isomorphism)
     RDOC_SCOPE_BASE(alias::IsomorphismImage)
 
-    auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3", rdoc_scope)
+    auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3", rdoc::__class)
         .def(pybind11::init<const Isomorphism<3>&>(), rdoc::__copy)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def("swap", &Isomorphism<3>::swap, rdoc::swap)
@@ -100,7 +100,7 @@ void addIsomorphism3(pybind11::module_& m) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Isomorphism<3>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Isomorphism<3>, Isomorphism);
 
     RDOC_SCOPE_END
 }

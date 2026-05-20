@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Bitmask
-inline constexpr const char Bitmask[] =
+// Docstring regina::python::doc::global_swap_Bitmask
+inline constexpr const char global_swap_Bitmask[] =
+R"doc(Swaps the contents of the two given bitmasks.
+
+This global routine simply calls Bitmask::swap(); it is provided so
+that Bitmask meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first bitmask whose contents should be swapped.
+
+Parameter ``b``:
+    the second bitmask whose contents should be swapped.)doc";
+
+struct Bitmask {
+
+// Docstring regina::python::doc::Bitmask::__class
+static constexpr const char __class[] =
 R"doc(A bitmask that can store arbitrarily many true-or-false bits.
 
 This bitmask packs the bits together, so that (unlike an array of
@@ -45,705 +60,8 @@ possible, even when passing or returning objects by value.
     effect for other operations (such as subset testing, bit counting
     and so on). Be careful!)doc";
 
-// Docstring regina::python::doc::Bitmask1
-inline constexpr const char Bitmask1[] =
-R"doc(A small but extremely fast bitmask class that can store up to ``8 *
-sizeof(T)`` true-or-false bits.
-
-This bitmask packs all of the bits together into a single variable of
-type *T*. This means that operations on bitmasks are extremely fast,
-because all of the bits can be processed at once.
-
-The downside of course is that the number of bits that can be stored
-is limited to ``8 * sizeof(T)``, where *T* is some native unsigned C++
-integer type.
-
-For another extremely fast bitmask class that can store twice as many
-bits, see Bitmask2. For a bitmask class that can store arbitrarily
-many bits, see Bitmask.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.
-
-Python:
-    Python does not support templates, and so instead Regina's python
-    interface offers the classes Bitmask8, Bitmask16, Bitmask32,
-    Bitmask64, Bitmask128, and (if the machine supports 128-bit
-    integers) Bitmask256. Each of these will be an optimised bitmask
-    class that can hold the corresponding number of bits, and is
-    guaranteed to be an instance of either the C++ ``Bitmask1<T>``
-    class (where possible) or the C++ ``Bitmask2<T>`` template class
-    (if necessary).)doc";
-
-// Docstring regina::python::doc::Bitmask2
-inline constexpr const char Bitmask2[] =
-R"doc(A small but extremely fast bitmask class that can store up to ``16 *
-sizeof(T)`` true-or-false bits.
-
-This bitmask packs all of the bits together into two variables of type
-*T*. This means that operations on entire bitmasks are extremely fast,
-because all of the bits can be processed in just two "native"
-operations.
-
-The downside of course is that the number of bits that can be stored
-is limited to ``16 * sizeof(T)``, where *T* is some native unsigned
-C++ integer type.
-
-For an even faster bitmask class that can only store half as many
-bits, see Bitmask1. For a bitmask class that can store arbitrarily
-many bits, see Bitmask.
-
-These objects are small enough to pass by value and swap with
-std::swap(), with no need for any specialised move operations or swap
-functions.
-
-Python:
-    Python does not support templates, and so instead Regina's python
-    interface offers the classes Bitmask8, Bitmask16, Bitmask32,
-    Bitmask64, Bitmask128, and (if the machine supports 128-bit
-    integers) Bitmask256. Each of these will be an optimised bitmask
-    class that can hold the corresponding number of bits, and is
-    guaranteed to be an instance of either the C++ ``Bitmask1<T>``
-    class (where possible) or the C++ ``Bitmask2<T>`` template class
-    (if necessary).)doc";
-
-namespace Bitmask1_ {
-
-// Docstring regina::python::doc::Bitmask1_::__cmp
-inline constexpr const char __cmp[] =
-R"doc(Compares two bitmasks under the subset relation.
-
-Here the bitmask *x* is considered less than *y* if the bits that are
-set in *x* form a strict subset of the bits that are set in *y*. In
-other words: ``x ≠ y``, and every bit that is set in *x* is also set
-in *y*.
-
-This operator generates all of the usual comparison operators,
-including ``<``, ``<=``, ``>``, and ``>=``.
-
-.. note::
-    This does not compare bitmasks lexicographically. For
-    lexicographical comparison, use lessThan() instead.
-
-Python:
-    This spaceship operator ``x <=> y`` is not available, but the
-    other comparison operators that it generates _are_ available.
-
-Parameter ``rhs``:
-    the bitmask to compare against this.
-
-Returns:
-    the result of the subset comparison between this and the given
-    bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a clone of the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__default
-inline constexpr const char __default[] = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines whether this and the given bitmask are identical.
-
-Returns:
-    ``True`` if and only if this and the given bitmask are identical.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__iand
-inline constexpr const char __iand[] =
-R"doc(Sets this to the intersection of this and the given bitmask. Every bit
-that is unset in *other* will be unset in this bitmask.
-
-Parameter ``other``:
-    the bitmask to intersect with this.
-
-Returns:
-    a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__init
-inline constexpr const char __init[] =
-R"doc(Creates a new bitmask with all bits set to ``False``.
-
-The integer argument is merely for compatibility with the Bitmask
-constructor, and will be ignored.
-
-.. warning::
-    This is _not_ a constructor that initialises the bitmask to a
-    given pattern.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__ior
-inline constexpr const char __ior[] =
-R"doc(Sets this to the union of this and the given bitmask. Every bit that
-is set in *other* will be set in this bitmask.
-
-Parameter ``other``:
-    the bitmask to union with this.
-
-Returns:
-    a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__isub
-inline constexpr const char __isub[] =
-R"doc(Sets this to the set difference of this and the given bitmask. Every
-bit that is set in *other* will be cleared in this bitmask.
-
-Parameter ``other``:
-    the bitmask to XOR with this.
-
-Returns:
-    a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::__ixor
-inline constexpr const char __ixor[] =
-R"doc(Sets this to the exclusive disjunction (XOR) of this and the given
-bitmask. Every bit that is set in *other* will be flipped in this
-bitmask.
-
-Parameter ``other``:
-    the bitmask to XOR with this.
-
-Returns:
-    a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::atMostOneBit
-inline constexpr const char atMostOneBit[] =
-R"doc(Determines whether at most one bit is set to ``True`` in this bitmask.
-
-If this bitmask is entirely ``False`` or if only one bit is set to
-``True``, then this routine will return ``True``. Otherwise this
-routine will return ``False``.
-
-Returns:
-    ``True`` if and only if at most one bit is set to ``True``.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::bits
-inline constexpr const char bits[] =
-R"doc(Returns the number of bits currently set to ``True`` in this bitmask.
-
-Returns:
-    the number of ``True`` bits.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::containsIntn
-inline constexpr const char containsIntn[] =
-R"doc(Determines whether this bitmask contains the intersection of the two
-given bitmasks.
-
-For this routine to return ``True``, every bit that is set in _both_
-*x* and *y* must be set in this bitmask also.
-
-Parameter ``x``:
-    the first bitmask used to form the intersection.
-
-Parameter ``y``:
-    the first bitmask used to form the intersection.
-
-Returns:
-    ``True`` if and only if this bitmask entirely contains the
-    intersection of *x* and *y*.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::firstBit
-inline constexpr const char firstBit[] =
-R"doc(Returns the index of the first ``True`` bit in this bitmask, or -1 if
-there are no ``True`` bits.
-
-Returns:
-    the index of the first ``True`` bit.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::flip
-inline constexpr const char flip[] =
-R"doc(Negates every bit in this bitmask. All ``True`` bits will be set to
-``False`` and vice versa.
-
-Unlike the more generic Bitmask, this optimised bitmask class does not
-store a length. This means that all ``8 * sizeof(T)`` possible bits
-will be negated.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::get
-inline constexpr const char get[] =
-R"doc(Returns the value of the given bit of this bitmask.
-
-Parameter ``index``:
-    indicates which bit to query; this must be between 0 and ``(8 *
-    sizeof(T) - 1)`` inclusive.
-
-Returns:
-    the value of the (*index*)th bit.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::inUnion
-inline constexpr const char inUnion[] =
-R"doc(Determines whether this bitmask is entirely contained within the union
-of the two given bitmasks.
-
-For this routine to return ``True``, every bit that is set in this
-bitmask must also be set in either *x* or *y*.
-
-Parameter ``x``:
-    the first bitmask used to form the union.
-
-Parameter ``y``:
-    the first bitmask used to form the union.
-
-Returns:
-    ``True`` if and only if this bitmask is entirely contained within
-    the union of *x* and *y*.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::lastBit
-inline constexpr const char lastBit[] =
-R"doc(Returns the index of the last ``True`` bit in this bitmask, or -1 if
-there are no ``True`` bits.
-
-Returns:
-    the index of the last ``True`` bit.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::lessThan
-inline constexpr const char lessThan[] =
-R"doc(Deprecated routine that determines whether this bitmask appears
-strictly before the given bitmask when bitmasks are sorted in "reverse
-lexicographical" order. Here the bit at index 0 is least significant,
-and the bit at index ``length-1`` is most significant.
-
-.. deprecated::
-    Instead use ``numericalComp(other)``, which has a clearer name and
-    which returns a three-way comparison.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this is "reverse lexicographically"
-    strictly smaller than the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::numericalComp
-inline constexpr const char numericalComp[] =
-R"doc(Compares this against the given bitmask numerically, treating the
-bitmask as an unsigned integer written in binary. This is essentially
-a "reverse lexicographical" ordering: the bit at index 0 is least
-significant, and the bit at index *length*-1 is most significant.
-
-.. warning::
-    We do not use < for this ordering, since the comparison operators
-    (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
-    instead.
-
-Python:
-    Since Python does not support ``std::strong_ordering``, this
-    routine is called ``numericalLessThan()`` instead, and it returns
-    a boolean according to whether the comparison orders this bitmask
-    before *other*.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    the result of the numerical comparison between this and the given
-    bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::reset
-inline constexpr const char reset[] = R"doc(Sets all bits of this bitmask to ``False``.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::reset_2
-inline constexpr const char reset_2[] =
-R"doc(Sets all bits of this bitmask to ``False``.
-
-The integer argument is merely for compatibility with
-Bitmask::reset(size_t), and will be ignored.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::set
-inline constexpr const char set[] =
-R"doc(Sets the given bit of this bitmask to the given value.
-
-Parameter ``index``:
-    indicates which bit to set; this must be between 0 and ``(8 *
-    sizeof(T) - 1)`` inclusive.
-
-Parameter ``value``:
-    the value that will be assigned to the (*index*)th bit.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::set_2
-inline constexpr const char set_2[] =
-R"doc(Sets all bits in the given sorted list to the given value.
-
-This is a convenience routine for setting many bits at once. The
-indices of the bits to set should be sorted and stored in some
-container, such as a std::set or a C-style array. This routine takes
-iterators over this container, and sets the bits at the corresponding
-indices to the given value.
-
-For example, the following code would set bits 3, 5 and 6 to ``true:``
-
-```
-std::vector<unsigned> indices;
-indices.push(3); indices.push(5); indices.push(6);
-bitmask.set(indices.begin(), indices.end(), true);
-```
-
-Likewise, the following code would set bits 1, 4 and 7 to ``false:``
-
-```
-unsigned indices[3] = { 1, 4, 7 };
-bitmask.set(indices, indices + 3, false);
-```
-
-All other bits of this bitmask are unaffected by this routine.
-
-Precondition:
-    The list of indices described by these iterators is in _sorted_
-    order. This is to allow optimisations for larger bitmask types.
-
-Precondition:
-    All indices in the given list are between 0 and ``(8 * sizeof(T) -
-    1)`` inclusive.
-
-Python:
-    Instead of a pair of iterators, you should pass a Python list
-    (which, as described above, must be a sorted list of indices).
-
-Parameter ``indexBegin``:
-    the beginning of the iterator range containing the sorted indices
-    of the bits to set.
-
-Parameter ``indexEnd``:
-    the end of the iterator range containing the sorted indices of the
-    bits to set.
-
-Parameter ``value``:
-    the value that will be assigned to each of the corresponding bits.)doc";
-
-// Docstring regina::python::doc::Bitmask1_::truncate
-inline constexpr const char truncate[] =
-R"doc(Leaves the first *numBits* bits of this bitmask intact, but sets all
-subsequent bits to ``False``. In other words, this routine "truncates"
-this bitmask to the given number of bits.
-
-This routine does not change the _length_ of this bitmask (as passed
-to the contructor or to reset()).
-
-Parameter ``numBits``:
-    the number of bits that will _not_ be cleared.)doc";
-
-}
-
-namespace Bitmask2_ {
-
-// Docstring regina::python::doc::Bitmask2_::__cmp
-inline constexpr const char __cmp[] =
-R"doc(Compares two bitmasks under the subset relation.
-
-Here the bitmask *x* is considered less than *y* if the bits that are
-set in *x* form a strict subset of the bits that are set in *y*. In
-other words: ``x ≠ y``, and every bit that is set in *x* is also set
-in *y*.
-
-This operator generates all of the usual comparison operators,
-including ``<``, ``<=``, ``>``, and ``>=``.
-
-.. note::
-    This does not compare bitmasks lexicographically. For
-    lexicographical comparison, use lessThan() instead.
-
-Python:
-    This spaceship operator ``x <=> y`` is not available, but the
-    other comparison operators that it generates _are_ available.
-
-Parameter ``rhs``:
-    the bitmask to compare against this.
-
-Returns:
-    the result of the subset comparison between this and the given
-    bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a clone of the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__default
-inline constexpr const char __default[] = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines whether this and the given bitmask are identical.
-
-Returns:
-    ``True`` if and only if this and the given bitmask are identical.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__iand
-inline constexpr const char __iand[] =
-R"doc(Sets this to the intersection of this and the given bitmask. Every bit
-that is unset in *other* will be unset in this bitmask.
-
-Parameter ``other``:
-    the bitmask to intersect with this.
-
-Returns:
-    a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__init
-inline constexpr const char __init[] =
-R"doc(Creates a new bitmask with all bits set to ``False``.
-
-The integer argument is merely for compatibility with the Bitmask
-constructor, and will be ignored.
-
-.. warning::
-    This is _not_ a constructor that initialises the bitmask to a
-    given pattern.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__ior
-inline constexpr const char __ior[] =
-R"doc(Sets this to the union of this and the given bitmask. Every bit that
-is set in *other* will be set in this bitmask.
-
-Parameter ``other``:
-    the bitmask to union with this.
-
-Returns:
-    a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__isub
-inline constexpr const char __isub[] =
-R"doc(Sets this to the set difference of this and the given bitmask. Every
-bit that is set in *other* will be cleared in this bitmask.
-
-Parameter ``other``:
-    the bitmask to XOR with this.
-
-Returns:
-    a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::__ixor
-inline constexpr const char __ixor[] =
-R"doc(Sets this to the exclusive disjunction (XOR) of this and the given
-bitmask. Every bit that is set in *other* will be flipped in this
-bitmask.
-
-Parameter ``other``:
-    the bitmask to XOR with this.
-
-Returns:
-    a reference to this bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::atMostOneBit
-inline constexpr const char atMostOneBit[] =
-R"doc(Determines whether at most one bit is set to ``True`` in this bitmask.
-
-If this bitmask is entirely ``False`` or if only one bit is set to
-``True``, then this routine will return ``True``. Otherwise this
-routine will return ``False``.
-
-Returns:
-    ``True`` if and only if at most one bit is set to ``True``.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::bits
-inline constexpr const char bits[] =
-R"doc(Returns the number of bits currently set to ``True`` in this bitmask.
-
-Returns:
-    the number of ``True`` bits.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::containsIntn
-inline constexpr const char containsIntn[] =
-R"doc(Determines whether this bitmask contains the intersection of the two
-given bitmasks.
-
-For this routine to return ``True``, every bit that is set in _both_
-*x* and *y* must be set in this bitmask also.
-
-Parameter ``x``:
-    the first bitmask used to form the intersection.
-
-Parameter ``y``:
-    the first bitmask used to form the intersection.
-
-Returns:
-    ``True`` if and only if this bitmask entirely contains the
-    intersection of *x* and *y*.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::firstBit
-inline constexpr const char firstBit[] =
-R"doc(Returns the index of the first ``True`` bit in this bitmask, or -1 if
-there are no ``True`` bits.
-
-Returns:
-    the index of the first ``True`` bit.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::flip
-inline constexpr const char flip[] =
-R"doc(Negates every bit in this bitmask. All ``True`` bits will be set to
-``False`` and vice versa.
-
-Unlike the more generic Bitmask, this optimised bitmask class does not
-store a length. This means that all ``16 * sizeof(T)`` possible bits
-will be negated.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::get
-inline constexpr const char get[] =
-R"doc(Returns the value of the given bit of this bitmask.
-
-Parameter ``index``:
-    indicates which bit to query; this must be between 0 and ``(16 *
-    sizeof(T) - 1)`` inclusive.
-
-Returns:
-    the value of the (*index*)th bit.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::inUnion
-inline constexpr const char inUnion[] =
-R"doc(Determines whether this bitmask is entirely contained within the union
-of the two given bitmasks.
-
-For this routine to return ``True``, every bit that is set in this
-bitmask must also be set in either *x* or *y*.
-
-Parameter ``x``:
-    the first bitmask used to form the union.
-
-Parameter ``y``:
-    the first bitmask used to form the union.
-
-Returns:
-    ``True`` if and only if this bitmask is entirely contained within
-    the union of *x* and *y*.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::lastBit
-inline constexpr const char lastBit[] =
-R"doc(Returns the index of the last ``True`` bit in this bitmask, or -1 if
-there are no ``True`` bits.
-
-Returns:
-    the index of the last ``True`` bit.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::lessThan
-inline constexpr const char lessThan[] =
-R"doc(Deprecated routine that determines whether this bitmask appears
-strictly before the given bitmask when bitmasks are sorted in "reverse
-lexicographical" order. Here the bit at index 0 is least significant,
-and the bit at index ``length-1`` is most significant.
-
-.. deprecated::
-    Instead use ``numericalComp(other)``, which has a clearer name and
-    which returns a three-way comparison.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    ``True`` if and only if this is "reverse lexicographically"
-    strictly smaller than the given bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::numericalComp
-inline constexpr const char numericalComp[] =
-R"doc(Compares this against the given bitmask numerically, treating the
-bitmask as an unsigned integer written in binary. This is essentially
-a "reverse lexicographical" ordering: the bit at index 0 is least
-significant, and the bit at index *length*-1 is most significant.
-
-.. warning::
-    We do not use < for this ordering, since the comparison operators
-    (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
-    instead.
-
-Python:
-    Since Python does not support ``std::strong_ordering``, this
-    routine is called ``numericalLessThan()`` instead, and it returns
-    a boolean according to whether the comparison orders this bitmask
-    before *other*.
-
-Parameter ``other``:
-    the bitmask to compare against this.
-
-Returns:
-    the result of the numerical comparison between this and the given
-    bitmask.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::reset
-inline constexpr const char reset[] = R"doc(Sets all bits of this bitmask to ``False``.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::reset_2
-inline constexpr const char reset_2[] =
-R"doc(Sets all bits of this bitmask to ``False``.
-
-The integer argument is merely for compatibility with
-Bitmask::reset(size_t), and will be ignored.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::set
-inline constexpr const char set[] =
-R"doc(Sets the given bit of this bitmask to the given value.
-
-Parameter ``index``:
-    indicates which bit to set; this must be between 0 and ``(16 *
-    sizeof(T) - 1)`` inclusive.
-
-Parameter ``value``:
-    the value that will be assigned to the (*index*)th bit.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::set_2
-inline constexpr const char set_2[] =
-R"doc(Sets all bits in the given sorted list to the given value.
-
-This is a convenience routine for setting many bits at once. The
-indices of the bits to set should be sorted and stored in some
-container, such as a std::set or a C-style array. This routine takes
-iterators over this container, and sets the bits at the corresponding
-indices to the given value.
-
-For example, the following code would set bits 3, 5 and 6 to ``true:``
-
-```
-std::vector<unsigned> indices;
-indices.push(3); indices.push(5); indices.push(6);
-bitmask.set(indices.begin(), indices.end(), true);
-```
-
-Likewise, the following code would set bits 1, 4 and 7 to ``false:``
-
-```
-unsigned indices[3] = { 1, 4, 7 };
-bitmask.set(indices, indices + 3, false);
-```
-
-All other bits of this bitmask are unaffected by this routine.
-
-Precondition:
-    The list of indices described by these iterators is in _sorted_
-    order. This is to allow optimisations for larger bitmask types.
-
-Precondition:
-    All indices in the given list are between 0 and ``(16 * sizeof(T)
-    - 1)`` inclusive.
-
-Python:
-    Instead of a pair of iterators, you should pass a Python list
-    (which, as described above, must be a sorted list of indices).
-
-Parameter ``indexBegin``:
-    the beginning of the iterator range containing the sorted indices
-    of the bits to set.
-
-Parameter ``indexEnd``:
-    the end of the iterator range containing the sorted indices of the
-    bits to set.
-
-Parameter ``value``:
-    the value that will be assigned to each of the corresponding bits.)doc";
-
-// Docstring regina::python::doc::Bitmask2_::truncate
-inline constexpr const char truncate[] =
-R"doc(Leaves the first *numBits* bits of this bitmask intact, but sets all
-subsequent bits to ``False``. In other words, this routine "truncates"
-this bitmask to the given number of bits.
-
-This routine does not change the _length_ of this bitmask (as passed
-to the contructor or to reset()).
-
-Parameter ``numBits``:
-    the number of bits that will _not_ be cleared.)doc";
-
-}
-
-namespace Bitmask_ {
-
-// Docstring regina::python::doc::Bitmask_::__cmp
-inline constexpr const char __cmp[] =
+// Docstring regina::python::doc::Bitmask::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares two bitmasks under the subset relation.
 
 Here the bitmask *x* is considered less than *y* if the bits that are
@@ -772,16 +90,16 @@ Returns:
     the result of the subset comparison between this and the given
     bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Bitmask::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a clone of the given bitmask.
 
 It is fine if the given bitmask is invalid (but in this case, the new
 bitmask will be invalid also). Invalid bitmasks must be assigned a
 length using reset(size_t) or the assignment operator.)doc";
 
-// Docstring regina::python::doc::Bitmask_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::Bitmask::__default
+static constexpr const char __default[] =
 R"doc(Creates a new invalid bitmask. You must call the one-argument
 reset(size_t) or use the assignment operator to give the bitmask a
 length before it can be used.
@@ -797,8 +115,8 @@ lengths.
     the single exception, the class destructor is safe to use even if
     a bitmask has never been initialised.)doc";
 
-// Docstring regina::python::doc::Bitmask_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Bitmask::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given bitmask are identical.
 
 .. warning::
@@ -812,8 +130,8 @@ R"doc(Determines whether this and the given bitmask are identical.
 Returns:
     ``True`` if and only if this and the given bitmask are identical.)doc";
 
-// Docstring regina::python::doc::Bitmask_::__iand
-inline constexpr const char __iand[] =
+// Docstring regina::python::doc::Bitmask::__iand
+static constexpr const char __iand[] =
 R"doc(Sets this to the intersection of this and the given bitmask. Every bit
 that is unset in *other* will be unset in this bitmask.
 
@@ -826,16 +144,16 @@ Parameter ``other``:
 Returns:
     a reference to this bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Bitmask::__init
+static constexpr const char __init[] =
 R"doc(Creates a new bitmask of the given length with all bits set to
 ``False``.
 
 Parameter ``length``:
     the number of bits stored in this bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::__ior
-inline constexpr const char __ior[] =
+// Docstring regina::python::doc::Bitmask::__ior
+static constexpr const char __ior[] =
 R"doc(Sets this to the union of this and the given bitmask. Every bit that
 is set in *other* will be set in this bitmask.
 
@@ -848,8 +166,8 @@ Parameter ``other``:
 Returns:
     a reference to this bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Bitmask::__isub
+static constexpr const char __isub[] =
 R"doc(Sets this to the set difference of this and the given bitmask. Every
 bit that is set in *other* will be cleared in this bitmask.
 
@@ -862,8 +180,8 @@ Parameter ``other``:
 Returns:
     a reference to this bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::__ixor
-inline constexpr const char __ixor[] =
+// Docstring regina::python::doc::Bitmask::__ixor
+static constexpr const char __ixor[] =
 R"doc(Sets this to the exclusive disjunction (XOR) of this and the given
 bitmask. Every bit that is set in *other* will be flipped in this
 bitmask.
@@ -877,8 +195,8 @@ Parameter ``other``:
 Returns:
     a reference to this bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::atMostOneBit
-inline constexpr const char atMostOneBit[] =
+// Docstring regina::python::doc::Bitmask::atMostOneBit
+static constexpr const char atMostOneBit[] =
 R"doc(Determines whether at most one bit is set to ``True`` in this bitmask.
 
 If this bitmask is entirely ``False`` or if only one bit is set to
@@ -888,15 +206,15 @@ routine will return ``False``.
 Returns:
     ``True`` if and only if at most one bit is set to ``True``.)doc";
 
-// Docstring regina::python::doc::Bitmask_::bits
-inline constexpr const char bits[] =
+// Docstring regina::python::doc::Bitmask::bits
+static constexpr const char bits[] =
 R"doc(Returns the number of bits currently set to ``True`` in this bitmask.
 
 Returns:
     the number of ``True`` bits.)doc";
 
-// Docstring regina::python::doc::Bitmask_::containsIntn
-inline constexpr const char containsIntn[] =
+// Docstring regina::python::doc::Bitmask::containsIntn
+static constexpr const char containsIntn[] =
 R"doc(Determines whether this bitmask contains the intersection of the two
 given bitmasks.
 
@@ -916,16 +234,16 @@ Returns:
     ``True`` if and only if this bitmask entirely contains the
     intersection of *x* and *y*.)doc";
 
-// Docstring regina::python::doc::Bitmask_::firstBit
-inline constexpr const char firstBit[] =
+// Docstring regina::python::doc::Bitmask::firstBit
+static constexpr const char firstBit[] =
 R"doc(Returns the index of the first ``True`` bit in this bitmask, or -1 if
 there are no ``True`` bits.
 
 Returns:
     the index of the first ``True`` bit.)doc";
 
-// Docstring regina::python::doc::Bitmask_::flip
-inline constexpr const char flip[] =
+// Docstring regina::python::doc::Bitmask::flip
+static constexpr const char flip[] =
 R"doc(Negates every bit in this bitmask. All ``True`` bits will be set to
 ``False`` and vice versa.
 
@@ -936,8 +254,8 @@ R"doc(Negates every bit in this bitmask. All ``True`` bits will be set to
     length. This may cause unexpected results for routines such as
     subset testing, bit counting and so on. Be careful!)doc";
 
-// Docstring regina::python::doc::Bitmask_::get
-inline constexpr const char get[] =
+// Docstring regina::python::doc::Bitmask::get
+static constexpr const char get[] =
 R"doc(Returns the value of the given bit of this bitmask.
 
 Parameter ``index``:
@@ -947,21 +265,8 @@ Parameter ``index``:
 Returns:
     the value of the (*index*)th bit.)doc";
 
-// Docstring regina::python::doc::Bitmask_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given bitmasks.
-
-This global routine simply calls Bitmask::swap(); it is provided so
-that Bitmask meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first bitmask whose contents should be swapped.
-
-Parameter ``b``:
-    the second bitmask whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Bitmask_::inUnion
-inline constexpr const char inUnion[] =
+// Docstring regina::python::doc::Bitmask::inUnion
+static constexpr const char inUnion[] =
 R"doc(Determines whether this bitmask is entirely contained within the union
 of the two given bitmasks.
 
@@ -981,16 +286,16 @@ Returns:
     ``True`` if and only if this bitmask is entirely contained within
     the union of *x* and *y*.)doc";
 
-// Docstring regina::python::doc::Bitmask_::lastBit
-inline constexpr const char lastBit[] =
+// Docstring regina::python::doc::Bitmask::lastBit
+static constexpr const char lastBit[] =
 R"doc(Returns the index of the last ``True`` bit in this bitmask, or -1 if
 there are no ``True`` bits.
 
 Returns:
     the index of the last ``True`` bit.)doc";
 
-// Docstring regina::python::doc::Bitmask_::lessThan
-inline constexpr const char lessThan[] =
+// Docstring regina::python::doc::Bitmask::lessThan
+static constexpr const char lessThan[] =
 R"doc(Deprecated routine that determines whether this bitmask appears
 strictly before the given bitmask when bitmasks are sorted in "reverse
 lexicographical" order. Here the bit at index 0 is least significant,
@@ -1010,8 +315,8 @@ Returns:
     ``True`` if and only if this is "reverse lexicographically"
     strictly smaller than the given bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::numericalComp
-inline constexpr const char numericalComp[] =
+// Docstring regina::python::doc::Bitmask::numericalComp
+static constexpr const char numericalComp[] =
 R"doc(Compares this against the given bitmask numerically, treating the
 bitmask as an unsigned integer written in binary. This is essentially
 a "reverse lexicographical" ordering: the bit at index 0 is least
@@ -1038,8 +343,8 @@ Returns:
     the result of the numerical comparison between this and the given
     bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::reset
-inline constexpr const char reset[] =
+// Docstring regina::python::doc::Bitmask::reset
+static constexpr const char reset[] =
 R"doc(Sets all bits of this bitmask to ``False``.
 
 .. warning::
@@ -1047,8 +352,8 @@ R"doc(Sets all bits of this bitmask to ``False``.
     particular, if the default constructor was used, you must call the
     one-argument reset(size_t) before you can use this routine.)doc";
 
-// Docstring regina::python::doc::Bitmask_::reset_2
-inline constexpr const char reset_2[] =
+// Docstring regina::python::doc::Bitmask::reset_2
+static constexpr const char reset_2[] =
 R"doc(Resizes this bitmask to the given length and sets all bits to
 ``False``.
 
@@ -1058,8 +363,8 @@ bitmask if desired.
 Parameter ``length``:
     the number of bits to store in this bitmask.)doc";
 
-// Docstring regina::python::doc::Bitmask_::set
-inline constexpr const char set[] =
+// Docstring regina::python::doc::Bitmask::set
+static constexpr const char set[] =
 R"doc(Sets the given bit of this bitmask to the given value.
 
 Parameter ``index``:
@@ -1069,8 +374,8 @@ Parameter ``index``:
 Parameter ``value``:
     the value that will be assigned to the (*index*)th bit.)doc";
 
-// Docstring regina::python::doc::Bitmask_::set_2
-inline constexpr const char set_2[] =
+// Docstring regina::python::doc::Bitmask::set_2
+static constexpr const char set_2[] =
 R"doc(Sets all bits in the given sorted list to the given value.
 
 This is a convenience routine for setting many bits at once. The
@@ -1119,15 +424,15 @@ Parameter ``indexEnd``:
 Parameter ``value``:
     the value that will be assigned to each of the corresponding bits.)doc";
 
-// Docstring regina::python::doc::Bitmask_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Bitmask::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given bitmask.
 
 Parameter ``other``:
     the bitmask whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::Bitmask_::truncate
-inline constexpr const char truncate[] =
+// Docstring regina::python::doc::Bitmask::truncate
+static constexpr const char truncate[] =
 R"doc(Leaves the first *numBits* bits of this bitmask intact, but sets all
 subsequent bits to ``False``. In other words, this routine "truncates"
 this bitmask to the given number of bits.
@@ -1141,7 +446,702 @@ Precondition:
 Parameter ``numBits``:
     the number of bits that will _not_ be cleared.)doc";
 
-}
+}; // struct Bitmask
+
+struct Bitmask1 {
+
+// Docstring regina::python::doc::Bitmask1::__class
+static constexpr const char __class[] =
+R"doc(A small but extremely fast bitmask class that can store up to ``8 *
+sizeof(T)`` true-or-false bits.
+
+This bitmask packs all of the bits together into a single variable of
+type *T*. This means that operations on bitmasks are extremely fast,
+because all of the bits can be processed at once.
+
+The downside of course is that the number of bits that can be stored
+is limited to ``8 * sizeof(T)``, where *T* is some native unsigned C++
+integer type.
+
+For another extremely fast bitmask class that can store twice as many
+bits, see Bitmask2. For a bitmask class that can store arbitrarily
+many bits, see Bitmask.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Python:
+    Python does not support templates, and so instead Regina's python
+    interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+    Bitmask64, Bitmask128, and (if the machine supports 128-bit
+    integers) Bitmask256. Each of these will be an optimised bitmask
+    class that can hold the corresponding number of bits, and is
+    guaranteed to be an instance of either the C++ ``Bitmask1<T>``
+    class (where possible) or the C++ ``Bitmask2<T>`` template class
+    (if necessary).)doc";
+
+// Docstring regina::python::doc::Bitmask1::__cmp
+static constexpr const char __cmp[] =
+R"doc(Compares two bitmasks under the subset relation.
+
+Here the bitmask *x* is considered less than *y* if the bits that are
+set in *x* form a strict subset of the bits that are set in *y*. In
+other words: ``x ≠ y``, and every bit that is set in *x* is also set
+in *y*.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+.. note::
+    This does not compare bitmasks lexicographically. For
+    lexicographical comparison, use lessThan() instead.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the bitmask to compare against this.
+
+Returns:
+    the result of the subset comparison between this and the given
+    bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1::__copy
+static constexpr const char __copy[] = R"doc(Creates a clone of the given bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1::__default
+static constexpr const char __default[] = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
+
+// Docstring regina::python::doc::Bitmask1::__eq
+static constexpr const char __eq[] =
+R"doc(Determines whether this and the given bitmask are identical.
+
+Returns:
+    ``True`` if and only if this and the given bitmask are identical.)doc";
+
+// Docstring regina::python::doc::Bitmask1::__iand
+static constexpr const char __iand[] =
+R"doc(Sets this to the intersection of this and the given bitmask. Every bit
+that is unset in *other* will be unset in this bitmask.
+
+Parameter ``other``:
+    the bitmask to intersect with this.
+
+Returns:
+    a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1::__init
+static constexpr const char __init[] =
+R"doc(Creates a new bitmask with all bits set to ``False``.
+
+The integer argument is merely for compatibility with the Bitmask
+constructor, and will be ignored.
+
+.. warning::
+    This is _not_ a constructor that initialises the bitmask to a
+    given pattern.)doc";
+
+// Docstring regina::python::doc::Bitmask1::__ior
+static constexpr const char __ior[] =
+R"doc(Sets this to the union of this and the given bitmask. Every bit that
+is set in *other* will be set in this bitmask.
+
+Parameter ``other``:
+    the bitmask to union with this.
+
+Returns:
+    a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1::__isub
+static constexpr const char __isub[] =
+R"doc(Sets this to the set difference of this and the given bitmask. Every
+bit that is set in *other* will be cleared in this bitmask.
+
+Parameter ``other``:
+    the bitmask to XOR with this.
+
+Returns:
+    a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1::__ixor
+static constexpr const char __ixor[] =
+R"doc(Sets this to the exclusive disjunction (XOR) of this and the given
+bitmask. Every bit that is set in *other* will be flipped in this
+bitmask.
+
+Parameter ``other``:
+    the bitmask to XOR with this.
+
+Returns:
+    a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1::atMostOneBit
+static constexpr const char atMostOneBit[] =
+R"doc(Determines whether at most one bit is set to ``True`` in this bitmask.
+
+If this bitmask is entirely ``False`` or if only one bit is set to
+``True``, then this routine will return ``True``. Otherwise this
+routine will return ``False``.
+
+Returns:
+    ``True`` if and only if at most one bit is set to ``True``.)doc";
+
+// Docstring regina::python::doc::Bitmask1::bits
+static constexpr const char bits[] =
+R"doc(Returns the number of bits currently set to ``True`` in this bitmask.
+
+Returns:
+    the number of ``True`` bits.)doc";
+
+// Docstring regina::python::doc::Bitmask1::containsIntn
+static constexpr const char containsIntn[] =
+R"doc(Determines whether this bitmask contains the intersection of the two
+given bitmasks.
+
+For this routine to return ``True``, every bit that is set in _both_
+*x* and *y* must be set in this bitmask also.
+
+Parameter ``x``:
+    the first bitmask used to form the intersection.
+
+Parameter ``y``:
+    the first bitmask used to form the intersection.
+
+Returns:
+    ``True`` if and only if this bitmask entirely contains the
+    intersection of *x* and *y*.)doc";
+
+// Docstring regina::python::doc::Bitmask1::firstBit
+static constexpr const char firstBit[] =
+R"doc(Returns the index of the first ``True`` bit in this bitmask, or -1 if
+there are no ``True`` bits.
+
+Returns:
+    the index of the first ``True`` bit.)doc";
+
+// Docstring regina::python::doc::Bitmask1::flip
+static constexpr const char flip[] =
+R"doc(Negates every bit in this bitmask. All ``True`` bits will be set to
+``False`` and vice versa.
+
+Unlike the more generic Bitmask, this optimised bitmask class does not
+store a length. This means that all ``8 * sizeof(T)`` possible bits
+will be negated.)doc";
+
+// Docstring regina::python::doc::Bitmask1::get
+static constexpr const char get[] =
+R"doc(Returns the value of the given bit of this bitmask.
+
+Parameter ``index``:
+    indicates which bit to query; this must be between 0 and ``(8 *
+    sizeof(T) - 1)`` inclusive.
+
+Returns:
+    the value of the (*index*)th bit.)doc";
+
+// Docstring regina::python::doc::Bitmask1::inUnion
+static constexpr const char inUnion[] =
+R"doc(Determines whether this bitmask is entirely contained within the union
+of the two given bitmasks.
+
+For this routine to return ``True``, every bit that is set in this
+bitmask must also be set in either *x* or *y*.
+
+Parameter ``x``:
+    the first bitmask used to form the union.
+
+Parameter ``y``:
+    the first bitmask used to form the union.
+
+Returns:
+    ``True`` if and only if this bitmask is entirely contained within
+    the union of *x* and *y*.)doc";
+
+// Docstring regina::python::doc::Bitmask1::lastBit
+static constexpr const char lastBit[] =
+R"doc(Returns the index of the last ``True`` bit in this bitmask, or -1 if
+there are no ``True`` bits.
+
+Returns:
+    the index of the last ``True`` bit.)doc";
+
+// Docstring regina::python::doc::Bitmask1::lessThan
+static constexpr const char lessThan[] =
+R"doc(Deprecated routine that determines whether this bitmask appears
+strictly before the given bitmask when bitmasks are sorted in "reverse
+lexicographical" order. Here the bit at index 0 is least significant,
+and the bit at index ``length-1`` is most significant.
+
+.. deprecated::
+    Instead use ``numericalComp(other)``, which has a clearer name and
+    which returns a three-way comparison.
+
+Parameter ``other``:
+    the bitmask to compare against this.
+
+Returns:
+    ``True`` if and only if this is "reverse lexicographically"
+    strictly smaller than the given bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1::numericalComp
+static constexpr const char numericalComp[] =
+R"doc(Compares this against the given bitmask numerically, treating the
+bitmask as an unsigned integer written in binary. This is essentially
+a "reverse lexicographical" ordering: the bit at index 0 is least
+significant, and the bit at index *length*-1 is most significant.
+
+.. warning::
+    We do not use < for this ordering, since the comparison operators
+    (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
+    instead.
+
+Python:
+    Since Python does not support ``std::strong_ordering``, this
+    routine is called ``numericalLessThan()`` instead, and it returns
+    a boolean according to whether the comparison orders this bitmask
+    before *other*.
+
+Parameter ``other``:
+    the bitmask to compare against this.
+
+Returns:
+    the result of the numerical comparison between this and the given
+    bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask1::reset
+static constexpr const char reset[] = R"doc(Sets all bits of this bitmask to ``False``.)doc";
+
+// Docstring regina::python::doc::Bitmask1::reset_2
+static constexpr const char reset_2[] =
+R"doc(Sets all bits of this bitmask to ``False``.
+
+The integer argument is merely for compatibility with
+Bitmask::reset(size_t), and will be ignored.)doc";
+
+// Docstring regina::python::doc::Bitmask1::set
+static constexpr const char set[] =
+R"doc(Sets the given bit of this bitmask to the given value.
+
+Parameter ``index``:
+    indicates which bit to set; this must be between 0 and ``(8 *
+    sizeof(T) - 1)`` inclusive.
+
+Parameter ``value``:
+    the value that will be assigned to the (*index*)th bit.)doc";
+
+// Docstring regina::python::doc::Bitmask1::set_2
+static constexpr const char set_2[] =
+R"doc(Sets all bits in the given sorted list to the given value.
+
+This is a convenience routine for setting many bits at once. The
+indices of the bits to set should be sorted and stored in some
+container, such as a std::set or a C-style array. This routine takes
+iterators over this container, and sets the bits at the corresponding
+indices to the given value.
+
+For example, the following code would set bits 3, 5 and 6 to ``true:``
+
+```
+std::vector<unsigned> indices;
+indices.push(3); indices.push(5); indices.push(6);
+bitmask.set(indices.begin(), indices.end(), true);
+```
+
+Likewise, the following code would set bits 1, 4 and 7 to ``false:``
+
+```
+unsigned indices[3] = { 1, 4, 7 };
+bitmask.set(indices, indices + 3, false);
+```
+
+All other bits of this bitmask are unaffected by this routine.
+
+Precondition:
+    The list of indices described by these iterators is in _sorted_
+    order. This is to allow optimisations for larger bitmask types.
+
+Precondition:
+    All indices in the given list are between 0 and ``(8 * sizeof(T) -
+    1)`` inclusive.
+
+Python:
+    Instead of a pair of iterators, you should pass a Python list
+    (which, as described above, must be a sorted list of indices).
+
+Parameter ``indexBegin``:
+    the beginning of the iterator range containing the sorted indices
+    of the bits to set.
+
+Parameter ``indexEnd``:
+    the end of the iterator range containing the sorted indices of the
+    bits to set.
+
+Parameter ``value``:
+    the value that will be assigned to each of the corresponding bits.)doc";
+
+// Docstring regina::python::doc::Bitmask1::truncate
+static constexpr const char truncate[] =
+R"doc(Leaves the first *numBits* bits of this bitmask intact, but sets all
+subsequent bits to ``False``. In other words, this routine "truncates"
+this bitmask to the given number of bits.
+
+This routine does not change the _length_ of this bitmask (as passed
+to the contructor or to reset()).
+
+Parameter ``numBits``:
+    the number of bits that will _not_ be cleared.)doc";
+
+}; // struct Bitmask1
+
+struct Bitmask2 {
+
+// Docstring regina::python::doc::Bitmask2::__class
+static constexpr const char __class[] =
+R"doc(A small but extremely fast bitmask class that can store up to ``16 *
+sizeof(T)`` true-or-false bits.
+
+This bitmask packs all of the bits together into two variables of type
+*T*. This means that operations on entire bitmasks are extremely fast,
+because all of the bits can be processed in just two "native"
+operations.
+
+The downside of course is that the number of bits that can be stored
+is limited to ``16 * sizeof(T)``, where *T* is some native unsigned
+C++ integer type.
+
+For an even faster bitmask class that can only store half as many
+bits, see Bitmask1. For a bitmask class that can store arbitrarily
+many bits, see Bitmask.
+
+These objects are small enough to pass by value and swap with
+std::swap(), with no need for any specialised move operations or swap
+functions.
+
+Python:
+    Python does not support templates, and so instead Regina's python
+    interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+    Bitmask64, Bitmask128, and (if the machine supports 128-bit
+    integers) Bitmask256. Each of these will be an optimised bitmask
+    class that can hold the corresponding number of bits, and is
+    guaranteed to be an instance of either the C++ ``Bitmask1<T>``
+    class (where possible) or the C++ ``Bitmask2<T>`` template class
+    (if necessary).)doc";
+
+// Docstring regina::python::doc::Bitmask2::__cmp
+static constexpr const char __cmp[] =
+R"doc(Compares two bitmasks under the subset relation.
+
+Here the bitmask *x* is considered less than *y* if the bits that are
+set in *x* form a strict subset of the bits that are set in *y*. In
+other words: ``x ≠ y``, and every bit that is set in *x* is also set
+in *y*.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+.. note::
+    This does not compare bitmasks lexicographically. For
+    lexicographical comparison, use lessThan() instead.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the bitmask to compare against this.
+
+Returns:
+    the result of the subset comparison between this and the given
+    bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2::__copy
+static constexpr const char __copy[] = R"doc(Creates a clone of the given bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2::__default
+static constexpr const char __default[] = R"doc(Creates a new bitmask with all bits set to ``False``.)doc";
+
+// Docstring regina::python::doc::Bitmask2::__eq
+static constexpr const char __eq[] =
+R"doc(Determines whether this and the given bitmask are identical.
+
+Returns:
+    ``True`` if and only if this and the given bitmask are identical.)doc";
+
+// Docstring regina::python::doc::Bitmask2::__iand
+static constexpr const char __iand[] =
+R"doc(Sets this to the intersection of this and the given bitmask. Every bit
+that is unset in *other* will be unset in this bitmask.
+
+Parameter ``other``:
+    the bitmask to intersect with this.
+
+Returns:
+    a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2::__init
+static constexpr const char __init[] =
+R"doc(Creates a new bitmask with all bits set to ``False``.
+
+The integer argument is merely for compatibility with the Bitmask
+constructor, and will be ignored.
+
+.. warning::
+    This is _not_ a constructor that initialises the bitmask to a
+    given pattern.)doc";
+
+// Docstring regina::python::doc::Bitmask2::__ior
+static constexpr const char __ior[] =
+R"doc(Sets this to the union of this and the given bitmask. Every bit that
+is set in *other* will be set in this bitmask.
+
+Parameter ``other``:
+    the bitmask to union with this.
+
+Returns:
+    a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2::__isub
+static constexpr const char __isub[] =
+R"doc(Sets this to the set difference of this and the given bitmask. Every
+bit that is set in *other* will be cleared in this bitmask.
+
+Parameter ``other``:
+    the bitmask to XOR with this.
+
+Returns:
+    a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2::__ixor
+static constexpr const char __ixor[] =
+R"doc(Sets this to the exclusive disjunction (XOR) of this and the given
+bitmask. Every bit that is set in *other* will be flipped in this
+bitmask.
+
+Parameter ``other``:
+    the bitmask to XOR with this.
+
+Returns:
+    a reference to this bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2::atMostOneBit
+static constexpr const char atMostOneBit[] =
+R"doc(Determines whether at most one bit is set to ``True`` in this bitmask.
+
+If this bitmask is entirely ``False`` or if only one bit is set to
+``True``, then this routine will return ``True``. Otherwise this
+routine will return ``False``.
+
+Returns:
+    ``True`` if and only if at most one bit is set to ``True``.)doc";
+
+// Docstring regina::python::doc::Bitmask2::bits
+static constexpr const char bits[] =
+R"doc(Returns the number of bits currently set to ``True`` in this bitmask.
+
+Returns:
+    the number of ``True`` bits.)doc";
+
+// Docstring regina::python::doc::Bitmask2::containsIntn
+static constexpr const char containsIntn[] =
+R"doc(Determines whether this bitmask contains the intersection of the two
+given bitmasks.
+
+For this routine to return ``True``, every bit that is set in _both_
+*x* and *y* must be set in this bitmask also.
+
+Parameter ``x``:
+    the first bitmask used to form the intersection.
+
+Parameter ``y``:
+    the first bitmask used to form the intersection.
+
+Returns:
+    ``True`` if and only if this bitmask entirely contains the
+    intersection of *x* and *y*.)doc";
+
+// Docstring regina::python::doc::Bitmask2::firstBit
+static constexpr const char firstBit[] =
+R"doc(Returns the index of the first ``True`` bit in this bitmask, or -1 if
+there are no ``True`` bits.
+
+Returns:
+    the index of the first ``True`` bit.)doc";
+
+// Docstring regina::python::doc::Bitmask2::flip
+static constexpr const char flip[] =
+R"doc(Negates every bit in this bitmask. All ``True`` bits will be set to
+``False`` and vice versa.
+
+Unlike the more generic Bitmask, this optimised bitmask class does not
+store a length. This means that all ``16 * sizeof(T)`` possible bits
+will be negated.)doc";
+
+// Docstring regina::python::doc::Bitmask2::get
+static constexpr const char get[] =
+R"doc(Returns the value of the given bit of this bitmask.
+
+Parameter ``index``:
+    indicates which bit to query; this must be between 0 and ``(16 *
+    sizeof(T) - 1)`` inclusive.
+
+Returns:
+    the value of the (*index*)th bit.)doc";
+
+// Docstring regina::python::doc::Bitmask2::inUnion
+static constexpr const char inUnion[] =
+R"doc(Determines whether this bitmask is entirely contained within the union
+of the two given bitmasks.
+
+For this routine to return ``True``, every bit that is set in this
+bitmask must also be set in either *x* or *y*.
+
+Parameter ``x``:
+    the first bitmask used to form the union.
+
+Parameter ``y``:
+    the first bitmask used to form the union.
+
+Returns:
+    ``True`` if and only if this bitmask is entirely contained within
+    the union of *x* and *y*.)doc";
+
+// Docstring regina::python::doc::Bitmask2::lastBit
+static constexpr const char lastBit[] =
+R"doc(Returns the index of the last ``True`` bit in this bitmask, or -1 if
+there are no ``True`` bits.
+
+Returns:
+    the index of the last ``True`` bit.)doc";
+
+// Docstring regina::python::doc::Bitmask2::lessThan
+static constexpr const char lessThan[] =
+R"doc(Deprecated routine that determines whether this bitmask appears
+strictly before the given bitmask when bitmasks are sorted in "reverse
+lexicographical" order. Here the bit at index 0 is least significant,
+and the bit at index ``length-1`` is most significant.
+
+.. deprecated::
+    Instead use ``numericalComp(other)``, which has a clearer name and
+    which returns a three-way comparison.
+
+Parameter ``other``:
+    the bitmask to compare against this.
+
+Returns:
+    ``True`` if and only if this is "reverse lexicographically"
+    strictly smaller than the given bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2::numericalComp
+static constexpr const char numericalComp[] =
+R"doc(Compares this against the given bitmask numerically, treating the
+bitmask as an unsigned integer written in binary. This is essentially
+a "reverse lexicographical" ordering: the bit at index 0 is least
+significant, and the bit at index *length*-1 is most significant.
+
+.. warning::
+    We do not use < for this ordering, since the comparison operators
+    (``<``, ``≤``, ``>``, ``≥``) work with the subset relation
+    instead.
+
+Python:
+    Since Python does not support ``std::strong_ordering``, this
+    routine is called ``numericalLessThan()`` instead, and it returns
+    a boolean according to whether the comparison orders this bitmask
+    before *other*.
+
+Parameter ``other``:
+    the bitmask to compare against this.
+
+Returns:
+    the result of the numerical comparison between this and the given
+    bitmask.)doc";
+
+// Docstring regina::python::doc::Bitmask2::reset
+static constexpr const char reset[] = R"doc(Sets all bits of this bitmask to ``False``.)doc";
+
+// Docstring regina::python::doc::Bitmask2::reset_2
+static constexpr const char reset_2[] =
+R"doc(Sets all bits of this bitmask to ``False``.
+
+The integer argument is merely for compatibility with
+Bitmask::reset(size_t), and will be ignored.)doc";
+
+// Docstring regina::python::doc::Bitmask2::set
+static constexpr const char set[] =
+R"doc(Sets the given bit of this bitmask to the given value.
+
+Parameter ``index``:
+    indicates which bit to set; this must be between 0 and ``(16 *
+    sizeof(T) - 1)`` inclusive.
+
+Parameter ``value``:
+    the value that will be assigned to the (*index*)th bit.)doc";
+
+// Docstring regina::python::doc::Bitmask2::set_2
+static constexpr const char set_2[] =
+R"doc(Sets all bits in the given sorted list to the given value.
+
+This is a convenience routine for setting many bits at once. The
+indices of the bits to set should be sorted and stored in some
+container, such as a std::set or a C-style array. This routine takes
+iterators over this container, and sets the bits at the corresponding
+indices to the given value.
+
+For example, the following code would set bits 3, 5 and 6 to ``true:``
+
+```
+std::vector<unsigned> indices;
+indices.push(3); indices.push(5); indices.push(6);
+bitmask.set(indices.begin(), indices.end(), true);
+```
+
+Likewise, the following code would set bits 1, 4 and 7 to ``false:``
+
+```
+unsigned indices[3] = { 1, 4, 7 };
+bitmask.set(indices, indices + 3, false);
+```
+
+All other bits of this bitmask are unaffected by this routine.
+
+Precondition:
+    The list of indices described by these iterators is in _sorted_
+    order. This is to allow optimisations for larger bitmask types.
+
+Precondition:
+    All indices in the given list are between 0 and ``(16 * sizeof(T)
+    - 1)`` inclusive.
+
+Python:
+    Instead of a pair of iterators, you should pass a Python list
+    (which, as described above, must be a sorted list of indices).
+
+Parameter ``indexBegin``:
+    the beginning of the iterator range containing the sorted indices
+    of the bits to set.
+
+Parameter ``indexEnd``:
+    the end of the iterator range containing the sorted indices of the
+    bits to set.
+
+Parameter ``value``:
+    the value that will be assigned to each of the corresponding bits.)doc";
+
+// Docstring regina::python::doc::Bitmask2::truncate
+static constexpr const char truncate[] =
+R"doc(Leaves the first *numBits* bits of this bitmask intact, but sets all
+subsequent bits to ``False``. In other words, this routine "truncates"
+this bitmask to the given number of bits.
+
+This routine does not change the _length_ of this bitmask (as passed
+to the contructor or to reset()).
+
+Parameter ``numBits``:
+    the number of bits that will _not_ be cleared.)doc";
+
+}; // struct Bitmask2
 
 } // namespace regina::python::doc
 

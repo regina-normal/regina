@@ -39,7 +39,7 @@ void addSigIsomorphism(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SigPartialIsomorphism)
 
     auto c = pybind11::class_<SigPartialIsomorphism>(m, "SigPartialIsomorphism",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<int>(), rdoc::__init)
         .def(pybind11::init<const SigPartialIsomorphism&>(), rdoc::__copy)
         .def("swap", &SigPartialIsomorphism::swap, rdoc::swap)
@@ -57,8 +57,7 @@ void addSigIsomorphism(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<SigPartialIsomorphism>(m,
-        rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SigPartialIsomorphism);
 
     RDOC_SCOPE_END
 }

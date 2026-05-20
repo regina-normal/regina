@@ -50,7 +50,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         alias::SimplexVoid)
 
     auto e = pybind11::class_<FaceEmbedding<4, 0>>(m, "FaceEmbedding4_0",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>(),
             rdoc::__init)
         .def(pybind11::init<const VertexEmbedding<4>&>(), rdoc::__copy)
@@ -68,7 +68,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc_scope)
+    auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc::__class)
         .def("index", &Vertex<4>::index, rbase::index)
         .def("embedding", &Vertex<4>::embedding, rbase::embedding)
         .def("embeddings", &Vertex<4>::embeddings, rbase::embeddings)

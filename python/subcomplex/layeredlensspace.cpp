@@ -41,7 +41,7 @@ void addLayeredLensSpace(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredLensSpace)
 
     auto c = pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
-            (m, "LayeredLensSpace", rdoc_scope)
+            (m, "LayeredLensSpace", rdoc::__class)
         .def(pybind11::init<const LayeredLensSpace&>(), rdoc::__copy)
         .def("swap", &LayeredLensSpace::swap, rdoc::swap)
         .def("p", &LayeredLensSpace::p, rdoc::p)
@@ -57,7 +57,7 @@ void addLayeredLensSpace(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<LayeredLensSpace>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, LayeredLensSpace);
 
     RDOC_SCOPE_END
 }

@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Face
-inline constexpr const char Face[] =
+struct Face {
+
+// Docstring regina::python::doc::Face::__class
+static constexpr const char __class[] =
 R"doc(Represents a vertex in the skeleton of a 3-manifold triangulation.
 
 This is a specialisation of the generic Face class template; see the
@@ -29,19 +31,8 @@ them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
 of by the Triangulation to which they belong.)doc";
 
-namespace Face_ {
-
-// Docstring regina::python::doc::Face_::Link
-inline constexpr const char Link[] =
-R"doc(Categorises the possible links of a vertex into a small number of
-common types. Here a vertex link is considered only up to its topology
-(not the combinatorics of its triangulation).
-
-See also:
-    link)doc";
-
-// Docstring regina::python::doc::Face_::buildLink
-inline constexpr const char buildLink[] =
+// Docstring regina::python::doc::Face::buildLink
+static constexpr const char buildLink[] =
 R"doc(Returns a full 2-manifold triangulation describing the link of this
 vertex.
 
@@ -83,8 +74,8 @@ Python:
 Returns:
     the read-only triangulated link of the vertex.)doc";
 
-// Docstring regina::python::doc::Face_::buildLinkInclusion
-inline constexpr const char buildLinkInclusion[] =
+// Docstring regina::python::doc::Face::buildLinkInclusion
+static constexpr const char buildLinkInclusion[] =
 R"doc(Returns details of how the triangles are labelled in the link of this
 vertex. This is a companion function to buildLink(), which returns a
 full 2-manifold triangulation of the vertex link.
@@ -116,31 +107,31 @@ Returns:
     details of how buildLink() labels the triangles of the vertex
     link.)doc";
 
-// Docstring regina::python::doc::Face_::isIdeal
-inline constexpr const char isIdeal[] =
+// Docstring regina::python::doc::Face::isIdeal
+static constexpr const char isIdeal[] =
 R"doc(Determines if this vertex is an ideal vertex. This requires the vertex
 link to be closed and not a 2-sphere.
 
 Returns:
     ``True`` if and only if this is an ideal vertex.)doc";
 
-// Docstring regina::python::doc::Face_::isLinkClosed
-inline constexpr const char isLinkClosed[] =
+// Docstring regina::python::doc::Face::isLinkClosed
+static constexpr const char isLinkClosed[] =
 R"doc(Determines if the link of this vertex is closed.
 
 Returns:
     ``True`` if and only if the link of this vertex is closed.)doc";
 
-// Docstring regina::python::doc::Face_::isStandard
-inline constexpr const char isStandard[] =
+// Docstring regina::python::doc::Face::isStandard
+static constexpr const char isStandard[] =
 R"doc(Determines if this vertex is standard. This requires the vertex link
 to be a sphere, disc, torus or Klein bottle.
 
 Returns:
     ``True`` if and only if this vertex is standard.)doc";
 
-// Docstring regina::python::doc::Face_::linkEulerChar
-inline constexpr const char linkEulerChar[] =
+// Docstring regina::python::doc::Face::linkEulerChar
+static constexpr const char linkEulerChar[] =
 R"doc(Returns the Euler characteristic of the vertex link.
 
 This routine does not require a full triangulation of the vertex link,
@@ -149,8 +140,8 @@ and so can be much faster than calling buildLink().eulerChar().
 Returns:
     the Euler characteristic of the vertex link.)doc";
 
-// Docstring regina::python::doc::Face_::linkType
-inline constexpr const char linkType[] =
+// Docstring regina::python::doc::Face::linkType
+static constexpr const char linkType[] =
 R"doc(Returns a broad categorisation of the link of the vertex. This
 considers topological information only, not the combinatorics of how
 the link is triangulated.
@@ -165,8 +156,8 @@ for a different routine to be called link() in the future.
 Returns:
     a broad categorisation of the vertex link.)doc";
 
-// Docstring regina::python::doc::Face_::linkingSurface
-inline constexpr const char linkingSurface[] =
+// Docstring regina::python::doc::Face::linkingSurface
+static constexpr const char linkingSurface[] =
 R"doc(Returns the link of this vertex as a normal surface.
 
 Note that vertex linking surfaces only ever contain triangles (not
@@ -177,42 +168,51 @@ further normalisation steps are required).
 Returns:
     the corresponding vertex linking normal surface.)doc";
 
-}
+struct Link {
 
-namespace Face_::Link_ {
-
-// Docstring regina::python::doc::Face_::Link_::Disc
-inline constexpr const char Disc[] =
+// Docstring regina::python::doc::Face::Link::Disc
+static constexpr const char Disc[] =
 R"doc(Specifies a vertex link that is a disc. In other words, the vertex
 lies on a real boundary component.)doc";
 
-// Docstring regina::python::doc::Face_::Link_::Invalid
-inline constexpr const char Invalid[] =
+// Docstring regina::python::doc::Face::Link::Invalid
+static constexpr const char Invalid[] =
 R"doc(Specifies a vertex link that has boundary and is not a disc. In other
 words, this vertex makes the triangulation invalid.)doc";
 
-// Docstring regina::python::doc::Face_::Link_::KleinBottle
-inline constexpr const char KleinBottle[] =
+// Docstring regina::python::doc::Face::Link::KleinBottle
+static constexpr const char KleinBottle[] =
 R"doc(Specifies a vertex link that is a Klein bottle. In other words, this
 is an ideal vertex representing a Klein bottle cusp.)doc";
 
-// Docstring regina::python::doc::Face_::Link_::NonStandardCusp
-inline constexpr const char NonStandardCusp[] =
+// Docstring regina::python::doc::Face::Link::NonStandardCusp
+static constexpr const char NonStandardCusp[] =
 R"doc(Specifies a vertex link that is closed and is not a sphere, torus or
 Klein bottle. In other words, this is an ideal vertex but not one of
 the standard ideal vertex types.)doc";
 
-// Docstring regina::python::doc::Face_::Link_::Sphere
-inline constexpr const char Sphere[] =
+// Docstring regina::python::doc::Face::Link::Sphere
+static constexpr const char Sphere[] =
 R"doc(Specifies a vertex link that is a sphere. In other words, the vertex
 is internal.)doc";
 
-// Docstring regina::python::doc::Face_::Link_::Torus
-inline constexpr const char Torus[] =
+// Docstring regina::python::doc::Face::Link::Torus
+static constexpr const char Torus[] =
 R"doc(Specifies a vertex link that is a torus. In other words, this is an
 ideal vertex representing a torus cusp.)doc";
 
-}
+// Docstring regina::python::doc::Face::Link::__class
+static constexpr const char __class[] =
+R"doc(Categorises the possible links of a vertex into a small number of
+common types. Here a vertex link is considered only up to its topology
+(not the combinatorics of its triangulation).
+
+See also:
+    link)doc";
+
+}; // struct Link
+
+}; // struct Face
 
 } // namespace regina::python::doc
 

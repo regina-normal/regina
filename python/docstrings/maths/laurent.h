@@ -11,33 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Laurent
-inline constexpr const char Laurent[] =
-R"doc(Represents a single-variable Laurent polynomial with coefficients of
-type *T*. A Laurent polynomial differs from an ordinary polynomial in
-that it allows negative exponents (so, unlike the Polynomial class,
-you can represent both ``2+3x`` and ``1+1/x``).
-
-This class implements C++ move semantics and adheres to the C++
-Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
-
-The underlying storage method for this class is dense (i.e., all
-coefficients are explicitly stored, including zero coefficients).
-
-See also the class Laurent2, which describes Laurent polynomials in
-two variables.
-
-Python:
-    In Python, the class Laurent refers to the specific template class
-    Laurent<Integer>.
-
-Template parameter ``T``:
-    the coefficient type. A typical coefficient type would be Integer
-    or Rational. Note that native C++ integer types are _not_
-    supported (since they have no zero-initialising default
-    constructor).)doc";
-
 // Docstring regina::python::doc::__add
 inline constexpr const char __add[] =
 R"doc(Adds the two given polynomials.
@@ -245,10 +218,23 @@ Parameter ``rhs``:
 Returns:
     the difference of the two given polynomials.)doc";
 
-namespace Laurent_ {
+// Docstring regina::python::doc::global_swap_Laurent
+inline constexpr const char global_swap_Laurent[] =
+R"doc(Swaps the contents of the given polynomials.
 
-// Docstring regina::python::doc::Laurent_::__array
-inline constexpr const char __array[] =
+This global routine simply calls Laurent<T>::swap(); it is provided so
+that Laurent<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first polynomial whose contents should be swapped.
+
+Parameter ``b``:
+    the second polynomial whose contents should be swapped.)doc";
+
+struct Laurent {
+
+// Docstring regina::python::doc::Laurent::__array
+static constexpr const char __array[] =
 R"doc(Returns the given coefficient of this polynomial. There are no
 restrictions on the exponent *exp*.
 
@@ -265,8 +251,35 @@ Parameter ``exp``:
 Returns:
     the coefficient of the given term.)doc";
 
-// Docstring regina::python::doc::Laurent_::__cmp
-inline constexpr const char __cmp[] =
+// Docstring regina::python::doc::Laurent::__class
+static constexpr const char __class[] =
+R"doc(Represents a single-variable Laurent polynomial with coefficients of
+type *T*. A Laurent polynomial differs from an ordinary polynomial in
+that it allows negative exponents (so, unlike the Polynomial class,
+you can represent both ``2+3x`` and ``1+1/x``).
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.
+
+The underlying storage method for this class is dense (i.e., all
+coefficients are explicitly stored, including zero coefficients).
+
+See also the class Laurent2, which describes Laurent polynomials in
+two variables.
+
+Python:
+    In Python, the class Laurent refers to the specific template class
+    Laurent<Integer>.
+
+Template parameter ``T``:
+    the coefficient type. A typical coefficient type would be Integer
+    or Rational. Note that native C++ integer types are _not_
+    supported (since they have no zero-initialising default
+    constructor).)doc";
+
+// Docstring regina::python::doc::Laurent::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares this against the given polynomial under a total ordering of
 all one-variable Laurent polynomials.
 
@@ -290,8 +303,8 @@ Returns:
     the result of the comparison between this and the given
     polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Laurent::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given polynomial.
 
 This constructor induces a deep copy of *value*.
@@ -304,11 +317,11 @@ copy constructor automatically.
 Parameter ``value``:
     the polynomial to clone.)doc";
 
-// Docstring regina::python::doc::Laurent_::__default
-inline constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
+// Docstring regina::python::doc::Laurent::__default
+static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Laurent::__eq
+static constexpr const char __eq[] =
 R"doc(Tests whether this and the given polynomial are equal.
 
 Parameter ``rhs``:
@@ -317,8 +330,8 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
 
-// Docstring regina::python::doc::Laurent_::__iadd
-inline constexpr const char __iadd[] =
+// Docstring regina::python::doc::Laurent::__iadd
+static constexpr const char __iadd[] =
 R"doc(Adds the given polynomial to this.
 
 The given polynomial need not have the same minimum and/or maximum
@@ -336,8 +349,8 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::__idiv
-inline constexpr const char __idiv[] =
+// Docstring regina::python::doc::Laurent::__idiv
+static constexpr const char __idiv[] =
 R"doc(Divides this polynomial by the given constant.
 
 This uses the division operator /= for the coefficient type *T*.
@@ -351,8 +364,8 @@ Parameter ``scalar``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::__imul
-inline constexpr const char __imul[] =
+// Docstring regina::python::doc::Laurent::__imul
+static constexpr const char __imul[] =
 R"doc(Multiplies this polynomial by the given constant.
 
 Parameter ``scalar``:
@@ -361,8 +374,8 @@ Parameter ``scalar``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::__imul_2
-inline constexpr const char __imul_2[] =
+// Docstring regina::python::doc::Laurent::__imul_2
+static constexpr const char __imul_2[] =
 R"doc(Multiplies this by the given polynomial.
 
 The given polynomial need not have the same minimum and/or maximum
@@ -374,8 +387,8 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Laurent::__init
+static constexpr const char __init[] =
 R"doc(Deprecated constructor that creates the polynomial ``x^d`` for the
 given exponent *d*.
 
@@ -388,8 +401,8 @@ given exponent *d*.
 Parameter ``exponent``:
     the exponent to use for the new polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::__init_2
-inline constexpr const char __init_2[] =
+// Docstring regina::python::doc::Laurent::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new polynomial from the given sequence of coefficients.
 
 The coefficients should be given in order from the smallest exponent
@@ -420,8 +433,8 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     coefficients.)doc";
 
-// Docstring regina::python::doc::Laurent_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Laurent::__isub
+static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
 
 The given polynomial need not have the same minimum and/or maximum
@@ -433,24 +446,11 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given polynomials.
+// Docstring regina::python::doc::Laurent::init
+static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
 
-This global routine simply calls Laurent<T>::swap(); it is provided so
-that Laurent<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first polynomial whose contents should be swapped.
-
-Parameter ``b``:
-    the second polynomial whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Laurent_::init
-inline constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent_::init_2
-inline constexpr const char init_2[] =
+// Docstring regina::python::doc::Laurent::init_2
+static constexpr const char init_2[] =
 R"doc(Deprecated function that sets this to become the polynomial ``x^d``
 for the given exponent *d*.
 
@@ -462,8 +462,8 @@ for the given exponent *d*.
 Parameter ``exponent``:
     the new exponent to use for this polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::init_3
-inline constexpr const char init_3[] =
+// Docstring regina::python::doc::Laurent::init_3
+static constexpr const char init_3[] =
 R"doc(Sets this to become the polynomial described by the given sequence of
 coefficients.
 
@@ -495,29 +495,29 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     coefficients.)doc";
 
-// Docstring regina::python::doc::Laurent_::initExp
-inline constexpr const char initExp[] =
+// Docstring regina::python::doc::Laurent::initExp
+static constexpr const char initExp[] =
 R"doc(Sets this to become the polynomial ``x^d`` for the given exponent *d*.
 
 Parameter ``exponent``:
     the new exponent to use for this polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::invertX
-inline constexpr const char invertX[] =
+// Docstring regina::python::doc::Laurent::invertX
+static constexpr const char invertX[] =
 R"doc(Replaces ``x`` with ``x^-1`` in this polynomial. This polynomial is
 changed directly.
 
 Calling this routine is equivalent to calling ``scaleUp(-1)``.)doc";
 
-// Docstring regina::python::doc::Laurent_::isZero
-inline constexpr const char isZero[] =
+// Docstring regina::python::doc::Laurent::isZero
+static constexpr const char isZero[] =
 R"doc(Returns whether this is the zero polynomial.
 
 Returns:
     ``True`` if and only if this is the zero polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent_::maxExp
-inline constexpr const char maxExp[] =
+// Docstring regina::python::doc::Laurent::maxExp
+static constexpr const char maxExp[] =
 R"doc(Returns the largest exponent that appears in this polynomial with a
 non-zero coefficient. If this is the zero polynomial, then this
 routine returns 0.
@@ -525,8 +525,8 @@ routine returns 0.
 Returns:
     the largest exponent.)doc";
 
-// Docstring regina::python::doc::Laurent_::minExp
-inline constexpr const char minExp[] =
+// Docstring regina::python::doc::Laurent::minExp
+static constexpr const char minExp[] =
 R"doc(Returns the smallest exponent that appears in this polynomial with a
 non-zero coefficient. If this is the zero polynomial, then this
 routine returns 0.
@@ -534,11 +534,11 @@ routine returns 0.
 Returns:
     the smallest exponent.)doc";
 
-// Docstring regina::python::doc::Laurent_::negate
-inline constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
+// Docstring regina::python::doc::Laurent::negate
+static constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
 
-// Docstring regina::python::doc::Laurent_::scaleDown
-inline constexpr const char scaleDown[] =
+// Docstring regina::python::doc::Laurent::scaleDown
+static constexpr const char scaleDown[] =
 R"doc(Divides all exponents in this polynomial by *k* for some integer *k*.
 This is equivalent to replacing the variable *x* of the polynomial
 with *x*^{1/*k*}.
@@ -559,8 +559,8 @@ Exception ``FailedPrecondition``:
 Parameter ``k``:
     the scaling factor to divide exponents by.)doc";
 
-// Docstring regina::python::doc::Laurent_::scaleUp
-inline constexpr const char scaleUp[] =
+// Docstring regina::python::doc::Laurent::scaleUp
+static constexpr const char scaleUp[] =
 R"doc(Multiplies all exponents in this polynomial by *k* for some integer
 *k*. This is equivalent to replacing the variable *x* of the
 polynomial with *x*^{*k*}.
@@ -573,8 +573,8 @@ Precondition:
 Parameter ``k``:
     the scaling factor to multiply exponents by.)doc";
 
-// Docstring regina::python::doc::Laurent_::set
-inline constexpr const char set[] =
+// Docstring regina::python::doc::Laurent::set
+static constexpr const char set[] =
 R"doc(Changes the given coefficient of this polynomial.
 
 There are no restrictions on the exponent *exp*, and the new
@@ -599,15 +599,15 @@ Parameter ``exp``:
 Parameter ``value``:
     the new value of this coefficient.)doc";
 
-// Docstring regina::python::doc::Laurent_::shift
-inline constexpr const char shift[] =
+// Docstring regina::python::doc::Laurent::shift
+static constexpr const char shift[] =
 R"doc(Multiplies this polynomial by ``x^s`` for some integer *s*.
 
 Parameter ``s``:
     the power of *x* to multiply by.)doc";
 
-// Docstring regina::python::doc::Laurent_::str
-inline constexpr const char str[] =
+// Docstring regina::python::doc::Laurent::str
+static constexpr const char str[] =
 R"doc(Returns this polynomial as a human-readable string, using the given
 variable name instead of ``x``.
 
@@ -622,8 +622,8 @@ Parameter ``variable``:
 Returns:
     this polynomial as a human-readable string.)doc";
 
-// Docstring regina::python::doc::Laurent_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Laurent::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given polynomial. This is a fast
 (constant time) operation.
 
@@ -633,8 +633,8 @@ and/or maximum exponents.
 Parameter ``other``:
     the polynomial whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::Laurent_::utf8
-inline constexpr const char utf8[] =
+// Docstring regina::python::doc::Laurent::utf8
+static constexpr const char utf8[] =
 R"doc(Returns this polynomial as a human-readable string using unicode
 characters, using the given variable name instead of ``x``.
 
@@ -655,7 +655,7 @@ Parameter ``variable``:
 Returns:
     this polynomial as a unicode-enabled human-readable string.)doc";
 
-}
+}; // struct Laurent
 
 } // namespace regina::python::doc
 

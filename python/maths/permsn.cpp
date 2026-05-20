@@ -44,7 +44,7 @@ void addPermSn(pybind11::module_& m, const char* name) {
 
     RDOC_SCOPE_BEGIN(PermSn)
 
-    auto c = pybind11::class_<Class>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Class>(m, name, rdoc::__class)
         .def("__getitem__", [](Class sn, typename Perm<n>::Index i) {
             // Give Python users range checking, for consistency with
             // Regina ≤ 7.3 (before the class PermSn<n> was introduced).
@@ -75,21 +75,17 @@ void addPermSn(pybind11::module_& m, const char* name) {
     });
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    RDOC_SCOPE_INNER_BEGIN(iterator)
-
     using iterator = typename Class::iterator;
-    auto it = pybind11::class_<iterator>(c, "iterator", rdoc_inner_scope)
-        .def(pybind11::init<>(), rdoc_inner::__default)
-        .def(pybind11::init<bool>(), rdoc_inner::__init)
+    auto it = pybind11::class_<iterator>(c, "iterator", rdoc::iterator::__class)
+        .def(pybind11::init<>(), rdoc::iterator::__default)
+        .def(pybind11::init<bool>(), rdoc::iterator::__init)
         .def("__next__", [](iterator& it) {
             if (it)
                 return *it++;
             else
                 throw pybind11::stop_iteration();
-        }, rdoc_inner::__next__);
-    regina::python::add_eq_operators(it, rdoc_inner::__eq);
-
-    RDOC_SCOPE_INNER_END
+        }, rdoc::iterator::__next__);
+    regina::python::add_eq_operators(it, rdoc::iterator::__eq);
 
     c.attr("const_iterator") = c.attr("iterator");
 
@@ -102,7 +98,7 @@ void addPermSubSn(pybind11::module_& mod, const char* name) {
 
     RDOC_SCOPE_BEGIN(detail::PermSubSn)
 
-    auto c = pybind11::class_<Class>(mod, name, rdoc_scope)
+    auto c = pybind11::class_<Class>(mod, name, rdoc::__class)
         .def("__getitem__", [](Class sub, int i) {
             // Give Python users range checking, since the exception that we
             // throw here allows Python to use iteration.

@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SigCensus
-inline constexpr const char SigCensus[] =
+struct SigCensus {
+
+// Docstring regina::python::doc::SigCensus::__class
+static constexpr const char __class[] =
 R"doc(A class responsible for building censuses of splitting surface
 signatures.
 
@@ -21,10 +23,8 @@ formCensus(). End users cannot create their own objects of this class.
 
 See formCensus() for further information.)doc";
 
-namespace SigCensus_ {
-
-// Docstring regina::python::doc::SigCensus_::formCensus
-inline constexpr const char formCensus[] =
+// Docstring regina::python::doc::SigCensus::formCensus
+static constexpr const char formCensus[] =
 R"doc(Forms a census of all splitting surface signatures of the given order.
 The order of a signature is the number of quads in the corresponding
 splitting surface.
@@ -90,7 +90,7 @@ Parameter ``args``:
 Returns:
     the total number of non-equivalent signatures that were found.)doc";
 
-}
+}; // struct SigCensus
 
 } // namespace regina::python::doc
 

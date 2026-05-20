@@ -11,8 +11,20 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TrieSet
-inline constexpr const char TrieSet[] =
+// Docstring regina::python::doc::global_swap_TrieSet
+inline constexpr const char global_swap_TrieSet[] =
+R"doc(Swaps the contents of the two given collections.
+
+Parameter ``a``:
+    the first collection of sets whose contents should be swapped.
+
+Parameter ``b``:
+    the second collection of sets whose contents should be swapped.)doc";
+
+struct TrieSet {
+
+// Docstring regina::python::doc::TrieSet::__class
+static constexpr const char __class[] =
 R"doc(A trie-like data structure for storing and retriving sets. This class
 is useful when the _elements_ of these sets are taken from a fairly
 small universe, but where the _number_ of sets being stored can be
@@ -50,21 +62,19 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-namespace TrieSet_ {
-
-// Docstring regina::python::doc::TrieSet_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::TrieSet::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given collection. This will induce a deep
 copy of *src*.
 
 Parameter ``src``:
     the collection of sets to copy.)doc";
 
-// Docstring regina::python::doc::TrieSet_::__default
-inline constexpr const char __default[] = R"doc(Constructs an empty collection of sets.)doc";
+// Docstring regina::python::doc::TrieSet::__default
+static constexpr const char __default[] = R"doc(Constructs an empty collection of sets.)doc";
 
-// Docstring regina::python::doc::TrieSet_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::TrieSet::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given collection store exactly the
 same sets.
 
@@ -74,18 +84,8 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if both collections store the same sets.)doc";
 
-// Docstring regina::python::doc::TrieSet_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given collections.
-
-Parameter ``a``:
-    the first collection of sets whose contents should be swapped.
-
-Parameter ``b``:
-    the second collection of sets whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::TrieSet_::hasExtraSuperset
-inline constexpr const char hasExtraSuperset[] =
+// Docstring regina::python::doc::TrieSet::hasExtraSuperset
+static constexpr const char hasExtraSuperset[] =
 R"doc(Performs the particular superset search required by the double
 description method.
 
@@ -125,8 +125,8 @@ Returns:
     ``True`` if a superset with the required properties was found, or
     ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::TrieSet_::hasSubset
-inline constexpr const char hasSubset[] =
+// Docstring regina::python::doc::TrieSet::hasSubset
+static constexpr const char hasSubset[] =
 R"doc(Determines whether this collection of sets contains any subset of the
 argument *superset*. Subsets need not be _proper_ subsets (so if an
 exact copy of *superset* is found in the tree then this will suffice).
@@ -150,8 +150,8 @@ Parameter ``universeSize``:
 Returns:
     ``True`` if a subset was found, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::TrieSet_::insert
-inline constexpr const char insert[] =
+// Docstring regina::python::doc::TrieSet::insert
+static constexpr const char insert[] =
 R"doc(Insert the given set into this collection. The same set may be insert
 into this collection multiple times (and this multiplicity will be
 recorded correctly).
@@ -161,14 +161,14 @@ Running time for insertion is O(*n*), where *n* is the bitmask length.
 Parameter ``entry``:
     the new set to insert.)doc";
 
-// Docstring regina::python::doc::TrieSet_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::TrieSet::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given collection.
 
 Parameter ``other``:
     the collection whose contents should be swapped with this.)doc";
 
-}
+}; // struct TrieSet
 
 } // namespace regina::python::doc
 

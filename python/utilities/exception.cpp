@@ -49,39 +49,39 @@ void addException(pybind11::module_& m) {
 
     // Derived from ReginaException:
     auto base = registerReginaException<regina::ReginaException>(m,
-        "ReginaException", rdoc::ReginaException, PyExc_RuntimeError);
+        "ReginaException", rdoc::ReginaException::__class, PyExc_RuntimeError);
     registerReginaException<regina::FailedPrecondition>(m,
-        "FailedPrecondition", rdoc::FailedPrecondition, base);
+        "FailedPrecondition", rdoc::FailedPrecondition::__class, base);
     registerReginaException<regina::InvalidArgument>(m,
-        "InvalidArgument", rdoc::InvalidArgument, base);
+        "InvalidArgument", rdoc::InvalidArgument::__class, base);
     registerReginaException<regina::InvalidInput>(m,
-        "InvalidInput", rdoc::InvalidInput, base);
+        "InvalidInput", rdoc::InvalidInput::__class, base);
     registerReginaException<regina::NotImplemented>(m,
-        "NotImplemented", rdoc::NotImplemented, base);
+        "NotImplemented", rdoc::NotImplemented::__class, base);
     registerReginaException<regina::FileError>(m,
-        "FileError", rdoc::FileError, base);
+        "FileError", rdoc::FileError::__class, base);
     registerReginaException<regina::NoSolution>(m,
-        "NoSolution", rdoc::NoSolution, base);
+        "NoSolution", rdoc::NoSolution::__class, base);
     auto unsolved = registerReginaException<regina::UnsolvedCase>(m,
-        "UnsolvedCase", rdoc::UnsolvedCase, base);
+        "UnsolvedCase", rdoc::UnsolvedCase::__class, base);
     registerReginaException<regina::LockViolation>(m,
-        "LockViolation", rdoc::LockViolation, base);
+        "LockViolation", rdoc::LockViolation::__class, base);
     registerReginaException<regina::ImpossibleScenario>(m,
-        "ImpossibleScenario", rdoc::ImpossibleScenario, base);
+        "ImpossibleScenario", rdoc::ImpossibleScenario::__class, base);
     auto numerical = registerReginaException<regina::NumericalError>(m,
-        "NumericalError", rdoc::NumericalError, base);
+        "NumericalError", rdoc::NumericalError::__class, base);
     registerReginaException<regina::IntegerOverflow>(m,
-        "IntegerOverflow", rdoc::IntegerOverflow, numerical);
+        "IntegerOverflow", rdoc::IntegerOverflow::__class, numerical);
     registerReginaException<regina::DivisionByZero>(m,
-        "DivisionByZero", rdoc::DivisionByZero, numerical);
+        "DivisionByZero", rdoc::DivisionByZero::__class, numerical);
     registerReginaException<regina::SnapPeaUnsolvedCase>(m,
-        "SnapPeaUnsolvedCase", rdoc::SnapPeaUnsolvedCase, unsolved);
+        "SnapPeaUnsolvedCase", rdoc::SnapPeaUnsolvedCase::__class, unsolved);
     registerReginaException<regina::SnapPeaIsNull>(m,
-        "SnapPeaIsNull", rdoc::SnapPeaIsNull, base);
+        "SnapPeaIsNull", rdoc::SnapPeaIsNull::__class, base);
 
     // Snapshotting machinery:
     registerReginaException<regina::SnapshotWriteError>(m,
-        "SnapshotWriteError", rdoc::SnapshotWriteError, base);
+        "SnapshotWriteError", rdoc::SnapshotWriteError::__class, base);
 
     RDOC_SCOPE_END
 }

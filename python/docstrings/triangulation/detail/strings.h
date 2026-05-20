@@ -13,12 +13,16 @@ namespace regina::python::doc {
 
 namespace detail {
 
-// Docstring regina::python::doc::detail::Strings
-inline constexpr const char Strings[] =
+struct Strings {
+
+// Docstring regina::python::doc::detail::Strings::__class
+static constexpr const char __class[] =
 R"doc(Contains a collection of compile-time constant strings that describe
 features of the dimension *dim*.)doc";
 
-}
+}; // struct Strings
+
+} // namespace detail
 
 } // namespace regina::python::doc
 

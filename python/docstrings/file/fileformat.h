@@ -11,8 +11,43 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::FileFormat
-inline constexpr const char FileFormat[] =
+struct FileFormat {
+
+// Docstring regina::python::doc::FileFormat::BinaryGen1
+static constexpr const char BinaryGen1[] =
+R"doc(Indicates the old first-generation binary format used by Regina 2.4
+and earlier. This format was discontinued in mid-2002, when Regina
+adopted an XML-based format instead.
+
+Regina no longer supports this (ancient) binary format at all: since
+version 4.94 in late 2013, Regina cannot read or write this format.)doc";
+
+// Docstring regina::python::doc::FileFormat::Current
+static constexpr const char Current[] =
+R"doc(An alias for whichever file format is current. The numerical value of
+this constant may change in future releases of Regina, if/when new
+generational changes to the file format occur.)doc";
+
+// Docstring regina::python::doc::FileFormat::XmlGen2
+static constexpr const char XmlGen2[] =
+R"doc(Indicates the second-generation file format used from Regina 3.0
+through to Regina 6.0.1 inclusive. This was the first file format
+based on XML. The root XML element is ``reginadata``.
+
+Regina can still transparently read second-generation data files, and
+can write them when explicitly asked.)doc";
+
+// Docstring regina::python::doc::FileFormat::XmlGen3
+static constexpr const char XmlGen3[] =
+R"doc(Indicates the third-generation file format used from Regina 7.0
+onwards. This format is both more streamlined and more human-readable.
+The root XML element is ``regina``.
+
+This is the current file format, and is used by default when saving
+data files.)doc";
+
+// Docstring regina::python::doc::FileFormat::__class
+static constexpr const char __class[] =
 R"doc(Represents each generation of Regina's file formats.
 
 These constants are intended to capture "generational changes" to the
@@ -33,42 +68,7 @@ some form of explicit conversion.
 Of course, Regina can still read and write some older generation
 formats; these abilities are indicated alongside the constants below.)doc";
 
-namespace FileFormat_ {
-
-// Docstring regina::python::doc::FileFormat_::BinaryGen1
-inline constexpr const char BinaryGen1[] =
-R"doc(Indicates the old first-generation binary format used by Regina 2.4
-and earlier. This format was discontinued in mid-2002, when Regina
-adopted an XML-based format instead.
-
-Regina no longer supports this (ancient) binary format at all: since
-version 4.94 in late 2013, Regina cannot read or write this format.)doc";
-
-// Docstring regina::python::doc::FileFormat_::Current
-inline constexpr const char Current[] =
-R"doc(An alias for whichever file format is current. The numerical value of
-this constant may change in future releases of Regina, if/when new
-generational changes to the file format occur.)doc";
-
-// Docstring regina::python::doc::FileFormat_::XmlGen2
-inline constexpr const char XmlGen2[] =
-R"doc(Indicates the second-generation file format used from Regina 3.0
-through to Regina 6.0.1 inclusive. This was the first file format
-based on XML. The root XML element is ``reginadata``.
-
-Regina can still transparently read second-generation data files, and
-can write them when explicitly asked.)doc";
-
-// Docstring regina::python::doc::FileFormat_::XmlGen3
-inline constexpr const char XmlGen3[] =
-R"doc(Indicates the third-generation file format used from Regina 7.0
-onwards. This format is both more streamlined and more human-readable.
-The root XML element is ``regina``.
-
-This is the current file format, and is used by default when saving
-data files.)doc";
-
-}
+}; // struct FileFormat
 
 } // namespace regina::python::doc
 

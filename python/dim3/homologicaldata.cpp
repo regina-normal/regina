@@ -40,7 +40,8 @@ using regina::Triangulation;
 void addHomologicalData(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HomologicalData)
 
-    auto c = pybind11::class_<HomologicalData>(m, "HomologicalData", rdoc_scope)
+    auto c = pybind11::class_<HomologicalData>(m, "HomologicalData",
+            rdoc::__class)
         .def(pybind11::init<const Triangulation<3>&>(), rdoc::__init)
         .def(pybind11::init<const HomologicalData&>(), rdoc::__copy)
         .def("triangulation", &HomologicalData::triangulation,
@@ -93,7 +94,7 @@ void addHomologicalData(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::disable_eq_operators(c);
 
-    regina::python::add_global_swap<HomologicalData>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, HomologicalData);
 
     RDOC_SCOPE_END
 }

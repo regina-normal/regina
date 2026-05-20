@@ -53,7 +53,7 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
         alias::SimplexVoid)
 
     auto e = pybind11::class_<FaceEmbedding<4, 1>>(m, "FaceEmbedding4_1",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>(),
             rdoc::__init)
         .def(pybind11::init<const EdgeEmbedding<4>&>(), rdoc::__copy)
@@ -71,7 +71,7 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1", rdoc_scope)
+    auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1", rdoc::__class)
         .def("index", &Edge<4>::index, rbase::index)
         .def("embedding", &Edge<4>::embedding, rbase::embedding)
         .def("embeddings", &Edge<4>::embeddings, rbase::embeddings)

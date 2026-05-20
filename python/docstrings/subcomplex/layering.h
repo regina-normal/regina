@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Layering
-inline constexpr const char Layering[] =
+struct Layering {
+
+// Docstring regina::python::doc::Layering::__class
+static constexpr const char __class[] =
 R"doc(Represents a layering of zero or more tetrahedra upon a torus
 boundary.
 
@@ -78,17 +80,15 @@ These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.)doc";
 
-namespace Layering_ {
-
-// Docstring regina::python::doc::Layering_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Layering::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given layering structure.
 
 The new structure will describe the same layering within the same
 underlying triangulation.)doc";
 
-// Docstring regina::python::doc::Layering_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Layering::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 layering.
 
@@ -114,8 +114,8 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same layering, as described above.)doc";
 
-// Docstring regina::python::doc::Layering_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Layering::__init
+static constexpr const char __init[] =
 R"doc(Creates a new trivial (zero-tetrahedron) layering upon the given
 boundary.
 
@@ -139,8 +139,8 @@ Parameter ``roles1``:
     the permutation describing how this second triangle is formed from
     three vertices of tetrahedron *bdry1*.)doc";
 
-// Docstring regina::python::doc::Layering_::boundaryReln
-inline constexpr const char boundaryReln[] =
+// Docstring regina::python::doc::Layering::boundaryReln
+static constexpr const char boundaryReln[] =
 R"doc(Returns a 2-by-2 matrix describing the relationship between curves on
 the old and new boundary tori. Note that this relationship will often
 be non-trivial, since one of the key reasons for layering is to modify
@@ -186,8 +186,8 @@ Note that the determinant of this matrix will always be 1.
 Returns:
     the matrix relating the old and new boundary curves.)doc";
 
-// Docstring regina::python::doc::Layering_::extend
-inline constexpr const char extend[] =
+// Docstring regina::python::doc::Layering::extend
+static constexpr const char extend[] =
 R"doc(Examines whether one or more additional tetrahedra have been layered
 upon the current new boundary.
 
@@ -204,8 +204,8 @@ extendOne() were called again then it would return ``False``.
 Returns:
     the number of additional layered tetrahedra that were discovered.)doc";
 
-// Docstring regina::python::doc::Layering_::extendOne
-inline constexpr const char extendOne[] =
+// Docstring regina::python::doc::Layering::extendOne
+static constexpr const char extendOne[] =
 R"doc(Examines whether a single additional tetrahedron has been layered upon
 the current new boundary.
 
@@ -225,8 +225,8 @@ Returns:
     ``True`` if a tetrahedron was found as described above and this
     structure was extended accordingly, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::Layering_::matchesTop
-inline constexpr const char matchesTop[] =
+// Docstring regina::python::doc::Layering::matchesTop
+static constexpr const char matchesTop[] =
 R"doc(Determines whether the new torus boundary of this structure is
 identified with the given torus boundary. In other words, this routine
 determines whether the new torus boundary of this structure and the
@@ -310,8 +310,8 @@ Returns:
     ``True`` if the given boundary is found to matche the new boundary
     of this structure, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::Layering_::newBoundaryRoles
-inline constexpr const char newBoundaryRoles[] =
+// Docstring regina::python::doc::Layering::newBoundaryRoles
+static constexpr const char newBoundaryRoles[] =
 R"doc(Returns the permutations that describe the new boundary triangles.
 These refer to the final boundary after layerings have been performed.
 
@@ -324,8 +324,8 @@ Parameter ``which``:
 Returns:
     the requested permutation describing the new boundary.)doc";
 
-// Docstring regina::python::doc::Layering_::newBoundaryTet
-inline constexpr const char newBoundaryTet[] =
+// Docstring regina::python::doc::Layering::newBoundaryTet
+static constexpr const char newBoundaryTet[] =
 R"doc(Returns the tetrahedra that provide the new boundary triangles. These
 belong to the final boundary after layerings have been performed.
 
@@ -338,8 +338,8 @@ Parameter ``which``:
 Returns:
     the requested tetrahedron of the new boundary.)doc";
 
-// Docstring regina::python::doc::Layering_::oldBoundaryRoles
-inline constexpr const char oldBoundaryRoles[] =
+// Docstring regina::python::doc::Layering::oldBoundaryRoles
+static constexpr const char oldBoundaryRoles[] =
 R"doc(Returns the permutations that describe the old boundary triangles.
 These refer to the original boundary before any layerings take place.
 
@@ -352,8 +352,8 @@ Parameter ``which``:
 Returns:
     the requested permutation describing the old boundary.)doc";
 
-// Docstring regina::python::doc::Layering_::oldBoundaryTet
-inline constexpr const char oldBoundaryTet[] =
+// Docstring regina::python::doc::Layering::oldBoundaryTet
+static constexpr const char oldBoundaryTet[] =
 R"doc(Returns the tetrahedra that provide the old boundary triangles. These
 belong to the original boundary before any layerings take place.
 
@@ -366,8 +366,8 @@ Parameter ``which``:
 Returns:
     the requested tetrahedron of the old boundary.)doc";
 
-// Docstring regina::python::doc::Layering_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::Layering::size
+static constexpr const char size[] =
 R"doc(Returns the number of individual tetrahedra that have been layered
 onto the original boundary, according to the data stored in this
 structure.
@@ -379,7 +379,7 @@ layerings have taken place.
 Returns:
     the number of layered tetrahedra.)doc";
 
-}
+}; // struct Layering
 
 } // namespace regina::python::doc
 

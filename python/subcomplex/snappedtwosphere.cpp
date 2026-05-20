@@ -44,7 +44,7 @@ void addSnappedTwoSphere(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnappedTwoSphere)
 
     auto c = pybind11::class_<SnappedTwoSphere>(m, "SnappedTwoSphere",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const SnappedTwoSphere&>(), rdoc::__copy)
         .def("snappedBall", &SnappedTwoSphere::snappedBall,
             pybind11::return_value_policy::reference_internal,

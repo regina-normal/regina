@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Primes
-inline constexpr const char Primes[] =
+struct Primes {
+
+// Docstring regina::python::doc::Primes::__class
+static constexpr const char __class[] =
 R"doc(A helper class for finding primes and factorising integers.
 
 This class has two functions: (i) to maintain a list of known primes,
@@ -47,10 +49,8 @@ all of its methods are thread-safe.
 Author:
     Ryan Budney, B.B.)doc";
 
-namespace Primes_ {
-
-// Docstring regina::python::doc::Primes_::prime
-inline constexpr const char prime[] =
+// Docstring regina::python::doc::Primes::prime
+static constexpr const char prime[] =
 R"doc(Returns the requested prime (or suspected prime). More specifically,
 this routine returns the (*which* + 1)th smallest prime. Thus prime(0)
 returns 2, prime(1) returns 3, prime(2) returns 5, and so on.
@@ -79,8 +79,8 @@ Returns:
     the requested prime (or suspected prime), or zero if *which* was
     too large and *autoGrow* was ``False``.)doc";
 
-// Docstring regina::python::doc::Primes_::primeDecomp
-inline constexpr const char primeDecomp[] =
+// Docstring regina::python::doc::Primes::primeDecomp
+static constexpr const char primeDecomp[] =
 R"doc(Returns the prime factorisation of the given integer as a list of
 individual primes (or suspected primes).
 
@@ -124,8 +124,8 @@ Parameter ``n``:
 Returns:
     the list of prime factors as described above.)doc";
 
-// Docstring regina::python::doc::Primes_::primePowerDecomp
-inline constexpr const char primePowerDecomp[] =
+// Docstring regina::python::doc::Primes::primePowerDecomp
+static constexpr const char primePowerDecomp[] =
 R"doc(Returns the prime factorisation of the given integer as a list of
 prime powers (or suspected prime powers).
 
@@ -173,8 +173,8 @@ Parameter ``n``:
 Returns:
     the list of prime power factors as described above.)doc";
 
-// Docstring regina::python::doc::Primes_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::Primes::size
+static constexpr const char size[] =
 R"doc(Returns the number of primes (or suspected primes) currently stored.
 
 Primes that are already stored can be accessed instantly; primes
@@ -187,7 +187,7 @@ larger primes are requested), but it will never decrease.
 Returns:
     the number of primes or suspected primes currently stored.)doc";
 
-}
+}; // struct Primes
 
 } // namespace regina::python::doc
 

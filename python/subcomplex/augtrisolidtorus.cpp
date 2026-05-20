@@ -42,7 +42,7 @@ void addAugTriSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(AugTriSolidTorus)
 
     auto c = pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
-            (m, "AugTriSolidTorus", rdoc_scope)
+            (m, "AugTriSolidTorus", rdoc::__class)
         .def(pybind11::init<const AugTriSolidTorus&>(), rdoc::__copy)
         .def("swap", &AugTriSolidTorus::swap, rdoc::swap)
         .def("core", &AugTriSolidTorus::core,
@@ -65,7 +65,7 @@ void addAugTriSolidTorus(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<AugTriSolidTorus>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, AugTriSolidTorus);
 
     RDOC_SCOPE_END
 }

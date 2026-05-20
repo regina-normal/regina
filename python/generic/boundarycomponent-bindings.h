@@ -53,7 +53,7 @@ void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
     RDOC_SCOPE_BASE(detail::BoundaryComponentBase)
 
     auto c = pybind11::class_<BoundaryComponent<dim>>(m, name,
-            rdoc::BoundaryComponent)
+            rdoc::BoundaryComponent::__class)
         .def("index", &BoundaryComponent<dim>::index, rbase::index)
         .def("size", &BoundaryComponent<dim>::size, rbase::size)
         .def("countRidges", &BoundaryComponent<dim>::countRidges,

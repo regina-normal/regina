@@ -43,7 +43,7 @@ void addDoubleDescription(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(DoubleDescription)
 
     auto c = pybind11::class_<DoubleDescription>(m, "DoubleDescription",
-            rdoc_scope)
+            rdoc::__class)
         .def_static("enumerate", [](
                 const std::function<void(VectorInt&&)>& action,
                 const regina::MatrixInt& s,

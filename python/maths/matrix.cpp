@@ -42,7 +42,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
 
     RDOC_SCOPE_BEGIN(Matrix)
 
-    auto c = pybind11::class_<Matrix>(m, className, rdoc_scope)
+    auto c = pybind11::class_<Matrix>(m, className, rdoc::__class)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
         .def(pybind11::init<const Matrix&>(), rdoc::__copy)
@@ -176,7 +176,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Matrix>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Matrix);
 
     RDOC_SCOPE_END
 }

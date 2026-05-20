@@ -41,7 +41,7 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnapPeaCensusTri)
 
     auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
-            (m, "SnapPeaCensusTri", rdoc_scope)
+            (m, "SnapPeaCensusTri", rdoc::__class)
         .def(pybind11::init<const SnapPeaCensusTri&>(), rdoc::__copy)
         .def("swap", &SnapPeaCensusTri::swap, rdoc::swap)
         .def("section", &SnapPeaCensusTri::section, rdoc::section)
@@ -56,7 +56,7 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<SnapPeaCensusTri>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, SnapPeaCensusTri);
 
     RDOC_SCOPE_END
 }

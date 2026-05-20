@@ -48,7 +48,7 @@ void addHyperFlags(pybind11::module_& m) {
                 rdoc::Fundamental },
             { "Legacy", regina::HyperList::Legacy, rdoc::Legacy },
             { "Custom", regina::HyperList::Custom, rdoc::Custom }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc_global::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 
@@ -72,7 +72,7 @@ void addHyperFlags(pybind11::module_& m) {
             { "HilbertDual", regina::HyperAlg::HilbertDual, rdoc::HilbertDual },
             { "Legacy", regina::HyperAlg::Legacy, rdoc::Legacy },
             { "Custom", regina::HyperAlg::Custom, rdoc::Custom }
-        }, rdoc_scope, rdoc_global::__bor_2);
+        }, rdoc::__class, rdoc_global::__bor_2);
 
     RDOC_SCOPE_SWITCH_MAIN
 

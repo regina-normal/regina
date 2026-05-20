@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SatCube
-inline constexpr const char SatCube[] =
+struct SatCube {
+
+// Docstring regina::python::doc::SatCube::__class
+static constexpr const char __class[] =
 R"doc(A saturated block that is a six-tetrahedron cube.
 
 There are several ways of triangulating a cube with six tetrahedra;
@@ -32,8 +34,19 @@ SatRegion class (or for independently constructed models, the
 SatBlockModel class), and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
-// Docstring regina::python::doc::SatLST
-inline constexpr const char SatLST[] =
+// Docstring regina::python::doc::SatCube::model
+static constexpr const char model[] =
+R"doc(Creates a new model of a cube block.
+
+Returns:
+    a full triangulated model of this type of block.)doc";
+
+}; // struct SatCube
+
+struct SatLST {
+
+// Docstring regina::python::doc::SatLST::__class
+static constexpr const char __class[] =
 R"doc(A saturated block that is a layered solid torus. See the
 LayeredSolidTorus class for details.
 
@@ -47,8 +60,42 @@ swapped or manually constructed. Its memory is managed by the
 SatRegion class, and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
-// Docstring regina::python::doc::SatLayering
-inline constexpr const char SatLayering[] =
+// Docstring regina::python::doc::SatLST::lst
+static constexpr const char lst[] =
+R"doc(Returns details of the layered solid torus that this block represents.
+
+Returns:
+    details of the layered solid torus.)doc";
+
+// Docstring regina::python::doc::SatLST::roles
+static constexpr const char roles[] =
+R"doc(Describes how the layered solid torus is attached to the boundary
+annulus.
+
+The LayeredSolidTorus class notes describe top-level edge groups 0, 1
+and 2 for a layered solid torus. On the other hand, the SatAnnulus
+class notes define vertical, horizontal and diagonal edges on the
+boundary annulus.
+
+Suppose that the permutation returned by this routine is *r*. This
+indicates that:
+
+* edge group *r*[0] is attached to the vertical annulus edges;
+
+* edge group *r*[1] is attached to the horizontal annulus edges;
+
+* edge group *r*[2] is attached to the diagonal annulus edges.
+
+Returns:
+    a description of how the layered solid torus is attached to the
+    boundary annulus.)doc";
+
+}; // struct SatLST
+
+struct SatLayering {
+
+// Docstring regina::python::doc::SatLayering::__class
+static constexpr const char __class[] =
 R"doc(A degenerate saturated block that is a single tetrahedron wrapped
 around so that two opposite edges touch. This forms a degenerate one-
 tetrahedron solid torus that is pinched along a single meridinal
@@ -79,8 +126,20 @@ swapped or manually constructed. Its memory is managed by the
 SatRegion class, and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
-// Docstring regina::python::doc::SatMobius
-inline constexpr const char SatMobius[] =
+// Docstring regina::python::doc::SatLayering::overHorizontal
+static constexpr const char overHorizontal[] =
+R"doc(Does this describe a layering over the horizontal edge of the boundary
+annulus, or a layering over the diagonal edge?
+
+See the SatAnnulus class notes for definitions of horizontal and
+diagonal in this context.)doc";
+
+}; // struct SatLayering
+
+struct SatMobius {
+
+// Docstring regina::python::doc::SatMobius::__class
+static constexpr const char __class[] =
 R"doc(A degenerate zero-tetrahedron saturated block that corresponds to
 attaching a Mobius band to a single annulus boundary.
 
@@ -102,8 +161,39 @@ swapped or manually constructed. Its memory is managed by the
 SatRegion class, and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
-// Docstring regina::python::doc::SatReflectorStrip
-inline constexpr const char SatReflectorStrip[] =
+// Docstring regina::python::doc::SatMobius::position
+static constexpr const char position[] =
+R"doc(Describes how the Mobius band is attached to the boundary annulus.
+
+The class notes discuss the weight two edge of the Mobius band (or
+equivalently the boundary edge of the Mobius band). The return value
+of this routine indicates which edge of the boundary annulus this
+weight two edge is joined to.
+
+In the SatAnnulus class notes, the three edges of the annulus are
+denoted vertical, horizontal and boundary, and the vertices of each
+triangle are given markings 0, 1 and 2.
+
+The return value of this routine takes the value 0, 1 or 2 as follows:
+
+* 0 means that the weight two edge is joined to the diagonal edge of
+  the annulus (markings 1 and 2);
+
+* 1 means that the weight two edge is joined to the horizontal edge of
+  the annulus (markings 0 and 2);
+
+* 2 means that the weight two edge is joined to the vertical edge of
+  the annulus (markings 0 and 1).
+
+Returns:
+    the value 0, 1 or 2 as described above.)doc";
+
+}; // struct SatMobius
+
+struct SatReflectorStrip {
+
+// Docstring regina::python::doc::SatReflectorStrip::__class
+static constexpr const char __class[] =
 R"doc(A saturated block that is a reflector strip.
 
 A reflector strip is a ring of triangular prisms arranged end-to-end,
@@ -135,8 +225,28 @@ SatRegion class (or for independently constructed models, the
 SatBlockModel class), and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
-// Docstring regina::python::doc::SatTriPrism
-inline constexpr const char SatTriPrism[] =
+// Docstring regina::python::doc::SatReflectorStrip::model
+static constexpr const char model[] =
+R"doc(Creates a new model of a reflector strip block.
+
+Parameter ``length``:
+    the length of the new reflector strip, i.e., the number of
+    boundary annuli; this must be strictly positive.
+
+Parameter ``twisted``:
+    ``True`` if the new reflector strip should be twisted (causing its
+    ring of boundary annuli to be twisted also), or ``False`` if the
+    new strip should not be twisted.
+
+Returns:
+    a full triangulated model of this type of block.)doc";
+
+}; // struct SatReflectorStrip
+
+struct SatTriPrism {
+
+// Docstring regina::python::doc::SatTriPrism::__class
+static constexpr const char __class[] =
 R"doc(A saturated block that is a three-tetrahedron triangular prism.
 
 Such a prism may be of major type or of minor type. In a _major_ type
@@ -153,118 +263,8 @@ SatRegion class (or for independently constructed models, the
 SatBlockModel class), and blocks' locations in memory define them. See
 SatRegion for further details.)doc";
 
-namespace SatCube_ {
-
-// Docstring regina::python::doc::SatCube_::model
-inline constexpr const char model[] =
-R"doc(Creates a new model of a cube block.
-
-Returns:
-    a full triangulated model of this type of block.)doc";
-
-}
-
-namespace SatLST_ {
-
-// Docstring regina::python::doc::SatLST_::lst
-inline constexpr const char lst[] =
-R"doc(Returns details of the layered solid torus that this block represents.
-
-Returns:
-    details of the layered solid torus.)doc";
-
-// Docstring regina::python::doc::SatLST_::roles
-inline constexpr const char roles[] =
-R"doc(Describes how the layered solid torus is attached to the boundary
-annulus.
-
-The LayeredSolidTorus class notes describe top-level edge groups 0, 1
-and 2 for a layered solid torus. On the other hand, the SatAnnulus
-class notes define vertical, horizontal and diagonal edges on the
-boundary annulus.
-
-Suppose that the permutation returned by this routine is *r*. This
-indicates that:
-
-* edge group *r*[0] is attached to the vertical annulus edges;
-
-* edge group *r*[1] is attached to the horizontal annulus edges;
-
-* edge group *r*[2] is attached to the diagonal annulus edges.
-
-Returns:
-    a description of how the layered solid torus is attached to the
-    boundary annulus.)doc";
-
-}
-
-namespace SatLayering_ {
-
-// Docstring regina::python::doc::SatLayering_::overHorizontal
-inline constexpr const char overHorizontal[] =
-R"doc(Does this describe a layering over the horizontal edge of the boundary
-annulus, or a layering over the diagonal edge?
-
-See the SatAnnulus class notes for definitions of horizontal and
-diagonal in this context.)doc";
-
-}
-
-namespace SatMobius_ {
-
-// Docstring regina::python::doc::SatMobius_::position
-inline constexpr const char position[] =
-R"doc(Describes how the Mobius band is attached to the boundary annulus.
-
-The class notes discuss the weight two edge of the Mobius band (or
-equivalently the boundary edge of the Mobius band). The return value
-of this routine indicates which edge of the boundary annulus this
-weight two edge is joined to.
-
-In the SatAnnulus class notes, the three edges of the annulus are
-denoted vertical, horizontal and boundary, and the vertices of each
-triangle are given markings 0, 1 and 2.
-
-The return value of this routine takes the value 0, 1 or 2 as follows:
-
-* 0 means that the weight two edge is joined to the diagonal edge of
-  the annulus (markings 1 and 2);
-
-* 1 means that the weight two edge is joined to the horizontal edge of
-  the annulus (markings 0 and 2);
-
-* 2 means that the weight two edge is joined to the vertical edge of
-  the annulus (markings 0 and 1).
-
-Returns:
-    the value 0, 1 or 2 as described above.)doc";
-
-}
-
-namespace SatReflectorStrip_ {
-
-// Docstring regina::python::doc::SatReflectorStrip_::model
-inline constexpr const char model[] =
-R"doc(Creates a new model of a reflector strip block.
-
-Parameter ``length``:
-    the length of the new reflector strip, i.e., the number of
-    boundary annuli; this must be strictly positive.
-
-Parameter ``twisted``:
-    ``True`` if the new reflector strip should be twisted (causing its
-    ring of boundary annuli to be twisted also), or ``False`` if the
-    new strip should not be twisted.
-
-Returns:
-    a full triangulated model of this type of block.)doc";
-
-}
-
-namespace SatTriPrism_ {
-
-// Docstring regina::python::doc::SatTriPrism_::isMajor
-inline constexpr const char isMajor[] =
+// Docstring regina::python::doc::SatTriPrism::isMajor
+static constexpr const char isMajor[] =
 R"doc(Is this prism of major type or minor type? See the class notes for
 further details.
 
@@ -276,8 +276,8 @@ Returns:
     ``True`` if this prism is of major type, or ``False`` if it is of
     minor type.)doc";
 
-// Docstring regina::python::doc::SatTriPrism_::model
-inline constexpr const char model[] =
+// Docstring regina::python::doc::SatTriPrism::model
+static constexpr const char model[] =
 R"doc(Creates a new model of a triangular prism block.
 
 Parameter ``major``:
@@ -287,7 +287,7 @@ Parameter ``major``:
 Returns:
     a full triangulated model of this type of block.)doc";
 
-}
+}; // struct SatTriPrism
 
 } // namespace regina::python::doc
 

@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Triangulation
-inline constexpr const char Triangulation[] =
+struct Triangulation {
+
+// Docstring regina::python::doc::Triangulation::__class
+static constexpr const char __class[] =
 R"doc(A *dim*-dimensional triangulation, built by gluing together
 *dim*-dimensional simplices along their `(dim-1)`-dimensional facets.
 Typically (but not necessarily) such triangulations are used to
@@ -116,10 +118,8 @@ Python:
 Template parameter ``dim``:
     the dimension of the underlying triangulation.)doc";
 
-namespace Triangulation_ {
-
-// Docstring regina::python::doc::Triangulation_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Triangulation::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given triangulation.
 
 This will also clone any computed properties (such as homology,
@@ -136,14 +136,14 @@ can use the two-argument copy constructor instead.
 Parameter ``src``:
     the triangulation to copy.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::Triangulation::__default
+static constexpr const char __default[] =
 R"doc(Default constructor.
 
 Creates an empty triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Triangulation::__init
+static constexpr const char __init[] =
 R"doc(Creates a new copy of the given triangulation, with the option of
 whether or not to clone its computed properties and/or locks also.
 
@@ -176,8 +176,8 @@ Parameter ``cloneLocks``:
     from the given triangulation, or ``False`` if the new
     triangulation should have no locks at all.)doc";
 
-// Docstring regina::python::doc::Triangulation_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Triangulation::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given triangulation.
 
 All top-dimensional simplices that belong to this triangulation will
@@ -200,7 +200,7 @@ triangulation.
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
 
-}
+}; // struct Triangulation
 
 } // namespace regina::python::doc
 

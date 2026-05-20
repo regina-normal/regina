@@ -40,7 +40,7 @@ void addAttachment(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Attachment)
 
     auto c = pybind11::class_<Attachment, regina::Packet,
-            std::shared_ptr<Attachment>>(m, "Attachment", rdoc_scope)
+            std::shared_ptr<Attachment>>(m, "Attachment", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const char*>(), rdoc::__init)
         .def(pybind11::init([](pybind11::bytes data, std::string filename) {
@@ -94,7 +94,7 @@ void addAttachment(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::packet_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<Attachment>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, Attachment);
 
     RDOC_SCOPE_END
 }

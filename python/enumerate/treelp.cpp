@@ -59,7 +59,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
 
     using Tableaux = LPInitialTableaux<Constraint>;
 
-    auto c = pybind11::class_<Tableaux>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Tableaux>(m, name, rdoc::__class)
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding, bool>(),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("enumeration") = true,
@@ -94,7 +94,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     // test.  In the meantime, don't make a decision we might regret later.
     regina::python::disable_eq_operators(c);
 
-    regina::python::add_global_swap<Tableaux>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Tableaux, LPInitialTableaux);
 
     RDOC_SCOPE_END
 }
@@ -105,7 +105,7 @@ void addLPData(pybind11::module_& m, const char* name) {
 
     using Data = LPData<Constraint, Integer>;
 
-    auto c = pybind11::class_<Data>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Data>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("swap", &Data::swap, rdoc::swap)
         .def("reserve", &Data::reserve, rdoc::reserve)
@@ -139,7 +139,7 @@ void addLPData(pybind11::module_& m, const char* name) {
     // all the internal data?  Let's not force a decision right now.
     regina::python::disable_eq_operators(c);
 
-    regina::python::add_global_swap<Data>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Data, LPData);
 
     RDOC_SCOPE_END
 }
@@ -149,9 +149,10 @@ void addTreeLP(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::LPConstraintType>(m, "LPConstraintType",
-        "enum.Enum", rdoc_scope)
+            "enum.Enum", rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::LPConstraintType>(m, "LPConstraintType", rdoc_scope)
+    pybind11::enum_<regina::LPConstraintType>(m, "LPConstraintType",
+            rdoc::__class)
 #endif
         .value("Zero", regina::LPConstraintType::Zero, rdoc::Zero)
         .value("Positive", regina::LPConstraintType::Positive, rdoc::Positive)
@@ -162,7 +163,7 @@ void addTreeLP(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(LPMatrix)
 
-    auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix", rdoc_scope)
+    auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init)
         .def("swap", &LPMatrix<Integer>::swap, rdoc::swap)
@@ -187,11 +188,11 @@ void addTreeLP(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<LPMatrix<Integer>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, LPMatrix<Integer>, LPMatrix);
 
     RDOC_SCOPE_SWITCH(LPSystem)
 
-    auto s = pybind11::class_<LPSystem>(m, "LPSystem", rdoc_scope)
+    auto s = pybind11::class_<LPSystem>(m, "LPSystem", rdoc::__class)
         .def(pybind11::init<NormalEncoding>(), rdoc::__init)
         .def(pybind11::init<const LPSystem&>(), rdoc::__copy)
         .def("normal", &LPSystem::normal, rdoc::normal)

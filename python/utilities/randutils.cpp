@@ -38,7 +38,7 @@ using regina::RandomEngine;
 void addRandUtils(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(RandomEngine)
 
-    auto c = pybind11::class_<RandomEngine>(m, "RandomEngine", rdoc_scope)
+    auto c = pybind11::class_<RandomEngine>(m, "RandomEngine", rdoc::__class)
         .def_static("rand", &RandomEngine::rand<long>, rdoc::rand)
         .def_static("reseedWithHardware", &RandomEngine::reseedWithHardware,
             rdoc::reseedWithHardware)

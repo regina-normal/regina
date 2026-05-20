@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::FacetPairing
-inline constexpr const char FacetPairing[] =
+struct FacetPairing {
+
+// Docstring regina::python::doc::FacetPairing::__class
+static constexpr const char __class[] =
 R"doc(Represents the dual graph of a *dim*-manifold triangulation; that is,
 the pairwise matching of facets of *dim*-dimensional simplices.
 
@@ -69,17 +71,15 @@ Python:
 Template parameter ``dim``:
     the dimension of the underlying triangulation.)doc";
 
-namespace FacetPairing_ {
-
-// Docstring regina::python::doc::FacetPairing_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::FacetPairing::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given facet pairing.
 
 Parameter ``src``:
     the facet pairing to clone.)doc";
 
-// Docstring regina::python::doc::FacetPairing_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::FacetPairing::__init
+static constexpr const char __init[] =
 R"doc(Creates the dual graph of the given triangulation. This is the facet
 pairing that describes how the facets of simplices in the given
 triangulation are joined together, as described in the class notes.
@@ -93,7 +93,7 @@ Precondition:
 Parameter ``tri``:
     the triangulation whose facet pairing should be constructed.)doc";
 
-}
+}; // struct FacetPairing
 
 } // namespace regina::python::doc
 

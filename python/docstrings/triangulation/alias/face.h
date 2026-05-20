@@ -13,8 +13,10 @@ namespace regina::python::doc {
 
 namespace alias {
 
-// Docstring regina::python::doc::alias::SimplexVoid
-inline constexpr const char SimplexVoid[] =
+struct SimplexVoid {
+
+// Docstring regina::python::doc::alias::SimplexVoid::__class
+static constexpr const char __class[] =
 R"doc(Helper class that provides a dimension-specific alias for simplex(),
 where reasonable.
 
@@ -25,29 +27,48 @@ The name of the alias is determined by the dimension *dim*, and the
 alias is only provided for those dimensions *dim* that are
 sufficiently small.)doc";
 
-}
+// Docstring regina::python::doc::alias::SimplexVoid::__class_2
+static constexpr const char __class_2[] =
+R"doc(Helper class that provides a dimension-specific alias for simplex().
 
-namespace alias::SimplexVoid_ {
+This is inherited by the class *Derived*, which must provide a routine
+of the form ``Simplex<dim>* simplex() const``.)doc";
 
-// Docstring regina::python::doc::alias::SimplexVoid_::pentachoron
-inline constexpr const char pentachoron[] =
+// Docstring regina::python::doc::alias::SimplexVoid::__class_3
+static constexpr const char __class_3[] =
+R"doc(Helper class that provides a dimension-specific alias for simplex().
+
+This is inherited by the class *Derived*, which must provide a routine
+of the form ``Simplex<dim>* simplex() const``.)doc";
+
+// Docstring regina::python::doc::alias::SimplexVoid::__class_4
+static constexpr const char __class_4[] =
+R"doc(Helper class that provides a dimension-specific alias for simplex().
+
+This is inherited by the class *Derived*, which must provide a routine
+of the form ``Simplex<dim>* simplex() const``.)doc";
+
+// Docstring regina::python::doc::alias::SimplexVoid::pentachoron
+static constexpr const char pentachoron[] =
 R"doc(A dimension-specific alias for simplex().
 
 See simplex() for further information.)doc";
 
-// Docstring regina::python::doc::alias::SimplexVoid_::tetrahedron
-inline constexpr const char tetrahedron[] =
+// Docstring regina::python::doc::alias::SimplexVoid::tetrahedron
+static constexpr const char tetrahedron[] =
 R"doc(A dimension-specific alias for simplex().
 
 See simplex() for further information.)doc";
 
-// Docstring regina::python::doc::alias::SimplexVoid_::triangle
-inline constexpr const char triangle[] =
+// Docstring regina::python::doc::alias::SimplexVoid::triangle
+static constexpr const char triangle[] =
 R"doc(A dimension-specific alias for simplex().
 
 See simplex() for further information.)doc";
 
-}
+}; // struct SimplexVoid
+
+} // namespace alias
 
 } // namespace regina::python::doc
 

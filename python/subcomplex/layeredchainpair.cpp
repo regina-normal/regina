@@ -41,7 +41,7 @@ void addLayeredChainPair(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredChainPair)
 
     auto c = pybind11::class_<LayeredChainPair, regina::StandardTriangulation>
-            (m, "LayeredChainPair", rdoc_scope)
+            (m, "LayeredChainPair", rdoc::__class)
         .def(pybind11::init<const LayeredChainPair&>(), rdoc::__copy)
         .def("swap", &LayeredChainPair::swap, rdoc::swap)
         .def("chain", &LayeredChainPair::chain,
@@ -51,7 +51,7 @@ void addLayeredChainPair(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<LayeredChainPair>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, LayeredChainPair);
 
     RDOC_SCOPE_END
 }

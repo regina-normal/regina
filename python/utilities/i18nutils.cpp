@@ -36,7 +36,7 @@
 void addLocale(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(i18n::Locale)
 
-    auto c = pybind11::class_<regina::i18n::Locale>(m, "Locale", rdoc_scope)
+    auto c = pybind11::class_<regina::i18n::Locale>(m, "Locale", rdoc::__class)
         .def_static("codeset", &regina::i18n::Locale::codeset, rdoc::codeset)
     ;
     regina::python::no_eq_static(c);

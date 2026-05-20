@@ -45,7 +45,7 @@ void addGluingPermSearcher4(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GluingPermSearcher)
 
     auto c = pybind11::class_<GluingPermSearcher<4>>(m, "GluingPermSearcher4",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<FacetPairing<4>, FacetPairing<4>::IsoList,
             bool, bool>(), rdoc::__init)
         .def("runSearch", &GluingPermSearcher<4>::runSearch<Action>,

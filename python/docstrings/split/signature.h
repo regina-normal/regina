@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Signature
-inline constexpr const char Signature[] =
+// Docstring regina::python::doc::global_swap_Signature
+inline constexpr const char global_swap_Signature[] =
+R"doc(Swaps the contents of the given signatures.
+
+This global routine simply calls Signature::swap(); it is provided so
+that Signature meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first signature whose contents should be swapped.
+
+Parameter ``b``:
+    the second signature whose contents should be swapped.)doc";
+
+struct Signature {
+
+// Docstring regina::python::doc::Signature::__class
+static constexpr const char __class[] =
 R"doc(Represents a signature of a splitting surface in a closed 3-manifold
 triangulation.
 
@@ -53,17 +68,15 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-namespace Signature_ {
-
-// Docstring regina::python::doc::Signature_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Signature::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given signature.
 
 Parameter ``sig``:
     the signature to copy.)doc";
 
-// Docstring regina::python::doc::Signature_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::Signature::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given signature are identical.
 
 To be considered identical, it is not enough for two signatures to be
@@ -81,8 +94,8 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and *other* are identical.)doc";
 
-// Docstring regina::python::doc::Signature_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Signature::__init
+static constexpr const char __init[] =
 R"doc(Creates a new signature by parsing the given signature string.
 
 Punctuation characters in the given string will be interpreted as
@@ -99,29 +112,16 @@ Exception ``InvalidArgument``:
 Parameter ``str``:
     a string representation of a splitting surface signature.)doc";
 
-// Docstring regina::python::doc::Signature_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given signatures.
-
-This global routine simply calls Signature::swap(); it is provided so
-that Signature meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first signature whose contents should be swapped.
-
-Parameter ``b``:
-    the second signature whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Signature_::order
-inline constexpr const char order[] =
+// Docstring regina::python::doc::Signature::order
+static constexpr const char order[] =
 R"doc(Returns the order of this signature. The order is the number of quads
 in the corresponding splitting surface.
 
 Returns:
     the order of this signature.)doc";
 
-// Docstring regina::python::doc::Signature_::str
-inline constexpr const char str[] =
+// Docstring regina::python::doc::Signature::str
+static constexpr const char str[] =
 R"doc(Returns a customised string representation of this signature.
 
 Note that there is also a zero-argument version of str(), inherited
@@ -138,8 +138,8 @@ Parameter ``cycleClose``:
 Parameter ``cycleJoin``:
     the text to write between each pair of consecutive cycles.)doc";
 
-// Docstring regina::python::doc::Signature_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Signature::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given signature.
 
 It does not matter if this and the given signature use different
@@ -149,15 +149,15 @@ signatures will be adjusted accordingly.
 Parameter ``other``:
     the signature whose contents are to be swapped with this.)doc";
 
-// Docstring regina::python::doc::Signature_::triangulate
-inline constexpr const char triangulate[] =
+// Docstring regina::python::doc::Signature::triangulate
+static constexpr const char triangulate[] =
 R"doc(Returns the 3-manifold triangulation corresponding to this splitting
 surface signature.
 
 Returns:
     the corresponding triangulation.)doc";
 
-}
+}; // struct Signature
 
 } // namespace regina::python::doc
 

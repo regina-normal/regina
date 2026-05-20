@@ -46,7 +46,7 @@ using regina::python::wrapTableView;
 void addNormalSurface(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(NormalSurface)
 
-    auto c = pybind11::class_<NormalSurface>(m, "NormalSurface", rdoc_scope)
+    auto c = pybind11::class_<NormalSurface>(m, "NormalSurface", rdoc::__class)
         .def(pybind11::init<const NormalSurface&>(), rdoc::__copy)
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>(),
             rdoc::__init)
@@ -172,7 +172,7 @@ void addNormalSurface(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
 
-    regina::python::add_global_swap<NormalSurface>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, NormalSurface);
 
     RDOC_SCOPE_END
 

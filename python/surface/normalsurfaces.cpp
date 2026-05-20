@@ -63,7 +63,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             { "AllButName", regina::SurfaceExport::AllButName,
                 rdoc::AllButName },
             { "All", regina::SurfaceExport::All, rdoc::All }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc_global::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 
@@ -88,7 +88,7 @@ void addNormalSurfaces(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(NormalSurfaces)
 
     auto l = pybind11::class_<NormalSurfaces,
-            std::shared_ptr<NormalSurfaces>>(m, "NormalSurfaces", rdoc_scope)
+            std::shared_ptr<NormalSurfaces>>(m, "NormalSurfaces", rdoc::__class)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
                 regina::Flags<regina::NormalList>,
                 regina::Flags<regina::NormalAlg>, ProgressTracker*>(),
@@ -166,7 +166,7 @@ void addNormalSurfaces(pybind11::module_& m) {
     regina::python::add_packet_constructor<const NormalSurfaces&,
         const SurfaceFilter&>(wrap, rdoc::__init_3);
 
-    regina::python::add_global_swap<NormalSurfaces>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, NormalSurfaces);
 
     RDOC_SCOPE_END
 }

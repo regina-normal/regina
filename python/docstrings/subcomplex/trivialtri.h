@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TrivialTri
-inline constexpr const char TrivialTri[] =
+// Docstring regina::python::doc::global_swap_TrivialTri
+inline constexpr const char global_swap_TrivialTri[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls TrivialTri::swap(); it is provided so
+that TrivialTri meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct TrivialTri {
+
+// Docstring regina::python::doc::TrivialTri::__class
+static constexpr const char __class[] =
 R"doc(Represents one of a few particular hard-coded trivial triangulations
 that do not belong to any of the other larger families.
 
@@ -27,13 +42,11 @@ StandardTriangulation subclasses. Note that the only way to create
 these objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
-namespace TrivialTri_ {
+// Docstring regina::python::doc::TrivialTri::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::TrivialTri_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::TrivialTri_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::TrivialTri::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of trivial triangulation.
 
@@ -53,21 +66,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of trivial triangulation.)doc";
 
-// Docstring regina::python::doc::TrivialTri_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls TrivialTri::swap(); it is provided so
-that TrivialTri meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::TrivialTri_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::TrivialTri::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component is one of the trivial
 triangulations recognised by this class.
 
@@ -83,22 +83,22 @@ Returns:
     the given component is not one of the triangulations recognised by
     this class.)doc";
 
-// Docstring regina::python::doc::TrivialTri_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::TrivialTri::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::TrivialTri_::type
-inline constexpr const char type[] =
+// Docstring regina::python::doc::TrivialTri::type
+static constexpr const char type[] =
 R"doc(Returns the specific trivial triangulation being represented.
 
 Returns:
     the specific triangulation. This will be one of the triangulation
     constants defined in this class.)doc";
 
-}
+}; // struct TrivialTri
 
 } // namespace regina::python::doc
 

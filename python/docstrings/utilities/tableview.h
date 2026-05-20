@@ -11,8 +11,34 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TableView
-inline constexpr const char TableView[] =
+struct TableView {
+
+// Docstring regina::python::doc::TableView::__array
+static constexpr const char __array[] =
+R"doc(Returns the requested sub-array of a multi-dimensional array, or the
+requested element of a one-dimensional array.
+
+If this array is one-dimensional then this operator simply returns the
+(*index*)th element, as a const reference.
+
+If this array has more than one dimension then this operator returns a
+TableView of smaller dimension, by value, representing the slice of
+the overall table obtained when the first array index is set to the
+given value.
+
+Typically this operator would just be used to access an individual
+element using the syntax ``array[index_1][index_2]...[index_dim]``,
+where *dim* is the dimension of this array.
+
+Parameter ``index``:
+    indicates which element or sub-array to return; this must be
+    between 0 and (*dim1*-1) inclusive.
+
+Returns:
+    the (*index*)th sub-array.)doc";
+
+// Docstring regina::python::doc::TableView::__class
+static constexpr const char __class[] =
 R"doc(A lightweight object that can be used for random access to all
 elements of a given multi-dimensional table.
 
@@ -71,37 +97,11 @@ Template parameter ``dim``:
     the dimensions of the C-style array. There must always be at least
     one dimension supplied.)doc";
 
-namespace TableView_ {
+// Docstring regina::python::doc::TableView::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given table view.)doc";
 
-// Docstring regina::python::doc::TableView_::__array
-inline constexpr const char __array[] =
-R"doc(Returns the requested sub-array of a multi-dimensional array, or the
-requested element of a one-dimensional array.
-
-If this array is one-dimensional then this operator simply returns the
-(*index*)th element, as a const reference.
-
-If this array has more than one dimension then this operator returns a
-TableView of smaller dimension, by value, representing the slice of
-the overall table obtained when the first array index is set to the
-given value.
-
-Typically this operator would just be used to access an individual
-element using the syntax ``array[index_1][index_2]...[index_dim]``,
-where *dim* is the dimension of this array.
-
-Parameter ``index``:
-    indicates which element or sub-array to return; this must be
-    between 0 and (*dim1*-1) inclusive.
-
-Returns:
-    the (*index*)th sub-array.)doc";
-
-// Docstring regina::python::doc::TableView_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given table view.)doc";
-
-// Docstring regina::python::doc::TableView_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::TableView::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given table view are accessing the
 same underlying C-style array.
 
@@ -117,8 +117,8 @@ Returns:
     ``True`` if and only if this and the given table use the same
     underlying C-style array.)doc";
 
-// Docstring regina::python::doc::TableView_::__iter__
-inline constexpr const char __iter__[] =
+// Docstring regina::python::doc::TableView::__iter__
+static constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all sub-arrays (for a multi-dimensional
 array), or all elements (for a one-dimensional array).
 
@@ -133,8 +133,8 @@ not run through the individual array elements; for this you will need
 Returns:
     an iterator over the subarrays or elements of this table.)doc";
 
-// Docstring regina::python::doc::TableView_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::TableView::size
+static constexpr const char size[] =
 R"doc(Returns the size of this array, across all of the array dimensions.
 
 This returns a sequence (*s_1*, *s_2*, ..., *s_dim*), where *dim* is
@@ -148,7 +148,7 @@ Python:
 Returns:
     the size of this array, across all of the array dimensions.)doc";
 
-}
+}; // struct TableView
 
 } // namespace regina::python::doc
 

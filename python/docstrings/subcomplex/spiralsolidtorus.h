@@ -11,8 +11,24 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SpiralSolidTorus
-inline constexpr const char SpiralSolidTorus[] =
+// Docstring regina::python::doc::global_swap_SpiralSolidTorus
+inline constexpr const char global_swap_SpiralSolidTorus[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls SpiralSolidTorus::swap(); it is
+provided so that SpiralSolidTorus meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+struct SpiralSolidTorus {
+
+// Docstring regina::python::doc::SpiralSolidTorus::__class
+static constexpr const char __class[] =
 R"doc(Represents a spiralled solid torus in a triangulation.
 
 A spiralled solid torus is created by placing tetrahedra one upon
@@ -55,18 +71,16 @@ possible, even when passing or returning objects by value. Note,
 however, that the only way to create objects of this class (aside from
 copying or moving) is via the static member function recognise().)doc";
 
-namespace SpiralSolidTorus_ {
-
-// Docstring regina::python::doc::SpiralSolidTorus_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::SpiralSolidTorus::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given structure. This will induce a deep
 copy of *src*.
 
 Parameter ``src``:
     the structure to copy.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::SpiralSolidTorus::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of spiralled solid torus.
 
@@ -86,8 +100,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of spiralled solid torus.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::cycle
-inline constexpr const char cycle[] =
+// Docstring regina::python::doc::SpiralSolidTorus::cycle
+static constexpr const char cycle[] =
 R"doc(Cycles this spiralled solid torus by the given number of tetrahedra.
 Tetrahedra *k*, *k*+1, *k*+2 and so on will become tetrahedra 0, 1, 2
 and so on respectively. Note that this operation will not change the
@@ -99,22 +113,8 @@ this spiralled solid torus is represented.
 Parameter ``k``:
     the number of tetrahedra through which we should cycle.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls SpiralSolidTorus::swap(); it is
-provided so that SpiralSolidTorus meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::SpiralSolidTorus_::isCanonical
-inline constexpr const char isCanonical[] =
+// Docstring regina::python::doc::SpiralSolidTorus::isCanonical
+static constexpr const char isCanonical[] =
 R"doc(Determines whether this spiralled solid torus is in canonical form.
 Canonical form is described in detail in the description for
 makeCanonical().
@@ -123,8 +123,8 @@ Returns:
     ``True`` if and only if this spiralled solid torus is in canonical
     form.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::makeCanonical
-inline constexpr const char makeCanonical[] =
+// Docstring regina::python::doc::SpiralSolidTorus::makeCanonical
+static constexpr const char makeCanonical[] =
 R"doc(Converts this spiralled solid torus into its canonical representation.
 The canonical representation of a spiralled solid torus is unique in a
 given triangulation.
@@ -137,8 +137,8 @@ Returns:
     ``True`` if and only if the representation of this spiralled solid
     torus was actually changed.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::SpiralSolidTorus::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given tetrahedron forms part of a spiralled solid
 torus with its vertices playing the given roles in the solid torus.
 
@@ -164,8 +164,8 @@ Returns:
     is not part of a spiralled solid torus with the given vertex
     roles.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::reverse
-inline constexpr const char reverse[] =
+// Docstring regina::python::doc::SpiralSolidTorus::reverse
+static constexpr const char reverse[] =
 R"doc(Reverses this spiralled solid torus. Tetrahedra 0, 1, 2, ..., size()-1
 will become tetrahedra size()-1, ..., 2, 1, 0 respectively. Note that
 this operation will change the vertex roles as well.
@@ -173,22 +173,22 @@ this operation will change the vertex roles as well.
 The underlying triangulation is not changed; all that changes is how
 this spiralled solid torus is represented.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::SpiralSolidTorus::size
+static constexpr const char size[] =
 R"doc(Returns the number of tetrahedra in this spiralled solid torus.
 
 Returns:
     the number of tetrahedra.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::SpiralSolidTorus::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::tetrahedron
-inline constexpr const char tetrahedron[] =
+// Docstring regina::python::doc::SpiralSolidTorus::tetrahedron
+static constexpr const char tetrahedron[] =
 R"doc(Returns the requested tetrahedron in this spiralled solid torus.
 Tetrahedra are numbered from 0 to size()-1 inclusive, with tetrahedron
 *i*+1 being placed above tetrahedron *i*.
@@ -200,8 +200,8 @@ Parameter ``index``:
 Returns:
     the requested tetrahedron.)doc";
 
-// Docstring regina::python::doc::SpiralSolidTorus_::vertexRoles
-inline constexpr const char vertexRoles[] =
+// Docstring regina::python::doc::SpiralSolidTorus::vertexRoles
+static constexpr const char vertexRoles[] =
 R"doc(Returns a permutation represeting the role that each vertex of the
 requested tetrahedron plays in the solid torus. The permutation
 returned (call this ``p``) maps 0, 1, 2 and 3 to the four vertices of
@@ -224,7 +224,7 @@ Returns:
     a permutation representing the roles of the vertices of the
     requested tetrahedron.)doc";
 
-}
+}; // struct SpiralSolidTorus
 
 } // namespace regina::python::doc
 

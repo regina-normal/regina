@@ -42,7 +42,7 @@ using regina::VectorInt;
 void addHilbertDual(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HilbertDual)
 
-    auto c = pybind11::class_<HilbertDual>(m, "HilbertDual", rdoc_scope)
+    auto c = pybind11::class_<HilbertDual>(m, "HilbertDual", rdoc::__class)
         .def_static("enumerate", [](
                 const std::function<void(VectorInt&&)>& action,
                 const regina::MatrixInt& s,

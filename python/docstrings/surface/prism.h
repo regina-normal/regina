@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::PrismSpec
-inline constexpr const char PrismSpec[] =
+struct PrismSpec {
+
+// Docstring regina::python::doc::PrismSpec::__class
+static constexpr const char __class[] =
 R"doc(Specifies a single triangular prism in a tetrahedron.
 
 If a tetrahedron contains normal quads, slicing along these quads
@@ -27,16 +29,14 @@ functions.
 Precondition:
     This class should only be used with *embedded* normal surfaces.)doc";
 
-namespace PrismSpec_ {
+// Docstring regina::python::doc::PrismSpec::__copy
+static constexpr const char __copy[] = R"doc(Creates a new prism specifier that is a clone of the given specifier.)doc";
 
-// Docstring regina::python::doc::PrismSpec_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new prism specifier that is a clone of the given specifier.)doc";
+// Docstring regina::python::doc::PrismSpec::__default
+static constexpr const char __default[] = R"doc(Creates a new uninitialised prism specifier.)doc";
 
-// Docstring regina::python::doc::PrismSpec_::__default
-inline constexpr const char __default[] = R"doc(Creates a new uninitialised prism specifier.)doc";
-
-// Docstring regina::python::doc::PrismSpec_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::PrismSpec::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given prism specifier contain identical
 information.
 
@@ -44,8 +44,8 @@ Returns:
     ``True`` if and only if this and the given prism specifier contain
     identical information.)doc";
 
-// Docstring regina::python::doc::PrismSpec_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::PrismSpec::__init
+static constexpr const char __init[] =
 R"doc(Creates a new prism specifier containing the given values.
 
 Parameter ``newTetIndex``:
@@ -56,7 +56,7 @@ Parameter ``newEdge``:
     the edge of the tetrahedron that is contained in this prism; this
     must be between 0 and 5 inclusive.)doc";
 
-}
+}; // struct PrismSpec
 
 } // namespace regina::python::doc
 

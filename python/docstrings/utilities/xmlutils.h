@@ -39,7 +39,7 @@ Returns:
     the converted string with special characters replaced by XML
     entities.)doc";
 
-}
+} // namespace xml
 
 } // namespace regina::python::doc
 

@@ -49,7 +49,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GluingPermSearcher)
 
     auto g = pybind11::class_<GluingPermSearcher<3>>(m, "GluingPermSearcher3",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, bool, regina::CensusPurge>(), rdoc::__init)
         .def("runSearch", &GluingPermSearcher<3>::runSearch<Action>,
@@ -79,7 +79,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(EulerSearcher)
 
     auto e = pybind11::class_<EulerSearcher, GluingPermSearcher<3>>(
-            m, "EulerSearcher", rdoc_scope)
+            m, "EulerSearcher", rdoc::__class)
         .def(pybind11::init<int, FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, regina::CensusPurge>(), rdoc::__init)
         .def_readonly_static("dataTag", &EulerSearcher::dataTag)
@@ -97,7 +97,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(CompactSearcher)
 
     auto c = pybind11::class_<CompactSearcher, GluingPermSearcher<3>>(
-            m, "CompactSearcher", rdoc_scope)
+            m, "CompactSearcher", rdoc::__class)
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, regina::CensusPurge>(), rdoc::__init)
         .def_readonly_static("dataTag", &CompactSearcher::dataTag)
@@ -108,7 +108,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ClosedPrimeMinSearcher)
 
     auto p = pybind11::class_<ClosedPrimeMinSearcher, GluingPermSearcher<3>>(
-            m, "ClosedPrimeMinSearcher", rdoc_scope)
+            m, "ClosedPrimeMinSearcher", rdoc::__class)
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList, bool>(),
             rdoc::__init)
         .def_readonly_static("dataTag", &ClosedPrimeMinSearcher::dataTag)
@@ -119,7 +119,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(HyperbolicMinSearcher)
 
     auto h = pybind11::class_<HyperbolicMinSearcher, GluingPermSearcher<3>>(
-            m, "HyperbolicMinSearcher", rdoc_scope)
+            m, "HyperbolicMinSearcher", rdoc::__class)
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList, bool>(),
             rdoc::__init)
         .def_readonly_static("dataTag", &HyperbolicMinSearcher::dataTag)

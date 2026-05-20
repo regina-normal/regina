@@ -11,20 +11,15 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SurfaceFilterType
-inline constexpr const char SurfaceFilterType[] =
-R"doc(Represents different types of filter classes that can be used to
-filter lists of normal surfaces in 3-manifold triangulations.)doc";
+struct SurfaceFilterType {
 
-namespace SurfaceFilterType_ {
-
-// Docstring regina::python::doc::SurfaceFilterType_::Combination
-inline constexpr const char Combination[] =
+// Docstring regina::python::doc::SurfaceFilterType::Combination
+static constexpr const char Combination[] =
 R"doc(Represents the SurfaceFilterCombination subclass: a filter that
 combines other filters using boolean AND or OR.)doc";
 
-// Docstring regina::python::doc::SurfaceFilterType_::LegacyDefault
-inline constexpr const char LegacyDefault[] =
+// Docstring regina::python::doc::SurfaceFilterType::LegacyDefault
+static constexpr const char LegacyDefault[] =
 R"doc(A legacy constant representing a do-nothing filter that accepts any
 normal surface.
 
@@ -33,12 +28,17 @@ Regina data file, though it is unlikely that this feature was ever
 used in practice (in particular, filters of this type could not be
 created through the GUI).)doc";
 
-// Docstring regina::python::doc::SurfaceFilterType_::Properties
-inline constexpr const char Properties[] =
+// Docstring regina::python::doc::SurfaceFilterType::Properties
+static constexpr const char Properties[] =
 R"doc(Represents the SurfaceFilterProperties subclass: a filter that
 examines simple properties of a normal surface.)doc";
 
-}
+// Docstring regina::python::doc::SurfaceFilterType::__class
+static constexpr const char __class[] =
+R"doc(Represents different types of filter classes that can be used to
+filter lists of normal surfaces in 3-manifold triangulations.)doc";
+
+}; // struct SurfaceFilterType
 
 } // namespace regina::python::doc
 

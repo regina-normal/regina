@@ -11,8 +11,19 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Container
-inline constexpr const char Container[] =
+// Docstring regina::python::doc::global_swap_Container
+inline constexpr const char global_swap_Container[] =
+R"doc(Swap function for container packets that does nothing.
+
+This is only here for consistency with the other packet types. For
+container packets, the swap operation does nothing since containers
+have no "real" content of their own. See the member function
+Container::swap() for further explanation.)doc";
+
+struct Container {
+
+// Docstring regina::python::doc::Container::__class
+static constexpr const char __class[] =
 R"doc(A packet that simply contains other packets. Such a packet contains no
 real data.
 
@@ -25,10 +36,8 @@ packet infrastructure (e.g., they do not touch packet labels, or the
 packet tree, or event listeners), and containers have no "real"
 content of their own.)doc";
 
-namespace Container_ {
-
-// Docstring regina::python::doc::Container_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::Container::__copy
+static constexpr const char __copy[] =
 R"doc(Copy constructor that does nothing.
 
 This is only here for consistency with the other packet types. Like
@@ -37,11 +46,11 @@ packet infrastructure (e.g., it will not copy the packet label, it
 will not clone the given packet's children, and it will not insert the
 new packet into any packet tree).)doc";
 
-// Docstring regina::python::doc::Container_::__default
-inline constexpr const char __default[] = R"doc(Default constructor.)doc";
+// Docstring regina::python::doc::Container::__default
+static constexpr const char __default[] = R"doc(Default constructor.)doc";
 
-// Docstring regina::python::doc::Container_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Container::__init
+static constexpr const char __init[] =
 R"doc(Constructs a new container with the given packet label.
 
 This constructor is (for example) helpful when you are building a
@@ -51,17 +60,8 @@ containers to organise the data in this tree.
 Parameter ``label``:
     the packet label for this new container.)doc";
 
-// Docstring regina::python::doc::Container_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swap function for container packets that does nothing.
-
-This is only here for consistency with the other packet types. For
-container packets, the swap operation does nothing since containers
-have no "real" content of their own. See the member function
-Container::swap() for further explanation.)doc";
-
-// Docstring regina::python::doc::Container_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Container::swap
+static constexpr const char swap[] =
 R"doc(Swap function that does nothing.
 
 This is only here for consistency with the other packet types. Like
@@ -69,7 +69,7 @@ all packet types, this operation does not swap any of the packet
 infrastructure (e.g., it will not swap packet labels, or change either
 packet's location in any packet tree).)doc";
 
-}
+}; // struct Container
 
 } // namespace regina::python::doc
 

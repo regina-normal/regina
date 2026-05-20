@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::PillowTwoSphere
-inline constexpr const char PillowTwoSphere[] =
+struct PillowTwoSphere {
+
+// Docstring regina::python::doc::PillowTwoSphere::__class
+static constexpr const char __class[] =
 R"doc(Represents a 2-sphere made from two triangles glued together along
 their three edges. The two triangles must be distinct and the three
 edges of each triangle must also be distinct. Neither of the triangles
@@ -32,13 +34,11 @@ std::swap(), with no need for any specialised move operations or swap
 functions. However, the only way to create them (aside from copying or
 moving) is via the static member function recognise().)doc";
 
-namespace PillowTwoSphere_ {
+// Docstring regina::python::doc::PillowTwoSphere::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::PillowTwoSphere_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::PillowTwoSphere_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::PillowTwoSphere::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 specific presentation of a pillow 2-sphere.
 
@@ -57,8 +57,8 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same specific presentation of a pillow 2-sphere.)doc";
 
-// Docstring regina::python::doc::PillowTwoSphere_::recognise
-inline constexpr const char recognise[] =
+// Docstring regina::python::doc::PillowTwoSphere::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the two given triangles together form a pillow 2-sphere.
 
 Even though PillowTwoSphere is a two-dimensional class and so does not
@@ -80,8 +80,8 @@ Returns:
     a structure containing details of the pillow 2-sphere, or ``None``
     if the given triangles do not form a pillow 2-sphere.)doc";
 
-// Docstring regina::python::doc::PillowTwoSphere_::triangle
-inline constexpr const char triangle[] =
+// Docstring regina::python::doc::PillowTwoSphere::triangle
+static constexpr const char triangle[] =
 R"doc(Returns one of the two triangles whose boundaries are joined.
 
 Parameter ``index``:
@@ -91,8 +91,8 @@ Parameter ``index``:
 Returns:
     the corresponding triangle.)doc";
 
-// Docstring regina::python::doc::PillowTwoSphere_::triangleMapping
-inline constexpr const char triangleMapping[] =
+// Docstring regina::python::doc::PillowTwoSphere::triangleMapping
+static constexpr const char triangleMapping[] =
 R"doc(Returns a permutation describing how the boundaries of the two
 triangles are joined.
 
@@ -103,7 +103,7 @@ vertices of the triangles are identified by the three edge gluings.
 Returns:
     a permutation describing how the triangle boundaries are joined.)doc";
 
-}
+}; // struct PillowTwoSphere
 
 } // namespace regina::python::doc
 

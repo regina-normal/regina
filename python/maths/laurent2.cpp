@@ -43,7 +43,7 @@ using regina::Laurent2;
 void addLaurent2(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Laurent2)
 
-    auto c = pybind11::class_<Laurent2<Integer>>(m, "Laurent2", rdoc_scope)
+    auto c = pybind11::class_<Laurent2<Integer>>(m, "Laurent2", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent2<Integer>&>(), rdoc::__copy)
         .def(pybind11::init([](long xExp, long yExp) { // deprecated
@@ -99,7 +99,7 @@ void addLaurent2(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
 
-    regina::python::add_global_swap<Laurent2<Integer>>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP_SUFFIX(m, Laurent2<Integer>, Laurent2);
 
     RDOC_SCOPE_END
 }

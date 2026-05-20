@@ -41,7 +41,7 @@ using regina::VectorInt;
 void addMaxAdmissible(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(MaxAdmissible)
 
-    auto c = pybind11::class_<MaxAdmissible>(m, "MaxAdmissible", rdoc_scope)
+    auto c = pybind11::class_<MaxAdmissible>(m, "MaxAdmissible", rdoc::__class)
         .def_static("enumerate", [](const std::vector<VectorInt>& rays,
                 const regina::ValidityConstraints& c) {
             return MaxAdmissible::enumerate<regina::Bitmask>(

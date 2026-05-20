@@ -41,7 +41,7 @@ using regina::Tetrahedron;
 void addLayering(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Layering)
 
-    auto c = pybind11::class_<Layering>(m, "Layering", rdoc_scope)
+    auto c = pybind11::class_<Layering>(m, "Layering", rdoc::__class)
         .def(pybind11::init<Tetrahedron<3>*, Perm<4>,
             Tetrahedron<3>*, Perm<4>>(), rdoc::__init)
         .def(pybind11::init<const Layering&>(), rdoc::__copy)

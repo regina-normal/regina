@@ -11,8 +11,23 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::LensSpace
-inline constexpr const char LensSpace[] =
+// Docstring regina::python::doc::global_swap_LensSpace
+inline constexpr const char global_swap_LensSpace[] =
+R"doc(Swaps the contents of the two given lens spaces.
+
+This global routine simply calls LensSpace::swap(); it is provided so
+that LensSpace meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first lens space whose contents should be swapped.
+
+Parameter ``b``:
+    the second lens space whose contents should be swapped.)doc";
+
+struct LensSpace {
+
+// Docstring regina::python::doc::LensSpace::__class
+static constexpr const char __class[] =
 R"doc(Represents a general lens space.
 
 The lens space ``L(p,q)`` is the 3-manifold you get by ``p/q`` Dehn
@@ -30,10 +45,8 @@ as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
 manifold classes.)doc";
 
-namespace LensSpace_ {
-
-// Docstring regina::python::doc::LensSpace_::__cmp
-inline constexpr const char __cmp[] =
+// Docstring regina::python::doc::LensSpace::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares representations of two lens spaces according to an aesthetic
 ordering.
 
@@ -61,11 +74,11 @@ Returns:
     a result that indicates how this and the given lens space
     representation should be ordered with respect to each other.)doc";
 
-// Docstring regina::python::doc::LensSpace_::__copy
-inline constexpr const char __copy[] = R"doc(Creates a new copy of the given lens space.)doc";
+// Docstring regina::python::doc::LensSpace::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given lens space.)doc";
 
-// Docstring regina::python::doc::LensSpace_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::LensSpace::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given lens space have the same
 presentation.
 
@@ -83,8 +96,8 @@ Returns:
     ``True`` if and only if this and the given lens space have the
     same presentation (i.e., are homeomorphic).)doc";
 
-// Docstring regina::python::doc::LensSpace_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::LensSpace::__init
+static constexpr const char __init[] =
 R"doc(Creates a new lens space with the given parameters. See the class
 notes for details.
 
@@ -98,29 +111,16 @@ Parameter ``q``:
     the second parameter *q* of the lens space L(p,q). Note that there
     are no range restrictions whatsoever on this parameter.)doc";
 
-// Docstring regina::python::doc::LensSpace_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given lens spaces.
-
-This global routine simply calls LensSpace::swap(); it is provided so
-that LensSpace meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first lens space whose contents should be swapped.
-
-Parameter ``b``:
-    the second lens space whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::LensSpace_::p
-inline constexpr const char p[] =
+// Docstring regina::python::doc::LensSpace::p
+static constexpr const char p[] =
 R"doc(Returns the first parameter *p* of this lens space L(p,q). See the
 class notes for details.
 
 Returns:
     the first parameter.)doc";
 
-// Docstring regina::python::doc::LensSpace_::q
-inline constexpr const char q[] =
+// Docstring regina::python::doc::LensSpace::q
+static constexpr const char q[] =
 R"doc(Returns the second parameter *q* of this lens space L(p,q). See the
 class notes for details.
 
@@ -129,14 +129,14 @@ inclusive that produces the same 3-manifold as this lens space. This
 means it might not be the value of *q* that was used to initialise
 this lens space.)doc";
 
-// Docstring regina::python::doc::LensSpace_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::LensSpace::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given lens space.
 
 Parameter ``other``:
     the lens space whose contents should be swapped with this.)doc";
 
-}
+}; // struct LensSpace
 
 } // namespace regina::python::doc
 

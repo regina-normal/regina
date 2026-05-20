@@ -11,20 +11,18 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Matrix2
-inline constexpr const char Matrix2[] =
-R"doc(Represents a 2-by-2 integer matrix. The advantage of using this class
-over the larger Matrix class template (e.g., MatrixInt) is that this
-class has less overhead.
+// Docstring regina::python::doc::global_swap_Matrix2
+inline constexpr const char global_swap_Matrix2[] =
+R"doc(Swaps the contents of the two given matrices.
 
-This class only contains four long integers, and so it may be
-considered small enough to pass about by value.
+This global routine simply calls Matrix2::swap(); it is provided so
+that Matrix2 meets the C++ Swappable requirements.
 
-This class supports copying but does not implement separate move
-operations, since its internal data is so small that copying is just
-as efficient. It implements the C++ Swappable requirement via its own
-member and global swap() functions, for consistency with the Matrix
-classes.)doc";
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::simpler
 inline constexpr const char simpler[] =
@@ -129,10 +127,10 @@ Returns:
     second pair, ``greater`` if the second pair is more pleasing than
     the first, or ``equal`` if both ordered pairs are equal.)doc";
 
-namespace Matrix2_ {
+struct Matrix2 {
 
-// Docstring regina::python::doc::Matrix2_::__add
-inline constexpr const char __add[] =
+// Docstring regina::python::doc::Matrix2::__add
+static constexpr const char __add[] =
 R"doc(Calculates the sum of two matrices. Neither this nor the given matrix
 is changed.
 
@@ -142,8 +140,8 @@ Parameter ``other``:
 Returns:
     the sum *this* + *other*.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__array
-inline constexpr const char __array[] =
+// Docstring regina::python::doc::Matrix2::__array
+static constexpr const char __array[] =
 R"doc(Gives read-only access to a single row of this matrix.
 
 This means that the integer in row *r*, column *c* can be accessed as
@@ -155,8 +153,8 @@ Parameter ``row``:
 Returns:
     a two-integer array containing the elements of the requested row.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__array_2
-inline constexpr const char __array_2[] =
+// Docstring regina::python::doc::Matrix2::__array_2
+static constexpr const char __array_2[] =
 R"doc(Gives read-write access to a single row of this matrix.
 
 This means that the integer in row *r*, column *c* can be accessed as
@@ -170,21 +168,36 @@ Returns:
     a reference to the two-integer array containing the elements of
     the requested row.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__copy
-inline constexpr const char __copy[] = R"doc(Initialises to a copy of the given matrix.)doc";
+// Docstring regina::python::doc::Matrix2::__class
+static constexpr const char __class[] =
+R"doc(Represents a 2-by-2 integer matrix. The advantage of using this class
+over the larger Matrix class template (e.g., MatrixInt) is that this
+class has less overhead.
 
-// Docstring regina::python::doc::Matrix2_::__default
-inline constexpr const char __default[] = R"doc(Initialises to the zero matrix.)doc";
+This class only contains four long integers, and so it may be
+considered small enough to pass about by value.
 
-// Docstring regina::python::doc::Matrix2_::__eq
-inline constexpr const char __eq[] =
+This class supports copying but does not implement separate move
+operations, since its internal data is so small that copying is just
+as efficient. It implements the C++ Swappable requirement via its own
+member and global swap() functions, for consistency with the Matrix
+classes.)doc";
+
+// Docstring regina::python::doc::Matrix2::__copy
+static constexpr const char __copy[] = R"doc(Initialises to a copy of the given matrix.)doc";
+
+// Docstring regina::python::doc::Matrix2::__default
+static constexpr const char __default[] = R"doc(Initialises to the zero matrix.)doc";
+
+// Docstring regina::python::doc::Matrix2::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this is equal to the given matrix.
 
 Returns:
     ``True`` if and only if this matrix is equal to the given matrix.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__iadd
-inline constexpr const char __iadd[] =
+// Docstring regina::python::doc::Matrix2::__iadd
+static constexpr const char __iadd[] =
 R"doc(Adds the given matrix to this. This matrix is changed to reflect the
 result.
 
@@ -194,8 +207,8 @@ Parameter ``other``:
 Returns:
     a reference to this matrix with its new value.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__imul
-inline constexpr const char __imul[] =
+// Docstring regina::python::doc::Matrix2::__imul
+static constexpr const char __imul[] =
 R"doc(Multiplies this by the given matrix. This matrix is changed to reflect
 the result.
 
@@ -205,8 +218,8 @@ Parameter ``other``:
 Returns:
     a reference to this matrix with its new value.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__imul_2
-inline constexpr const char __imul_2[] =
+// Docstring regina::python::doc::Matrix2::__imul_2
+static constexpr const char __imul_2[] =
 R"doc(Multiplies this by the given scalar. This matrix is changed to reflect
 the result.
 
@@ -216,8 +229,8 @@ Parameter ``scalar``:
 Returns:
     a reference to this matrix with its new value.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::Matrix2::__init
+static constexpr const char __init[] =
 R"doc(Initialises to the given integer values.
 
 Parameter ``val00``:
@@ -232,8 +245,8 @@ Parameter ``val10``:
 Parameter ``val11``:
     the value to place in row 1, column 1.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__isub
-inline constexpr const char __isub[] =
+// Docstring regina::python::doc::Matrix2::__isub
+static constexpr const char __isub[] =
 R"doc(Subtracts the given matrix from this. This matrix is changed to
 reflect the result.
 
@@ -243,8 +256,8 @@ Parameter ``other``:
 Returns:
     a reference to this matrix with its new value.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__mul
-inline constexpr const char __mul[] =
+// Docstring regina::python::doc::Matrix2::__mul
+static constexpr const char __mul[] =
 R"doc(Calculates the matrix product of this and the given matrix. Neither
 this nor the given matrix is changed.
 
@@ -254,8 +267,8 @@ Parameter ``other``:
 Returns:
     the product *this* * *other*.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__mul_2
-inline constexpr const char __mul_2[] =
+// Docstring regina::python::doc::Matrix2::__mul_2
+static constexpr const char __mul_2[] =
 R"doc(Calculates the scalar product of this matrix and the given integer.
 This matrix is not changed.
 
@@ -265,8 +278,8 @@ Parameter ``scalar``:
 Returns:
     the product *this* * *scalar*.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__sub
-inline constexpr const char __sub[] =
+// Docstring regina::python::doc::Matrix2::__sub
+static constexpr const char __sub[] =
 R"doc(Calculates the difference of two matrices. Neither this nor the given
 matrix is changed.
 
@@ -276,35 +289,22 @@ Parameter ``other``:
 Returns:
     the difference *this* - *other*.)doc";
 
-// Docstring regina::python::doc::Matrix2_::__sub_2
-inline constexpr const char __sub_2[] =
+// Docstring regina::python::doc::Matrix2::__sub_2
+static constexpr const char __sub_2[] =
 R"doc(Determines the negative of this matrix. This matrix is not changed.
 
 Returns:
     the negative of this matrix.)doc";
 
-// Docstring regina::python::doc::Matrix2_::determinant
-inline constexpr const char determinant[] =
+// Docstring regina::python::doc::Matrix2::determinant
+static constexpr const char determinant[] =
 R"doc(Returns the determinant of this matrix.
 
 Returns:
     the determinant of this matrix.)doc";
 
-// Docstring regina::python::doc::Matrix2_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given matrices.
-
-This global routine simply calls Matrix2::swap(); it is provided so
-that Matrix2 meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::Matrix2_::inverse
-inline constexpr const char inverse[] =
+// Docstring regina::python::doc::Matrix2::inverse
+static constexpr const char inverse[] =
 R"doc(Calculates the inverse of this matrix. This matrix is not changed.
 
 This routine only works for integer matrices whose determinant is
@@ -314,8 +314,8 @@ Returns:
     the inverse of this matrix. If this matrix does not have
     determinant +1 or -1, the zero matrix will be returned instead.)doc";
 
-// Docstring regina::python::doc::Matrix2_::invert
-inline constexpr const char invert[] =
+// Docstring regina::python::doc::Matrix2::invert
+static constexpr const char invert[] =
 R"doc(Inverts this matrix.
 
 This routine only works for integer matrices whose determinant is
@@ -325,38 +325,38 @@ Returns:
     ``True`` if this matrix was successfully inverted (i.e., its
     determinant was +1 or -1), or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::Matrix2_::isIdentity
-inline constexpr const char isIdentity[] =
+// Docstring regina::python::doc::Matrix2::isIdentity
+static constexpr const char isIdentity[] =
 R"doc(Determines if this is the 2-by-2 identity matrix.
 
 Returns:
     ``True`` if this is the identity matrix, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::Matrix2_::isZero
-inline constexpr const char isZero[] =
+// Docstring regina::python::doc::Matrix2::isZero
+static constexpr const char isZero[] =
 R"doc(Determines if this is the 2-by-2 zero matrix.
 
 Returns:
     ``True`` if this is the zero matrix, or ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::Matrix2_::negate
-inline constexpr const char negate[] = R"doc(Negates this matrix. This matrix is changed to reflect the result.)doc";
+// Docstring regina::python::doc::Matrix2::negate
+static constexpr const char negate[] = R"doc(Negates this matrix. This matrix is changed to reflect the result.)doc";
 
-// Docstring regina::python::doc::Matrix2_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::Matrix2::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given matrix.
 
 Parameter ``other``:
     the matrix whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::Matrix2_::transpose
-inline constexpr const char transpose[] =
+// Docstring regina::python::doc::Matrix2::transpose
+static constexpr const char transpose[] =
 R"doc(Returns the transpose of this matrix. This matrix is not changed.
 
 Returns:
     the transpose of this matrix.)doc";
 
-}
+}; // struct Matrix2
 
 } // namespace regina::python::doc
 

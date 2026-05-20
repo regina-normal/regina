@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::ExampleLink
-inline constexpr const char ExampleLink[] =
+struct ExampleLink {
+
+// Docstring regina::python::doc::ExampleLink::__class
+static constexpr const char __class[] =
 R"doc(This class offers routines for constructing ready-made examples of
 knots and links. These examples may be useful for testing new code, or
 for simply getting a feel for how Regina works.
@@ -21,17 +23,15 @@ The sample links offered here may prove especially useful in Regina's
 scripting interface, where working with pre-existing files is more
 complicated than in the GUI.)doc";
 
-namespace ExampleLink_ {
-
-// Docstring regina::python::doc::ExampleLink_::borromean
-inline constexpr const char borromean[] =
+// Docstring regina::python::doc::ExampleLink::borromean
+static constexpr const char borromean[] =
 R"doc(Returns a six-crossing diagram of the Borromean rings.
 
 Returns:
     the Borromean rings.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::chen
-inline constexpr const char chen[] =
+// Docstring regina::python::doc::ExampleLink::chen
+static constexpr const char chen[] =
 R"doc(Returns a 20-crossing, 5-component counterexample to the 3-move
 conjecture, as proposed by Chen and proven to be a counterexample by
 Dabkowski and Przytycki.
@@ -50,8 +50,8 @@ Returns:
     Chen's proposed (and since proven) 20-crossing counterexample to
     the 3-move conjecture.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::conway
-inline constexpr const char conway[] =
+// Docstring regina::python::doc::ExampleLink::conway
+static constexpr const char conway[] =
 R"doc(Returns the 11-crossing Conway knot.
 
 This is the reflection of *K11n34* in the Knot Atlas, and is a mutant
@@ -60,8 +60,8 @@ of the Kinoshita-Terasaka knot.
 Returns:
     the Conway knot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::cubicalUnknot
-inline constexpr const char cubicalUnknot[] =
+// Docstring regina::python::doc::ExampleLink::cubicalUnknot
+static constexpr const char cubicalUnknot[] =
 R"doc(Returns a 3-dimensional embedding of the unknot that follows the edges
 of a cube.
 
@@ -71,23 +71,23 @@ of the 12 edges of the cube, making use of all three dimensions.
 Returns:
     an unknot embedded in the edges of a cube.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::figureEight
-inline constexpr const char figureEight[] =
+// Docstring regina::python::doc::ExampleLink::figureEight
+static constexpr const char figureEight[] =
 R"doc(Returns a four-crossing diagram of the figure eight knot.
 
 Returns:
     the figure eight knot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::gordian
-inline constexpr const char gordian[] =
+// Docstring regina::python::doc::ExampleLink::gordian
+static constexpr const char gordian[] =
 R"doc(Returns Haken's Gordian unknot, a 141-crossing diagram of the unknot
 that is difficult to untangle.
 
 Returns:
     the Gordian unknot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::gpv
-inline constexpr const char gpv[] =
+// Docstring regina::python::doc::ExampleLink::gpv
+static constexpr const char gpv[] =
 R"doc(Returns a four-crossing diagram of the Goussarov-Polyak-Viro virtual
 knot. This is a knot whose group changes when we switch the upper and
 lower strands at each crossing (a behaviour that is impossible for
@@ -107,8 +107,8 @@ a horizontal mirror image).
 Returns:
     the Goussarov-Polyak-Viro virtual knot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::gst
-inline constexpr const char gst[] =
+// Docstring regina::python::doc::ExampleLink::gst
+static constexpr const char gst[] =
 R"doc(Returns a 48-crossing potential counterexample to the slice-ribbon
 conjecture, as described by Gompf, Scharlemann and Thompson.
 
@@ -119,16 +119,16 @@ conjectures", Geometry & Topology 14 (2010), 2305-2347.
 Returns:
     the Gompf-Scharlemann-Thompson knot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::hopf
-inline constexpr const char hopf[] =
+// Docstring regina::python::doc::ExampleLink::hopf
+static constexpr const char hopf[] =
 R"doc(Returns a two-crossing diagram of the Hopf link. This is the variant
 in which both crossings are positive.
 
 Returns:
     the Hopf link.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::kinoshitaTerasaka
-inline constexpr const char kinoshitaTerasaka[] =
+// Docstring regina::python::doc::ExampleLink::kinoshitaTerasaka
+static constexpr const char kinoshitaTerasaka[] =
 R"doc(Returns the 11-crossing Kinoshita-Terasaka knot.
 
 This is the reflection of *K11n42* in the Knot Atlas, and is a mutant
@@ -137,8 +137,8 @@ of the Conway knot. It has trivial Alexander polynomial.
 Returns:
     the kinoshita-Terasaka knot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::kishino
-inline constexpr const char kishino[] =
+// Docstring regina::python::doc::ExampleLink::kishino
+static constexpr const char kishino[] =
 R"doc(Returns a four-crossing diagram of the Kishino knot. This is a non-
 trivial virtual knot that is the composition of two virtual unknots.
 It is a non-trivial virtual knot; however, it has the same group as
@@ -149,39 +149,39 @@ This is virtual knot 4.55 in the Jeremy Green tables.
 Returns:
     the Kishino knot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::monster
-inline constexpr const char monster[] =
+// Docstring regina::python::doc::ExampleLink::monster
+static constexpr const char monster[] =
 R"doc(Returns the monster unknot, a 10-crossing diagram of the unknot that
 is difficult to untangle.
 
 Returns:
     the monster unknot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::spatialBorromean
-inline constexpr const char spatialBorromean[] =
+// Docstring regina::python::doc::ExampleLink::spatialBorromean
+static constexpr const char spatialBorromean[] =
 R"doc(Returns a simple and symmetric embedding in 3-space of the Borromean
 rings.
 
 Returns:
     the Borromean rings.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::spatialHopf
-inline constexpr const char spatialHopf[] =
+// Docstring regina::python::doc::ExampleLink::spatialHopf
+static constexpr const char spatialHopf[] =
 R"doc(Returns a simple embedding in 3-space of the Hopf link.
 
 Returns:
     the Hopf link.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::spatialTrefoil
-inline constexpr const char spatialTrefoil[] =
+// Docstring regina::python::doc::ExampleLink::spatialTrefoil
+static constexpr const char spatialTrefoil[] =
 R"doc(Returns a simple and symmetric embedding in 3-space of the right-hand
 trefoil.
 
 Returns:
     the right-hand trefoil.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::torus
-inline constexpr const char torus[] =
+// Docstring regina::python::doc::ExampleLink::torus
+static constexpr const char torus[] =
 R"doc(Returns the (*p*,*q*) torus link.
 
 The parameters *p* and *q* must be non-negative, but they do not need
@@ -200,38 +200,38 @@ Parameter ``q``:
 Returns:
     the (*p*, *q*) torus link.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::trefoil
-inline constexpr const char trefoil[] =
+// Docstring regina::python::doc::ExampleLink::trefoil
+static constexpr const char trefoil[] =
 R"doc(Returns a three-crossing diagram of the right-hand trefoil. This
 returns the same knot as trefoilRight().
 
 Returns:
     the right-hand trefoil.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::trefoilLeft
-inline constexpr const char trefoilLeft[] =
+// Docstring regina::python::doc::ExampleLink::trefoilLeft
+static constexpr const char trefoilLeft[] =
 R"doc(Returns a three-crossing diagram of the left-hand trefoil.
 
 Returns:
     the left-hand trefoil.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::trefoilRight
-inline constexpr const char trefoilRight[] =
+// Docstring regina::python::doc::ExampleLink::trefoilRight
+static constexpr const char trefoilRight[] =
 R"doc(Returns a three-crossing diagram of the right-hand trefoil. This
 returns the same knot as trefoil().
 
 Returns:
     the right-hand trefoil.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::unknot
-inline constexpr const char unknot[] =
+// Docstring regina::python::doc::ExampleLink::unknot
+static constexpr const char unknot[] =
 R"doc(Returns a zero-crossing diagram of the unknot.
 
 Returns:
     the unknot.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::virtualTrefoil
-inline constexpr const char virtualTrefoil[] =
+// Docstring regina::python::doc::ExampleLink::virtualTrefoil
+static constexpr const char virtualTrefoil[] =
 R"doc(Returns a two-crossing diagram of the virtual trefoil. Both crossings
 will be positive.
 
@@ -243,14 +243,14 @@ image).
 Returns:
     the virtual trefoil.)doc";
 
-// Docstring regina::python::doc::ExampleLink_::whitehead
-inline constexpr const char whitehead[] =
+// Docstring regina::python::doc::ExampleLink::whitehead
+static constexpr const char whitehead[] =
 R"doc(Returns a five-crossing diagram of the Whitehead link.
 
 Returns:
     the Whitehead link.)doc";
 
-}
+}; // struct ExampleLink
 
 } // namespace regina::python::doc
 

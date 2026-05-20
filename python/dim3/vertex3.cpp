@@ -55,7 +55,7 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
         alias::SimplexVoid)
 
     auto e = pybind11::class_<FaceEmbedding<3, 0>>(m, "FaceEmbedding3_0",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>(),
             rdoc::__init)
         .def(pybind11::init<const VertexEmbedding<3>&>(), rdoc::__copy)
@@ -73,7 +73,7 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(Face)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0", rdoc_scope)
+    auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0", rdoc::__class)
         .def("index", &Vertex<3>::index, rbase::index)
         .def("embedding", &Vertex<3>::embedding, rbase::embedding)
         .def("embeddings", &Vertex<3>::embeddings, rbase::embeddings)
@@ -148,25 +148,23 @@ being reserved for a different purpose in a future release.)doc")
         decltype(std::declval<Vertex<3>>().embeddings())>(internal,
         "Face3_0_embeddings");
 
-    RDOC_SCOPE_INNER_BEGIN(Link)
-
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::Vertex<3>::Link>(c, "Link", "enum.Enum",
-            rdoc_inner_scope)
+            rdoc::Link::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::Vertex<3>::Link>(c, "Link", rdoc_inner_scope)
+    pybind11::enum_<regina::Vertex<3>::Link>(c, "Link", rdoc::Link::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
-        .value("Sphere", regina::Vertex<3>::Link::Sphere, rdoc_inner::Sphere)
-        .value("Disc", regina::Vertex<3>::Link::Disc, rdoc_inner::Disc)
-        .value("Torus", regina::Vertex<3>::Link::Torus, rdoc_inner::Torus)
+        .value("Sphere", regina::Vertex<3>::Link::Sphere, rdoc::Link::Sphere)
+        .value("Disc", regina::Vertex<3>::Link::Disc, rdoc::Link::Disc)
+        .value("Torus", regina::Vertex<3>::Link::Torus, rdoc::Link::Torus)
         .value("KleinBottle", regina::Vertex<3>::Link::KleinBottle,
-            rdoc_inner::KleinBottle)
+            rdoc::Link::KleinBottle)
         .value("NonStandardCusp", regina::Vertex<3>::Link::NonStandardCusp,
-            rdoc_inner::NonStandardCusp)
+            rdoc::Link::NonStandardCusp)
         .value("Invalid", regina::Vertex<3>::Link::Invalid,
-            rdoc_inner::Invalid)
+            rdoc::Link::Invalid)
 #if REGINA_PYBIND11_VERSION == 3
         .finalize()
 #endif
@@ -181,7 +179,6 @@ being reserved for a different purpose in a future release.)doc")
     c.attr("NON_STANDARD_CUSP") = regina::Vertex<3>::Link::NonStandardCusp;
     c.attr("INVALID") = regina::Vertex<3>::Link::Invalid;
 
-    RDOC_SCOPE_INNER_END
     RDOC_SCOPE_END
 
     m.attr("VertexEmbedding3") = m.attr("FaceEmbedding3_0");

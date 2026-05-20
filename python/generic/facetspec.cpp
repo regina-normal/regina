@@ -41,7 +41,7 @@ template <int dim> requires (regina::supportedDim(dim))
 void addFacetSpec(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(FacetSpec)
 
-    auto c = pybind11::class_<FacetSpec<dim>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<FacetSpec<dim>>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<ssize_t, int>(), rdoc::__init)
         .def(pybind11::init<const FacetSpec<dim>&>(), rdoc::__copy)

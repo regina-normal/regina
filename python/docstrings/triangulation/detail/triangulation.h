@@ -11,10 +11,8 @@
 namespace regina::python::doc {
 
 
-namespace Triangulation_ {
-
-// Docstring regina::python::doc::Triangulation_::global_swap
-inline constexpr const char global_swap[] =
+// Docstring regina::python::doc::global_swap_Triangulation
+inline constexpr const char global_swap_Triangulation[] =
 R"doc(Swaps the contents of the two given triangulations.
 
 This global routine simply calls Triangulation<dim>::swap(); it is
@@ -34,12 +32,12 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the triangulation whose contents should be swapped with *lhs*.)doc";
 
-}
-
 namespace detail {
 
-// Docstring regina::python::doc::detail::TriangulationBase
-inline constexpr const char TriangulationBase[] =
+struct TriangulationBase {
+
+// Docstring regina::python::doc::detail::TriangulationBase::__class
+static constexpr const char __class[] =
 R"doc(Provides core functionality for *dim*-dimensional triangulations.
 
 Such a triangulation is represented by the class Triangulation<dim>,
@@ -65,12 +63,8 @@ Python:
 Template parameter ``dim``:
     the dimension of the triangulation.)doc";
 
-}
-
-namespace detail::TriangulationBase_ {
-
-// Docstring regina::python::doc::detail::TriangulationBase_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::detail::TriangulationBase::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given triangulation.
 
 This will also clone any computed properties (such as homology,
@@ -87,14 +81,14 @@ can use the two-argument copy constructor instead.
 Parameter ``src``:
     the triangulation to copy.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::__default
-inline constexpr const char __default[] =
+// Docstring regina::python::doc::detail::TriangulationBase::__default
+static constexpr const char __default[] =
 R"doc(Default constructor.
 
 Creates an empty triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::detail::TriangulationBase::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this triangulation is combinatorially identical to the
 given triangulation.
 
@@ -131,8 +125,8 @@ Returns:
     ``True`` if and only if the two triangulations are combinatorially
     identical.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::__init
-inline constexpr const char __init[] =
+// Docstring regina::python::doc::detail::TriangulationBase::__init
+static constexpr const char __init[] =
 R"doc(Creates a new copy of the given triangulation, with the option of
 whether or not to clone its computed properties and/or locks also.
 
@@ -166,8 +160,8 @@ Parameter ``cloneLocks``:
     from the given triangulation, or ``False`` if the new
     triangulation should have no locks at all.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::barycentricSubdivision
-inline constexpr const char barycentricSubdivision[] =
+// Docstring regina::python::doc::detail::TriangulationBase::barycentricSubdivision
+static constexpr const char barycentricSubdivision[] =
 R"doc(Deprecated routine that performs a barycentric subdivision of the
 triangulation.
 
@@ -183,8 +177,8 @@ Exception ``LockViolation``:
     Simplex<dim>::lockFacet() for further details on how such locks
     work and what their implications are.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::boundaryComponent
-inline constexpr const char boundaryComponent[] =
+// Docstring regina::python::doc::detail::TriangulationBase::boundaryComponent
+static constexpr const char boundaryComponent[] =
 R"doc(Returns the requested boundary component of this triangulation.
 
 Note that each time the triangulation changes, all boundary components
@@ -198,8 +192,8 @@ Parameter ``index``:
 Returns:
     the requested boundary component.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::boundaryComponents
-inline constexpr const char boundaryComponents[] =
+// Docstring regina::python::doc::detail::TriangulationBase::boundaryComponents
+static constexpr const char boundaryComponents[] =
 R"doc(Returns an object that allows iteration through and random access to
 all boundary components of this triangulation.
 
@@ -231,8 +225,8 @@ boundaryComponents() again each time you need it.
 Returns:
     access to the list of all boundary components.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::boundaryMap
-inline constexpr const char boundaryMap[] =
+// Docstring regina::python::doc::detail::TriangulationBase::boundaryMap
+static constexpr const char boundaryMap[] =
 R"doc(Returns the boundary map from *subdim*-faces to (*subdim*-1)-faces of
 the triangulation, where the face dimension does not need to be known
 until runtime.
@@ -290,8 +284,8 @@ Parameter ``subdim``:
 Returns:
     the boundary map from *subdim*-faces to (*subdim*-1)-faces.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::cachedGroup
-inline constexpr const char cachedGroup[] =
+// Docstring regina::python::doc::detail::TriangulationBase::cachedGroup
+static constexpr const char cachedGroup[] =
 R"doc(Is a presentation of the fundamental group currently cached? See
 group() for further details.
 
@@ -314,8 +308,8 @@ Returns:
     ``True`` if and only if the fundamental group is currently cached,
     _and_ the preconditions for group() are satisfied.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::component
-inline constexpr const char component[] =
+// Docstring regina::python::doc::detail::TriangulationBase::component
+static constexpr const char component[] =
 R"doc(Returns the requested connected component of this triangulation.
 
 Note that each time the triangulation changes, all component objects
@@ -329,8 +323,8 @@ Parameter ``index``:
 Returns:
     the requested component.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::components
-inline constexpr const char components[] =
+// Docstring regina::python::doc::detail::TriangulationBase::components
+static constexpr const char components[] =
 R"doc(Returns an object that allows iteration through and random access to
 all components of this triangulation.
 
@@ -357,8 +351,8 @@ each time you need it.
 Returns:
     access to the list of all components.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countBoundaryComponents
-inline constexpr const char countBoundaryComponents[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countBoundaryComponents
+static constexpr const char countBoundaryComponents[] =
 R"doc(Returns the number of boundary components in this triangulation.
 
 Note that, in Regina's standard dimensions, each ideal vertex forms
@@ -369,8 +363,8 @@ boundary component in standard and non-standard dimensions.
 Returns:
     the number of boundary components.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countBoundaryFaces
-inline constexpr const char countBoundaryFaces[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countBoundaryFaces
+static constexpr const char countBoundaryFaces[] =
 R"doc(Returns the number of boundary *subdim*-faces in this triangulation,
 where the face dimension does not need to be known until runtime.
 
@@ -404,8 +398,8 @@ Parameter ``subdim``:
 Returns:
     the number of boundary *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countBoundaryFacets
-inline constexpr const char countBoundaryFacets[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countBoundaryFacets
+static constexpr const char countBoundaryFacets[] =
 R"doc(Returns the total number of boundary facets in this triangulation.
 
 This routine counts facets of top-dimensional simplices that are not
@@ -416,21 +410,21 @@ This is equivalent to calling countBoundaryFaces<dim-1>().
 Returns:
     the total number of boundary facets.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countComponents
-inline constexpr const char countComponents[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countComponents
+static constexpr const char countComponents[] =
 R"doc(Returns the number of connected components in this triangulation.
 
 Returns:
     the number of connected components.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countEdges
-inline constexpr const char countEdges[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countEdges
+static constexpr const char countEdges[] =
 R"doc(A dimension-specific alias for countFaces<1>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countFaces
-inline constexpr const char countFaces[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countFaces
+static constexpr const char countFaces[] =
 R"doc(Returns the number of *subdim*-faces in this triangulation, where the
 face dimension does not need to be known until runtime.
 
@@ -455,32 +449,32 @@ Parameter ``subdim``:
 Returns:
     the number of *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countPentachora
-inline constexpr const char countPentachora[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countPentachora
+static constexpr const char countPentachora[] =
 R"doc(A dimension-specific alias for countFaces<4>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countTetrahedra
-inline constexpr const char countTetrahedra[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countTetrahedra
+static constexpr const char countTetrahedra[] =
 R"doc(A dimension-specific alias for countFaces<3>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countTriangles
-inline constexpr const char countTriangles[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countTriangles
+static constexpr const char countTriangles[] =
 R"doc(A dimension-specific alias for countFaces<2>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::countVertices
-inline constexpr const char countVertices[] =
+// Docstring regina::python::doc::detail::TriangulationBase::countVertices
+static constexpr const char countVertices[] =
 R"doc(A dimension-specific alias for countFaces<0>().
 
 See countFaces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::dot
-inline constexpr const char dot[] =
+// Docstring regina::python::doc::detail::TriangulationBase::dot
+static constexpr const char dot[] =
 R"doc(Returns a Graphviz DOT representation of the dual graph of this
 triangulation.
 
@@ -516,8 +510,8 @@ Parameter ``labels``:
 Returns:
     the output of writeDot(), as outlined above.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::doubleCover
-inline constexpr const char doubleCover[] =
+// Docstring regina::python::doc::detail::TriangulationBase::doubleCover
+static constexpr const char doubleCover[] =
 R"doc(Returns the orientable double cover of this triangulation.
 
 Each orientable component will be duplicated, and each non-orientable
@@ -534,8 +528,8 @@ both sheets of the double cover).
 Returns:
     the orientable double cover.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::doubleOverBoundary
-inline constexpr const char doubleOverBoundary[] =
+// Docstring regina::python::doc::detail::TriangulationBase::doubleOverBoundary
+static constexpr const char doubleOverBoundary[] =
 R"doc(Returns two copies of this triangulation joined together along their
 boundary facets.
 
@@ -568,8 +562,8 @@ Returns:
     two copies of this triangulation joined along their boundary
     facets.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::dualBoundaryMap
-inline constexpr const char dualBoundaryMap[] =
+// Docstring regina::python::doc::detail::TriangulationBase::dualBoundaryMap
+static constexpr const char dualBoundaryMap[] =
 R"doc(Returns the boundary map from dual *subdim*-faces to dual
 (*subdim*-1)-faces of the triangulation, where the face dimension does
 not need to be known until runtime.
@@ -665,8 +659,8 @@ Returns:
     the boundary map from dual *subdim*-faces to dual
     (*subdim*-1)-faces.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::dualToPrimal
-inline constexpr const char dualToPrimal[] =
+// Docstring regina::python::doc::detail::TriangulationBase::dualToPrimal
+static constexpr const char dualToPrimal[] =
 R"doc(Returns a map from dual chains to primal chains that preserves
 homology classes, where the chain dimension does not need to be known
 until runtime.
@@ -717,8 +711,8 @@ Parameter ``subdim``:
 Returns:
     the map from dual *subdim*-chains to primal *subdim*-chains.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::dumpConstruction
-inline constexpr const char dumpConstruction[] =
+// Docstring regina::python::doc::detail::TriangulationBase::dumpConstruction
+static constexpr const char dumpConstruction[] =
 R"doc(Deprecated routine that returns C++ code to reconstruct this
 triangulation.
 
@@ -732,20 +726,20 @@ triangulation.
 Returns:
     the C++ code that was generated.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::edge
-inline constexpr const char edge[] =
+// Docstring regina::python::doc::detail::TriangulationBase::edge
+static constexpr const char edge[] =
 R"doc(A dimension-specific alias for face<1>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::edges
-inline constexpr const char edges[] =
+// Docstring regina::python::doc::detail::TriangulationBase::edges
+static constexpr const char edges[] =
 R"doc(A dimension-specific alias for faces<1>().
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::eulerCharTri
-inline constexpr const char eulerCharTri[] =
+// Docstring regina::python::doc::detail::TriangulationBase::eulerCharTri
+static constexpr const char eulerCharTri[] =
 R"doc(Returns the Euler characteristic of this triangulation. This will be
 evaluated strictly as the alternating sum of the number of *i*-faces
 (that is, ``countVertices() - countEdges() + countTriangles() -
@@ -765,8 +759,8 @@ characteristic), you can use the routine eulerCharManifold() instead.
 Returns:
     the Euler characteristic of this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::fVector
-inline constexpr const char fVector[] =
+// Docstring regina::python::doc::detail::TriangulationBase::fVector
+static constexpr const char fVector[] =
 R"doc(Returns the f-vector of this triangulation, which counts the number of
 faces of all dimensions.
 
@@ -781,8 +775,8 @@ to count faces whose dimensions are not known until runtime.
 Returns:
     the f-vector of this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::face
-inline constexpr const char face[] =
+// Docstring regina::python::doc::detail::TriangulationBase::face
+static constexpr const char face[] =
 R"doc(Returns the requested *subdim*-face of this triangulation, in a way
 that is optimised for Python programmers.
 
@@ -817,8 +811,8 @@ Parameter ``index``:
 Returns:
     the requested face.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::faces
-inline constexpr const char faces[] =
+// Docstring regina::python::doc::detail::TriangulationBase::faces
+static constexpr const char faces[] =
 R"doc(Returns an object that allows iteration through and random access to
 all *subdim*-faces of this triangulation, in a way that is optimised
 for Python programmers.
@@ -847,8 +841,8 @@ Parameter ``subdim``:
 Returns:
     access to the list of all *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::findAllIsomorphisms
-inline constexpr const char findAllIsomorphisms[] =
+// Docstring regina::python::doc::detail::TriangulationBase::findAllIsomorphisms
+static constexpr const char findAllIsomorphisms[] =
 R"doc(Finds all ways in which this triangulation is combinatorially
 isomorphic to the given triangulation.
 
@@ -906,8 +900,8 @@ Returns:
     ``True``, or ``False`` if the search was allowed to run to
     completion.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::findAllSubcomplexesIn
-inline constexpr const char findAllSubcomplexesIn[] =
+// Docstring regina::python::doc::detail::TriangulationBase::findAllSubcomplexesIn
+static constexpr const char findAllSubcomplexesIn[] =
 R"doc(Finds all ways in which an isomorphic copy of this triangulation is
 contained within the given triangulation, possibly as a subcomplex of
 some larger component (or components).
@@ -967,8 +961,8 @@ Returns:
     ``True``, or ``False`` if the search was allowed to run to
     completion.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::finiteToIdeal
-inline constexpr const char finiteToIdeal[] =
+// Docstring regina::python::doc::detail::TriangulationBase::finiteToIdeal
+static constexpr const char finiteToIdeal[] =
 R"doc(Alias for makeIdeal(), which converts each real boundary component
 into an ideal vertex.
 
@@ -988,8 +982,8 @@ Returns:
     ``True`` if changes were made, or ``False`` if the original
     triangulation contained no real boundary components.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::fromGluings
-inline constexpr const char fromGluings[] =
+// Docstring regina::python::doc::detail::TriangulationBase::fromGluings
+static constexpr const char fromGluings[] =
 R"doc(Creates a triangulation from a list of gluings.
 
 This routine is an analogue to the variant of fromGluings() that takes
@@ -1052,8 +1046,8 @@ Parameter ``endGluings``:
 Returns:
     the reconstructed triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::fromIsoSig
-inline constexpr const char fromIsoSig[] =
+// Docstring regina::python::doc::detail::TriangulationBase::fromIsoSig
+static constexpr const char fromIsoSig[] =
 R"doc(Deprecated alias for fromSig(), to recover a full triangulation from a
 string-based isomorphism signature.
 
@@ -1074,8 +1068,8 @@ Parameter ``sig``:
 Returns:
     the reconstructed triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::fromSig
-inline constexpr const char fromSig[] =
+// Docstring regina::python::doc::detail::TriangulationBase::fromSig
+static constexpr const char fromSig[] =
 R"doc(Recovers a full triangulation from a string-based isomorphism
 signature. This may be either a first-generation signature (computed
 via ``isoSig()``), or a second-generation signature (computed via
@@ -1123,8 +1117,8 @@ Parameter ``sig``:
 Returns:
     the reconstructed triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::fromSig_2
-inline constexpr const char fromSig_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::fromSig_2
+static constexpr const char fromSig_2[] =
 R"doc(Recovers a full triangulation from a binary second-generation
 isomorphism signature. This signature would typically have been
 computed via ``neoSig<IsoSigBinary>()``.
@@ -1166,8 +1160,8 @@ Parameter ``sig``:
 Returns:
     the reconstructed triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::fundamentalGroup
-inline constexpr const char fundamentalGroup[] =
+// Docstring regina::python::doc::detail::TriangulationBase::fundamentalGroup
+static constexpr const char fundamentalGroup[] =
 R"doc(An alias for group(), which returns the fundamental group of this
 triangulation.
 
@@ -1198,8 +1192,8 @@ Exception ``FailedPrecondition``:
 Returns:
     the fundamental group.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::group
-inline constexpr const char group[] =
+// Docstring regina::python::doc::detail::TriangulationBase::group
+static constexpr const char group[] =
 R"doc(Returns the fundamental group of this triangulation.
 
 The fundamental group is computed in the dual 2-skeleton. This means:
@@ -1249,8 +1243,8 @@ Exception ``FailedPrecondition``:
 Returns:
     the fundamental group.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::has20
-inline constexpr const char has20[] =
+// Docstring regina::python::doc::detail::TriangulationBase::has20
+static constexpr const char has20[] =
 R"doc(Determines whether it is possible to perform a 2-0 move about the
 given *k*-face of this triangulation, without violating any simplex
 and/or facet locks.
@@ -1270,8 +1264,8 @@ Parameter ``f``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::hasBoundaryFacets
-inline constexpr const char hasBoundaryFacets[] =
+// Docstring regina::python::doc::detail::TriangulationBase::hasBoundaryFacets
+static constexpr const char hasBoundaryFacets[] =
 R"doc(Determines if this triangulation has any boundary facets.
 
 This routine returns ``True`` if and only if the triangulation
@@ -1281,8 +1275,8 @@ not glued to an adjacent simplex.
 Returns:
     ``True`` if and only if there are boundary facets.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::hasLocks
-inline constexpr const char hasLocks[] =
+// Docstring regina::python::doc::detail::TriangulationBase::hasLocks
+static constexpr const char hasLocks[] =
 R"doc(Identifies whether any top-dimensional simplices and/or any of their
 facets are locked.
 
@@ -1296,8 +1290,8 @@ Returns:
     dimensional simplex or at least one locked facet of a top-
     dimensional simplex within this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::hasPachner
-inline constexpr const char hasPachner[] =
+// Docstring regina::python::doc::detail::TriangulationBase::hasPachner
+static constexpr const char hasPachner[] =
 R"doc(Determines whether it is possible to perform a (*dim* + 1 - *k*)-(*k*
 + 1) Pachner move about the given *k*-face of this triangulation,
 without violating any simplex and/or facet locks.
@@ -1317,8 +1311,8 @@ Parameter ``f``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::hasShellBoundary
-inline constexpr const char hasShellBoundary[] =
+// Docstring regina::python::doc::detail::TriangulationBase::hasShellBoundary
+static constexpr const char hasShellBoundary[] =
 R"doc(Determines whether it is possible to perform a boundary shelling move
 upon the given top-dimensional simplex of this triangulation, without
 violating any simplex and/or facet locks.
@@ -1341,8 +1335,8 @@ Parameter ``s``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::homology
-inline constexpr const char homology[] =
+// Docstring regina::python::doc::detail::TriangulationBase::homology
+static constexpr const char homology[] =
 R"doc(Returns the *k*th homology group of this triangulation, treating any
 ideal vertices as though they had been truncated, where the parameter
 *k* does not need to be known until runtime.
@@ -1410,8 +1404,8 @@ Parameter ``k``:
 Returns:
     the *k*th homology group.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::insertTriangulation
-inline constexpr const char insertTriangulation[] =
+// Docstring regina::python::doc::detail::TriangulationBase::insertTriangulation
+static constexpr const char insertTriangulation[] =
 R"doc(Inserts a copy of the given triangulation into this triangulation.
 
 The top-dimensional simplices of *source* will be copied into this
@@ -1436,8 +1430,8 @@ This routine behaves correctly when *source* is this triangulation.
 Parameter ``source``:
     the triangulation whose copy will be inserted.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isConnected
-inline constexpr const char isConnected[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isConnected
+static constexpr const char isConnected[] =
 R"doc(Determines if this triangulation is connected.
 
 This routine returns ``False`` only if there is more than one
@@ -1447,8 +1441,8 @@ triangulation.
 Returns:
     ``True`` if and only if this triangulation is connected.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isContainedIn
-inline constexpr const char isContainedIn[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isContainedIn
+static constexpr const char isContainedIn[] =
 R"doc(Determines if an isomorphic copy of this triangulation is contained
 within the given triangulation, possibly as a subcomplex of some
 larger component (or components).
@@ -1486,16 +1480,16 @@ Returns:
     details of the isomorphism if such a copy is found, or ``None``
     otherwise.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isEmpty
-inline constexpr const char isEmpty[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isEmpty
+static constexpr const char isEmpty[] =
 R"doc(Determines whether this triangulation is empty. An empty triangulation
 is one with no simplices at all.
 
 Returns:
     ``True`` if and only if this triangulation is empty.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isIsomorphicTo
-inline constexpr const char isIsomorphicTo[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isIsomorphicTo
+static constexpr const char isIsomorphicTo[] =
 R"doc(Determines if this triangulation is combinatorially isomorphic to the
 given triangulation.
 
@@ -1538,15 +1532,15 @@ Returns:
     details of the isomorphism if the two triangulations are
     combinatorially isomorphic, or ``None`` otherwise.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isOrientable
-inline constexpr const char isOrientable[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isOrientable
+static constexpr const char isOrientable[] =
 R"doc(Determines if this triangulation is orientable.
 
 Returns:
     ``True`` if and only if this triangulation is orientable.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isOriented
-inline constexpr const char isOriented[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isOriented
+static constexpr const char isOriented[] =
 R"doc(Determines if this triangulation is oriented; that is, if the vertices
 of its top-dimensional simplices are labelled in a way that preserves
 orientation across adjacent facets. Specifically, this routine returns
@@ -1565,8 +1559,8 @@ Returns:
 Author:
     Matthias Goerner)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isValid
-inline constexpr const char isValid[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isValid
+static constexpr const char isValid[] =
 R"doc(Determines if this triangulation is valid.
 
 There are several conditions that might make a *dim*-dimensional
@@ -1605,8 +1599,8 @@ see isBoundary() for details.
 Returns:
     ``True`` if and only if this triangulation is valid.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isoSig
-inline constexpr const char isoSig[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isoSig
+static constexpr const char isoSig[] =
 R"doc(Constructs the first-generation isomorphism signature for this
 triangulation. This is identical to calling ``sig<1, ...>()``.
 
@@ -1650,8 +1644,8 @@ Returns:
     ``std::string`` for string-based encodings (which is all that
     Regina offers for first-generation signatures).)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isoSigComponentSize
-inline constexpr const char isoSigComponentSize[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isoSigComponentSize
+static constexpr const char isoSigComponentSize[] =
 R"doc(Deduces the number of top-dimensional simplices in a connected
 triangulation from its string-based isomorphism signature. This may be
 either a first-generation signature (computed via ``isoSig()``), or a
@@ -1705,8 +1699,8 @@ Returns:
     the size of the first connected component, or 0 if the given
     signature describes the empty triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::isoSigDetail
-inline constexpr const char isoSigDetail[] =
+// Docstring regina::python::doc::detail::TriangulationBase::isoSigDetail
+static constexpr const char isoSigDetail[] =
 R"doc(Constructs the first-generation isomorphism signature for this
 triangulation, along with the relabelling that will occur when the
 triangulation is reconstructed from it.
@@ -1766,8 +1760,8 @@ Returns:
     will be of type ``std::string`` for string-based encodings (which
     is all that Regina offers for first-generation signatures).)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::knowsHomology
-inline constexpr const char knowsHomology[] =
+// Docstring regina::python::doc::detail::TriangulationBase::knowsHomology
+static constexpr const char knowsHomology[] =
 R"doc(Determines whether the *k*th homology group is already known (or
 trivial to determine), where the parameter *k* does not need to be
 known until runtime. See homology() for further details.
@@ -1815,8 +1809,8 @@ Returns:
     to calculate, _and_ the validity preconditions for homology() are
     satisfied.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::lockBoundary
-inline constexpr const char lockBoundary[] =
+// Docstring regina::python::doc::detail::TriangulationBase::lockBoundary
+static constexpr const char lockBoundary[] =
 R"doc(Locks all boundary facets of this triangulation.
 
 In short, this means that the boundary facets must not be changed. See
@@ -1830,8 +1824,8 @@ Note that this only locks the facets of real boundary components.
 Ideal boundary components are not affected (since they have no facets
 to lock).)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::makeCanonical
-inline constexpr const char makeCanonical[] =
+// Docstring regina::python::doc::detail::TriangulationBase::makeCanonical
+static constexpr const char makeCanonical[] =
 R"doc(Relabel the top-dimensional simplices and their vertices so that this
 triangulation is in canonical form. This is essentially the
 lexicographically smallest labelling when the facet gluings are
@@ -1861,8 +1855,8 @@ Returns:
     ``True`` if the triangulation was changed, or ``False`` if the
     triangulation was in canonical form to begin with.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::makeDoubleCover
-inline constexpr const char makeDoubleCover[] =
+// Docstring regina::python::doc::detail::TriangulationBase::makeDoubleCover
+static constexpr const char makeDoubleCover[] =
 R"doc(Deprecated routine that converts this triangulation into its
 orientable double cover. This triangulation wll be modified directly.
 
@@ -1873,8 +1867,8 @@ orientable double cover. This triangulation wll be modified directly.
 
 See doubleCover() for further details.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::makeIdeal
-inline constexpr const char makeIdeal[] =
+// Docstring regina::python::doc::detail::TriangulationBase::makeIdeal
+static constexpr const char makeIdeal[] =
 R"doc(Converts each real boundary component into a cusp (i.e., an ideal
 vertex). Only boundary components formed from real (*dim*-1)-faces
 will be affected; ideal boundary components are already cusps and so
@@ -1917,8 +1911,8 @@ Returns:
     ``True`` if changes were made, or ``False`` if the original
     triangulation contained no real boundary components.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::markedHomology
-inline constexpr const char markedHomology[] =
+// Docstring regina::python::doc::detail::TriangulationBase::markedHomology
+static constexpr const char markedHomology[] =
 R"doc(Returns the *k*th homology group of this triangulation, without
 truncating ideal vertices, but with explicit coordinates that track
 the individual *k*-faces of this triangulation, where the parameter
@@ -1974,8 +1968,8 @@ Returns:
     the *k*th homology group of the union of all simplices in this
     triangulation, as described above.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::move20
-inline constexpr const char move20[] =
+// Docstring regina::python::doc::detail::TriangulationBase::move20
+static constexpr const char move20[] =
 R"doc(If possible, performs a 2-0 move about the given *k*-face of degree
 two. This involves taking the two top-dimensional simplices joined
 along that face and squashing them flat.
@@ -2046,8 +2040,8 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::moveContentsTo
-inline constexpr const char moveContentsTo[] =
+// Docstring regina::python::doc::detail::TriangulationBase::moveContentsTo
+static constexpr const char moveContentsTo[] =
 R"doc(Moves the contents of this triangulation into the given destination
 triangulation, leaving this triangulation empty but otherwise usable.
 
@@ -2077,8 +2071,8 @@ Parameter ``dest``:
     the triangulation into which the contents of this triangulation
     should be moved.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::neoSig
-inline constexpr const char neoSig[] =
+// Docstring regina::python::doc::detail::TriangulationBase::neoSig
+static constexpr const char neoSig[] =
 R"doc(Constructs the second-generation isomorphism signature for this
 triangulation. This is identical to calling ``sig<2, ...>()``.
 
@@ -2132,8 +2126,8 @@ Returns:
     ``std::string`` for string-based encodings, or ByteSequence for
     binary encodings.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::neoSigDetail
-inline constexpr const char neoSigDetail[] =
+// Docstring regina::python::doc::detail::TriangulationBase::neoSigDetail
+static constexpr const char neoSigDetail[] =
 R"doc(Constructs the second-generation isomorphism signature for this
 triangulation, along with the relabelling that will occur when the
 triangulation is reconstructed from it.
@@ -2207,8 +2201,8 @@ Returns:
     will be of type ``std::string`` for string-based encodings, or
     ByteSequence for binary encodings.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::newSimplex
-inline constexpr const char newSimplex[] =
+// Docstring regina::python::doc::detail::TriangulationBase::newSimplex
+static constexpr const char newSimplex[] =
 R"doc(Creates a new top-dimensional simplex and adds it to this
 triangulation.
 
@@ -2221,8 +2215,8 @@ that is, it will have index size()-1.
 Returns:
     the new simplex.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::newSimplex_2
-inline constexpr const char newSimplex_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::newSimplex_2
+static constexpr const char newSimplex_2[] =
 R"doc(Creates a new top-dimensional simplex with the given description and
 adds it to this triangulation.
 
@@ -2240,8 +2234,8 @@ Parameter ``desc``:
 Returns:
     the new simplex.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::newSimplices
-inline constexpr const char newSimplices[] =
+// Docstring regina::python::doc::detail::TriangulationBase::newSimplices
+static constexpr const char newSimplices[] =
 R"doc(Creates *k* new top-dimensional simplices, adds them to this
 triangulation, and returns them in a std::array.
 
@@ -2275,8 +2269,8 @@ Returns:
     an array containing all of the new simplices, in the order in
     which they were added.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::newSimplices_2
-inline constexpr const char newSimplices_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::newSimplices_2
+static constexpr const char newSimplices_2[] =
 R"doc(Creates *k* new top-dimensional simplices and adds them to this
 triangulation.
 
@@ -2307,8 +2301,8 @@ Parameter ``k``:
     the number of new top-dimensional simplices to add; this must be
     non-negative.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::orient
-inline constexpr const char orient[] =
+// Docstring regina::python::doc::detail::TriangulationBase::orient
+static constexpr const char orient[] =
 R"doc(Relabels the vertices of top-dimensional simplices in this
 triangulation so that all simplices are oriented consistently, if
 possible.
@@ -2330,8 +2324,8 @@ taking place. Instead, any locks will be transformed accordingly
 (i.e., facets (*dim* - 1) and *dim* will exchange their lock states
 for those simplices that originally had negative orientation).)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::pachner
-inline constexpr const char pachner[] =
+// Docstring regina::python::doc::detail::TriangulationBase::pachner
+static constexpr const char pachner[] =
 R"doc(If possible, performs a (*dim* + 1 - *k*)-(*k* + 1) Pachner move about
 the given *k*-face. This involves replacing the (*dim* + 1 - *k*) top-
 dimensional simplices meeting that *k*-face with (*k* + 1) new top-
@@ -2396,8 +2390,8 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::pachner_2
-inline constexpr const char pachner_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::pachner_2
+static constexpr const char pachner_2[] =
 R"doc(Deprecated routine that tests for and optionally performs a (*dim* + 1
 - *k*)-(*k* + 1) Pachner move about the given *k*-face of this
 triangulation.
@@ -2437,8 +2431,8 @@ Parameter ``perform``:
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::pairing
-inline constexpr const char pairing[] =
+// Docstring regina::python::doc::detail::TriangulationBase::pairing
+static constexpr const char pairing[] =
 R"doc(Returns the dual graph of this triangulation, expressed as a facet
 pairing.
 
@@ -2451,15 +2445,15 @@ Precondition:
 Returns:
     the dual graph of this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::pentachora
-inline constexpr const char pentachora[] =
+// Docstring regina::python::doc::detail::TriangulationBase::pentachora
+static constexpr const char pentachora[] =
 R"doc(A dimension-specific alias for faces<4>(), or an alias for simplices()
 in dimension *dim* = 4.
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::pentachoron
-inline constexpr const char pentachoron[] =
+// Docstring regina::python::doc::detail::TriangulationBase::pentachoron
+static constexpr const char pentachoron[] =
 R"doc(A dimension-specific alias for face<4>(), or an alias for simplex() in
 dimension *dim* = 4.
 
@@ -2467,8 +2461,8 @@ This returns a non-const pentachoron pointer.
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::pentachoron_2
-inline constexpr const char pentachoron_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::pentachoron_2
+static constexpr const char pentachoron_2[] =
 R"doc(A dimension-specific alias for face<4>(), or an alias for simplex() in
 dimension *dim* = 4.
 
@@ -2477,8 +2471,8 @@ non-const pentachoron pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::randomiseLabelling
-inline constexpr const char randomiseLabelling[] =
+// Docstring regina::python::doc::detail::TriangulationBase::randomiseLabelling
+static constexpr const char randomiseLabelling[] =
 R"doc(Randomly relabels the top-dimensional simplices and their vertices.
 
 Essentially, this routine creates a random isomorphism of the correct
@@ -2500,8 +2494,8 @@ Returns:
     the random isomorphism that was applied; that is, the isomorphism
     from the original triangulation to the final triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::reflect
-inline constexpr const char reflect[] =
+// Docstring regina::python::doc::detail::TriangulationBase::reflect
+static constexpr const char reflect[] =
 R"doc(Relabels the vertices of top-dimensional simplices in this
 triangulation so that all simplices reflect their orientation. In
 particular, if this triangulation is oriented, then it will be
@@ -2517,8 +2511,8 @@ place. Instead, any locks will be transformed accordingly (i.e.,
 facets (*dim* - 1) and *dim* will exchange their lock states in every
 top-dimensional simplex).)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::removeAllSimplices
-inline constexpr const char removeAllSimplices[] =
+// Docstring regina::python::doc::detail::TriangulationBase::removeAllSimplices
+static constexpr const char removeAllSimplices[] =
 R"doc(Removes all simplices from the triangulation. As a result, this
 triangulation will become empty.
 
@@ -2532,8 +2526,8 @@ Exception ``LockViolation``:
     Simplex<dim>::lockFacet() for further details on how such locks
     work and what their implications are.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::removeSimplex
-inline constexpr const char removeSimplex[] =
+// Docstring regina::python::doc::detail::TriangulationBase::removeSimplex
+static constexpr const char removeSimplex[] =
 R"doc(Removes the given top-dimensional simplex from this triangulation.
 
 The given simplex will be unglued from any adjacent simplices (if
@@ -2552,8 +2546,8 @@ Exception ``LockViolation``:
 Parameter ``simplex``:
     the simplex to remove.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::removeSimplexAt
-inline constexpr const char removeSimplexAt[] =
+// Docstring regina::python::doc::detail::TriangulationBase::removeSimplexAt
+static constexpr const char removeSimplexAt[] =
 R"doc(Removes the top-dimensional simplex at the given index in this
 triangulation.
 
@@ -2572,8 +2566,8 @@ Parameter ``index``:
     specifies which top-dimensional simplex to remove; this must be
     between 0 and size()-1 inclusive.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::reorderBFS
-inline constexpr const char reorderBFS[] =
+// Docstring regina::python::doc::detail::TriangulationBase::reorderBFS
+static constexpr const char reorderBFS[] =
 R"doc(Reorders the top-dimensional simplices of this triangulation using a
 breadth-first search, so that small-numbered simplices are adjacent to
 other small-numbered simplices.
@@ -2600,8 +2594,8 @@ Parameter ``reverse``:
     ``True`` if the new simplex numbers should be assigned in reverse
     order, as described above.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::setGroupPresentation
-inline constexpr const char setGroupPresentation[] =
+// Docstring regina::python::doc::detail::TriangulationBase::setGroupPresentation
+static constexpr const char setGroupPresentation[] =
 R"doc(Allows the specific presentation of the fundamental group to be
 changed by some other (external) means.
 
@@ -2634,8 +2628,8 @@ Exception ``FailedPrecondition``:
 Parameter ``pres``:
     a new presentation of the fundamental group of this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::shellBoundary
-inline constexpr const char shellBoundary[] =
+// Docstring regina::python::doc::detail::TriangulationBase::shellBoundary
+static constexpr const char shellBoundary[] =
 R"doc(If possible, performs a boundary shelling move upon the given top-
 dimensional simplex of this triangulation. This involves popping off a
 top-dimensional simplex with one or more facets on the boundary.
@@ -2698,8 +2692,8 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::shellBoundary_2
-inline constexpr const char shellBoundary_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::shellBoundary_2
+static constexpr const char shellBoundary_2[] =
 R"doc(Deprecated routine that tests for and optionally performs a boundary
 shelling move on the given top-dimensional simplex.
 
@@ -2742,8 +2736,8 @@ Parameter ``perform``:
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::sig
-inline constexpr const char sig[] =
+// Docstring regina::python::doc::detail::TriangulationBase::sig
+static constexpr const char sig[] =
 R"doc(Constructs an _isomorphism signature_ for this triangulation.
 
 Most users will not need to use this routine, which is extremely
@@ -2953,8 +2947,8 @@ Returns:
     type ``std::string`` for string-based encodings, or ByteSequence
     for binary encodings.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::simplex
-inline constexpr const char simplex[] =
+// Docstring regina::python::doc::detail::TriangulationBase::simplex
+static constexpr const char simplex[] =
 R"doc(Returns the top-dimensional simplex at the given index in the
 triangulation.
 
@@ -2968,8 +2962,8 @@ Parameter ``index``:
 Returns:
     the *index*th top-dimensional simplex.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::simplex_2
-inline constexpr const char simplex_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::simplex_2
+static constexpr const char simplex_2[] =
 R"doc(Returns the top-dimensional simplex at the given index in the
 triangulation.
 
@@ -2983,8 +2977,8 @@ Parameter ``index``:
 Returns:
     the *index*th top-dimensional simplex.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::simplices
-inline constexpr const char simplices[] =
+// Docstring regina::python::doc::detail::TriangulationBase::simplices
+static constexpr const char simplices[] =
 R"doc(Returns an object that allows iteration through and random access to
 all top-dimensional simplices in this triangulation.
 
@@ -3011,8 +3005,8 @@ need it.
 Returns:
     access to the list of all top-dimensional simplices.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::simplifiedFundamentalGroup
-inline constexpr const char simplifiedFundamentalGroup[] =
+// Docstring regina::python::doc::detail::TriangulationBase::simplifiedFundamentalGroup
+static constexpr const char simplifiedFundamentalGroup[] =
 R"doc(Deprecated alias for setGroupPresentation(), which allows the specific
 presentation of the fundamental group to be changed by some other
 (external) means.
@@ -3033,15 +3027,15 @@ Exception ``FailedPrecondition``:
 Parameter ``pres``:
     a new presentation of the fundamental group of this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::size
-inline constexpr const char size[] =
+// Docstring regina::python::doc::detail::TriangulationBase::size
+static constexpr const char size[] =
 R"doc(Returns the number of top-dimensional simplices in the triangulation.
 
 Returns:
     the number of top-dimensional simplices.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::source
-inline constexpr const char source[] =
+// Docstring regina::python::doc::detail::TriangulationBase::source
+static constexpr const char source[] =
 R"doc(Returns C++ or Python source code that can be used to reconstruct this
 triangulation.
 
@@ -3062,8 +3056,8 @@ Parameter ``language``:
 Returns:
     the source code that was generated.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::subdivide
-inline constexpr const char subdivide[] =
+// Docstring regina::python::doc::detail::TriangulationBase::subdivide
+static constexpr const char subdivide[] =
 R"doc(Does a barycentric subdivision of the triangulation. This is done in-
 place, i.e., the triangulation will be modified directly.
 
@@ -3128,15 +3122,15 @@ Exception ``LockViolation``:
     Simplex<dim>::lockFacet() for further details on how such locks
     work and what their implications are.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::tetrahedra
-inline constexpr const char tetrahedra[] =
+// Docstring regina::python::doc::detail::TriangulationBase::tetrahedra
+static constexpr const char tetrahedra[] =
 R"doc(A dimension-specific alias for faces<3>(), or an alias for simplices()
 in dimension *dim* = 3.
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::tetrahedron
-inline constexpr const char tetrahedron[] =
+// Docstring regina::python::doc::detail::TriangulationBase::tetrahedron
+static constexpr const char tetrahedron[] =
 R"doc(A dimension-specific alias for face<3>(), or an alias for simplex() in
 dimension *dim* = 3.
 
@@ -3144,8 +3138,8 @@ This returns a non-const tetrahedron pointer.
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::tetrahedron_2
-inline constexpr const char tetrahedron_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::tetrahedron_2
+static constexpr const char tetrahedron_2[] =
 R"doc(A dimension-specific alias for face<3>(), or an alias for simplex() in
 dimension *dim* = 3.
 
@@ -3154,8 +3148,8 @@ non-const tetrahedron pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::translate
-inline constexpr const char translate[] =
+// Docstring regina::python::doc::detail::TriangulationBase::translate
+static constexpr const char translate[] =
 R"doc(Translates a face of some other triangulation into the corresponding
 face of this triangulation, using simplex numbers for the translation.
 
@@ -3195,8 +3189,8 @@ Parameter ``other``:
 Returns:
     the corresponding face of this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::translate_2
-inline constexpr const char translate_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::translate_2
+static constexpr const char translate_2[] =
 R"doc(Translates a face embedding from some other triangulation into the
 corresponding face embedding with respect to this triangulation, using
 simplex numbers for the translation.
@@ -3226,8 +3220,8 @@ Parameter ``other``:
 Returns:
     the corresponding face embedding in this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::triangle
-inline constexpr const char triangle[] =
+// Docstring regina::python::doc::detail::TriangulationBase::triangle
+static constexpr const char triangle[] =
 R"doc(A dimension-specific alias for face<2>(), or an alias for simplex() in
 dimension *dim* = 2.
 
@@ -3235,8 +3229,8 @@ This returns a non-const triangle pointer.
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::triangle_2
-inline constexpr const char triangle_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::triangle_2
+static constexpr const char triangle_2[] =
 R"doc(A dimension-specific alias for face<2>(), or an alias for simplex() in
 dimension *dim* = 2.
 
@@ -3245,15 +3239,15 @@ non-const triangle pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::triangles
-inline constexpr const char triangles[] =
+// Docstring regina::python::doc::detail::TriangulationBase::triangles
+static constexpr const char triangles[] =
 R"doc(A dimension-specific alias for faces<2>(), or an alias for simplices()
 in dimension *dim* = 2.
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::triangulateComponents
-inline constexpr const char triangulateComponents[] =
+// Docstring regina::python::doc::detail::TriangulationBase::triangulateComponents
+static constexpr const char triangulateComponents[] =
 R"doc(Returns the individual connected components of this triangulation.
 This triangulation will not be modified.
 
@@ -3273,8 +3267,8 @@ newly-triangulated components.
 Returns:
     a list of individual component triangulations.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::twoZeroMove
-inline constexpr const char twoZeroMove[] =
+// Docstring regina::python::doc::detail::TriangulationBase::twoZeroMove
+static constexpr const char twoZeroMove[] =
 R"doc(Deprecated routine that tests for and optionally performs a 2-0 move
 about the given *k*-face of this triangulation.
 
@@ -3313,8 +3307,8 @@ Parameter ``perform``:
 Returns:
     ``True`` if and only if the requested move could be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::unlockAll
-inline constexpr const char unlockAll[] =
+// Docstring regina::python::doc::detail::TriangulationBase::unlockAll
+static constexpr const char unlockAll[] =
 R"doc(Unlocks all top-dimensional simplices and their facets.
 
 In short, locking a top-dimensional simplex and/or some of its facets
@@ -3324,20 +3318,20 @@ how locks work and what their implications are.
 
 After this is routine called, hasLocks() will return ``False``.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::vertex
-inline constexpr const char vertex[] =
+// Docstring regina::python::doc::detail::TriangulationBase::vertex
+static constexpr const char vertex[] =
 R"doc(A dimension-specific alias for face<0>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::vertices
-inline constexpr const char vertices[] =
+// Docstring regina::python::doc::detail::TriangulationBase::vertices
+static constexpr const char vertices[] =
 R"doc(A dimension-specific alias for faces<0>().
 
 See faces() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::with20
-inline constexpr const char with20[] =
+// Docstring regina::python::doc::detail::TriangulationBase::with20
+static constexpr const char with20[] =
 R"doc(If possible, returns the triangulation obtained by performing a 2-0
 move about the given *k*-face of this triangulation. If such a move is
 not allowed, or if such a move would violate any simplex and/or facet
@@ -3361,8 +3355,8 @@ Returns:
     the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::withPachner
-inline constexpr const char withPachner[] =
+// Docstring regina::python::doc::detail::TriangulationBase::withPachner
+static constexpr const char withPachner[] =
 R"doc(If possible, returns the triangulation obtained by performing a (*dim*
 + 1 - *k*)-(*k* + 1) Pachner move about the given *k*-face of this
 triangulation. If such a move is not allowed, or if such a move would
@@ -3387,8 +3381,8 @@ Returns:
     the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase_::withShellBoundary
-inline constexpr const char withShellBoundary[] =
+// Docstring regina::python::doc::detail::TriangulationBase::withShellBoundary
+static constexpr const char withShellBoundary[] =
 R"doc(If possible, returns the triangulation obtained by performing a
 boundary shelling move on the given top-dimensional simplex of this
 triangulation. If such a move is not allowed, or if such a move would
@@ -3415,7 +3409,9 @@ Returns:
     the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-}
+}; // struct TriangulationBase
+
+} // namespace detail
 
 } // namespace regina::python::doc
 

@@ -137,7 +137,7 @@ void addSigUtils(pybind11::module_& m) {
     #endif
     #endif
     auto c = pybind11::class_<Base64SigEncoding>(m, "Base64SigEncoding",
-            rdoc_scope)
+            rdoc::__class)
         .def_static("decodeSingle", &Base64SigEncoding::decodeSingle,
             rdoc::decodeSingle)
         .def_static("encodeSingle", &Base64SigEncoding::encodeSingle,
@@ -175,7 +175,7 @@ void addSigUtils(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(Base64Encoder)
 
-    auto c = pybind11::class_<Base64Encoder>(m, "Base64Encoder", rdoc_scope)
+    auto c = pybind11::class_<Base64Encoder>(m, "Base64Encoder", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("str",
             static_cast<const std::string&(Base64Encoder::*)() const &>(
@@ -207,7 +207,7 @@ void addSigUtils(pybind11::module_& m) {
 
     using Decoder = regina::Base64Decoder<std::string::const_iterator>;
     using Wrapper = regina::python::CachedDecoder<regina::Base64Decoder>;
-    auto c = pybind11::class_<Wrapper>(m, "Base64Decoder", rdoc_scope)
+    auto c = pybind11::class_<Wrapper>(m, "Base64Decoder", rdoc::__class)
         .def(pybind11::init<const std::string&, bool>(),
             pybind11::arg("string"),
             pybind11::arg("skipInitialWhitespace") = true,
@@ -262,7 +262,7 @@ void addSigUtils(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(BitEncoder)
 
     using Encoder = regina::python::SafeEncoder<regina::BitEncoder>;
-    auto c = pybind11::class_<Encoder>(m, "BitEncoder", rdoc_scope)
+    auto c = pybind11::class_<Encoder>(m, "BitEncoder", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("bytes", &Encoder::extract, rdoc::bytes)
         .def("encodeBit", [](Encoder& enc, bool bit) {
@@ -287,7 +287,7 @@ void addSigUtils(pybind11::module_& m) {
 
     using Decoder = regina::BitDecoder<std::string::const_iterator>;
     using Wrapper = regina::python::CachedDecoder<regina::BitDecoder>;
-    auto c = pybind11::class_<Wrapper>(m, "BitDecoder", rdoc_scope)
+    auto c = pybind11::class_<Wrapper>(m, "BitDecoder", rdoc::__class)
         .def(pybind11::init<pybind11::bytes>(), rdoc::__init)
         .def("maybeDone", &Decoder::maybeDone, rdoc::maybeDone)
         .def("noMoreBits", &Decoder::noMoreBits, rdoc::noMoreBits)
@@ -302,7 +302,7 @@ void addSigUtils(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Base64BitEncoder)
 
     using Encoder = regina::python::SafeEncoder<regina::Base64BitEncoder>;
-    auto c = pybind11::class_<Encoder>(m, "Base64BitEncoder", rdoc_scope)
+    auto c = pybind11::class_<Encoder>(m, "Base64BitEncoder", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("str", &Encoder::extract, rdoc::str)
         .def("encodeBit", [](Encoder& enc, bool bit) {
@@ -336,7 +336,7 @@ void addSigUtils(pybind11::module_& m) {
 
     using Decoder = regina::Base64BitDecoder<std::string::const_iterator>;
     using Wrapper = regina::python::CachedDecoder<regina::Base64BitDecoder>;
-    auto c = pybind11::class_<Wrapper>(m, "Base64BitDecoder", rdoc_scope)
+    auto c = pybind11::class_<Wrapper>(m, "Base64BitDecoder", rdoc::__class)
         .def(pybind11::init<const std::string&, bool>(),
             pybind11::arg("string"),
             pybind11::arg("skipInitialWhitespace") = true,

@@ -41,7 +41,7 @@ void addLayeredLoop(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredLoop)
 
     auto c = pybind11::class_<LayeredLoop, regina::StandardTriangulation>
-            (m, "LayeredLoop", rdoc_scope)
+            (m, "LayeredLoop", rdoc::__class)
         .def(pybind11::init<const LayeredLoop&>(), rdoc::__copy)
         .def("swap", &LayeredLoop::swap, rdoc::swap)
         .def("length", &LayeredLoop::length, rdoc::length)
@@ -53,7 +53,7 @@ void addLayeredLoop(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
 
-    regina::python::add_global_swap<LayeredLoop>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, LayeredLoop);
 
     RDOC_SCOPE_END
 }

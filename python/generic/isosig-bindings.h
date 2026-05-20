@@ -313,7 +313,7 @@ void addIsoSigClassic(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigClassic)
 
     using Type = IsoSigClassic<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+    auto s = pybind11::class_<Type>(m, name, rdoc::__class)
         .def(pybind11::init<const regina::Component<dim>&, bool>(),
             rdoc::__init)
         .def("simplex", &Type::simplex, rdoc::simplex)
@@ -330,7 +330,7 @@ void addIsoSigEdgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigDegrees)
 
     using Type = IsoSigEdgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+    auto s = pybind11::class_<Type>(m, name, rdoc::__class)
         .def(pybind11::init<const regina::Component<dim>&, bool>(),
             rdoc::__init)
         .def("simplex", &Type::simplex, rdoc::simplex)
@@ -347,7 +347,7 @@ void addIsoSigRidgeDegrees(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(IsoSigDegrees)
 
     using Type = IsoSigRidgeDegrees<dim>;
-    auto s = pybind11::class_<Type>(m, name, rdoc_scope)
+    auto s = pybind11::class_<Type>(m, name, rdoc::__class)
         .def(pybind11::init<const regina::Component<dim>&, bool>(),
             rdoc::__init)
         .def("simplex", &Type::simplex, rdoc::simplex)
@@ -364,12 +364,10 @@ requires (regina::supportedDim(dim))
 void addIsoSigData(pybind11::module_& m, const char* name) {
     using Data = regina::IsoSigData<generation, dim>;
 
-    RDOC_SCOPE_BASE(IsoSigData) // for global_swap
-
     if constexpr (generation == 1) {
         RDOC_SCOPE_BEGIN(IsoSigData1)
 
-        auto s = pybind11::class_<Data>(m, name, rdoc_scope)
+        auto s = pybind11::class_<Data>(m, name, rdoc::__class)
             .def(pybind11::init<regina::Component<dim>*>(), rdoc::__init)
             .def(pybind11::init<const Data&>(), rdoc::__copy)
             .def("size", &Data::size, rdoc::size)
@@ -405,13 +403,13 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
             .def("swap", &Data::swap, rdoc::swap)
             ;
         regina::python::add_eq_operators(s, rdoc::__eq);
-        regina::python::add_global_swap<Data>(m, rbase::global_swap);
+        ADD_GLOBAL_SWAP_SUFFIX(m, Data, IsoSigData);
 
         RDOC_SCOPE_END
     } else {
         RDOC_SCOPE_BEGIN(IsoSigData2)
 
-        auto s = pybind11::class_<Data>(m, name, rdoc_scope)
+        auto s = pybind11::class_<Data>(m, name, rdoc::__class)
             .def_static("minimal", [](pybind11::type sigType,
                     regina::Component<dim>* c, bool oriented,
                     regina::Isomorphism<dim>* iso) {
@@ -456,7 +454,7 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
             ;
         regina::python::add_eq_operators(s, rdoc::__eq);
         regina::python::add_cmp_operators(s, rdoc::__cmp);
-        regina::python::add_global_swap<Data>(m, rbase::global_swap);
+        ADD_GLOBAL_SWAP_SUFFIX(m, Data, IsoSigData);
 
         RDOC_SCOPE_END
     }

@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Manifold
-inline constexpr const char Manifold[] =
+struct Manifold {
+
+// Docstring regina::python::doc::Manifold::__class
+static constexpr const char __class[] =
 R"doc(Represents a particular 3-manifold, independent of how it might be
 triangulated. This is an abstract base class: its subclasses
 correspond to different families of 3-manifolds.
@@ -36,10 +38,8 @@ Each subclass:
 * must provide member and global swap functions, for consistency
   across all Manifold subclasses.)doc";
 
-namespace Manifold_ {
-
-// Docstring regina::python::doc::Manifold_::__cmp
-inline constexpr const char __cmp[] =
+// Docstring regina::python::doc::Manifold::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares representations of two 3-manifolds according to an aesthetic
 ordering.
 
@@ -75,8 +75,8 @@ Returns:
     a result that indicates how this and the given 3-manifold
     representation should be ordered with respect to each other.)doc";
 
-// Docstring regina::python::doc::Manifold_::construct
-inline constexpr const char construct[] =
+// Docstring regina::python::doc::Manifold::construct
+static constexpr const char construct[] =
 R"doc(Returns a triangulation of this 3-manifold, if such a construction has
 been implemented. For details of which types of 3-manifolds have
 implemented this routine, see the class notes for each corresponding
@@ -101,8 +101,8 @@ Returns:
     a triangulation of this 3-manifold, if this construction has been
     implemented.)doc";
 
-// Docstring regina::python::doc::Manifold_::homology
-inline constexpr const char homology[] =
+// Docstring regina::python::doc::Manifold::homology
+static constexpr const char homology[] =
 R"doc(Returns the first homology group of this 3-manifold, if such a routine
 has been implemented. For details of which types of 3-manifolds have
 implemented this routine, see the class notes for each corresponding
@@ -126,23 +126,23 @@ Returns:
     the first homology group of this 3-manifold, if this functionality
     has been implemented.)doc";
 
-// Docstring regina::python::doc::Manifold_::isHyperbolic
-inline constexpr const char isHyperbolic[] =
+// Docstring regina::python::doc::Manifold::isHyperbolic
+static constexpr const char isHyperbolic[] =
 R"doc(Returns whether or not this is a finite-volume hyperbolic manifold.
 
 Returns:
     ``True`` if this is a finite-volume hyperbolic manifold, or
     ``False`` if not.)doc";
 
-// Docstring regina::python::doc::Manifold_::name
-inline constexpr const char name[] =
+// Docstring regina::python::doc::Manifold::name
+static constexpr const char name[] =
 R"doc(Returns the common name of this 3-manifold as a human-readable string.
 
 Returns:
     the common name of this 3-manifold.)doc";
 
-// Docstring regina::python::doc::Manifold_::structure
-inline constexpr const char structure[] =
+// Docstring regina::python::doc::Manifold::structure
+static constexpr const char structure[] =
 R"doc(Returns details of the structure of this 3-manifold that might not be
 evident from its common name. For instance, for an orbit space S³/G
 this routine might return the full Seifert structure.
@@ -153,8 +153,8 @@ deemed necessary.
 Returns:
     a string describing additional structural details.)doc";
 
-// Docstring regina::python::doc::Manifold_::texName
-inline constexpr const char texName[] =
+// Docstring regina::python::doc::Manifold::texName
+static constexpr const char texName[] =
 R"doc(Returns the common name of this 3-manifold in TeX format. No leading
 or trailing dollar signs will be included.
 
@@ -165,7 +165,7 @@ or trailing dollar signs will be included.
 Returns:
     the common name of this 3-manifold in TeX format.)doc";
 
-}
+}; // struct Manifold
 
 } // namespace regina::python::doc
 

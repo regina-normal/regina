@@ -43,7 +43,7 @@ void addPluggedTorusBundle(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PluggedTorusBundle)
 
     auto c = pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
-            (m, "PluggedTorusBundle", rdoc_scope)
+            (m, "PluggedTorusBundle", rdoc::__class)
         .def(pybind11::init<const PluggedTorusBundle&>(), rdoc::__copy)
         .def("swap", &PluggedTorusBundle::swap, rdoc::swap)
         .def("bundle", &PluggedTorusBundle::bundle,
@@ -61,7 +61,7 @@ void addPluggedTorusBundle(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    regina::python::add_global_swap<PluggedTorusBundle>(m, rdoc::global_swap);
+    ADD_GLOBAL_SWAP(m, PluggedTorusBundle);
 
     RDOC_SCOPE_END
 }

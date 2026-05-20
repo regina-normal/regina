@@ -42,7 +42,7 @@ using regina::Manifold;
 void addManifold(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Manifold)
 
-    auto c = pybind11::class_<Manifold>(m, "Manifold", rdoc_scope)
+    auto c = pybind11::class_<Manifold>(m, "Manifold", rdoc::__class)
         .def("name", &Manifold::name, rdoc::name)
         .def("texName", &Manifold::texName, rdoc::texName)
         .def("structure", &Manifold::structure, rdoc::structure)

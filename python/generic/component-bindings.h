@@ -45,7 +45,7 @@ void addComponent(pybind11::module_& m, pybind11::module_& internal,
     RDOC_SCOPE_BEGIN_MAIN
     RDOC_SCOPE_BASE(detail::ComponentBase)
 
-    auto c = pybind11::class_<Component<dim>>(m, name, rdoc::Component)
+    auto c = pybind11::class_<Component<dim>>(m, name, rdoc::Component::__class)
         .def("index", &Component<dim>::index, rbase::index)
         .def("triangulation", &Component<dim>::triangulation,
             rbase::triangulation)

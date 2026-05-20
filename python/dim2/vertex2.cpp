@@ -49,7 +49,7 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
         alias::SimplexVoid)
 
     auto e = pybind11::class_<FaceEmbedding<2, 0>>(m, "FaceEmbedding2_0",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<regina::Triangle<2>*, regina::Perm<3>>(),
             rdoc::__init)
         .def(pybind11::init<const VertexEmbedding<2>&>(), rdoc::__copy)
@@ -69,7 +69,7 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0", rdoc::Face)
+    auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0", rdoc::Face::__class)
         .def("index", &Vertex<2>::index, rbase::index)
         .def("isValid", &Vertex<2>::isValid, rbase::isValid)
         .def("hasBadIdentification", &Vertex<2>::hasBadIdentification,

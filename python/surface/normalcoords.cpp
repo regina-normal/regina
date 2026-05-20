@@ -48,9 +48,9 @@ void addNormalCoords(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<NormalCoords>(m, "NormalCoords", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<NormalCoords>(m, "NormalCoords", rdoc_scope)
+    pybind11::enum_<NormalCoords>(m, "NormalCoords", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -85,7 +85,8 @@ void addNormalCoords(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(NormalEncoding)
 
-    auto e = pybind11::class_<NormalEncoding>(m, "NormalEncoding", rdoc_scope)
+    auto e = pybind11::class_<NormalEncoding>(m, "NormalEncoding",
+            rdoc::__class)
         .def(pybind11::init<NormalCoords>(), rdoc::__init)
         .def(pybind11::init<const NormalEncoding&>(), rdoc::__copy)
         .def("valid", &NormalEncoding::valid, rdoc::valid)
@@ -128,7 +129,7 @@ void addNormalCoords(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(NormalInfo)
 
-    auto i = pybind11::class_<NormalInfo>(m, "NormalInfo", rdoc_scope)
+    auto i = pybind11::class_<NormalInfo>(m, "NormalInfo", rdoc::__class)
         .def_static("name", &NormalInfo::name, rdoc::name)
         ;
     regina::python::no_eq_static(i);

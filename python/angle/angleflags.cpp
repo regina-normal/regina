@@ -43,7 +43,7 @@ void addAngleFlags(pybind11::module_& m) {
             { "DD", regina::AngleAlg::DD, rdoc::DD },
             { "Legacy", regina::AngleAlg::Legacy, rdoc::Legacy },
             { "Custom", regina::AngleAlg::Custom, rdoc::Custom }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc_global::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 

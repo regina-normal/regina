@@ -42,7 +42,7 @@ void addTetrahedron3(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Face)
     RDOC_SCOPE_BASE(detail::SimplexBase)
 
-    auto c = pybind11::class_<regina::Simplex<3>>(m, "Simplex3", rdoc_scope)
+    auto c = pybind11::class_<regina::Simplex<3>>(m, "Simplex3", rdoc::__class)
         .def("description", &Tetrahedron<3>::description, rbase::description)
         .def("setDescription", &Tetrahedron<3>::setDescription,
             rbase::setDescription)

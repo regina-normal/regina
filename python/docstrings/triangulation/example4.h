@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Example
-inline constexpr const char Example[] =
+struct Example {
+
+// Docstring regina::python::doc::Example::__class
+static constexpr const char __class[] =
 R"doc(Offers routines for constructing a variety of sample 4-dimensional
 triangulations.
 
@@ -26,10 +28,8 @@ This 4-dimensional specialisation offers significant extra
 functionality, by providing several more hard-coded and parameterised
 constructions.)doc";
 
-namespace Example_ {
-
-// Docstring regina::python::doc::Example_::boundarySpin
-inline constexpr const char boundarySpin[] =
+// Docstring regina::python::doc::Example::boundarySpin
+static constexpr const char boundarySpin[] =
 R"doc(Returns a triangulation of the given 3-manifold spun around its
 boundary.
 
@@ -110,8 +110,8 @@ Returns:
     the 4-manifold obtained by spinning *M* around its boundary, as
     described above.)doc";
 
-// Docstring regina::python::doc::Example_::bundleWithMonodromy
-inline constexpr const char bundleWithMonodromy[] =
+// Docstring regina::python::doc::Example::bundleWithMonodromy
+static constexpr const char bundleWithMonodromy[] =
 R"doc(Returns a bundle formed from a given 3-manifold and a given monodromy.
 
 Specifically, let *M* be the given 3-manifold triangulation. This
@@ -160,8 +160,8 @@ Parameter ``monodromy``:
 Returns:
     the requested bundle.)doc";
 
-// Docstring regina::python::doc::Example_::cappellShaneson
-inline constexpr const char cappellShaneson[] =
+// Docstring regina::python::doc::Example::cappellShaneson
+static constexpr const char cappellShaneson[] =
 R"doc(Returns a two-pentachoron triangulation of a Cappell-Shaneson 2-knot
 complement in the 4-sphere. This triangulation is described and
 analysed in "Triangulating a Cappell-Shaneson knot complement",
@@ -171,8 +171,8 @@ no. 5, 1117-1126.
 Returns:
     a Cappell-Shaneson 2-knot complement.)doc";
 
-// Docstring regina::python::doc::Example_::cp2
-inline constexpr const char cp2[] =
+// Docstring regina::python::doc::Example::cp2
+static constexpr const char cp2[] =
 R"doc(Returns a four-pentachoron triangulation of the standard complex
 projective plane. This triangulation is minimal.
 
@@ -183,24 +183,24 @@ this triangulation gives the "plain" ``CP²`` with intersection form
 Returns:
     the standard complex projective plane.)doc";
 
-// Docstring regina::python::doc::Example_::fourSphere
-inline constexpr const char fourSphere[] =
+// Docstring regina::python::doc::Example::fourSphere
+static constexpr const char fourSphere[] =
 R"doc(Returns a two-pentachoron triangulation of the 4-sphere. This is
 identical to calling the generic routine sphere().
 
 Returns:
     a two-pentachoron 4-sphere.)doc";
 
-// Docstring regina::python::doc::Example_::fourTorus
-inline constexpr const char fourTorus[] =
+// Docstring regina::python::doc::Example::fourTorus
+static constexpr const char fourTorus[] =
 R"doc(Returns a triangulation of the standard 4-torus; that is, the product
 space ``T² × T²``.
 
 Returns:
     the product space ``T² × T²``.)doc";
 
-// Docstring regina::python::doc::Example_::iBundle
-inline constexpr const char iBundle[] =
+// Docstring regina::python::doc::Example::iBundle
+static constexpr const char iBundle[] =
 R"doc(Returns a triangulation of the product ``M × I``, where *M* is the
 given 3-manifold triangulation.
 
@@ -238,8 +238,8 @@ Parameter ``base``:
 Returns:
     the product ``M × I``.)doc";
 
-// Docstring regina::python::doc::Example_::k3
-inline constexpr const char k3[] =
+// Docstring regina::python::doc::Example::k3
+static constexpr const char k3[] =
 R"doc(Returns a triangulation of the standard K3 surface.
 
 Be warned: this triangulation is fairly large.
@@ -247,15 +247,15 @@ Be warned: this triangulation is fairly large.
 Returns:
     the K3 surface.)doc";
 
-// Docstring regina::python::doc::Example_::rp4
-inline constexpr const char rp4[] =
+// Docstring regina::python::doc::Example::rp4
+static constexpr const char rp4[] =
 R"doc(Returns a four-pentachoron triangulation of real projective 4-space.
 
 Returns:
     real projective 4-space.)doc";
 
-// Docstring regina::python::doc::Example_::s1Bundle
-inline constexpr const char s1Bundle[] =
+// Docstring regina::python::doc::Example::s1Bundle
+static constexpr const char s1Bundle[] =
 R"doc(Returns a triangulation of the product ``M × S1``, where *M* is the
 given 3-manifold triangulation. This simply calls iBundle() and then
 glues together the two copies of *M* on the boundary.
@@ -289,16 +289,16 @@ Parameter ``base``:
 Returns:
     the product ``M × S1``.)doc";
 
-// Docstring regina::python::doc::Example_::s2xs2
-inline constexpr const char s2xs2[] =
+// Docstring regina::python::doc::Example::s2xs2
+static constexpr const char s2xs2[] =
 R"doc(Returns a six-pentachoron triangulation of the standard product ``S² ×
 S²``. This triangulation is minimal.
 
 Returns:
     the standard product of two 2-spheres.)doc";
 
-// Docstring regina::python::doc::Example_::s2xs2Twisted
-inline constexpr const char s2xs2Twisted[] =
+// Docstring regina::python::doc::Example::s2xs2Twisted
+static constexpr const char s2xs2Twisted[] =
 R"doc(Returns a six-pentachoron triangulation of the twisted product ``S² x~
 S²``. This manifold is diffeomorphic to ``CP² # -CP²``, where ``-CP²``
 denotes ``CP²`` with its orientation reversed. This triangulation is
@@ -307,16 +307,16 @@ minimal.
 Returns:
     the twisted product of two 2-spheres.)doc";
 
-// Docstring regina::python::doc::Example_::s3xs1
-inline constexpr const char s3xs1[] =
+// Docstring regina::python::doc::Example::s3xs1
+static constexpr const char s3xs1[] =
 R"doc(Returns a two-pentachoron triangulation of the product space ``S³ ×
 S¹``. This is identical to calling the generic routine sphereBundle().
 
 Returns:
     the product ``S³ × S¹``.)doc";
 
-// Docstring regina::python::doc::Example_::s3xs1Twisted
-inline constexpr const char s3xs1Twisted[] =
+// Docstring regina::python::doc::Example::s3xs1Twisted
+static constexpr const char s3xs1Twisted[] =
 R"doc(Returns a two-pentachoron triangulation of the twisted product space
 ``S³ x~ S¹``. This is identical to calling the generic routine
 twistedSphereBundle().
@@ -324,8 +324,8 @@ twistedSphereBundle().
 Returns:
     the twisted product ``S³ x~ S¹``.)doc";
 
-// Docstring regina::python::doc::Example_::simplicialFourSphere
-inline constexpr const char simplicialFourSphere[] =
+// Docstring regina::python::doc::Example::simplicialFourSphere
+static constexpr const char simplicialFourSphere[] =
 R"doc(Returns the standard six-pentachoron triangulation of the 4-sphere as
 the boundary of a 5-simplex. This is identical to calling the generic
 routine simplicialSphere().
@@ -333,8 +333,8 @@ routine simplicialSphere().
 Returns:
     the standard simplicial 4-sphere.)doc";
 
-// Docstring regina::python::doc::Example_::spun
-inline constexpr const char spun[] =
+// Docstring regina::python::doc::Example::spun
+static constexpr const char spun[] =
 R"doc(Returns an ideal triangulation of the complement of the 2-knot
 obtained by spinning the given 1-knot (without twisting). The knot to
 be spun is passed as the first argument; the second (optional)
@@ -377,7 +377,7 @@ Parameter ``breakOpen``:
 Returns:
     an ideal triangulation of the resulting 2-knot.)doc";
 
-}
+}; // struct Example
 
 } // namespace regina::python::doc
 

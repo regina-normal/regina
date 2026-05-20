@@ -11,8 +11,41 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SatBlockSpec
-inline constexpr const char SatBlockSpec[] =
+// Docstring regina::python::doc::global_swap_SatBlockSpec
+inline constexpr const char global_swap_SatBlockSpec[] =
+R"doc(Swaps the contents of the two given structures.
+
+In particular, the internal SatBlock pointers will be swapped; that
+is, the pointers ``a.block()`` and ``b.block()`` after the move will
+be the same as ``b.block()`` and ``a.block()`` were respectively
+before the move.
+
+This global routine simply calls SatBlockSpec::swap(); it is provided
+so that SatBlockSpec meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
+
+// Docstring regina::python::doc::global_swap_SatRegion
+inline constexpr const char global_swap_SatRegion[] =
+R"doc(Swaps the contents of the two given regions.
+
+This global routine simply calls SatRegion::swap(); it is provided so
+that SatRegion meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first region whose contents should be swapped.
+
+Parameter ``b``:
+    the second region whose contents should be swapped.)doc";
+
+struct SatBlockSpec {
+
+// Docstring regina::python::doc::SatBlockSpec::__class
+static constexpr const char __class[] =
 R"doc(Describes how a single saturated block forms a part of a larger
 saturated region.
 
@@ -48,8 +81,65 @@ Because of these new ownership semantics, SatBlockSpec is no longer
 copyable. However, it is both movable and swappable (it implements C++
 moves semantics and adheres to the C++ Swappable requirement).)doc";
 
-// Docstring regina::python::doc::SatRegion
-inline constexpr const char SatRegion[] =
+// Docstring regina::python::doc::SatBlockSpec::__eq
+static constexpr const char __eq[] =
+R"doc(Determines whether this and the given structure contain
+combinatorially equivalent information.
+
+Specifically, to compare as equal, two SatBlockSpec objects must hold
+blocks of the same type with the same combinatorial parameters (as
+tested by the SatBlock equality comparison), and they must use the
+same horizontal/vertical reflection parameters within the larger
+region (as returned by refVert() and refHoriz()).
+
+Parameter ``other``:
+    the structure to compare against this.
+
+Returns:
+    ``True`` if and only if this and *other* contain combinatorially
+    equivalent information.)doc";
+
+// Docstring regina::python::doc::SatBlockSpec::block
+static constexpr const char block[] =
+R"doc(Returns the full combinatorial structure of the saturated block.
+
+Returns:
+    the saturated block structure.)doc";
+
+// Docstring regina::python::doc::SatBlockSpec::refHoriz
+static constexpr const char refHoriz[] =
+R"doc(Returns whether the block is reflected horizontally within the larger
+region. See the class notes for details.
+
+Returns:
+    ``True`` if and only if the block is reflected horizontally.)doc";
+
+// Docstring regina::python::doc::SatBlockSpec::refVert
+static constexpr const char refVert[] =
+R"doc(Returns whether the block is reflected vertically within the larger
+region. See the class notes for details.
+
+Returns:
+    ``True`` if and only if the block is reflected vertically.)doc";
+
+// Docstring regina::python::doc::SatBlockSpec::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given structure.
+
+In particular, the internal SatBlock pointers will be swapped; that
+is, the pointers ``this->block()`` and ``other.block()`` after the
+move will be the same as ``other.block()`` and ``this->block()`` were
+respectively before the move.
+
+Parameter ``other``:
+    the structure whose contents should be swapped with this.)doc";
+
+}; // struct SatBlockSpec
+
+struct SatRegion {
+
+// Docstring regina::python::doc::SatRegion::__class
+static constexpr const char __class[] =
 R"doc(A large saturated region in a Seifert fibred space formed by joining
 together saturated blocks.
 
@@ -98,92 +188,15 @@ or beginsRegion().
     SatBlock::setAdjacent() is not called on any of the blocks), but
     instead all adjacency information is managed by this class.)doc";
 
-namespace SatBlockSpec_ {
-
-// Docstring regina::python::doc::SatBlockSpec_::__eq
-inline constexpr const char __eq[] =
-R"doc(Determines whether this and the given structure contain
-combinatorially equivalent information.
-
-Specifically, to compare as equal, two SatBlockSpec objects must hold
-blocks of the same type with the same combinatorial parameters (as
-tested by the SatBlock equality comparison), and they must use the
-same horizontal/vertical reflection parameters within the larger
-region (as returned by refVert() and refHoriz()).
-
-Parameter ``other``:
-    the structure to compare against this.
-
-Returns:
-    ``True`` if and only if this and *other* contain combinatorially
-    equivalent information.)doc";
-
-// Docstring regina::python::doc::SatBlockSpec_::block
-inline constexpr const char block[] =
-R"doc(Returns the full combinatorial structure of the saturated block.
-
-Returns:
-    the saturated block structure.)doc";
-
-// Docstring regina::python::doc::SatBlockSpec_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given structures.
-
-In particular, the internal SatBlock pointers will be swapped; that
-is, the pointers ``a.block()`` and ``b.block()`` after the move will
-be the same as ``b.block()`` and ``a.block()`` were respectively
-before the move.
-
-This global routine simply calls SatBlockSpec::swap(); it is provided
-so that SatBlockSpec meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::SatBlockSpec_::refHoriz
-inline constexpr const char refHoriz[] =
-R"doc(Returns whether the block is reflected horizontally within the larger
-region. See the class notes for details.
-
-Returns:
-    ``True`` if and only if the block is reflected horizontally.)doc";
-
-// Docstring regina::python::doc::SatBlockSpec_::refVert
-inline constexpr const char refVert[] =
-R"doc(Returns whether the block is reflected vertically within the larger
-region. See the class notes for details.
-
-Returns:
-    ``True`` if and only if the block is reflected vertically.)doc";
-
-// Docstring regina::python::doc::SatBlockSpec_::swap
-inline constexpr const char swap[] =
-R"doc(Swaps the contents of this and the given structure.
-
-In particular, the internal SatBlock pointers will be swapped; that
-is, the pointers ``this->block()`` and ``other.block()`` after the
-move will be the same as ``other.block()`` and ``this->block()`` were
-respectively before the move.
-
-Parameter ``other``:
-    the structure whose contents should be swapped with this.)doc";
-
-}
-
-namespace SatRegion_ {
-
-// Docstring regina::python::doc::SatRegion_::__copy
-inline constexpr const char __copy[] =
+// Docstring regina::python::doc::SatRegion::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given region.
 
 Parameter ``src``:
     the region to copy.)doc";
 
-// Docstring regina::python::doc::SatRegion_::__eq
-inline constexpr const char __eq[] =
+// Docstring regina::python::doc::SatRegion::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 combinatorial presentation of a saturated region.
 
@@ -207,8 +220,8 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same combinatorial presentation of a saturated region.)doc";
 
-// Docstring regina::python::doc::SatRegion_::beginsRegion
-inline constexpr const char beginsRegion[] =
+// Docstring regina::python::doc::SatRegion::beginsRegion
+static constexpr const char beginsRegion[] =
 R"doc(Determines whether the given annulus is in fact a boundary annulus for
 a saturated region. The annulus should be represented from the inside
 of the proposed saturated region.
@@ -243,8 +256,8 @@ Returns:
     details of the saturated region if one was found, or ``None`` if
     none was found.)doc";
 
-// Docstring regina::python::doc::SatRegion_::block
-inline constexpr const char block[] =
+// Docstring regina::python::doc::SatRegion::block
+static constexpr const char block[] =
 R"doc(Returns details of the requested saturated block within this region.
 The information will returned will include structural information for
 the block, along with details of how the block is aligned (e.g.,
@@ -257,8 +270,8 @@ Parameter ``which``:
 Returns:
     details of the requested saturated block.)doc";
 
-// Docstring regina::python::doc::SatRegion_::blockAbbrs
-inline constexpr const char blockAbbrs[] =
+// Docstring regina::python::doc::SatRegion::blockAbbrs
+static constexpr const char blockAbbrs[] =
 R"doc(Returns an abbreviated list of blocks within this region in string
 format. The string that is returned will consist of the abbreviated
 names of all blocks in this region, separated by commas and spaces.
@@ -276,8 +289,8 @@ Parameter ``tex``:
 Returns:
     the abbreviated list of all blocks.)doc";
 
-// Docstring regina::python::doc::SatRegion_::blockIndex
-inline constexpr const char blockIndex[] =
+// Docstring regina::python::doc::SatRegion::blockIndex
+static constexpr const char blockIndex[] =
 R"doc(Returns the index of the given block within this region. This index
 corresponds to the integer parameter that is passed to the routine
 block().
@@ -292,8 +305,8 @@ Returns:
     countBlocks()-1 inclusive), or -1 if the block is not part of this
     region.)doc";
 
-// Docstring regina::python::doc::SatRegion_::boundaryAnnulus
-inline constexpr const char boundaryAnnulus[] =
+// Docstring regina::python::doc::SatRegion::boundaryAnnulus
+static constexpr const char boundaryAnnulus[] =
 R"doc(Returns details of the requested saturated annulus on the boundary of
 this region.
 
@@ -348,24 +361,24 @@ Returns:
     reflected within this region. See SatBlockSpec for further details
     on these reflections.)doc";
 
-// Docstring regina::python::doc::SatRegion_::countBlocks
-inline constexpr const char countBlocks[] =
+// Docstring regina::python::doc::SatRegion::countBlocks
+static constexpr const char countBlocks[] =
 R"doc(Returns the number of saturated blocks that come together to form this
 saturated region.
 
 Returns:
     the total number of blocks.)doc";
 
-// Docstring regina::python::doc::SatRegion_::countBoundaryAnnuli
-inline constexpr const char countBoundaryAnnuli[] =
+// Docstring regina::python::doc::SatRegion::countBoundaryAnnuli
+static constexpr const char countBoundaryAnnuli[] =
 R"doc(Returns the number of saturated annuli that together form the boundary
 components of this region.
 
 Returns:
     the number of boundary annuli.)doc";
 
-// Docstring regina::python::doc::SatRegion_::createSFS
-inline constexpr const char createSFS[] =
+// Docstring regina::python::doc::SatRegion::createSFS
+static constexpr const char createSFS[] =
 R"doc(Returns details of the Seifert fibred space represented by this
 region.
 
@@ -416,8 +429,8 @@ Parameter ``reflect``:
 Returns:
     the structure of the underlying Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::SatRegion_::find
-inline constexpr const char find[] =
+// Docstring regina::python::doc::SatRegion::find
+static constexpr const char find[] =
 R"doc(Runs a search for every isomorphic embedding of every starter block
 from the global SatBlockStarterSet within the given triangulation.
 
@@ -486,27 +499,14 @@ Returns:
     ``True``, or ``False`` if the search was allowed to run to
     completion.)doc";
 
-// Docstring regina::python::doc::SatRegion_::global_swap
-inline constexpr const char global_swap[] =
-R"doc(Swaps the contents of the two given regions.
-
-This global routine simply calls SatRegion::swap(); it is provided so
-that SatRegion meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first region whose contents should be swapped.
-
-Parameter ``b``:
-    the second region whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::SatRegion_::swap
-inline constexpr const char swap[] =
+// Docstring regina::python::doc::SatRegion::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given region.
 
 Parameter ``other``:
     the region whose contents should be swapped with this.)doc";
 
-}
+}; // struct SatRegion
 
 } // namespace regina::python::doc
 
