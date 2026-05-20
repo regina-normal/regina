@@ -4631,6 +4631,7 @@
 		05E221E42CEE107B009D5D4E /* data-spatiallink.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-spatiallink.docbook"; sourceTree = "<group>"; };
 		05E221E52CEE124E009D5D4E /* data-oneeff.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-oneeff.docbook"; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
+		05E6297C2FBDF57000AE1B84 /* docstrings_all.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = docstrings_all.cpp; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -5797,6 +5798,7 @@
 				050EC0032E04D3BB006755ED /* docstrings.out.v2 */,
 				050EC0042E04D3BB006755ED /* docstrings.out.v3 */,
 				05098A6928F24D3C005E4716 /* docstrings.test */,
+				05E6297C2FBDF57000AE1B84 /* docstrings_all.cpp */,
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
 				0577E6DF1F97087A00CBDF15 /* embeddings.out */,
 				0577E6EA1F97088000CBDF15 /* embeddings.test */,
