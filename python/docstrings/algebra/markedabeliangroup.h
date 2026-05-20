@@ -124,21 +124,6 @@ Parameter ``X``:
 Returns:
     the composite homomorphism.)doc";
 
-// Docstring regina::python::doc::HomMarkedAbelianGroup::__mul_2
-static constexpr const char __mul_2[] =
-R"doc(Returns the composition of two homomorphisms.
-
-Precondition:
-    the homomorphisms must be composable, meaning that the codomain of
-    X must have the same presentation matrices as the domain of this
-    homomorphism.
-
-Parameter ``X``:
-    the homomorphism to compose this with.
-
-Returns:
-    the composite homomorphism.)doc";
-
 // Docstring regina::python::doc::HomMarkedAbelianGroup::codomain
 static constexpr const char codomain[] =
 R"doc(Returns the codomain of this homomorphism.

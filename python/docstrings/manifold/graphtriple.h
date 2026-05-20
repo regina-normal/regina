@@ -199,42 +199,6 @@ Parameter ``matchingReln1``:
     the 2-by-2 matching matrix that specifies how spaces *end1* and
     *centre* are joined.)doc";
 
-// Docstring regina::python::doc::GraphTriple::__init_2
-static constexpr const char __init_2[] =
-R"doc(Creates a new graph manifold from three bounded Seifert fibred spaces,
-which are moved instead of copied.
-
-Other than its use of move semantics, this behaves identically to the
-other constructor that takes the Seifert fibred spaces by const
-reference.
-
-Precondition:
-    Each of the given matrices has determinant +1 or -1.
-
-Exception ``InvalidArgument``:
-    One of the spaces *end0* and *end1* does not have precisely one
-    torus boundary corresponding to a single untwisted puncture in its
-    base orbifold, and/or the space *centre* does not have precisely
-    two disjoint torus boundaries corresponding to two untwisted
-    punctures in its base orbifold.
-
-Parameter ``end0``:
-    the first end space, as described in the class notes.
-
-Parameter ``centre``:
-    the central space, as described in the class notes.
-
-Parameter ``end1``:
-    the second end space, as described in the class notes.
-
-Parameter ``matchingReln0``:
-    the 2-by-2 matching matrix that specifies how spaces *end0* and
-    *centre* are joined.
-
-Parameter ``matchingReln1``:
-    the 2-by-2 matching matrix that specifies how spaces *end1* and
-    *centre* are joined.)doc";
-
 // Docstring regina::python::doc::GraphTriple::centre
 static constexpr const char centre[] =
 R"doc(Returns a reference to the central space. This is the Seifert fibred

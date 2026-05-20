@@ -47,7 +47,7 @@ void addGraphPair(pybind11::module_& m) {
         .def(pybind11::init<const SFSpace&, const SFSpace&,
             long, long, long, long>(), rdoc::__init)
         .def(pybind11::init<const SFSpace&, const SFSpace&, const Matrix2&>(),
-            rdoc::__init_3)
+            rdoc::__init_2)
         .def(pybind11::init<const GraphPair&>(), rdoc::__copy)
         .def("sfs", &GraphPair::sfs,
             pybind11::return_value_policy::reference_internal, rdoc::sfs)

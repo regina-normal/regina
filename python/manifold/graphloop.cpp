@@ -46,7 +46,7 @@ void addGraphLoop(pybind11::module_& m) {
             rdoc::__class)
         .def(pybind11::init<const SFSpace&, long, long, long, long>(),
             rdoc::__init)
-        .def(pybind11::init<const SFSpace&, const Matrix2&>(), rdoc::__init_3)
+        .def(pybind11::init<const SFSpace&, const Matrix2&>(), rdoc::__init_2)
         .def(pybind11::init<const GraphLoop&>(), rdoc::__copy)
         .def("sfs", &GraphLoop::sfs,
             pybind11::return_value_policy::reference_internal, rdoc::sfs)

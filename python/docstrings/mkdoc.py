@@ -490,10 +490,18 @@ def extract(filename, node, parent_namespace, parent_types, output):
             node.spelling not in CLASS_BLACKLIST and \
             (not node.is_move_constructor())))
 
+    # Check for rvalue reference arguments, which would normally make a
+    # function non-bindable in Python.
+    if generateDocstring:
+        for c in node.get_children():
+            if c.type.kind == TypeKind.RVALUEREFERENCE:
+                generateDocstring = False
+                break
+
     if (not generateDocstring) and (node.kind not in PRINT_BLACKLIST) and \
             '\\python' in node.raw_comment:
         # This entity has Python-specific comments, so generate a docstring
-        # even though the node type is not in the print whitelist.
+        # even though we would otherwise have not done so.
         # print('Print override for node kind:', node.kind)
         generateDocstring = True
 

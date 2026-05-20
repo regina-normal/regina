@@ -27,54 +27,6 @@ Parameter ``rhs``:
 Returns:
     the sum of both polynomials.)doc";
 
-// Docstring regina::python::doc::__add_2
-inline constexpr const char __add_2[] =
-R"doc(Adds the two given polynomials.
-
-This operator ``+`` is sometimes faster than using ``+=``, since it
-has more flexibility to avoid an internal deep copy.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
-// Docstring regina::python::doc::__add_3
-inline constexpr const char __add_3[] =
-R"doc(Adds the two given polynomials.
-
-This operator ``+`` is sometimes faster than using ``+=``, since it
-has more flexibility to avoid an internal deep copy.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
-// Docstring regina::python::doc::__add_4
-inline constexpr const char __add_4[] =
-R"doc(Adds the two given polynomials.
-
-This operator ``+`` is sometimes faster than using ``+=``, since it
-has more flexibility to avoid an internal deep copy.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
 // Docstring regina::python::doc::__div
 inline constexpr const char __div[] =
 R"doc(Divides the given polynomial by the given scalar constant.
@@ -156,54 +108,6 @@ Returns:
 
 // Docstring regina::python::doc::__sub_2
 inline constexpr const char __sub_2[] =
-R"doc(Subtracts the two given polynomials.
-
-This operator ``-`` is sometimes faster than using ``-=``, since it
-has more flexibility to avoid an internal deep copy.
-
-Parameter ``lhs``:
-    the polynomial to sutract *rhs* from.
-
-Parameter ``rhs``:
-    the polynomial to subtract from *lhs*.
-
-Returns:
-    the difference of the two given polynomials.)doc";
-
-// Docstring regina::python::doc::__sub_3
-inline constexpr const char __sub_3[] =
-R"doc(Subtracts the two given polynomials.
-
-This operator ``-`` is sometimes faster than using ``-=``, since it
-has more flexibility to avoid an internal deep copy.
-
-Parameter ``lhs``:
-    the polynomial to sutract *rhs* from.
-
-Parameter ``rhs``:
-    the polynomial to subtract from *lhs*.
-
-Returns:
-    the difference of the two given polynomials.)doc";
-
-// Docstring regina::python::doc::__sub_4
-inline constexpr const char __sub_4[] =
-R"doc(Subtracts the two given polynomials.
-
-This operator ``-`` is sometimes faster than using ``-=``, since it
-has more flexibility to avoid an internal deep copy.
-
-Parameter ``lhs``:
-    the polynomial to sutract *rhs* from.
-
-Parameter ``rhs``:
-    the polynomial to subtract from *lhs*.
-
-Returns:
-    the difference of the two given polynomials.)doc";
-
-// Docstring regina::python::doc::__sub_5
-inline constexpr const char __sub_5[] =
 R"doc(Subtracts the two given polynomials.
 
 This operator ``-`` is sometimes faster than using ``-=``, since it

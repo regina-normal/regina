@@ -286,25 +286,6 @@ Precondition:
 Returns:
     the composition of both isomorphisms.)doc";
 
-// Docstring regina::python::doc::Isomorphism::__mul_2
-static constexpr const char __mul_2[] =
-R"doc(Returns the composition of this isomorphism with the given
-isomorphism.
-
-This follows the same order convention as Regina's permutation
-classes: the composition ``a * b`` first applies the right-hand
-isomorphism *b*, and then the left-hand isomorphism *a*.
-
-Precondition:
-    The source triangulation for this isomorphism (the left-hand side)
-    is at least as large as the destination triangulation for *rhs*
-    (the right-hand side). In other words, the maximum value of
-    ``rhs.simpImage(i)`` over all *i* must be less than
-    ``this->size()``.
-
-Returns:
-    the composition of both isomorphisms.)doc";
-
 // Docstring regina::python::doc::Isomorphism::apply
 static constexpr const char apply[] =
 R"doc(Deprecated routine that applies this isomorphism to the given

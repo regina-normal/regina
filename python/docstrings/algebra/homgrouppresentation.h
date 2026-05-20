@@ -159,28 +159,6 @@ Parameter ``rhs``:
 Returns:
     the composition of both homomorphisms.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation::__mul_2
-static constexpr const char __mul_2[] =
-R"doc(Composes this homomorphism with the given homomorphism.
-
-Evaluating the composition on some group element *x* is the same as
-evaluating ``this(rhs(x))``. In other words, in this composition,
-*rhs* is evaluated first and then the output of that is evaluated by
-this homomorphism.
-
-If both of the given homomorphisms are declared isomorphisms, then the
-return value will be a declared isomoprhism also.
-
-Precondition:
-    the codomain of *rhs* must be the same as the domain of this
-    homomorphism.
-
-Parameter ``rhs``:
-    the homomorphism to compose this with.
-
-Returns:
-    the composition of both homomorphisms.)doc";
-
 // Docstring regina::python::doc::HomGroupPresentation::codomain
 static constexpr const char codomain[] =
 R"doc(The codomain of the map.

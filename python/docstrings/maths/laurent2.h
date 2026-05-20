@@ -27,54 +27,6 @@ Parameter ``rhs``:
 Returns:
     the sum of both polynomials.)doc";
 
-// Docstring regina::python::doc::__add_2
-inline constexpr const char __add_2[] =
-R"doc(Adds the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
-// Docstring regina::python::doc::__add_3
-inline constexpr const char __add_3[] =
-R"doc(Adds the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
-// Docstring regina::python::doc::__add_4
-inline constexpr const char __add_4[] =
-R"doc(Adds the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
 // Docstring regina::python::doc::__div
 inline constexpr const char __div[] =
 R"doc(Divides the given polynomial by the given scalar constant.
@@ -159,54 +111,6 @@ Returns:
 
 // Docstring regina::python::doc::__sub_2
 inline constexpr const char __sub_2[] =
-R"doc(Subtracts the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the polynomial to subtract from.
-
-Parameter ``rhs``:
-    the polynomial to subtract.
-
-Returns:
-    the first polynomial minus the second.)doc";
-
-// Docstring regina::python::doc::__sub_3
-inline constexpr const char __sub_3[] =
-R"doc(Subtracts the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the polynomial to subtract from.
-
-Parameter ``rhs``:
-    the polynomial to subtract.
-
-Returns:
-    the first polynomial minus the second.)doc";
-
-// Docstring regina::python::doc::__sub_4
-inline constexpr const char __sub_4[] =
-R"doc(Subtracts the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the polynomial to subtract from.
-
-Parameter ``rhs``:
-    the polynomial to subtract.
-
-Returns:
-    the first polynomial minus the second.)doc";
-
-// Docstring regina::python::doc::__sub_5
-inline constexpr const char __sub_5[] =
 R"doc(Subtracts the two given polynomials.
 
 The two polynomials need not have the same range of non-zero

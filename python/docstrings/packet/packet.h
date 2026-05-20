@@ -2038,20 +2038,6 @@ Parameter ``data``:
 
 // Docstring regina::python::doc::PacketOf::__init_2
 static constexpr const char __init_2[] =
-R"doc(Moves the given data into this new packet. This will typically be much
-faster than a deep copy, since it uses the move constructor for
-*Held*.
-
-The packet will not be inserted into any packet tree, and will have an
-empty packet label.
-
-The object that is passed (*data*) will no longer be usable.
-
-Parameter ``data``:
-    the object to move.)doc";
-
-// Docstring regina::python::doc::PacketOf::__init_3
-static constexpr const char __init_3[] =
 R"doc(Creates a new packet using one of *Held*'s own constructors.
 
 The given arguments *args* will be forwarded directly to the

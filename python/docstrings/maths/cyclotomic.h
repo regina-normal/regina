@@ -27,54 +27,6 @@ Parameter ``rhs``:
 Returns:
     the sum of both field elements.)doc";
 
-// Docstring regina::python::doc::__add_2
-inline constexpr const char __add_2[] =
-R"doc(Adds the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the first field element to add.
-
-Parameter ``rhs``:
-    the second field element to add.
-
-Returns:
-    the sum of both field elements.)doc";
-
-// Docstring regina::python::doc::__add_3
-inline constexpr const char __add_3[] =
-R"doc(Adds the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the first field element to add.
-
-Parameter ``rhs``:
-    the second field element to add.
-
-Returns:
-    the sum of both field elements.)doc";
-
-// Docstring regina::python::doc::__add_4
-inline constexpr const char __add_4[] =
-R"doc(Adds the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the first field element to add.
-
-Parameter ``rhs``:
-    the second field element to add.
-
-Returns:
-    the sum of both field elements.)doc";
-
 // Docstring regina::python::doc::__div
 inline constexpr const char __div[] =
 R"doc(Divides the given field element by the given rational.
@@ -164,54 +116,6 @@ Returns:
 
 // Docstring regina::python::doc::__sub_2
 inline constexpr const char __sub_2[] =
-R"doc(Subtracts the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the field element to subtract from.
-
-Parameter ``rhs``:
-    the field element to subtract.
-
-Returns:
-    the first field element minus the second.)doc";
-
-// Docstring regina::python::doc::__sub_3
-inline constexpr const char __sub_3[] =
-R"doc(Subtracts the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the field element to subtract from.
-
-Parameter ``rhs``:
-    the field element to subtract.
-
-Returns:
-    the first field element minus the second.)doc";
-
-// Docstring regina::python::doc::__sub_4
-inline constexpr const char __sub_4[] =
-R"doc(Subtracts the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the field element to subtract from.
-
-Parameter ``rhs``:
-    the field element to subtract.
-
-Returns:
-    the first field element minus the second.)doc";
-
-// Docstring regina::python::doc::__sub_5
-inline constexpr const char __sub_5[] =
 R"doc(Subtracts the two given cyclotomic field elements.
 
 Precondition:

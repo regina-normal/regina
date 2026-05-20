@@ -495,19 +495,6 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::IntegerBase::__init_3
 static constexpr const char __init_3[] =
-R"doc(Moves the given integer into this new integer. This is a fast
-(constant time) operation.
-
-The integer that is passed (*src*) will no longer be usable.
-
-Precondition:
-    The given integer is not infinite.
-
-Parameter ``src``:
-    the integer to move.)doc";
-
-// Docstring regina::python::doc::IntegerBase::__init_4
-static constexpr const char __init_4[] =
 R"doc(Initialises this to the given native Python integer.
 
 The argument is of the Python ``int`` type, which Python uses to store
@@ -517,15 +504,15 @@ Integer and LargeInteger classes).
 Parameter ``value``:
     the new value of this integer.)doc";
 
-// Docstring regina::python::doc::IntegerBase::__init_5
-static constexpr const char __init_5[] =
+// Docstring regina::python::doc::IntegerBase::__init_4
+static constexpr const char __init_4[] =
 R"doc(Initialises this integer to the truncation of the given real number.
 
 Parameter ``value``:
     the real number to be truncated.)doc";
 
-// Docstring regina::python::doc::IntegerBase::__init_6
-static constexpr const char __init_6[] =
+// Docstring regina::python::doc::IntegerBase::__init_5
+static constexpr const char __init_5[] =
 R"doc(Initialises this integer to the given value which is represented as a
 string of digits in a given base.
 
@@ -562,8 +549,8 @@ Parameter ``value``:
 Parameter ``base``:
     the base in which *value* is given.)doc";
 
-// Docstring regina::python::doc::IntegerBase::__init_7
-static constexpr const char __init_7[] =
+// Docstring regina::python::doc::IntegerBase::__init_6
+static constexpr const char __init_6[] =
 R"doc(Initialises this integer to the given value which is represented as a
 string of digits in a given base.
 

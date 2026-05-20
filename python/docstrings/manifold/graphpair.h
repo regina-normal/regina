@@ -157,70 +157,9 @@ Parameter ``mat11``:
 
 // Docstring regina::python::doc::GraphPair::__init_2
 static constexpr const char __init_2[] =
-R"doc(Creates a new graph manifold from a pair of bounded Seifert fibred
-spaces, which are moved instead of copied.
-
-Other than its use of move semantics, this behaves identically to the
-other constructor that takes the Seifert fibred spaces by const
-reference. See that constructor for further details.
-
-Precondition:
-    The given matching matrix has determinant +1 or -1.
-
-Exception ``InvalidArgument``:
-    One of the given Seifert fibred spaces does not have precisely one
-    torus boundary, corresponding to a single untwisted puncture in
-    its base orbifold.
-
-Parameter ``sfs0``:
-    the first Seifert fibred space.
-
-Parameter ``sfs1``:
-    the second Seifert fibred space.
-
-Parameter ``mat00``:
-    the (0,0) element of the matching matrix.
-
-Parameter ``mat01``:
-    the (0,1) element of the matching matrix.
-
-Parameter ``mat10``:
-    the (1,0) element of the matching matrix.
-
-Parameter ``mat11``:
-    the (1,1) element of the matching matrix.)doc";
-
-// Docstring regina::python::doc::GraphPair::__init_3
-static constexpr const char __init_3[] =
 R"doc(Creates a new graph manifold as a pair of joined Seifert fibred
 spaces. The two bounded Seifert fibred spaces and the entire 2-by-2
 matching matrix are each passed separately.
-
-Precondition:
-    The given matching matrix has determinant +1 or -1.
-
-Exception ``InvalidArgument``:
-    One of the given Seifert fibred spaces does not have precisely one
-    torus boundary, corresponding to a single untwisted puncture in
-    its base orbifold.
-
-Parameter ``sfs0``:
-    the first Seifert fibred space.
-
-Parameter ``sfs1``:
-    the second Seifert fibred space.
-
-Parameter ``matchingReln``:
-    the 2-by-2 matching matrix.)doc";
-
-// Docstring regina::python::doc::GraphPair::__init_4
-static constexpr const char __init_4[] =
-R"doc(Creates a new graph manifold from a pair of bounded Seifert fibred
-spaces, which are moved instead of copied.
-
-Other than its use of move semantics, this behaves identically to the
-other constructor that takes the Seifert fibred spaces by const
-reference. See that constructor for further details.
 
 Precondition:
     The given matching matrix has determinant +1 or -1.

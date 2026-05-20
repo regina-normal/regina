@@ -118,30 +118,6 @@ Parameter ``pairing``:
     the specific pairing of simplex facets that this permutation set
     will complement.)doc";
 
-// Docstring regina::python::doc::GluingPerms::__init_2
-static constexpr const char __init_2[] =
-R"doc(Creates a new permutation set. All internal permutations will be
-marked as not yet chosen, and any attempt to query them before setting
-them to explicit values will result in undefined behaviour. The
-corresponding permutation indices will be set to -1.
-
-This constructor moves the contents of the given facet pairing into
-this object. After it returns, *pairing* will no longer be usable.
-
-Precondition:
-    The given facet pairing is connected, i.e., it is possible to
-    reach any simplex from any other simplex via a series of matched
-    facet pairs.
-
-Precondition:
-    The given facet pairing is in canonical form as described by
-    FacetPairing::isCanonical(). Note that all facet pairings
-    constructed by FacetPairing::findAllPairings() are of this form.
-
-Parameter ``pairing``:
-    the specific pairing of simplex facets that this permutation set
-    will complement.)doc";
-
 // Docstring regina::python::doc::GluingPerms::data
 static constexpr const char data[] =
 R"doc(Returns all internal data in a plain text format. This gluing
