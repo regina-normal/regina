@@ -53,12 +53,10 @@ using regina::Triangulation;
 void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN_MAIN
 
-    regina::python::registerReginaException<regina::SnapPeaFatalError>(
-        m, "SnapPeaFatalError", rdoc::SnapPeaFatalError::__class,
-        PyExc_RuntimeError);
-    regina::python::registerReginaException<regina::SnapPeaMemoryFull>(
-        m, "SnapPeaMemoryFull", rdoc::SnapPeaMemoryFull::__class,
-        PyExc_RuntimeError);
+    regina::python::registerReginaException<regina::SnapPeaFatalError,
+        rdoc::SnapPeaFatalError>(m, "SnapPeaFatalError", PyExc_RuntimeError);
+    regina::python::registerReginaException<regina::SnapPeaMemoryFull,
+        rdoc::SnapPeaMemoryFull>(m, "SnapPeaMemoryFull", PyExc_RuntimeError);
 
     RDOC_SCOPE_SWITCH(Cusp)
 

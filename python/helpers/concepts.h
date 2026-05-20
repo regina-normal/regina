@@ -81,4 +81,12 @@ concept PythonPacketHeldWrapper =
         requires regina::PacketHeldType<typename T::type>;
     };
 
+/**
+ * A docstring class, filled with static constants all of which are docstrings
+ * for some particular Regina type.
+ */
+template <typename T>
+concept DocstringClass =
+    requires { { T::__class } -> std::convertible_to<const char*>; };
+
 } // namespace regina::python

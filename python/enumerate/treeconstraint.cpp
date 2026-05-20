@@ -53,11 +53,11 @@ using regina::LPConstraintEulerPositive;
 using regina::LPConstraintEulerZero;
 using regina::LPConstraintNonSpun;
 
-template <regina::LPConstraint Constraint>
-void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
+template <regina::LPConstraint Constraint, regina::python::DocstringClass Docs>
+void addLPConstraint(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(LPConstraintAPI)
 
-    auto c = pybind11::class_<Constraint>(m, name, doc)
+    auto c = pybind11::class_<Constraint>(m, name, Docs::__class)
         .def_readonly_static("constraints", &Constraint::constraints)
         .def_readonly_static("octAdjustment", &Constraint::octAdjustment)
         .def_static("addRows", [](const Triangulation<3>& tri,
@@ -140,14 +140,14 @@ void addTreeConstraint(pybind11::module_& m) {
     // the class-specific doc namespaces are unavailable.
     RDOC_SCOPE_BEGIN_MAIN
 
-    addLPConstraint<LPConstraintNone>(m, "LPConstraintNone",
-        rdoc::LPConstraintNone::__class);
-    addLPConstraint<LPConstraintEulerPositive>(m, "LPConstraintEulerPositive",
-        rdoc::LPConstraintEulerPositive::__class);
-    addLPConstraint<LPConstraintEulerZero>(m, "LPConstraintEulerZero",
-        rdoc::LPConstraintEulerZero::__class);
-    addLPConstraint<LPConstraintNonSpun>(m, "LPConstraintNonSpun",
-        rdoc::LPConstraintNonSpun::__class);
+    addLPConstraint<LPConstraintNone, rdoc::LPConstraintNone>(
+        m, "LPConstraintNone");
+    addLPConstraint<LPConstraintEulerPositive, rdoc::LPConstraintEulerPositive>(
+        m, "LPConstraintEulerPositive");
+    addLPConstraint<LPConstraintEulerZero, rdoc::LPConstraintEulerZero>(
+        m, "LPConstraintEulerZero");
+    addLPConstraint<LPConstraintNonSpun, rdoc::LPConstraintNonSpun>(
+        m, "LPConstraintNonSpun");
 
     // BanNone does not have its own constructor documentation, since it
     // behaves identically to the base class constructor.
