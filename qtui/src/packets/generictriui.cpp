@@ -29,7 +29,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 
 // UI includes:
 #include "generictriui.h"

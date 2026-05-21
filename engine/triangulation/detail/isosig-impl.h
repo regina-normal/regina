@@ -43,7 +43,7 @@
 #endif
 
 #include <algorithm>
-#include "triangulation/detail/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 

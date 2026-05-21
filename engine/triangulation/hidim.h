@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -28,10 +28,22 @@
  *                                                                        *
  **************************************************************************/
 
-#include "gluingperms-bindings.h"
-#include "triangulation/hidim.h"
+/*! \file triangulation/hidim.h
+ *  \brief Includes all headers for working with higher-dimensional
+ *  triangulations.  This includes headers for the main class
+ *  `Triangulation<dim>`, as well as the face classes `Face<dim, subdim>`,
+ *  the component classes `Component<dim>` and `BoundaryComponent<dim>`, and
+ *  the isomorphism class `Isomorphism<dim>`, for all dimensions \a dim ≥ 5.
+ */
 
-void addGluingPerms8(pybind11::module_& m) {
-    addGluingPerms<8>(m, "GluingPerms8");
-}
+#ifndef __REGINA_HIDIM_H
+#ifndef __DOXYGEN
+#define __REGINA_HIDIM_H
+#endif
+
+#include "triangulation/triangulation.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
+#endif
 

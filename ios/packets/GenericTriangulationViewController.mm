@@ -33,7 +33,7 @@
 #import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "GenericTriangulationViewController.h"
-#import "triangulation/generic.h"
+#import "triangulation/hidim.h"
 
 class GenericTriangulationHelper {
 public:

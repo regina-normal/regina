@@ -34,7 +34,7 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 #include "../helpers.h"
 #include "../docstrings/triangulation/detail/facetpairing.h"
 

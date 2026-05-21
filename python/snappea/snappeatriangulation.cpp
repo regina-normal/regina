@@ -43,7 +43,7 @@
 #include "../helpers/exception.h"
 #include "../helpers/packet.h"
 #include "../docstrings/snappea/snappeatriangulation.h"
-#include "../docstrings/triangulation/detail/triangulation.h" // for global_swap
+#include "../docstrings/triangulation/triangulation.h" // for global_swap
 
 using pybind11::overload_cast;
 using regina::Cusp;

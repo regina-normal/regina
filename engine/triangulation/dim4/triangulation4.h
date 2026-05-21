@@ -46,8 +46,8 @@
 #include "regina-core.h"
 #include "hypersurface/normalhypersurface.h"
 #include "progress/progresstracker.h"
+#include "triangulation/triangulation.h"
 #include "triangulation/detail/retriangulate.h"
-#include "triangulation/detail/triangulation.h"
 #include "utilities/markedvector.h"
 
 // NOTE: More #includes for faces, components and boundary components

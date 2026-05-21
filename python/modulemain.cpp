@@ -35,7 +35,7 @@
 #endif
 
 #include "core/engine.h"
-#include "triangulation/generic.h" // for TriangleType
+#include "triangulation/triangulation.h" // for TriangleType
 
 #include "helpers.h"
 #include "docstrings/core/engine.h"

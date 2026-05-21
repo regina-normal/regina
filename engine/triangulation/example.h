@@ -72,7 +72,7 @@ namespace regina {
  *
  * \tparam dim the dimension of the example triangulations to construct.
  *
- * \headerfile triangulation/generic.h
+ * \headerfile triangulation/triangulation.h
  *
  * \ingroup triangulation
  */

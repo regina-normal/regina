@@ -24,6 +24,5 @@ if (${REGINA_INSTALL_DEV})
     retriangulate.h
     simplex.h
     strings.h
-    triangulation.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation/detail" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

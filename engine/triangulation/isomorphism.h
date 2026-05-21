@@ -29,12 +29,12 @@
  **************************************************************************/
 
 /*! \file triangulation/isomorphism.h
- *  \brief Internal header for combinatorial isomorphisms between
- *  triangulations of arbitrary dimension.
+ *  \brief Support for combinatorial isomorphisms between triangulations of
+ *  arbitrary dimension.
  *
- *  This file is automatically included from the high-level triangulation
- *  headers (e.g., triangulation/dim3.h, triangulation/generic.h, etc.).
- *  There is no need for end users to include this header explicitly.
+ *  This file is automatically imported by the high-level triangulation headers
+ *  (e.g., triangulation/dim3.h, triangulation/hidim.h, and so on).
+ *  There is typically no need for end users to include this header directly.
  */
 
 #ifndef __REGINA_ISOMORPHISM_H
@@ -106,7 +106,7 @@ namespace regina {
  * \tparam dim the dimension of the triangulations that this isomorphism
  * class works with.
  *
- * \headerfile triangulation/generic.h
+ * \headerfile triangulation/triangulation.h
  *
  * \ingroup triangulation
  */

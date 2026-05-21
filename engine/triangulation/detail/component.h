@@ -462,7 +462,7 @@ class ComponentBase :
  *
  * \tparam dim the dimension of the underlying triangulation.
  *
- * \headerfile triangulation/generic.h
+ * \headerfile triangulation/triangulation.h
  *
  * \ingroup triangulation
  */

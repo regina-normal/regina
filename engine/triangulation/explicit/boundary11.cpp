@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 #include "triangulation/detail/boundarycomponent-impl.h"
 
 namespace regina::detail {

@@ -29,21 +29,11 @@
  **************************************************************************/
 
 /*! \file triangulation/generic.h
- *  \brief Includes all headers for working with higher-dimensional
- *  triangulations.  This includes headers for the main class
- *  `Triangulation<dim>`, as well as the face classes `Face<dim, subdim>`,
- *  the component classes `Component<dim>` and `BoundaryComponent<dim>`, and
- *  the isomorphism class `Isomorphism<dim>`, for all dimensions \a dim ≥ 5.
+ *  \brief Deprecated header that includes everything for working with
+ *  higher-dimensional triangulations.
+ *  \deprecated Use triangulation/hidim.h instead.
  */
 
-#ifndef __REGINA_GENERIC_H
-#ifndef __DOXYGEN
-#define __REGINA_GENERIC_H
-#endif
-
-#include "triangulation/detail/triangulation.h"
-
-ENSURE_ESSENTIAL_REGINA_HEADERS
-
-#endif
+#warning "The header triangulation/generic.h is deprecated; use triangulation/hidim.h instead."
+#include "triangulation/hidim.h"
 

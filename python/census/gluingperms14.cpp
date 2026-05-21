@@ -29,7 +29,7 @@
  **************************************************************************/
 
 #include "gluingperms-bindings.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 
 void addGluingPerms14(pybind11::module_& m) {
     addGluingPerms<14>(m, "GluingPerms14");

@@ -32,7 +32,7 @@
 #define __REGINA_PYTHON_FACEHELPER_H
 
 #include <pybind11/pybind11.h>
-#include "triangulation/generic.h"
+#include "triangulation/forward.h"
 #include "../helpers.h"
 
 namespace regina::python {

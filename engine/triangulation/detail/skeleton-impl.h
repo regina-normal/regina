@@ -45,7 +45,7 @@
 #define __REGINA_SKELETON_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/detail/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/typeutils.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS

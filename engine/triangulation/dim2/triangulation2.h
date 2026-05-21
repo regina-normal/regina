@@ -43,7 +43,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "triangulation/detail/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/markedvector.h"
 
 // NOTE: More #includes for faces, components and boundary components

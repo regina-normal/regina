@@ -30,7 +30,7 @@
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include "triangulation/generic.h"
+#include "triangulation/triangulation.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 #include "../docstrings/triangulation/detail/boundarycomponent.h"

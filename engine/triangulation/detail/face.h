@@ -349,7 +349,7 @@ class FaceEmbeddingBase :
  * \tparam dim the dimension of the underlying triangulation.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
  *
- * \headerfile triangulation/generic.h
+ * \headerfile triangulation/triangulation.h
  *
  * \ingroup triangulation
  */
@@ -1436,7 +1436,7 @@ class FaceBase :
  * \tparam dim the dimension of the underlying triangulation.
  * \tparam subdim the dimension of the faces that this class represents.
  *
- * \headerfile triangulation/generic.h
+ * \headerfile triangulation/triangulation.h
  *
  * \ingroup triangulation
  */

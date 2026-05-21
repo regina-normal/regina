@@ -32,7 +32,7 @@
 
 // Headers required for our template instantiations:
 #include "census/gluingperms.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 #include "triangulation/facetpairing.h"
 
 // Instantiate templates for standard dimensions.

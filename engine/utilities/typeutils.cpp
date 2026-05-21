@@ -38,7 +38,7 @@
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/facetpairing3.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 #include "utilities/typeutils.h"
 #include <unordered_map>
 

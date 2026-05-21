@@ -32,13 +32,13 @@
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #include "triangulation/facetpairing.h"
-#include "triangulation/generic.h"
+#include "triangulation/triangulation.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "utilities/typeutils.h"
 #include "../helpers.h"
 #include "../helpers/packet.h"
 #include "../generic/facehelper.h"
-#include "../docstrings/triangulation/detail/triangulation.h"
+#include "../docstrings/triangulation/triangulation.h"
 #include "../docstrings/utilities/snapshot.h"
 #include "../generic/isosig-bindings.h" // must come after docstrings
 

@@ -45,7 +45,7 @@
 #define __REGINA_TRIANGULATION_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/detail/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS

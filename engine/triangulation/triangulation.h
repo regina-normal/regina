@@ -28,13 +28,19 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file triangulation/detail/triangulation.h
- *  \brief Implementation details for triangulations of arbitrary dimension.
+/*! \file triangulation/triangulation.h
+ *  \brief Core support for triangulations.
+ *
+ *  End users will most likely not need to include this header.  Instead you
+ *  should include one of triangulation/dim2.h, triangulation/dim3.h,
+ *  triangulation/dim4.h and/or triangulation/hidim.h, according to which
+ *  dimension(s) you plan on working in.  This header (along with several
+ *  others) will then be imported automatically.
  */
 
-#ifndef __REGINA_TRIANGULATION_H_DETAIL
+#ifndef __REGINA_TRIANGULATION_H
 #ifndef __DOXYGEN
-#define __REGINA_TRIANGULATION_H_DETAIL
+#define __REGINA_TRIANGULATION_H
 #endif
 
 #include <iomanip>
@@ -4863,7 +4869,7 @@ class TriangulationBase :
  *
  * \tparam dim the dimension of the underlying triangulation.
  *
- * \headerfile triangulation/generic.h
+ * \headerfile triangulation/triangulation.h
  *
  * \ingroup triangulation
  */

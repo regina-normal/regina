@@ -43,10 +43,12 @@ if (${REGINA_INSTALL_DEV})
     facetpairing3.h
     facetspec.h
     generic.h
+    hidim.h
     isomorphism.h
     isosig.h
     isosigencoding.h
     isosigtype.h
     pachner.h
+    triangulation.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

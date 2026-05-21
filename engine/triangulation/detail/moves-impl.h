@@ -45,7 +45,7 @@
 #define __REGINA_MOVES_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/detail/triangulation.h"
+#include "triangulation/triangulation.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
