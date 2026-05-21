@@ -50,7 +50,7 @@
 #define __REGINA_BOUNDARYCOMPONENT_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/boundarycomponent.h"
+#include "triangulation/detail/boundarycomponent.h"
 #include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS

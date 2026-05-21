@@ -38,7 +38,6 @@
 #include "../helpers.h"
 #include "../helpers/packet.h"
 #include "../generic/facehelper.h"
-#include "../docstrings/triangulation/generic/triangulation.h"
 #include "../docstrings/triangulation/detail/triangulation.h"
 #include "../docstrings/utilities/snapshot.h"
 #include "../generic/isosig-bindings.h" // must come after docstrings

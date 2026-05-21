@@ -1036,7 +1036,7 @@ class FacetPairingBase :
  *
  * \headerfile triangulation/generic.h
  *
- * \ingroup generic
+ * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
 class FacetPairing : public detail::FacetPairingBase<dim> {
@@ -1163,7 +1163,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
  * \param a the first facet pairing whose contents should be swapped.
  * \param b the second facet pairing whose contents should be swapped.
  *
- * \ingroup generic
+ * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
 void swap(FacetPairing<dim>& a, FacetPairing<dim>& b) noexcept {

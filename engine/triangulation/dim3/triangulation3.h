@@ -52,7 +52,7 @@
 #include "surface/normalsurface.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/detail/triangulation.h"
 #include "utilities/boolset.h"
 #include "utilities/exception.h"
 #include "utilities/markedvector.h"

@@ -32,7 +32,6 @@
 #include <pybind11/stl.h>
 #include "triangulation/generic.h"
 #include "../helpers.h"
-#include "../docstrings/triangulation/generic/component.h"
 #include "../docstrings/triangulation/detail/component.h"
 
 using regina::Component;

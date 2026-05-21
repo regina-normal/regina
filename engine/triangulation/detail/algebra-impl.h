@@ -42,7 +42,7 @@
 #define __REGINA_ALGEBRA_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/detail/triangulation.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 

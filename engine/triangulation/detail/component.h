@@ -47,7 +47,8 @@
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
-namespace regina::detail {
+namespace regina {
+namespace detail {
 
 template <int dim> requires (supportedDim(dim)) class TriangulationBase;
 
@@ -434,6 +435,56 @@ class ComponentBase :
     friend class TriangulationBase<dim>;
 };
 
+} // namespace regina::detail -> namespace regina
+
+/**
+ * A connected component of a <i>dim</i>-manifold triangulation.
+ *
+ * Components are highly temporary: whenever a triangulation changes, all
+ * of its component objects will be deleted and new ones will be created
+ * in their place.
+ *
+ * For Regina's \ref stddim "standard dimensions", this template is specialised
+ * and offers more functionality.  In order to use these specialised classes,
+ * you will need to include the corresponding triangulation headers (e.g.,
+ * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
+ * for \a dim = 3).
+ *
+ * Components do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
+ * \python Python does not support templates.  Instead
+ * this class can be used by appending the dimension as a suffix
+ * (e.g., Component2 and Component3 for dimensions 2 and 3).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \headerfile triangulation/generic.h
+ *
+ * \ingroup triangulation
+ */
+template <int dim> requires (supportedDim(dim))
+class Component : public detail::ComponentBase<dim> {
+    static_assert(! standardDim(dim),
+        "The generic implementation of Component<dim> "
+        "should not be used for Regina's standard dimensions.");
+
+    private:
+        /**
+         * Default constructor.
+         *
+         * Marks the component as orientable, with no boundary facets.
+         */
+        Component() = default;
+
+    friend class detail::TriangulationBase<dim>;
+};
+
+namespace detail {
+
 // Inline functions for ComponentBase
 
 template <int dim> requires (supportedDim(dim))
@@ -654,7 +705,7 @@ void ComponentBase<dim>::writeTextShort(std::ostream& out) const {
     }
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #endif
 

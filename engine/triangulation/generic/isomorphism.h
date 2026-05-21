@@ -58,6 +58,11 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 /**
+ * \defgroup generic Generic triangulations
+ * Details for implementing triangulations in arbitrary dimensions.
+ */
+
+/**
  * Represents a combinatorial isomorphism from one <i>dim</i>-manifold
  * triangulation into another.
  *

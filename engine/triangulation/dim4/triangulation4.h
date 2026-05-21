@@ -47,7 +47,7 @@
 #include "hypersurface/normalhypersurface.h"
 #include "progress/progresstracker.h"
 #include "triangulation/detail/retriangulate.h"
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/detail/triangulation.h"
 #include "utilities/markedvector.h"
 
 // NOTE: More #includes for faces, components and boundary components

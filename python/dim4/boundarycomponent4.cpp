@@ -34,7 +34,6 @@
 #include "triangulation/dim3.h" // for build()
 #include "../helpers.h"
 #include "../generic/facehelper.h"
-#include "../docstrings/triangulation/generic/boundarycomponent.h"
 #include "../docstrings/triangulation/detail/boundarycomponent.h"
 
 using regina::BoundaryComponent;

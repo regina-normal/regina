@@ -554,6 +554,20 @@ Version 8.0  [ TODO ]
         Header foreign/isosig.h:
             - Renamed to foreign/siglist.h.  The old header is kept but
               deprecated.
+        Header triangulation/generic/isomorphism.h:
+            - Moved to triangulation/isomorphism.h, since this is the main
+              definition of the Isomorphism class in all dimensions.
+        Header triangulation/generic/*.h:
+            - These headers are all gone - their contents have been moved
+              into other headers instead.
+            - End users were never meant to include these headers directly.
+              Instead you should be including triangulation/dim2.h,
+              triangulation/dim3.h, triangulation/dim4.h, and/or
+              triangulation/generic.h.  Those "end user" headers will
+              automatically include the relevant material from its new
+              locations.
+            - The old headers triangulation/generic/*.h are not deprecated;
+              instead they have been removed entirely.
         Header triangulation/isosigencoding.h, triangulation/isosigtype.h:
             - Merged into the new header triangulation/isosig.h.  The old
               headers are kept but deprecated.

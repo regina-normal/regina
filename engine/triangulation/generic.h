@@ -41,12 +41,10 @@
 #define __REGINA_GENERIC_H
 #endif
 
-#include "triangulation/generic/boundarycomponent.h"
-#include "triangulation/generic/component.h"
 #include "triangulation/generic/face.h"
 #include "triangulation/generic/isomorphism.h"
 #include "triangulation/generic/simplex.h"
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/detail/triangulation.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
