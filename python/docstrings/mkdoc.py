@@ -78,6 +78,25 @@ MEMBER_BLACKLIST = [
     'operator='
 ]
 
+GLOBAL_OVERLOADS = [
+    'swap', '__add', '__bor', '__div', '__mul', '__sub'
+]
+
+TYPE_RANK = [
+    # Sorted in order of "mathematical complexity".
+    # The general idea is that, if we _can_ combine two different types in
+    # this list (e.g., through arithmetic operations), the resulting type will
+    # be the one with the larger index in this list.  Any type _not_ in this
+    # list is treated as being simpler than all of the others.
+    'IntegerBase', 'Rational', 'Cyclotomic', 'Polynomial',
+    'Laurent', 'Laurent2', 'Arrow'
+]
+def type_rank(name):
+    try:
+        return TYPE_RANK.index(name)
+    except:
+        return -1
+
 CPP_OPERATORS = {
     '<=>': 'cmp', '<=': 'le', '>=': 'ge', '==': 'eq', '!=': 'ne', '[]': 'array',
     '+=': 'iadd', '-=': 'isub', '*=': 'imul', '/=': 'idiv', '%=':
@@ -622,28 +641,54 @@ def extract(filename, node, parent_namespace, parent_types, output):
             output.append((parent_namespace, parent_types + [ name ], \
                 '__class', filename, comment))
             special = True
-        elif name == 'swap' and parent_namespace == '' and parent_types == []:
-            # There are *so* many global swap(T&, T&) functions that
-            # it will be helpful to name them according to the types
-            # that they swap.  Otherwise their dostrings will all be called
-            # regina::python::doc::swap, and there will be a risk of
-            # inadvertently confusing one for another.
-            children = [ c.type for c in node.get_children() \
-                if c.type.kind == TypeKind.LVALUEREFERENCE ]
-            if len(children) == 2:
-                swapType = children[0].get_pointee().spelling
-                if swapType.startswith('regina::'):
-                    swapType = swapType[8:]
-                pos = swapType.find('<')
-                if pos >= 0:
-                    swapType = swapType[:pos]
-                if swapType:
-                    if '::' in swapType:
-                        # We cannot use swapType as part of the constant name.
-                        raise RuntimeError('Global swap for type ' + swapType + ': cannot choose a sensible name for the constant')
-                    output.append(('', [], 'global_swap_' + swapType, \
-                        filename, comment))
-                    special = True
+        elif parent_namespace == '' and parent_types == []:
+            # Some global functions are heavily overloaded, and so it will be
+            # helpful to name the docstrings according to the types that these
+            # functions operate on.  Otherwise we run the risk of using the
+            # same docstring variables for several different strings.
+            if name in GLOBAL_OVERLOADS:
+                # Try and extract the argument types.
+                argTypes = []
+                for c in node.get_children():
+                    t = None
+                    if c.type.kind == TypeKind.LVALUEREFERENCE:
+                        t = c.type.get_pointee().spelling
+                    elif c.type.kind == TypeKind.ELABORATED:
+                        t = c.type.spelling
+                    if t:
+                        if t.startswith('const '):
+                            t = t[6:]
+                        if t.startswith('typename '):
+                            t = t[9:]
+                        if t.startswith('regina::'):
+                            t = t[8:]
+                        left = t.find('<')
+                        if left >= 0:
+                            right = t.find('>', left+1)
+                            if right >= 0:
+                                t = t[:left] + t[right+1:]
+                        argTypes.append(t)
+
+                if argTypes:
+                    # print('OVERLOAD:', name, argTypes)
+                    argTypes.sort(key=type_rank)
+                    useArgType = argTypes[-1] # choose the richest arg type
+                    if '::' in useArgType:
+                        raise RuntimeError('Global overload for (' + \
+                            name + ', ' + useArgType + '): ' + \
+                            'cannot choose a sensible name.')
+
+                    if name == 'swap':
+                        output.append(('', [], 'global_swap_' + useArgType, \
+                            filename, comment))
+                        special = True
+                    else:
+                        # What remains is mathematical operations.
+                        # We will put the docstrings for these under the
+                        # helper classes for the argument type.
+                        output.append(('', [ useArgType ], name, \
+                            filename, comment))
+                        special = True
 
         if not special:
             output.append((parent_namespace, parent_types, name, \

@@ -11,125 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__add
-inline constexpr const char __add[] =
-R"doc(Adds the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the first field element to add.
-
-Parameter ``rhs``:
-    the second field element to add.
-
-Returns:
-    the sum of both field elements.)doc";
-
-// Docstring regina::python::doc::__div
-inline constexpr const char __div[] =
-R"doc(Divides the given field element by the given rational.
-
-Precondition:
-    The argument *scalar* is non-zero.
-
-Parameter ``elt``:
-    the field element to divide by the given rational.
-
-Parameter ``scalar``:
-    the rational to divide by.
-
-Returns:
-    the quotient of the given field element by the given rational.)doc";
-
-// Docstring regina::python::doc::__div_2
-inline constexpr const char __div_2[] =
-R"doc(Divides the two given cyclotomic field elements.
-
-Precondition:
-    The second argument *rhs* is non-zero.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the field element to divide by *rhs*.
-
-Parameter ``rhs``:
-    the field element to divide *lhs* by.
-
-Returns:
-    the result of dividing *lhs* by *rhs*.)doc";
-
-// Docstring regina::python::doc::__mul
-inline constexpr const char __mul[] =
-R"doc(Multiplies the given field element by the given rational.
-
-Parameter ``elt``:
-    the field element to multiply by.
-
-Parameter ``scalar``:
-    the rational to multiply by.
-
-Returns:
-    the product of the given field element and rational.)doc";
-
-// Docstring regina::python::doc::__mul_2
-inline constexpr const char __mul_2[] =
-R"doc(Multiplies the given field element by the given rational.
-
-Parameter ``scalar``:
-    the rational to multiply by.
-
-Parameter ``elt``:
-    the field element to multiply by.
-
-Returns:
-    the product of the given field element and rational.)doc";
-
-// Docstring regina::python::doc::__mul_3
-inline constexpr const char __mul_3[] =
-R"doc(Multiplies the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the first field element to multiply.
-
-Parameter ``rhs``:
-    the second field element to multiply.
-
-Returns:
-    the product of both field elements.)doc";
-
-// Docstring regina::python::doc::__sub
-inline constexpr const char __sub[] =
-R"doc(Returns the negative of the given field element.
-
-Parameter ``arg``:
-    the field element to negate.
-
-Returns:
-    the negative of *arg*.)doc";
-
-// Docstring regina::python::doc::__sub_2
-inline constexpr const char __sub_2[] =
-R"doc(Subtracts the two given cyclotomic field elements.
-
-Precondition:
-    Both arguments belong to the same cyclotomic field.
-
-Parameter ``lhs``:
-    the field element to subtract from.
-
-Parameter ``rhs``:
-    the field element to subtract.
-
-Returns:
-    the first field element minus the second.)doc";
-
 // Docstring regina::python::doc::global_swap_Cyclotomic
 inline constexpr const char global_swap_Cyclotomic[] =
 R"doc(Swaps the contents of the given field elements.
@@ -144,6 +25,22 @@ Parameter ``b``:
     the second field element whose contents should be swapped.)doc";
 
 struct Cyclotomic {
+
+// Docstring regina::python::doc::Cyclotomic::__add
+static constexpr const char __add[] =
+R"doc(Adds the two given cyclotomic field elements.
+
+Precondition:
+    Both arguments belong to the same cyclotomic field.
+
+Parameter ``lhs``:
+    the first field element to add.
+
+Parameter ``rhs``:
+    the second field element to add.
+
+Returns:
+    the sum of both field elements.)doc";
 
 // Docstring regina::python::doc::Cyclotomic::__array
 static constexpr const char __array[] =
@@ -246,6 +143,41 @@ operator before it can be used.
 
 The underlying cyclotomic field is not yet known; this will also be
 specified during the call to init() or the assignment operator.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::__div
+static constexpr const char __div[] =
+R"doc(Divides the given field element by the given rational.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Parameter ``elt``:
+    the field element to divide by the given rational.
+
+Parameter ``scalar``:
+    the rational to divide by.
+
+Returns:
+    the quotient of the given field element by the given rational.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::__div_2
+static constexpr const char __div_2[] =
+R"doc(Divides the two given cyclotomic field elements.
+
+Precondition:
+    The second argument *rhs* is non-zero.
+
+Precondition:
+    Both arguments belong to the same cyclotomic field.
+
+Parameter ``lhs``:
+    the field element to divide by *rhs*.
+
+Parameter ``rhs``:
+    the field element to divide *lhs* by.
+
+Returns:
+    the result of dividing *lhs* by *rhs*.)doc";
 
 // Docstring regina::python::doc::Cyclotomic::__eq
 static constexpr const char __eq[] =
@@ -416,6 +348,74 @@ Parameter ``other``:
 
 Returns:
     a reference to this field element.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::__mul
+static constexpr const char __mul[] =
+R"doc(Multiplies the given field element by the given rational.
+
+Parameter ``elt``:
+    the field element to multiply by.
+
+Parameter ``scalar``:
+    the rational to multiply by.
+
+Returns:
+    the product of the given field element and rational.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::__mul_2
+static constexpr const char __mul_2[] =
+R"doc(Multiplies the given field element by the given rational.
+
+Parameter ``scalar``:
+    the rational to multiply by.
+
+Parameter ``elt``:
+    the field element to multiply by.
+
+Returns:
+    the product of the given field element and rational.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::__mul_3
+static constexpr const char __mul_3[] =
+R"doc(Multiplies the two given cyclotomic field elements.
+
+Precondition:
+    Both arguments belong to the same cyclotomic field.
+
+Parameter ``lhs``:
+    the first field element to multiply.
+
+Parameter ``rhs``:
+    the second field element to multiply.
+
+Returns:
+    the product of both field elements.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::__sub
+static constexpr const char __sub[] =
+R"doc(Returns the negative of the given field element.
+
+Parameter ``arg``:
+    the field element to negate.
+
+Returns:
+    the negative of *arg*.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::__sub_2
+static constexpr const char __sub_2[] =
+R"doc(Subtracts the two given cyclotomic field elements.
+
+Precondition:
+    Both arguments belong to the same cyclotomic field.
+
+Parameter ``lhs``:
+    the field element to subtract from.
+
+Parameter ``rhs``:
+    the field element to subtract.
+
+Returns:
+    the first field element minus the second.)doc";
 
 // Docstring regina::python::doc::Cyclotomic::cyclotomic
 static constexpr const char cyclotomic[] =

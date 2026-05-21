@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__bor
-inline constexpr const char __bor[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
 struct AngleAlg {
 
 // Docstring regina::python::doc::AngleAlg::Custom
@@ -79,6 +66,19 @@ knot theory and 3-manifold topology", Algorithmica 65 (2013), pp.
 772-801.
 
 This flag is incompatible with DD.)doc";
+
+// Docstring regina::python::doc::AngleAlg::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
 
 // Docstring regina::python::doc::AngleAlg::__class
 static constexpr const char __class[] =

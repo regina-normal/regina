@@ -11,111 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__add
-inline constexpr const char __add[] =
-R"doc(Adds the two given polynomials.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
-// Docstring regina::python::doc::__mul
-inline constexpr const char __mul[] =
-R"doc(Multiplies the given polynomial by the given integer constant.
-
-Parameter ``poly``:
-    the polynomial to multiply by.
-
-Parameter ``scalar``:
-    the scalar factor to multiply by.
-
-Returns:
-    the product of the given polynomial and scalar.)doc";
-
-// Docstring regina::python::doc::__mul_2
-inline constexpr const char __mul_2[] =
-R"doc(Multiplies the given polynomial by the given integer constant.
-
-Parameter ``scalar``:
-    the scalar factor to multiply by.
-
-Parameter ``poly``:
-    the polynomial to multiply by.
-
-Returns:
-    the product of the given polynomial and scalar.)doc";
-
-// Docstring regina::python::doc::__mul_3
-inline constexpr const char __mul_3[] =
-R"doc(Multiplies the given arrow polynomial by the given Laurent polynomial
-in ``A``.
-
-Parameter ``arrow``:
-    the arrow polynomial to multiply by.
-
-Parameter ``laurent``:
-    the Laurent polynomial to multiply by; this will be treated as a
-    Laurent polynomial in the ordinary variable ``A``.
-
-Returns:
-    the product of the given arrow and Laurent polynomials.)doc";
-
-// Docstring regina::python::doc::__mul_4
-inline constexpr const char __mul_4[] =
-R"doc(Multiplies the given arrow polynomial by the given Laurent polynomial
-in ``A``.
-
-Parameter ``laurent``:
-    the Laurent polynomial to multiply by; this will be treated as a
-    Laurent polynomial in the ordinary variable ``A``.
-
-Parameter ``arrow``:
-    the arrow polynomial to multiply by.
-
-Returns:
-    the product of the given arrow and Laurent polynomials.)doc";
-
-// Docstring regina::python::doc::__mul_5
-inline constexpr const char __mul_5[] =
-R"doc(Multiplies the two given polynomials.
-
-Parameter ``lhs``:
-    the first polynomial to multiply.
-
-Parameter ``rhs``:
-    the second polynomial to multiply.
-
-Returns:
-    the product of the two given polynomials.)doc";
-
-// Docstring regina::python::doc::__sub
-inline constexpr const char __sub[] =
-R"doc(Returns the negative of the given polynomial.
-
-Parameter ``arg``:
-    the polynomial to negate.
-
-Returns:
-    the negative of *arg*.)doc";
-
-// Docstring regina::python::doc::__sub_2
-inline constexpr const char __sub_2[] =
-R"doc(Subtracts the two given polynomials.
-
-Parameter ``lhs``:
-    the polynomial to sutract *rhs* from.
-
-Parameter ``rhs``:
-    the polynomial to subtract from *lhs*.
-
-Returns:
-    the difference of the two given polynomials.)doc";
-
 // Docstring regina::python::doc::global_swap_Arrow
 inline constexpr const char global_swap_Arrow[] =
 R"doc(Swaps the contents of the given polynomials.
@@ -130,6 +25,19 @@ Parameter ``b``:
     the second polynomial whose contents should be swapped.)doc";
 
 struct Arrow {
+
+// Docstring regina::python::doc::Arrow::__add
+static constexpr const char __add[] =
+R"doc(Adds the two given polynomials.
+
+Parameter ``lhs``:
+    the first polynomial to add.
+
+Parameter ``rhs``:
+    the second polynomial to add.
+
+Returns:
+    the sum of both polynomials.)doc";
 
 // Docstring regina::python::doc::Arrow::__array
 static constexpr const char __array[] =
@@ -354,6 +262,98 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Arrow::__mul
+static constexpr const char __mul[] =
+R"doc(Multiplies the given polynomial by the given integer constant.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Parameter ``scalar``:
+    the scalar factor to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Arrow::__mul_2
+static constexpr const char __mul_2[] =
+R"doc(Multiplies the given polynomial by the given integer constant.
+
+Parameter ``scalar``:
+    the scalar factor to multiply by.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Arrow::__mul_3
+static constexpr const char __mul_3[] =
+R"doc(Multiplies the given arrow polynomial by the given Laurent polynomial
+in ``A``.
+
+Parameter ``arrow``:
+    the arrow polynomial to multiply by.
+
+Parameter ``laurent``:
+    the Laurent polynomial to multiply by; this will be treated as a
+    Laurent polynomial in the ordinary variable ``A``.
+
+Returns:
+    the product of the given arrow and Laurent polynomials.)doc";
+
+// Docstring regina::python::doc::Arrow::__mul_4
+static constexpr const char __mul_4[] =
+R"doc(Multiplies the given arrow polynomial by the given Laurent polynomial
+in ``A``.
+
+Parameter ``laurent``:
+    the Laurent polynomial to multiply by; this will be treated as a
+    Laurent polynomial in the ordinary variable ``A``.
+
+Parameter ``arrow``:
+    the arrow polynomial to multiply by.
+
+Returns:
+    the product of the given arrow and Laurent polynomials.)doc";
+
+// Docstring regina::python::doc::Arrow::__mul_5
+static constexpr const char __mul_5[] =
+R"doc(Multiplies the two given polynomials.
+
+Parameter ``lhs``:
+    the first polynomial to multiply.
+
+Parameter ``rhs``:
+    the second polynomial to multiply.
+
+Returns:
+    the product of the two given polynomials.)doc";
+
+// Docstring regina::python::doc::Arrow::__sub
+static constexpr const char __sub[] =
+R"doc(Returns the negative of the given polynomial.
+
+Parameter ``arg``:
+    the polynomial to negate.
+
+Returns:
+    the negative of *arg*.)doc";
+
+// Docstring regina::python::doc::Arrow::__sub_2
+static constexpr const char __sub_2[] =
+R"doc(Subtracts the two given polynomials.
+
+Parameter ``lhs``:
+    the polynomial to sutract *rhs* from.
+
+Parameter ``rhs``:
+    the polynomial to subtract from *lhs*.
+
+Returns:
+    the difference of the two given polynomials.)doc";
 
 // Docstring regina::python::doc::Arrow::init
 static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";

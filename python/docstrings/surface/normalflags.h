@@ -11,32 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__bor
-inline constexpr const char __bor[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
-// Docstring regina::python::doc::__bor_2
-inline constexpr const char __bor_2[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
 struct NormalAlg {
 
 // Docstring regina::python::doc::NormalAlg::Custom
@@ -206,6 +180,19 @@ theory", Algebr. Geom. Topol. 9 (2009), 2121-2174.
 
 This flag is incompatible with VertexStandardDirect.)doc";
 
+// Docstring regina::python::doc::NormalAlg::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
+
 // Docstring regina::python::doc::NormalAlg::__class
 static constexpr const char __class[] =
 R"doc(Represents options and variants of algorithms for enumerating various
@@ -283,6 +270,19 @@ R"doc(Indicates a list of all vertex normal surfaces, with respect to the
 particular normal coordinate system used by the list.
 
 This flag is incompatible with Fundamental.)doc";
+
+// Docstring regina::python::doc::NormalList::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
 
 // Docstring regina::python::doc::NormalList::__class
 static constexpr const char __class[] =

@@ -50,7 +50,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
             { "NoTwists", regina::GraphConstraint::NoTwists, rdoc::NoTwists },
             { "SingleTraversal", regina::GraphConstraint::SingleTraversal,
                 rdoc::SingleTraversal }
-        }, rdoc::__class, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH(ModelLinkGraphArc)
 

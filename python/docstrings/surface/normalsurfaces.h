@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__bor
-inline constexpr const char __bor[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
 // Docstring regina::python::doc::global_swap_NormalSurfaces
 inline constexpr const char global_swap_NormalSurfaces[] =
 R"doc(Swaps the contents of the two given lists.
@@ -773,6 +760,19 @@ whether it is a splitting surface or a central surface. This will be
 written as a human-readable string. This field is somewhat arbitrary,
 and the precise properties it describes are subject to change in
 future releases of Regina.)doc";
+
+// Docstring regina::python::doc::SurfaceExport::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
 
 // Docstring regina::python::doc::SurfaceExport::__class
 static constexpr const char __class[] =

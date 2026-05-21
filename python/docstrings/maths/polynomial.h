@@ -11,155 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__add
-inline constexpr const char __add[] =
-R"doc(Adds the two given polynomials.
-
-This operator ``+`` is sometimes faster than using ``+=``, since it
-has more flexibility to avoid an internal deep copy.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
-// Docstring regina::python::doc::__div
-inline constexpr const char __div[] =
-R"doc(Divides the given polynomial by the given scalar constant.
-
-This uses the division operator /= for the coefficient type *T*.
-
-The scalar is simply of type *T*; we use the identical type
-Polynomial<T>::Coefficient here to assist with C++ template type
-matching.
-
-Precondition:
-    The argument *scalar* is non-zero.
-
-Parameter ``poly``:
-    the polynomial to divide by the given scalar.
-
-Parameter ``scalar``:
-    the scalar factor to divide by.
-
-Returns:
-    the quotient of the given polynomial by the given scalar.)doc";
-
-// Docstring regina::python::doc::__div_2
-inline constexpr const char __div_2[] =
-R"doc(Divides the two given polynomials.
-
-More precisely: suppose there exist polynomials *q* and *r* with
-coefficients of type *T* for which ``lhs = q.rhs + r``, and where *r*
-has smaller degree than *rhs*. Then we call *q* the _quotient_, and
-*r* the _remainder_.
-
-This routine returns the quotient *q*, and discards the remainder. If
-you need to keep the remainder also, then call
-Polynomial::divisionAlg() instead.
-
-Coefficients are divided using the operator /= on type *T*.
-
-If your coefficient type *T* is not a field (e.g., if *T* is Integer),
-you must be sure to know in advance that the quotient exists (see the
-precondition below). Otherwise the behaviour of this routine is
-undefined.
-
-Precondition:
-    The second polynomial *rhs* is non-zero.
-
-Precondition:
-    The quotient as defined above exists. If *T* is a field type
-    (e.g., if *T* is Rational) then this is true automatically. If not
-    (e.g., if *T* is Integer) then this requires some prior knowledge
-    about the arguments.
-
-Parameter ``lhs``:
-    the polynomial to divide by *rhs*.
-
-Parameter ``rhs``:
-    the polynomial that we will divide *lhs* by.
-
-Returns:
-    the quotient, as described above.)doc";
-
-// Docstring regina::python::doc::__mul
-inline constexpr const char __mul[] =
-R"doc(Multiplies the given polynomial by the given scalar constant.
-
-The scalar is simply of type *T*; we use the identical type
-Polynomial<T>::Coefficient here to assist with C++ template type
-matching.
-
-Parameter ``poly``:
-    the polynomial to multiply by.
-
-Parameter ``scalar``:
-    the scalar to multiply by.
-
-Returns:
-    the product of the given polynomial and scalar.)doc";
-
-// Docstring regina::python::doc::__mul_2
-inline constexpr const char __mul_2[] =
-R"doc(Multiplies the given polynomial by the given scalar constant.
-
-The scalar is simply of type *T*; we use the identical type
-Polynomial<T>::Coefficient here to assist with C++ template type
-matching.
-
-Parameter ``scalar``:
-    the scalar to multiply by.
-
-Parameter ``poly``:
-    the polynomial to multiply by.
-
-Returns:
-    the product of the given polynomial and scalar.)doc";
-
-// Docstring regina::python::doc::__mul_3
-inline constexpr const char __mul_3[] =
-R"doc(Multiplies the two given polynomials.
-
-Parameter ``lhs``:
-    the first polynomial to multiply.
-
-Parameter ``rhs``:
-    the second polynomial to multiply.
-
-Returns:
-    the product of both polynomials.)doc";
-
-// Docstring regina::python::doc::__sub
-inline constexpr const char __sub[] =
-R"doc(Returns the negative of the given polynomial.
-
-Parameter ``arg``:
-    the polynomial to negate.
-
-Returns:
-    the negative of *arg*.)doc";
-
-// Docstring regina::python::doc::__sub_2
-inline constexpr const char __sub_2[] =
-R"doc(Subtracts the two given polynomials.
-
-This operator ``-`` is sometimes faster than using ``-=``, since it
-has more flexibility to avoid an internal deep copy.
-
-Parameter ``lhs``:
-    the polynomial to sutract *rhs* from.
-
-Parameter ``rhs``:
-    the polynomial to subtract from *lhs*.
-
-Returns:
-    the difference of the two given polynomials.)doc";
-
 // Docstring regina::python::doc::global_swap_Polynomial
 inline constexpr const char global_swap_Polynomial[] =
 R"doc(Swaps the contents of the given polynomials.
@@ -174,6 +25,22 @@ Parameter ``b``:
     the second polynomial whose contents should be swapped.)doc";
 
 struct Polynomial {
+
+// Docstring regina::python::doc::Polynomial::__add
+static constexpr const char __add[] =
+R"doc(Adds the two given polynomials.
+
+This operator ``+`` is sometimes faster than using ``+=``, since it
+has more flexibility to avoid an internal deep copy.
+
+Parameter ``lhs``:
+    the first polynomial to add.
+
+Parameter ``rhs``:
+    the second polynomial to add.
+
+Returns:
+    the sum of both polynomials.)doc";
 
 // Docstring regina::python::doc::Polynomial::__array
 static constexpr const char __array[] =
@@ -234,6 +101,66 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::Polynomial::__default
 static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial::__div
+static constexpr const char __div[] =
+R"doc(Divides the given polynomial by the given scalar constant.
+
+This uses the division operator /= for the coefficient type *T*.
+
+The scalar is simply of type *T*; we use the identical type
+Polynomial<T>::Coefficient here to assist with C++ template type
+matching.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Parameter ``poly``:
+    the polynomial to divide by the given scalar.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    the quotient of the given polynomial by the given scalar.)doc";
+
+// Docstring regina::python::doc::Polynomial::__div_2
+static constexpr const char __div_2[] =
+R"doc(Divides the two given polynomials.
+
+More precisely: suppose there exist polynomials *q* and *r* with
+coefficients of type *T* for which ``lhs = q.rhs + r``, and where *r*
+has smaller degree than *rhs*. Then we call *q* the _quotient_, and
+*r* the _remainder_.
+
+This routine returns the quotient *q*, and discards the remainder. If
+you need to keep the remainder also, then call
+Polynomial::divisionAlg() instead.
+
+Coefficients are divided using the operator /= on type *T*.
+
+If your coefficient type *T* is not a field (e.g., if *T* is Integer),
+you must be sure to know in advance that the quotient exists (see the
+precondition below). Otherwise the behaviour of this routine is
+undefined.
+
+Precondition:
+    The second polynomial *rhs* is non-zero.
+
+Precondition:
+    The quotient as defined above exists. If *T* is a field type
+    (e.g., if *T* is Rational) then this is true automatically. If not
+    (e.g., if *T* is Integer) then this requires some prior knowledge
+    about the arguments.
+
+Parameter ``lhs``:
+    the polynomial to divide by *rhs*.
+
+Parameter ``rhs``:
+    the polynomial that we will divide *lhs* by.
+
+Returns:
+    the quotient, as described above.)doc";
 
 // Docstring regina::python::doc::Polynomial::__eq
 static constexpr const char __eq[] =
@@ -388,6 +315,79 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial::__mul
+static constexpr const char __mul[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
+The scalar is simply of type *T*; we use the identical type
+Polynomial<T>::Coefficient here to assist with C++ template type
+matching.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Polynomial::__mul_2
+static constexpr const char __mul_2[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
+The scalar is simply of type *T*; we use the identical type
+Polynomial<T>::Coefficient here to assist with C++ template type
+matching.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Polynomial::__mul_3
+static constexpr const char __mul_3[] =
+R"doc(Multiplies the two given polynomials.
+
+Parameter ``lhs``:
+    the first polynomial to multiply.
+
+Parameter ``rhs``:
+    the second polynomial to multiply.
+
+Returns:
+    the product of both polynomials.)doc";
+
+// Docstring regina::python::doc::Polynomial::__sub
+static constexpr const char __sub[] =
+R"doc(Returns the negative of the given polynomial.
+
+Parameter ``arg``:
+    the polynomial to negate.
+
+Returns:
+    the negative of *arg*.)doc";
+
+// Docstring regina::python::doc::Polynomial::__sub_2
+static constexpr const char __sub_2[] =
+R"doc(Subtracts the two given polynomials.
+
+This operator ``-`` is sometimes faster than using ``-=``, since it
+has more flexibility to avoid an internal deep copy.
+
+Parameter ``lhs``:
+    the polynomial to sutract *rhs* from.
+
+Parameter ``rhs``:
+    the polynomial to subtract from *lhs*.
+
+Returns:
+    the difference of the two given polynomials.)doc";
 
 // Docstring regina::python::doc::Polynomial::degree
 static constexpr const char degree[] =

@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__bor
-inline constexpr const char __bor[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
 // Docstring regina::python::doc::global_swap_ModelLinkGraph
 inline constexpr const char global_swap_ModelLinkGraph[] =
 R"doc(Swaps the contents of the two given graphs.
@@ -63,6 +50,19 @@ generated. That is, for every embedding *e* that is generated,
 An embedding that satisfies this constraint must always model knots
 (classical or virtual). An embedding that fails this constraint must
 either be empty, or must always model multiple-component links.)doc";
+
+// Docstring regina::python::doc::GraphConstraint::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
 
 // Docstring regina::python::doc::GraphConstraint::__class
 static constexpr const char __class[] =

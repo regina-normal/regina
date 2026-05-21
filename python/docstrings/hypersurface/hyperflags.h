@@ -11,32 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__bor
-inline constexpr const char __bor[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
-// Docstring regina::python::doc::__bor_2
-inline constexpr const char __bor_2[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
 struct HyperAlg {
 
 // Docstring regina::python::doc::HyperAlg::Custom
@@ -123,6 +97,19 @@ For details on the modified double description method, see B. A.
 Burton, "Optimizing the double description method for normal surface
 enumeration", Mathematics of Computation 79 (2010), pp. 453-484.)doc";
 
+// Docstring regina::python::doc::HyperAlg::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
+
 // Docstring regina::python::doc::HyperAlg::__class
 static constexpr const char __class[] =
 R"doc(Represents options and variants of algorithms for enumerating various
@@ -201,6 +188,19 @@ R"doc(Indicates a list of all vertex normal hypersurfaces, with respect to
 the particular normal coordinate system used by the list.
 
 This flag is incompatible with Fundamental.)doc";
+
+// Docstring regina::python::doc::HyperList::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
 
 // Docstring regina::python::doc::HyperList::__class
 static constexpr const char __class[] =

@@ -63,7 +63,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             { "AllButName", regina::SurfaceExport::AllButName,
                 rdoc::AllButName },
             { "All", regina::SurfaceExport::All, rdoc::All }
-        }, rdoc::__class, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 

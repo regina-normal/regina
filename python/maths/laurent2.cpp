@@ -86,13 +86,13 @@ void addLaurent2(pybind11::module_& m) {
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
-        .def(pybind11::self * Integer(), rdoc_global::__mul)
-        .def(Integer() * pybind11::self, rdoc_global::__mul_2)
-        .def(pybind11::self / Integer(), rdoc_global::__div)
-        .def(pybind11::self + pybind11::self, rdoc_global::__add)
-        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
-        .def(pybind11::self * pybind11::self, rdoc_global::__mul_3)
-        .def(- pybind11::self, rdoc_global::__sub)
+        .def(pybind11::self * Integer(), rdoc::__mul)
+        .def(Integer() * pybind11::self, rdoc::__mul_2)
+        .def(pybind11::self / Integer(), rdoc::__div)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_3)
+        .def(- pybind11::self, rdoc::__sub)
     ;
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);

@@ -11,120 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__add
-inline constexpr const char __add[] =
-R"doc(Adds the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the first polynomial to add.
-
-Parameter ``rhs``:
-    the second polynomial to add.
-
-Returns:
-    the sum of both polynomials.)doc";
-
-// Docstring regina::python::doc::__div
-inline constexpr const char __div[] =
-R"doc(Divides the given polynomial by the given scalar constant.
-
-This uses the division operator /= for the coefficient type *T*.
-
-The scalar is simply of type *T*; we use the identical type
-Laurent2<T>::Coefficient here to assist with C++ template type
-matching.
-
-Precondition:
-    The argument *scalar* is non-zero.
-
-Parameter ``poly``:
-    the polynomial to divide by the given scalar.
-
-Parameter ``scalar``:
-    the scalar factor to divide by.
-
-Returns:
-    the quotient of the given polynomial by the given scalar.)doc";
-
-// Docstring regina::python::doc::__mul
-inline constexpr const char __mul[] =
-R"doc(Multiplies the given polynomial by the given scalar constant.
-
-The scalar is simply of type *T*; we use the identical type
-Laurent2<T>::Coefficient here to assist with C++ template type
-matching.
-
-Parameter ``poly``:
-    the polynomial to multiply by.
-
-Parameter ``scalar``:
-    the scalar to multiply by.
-
-Returns:
-    the product of the given polynomial and scalar.)doc";
-
-// Docstring regina::python::doc::__mul_2
-inline constexpr const char __mul_2[] =
-R"doc(Multiplies the given polynomial by the given scalar constant.
-
-The scalar is simply of type *T*; we use the identical type
-Laurent2<T>::Coefficient here to assist with C++ template type
-matching.
-
-Parameter ``scalar``:
-    the scalar to multiply by.
-
-Parameter ``poly``:
-    the polynomial to multiply by.
-
-Returns:
-    the product of the given polynomial and scalar.)doc";
-
-// Docstring regina::python::doc::__mul_3
-inline constexpr const char __mul_3[] =
-R"doc(Multiplies the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the first polynomial to multiply.
-
-Parameter ``rhs``:
-    the second polynomial to multiply.
-
-Returns:
-    the product of both polynomials.)doc";
-
-// Docstring regina::python::doc::__sub
-inline constexpr const char __sub[] =
-R"doc(Returns the negative of the given polynomial.
-
-Parameter ``arg``:
-    the polynomial to negate.
-
-Returns:
-    the negative of *arg*.)doc";
-
-// Docstring regina::python::doc::__sub_2
-inline constexpr const char __sub_2[] =
-R"doc(Subtracts the two given polynomials.
-
-The two polynomials need not have the same range of non-zero
-coefficients.
-
-Parameter ``lhs``:
-    the polynomial to subtract from.
-
-Parameter ``rhs``:
-    the polynomial to subtract.
-
-Returns:
-    the first polynomial minus the second.)doc";
-
 // Docstring regina::python::doc::global_swap_Laurent2
 inline constexpr const char global_swap_Laurent2[] =
 R"doc(Swaps the contents of the given polynomials.
@@ -139,6 +25,22 @@ Parameter ``b``:
     the second polynomial whose contents should be swapped.)doc";
 
 struct Laurent2 {
+
+// Docstring regina::python::doc::Laurent2::__add
+static constexpr const char __add[] =
+R"doc(Adds the two given polynomials.
+
+The two polynomials need not have the same range of non-zero
+coefficients.
+
+Parameter ``lhs``:
+    the first polynomial to add.
+
+Parameter ``rhs``:
+    the second polynomial to add.
+
+Returns:
+    the sum of both polynomials.)doc";
 
 // Docstring regina::python::doc::Laurent2::__call
 static constexpr const char __call[] =
@@ -233,6 +135,28 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::Laurent2::__default
 static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__div
+static constexpr const char __div[] =
+R"doc(Divides the given polynomial by the given scalar constant.
+
+This uses the division operator /= for the coefficient type *T*.
+
+The scalar is simply of type *T*; we use the identical type
+Laurent2<T>::Coefficient here to assist with C++ template type
+matching.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Parameter ``poly``:
+    the polynomial to divide by the given scalar.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    the quotient of the given polynomial by the given scalar.)doc";
 
 // Docstring regina::python::doc::Laurent2::__eq
 static constexpr const char __eq[] =
@@ -369,6 +293,82 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__mul
+static constexpr const char __mul[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
+The scalar is simply of type *T*; we use the identical type
+Laurent2<T>::Coefficient here to assist with C++ template type
+matching.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Laurent2::__mul_2
+static constexpr const char __mul_2[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
+The scalar is simply of type *T*; we use the identical type
+Laurent2<T>::Coefficient here to assist with C++ template type
+matching.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Laurent2::__mul_3
+static constexpr const char __mul_3[] =
+R"doc(Multiplies the two given polynomials.
+
+The two polynomials need not have the same range of non-zero
+coefficients.
+
+Parameter ``lhs``:
+    the first polynomial to multiply.
+
+Parameter ``rhs``:
+    the second polynomial to multiply.
+
+Returns:
+    the product of both polynomials.)doc";
+
+// Docstring regina::python::doc::Laurent2::__sub
+static constexpr const char __sub[] =
+R"doc(Returns the negative of the given polynomial.
+
+Parameter ``arg``:
+    the polynomial to negate.
+
+Returns:
+    the negative of *arg*.)doc";
+
+// Docstring regina::python::doc::Laurent2::__sub_2
+static constexpr const char __sub_2[] =
+R"doc(Subtracts the two given polynomials.
+
+The two polynomials need not have the same range of non-zero
+coefficients.
+
+Parameter ``lhs``:
+    the polynomial to subtract from.
+
+Parameter ``rhs``:
+    the polynomial to subtract.
+
+Returns:
+    the first polynomial minus the second.)doc";
 
 // Docstring regina::python::doc::Laurent2::init
 static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";

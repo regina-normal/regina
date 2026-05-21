@@ -55,7 +55,7 @@ void addNormalFlags(pybind11::module_& m) {
             { "Fundamental", NormalList::Fundamental, rdoc::Fundamental },
             { "Legacy", NormalList::Legacy, rdoc::Legacy },
             { "Custom", NormalList::Custom, rdoc::Custom }
-        }, rdoc::__class, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 
@@ -86,7 +86,7 @@ void addNormalFlags(pybind11::module_& m) {
                 rdoc::HilbertFullCone },
             { "Legacy", NormalAlg::Legacy, rdoc::Legacy },
             { "Custom", NormalAlg::Custom, rdoc::Custom }
-        }, rdoc::__class, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 

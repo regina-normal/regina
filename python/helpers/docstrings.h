@@ -78,8 +78,7 @@
  * can be searched (and ideally _fixed_) before each formal Regina release.
  */
 #define RDOC_SCOPE_BEGIN(scope)  { \
-    using rdoc = regina::python::doc::scope; \
-    namespace rdoc_global = regina::python::doc;
+    using rdoc = regina::python::doc::scope;
 #define RDOC_SCOPE_BEGIN_MAIN    { \
     namespace rdoc = regina::python::doc;
 #define RDOC_SCOPE_SWITCH(scope) } RDOC_SCOPE_BEGIN(scope)

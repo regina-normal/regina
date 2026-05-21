@@ -11,40 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__add
-inline constexpr const char __add[] =
-R"doc(Adds the given native C++ integer to the given large integer. If the
-large integer is infinite, the result will also be infinity.
-
-Python:
-    It is assumed that the type *IntType* is ``long``.
-
-Parameter ``lhs``:
-    the native integer to add.
-
-Parameter ``rhs``:
-    the large integer to add.
-
-Returns:
-    the sum *lhs* plus *rhs*.)doc";
-
-// Docstring regina::python::doc::__mul
-inline constexpr const char __mul[] =
-R"doc(Multiplies the given native C++ integer with the given large integer.
-If the large integer is infinite, the result will also be infinity.
-
-Python:
-    It is assumed that the type *IntType* is ``long``.
-
-Parameter ``lhs``:
-    the native integer to multiply.
-
-Parameter ``rhs``:
-    the large integer to multiply.
-
-Returns:
-    the product *lhs* times *rhs*.)doc";
-
 // Docstring regina::python::doc::global_swap_IntegerBase
 inline constexpr const char global_swap_IntegerBase[] =
 R"doc(Swaps the contents of the given integers.
@@ -104,6 +70,23 @@ Parameter ``other``:
 
 Returns:
     the sum *this* plus *other*.)doc";
+
+// Docstring regina::python::doc::IntegerBase::__add_3
+static constexpr const char __add_3[] =
+R"doc(Adds the given native C++ integer to the given large integer. If the
+large integer is infinite, the result will also be infinity.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``lhs``:
+    the native integer to add.
+
+Parameter ``rhs``:
+    the large integer to add.
+
+Returns:
+    the sum *lhs* plus *rhs*.)doc";
 
 // Docstring regina::python::doc::IntegerBase::__class
 static constexpr const char __class[] =
@@ -701,6 +684,23 @@ Parameter ``other``:
 
 Returns:
     the product *this* times *other*.)doc";
+
+// Docstring regina::python::doc::IntegerBase::__mul_3
+static constexpr const char __mul_3[] =
+R"doc(Multiplies the given native C++ integer with the given large integer.
+If the large integer is infinite, the result will also be infinity.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``lhs``:
+    the native integer to multiply.
+
+Parameter ``rhs``:
+    the large integer to multiply.
+
+Returns:
+    the product *lhs* times *rhs*.)doc";
 
 // Docstring regina::python::doc::IntegerBase::__sub
 static constexpr const char __sub[] =

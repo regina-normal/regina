@@ -103,10 +103,12 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         }, rdoc::__dec)
         .def(pybind11::self + pybind11::self, rdoc::__add)
         .def(pybind11::self + long(), rdoc::__add_2)
+        .def(long() + pybind11::self, rdoc::__add_3)
         .def(pybind11::self - pybind11::self, rdoc::__sub)
         .def(pybind11::self - long(), rdoc::__sub_2)
         .def(pybind11::self * pybind11::self, rdoc::__mul)
         .def(pybind11::self * long(), rdoc::__mul_2)
+        .def(long() * pybind11::self, rdoc::__mul_3)
         .def(pybind11::self / pybind11::self, rdoc::__div)
         .def(pybind11::self / long(), rdoc::__div_2)
         // overload_cast has trouble with templated vs non-templated overloads.
@@ -161,8 +163,6 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
             rdoc::randomCornerBinary)
         .def("makeLarge", &Int::makeLarge, rdoc::makeLarge)
         .def("tryReduce", &Int::tryReduce, rdoc::tryReduce)
-        .def(long() + pybind11::self, rdoc_global::__add)
-        .def(long() * pybind11::self, rdoc_global::__mul)
         .def_readonly_static("supportsInfinity", &Int::supportsInfinity)
         .def_readonly_static("zero", &Int::zero)
         .def_readonly_static("one", &Int::one)
@@ -178,8 +178,9 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
     regina::python::add_cmp_operators(c, rdoc::__cmp);
     regina::python::add_output_ostream(c, regina::python::ReprStyle::Slim);
 
-    m.def("tightEncoding", static_cast<std::string(&)(Int)>(
-        regina::tightEncoding), rdoc_global::tightEncoding_ReginaInteger);
+    m.def("tightEncoding",
+        static_cast<std::string(&)(Int)>(regina::tightEncoding),
+        regina::python::doc::tightEncoding_ReginaInteger);
     ADD_GLOBAL_SWAP_SUFFIX(m, Int, IntegerBase);
 
     RDOC_SCOPE_END

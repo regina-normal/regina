@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::__bor
-inline constexpr const char __bor[] =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
 struct CensusPurge {
 
 // Docstring regina::python::doc::CensusPurge::NonMinimal
@@ -61,6 +48,19 @@ Python:
 static constexpr const char P2Reducible[] =
 R"doc(Indicates that any triangulation containing an embedded two-sided
 projective plane may be ignored.)doc";
+
+// Docstring regina::python::doc::CensusPurge::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
+
+Parameter ``lhs``:
+    the first flag to combine.
+
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
 
 // Docstring regina::python::doc::CensusPurge::__class
 static constexpr const char __class[] =
