@@ -30,7 +30,7 @@
 
 #include "triangulation/facetpairing3.h"
 
-#include "generic/facetpairingtest.h"
+#include "../facetpairingtest.h"
 
 TEST(FacetPairing3Test, isCanonical) {
     FacetPairingTest<3>::isCanonicalAllClosed(0);

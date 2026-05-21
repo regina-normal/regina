@@ -31,7 +31,7 @@
 #include "triangulation/dim4.h" // for boundaries in 5-D
 #include "triangulation/example4.h" // for building cones in 5-D
 
-#include "generic/triangulationtest.h"
+#include "triangulationtest.h"
 
 using regina::Example;
 

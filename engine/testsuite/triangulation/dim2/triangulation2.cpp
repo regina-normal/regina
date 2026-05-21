@@ -31,7 +31,7 @@
 #include "triangulation/dim2.h"
 #include "triangulation/example2.h"
 
-#include "generic/triangulationtest.h"
+#include "../triangulationtest.h"
 #include "testexhaustive.h"
 
 using regina::Triangulation;

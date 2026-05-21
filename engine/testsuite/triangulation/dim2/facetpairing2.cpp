@@ -28,37 +28,45 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/example3.h"
+#include "triangulation/facetpairing.h"
 
-#include "generic/isomorphismtest.h"
+#include "../facetpairingtest.h"
 
-using regina::Example;
-
-TEST(Isomorphism3Test, application) {
-    IsomorphismTest<3>::application(Example<3>::rp2xs1(), 11);
+TEST(FacetPairing2Test, isCanonical) {
+    FacetPairingTest<2>::isCanonicalAllClosed(0);
+    FacetPairingTest<2>::isCanonicalAllClosed(2);
+    FacetPairingTest<2>::isCanonicalAllClosed(4);
+    FacetPairingTest<2>::isCanonicalAllBounded(1);
+    FacetPairingTest<2>::isCanonicalAllBounded(2);
+    FacetPairingTest<2>::isCanonicalAllBounded(3);
+    FacetPairingTest<2>::isCanonicalAllBounded(4);
 }
 
-TEST(Isomorphism3Test, inverse) {
-    IsomorphismTest<3>::inverse(5);
+TEST(FacetPairing2Test, makeCanonical) {
+    FacetPairingTest<2>::makeCanonicalAllClosed(0);
+    FacetPairingTest<2>::makeCanonicalAllClosed(2);
+    FacetPairingTest<2>::makeCanonicalAllClosed(4);
+    FacetPairingTest<2>::makeCanonicalAllBounded(1);
+    FacetPairingTest<2>::makeCanonicalAllBounded(2);
+    FacetPairingTest<2>::makeCanonicalAllBounded(3);
+    FacetPairingTest<2>::makeCanonicalAllBounded(4);
 }
 
-TEST(Isomorphism3Test, automorphismsAndSubcomplexes) {
-    IsomorphismTest<3>::automorphismsAndSubcomplexes(
-        Example<3>::ball(), 24, "Ball");
-    IsomorphismTest<3>::automorphismsAndSubcomplexes(
-        Example<3>::lens(8, 1), 4, "L(8,1)");
-    IsomorphismTest<3>::automorphismsAndSubcomplexes(
-        Example<3>::lens(13, 3), 2, "L(13,3)");
-    IsomorphismTest<3>::automorphismsAndSubcomplexes(
-        Example<3>::layeredLoop(5, true), 20, "C~(5)");
-    IsomorphismTest<3>::automorphismsAndSubcomplexes(
-        Example<3>::layeredLoop(5, false), 20, "C(5)");
+TEST(FacetPairing2Test, rawCountsClosed) {
+    // Figures taken from the OEIS sequence #A005967.
+    static const size_t nPairs[] = {
+        0, 0, 2, 0, 5, 0, 17, 0, 71, 0, 388, 0, 2592 };
 
-    // A case with no non-trivial symmetries.
-    IsomorphismTest<3>::automorphismsAndSubcomplexes(
-        Example<3>::augTriSolidTorus(3, -1, 5, -3, 2, -1), 1, "A(3,-1 | 5,-3)");
+    for (size_t i = 0; i <= 12; ++i)
+        FacetPairingTest<2>::enumerateClosed(i, nPairs[i]);
 }
 
-TEST(Isomorphism3Test, tightEncoding) {
-    IsomorphismTest<3>::tightEncoding(3);
+TEST(FacetPairing2Test, tightEncoding) {
+    FacetPairingTest<2>::tightEncodingAllClosed(2);
+    FacetPairingTest<2>::tightEncodingAllClosed(4);
+    FacetPairingTest<2>::tightEncodingAllBounded(1);
+    FacetPairingTest<2>::tightEncodingAllBounded(2);
+    FacetPairingTest<2>::tightEncodingAllBounded(3);
+    FacetPairingTest<2>::tightEncodingAllBounded(4);
 }
+

@@ -1,12 +1,13 @@
 # Files to compile
 SET ( FILES
-  facenumbering.cpp
-  generictriangulation.cpp
+  facetpairing2.cpp
+  isomorphism2.cpp
+  triangulation2.cpp
   )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
-  SET ( SOURCES ${SOURCES} generic/${SOURCE_FILE})
+  SET ( SOURCES ${SOURCES} triangulation/dim2/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
 SET(SOURCES ${SOURCES} PARENT_SCOPE)
 

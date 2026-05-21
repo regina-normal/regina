@@ -28,45 +28,20 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/facetpairing.h"
+#include "triangulation/example4.h"
 
-#include "generic/facetpairingtest.h"
+#include "../isomorphismtest.h"
 
-TEST(FacetPairing2Test, isCanonical) {
-    FacetPairingTest<2>::isCanonicalAllClosed(0);
-    FacetPairingTest<2>::isCanonicalAllClosed(2);
-    FacetPairingTest<2>::isCanonicalAllClosed(4);
-    FacetPairingTest<2>::isCanonicalAllBounded(1);
-    FacetPairingTest<2>::isCanonicalAllBounded(2);
-    FacetPairingTest<2>::isCanonicalAllBounded(3);
-    FacetPairingTest<2>::isCanonicalAllBounded(4);
+using regina::Example;
+
+TEST(Isomorphism4Test, application) {
+    IsomorphismTest<4>::application(Example<4>::twistedSphereBundle(), 11);
 }
 
-TEST(FacetPairing2Test, makeCanonical) {
-    FacetPairingTest<2>::makeCanonicalAllClosed(0);
-    FacetPairingTest<2>::makeCanonicalAllClosed(2);
-    FacetPairingTest<2>::makeCanonicalAllClosed(4);
-    FacetPairingTest<2>::makeCanonicalAllBounded(1);
-    FacetPairingTest<2>::makeCanonicalAllBounded(2);
-    FacetPairingTest<2>::makeCanonicalAllBounded(3);
-    FacetPairingTest<2>::makeCanonicalAllBounded(4);
+TEST(Isomorphism4Test, inverse) {
+    IsomorphismTest<4>::inverse(5);
 }
 
-TEST(FacetPairing2Test, rawCountsClosed) {
-    // Figures taken from the OEIS sequence #A005967.
-    static const size_t nPairs[] = {
-        0, 0, 2, 0, 5, 0, 17, 0, 71, 0, 388, 0, 2592 };
-
-    for (size_t i = 0; i <= 12; ++i)
-        FacetPairingTest<2>::enumerateClosed(i, nPairs[i]);
+TEST(Isomorphism4Test, tightEncoding) {
+    IsomorphismTest<4>::tightEncoding(2);
 }
-
-TEST(FacetPairing2Test, tightEncoding) {
-    FacetPairingTest<2>::tightEncodingAllClosed(2);
-    FacetPairingTest<2>::tightEncodingAllClosed(4);
-    FacetPairingTest<2>::tightEncodingAllBounded(1);
-    FacetPairingTest<2>::tightEncodingAllBounded(2);
-    FacetPairingTest<2>::tightEncodingAllBounded(3);
-    FacetPairingTest<2>::tightEncodingAllBounded(4);
-}
-

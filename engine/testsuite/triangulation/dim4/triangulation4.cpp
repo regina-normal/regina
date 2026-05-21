@@ -38,7 +38,7 @@
 #include "triangulation/example4.h"
 #include "triangulation/facetpairing.h"
 
-#include "generic/triangulationtest.h"
+#include "../triangulationtest.h"
 #include "testexhaustive.h"
 
 using regina::AbelianGroup;

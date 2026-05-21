@@ -28,60 +28,37 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/facetpairing.h"
+#include "triangulation/example3.h"
 
-#include "generic/facetpairingtest.h"
+#include "../isomorphismtest.h"
 
-TEST(FacetPairing4Test, isCanonical) {
-    FacetPairingTest<4>::isCanonicalAllClosed(0);
-    FacetPairingTest<4>::isCanonicalAllClosed(2);
-    FacetPairingTest<4>::isCanonicalAllClosed(4);
-    FacetPairingTest<4>::isCanonicalAllBounded(1);
-    FacetPairingTest<4>::isCanonicalAllBounded(2);
-    FacetPairingTest<4>::isCanonicalAllBounded(3);
-    FacetPairingTest<4>::isCanonicalAllBounded(4);
+using regina::Example;
+
+TEST(Isomorphism3Test, application) {
+    IsomorphismTest<3>::application(Example<3>::rp2xs1(), 11);
 }
 
-TEST(FacetPairing4Test, makeCanonical) {
-    FacetPairingTest<4>::makeCanonicalAllClosed(0);
-    // Already too slow just for n=2. :/
-    // FacetPairingTest<4>::makeCanonicalAllClosed(2);
-    FacetPairingTest<4>::makeCanonicalAllBounded(1);
-    // FacetPairingTest<4>::makeCanonicalAllBounded(2);
+TEST(Isomorphism3Test, inverse) {
+    IsomorphismTest<3>::inverse(5);
 }
 
-TEST(FacetPairing4Test, rawCountsClosed) {
-    // Figures taken from OEIS sequence #A129430, as enumerated by
-    // Brendan McKay using the software Nauty.
-    static const size_t nPairs[] = { 0, 0, 3, 0, 26, 0, 639, 0, 40264 };
+TEST(Isomorphism3Test, automorphismsAndSubcomplexes) {
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::ball(), 24, "Ball");
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::lens(8, 1), 4, "L(8,1)");
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::lens(13, 3), 2, "L(13,3)");
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::layeredLoop(5, true), 20, "C~(5)");
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::layeredLoop(5, false), 20, "C(5)");
 
-    for (size_t i = 0; i <= 5; ++i)
-        FacetPairingTest<4>::enumerateClosed(i, nPairs[i]);
+    // A case with no non-trivial symmetries.
+    IsomorphismTest<3>::automorphismsAndSubcomplexes(
+        Example<3>::augTriSolidTorus(3, -1, 5, -3, 2, -1), 1, "A(3,-1 | 5,-3)");
 }
 
-TEST(FacetPairing4Test, rawCountsBounded) {
-    // Figures based on enumeration under the 4-manifolds branch
-    // at the time of the Regina 4.93 release.
-    static const size_t nBdry[] = { 0, 3, 11, 61, 473, 4487 };
-    static const size_t nBdry1[] = { 0, 1, 0, 10, 0, 284, 0, 17761 };
-    static const size_t nBdry2[] = { 0, 0, 4, 0, 91, 0, 4665 };
-
-    for (size_t i = 0; i <= 6; ++i)
-        FacetPairingTest<4>::enumerateBounded(i, 1, nBdry1[i]);
-
-    for (size_t i = 0; i <= 5; ++i)
-        FacetPairingTest<4>::enumerateBounded(i, 2, nBdry2[i]);
-
-    for (size_t i = 0; i <= 4; ++i)
-        FacetPairingTest<4>::enumerateBounded(i, nBdry[i]);
+TEST(Isomorphism3Test, tightEncoding) {
+    IsomorphismTest<3>::tightEncoding(3);
 }
-
-TEST(FacetPairing4Test, tightEncoding) {
-    FacetPairingTest<4>::tightEncodingAllClosed(2);
-    FacetPairingTest<4>::tightEncodingAllClosed(4);
-    FacetPairingTest<4>::tightEncodingAllBounded(1);
-    FacetPairingTest<4>::tightEncodingAllBounded(2);
-    FacetPairingTest<4>::tightEncodingAllBounded(3);
-    FacetPairingTest<4>::tightEncodingAllBounded(4);
-}
-

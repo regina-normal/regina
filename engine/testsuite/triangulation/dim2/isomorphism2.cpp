@@ -30,7 +30,7 @@
 
 #include "triangulation/example2.h"
 
-#include "generic/isomorphismtest.h"
+#include "../isomorphismtest.h"
 
 using regina::Example;
 
