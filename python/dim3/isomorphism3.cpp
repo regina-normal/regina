@@ -33,7 +33,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/facetpairing3.h"
 #include "../helpers.h"
-#include "../docstrings/triangulation/generic/isomorphism.h"
+#include "../docstrings/triangulation/isomorphism.h"
 #include "../docstrings/triangulation/alias/isomorphism.h"
 
 using pybind11::overload_cast;

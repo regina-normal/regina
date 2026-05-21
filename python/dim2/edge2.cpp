@@ -35,8 +35,6 @@
 #include "../docstrings/triangulation/facenumbering.h"
 #include "../docstrings/triangulation/alias/face.h"
 #include "../docstrings/triangulation/alias/facenumber.h"
-#include "../docstrings/triangulation/generic/face.h"
-#include "../docstrings/triangulation/generic/faceembedding.h"
 #include "../docstrings/triangulation/detail/face.h"
 
 using regina::Edge;

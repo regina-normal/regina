@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/generic/isomorphism.h"
+#include "triangulation/isomorphism.h"
 #include "triangulation/facetpairing.h"
 
 #include "utilities/tightencodingtest.h"

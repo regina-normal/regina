@@ -306,6 +306,206 @@ class FaceEmbeddingBase :
     friend class FaceBase<dim, subdim>;
 };
 
+} // namespace regina::detail -> namespace regina
+
+/**
+ * Details how a <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * For small-dimensional faces, this class is typically described using
+ * dimension-specific type aliases: VertexEmbedding<dim>, EdgeEmbedding<dim>,
+ * TriangleEmbedding<dim>, TetrahedronEmbedding<dim> and
+ * PentachoronEmbedding<dim> refer to the cases
+ * \a subdim = 0, 1, 2, 3 and 4 respectively.
+ *
+ * For a <i>dim</i>-dimensional triangulation \a T, each <i>subdim</i>-face
+ * \a F typically belongs to many top-dimensional simplices of \a T,
+ * and therefore has many associated FaceEmbedding objects.  These individual
+ * FaceEmbedding objects correspond to the top-dimensional simplices of the
+ * link of \a F (which is a (\a dim - \a subdim - 1)-dimensional triangulation).
+ *
+ * As of Regina 7.0, a FaceEmbedding can happily outlive its face - even if the
+ * underlying Face object is destroyed (e.g., because the triangulation
+ * changed), if you made a local copy of a FaceEmbedding beforehand then its
+ * simplex(), face() and vertices() routines will continue to return the same
+ * values as they did before, back when the underlying Face still existed.
+ * A FaceEmbedding cannot, however, outlive its top-dimensional simplex,
+ * because internally a FaceEmbedding references the Simplex object in which
+ * it lives (i.e., it does not just store an integer simplex index).
+ *
+ * If \a dim is one of Regina's \ref stddim "standard dimensions", then
+ * this template is specialised to offer additional dimension-specific aliases.
+ * In order to use these specialised classes, you will need to include the
+ * corresponding triangulation headers (e.g., triangulation/dim2.h for
+ * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \python Python does not support templates.  Instead this class
+ * can be used by appending dimensions \a dim and \a subdim as suffices
+ * (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam subdim the dimension of the faces of the underlying triangulation.
+ *
+ * \headerfile triangulation/generic.h
+ *
+ * \ingroup triangulation
+ */
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
+    public:
+        /**
+         * Default constructor.  This object is unusable until it has
+         * some data assigned to it using `operator =`.
+         *
+         * \nopython This is because the C++ assignment operators are
+         * not accessible to Python.
+         */
+        FaceEmbedding() = default;
+
+        /**
+         * Creates a new object containing the given data.
+         *
+         * \param simplex the top-dimensional simplex in which the
+         * underlying <i>subdim</i>-face of the triangulation is contained.
+         * \param vertices a mapping from the vertices of the underlying
+         * <i>subdim</i>-face of the triangulation to the corresponding
+         * vertex numbers of \a simplex.  See FaceEmbeddingBase::vertices()
+         * for details of how this permutation should be structured.
+         */
+        FaceEmbedding(Simplex<dim>* simplex, Perm<dim + 1> vertices) :
+                detail::FaceEmbeddingBase<dim, subdim>(simplex, vertices) {
+        }
+
+        /**
+         * Creates a new copy of the given object.
+         *
+         * \param cloneMe the object to copy.
+         */
+        FaceEmbedding(const FaceEmbedding& cloneMe) = default;
+
+        /**
+         * Sets this to be a copy of the given object.
+         *
+         * \param cloneMe the object to copy.
+         */
+        FaceEmbedding& operator = (const FaceEmbedding& cloneMe) = default;
+
+    private:
+        /**
+         * Explicitly disable the old (\a simplex, \a face) constructor from
+         * Regina 6.0.1 and earlier.
+         *
+         * This is so that, if the user unintentionally calls the old
+         * (\a simplex, \a face) constructor, the face argument will not be
+         * silently converted to a permutation and passed to the new
+         * (\a simplex, \a vertices) constructor instead.
+         */
+        FaceEmbedding(Simplex<dim>*, int);
+};
+
+#ifdef __APIDOCS
+// This type alias is already defined in trianguation/forward.h.
+/**
+ * Details how a vertex of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 0>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c VertexEmbedding3).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using VertexEmbedding = FaceEmbedding<dim, 0>;
+
+/**
+ * Details how a edge of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 1>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c EdgeEmbedding5).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using EdgeEmbedding = FaceEmbedding<dim, 1>;
+
+/**
+ * Details how a triangular face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 2>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c TriangleEmbedding12).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim > 2)
+using TriangleEmbedding = FaceEmbedding<dim, 2>;
+
+/**
+ * Details how a tetrahedral face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 3>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c TetrahedronEmbedding7).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim > 3)
+using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
+
+/**
+ * Details how a pentachoron face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 4>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c PentachoronEmbedding14).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim > 4)
+using PentachoronEmbedding = FaceEmbedding<dim, 4>;
+#endif // __DOXYGEN
+
+
 #ifndef __DOXYGEN
 /**
  * Internal helper class that determines the data structure used to
@@ -353,6 +553,8 @@ struct FaceEmbeddingsList<dim, 1> {
     using type = ShortArray<FaceEmbedding<dim, dim - 1>, 2>;
 };
 #endif // __DOXYGEN
+
+namespace detail {
 
 /**
  * Helper class that provides core functionality for a <i>subdim</i>-face
@@ -1269,6 +1471,197 @@ class FaceBase :
     template <int dim_> requires (supportedDim(dim_))
     friend class regina::detail::BoundaryComponentBase;
 };
+
+} // namespace regina::detail -> namespace regina
+
+/**
+ * Represents a <i>subdim</i>-face in the skeleton of a <i>dim</i>-dimensional
+ * triangulation.  There are two substantially different cases:
+ *
+ * - The case \a subdim \< \a dim represents a lower-dimensional face
+ *   in a triangulation.  This is implemented by the generic class
+ *   template (as documented here), and is specialised for Regina's
+ *   \ref stddim "standard dimensions" (as discussed below).
+ *
+ * - The case \a subdim = \a dim represents a top-dimensional simplex in
+ *   a triangulation.  This class has a very different interface, and is
+ *   implemented by the partial specialisation Face<dim, dim> (and again
+ *   specialised further for \ref stddim "standard dimensions").   This
+ *   case is typically referred to using the type alias Simplex<dim>, to
+ *   make the distinction clear.  See the documentation for the specialisation
+ *   Face<dim, dim> for details on the interface that it provides.
+ *
+ * For small-dimensional faces, this class is typically described using
+ * dimension-specific type aliases: Vertex<dim>, Edge<dim>, Triangle<dim>,
+ * Tetrahedron<dim> and Pentachoron<dim> refer to the cases
+ * \a subdim = 0, 1, 2, 3 and 4 respectively.
+ *
+ * A given <i>subdim</i>-face \a F of the triangulation may appear many
+ * times within the various top-dimensional simplices of the underlying
+ * triangulation.  As an extreme example, in a 1-vertex triangulation of
+ * a 3-manifold, the single vertex makes 4<i>n</i> such appearances,
+ * where \a n is the total number of tetrahedra.
+ *
+ * Each such appearance is described by a single FaceEmbedding object.  You can
+ * iterate through these appearances using begin() and end(), or using a
+ * range-based `for` loop:
+ *
+ * \code{.cpp}
+ * for (auto& emb : face) { ... }
+ * \endcode
+ *
+ * You can count these appearances by calling degree(), and you can also
+ * examine them using routines such as front(), back() and embedding().
+ *
+ * \warning Face objects are highly temporary: whenever a triangulation
+ * changes, all its face objects will be deleted and new ones will be
+ * created in their place.
+ *
+ * For some types of faces in dimensions \a dim = 3 and 4, this template is
+ * specialised to offer additional functionality.  In order to use these
+ * specialised classes, you will need to include the corresponding triangulation
+ * headers (triangulation/dim3.h or triangulation/dim4.h respectively).
+ *
+ * Faces do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
+ * \python Python does not support templates.  Instead
+ * this class can be used by appending dimensions \a dim and \a subdim as
+ * suffices (e.g., Face2_1 and Face3_0 for the two examples above).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam subdim the dimension of the faces that this class represents.
+ *
+ * \headerfile triangulation/generic.h
+ *
+ * \ingroup triangulation
+ */
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+class Face : public detail::FaceBase<dim, subdim> {
+    static_assert(dim == 2 || dim > 4,
+        "The generic implementation of Face<dim, subdim> "
+        "should not be used for those face classes that are specialised "
+        "in Regina's standard dimensions.");
+    static_assert(subdim < dim,
+        "The generic implementation of Face<dim, subdim> "
+        "should only be used for the case subdim < dim.");
+
+    protected:
+        /**
+         * Creates a new face.
+         *
+         * \param component the component of the underlying triangulation
+         * to which the new face belongs.
+         */
+        Face(Component<dim>* component) :
+                detail::FaceBase<dim, subdim>(component) {
+        }
+
+    friend class Triangulation<dim>;
+    friend class detail::TriangulationBase<dim>;
+};
+
+#ifdef __APIDOCS
+// This type alias is already defined in trianguation/forward.h.
+/**
+ * Refers to a vertex of a <i>dim</i>-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a vertex of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 0>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Vertex8).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using Vertex = Face<dim, 0>;
+
+/**
+ * Refers to an edge of a <i>dim</i>-dimensional triangulation.
+ *
+ * This is the preferred way to refer to an edge of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 1>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Edge5).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using Edge = Face<dim, 1>;
+
+/**
+ * Refers to a triangular face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 2, where it refers to
+ * a top-dimensional simplex of a 2-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 2-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 2>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Triangle4).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using Triangle = Face<dim, 2>;
+
+/**
+ * Refers to a tetrahedral face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 3, where it refers to
+ * a top-dimensional simplex of a 3-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 3-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 3>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c Tetrahedron7).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim >= 3)
+using Tetrahedron = Face<dim, 3>;
+
+/**
+ * Refers to a pentachoron face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 4, where it refers to
+ * a top-dimensional simplex of a 4-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 4-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 4>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g.,
+ * \c Pentachoron9).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim >= 4)
+using Pentachoron = Face<dim, 4>;
+#endif // __DOXYGEN
+
+namespace detail {
 
 // Inline functions for FaceEmbeddingBase
 

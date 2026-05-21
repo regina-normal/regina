@@ -37,7 +37,6 @@
 #include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/dim4/tetrahedron4.h"
 #include "../docstrings/triangulation/detail/face.h"
-#include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Tetrahedron;
 using regina::TetrahedronEmbedding;

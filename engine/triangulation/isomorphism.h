@@ -28,12 +28,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file triangulation/generic/isomorphism.h
+/*! \file triangulation/isomorphism.h
  *  \brief Internal header for combinatorial isomorphisms between
  *  triangulations of arbitrary dimension.
  *
- *  This file is automatically included from triangulation/generic.h;
- *  there is no need for end users to include this header explicitly.
+ *  This file is automatically included from the high-level triangulation
+ *  headers (e.g., triangulation/dim3.h, triangulation/generic.h, etc.).
+ *  There is no need for end users to include this header explicitly.
  */
 
 #ifndef __REGINA_ISOMORPHISM_H
@@ -56,11 +57,6 @@
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
-
-/**
- * \defgroup generic Generic triangulations
- * Details for implementing triangulations in arbitrary dimensions.
- */
 
 /**
  * Represents a combinatorial isomorphism from one <i>dim</i>-manifold
@@ -112,7 +108,7 @@ namespace regina {
  *
  * \headerfile triangulation/generic.h
  *
- * \ingroup generic
+ * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
 class Isomorphism :
@@ -760,7 +756,7 @@ class Isomorphism :
  * \param a the first isomorphism whose contents should be swapped.
  * \param b the second isomorphism whose contents should be swapped.
  *
- * \ingroup generic
+ * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
 void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept;

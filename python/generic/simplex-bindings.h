@@ -32,7 +32,6 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
-#include "../docstrings/triangulation/generic/simplex.h"
 #include "../docstrings/triangulation/detail/simplex.h"
 
 using pybind11::overload_cast;

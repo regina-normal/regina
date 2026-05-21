@@ -1125,6 +1125,117 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
     friend class FaceBase;
 };
 
+} // namespace regina::detail -> namespace regina
+
+/**
+ * Represents a top-dimensional simplex in a <i>dim</i>-manifold triangulation.
+ *
+ * For example, for 3-manifolds this class represents a tetrahedron, and for
+ * 2-manifolds this class represents a triangle.
+ *
+ * Although this is a specialisation of the Face class template, this
+ * class is typically referred to using the alias Simplex<dim>.
+ * For Regina's \ref stddim "standard dimensions", you can also use the
+ * aliases Triangle<2>, Tetrahedron<3> and Pentachoron<4>.
+ *
+ * Top-dimensional simplices cannot exist in isolation (without a
+ * triangulation object), and they cannot be created or destroyed directly.
+ * Instead, you create and destroy them via the underlying triangulation,
+ * by calling routines such as Triangulation<dim>::newSimplex() or
+ * Triangulation<dim>::removeSimplex().
+ *
+ * Amongst other things, this class is used to view and change the gluings
+ * between top-dimensional simplices.  For this we number the facets and
+ * vertices of each simplex 0,...,\a dim, so that facet \a i is opposite
+ * vertex \a i.
+ *
+ * Each simplex may have an optional description.  This is typically a
+ * human-readable piece of text.  Descriptions are not required, and do
+ * not need to be unique.
+ *
+ * For Regina's \ref stddim "standard dimensions", this template is specialised
+ * and offers significant extra functionality.  In order to use these
+ * specialised classes, you will need to include the corresponding
+ * triangulation headers (e.g., triangulation/dim2.h for \a dim = 2, or
+ * triangulation/dim3.h for \a dim = 3).
+ *
+ * Simplices do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
+ * \python Python does not support templates.  Instead
+ * this class can be used by appending the dimension as a suffix
+ * (e.g., Simplex2 and Simplex3 for dimensions 2 and 3).
+ *
+ * \pydocname{Simplex}
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \headerfile triangulation/generic.h
+ *
+ * \ingroup triangulation
+ */
+template <int dim> requires (supportedDim(dim))
+class Face<dim, dim> : public detail::SimplexBase<dim> {
+    static_assert(! standardDim(dim),
+        "The generic implementation of Simplex<dim> "
+        "should not be used for Regina's standard dimensions.");
+
+    protected:
+        /**
+         * Creates a new simplex with no description and no facets joined
+         * to anything.
+         *
+         * \param tri the triangulation to which the new simplex belongs.
+         */
+        Face(Triangulation<dim>* tri) : detail::SimplexBase<dim>(tri) {
+        }
+        /**
+         * Creates a new simplex whose description and locks are cloned
+         * from the given simplex, and with no faces joined to anything.
+         *
+         * \param clone the simplex whose details should be cloned.
+         * \param tri the triangulation to which the new tetrahedron belongs.
+         */
+        Face(const Face& clone, Triangulation<dim>* tri) :
+                detail::SimplexBase<dim>(clone, tri) {
+        }
+        /**
+         * Creates a new simplex with the given description, no locks, and
+         * no facets joined to anything.
+         *
+         * \param desc the description to give the new simplex.
+         * \param tri the triangulation to which the new simplex belongs.
+         */
+        Face(const std::string& desc, Triangulation<dim>* tri) :
+                detail::SimplexBase<dim>(desc, tri) {
+        }
+
+    friend class Triangulation<dim>;
+    friend class detail::TriangulationBase<dim>;
+};
+
+#ifdef __APIDOCS
+// This type alias is already defined in trianguation/forward.h.
+/**
+ * Refers to a top-dimensional simplex in a <i>dim</i>-dimensional
+ * triangulation.
+ *
+ * This is the preferred way to refer to a top-dimensional simplex (as
+ * opposed to the more clumsy notation Face<dim, dim>).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim> requires (supportedDim(dim))
+using Simplex = Face<dim, dim>;
+#endif
+
+namespace detail {
+
 // Inline functions for SimplexBase
 
 template <int dim> requires (supportedDim(dim))

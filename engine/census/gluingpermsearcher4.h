@@ -46,7 +46,7 @@
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/generic/isomorphism.h"
+#include "triangulation/isomorphism.h"
 #include "utilities/exception.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS

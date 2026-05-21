@@ -38,7 +38,6 @@
 #include "../docstrings/triangulation/alias/facenumber.h"
 #include "../docstrings/triangulation/dim4/triangle4.h"
 #include "../docstrings/triangulation/detail/face.h"
-#include "../docstrings/triangulation/generic/faceembedding.h"
 
 using regina::Triangle;
 using regina::TriangleEmbedding;

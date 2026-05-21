@@ -33,7 +33,7 @@
 #include "triangulation/generic.h"
 #include "triangulation/facetpairing.h"
 #include "../helpers.h"
-#include "../docstrings/triangulation/generic/isomorphism.h"
+#include "../docstrings/triangulation/isomorphism.h"
 
 using pybind11::overload_cast;
 using regina::Isomorphism;

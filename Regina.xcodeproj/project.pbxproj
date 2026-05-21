@@ -621,9 +621,6 @@
 		055114D41DCC71A700EC753C /* facenumbering.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D01DCC71A700EC753C /* facenumbering.h */; };
 		055114D51DCC71A700EC753C /* facetspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D11DCC71A700EC753C /* facetspec.h */; };
 		055114EE1DCD5D0500EC753C /* gluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114ED1DCD5D0500EC753C /* gluingpermsearcher.h */; };
-		055114FE1DCDF63000EC753C /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F71DCDF63000EC753C /* face.h */; };
-		055115001DCDF63000EC753C /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F91DCDF63000EC753C /* isomorphism.h */; };
-		055115011DCDF63000EC753C /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FA1DCDF63000EC753C /* simplex.h */; };
 		0553FA672AEBDF5600BE89A7 /* homgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46DE1DD92D4A00BB00E5 /* homgrouppresentation.cpp */; };
 		0553FA682AEBDF5600BE89A7 /* covers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057B0CB526A5067B0017F5EA /* covers.cpp */; };
 		0553FA692AEBDF5600BE89A7 /* intersectionform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051261A5278D65B8006A55B1 /* intersectionform.cpp */; };
@@ -1662,6 +1659,7 @@
 		05E221D82CEC2525009D5D4E /* permsn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E221D72CEC2525009D5D4E /* permsn.cpp */; };
 		05E6297A2FBC880B00AE1B84 /* tri2composition.h in Sources */ = {isa = PBXBuildFile; fileRef = 0545A04F2FBBCD71008D3ADB /* tri2composition.h */; };
 		05E6297B2FBC884C00AE1B84 /* trisigchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0482FB5994E008D3ADB /* trisigchooser.h */; };
+		05E6297E2FBFAB6800AE1B84 /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E6297D2FBFAB6800AE1B84 /* isomorphism.h */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -1751,7 +1749,6 @@
 		05FEA07A19C1890900A31924 /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* examplesnappea.cpp */; };
 		05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* examplesnappea.h */; };
 		05FFD26A2900C75900E0F61C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFD2692900C75900E0F61C /* facenumbering.cpp */; };
-		05FFD26D2905263800E0F61C /* faceembedding.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FFD26C2905263700E0F61C /* faceembedding.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -2320,9 +2317,6 @@
 		05098B292900186E005E4716 /* example3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example3.h; sourceTree = "<group>"; };
 		05098B2A2900186E005E4716 /* cut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cut.h; sourceTree = "<group>"; };
 		05098B2B2900186E005E4716 /* example2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example2.h; sourceTree = "<group>"; };
-		05098B372900186E005E4716 /* isomorphism.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
-		05098B392900186E005E4716 /* simplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
-		05098B3D2900186E005E4716 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		05098B3E2900186E005E4716 /* facepair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facepair.h; sourceTree = "<group>"; };
 		05098B3F2900186E005E4716 /* facenumbering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
 		05098B412900186E005E4716 /* facetspec.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
@@ -3155,7 +3149,6 @@
 		054C6A7C1DCC20DA005373F0 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		054C6A7D1DCC20DA005373F0 /* strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = strings.h; sourceTree = "<group>"; };
 		054C6A811DCC2127005373F0 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
-		054C6A841DCC2148005373F0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		054DF93E28CABBC300EC3D81 /* sizes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sizes.cpp; sourceTree = "<group>"; };
 		054DF93F28CABBC300EC3D81 /* tree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tree.cpp; sourceTree = "<group>"; };
 		054DF94028CABC2800EC3D81 /* basic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic.cpp; sourceTree = "<group>"; };
@@ -3203,9 +3196,6 @@
 		055114D01DCC71A700EC753C /* facenumbering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
 		055114D11DCC71A700EC753C /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
 		055114ED1DCD5D0500EC753C /* gluingpermsearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluingpermsearcher.h; sourceTree = "<group>"; };
-		055114F71DCDF63000EC753C /* face.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
-		055114F91DCDF63000EC753C /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
-		055114FA1DCDF63000EC753C /* simplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
 		0553FB9A2AF2117200BE89A7 /* construction.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = construction.out; sourceTree = "<group>"; };
 		0553FB9B2AF2117200BE89A7 /* lst.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = lst.out; sourceTree = "<group>"; };
 		0553FB9C2AF2117300BE89A7 /* construction.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = construction.test; sourceTree = "<group>"; };
@@ -4620,6 +4610,8 @@
 		05E221E52CEE124E009D5D4E /* data-oneeff.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-oneeff.docbook"; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
 		05E6297C2FBDF57000AE1B84 /* docstrings_all.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = docstrings_all.cpp; sourceTree = "<group>"; };
+		05E6297D2FBFAB6800AE1B84 /* isomorphism.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
+		05E6297F2FBFABC700AE1B84 /* isomorphism.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -4733,8 +4725,6 @@
 		05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SyntaxHighlighter.mm; sourceTree = "<group>"; };
 		05FF74E31DCB12F700FC2CB4 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
 		05FFD2692900C75900E0F61C /* facenumbering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facenumbering.cpp; sourceTree = "<group>"; };
-		05FFD26C2905263700E0F61C /* faceembedding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = faceembedding.h; sourceTree = "<group>"; };
-		05FFD26E2905265700E0F61C /* faceembedding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = faceembedding.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5346,7 +5336,7 @@
 				05098B3E2900186E005E4716 /* facepair.h */,
 				05098B272900186E005E4716 /* facetpairing3.h */,
 				05098B412900186E005E4716 /* facetspec.h */,
-				05098B362900186E005E4716 /* generic */,
+				05E6297F2FBFABC700AE1B84 /* isomorphism.h */,
 				050613582F8DA075009CF16A /* isosig.h */,
 			);
 			path = triangulation;
@@ -5398,17 +5388,6 @@
 				05098B232900186E005E4716 /* isomorphism.h */,
 			);
 			path = alias;
-			sourceTree = "<group>";
-		};
-		05098B362900186E005E4716 /* generic */ = {
-			isa = PBXGroup;
-			children = (
-				05098B3D2900186E005E4716 /* face.h */,
-				05FFD26E2905265700E0F61C /* faceembedding.h */,
-				05098B372900186E005E4716 /* isomorphism.h */,
-				05098B392900186E005E4716 /* simplex.h */,
-			);
-			path = generic;
 			sourceTree = "<group>";
 		};
 		05098B422900186E005E4716 /* link */ = {
@@ -6806,7 +6785,6 @@
 				05F09FC31DBF018B00117BFC /* dim3 */,
 				05F09FC41DBF019100117BFC /* dim4 */,
 				05C1BE9A1DCA7C93007C946B /* explicit */,
-				054C6A831DCC212F005373F0 /* generic */,
 				052F9E30180600FB00FAE4DF /* CMakeLists.txt */,
 				05135ADF28347BF600C4BFDC /* cut.cpp */,
 				05135ADE28347BF600C4BFDC /* cut.h */,
@@ -6829,6 +6807,7 @@
 				055114D11DCC71A700EC753C /* facetspec.h */,
 				058C305E1DCAF6F8006162D2 /* forward.h */,
 				058E398C1DCBC67C00D463A4 /* generic.h */,
+				05E6297D2FBFAB6800AE1B84 /* isomorphism.h */,
 				0545A0222FB131E1008D3ADB /* isosig.cpp */,
 				050613562F8DA057009CF16A /* isosig.h */,
 				05CAE698274AA785007C93F3 /* isosigencoding.h */,
@@ -7299,18 +7278,6 @@
 				052274BD2F7367730054172A /* view.h */,
 			);
 			path = helpers;
-			sourceTree = "<group>";
-		};
-		054C6A831DCC212F005373F0 /* generic */ = {
-			isa = PBXGroup;
-			children = (
-				054C6A841DCC2148005373F0 /* CMakeLists.txt */,
-				055114F71DCDF63000EC753C /* face.h */,
-				05FFD26C2905263700E0F61C /* faceembedding.h */,
-				055114F91DCDF63000EC753C /* isomorphism.h */,
-				055114FA1DCDF63000EC753C /* simplex.h */,
-			);
-			path = generic;
 			sourceTree = "<group>";
 		};
 		054F7E2E180B99320090B1F3 /* HTML */ = {
@@ -8925,7 +8892,6 @@
 				05A067251DFA68190047872E /* pluggedtorusbundle.h in Headers */,
 				053CB70828D0168D006B37B0 /* tetrahedron4.h in Headers */,
 				05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */,
-				055115001DCDF63000EC753C /* isomorphism.h in Headers */,
 				05A0672F1DFA68190047872E /* satblocktypes.h in Headers */,
 				054209261DF28C990018AB24 /* keywordlist.h in Headers */,
 				054208C21DF0D2740018AB24 /* simplesurfacebundle.h in Headers */,
@@ -8939,14 +8905,12 @@
 				052F9EBD180600FB00FAE4DF /* docs.h in Headers */,
 				05B4D2D7229F42D700B7B11C /* output.h in Headers */,
 				05B4D2CE229F376B00B7B11C /* descent.h in Headers */,
-				055114FE1DCDF63000EC753C /* face.h in Headers */,
 				052FA08F180600FB00FAE4DF /* markedvector.h in Headers */,
 				054208891DF0D0B50018AB24 /* themedata_p.h in Headers */,
 				05F0A04A1DBF0B5E00117BFC /* tetrahedron3.h in Headers */,
 				05EDDA5027E3102A001743C1 /* chunk.h in Headers */,
 				051261A9278D65B9006A55B1 /* intersectionform.h in Headers */,
 				05721EFF1F9715C700A83FFC /* laurent2.h in Headers */,
-				055115011DCDF63000EC753C /* simplex.h in Headers */,
 				05BDA5622CB64CCD006F4738 /* binomial.h in Headers */,
 				05BDA5632CB64CCD006F4738 /* binomial_containers.h in Headers */,
 				05BDA5642CB64CCD006F4738 /* nmz_polynomial.h in Headers */,
@@ -8968,7 +8932,6 @@
 				05F0A04E1DBF0B5E00117BFC /* triangulation3.h in Headers */,
 				05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */,
 				052F9F8C180600FB00FAE4DF /* kernel.h in Headers */,
-				05FFD26D2905263800E0F61C /* faceembedding.h in Headers */,
 				054208741DF0D0B50018AB24 /* definition_p.h in Headers */,
 				05F09FC01DBEF01800117BFC /* dim3.h in Headers */,
 				05FB46EB1DD92D4A00BB00E5 /* markedabeliangroup.h in Headers */,
@@ -9161,6 +9124,7 @@
 				05431F871C40F3C9009BC072 /* version.h in Headers */,
 				052FA084180600FB00FAE4DF /* bitmanip.h in Headers */,
 				052F9FDA180600FB00FAE4DF /* winged_edge.h in Headers */,
+				05E6297E2FBFAB6800AE1B84 /* isomorphism.h in Headers */,
 				05A067271DFA68190047872E /* plugtrisolidtorus.h in Headers */,
 				05A0672B1DFA68190047872E /* satblock.h in Headers */,
 				052FA097180600FB00FAE4DF /* trieset.h in Headers */,

@@ -46,7 +46,7 @@
 #endif
 
 #include "triangulation/detail/facetpairing.h"
-#include "triangulation/generic/isomorphism.h"
+#include "triangulation/isomorphism.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
