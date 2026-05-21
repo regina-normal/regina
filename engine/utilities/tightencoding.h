@@ -305,7 +305,7 @@ void tightEncode(std::ostream& out, IntType value) {
  * `Integer(value).tightEncoding()`, which is slower but will give the
  * correct result.
  *
- * \pyname{tightEncoding_CppInteger}
+ * \pydocname{tightEncoding_CppInteger}
  *
  * \param value the integer to encode.
  * \return the resulting encoded string.
@@ -342,7 +342,7 @@ void tightEncode(std::ostream& out, bool value);
  * The booleans \c true and \c false are guaranteed to have the same
  * tight encodings as the integers 1 and 0 respectively.
  *
- * \pyname{tightEncoding_bool}
+ * \pydocname{tightEncoding_bool}
  *
  * \param value the boolean to encode.
  * \return the resulting encoded string.

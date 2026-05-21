@@ -285,7 +285,7 @@ class IsoSigData;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \pyname{IsoSigData1}
+ * \pydocname{IsoSigData1}
  *
  * \apinotfinal
  *
@@ -615,7 +615,7 @@ class IsoSigData<1, dim> {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \pyname{IsoSigData2}
+ * \pydocname{IsoSigData2}
  *
  * \apinotfinal
  *

@@ -265,7 +265,7 @@ def process_comment(comment, preserveAmpersands):
     s = re.sub(r'\\headerfile\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\cpp\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\nocpp\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
-    s = re.sub(r'\\pyname{\S+}', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\pydocname{\S+}', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\swift\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
 
     # Doxygen paragraphs that we will likewise ignore in Python:
@@ -526,7 +526,7 @@ def extract(filename, node, parent_namespace, parent_types, output):
 
     name = sanitize_name(d(node.spelling))
     if node.raw_comment:
-        match = re.search(r'\\pyname{(\S+)}($|\s)', node.raw_comment)
+        match = re.search(r'\\pydocname{(\S+)}($|\s)', node.raw_comment)
         if match:
             newName = match.group(1)
             print('Name override:', name, '->', newName)
