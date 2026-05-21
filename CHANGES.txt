@@ -555,8 +555,8 @@ Version 8.0  [ TODO ]
             - Renamed to foreign/siglist.h.  The old header is kept but
               deprecated.
         Header triangulation/generic/isomorphism.h:
-            - Moved to triangulation/isomorphism.h, since this is the main
-              definition of the Isomorphism class in all dimensions.
+            - Moved to triangulation/isomorphism.h, since this defines the
+              Isomorphism class in all dimensions.
         Header triangulation/generic/*.h:
             - These headers are all gone - their contents have been moved
               into other headers instead.
