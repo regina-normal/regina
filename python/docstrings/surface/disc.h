@@ -34,20 +34,6 @@ Parameter ``edgeStart``:
 Parameter ``edgeEnd``:
     the end vertex of the edge to which the normal arc is parallel.)doc";
 
-// Docstring regina::python::doc::global_swap_DiscSetSurfaceDataImpl
-inline constexpr const char global_swap_DiscSetSurfaceDataImpl[] =
-R"doc(Swaps the contents of the two given disc sets.
-
-This global routine simply calls DiscSetSurfaceDataImpl::swap(); it is
-provided so that DiscSetSurfaceDataImpl meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first disc set whose contents should be swapped.
-
-Parameter ``b``:
-    the second disc set whose contents should be swapped.)doc";
-
 // Docstring regina::python::doc::numberDiscsAwayFromVertex
 inline constexpr const char numberDiscsAwayFromVertex[] =
 R"doc(Determines whether or not normal discs of the given type are numbered
@@ -192,6 +178,20 @@ Returns:
     directed normal arc that was passed but expressed in terms of the
     vertices of the adjacent tetrahedron. This will be ``None`` if
     there is no adjacent disc.)doc";
+
+// Docstring regina::python::doc::DiscSetSurfaceDataImpl::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given disc sets.
+
+This global routine simply calls DiscSetSurfaceDataImpl::swap(); it is
+provided so that DiscSetSurfaceDataImpl meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first disc set whose contents should be swapped.
+
+Parameter ``b``:
+    the second disc set whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::DiscSetSurfaceDataImpl::nDiscs
 static constexpr const char nDiscs[] =

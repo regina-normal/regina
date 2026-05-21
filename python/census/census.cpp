@@ -69,8 +69,7 @@ void addCensus(pybind11::module_& m) {
         s << db.filename() << " [" << db.desc() << ']';
     });
     regina::python::add_eq_operators(db, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, CensusDB);
+    regina::python::add_global_swap<CensusDB, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(CensusHit)
 
@@ -86,8 +85,7 @@ void addCensus(pybind11::module_& m) {
         s << hit.name() << " -- " << hit.db().desc();
     });
     regina::python::add_eq_operators(h, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, CensusHit);
+    regina::python::add_global_swap<CensusHit, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(Census)
 

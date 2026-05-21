@@ -11,15 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Container
-inline constexpr const char global_swap_Container[] =
-R"doc(Swap function for container packets that does nothing.
-
-This is only here for consistency with the other packet types. For
-container packets, the swap operation does nothing since containers
-have no "real" content of their own. See the member function
-Container::swap() for further explanation.)doc";
-
 struct Container {
 
 // Docstring regina::python::doc::Container::__class
@@ -59,6 +50,15 @@ containers to organise the data in this tree.
 
 Parameter ``label``:
     the packet label for this new container.)doc";
+
+// Docstring regina::python::doc::Container::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swap function for container packets that does nothing.
+
+This is only here for consistency with the other packet types. For
+container packets, the swap operation does nothing since containers
+have no "real" content of their own. See the member function
+Container::swap() for further explanation.)doc";
 
 // Docstring regina::python::doc::Container::swap
 static constexpr const char swap[] =

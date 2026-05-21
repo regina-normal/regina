@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_GraphPair
-inline constexpr const char global_swap_GraphPair[] =
-R"doc(Swaps the contents of the two given graph manifolds.
-
-This global routine simply calls GraphPair::swap(); it is provided so
-that GraphPair meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first graph manifold whose contents should be swapped.
-
-Parameter ``b``:
-    the second graph manifold whose contents should be swapped.)doc";
-
 struct GraphPair {
 
 // Docstring regina::python::doc::GraphPair::__class
@@ -177,6 +164,19 @@ Parameter ``sfs1``:
 
 Parameter ``matchingReln``:
     the 2-by-2 matching matrix.)doc";
+
+// Docstring regina::python::doc::GraphPair::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given graph manifolds.
+
+This global routine simply calls GraphPair::swap(); it is provided so
+that GraphPair meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first graph manifold whose contents should be swapped.
+
+Parameter ``b``:
+    the second graph manifold whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::GraphPair::matchingReln
 static constexpr const char matchingReln[] =

@@ -60,8 +60,7 @@ void addGraphTriple(pybind11::module_& m) {
     // Do not bind comparison operators, since these are already inherited
     // from Manifold and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
-
-    ADD_GLOBAL_SWAP(m, GraphTriple);
+    regina::python::add_global_swap<GraphTriple, rdoc>(m);
 
     RDOC_SCOPE_END
 }

@@ -161,8 +161,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(g);
     regina::python::add_tight_encoding(g);
     regina::python::add_eq_operators(g, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, ModelLinkGraph);
+    regina::python::add_global_swap<ModelLinkGraph, rdoc>(m);
 
     regina::python::addStdView<decltype(ModelLinkGraph().nodes())>(internal,
         "ModelLinkGraph_nodes");

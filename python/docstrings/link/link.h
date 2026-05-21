@@ -11,26 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Link
-inline constexpr const char global_swap_Link[] =
-R"doc(Swaps the contents of the two given links.
-
-This global routine simply calls Link::swap(); it is provided so that
-Link meets the C++ Swappable requirements.
-
-See Link::swap() for more details.
-
-.. note::
-    This swap function is _not_ marked ``noexcept``, since it fires
-    change events on both links which may in turn call arbitrary code
-    via any registered packet listeners.
-
-Parameter ``lhs``:
-    the link whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the link whose contents should be swapped with *lhs*.)doc";
-
 struct Crossing {
 
 // Docstring regina::python::doc::Crossing::__class
@@ -2262,6 +2242,26 @@ Exception ``NotImplemented``:
 
 Returns:
     a classical Gauss code for this knot in machine-readable form.)doc";
+
+// Docstring regina::python::doc::Link::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given links.
+
+This global routine simply calls Link::swap(); it is provided so that
+Link meets the C++ Swappable requirements.
+
+See Link::swap() for more details.
+
+.. note::
+    This swap function is _not_ marked ``noexcept``, since it fires
+    change events on both links which may in turn call arbitrary code
+    via any registered packet listeners.
+
+Parameter ``lhs``:
+    the link whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the link whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::Link::graft
 static constexpr const char graft[] =

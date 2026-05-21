@@ -11,32 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_CensusDB
-inline constexpr const char global_swap_CensusDB[] =
-R"doc(Swaps the contents of the given database references.
-
-This global routine simply calls CensusDB::swap(); it is provided so
-that CensusDB meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first database reference whose contents should be swapped.
-
-Parameter ``b``:
-    the second database reference whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::global_swap_CensusHit
-inline constexpr const char global_swap_CensusHit[] =
-R"doc(Swaps the contents of the given census hits.
-
-This global routine simply calls CensusHit::swap(); it is provided so
-that CensusHit meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first census hit whose contents should be swapped.
-
-Parameter ``b``:
-    the second census hit whose contents should be swapped.)doc";
-
 struct Census {
 
 // Docstring regina::python::doc::Census::__class
@@ -228,6 +202,19 @@ R"doc(Returns the filename where this database is stored.
 Returns:
     the database filename.)doc";
 
+// Docstring regina::python::doc::CensusDB::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given database references.
+
+This global routine simply calls CensusDB::swap(); it is provided so
+that CensusDB meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first database reference whose contents should be swapped.
+
+Parameter ``b``:
+    the second database reference whose contents should be swapped.)doc";
+
 // Docstring regina::python::doc::CensusDB::lookupKey
 static constexpr const char lookupKey[] =
 R"doc(Searches for the given key in this database.
@@ -335,6 +322,19 @@ found.
 
 Returns:
     the database for this hit.)doc";
+
+// Docstring regina::python::doc::CensusHit::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given census hits.
+
+This global routine simply calls CensusHit::swap(); it is provided so
+that CensusHit meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first census hit whose contents should be swapped.
+
+Parameter ``b``:
+    the second census hit whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::CensusHit::name
 static constexpr const char name[] =

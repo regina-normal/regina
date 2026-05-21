@@ -36,6 +36,11 @@
  *  you will need to explicitly include this header yourself.
  */
 
+#ifndef __HELPERS_BYTESEQUENCE_H
+#ifndef __DOXYGEN
+#define __HELPERS_BYTESEQUENCE_H
+#endif
+
 #include <pybind11/pybind11.h>
 #include "utilities/bytesequence.h"
 
@@ -63,3 +68,4 @@ struct type_caster<regina::ByteSequence> {
 
 } // namespace pybind11::detail
 
+#endif

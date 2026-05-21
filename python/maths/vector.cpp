@@ -87,8 +87,7 @@ void addVectorOf(pybind11::module_& m, const char* className) {
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, Vec, Vector);
+    regina::python::add_global_swap<Vec, rdoc>(m);
 
     RDOC_SCOPE_END
 

@@ -45,7 +45,7 @@
 #define __REGINA_FACETPAIRING_CANONICAL_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/facetpairing.h"
+#include "triangulation/detail/facetpairing.h"
 #include "triangulation/generic/isomorphism.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS

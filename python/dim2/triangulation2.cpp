@@ -423,6 +423,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
+    // The global swap is bound later, when we have a different rdoc alias.
 
     regina::python::addStdView<decltype(Triangulation<2>().vertices())>(
         internal, "Triangulation2_vertices");
@@ -448,7 +449,9 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_packet_constructor<const std::string&>(wrap,
         rdoc::__init_2);
 
-    ADD_GLOBAL_SWAP_SUFFIX(m, Triangulation<2>, Triangulation);
+    RDOC_SCOPE_SWITCH(Triangulation)
+
+    regina::python::add_global_swap<Triangulation<2>, rdoc>(m);
 
     RDOC_SCOPE_END
 

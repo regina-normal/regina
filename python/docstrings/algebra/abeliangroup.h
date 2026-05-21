@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_AbelianGroup
-inline constexpr const char global_swap_AbelianGroup[] =
-R"doc(Swaps the contents of the two given abelian groups.
-
-This global routine simply calls AbelianGroup::swap(); it is provided
-so that AbelianGroup meets the C++ Swappable requirements.
-
-Parameter ``lhs``:
-    the group whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the group whose contents should be swapped with *lhs*.)doc";
-
 struct AbelianGroup {
 
 // Docstring regina::python::doc::AbelianGroup::__class
@@ -275,6 +262,19 @@ details.
 
 Returns:
     the number of invariant factors.)doc";
+
+// Docstring regina::python::doc::AbelianGroup::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given abelian groups.
+
+This global routine simply calls AbelianGroup::swap(); it is provided
+so that AbelianGroup meets the C++ Swappable requirements.
+
+Parameter ``lhs``:
+    the group whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the group whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::AbelianGroup::invariantFactor
 static constexpr const char invariantFactor[] =

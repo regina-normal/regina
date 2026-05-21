@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_TreeDecomposition
-inline constexpr const char global_swap_TreeDecomposition[] =
-R"doc(Swaps the contents of the two given tree decompositions.
-
-This global routine simply calls TreeDecomposition::swap(); it is
-provided so that TreeDecomposition meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first tree decomposition whose contents should be swapped.
-
-Parameter ``b``:
-    the second tree decomposition whose contents should be swapped.)doc";
-
 struct BagComparison {
 
 // Docstring regina::python::doc::BagComparison::Equal
@@ -834,6 +820,20 @@ Returns:
 
 See also:
     https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/)doc";
+
+// Docstring regina::python::doc::TreeDecomposition::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given tree decompositions.
+
+This global routine simply calls TreeDecomposition::swap(); it is
+provided so that TreeDecomposition meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first tree decomposition whose contents should be swapped.
+
+Parameter ``b``:
+    the second tree decomposition whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TreeDecomposition::makeNice
 static constexpr const char makeNice[] =

@@ -409,6 +409,7 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
     regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
+    regina::python::add_global_swap<Triangulation<dim>, rdoc>(m);
 
     // The view classes for faces<subdim>() where subdim < dim are wrapped
     // in face-bindings.h, since this needs to be done for each subdimension.
@@ -429,8 +430,6 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
         pybind11::arg("cloneProps"),
         pybind11::arg("cloneLocks") = true,
         rdoc::__init);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, Triangulation<dim>, Triangulation);
 
     RDOC_SCOPE_END
 }

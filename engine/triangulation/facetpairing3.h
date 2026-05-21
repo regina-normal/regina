@@ -39,7 +39,7 @@
 
 #include "regina-core.h"
 #include "triangulation/dim3.h"
-#include "triangulation/generic/facetpairing.h"
+#include "triangulation/detail/facetpairing.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 

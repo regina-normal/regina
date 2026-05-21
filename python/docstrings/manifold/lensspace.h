@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_LensSpace
-inline constexpr const char global_swap_LensSpace[] =
-R"doc(Swaps the contents of the two given lens spaces.
-
-This global routine simply calls LensSpace::swap(); it is provided so
-that LensSpace meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first lens space whose contents should be swapped.
-
-Parameter ``b``:
-    the second lens space whose contents should be swapped.)doc";
-
 struct LensSpace {
 
 // Docstring regina::python::doc::LensSpace::__class
@@ -110,6 +97,19 @@ Parameter ``p``:
 Parameter ``q``:
     the second parameter *q* of the lens space L(p,q). Note that there
     are no range restrictions whatsoever on this parameter.)doc";
+
+// Docstring regina::python::doc::LensSpace::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given lens spaces.
+
+This global routine simply calls LensSpace::swap(); it is provided so
+that LensSpace meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first lens space whose contents should be swapped.
+
+Parameter ``b``:
+    the second lens space whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LensSpace::p
 static constexpr const char p[] =

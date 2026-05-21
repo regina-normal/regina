@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_ValidityConstraints
-inline constexpr const char global_swap_ValidityConstraints[] =
-R"doc(Swaps the contents of the two given constraint sets.
-
-This global routine simply calls ValidityConstraints::swap(); it is
-provided so that ValidityConstraints meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first constraint set whose contents should be swapped.
-
-Parameter ``b``:
-    the second constraint set whose contents should be swapped.)doc";
-
 struct ValidityConstraints {
 
 // Docstring regina::python::doc::ValidityConstraints::__class
@@ -268,6 +254,20 @@ Python:
 Returns:
     the list of bitmasks describing the full set of validity
     constraints.)doc";
+
+// Docstring regina::python::doc::ValidityConstraints::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given constraint sets.
+
+This global routine simply calls ValidityConstraints::swap(); it is
+provided so that ValidityConstraints meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first constraint set whose contents should be swapped.
+
+Parameter ``b``:
+    the second constraint set whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::ValidityConstraints::swap
 static constexpr const char swap[] =

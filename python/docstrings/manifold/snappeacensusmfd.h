@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SnapPeaCensusManifold
-inline constexpr const char global_swap_SnapPeaCensusManifold[] =
-R"doc(Swaps the contents of the two given SnapPea census manifolds.
-
-This global routine simply calls SnapPeaCensusManifold::swap(); it is
-provided so that SnapPeaCensusManifold meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first census manifold whose contents should be swapped.
-
-Parameter ``b``:
-    the second census manifold whose contents should be swapped.)doc";
-
 struct SnapPeaCensusManifold {
 
 // Docstring regina::python::doc::SnapPeaCensusManifold::__class
@@ -100,6 +86,20 @@ Parameter ``index``:
     represented. The indices for each section begin counting at zero,
     and so this index must be between 0 and *k*-1, where *k* is the
     total number of manifolds in the given section.)doc";
+
+// Docstring regina::python::doc::SnapPeaCensusManifold::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given SnapPea census manifolds.
+
+This global routine simply calls SnapPeaCensusManifold::swap(); it is
+provided so that SnapPeaCensusManifold meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first census manifold whose contents should be swapped.
+
+Parameter ``b``:
+    the second census manifold whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusManifold::index
 static constexpr const char index[] =

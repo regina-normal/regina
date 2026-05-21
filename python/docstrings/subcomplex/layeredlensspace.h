@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_LayeredLensSpace
-inline constexpr const char global_swap_LayeredLensSpace[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls LayeredLensSpace::swap(); it is
-provided so that LayeredLensSpace meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct LayeredLensSpace {
 
 // Docstring regina::python::doc::LayeredLensSpace::__class
@@ -76,6 +62,20 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered lens space.)doc";
+
+// Docstring regina::python::doc::LayeredLensSpace::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls LayeredLensSpace::swap(); it is
+provided so that LayeredLensSpace meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredLensSpace::isSnapped
 static constexpr const char isSnapped[] =

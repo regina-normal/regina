@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Cyclotomic
-inline constexpr const char global_swap_Cyclotomic[] =
-R"doc(Swaps the contents of the given field elements.
-
-This global routine simply calls Cyclotomic::swap(); it is provided so
-that Cyclotomic meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first field element whose contents should be swapped.
-
-Parameter ``b``:
-    the second field element whose contents should be swapped.)doc";
-
 struct Cyclotomic {
 
 // Docstring regina::python::doc::Cyclotomic::__add
@@ -511,6 +498,19 @@ constructor).
 
 Returns:
     the order of the underlying cyclotomic field.)doc";
+
+// Docstring regina::python::doc::Cyclotomic::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given field elements.
+
+This global routine simply calls Cyclotomic::swap(); it is provided so
+that Cyclotomic meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first field element whose contents should be swapped.
+
+Parameter ``b``:
+    the second field element whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Cyclotomic::init
 static constexpr const char init[] =

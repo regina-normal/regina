@@ -32,6 +32,11 @@
  *  \brief Assists with wrapping lightweight C++ views.
  */
 
+#ifndef __HELPERS_VIEW_H
+#ifndef __DOXYGEN
+#define __HELPERS_VIEW_H
+#endif
+
 #include <ranges>
 
 namespace regina::python {
@@ -199,3 +204,4 @@ Returns:
 
 } // namespace regina::python
 
+#endif

@@ -141,11 +141,10 @@ void addTangle(pybind11::module_& m) {
     #endif
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_global_swap<Tangle, rdoc>(m);
 
     // No need to register the view class for crossings(), since
     // this is the same class used by Link.
-
-    ADD_GLOBAL_SWAP(m, Tangle);
 
     RDOC_SCOPE_END
 }

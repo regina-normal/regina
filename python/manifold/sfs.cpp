@@ -122,8 +122,7 @@ void addSFSpace(pybind11::module_& m) {
     // Do not bind comparison operators, since these are already inherited
     // from Manifold and we do not want to hide those more general versions.
     regina::python::add_output_rich(s);
-
-    ADD_GLOBAL_SWAP(m, SFSpace);
+    regina::python::add_global_swap<SFSpace, rdoc>(m);
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<SFSpace::Class>(s, "Class", "enum.Enum",

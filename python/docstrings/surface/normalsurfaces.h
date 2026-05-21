@@ -11,26 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_NormalSurfaces
-inline constexpr const char global_swap_NormalSurfaces[] =
-R"doc(Swaps the contents of the two given lists.
-
-This global routine simply calls NormalSurfaces::swap(); it is
-provided so that NormalSurfaces meets the C++ Swappable requirements.
-
-See NormalSurfaces::swap() for more details.
-
-.. note::
-    This swap function is _not_ marked ``noexcept``, since it fires
-    change events on both lists which may in turn call arbitrary code
-    via any registered packet listeners.
-
-Parameter ``lhs``:
-    the list whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the list whose contents should be swapped with *lhs*.)doc";
-
 // Docstring regina::python::doc::makeEmbeddedConstraints3
 inline constexpr const char makeEmbeddedConstraints3[] =
 R"doc(Generates the validity constraints representing the condition that
@@ -422,6 +402,26 @@ the surfaces in this list.
 
 Returns:
     the coordinate system used.)doc";
+
+// Docstring regina::python::doc::NormalSurfaces::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given lists.
+
+This global routine simply calls NormalSurfaces::swap(); it is
+provided so that NormalSurfaces meets the C++ Swappable requirements.
+
+See NormalSurfaces::swap() for more details.
+
+.. note::
+    This swap function is _not_ marked ``noexcept``, since it fires
+    change events on both lists which may in turn call arbitrary code
+    via any registered packet listeners.
+
+Parameter ``lhs``:
+    the list whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the list whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::NormalSurfaces::isEmbeddedOnly
 static constexpr const char isEmbeddedOnly[] =

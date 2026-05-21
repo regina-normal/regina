@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SnapPeaCensusTri
-inline constexpr const char global_swap_SnapPeaCensusTri[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls SnapPeaCensusTri::swap(); it is
-provided so that SnapPeaCensusTri meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct SnapPeaCensusTri {
 
 // Docstring regina::python::doc::SnapPeaCensusTri::__class
@@ -95,6 +81,20 @@ Parameter ``compare``:
 Returns:
     ``True`` if and only if this and the given structure represent the
     same SnapPea census triangulation.)doc";
+
+// Docstring regina::python::doc::SnapPeaCensusTri::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls SnapPeaCensusTri::swap(); it is
+provided so that SnapPeaCensusTri meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SnapPeaCensusTri::index
 static constexpr const char index[] =

@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_TorusBundle
-inline constexpr const char global_swap_TorusBundle[] =
-R"doc(Swaps the contents of the two given torus bundles.
-
-This global routine simply calls TorusBundle::swap(); it is provided
-so that TorusBundle meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first torus bundle whose contents should be swapped.
-
-Parameter ``b``:
-    the second torus bundle whose contents should be swapped.)doc";
-
 struct TorusBundle {
 
 // Docstring regina::python::doc::TorusBundle::__class
@@ -122,6 +109,19 @@ Parameter ``mon10``:
 
 Parameter ``mon11``:
     the (1,1) element of the monodromy matrix.)doc";
+
+// Docstring regina::python::doc::TorusBundle::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given torus bundles.
+
+This global routine simply calls TorusBundle::swap(); it is provided
+so that TorusBundle meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first torus bundle whose contents should be swapped.
+
+Parameter ``b``:
+    the second torus bundle whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TorusBundle::monodromy
 static constexpr const char monodromy[] =

@@ -58,8 +58,7 @@ void addLinkSig(pybind11::module_& m) {
         ;
     regina::python::add_eq_operators(d, rdoc::__eq);
     regina::python::add_cmp_operators(d, rdoc::__cmp);
-
-    ADD_GLOBAL_SWAP(m, LinkSigData);
+    regina::python::add_global_swap<LinkSigData, rdoc>(m);
 
     auto t = pybind11::class_<LinkSigData::Term>(d, "Term", rdoc::Term::__class)
         .def_readonly("crossing", &LinkSigData::Term::crossing,

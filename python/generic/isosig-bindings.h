@@ -403,7 +403,6 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
             .def("swap", &Data::swap, rdoc::swap)
             ;
         regina::python::add_eq_operators(s, rdoc::__eq);
-        ADD_GLOBAL_SWAP_SUFFIX(m, Data, IsoSigData);
 
         RDOC_SCOPE_END
     } else {
@@ -454,9 +453,14 @@ void addIsoSigData(pybind11::module_& m, const char* name) {
             ;
         regina::python::add_eq_operators(s, rdoc::__eq);
         regina::python::add_cmp_operators(s, rdoc::__cmp);
-        ADD_GLOBAL_SWAP_SUFFIX(m, Data, IsoSigData);
 
         RDOC_SCOPE_END
     }
+
+    RDOC_SCOPE_BEGIN(IsoSigData)
+
+    regina::python::add_global_swap<Data, rdoc>(m);
+
+    RDOC_SCOPE_END
 }
 

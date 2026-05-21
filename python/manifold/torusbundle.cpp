@@ -53,8 +53,7 @@ void addTorusBundle(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
-
-    ADD_GLOBAL_SWAP(m, TorusBundle);
+    regina::python::add_global_swap<TorusBundle, rdoc>(m);
 
     RDOC_SCOPE_END
 }

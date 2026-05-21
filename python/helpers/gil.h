@@ -32,6 +32,11 @@
  *  \brief Assists with managing the Python global interpreter lock (GIL).
  */
 
+#ifndef __HELPERS_GIL_H
+#ifndef __DOXYGEN
+#define __HELPERS_GIL_H
+#endif
+
 #include "regina-config.h"
 #if REGINA_PYBIND11_VERSION == 3
 #include <pybind11/subinterpreter.h>
@@ -371,3 +376,5 @@ namespace regina::python {
 #endif
 
 } // namespace regina::python
+
+#endif

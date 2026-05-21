@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Signature
-inline constexpr const char global_swap_Signature[] =
-R"doc(Swaps the contents of the given signatures.
-
-This global routine simply calls Signature::swap(); it is provided so
-that Signature meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first signature whose contents should be swapped.
-
-Parameter ``b``:
-    the second signature whose contents should be swapped.)doc";
-
 struct Signature {
 
 // Docstring regina::python::doc::Signature::__class
@@ -111,6 +98,19 @@ Exception ``InvalidArgument``:
 
 Parameter ``str``:
     a string representation of a splitting surface signature.)doc";
+
+// Docstring regina::python::doc::Signature::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given signatures.
+
+This global routine simply calls Signature::swap(); it is provided so
+that Signature meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first signature whose contents should be swapped.
+
+Parameter ``b``:
+    the second signature whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Signature::order
 static constexpr const char order[] =

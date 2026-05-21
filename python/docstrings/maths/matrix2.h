@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Matrix2
-inline constexpr const char global_swap_Matrix2[] =
-R"doc(Swaps the contents of the two given matrices.
-
-This global routine simply calls Matrix2::swap(); it is provided so
-that Matrix2 meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
 // Docstring regina::python::doc::simpler
 inline constexpr const char simpler[] =
 R"doc(Deprecated routine that determines whether the first given matrix is
@@ -302,6 +289,19 @@ R"doc(Returns the determinant of this matrix.
 
 Returns:
     the determinant of this matrix.)doc";
+
+// Docstring regina::python::doc::Matrix2::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given matrices.
+
+This global routine simply calls Matrix2::swap(); it is provided so
+that Matrix2 meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Matrix2::inverse
 static constexpr const char inverse[] =

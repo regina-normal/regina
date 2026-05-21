@@ -913,6 +913,15 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
     regina::python::packet_eq_operators(c, rbase::__eq);
     regina::python::add_packet_data(c);
 
+    // We do not define the global swap() yet for Triangulation<3>, since this
+    // needs to come *after* the global swap() for the child class
+    // SnapPeaTriangulation.  This is because overloads in python/pybind11
+    // are handled by walking through the functions one after another
+    // until any matching function is found (as opposed to C++, which has a
+    // well-defined notion of "best match").  This means that, if we define
+    // the Triangulation<3> swap() first, the SnapPeaTriangulation swap()
+    // will never be called at all.
+
     regina::python::addStdView<decltype(Triangulation<3>().vertices())>(
         internal, "Triangulation3_vertices");
     regina::python::addStdView<decltype(Triangulation<3>().edges())>(
@@ -947,15 +956,6 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         return regina::make_packet<Triangulation<3>>(std::in_place,
             obj.string_);
     }), rdoc::__init_4);
-
-    // We do not define the global swap() yet for Triangulation<3>, since this
-    // needs to come *after* the global swap() for the child class
-    // SnapPeaTriangulation.  This is because overloads in python/pybind11
-    // are handled by walking through the functions one after another
-    // until any matching function is found (as opposed to C++, which has a
-    // well-defined notion of "best match").  This means that, if we define
-    // the Triangulation<3> swap() first, the SnapPeaTriangulation swap()
-    // will never be called at all.
 
     RDOC_SCOPE_END
 

@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Cut
-inline constexpr const char global_swap_Cut[] =
-R"doc(Swaps the contents of the given cuts.
-
-This global routine simply calls Cut::swap(); it is provided so that
-Cut meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first cut whose contents should be swapped.
-
-Parameter ``b``:
-    the second cut whose contents should be swapped.)doc";
-
 struct Cut {
 
 // Docstring regina::python::doc::Cut::__call
@@ -214,6 +201,19 @@ Parameter ``begin``:
 Parameter ``end``:
     a past-the-end iterator indicating the end of the 0-1 sequence of
     sides.)doc";
+
+// Docstring regina::python::doc::Cut::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given cuts.
+
+This global routine simply calls Cut::swap(); it is provided so that
+Cut meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first cut whose contents should be swapped.
+
+Parameter ``b``:
+    the second cut whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Cut::inc
 static constexpr const char inc[] =

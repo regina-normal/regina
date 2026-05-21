@@ -214,7 +214,6 @@
 #include "../docstrings/triangulation/generic/component.h"
 #include "../docstrings/triangulation/generic/face.h"
 #include "../docstrings/triangulation/generic/faceembedding.h"
-#include "../docstrings/triangulation/generic/facetpairing.h"
 #include "../docstrings/triangulation/generic/isomorphism.h"
 #include "../docstrings/triangulation/generic/simplex.h"
 #include "../docstrings/triangulation/generic/triangulation.h"

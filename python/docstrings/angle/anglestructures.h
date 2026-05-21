@@ -11,26 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_AngleStructures
-inline constexpr const char global_swap_AngleStructures[] =
-R"doc(Swaps the contents of the two given lists.
-
-This global routine simply calls AngleStructures::swap(); it is
-provided so that AngleStructures meets the C++ Swappable requirements.
-
-See AngleStructures::swap() for more details.
-
-.. note::
-    This swap function is _not_ marked ``noexcept``, since it fires
-    change events on both lists which may in turn call arbitrary code
-    via any registered packet listeners.
-
-Parameter ``lhs``:
-    the list whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the list whose contents should be swapped with *lhs*.)doc";
-
 // Docstring regina::python::doc::makeAngleEquations
 inline constexpr const char makeAngleEquations[] =
 R"doc(Generates the set of angle structure equations for the given
@@ -231,6 +211,26 @@ flags will be replaced with whatever algorithm was actually used.
 
 Returns:
     details of the algorithm used to enumerate this list.)doc";
+
+// Docstring regina::python::doc::AngleStructures::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given lists.
+
+This global routine simply calls AngleStructures::swap(); it is
+provided so that AngleStructures meets the C++ Swappable requirements.
+
+See AngleStructures::swap() for more details.
+
+.. note::
+    This swap function is _not_ marked ``noexcept``, since it fires
+    change events on both lists which may in turn call arbitrary code
+    via any registered packet listeners.
+
+Parameter ``lhs``:
+    the list whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the list whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::AngleStructures::isTautOnly
 static constexpr const char isTautOnly[] =

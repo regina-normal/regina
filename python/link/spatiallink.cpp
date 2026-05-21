@@ -89,6 +89,7 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
+    regina::python::add_global_swap<SpatialLink, rdoc>(m);
 
     regina::python::addStdView<decltype(SpatialLink().components())>(internal,
         "SpatialLink_components");
@@ -96,8 +97,6 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
     auto wrap = regina::python::add_packet_wrapper<SpatialLink>(m,
         "PacketOfSpatialLink");
     regina::python::add_packet_constructor<>(wrap, rdoc::__default);
-
-    ADD_GLOBAL_SWAP(m, SpatialLink);
 
     RDOC_SCOPE_END
 }

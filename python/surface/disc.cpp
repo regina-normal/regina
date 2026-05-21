@@ -117,8 +117,7 @@ void addDisc(pybind11::module_& m) {
         s << " )";
     });
     regina::python::add_eq_operators(s, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, DiscSetSurface, DiscSetSurfaceDataImpl);
+    regina::python::add_global_swap<DiscSetSurface, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(DiscSpecIterator)
 

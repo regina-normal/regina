@@ -11,37 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SatBlockSpec
-inline constexpr const char global_swap_SatBlockSpec[] =
-R"doc(Swaps the contents of the two given structures.
-
-In particular, the internal SatBlock pointers will be swapped; that
-is, the pointers ``a.block()`` and ``b.block()`` after the move will
-be the same as ``b.block()`` and ``a.block()`` were respectively
-before the move.
-
-This global routine simply calls SatBlockSpec::swap(); it is provided
-so that SatBlockSpec meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::global_swap_SatRegion
-inline constexpr const char global_swap_SatRegion[] =
-R"doc(Swaps the contents of the two given regions.
-
-This global routine simply calls SatRegion::swap(); it is provided so
-that SatRegion meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first region whose contents should be swapped.
-
-Parameter ``b``:
-    the second region whose contents should be swapped.)doc";
-
 struct SatBlockSpec {
 
 // Docstring regina::python::doc::SatBlockSpec::__class
@@ -105,6 +74,24 @@ R"doc(Returns the full combinatorial structure of the saturated block.
 
 Returns:
     the saturated block structure.)doc";
+
+// Docstring regina::python::doc::SatBlockSpec::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+In particular, the internal SatBlock pointers will be swapped; that
+is, the pointers ``a.block()`` and ``b.block()`` after the move will
+be the same as ``b.block()`` and ``a.block()`` were respectively
+before the move.
+
+This global routine simply calls SatBlockSpec::swap(); it is provided
+so that SatBlockSpec meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SatBlockSpec::refHoriz
 static constexpr const char refHoriz[] =
@@ -498,6 +485,19 @@ Returns:
     ``True`` if *action* ever terminated the search by returning
     ``True``, or ``False`` if the search was allowed to run to
     completion.)doc";
+
+// Docstring regina::python::doc::SatRegion::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given regions.
+
+This global routine simply calls SatRegion::swap(); it is provided so
+that SatRegion meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first region whose contents should be swapped.
+
+Parameter ``b``:
+    the second region whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SatRegion::swap
 static constexpr const char swap[] =

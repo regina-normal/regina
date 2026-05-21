@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Text
-inline constexpr const char global_swap_Text[] =
-R"doc(Swaps the contents of the given text packets.
-
-This global routine simply calls Text::swap(); it is provided so that
-Text meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first text packet whose contents should be swapped.
-
-Parameter ``b``:
-    the second text packet whose contents should be swapped.)doc";
-
 struct Text {
 
 // Docstring regina::python::doc::Text::__class
@@ -66,6 +53,19 @@ R"doc(Initialises the packet to the given string.
 
 Parameter ``text``:
     the new value for the packet.)doc";
+
+// Docstring regina::python::doc::Text::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given text packets.
+
+This global routine simply calls Text::swap(); it is provided so that
+Text meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first text packet whose contents should be swapped.
+
+Parameter ``b``:
+    the second text packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Text::setText
 static constexpr const char setText[] =

@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_LinkSigData
-inline constexpr const char global_swap_LinkSigData[] =
-R"doc(Swaps the contents of the given diagram component data sets.
-
-This global routine simply calls LinkSigData::swap(); it is provided
-so that LinkSigData meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first component data set whose contents should be swapped.
-
-Parameter ``b``:
-    the second component data set whose contents should be swapped.)doc";
-
 struct LinkSigBinary {
 
 // Docstring regina::python::doc::LinkSigBinary::__class
@@ -252,6 +239,19 @@ Parameter ``rotationOptions``:
     minimising the sequence of triples. This is a BoolSet, which means
     rotation may be mandatory, forbidden, or optional. This BoolSet
     cannot be empty.)doc";
+
+// Docstring regina::python::doc::LinkSigData::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given diagram component data sets.
+
+This global routine simply calls LinkSigData::swap(); it is provided
+so that LinkSigData meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first component data set whose contents should be swapped.
+
+Parameter ``b``:
+    the second component data set whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LinkSigData::sequence
 static constexpr const char sequence[] =

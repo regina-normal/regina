@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SFSpace
-inline constexpr const char global_swap_SFSpace[] =
-R"doc(Swaps the contents of the two given Seifert fibred spaces.
-
-This global routine simply calls SFSpace::swap(); it is provided so
-that SFSpace meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first space whose contents should be swapped.
-
-Parameter ``b``:
-    the second space whose contents should be swapped.)doc";
-
 struct SFSFibre {
 
 // Docstring regina::python::doc::SFSFibre::__class
@@ -444,6 +431,19 @@ R"doc(Returns whether or not this space contains any fibre-reversing paths.
 
 Returns:
     ``True`` if and only if a fibre-reversing path exists.)doc";
+
+// Docstring regina::python::doc::SFSpace::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given Seifert fibred spaces.
+
+This global routine simply calls SFSpace::swap(); it is provided so
+that SFSpace meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first space whose contents should be swapped.
+
+Parameter ``b``:
+    the second space whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SFSpace::insertFibre
 static constexpr const char insertFibre[] =

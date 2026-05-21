@@ -95,8 +95,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, TypeTrie<nTypes>, TypeTrie);
+    regina::python::add_global_swap<TypeTrie<nTypes>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

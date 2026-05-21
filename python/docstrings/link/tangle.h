@@ -11,21 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Tangle
-inline constexpr const char global_swap_Tangle[] =
-R"doc(Swaps the contents of the two given tangles.
-
-This global routine simply calls Tangle::swap(); it is provided so
-that Tangle meets the C++ Swappable requirements.
-
-See Tangle::swap() for more details.
-
-Parameter ``lhs``:
-    the tangle whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the tangle whose contents should be swapped with *lhs*.)doc";
-
 struct Tangle {
 
 // Docstring regina::python::doc::Tangle::__class
@@ -519,6 +504,21 @@ Parameter ``end``:
 
 Returns:
     the resulting tangle.)doc";
+
+// Docstring regina::python::doc::Tangle::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given tangles.
+
+This global routine simply calls Tangle::swap(); it is provided so
+that Tangle meets the C++ Swappable requirements.
+
+See Tangle::swap() for more details.
+
+Parameter ``lhs``:
+    the tangle whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the tangle whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::Tangle::hasR1
 static constexpr const char hasR1[] =

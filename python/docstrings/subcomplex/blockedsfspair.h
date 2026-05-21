@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_BlockedSFSPair
-inline constexpr const char global_swap_BlockedSFSPair[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls BlockedSFSPair::swap(); it is
-provided so that BlockedSFSPair meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct BlockedSFSPair {
 
 // Docstring regina::python::doc::BlockedSFSPair::__class
@@ -108,6 +95,19 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given structure represent the
     same type of blocked pair of Seifert fibred spaces.)doc";
+
+// Docstring regina::python::doc::BlockedSFSPair::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls BlockedSFSPair::swap(); it is
+provided so that BlockedSFSPair meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::BlockedSFSPair::matchingReln
 static constexpr const char matchingReln[] =

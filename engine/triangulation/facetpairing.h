@@ -39,7 +39,7 @@
 #define __REGINA_FACETPAIRING_H
 #endif
 
-#include "triangulation/generic/facetpairing.h"
+#include "triangulation/detail/facetpairing.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 

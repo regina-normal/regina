@@ -56,8 +56,7 @@ void addBlockedSFSTriple(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, BlockedSFSTriple);
+    regina::python::add_global_swap<BlockedSFSTriple, rdoc>(m);
 
     RDOC_SCOPE_END
 }

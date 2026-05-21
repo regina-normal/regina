@@ -68,8 +68,7 @@ void addTxICore(pybind11::module_& m) {
         .def("k", &TxIDiagonalCore::k, rdoc::k)
     ;
     regina::python::add_output_rich(d);
-
-    ADD_GLOBAL_SWAP(m, TxIDiagonalCore);
+    regina::python::add_global_swap<TxIDiagonalCore, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(TxIParallelCore)
 
@@ -80,8 +79,7 @@ void addTxICore(pybind11::module_& m) {
         .def("swap", &TxIParallelCore::swap, rdoc::swap)
     ;
     regina::python::add_output_rich(p);
-
-    ADD_GLOBAL_SWAP(m, TxIParallelCore);
+    regina::python::add_global_swap<TxIParallelCore, rdoc>(m);
 
     RDOC_SCOPE_END
 }

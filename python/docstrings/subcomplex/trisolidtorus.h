@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_TriSolidTorus
-inline constexpr const char global_swap_TriSolidTorus[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls TriSolidTorus::swap(); it is provided
-so that TriSolidTorus meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct TriSolidTorus {
 
 // Docstring regina::python::doc::TriSolidTorus::__class
@@ -160,6 +147,19 @@ Parameter ``otherAnnulus``:
 Returns:
     the number of tetrahedra in the layered chain if the two annuli
     are linked as described, or 0 otherwise.)doc";
+
+// Docstring regina::python::doc::TriSolidTorus::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls TriSolidTorus::swap(); it is provided
+so that TriSolidTorus meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TriSolidTorus::isAnnulusSelfIdentified
 static constexpr const char isAnnulusSelfIdentified[] =

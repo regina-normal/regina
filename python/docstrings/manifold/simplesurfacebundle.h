@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SimpleSurfaceBundle
-inline constexpr const char global_swap_SimpleSurfaceBundle[] =
-R"doc(Swaps the contents of the two given surface bundles.
-
-This global routine simply calls SimpleSurfaceBundle::swap(); it is
-provided so that SimpleSurfaceBundle meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first surface bundle whose contents should be swapped.
-
-Parameter ``b``:
-    the second surface bundle whose contents should be swapped.)doc";
-
 struct SimpleSurfaceBundle {
 
 // Docstring regina::python::doc::SimpleSurfaceBundle::__class
@@ -63,6 +49,20 @@ R"doc(Creates a new surface bundle of the given type.
 Parameter ``bundleType``:
     the specific type of surface bundle to represent. This must be one
     of the 3-manifold constants defined in this class.)doc";
+
+// Docstring regina::python::doc::SimpleSurfaceBundle::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given surface bundles.
+
+This global routine simply calls SimpleSurfaceBundle::swap(); it is
+provided so that SimpleSurfaceBundle meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first surface bundle whose contents should be swapped.
+
+Parameter ``b``:
+    the second surface bundle whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SimpleSurfaceBundle::swap
 static constexpr const char swap[] =

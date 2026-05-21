@@ -116,8 +116,7 @@ void addMatrix2(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_ostream(c);
-
-    ADD_GLOBAL_SWAP(m, Matrix2);
+    regina::python::add_global_swap<Matrix2, rdoc>(m);
 
     auto row = pybind11::class_<Matrix2Row>(c, "_Row",
 R"doc(Gives access to a single row of a 2-by-2 integer matrix.

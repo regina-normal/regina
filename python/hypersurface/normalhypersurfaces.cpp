@@ -106,6 +106,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
     regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
+    regina::python::add_global_swap<NormalHypersurfaces, rdoc>(m);
 
     auto wrap = regina::python::add_packet_wrapper<NormalHypersurfaces>(
         m, "PacketOfNormalHypersurfaces");
@@ -118,8 +119,6 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         pybind11::arg("tracker") = nullptr,
         pybind11::call_guard<GILScopedRelease>(),
         rdoc::__init);
-
-    ADD_GLOBAL_SWAP(m, NormalHypersurfaces);
 
     RDOC_SCOPE_END
 }

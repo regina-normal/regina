@@ -725,6 +725,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_tight_encoding(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
+    regina::python::add_global_swap<Link, rdoc>(m);
 
     regina::python::addStdView<decltype(Link().crossings())>(internal,
         "Link_crossings");
@@ -738,8 +739,6 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         rdoc::__init_2);
     regina::python::add_packet_constructor<const std::string&>(wrap,
         rdoc::__init_3);
-
-    ADD_GLOBAL_SWAP(m, Link);
 
     RDOC_SCOPE_END
 }

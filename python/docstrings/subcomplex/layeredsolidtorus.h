@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_LayeredSolidTorus
-inline constexpr const char global_swap_LayeredSolidTorus[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls LayeredSolidTorus::swap(); it is
-provided so that LayeredSolidTorus meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct LayeredSolidTorus {
 
 // Docstring regina::python::doc::LayeredSolidTorus::__class
@@ -169,6 +155,20 @@ Parameter ``mobiusBandBdry``:
 Returns:
     a new triangulation in which this layered solid torus has been
     flattened to a Mobius band.)doc";
+
+// Docstring regina::python::doc::LayeredSolidTorus::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls LayeredSolidTorus::swap(); it is
+provided so that LayeredSolidTorus meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus::meridinalCuts
 static constexpr const char meridinalCuts[] =

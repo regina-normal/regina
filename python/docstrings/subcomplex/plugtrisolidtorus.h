@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_PlugTriSolidTorus
-inline constexpr const char global_swap_PlugTriSolidTorus[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls PlugTriSolidTorus::swap(); it is
-provided so that PlugTriSolidTorus meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct PlugTriSolidTorus {
 
 // Docstring regina::python::doc::PlugTriSolidTorus::__class
@@ -154,6 +140,20 @@ the equator of the plug.
 Returns:
     the types of edges that form the equator of the plug; this will be
     one of the equator type constants defined in this class.)doc";
+
+// Docstring regina::python::doc::PlugTriSolidTorus::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls PlugTriSolidTorus::swap(); it is
+provided so that PlugTriSolidTorus meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::PlugTriSolidTorus::recognise
 static constexpr const char recognise[] =

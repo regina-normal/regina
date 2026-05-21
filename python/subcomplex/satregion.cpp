@@ -56,8 +56,7 @@ void addSatRegion(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(s);
     regina::python::add_eq_operators(s, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, SatBlockSpec);
+    regina::python::add_global_swap<SatBlockSpec, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(SatRegion)
 
@@ -94,8 +93,7 @@ void addSatRegion(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(r);
     regina::python::add_eq_operators(r, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, SatRegion);
+    regina::python::add_global_swap<SatRegion, rdoc>(m);
 
     RDOC_SCOPE_END
 }

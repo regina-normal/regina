@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_IsoSigData
-inline constexpr const char global_swap_IsoSigData[] =
-R"doc(Swaps the contents of the given triangulation component data sets.
-
-This global routine simply calls ``IsoSigData<generation,
-dim>::swap()``; it is provided so that IsoSigData meets the C++
-Swappable requirements.
-
-Parameter ``a``:
-    the first component data set whose contents should be swapped.
-
-Parameter ``b``:
-    the second component data set whose contents should be swapped.)doc";
-
 struct IsoSigBinary {
 
 // Docstring regina::python::doc::IsoSigBinary::__class
@@ -241,6 +227,51 @@ Returns:
     the index within the component of the starting simplex *s*.)doc";
 
 }; // struct IsoSigClassic
+
+struct IsoSigData {
+
+// Docstring regina::python::doc::IsoSigData::__class
+static constexpr const char __class[] =
+R"doc(Holds the combinatorial data required to reconstruct a single non-
+empty connected component of a *dim*-dimensional triangulation, up to
+relabelling, for use with the given generation of isomorphism
+signatures.
+
+This class offers different interfaces for first-generation versus
+second-generation signatures, due to the differences in how these
+signatures are constructed. See the specialisations ``IsoSigData<1,
+dim>`` and ``IsoSigData<2, dim>`` for further details.
+
+Template parameter ``generation``:
+    the generation of isomorphism signature that we are working with;
+    this must be either 1 or 2.
+
+Template parameter ``dim``:
+    the dimension of triangulation with which we are working.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
+// Docstring regina::python::doc::IsoSigData::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given triangulation component data sets.
+
+This global routine simply calls ``IsoSigData<generation,
+dim>::swap()``; it is provided so that IsoSigData meets the C++
+Swappable requirements.
+
+Parameter ``a``:
+    the first component data set whose contents should be swapped.
+
+Parameter ``b``:
+    the second component data set whose contents should be swapped.)doc";
+
+}; // struct IsoSigData
 
 struct IsoSigData1 {
 

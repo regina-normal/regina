@@ -52,8 +52,7 @@ void addLayeredLoop(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
-
-    ADD_GLOBAL_SWAP(m, LayeredLoop);
+    regina::python::add_global_swap<LayeredLoop, rdoc>(m);
 
     RDOC_SCOPE_END
 }

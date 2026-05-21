@@ -32,6 +32,11 @@
  *  \brief Assists with wrapping Regina's common string output routines.
  */
 
+#ifndef __HELPERS_OUTPUT_H
+#ifndef __DOXYGEN
+#define __HELPERS_OUTPUT_H
+#endif
+
 #include <type_traits>
 #include <sstream>
 #include "concepts/io.h"
@@ -344,3 +349,5 @@ void writeStr(std::ostream& out, const T& obj) {
 }
 
 } // namespace regina::python
+
+#endif

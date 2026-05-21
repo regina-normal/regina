@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_LayeredChain
-inline constexpr const char global_swap_LayeredChain[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls LayeredChain::swap(); it is provided
-so that LayeredChain meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct LayeredChain {
 
 // Docstring regina::python::doc::LayeredChain::__class
@@ -160,6 +147,19 @@ can be extended no further.
 
 Returns:
     ``True`` if and only if this layered chain was extended.)doc";
+
+// Docstring regina::python::doc::LayeredChain::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls LayeredChain::swap(); it is provided
+so that LayeredChain meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredChain::index
 static constexpr const char index[] =

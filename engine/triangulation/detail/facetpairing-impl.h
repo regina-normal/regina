@@ -45,7 +45,7 @@
 #include <sstream>
 #include <thread>
 #include <vector>
-#include "triangulation/generic/facetpairing.h"
+#include "triangulation/detail/facetpairing.h"
 #include "maths/perm.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"

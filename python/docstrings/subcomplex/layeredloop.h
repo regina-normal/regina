@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_LayeredLoop
-inline constexpr const char global_swap_LayeredLoop[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls LayeredLoop::swap(); it is provided
-so that LayeredLoop meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct LayeredLoop {
 
 // Docstring regina::python::doc::LayeredLoop::__class
@@ -85,6 +72,19 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered loop.)doc";
+
+// Docstring regina::python::doc::LayeredLoop::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls LayeredLoop::swap(); it is provided
+so that LayeredLoop meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredLoop::hinge
 static constexpr const char hinge[] =

@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_GluingPerms
-inline constexpr const char global_swap_GluingPerms[] =
-R"doc(Swaps the contents of the given gluing permutation sets.
-
-This global routine simply calls GluingPerms<dim>::swap(); it is
-provided so that GluingPerms<dim> meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
 struct GluingPerms {
 
 // Docstring regina::python::doc::GluingPerms::__class
@@ -156,6 +142,20 @@ Parameter ``data``:
 
 Returns:
     the reconstructed gluing permutation set.)doc";
+
+// Docstring regina::python::doc::GluingPerms::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given gluing permutation sets.
+
+This global routine simply calls GluingPerms<dim>::swap(); it is
+provided so that GluingPerms<dim> meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::GluingPerms::gluingToIndex
 static constexpr const char gluingToIndex[] =

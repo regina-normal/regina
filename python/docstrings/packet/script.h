@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Script
-inline constexpr const char global_swap_Script[] =
-R"doc(Swaps the contents of the given script packets.
-
-This global routine simply calls Script::swap(); it is provided so
-that Script meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first script packet whose contents should be swapped.
-
-Parameter ``b``:
-    the second script packet whose contents should be swapped.)doc";
-
 struct Script {
 
 // Docstring regina::python::doc::Script::__class
@@ -175,6 +162,19 @@ R"doc(Returns the number of variables associated with this script.
 
 Returns:
     the number of variables.)doc";
+
+// Docstring regina::python::doc::Script::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given script packets.
+
+This global routine simply calls Script::swap(); it is provided so
+that Script meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first script packet whose contents should be swapped.
+
+Parameter ``b``:
+    the second script packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Script::listenVariables
 static constexpr const char listenVariables[] =

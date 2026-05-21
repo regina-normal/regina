@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SFSAlt
-inline constexpr const char global_swap_SFSAlt[] =
-R"doc(Swaps the contents of the two given alternative representations of
-Seifert fibred spaces.
-
-This global routine simply calls SFSAlt::swap(); it is provided so
-that SFSAlt meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first alternative whose contents should be swapped.
-
-Parameter ``b``:
-    the second alternative whose contents should be swapped.)doc";
-
 struct SFSAlt {
 
 // Docstring regina::python::doc::SFSAlt::__class
@@ -255,6 +241,20 @@ been used or not. See reflected() or the class notes for details.
 
 Returns:
     the conversion matrix for this alternative space.)doc";
+
+// Docstring regina::python::doc::SFSAlt::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given alternative representations of
+Seifert fibred spaces.
+
+This global routine simply calls SFSAlt::swap(); it is provided so
+that SFSAlt meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first alternative whose contents should be swapped.
+
+Parameter ``b``:
+    the second alternative whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SFSAlt::reflected
 static constexpr const char reflected[] =

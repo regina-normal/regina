@@ -11,37 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SnapPeaTriangulation
-inline constexpr const char global_swap_SnapPeaTriangulation[] =
-R"doc(Swaps the contents of the two given SnapPea triangulations.
-
-This global routine simply calls SnapPeaTriangulation::swap(); it is
-provided so that SnapPeaTriangulation meets the C++ Swappable
-requirements.
-
-See SnapPeaTriangulation::swap() for more details and caveats.
-
-.. warning::
-    If you wish to swap the contents of two SnapPea triangulations,
-    you _must_ cast both to SnapPeaTriangulation before calling
-    swap(). If either argument is presented as the parent class
-    Triangulation<3>, then the Triangulation<3> swap() will be called
-    instead; the result will be that (just like when you call any of
-    the Triangulation<3> edit routines) both SnapPea triangulations
-    will be reset to null triangulations. See the SnapPeaTriangulation
-    class notes for further discussion.
-
-.. note::
-    This swap function is _not_ marked ``noexcept``, since it fires
-    change events which may in turn call arbitrary code via any
-    registered packet listeners.
-
-Parameter ``lhs``:
-    the triangulation whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the triangulation whose contents should be swapped with *lhs*.)doc";
-
 struct Cusp {
 
 // Docstring regina::python::doc::Cusp::__class
@@ -1195,6 +1164,37 @@ Parameter ``tryHardToShortenRelators``:
 
 Returns:
     the fundamental group of the filled manifold.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given SnapPea triangulations.
+
+This global routine simply calls SnapPeaTriangulation::swap(); it is
+provided so that SnapPeaTriangulation meets the C++ Swappable
+requirements.
+
+See SnapPeaTriangulation::swap() for more details and caveats.
+
+.. warning::
+    If you wish to swap the contents of two SnapPea triangulations,
+    you _must_ cast both to SnapPeaTriangulation before calling
+    swap(). If either argument is presented as the parent class
+    Triangulation<3>, then the Triangulation<3> swap() will be called
+    instead; the result will be that (just like when you call any of
+    the Triangulation<3> edit routines) both SnapPea triangulations
+    will be reset to null triangulations. See the SnapPeaTriangulation
+    class notes for further discussion.
+
+.. note::
+    This swap function is _not_ marked ``noexcept``, since it fires
+    change events which may in turn call arbitrary code via any
+    registered packet listeners.
+
+Parameter ``lhs``:
+    the triangulation whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the triangulation whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::SnapPeaTriangulation::gluingEquations
 static constexpr const char gluingEquations[] =

@@ -35,6 +35,11 @@
  *  If you need it, you will need to include it yourself.
  */
 
+#ifndef __HELPERS_TABLEVIEW_H
+#ifndef __DOXYGEN
+#define __HELPERS_TABLEVIEW_H
+#endif
+
 #include "../helpers.h"
 #include <pybind11/stl.h>
 #include "utilities/tableview.h"
@@ -266,3 +271,4 @@ regina::TableView<Element, dim1, dim2, dim3> wrapTableView(
 
 } // namespace regina::python
 
+#endif

@@ -93,8 +93,7 @@ void addAttachment(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(c);
     regina::python::packet_eq_operators(c, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, Attachment);
+    regina::python::add_global_swap<Attachment, rdoc>(m);
 
     RDOC_SCOPE_END
 }

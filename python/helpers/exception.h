@@ -35,6 +35,11 @@
  *  If you need it, you will need to include it yourself.
  */
 
+#ifndef __HELPERS_EXCEPTION_H
+#ifndef __DOXYGEN
+#define __HELPERS_EXCEPTION_H
+#endif
+
 #include <pybind11/pybind11.h>
 #if REGINA_PYBIND11_VERSION == 3
 #include <pybind11/subinterpreter.h>
@@ -161,3 +166,4 @@ PyObject* registerReginaException(pybind11::module_& m, const char* className,
 
 } // namespace regina::python
 
+#endif

@@ -11,16 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_TypeTrie
-inline constexpr const char global_swap_TypeTrie[] =
-R"doc(Swaps the contents of the two given tries.
-
-Parameter ``a``:
-    the first trie whose contents should be swapped.
-
-Parameter ``b``:
-    the second trie whose contents should be swapped.)doc";
-
 struct TypeTrie {
 
 // Docstring regina::python::doc::TypeTrie::__class
@@ -115,6 +105,16 @@ Parameter ``len``:
 Returns:
     ``True`` if and only if *vec* dominates some type vector stored in
     this trie.)doc";
+
+// Docstring regina::python::doc::TypeTrie::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given tries.
+
+Parameter ``a``:
+    the first trie whose contents should be swapped.
+
+Parameter ``b``:
+    the second trie whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TypeTrie::insert
 static constexpr const char insert[] =

@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_NormalSurface
-inline constexpr const char global_swap_NormalSurface[] =
-R"doc(Swaps the contents of the given normal surfaces. This is a fast
-(constant time) operation.
-
-This global routine simply calls NormalSurface::swap(); it is provided
-so that NormalSurface meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first normal surface whose contents should be swapped.
-
-Parameter ``b``:
-    the second normal surface whose contents should be swapped.)doc";
-
 struct NormalSurface {
 
 // Docstring regina::python::doc::NormalSurface::__add
@@ -694,6 +680,20 @@ Precondition:
 
 Returns:
     the Euler characteristic.)doc";
+
+// Docstring regina::python::doc::NormalSurface::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given normal surfaces. This is a fast
+(constant time) operation.
+
+This global routine simply calls NormalSurface::swap(); it is provided
+so that NormalSurface meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first normal surface whose contents should be swapped.
+
+Parameter ``b``:
+    the second normal surface whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::NormalSurface::hasMultipleOctDiscs
 static constexpr const char hasMultipleOctDiscs[] =

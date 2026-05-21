@@ -11,21 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_ModelLinkGraph
-inline constexpr const char global_swap_ModelLinkGraph[] =
-R"doc(Swaps the contents of the two given graphs.
-
-This global routine simply calls ModelLinkGraph::swap(); it is
-provided so that ModelLinkGraph meets the C++ Swappable requirements.
-
-See ModelLinkGraph::swap() for more details.
-
-Parameter ``lhs``:
-    the graph whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the graph whose contents should be swapped with *lhs*.)doc";
-
 struct GraphConstraint {
 
 // Docstring regina::python::doc::GraphConstraint::All
@@ -995,6 +980,21 @@ all components.
 
 Returns:
     the genus of the surface in which this graph embeds.)doc";
+
+// Docstring regina::python::doc::ModelLinkGraph::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given graphs.
+
+This global routine simply calls ModelLinkGraph::swap(); it is
+provided so that ModelLinkGraph meets the C++ Swappable requirements.
+
+See ModelLinkGraph::swap() for more details.
+
+Parameter ``lhs``:
+    the graph whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the graph whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::ModelLinkGraph::insertGraph
 static constexpr const char insertGraph[] =

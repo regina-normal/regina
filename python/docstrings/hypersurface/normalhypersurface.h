@@ -11,21 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_NormalHypersurface
-inline constexpr const char global_swap_NormalHypersurface[] =
-R"doc(Swaps the contents of the given normal hypersurfaces. This is a fast
-(constant time) operation.
-
-This global routine simply calls NormalHypersurface::swap(); it is
-provided so that NormalHypersurface meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first normal hypersurface whose contents should be swapped.
-
-Parameter ``b``:
-    the second normal hypersurface whose contents should be swapped.)doc";
-
 struct NormalHypersurface {
 
 // Docstring regina::python::doc::NormalHypersurface::__add
@@ -353,6 +338,21 @@ class constructor.
 
 Returns:
     the internal vector encoding.)doc";
+
+// Docstring regina::python::doc::NormalHypersurface::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given normal hypersurfaces. This is a fast
+(constant time) operation.
+
+This global routine simply calls NormalHypersurface::swap(); it is
+provided so that NormalHypersurface meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first normal hypersurface whose contents should be swapped.
+
+Parameter ``b``:
+    the second normal hypersurface whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::NormalHypersurface::hasRealBoundary
 static constexpr const char hasRealBoundary[] =

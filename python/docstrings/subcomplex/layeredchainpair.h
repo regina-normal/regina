@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_LayeredChainPair
-inline constexpr const char global_swap_LayeredChainPair[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls LayeredChainPair::swap(); it is
-provided so that LayeredChainPair meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct LayeredChainPair {
 
 // Docstring regina::python::doc::LayeredChainPair::__class
@@ -101,6 +87,20 @@ Parameter ``which``:
 
 Returns:
     the requested layered chain.)doc";
+
+// Docstring regina::python::doc::LayeredChainPair::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls LayeredChainPair::swap(); it is
+provided so that LayeredChainPair meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::LayeredChainPair::recognise
 static constexpr const char recognise[] =

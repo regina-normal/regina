@@ -11,36 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_TxIDiagonalCore
-inline constexpr const char global_swap_TxIDiagonalCore[] =
-R"doc(Swaps the contents of the two given ``T × I`` triangulations.
-
-This global routine simply calls TxIDiagonalCore::swap(); it is
-provided so that TxIDiagonalCore meets the C++ Swappable requirements.
-
-See TxIDiagonalCore::swap() for more details.
-
-Parameter ``lhs``:
-    the triangulation whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the triangulation whose contents should be swapped with *lhs*.)doc";
-
-// Docstring regina::python::doc::global_swap_TxIParallelCore
-inline constexpr const char global_swap_TxIParallelCore[] =
-R"doc(Swaps the contents of the two given ``T × I`` triangulations.
-
-This global routine simply calls TxIParallelCore::swap(); it is
-provided so that TxIParallelCore meets the C++ Swappable requirements.
-
-See TxIParallelCore::swap() for more details.
-
-Parameter ``lhs``:
-    the triangulation whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the triangulation whose contents should be swapped with *lhs*.)doc";
-
 struct TxICore {
 
 // Docstring regina::python::doc::TxICore::__class
@@ -330,6 +300,21 @@ Parameter ``k``:
     the additional parameter *k* as described in the class notes. This
     must be between 1 and (*size* - 5) inclusive.)doc";
 
+// Docstring regina::python::doc::TxIDiagonalCore::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given ``T × I`` triangulations.
+
+This global routine simply calls TxIDiagonalCore::swap(); it is
+provided so that TxIDiagonalCore meets the C++ Swappable requirements.
+
+See TxIDiagonalCore::swap() for more details.
+
+Parameter ``lhs``:
+    the triangulation whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the triangulation whose contents should be swapped with *lhs*.)doc";
+
 // Docstring regina::python::doc::TxIDiagonalCore::k
 static constexpr const char k[] =
 R"doc(Returns the additional parameter *k* as described in the class notes.
@@ -399,6 +384,21 @@ constructor will give the same end result as the default constructor
 
 // Docstring regina::python::doc::TxIParallelCore::__default
 static constexpr const char __default[] = R"doc(Creates a new copy of this ``T × I`` triangulation.)doc";
+
+// Docstring regina::python::doc::TxIParallelCore::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given ``T × I`` triangulations.
+
+This global routine simply calls TxIParallelCore::swap(); it is
+provided so that TxIParallelCore meets the C++ Swappable requirements.
+
+See TxIParallelCore::swap() for more details.
+
+Parameter ``lhs``:
+    the triangulation whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the triangulation whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::TxIParallelCore::swap
 static constexpr const char swap[] =

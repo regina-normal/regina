@@ -175,8 +175,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
     }
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, Matrix);
+    regina::python::add_global_swap<Matrix, rdoc>(m);
 
     RDOC_SCOPE_END
 }

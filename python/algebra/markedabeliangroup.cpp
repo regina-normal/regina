@@ -107,8 +107,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(c1);
     regina::python::add_eq_operators(c1, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, MarkedAbelianGroup);
+    regina::python::add_global_swap<MarkedAbelianGroup, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(HomMarkedAbelianGroup)
 
@@ -155,8 +154,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     // Deciding what we want comparisons to *mean* requires some thought.
     // Let's not make a decision now that we might regret later.
     regina::python::disable_eq_operators(c2);
-
-    ADD_GLOBAL_SWAP(m, HomMarkedAbelianGroup);
+    regina::python::add_global_swap<HomMarkedAbelianGroup, rdoc>(m);
 
     RDOC_SCOPE_END
 }

@@ -32,6 +32,11 @@
  *  \brief C++ concepts for use with Regina's Python bindings.
  */
 
+#ifndef __HELPERS_CONCEPTS_H
+#ifndef __DOXYGEN
+#define __HELPERS_CONCEPTS_H
+#endif
+
 #include "packet/packet.h"
 
 namespace regina::python {
@@ -90,3 +95,5 @@ concept DocstringClass =
     requires { { T::__class } -> std::convertible_to<const char*>; };
 
 } // namespace regina::python
+
+#endif

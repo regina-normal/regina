@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_AngleStructure
-inline constexpr const char global_swap_AngleStructure[] =
-R"doc(Swaps the contents of the given angle structures.
-
-This global routine simply calls AngleStructure::swap(); it is
-provided so that AngleStructure meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first angle structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second angle structure whose contents should be swapped.)doc";
-
 struct AngleStructure {
 
 // Docstring regina::python::doc::AngleStructure::__class
@@ -170,6 +157,19 @@ Parameter ``edgePair``:
 
 Returns:
     the requested angle scaled down by π.)doc";
+
+// Docstring regina::python::doc::AngleStructure::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given angle structures.
+
+This global routine simply calls AngleStructure::swap(); it is
+provided so that AngleStructure meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first angle structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second angle structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::AngleStructure::isStrict
 static constexpr const char isStrict[] =

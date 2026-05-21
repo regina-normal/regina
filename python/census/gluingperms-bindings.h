@@ -93,8 +93,7 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
         ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, GluingPerms<dim>, GluingPerms);
+    regina::python::add_global_swap<GluingPerms<dim>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

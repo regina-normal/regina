@@ -51,8 +51,7 @@ void addLensSpace(pybind11::module_& m) {
     // Do not bind comparison operators, since these are already inherited
     // from Manifold and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
-
-    ADD_GLOBAL_SWAP(m, LensSpace);
+    regina::python::add_global_swap<LensSpace, rdoc>(m);
 
     RDOC_SCOPE_END
 }

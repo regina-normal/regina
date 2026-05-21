@@ -205,7 +205,14 @@ concept IsoSigType =
  */
 template <int generation, int dim>
 requires ((generation == 1 || generation == 2) && supportedDim(dim))
-class IsoSigData;
+class IsoSigData {
+    // We give a generic implementation so that the generic class notes are
+    // picked up by the automatic docstring generation.  This in turn is
+    // needed for regina::python::doc::IsoDigData to satisfy the concept
+    // regina::python::DocstringClass.
+    static_assert(false,
+        "Only specialised implementations of IsoSigData may be used.");
+};
 
 /**
  * Holds the combinatorial data required to reconstruct a single non-empty

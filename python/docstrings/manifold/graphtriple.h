@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_GraphTriple
-inline constexpr const char global_swap_GraphTriple[] =
-R"doc(Swaps the contents of the two given graph manifolds.
-
-This global routine simply calls GraphTriple::swap(); it is provided
-so that GraphTriple meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first graph manifold whose contents should be swapped.
-
-Parameter ``b``:
-    the second graph manifold whose contents should be swapped.)doc";
-
 struct GraphTriple {
 
 // Docstring regina::python::doc::GraphTriple::__class
@@ -220,6 +207,19 @@ Parameter ``which``:
 
 Returns:
     a reference to the requested Seifert fibred space.)doc";
+
+// Docstring regina::python::doc::GraphTriple::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given graph manifolds.
+
+This global routine simply calls GraphTriple::swap(); it is provided
+so that GraphTriple meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first graph manifold whose contents should be swapped.
+
+Parameter ``b``:
+    the second graph manifold whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::GraphTriple::matchingReln
 static constexpr const char matchingReln[] =

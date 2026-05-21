@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_PluggedTorusBundle
-inline constexpr const char global_swap_PluggedTorusBundle[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls PluggedTorusBundle::swap(); it is
-provided so that PluggedTorusBundle meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct PluggedTorusBundle {
 
 // Docstring regina::python::doc::PluggedTorusBundle::__class
@@ -164,6 +150,20 @@ thin I-bundle appears as a subcomplex of this structure.
 Returns:
     an isomorphism from the thin I-bundle described by bundle() to the
     tetrahedra of this triangulation.)doc";
+
+// Docstring regina::python::doc::PluggedTorusBundle::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls PluggedTorusBundle::swap(); it is
+provided so that PluggedTorusBundle meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::PluggedTorusBundle::matchingReln
 static constexpr const char matchingReln[] =

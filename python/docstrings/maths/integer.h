@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_IntegerBase
-inline constexpr const char global_swap_IntegerBase[] =
-R"doc(Swaps the contents of the given integers.
-
-This global routine simply calls IntegerBase<withInfinity>::swap(); it
-is provided so that IntegerBase meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first integer whose contents should be swapped.
-
-Parameter ``b``:
-    the second integer whose contents should be swapped.)doc";
-
 // Docstring regina::python::doc::tightEncoding_ReginaInteger
 inline constexpr const char tightEncoding_ReginaInteger[] =
 R"doc(Returns the tight encoding of the given arbitrary precision integer.
@@ -997,6 +984,19 @@ Parameter ``v``:
 
 Returns:
     the greatest common divisor of *this* and *other*.)doc";
+
+// Docstring regina::python::doc::IntegerBase::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given integers.
+
+This global routine simply calls IntegerBase<withInfinity>::swap(); it
+is provided so that IntegerBase meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first integer whose contents should be swapped.
+
+Parameter ``b``:
+    the second integer whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::IntegerBase::hash
 static constexpr const char hash[] =

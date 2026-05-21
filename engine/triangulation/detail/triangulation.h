@@ -4770,6 +4770,326 @@ class TriangulationBase :
 } // namespace regina::detail -> namespace regina
 
 /**
+ * A <i>dim</i>-dimensional triangulation, built by gluing together
+ * <i>dim</i>-dimensional simplices along their `(dim-1)`-dimensional
+ * facets.  Typically (but not necessarily) such triangulations are used
+ * to represent <i>dim</i>-manifolds.
+ *
+ * ### Structure of triangulations
+ *
+ * Triangulations in Regina are not the same as pure simplicial complexes,
+ * for two reasons:
+ *
+ * - The only identifications that the user can explicitly specify are
+ *   gluings between <i>dim</i>-dimensional simplices along their
+ *   `(dim-1)`-dimensional facets.  All other identifications between
+ *   <i>k</i>-faces (for any \a k) are simply consequences of these
+ *   `(dim-1)`-dimensional gluings.  In contrast, a simplicial complex
+ *   allows explicit gluings between faces of any dimension.
+ *
+ * - There is no requirement for a <i>k</i>-face to have `(k+1)` distinct
+ *   vertices (so, for example, edges may be loops).  Many distinct
+ *   <i>k</i>-faces of a top-dimensional simplex may be identified together
+ *   as a consequence of the `(dim-1)`-dimensional gluings, and indeed
+ *   we are even allowed to glue together two distinct facets of the same
+ *   <i>dim</i>-simplex.  In contrast, a simplicial complex does not allow
+ *   any of these situations.
+ *
+ * Amongst other things, this definition is general enough to capture
+ * any reasonable definition of a <i>dim</i>-manifold triangulation.
+ * However, there is no requirement that a triangulation must actually
+ * represent a manifold (and indeed, testing this condition is undecidable
+ * for sufficiently large \a dim).
+ *
+ * You can construct a triangulation from scratch using routines such as
+ * `newSimplex()` and `Simplex<dim>::join()`.  There are also routines for
+ * exporting and importing triangulations in bulk, such as neoSig(), isoSig(),
+ * and fromSig() (which use _isomorphism signatures_), or source() and
+ * fromGluings() (which use C++ or Python code).
+ *
+ * ### Skeleta and components
+ *
+ * In additional to top-dimensional simplices, this class also tracks:
+ *
+ * - connected components of the triangulation, as represented by the
+ *   class `Component<dim>`;
+ * - boundary components of the triangulation, as represented by the
+ *   class `BoundaryComponent<dim>`;
+ * - lower-dimensional faces of the triangulation, as represented by the
+ *   classes `Face<dim, subdim>` for `subdim = 0,...,(dim-1)`.
+ *
+ * Such objects are temporary: whenever the triangulation changes, they will
+ * be deleted and rebuilt, and any pointers to them will become invalid.
+ * Likewise, if the triangulation is deleted then all component objects
+ * will be deleted alongside it.
+ *
+ * ### The packet tree
+ *
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead a Triangulation is now a
+ * standalone mathematatical object, which makes it slimmer and faster
+ * for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own Triangulation, it will not have any of the usual
+ *   packet infrastructure.  You cannot add it into the packet tree, and it will
+ *   not support a label, tags, child/parent packets, and/or event listeners.
+ *
+ * - To include a Triangulation in the packet tree, you must create a new
+ *   PacketOf<Triangulation>.  This _is_ a packet type, and supports labels,
+ *   tags, child/parent packets, and event listeners.  It derives from
+ *   Triangulation, and so inherits the full Triangulation interface.
+ *
+ * If you are adding new member functions that edit the internal data
+ * structures of a triangulation, you must remember to surround these changes
+ * with a ChangeAndClearSpan.  This manages bookkeeping such as clearing
+ * computed properties, snapshotting, and (if this link _does_ belong to a
+ * packet) firing packet change events.
+ *
+ * ### C++ housekeeping
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * For Regina's \ref stddim "standard dimensions", this template is specialised
+ * and offers _much_ more functionality.  In order to use these specialised
+ * classes, you will need to include the corresponding headers (e.g.,
+ * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
+ * for \a dim = 3).
+ *
+ * \python Python does not support templates.  Instead
+ * this class can be used by appending the dimension as a suffix
+ * (e.g., Triangulation2 and Triangulation3 for dimensions 2 and 3).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
+ */
+template <int dim> requires (supportedDim(dim))
+class Triangulation : public detail::TriangulationBase<dim> {
+    static_assert(! standardDim(dim),
+        "The generic implementation of Triangulation<dim> "
+        "should not be used for Regina's standard dimensions.");
+
+    public:
+        /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
+         * Default constructor.
+         *
+         * Creates an empty triangulation.
+         */
+        Triangulation() = default;
+        /**
+         * Creates a new copy of the given triangulation.
+         *
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, the same numbering and
+         * labelling will be used for all skeletal objects.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * If you want a "clean" copy that resets all properties to unknown,
+         * you can use the two-argument copy constructor instead.
+         *
+         * \param src the triangulation to copy.
+         */
+        Triangulation(const Triangulation& src) = default;
+        /**
+         * Creates a new copy of the given triangulation, with the option
+         * of whether or not to clone its computed properties and/or locks also.
+         *
+         * If \a cloneProps is \c true, then this constructor will also clone
+         * any computed properties (such as homology, fundamental group, and
+         * so on).  If \a cloneProps is \c false, then these properties
+         * will be marked as unknown in the new triangulation, and will be
+         * recomputed on demand if/when they are required.
+         *
+         * Regardless of \a cloneProps, the skeleton (vertices, edges,
+         * components, etc.) will _always_ be cloned.  This is to ensure that
+         * the same numbering and labelling will be used for all skeletal
+         * objects in both triangulations.
+         *
+         * If \a cloneLocks is \c true then any locks on the top-dimensional
+         * simplices and/or facets of \a src will be copied across.
+         * If \a cloneLocks is \c false then the new triangulation will have
+         * no locks at all.
+         *
+         * \param src the triangulation to copy.
+         * \param cloneProps \c true if this should also clone any computed
+         * properties of the given triangulation, or \c false if the new
+         * triangulation should have such properties marked as unknown.
+         * \param cloneLocks \c true if this should also clone any simplex
+         * and/or facet locks from the given triangulation, or \c false if
+         * the new triangulation should have no locks at all.
+         */
+        Triangulation(const Triangulation& src,
+                bool cloneProps, bool cloneLocks = true) :
+                detail::TriangulationBase<dim>(src, cloneProps, cloneLocks) {
+            // All properties to clone are held by TriangulationBase.
+        }
+
+        /**
+         * Moves the given triangulation into this new triangulation.
+         *
+         * This is much faster than the copy constructor, but is still linear
+         * time.  This is because every top-dimensional simplex must be
+         * adjusted to point back to this new triangulation instead of \a src.
+         *
+         * All top-dimensional simplices and skeletal objects (faces,
+         * components and boundary components) that belong to \a src will be
+         * moved into this triangulation, and so any pointers or references to
+         * Simplex<dim>, Face<dim, subdim>, Component<dim> or
+         * BoundaryComponent<dim> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that _will_ fire a packet destruction event).
+         *
+         * \param src the triangulation to move.
+         */
+        Triangulation(Triangulation&& src) noexcept = default;
+        /**
+         * Destroys this triangulation.
+         *
+         * The constituent simplices, the cellular structure and all other
+         * properties will also be destroyed.
+         */
+        ~Triangulation() {
+            Snapshottable<Triangulation>::takeSnapshot();
+            clearAllProperties();
+        }
+
+        /*@}*/
+        /**
+         * \name Simplices
+         */
+        /*@{*/
+
+        /**
+         * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * This will also clone any computed properties (such as homology,
+         * fundamental group, and so on), as well as the skeleton (vertices,
+         * edges, components, etc.).  In particular, this triangulation
+         * will use the same numbering and labelling for all skeletal objects
+         * as in the source triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be copied across.
+         *
+         * \return a reference to this triangulation.
+         */
+        Triangulation& operator = (const Triangulation&) = default;
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every top-dimensional simplex must be
+         * adjusted to point back to this triangulation instead of \a src.
+         *
+         * All top-dimensional simplices and skeletal objects (faces,
+         * components and boundary components) that belong to \a src will be
+         * moved into this triangulation, and so any pointers or references to
+         * Simplex<dim>, Face<dim, subdim>, Component<dim> or
+         * BoundaryComponent<dim> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * If \a src has any locks on top-dimensional simplices and/or their
+         * facets, these locks will also be moved across.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is _not_ marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * _not_ fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * \param src the triangulation to move.
+         * \return a reference to this triangulation.
+         */
+        Triangulation& operator = (Triangulation&& src) = default;
+
+        /**
+         * Swaps the contents of this and the given triangulation.
+         *
+         * All top-dimensional simplices that belong to this triangulation
+         * will be moved to \a other, and all top-dimensional simplices
+         * that belong to \a other will be moved to this triangulation.
+         * Likewise, all skeletal objects (such as lower-dimensional faces,
+         * components, and boundary components) and all cached properties
+         * will be swapped.
+         *
+         * In particular, any pointers or references to Simplex<dim> and/or
+         * Face<dim, subdim> objects will remain valid.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this triangulation.
+         *
+         * \note This swap function is _not_ marked \c noexcept, since it
+         * fires change events on both triangulations which may in turn call
+         * arbitrary code via any registered packet listeners.
+         *
+         * \param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        void swap(Triangulation<dim>& other) {
+            if (&other == this)
+                return;
+
+            // We use a basic PacketChangeSpan here, not a richer
+            // ChangeAndClearSpan, since we do not want to touch computed
+            // properties.  Our intention here is to swap them, not clear them.
+            typename Triangulation<dim>::PacketChangeSpan span1(*this);
+            typename Triangulation<dim>::PacketChangeSpan span2(other);
+
+            // All properties to swap are held by TriangulationBase.
+            // Note: swapBaseData() calls Snapshottable::swap().
+            detail::TriangulationBase<dim>::swapBaseData(other);
+        }
+
+        /*@}*/
+
+    private:
+        /**
+         * Clears any calculated properties, including skeletal data,
+         * and declares them all unknown.  This must be called by any
+         * internal function that changes the triangulation.
+         *
+         * In most cases this routine is followed immediately by firing
+         * a change event.
+         *
+         * It is recommended that you use a local ChangeAndClearSpan object
+         * to manage both of these tasks (calling clearAllProperties() and
+         * firing change events), rather than calling this function manually.
+         */
+        void clearAllProperties() {
+            detail::TriangulationBase<dim>::clearBaseProperties();
+        }
+
+    friend class detail::SimplexBase<dim>;
+    friend class detail::TriangulationBase<dim>;
+};
+
+/**
  * Swaps the contents of the two given triangulations.
  *
  * This global routine simply calls Triangulation<dim>::swap(); it is

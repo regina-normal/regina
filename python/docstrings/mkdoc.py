@@ -650,9 +650,10 @@ def extract(filename, node, parent_namespace, parent_types, output):
             special = True
         elif parent_namespace == '' and parent_types == []:
             # Some global functions are heavily overloaded, and so it will be
-            # helpful to name the docstrings according to the types that these
-            # functions operate on.  Otherwise we run the risk of using the
-            # same docstring variables for several different strings.
+            # helpful to place their docstrings inside the docstring classes
+            # for their argument types (as opposed to placing them all in the
+            # "main namespace" regina::python::doc).  This helps us avoid
+            # using the same variable names for several different docstrings.
             if name in GLOBAL_OVERLOADS:
                 # Try and extract the argument types.
                 argTypes = []
@@ -677,25 +678,23 @@ def extract(filename, node, parent_namespace, parent_types, output):
                         argTypes.append(t)
 
                 if argTypes:
-                    # print('OVERLOAD:', name, argTypes)
+                    # Try to choose the "richest" argument type.  For example,
+                    # for (int + polynomial) we would choose polynomial.
                     argTypes.sort(key=type_rank)
-                    useArgType = argTypes[-1] # choose the richest arg type
+                    useArgType = argTypes[-1]
                     if '::' in useArgType:
-                        raise RuntimeError('Global overload for (' + \
-                            name + ', ' + useArgType + '): ' + \
-                            'cannot choose a sensible name.')
+                        raise RuntimeError('Overload for global ' + \
+                            name + ': ' + useArgType + \
+                            ' is not a usable argument type.')
 
                     if name == 'swap':
-                        output.append(('', [], 'global_swap_' + useArgType, \
-                            filename, comment))
-                        special = True
-                    else:
-                        # What remains is mathematical operations.
-                        # We will put the docstrings for these under the
-                        # helper classes for the argument type.
-                        output.append(('', [ useArgType ], name, \
-                            filename, comment))
-                        special = True
+                        # The argument type likely has its own member swap()
+                        # function.  Distinguish this from the global swap().
+                        name = 'global_swap'
+
+                    output.append(('', [ useArgType ], name, \
+                        filename, comment))
+                    special = True
 
         if not special:
             output.append((parent_namespace, parent_types, name, \

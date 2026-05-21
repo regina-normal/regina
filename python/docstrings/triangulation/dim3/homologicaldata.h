@@ -11,27 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_HomologicalData
-inline constexpr const char global_swap_HomologicalData[] =
-R"doc(Swaps the contents of the two given HomologicalData objects.
-
-This global routine simply calls HomologicalData::swap(); it is
-provided so that HomologicalData meets the C++ Swappable requirements.
-
-.. warning::
-    Although this operation is constant time, the HomologicalData
-    class contains an enormous amount of data spread across many
-    different member variables, and so this should really be
-    considered "expensive constant time". You should still work to
-    avoid swapping (or moving, and certainly copying) HomologicalData
-    objects where possible.
-
-Parameter ``a``:
-    the first object whose contents should be swapped.
-
-Parameter ``b``:
-    the second object whose contents should be swapped.)doc";
-
 struct HomologicalData {
 
 // Docstring regina::python::doc::HomologicalData::__class
@@ -377,6 +356,27 @@ Exception ``UnsolvedCase``:
 Returns:
     ``True`` iff the form satisfies the 2-torsion condition of
     Kawauchi-Kojima.)doc";
+
+// Docstring regina::python::doc::HomologicalData::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given HomologicalData objects.
+
+This global routine simply calls HomologicalData::swap(); it is
+provided so that HomologicalData meets the C++ Swappable requirements.
+
+.. warning::
+    Although this operation is constant time, the HomologicalData
+    class contains an enormous amount of data spread across many
+    different member variables, and so this should really be
+    considered "expensive constant time". You should still work to
+    avoid swapping (or moving, and certainly copying) HomologicalData
+    objects where possible.
+
+Parameter ``a``:
+    the first object whose contents should be swapped.
+
+Parameter ``b``:
+    the second object whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::HomologicalData::h1CellAp
 static constexpr const char h1CellAp[] =

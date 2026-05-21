@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Laurent2
-inline constexpr const char global_swap_Laurent2[] =
-R"doc(Swaps the contents of the given polynomials.
-
-This global routine simply calls Laurent2<T>::swap(); it is provided
-so that Laurent2<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first polynomial whose contents should be swapped.
-
-Parameter ``b``:
-    the second polynomial whose contents should be swapped.)doc";
-
 struct Laurent2 {
 
 // Docstring regina::python::doc::Laurent2::__add
@@ -369,6 +356,19 @@ Parameter ``rhs``:
 
 Returns:
     the first polynomial minus the second.)doc";
+
+// Docstring regina::python::doc::Laurent2::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given polynomials.
+
+This global routine simply calls Laurent2<T>::swap(); it is provided
+so that Laurent2<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first polynomial whose contents should be swapped.
+
+Parameter ``b``:
+    the second polynomial whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Laurent2::init
 static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";

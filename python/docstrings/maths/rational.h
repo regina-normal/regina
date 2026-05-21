@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Rational
-inline constexpr const char global_swap_Rational[] =
-R"doc(Swaps the contents of the given rationals.
-
-This global routine simply calls Rational::swap(); it is provided so
-that Rational meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first rational whose contents should be swapped.
-
-Parameter ``b``:
-    the second rational whose contents should be swapped.)doc";
-
 struct Rational {
 
 // Docstring regina::python::doc::Rational::__add
@@ -289,6 +276,19 @@ Returns:
 
 Author:
     Ryan Budney, B.B.)doc";
+
+// Docstring regina::python::doc::Rational::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given rationals.
+
+This global routine simply calls Rational::swap(); it is provided so
+that Rational meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first rational whose contents should be swapped.
+
+Parameter ``b``:
+    the second rational whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Rational::inverse
 static constexpr const char inverse[] =

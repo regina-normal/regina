@@ -149,8 +149,7 @@ void addArrow(pybind11::module_& m) {
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-
-    ADD_GLOBAL_SWAP(m, Arrow);
+    regina::python::add_global_swap<Arrow, rdoc>(m);
 
     RDOC_SCOPE_END
 }

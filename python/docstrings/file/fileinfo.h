@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_FileInfo
-inline constexpr const char global_swap_FileInfo[] =
-R"doc(Swaps the contents of the two given file information objects.
-
-This global routine simply calls FileInfo::swap(); it is provided so
-that FileInfo meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the object whose contents should be swapped with *b*.
-
-Parameter ``b``:
-    the object whose contents should be swapped with *a*.)doc";
-
 struct FileInfo {
 
 // Docstring regina::python::doc::FileInfo::__class
@@ -95,6 +82,19 @@ but not whether the XML is compressed.
 
 Returns:
     a description of the file format.)doc";
+
+// Docstring regina::python::doc::FileInfo::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given file information objects.
+
+This global routine simply calls FileInfo::swap(); it is provided so
+that FileInfo meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the object whose contents should be swapped with *b*.
+
+Parameter ``b``:
+    the object whose contents should be swapped with *a*.)doc";
 
 // Docstring regina::python::doc::FileInfo::identify
 static constexpr const char identify[] =

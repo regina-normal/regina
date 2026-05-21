@@ -4,7 +4,6 @@ if (${REGINA_INSTALL_DEV})
     component.h
     face.h
     faceembedding.h
-    facetpairing.h
     isomorphism.h
     simplex.h
     triangulation.h

@@ -94,8 +94,7 @@ void addSatBlock(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(d);
     regina::python::add_eq_operators(d, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, SatBlockModel);
+    regina::python::add_global_swap<SatBlockModel, rdoc>(m);
 
     RDOC_SCOPE_END
 }

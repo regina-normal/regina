@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_HomGroupPresentation
-inline constexpr const char global_swap_HomGroupPresentation[] =
-R"doc(Swaps the contents of the two given homomorphisms.
-
-This global routine simply calls HomGroupPresentation::swap(); it is
-provided so that HomGroupPresentation meets the C++ Swappable
-requirements.
-
-Parameter ``lhs``:
-    the homomorphism whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the homomorphism whose contents should be swapped with *lhs*.)doc";
-
 struct HomGroupPresentation {
 
 // Docstring regina::python::doc::HomGroupPresentation::__class
@@ -192,6 +178,20 @@ Parameter ``i``:
 
 Returns:
     the image of the *i*th generator in the codomain.)doc";
+
+// Docstring regina::python::doc::HomGroupPresentation::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given homomorphisms.
+
+This global routine simply calls HomGroupPresentation::swap(); it is
+provided so that HomGroupPresentation meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the homomorphism whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the homomorphism whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::HomGroupPresentation::intelligentNielsen
 static constexpr const char intelligentNielsen[] =

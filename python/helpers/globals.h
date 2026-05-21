@@ -32,33 +32,39 @@
  *  \brief Assists with safely wrapping heavily overloaded functions.
  */
 
+#ifndef __HELPERS_GLOBALS_H
+#ifndef __DOXYGEN
+#define __HELPERS_GLOBALS_H
+#endif
+
+#include "../helpers/concepts.h"
+
+namespace regina {
+
+// Declare (but do not implement) a dummy swap function, so that regina::swap
+// always resolves.  This avoids a compile error in scenarios where we are
+// including this header but not calling add_global_swap(), and where there is
+// in fact no variant of regina::swap() currently visible.
+//
+void swap(std::nullptr_t, std::nullptr_t) noexcept;
+
+namespace python {
+
 /**
- * Adds a Python binding for the global function `regina::swap(type&, type&)`,
- * assuming the docstring can be accessed via the "usual" syntax.
- * Specifically, the docstring will be accessed via the syntax
- * `regina::python::doc::global_swap_SUFFIX`, where \a SUFFIX is replaced with
- * the argument \a type.
+ * Adds a Python binding for the global function `regina::swap(T&, T&)`,
+ * using the docstring stored in `Docs::global_swap`.
  *
  * This macro adds safety by using a `static_cast` (not a C-style cast) to
  * resolve the overloaded `regina::swap`, so that there is no risk of
  * accidentally binding the wrong swap function.
  */
-#define ADD_GLOBAL_SWAP(module, type) \
-    module.def("swap", static_cast<void(&)(type&, type&)>(regina::swap), \
-    regina::python::doc::global_swap_ ## type)
+template <typename T, DocstringClass Docs>
+requires requires(T x, T y) { regina::swap(x, y); }
+inline void add_global_swap(pybind11::module_& m) {
+    m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap),
+        Docs::global_swap);
+}
 
-/**
- * Adds a Python binding for the global function `regina::swap(type&, type&)`,
- * with explicit instructions on how to locate the docstring.
- * Specifically, the docstring will be accessed via the syntax
- * `regina::python::doc::global_swap_SUFFIX`, where \a SUFFIX is replaced with
- * the extra argument \a suffix.
- *
- * Like ADD_GLOBAL_SWAP(), this macro adds safety by using a `static_cast`
- * (not a C-style cast) to resolve the overloaded `regina::swap`, so that
- * there is no risk of accidentally binding the wrong swap function.
- */
-#define ADD_GLOBAL_SWAP_SUFFIX(module, type, suffix) \
-    module.def("swap", static_cast<void(&)(type&, type&)>(regina::swap), \
-    regina::python::doc::global_swap_ ## suffix)
+} } // namespace regina::python
 
+#endif

@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_IntersectionForm
-inline constexpr const char global_swap_IntersectionForm[] =
-R"doc(Swaps the contents of the two given intersection forms.
-
-This global routine simply calls IntersectionForm::swap(); it is
-provided so that IntersectionForm meets the C++ Swappable
-requirements.
-
-Parameter ``lhs``:
-    the intersection form whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the intersection form whose contents should be swapped with *lhs*.)doc";
-
 struct IntersectionForm {
 
 // Docstring regina::python::doc::IntersectionForm::__class
@@ -94,6 +80,20 @@ A form *Q* is _even_ if and only if ``Q(x,x)`` is even for all *x*.
 Returns:
     ``True`` if this bilinear form is of even type, or ``False`` if it
     is of odd type.)doc";
+
+// Docstring regina::python::doc::IntersectionForm::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given intersection forms.
+
+This global routine simply calls IntersectionForm::swap(); it is
+provided so that IntersectionForm meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the intersection form whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the intersection form whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::IntersectionForm::matrix
 static constexpr const char matrix[] =

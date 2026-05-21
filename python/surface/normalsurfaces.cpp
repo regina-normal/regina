@@ -149,6 +149,7 @@ void addNormalSurfaces(pybind11::module_& m) {
     regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
+    regina::python::add_global_swap<NormalSurfaces, rdoc>(m);
 
     auto wrap = regina::python::add_packet_wrapper<NormalSurfaces>(
         m, "PacketOfNormalSurfaces");
@@ -165,8 +166,6 @@ void addNormalSurfaces(pybind11::module_& m) {
         regina::NormalTransform>(wrap, rdoc::__init_2);
     regina::python::add_packet_constructor<const NormalSurfaces&,
         const SurfaceFilter&>(wrap, rdoc::__init_3);
-
-    ADD_GLOBAL_SWAP(m, NormalSurfaces);
 
     RDOC_SCOPE_END
 }

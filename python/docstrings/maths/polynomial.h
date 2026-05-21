@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Polynomial
-inline constexpr const char global_swap_Polynomial[] =
-R"doc(Swaps the contents of the given polynomials.
-
-This global routine simply calls Polynomial<T>::swap(); it is provided
-so that Polynomial<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first polynomial whose contents should be swapped.
-
-Parameter ``b``:
-    the second polynomial whose contents should be swapped.)doc";
-
 struct Polynomial {
 
 // Docstring regina::python::doc::Polynomial::__add
@@ -463,6 +450,19 @@ Parameter ``u``:
 Parameter ``v``:
     a polynomial whose contents will be destroyed and replaced with
     *v*, as described above.)doc";
+
+// Docstring regina::python::doc::Polynomial::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given polynomials.
+
+This global routine simply calls Polynomial<T>::swap(); it is provided
+so that Polynomial<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first polynomial whose contents should be swapped.
+
+Parameter ``b``:
+    the second polynomial whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Polynomial::init
 static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";

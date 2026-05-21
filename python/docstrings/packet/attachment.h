@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Attachment
-inline constexpr const char global_swap_Attachment[] =
-R"doc(Swaps the contents of the given attachment packets.
-
-This global routine simply calls Attachment::swap(); it is provided so
-that Attachment meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first attachment packet whose contents should be swapped.
-
-Parameter ``b``:
-    the second attachment packet whose contents should be swapped.)doc";
-
 struct Attachment {
 
 // Docstring regina::python::doc::Attachment::__class
@@ -216,6 +203,19 @@ the current platform.
 
 Returns:
     the filename associated with this attachment.)doc";
+
+// Docstring regina::python::doc::Attachment::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given attachment packets.
+
+This global routine simply calls Attachment::swap(); it is provided so
+that Attachment meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first attachment packet whose contents should be swapped.
+
+Parameter ``b``:
+    the second attachment packet whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Attachment::isNull
 static constexpr const char isNull[] =

@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Isomorphism
-inline constexpr const char global_swap_Isomorphism[] =
-R"doc(Swaps the contents of the given isomorphisms.
-
-This global routine simply calls Isomorphism<dim>::swap(); it is
-provided so that Isomorphism<dim> meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first isomorphism whose contents should be swapped.
-
-Parameter ``b``:
-    the second isomorphism whose contents should be swapped.)doc";
-
 struct Isomorphism {
 
 // Docstring regina::python::doc::Isomorphism::__array
@@ -361,6 +347,20 @@ Parameter ``sourceSimp``:
 
 Returns:
     the permutation applied to the facets of the source simplex.)doc";
+
+// Docstring regina::python::doc::Isomorphism::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given isomorphisms.
+
+This global routine simply calls Isomorphism<dim>::swap(); it is
+provided so that Isomorphism<dim> meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first isomorphism whose contents should be swapped.
+
+Parameter ``b``:
+    the second isomorphism whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Isomorphism::identity
 static constexpr const char identity[] =

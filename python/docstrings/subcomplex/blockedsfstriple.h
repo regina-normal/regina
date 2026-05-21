@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_BlockedSFSTriple
-inline constexpr const char global_swap_BlockedSFSTriple[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls BlockedSFSTriple::swap(); it is
-provided so that BlockedSFSTriple meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct BlockedSFSTriple {
 
 // Docstring regina::python::doc::BlockedSFSTriple::__class
@@ -170,6 +156,20 @@ Parameter ``which``:
 
 Returns:
     details of the requested end region.)doc";
+
+// Docstring regina::python::doc::BlockedSFSTriple::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls BlockedSFSTriple::swap(); it is
+provided so that BlockedSFSTriple meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::BlockedSFSTriple::matchingReln
 static constexpr const char matchingReln[] =

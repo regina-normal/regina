@@ -50,8 +50,7 @@ void addLayeredChainPair(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
-
-    ADD_GLOBAL_SWAP(m, LayeredChainPair);
+    regina::python::add_global_swap<LayeredChainPair, rdoc>(m);
 
     RDOC_SCOPE_END
 }

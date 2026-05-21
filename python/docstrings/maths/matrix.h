@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Matrix
-inline constexpr const char global_swap_Matrix[] =
-R"doc(Swaps the contents of the given matrices.
-
-This global routine simply calls Matrix<T>::swap(); it is provided so
-that Matrix<T> meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first matrix whose contents should be swapped.
-
-Parameter ``b``:
-    the second matrix whose contents should be swapped.)doc";
-
 struct Matrix {
 
 // Docstring regina::python::doc::Matrix::__class
@@ -628,6 +615,19 @@ Parameter ``row``:
 
 Returns:
     the greatest common divisor of all elements of this row.)doc";
+
+// Docstring regina::python::doc::Matrix::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given matrices.
+
+This global routine simply calls Matrix<T>::swap(); it is provided so
+that Matrix<T> meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first matrix whose contents should be swapped.
+
+Parameter ``b``:
+    the second matrix whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Matrix::identity
 static constexpr const char identity[] =

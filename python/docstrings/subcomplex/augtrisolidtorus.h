@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_AugTriSolidTorus
-inline constexpr const char global_swap_AugTriSolidTorus[] =
-R"doc(Swaps the contents of the two given structures.
-
-This global routine simply calls AugTriSolidTorus::swap(); it is
-provided so that AugTriSolidTorus meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first structure whose contents should be swapped.
-
-Parameter ``b``:
-    the second structure whose contents should be swapped.)doc";
-
 struct AugTriSolidTorus {
 
 // Docstring regina::python::doc::AugTriSolidTorus::__class
@@ -167,6 +153,20 @@ Parameter ``annulus``:
 Returns:
     a permutation describing the roles of the corresponding top level
     edge groups.)doc";
+
+// Docstring regina::python::doc::AugTriSolidTorus::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given structures.
+
+This global routine simply calls AugTriSolidTorus::swap(); it is
+provided so that AugTriSolidTorus meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first structure whose contents should be swapped.
+
+Parameter ``b``:
+    the second structure whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::AugTriSolidTorus::hasLayeredChain
 static constexpr const char hasLayeredChain[] =

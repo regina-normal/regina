@@ -11,20 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SigPartialIsomorphism
-inline constexpr const char global_swap_SigPartialIsomorphism[] =
-R"doc(Swaps the contents of the given partial isomorphisms.
-
-This global routine simply calls SigPartialIsomorphism::swap(); it is
-provided so that SigPartialIsomorphism meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first partial isomorphism whose contents should be swapped.
-
-Parameter ``b``:
-    the second partial isomorphism whose contents should be swapped.)doc";
-
 struct SigPartialIsomorphism {
 
 // Docstring regina::python::doc::SigPartialIsomorphism::__class
@@ -136,6 +122,20 @@ Returns:
     -1, 1 or 0 if the image of the given signature under this
     isomorphism is lexicographically less than, greater than or equal
     to its image under the identity isomorphism respectively.)doc";
+
+// Docstring regina::python::doc::SigPartialIsomorphism::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given partial isomorphisms.
+
+This global routine simply calls SigPartialIsomorphism::swap(); it is
+provided so that SigPartialIsomorphism meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first partial isomorphism whose contents should be swapped.
+
+Parameter ``b``:
+    the second partial isomorphism whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SigPartialIsomorphism::makeCanonical
 static constexpr const char makeCanonical[] =

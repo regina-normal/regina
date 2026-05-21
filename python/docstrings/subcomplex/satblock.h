@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SatBlockModel
-inline constexpr const char global_swap_SatBlockModel[] =
-R"doc(Swaps the contents of the two given models.
-
-This global routine simply calls SatBlockModel::swap(); it is provided
-so that SatBlockModel meets the C++ Swappable requirements.
-
-Parameter ``a``:
-    the first model whose contents should be swapped.
-
-Parameter ``b``:
-    the second model whose contents should be swapped.)doc";
-
 struct SatBlock {
 
 // Docstring regina::python::doc::SatBlock::__class
@@ -457,6 +444,19 @@ R"doc(Returns the structure of the saturated block.
 
 Returns:
     the block structure.)doc";
+
+// Docstring regina::python::doc::SatBlockModel::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given models.
+
+This global routine simply calls SatBlockModel::swap(); it is provided
+so that SatBlockModel meets the C++ Swappable requirements.
+
+Parameter ``a``:
+    the first model whose contents should be swapped.
+
+Parameter ``b``:
+    the second model whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SatBlockModel::swap
 static constexpr const char swap[] =

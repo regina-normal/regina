@@ -37,7 +37,6 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 #include "../docstrings/triangulation/detail/facetpairing.h"
-#include "../docstrings/triangulation/generic/facetpairing.h"
 
 using pybind11::overload_cast;
 using regina::BoolSet;
@@ -108,8 +107,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rbase::__eq);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, FacetPairing<dim>, FacetPairing);
+    regina::python::add_global_swap<FacetPairing<dim>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

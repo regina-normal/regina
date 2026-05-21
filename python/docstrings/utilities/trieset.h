@@ -11,16 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_TrieSet
-inline constexpr const char global_swap_TrieSet[] =
-R"doc(Swaps the contents of the two given collections.
-
-Parameter ``a``:
-    the first collection of sets whose contents should be swapped.
-
-Parameter ``b``:
-    the second collection of sets whose contents should be swapped.)doc";
-
 struct TrieSet {
 
 // Docstring regina::python::doc::TrieSet::__class
@@ -83,6 +73,16 @@ Parameter ``other``:
 
 Returns:
     ``True`` if and only if both collections store the same sets.)doc";
+
+// Docstring regina::python::doc::TrieSet::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given collections.
+
+Parameter ``a``:
+    the first collection of sets whose contents should be swapped.
+
+Parameter ``b``:
+    the second collection of sets whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::TrieSet::hasExtraSuperset
 static constexpr const char hasExtraSuperset[] =

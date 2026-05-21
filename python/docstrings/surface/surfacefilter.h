@@ -11,34 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SurfaceFilterCombination
-inline constexpr const char global_swap_SurfaceFilterCombination[] =
-R"doc(Swaps the contents of the given combination filters.
-
-This global routine simply calls SurfaceFilterCombination::swap(); it
-is provided so that SurfaceFilterCombination meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first filter whose contents should be swapped.
-
-Parameter ``b``:
-    the second filter whose contents should be swapped.)doc";
-
-// Docstring regina::python::doc::global_swap_SurfaceFilterProperties
-inline constexpr const char global_swap_SurfaceFilterProperties[] =
-R"doc(Swaps the contents of the given property-based filters.
-
-This global routine simply calls SurfaceFilterProperties::swap(); it
-is provided so that SurfaceFilterProperties meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first filter whose contents should be swapped.
-
-Parameter ``b``:
-    the second filter whose contents should be swapped.)doc";
-
 struct SurfaceFilter {
 
 // Docstring regina::python::doc::SurfaceFilter::__class
@@ -148,6 +120,20 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given filter use the same
     boolean operation.)doc";
+
+// Docstring regina::python::doc::SurfaceFilterCombination::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given combination filters.
+
+This global routine simply calls SurfaceFilterCombination::swap(); it
+is provided so that SurfaceFilterCombination meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first filter whose contents should be swapped.
+
+Parameter ``b``:
+    the second filter whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterCombination::setUsesAnd
 static constexpr const char setUsesAnd[] =
@@ -276,6 +262,20 @@ If this set is empty, all Euler characteristics will be accepted.
 
 Returns:
     the set of allowable Euler characteristics.)doc";
+
+// Docstring regina::python::doc::SurfaceFilterProperties::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given property-based filters.
+
+This global routine simply calls SurfaceFilterProperties::swap(); it
+is provided so that SurfaceFilterProperties meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first filter whose contents should be swapped.
+
+Parameter ``b``:
+    the second filter whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::SurfaceFilterProperties::orientability
 static constexpr const char orientability[] =

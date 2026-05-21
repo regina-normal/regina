@@ -186,6 +186,7 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
     regina::python::add_output_rich(c2);
     regina::python::add_packet_data(c2);
     regina::python::packet_eq_operators(c2, rdoc::__eq);
+    regina::python::add_global_swap<SnapPeaTriangulation, rdoc>(m);
 
     regina::python::addStdView<decltype(SnapPeaTriangulation().cusps())>(
         internal, "SnapPea_cusps");
@@ -296,14 +297,12 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
     c2.attr("regular_cover") = SnapPeaTriangulation::Cover::Regular;
     c2.attr("cyclic_cover") = SnapPeaTriangulation::Cover::Cyclic;
 
-    ADD_GLOBAL_SWAP(m, SnapPeaTriangulation);
-
-    RDOC_SCOPE_SWITCH_MAIN
+    RDOC_SCOPE_SWITCH(Triangulation)
 
     // Now we can define the global swap for the parent Triangulation<3> class.
-    // See the notes beneath the Triangulation<3> bindings as to why this had
-    // to wait until *after* the SnapPeaTriangulation swap.
-    ADD_GLOBAL_SWAP_SUFFIX(m, Triangulation<3>, Triangulation);
+    // See the notes in the Triangulation<3> bindings as to why this had to
+    // wait until *after* the SnapPeaTriangulation swap.
+    regina::python::add_global_swap<Triangulation<3>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

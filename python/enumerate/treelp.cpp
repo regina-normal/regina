@@ -93,8 +93,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
     // We need to think more about what a comparison between tableaux should
     // test.  In the meantime, don't make a decision we might regret later.
     regina::python::disable_eq_operators(c);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, Tableaux, LPInitialTableaux);
+    regina::python::add_global_swap<Tableaux, rdoc>(m);
 
     RDOC_SCOPE_END
 }
@@ -138,8 +137,7 @@ void addLPData(pybind11::module_& m, const char* name) {
     // test.  Do we just compare basis indices?  Do we do a deep comparison of
     // all the internal data?  Let's not force a decision right now.
     regina::python::disable_eq_operators(c);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, Data, LPData);
+    regina::python::add_global_swap<Data, rdoc>(m);
 
     RDOC_SCOPE_END
 }
@@ -187,8 +185,7 @@ void addTreeLP(pybind11::module_& m) {
         ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, LPMatrix<Integer>, LPMatrix);
+    regina::python::add_global_swap<LPMatrix<Integer>, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(LPSystem)
 

@@ -11,19 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_Handlebody
-inline constexpr const char global_swap_Handlebody[] =
-R"doc(Swaps the contents of the two given handlebodies.
-
-This global routine simply calls Handlebody::swap(); it is provided so
-that LensSpace meets the C++ Handlebody requirements.
-
-Parameter ``a``:
-    the first handlebody whose contents should be swapped.
-
-Parameter ``b``:
-    the second handlebody whose contents should be swapped.)doc";
-
 struct Handlebody {
 
 // Docstring regina::python::doc::Handlebody::__class
@@ -67,6 +54,19 @@ R"doc(Returns the genus of this handlebody.
 
 Returns:
     the genus; that is, number of handles.)doc";
+
+// Docstring regina::python::doc::Handlebody::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given handlebodies.
+
+This global routine simply calls Handlebody::swap(); it is provided so
+that LensSpace meets the C++ Handlebody requirements.
+
+Parameter ``a``:
+    the first handlebody whose contents should be swapped.
+
+Parameter ``b``:
+    the second handlebody whose contents should be swapped.)doc";
 
 // Docstring regina::python::doc::Handlebody::swap
 static constexpr const char swap[] =

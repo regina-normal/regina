@@ -86,8 +86,7 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP_SUFFIX(m, Isomorphism<dim>, Isomorphism);
+    regina::python::add_global_swap<Isomorphism<dim>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

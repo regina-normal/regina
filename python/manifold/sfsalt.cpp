@@ -57,8 +57,7 @@ void addSFSAlt(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(s);
     regina::python::add_eq_operators(s, rdoc::__eq);
-
-    ADD_GLOBAL_SWAP(m, SFSAlt);
+    regina::python::add_global_swap<SFSAlt, rdoc>(m);
 
     RDOC_SCOPE_END
 }

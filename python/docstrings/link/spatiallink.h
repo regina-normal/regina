@@ -11,26 +11,6 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::global_swap_SpatialLink
-inline constexpr const char global_swap_SpatialLink[] =
-R"doc(Swaps the contents of the two given spatial links.
-
-This global routine simply calls SpatialLink::swap(); it is provided
-so that SpatialLink meets the C++ Swappable requirements.
-
-See SpatialLink::swap() for more details.
-
-.. note::
-    This swap function is _not_ marked ``noexcept``, since it fires
-    change events on both links which may in turn call arbitrary code
-    via any registered packet listeners.
-
-Parameter ``lhs``:
-    the spatial link whose contents should be swapped with *rhs*.
-
-Parameter ``rhs``:
-    the spatial link whose contents should be swapped with *lhs*.)doc";
-
 struct SpatialLink {
 
 // Docstring regina::python::doc::SpatialLink::__class
@@ -314,6 +294,26 @@ Parameter ``filename``:
 
 Returns:
     the reconstructed spatial link.)doc";
+
+// Docstring regina::python::doc::SpatialLink::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given spatial links.
+
+This global routine simply calls SpatialLink::swap(); it is provided
+so that SpatialLink meets the C++ Swappable requirements.
+
+See SpatialLink::swap() for more details.
+
+.. note::
+    This swap function is _not_ marked ``noexcept``, since it fires
+    change events on both links which may in turn call arbitrary code
+    via any registered packet listeners.
+
+Parameter ``lhs``:
+    the spatial link whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the spatial link whose contents should be swapped with *lhs*.)doc";
 
 // Docstring regina::python::doc::SpatialLink::hasRadius
 static constexpr const char hasRadius[] =
