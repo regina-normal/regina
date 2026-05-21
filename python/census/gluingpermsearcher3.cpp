@@ -46,7 +46,7 @@ using regina::HyperbolicMinSearcher;
 void addGluingPermSearcher3(pybind11::module_& m) {
     using Action = const std::function<void(const regina::GluingPerms<3>&)>&;
 
-    RDOC_SCOPE_BEGIN(GluingPermSearcher)
+    RDOC_SCOPE_BEGIN(GluingPermSearcher3)
 
     auto g = pybind11::class_<GluingPermSearcher<3>>(m, "GluingPermSearcher3",
             rdoc::__class)

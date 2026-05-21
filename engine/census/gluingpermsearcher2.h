@@ -74,6 +74,8 @@ namespace regina {
  * This class is designed to manage the construction of a large census of
  * triangulations, and so it does not support copying, moving or swapping.
  *
+ * \pyclassname{GluingPermSearcher2}
+ *
  * \ingroup census
  */
 template <>

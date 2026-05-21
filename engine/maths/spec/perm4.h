@@ -101,8 +101,7 @@ namespace regina {
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
- * \python Since Python does not support templates, this class is
- * made available under the name Perm4.
+ * \pyclassname{Perm4}
  *
  * \ingroup maths
  */

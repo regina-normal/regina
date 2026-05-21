@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct GluingPermSearcher {
+struct GluingPermSearcher4 {
 
-// Docstring regina::python::doc::GluingPermSearcher::__class
+// Docstring regina::python::doc::GluingPermSearcher4::__class
 static constexpr const char __class[] =
 R"doc(A utility class for searching through all possible gluing permutation
 sets that correspond to a given pentachoron facet pairing. Subclasses
@@ -43,9 +43,13 @@ no. 3, 527--571.
 
 This class is designed to manage the construction of a large census of
 triangulations, and so it does not support copying, moving or
-swapping.)doc";
+swapping.
 
-// Docstring regina::python::doc::GluingPermSearcher::__init
+Python:
+    This class is available to Python users under the name
+    GluingPermSearcher4.)doc";
+
+// Docstring regina::python::doc::GluingPermSearcher4::__init
 static constexpr const char __init[] =
 R"doc(Initialises a new search for gluing permutation sets. The search is
 started by calling runSearch(). Note that the static method
@@ -102,7 +106,7 @@ Parameter ``finiteOnly``:
     triangulations might still be produced; see the notes above for
     details.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher::bestSearcher
+// Docstring regina::python::doc::GluingPermSearcher4::bestSearcher
 static constexpr const char bestSearcher[] =
 R"doc(Constructs a search manager of the best possible class for the given
 search parameters. Different subclasses of GluingPermSearcher<4>
@@ -130,7 +134,7 @@ Precondition:
 Returns:
     the new search manager.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher::data
+// Docstring regina::python::doc::GluingPermSearcher4::data
 static constexpr const char data[] =
 R"doc(Returns all internal data in a plain text format. This object can be
 recreated from this text data by calling the input stream constructor
@@ -164,7 +168,7 @@ Python:
 Returns:
     all of this object's internal data in plain text format.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher::findAllPerms
+// Docstring regina::python::doc::GluingPermSearcher4::findAllPerms
 static constexpr const char findAllPerms[] =
 R"doc(The main entry routine for running a search for all gluing permutation
 sets that complement a given pentachoron facet pairing.
@@ -195,7 +199,7 @@ Python:
     beyond the initial gluing permutation set (and therefore the
     additional *args* list is omitted here).)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher::fromTaggedData
+// Docstring regina::python::doc::GluingPermSearcher4::fromTaggedData
 static constexpr const char fromTaggedData[] =
 R"doc(Creates a new search manager based on tagged data stored in the given
 string. This may be a new search or a partially completed search.
@@ -222,7 +226,7 @@ Returns:
     the new search manager, or ``None`` if the data in the given
     string was invalid or incorrectly formatted.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher::isComplete
+// Docstring regina::python::doc::GluingPermSearcher4::isComplete
 static constexpr const char isComplete[] =
 R"doc(Determines whether this search manager holds a complete gluing
 permutation set or just a partially completed search state.
@@ -234,7 +238,7 @@ Returns:
     ``True`` if a complete gluing permutation set is held, or
     ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher::partialSearch
+// Docstring regina::python::doc::GluingPermSearcher4::partialSearch
 static constexpr const char partialSearch[] =
 R"doc(Runs a partial search for all possible gluing permutations that
 satisfy the search criteria, branching only to the given depth and no
@@ -283,7 +287,7 @@ Parameter ``args``:
     any additional arguments that should be passed to *action*,
     following the initial permutation set argument.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher::runSearch
+// Docstring regina::python::doc::GluingPermSearcher4::runSearch
 static constexpr const char runSearch[] =
 R"doc(Generates all possible gluing permutation sets that satisfy the
 current search criteria. The search criteria are specified in the
@@ -326,7 +330,7 @@ Parameter ``args``:
     any additional arguments that should be passed to *action*,
     following the initial permutation set argument.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher::taggedData
+// Docstring regina::python::doc::GluingPermSearcher4::taggedData
 static constexpr const char taggedData[] =
 R"doc(Returns all internal data in a plain text format, along with a marker
 to signify which precise class the data belongs to. This routine can
@@ -349,7 +353,7 @@ writes information pertaining to this base class.
 Returns:
     all of this object's internal data in plain text format.)doc";
 
-}; // struct GluingPermSearcher
+}; // struct GluingPermSearcher4
 
 } // namespace regina::python::doc
 

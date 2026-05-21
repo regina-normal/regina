@@ -44,7 +44,7 @@ namespace {
 }
 
 void addPerm2(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Perm)
+    RDOC_SCOPE_BEGIN(Perm2)
 
     auto c = pybind11::class_<Perm<2>>(m, "Perm2", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)

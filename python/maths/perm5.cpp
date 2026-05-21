@@ -40,7 +40,7 @@ using pybind11::overload_cast;
 using regina::Perm;
 
 void addPerm5(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Perm)
+    RDOC_SCOPE_BEGIN(Perm5)
 
     auto c = pybind11::class_<Perm<5>>(m, "Perm5", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)

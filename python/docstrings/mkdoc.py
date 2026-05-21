@@ -259,6 +259,8 @@ def process_comment(comment, preserveAmpersands):
                r'$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]note\s?(.*?)\s?\n\n',
                r'$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
+    s = re.sub(r'[\\@]pyclassname{(\S+)}',
+               r'\n\n$Python:\n\nThis class is available to Python users under the name \1.\n\n', s, flags=re.DOTALL)
 
     # Regina-specific paragraphs that we can ignore in Python:
     s = re.sub(r'\\headers\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
@@ -526,6 +528,11 @@ def extract(filename, node, parent_namespace, parent_types, output):
 
     name = sanitize_name(d(node.spelling))
     if node.raw_comment:
+        match = re.search(r'\\pyclassname{(\S+)}($|\s)', node.raw_comment)
+        if match:
+            newName = match.group(1)
+            # print('Python class name:', name, '->', newName)
+            name = newName
         match = re.search(r'\\pydocname{(\S+)}($|\s)', node.raw_comment)
         if match:
             newName = match.group(1)

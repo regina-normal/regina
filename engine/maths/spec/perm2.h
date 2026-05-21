@@ -94,8 +94,7 @@ namespace regina {
  * \a a and \a b.  In particular, `Perm(0,1)` is _not_ the
  * identity permutation.
  *
- * \python Since Python does not support templates, this class is
- * made available under the name Perm2.
+ * \pyclassname{Perm2}
  *
  * \ingroup maths
  */

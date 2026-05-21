@@ -42,7 +42,7 @@ using regina::GluingPermSearcher;
 void addGluingPermSearcher2(pybind11::module_& m) {
     using Action = const std::function<void(const regina::GluingPerms<2>&)>&;
 
-    RDOC_SCOPE_BEGIN(GluingPermSearcher)
+    RDOC_SCOPE_BEGIN(GluingPermSearcher2)
 
     auto c = pybind11::class_<GluingPermSearcher<2>>(m, "GluingPermSearcher2",
             rdoc::__class)
