@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct Example {
+struct Example3 {
 
-// Docstring regina::python::doc::Example::__class
+// Docstring regina::python::doc::Example3::__class
 static constexpr const char __class[] =
 R"doc(Offers routines for constructing a variety of sample 3-dimensional
 triangulations.
@@ -26,9 +26,12 @@ this generic documentation by looking at a higher dimension: try
 
 This 3-dimensional specialisation offers significant extra
 functionality, by providing several more hard-coded and parameterised
-constructions.)doc";
+constructions.
 
-// Docstring regina::python::doc::Example::augTriSolidTorus
+Python:
+    This class is available to Python users under the name Example3.)doc";
+
+// Docstring regina::python::doc::Example3::augTriSolidTorus
 static constexpr const char augTriSolidTorus[] =
 R"doc(Returns an augmented triangular solid torus with the given parameters.
 Almost all augmented triangular solid tori represent Seifert fibred
@@ -83,7 +86,7 @@ Parameter ``b3``:
     a parameter describing the third layered solid torus in the
     augmented triangular solid torus.)doc";
 
-// Docstring regina::python::doc::Example::b5
+// Docstring regina::python::doc::Example3::b5
 static constexpr const char b5[] =
 R"doc(Returns a triangulation of the Martelli-Petronio brick B5.
 
@@ -102,7 +105,7 @@ For more details on the brick B5, see "Complexity of geometric
 Returns:
     the Martell-Petronio brick B5.)doc";
 
-// Docstring regina::python::doc::Example::bingsHouse
+// Docstring regina::python::doc::Example3::bingsHouse
 static constexpr const char bingsHouse[] =
 R"doc(Returns the two-tetrahedron triangulation of the 3-sphere that is dual
 to Bing's house with two rooms.
@@ -110,7 +113,7 @@ to Bing's house with two rooms.
 Returns:
     a 3-sphere triangulation dual to Bing's house.)doc";
 
-// Docstring regina::python::doc::Example::cuspedGenusTwoTorus
+// Docstring regina::python::doc::Example3::cuspedGenusTwoTorus
 static constexpr const char cuspedGenusTwoTorus[] =
 R"doc(Deprecated routine that returns a triangulation of a solid genus two
 handlebody with ideal boundary.
@@ -124,7 +127,7 @@ See idealGenusTwoHandlebody() for further details.
 Returns:
     the solid genus two handlebody with ideal boundary.)doc";
 
-// Docstring regina::python::doc::Example::figureEight
+// Docstring regina::python::doc::Example3::figureEight
 static constexpr const char figureEight[] =
 R"doc(Returns a two-tetrahedron ideal triangulation of the figure eight knot
 complement.
@@ -132,7 +135,7 @@ complement.
 Returns:
     the figure eight knot complement.)doc";
 
-// Docstring regina::python::doc::Example::gieseking
+// Docstring regina::python::doc::Example3::gieseking
 static constexpr const char gieseking[] =
 R"doc(Returns the one-tetrahedron ideal triangulation of the non-orientable
 Gieseking manifold.
@@ -140,7 +143,7 @@ Gieseking manifold.
 Returns:
     the Gieseking manifold.)doc";
 
-// Docstring regina::python::doc::Example::handlebody
+// Docstring regina::python::doc::Example3::handlebody
 static constexpr const char handlebody[] =
 R"doc(Returns a triangulation of the orientable handlebody with the given
 genus.
@@ -168,7 +171,7 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Example::idealGenusTwoHandlebody
+// Docstring regina::python::doc::Example3::idealGenusTwoHandlebody
 static constexpr const char idealGenusTwoHandlebody[] =
 R"doc(Returns a triangulation of a solid genus two handlebody with ideal
 boundary. This triangulation has one internal finite vertex and one
@@ -183,7 +186,7 @@ change in a future version of Regina.
 Returns:
     the solid genus two handlebody with ideal boundary.)doc";
 
-// Docstring regina::python::doc::Example::layeredLoop
+// Docstring regina::python::doc::Example3::layeredLoop
 static constexpr const char layeredLoop[] =
 R"doc(Returns a layered loop of the given length. Layered loops are
 described in detail in the LayeredLoop class notes.
@@ -199,7 +202,7 @@ Parameter ``twisted``:
 Returns:
     the resulting layered loop.)doc";
 
-// Docstring regina::python::doc::Example::lens
+// Docstring regina::python::doc::Example3::lens
 static constexpr const char lens[] =
 R"doc(Returns a triangulation of the lens space ``L(p,q)``.
 
@@ -227,7 +230,7 @@ Parameter ``q``:
 Returns:
     the lens space ``L(p,q)``.)doc";
 
-// Docstring regina::python::doc::Example::lst
+// Docstring regina::python::doc::Example3::lst
 static constexpr const char lst[] =
 R"doc(Returns the layered solid torus ``LST(a,b,c)``.
 
@@ -260,7 +263,7 @@ Parameter ``b``:
 Returns:
     the layered solid torus ``LST(a,b,c)``.)doc";
 
-// Docstring regina::python::doc::Example::poincare
+// Docstring regina::python::doc::Example3::poincare
 static constexpr const char poincare[] =
 R"doc(Returns the five-tetrahedron triangulation of the Poincare homology
 sphere.
@@ -268,7 +271,7 @@ sphere.
 Returns:
     the Poincare homology sphere.)doc";
 
-// Docstring regina::python::doc::Example::rp2xs1
+// Docstring regina::python::doc::Example3::rp2xs1
 static constexpr const char rp2xs1[] =
 R"doc(Returns a three-tetrahedron triangulation of the non-orientable
 product space ``RP² × S¹``.
@@ -276,14 +279,14 @@ product space ``RP² × S¹``.
 Returns:
     the product space ``RP² × S¹``.)doc";
 
-// Docstring regina::python::doc::Example::rp3rp3
+// Docstring regina::python::doc::Example3::rp3rp3
 static constexpr const char rp3rp3[] =
 R"doc(Returns a triangulation of the connected sum ``RP³ # RP³``.
 
 Returns:
     the connected sum ``RP³ # RP³``.)doc";
 
-// Docstring regina::python::doc::Example::s2xs1
+// Docstring regina::python::doc::Example3::s2xs1
 static constexpr const char s2xs1[] =
 R"doc(Returns a two-tetrahedron triangulation of the product space ``S² ×
 S¹``. This is identical to calling the generic routine sphereBundle().
@@ -291,7 +294,7 @@ S¹``. This is identical to calling the generic routine sphereBundle().
 Returns:
     the product space ``S² × S¹``.)doc";
 
-// Docstring regina::python::doc::Example::sfsOverSphere
+// Docstring regina::python::doc::Example3::sfsOverSphere
 static constexpr const char sfsOverSphere[] =
 R"doc(Returns a triangulation of the given orientable Seifert fibred space
 over the sphere with at most three exceptional fibres.
@@ -348,7 +351,7 @@ Parameter ``b3``:
 Returns:
     the triangulated Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::Example::smallClosedNonOrblHyperbolic
+// Docstring regina::python::doc::Example3::smallClosedNonOrblHyperbolic
 static constexpr const char smallClosedNonOrblHyperbolic[] =
 R"doc(Returns the eleven-tetrahedron closed non-orientable hyperbolic
 3-manifold with volume 2.02988321.
@@ -356,7 +359,7 @@ R"doc(Returns the eleven-tetrahedron closed non-orientable hyperbolic
 Returns:
     the closed non-orientable hyperbolic manifold described above.)doc";
 
-// Docstring regina::python::doc::Example::smallClosedOrblHyperbolic
+// Docstring regina::python::doc::Example3::smallClosedOrblHyperbolic
 static constexpr const char smallClosedOrblHyperbolic[] =
 R"doc(Returns the nine-tetrahedron closed orientable hyperbolic 3-manifold
 with volume 0.94270736.
@@ -364,7 +367,7 @@ with volume 0.94270736.
 Returns:
     the closed orientable hyperbolic manifold described above.)doc";
 
-// Docstring regina::python::doc::Example::solidKleinBottle
+// Docstring regina::python::doc::Example3::solidKleinBottle
 static constexpr const char solidKleinBottle[] =
 R"doc(Returns a triangulation of the solid Klein bottle. This is identical
 to the triangulation returned by the generic routine
@@ -373,7 +376,7 @@ twistedBallBundle().
 Returns:
     the solid Klein bottle.)doc";
 
-// Docstring regina::python::doc::Example::sphere600
+// Docstring regina::python::doc::Example3::sphere600
 static constexpr const char sphere600[] =
 R"doc(Returns the boundary 3-sphere of the regular 600-cell. This is a
 triangulation of the 3-sphere that is a simplicial complex, and in
@@ -386,7 +389,7 @@ berlin.de/~lutz/stellar/library_of_triangulations.html
 Returns:
     the boundary of the regular 600-cell.)doc";
 
-// Docstring regina::python::doc::Example::threeSphere
+// Docstring regina::python::doc::Example3::threeSphere
 static constexpr const char threeSphere[] =
 R"doc(Returns a one-tetrahedron triangulation of the 3-sphere. This is
 _different_ from the generic routine sphere(), which uses two
@@ -395,7 +398,7 @@ tetrahedra instead.
 Returns:
     a one-tetrahedron 3-sphere.)doc";
 
-// Docstring regina::python::doc::Example::threeTorus
+// Docstring regina::python::doc::Example3::threeTorus
 static constexpr const char threeTorus[] =
 R"doc(Returns a six-tetrahedron triangulation of the 3-torus; that is, the
 product space ``S¹ × S¹ × S¹``.
@@ -403,7 +406,7 @@ product space ``S¹ × S¹ × S¹``.
 Returns:
     the product space ``S¹ × S¹ × S¹``.)doc";
 
-// Docstring regina::python::doc::Example::trefoil
+// Docstring regina::python::doc::Example3::trefoil
 static constexpr const char trefoil[] =
 R"doc(Returns a two-tetrahedron ideal triangulation of the trefoil knot
 complement.
@@ -411,7 +414,7 @@ complement.
 Returns:
     the trefoil knot complement.)doc";
 
-// Docstring regina::python::doc::Example::weberSeifert
+// Docstring regina::python::doc::Example3::weberSeifert
 static constexpr const char weberSeifert[] =
 R"doc(Returns a one-vertex triangulation of the Weber-Seifert dodecahedral
 space.
@@ -426,7 +429,7 @@ pp. 911-932.
 Returns:
     the Weber-Seifert dodecahedral space.)doc";
 
-// Docstring regina::python::doc::Example::weeks
+// Docstring regina::python::doc::Example3::weeks
 static constexpr const char weeks[] =
 R"doc(Returns a nine-tetrahedron minimal triangulation of the Weeks
 manifold. The Weeks manifold is the smallest-volume closed hyperbolic
@@ -437,7 +440,7 @@ returns just one).
 Returns:
     the Weeks manifold.)doc";
 
-// Docstring regina::python::doc::Example::whitehead
+// Docstring regina::python::doc::Example3::whitehead
 static constexpr const char whitehead[] =
 R"doc(Returns a four-tetrahedron ideal triangulation of the Whitehead link
 complement.
@@ -445,7 +448,7 @@ complement.
 Returns:
     the Whitehead link complement.)doc";
 
-// Docstring regina::python::doc::Example::whiteheadLink
+// Docstring regina::python::doc::Example3::whiteheadLink
 static constexpr const char whiteheadLink[] =
 R"doc(Deprecated alias for whitehead(), which returns a four-tetrahedron
 ideal triangulation of the Whitehead link complement.
@@ -456,7 +459,7 @@ ideal triangulation of the Whitehead link complement.
 Returns:
     the Whitehead link complement.)doc";
 
-}; // struct Example
+}; // struct Example3
 
 } // namespace regina::python::doc
 

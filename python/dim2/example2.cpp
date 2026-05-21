@@ -38,7 +38,7 @@
 using regina::Example;
 
 void addExample2(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Example)
+    RDOC_SCOPE_BEGIN(Example2)
     RDOC_SCOPE_BASE(detail::ExampleBase)
 
     auto c = pybind11::class_<Example<2>>(m, "Example2", rdoc::__class)

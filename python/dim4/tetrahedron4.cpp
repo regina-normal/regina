@@ -66,7 +66,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
-    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_SWITCH(Tetrahedron4)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3", rdoc::__class)

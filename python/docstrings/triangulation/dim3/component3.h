@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct Component {
+struct Component3 {
 
-// Docstring regina::python::doc::Component::__class
+// Docstring regina::python::doc::Component3::__class
 static constexpr const char __class[] =
 R"doc(Represents a connected component of a 3-manifold triangulation.
 
@@ -31,15 +31,18 @@ Components do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
-of by the Triangulation to which they belong.)doc";
+of by the Triangulation to which they belong.
 
-// Docstring regina::python::doc::Component::countBoundaryTriangles
+Python:
+    This class is available to Python users under the name Component3.)doc";
+
+// Docstring regina::python::doc::Component3::countBoundaryTriangles
 static constexpr const char countBoundaryTriangles[] =
 R"doc(A dimension-specific alias for countBoundaryFacets().
 
 See countBoundaryFacets() for further information.)doc";
 
-// Docstring regina::python::doc::Component::countFaces
+// Docstring regina::python::doc::Component3::countFaces
 static constexpr const char countFaces[] =
 R"doc(Returns the number of *subdim*-faces in this component, where the face
 dimension does not need to be known until runtime.
@@ -64,7 +67,7 @@ Parameter ``subdim``:
 Returns:
     the number of *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::Component::face
+// Docstring regina::python::doc::Component3::face
 static constexpr const char face[] =
 R"doc(Returns the requested *subdim*-face in this component, in a way that
 is optimised for Python programmers.
@@ -103,7 +106,7 @@ Parameter ``index``:
 Returns:
     the requested face.)doc";
 
-// Docstring regina::python::doc::Component::faces
+// Docstring regina::python::doc::Component3::faces
 static constexpr const char faces[] =
 R"doc(Returns an object that allows iteration through and random access to
 all *subdim*-faces in this component, in a way that is optimised for
@@ -133,13 +136,13 @@ Parameter ``subdim``:
 Returns:
     access to the list of all *subdim*-faces.)doc";
 
-// Docstring regina::python::doc::Component::hasBoundaryTriangles
+// Docstring regina::python::doc::Component3::hasBoundaryTriangles
 static constexpr const char hasBoundaryTriangles[] =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
 
-// Docstring regina::python::doc::Component::isClosed
+// Docstring regina::python::doc::Component3::isClosed
 static constexpr const char isClosed[] =
 R"doc(Determines if this component is closed. This is the case if and only
 if it has no boundary. Note that ideal components are not closed.
@@ -147,7 +150,7 @@ if it has no boundary. Note that ideal components are not closed.
 Returns:
     ``True`` if and only if this component is closed.)doc";
 
-// Docstring regina::python::doc::Component::isIdeal
+// Docstring regina::python::doc::Component3::isIdeal
 static constexpr const char isIdeal[] =
 R"doc(Determines if this component is ideal. This is the case if and only if
 it contains an ideal vertex as described by Vertex<3>::isIdeal().
@@ -155,7 +158,7 @@ it contains an ideal vertex as described by Vertex<3>::isIdeal().
 Returns:
     ``True`` if and only if this component is ideal.)doc";
 
-}; // struct Component
+}; // struct Component3
 
 } // namespace regina::python::doc
 

@@ -63,6 +63,8 @@ class FacePair;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
+ * \pyclassname{FacetPairing3}
+ *
  * \ingroup triangulation
  */
 template <>

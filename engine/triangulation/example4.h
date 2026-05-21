@@ -59,6 +59,8 @@ namespace regina {
  * This 4-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded and parameterised constructions.
  *
+ * \pyclassname{Example4}
+ *
  * \ingroup triangulation
  */
 template <>

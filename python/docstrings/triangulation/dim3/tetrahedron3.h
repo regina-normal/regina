@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct Face {
+struct Tetrahedron3 {
 
-// Docstring regina::python::doc::Face::__class
+// Docstring regina::python::doc::Tetrahedron3::__class
 static constexpr const char __class[] =
 R"doc(Represents a tetrahedron within a 3-manifold triangulation.
 
@@ -35,21 +35,25 @@ Tetrahedra do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
-of by the Triangulation to which they belong.)doc";
+of by the Triangulation to which they belong.
 
-// Docstring regina::python::doc::Face::adjacentFace
+Python:
+    This class is available to Python users under the name
+    Tetrahedron3.)doc";
+
+// Docstring regina::python::doc::Tetrahedron3::adjacentFace
 static constexpr const char adjacentFace[] =
 R"doc(A dimension-specific alias for adjacentFacet().
 
 See adjacentFacet() for further information.)doc";
 
-// Docstring regina::python::doc::Face::adjacentTetrahedron
+// Docstring regina::python::doc::Tetrahedron3::adjacentTetrahedron
 static constexpr const char adjacentTetrahedron[] =
 R"doc(A dimension-specific alias for adjacentSimplex().
 
 See adjacentSimplex() for further information.)doc";
 
-}; // struct Face
+}; // struct Tetrahedron3
 
 } // namespace regina::python::doc
 

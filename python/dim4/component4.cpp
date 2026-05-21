@@ -39,7 +39,7 @@
 using regina::Component;
 
 void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
-    RDOC_SCOPE_BEGIN(Component)
+    RDOC_SCOPE_BEGIN(Component4)
     RDOC_SCOPE_BASE(detail::ComponentBase)
 
     auto c = pybind11::class_<Component<4>>(m, "Component4", rdoc::__class)

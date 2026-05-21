@@ -65,7 +65,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
-    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_SWITCH(Vertex4)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc::__class)

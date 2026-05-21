@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct Face {
+struct Edge4 {
 
-// Docstring regina::python::doc::Face::__class
+// Docstring regina::python::doc::Edge4::__class
 static constexpr const char __class[] =
 R"doc(Represents an edge in the skeleton of a 4-manifold triangulation.
 
@@ -29,9 +29,12 @@ Edges do not support value semantics: they cannot be copied, swapped,
 or manually constructed. Their location in memory defines them, and
 they are often passed and compared by pointer. End users are never
 responsible for their memory management; this is all taken care of by
-the Triangulation to which they belong.)doc";
+the Triangulation to which they belong.
 
-// Docstring regina::python::doc::Face::buildLink
+Python:
+    This class is available to Python users under the name Edge4.)doc";
+
+// Docstring regina::python::doc::Edge4::buildLink
 static constexpr const char buildLink[] =
 R"doc(Returns a full 2-manifold triangulation describing the link of this
 edge.
@@ -74,7 +77,7 @@ Python:
 Returns:
     the read-only triangulated link of this edge.)doc";
 
-// Docstring regina::python::doc::Face::buildLinkInclusion
+// Docstring regina::python::doc::Edge4::buildLinkInclusion
 static constexpr const char buildLinkInclusion[] =
 R"doc(Returns details of how the triangles are labelled in the link of this
 edge. This is a companion function to buildLink(), which returns a
@@ -108,7 +111,7 @@ buildLinkDetail() function in Regina 6.0.1 and earlier.
 Returns:
     details of how buildLink() labels the triangles of the edge link.)doc";
 
-// Docstring regina::python::doc::Face::linkingSurface
+// Docstring regina::python::doc::Edge4::linkingSurface
 static constexpr const char linkingSurface[] =
 R"doc(Returns the link of this edge as a normal hypersurface.
 
@@ -131,7 +134,7 @@ Returns:
     hypersurface, and *thin* is ``True`` if and only if this link is
     thin (i.e., no additional normalisation steps were required).)doc";
 
-}; // struct Face
+}; // struct Edge4
 
 } // namespace regina::python::doc
 

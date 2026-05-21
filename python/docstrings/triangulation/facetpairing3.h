@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct FacetPairing {
+struct FacetPairing3 {
 
-// Docstring regina::python::doc::FacetPairing::__class
+// Docstring regina::python::doc::FacetPairing3::__class
 static constexpr const char __class[] =
 R"doc(Represents the dual graph of a 3-manifold triangulation.
 
@@ -29,16 +29,20 @@ within the dual graph.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.)doc";
+possible, even when passing or returning objects by value.
 
-// Docstring regina::python::doc::FacetPairing::__copy
+Python:
+    This class is available to Python users under the name
+    FacetPairing3.)doc";
+
+// Docstring regina::python::doc::FacetPairing3::__copy
 static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given face pairing.
 
 Parameter ``src``:
     the face pairing to clone.)doc";
 
-// Docstring regina::python::doc::FacetPairing::__init
+// Docstring regina::python::doc::FacetPairing3::__init
 static constexpr const char __init[] =
 R"doc(Creates the face pairing of the given 3-manifold triangulation. This
 describes how the tetrahedron faces of the given triangulation are
@@ -53,7 +57,7 @@ Precondition:
 Parameter ``tri``:
     the triangulation whose face pairing should be constructed.)doc";
 
-// Docstring regina::python::doc::FacetPairing::followChain
+// Docstring regina::python::doc::FacetPairing3::followChain
 static constexpr const char followChain[] =
 R"doc(Follows a chain as far as possible from the given point.
 
@@ -95,7 +99,7 @@ Parameter ``faces``:
     begin. This parameter will also be modified directly by this
     routine as a way of returning results.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasBrokenDoubleEndedChain
+// Docstring regina::python::doc::FacetPairing3::hasBrokenDoubleEndedChain
 static constexpr const char hasBrokenDoubleEndedChain[] =
 R"doc(Determines whether this face pairing contains a broken double-ended
 chain.
@@ -132,7 +136,7 @@ Returns:
     double-ended chain that is not part of a complete double-ended
     chain.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasDoubleSquare
+// Docstring regina::python::doc::FacetPairing3::hasDoubleSquare
 static constexpr const char hasDoubleSquare[] =
 R"doc(Determines whether this face pairing contains a double-edged square.
 
@@ -147,7 +151,7 @@ Returns:
     ``True`` if and only if this face pairing contains a double-edged
     square.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasDoubleStar
+// Docstring regina::python::doc::FacetPairing3::hasDoubleStar
 static constexpr const char hasDoubleStar[] =
 R"doc(Determines whether this face pairing contains a double-edged star.
 
@@ -160,7 +164,7 @@ Returns:
     ``True`` if and only if this face pairing contains a double-edged
     star.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasOneEndedChainWithDoubleHandle
+// Docstring regina::python::doc::FacetPairing3::hasOneEndedChainWithDoubleHandle
 static constexpr const char hasOneEndedChainWithDoubleHandle[] =
 R"doc(Determines whether this face pairing contains a one-ended chain with a
 double handle.
@@ -189,7 +193,7 @@ Returns:
     ``True`` if and only if this face pairing contains a one-ended
     chain with a double handle.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasOneEndedChainWithStrayBigon
+// Docstring regina::python::doc::FacetPairing3::hasOneEndedChainWithStrayBigon
 static constexpr const char hasOneEndedChainWithStrayBigon[] =
 R"doc(Determines whether this face pairing contains a one-ended chain with a
 stray bigon.
@@ -234,7 +238,7 @@ Returns:
     ``True`` if and only if this face pairing contains a one-ended
     chain with a stray bigon.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasSingleStar
+// Docstring regina::python::doc::FacetPairing3::hasSingleStar
 static constexpr const char hasSingleStar[] =
 R"doc(Determines whether this face pairing contains a single-edged star.
 
@@ -247,7 +251,7 @@ Returns:
     ``True`` if and only if this face pairing contains a single-edged
     star.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasTripleEdge
+// Docstring regina::python::doc::FacetPairing3::hasTripleEdge
 static constexpr const char hasTripleEdge[] =
 R"doc(Determines whether this face pairing contains a triple edge. A triple
 edge is where two different tetrahedra are joined along three of their
@@ -264,7 +268,7 @@ This routine is identical to calling ``hasMultiEdge<3>()``.
 Returns:
     ``True`` if and only if this face pairing contains a triple edge.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasTripleOneEndedChain
+// Docstring regina::python::doc::FacetPairing3::hasTripleOneEndedChain
 static constexpr const char hasTripleOneEndedChain[] =
 R"doc(Determines whether this face pairing contains a triple one-ended
 chain.
@@ -293,7 +297,7 @@ Returns:
     ``True`` if and only if this face pairing contains a triple one-
     ended chain.)doc";
 
-// Docstring regina::python::doc::FacetPairing::hasWedgedDoubleEndedChain
+// Docstring regina::python::doc::FacetPairing3::hasWedgedDoubleEndedChain
 static constexpr const char hasWedgedDoubleEndedChain[] =
 R"doc(Determines whether this face pairing contains a wedged double-ended
 chain.
@@ -342,7 +346,7 @@ Returns:
     ``True`` if and only if this face pairing contains a wedged
     double-ended chain.)doc";
 
-}; // struct FacetPairing
+}; // struct FacetPairing3
 
 } // namespace regina::python::doc
 

@@ -58,6 +58,8 @@ namespace regina {
  * This 2-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded constructions.
  *
+ * \pyclassname{Example2}
+ *
  * \ingroup triangulation
  */
 template <>

@@ -39,7 +39,7 @@ using pybind11::overload_cast;
 using regina::Tetrahedron;
 
 void addTetrahedron3(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Face)
+    RDOC_SCOPE_BEGIN(Tetrahedron3)
     RDOC_SCOPE_BASE(detail::SimplexBase)
 
     auto c = pybind11::class_<regina::Simplex<3>>(m, "Simplex3", rdoc::__class)

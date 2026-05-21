@@ -45,7 +45,7 @@ using regina::FacetSpec;
 using regina::Triangulation;
 
 void addFacetPairing3(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(FacetPairing)
+    RDOC_SCOPE_BEGIN(FacetPairing3)
     RDOC_SCOPE_BASE(detail::FacetPairingBase)
 
     auto c = pybind11::class_<FacetPairing<3>>(m, "FacetPairing3",

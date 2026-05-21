@@ -66,6 +66,8 @@ namespace regina {
  * responsible for their memory management; this is all taken care of by
  * the Triangulation to which they belong.
  *
+ * \pyclassname{Edge3}
+ *
  * \headerfile triangulation/dim3.h
  *
  * \ingroup dim3

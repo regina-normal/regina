@@ -40,7 +40,7 @@ using namespace regina::python;
 using regina::Example;
 
 void addExample4(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Example)
+    RDOC_SCOPE_BEGIN(Example4)
     RDOC_SCOPE_BASE(detail::ExampleBase)
 
     auto c = pybind11::class_<Example<4>>(m, "Example4", rdoc::__class)

@@ -110,7 +110,7 @@ namespace pybind11::detail {
 } // namespace pybind11::detail
 
 void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
-    RDOC_SCOPE_BEGIN(Triangulation)
+    RDOC_SCOPE_BEGIN(Triangulation3)
     RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
 
     auto c = pybind11::class_<Triangulation<3>,

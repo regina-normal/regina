@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct Face {
+struct Triangle2 {
 
-// Docstring regina::python::doc::Face::__class
+// Docstring regina::python::doc::Triangle2::__class
 static constexpr const char __class[] =
 R"doc(Represents a triangle within a 2-manifold triangulation.
 
@@ -34,21 +34,24 @@ Triangles do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
-of by the Triangulation to which they belong.)doc";
+of by the Triangulation to which they belong.
 
-// Docstring regina::python::doc::Face::adjacentEdge
+Python:
+    This class is available to Python users under the name Triangle2.)doc";
+
+// Docstring regina::python::doc::Triangle2::adjacentEdge
 static constexpr const char adjacentEdge[] =
 R"doc(A dimension-specific alias for adjacentFacet().
 
 See adjacentFacet() for further information.)doc";
 
-// Docstring regina::python::doc::Face::adjacentTriangle
+// Docstring regina::python::doc::Triangle2::adjacentTriangle
 static constexpr const char adjacentTriangle[] =
 R"doc(A dimension-specific alias for adjacentSimplex().
 
 See adjacentSimplex() for further information.)doc";
 
-}; // struct Face
+}; // struct Triangle2
 
 } // namespace regina::python::doc
 

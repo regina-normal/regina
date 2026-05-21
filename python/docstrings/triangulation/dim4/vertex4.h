@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct Face {
+struct Vertex4 {
 
-// Docstring regina::python::doc::Face::__class
+// Docstring regina::python::doc::Vertex4::__class
 static constexpr const char __class[] =
 R"doc(Represents a vertex in the skeleton of a 4-manifold triangulation.
 
@@ -29,9 +29,12 @@ Vertices do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
-of by the Triangulation to which they belong.)doc";
+of by the Triangulation to which they belong.
 
-// Docstring regina::python::doc::Face::buildLink
+Python:
+    This class is available to Python users under the name Vertex4.)doc";
+
+// Docstring regina::python::doc::Vertex4::buildLink
 static constexpr const char buildLink[] =
 R"doc(Returns a full 3-manifold triangulation describing the link of this
 vertex.
@@ -75,7 +78,7 @@ Python:
 Returns:
     the read-only triangulated link of this vertex.)doc";
 
-// Docstring regina::python::doc::Face::buildLinkInclusion
+// Docstring regina::python::doc::Vertex4::buildLinkInclusion
 static constexpr const char buildLinkInclusion[] =
 R"doc(Returns details of how the tetrahedra are labelled in the link of this
 vertex. This is a companion function to buildLink(), which returns a
@@ -108,7 +111,7 @@ Returns:
     details of how buildLink() labels the tetrahedra of the vertex
     link.)doc";
 
-// Docstring regina::python::doc::Face::isIdeal
+// Docstring regina::python::doc::Vertex4::isIdeal
 static constexpr const char isIdeal[] =
 R"doc(Determines if this vertex is an ideal vertex. To be an ideal, a vertex
 must (i) be valid, and (ii) have a closed vertex link that is not a
@@ -117,7 +120,7 @@ must (i) be valid, and (ii) have a closed vertex link that is not a
 Returns:
     ``True`` if and only if this is an ideal vertex.)doc";
 
-// Docstring regina::python::doc::Face::linkingSurface
+// Docstring regina::python::doc::Vertex4::linkingSurface
 static constexpr const char linkingSurface[] =
 R"doc(Returns the link of this vertex as a normal hypersurface.
 
@@ -129,7 +132,7 @@ further normalisation steps are required).
 Returns:
     the corresponding vertex linking normal hypersurface.)doc";
 
-}; // struct Face
+}; // struct Vertex4
 
 } // namespace regina::python::doc
 

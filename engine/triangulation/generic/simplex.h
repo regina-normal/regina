@@ -89,6 +89,8 @@ namespace regina {
  * this class can be used by appending the dimension as a suffix
  * (e.g., Simplex2 and Simplex3 for dimensions 2 and 3).
  *
+ * \pydocname{Simplex}
+ *
  * \tparam dim the dimension of the underlying triangulation.
  *
  * \headerfile triangulation/generic.h

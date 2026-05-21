@@ -73,6 +73,8 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
+ * \pyclassname{Triangulation2}
+ *
  * \headerfile triangulation/dim2.h
  *
  * \ingroup dim2

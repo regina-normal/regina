@@ -39,7 +39,7 @@ using pybind11::overload_cast;
 using regina::Pentachoron;
 
 void addPentachoron4(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Face)
+    RDOC_SCOPE_BEGIN(Pentachoron4)
     RDOC_SCOPE_BASE(detail::SimplexBase)
 
     auto c = pybind11::class_<regina::Simplex<4>>(m, "Simplex4", rdoc::__class)

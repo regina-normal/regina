@@ -70,6 +70,8 @@ namespace regina {
  * responsible for their memory management; this is all taken care of by
  * the Triangulation to which they belong.
  *
+ * \pyclassname{Component4}
+ *
  * \headerfile triangulation/dim4.h
  *
  * \ingroup dim4

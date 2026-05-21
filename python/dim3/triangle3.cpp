@@ -67,7 +67,7 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 
-    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_SWITCH(Triangle3)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
     auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2", rdoc::__class)

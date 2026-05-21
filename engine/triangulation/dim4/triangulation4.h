@@ -86,6 +86,8 @@ template <int dim> requires (supportedDim(dim)) class XMLTriangulationReader;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
+ * \pyclassname{Triangulation4}
+ *
  * \headerfile triangulation/dim4.h
  *
  * \ingroup dim4

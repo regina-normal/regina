@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct Face {
+struct Triangle3 {
 
-// Docstring regina::python::doc::Face::__class
+// Docstring regina::python::doc::Triangle3::__class
 static constexpr const char __class[] =
 R"doc(Represents a triangle in the skeleton of a 3-manifold triangulation.
 
@@ -29,9 +29,12 @@ Triangles do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
-of by the Triangulation to which they belong.)doc";
+of by the Triangulation to which they belong.
 
-// Docstring regina::python::doc::Face::isCone
+Python:
+    This class is available to Python users under the name Triangle3.)doc";
+
+// Docstring regina::python::doc::Triangle3::isCone
 static constexpr const char isCone[] =
 R"doc(Deprecated function that determines whether this triangle is wrapped
 up to form a cone, possibly with or without additional identifications
@@ -45,7 +48,7 @@ between its vertices and/or edges.
 Returns:
     ``True`` if and only if this triangle forms a cone.)doc";
 
-// Docstring regina::python::doc::Face::isMobiusBand
+// Docstring regina::python::doc::Triangle3::isMobiusBand
 static constexpr const char isMobiusBand[] =
 R"doc(Deprecated function that determines whether this triangle is wrapped
 up to form a Möbius band, possibly with or without additional
@@ -59,7 +62,7 @@ identifications between its vertices and/or edges.
 Returns:
     ``True`` if and only if this triangle forms a Möbius band.)doc";
 
-// Docstring regina::python::doc::Face::linkingSurface
+// Docstring regina::python::doc::Triangle3::linkingSurface
 static constexpr const char linkingSurface[] =
 R"doc(Returns the link of this triangle as a normal surface.
 
@@ -79,7 +82,7 @@ Returns:
 Returns:
     the corresponding triangle linking normal surface.)doc";
 
-// Docstring regina::python::doc::Face::subtype
+// Docstring regina::python::doc::Triangle3::subtype
 static constexpr const char subtype[] =
 R"doc(Deprecated function that returns the vertex or edge number in this
 triangle that plays a special role for this triangle's combinatorial
@@ -95,7 +98,7 @@ Returns:
     or -1 if this triangle's combinatorial type has no special vertex
     or edge.)doc";
 
-// Docstring regina::python::doc::Face::type
+// Docstring regina::python::doc::Triangle3::type
 static constexpr const char type[] =
 R"doc(Deprecated function that returns the combinatorial type of this
 triangle.
@@ -109,7 +112,7 @@ Returns:
     the combinatorial type of this triangle, which will never be
     TriangleType::Unknown.)doc";
 
-}; // struct Face
+}; // struct Triangle3
 
 } // namespace regina::python::doc
 

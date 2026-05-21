@@ -57,7 +57,7 @@ using regina::Simplex;
 using regina::Triangulation;
 
 void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
-    RDOC_SCOPE_BEGIN(Triangulation)
+    RDOC_SCOPE_BEGIN(Triangulation4)
     RDOC_SCOPE_BASE_2(detail::TriangulationBase, Snapshottable)
 
     auto c = pybind11::class_<Triangulation<4>,

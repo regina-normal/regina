@@ -39,7 +39,7 @@ using pybind11::overload_cast;
 using regina::Triangle;
 
 void addTriangle2(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Face)
+    RDOC_SCOPE_BEGIN(Triangle2)
     RDOC_SCOPE_BASE(detail::SimplexBase)
 
     auto c = pybind11::class_<regina::Simplex<2>>(m, "Simplex2", rdoc::__class)

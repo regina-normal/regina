@@ -101,6 +101,8 @@ namespace snappy {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
+ * \pyclassname{Triangulation3}
+ *
  * \headerfile triangulation/dim3.h
  *
  * \ingroup dim3

@@ -11,9 +11,9 @@
 namespace regina::python::doc {
 
 
-struct Face {
+struct Tetrahedron4 {
 
-// Docstring regina::python::doc::Face::__class
+// Docstring regina::python::doc::Tetrahedron4::__class
 static constexpr const char __class[] =
 R"doc(Represents a tetrahedron in the skeleton of a 4-manifold
 triangulation.
@@ -30,9 +30,13 @@ Tetrahedra do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
 never responsible for their memory management; this is all taken care
-of by the Triangulation to which they belong.)doc";
+of by the Triangulation to which they belong.
 
-// Docstring regina::python::doc::Face::linkingSurface
+Python:
+    This class is available to Python users under the name
+    Tetrahedron4.)doc";
+
+// Docstring regina::python::doc::Tetrahedron4::linkingSurface
 static constexpr const char linkingSurface[] =
 R"doc(Returns the link of this tetrahedron as a normal hypersurface.
 
@@ -55,7 +59,7 @@ Returns:
     hypersurface, and *thin* is ``True`` if and only if this link is
     thin (i.e., no additional normalisation steps were required).)doc";
 
-}; // struct Face
+}; // struct Tetrahedron4
 
 } // namespace regina::python::doc
 
