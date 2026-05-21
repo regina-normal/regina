@@ -109,19 +109,46 @@ auto forIsoSigType(pybind11::type sigType, auto action) {
  * we do not enforce it as a constraint because we do not want to instantiate
  * the full triangulation classes for all dimensions at once when binding an
  * encoding class.
+ *
+ * The docstring helper class appears _before_ \a Encoding as a template
+ * parameter, since the compiler can automatically derive \a Encoding from
+ * the argument \a c.
  */
-template <int generation, int dim, typename Encoding>
+template <int generation, int dim, DocstringClass Docs, typename Encoding>
 requires ((generation == 1 || generation == 2) && regina::supportedDim(dim))
 void add_isosig_encoding_functions(pybind11::class_<Encoding>& c) {
     static_assert(regina::IsoSigEncoding<Encoding, generation, dim>);
 
     c.def_static("encode",
         static_cast<typename Encoding::Signature (*)(
-            const IsoSigData<generation, dim>&)>(&Encoding::encode));
+            const IsoSigData<generation, dim>&)>(&Encoding::encode),
+        Docs::encode);
     c.def_static("length",
         static_cast<size_t (*)(const IsoSigData<generation, dim>&)>(
-            &Encoding::length));
+            &Encoding::length),
+        Docs::length);
 }
+
+/**
+ * Instantiates all of the relevant add_isosig_encoding_functions() template
+ * functions for the given dimension.
+ */
+#define INSTANTIATE_ISOSIG_BINDING_FUNCTIONS(dim) \
+    template void regina::python::add_isosig_encoding_functions<1, dim, \
+        regina::python::doc::IsoSigPrintable>( \
+        pybind11::class_<regina::IsoSigPrintable>&); \
+    template void regina::python::add_isosig_encoding_functions<2, dim, \
+        regina::python::doc::IsoSigPrintable>( \
+        pybind11::class_<regina::IsoSigPrintable>&); \
+    template void regina::python::add_isosig_encoding_functions<1, dim, \
+        regina::python::doc::IsoSigPrintableLockFree>( \
+        pybind11::class_<regina::IsoSigPrintableLockFree>&); \
+    template void regina::python::add_isosig_encoding_functions<2, dim, \
+        regina::python::doc::IsoSigPrintableLockFree>( \
+        pybind11::class_<regina::IsoSigPrintableLockFree>&); \
+    template void regina::python::add_isosig_encoding_functions<2, dim, \
+        regina::python::doc::IsoSigBinary>( \
+        pybind11::class_<regina::IsoSigBinary>&);
 
 /**
  * Adds all of the available variants of sig() / isoSig() / neoSig() to the

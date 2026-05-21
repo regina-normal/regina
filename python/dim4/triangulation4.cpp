@@ -643,14 +643,5 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
     addIsoSigData<2, 4>(m, "IsoSigData2_4");
 }
 
-// Instantiate templates for isomorphism signature encodings:
-template void regina::python::add_isosig_encoding_functions<1, 4>(
-    pybind11::class_<regina::IsoSigPrintable>&);
-template void regina::python::add_isosig_encoding_functions<2, 4>(
-    pybind11::class_<regina::IsoSigPrintable>&);
-template void regina::python::add_isosig_encoding_functions<1, 4>(
-    pybind11::class_<regina::IsoSigPrintableLockFree>&);
-template void regina::python::add_isosig_encoding_functions<2, 4>(
-    pybind11::class_<regina::IsoSigPrintableLockFree>&);
-template void regina::python::add_isosig_encoding_functions<2, 4>(
-    pybind11::class_<regina::IsoSigBinary>&);
+INSTANTIATE_ISOSIG_BINDING_FUNCTIONS(4)
+
