@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include <getopt.h>
+#include <cstring>
 #include "link/link.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
