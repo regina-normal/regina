@@ -1217,23 +1217,6 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
     friend class detail::TriangulationBase<dim>;
 };
 
-#ifdef __APIDOCS
-// This type alias is already defined in trianguation/forward.h.
-/**
- * Refers to a top-dimensional simplex in a <i>dim</i>-dimensional
- * triangulation.
- *
- * This is the preferred way to refer to a top-dimensional simplex (as
- * opposed to the more clumsy notation Face<dim, dim>).
- *
- * \tparam dim the dimension of the underlying triangulation.
- *
- * \ingroup triangulation
- */
-template <int dim> requires (supportedDim(dim))
-using Simplex = Face<dim, dim>;
-#endif
-
 namespace detail {
 
 // Inline functions for SimplexBase

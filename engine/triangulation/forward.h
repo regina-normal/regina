@@ -82,33 +82,10 @@ template <> class Face<4, 3>; // linking surface
 template <> class Face<4, 2>; // linking surface
 template <> class Face<4, 1>; // build links, linking surface
 template <> class Face<4, 0>; // build links, linking surface, output ideal/etc.
-template <int dim> requires (supportedDim(dim))
-using Vertex = Face<dim, 0>;
-template <int dim> requires (supportedDim(dim))
-using Edge = Face<dim, 1>;
-template <int dim> requires (supportedDim(dim))
-using Triangle = Face<dim, 2>;
-template <int dim> requires (supportedDim(dim) && dim >= 3)
-using Tetrahedron = Face<dim, 3>;
-template <int dim> requires (supportedDim(dim) && dim >= 4)
-using Pentachoron = Face<dim, 4>;
-template <int dim> requires (supportedDim(dim))
-using Simplex = Face<dim, dim>;
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 class FaceEmbedding;
-
-template <int dim> requires (supportedDim(dim))
-using VertexEmbedding = FaceEmbedding<dim, 0>;
-template <int dim> requires (supportedDim(dim))
-using EdgeEmbedding = FaceEmbedding<dim, 1>;
-template <int dim> requires (supportedDim(dim) && dim > 2)
-using TriangleEmbedding = FaceEmbedding<dim, 2>;
-template <int dim> requires (supportedDim(dim) && dim > 3)
-using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
-template <int dim> requires (supportedDim(dim) && dim > 4)
-using PentachoronEmbedding = FaceEmbedding<dim, 4>;
 
 template <int dim> requires (supportedDim(dim)) class FacetPairing;
 template <> class FacetPairing<3>;
@@ -119,6 +96,208 @@ template <int dim> requires (supportedDim(dim)) class Triangulation;
 template <> class Triangulation<2>;
 template <> class Triangulation<3>;
 template <> class Triangulation<4>;
+
+/**
+ * Refers to a top-dimensional simplex in a <i>dim</i>-dimensional
+ * triangulation.
+ *
+ * This is the preferred way to refer to a top-dimensional simplex (as
+ * opposed to the more clumsy notation Face<dim, dim>).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim> requires (supportedDim(dim))
+using Simplex = Face<dim, dim>;
+
+/**
+ * Refers to a vertex of a <i>dim</i>-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a vertex of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 0>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Vertex8).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using Vertex = Face<dim, 0>;
+
+/**
+ * Refers to an edge of a <i>dim</i>-dimensional triangulation.
+ *
+ * This is the preferred way to refer to an edge of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 1>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Edge5).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using Edge = Face<dim, 1>;
+
+/**
+ * Refers to a triangular face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 2, where it refers to
+ * a top-dimensional simplex of a 2-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 2-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 2>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g., \c Triangle4).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using Triangle = Face<dim, 2>;
+
+/**
+ * Refers to a tetrahedral face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 3, where it refers to
+ * a top-dimensional simplex of a 3-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 3-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 3>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c Tetrahedron7).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim >= 3)
+using Tetrahedron = Face<dim, 3>;
+
+/**
+ * Refers to a pentachoron face of a <i>dim</i>-dimensional triangulation.
+ * This alias is also valid for the case \a dim = 4, where it refers to
+ * a top-dimensional simplex of a 4-dimensional triangulation.
+ *
+ * This is the preferred way to refer to a 4-face of a triangulation
+ * (as opposed to the more clumsy notation Face<dim, 4>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix (e.g.,
+ * \c Pentachoron9).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim >= 4)
+using Pentachoron = Face<dim, 4>;
+
+/**
+ * Details how a vertex of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 0>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c VertexEmbedding3).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using VertexEmbedding = FaceEmbedding<dim, 0>;
+
+/**
+ * Details how a edge of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 1>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c EdgeEmbedding5).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim))
+using EdgeEmbedding = FaceEmbedding<dim, 1>;
+
+/**
+ * Details how a triangular face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 2>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c TriangleEmbedding12).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim > 2)
+using TriangleEmbedding = FaceEmbedding<dim, 2>;
+
+/**
+ * Details how a tetrahedral face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 3>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c TetrahedronEmbedding7).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim > 3)
+using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
+
+/**
+ * Details how a pentachoron face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
+ *
+ * This is the preferred way to refer to this class (as opposed to the
+ * more clumsy notation FaceEmbedding<dim, 4>).
+ *
+ * \python Python does not support templates.  Instead this alias can
+ * be used by appending the dimension \a dim as a suffix
+ * (e.g., \c PentachoronEmbedding14).
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ *
+ * \ingroup triangulation
+ */
+template <int dim>
+requires (supportedDim(dim) && dim > 4)
+using PentachoronEmbedding = FaceEmbedding<dim, 4>;
 
 /**
  * Provides safe access to related types for triangulations of the given
