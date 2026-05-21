@@ -47,7 +47,7 @@ namespace regina::python {
     // We do _not_ want to include its implementation here, because we do not
     // want to inadvertently force the instantiation of the full triangulation
     // classes for _all_ dimensions simultaneously in the same source file.
-    template <int generation, int dim, typename Encoding>
+    template <int generation, int dim, DocstringClass Docs, typename Encoding>
     requires ((generation == 1 || generation == 2) && regina::supportedDim(dim))
     void add_isosig_encoding_functions(pybind11::class_<Encoding>&);
 }
@@ -73,8 +73,8 @@ void addIsoSigEncodings(pybind11::module_& m) {
             rdoc::generation)
         ;
     regina::for_constexpr<2, regina::maxDim() + 1>([&p](auto dim) {
-        regina::python::add_isosig_encoding_functions<1, dim>(p);
-        regina::python::add_isosig_encoding_functions<2, dim>(p);
+        regina::python::add_isosig_encoding_functions<1, dim, rdoc>(p);
+        regina::python::add_isosig_encoding_functions<2, dim, rdoc>(p);
     });
     regina::python::no_eq_static(p);
 
@@ -96,8 +96,8 @@ void addIsoSigEncodings(pybind11::module_& m) {
             rdoc::encodeEmpty)
         ;
     regina::for_constexpr<2, regina::maxDim() + 1>([&f](auto dim) {
-        regina::python::add_isosig_encoding_functions<1, dim>(f);
-        regina::python::add_isosig_encoding_functions<2, dim>(f);
+        regina::python::add_isosig_encoding_functions<1, dim, rdoc>(f);
+        regina::python::add_isosig_encoding_functions<2, dim, rdoc>(f);
     });
     regina::python::no_eq_static(f);
 
@@ -121,7 +121,7 @@ void addIsoSigEncodings(pybind11::module_& m) {
         ;
     regina::for_constexpr<2, regina::maxDim() + 1>([&b](auto dim) {
         // This encoding is for second-generation signatures only.
-        regina::python::add_isosig_encoding_functions<2, dim>(b);
+        regina::python::add_isosig_encoding_functions<2, dim, rdoc>(b);
     });
     regina::python::no_eq_static(b);
 
