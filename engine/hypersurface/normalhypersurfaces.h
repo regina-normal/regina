@@ -935,6 +935,8 @@ void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
  * can only happen in certain coordinate systems, and for all such coordinate
  * systems this is explicitly described in the HyperCoords enum documentation.
  *
+ * \pydocname{makeMatchingEquations4}
+ *
  * \exception UnsolvedCase The matching equations could not be created for the
  * given triangulation in the given coordinate system, due to an error that was
  * "genuinely" unforseeable.  Again this can only happen in certain coordinate
@@ -960,6 +962,8 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
  * hypersurfaces in the given coordinate system (i.e., when the default flag
  * HyperList::EmbeddedOnly is used).  They will not be used when the enumeration
  * allows for immersed and/or singular hypersurfaces.
+ *
+ * \pydocname{makeEmbeddedConstraints4}
  *
  * \param triangulation the triangulation upon which these validity constraints
  * will be based.

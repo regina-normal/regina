@@ -31,8 +31,8 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the list whose contents should be swapped with *lhs*.)doc";
 
-// Docstring regina::python::doc::makeEmbeddedConstraints
-inline constexpr const char makeEmbeddedConstraints[] =
+// Docstring regina::python::doc::makeEmbeddedConstraints3
+inline constexpr const char makeEmbeddedConstraints3[] =
 R"doc(Generates the validity constraints representing the condition that
 normal surfaces be embedded. The validity constraints will be
 expressed relative to the given coordinate system.
@@ -59,8 +59,8 @@ Parameter ``coords``:
 Returns:
     the set of validity constraints.)doc";
 
-// Docstring regina::python::doc::makeMatchingEquations
-inline constexpr const char makeMatchingEquations[] =
+// Docstring regina::python::doc::makeMatchingEquations3
+inline constexpr const char makeMatchingEquations3[] =
 R"doc(Generates the set of normal surface matching equations for the given
 triangulation using the given coordinate system.
 

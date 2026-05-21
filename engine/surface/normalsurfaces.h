@@ -1460,6 +1460,8 @@ void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
+ * \pydocname{makeMatchingEquations3}
+ *
  * \exception InvalidArgument The matching equations could not be created for
  * the given triangulation in the given coordinate system, due to an error
  * that should have been preventable with the right checks in advance.  This
@@ -1497,6 +1499,8 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
  * surfaces in the given coordinate system (i.e., when the default flag
  * NormalList::EmbeddedOnly is used).  They will not be used when the
  * enumeration allows for immersed and/or singular surfaces.
+ *
+ * \pydocname{makeEmbeddedConstraints3}
  *
  * \param triangulation the triangulation upon which these validity constraints
  * will be based.

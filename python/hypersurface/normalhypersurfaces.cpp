@@ -49,8 +49,10 @@ using regina::Triangulation;
 void addNormalHypersurfaces(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
-    m.def("makeMatchingEquations", regina::makeMatchingEquations);
-    m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
+    m.def("makeMatchingEquations", regina::makeMatchingEquations,
+        rdoc::makeMatchingEquations4);
+    m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints,
+        rdoc::makeEmbeddedConstraints4);
 
     RDOC_SCOPE_SWITCH(NormalHypersurfaces)
 
