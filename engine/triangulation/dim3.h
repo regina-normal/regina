@@ -30,9 +30,9 @@
 
 /*! \file triangulation/dim3.h
  *  \brief Includes all headers for working with 3-dimensional triangulations.
- *  This includes headers for the main class Triangulation<3>, as well as the
- *  face classes Face<3,\a subdim>, the component classes Component<3> and
- *  BoundaryComponent<3>, and the isomorphism class Isomorphism<3>.
+ *  This includes headers for the main class `Triangulation<3>`, as well as the
+ *  face classes `Face<3, subdim>`, the component classes `Component<3>` and
+ *  `BoundaryComponent<3>`, and the isomorphism class `Isomorphism<3>`.
  */
 
 #ifndef __REGINA_DIM3_H

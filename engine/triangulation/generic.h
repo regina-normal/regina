@@ -31,9 +31,9 @@
 /*! \file triangulation/generic.h
  *  \brief Includes all headers for working with higher-dimensional
  *  triangulations.  This includes headers for the main class
- *  Triangulation<\a dim>, as well as the face classes Face<\a dim,\a subdim>,
- *  the component classes Component<\a dim> and BoundaryComponent<\a dim>, and
- *  the isomorphism class Isomorphism<\a dim>, for all dimensions \a dim ≥ 5.
+ *  `Triangulation<dim>`, as well as the face classes `Face<dim, subdim>`,
+ *  the component classes `Component<dim>` and `BoundaryComponent<dim>`, and
+ *  the isomorphism class `Isomorphism<dim>`, for all dimensions \a dim ≥ 5.
  */
 
 #ifndef __REGINA_GENERIC_H
@@ -41,10 +41,7 @@
 #define __REGINA_GENERIC_H
 #endif
 
-#include "triangulation/detail/face.h"
-#include "triangulation/detail/simplex.h"
 #include "triangulation/detail/triangulation.h"
-#include "triangulation/isomorphism.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
