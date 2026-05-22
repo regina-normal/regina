@@ -40,6 +40,8 @@
 #include "../helpers.h"
 #include "../docstrings/foreign/siglist.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 
 void addForeignIsoSig(pybind11::module_& m) {
@@ -64,11 +66,11 @@ void addForeignIsoSig(pybind11::module_& m) {
             }
         }
     },
-    pybind11::arg("dimension"),
-    pybind11::arg("filename"),
-    pybind11::arg("colSigs") = 0,
-    pybind11::arg("colLabels") = -1,
-    pybind11::arg("ignoreLines") = 0,
+    "dimension"_a,
+    "filename"_a,
+    "colSigs"_a = 0,
+    "colLabels"_a = -1,
+    "ignoreLines"_a = 0,
     rdoc::readSigList);
 
     RDOC_SCOPE_END

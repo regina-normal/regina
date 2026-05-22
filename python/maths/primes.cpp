@@ -34,6 +34,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/primes.h"
 
+using namespace pybind11::literals;
+
 using regina::Integer;
 using regina::Primes;
 
@@ -66,8 +68,7 @@ void addPrimes(pybind11::module_& m) {
     auto c = pybind11::class_<Primes>(m, "Primes", rdoc::__class)
         .def_static("size", &Primes::size, rdoc::size)
         .def_static("prime", &Primes::prime,
-            pybind11::arg(), pybind11::arg("autoGrow") = true,
-            rdoc::prime)
+            "which"_a, "autoGrow"_a = true, rdoc::prime)
         .def_static("primeDecomp", &Primes::primeDecomp,
             rdoc::primeDecomp)
         .def_static("primeDecomp", &nativePrimeDecomp,

@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/integer.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::python::doc::common::neq_value;
 
@@ -55,8 +57,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         }), rdoc::__init_3)
         .def(pybind11::init<double>(), rdoc::__init_4)
         .def(pybind11::init<const char*, int>(),
-            pybind11::arg(), pybind11::arg("base") = 10,
-            rdoc::__init_5)
+            "value"_a, "base"_a = 10, rdoc::__init_5)
         .def("isNative", &Int::isNative, rdoc::isNative)
         .def("isZero", &Int::isZero, rdoc::isZero)
         .def("sign", &Int::sign, rdoc::sign)
@@ -68,7 +69,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("longValue", &Int::template unsafeValue<long>,
             rdoc::longValue) // deprecated
         .def("stringValue", &Int::stringValue,
-            pybind11::arg("base") = 10,
+            "base"_a = 10,
             rdoc::stringValue)
         .def("str", &Int::str, rdoc::str)
         .def("pythonValue", [](const Int& i) {

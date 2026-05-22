@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/perm7.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Perm;
 
@@ -95,7 +97,7 @@ void addPerm7(pybind11::module_& m) {
         }, rdoc::__inc)
         .def_static("rot", &Perm<7>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<7>(&)(bool)>(Perm<7>::rand),
-            pybind11::arg("even") = false, rdoc::rand)
+            "even"_a = false, rdoc::rand)
         .def("trunc", &Perm<7>::trunc, rdoc::trunc)
         .def("clear", &Perm<7>::clear, rdoc::clear)
         .def("S7Index", static_cast<int (Perm<7>::*)() const>(

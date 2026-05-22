@@ -40,6 +40,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/perm.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Perm;
 using regina::PermClass;
@@ -92,7 +94,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         }, rdoc::__inc)
         .def_static("rot", &Perm<n>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<n>(&)(bool)>(Perm<n>::rand),
-            pybind11::arg("even") = false, rdoc::rand)
+            "even"_a = false, rdoc::rand)
         .def("trunc", &Perm<n>::trunc, rdoc::trunc)
         .def("clear", &Perm<n>::clear, rdoc::clear)
         .def("SnIndex", &Perm<n>::SnIndex, rdoc::SnIndex)

@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/cyclotomic.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Cyclotomic;
 using regina::Rational;
@@ -51,8 +53,7 @@ void addCyclotomic(pybind11::module_& m) {
         .def(pybind11::init<const Cyclotomic&>(), rdoc::__copy)
         .def(pybind11::init([](size_t field, const std::vector<Rational>& c) {
             return new Cyclotomic(field, c.begin(), c.end());
-        }), pybind11::arg("field"), pybind11::arg("coefficients"),
-            rdoc::__init_4)
+        }), "field"_a, "coefficients"_a, rdoc::__init_4)
         .def("init", &Cyclotomic::init, rdoc::init)
         .def("field", &Cyclotomic::field, rdoc::field)
         .def("degree", &Cyclotomic::degree, rdoc::degree)
@@ -66,7 +67,7 @@ void addCyclotomic(pybind11::module_& m) {
         }, rdoc::__array_2)
         .def("polynomial", &Cyclotomic::polynomial, rdoc::polynomial)
         .def("evaluate", &Cyclotomic::evaluate,
-            pybind11::arg("whichRoot") = 1, rdoc::evaluate)
+            "whichRoot"_a = 1, rdoc::evaluate)
         .def("swap", &Cyclotomic::swap, rdoc::swap)
         .def("negate", &Cyclotomic::negate, rdoc::negate)
         .def("invert", &Cyclotomic::invert, rdoc::invert)

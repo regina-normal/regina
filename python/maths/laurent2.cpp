@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/laurent2.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Integer;
 using regina::Laurent2;
@@ -56,7 +58,7 @@ void addLaurent2(pybind11::module_& m) {
         .def(pybind11::init([](const std::vector<
                 std::tuple<long, long, Integer>>& coeffs) {
             return new Laurent2<Integer>(coeffs.begin(), coeffs.end());
-        }), pybind11::arg("coefficients"), rdoc::__init_3)
+        }), "coefficients"_a, rdoc::__init_3)
         .def("init", overload_cast<>(&Laurent2<Integer>::init), rdoc::init)
         .def("initExp", &Laurent2<Integer>::initExp, rdoc::initExp)
         .def("init", &Laurent2<Integer>::initExp, rdoc::init_2) // deprecated
@@ -68,10 +70,10 @@ void addLaurent2(pybind11::module_& m) {
         .def("invertY", &Laurent2<Integer>::invertY, rdoc::invertY)
         .def("str", overload_cast<const char*, const char*>(
             &Laurent2<Integer>::str, pybind11::const_),
-            pybind11::arg(), pybind11::arg("varY") = nullptr, rdoc::str)
+            "varX"_a, "varY"_a = nullptr, rdoc::str)
         .def("utf8", overload_cast<const char*, const char*>(
             &Laurent2<Integer>::utf8, pybind11::const_),
-            pybind11::arg(), pybind11::arg("varY") = nullptr, rdoc::utf8)
+            "varX"_a, "varY"_a = nullptr, rdoc::utf8)
         .def("__getitem__", [](const Laurent2<Integer>& p,
                 std::pair<long, long> exponents) {
             return p(exponents.first, exponents.second);

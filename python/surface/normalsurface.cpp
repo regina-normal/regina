@@ -39,6 +39,8 @@
 #include "../helpers/tableview.h"
 #include "../docstrings/surface/normalsurface.h"
 
+using namespace pybind11::literals;
+
 using regina::NormalSurface;
 using regina::Triangulation;
 using regina::python::wrapTableView;
@@ -140,8 +142,7 @@ void addNormalSurface(pybind11::module_& m, pybind11::module_& internal) {
         .def("countBoundaries", &NormalSurface::countBoundaries,
             rdoc::countBoundaries)
         .def("isCompressingDisc", &NormalSurface::isCompressingDisc,
-            pybind11::arg("knownConnected") = false,
-            rdoc::isCompressingDisc)
+            "knownConnected"_a = false, rdoc::isCompressingDisc)
         .def("isIncompressible", &NormalSurface::isIncompressible,
             rdoc::isIncompressible)
         .def("cutAlong", &NormalSurface::cutAlong, rdoc::cutAlong)

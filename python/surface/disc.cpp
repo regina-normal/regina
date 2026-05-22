@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/surface/disc.h"
 
+using namespace pybind11::literals;
+
 using regina::DiscSpec;
 using regina::DiscSetTet;
 using regina::DiscSetSurface;
@@ -68,11 +70,9 @@ void addDisc(pybind11::module_& m) {
             rdoc::__init)
         .def(pybind11::init<size_t, size_t, size_t, size_t,
             size_t, size_t, size_t, size_t, size_t, size_t>(),
-            pybind11::arg("tri0"), pybind11::arg("tri1"), pybind11::arg("tri2"),
-            pybind11::arg("tri3"), pybind11::arg("quad0"),
-            pybind11::arg("quad1"), pybind11::arg("quad2"),
-            pybind11::arg("oct0") = 0, pybind11::arg("oct1") = 0,
-            pybind11::arg("oct2") = 0,
+            "tri0"_a, "tri1"_a, "tri2"_a, "tri3"_a,
+            "quad0"_a, "quad1"_a, "quad2"_a,
+            "oct0"_a = 0, "oct1"_a = 0, "oct2"_a = 0,
             rdoc::__init_2)
         .def(pybind11::init<const DiscSetTet&>(), rdoc::__copy)
         .def("nDiscs", &DiscSetTet::nDiscs, rdoc::nDiscs)

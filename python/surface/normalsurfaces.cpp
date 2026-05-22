@@ -41,7 +41,8 @@
 #include "../helpers/packet.h"
 #include "../docstrings/surface/normalsurfaces.h"
 
-using namespace regina::python;
+using namespace pybind11::literals;
+
 using regina::NormalSurfaces;
 using regina::ProgressTracker;
 using regina::SurfaceFilter;
@@ -92,11 +93,12 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
                 regina::Flags<regina::NormalList>,
                 regina::Flags<regina::NormalAlg>, ProgressTracker*>(),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("which") = regina::NormalList::Default,
-            pybind11::arg("algHints") = regina::NormalAlg::Default,
-            pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<GILScopedRelease>(),
+            "triangulation"_a,
+            "coords"_a,
+            "whichList"_a = regina::NormalList::Default,
+            "algHints"_a = regina::NormalAlg::Default,
+            "tracker"_a = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::__init)
         .def(pybind11::init<const NormalSurfaces&, regina::NormalTransform>(),
             rdoc::__init_2)
@@ -133,12 +135,10 @@ void addNormalSurfaces(pybind11::module_& m) {
             &NormalSurfaces::recreateMatchingEquations,
             rdoc::recreateMatchingEquations)
         .def("saveCSVStandard", &NormalSurfaces::saveCSVStandard,
-            pybind11::arg(),
-            pybind11::arg("additionalFields") = regina::SurfaceExport::All,
+            "filename"_a, "additionalFields"_a = regina::SurfaceExport::All,
             rdoc::saveCSVStandard)
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
-            pybind11::arg(),
-            pybind11::arg("additionalFields") = regina::SurfaceExport::All,
+            "filename"_a, "additionalFields"_a = regina::SurfaceExport::All,
             rdoc::saveCSVEdgeWeight)
         .def("vectors", [](const NormalSurfaces& list) {
             return pybind11::make_iterator(
@@ -156,11 +156,12 @@ void addNormalSurfaces(pybind11::module_& m) {
     regina::python::add_packet_constructor<const Triangulation<3>&,
             regina::NormalCoords, regina::Flags<regina::NormalList>,
             regina::Flags<regina::NormalAlg>, ProgressTracker*>(wrap,
-        pybind11::arg(), pybind11::arg(),
-        pybind11::arg("which") = regina::NormalList::Default,
-        pybind11::arg("algHints") = regina::NormalAlg::Default,
-        pybind11::arg("tracker") = nullptr,
-        pybind11::call_guard<GILScopedRelease>(),
+        "triangulation"_a,
+        "coords"_a,
+        "whichList"_a = regina::NormalList::Default,
+        "algHints"_a = regina::NormalAlg::Default,
+        "tracker"_a = nullptr,
+        pybind11::call_guard<regina::python::GILScopedRelease>(),
         rdoc::__init);
     regina::python::add_packet_constructor<const NormalSurfaces&,
         regina::NormalTransform>(wrap, rdoc::__init_2);

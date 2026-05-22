@@ -33,6 +33,8 @@
 #include "../helpers.h"
 #include "../docstrings/file/globaldirs.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::GlobalDirs;
 
@@ -48,10 +50,8 @@ void addGlobalDirs(pybind11::module_& m) {
         .def_static("engineDocs", &GlobalDirs::engineDocs, rdoc::engineDocs)
         .def_static("data", &GlobalDirs::data, rdoc::data)
         .def_static("setDirs", overload_cast<const std::string&,
-                const std::string&, const std::string&>(
-            &GlobalDirs::setDirs),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("censusDir") = std::string(),
+                const std::string&, const std::string&>(&GlobalDirs::setDirs),
+            "homeDir"_a, "pythonDir"_a, "censusDir"_a = std::string(),
             rdoc::setDirs)
         .def_static("deduceDirs", &GlobalDirs::deduceDirs, rdoc::deduceDirs)
     ;

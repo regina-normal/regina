@@ -34,6 +34,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/matrix.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 
 template <typename Element>
@@ -104,8 +106,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def("transpose", &Matrix::transpose, rdoc::transpose)
         .def("swapRows", &Matrix::swapRows, rdoc::swapRows)
         .def("swapCols", &Matrix::swapCols,
-            pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0,
-            rdoc::swapCols)
+            "first"_a, "second"_a, "fromRow"_a = 0, rdoc::swapCols)
     ;
     if constexpr (regina::Ring<Element>) {
         c
@@ -118,30 +119,28 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("addRowFrom", &Matrix::addRowFrom, rdoc::addRowFrom)
             .def("addRow",
                 overload_cast<size_t, size_t, Element, size_t>(&Matrix::addRow),
-                pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg("fromCol") = 0, rdoc::addRow_2)
+                "source"_a, "dest"_a, "copies"_a, "fromCol"_a = 0,
+                rdoc::addRow_2)
             .def("addCol", overload_cast<size_t, size_t>(&Matrix::addCol),
                 rdoc::addCol)
             .def("addColFrom", &Matrix::addColFrom, rdoc::addColFrom)
             .def("addCol",
                 overload_cast<size_t, size_t, Element, size_t>(&Matrix::addCol),
-                pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg("fromRow") = 0, rdoc::addCol_2)
+                "source"_a, "dest"_a, "copies"_a, "fromRow"_a = 0,
+                rdoc::addCol_2)
             .def("multRow", &Matrix::multRow,
-                pybind11::arg(), pybind11::arg(), pybind11::arg("fromCol") = 0,
-                rdoc::multRow)
+                "row"_a, "factor"_a, "fromCol"_a = 0, rdoc::multRow)
             .def("multCol", &Matrix::multCol,
-                pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0,
-                rdoc::multCol)
+                "column"_a, "factor"_a, "fromRow"_a = 0, rdoc::multCol)
             .def("combRows", &Matrix::combRows,
-                pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg("fromCol") = 0,
+                "row1"_a, "row2"_a,
+                "coeff11"_a, "coeff12"_a, "coeff21"_a, "coeff22"_a,
+                "fromCol"_a = 0,
                 rdoc::combRows)
             .def("combCols", &Matrix::combCols,
-                pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg("fromRow") = 0,
+                "col1"_a, "col2"_a,
+                "coeff11"_a, "coeff12"_a, "coeff21"_a, "coeff22"_a,
+                "fromRow"_a = 0,
                 rdoc::combCols)
             .def("det", &Matrix::det, rdoc::det)
             .def("__mul__", [](const Matrix& m1, const Matrix& m2){

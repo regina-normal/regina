@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/laurent.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Integer;
 using regina::Laurent;
@@ -53,8 +55,7 @@ void addLaurent(pybind11::module_& m) {
         }), rdoc::__init)
         .def(pybind11::init([](long minExp, const std::vector<Integer>& c) {
             return new Laurent<Integer>(minExp, c.begin(), c.end());
-        }), pybind11::arg("minExp"), pybind11::arg("coefficients"),
-            rdoc::__init_2)
+        }), "minExp"_a, "coefficients"_a, rdoc::__init_2)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Laurent<Integer>::*)()>(
@@ -64,7 +65,7 @@ void addLaurent(pybind11::module_& m) {
         .def("init", [](Laurent<Integer>& p, long minExp,
                 const std::vector<Integer>& c) {
             p.init(minExp, c.begin(), c.end());
-        }, pybind11::arg("minExp"), pybind11::arg("coefficients"), rdoc::init_3)
+        }, "minExp"_a, "coefficients"_a, rdoc::init_3)
         .def("minExp", &Laurent<Integer>::minExp, rdoc::minExp)
         .def("maxExp", &Laurent<Integer>::maxExp, rdoc::maxExp)
         .def("isZero", &Laurent<Integer>::isZero, rdoc::isZero)

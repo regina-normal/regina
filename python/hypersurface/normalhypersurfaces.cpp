@@ -39,7 +39,8 @@
 #include "../helpers/packet.h"
 #include "../docstrings/hypersurface/normalhypersurfaces.h"
 
-using namespace regina::python;
+using namespace pybind11::literals;
+
 using regina::HyperCoords;
 using regina::NormalHypersurface;
 using regina::NormalHypersurfaces;
@@ -62,11 +63,12 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         .def(pybind11::init<const Triangulation<4>&, HyperCoords,
                 regina::Flags<regina::HyperList>,
                 regina::Flags<regina::HyperAlg>, ProgressTracker*>(),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("which") = regina::HyperList::Default,
-            pybind11::arg("algHints") = regina::HyperAlg::Default,
-            pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<GILScopedRelease>(),
+            "triangulation"_a,
+            "coords"_a,
+            "whichList"_a = regina::HyperList::Default,
+            "algHints"_a = regina::HyperAlg::Default,
+            "tracker"_a = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::__init)
         .def(pybind11::init<const NormalHypersurfaces&>(), rdoc::__copy)
         .def("swap", &NormalHypersurfaces::swap, rdoc::swap)
@@ -113,11 +115,12 @@ void addNormalHypersurfaces(pybind11::module_& m) {
     regina::python::add_packet_constructor<const Triangulation<4>&, HyperCoords,
             regina::Flags<regina::HyperList>, regina::Flags<regina::HyperAlg>,
             ProgressTracker*>(wrap,
-        pybind11::arg(), pybind11::arg(),
-        pybind11::arg("which") = regina::HyperList::Default,
-        pybind11::arg("algHints") = regina::HyperAlg::Default,
-        pybind11::arg("tracker") = nullptr,
-        pybind11::call_guard<GILScopedRelease>(),
+        "triangulation"_a,
+        "coords"_a,
+        "whichList"_a = regina::HyperList::Default,
+        "algHints"_a = regina::HyperAlg::Default,
+        "tracker"_a = nullptr,
+        pybind11::call_guard<regina::python::GILScopedRelease>(),
         rdoc::__init);
 
     RDOC_SCOPE_END

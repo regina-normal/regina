@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/surface/surfacefilter.h"
 
+using namespace pybind11::literals;
+
 using regina::SurfaceFilter;
 using regina::SurfaceFilterCombination;
 using regina::SurfaceFilterProperties;
@@ -99,7 +101,7 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def("setEulerChars", [](SurfaceFilterProperties& f,
                 const std::vector<regina::LargeInteger>& v) {
             f.setEulerChars(v.begin(), v.end());
-        }, pybind11::arg("euler"), rdoc::setEulerChars)
+        }, "euler"_a, rdoc::setEulerChars)
         .def("setOrientability", &SurfaceFilterProperties::setOrientability,
             rdoc::setOrientability)
         .def("setCompactness", &SurfaceFilterProperties::setCompactness,

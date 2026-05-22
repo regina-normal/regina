@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/polynomial.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Polynomial;
 
@@ -53,7 +55,7 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         }), rdoc::__init)
         .def(pybind11::init([](const std::vector<T>& coeffs) {
             return new Polynomial<T>(coeffs.begin(), coeffs.end());
-        }), pybind11::arg("coefficients"), rdoc::__init_2)
+        }), "coefficients"_a, rdoc::__init_2)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Polynomial<T>::*)()>(
@@ -62,7 +64,7 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         .def("init", &Polynomial<T>::initExp, rdoc::init_2) // deprecated
         .def("init", [](Polynomial<T>& p, const std::vector<T>& c) {
             p.init(c.begin(), c.end());
-        }, pybind11::arg("coefficients"), rdoc::init_3)
+        }, "coefficients"_a, rdoc::init_3)
         .def("degree", &Polynomial<T>::degree, rdoc::degree)
         .def("isZero", &Polynomial<T>::isZero, rdoc::isZero)
         .def("isMonic", &Polynomial<T>::isMonic, rdoc::isMonic)

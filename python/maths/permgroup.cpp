@@ -38,6 +38,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/permgroup.h"
 
+using namespace pybind11::literals;
+
 using regina::NamedPermGroup;
 using regina::Perm;
 using regina::PermGroup;
@@ -56,7 +58,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
         .def(pybind11::init([](const Group& parent,
                 const std::function<bool(Perm<n>)>& test) {
             return new Group(parent, test);
-        }), pybind11::arg("parent"), pybind11::arg("test"),
+        }), "parent"_a, "test"_a,
             rdoc::__init_3)
         .def("size", &Group::size, rdoc::size)
         .def("__len__", &Group::size, rdoc::size)
