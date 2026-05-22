@@ -28,7 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/container.h"
 #include "exhaustive-tri.h"
 
 using regina::BoolSet;
