@@ -50,12 +50,9 @@
 void addAlgebraClasses(pybind11::module_& m);
 void addAngleClasses(pybind11::module_& m);
 void addCensusClasses(pybind11::module_& m);
-void addDim2Classes(pybind11::module_& m, pybind11::module_& internal);
-void addDim4Classes(pybind11::module_& m, pybind11::module_& internal);
 void addEnumerateClasses(pybind11::module_& m);
 void addFileClasses(pybind11::module_& m);
 void addForeignClasses(pybind11::module_& m);
-void addGenericClasses(pybind11::module_& m, pybind11::module_& internal);
 void addHypersurfaceClasses(pybind11::module_& m);
 void addLinkClasses(pybind11::module_& m, pybind11::module_& internal);
 void addManifoldClasses(pybind11::module_& m);
@@ -306,11 +303,8 @@ Returns:
     addProgressClasses(m);
     addAlgebraClasses(m);
     addPacketClasses(m);
-    addDim2Classes(m, internal);
-    addTriangulationClasses(m, internal);
     addLinkClasses(m, internal); // Needs to come _before_ dim4 classes
-    addDim4Classes(m, internal);
-    addGenericClasses(m, internal);
+    addTriangulationClasses(m, internal);
     addCensusClasses(m);
     addForeignClasses(m);
     addSplitClasses(m);
