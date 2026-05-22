@@ -165,6 +165,8 @@ struct NoPropagationOptions {};
  *   argument.  That boolean argument should indicate whether computed
  *   properties are to be cloned.
  *
+ * \nopython
+ *
  * \ingroup triangulation
  */
 template <typename T>

@@ -114,7 +114,7 @@ auto forIsoSigType(pybind11::type sigType, auto action) {
  * parameter, since the compiler can automatically derive \a Encoding from
  * the argument \a c.
  */
-template <int generation, int dim, DocstringClass Docs, typename Encoding>
+template <int generation, int dim, ClassDocType Docs, typename Encoding>
 requires ((generation == 1 || generation == 2) && regina::supportedDim(dim))
 void add_isosig_encoding_functions(pybind11::class_<Encoding>& c) {
     static_assert(regina::IsoSigEncoding<Encoding, generation, dim>);

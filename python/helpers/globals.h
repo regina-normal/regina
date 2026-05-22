@@ -58,7 +58,7 @@ namespace python {
  * resolve the overloaded `regina::swap`, so that there is no risk of
  * accidentally binding the wrong swap function.
  */
-template <typename T, DocstringClass Docs>
+template <typename T, ClassDocType Docs>
 requires requires(T x, T y) { regina::swap(x, y); }
 inline void add_global_swap(pybind11::module_& m) {
     m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap),

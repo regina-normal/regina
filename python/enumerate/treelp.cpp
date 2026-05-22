@@ -213,6 +213,12 @@ void addTreeLP(pybind11::module_& m) {
     addLPData<LPConstraintEulerZero>(m, "LPData_EulerZero");
     addLPData<LPConstraintNonSpun>(m, "LPData_NonSpun");
 
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_concept<rdoc::LPConstraint>(m, "LPConstraint");
+    regina::python::add_concept<rdoc::LPSubspace>(m, "LPSubspace");
+    regina::python::add_concept<rdoc::BanConstraint>(m, "BanConstraint");
+
     RDOC_SCOPE_END
 }
 

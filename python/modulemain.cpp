@@ -50,6 +50,7 @@
 void addAlgebraClasses(pybind11::module_& m);
 void addAngleClasses(pybind11::module_& m);
 void addCensusClasses(pybind11::module_& m);
+void addConceptsClasses(pybind11::module_& m);
 void addEnumerateClasses(pybind11::module_& m);
 void addFileClasses(pybind11::module_& m);
 void addForeignClasses(pybind11::module_& m);
@@ -282,6 +283,17 @@ Returns:
 
     RDOC_SCOPE_END
 
+    // An empty base class to use for all Python wrappers around C++ concepts.
+    pybind11::class_<regina::python::ConceptBase>(m, "Concept",
+R"doc(A common base class for all C++ concepts.
+
+Concepts are a C++ compile-time phenomenon, and they are not functional
+in Python (i.e., you cannot test which types satisfy which concepts).
+
+Nevertheless, they are made available here as empty classes with
+docstrings, which means you can access concept _documentation_ here
+in Python.  Try ``help(Ring)`` for an example.)doc");
+
     // Components from subdirectories, which appear in order of dependency:
     //
     // - In some cases the bindings require this; in particular, when a value
@@ -316,6 +328,7 @@ Returns:
     addHypersurfaceClasses(m);
     addTreewidthClasses(m);
     addEnumerateClasses(m);
+    addConceptsClasses(m);
 
     // This routine allows the user to import sage-related hacks, which
     // are not included by default in regina's python module.

@@ -8,7 +8,7 @@ set -e
 set -o pipefail
 
 if [ "$#" = 0 ]; then
-  dirs="algebra angle census core enumerate file foreign hypersurface link manifold maths packet progress python snappea split subcomplex surface treewidth triangulation utilities"
+  dirs="algebra angle census concepts core enumerate file foreign hypersurface link manifold maths packet progress python snappea split subcomplex surface treewidth triangulation utilities"
 else
   dirs="$@"
 fi

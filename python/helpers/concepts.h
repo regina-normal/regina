@@ -87,12 +87,53 @@ concept PythonPacketHeldWrapper =
     };
 
 /**
- * A docstring class, filled with static constants all of which are docstrings
- * for some particular Regina type.
+ * A docstring helper class for one of Regina's C++ concepts.
+ *
+ * Such a helper class would typically contain just the static string constant
+ * `__concept` holding the concept notes.
  */
 template <typename T>
-concept DocstringClass =
+concept ConceptDocType =
+    requires { { T::__concept } -> std::convertible_to<const char*>; };
+
+/**
+ * A docstring helper class for one of Regina's C++ class/struct/enum types.
+ *
+ * Such a helper class would typically be filled with static string constants
+ * for the class/struct members or enum values, plus a special string constant
+ * `__class` that holds the class notes.
+ */
+template <typename T>
+concept ClassDocType =
     requires { { T::__class } -> std::convertible_to<const char*>; };
+
+/**
+ * A common base class to use for all Python wrappers around C++ concepts.
+ */
+struct ConceptBase {
+};
+
+/**
+ * An empty C++ class that we can wrap in order to "bind" a C++ concept in
+ * Python.
+ *
+ * These types need to be unique for each concept.  Therefore, when wrapping
+ * a concept \a c, the template argument \a Docs should be the docstring
+ * helper class for the concept \a c.
+ */
+template <ConceptDocType Docs>
+struct ConceptClass : ConceptBase {
+};
+
+/**
+ * Adds an empty Python class to the given module that "wraps" a C++ concept.
+ *
+ * The Python class will be empty, except for the docstring.
+ */
+template <ConceptDocType Docs>
+void add_concept(pybind11::module_& m, const char* name) {
+    pybind11::class_<ConceptClass<Docs>, ConceptBase>(m, name, Docs::__concept);
+}
 
 } // namespace regina::python
 

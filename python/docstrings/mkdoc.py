@@ -45,7 +45,8 @@ PRINT_LIST = [
     CursorKind.CONVERSION_FUNCTION,
     CursorKind.CXX_METHOD,
     CursorKind.CONSTRUCTOR,
-    CursorKind.FIELD_DECL
+    CursorKind.FIELD_DECL,
+    CursorKind.CONCEPT_DECL
 ]
 
 PRINT_BLACKLIST = [
@@ -647,6 +648,13 @@ def extract(filename, node, parent_namespace, parent_types, output):
             # the same type that holds the documentation for the class members.
             output.append((parent_namespace, parent_types + [ name ], \
                 '__class', filename, comment))
+            special = True
+        elif node.kind == CursorKind.CONCEPT_DECL:
+            # We give concepts their own docstring classes, but we use
+            # __concept instead of __class to distinguish our concept helper
+            # classes from other helper classes.
+            output.append((parent_namespace, parent_types + [ name ], \
+                '__concept', filename, comment))
             special = True
         elif parent_namespace == '' and parent_types == []:
             # Some global functions are heavily overloaded, and so it will be

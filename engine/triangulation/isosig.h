@@ -209,7 +209,7 @@ class IsoSigData {
     // We give a generic implementation so that the generic class notes are
     // picked up by the automatic docstring generation.  This in turn is
     // needed for regina::python::doc::IsoDigData to satisfy the concept
-    // regina::python::DocstringClass.
+    // regina::python::ClassDocType.
     static_assert(false,
         "Only specialised implementations of IsoSigData may be used.");
 };

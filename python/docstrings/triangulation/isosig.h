@@ -945,6 +945,59 @@ Returns:
 
 }; // struct IsoSigDegrees
 
+struct IsoSigEncoding {
+
+// Docstring regina::python::doc::IsoSigEncoding::__concept
+static constexpr const char __concept[] =
+R"doc(Represents an encoding that can be used for the given generation of
+isomorphism signatures for triangulations. Essentially, the job of an
+encoding algorithm is to pack the gluings table for a single
+triangulation component into a small piece of data (such as a string)
+that is easily transported.
+
+An encoding should provide a type alias ``Signature``, indicating the
+type that holds the final signature (e.g., ``std::string``). In
+addition, it should provide the following static routines:
+
+* ``encodeEmpty()``, which encodes the empty *dim*-dimensional
+  triangulation;
+
+* ``encode(const IsoSigData<generation, dim>&)``, which encodes the
+  gluings table for a single connected component of a
+  *dim*-dimensional triangulation;
+
+* ``length(const IsoSigData<generation, dim>&)``, which pre-computes
+  the length of the signature that encodes a single component.
+
+Both encoding routines should return the type ``Signature``.
+
+Both ``encode()`` and ``length()`` may assume that the given component
+is non-empty, and that it uses a canonical labelling in the sense
+described in the IsoSigData class notes.
+
+Note that ``encode()`` can be economical about what information it
+writes: although ``data.size()`` will need to be encoded, it is
+typically not necessary to encode the sizes of the various supporting
+bitmasks/arrays, since their sizes are usually implied by their
+contents.
+
+Template parameter ``generation``:
+    the generation of signature to encode; this must be either 1 or 2.
+
+Template parameter ``dim``:
+    the dimension of triangulation for which we are building
+    isomorphism signatures.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
+}; // struct IsoSigEncoding
+
 struct IsoSigPrintable {
 
 // Docstring regina::python::doc::IsoSigPrintable::__class
@@ -1241,6 +1294,87 @@ Returns:
     the length of the second-generation signature that encodes *data*.)doc";
 
 }; // struct IsoSigPrintableLockFree
+
+struct IsoSigType {
+
+// Docstring regina::python::doc::IsoSigType::__concept
+static constexpr const char __concept[] =
+R"doc(Represents a signature _type_ that can be used for isomorphism
+signatures of triangulations (both first-generation and second-
+generation). Essentially, the job of a signature type is to help
+Regina determine which labelling of a triangulation is "canonical".
+Different signature types will make different trade-offs between
+factors such as speed, accessibility, backward compatibility and so
+on, typically resulting in different notions of "canonical" as a
+consequence.
+
+More specifically, a signature type is described by a class
+(implementing this IsoSigType concept), which works with a single
+component *c* of a *dim*-dimenensional triangulation. The sole task of
+this class is to iterate through a selection of combinations ``(s,
+p)``, each of which identifies a "starting simplex" of *c* and a
+"starting labelling" of its vertices. Here *s* is a top-dimensional
+simplex in *c* that will act as the "starting simplex", and *p* is a
+permutation that maps the vertices of *s* to the "starting labelling"
+``0,1,...,dim``.
+
+Second-generation signatures can be either _oriented_ or _unoriented_,
+and a signature type should support both variants. When building an
+oriented signature, the permutation *p* must always be even (since the
+signature must preserve the orientation of the triangulation
+component). When building an unoriented signature, any permutation *p*
+is allowed.
+
+Not all possible pairs ``(s, p)`` need to be offered during this
+iteration (indeed, it is the ability to prune the candidate pairs
+``(s, p)`` that make some signature types faster than others).
+However, we do require:
+
+* At least one candidate pair ``(s, p)`` must be offered.
+
+* Suppose we relabel the top-dimensional simplices of *c* and/or their
+  vertices (when building an oriented signature, we insist that such a
+  relabelling must be orientation-preserving). Then the candidate
+  pairs ``(s, p)`` that are offered will be the _same set_ as before,
+  just modified according to this relabelling. In other words,
+  relabelling does not change the set of candidate pairs in any way
+  beyond the relabelling itself.
+
+An instance of a signature type class acts like an iterator: it holds
+a single candidate combination ``(s, p)``. In this sense, it must
+provide:
+
+* a class constructor ``T(const Component<dim>&, bool)``, which sets
+  the "iterator" to the first candidate pair ``(s, p)`` for the given
+  component, and whose boolean argument indicates whether the
+  signature being constructed is oriented (``True``) or unoriented
+  (``False``);
+
+* a query routine ``size_t simplex() const``, which returns the index
+  of the current "starting simplex" *s* within the component *c* (this
+  might _not_ be the index of *s* within the overall triangulation);
+
+* a query routine ``Perm<dim+1> perm() const``, which returns the
+  current "starting labelling" *p* (mapping the vertices of *s* to
+  ``0,1,...,dim``);
+
+* a routine ``bool next()``, which advances this "iterator" to the
+  next candidate pair ``(s, p)``, returning ``True`` if this
+  successful or ``False`` if there are no more candidate pairs.
+
+The routines ``simplex()``, ``perm()`` and ``next()`` may all assume
+that the "iterator" is describing a valid candidate pair ``(s, p)``;
+that is, ``next()`` has not yet returned ``False``.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
+}; // struct IsoSigType
 
 } // namespace regina::python::doc
 

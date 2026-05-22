@@ -31,6 +31,13 @@
 
 import enum
 
+def isConcept(object):
+    while object:
+        if object is Concept:
+            return True
+        object = object.__base__
+    return False
+
 def isException(object):
     while object:
         if object is Exception:
@@ -46,9 +53,11 @@ def classInfo(name, object):
             # Omit them here so that this test generates the same output
             # across all platforms.
             return
+        # Exception and concept classes do not have equalityType.
         if isException(object):
-            # Exception classes do not have equalityType.
             print(name, ': exception')
+        elif isConcept(object):
+            print(name, ': concept')
         else:
             print(name, ': class ->', object.equalityType)
     else:

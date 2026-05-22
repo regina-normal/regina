@@ -105,7 +105,7 @@ class ExceptionCache {
  * pybind11 3.0.0rc3, `pybind11::register_exception()` is not).
  */
 template <std::derived_from<std::exception> ReginaExceptionType,
-    DocstringClass Docs>
+    ClassDocType Docs>
 PyObject* registerReginaException(pybind11::module_& m, const char* className,
         pybind11::handle base) {
 #if REGINA_PYBIND11_VERSION == 3

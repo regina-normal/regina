@@ -352,6 +352,56 @@ static constexpr const char strand[] = R"doc(0 or 1 for the lower or upper stran
 
 }; // struct LinkSigData
 
+struct LinkSigEncoding {
+
+// Docstring regina::python::doc::LinkSigEncoding::__concept
+static constexpr const char __concept[] =
+R"doc(Represents an encoding that can be used for the given generation of
+knot/link signatures. Essentially, the job of an encoding algorithm is
+to pack the information describing a single connected diagram
+component into a small piece of data (such as a string) that is easily
+transported.
+
+An encoding should provide a type alias ``Signature``, indicating the
+type that holds the final knot/link signature (e.g., ``std::string``).
+In addition, it should provide the following static routines:
+
+* ``encodeEmpty()``, which encodes the empty link;
+
+* ``encodeUnknot()``, which encodes the zero-crossing unknot diagram;
+
+* ``encode<generation>(const LinkSigData&)``, which encodes the
+  information describing a single connected diagram component;
+
+* ``length<generation>(const LinkSigData&)``, which pre-computes the
+  length of the signature that encodes a single diagram component.
+
+All three encoding routines should return the type ``Signature``.
+
+Both encode() and length() require the generation as a template
+argument, since the same encoding type may be used for multiple
+generations of signature (e.g., LinkSigPrintable can be used in this
+way).
+
+Both ``encode()`` and ``length()`` may assume that the given data set
+has at least one crossing, and is minimal amongst all allowed
+relabellings of the underlying connected link diagram. (Here "allowed"
+accounts for the fact that reflection, reversal and/or rotation may or
+may not be permitted depending upon context.)
+
+Template parameter ``generation``:
+    the generation of signature to encode; this must be either 1 or 2.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.)doc";
+
+}; // struct LinkSigEncoding
+
 struct LinkSigPrintable {
 
 // Docstring regina::python::doc::LinkSigPrintable::__class

@@ -1483,6 +1483,19 @@ Returns:
 
 }; // struct PacketChildren
 
+struct PacketClass {
+
+// Docstring regina::python::doc::PacketClass::__concept
+static constexpr const char __concept[] =
+R"doc(A class that is equal to or derived from one of Regina's packet types.
+
+This concept does _not_ include the virtual base class Packet. It
+does, however, include SurfaceFilter (which represents a single packet
+type in Regina, but which itself is a virtual base class for different
+kinds of filters).)doc";
+
+}; // struct PacketClass
+
 struct PacketData {
 
 // Docstring regina::python::doc::PacketData::__class
@@ -1660,6 +1673,23 @@ Returns:
     an iterator over all strict descendant packets.)doc";
 
 }; // struct PacketDescendants
+
+struct PacketHeldType {
+
+// Docstring regina::python::doc::PacketHeldType::__concept
+static constexpr const char __concept[] =
+R"doc(A data type (typically mathematical) that can be held within one of
+Regina's wrapped packets. Specifically, such a type *T* can be held in
+the wrapped packet type ``PacketOf<T>``.
+
+Examples of such types *T* include ``Triangulation<dim>``, Link, and
+NormalSurfaces.
+
+See the Packet class notes for an overview of how wrapped packets
+work, as well as instructions on how to create a new wrapped packet
+type.)doc";
+
+}; // struct PacketHeldType
 
 struct PacketListener {
 
@@ -2264,6 +2294,27 @@ Returns:
     takes place.)doc";
 
 }; // struct SubtreeIterator
+
+struct TextPacket {
+
+// Docstring regina::python::doc::TextPacket::__concept
+static constexpr const char __concept[] =
+R"doc(A packet class that stores text (possibly alongside other data).
+
+Examples of this concept include Text and Script.)doc";
+
+}; // struct TextPacket
+
+struct WrappedPacket {
+
+// Docstring regina::python::doc::WrappedPacket::__concept
+static constexpr const char __concept[] =
+R"doc(A class that is equal to one of Regina's wrapped packet types.
+
+Subclasses are _not_ considered here: we requires ``T`` to be
+precisely a class of the form ``PacketOf<...>``.)doc";
+
+}; // struct WrappedPacket
 
 } // namespace regina::python::doc
 

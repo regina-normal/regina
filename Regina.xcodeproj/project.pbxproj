@@ -1664,6 +1664,7 @@
 		05E62A842FBFFD8D00AE1B84 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E629C52FBFFD8D00AE1B84 /* homologicaldata.cpp */; };
 		05E62A852FBFFD8D00AE1B84 /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A222FBFFD8D00AE1B84 /* isosig.cpp */; };
 		05E62A882FC0099900AE1B84 /* exhaustive-tri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */; };
+		05E62A932FC0932A00AE1B84 /* pyconcepts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A912FC0932A00AE1B84 /* pyconcepts.cpp */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -4620,6 +4621,13 @@
 		05E62A862FC0099900AE1B84 /* exhaustive-tri.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "exhaustive-tri.h"; sourceTree = "<group>"; };
 		05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "exhaustive-tri.cpp"; sourceTree = "<group>"; };
 		05E62A892FC009B600AE1B84 /* exhaustive-link.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "exhaustive-link.h"; sourceTree = "<group>"; };
+		05E62A8A2FC092FA00AE1B84 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
+		05E62A8B2FC092FA00AE1B84 /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
+		05E62A8C2FC092FA00AE1B84 /* io.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
+		05E62A8D2FC092FA00AE1B84 /* iterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iterator.h; sourceTree = "<group>"; };
+		05E62A8E2FC092FA00AE1B84 /* maths.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = maths.h; sourceTree = "<group>"; };
+		05E62A902FC0932A00AE1B84 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05E62A912FC0932A00AE1B84 /* pyconcepts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pyconcepts.cpp; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -5063,6 +5071,7 @@
 				05098AD428F63250005E4716 /* angle */,
 				05098ACF28F63250005E4716 /* census */,
 				05098A7428F24D98005E4716 /* checknames.py */,
+				05E62A8F2FC092FA00AE1B84 /* concepts */,
 				05098A7028F24D98005E4716 /* core */,
 				05098AD928FA2CEC005E4716 /* enumerate */,
 				05098A7728F24D98005E4716 /* file */,
@@ -5479,6 +5488,7 @@
 				050F5D001B9BAB9C00C1F681 /* algebra */,
 				050F5D071B9BAB9C00C1F681 /* angle */,
 				050F5DC01B9BAB9C00C1F681 /* census */,
+				05E62A922FC0932A00AE1B84 /* concepts */,
 				05098A6B28F24D98005E4716 /* docstrings */,
 				05772F13270CFBA900D26D8A /* enumerate */,
 				050F5D181B9BAB9C00C1F681 /* file */,
@@ -8769,6 +8779,27 @@
 			path = triangulation;
 			sourceTree = "<group>";
 		};
+		05E62A8F2FC092FA00AE1B84 /* concepts */ = {
+			isa = PBXGroup;
+			children = (
+				05E62A8A2FC092FA00AE1B84 /* array.h */,
+				05E62A8B2FC092FA00AE1B84 /* core.h */,
+				05E62A8C2FC092FA00AE1B84 /* io.h */,
+				05E62A8D2FC092FA00AE1B84 /* iterator.h */,
+				05E62A8E2FC092FA00AE1B84 /* maths.h */,
+			);
+			path = concepts;
+			sourceTree = "<group>";
+		};
+		05E62A922FC0932A00AE1B84 /* concepts */ = {
+			isa = PBXGroup;
+			children = (
+				05E62A902FC0932A00AE1B84 /* CMakeLists.txt */,
+				05E62A912FC0932A00AE1B84 /* pyconcepts.cpp */,
+			);
+			path = concepts;
+			sourceTree = "<group>";
+		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -9932,6 +9963,7 @@
 				050F5E571B9BAB9C00C1F681 /* gluingpermsearcher3.cpp in Sources */,
 				05A066A91DFA67D40047872E /* satregion.cpp in Sources */,
 				05772EE3270CFAD200D26D8A /* bitmask.cpp in Sources */,
+				05E62A932FC0932A00AE1B84 /* pyconcepts.cpp in Sources */,
 				05A0669A1DFA67D40047872E /* blockedsfstriple.cpp in Sources */,
 				05A066A31DFA67D40047872E /* pillowtwosphere.cpp in Sources */,
 				05166B8A2C36140A0014CE97 /* 3d.cpp in Sources */,

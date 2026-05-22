@@ -11,6 +11,32 @@
 namespace regina::python::doc {
 
 
+struct BanConstraint {
+
+// Docstring regina::python::doc::BanConstraint::__concept
+static constexpr const char __concept[] =
+R"doc(A type used to force certain normal coordinates or angle structure
+coordinates to be zero. This concept is used with Regina's linear
+programming machinery when enumerating or locating normal surfaces or
+angle structures.
+
+See BanConstraintBase for further information.)doc";
+
+}; // struct BanConstraint
+
+struct LPConstraint {
+
+// Docstring regina::python::doc::LPConstraint::__concept
+static constexpr const char __concept[] =
+R"doc(Represents a set of additional linear constraints that we can add to
+the tableaux of normal surface or angle structure matching equations.
+This concept is used with Regina's linear programming machinery.
+
+See LPConstraintAPI for further information, including a thorough
+description of how a linear constraint type is expected to behave.)doc";
+
+}; // struct LPConstraint
+
 struct LPConstraintType {
 
 // Docstring regina::python::doc::LPConstraintType::Positive
@@ -1213,6 +1239,23 @@ Parameter ``r2``:
     rows()-1 inclusive.)doc";
 
 }; // struct LPMatrix
+
+struct LPSubspace {
+
+// Docstring regina::python::doc::LPSubspace::__concept
+static constexpr const char __concept[] =
+R"doc(Represents a set of additional homogeneous linear equality constraints
+that we can add to the tableaux of normal surface or angle structure
+matching equations. This concept is used with Regina's linear
+programming machinery.
+
+The concept LPSubspace essentially refines LPConstraint to ensure that
+the additional linear constraints carve out a linear subspace of
+``R^n``.
+
+See LPConstraintAPI for further information.)doc";
+
+}; // struct LPSubspace
 
 struct LPSystem {
 

@@ -125,6 +125,10 @@ void addLinkSig(pybind11::module_& m) {
         ;
     regina::python::no_eq_static(c);
 
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_concept<rdoc::LinkSigEncoding>(m, "LinkSigEncoding");
+
     RDOC_SCOPE_END
 }
 

@@ -47,7 +47,7 @@ namespace regina::python {
     // We do _not_ want to include its implementation here, because we do not
     // want to inadvertently force the instantiation of the full triangulation
     // classes for _all_ dimensions simultaneously in the same source file.
-    template <int generation, int dim, DocstringClass Docs, typename Encoding>
+    template <int generation, int dim, ClassDocType Docs, typename Encoding>
     requires ((generation == 1 || generation == 2) && regina::supportedDim(dim))
     void add_isosig_encoding_functions(pybind11::class_<Encoding>&);
 }
@@ -124,6 +124,11 @@ void addIsoSigEncodings(pybind11::module_& m) {
         regina::python::add_isosig_encoding_functions<2, dim, rdoc>(b);
     });
     regina::python::no_eq_static(b);
+
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_concept<rdoc::IsoSigEncoding>(m, "IsoSigEncoding");
+    regina::python::add_concept<rdoc::IsoSigType>(m, "IsoSigType");
 
     RDOC_SCOPE_END
 }

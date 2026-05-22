@@ -582,6 +582,12 @@ Version 8.0  [ TODO ]
         - Regina's exception types now use the same class hierarchy in Python
           as they do in C++ (previously in Python they all derived directly
           from Python's RuntimeError).
+        - C++ concepts now have Python docstrings.  For example, you can type
+          'help(Ring)' in Python.  Since concepts are a C++ compile-time
+          phenomenon, they are not functional in Python (e.g., you cannot test
+          in Python which types satisfy which concepts).  Instead, concepts
+          appear to Python as empty classes with only their docstrings
+          (i.e., they are bound in Python purely for their documentation).
         - The bindings for tightEncoding() now accept integers of any size
           (using C++ long where possible, and regina::Integer otherwise).
         - The bindings for readSigList() can now work with triangulations of
