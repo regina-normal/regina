@@ -41,8 +41,8 @@
 #include "triangulation/example2.h"
 #include "triangulation/example3.h"
 
-#include "../triangulationtest.h"
-#include "testexhaustive.h"
+#include "triangulation/exhaustive-tri.h"
+#include "triangulation/triangulationtest.h"
 
 using regina::AbelianGroup;
 using regina::Example;

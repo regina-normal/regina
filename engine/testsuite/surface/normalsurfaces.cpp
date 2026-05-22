@@ -36,7 +36,7 @@
 #include "triangulation/dim3.h"
 
 #include "testhelper.h"
-#include "testexhaustive.h"
+#include "triangulation/exhaustive-tri.h"
 
 using regina::Example;
 using regina::NormalAlg;

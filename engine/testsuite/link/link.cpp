@@ -33,7 +33,8 @@
 #include "link/link.h"
 #include "surface/normalsurfaces.h"
 
-#include "testexhaustive.h"
+#include "link/exhaustive-link.h"
+#include "triangulation/exhaustive-tri.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::Algorithm;
@@ -2406,7 +2407,7 @@ static void verifyR3(Link link, int crossing, int strand, int side,
     EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR1Down(const Link& link, const char* name) {
+static void verifyR1DownAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (size_t i = 0; i < link.size(); ++i) {
@@ -2427,7 +2428,7 @@ static void verifyR1Down(const Link& link, const char* name) {
     }
 }
 
-static void verifyR1Up(const Link& link, const char* name) {
+static void verifyR1UpAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (int side = 0; side <= 1; ++side)
@@ -2457,7 +2458,7 @@ static void verifyR1Up(const Link& link, const char* name) {
         }
 }
 
-static void verifyR2Down(const Link& link, const char* name) {
+static void verifyR2DownAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (size_t i = 0; i < link.size(); ++i) {
@@ -2496,7 +2497,7 @@ static void verifyR2Down(const Link& link, const char* name) {
     }
 }
 
-static void verifyR2Up(const Link& link, const char* name) {
+static void verifyR2UpAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (int uSide = 0; uSide <= 1; ++uSide)
@@ -2616,7 +2617,7 @@ static void verifyR2Up(const Link& link, const char* name) {
         }
 }
 
-static void verifyR3(const Link& link, const char* name) {
+static void verifyR3All(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     // Note: there is exactly one scenario in which alt == link (and with
@@ -2674,28 +2675,28 @@ static void verifyR3(const Link& link, const char* name) {
 }
 
 TEST_F(LinkTest, reidemeister1Down) {
-    testManualCases(verifyR1Down, false /* gordian */);
-    runCensusAllVirtual(verifyR1Down);
+    testManualCases(verifyR1DownAll, false /* gordian */);
+    runCensusAllVirtual(verifyR1DownAll);
 }
 
 TEST_F(LinkTest, reidemeister1Up) {
-    testManualCases(verifyR1Up, false /* gordian */);
-    runCensusAllVirtual(verifyR1Up, true /* small */);
+    testManualCases(verifyR1UpAll, false /* gordian */);
+    runCensusAllVirtual(verifyR1UpAll, true /* small */);
 }
 
 TEST_F(LinkTest, reidemeister2Down) {
-    testManualCases(verifyR2Down, false /* gordian */);
-    runCensusAllVirtual(verifyR2Down);
+    testManualCases(verifyR2DownAll, false /* gordian */);
+    runCensusAllVirtual(verifyR2DownAll);
 }
 
 TEST_F(LinkTest, reidemeister2Up) {
-    testManualCases(verifyR2Up, false /* gordian */);
-    runCensusAllVirtual(verifyR2Up, true /* small */);
+    testManualCases(verifyR2UpAll, false /* gordian */);
+    runCensusAllVirtual(verifyR2UpAll, true /* small */);
 }
 
 TEST_F(LinkTest, reidemeister3) {
-    testManualCases(verifyR3, false /* gordian */);
-    runCensusAllVirtual(verifyR3);
+    testManualCases(verifyR3All, false /* gordian */);
+    runCensusAllVirtual(verifyR3All);
 }
 
 TEST_F(LinkTest, reidemeisterMisc) {

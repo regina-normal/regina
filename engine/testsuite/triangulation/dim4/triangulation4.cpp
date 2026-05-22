@@ -38,8 +38,8 @@
 #include "triangulation/example4.h"
 #include "triangulation/facetpairing.h"
 
-#include "../triangulationtest.h"
-#include "testexhaustive.h"
+#include "triangulation/exhaustive-tri.h"
+#include "triangulation/triangulationtest.h"
 
 using regina::AbelianGroup;
 using regina::Example;

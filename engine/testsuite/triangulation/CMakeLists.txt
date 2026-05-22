@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  exhaustive-tri.cpp
   facenumbering.cpp
   hidim.cpp
   )

@@ -31,50 +31,38 @@
 #ifndef __TESTEXHAUSTIVE_H
 #define __TESTEXHAUSTIVE_H
 
-#include "triangulation/forward.h"
+#include "link/link.h"
+#include "link/modellinkgraph.h"
+
+#define LINK_CENSUS_SIZE 4
+#define LINK_SMALL_CENSUS_SIZE 3
 
 /**
- * The functions in this header allow you to run a test over all
- * triangulations or link diagrams from a census.
+ * Run the given test over all link diagrams from a census that is generated
+ * on the fly.
  *
- * The \a small parameter indicates that a smaller census should be
- * used; this is appropriate when the corresponding test is extremely slow.
+ * The argument \a small indicates whether a smaller census should be
+ * used (e.g., if the given test is extremely slow).
  *
- * The \a size parameter can be used to manually set the maximum number of
- * top-dimensional simplices; a value of 0 means the default should be used.
- *
- * The \a pairingFilter parameter allows you to run the census over an
- * arbitrary subset of facet pairings (those for which the filter returns
- * \c true).  If a pairing filter is used then \a size must be explicitly
- * specified (it cannot be 0).
- *
- * Each test function takes as arguments a triangulation and its
- * human-readable name.
+ * The test should be a callable object that takes two arguments:
+ * a link, and a human-readable name for the link.
  */
-
-using Triangulation2TestFunction = void (*)(const regina::Triangulation<2>&,
-    const char*);
-using Triangulation3TestFunction = void (*)(const regina::Triangulation<3>&,
-    const char*);
-using Triangulation4TestFunction = void (*)(const regina::Triangulation<4>&,
-    const char*);
-using LinkTestFunction = void (*)(const regina::Link&, const char*);
-
-void runCensusAllClosed(Triangulation2TestFunction f);
-void runCensusAllBounded(Triangulation2TestFunction f);
-
-void runCensusMinClosed(Triangulation3TestFunction f, bool small_ = false);
-void runCensusAllClosed(Triangulation3TestFunction f, bool small_ = false);
-void runCensusAllBounded(Triangulation3TestFunction f, bool small_ = false);
-void runCensusAllIdeal(Triangulation3TestFunction f, bool small_ = false);
-void runCensusAllNoBdry(Triangulation3TestFunction f, bool small_ = false);
-
-void runCensusAllClosed(Triangulation4TestFunction f, int size = 0);
-void runCensusAllBounded(Triangulation4TestFunction f, int size = 0);
-void runCensusAllNoBdry(Triangulation4TestFunction f, int size = 0);
-void runCensus(bool (*pairingFilter)(const regina::FacetPairing<4>&),
-    Triangulation4TestFunction f, int size, bool orblOnly = false);
-
-void runCensusAllVirtual(LinkTestFunction f, bool small_ = false);
+template <std::invocable<regina::Link&&, const char*> Action>
+inline void runCensusAllVirtual(Action&& action, bool small_ = false) {
+    for (int n = 1;
+            n <= (small_ ? LINK_SMALL_CENSUS_SIZE : LINK_CENSUS_SIZE); ++n) {
+        regina::FacetPairing<3>::findAllPairings(n, false, -1,
+                [&action](const regina::FacetPairing<3>& p) {
+            regina::ModelLinkGraph::generateAllEmbeddings(p, false, {},
+                    [&action](const regina::ModelLinkGraph& g) {
+                g.generateAllLinks([&action](regina::Link&& link) {
+                    auto brief = link.brief();
+                    std::invoke(std::forward<Action>(action),
+                        std::move(link), brief.c_str());
+                });
+            });
+        });
+    }
+}
 
 #endif

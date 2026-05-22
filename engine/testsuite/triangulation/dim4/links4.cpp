@@ -31,8 +31,8 @@
 #include "hypersurface/normalhypersurfaces.h"
 #include "triangulation/dim4.h"
 
-#include "testexhaustive.h"
 #include "testhelper.h"
+#include "triangulation/exhaustive-tri.h"
 
 using regina::NormalHypersurface;
 using regina::NormalHypersurfaces;

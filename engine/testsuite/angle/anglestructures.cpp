@@ -34,7 +34,7 @@
 #include "triangulation/example3.h"
 
 #include "testhelper.h"
-#include "testexhaustive.h"
+#include "triangulation/exhaustive-tri.h"
 
 using regina::AngleStructure;
 using regina::AngleStructures;

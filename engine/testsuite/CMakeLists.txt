@@ -3,7 +3,6 @@ INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/engine/testsuite/gtest")
 
 SET ( SOURCES
   main.cpp
-  testexhaustive.cpp
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files

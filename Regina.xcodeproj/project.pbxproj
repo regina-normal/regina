@@ -1002,7 +1002,6 @@
 		056AED5F2A431AE200EAF4FA /* txicore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AECE32A431AE200EAF4FA /* txicore.cpp */; };
 		056AED602A431AE200EAF4FA /* standardtriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AECE42A431AE200EAF4FA /* standardtriangulation.cpp */; };
 		056AED612A431AE200EAF4FA /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AECE62A431AE200EAF4FA /* anglestructures.cpp */; };
-		056AED622A431AE200EAF4FA /* testexhaustive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AECE82A431AE200EAF4FA /* testexhaustive.cpp */; };
 		056AED632A431AE200EAF4FA /* incompressible.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AECEB2A431AE200EAF4FA /* incompressible.cpp */; };
 		056AED642A431AE200EAF4FA /* normalsurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AECEC2A431AE200EAF4FA /* normalsurfaces.cpp */; };
 		056AED652A431AE200EAF4FA /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056AECEF2A431AE200EAF4FA /* tightencoding.cpp */; };
@@ -1664,6 +1663,7 @@
 		05E62A812FBFFD8D00AE1B84 /* boundarycomponent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E629BE2FBFFD8D00AE1B84 /* boundarycomponent3.cpp */; };
 		05E62A842FBFFD8D00AE1B84 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E629C52FBFFD8D00AE1B84 /* homologicaldata.cpp */; };
 		05E62A852FBFFD8D00AE1B84 /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A222FBFFD8D00AE1B84 /* isosig.cpp */; };
+		05E62A882FC0099900AE1B84 /* exhaustive-tri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -3524,7 +3524,6 @@
 		056AECE42A431AE200EAF4FA /* standardtriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = standardtriangulation.cpp; sourceTree = "<group>"; };
 		056AECE62A431AE200EAF4FA /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		056AECE72A431AE200EAF4FA /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		056AECE82A431AE200EAF4FA /* testexhaustive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testexhaustive.cpp; sourceTree = "<group>"; };
 		056AECEA2A431AE200EAF4FA /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		056AECEB2A431AE200EAF4FA /* incompressible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = incompressible.cpp; sourceTree = "<group>"; };
 		056AECEC2A431AE200EAF4FA /* normalsurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalsurfaces.cpp; sourceTree = "<group>"; };
@@ -3593,7 +3592,6 @@
 		056AED3E2A431AE200EAF4FA /* testhelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testhelper.h; sourceTree = "<group>"; };
 		056AED402A431AE200EAF4FA /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		056AED412A431AE200EAF4FA /* census.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = census.cpp; sourceTree = "<group>"; };
-		056AED422A431AE200EAF4FA /* testexhaustive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testexhaustive.h; sourceTree = "<group>"; };
 		056AED432A431AE200EAF4FA /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		056AED452A431AE200EAF4FA /* snappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappea.cpp; sourceTree = "<group>"; };
 		056AED462A431AE200EAF4FA /* boolset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boolset.cpp; sourceTree = "<group>"; };
@@ -4619,6 +4617,9 @@
 		05E62A222FBFFD8D00AE1B84 /* isosig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isosig.cpp; sourceTree = "<group>"; };
 		05E62A232FBFFD8D00AE1B84 /* isosig-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "isosig-bindings.h"; sourceTree = "<group>"; };
 		05E62A242FBFFD8D00AE1B84 /* pytriangulation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pytriangulation.cpp; sourceTree = "<group>"; };
+		05E62A862FC0099900AE1B84 /* exhaustive-tri.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "exhaustive-tri.h"; sourceTree = "<group>"; };
+		05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "exhaustive-tri.cpp"; sourceTree = "<group>"; };
+		05E62A892FC009B600AE1B84 /* exhaustive-link.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "exhaustive-link.h"; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -7629,8 +7630,6 @@
 				056AED262A431AE200EAF4FA /* snappea */,
 				056AECE12A431AE200EAF4FA /* subcomplex */,
 				056AECE92A431AE200EAF4FA /* surface */,
-				056AECE82A431AE200EAF4FA /* testexhaustive.cpp */,
-				056AED422A431AE200EAF4FA /* testexhaustive.h */,
 				056AED3E2A431AE200EAF4FA /* testhelper.h */,
 				05E6299D2FBFD04600AE1B84 /* triangulation */,
 				056AECEE2A431AE200EAF4FA /* utilities */,
@@ -7786,6 +7785,7 @@
 			isa = PBXGroup;
 			children = (
 				056AED242A431AE200EAF4FA /* CMakeLists.txt */,
+				05E62A892FC009B600AE1B84 /* exhaustive-link.h */,
 				056AED252A431AE200EAF4FA /* link.cpp */,
 				05FE04FB2DB84665001432AC /* modellinkgraph.cpp */,
 				0545A04D2FB66FC5008D3ADB /* spatiallink.cpp */,
@@ -8608,6 +8608,8 @@
 				05E629902FBFD04600AE1B84 /* dim3 */,
 				05E629962FBFD04600AE1B84 /* dim4 */,
 				05E629972FBFD04600AE1B84 /* CMakeLists.txt */,
+				05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */,
+				05E62A862FC0099900AE1B84 /* exhaustive-tri.h */,
 				05E629982FBFD04600AE1B84 /* facenumbering.cpp */,
 				05E629992FBFD04600AE1B84 /* facetpairingtest.h */,
 				05E6299A2FBFD04600AE1B84 /* hidim.cpp */,
@@ -10467,6 +10469,7 @@
 				056AED7D2A431AE200EAF4FA /* numbertheory.cpp in Sources */,
 				056AED902A431AE200EAF4FA /* markedabeliangroup.cpp in Sources */,
 				056AED752A431AE200EAF4FA /* snappea.cpp in Sources */,
+				05E62A882FC0099900AE1B84 /* exhaustive-tri.cpp in Sources */,
 				056AED802A431AE200EAF4FA /* polynomial.cpp in Sources */,
 				05329E512F25548A0048C8C6 /* boolset.cpp in Sources */,
 				056AED732A431AE200EAF4FA /* gtest-matchers.cc in Sources */,
@@ -10503,7 +10506,6 @@
 				05FE04FC2DB84665001432AC /* modellinkgraph.cpp in Sources */,
 				056AED852A431AE200EAF4FA /* snappea.cpp in Sources */,
 				05F3DABE2A5CE3B3007A2CE2 /* integer.cpp in Sources */,
-				056AED622A431AE200EAF4FA /* testexhaustive.cpp in Sources */,
 				056AED632A431AE200EAF4FA /* incompressible.cpp in Sources */,
 				056AED7A2A431AE200EAF4FA /* laurent.cpp in Sources */,
 				056AED7B2A431AE200EAF4FA /* primes.cpp in Sources */,

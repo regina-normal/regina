@@ -32,8 +32,8 @@
 #include "subcomplex/standardtri.h"
 #include "triangulation/example3.h"
 
-#include "testexhaustive.h"
 #include "testhelper.h"
+#include "triangulation/exhaustive-tri.h"
 
 using regina::Example;
 using regina::Signature;

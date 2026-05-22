@@ -32,14 +32,12 @@
 #include "census/gluingpermsearcher2.h"
 #include "census/gluingpermsearcher3.h"
 #include "census/gluingpermsearcher4.h"
-#include "link/link.h"
-#include "link/modellinkgraph.h"
 #include "packet/container.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
-#include "testexhaustive.h"
+#include "exhaustive-tri.h"
 
 // When we run tests over an entire census, do we use a larger census
 // (which takes a long time to run), or a smaller census?
@@ -80,16 +78,11 @@
     #define DIM4_IDEAL_CENSUS_SIZE 2
 #endif
 
-#define LINK_CENSUS_SIZE 4
-#define LINK_SMALL_CENSUS_SIZE 3
-
 using regina::BoolSet;
 using regina::CensusPurge;
 using regina::FacetPairing;
 using regina::GluingPerms;
 using regina::GluingPermSearcher;
-using regina::Link;
-using regina::ModelLinkGraph;
 using regina::Triangulation;
 
 namespace {
@@ -218,20 +211,5 @@ void runCensus(bool (*pairingFilter)(const FacetPairing<4>&),
                             f(tri, tri.neoSig().c_str());
                     });
         });
-}
-
-void runCensusAllVirtual(LinkTestFunction f, bool small_) {
-    for (int n = 1;
-            n <= (small_ ? LINK_SMALL_CENSUS_SIZE : LINK_CENSUS_SIZE); ++n) {
-        FacetPairing<3>::findAllPairings(n, false, -1,
-                [](const FacetPairing<3>& p, LinkTestFunction f) {
-            ModelLinkGraph::generateAllEmbeddings(p, false, {},
-                    [](const ModelLinkGraph& g, LinkTestFunction f) {
-                g.generateAllLinks([](const Link& link, LinkTestFunction f) {
-                    f(link, link.brief().c_str());
-                }, f);
-            }, f);
-        }, f);
-    }
 }
 
