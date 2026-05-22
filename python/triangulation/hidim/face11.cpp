@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "face-bindings.h"
+#include "face-hidim.h"
 
 void addFace11(pybind11::module_& m, pybind11::module_& internal) {
     addFace<11, 0>(m, internal, "Face11_0", "FaceEmbedding11_0");

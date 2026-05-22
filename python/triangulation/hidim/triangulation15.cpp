@@ -28,10 +28,10 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation-bindings.h"
-#include "boundarycomponent-bindings.h"
-#include "component-bindings.h"
-#include "simplex-bindings.h"
+#include "triangulation-hidim.h"
+#include "boundarycomponent-hidim.h"
+#include "component-hidim.h"
+#include "simplex-hidim.h"
 
 void addTriangulations15(pybind11::module_& m, pybind11::module_& internal) {
     addSimplex<15>(m, "Simplex15");

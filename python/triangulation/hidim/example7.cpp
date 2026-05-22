@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "example-bindings.h"
+#include "example-hidim.h"
 
 void addExample7(pybind11::module_& m) {
     addExample<7>(m, "Example7");

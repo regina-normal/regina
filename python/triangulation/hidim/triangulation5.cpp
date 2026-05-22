@@ -29,10 +29,10 @@
  **************************************************************************/
 
 #include "triangulation/dim4.h" // for BoundaryComponent<5>::build()
-#include "triangulation-bindings.h"
-#include "boundarycomponent-bindings.h"
-#include "component-bindings.h"
-#include "simplex-bindings.h"
+#include "triangulation-hidim.h"
+#include "boundarycomponent-hidim.h"
+#include "component-hidim.h"
+#include "simplex-hidim.h"
 
 void addTriangulations5(pybind11::module_& m, pybind11::module_& internal) {
     addSimplex<5>(m, "Simplex5");

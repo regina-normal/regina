@@ -4546,10 +4546,10 @@
 		05E629D72FBFFD8D00AE1B84 /* triangle4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = triangle4.cpp; sourceTree = "<group>"; };
 		05E629D82FBFFD8D00AE1B84 /* triangulation4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation4.cpp; sourceTree = "<group>"; };
 		05E629D92FBFFD8D00AE1B84 /* vertex4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = vertex4.cpp; sourceTree = "<group>"; };
-		05E629DB2FBFFD8D00AE1B84 /* boundarycomponent-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "boundarycomponent-bindings.h"; sourceTree = "<group>"; };
+		05E629DB2FBFFD8D00AE1B84 /* boundarycomponent-hidim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "boundarycomponent-hidim.h"; sourceTree = "<group>"; };
 		05E629DC2FBFFD8D00AE1B84 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05E629DD2FBFFD8D00AE1B84 /* component-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
-		05E629DE2FBFFD8D00AE1B84 /* example-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "example-bindings.h"; sourceTree = "<group>"; };
+		05E629DD2FBFFD8D00AE1B84 /* component-hidim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "component-hidim.h"; sourceTree = "<group>"; };
+		05E629DE2FBFFD8D00AE1B84 /* example-hidim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "example-hidim.h"; sourceTree = "<group>"; };
 		05E629DF2FBFFD8D00AE1B84 /* example5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = example5.cpp; sourceTree = "<group>"; };
 		05E629E02FBFFD8D00AE1B84 /* example6.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = example6.cpp; sourceTree = "<group>"; };
 		05E629E12FBFFD8D00AE1B84 /* example7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = example7.cpp; sourceTree = "<group>"; };
@@ -4561,7 +4561,7 @@
 		05E629E72FBFFD8D00AE1B84 /* example13.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = example13.cpp; sourceTree = "<group>"; };
 		05E629E82FBFFD8D00AE1B84 /* example14.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = example14.cpp; sourceTree = "<group>"; };
 		05E629E92FBFFD8D00AE1B84 /* example15.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = example15.cpp; sourceTree = "<group>"; };
-		05E629EA2FBFFD8D00AE1B84 /* face-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
+		05E629EA2FBFFD8D00AE1B84 /* face-hidim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "face-hidim.h"; sourceTree = "<group>"; };
 		05E629EB2FBFFD8D00AE1B84 /* face5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = face5.cpp; sourceTree = "<group>"; };
 		05E629EC2FBFFD8D00AE1B84 /* face6.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = face6.cpp; sourceTree = "<group>"; };
 		05E629ED2FBFFD8D00AE1B84 /* face7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = face7.cpp; sourceTree = "<group>"; };
@@ -4584,7 +4584,7 @@
 		05E629FE2FBFFD8D00AE1B84 /* facetpairing13.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing13.cpp; sourceTree = "<group>"; };
 		05E629FF2FBFFD8D00AE1B84 /* facetpairing14.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing14.cpp; sourceTree = "<group>"; };
 		05E62A002FBFFD8D00AE1B84 /* facetpairing15.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing15.cpp; sourceTree = "<group>"; };
-		05E62A012FBFFD8D00AE1B84 /* isomorphism-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "isomorphism-bindings.h"; sourceTree = "<group>"; };
+		05E62A012FBFFD8D00AE1B84 /* isomorphism-hidim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "isomorphism-hidim.h"; sourceTree = "<group>"; };
 		05E62A022FBFFD8D00AE1B84 /* isomorphism5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism5.cpp; sourceTree = "<group>"; };
 		05E62A032FBFFD8D00AE1B84 /* isomorphism6.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism6.cpp; sourceTree = "<group>"; };
 		05E62A042FBFFD8D00AE1B84 /* isomorphism7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism7.cpp; sourceTree = "<group>"; };
@@ -4597,8 +4597,8 @@
 		05E62A0B2FBFFD8D00AE1B84 /* isomorphism14.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism14.cpp; sourceTree = "<group>"; };
 		05E62A0C2FBFFD8D00AE1B84 /* isomorphism15.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism15.cpp; sourceTree = "<group>"; };
 		05E62A0D2FBFFD8D00AE1B84 /* pyhidim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pyhidim.cpp; sourceTree = "<group>"; };
-		05E62A0E2FBFFD8D00AE1B84 /* simplex-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "simplex-bindings.h"; sourceTree = "<group>"; };
-		05E62A0F2FBFFD8D00AE1B84 /* triangulation-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "triangulation-bindings.h"; sourceTree = "<group>"; };
+		05E62A0E2FBFFD8D00AE1B84 /* simplex-hidim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "simplex-hidim.h"; sourceTree = "<group>"; };
+		05E62A0F2FBFFD8D00AE1B84 /* triangulation-hidim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "triangulation-hidim.h"; sourceTree = "<group>"; };
 		05E62A102FBFFD8D00AE1B84 /* triangulation5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation5.cpp; sourceTree = "<group>"; };
 		05E62A112FBFFD8D00AE1B84 /* triangulation6.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation6.cpp; sourceTree = "<group>"; };
 		05E62A122FBFFD8D00AE1B84 /* triangulation7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation7.cpp; sourceTree = "<group>"; };
@@ -8679,10 +8679,10 @@
 		05E62A1B2FBFFD8D00AE1B84 /* hidim */ = {
 			isa = PBXGroup;
 			children = (
-				05E629DB2FBFFD8D00AE1B84 /* boundarycomponent-bindings.h */,
+				05E629DB2FBFFD8D00AE1B84 /* boundarycomponent-hidim.h */,
 				05E629DC2FBFFD8D00AE1B84 /* CMakeLists.txt */,
-				05E629DD2FBFFD8D00AE1B84 /* component-bindings.h */,
-				05E629DE2FBFFD8D00AE1B84 /* example-bindings.h */,
+				05E629DD2FBFFD8D00AE1B84 /* component-hidim.h */,
+				05E629DE2FBFFD8D00AE1B84 /* example-hidim.h */,
 				05E629DF2FBFFD8D00AE1B84 /* example5.cpp */,
 				05E629E02FBFFD8D00AE1B84 /* example6.cpp */,
 				05E629E12FBFFD8D00AE1B84 /* example7.cpp */,
@@ -8694,7 +8694,7 @@
 				05E629E72FBFFD8D00AE1B84 /* example13.cpp */,
 				05E629E82FBFFD8D00AE1B84 /* example14.cpp */,
 				05E629E92FBFFD8D00AE1B84 /* example15.cpp */,
-				05E629EA2FBFFD8D00AE1B84 /* face-bindings.h */,
+				05E629EA2FBFFD8D00AE1B84 /* face-hidim.h */,
 				05E629EB2FBFFD8D00AE1B84 /* face5.cpp */,
 				05E629EC2FBFFD8D00AE1B84 /* face6.cpp */,
 				05E629ED2FBFFD8D00AE1B84 /* face7.cpp */,
@@ -8717,7 +8717,7 @@
 				05E629FE2FBFFD8D00AE1B84 /* facetpairing13.cpp */,
 				05E629FF2FBFFD8D00AE1B84 /* facetpairing14.cpp */,
 				05E62A002FBFFD8D00AE1B84 /* facetpairing15.cpp */,
-				05E62A012FBFFD8D00AE1B84 /* isomorphism-bindings.h */,
+				05E62A012FBFFD8D00AE1B84 /* isomorphism-hidim.h */,
 				05E62A022FBFFD8D00AE1B84 /* isomorphism5.cpp */,
 				05E62A032FBFFD8D00AE1B84 /* isomorphism6.cpp */,
 				05E62A042FBFFD8D00AE1B84 /* isomorphism7.cpp */,
@@ -8730,8 +8730,8 @@
 				05E62A0B2FBFFD8D00AE1B84 /* isomorphism14.cpp */,
 				05E62A0C2FBFFD8D00AE1B84 /* isomorphism15.cpp */,
 				05E62A0D2FBFFD8D00AE1B84 /* pyhidim.cpp */,
-				05E62A0E2FBFFD8D00AE1B84 /* simplex-bindings.h */,
-				05E62A0F2FBFFD8D00AE1B84 /* triangulation-bindings.h */,
+				05E62A0E2FBFFD8D00AE1B84 /* simplex-hidim.h */,
+				05E62A0F2FBFFD8D00AE1B84 /* triangulation-hidim.h */,
 				05E62A102FBFFD8D00AE1B84 /* triangulation5.cpp */,
 				05E62A112FBFFD8D00AE1B84 /* triangulation6.cpp */,
 				05E62A122FBFFD8D00AE1B84 /* triangulation7.cpp */,

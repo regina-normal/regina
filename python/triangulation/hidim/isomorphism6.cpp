@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "isomorphism-bindings.h"
+#include "isomorphism-hidim.h"
 
 void addIsomorphism6(pybind11::module_& m) {
     addIsomorphism<6>(m, "Isomorphism6");
