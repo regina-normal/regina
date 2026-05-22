@@ -28,55 +28,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "census/census.h"
-#include "census/gluingpermsearcher2.h"
-#include "census/gluingpermsearcher3.h"
-#include "census/gluingpermsearcher4.h"
 #include "packet/container.h"
-#include "triangulation/dim2.h"
-#include "triangulation/dim3.h"
-#include "triangulation/dim4.h"
-
 #include "exhaustive-tri.h"
-
-// When we run tests over an entire census, do we use a larger census
-// (which takes a long time to run), or a smaller census?
-// #define LARGE_CENSUS
-
-#define DIM2_CLOSED_CENSUS_SIZE 8
-#define DIM2_BOUNDED_CENSUS_SIZE 6
-
-#ifdef LARGE_CENSUS
-    #define DIM3_MIN_CLOSED_CENSUS_SIZE 6
-    #define DIM3_CLOSED_CENSUS_SIZE 4
-    #define DIM3_BOUNDED_CENSUS_SIZE 4
-    #define DIM3_IDEAL_CENSUS_SIZE 4
-
-    #define DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE 4
-    #define DIM3_SMALL_CLOSED_CENSUS_SIZE 3
-    #define DIM3_SMALL_BOUNDED_CENSUS_SIZE 3
-    #define DIM3_SMALL_IDEAL_CENSUS_SIZE 3
-#else
-    #define DIM3_MIN_CLOSED_CENSUS_SIZE 4
-    #define DIM3_CLOSED_CENSUS_SIZE 3
-    #define DIM3_BOUNDED_CENSUS_SIZE 3
-    #define DIM3_IDEAL_CENSUS_SIZE 3
-
-    #define DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE 3
-    #define DIM3_SMALL_CLOSED_CENSUS_SIZE 2
-    #define DIM3_SMALL_BOUNDED_CENSUS_SIZE 2
-    #define DIM3_SMALL_IDEAL_CENSUS_SIZE 2
-#endif
-
-#ifdef LARGE_CENSUS
-    #define DIM4_CLOSED_CENSUS_SIZE 2
-    #define DIM4_BOUNDED_CENSUS_SIZE 3
-    #define DIM4_IDEAL_CENSUS_SIZE 2
-#else
-    #define DIM4_CLOSED_CENSUS_SIZE 2
-    #define DIM4_BOUNDED_CENSUS_SIZE 2
-    #define DIM4_IDEAL_CENSUS_SIZE 2
-#endif
 
 using regina::BoolSet;
 using regina::CensusPurge;
@@ -86,17 +39,6 @@ using regina::GluingPermSearcher;
 using regina::Triangulation;
 
 namespace {
-    void foundFacetPairing2(const FacetPairing<2>& pairing,
-            FacetPairing<2>::IsoList autos,
-            Triangulation2TestFunction f) {
-        GluingPermSearcher<2>::findAllPerms(pairing, std::move(autos),
-            false /* orientable only */,
-            [f](const GluingPerms<2>& perms) {
-                Triangulation<2> tri = perms.triangulate();
-                f(tri, tri.neoSig().c_str());
-            });
-    }
-
     void foundFacetPairing3(const FacetPairing<3>& pairing,
             FacetPairing<3>::IsoList autos,
             Triangulation3TestFunction f, BoolSet finite, bool minimal) {
@@ -124,18 +66,6 @@ namespace {
                     f(tri, tri.neoSig().c_str());
             });
     }
-}
-
-void runCensusAllClosed(Triangulation2TestFunction testFunction) {
-    FacetPairing<2>::findAllPairings(DIM2_CLOSED_CENSUS_SIZE,
-        false /* bounded */, -1 /* bdry faces */,
-        &foundFacetPairing2, testFunction);
-}
-
-void runCensusAllBounded(Triangulation2TestFunction testFunction) {
-    FacetPairing<2>::findAllPairings(DIM2_BOUNDED_CENSUS_SIZE,
-        true /* bounded */, -1 /* bdry faces */,
-        &foundFacetPairing2, testFunction);
 }
 
 void runCensusMinClosed(Triangulation3TestFunction testFunction, bool small_) {

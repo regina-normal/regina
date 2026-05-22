@@ -31,10 +31,97 @@
 #ifndef __TESTEXHAUSTIVE_H
 #define __TESTEXHAUSTIVE_H
 
-#include "triangulation/forward.h"
+#include "census/census.h"
+#include "census/gluingpermsearcher2.h"
+#include "census/gluingpermsearcher3.h"
+#include "census/gluingpermsearcher4.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
+
+// When we run tests over an entire census, do we use a larger census
+// (which takes a long time to run), or a smaller census?
+// #define LARGE_CENSUS
+
+#define DIM2_CLOSED_CENSUS_SIZE 8
+#define DIM2_BOUNDED_CENSUS_SIZE 6
+
+#ifdef LARGE_CENSUS
+    #define DIM3_MIN_CLOSED_CENSUS_SIZE 6
+    #define DIM3_CLOSED_CENSUS_SIZE 4
+    #define DIM3_BOUNDED_CENSUS_SIZE 4
+    #define DIM3_IDEAL_CENSUS_SIZE 4
+
+    #define DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE 4
+    #define DIM3_SMALL_CLOSED_CENSUS_SIZE 3
+    #define DIM3_SMALL_BOUNDED_CENSUS_SIZE 3
+    #define DIM3_SMALL_IDEAL_CENSUS_SIZE 3
+#else
+    #define DIM3_MIN_CLOSED_CENSUS_SIZE 4
+    #define DIM3_CLOSED_CENSUS_SIZE 3
+    #define DIM3_BOUNDED_CENSUS_SIZE 3
+    #define DIM3_IDEAL_CENSUS_SIZE 3
+
+    #define DIM3_SMALL_MIN_CLOSED_CENSUS_SIZE 3
+    #define DIM3_SMALL_CLOSED_CENSUS_SIZE 2
+    #define DIM3_SMALL_BOUNDED_CENSUS_SIZE 2
+    #define DIM3_SMALL_IDEAL_CENSUS_SIZE 2
+#endif
+
+#ifdef LARGE_CENSUS
+    #define DIM4_CLOSED_CENSUS_SIZE 2
+    #define DIM4_BOUNDED_CENSUS_SIZE 3
+    #define DIM4_IDEAL_CENSUS_SIZE 2
+#else
+    #define DIM4_CLOSED_CENSUS_SIZE 2
+    #define DIM4_BOUNDED_CENSUS_SIZE 2
+    #define DIM4_IDEAL_CENSUS_SIZE 2
+#endif
 
 /**
- * The functions in this header allow you to run a test over all
+ * Run the given test over all triangulations from a census of
+ * closed 2-manifolds that is generated on the fly.
+ *
+ * The test should be a callable object that takes two arguments:
+ * a triangulation, and a human-readable name for the triangulation.
+ */
+template <std::invocable<regina::Triangulation<2>&&, const char*> Action>
+inline void runCensusAllClosed(Action&& action) {
+    regina::FacetPairing<2>::findAllPairings(
+            DIM2_CLOSED_CENSUS_SIZE, false /* bounded */, -1 /* bdry faces */,
+            [&action](const regina::FacetPairing<2>& p,
+                regina::FacetPairing<2>::IsoList autos) {
+        regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
+                false /* orbl? */, [&action](const regina::GluingPerms<2>& g) {
+            auto t = g.triangulate();
+            std::invoke(std::forward<Action>(action), t, t.neoSig().c_str());
+        });
+    });
+}
+
+/**
+ * Run the given test over all triangulations from a census of
+ * 2-manifolds with boundary that is generated on the fly.
+ *
+ * The test should be a callable object that takes two arguments:
+ * a triangulation, and a human-readable name for the triangulation.
+ */
+template <std::invocable<regina::Triangulation<2>&&, const char*> Action>
+inline void runCensusAllBounded(Action&& action) {
+    regina::FacetPairing<2>::findAllPairings(
+            DIM2_BOUNDED_CENSUS_SIZE, true /* bounded */, -1 /* bdry faces */,
+            [&action](const regina::FacetPairing<2>& p,
+                regina::FacetPairing<2>::IsoList autos) {
+        regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
+                false /* orbl? */, [&action](const regina::GluingPerms<2>& g) {
+            auto t = g.triangulate();
+            std::invoke(std::forward<Action>(action), t, t.neoSig().c_str());
+        });
+    });
+}
+
+/**
+ * The functions below allow you to run a test over all
  * triangulations or link diagrams from a census.
  *
  * The \a small parameter indicates that a smaller census should be
@@ -52,15 +139,10 @@
  * human-readable name.
  */
 
-using Triangulation2TestFunction = void (*)(const regina::Triangulation<2>&,
-    const char*);
 using Triangulation3TestFunction = void (*)(const regina::Triangulation<3>&,
     const char*);
 using Triangulation4TestFunction = void (*)(const regina::Triangulation<4>&,
     const char*);
-
-void runCensusAllClosed(Triangulation2TestFunction f);
-void runCensusAllBounded(Triangulation2TestFunction f);
 
 void runCensusMinClosed(Triangulation3TestFunction f, bool small_ = false);
 void runCensusAllClosed(Triangulation3TestFunction f, bool small_ = false);
