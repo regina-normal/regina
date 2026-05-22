@@ -245,12 +245,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * interpreted as a group expression, or else \a nGens was positive
          * and the given string contains an out-of-range generator.
          *
-         * \param input the input string that is to be interpreted.
+         * \param word the input string that is to be interpreted as a word.
          * \param nGens the number of generators in the group presentation.
          * If this is 0 (the default), then this argument will be ignored and
          * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const char* input, size_t nGens = 0);
+        GroupExpression(const char* word, size_t nGens = 0);
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
@@ -275,12 +275,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * interpreted as a group expression, or else \a nGens was positive
          * and the given string contains an out-of-range generator.
          *
-         * \param input the input string that is to be interpreted.
+         * \param word the input string that is to be interpreted as a word.
          * \param nGens the number of generators in the group presentation.
          * If this is 0 (the default), then this argument will be ignored and
          * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const std::string &input, size_t nGens = 0);
+        GroupExpression(const std::string& word, size_t nGens = 0);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -1877,8 +1877,8 @@ inline GroupExpression::GroupExpression(size_t generator, long exponent) {
     terms_.emplace_back(generator, exponent);
 }
 
-inline GroupExpression::GroupExpression(const std::string &input,
-        size_t nGens) : GroupExpression(input.c_str(), nGens) {
+inline GroupExpression::GroupExpression(const std::string& word, size_t nGens) :
+        GroupExpression(word.c_str(), nGens) {
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {

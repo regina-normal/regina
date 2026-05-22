@@ -575,8 +575,8 @@ void GroupExpression::cycleLeft() {
     }
 }
 
-GroupExpression::GroupExpression(const char* input, size_t nGens) {
-    // interpret input as GroupExpression as one of forms a^7b^-2,
+GroupExpression::GroupExpression(const char* word, size_t nGens) {
+    // interpret word as GroupExpression as one of forms a^7b^-2,
     // a^7B^2, aaaaaaaBB, g0^7g1^-2.
 
     enum class WordStatus {
@@ -588,10 +588,10 @@ GroupExpression::GroupExpression(const char* input, size_t nGens) {
         ExpNum  /**< reading numbers after `^` or `^-` */
     };
 
-    // a loop that goes through the entries of input.
+    // a loop that goes through the entries of word.
     WordStatus ws = WordStatus::Null;
     GroupExpressionTerm buildTerm;
-    for (const char* i = input; *i; ++i) {
+    for (const char* i = word; *i; ++i) {
         // read *i, see what to do next.
         // case 1: it is a letter a..z or A..Z
         if ( ( *i >= 'a' && *i <= 'z' ) || ( *i >= 'A' && *i <= 'Z' ) ) {

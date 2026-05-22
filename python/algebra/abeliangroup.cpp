@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/algebra/abeliangroup.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::AbelianGroup;
 using regina::Integer;
@@ -50,17 +52,17 @@ void addAbelianGroup(pybind11::module_& m) {
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init([](size_t r, const std::vector<int>& i) {
             return new AbelianGroup(r, i.begin(), i.end());
-        }), pybind11::arg("rank"), pybind11::arg("invFac"), rdoc::__init_2)
+        }), "rank"_a, "invFac"_a, rdoc::__init_2)
         .def(pybind11::init([](size_t r, const std::vector<Integer>& i) {
             return new AbelianGroup(r, i.begin(), i.end());
-        }), pybind11::arg("rank"), pybind11::arg("invFac"), rdoc::__init_2)
+        }), "rank"_a, "invFac"_a, rdoc::__init_2)
         .def(pybind11::init<MatrixInt>(), rdoc::__init_3)
         .def(pybind11::init<MatrixInt, MatrixInt>(), rdoc::__init_4)
         .def(pybind11::init<MatrixInt, MatrixInt, const Integer&>(),
             rdoc::__init_5)
         .def("swap", &AbelianGroup::swap, rdoc::swap)
         .def("addRank", &AbelianGroup::addRank,
-            pybind11::arg("extraRank") = 1, rdoc::addRank)
+            "extraRank"_a = 1, rdoc::addRank)
         .def("addTorsion", &AbelianGroup::addTorsion, rdoc::addTorsion)
         .def("addGroup", overload_cast<MatrixInt>(
             &AbelianGroup::addGroup), rdoc::addGroup)
