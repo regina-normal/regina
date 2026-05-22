@@ -28,12 +28,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file generictriui.h
- *  \brief Provides a very basic interface for viewing generic triangulations.
+/*! \file hidimui.h
+ *  \brief Provides a very basic interface for viewing triangulations in
+ *  higher dimensions.
  */
 
-#ifndef __GENERICTRIUI_H
-#define __GENERICTRIUI_H
+#ifndef __HIDIMUI_H
+#define __HIDIMUI_H
 
 #include "triangulation/forward.h"
 #include "reginamain.h"
@@ -41,54 +42,20 @@
 #include <QObject>
 
 class QLabel;
-class QPushButton;
 
 /**
- * A non-templated, QObject-enabled helper class for GenericTriangulationUI.
- * This provides functionality that is independent of the dimension of the
- * underlying triangulation, including all Qt slots and signals (which do
- * not work well with template classes).
+ * A very basic packet interface for working with triangulations in higher
+ * dimensions.
  */
-class GenericTriangulationBase : public QObject, public PacketReadOnlyUI {
-    Q_OBJECT
-
-    protected:
+template <int dim>
+requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
+class HiDimUI : public QObject, public PacketReadOnlyUI {
+    private:
         /**
          * Packet details
          */
         regina::Packet* packet;
 
-        /**
-         * Internal components
-         */
-        QPushButton* python;
-
-    public:
-        /**
-         * Constructor and destructor.
-         */
-        GenericTriangulationBase(regina::Packet* p,
-            PacketPane* enclosingPane);
-
-        /**
-         * PacketUI overrides.
-         */
-        regina::Packet* getPacket() override;
-
-    public slots:
-        /**
-         * Open a python console to work with this triangulation.
-         */
-        void pythonConsole();
-};
-
-/**
- * A very basic packet interface for working with generic triangulations.
- */
-template <int dim>
-requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
-class GenericTriangulationUI : public GenericTriangulationBase {
-    private:
         /**
          * Internal components
          */
@@ -101,16 +68,21 @@ class GenericTriangulationUI : public GenericTriangulationBase {
         /**
          * Constructor and destructor.
          */
-        GenericTriangulationUI(
-            regina::PacketOf<regina::Triangulation<dim>>* packet,
+        HiDimUI(regina::PacketOf<regina::Triangulation<dim>>* packet,
             PacketPane* newEnclosingPane);
 
         /**
          * PacketUI overrides.
          */
+        regina::Packet* getPacket() override;
         QWidget* getInterface() override;
         QString getPacketMenuText() const override;
         void refresh() override;
+
+        /**
+         * Open a python console to work with this triangulation.
+         */
+        void pythonConsole();
 };
 
 #endif

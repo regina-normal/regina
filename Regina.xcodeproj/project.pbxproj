@@ -909,8 +909,6 @@
 		0553FBB62AF6A4E700BE89A7 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB52AF6A4E700BE89A7 /* LinkView.swift */; };
 		0553FBBA2AF8643D00BE89A7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB92AF8643D00BE89A7 /* SettingsView.swift */; };
 		0553FBBE2AF92A3700BE89A7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0553FBBD2AF92A3700BE89A7 /* Settings.bundle */; };
-		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
-		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		055BC3E92653380600E5E34C /* sigutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 055BC3E82653380600E5E34C /* sigutils.h */; };
 		055BC3ED265338FC00E5E34C /* pd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055BC3EC265338FC00E5E34C /* pd.cpp */; };
 		055CD8F62A23605A0072F4B5 /* topologylock.h in Headers */ = {isa = PBXBuildFile; fileRef = 055CD8F52A23605A0072F4B5 /* topologylock.h */; };
@@ -1661,6 +1659,9 @@
 		05E629AA2FBFD04600AE1B84 /* decomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E6298A2FBFD04600AE1B84 /* decomposition.cpp */; };
 		05E629AB2FBFD04600AE1B84 /* links4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E629942FBFD04600AE1B84 /* links4.cpp */; };
 		05E629AC2FBFD04600AE1B84 /* isomorphism4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E629932FBFD04600AE1B84 /* isomorphism4.cpp */; };
+		05E629AF2FBFE48800AE1B84 /* hidimui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E629AE2FBFE48800AE1B84 /* hidimui.cpp */; };
+		05E629B02FBFE4B100AE1B84 /* hidimui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05E629AD2FBFE48800AE1B84 /* hidimui.h */; };
+		05E629B12FBFE92000AE1B84 /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A01D2FA6C167008D3ADB /* isosig.cpp */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -3208,8 +3209,6 @@
 		0553FBB52AF6A4E700BE89A7 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
 		0553FBB92AF8643D00BE89A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0553FBBD2AF92A3700BE89A7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
-		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
 		05583A6019B8041F00076187 /* ReginaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaDocument.h; sourceTree = "<group>"; };
 		05583A6119B8041F00076187 /* ReginaDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaDocument.mm; sourceTree = "<group>"; };
@@ -4614,6 +4613,8 @@
 		05E6299A2FBFD04600AE1B84 /* hidim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hidim.cpp; sourceTree = "<group>"; };
 		05E6299B2FBFD04600AE1B84 /* isomorphismtest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isomorphismtest.h; sourceTree = "<group>"; };
 		05E6299C2FBFD04600AE1B84 /* triangulationtest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulationtest.h; sourceTree = "<group>"; };
+		05E629AD2FBFE48800AE1B84 /* hidimui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hidimui.h; sourceTree = "<group>"; };
+		05E629AE2FBFE48800AE1B84 /* hidimui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hidimui.cpp; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -7529,10 +7530,10 @@
 				0564A5AF1811D920002CC2AE /* filterprop.h */,
 				0564A5941811D920002CC2AE /* gaprunner.cpp */,
 				0564A5951811D920002CC2AE /* gaprunner.h */,
-				0554CA761C5983730053461B /* generictriui.cpp */,
-				0554CA771C5983730053461B /* generictriui.h */,
 				05A73CBC19B2F1AB0099C617 /* groupwidget.cpp */,
 				05A73CBD19B2F1AB0099C617 /* groupwidget.h */,
+				05E629AE2FBFE48800AE1B84 /* hidimui.cpp */,
+				05E629AD2FBFE48800AE1B84 /* hidimui.h */,
 				051691A31C5AD59000DC69EC /* hypercompatui.cpp */,
 				051691A41C5AD59000DC69EC /* hypercompatui.h */,
 				051691A51C5AD59000DC69EC /* hypercoordinateui.cpp */,
@@ -9862,6 +9863,7 @@
 			files = (
 				057EE4C91C600A3600C4D155 /* triangulation6.cpp in Sources */,
 				050F5E321B9BAB9C00C1F681 /* disc.cpp in Sources */,
+				05E629B12FBFE92000AE1B84 /* isosig.cpp in Sources */,
 				05772EE5270CFAD200D26D8A /* trieset.cpp in Sources */,
 				0545A01C2F9F696E008D3ADB /* siglist.cpp in Sources */,
 				05721F111F97162600A83FFC /* pylink.cpp in Sources */,
@@ -10634,8 +10636,8 @@
 				0543AEAF1811E12A002758F8 /* filtercomb.h in Sources */,
 				0543AEB01811E12A002758F8 /* filterprop.h in Sources */,
 				0543AEA81811E12A002758F8 /* gaprunner.h in Sources */,
-				0554CA7B1C5983B00053461B /* generictriui.h in Sources */,
 				05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */,
+				05E629B02FBFE4B100AE1B84 /* hidimui.h in Sources */,
 				051691BC1C5AD60100DC69EC /* hypercompatui.h in Sources */,
 				051691BD1C5AD60600DC69EC /* hypercoordinateui.h in Sources */,
 				051691BE1C5AD60A00DC69EC /* hypermatchingui.h in Sources */,
@@ -10685,6 +10687,7 @@
 				051691B81C5AD5AC00DC69EC /* hypercoordinateui.cpp in Sources */,
 				050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */,
 				05866B7E2E52AF4C00C74465 /* eltmovedialog2.cpp in Sources */,
+				05E629AF2FBFE48800AE1B84 /* hidimui.cpp in Sources */,
 				0591E83F1C4F769100793A9C /* tri4algebra.cpp in Sources */,
 				05A73CCF19B2F1AB0099C617 /* snappeashapes.cpp in Sources */,
 				051691BB1C5AD5AC00DC69EC /* hyperui.cpp in Sources */,
@@ -10697,7 +10700,6 @@
 				051691BA1C5AD5AC00DC69EC /* hypersummaryui.cpp in Sources */,
 				05A73CD019B2F1AB0099C617 /* snappeaui.cpp in Sources */,
 				05A73CCD19B2F1AB0099C617 /* snappeafile.cpp in Sources */,
-				0554CA7A1C5983870053461B /* generictriui.cpp in Sources */,
 				0591E8411C4F769100793A9C /* tri4gluings.cpp in Sources */,
 				05941EF9272A9E3500562586 /* elidedlabel.cpp in Sources */,
 				0564A95F1811D921002CC2AE /* filtercreator.cpp in Sources */,

@@ -36,7 +36,7 @@
 #define __HYPERCOODINATEUI_H
 
 #include "hypersurface/normalhypersurfaces.h"
-#include "triangulation/dim4.h" // To avoid generic Triangulation<4>.
+#include "triangulation/dim4.h"
 
 #include "../packettabui.h"
 #include "./coordinates.h" // Use ./ to avoid picking up the iOS header.

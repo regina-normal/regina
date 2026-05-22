@@ -12,8 +12,8 @@ SET ( FILES
   filtercreator.cpp
   filterprop.cpp
   gaprunner.cpp
-  generictriui.cpp
   groupwidget.cpp
+  hidimui.cpp
   hypercompatui.cpp
   hypercoordinateui.cpp
   hypercreator.cpp

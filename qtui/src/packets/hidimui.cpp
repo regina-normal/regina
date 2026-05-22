@@ -32,7 +32,7 @@
 #include "triangulation/hidim.h"
 
 // UI includes:
-#include "generictriui.h"
+#include "hidimui.h"
 #include "pythonmanager.h"
 #include "reginasupport.h"
 
@@ -45,39 +45,11 @@
 using regina::Packet;
 using regina::Triangulation;
 
-GenericTriangulationBase::GenericTriangulationBase(regina::Packet* p,
-        PacketPane* enclosingPane) :
-        PacketReadOnlyUI(enclosingPane), packet(p) {
-#ifdef BUILD_PYTHON_BINDINGS
-    python = new QPushButton(ReginaSupport::themeIcon("utilities-terminal"),
-        tr("Python Console"));
-    python->setToolTip("Open a new Python console");
-    python->setWhatsThis("<qt>Open a new python console to work with "
-        "this triangulation.<p>The triangulation will be available "
-        "through the python variable <tt>item</tt>.</qt>");
-
-    connect(python, SIGNAL(clicked()), this, SLOT(pythonConsole()));
-#else
-    python = nullptr;
-#endif
-}
-
-void GenericTriangulationBase::pythonConsole() {
-    enclosingPane->getMainWindow()->getPythonManager().
-        launchPythonConsole(enclosingPane->getMainWindow(),
-        packet->root(), packet->shared_from_this());
-}
-
-regina::Packet* GenericTriangulationBase::getPacket() {
-    return packet;
-}
-
 template <int dim>
 requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
-GenericTriangulationUI<dim>::GenericTriangulationUI(
-        regina::PacketOf<Triangulation<dim>>* packet,
+HiDimUI<dim>::HiDimUI(regina::PacketOf<Triangulation<dim>>* p,
         PacketPane* enclosingPane) :
-        GenericTriangulationBase(packet, enclosingPane) {
+        PacketReadOnlyUI(enclosingPane), packet(p) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(20, 20, 20, 20);
@@ -120,6 +92,13 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(
 #ifdef BUILD_PYTHON_BINDINGS
     QBoxLayout* buttonBox = new QHBoxLayout();
     buttonBox->addWidget(new QWidget(), 1);
+    auto* python = new QPushButton(ReginaSupport::themeIcon(
+        "utilities-terminal"), tr("Python Console"));
+    python->setToolTip("Open a new Python console");
+    python->setWhatsThis("<qt>Open a new python console to work with "
+        "this triangulation.<p>The triangulation will be available "
+        "through the python variable <tt>item</tt>.</qt>");
+    connect(python, &QPushButton::clicked, this, &HiDimUI::pythonConsole);
     buttonBox->addWidget(python);
     buttonBox->addWidget(new QWidget(), 1);
     layout->addLayout(buttonBox);
@@ -131,19 +110,25 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(
 
 template <int dim>
 requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
-QWidget* GenericTriangulationUI<dim>::getInterface() {
+regina::Packet* HiDimUI<dim>::getPacket() {
+    return packet;
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
+QWidget* HiDimUI<dim>::getInterface() {
     return ui;
 }
 
 template <int dim>
 requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
-QString GenericTriangulationUI<dim>::getPacketMenuText() const {
+QString HiDimUI<dim>::getPacketMenuText() const {
     return QObject::tr("%1-D &Triangulation").arg(dim);
 }
 
 template <int dim>
 requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
-void GenericTriangulationUI<dim>::refresh() {
+void HiDimUI<dim>::refresh() {
     const auto tri = static_cast<regina::PacketOf<Triangulation<dim>>*>(packet);
     if (tri->isEmpty())
         type->setText(QObject::tr("Empty"));
@@ -187,17 +172,25 @@ void GenericTriangulationUI<dim>::refresh() {
         boundary->setText(QObject::tr("%1 boundary facets").arg(nBdry));
 }
 
+template <int dim>
+requires (regina::supportedDim(dim) && ! regina::standardDim(dim))
+void HiDimUI<dim>::pythonConsole() {
+    enclosingPane->getMainWindow()->getPythonManager().
+        launchPythonConsole(enclosingPane->getMainWindow(),
+        packet->root(), packet->shared_from_this());
+}
+
 // Instantiate the templates for all dimensions that we need.
-template class GenericTriangulationUI<5>;
-template class GenericTriangulationUI<6>;
-template class GenericTriangulationUI<7>;
-template class GenericTriangulationUI<8>;
+template class HiDimUI<5>;
+template class HiDimUI<6>;
+template class HiDimUI<7>;
+template class HiDimUI<8>;
 #ifdef REGINA_HIGHDIM
-template class GenericTriangulationUI<9>;
-template class GenericTriangulationUI<10>;
-template class GenericTriangulationUI<11>;
-template class GenericTriangulationUI<12>;
-template class GenericTriangulationUI<13>;
-template class GenericTriangulationUI<14>;
-template class GenericTriangulationUI<15>;
+template class HiDimUI<9>;
+template class HiDimUI<10>;
+template class HiDimUI<11>;
+template class HiDimUI<12>;
+template class HiDimUI<13>;
+template class HiDimUI<14>;
+template class HiDimUI<15>;
 #endif
