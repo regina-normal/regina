@@ -95,8 +95,8 @@ Exception ``InvalidArgument``:
     or else *nGens* was positive and the given string contains an out-
     of-range generator.
 
-Parameter ``input``:
-    the input string that is to be interpreted.
+Parameter ``word``:
+    the input string that is to be interpreted as a word.
 
 Parameter ``nGens``:
     the number of generators in the group presentation. If this is 0
@@ -132,8 +132,8 @@ Exception ``InvalidArgument``:
     or else *nGens* was positive and the given string contains an out-
     of-range generator.
 
-Parameter ``input``:
-    the input string that is to be interpreted.
+Parameter ``word``:
+    the input string that is to be interpreted as a word.
 
 Parameter ``nGens``:
     the number of generators in the group presentation. If this is 0

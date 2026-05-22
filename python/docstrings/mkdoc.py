@@ -257,9 +257,9 @@ def process_comment(comment, preserveAmpersands):
     s = re.sub(r'[\\@]verbatim\s?(.*?)\s?[\\@]endverbatim',
                r"```\n\1\n```\n", s, flags=re.DOTALL)
     s = re.sub(r'[\\@]warning\s?(.*?)\s?\n\n',
-               r'$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
+               r'\n\n$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]note\s?(.*?)\s?\n\n',
-               r'$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
+               r'\n\n$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]pyclassname{(\S+)}',
                r'\n\n$Python:\n\nThis class is available to Python users under the name \1.\n\n', s, flags=re.DOTALL)
 
