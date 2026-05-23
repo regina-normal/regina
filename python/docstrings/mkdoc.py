@@ -653,6 +653,7 @@ def extract(filename, node, parent_namespace, parent_types, output):
             # We give concepts their own docstring classes, but we use
             # __concept instead of __class to distinguish our concept helper
             # classes from other helper classes.
+            comment += ('\n\n' + process_comment('$Concepts:\n\n' + name + ' is a C++ concept. Concepts work with the C++ compiler at build time: you cannot test in Python which concepts are satisfied by which types.  Instead, what this Python wrapper offers is the concept _documentation_ (which you are reading now).', False))
             output.append((parent_namespace, parent_types + [ name ], \
                 '__concept', filename, comment))
             special = True

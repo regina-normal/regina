@@ -20,7 +20,13 @@ coordinates to be zero. This concept is used with Regina's linear
 programming machinery when enumerating or locating normal surfaces or
 angle structures.
 
-See BanConstraintBase for further information.)doc";
+See BanConstraintBase for further information.
+
+Concepts:
+    BanConstraint is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct BanConstraint
 
@@ -33,7 +39,13 @@ the tableaux of normal surface or angle structure matching equations.
 This concept is used with Regina's linear programming machinery.
 
 See LPConstraintAPI for further information, including a thorough
-description of how a linear constraint type is expected to behave.)doc";
+description of how a linear constraint type is expected to behave.
+
+Concepts:
+    LPConstraint is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct LPConstraint
 
@@ -1253,7 +1265,13 @@ The concept LPSubspace essentially refines LPConstraint to ensure that
 the additional linear constraints carve out a linear subspace of
 ``R^n``.
 
-See LPConstraintAPI for further information.)doc";
+See LPConstraintAPI for further information.
+
+Concepts:
+    LPSubspace is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct LPSubspace
 

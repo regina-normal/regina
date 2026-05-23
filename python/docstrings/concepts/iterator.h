@@ -24,7 +24,14 @@ The corresponding iterator type must be a bidirectional iterator.
 Here _elements_ means the values obtained when dereferencing
 iterators. When converting elements to the type *Target*, both
 construction and the assignment operator should be supported, and
-implicit conversion should be supported also.)doc";
+implicit conversion should be supported also.
+
+Concepts:
+    BidirectionalIterableFor is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
 
 }; // struct BidirectionalIterableFor
 
@@ -36,7 +43,14 @@ R"doc(A bidirectional iterator whose dereferenced values can be assigned or
 converted to the type *Target*.
 
 Both construction and the assignment operator should be supported, and
-implicit conversion should be supported also.)doc";
+implicit conversion should be supported also.
+
+Concepts:
+    BidirectionalIteratorFor is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
 
 }; // struct BidirectionalIteratorFor
 
@@ -49,7 +63,13 @@ would typically be used when reading characters from an input stream
 or a string.
 
 Dereferencing the iterator should yield a ``char``, possibly as a
-reference and possibly ``const``.)doc";
+reference and possibly ``const``.
+
+Concepts:
+    CharIterator is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct CharIterator
 
@@ -61,7 +81,13 @@ R"doc(A forward iterator whose dereferenced values can be assigned or
 converted to the type *Target*.
 
 Both construction and the assignment operator should be supported, and
-implicit conversion should be supported also.)doc";
+implicit conversion should be supported also.
+
+Concepts:
+    ForwardIteratorFor is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct ForwardIteratorFor
 
@@ -73,7 +99,13 @@ R"doc(A container-like type whose elements can be access via indexing.
 
 We do _not_ require that the elements be accessible via iteration. We
 do however require some other parts of a standard container interface,
-including ``T::value_type`` and ``T::size()``.)doc";
+including ``T::value_type`` and ``T::size()``.
+
+Concepts:
+    IndexedContainer is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct IndexedContainer
 
@@ -85,7 +117,13 @@ R"doc(An input iterator whose dereferenced values can be assigned or
 converted to the type *Target*.
 
 Both construction and the assignment operator should be supported, and
-implicit conversion should be supported also.)doc";
+implicit conversion should be supported also.
+
+Concepts:
+    InputIteratorFor is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct InputIteratorFor
 
@@ -96,7 +134,13 @@ static constexpr const char __concept[] =
 R"doc(A container-like type that can be iterated over via ``begin()`` and
 ``end()`` member functions.
 
-The corresponding iterator type must be a forward iterator.)doc";
+The corresponding iterator type must be a forward iterator.
+
+Concepts:
+    Iterable is a C++ concept. Concepts work with the C++ compiler at
+    build time: you cannot test in Python which concepts are satisfied
+    by which types. Instead, what this Python wrapper offers is the
+    concept _documentation_ (which you are reading now).)doc";
 
 }; // struct Iterable
 
@@ -113,7 +157,13 @@ The corresponding iterator type must be a forward iterator.
 Here _elements_ means the values obtained when dereferencing
 iterators. When converting elements to the type *Target*, both
 construction and the assignment operator should be supported, and
-implicit conversion should be supported also.)doc";
+implicit conversion should be supported also.
+
+Concepts:
+    IterableFor is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct IterableFor
 
@@ -126,7 +176,13 @@ R"doc(An output iterator type.
 The reason for using OutputIterator instead of std::output_iterator is
 that this concept does not require you to specify the output type in
 advance. Instead, the output type is deduced automatically via
-``std::iter_value_t``.)doc";
+``std::iter_value_t``.
+
+Concepts:
+    OutputIterator is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct OutputIterator
 
@@ -139,7 +195,13 @@ R"doc(An input iterator that iterates over packets.
 Dereferencing the iterator should yield a reference type ``Packet&``
 (possibly ``const``). Moreover, the iterator should have a ``bool``
 operator that returns ``True`` if and only if the iterator is
-dereferenceable.)doc";
+dereferenceable.
+
+Concepts:
+    PacketIterator is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct PacketIterator
 
@@ -156,7 +218,14 @@ The corresponding iterator type must be a random access iterator.
 Here _elements_ means the values obtained when dereferencing
 iterators. When converting elements to the type *Target*, both
 construction and the assignment operator should be supported, and
-implicit conversion should be supported also.)doc";
+implicit conversion should be supported also.
+
+Concepts:
+    RandomAccessIterableFor is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
 
 }; // struct RandomAccessIterableFor
 
@@ -168,7 +237,14 @@ R"doc(A random access iterator whose dereferenced values can be assigned or
 converted to the type *Target*.
 
 Both construction and the assignment operator should be supported, and
-implicit conversion should be supported also.)doc";
+implicit conversion should be supported also.
+
+Concepts:
+    RandomAccessIteratorFor is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
 
 }; // struct RandomAccessIteratorFor
 
@@ -179,7 +255,14 @@ static constexpr const char __concept[] =
 R"doc(An input iterator that knows when iteration has finished.
 
 Specifically, such an iterator should have a ``bool`` operator that
-returns ``True`` if and only if the iterator is dereferenceable.)doc";
+returns ``True`` if and only if the iterator is dereferenceable.
+
+Concepts:
+    SelfSentinelInputIterator is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
 
 }; // struct SelfSentinelInputIterator
 

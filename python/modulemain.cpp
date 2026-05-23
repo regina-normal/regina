@@ -292,7 +292,7 @@ in Python (i.e., you cannot test which types satisfy which concepts).
 
 Nevertheless, they are made available here as empty classes with
 docstrings, which means you can access concept _documentation_ here
-in Python.  Try ``help(Ring)`` for an example.)doc");
+in Python. Try ``help(Ring)`` for an example.)doc");
 
     // Components from subdirectories, which appear in order of dependency:
     //

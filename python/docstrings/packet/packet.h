@@ -1492,7 +1492,13 @@ R"doc(A class that is equal to or derived from one of Regina's packet types.
 This concept does _not_ include the virtual base class Packet. It
 does, however, include SurfaceFilter (which represents a single packet
 type in Regina, but which itself is a virtual base class for different
-kinds of filters).)doc";
+kinds of filters).
+
+Concepts:
+    PacketClass is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct PacketClass
 
@@ -1687,7 +1693,13 @@ NormalSurfaces.
 
 See the Packet class notes for an overview of how wrapped packets
 work, as well as instructions on how to create a new wrapped packet
-type.)doc";
+type.
+
+Concepts:
+    PacketHeldType is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct PacketHeldType
 
@@ -2301,7 +2313,13 @@ struct TextPacket {
 static constexpr const char __concept[] =
 R"doc(A packet class that stores text (possibly alongside other data).
 
-Examples of this concept include Text and Script.)doc";
+Examples of this concept include Text and Script.
+
+Concepts:
+    TextPacket is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct TextPacket
 
@@ -2312,7 +2330,13 @@ static constexpr const char __concept[] =
 R"doc(A class that is equal to one of Regina's wrapped packet types.
 
 Subclasses are _not_ considered here: we requires ``T`` to be
-precisely a class of the form ``PacketOf<...>``.)doc";
+precisely a class of the form ``PacketOf<...>``.
+
+Concepts:
+    WrappedPacket is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct WrappedPacket
 

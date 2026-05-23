@@ -17,7 +17,14 @@ struct ArbitraryPrecisionIntegerVector {
 static constexpr const char __concept[] =
 R"doc(A mathematical vector type derived from (or the same as)
 ``Vector<T>``, where the element type *T* is one of Regina's
-arbitrary-precision integer types (Integer or LargeInteger).)doc";
+arbitrary-precision integer types (Integer or LargeInteger).
+
+Concepts:
+    ArbitraryPrecisionIntegerVector is a C++ concept. Concepts work
+    with the C++ compiler at build time: you cannot test in Python
+    which concepts are satisfied by which types. Instead, what this
+    Python wrapper offers is the concept _documentation_ (which you
+    are reading now).)doc";
 
 }; // struct ArbitraryPrecisionIntegerVector
 
@@ -27,7 +34,13 @@ struct IntegerVector {
 static constexpr const char __concept[] =
 R"doc(A mathematical vector type derived from (or the same as)
 ``Vector<T>``, where the element type *T* is one of Regina's own
-integer types (Integer, LargeInteger, or NativeInteger).)doc";
+integer types (Integer, LargeInteger, or NativeInteger).
+
+Concepts:
+    IntegerVector is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct IntegerVector
 
@@ -38,7 +51,14 @@ static constexpr const char __concept[] =
 R"doc(One of Regina's mathematical types that allows reconstruction from
 string-based signatures, up to combinatorial isomorphism.
 
-Examples of such types include ``Triangulation<dim>`` and Link.)doc";
+Examples of such types include ``Triangulation<dim>`` and Link.
+
+Concepts:
+    SignatureReconstructible is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
 
 }; // struct SignatureReconstructible
 
@@ -62,7 +82,13 @@ Important semantic requirements for this type are:
   bytes).
 
 Examples of such types include ``std::string`` and
-``regina::ByteSequence``.)doc";
+``regina::ByteSequence``.
+
+Concepts:
+    SignatureType is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct SignatureType
 

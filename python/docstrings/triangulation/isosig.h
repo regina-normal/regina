@@ -994,7 +994,13 @@ Template parameter ``dim``:
     Regina, without maintaining backward compatibility. If you use
     this class directly in your own code, please check the detailed
     changelog with each new release to see if you need to make changes
-    to your code.)doc";
+    to your code.
+
+Concepts:
+    IsoSigEncoding is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct IsoSigEncoding
 
@@ -1372,7 +1378,13 @@ that is, ``next()`` has not yet returned ``False``.
     Regina, without maintaining backward compatibility. If you use
     this class directly in your own code, please check the detailed
     changelog with each new release to see if you need to make changes
-    to your code.)doc";
+    to your code.
+
+Concepts:
+    IsoSigType is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct IsoSigType
 

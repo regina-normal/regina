@@ -81,7 +81,13 @@ own integer types.
 This concept excludes ``bool``, and does not make any special
 accommodations for 128-bit integer compiler extensions (which are not
 standard C++). This means that 128-bit integers might or might not
-pass this test, depending on your compiler.)doc";
+pass this test, depending on your compiler.
+
+Concepts:
+    AnyInteger is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct AnyInteger
 
@@ -90,7 +96,14 @@ struct ArbitraryPrecisionInteger {
 // Docstring regina::python::doc::ArbitraryPrecisionInteger::__concept
 static constexpr const char __concept[] =
 R"doc(One of Regina's arbitrary precision integer types (Integer or
-LargeInteger).)doc";
+LargeInteger).
+
+Concepts:
+    ArbitraryPrecisionInteger is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
 
 }; // struct ArbitraryPrecisionInteger
 
@@ -112,7 +125,13 @@ arithmetically.
 
 The main reason for using this concept (as opposed to
 ``std::is_integral_v<T>``) is because the C++ standard type traits
-treat 128-bit integers differently under different compilers.)doc";
+treat 128-bit integers differently under different compilers.
+
+Concepts:
+    CppInteger is a C++ concept. Concepts work with the C++ compiler
+    at build time: you cannot test in Python which concepts are
+    satisfied by which types. Instead, what this Python wrapper offers
+    is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct CppInteger
 
@@ -122,7 +141,13 @@ struct IntegerComparable {
 static constexpr const char __concept[] =
 R"doc(A type that supports interoperability with native C++ integer values
 via construction, assignment, equality/inequality testing, and
-comparisons. The comparisons must yield a total order.)doc";
+comparisons. The comparisons must yield a total order.
+
+Concepts:
+    IntegerComparable is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct IntegerComparable
 
@@ -132,7 +157,13 @@ struct IntegerCompatible {
 static constexpr const char __concept[] =
 R"doc(A type that supports very basic interoperability with native C++
 integer values, via construction, assignment, and equality/inequality
-testing.)doc";
+testing.
+
+Concepts:
+    IntegerCompatible is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct IntegerCompatible
 
@@ -144,7 +175,13 @@ R"doc(One of Regina's own integer types (Integer, LargeInteger, or
 NativeInteger).
 
 An important feature of all of Regina's integer types is that their
-default constructors initialise the integers to zero.)doc";
+default constructors initialise the integers to zero.
+
+Concepts:
+    ReginaInteger is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct ReginaInteger
 
@@ -167,7 +204,13 @@ integers arithmetically.
 The main reason for using this constant (as opposed to
 ``std::is_integral_v<T>`` and ``std::is_signed_v<T>``) is because the
 C++ standard type traits treat 128-bit integers differently under
-different compilers.)doc";
+different compilers.
+
+Concepts:
+    SignedCppInteger is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct SignedCppInteger
 
@@ -182,7 +225,13 @@ This concept is exactly like ``std::integral`` but with ``bool``
 excluded.
 
 Note that 128-bit integers (which are not standard C++) might or might
-not pass this test, depending on your compiler.)doc";
+not pass this test, depending on your compiler.
+
+Concepts:
+    StandardCppInteger is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct StandardCppInteger
 
@@ -206,7 +255,13 @@ arithmetically.
 The main reason for using this constant (as opposed to
 ``std::is_integral_v<T>`` and ``std::is_unsigned_v<T>``) is because
 the C++ standard type traits treat 128-bit integers differently under
-different compilers.)doc";
+different compilers.
+
+Concepts:
+    UnsignedCppInteger is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct UnsignedCppInteger
 

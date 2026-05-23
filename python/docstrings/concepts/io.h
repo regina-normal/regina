@@ -16,14 +16,28 @@ struct InherentlyTightEncodable {
 // Docstring regina::python::doc::InherentlyTightEncodable::__concept
 static constexpr const char __concept[] =
 R"doc(A type that has member functions for tight encoding and decoding (both
-via strings and via input/output streams) and also hashing.)doc";
+via strings and via input/output streams) and also hashing.
+
+Concepts:
+    InherentlyTightEncodable is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
 
 }; // struct InherentlyTightEncodable
 
 struct Readable {
 
 // Docstring regina::python::doc::Readable::__concept
-static constexpr const char __concept[] = R"doc(A type that can be read from an input stream.)doc";
+static constexpr const char __concept[] =
+R"doc(A type that can be read from an input stream.
+
+Concepts:
+    Readable is a C++ concept. Concepts work with the C++ compiler at
+    build time: you cannot test in Python which concepts are satisfied
+    by which types. Instead, what this Python wrapper offers is the
+    concept _documentation_ (which you are reading now).)doc";
 
 }; // struct Readable
 
@@ -36,7 +50,13 @@ interface, via member functions ``str()``, ``detail()``, and
 ``utf8()``.
 
 Such types often (but are not required to) derive from
-``Output<...>``.)doc";
+``Output<...>``.
+
+Concepts:
+    RichStringifiable is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct RichStringifiable
 
@@ -47,7 +67,13 @@ static constexpr const char __concept[] =
 R"doc(A type that supports string conversion via ``std::to_string()``.
 
 For example, the standard C++ native integer types support string
-conversion in this way.)doc";
+conversion in this way.
+
+Concepts:
+    StandardStringifiable is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct StandardStringifiable
 
@@ -58,14 +84,27 @@ static constexpr const char __concept[] =
 R"doc(A class or struct type that supports string output through a member
 function ``str()``.
 
-Many of Regina's own classes provide such a function.)doc";
+Many of Regina's own classes provide such a function.
+
+Concepts:
+    Stringifiable is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct Stringifiable
 
 struct Writeable {
 
 // Docstring regina::python::doc::Writeable::__concept
-static constexpr const char __concept[] = R"doc(A type that can be written to an output stream.)doc";
+static constexpr const char __concept[] =
+R"doc(A type that can be written to an output stream.
+
+Concepts:
+    Writeable is a C++ concept. Concepts work with the C++ compiler at
+    build time: you cannot test in Python which concepts are satisfied
+    by which types. Instead, what this Python wrapper offers is the
+    concept _documentation_ (which you are reading now).)doc";
 
 }; // struct Writeable
 
