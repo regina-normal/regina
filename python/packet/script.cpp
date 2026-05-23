@@ -34,6 +34,8 @@
 #include "../docstrings/packet/packet.h" // for Packet::append
 #include "../docstrings/packet/script.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Script;
 
@@ -65,22 +67,19 @@ void addScript(pybind11::module_& m) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             s.setVariableValue(index, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr,
-            rdoc::setVariableValue)
+        }, "index"_a, "value"_a = nullptr, rdoc::setVariableValue)
         .def("addVariable", [](Script& s, const std::string& name,
                 std::shared_ptr<regina::Packet> value) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             return s.addVariable(name, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr,
-            rdoc::addVariable)
+        }, "name"_a, "value"_a = nullptr, rdoc::addVariable)
         .def("addVariableName", [](Script& s, const std::string& name,
                 std::shared_ptr<regina::Packet> value) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             return s.addVariableName(name, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr,
-            rdoc::addVariableName)
+        }, "name"_a, "value"_a = nullptr, rdoc::addVariableName)
         .def("removeVariable",
             overload_cast<const std::string&>(&Script::removeVariable),
             rdoc::removeVariable)

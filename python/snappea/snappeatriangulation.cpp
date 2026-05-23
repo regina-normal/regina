@@ -45,6 +45,8 @@
 #include "../docstrings/snappea/snappeatriangulation.h"
 #include "../docstrings/triangulation/triangulation.h" // for global_swap
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Cusp;
 using regina::SnapPeaTriangulation;
@@ -80,8 +82,7 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
         .def(pybind11::init<const std::string&>(), rdoc::__init)
         .def(pybind11::init<const SnapPeaTriangulation&>(), rdoc::__copy)
         .def(pybind11::init<const Triangulation<3>&, bool>(),
-            pybind11::arg(), pybind11::arg("ignored") = false,
-            rdoc::__init_2)
+            "tri"_a, "ignored"_a = false, rdoc::__init_2)
         .def(pybind11::init<const regina::Link&>(), rdoc::__init_3)
         .def("swap", &SnapPeaTriangulation::swap, rdoc::swap)
         .def("nullify", &SnapPeaTriangulation::nullify, rdoc::nullify)
@@ -108,15 +109,13 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
             rdoc::countFilledCusps)
         .def("cusp", &SnapPeaTriangulation::cusp,
             pybind11::return_value_policy::reference_internal,
-            pybind11::arg("whichCusp") = 0,
-            rdoc::cusp)
+            "whichCusp"_a = 0, rdoc::cusp)
         .def("cusps", &SnapPeaTriangulation::cusps,
             pybind11::keep_alive<0, 1>(), rdoc::cusps)
         .def("fill", &SnapPeaTriangulation::fill,
-            pybind11::arg(), pybind11::arg(), pybind11::arg("whichCusp")= 0,
-            rdoc::fill)
+            "m"_a, "l"_a, "whichCusp"_a = 0, rdoc::fill)
         .def("unfill", &SnapPeaTriangulation::unfill,
-            pybind11::arg("whichCusp")= 0, rdoc::unfill)
+            "whichCusp"_a= 0, rdoc::unfill)
         .def("filledPartial", overload_cast<unsigned>(
             &SnapPeaTriangulation::filledPartial, pybind11::const_),
             rdoc::filledPartial)
@@ -128,10 +127,10 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
             rdoc::slopeEquations)
         .def("fundamentalGroupFilled",
             &SnapPeaTriangulation::fundamentalGroupFilled,
-            pybind11::arg("simplifyPresentation") = true,
-            pybind11::arg("fillingsMayAffectGenerators") = true,
-            pybind11::arg("minimiseNumberOfGenerators") = true,
-            pybind11::arg("tryHardToShortenRelators") = true,
+            "simplifyPresentation"_a = true,
+            "fillingsMayAffectGenerators"_a = true,
+            "minimiseNumberOfGenerators"_a = true,
+            "tryHardToShortenRelators"_a = true,
             pybind11::return_value_policy::reference_internal,
             rdoc::fundamentalGroupFilled)
         .def("homologyFilled", &SnapPeaTriangulation::homologyFilled,
@@ -148,10 +147,7 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
         .def("enumerateCovers", &SnapPeaTriangulation::enumerateCovers<
                 const std::function<void(SnapPeaTriangulation&&,
                     SnapPeaTriangulation::Cover)>&>,
-            pybind11::arg("sheets"),
-            pybind11::arg("type"),
-            pybind11::arg("action"),
-            rdoc::enumerateCovers)
+            "sheets"_a, "type"_a, "action"_a, rdoc::enumerateCovers)
         .def("enumerateCovers", [](const SnapPeaTriangulation& tri,
                 int sheets, SnapPeaTriangulation::CoverEnumeration type) {
             pybind11::list ans;
@@ -163,16 +159,13 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
                 ans.append(pair);
             });
             return ans;
-        },
-            pybind11::arg("sheets"), pybind11::arg("type"),
-            rdoc::enumerateCovers)
+        }, "sheets"_a, "type"_a, rdoc::enumerateCovers)
         .def_static("kernelMessagesEnabled",
             &SnapPeaTriangulation::kernelMessagesEnabled,
             rdoc::kernelMessagesEnabled)
         .def_static("enableKernelMessages",
             &SnapPeaTriangulation::enableKernelMessages,
-            pybind11::arg("enabled") = true,
-            rdoc::enableKernelMessages)
+            "enabled"_a = true, rdoc::enableKernelMessages)
         .def_static("disableKernelMessages",
             &SnapPeaTriangulation::disableKernelMessages,
             rdoc::disableKernelMessages)
@@ -197,8 +190,7 @@ void addSnapPeaTriangulation(pybind11::module_& m, pybind11::module_& internal) 
     regina::python::add_packet_constructor<const std::string&>(wrap,
         rdoc::__init);
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap,
-        pybind11::arg(), pybind11::arg("ignored") = false,
-        rdoc::__init_2);
+        "tri"_a, "ignored"_a = false, rdoc::__init_2);
     regina::python::add_packet_constructor<const regina::Link&>(wrap,
         rdoc::__init_3);
 

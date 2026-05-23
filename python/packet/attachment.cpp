@@ -33,6 +33,8 @@
 #include "../helpers.h"
 #include "../docstrings/packet/attachment.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Attachment;
 
@@ -61,7 +63,7 @@ void addAttachment(pybind11::module_& m) {
 
             return new Attachment(in, inlen,
                 Attachment::OwnershipPolicy::DeepCopy, filename);
-        }), pybind11::arg("data"), pybind11::arg("filename"), rdoc::__init_2)
+        }), "data"_a, "filename"_a, rdoc::__init_2)
         .def(pybind11::init<const Attachment&>(), rdoc::__copy)
         .def("swap", &Attachment::swap, rdoc::swap)
         .def("isNull", &Attachment::isNull, rdoc::isNull)
@@ -87,7 +89,7 @@ void addAttachment(pybind11::module_& m) {
             }
 
             a.reset(in, inlen, Attachment::OwnershipPolicy::DeepCopy, filename);
-        }, pybind11::arg("data"), pybind11::arg("filename"), rdoc::reset_2)
+        }, "data"_a, "filename"_a, rdoc::reset_2)
         .def("save", &Attachment::save, rdoc::save)
         .def_readonly_static("typeID", &Attachment::typeID)
     ;

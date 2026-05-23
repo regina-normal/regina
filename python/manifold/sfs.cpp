@@ -41,6 +41,8 @@
 #include "../helpers.h"
 #include "../docstrings/manifold/sfs.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::SFSFibre;
 using regina::SFSpace;
@@ -67,11 +69,9 @@ void addSFSpace(pybind11::module_& m) {
         .def(pybind11::init<SFSpace::Class, unsigned long,
             unsigned long, unsigned long,
             unsigned long, unsigned long>(),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("punctures") = 0,
-            pybind11::arg("puncturesTwisted") = 0,
-            pybind11::arg("reflectors") = 0,
-            pybind11::arg("reflectorsTwisted") = 0,
+            "baseClass"_a, "genus"_a,
+            "punctures"_a = 0, "puncturesTwisted"_a = 0,
+            "reflectors"_a = 0, "reflectorsTwisted"_a = 0,
             rdoc::__init)
         .def(pybind11::init<const SFSpace&>(), rdoc::__copy)
         .def("swap", &SFSpace::swap, rdoc::swap)
@@ -96,15 +96,13 @@ void addSFSpace(pybind11::module_& m) {
         .def("fibre", &SFSpace::fibre, rdoc::fibre)
         .def("obstruction", &SFSpace::obstruction, rdoc::obstruction)
         .def("addHandle", &SFSpace::addHandle,
-            pybind11::arg("fibreReversing") = false, rdoc::addHandle)
+            "fibreReversing"_a = false, rdoc::addHandle)
         .def("addCrosscap", &SFSpace::addCrosscap,
-            pybind11::arg("fibreReversing") = false, rdoc::addCrosscap)
+            "fibreReversing"_a = false, rdoc::addCrosscap)
         .def("addPuncture", &SFSpace::addPuncture,
-            pybind11::arg("twisted") = false,
-            pybind11::arg("nPunctures") = 1, rdoc::addPuncture)
+            "twisted"_a = false, "nPunctures"_a = 1, rdoc::addPuncture)
         .def("addReflector", &SFSpace::addReflector,
-            pybind11::arg("twisted") = false,
-            pybind11::arg("nReflectors") = 1, rdoc::addReflector)
+            "twisted"_a = false, "nReflectors"_a = 1, rdoc::addReflector)
         .def("insertFibre",
             overload_cast<const SFSFibre&>(&SFSpace::insertFibre),
             rdoc::insertFibre)
@@ -115,7 +113,7 @@ void addSFSpace(pybind11::module_& m) {
         .def("complementAllFibres", &SFSpace::complementAllFibres,
             rdoc::complementAllFibres)
         .def("reduce", &SFSpace::reduce,
-            pybind11::arg("mayReflect") = true, rdoc::reduce)
+            "mayReflect"_a = true, rdoc::reduce)
         .def("isLensSpace", &SFSpace::isLensSpace, rdoc::isLensSpace)
     ;
     regina::python::add_eq_operators(s, rdoc::__eq);

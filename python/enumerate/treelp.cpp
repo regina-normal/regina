@@ -39,6 +39,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/treelp.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Integer;
 using regina::LPData;
@@ -61,9 +63,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
 
     auto c = pybind11::class_<Tableaux>(m, name, rdoc::__class)
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding, bool>(),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("enumeration") = true,
-            rdoc::__init)
+            "tri"_a, "encoding"_a, "enumeration"_a = true, rdoc::__init)
         .def(pybind11::init<const Tableaux&>(), rdoc::__copy)
         .def("swap", &Tableaux::swap, rdoc::swap)
         .def("tri", &Tableaux::tri,

@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/treeconstraint.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 
 using regina::Integer;
@@ -82,7 +84,7 @@ void addLPConstraint(pybind11::module_& m, const char* name) {
                     ans[i].push_back(col[j].extra[i]);
             }
             return ans;
-        }, pybind11::arg("tri"), pybind11::arg("columnPerm"), rdoc::addRows)
+        }, "tri"_a, "columnPerm"_a, rdoc::addRows)
         .def_static("verify", overload_cast<const regina::NormalSurface&>(
             &Constraint::verify), rdoc::verify)
         .def_static("verify", overload_cast<const regina::AngleStructure&>(

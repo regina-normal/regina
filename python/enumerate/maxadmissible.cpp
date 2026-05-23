@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/maxadmissible.h"
 
+using namespace pybind11::literals;
+
 using regina::MaxAdmissible;
 using regina::VectorInt;
 
@@ -46,8 +48,7 @@ void addMaxAdmissible(pybind11::module_& m) {
                 const regina::ValidityConstraints& c) {
             return MaxAdmissible::enumerate<regina::Bitmask>(
                 rays.begin(), rays.end(), c);
-        }, pybind11::arg("extremalRays"), pybind11::arg("constraints"),
-            rdoc::enumerate)
+        }, "extremalRays"_a, "constraints"_a, rdoc::enumerate)
     ;
     regina::python::no_eq_static(c);
 

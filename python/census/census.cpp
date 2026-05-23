@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/census/census.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Census;
 using regina::CensusDB;
@@ -60,9 +62,7 @@ void addCensus(pybind11::module_& m) {
             else
                 throw regina::InvalidArgument("This generation of "
                     "signature is not supported by CensusDB");
-        }, pybind11::arg("generation"), pybind11::arg("isoSig"),
-            pybind11::arg("action"),
-            rdoc::lookupKey)
+        }, "generation"_a, "isoSig"_a, "action"_a, rdoc::lookupKey)
     ;
     regina::python::add_output_custom(db,
             [](const CensusDB& db, std::ostream& s) {

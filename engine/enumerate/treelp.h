@@ -1014,7 +1014,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * consult its documentation to see if this is a possibility.
          *
          * \param tri the underlying 3-manifold triangulation.
-         * \param enc the normal surface vector encoding that we are using
+         * \param encoding the normal surface vector encoding that we are using
          * for our enumeration task.  This may be any valid NormalEncoding
          * object, including the special angle structure encoding.
          * \param enumeration \c true if we should optimise the tableaux
@@ -1023,7 +1023,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * (such as searching for a non-trivial normal disc or sphere, or
          * a strict angle structure).
          */
-        LPInitialTableaux(const Triangulation<3>& tri, NormalEncoding enc,
+        LPInitialTableaux(const Triangulation<3>& tri, NormalEncoding encoding,
             bool enumeration = true);
 
         /**

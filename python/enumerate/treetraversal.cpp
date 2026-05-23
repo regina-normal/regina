@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/treetraversal.h"
 
+using namespace pybind11::literals;
+
 using regina::Integer;
 using regina::NormalEncoding;
 using regina::Triangulation;
@@ -83,9 +85,9 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
             BanArgs...>(), rdoc::__init)
         .def("solutions", &Tree::solutions, rdoc::solutions)
         .def("run", &Tree::template run<Action>,
-            pybind11::arg("action"), rdoc::run)
+            "action"_a, rdoc::run)
         .def("next", &Tree::next,
-            pybind11::arg("tracker") = nullptr,
+            "tracker"_a = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::next)
         .def_static("writeTypes", &Tree::writeTypes, rdoc::writeTypes)
@@ -111,9 +113,9 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
             rdoc::__init)
         .def("solutions", &Tree::solutions, rdoc::solutions)
         .def("run", &Tree::template run<Action>,
-            pybind11::arg("action"), rdoc::run)
+            "action"_a, rdoc::run)
         .def("next", &Tree::next,
-            pybind11::arg("tracker") = nullptr,
+            "tracker"_a = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::next)
         .def_static("writeTypes", &Tree::writeTypes, rdoc::writeTypes)

@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/split/sigcensus.h"
 
+using namespace pybind11::literals;
+
 using regina::SigCensus;
 
 void addSigCensus(pybind11::module_& m) {
@@ -43,7 +45,7 @@ void addSigCensus(pybind11::module_& m) {
     auto c = pybind11::class_<SigCensus>(m, "SigCensus", rdoc::__class)
         .def_static("formCensus", &SigCensus::formCensus<const std::function<
             void(const regina::Signature&, const SigCensus::IsoList&)>&>,
-            pybind11::arg("order"), pybind11::arg("action"), rdoc::formCensus)
+            "order"_a, "action"_a, rdoc::formCensus)
     ;
     regina::python::no_eq_static(c);
 

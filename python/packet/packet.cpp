@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/packet/packet.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::ChildIterator;
 using regina::Packet;
@@ -199,15 +201,15 @@ void addPacket(pybind11::module_& m) {
             rdoc::insertChildAfter)
         .def("makeOrphan", &Packet::makeOrphan, rdoc::makeOrphan)
         .def("reparent", &Packet::reparent,
-            pybind11::arg(), pybind11::arg("first") = false, rdoc::reparent)
+            "newParent"_a, "first"_a = false, rdoc::reparent)
         .def("transferChildren", &Packet::transferChildren,
             rdoc::transferChildren)
         .def("swapWithNextSibling", &Packet::swapWithNextSibling,
             rdoc::swapWithNextSibling)
         .def("moveUp", &Packet::moveUp,
-            pybind11::arg("steps") = 1, rdoc::moveUp)
+            "steps"_a = 1, rdoc::moveUp)
         .def("moveDown", &Packet::moveDown,
-            pybind11::arg("steps") = 1, rdoc::moveDown)
+            "steps"_a = 1, rdoc::moveDown)
         .def("moveToFirst", &Packet::moveToFirst, rdoc::moveToFirst)
         .def("moveToLast", &Packet::moveToLast, rdoc::moveToLast)
         .def("sortChildren", &Packet::sortChildren, rdoc::sortChildren)
@@ -232,23 +234,19 @@ void addPacket(pybind11::module_& m) {
             overload_cast<const std::string&>(&Packet::findPacketLabel),
             rdoc::findPacketLabel)
         .def("cloneAsSibling", &Packet::cloneAsSibling,
-            pybind11::arg("cloneDescendants") = false,
-            pybind11::arg("end") = true,
-            rdoc::cloneAsSibling)
+            "cloneDescendants"_a = false, "end"_a = true, rdoc::cloneAsSibling)
         .def("save",
             overload_cast<const char*, bool, regina::FileFormat>(
                 &Packet::save, pybind11::const_),
-            pybind11::arg(),
-            pybind11::arg("compressed") = true,
-            pybind11::arg("format") = regina::FileFormat::Current,
+            "filename"_a, "compressed"_a = true,
+            "format"_a = regina::FileFormat::Current,
             rdoc::save)
         .def("writeXMLFile", [](const Packet& p, pybind11::object file,
                 regina::FileFormat format) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
             p.writeXMLFile(std::cout, format);
-        }, pybind11::arg(),
-            pybind11::arg("format") = regina::FileFormat::Current,
-            rdoc::writeXMLFile)
+        }, "file"_a, "format"_a = regina::FileFormat::Current,
+             rdoc::writeXMLFile)
         .def("internalID", &Packet::internalID, rdoc::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {
             return (s == p);

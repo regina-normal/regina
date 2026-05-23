@@ -137,9 +137,9 @@ void LPMatrix<IntType>::writeTextLong(std::ostream& out) const {
 }
 
 template <LPConstraint Constraint>
-LPInitialTableaux<Constraint>::LPInitialTableaux(
-        const Triangulation<3>& tri, NormalEncoding enc, bool enumeration) :
-        tri_(&tri), system_(enc) {
+LPInitialTableaux<Constraint>::LPInitialTableaux(const Triangulation<3>& tri,
+        NormalEncoding encoding, bool enumeration) :
+        tri_(&tri), system_(encoding) {
     size_t r, c;
 
     // Fetch the original (unadjusted) matrix of matching equations.

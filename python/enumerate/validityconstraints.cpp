@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/validityconstraints.h"
 
+using namespace pybind11::literals;
+
 using regina::ValidityConstraints;
 
 void addValidityConstraints(pybind11::module_& m) {
@@ -43,19 +45,18 @@ void addValidityConstraints(pybind11::module_& m) {
     auto c = pybind11::class_<ValidityConstraints>(m, "ValidityConstraints",
             rdoc::__class)
         .def(pybind11::init<int, size_t, size_t, size_t>(),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("reserveLocal") = 0,
-            pybind11::arg("reserveGlobal") = 0,
+            "blockSize"_a, "nBlocks"_a,
+            "reserveLocal"_a = 0, "reserveGlobal"_a = 0,
             rdoc::__init)
         .def(pybind11::init<const ValidityConstraints&>(), rdoc::__copy)
         .def("addLocal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addLocal(pos.begin(), pos.end());
-        }, pybind11::arg("coordinates"), rdoc::addLocal)
+        }, "coordinates"_a, rdoc::addLocal)
         .def("addGlobal", [](ValidityConstraints& v,
                 const std::vector<int>& pos) {
             v.addGlobal(pos.begin(), pos.end());
-        }, pybind11::arg("coordinates"), rdoc::addGlobal)
+        }, "coordinates"_a, rdoc::addGlobal)
         .def("swap", &ValidityConstraints::swap, rdoc::swap)
         .def("bitmasks", pybind11::overload_cast<size_t>(
             &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_),

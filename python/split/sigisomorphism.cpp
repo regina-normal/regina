@@ -33,6 +33,8 @@
 #include "../helpers.h"
 #include "../docstrings/split/sigisomorphism.h"
 
+using namespace pybind11::literals;
+
 using regina::SigPartialIsomorphism;
 
 void addSigIsomorphism(pybind11::module_& m) {
@@ -44,15 +46,11 @@ void addSigIsomorphism(pybind11::module_& m) {
         .def(pybind11::init<const SigPartialIsomorphism&>(), rdoc::__copy)
         .def("swap", &SigPartialIsomorphism::swap, rdoc::swap)
         .def("makeCanonical", &SigPartialIsomorphism::makeCanonical,
-            pybind11::arg(), pybind11::arg("fromCycleGroup") = 0,
-            rdoc::makeCanonical)
+            "sig"_a, "fromCycleGroup"_a = 0, rdoc::makeCanonical)
         .def("compareWith", &SigPartialIsomorphism::compareWith,
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("fromCycleGroup") = 0,
-            rdoc::compareWith)
+            "sig"_a, "other"_a, "fromCycleGroup"_a = 0, rdoc::compareWith)
         .def("compareWithIdentity", &SigPartialIsomorphism::compareWithIdentity,
-            pybind11::arg(), pybind11::arg("fromCycleGroup") = 0,
-            rdoc::compareWithIdentity)
+            "sig"_a, "fromCycleGroup"_a = 0, rdoc::compareWithIdentity)
     ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);

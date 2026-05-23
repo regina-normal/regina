@@ -429,14 +429,14 @@ class SFSpace : public Manifold {
          * given base orbifold and no exceptional fibres.
          *
          * \pre If there are no punctures or reflector boundary components,
-         * then \a useClass is one of the six classes \c o1, \c o2, \c n1,
+         * then \a baseClass is one of the six classes \c o1, \c o2, \c n1,
          * \c n2, \c n3 or \c n4.  Likewise, if there are punctures and/or
-         * reflector boundary components, then \a useClass is one of the
+         * reflector boundary components, then \a baseClass is one of the
          * five classes \c bo1, \c bo2, \c bn1, \c bn2 or \c bn3.
          * \pre If there are any twisted punctures or reflector boundary
-         * components, then \a useClass is either \c bo2 or \c bn3.
+         * components, then \a baseClass is either \c bo2 or \c bn3.
          *
-         * \param useClass indicates whether the base orbifold is closed
+         * \param baseClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
          * paths in the 3-manifold.  See the SFSpace class notes and the
          * Class enumeration notes for details.
@@ -459,7 +459,7 @@ class SFSpace : public Manifold {
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
-        SFSpace(Class useClass, unsigned long genus,
+        SFSpace(Class baseClass, unsigned long genus,
             unsigned long punctures = 0, unsigned long puncturesTwisted = 0,
             unsigned long reflectors = 0, unsigned long reflectorsTwisted = 0);
         /**
@@ -984,10 +984,10 @@ inline SFSpace::SFSpace() : class_(Class::o1), genus_(0),
         nFibres_(0), b_(0) {
 }
 
-inline SFSpace::SFSpace(SFSpace::Class useClass, unsigned long genus,
+inline SFSpace::SFSpace(SFSpace::Class baseClass, unsigned long genus,
         unsigned long punctures, unsigned long puncturesTwisted,
         unsigned long reflectors, unsigned long reflectorsTwisted) :
-        class_(useClass), genus_(genus),
+        class_(baseClass), genus_(genus),
         punctures_(punctures), puncturesTwisted_(puncturesTwisted),
         reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
         nFibres_(0), b_(0) {

@@ -34,6 +34,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/typetrie.h"
 
+using namespace pybind11::literals;
+
 using regina::TypeTrie;
 
 template <int nTypes>
@@ -67,7 +69,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             c[len] = 0;
             t.insert(c, len);
             delete[] c;
-        }, pybind11::arg("entry"), rdoc::insert)
+        }, "entry"_a, rdoc::insert)
         .def("dominates", [](const TypeTrie<nTypes>& t, pybind11::list arg) {
             uint8_t* c = new uint8_t[arg.size() + 1];
             size_t len = 0;
@@ -91,7 +93,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             bool ans = t.dominates(c, len);
             delete[] c;
             return ans;
-        }, pybind11::arg("vec"), rdoc::dominates)
+        }, "vec"_a, rdoc::dominates)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);

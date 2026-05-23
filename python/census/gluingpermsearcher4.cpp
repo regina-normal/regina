@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/census/gluingpermsearcher4.h"
 
+using namespace pybind11::literals;
+
 using regina::FacetPairing;
 using regina::GluingPermSearcher;
 
@@ -49,18 +51,16 @@ void addGluingPermSearcher4(pybind11::module_& m) {
         .def(pybind11::init<FacetPairing<4>, FacetPairing<4>::IsoList,
             bool, bool>(), rdoc::__init)
         .def("runSearch", &GluingPermSearcher<4>::runSearch<Action>,
-            pybind11::arg("action"), rdoc::runSearch)
+            "action"_a, rdoc::runSearch)
         .def("partialSearch", &GluingPermSearcher<4>::partialSearch<Action>,
-            pybind11::arg("maxDepth"), pybind11::arg("action"),
-            rdoc::partialSearch)
+            "maxDepth"_a, "action"_a, rdoc::partialSearch)
         .def("isComplete", &GluingPermSearcher<4>::isComplete, rdoc::isComplete)
         .def("taggedData", &GluingPermSearcher<4>::taggedData, rdoc::taggedData)
         .def("data", &GluingPermSearcher<4>::data, rdoc::data)
         .def_static("findAllPerms",
             &GluingPermSearcher<4>::findAllPerms<Action>,
-            pybind11::arg("pairing"), pybind11::arg("autos"),
-            pybind11::arg("orientableOnly"), pybind11::arg("finiteOnly"),
-            pybind11::arg("action"),
+            "pairing"_a, "autos"_a, "orientableOnly"_a, "finiteOnly"_a,
+            "action"_a,
             rdoc::findAllPerms)
         .def_static("bestSearcher", &GluingPermSearcher<4>::bestSearcher,
             rdoc::bestSearcher)

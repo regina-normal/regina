@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/hilbertcd.h"
 
+using namespace pybind11::literals;
+
 using regina::HilbertCD;
 using regina::VectorInt;
 
@@ -44,9 +46,7 @@ void addHilbertCD(pybind11::module_& m) {
     auto c = pybind11::class_<HilbertCD>(m, "HilbertCD", rdoc::__class)
         .def_static("enumerate", &HilbertCD::enumerate<VectorInt,
             const std::function<void(VectorInt&&)>&>,
-            pybind11::arg("action"), pybind11::arg("subspace"),
-            pybind11::arg("constraints"),
-            rdoc::enumerate)
+            "action"_a, "subspace"_a, "constraints"_a, rdoc::enumerate)
         .def_static("enumerate", [](const regina::MatrixInt& s,
                 const regina::ValidityConstraints& c) {
             std::vector<VectorInt> ans;
@@ -54,8 +54,7 @@ void addHilbertCD(pybind11::module_& m) {
                 ans.push_back(std::move(v));
             }, s, c);
             return ans;
-        }, pybind11::arg("subspace"), pybind11::arg("constraints"),
-            rdoc::enumerate)
+        }, "subspace"_a, "constraints"_a, rdoc::enumerate)
     ;
     regina::python::no_eq_static(c);
 
