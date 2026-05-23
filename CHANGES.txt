@@ -288,6 +288,10 @@ Version 8.0  [ TODO ]
               FixedArray internally, which is not copy-assignable).  If you
               need to copy a tableaux, the copy constructor remains available
               (and move assignment is still available also).
+        Class Matrix2:
+            - Routines inverse() and invert() now throw an exception if the
+              matrix does not have determinant ±1.  This also means that
+              invert() no longer returns a boolean to indicate success.
         Class MaxAggregator<T>:
             - Helper class for aggregating values using max with multiplicity.
         Class NativeInteger<bytes>:
