@@ -520,6 +520,8 @@ protected:
             constexpr auto pos_only_pos = constexpr_first<is_pos_only, Extra...>();
             static_assert(!(has_kw_only_args && has_pos_only_args) || pos_only_pos < kw_only_pos,
                           "py::pos_only must come before py::kw_only");
+            static_assert(constexpr_sum(std::convertible_to<Extra, const char*>...) <= 1,
+                          "At most one docstring should be provided");
         }
 
         /* Generate a readable signature describing the function's arguments and return
