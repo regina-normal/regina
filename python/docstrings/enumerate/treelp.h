@@ -652,7 +652,7 @@ Exception ``InvalidArgument``:
 Parameter ``tri``:
     the underlying 3-manifold triangulation.
 
-Parameter ``enc``:
+Parameter ``encoding``:
     the normal surface vector encoding that we are using for our
     enumeration task. This may be any valid NormalEncoding object,
     including the special angle structure encoding.

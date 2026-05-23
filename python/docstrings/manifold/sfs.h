@@ -203,16 +203,16 @@ base orbifold and no exceptional fibres.
 
 Precondition:
     If there are no punctures or reflector boundary components, then
-    *useClass* is one of the six classes ``o1``, ``o2``, ``n1``,
+    *baseClass* is one of the six classes ``o1``, ``o2``, ``n1``,
     ``n2``, ``n3`` or ``n4``. Likewise, if there are punctures and/or
-    reflector boundary components, then *useClass* is one of the five
+    reflector boundary components, then *baseClass* is one of the five
     classes ``bo1``, ``bo2``, ``bn1``, ``bn2`` or ``bn3``.
 
 Precondition:
     If there are any twisted punctures or reflector boundary
-    components, then *useClass* is either ``bo2`` or ``bn3``.
+    components, then *baseClass* is either ``bo2`` or ``bn3``.
 
-Parameter ``useClass``:
+Parameter ``baseClass``:
     indicates whether the base orbifold is closed and/or orientable,
     and gives information about fibre-reversing paths in the
     3-manifold. See the SFSpace class notes and the Class enumeration

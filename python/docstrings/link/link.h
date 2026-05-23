@@ -4095,20 +4095,20 @@ See also:
 
 // Docstring regina::python::doc::Link::parallel
 static constexpr const char parallel[] =
-R"doc(Returns *k* cables of this link, all parallel to each other using the
-given framing.
+R"doc(Returns the given number of cables of this link, all parallel to each
+other using the given framing.
 
 This routine creates a new link by:
 
 * treating each component of this link as a ribbon, using the given
   framing;
 
-* creating *k* parallel copies of the original link, following each
-  other side-by-side along these ribbons.
+* creating *cables* parallel copies of the original link, following
+  each other side-by-side along these ribbons.
 
 This link will not be modified.
 
-Parameter ``k``:
+Parameter ``cables``:
     the number of parallel copies to create. This must be non-
     negative.
 
@@ -4116,7 +4116,7 @@ Parameter ``framing``:
     the framing under which these copies will be parallel.
 
 Returns:
-    *k* parallel copies of this link.)doc";
+    *cables* parallel copies of this link.)doc";
 
 // Docstring regina::python::doc::Link::parityProjection
 static constexpr const char parityProjection[] =

@@ -1449,7 +1449,7 @@ Precondition:
 Template parameter ``k``:
     the dimension of the given face.
 
-Parameter ``f``:
+Parameter ``face``:
     the *k*-face about which to perform the candidate move.
 
 Returns:
@@ -1496,7 +1496,7 @@ Precondition:
 Template parameter ``k``:
     the dimension of the given face.
 
-Parameter ``f``:
+Parameter ``face``:
     the *k*-face about which to perform the candidate move.
 
 Returns:
@@ -1519,7 +1519,7 @@ performed, see shellBoundary().
 Precondition:
     The given simplex is a simplex of this triangulation.
 
-Parameter ``s``:
+Parameter ``simplex``:
     the top-dimensional simplex upon which to perform the candidate
     move.
 
@@ -2178,7 +2178,8 @@ Simplex<dim>::lockFacet() for further details on locks.
 The requirements for the move to not change the topology depend upon
 the facial dimension *k*. In all cases:
 
-* the face *f* must be valid and non-boundary, and must have degree 2;
+* the given face *f* must be valid and non-boundary, and must have
+  degree 2;
 
 * the two top-dimensional simplices on either side of *f* must be
   distinct;
@@ -2216,7 +2217,8 @@ preserve the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *f*) can no longer be used.
+old skeletal objects (such as the argument *face*) can no longer be
+used.
 
 Precondition:
     The given *k*-face is a *k*-face of this triangulation.
@@ -2224,7 +2226,7 @@ Precondition:
 Template parameter ``k``:
     the dimension of the given face.
 
-Parameter ``f``:
+Parameter ``face``:
     the *k*-face about which to perform the move.
 
 Returns:
@@ -2546,7 +2548,8 @@ the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *f*) can no longer be used.
+old skeletal objects (such as the argument *face*) can no longer be
+used.
 
 See the page on Pachner moves on triangulations for definitions and
 terminology relating to Pachner moves. After the move, the new belt
@@ -2574,7 +2577,7 @@ Precondition:
 Template parameter ``k``:
     the dimension of the given face.
 
-Parameter ``f``:
+Parameter ``face``:
     the *k*-face about which to perform the move.
 
 Returns:
@@ -2607,7 +2610,7 @@ Precondition:
 Template parameter ``k``:
     the dimension of the given face.
 
-Parameter ``f``:
+Parameter ``face``:
     the *k*-face about which to perform the move.
 
 Parameter ``ignored``:
@@ -2876,7 +2879,7 @@ old skeletal objects can no longer be used.
 Precondition:
     The given simplex is a simplex of this triangulation.
 
-Parameter ``s``:
+Parameter ``simplex``:
     the top-dimensional simplex upon which to perform the move.
 
 Returns:
@@ -2912,7 +2915,7 @@ discussion.
 Precondition:
     The given simplex is a simplex of this triangulation.
 
-Parameter ``s``:
+Parameter ``simplex``:
     the top-dimensional simplex upon which to perform the move.
 
 Parameter ``ignored``:
@@ -3483,7 +3486,7 @@ Precondition:
 Template parameter ``k``:
     the dimension of the given face.
 
-Parameter ``f``:
+Parameter ``face``:
     the *k*-face about which to perform the move.
 
 Parameter ``ignored``:
@@ -3539,7 +3542,7 @@ Precondition:
 Template parameter ``k``:
     the dimension of the given face.
 
-Parameter ``f``:
+Parameter ``face``:
     the *k*-face about which to perform the move.
 
 Returns:
@@ -3565,7 +3568,7 @@ Precondition:
 Template parameter ``k``:
     the dimension of the given face.
 
-Parameter ``f``:
+Parameter ``face``:
     the *k*-face about which to perform the move.
 
 Returns:
@@ -3593,7 +3596,7 @@ performed, see shellBoundary().
 Precondition:
     The given simplex is a simplex of this triangulation.
 
-Parameter ``s``:
+Parameter ``simplex``:
     the top-dimensional simplex upon which to perform the move.
 
 Returns:

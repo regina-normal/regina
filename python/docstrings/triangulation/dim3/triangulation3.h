@@ -233,14 +233,15 @@ If this triangulation is currently oriented, then this operation will
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 See openBook() for an inverse to this move.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Returns:
@@ -270,7 +271,7 @@ all. If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``ignored``:
@@ -309,7 +310,7 @@ things, we need to build a union-find structure to implement the
 test).
 
 If you are trying to reduce the number of vertices without changing
-the topology, and if *e* is an edge connecting an internal vertex with
+the topology, and if the given edge connects an internal vertex with
 some different vertex, then either collapseEdge() or pinchEdge() may
 be more appropriate for your situation (though you may find it easier
 just to call minimiseVertices() instead).
@@ -320,20 +321,20 @@ just to call minimiseVertices() instead).
 
 * The disadvantages of collapseEdge() are that it cannot always be
   performed, and its validity tests are expensive; pinchEdge() on the
-  other hand can always be used for edges *e* of the type described
-  above.
+  other hand can always be used on edges of the type described above.
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.
 
 Returns:
@@ -364,7 +365,7 @@ locks). If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.
 
 Parameter ``ignored``:
@@ -494,18 +495,18 @@ R"doc(Fills a two-triangle torus boundary component by attaching a solid
 torus along a given curve.
 
 The boundary component to be filled should be passed as the argument
-*bc*; if the triangulation has exactly one boundary component then you
-may omit *bc* (i.e., pass ``None``), and the (unique) boundary
-component will be inferred.
+*boundary*; if the triangulation has exactly one boundary component
+then you may omit *boundary* (i.e., pass the default value of
+``None``), and the (unique) boundary component will be inferred.
 
 If the boundary component cannot be inferred, and/or if the selected
 boundary component is not a two-triangle torus, then this routine will
 do nothing and return ``False``.
 
 Otherwise the given boundary component will be filled with a solid
-torus whose meridional curve cuts the edges ``bc->edge(0)``,
-``bc->edge(1)`` and ``bc->edge(2)`` a total of *cuts0*, *cuts1* and
-*cuts2* times respectively.
+torus whose meridional curve cuts the edges ``boundary->edge(0)``,
+``boundary->edge(1)`` and ``boundary->edge(2)`` a total of *cuts0*,
+*cuts1* and *cuts2* times respectively.
 
 For the filling to be performed successfully, the integers *cuts0*,
 *cuts1* and *cuts2* must be coprime, and two of them must add to give
@@ -521,17 +522,17 @@ you do not know how these edges are indexed in the boundary component.
 
 Parameter ``cuts0``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge ``bc->edge(0)``.
+    torus should cut the edge ``boundary->edge(0)``.
 
 Parameter ``cuts1``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge ``bc->edge(1)``.
+    torus should cut the edge ``boundary->edge(1)``.
 
 Parameter ``cuts2``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge ``bc->edge(2)``.
+    torus should cut the edge ``boundary->edge(2)``.
 
-Parameter ``bc``:
+Parameter ``boundary``:
     the boundary component to fill. If the triangulation has precisely
     one boundary component then this may be ``None``.
 
@@ -546,9 +547,9 @@ R"doc(Fills a two-triangle torus boundary component by attaching a solid
 torus along a given curve.
 
 The three edges of the boundary component should be passed as the
-arguments *e0*, *e1* and *e2*. The boundary component will then be
-filled with a solid torus whose meridional curve cuts these three
-edges *cuts0*, *cuts1* and *cuts2* times respectively.
+arguments *edge0*, *edge1* and *edge2*. The boundary component will
+then be filled with a solid torus whose meridional curve cuts these
+three edges *cuts0*, *cuts1* and *cuts2* times respectively.
 
 For the filling to be performed successfully, the three given edges
 must belong to the same boundary component, and this boundary
@@ -560,32 +561,32 @@ routine will do nothing and return ``False``.
 The triangulation will be simplified before returning.
 
 There are two versions of fillTorus(); the other takes a boundary
-component, and sets *e0*, *e1* and *e2* to its three edges according
-to Regina's own edge numbering. This version of fillTorus() should be
-used when you know how the filling curve cuts each boundary edge but
-you do not know how these edges are indexed in the corresponding
-boundary component.
+component, and sets *edge0*, *edge1* and *edge2* to its three edges
+according to Regina's own edge numbering. This version of fillTorus()
+should be used when you know how the filling curve cuts each boundary
+edge but you do not know how these edges are indexed in the
+corresponding boundary component.
 
-Parameter ``e0``:
+Parameter ``edge0``:
     one of the three edges of the boundary component to fill.
 
-Parameter ``e1``:
+Parameter ``edge1``:
     the second of the three edges of the boundary component to fill.
 
-Parameter ``e2``:
+Parameter ``edge2``:
     the second of the three edges of the boundary component to fill.
 
 Parameter ``cuts0``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge *e0*.
+    torus should cut the edge *edge0*.
 
 Parameter ``cuts1``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge *e1*.
+    torus should cut the edge *edge1*.
 
 Parameter ``cuts2``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge *e2*.
+    torus should cut the edge *edge2*.
 
 Returns:
     ``True`` if the boundary component was filled successfully, or
@@ -614,7 +615,7 @@ locks). If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``axis``:
@@ -764,21 +765,21 @@ move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
 Precondition:
     The given embeddings refer to edges of this triangulation.
 
-Parameter ``e0``:
+Parameter ``emb0``:
     an embedding of the common edge *e* of the two candidate triangles
     about which to perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     indicates one of the candidate triangles about which to perform
-    the move, with respect to the edge embedding *e0*; this must be 2
-    or 3.
+    the move, with respect to the edge embedding *emb0*; this must be
+    2 or 3.
 
-Parameter ``e1``:
+Parameter ``emb1``:
     another embedding of the edge *e*.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     indicates the other candidate triangle about which to perform the
-    move, with respect to the edge embedding *e1*; this must be 2 or
+    move, with respect to the edge embedding *emb1*; this must be 2 or
     3.
 
 Returns:
@@ -800,15 +801,15 @@ move02(Edge<3>*, size_t, size_t).
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the common edge of the two candidate triangles about which to
     perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     the number assigned to one of two candidate triangles about which
     to perform the move.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the number assigned to the other candidate triangle about which to
     perform the move.
 
@@ -831,20 +832,20 @@ move02(Triangle<3>*, int, Triangle<3>*, int).
 Precondition:
     The given triangles are both triangles of this triangulation.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     one of the two candidate triangles about which to perform the
     move.
 
-Parameter ``e0``:
-    the edge at which *t0* meets the other triangle *t1*; this must be
-    0, 1 or 2.
+Parameter ``edge0``:
+    the edge at which *tri0* meets the other triangle *tri1*; this
+    must be 0, 1 or 2.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the other candidate triangle about which to perform the move.
 
-Parameter ``e1``:
-    the edge at which *t1* meets the other triangle *t0*; this must be
-    0, 1 or 2.
+Parameter ``edge1``:
+    the edge at which *tri1* meets the other triangle *tri0*; this
+    must be 0, 1 or 2.
 
 Returns:
     ``True`` if and only if the requested move can be performed.
@@ -864,7 +865,7 @@ move21().
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge about which to perform the move.
 
 Parameter ``edgeEnd``:
@@ -887,7 +888,7 @@ move44().
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge about which to perform the move.
 
 Parameter ``axis``:
@@ -916,7 +917,7 @@ see closeBook().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge about which to perform the move.
 
 Returns:
@@ -933,7 +934,7 @@ see collapseEdge().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge to collapse.
 
 Returns:
@@ -1122,7 +1123,7 @@ see openBook().
 Precondition:
     The given triangle is a triangle of this triangulation.
 
-Parameter ``t``:
+Parameter ``triangle``:
     the candidate triangle about which to perform the move.
 
 Returns:
@@ -2747,10 +2748,10 @@ inverse to the 2-0 edge move.
 
 The different variants of move02() allow the two triangles and their
 common edge to be specified in different ways. For this variant, the
-common edge is referenced by both the embedding objects *e0* and *e1*,
-and the the two triangles are
-``e0.tetrahedron()->triangle(e0.vertices()[t0])`` and
-``e1.tetrahedron()->triangle(e1.vertices()[t1])``.
+common edge is referenced by both the embedding objects *emb0* and
+*emb1*, and the the two triangles are
+``emb0.tetrahedron()->triangle(emb0.vertices()[tri0])`` and
+``emb1.tetrahedron()->triangle(emb1.vertices()[tri1])``.
 
 This triangulation will be changed directly.
 
@@ -2761,11 +2762,11 @@ Note that simplex locks are never a concern for this type of move.
 
 To be able to perform this move, we require that:
 
-* *e0* and *e1* are both embeddings of the same edge *e*;
+* *emb0* and *emb1* are both embeddings of the same edge *e*;
 
 * this common edge *e* is valid;
 
-* *t0* and *t1* are both either 2 or 3 (which means that the two
+* *tri0* and *tri1* are both either 2 or 3 (which means that the two
   triangles listed above do indeed contain *e*).
 
 A note regarding facet locks: since this move pries open a _pair_ of
@@ -2779,27 +2780,27 @@ label the new tetrahedra in a way that preserves the orientation.
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
 old skeletal objects can no longer be used. However, the arguments
-*e0* and *e1* _can_ still be used since a FaceEmbedding can happily
-outlive the face that it refers to; see the FaceEmbedding class notes
-for further details.
+*emb0* and *emb1* _can_ still be used since a FaceEmbedding can
+happily outlive the face that it refers to; see the FaceEmbedding
+class notes for further details.
 
 Precondition:
     The edge *e* is an edge of this triangulation.
 
-Parameter ``e0``:
+Parameter ``emb0``:
     an embedding of the common edge *e* of the two triangles about
     which to perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     indicates one of the triangles about which to perform the move,
-    with respect to the edge embedding *e0*; this must be 2 or 3.
+    with respect to the edge embedding *emb0*; this must be 2 or 3.
 
-Parameter ``e1``:
+Parameter ``emb1``:
     another embedding of the edge *e*.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     indicates the other triangle about which to perform the move, with
-    respect to the edge embedding *e1*; this must be 2 or 3.
+    respect to the edge embedding *emb1*; this must be 2 or 3.
 
 Returns:
     ``True`` if and only if the requested move was able to be
@@ -2818,9 +2819,9 @@ inverse to the 2-0 edge move.
 
 The different variants of move02() allow the two triangles and their
 common edge to be specified in different ways. For this variant, the
-common edge is given as the argument *e*, and the two triangles are
-the triangles incident to *e* that are numbered *t0* and *t1* (see
-below for how this numbering scheme works).
+common edge is given as the argument *edge*, and the two triangles are
+the triangles incident to *edge* that are numbered *tri0* and *tri1*
+(see below for how this numbering scheme works).
 
 This triangulation will be changed directly.
 
@@ -2831,23 +2832,25 @@ Note that simplex locks are never a concern for this type of move.
 
 To be able to perform this move, we require that:
 
-* the given edge *e* is valid;
+* the given edge is valid;
 
-* the numbers *t0* and *t1* are both less than or equal to
-  ``e->degree()``, and strictly less than ``e->degree()`` if *e* is
-  non-boundary (as required by our numbering scheme for triangles).
+* the numbers *tri0* and *tri1* are both less than or equal to
+  ``edge->degree()``, and strictly less than ``edge->degree()`` if
+  *edge* is non-boundary (as required by our numbering scheme for
+  triangles).
 
-Our numbering scheme for triangles incident to *e* works as follows:
+Our numbering scheme for triangles incident to the given edge works as
+follows:
 
-* For each *i* in the range ``0 ≤ i < e->degree()``, we assign the
+* For each *i* in the range ``0 ≤ i < edge->degree()``, we assign the
   number *i* to the triangle
   ``emb.tetrahedron()->triangle(emb.vertices()[3])``, where *emb*
-  denotes ``e->embedding(i)``.
+  denotes ``edge->embedding(i)``.
 
-* If *e* is a boundary edge, then we additionally assign the number
-  ``e->degree()`` to the boundary triangle
+* If *edge* is a boundary edge, then we additionally assign the number
+  ``edge->degree()`` to the boundary triangle
   ``emb.tetrahedron()->triangle(emb.vertices()[2])``, where this time
-  *emb* denotes ``e->back()``.
+  *emb* denotes ``edge->back()``.
 
 A note regarding facet locks: since this move pries open a _pair_ of
 adjacent triangles and not just a single triangle, a lock on either of
@@ -2862,20 +2865,21 @@ call ``move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int)``.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the common edge of the two triangles about which to perform the
     move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     the number assigned to one of two triangles about which to perform
     the move, as described above.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the number assigned to the other triangle about which to perform
     the move, as described above.
 
@@ -2896,8 +2900,8 @@ inverse to the 2-0 edge move.
 
 The different variants of move02() allow the two triangles and their
 common edge to be specified in different ways. For this variant, the
-two triangles are given as the arguments *t0* and *t1*, and their
-common edge is ``t0->edge(e0)`` and ``t1->edge(e1)``.
+two triangles are given as the arguments *tri0* and *tri1*, and their
+common edge is ``tri0->edge(edge0)`` and ``tri1->edge(edge1)``.
 
 This triangulation will be changed directly.
 
@@ -2908,8 +2912,8 @@ Note that simplex locks are never a concern for this type of move.
 
 To be able to perform this move, we require that:
 
-* the edges ``t0->edge(e0)`` and ``t1->edge(e1)`` are the same edge of
-  this triangulation;
+* the edges ``tri0->edge(edge0)`` and ``tri1->edge(edge1)`` are the
+  same edge of this triangulation;
 
 * moreover, that common edge is valid.
 
@@ -2926,25 +2930,25 @@ call ``move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int)``.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the arguments *t0* and *t1*) can no
+old skeletal objects (such as the arguments *tri0* and *tri1*) can no
 longer be used.
 
 Precondition:
     The given triangles are both triangles of this triangulation.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     one of the two triangles about which to perform the move.
 
-Parameter ``e0``:
-    the edge at which *t0* meets the other triangle *t1*; this must be
-    0, 1 or 2.
+Parameter ``edge0``:
+    the edge at which *tri0* meets the other triangle *tri1*; this
+    must be 0, 1 or 2.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the other triangle about which to perform the move.
 
-Parameter ``e1``:
-    the edge at which *t1* meets the other triangle *t0*; this must be
-    0, 1 or 2.
+Parameter ``edge1``:
+    the edge at which *tri1* meets the other triangle *tri0*; this
+    must be 0, 1 or 2.
 
 Returns:
     ``True`` if and only if the requested move was able to be
@@ -2967,13 +2971,13 @@ the manifold (as discussed below), _and_ it will not violate any
 simplex and/or facet locks. See Simplex<3>::lock() and
 Simplex<3>::lockFacet() for further details on locks.
 
-In order for this move to make sense and to not to change the
-topology, we require that:
+Let *e* denote the given edge. In order for this move to make sense
+and to not to change the topology, we require that:
 
-* the given edge *e* is valid and non-boundary;
+* the edge *e* is valid and non-boundary;
 
-* the given edge *e* has degree one, whereupon we let *t* denote the
-  unique tetrahedron containing *e*;
+* the edge *e* has degree one, whereupon we let *t* denote the unique
+  tetrahedron containing *e*;
 
 * the two faces of *t* that do _not_ contain *e* are not joined to
   each other;
@@ -3001,12 +3005,13 @@ label the new tetrahedra in a way that preserves the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``edgeEnd``:
@@ -3055,12 +3060,13 @@ label the new tetrahedra in a way that preserves the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``axis``:
@@ -3186,14 +3192,15 @@ If this triangulation is currently oriented, then this operation will
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *t*) can no longer be used.
+old skeletal objects (such as the argument *triangle*) can no longer
+be used.
 
 See closeBook() for an inverse to this move.
 
 Precondition:
     The given triangle is a triangle of this triangulation.
 
-Parameter ``t``:
+Parameter ``triangle``:
     the triangle about which to perform the move.
 
 Returns:
@@ -3223,7 +3230,7 @@ all. If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given triangle is a triangle of this triangulation.
 
-Parameter ``t``:
+Parameter ``triangle``:
     the triangle about which to perform the move.
 
 Parameter ``ignored``:
@@ -3303,16 +3310,16 @@ further constraints. Two particularly useful settings are:
   move effectively drills out the edge, leaving an ideal torus or
   Klein bottle boundary component.
 
-We do not allow *e* to lie entirely on the triangulation boundary,
-because the implementation actually collapses an internal curve
-_parallel_ to *e*, not the edge *e* itself (and so if *e* is a
-boundary edge then the topological effect would not be as intended).
-We do allow *e* to be an internal edge with both endpoints on the
-boundary, but note that in this case the resulting topological
+We do not allow the given edge *e* to lie entirely on the
+triangulation boundary, because the implementation actually collapses
+an internal curve _parallel_ to *e*, not the edge *e* itself (and so
+if *e* is a boundary edge then the topological effect would not be as
+intended). We do allow *e* to be an internal edge with both endpoints
+on the boundary, but note that in this case the resulting topological
 operation would render the triangulation invalid.
 
 If you are trying to reduce the number of vertices without changing
-the topology, and if *e* is an edge connecting an internal vertex with
+the topology, and if the given edge connects an internal vertex with
 some different vertex, then either collapseEdge() or pinchEdge() may
 be more appropriate for your situation (though you may find it easier
 just to call minimiseVertices() instead).
@@ -3323,8 +3330,7 @@ just to call minimiseVertices() instead).
 
 * The disadvantages of collapseEdge() are that it cannot always be
   performed, and its validity tests are expensive; pinchEdge() on the
-  other hand can always be used for edges *e* of the type described
-  above.
+  other hand can always be used on edges of the type described above.
 
 This operation works by prying open a triangle *t* and inserting a
 two-tetrahedron gadget *g* within the resulting triangular pillow. In
@@ -3338,17 +3344,18 @@ preserve the orientation.
 
 Note that after performing this move, all skeletal objects (triangles,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an internal edge of this triangulation (that is,
-    *e* does not lie entirely within the boundary).
+    the given edge does not lie entirely within the boundary).
 
 Exception ``InvalidArgument``:
     The given edge lies entirely within the boundary of the
     triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.)doc";
 
 // Docstring regina::python::doc::Triangulation3::puncture
@@ -4425,7 +4432,7 @@ locks). If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``edgeEnd``:
@@ -4461,20 +4468,20 @@ move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
 Precondition:
     The given embeddings refer to edges of this triangulation.
 
-Parameter ``e0``:
+Parameter ``emb0``:
     an embedding of the common edge *e* of the two triangles about
     which to perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     indicates one of the triangles about which to perform the move,
-    with respect to the edge embedding *e0*; this must be 2 or 3.
+    with respect to the edge embedding *emb0*; this must be 2 or 3.
 
-Parameter ``e1``:
+Parameter ``emb1``:
     another embedding of the edge *e*.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     indicates the other triangle about which to perform the move, with
-    respect to the edge embedding *e1*; this must be 2 or 3.
+    respect to the edge embedding *emb1*; this must be 2 or 3.
 
 Returns:
     the new triangulation obtained by performing the requested move,
@@ -4499,15 +4506,15 @@ move02(Edge<3>*, size_t, size_t).
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the common edge of the two triangles about which to perform the
     move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     the number assigned to one of two triangles about which to perform
     the move.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the number assigned to the other triangle about which to perform
     the move.
 
@@ -4534,19 +4541,19 @@ move02(Triangle<3>*, int, Triangle<3>*, int).
 Precondition:
     The given triangles are both triangles of this triangulation.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     one of the two triangles about which to perform the move.
 
-Parameter ``e0``:
-    the edge at which *t0* meets the other triangle *t1*; this must be
-    0, 1 or 2.
+Parameter ``edge0``:
+    the edge at which *tri0* meets the other triangle *tri1*; this
+    must be 0, 1 or 2.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the other triangle about which to perform the move.
 
-Parameter ``e1``:
-    the edge at which *t1* meets the other triangle *t0*; this must be
-    0, 1 or 2.
+Parameter ``edge1``:
+    the edge at which *tri1* meets the other triangle *tri0*; this
+    must be 0, 1 or 2.
 
 Returns:
     the new triangulation obtained by performing the requested move,
@@ -4570,7 +4577,7 @@ move21().
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``edgeEnd``:
@@ -4597,7 +4604,7 @@ move44().
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``axis``:
@@ -4624,7 +4631,7 @@ see closeBook().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Returns:
@@ -4646,7 +4653,7 @@ see collapseEdge().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.
 
 Returns:
@@ -4668,7 +4675,7 @@ see openBook().
 Precondition:
     The given triangle is a triangle of this triangulation.
 
-Parameter ``t``:
+Parameter ``triangle``:
     the triangle about which to perform the move.
 
 Returns:
@@ -4700,20 +4707,20 @@ Precondition:
     The two given edge embeddings both refer to the same edge, which
     must be an edge of this triangulation.
 
-Parameter ``e0``:
+Parameter ``emb0``:
     an embedding of the common edge *e* of the two triangles about
     which to perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     indicates one of the triangles about which to perform the move,
-    with respect to the edge embedding *e0*; this must be 2 or 3.
+    with respect to the edge embedding *emb0*; this must be 2 or 3.
 
-Parameter ``e1``:
+Parameter ``emb1``:
     another embedding of the edge *e*.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     indicates the other triangle about which to perform the move, with
-    respect to the edge embedding *e1*; this must be 2 or 3.
+    respect to the edge embedding *emb1*; this must be 2 or 3.
 
 Parameter ``ignored``:
     an argument that is ignored. In earlier versions of Regina this
@@ -4754,15 +4761,15 @@ all. If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the common edge of the two triangles about which to perform the
     move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     the number assigned to one of two triangles about which to perform
     the move.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the number assigned to the other triangle about which to perform
     the move.
 
@@ -4805,19 +4812,19 @@ all. If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given triangles are both triangles of this triangulation.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     one of the two triangles about which to perform the move.
 
-Parameter ``e0``:
-    the edge at which *t0* meets the other triangle *t1*; this must be
-    0, 1 or 2.
+Parameter ``edge0``:
+    the edge at which *tri0* meets the other triangle *tri1*; this
+    must be 0, 1 or 2.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the other triangle about which to perform the move.
 
-Parameter ``e1``:
-    the edge at which *t1* meets the other triangle *t0*; this must be
-    0, 1 or 2.
+Parameter ``edge1``:
+    the edge at which *tri1* meets the other triangle *tri0*; this
+    must be 0, 1 or 2.
 
 Parameter ``ignored``:
     an argument that is ignored. In earlier versions of Regina this

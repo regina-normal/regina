@@ -142,7 +142,7 @@ things, we need to build two union-find structures to implement the
 test).
 
 If you are trying to reduce the number of vertices without changing
-the topology, and if *e* is an edge connecting an internal vertex with
+the topology, and if the given edge connects an internal vertex with
 some different vertex, then either collapseEdge() or snapEdge() may be
 more appropriate for your situation.
 
@@ -152,20 +152,20 @@ more appropriate for your situation.
 
 * The disadvantages of collapseEdge() are that it cannot always be
   performed, and its validity tests are expensive; snapEdge() on the
-  other hand can always be used for edges *e* of the type described
-  above.
+  other hand can always be used on edges of the type described above.
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.
 
 Returns:
@@ -196,7 +196,7 @@ locks). If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse. :
 
 Parameter ``ignored``:
@@ -268,7 +268,7 @@ locks). If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``ignored``:
@@ -298,7 +298,7 @@ move44().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge about which to perform the move.
 
 Returns:
@@ -321,7 +321,7 @@ see collapseEdge().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge to collapse.
 
 Returns:
@@ -339,7 +339,7 @@ see openBook().
 Precondition:
     The given tetrahedron is a tetrahedron of this triangulation.
 
-Parameter ``t``:
+Parameter ``tet``:
     the candidate tetrahedron about which to perform the move.
 
 Returns:
@@ -356,7 +356,7 @@ performed, see snapEdge().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge whose endpoints would be snapped together.
 
 Returns:
@@ -506,12 +506,13 @@ the manifold (as discussed below), _and_ it will not violate any
 simplex and/or facet locks. See Simplex<4>::lock() and
 Simplex<4>::lockFacet() for further details on locks.
 
-For this move to make sense, the initial configuration of four
-pentachora around the given edge *e* should be equivalent to the join
-of a double edge and a square with diagonal given by the edge *e*. The
-4-4 move then essentially performs a 2-2 move on this square, with the
-new diagonal of the square corresponding precisely to the new edge of
-this triangulation that will join the four new pentachora.
+Let *e* denote the given edge. For this move to make sense, the
+initial configuration of four pentachora around *e* should be
+equivalent to the join of a double edge and a square with diagonal
+given by *e*. The 4-4 move then essentially performs a 2-2 move on
+this square, with the new diagonal of the square corresponding
+precisely to the new edge of this triangulation that will join the
+four new pentachora.
 
 Therefore, to be able to perform this move (and to do so without
 changing the topology), we require that:
@@ -526,12 +527,13 @@ label the new pentachora in a way that preserves the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Returns:
@@ -608,12 +610,13 @@ If this triangulation is currently oriented, then this operation will
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *t*) can no longer be used.
+old skeletal objects (such as the argument *tet*) can no longer be
+used.
 
 Precondition:
     The given tetrahedron is a tetrahedron of this triangulation.
 
-Parameter ``t``:
+Parameter ``tet``:
     the tetrahedron about which to perform the move.
 
 Returns:
@@ -643,7 +646,7 @@ all. If the move _is_ allowed, and if the argument *perform* is
 Precondition:
     The given tetrahedron is a tetrahedron of this triangulation.
 
-Parameter ``t``:
+Parameter ``tet``:
     the tetrahedron about which to perform the move.
 
 Parameter ``ignored``:
@@ -1132,8 +1135,7 @@ topology.
 
 * The disadvantages of collapseEdge() are that it cannot always be
   performed, and its validity tests are expensive; snapEdge() on the
-  other hand can always be used for edges *e* of the type described
-  above.
+  other hand can always be used on edges of the type described above.
 
 This operation essentially works by taking a triangle *f* that meets
 the given edge *e*, and folding the other two edges of *f* together
@@ -1150,12 +1152,13 @@ preserve the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge whose endpoints are to be snapped together.
 
 Returns:
@@ -1188,7 +1191,7 @@ also _perform_ the move.
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``ignored``:
@@ -1272,7 +1275,7 @@ move44().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Returns:
@@ -1294,7 +1297,7 @@ see collapseEdge().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.
 
 Returns:
@@ -1316,7 +1319,7 @@ see openBook().
 Precondition:
     The given tetrahedron is a tetrahedron of this triangulation.
 
-Parameter ``t``:
+Parameter ``tet``:
     the tetrahedron about which to perform the move.
 
 Returns:
@@ -1337,7 +1340,7 @@ performed, see snapEdge().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge whose endpoints are to be snapped together.
 
 Returns:

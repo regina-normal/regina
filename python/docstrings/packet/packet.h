@@ -1403,7 +1403,8 @@ Typically this will be called from the root of the packet tree, which
 will write the entire packet tree to the output stream.
 
 Python:
-    The argument *out* should be an open Python file object.
+    The first argument should be an open Python file object (not a C++
+    output stream).
 
 Parameter ``out``:
     the output stream to which the XML data file should be written.
