@@ -66,14 +66,14 @@ class SFSpace;
  * details).  Note that the following diagram is viewed from _inside_
  * the block.
  *
- * <pre>
+ * ```
  *               -+---+---+---+---+---+---+-
  *                |0 /|0 /|0 /|0 /|0 /|0 /|
  *            ... | / | / | / | / | / | / | ...
  *                |/ 1|/ 1|/ 1|/ 1|/ 1|/ 1|
  *               -+---+---+---+---+---+---+-
  * Annulus #  ...  n-2 n-1  0   1   2   3   ...
- * </pre>
+ * ```
  *
  * The ring of boundary annuli may optionally be twisted, so that together
  * the annuli form a long Mobius band.  In this case, for the purposes of

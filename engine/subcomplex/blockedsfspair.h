@@ -73,11 +73,11 @@ class SatRegion;
  * each region and \a o0 and \a o1 represent the base orbifolds.  Then
  * the boundaries are joined according to the following relation:
  *
- * <pre>
+ * ```
  *     [f1]       [f0]
  *     [  ] = M * [  ]
  *     [o1]       [o0]
- * </pre>
+ * ```
  *
  * If a layering is present between the two boundaries, then the
  * boundary curves are not identified directly.  In this case, the matrix

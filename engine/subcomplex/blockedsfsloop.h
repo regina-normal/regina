@@ -79,11 +79,11 @@ class SatRegion;
  * fibres of the region and \a o0 and \a o1 represent the base orbifold.
  * Then the boundaries are joined according to the following relation:
  *
- * <pre>
+ * ```
  *     [f1]       [f0]
  *     [  ] = M * [  ]
  *     [o1]       [o0]
- * </pre>
+ * ```
  *
  * If a layering is present between the two torus boundaries, then the
  * corresponding boundary curves are not identified directly.  In this

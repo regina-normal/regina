@@ -57,11 +57,11 @@ namespace regina {
  * parallel).  Then we identify the torus boundaries so that, in
  * additive terms:
  *
- * <pre>
+ * ```
  *     [a]       [p]
  *     [ ] = M * [ ]
  *     [b]       [q]
- * </pre>
+ * ```
  *
  * All optional Manifold routines except for construct() are implemented
  * for this class.
@@ -108,11 +108,11 @@ class TorusBundle : public Manifold {
          * passed separately.  They combine to give the full monodromy
          * matrix \a M as follows:
          *
-         * <pre>
+         * ```
          *           [ mon00  mon01 ]
          *     M  =  [              ]
          *           [ mon10  mon11 ]
-         * </pre>
+         * ```
          *
          * \pre The monodromy matrix formed from the given parameters
          * has determinant +1 or -1.

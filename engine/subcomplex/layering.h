@@ -60,7 +60,7 @@ namespace regina {
  * below to the corresponding vertex numbers in each tetrahedron (and
  * therefore maps 3 to the corresponding face number).
  *
- * <pre>
+ * ```
  *     *--->>--*
  *     |0  2 / |
  *     |    / 1|
@@ -68,7 +68,7 @@ namespace regina {
  *     |1 /    |
  *     | / 2  0|
  *     *--->>--*
- * </pre>
+ * ```
  *
  * In particular, if the two tetrahedra are \a t0 and \a t1 and the two
  * corresponding permutations are \a p0 and \a p1, then:
@@ -288,7 +288,7 @@ class Layering : public ShortOutput<Layering> {
          * \a new_x and \a new_y be the directed edges \a q[0]-\a q[1]
          * and \a q[0]-\a q[2] respectively of tetrahedron \a s.
          *
-         * <pre>
+         * ```
          *     *--->>--*
          *     |0  2 / |
          *     |    / 1|
@@ -296,7 +296,7 @@ class Layering : public ShortOutput<Layering> {
          *     |1 /    |
          *     | / 2  0|
          *     *--->>--*
-         * </pre>
+         * ```
          *
          * Assuming both boundaries are tori, edges \a old_x and \a old_y are
          * generators of the old boundary torus and edges \a new_x and
@@ -304,11 +304,11 @@ class Layering : public ShortOutput<Layering> {
          * that this routine returns the matrix \a M.  This signifies
          * that, using additive notation:
          *
-         * <pre>
+         * ```
          *     [new_x]         [old_x]
          *     [     ]  =  M * [     ] .
          *     [new_y]         [old_y]
-         * </pre>
+         * ```
          *
          * In other words, the matrix that is returned expresses the
          * generator curves of the new boundary in terms of the
@@ -398,7 +398,7 @@ class Layering : public ShortOutput<Layering> {
          * \a a and \a b be the directed edges \a q[0]-\a q[1] and
          * \a q[0]-\a q[2] of tetrahedron \a u respectively.
          *
-         * <pre>
+         * ```
          *     *--->>--*
          *     |0  2 / |
          *     |    / 1|
@@ -406,7 +406,7 @@ class Layering : public ShortOutput<Layering> {
          *     |1 /    |
          *     | / 2  0|
          *     *--->>--*
-         * </pre>
+         * ```
          *
          * Assuming both boundaries are tori, edges \a x and \a y are
          * generators of the original torus boundary and edges \a a and
@@ -414,11 +414,11 @@ class Layering : public ShortOutput<Layering> {
          * additive notation, the matrix \a upperReln is modified so
          * that
          *
-         * <pre>
+         * ```
          *     [a]                 [x]
          *     [ ]  =  upperReln * [ ] .
          *     [b]                 [y]
-         * </pre>
+         * ```
          *
          * In other words, the modified \a upperReln matrix expresses
          * the generator curves of the given boundary in terms of the

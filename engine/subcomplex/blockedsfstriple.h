@@ -65,14 +65,14 @@ class SatRegion;
  * tunnels show where the region boundaries are joined (possibly via
  * layerings).
  *
- * <pre>
+ * ```
  *     /----------------\   /------------------\   /----------------\
  *     |                |   |                  |   |                |
  *     |  End region 0   ---   Central region   ---   End region 1  |
  *     |                 ---                    ---                 |
  *     |                |   |                  |   |                |
  *     \----------------/   \------------------/   \----------------/
- * </pre>
+ * ```
  *
  * Each of the end regions must have precisely one boundary component
  * formed from just one saturated annulus.  The central region may have
@@ -96,11 +96,11 @@ class SatRegion;
  * the fibres of each region and \a o and \a o0 represent the base orbifolds.
  * Then the boundaries are joined according to the following relation:
  *
- * <pre>
+ * ```
  *     [f0]       [f ]
  *     [  ] = M * [  ]
  *     [o0]       [o ]
- * </pre>
+ * ```
  *
  * Likewise, let \a M' be the matrix describing how the central region
  * and the second end region (marked in the diagram as end region 1) are
@@ -110,11 +110,11 @@ class SatRegion;
  * \a o and \a o1 represent the base orbifolds.  Then the boundaries are
  * joined according to the relation:
  *
- * <pre>
+ * ```
  *     [f1]        [f']
  *     [  ] = M' * [  ]
  *     [o1]        [o']
- * </pre>
+ * ```
  *
  * If a layering is present between two regions, then the corresponding
  * boundary curves are not identified directly.  In this case, the relevant

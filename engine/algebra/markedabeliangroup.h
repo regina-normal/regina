@@ -892,12 +892,12 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * form a chain map.
          *
          * Given two HomMarkedAbelianGroups, you have two diagrams:
-         * <pre>
+         * ```
          * Z^a --N1--> Z^b --M1--> Z^c   Z^g --N3--> Z^h --M3--> Z^i
          *                   ^                             ^
          *                   |this.matrix                  |other.matrix
          * Z^d --N2--> Z^e --M2--> Z^f   Z^j --N4--> Z^k --M4--> Z^l
-         * </pre>
+         * ```
          * If c=g and f=j and M1=N3 and M2=N4, you can ask if these maps
          * commute, i.e., whether you have a map of chain complexes.
          *

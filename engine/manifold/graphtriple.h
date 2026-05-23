@@ -63,14 +63,14 @@ namespace regina {
  * boxes represent the bounded Seifert fibred spaces, and the small
  * tunnels show how their boundaries are joined.
  *
- * <pre>
+ * ```
  *     /---------------\   /-----------------\   /---------------\
  *     |               |   |                 |   |               |
  *     |  End space 0   ---   Central space   ---   End space 1  |
  *     |                ---                   ---                |
  *     |               |   |                 |   |               |
  *     \---------------/   \-----------------/   \---------------/
- * </pre>
+ * ```
  *
  * The way in which each pair of spaces is joined is specified by a
  * 2-by-2 matrix.  This matrix expresses the locations of the fibres and
@@ -89,11 +89,11 @@ namespace regina {
  * orbifold of the first end space.  Then the curves \a f, \a o,
  * \a f0 and \a o0 are related as follows:
  *
- * <pre>
+ * ```
  *     [f0]       [f ]
  *     [  ] = M * [  ]
  *     [o0]       [o ]
- * </pre>
+ * ```
  *
  * Likewise, let matrix \a M' describe the joining of the central
  * space and the second end space (marked in the diagram above as end
@@ -103,11 +103,11 @@ namespace regina {
  * fibres and the base orbifold of the second end space.  Then the curves
  * \a f', \a o', \a f1 and \a o1 are related as follows:
  *
- * <pre>
+ * ```
  *     [f1]        [f']
  *     [  ] = M' * [  ]
  *     [o1]        [o']
- * </pre>
+ * ```
  *
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.

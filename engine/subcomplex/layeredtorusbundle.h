@@ -176,19 +176,19 @@ class LayeredTorusBundle : public StandardTriangulation {
          * \a w.\a a_l + \a x.\a b_l, and that the upper β is parallel to
          * \a y.\a a_l + \a z.\a b_l.  Then the matrix returned will be
          *
-         * <pre>
+         * ```
          *     [ w  x ]
          *     [      ] .
          *     [ y  z ]
-         * </pre>
+         * ```
          *
          * In other words,
          *
-         * <pre>
+         * ```
          *     [ a_u ]                      [ a_l ]
          *     [     ]  =  layeringReln() * [     ] .
          *     [ b_u ]                      [ b_l ]
-         * </pre>
+         * ```
          *
          * It can be observed that this matrix expresses the upper
          * boundary curves in terms of the lower, whereas
@@ -196,13 +196,13 @@ class LayeredTorusBundle : public StandardTriangulation {
          * in terms of the upper.  This means that the monodromy
          * describing the overall torus bundle over the circle can be
          * calculated as
-         * <pre>
+         * ```
          *     M  =  layeringReln() * core().parallelReln()
-         * </pre>
+         * ```
          * or alternatively using the similar matrix
-         * <pre>
+         * ```
          *     M'  =  core().parallelReln() * layeringReln() .
-         * </pre>
+         * ```
          *
          * Note that in the degenerate case where there is no layering at
          * all, this matrix is still perfectly well defined; in this

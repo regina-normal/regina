@@ -77,11 +77,11 @@ class SFSpace;
  * be directed curves on this same boundary representing the fibre and
  * base orbifold of the new alternative space.  Then
  *
- * <pre>
+ * ```
  *     [f_alt]         [f_old]
  *     [     ]  =  M * [     ].
  *     [o_alt]         [o_old]
- * </pre>
+ * ```
  *
  * Note that this _only_ applies to the first boundary torus!  If the
  * Seifert fibred space has more than one boundary, then for the

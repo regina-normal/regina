@@ -63,7 +63,7 @@ class Matrix2;
  * The annulus can be drawn as follows, with the upper edge identified
  * with the lower:
  *
- * <pre>
+ * ```
  *            *--->---*
  *            |0  2 / |
  *    First   |    / 1|  Second
@@ -71,7 +71,7 @@ class Matrix2;
  *            |1 /    |
  *            | / 2  0|
  *            *--->---*
- * </pre>
+ * ```
  *
  * Suppose that \a tet[0] and \a tet[1] are the tetrahedra providing the
  * first and second triangles respectively.  Then the markings 0..2 on the
@@ -81,7 +81,7 @@ class Matrix2;
  *
  * Note that the diagram above can also be drawn as follows.
  *
- * <pre>
+ * ```
  *            *--->---*
  *            | \ 2  1|
  *    First   |0 \    |  Second
@@ -89,7 +89,7 @@ class Matrix2;
  *            |    \ 0|
  *            |1  2 \ |
  *            *--->---*
- * </pre>
+ * ```
  *
  * Note also that the labelling of the tetrahedra and their vertices
  * establishes an orientation on the vertical fibres, as well as a
@@ -99,7 +99,7 @@ class Matrix2;
  * edges \a roles[][0-2] as _horizontal_, and edge \a roles[][1-2] as
  * _diagonal_.  This is illustrated in the following diagrams.
  *
- * <pre>
+ * ```
  *         V  Horizontal       V   Diagonal
  *         e  *--->---*        e  *--->---*
  *         r  |   g / |        r  |H\ 2  1|
@@ -108,7 +108,7 @@ class Matrix2;
  *         c  |D /    |        c  |   i\ 0|
  *         a  | / 2  0|        a  |    z\ |
  *         l  *--->---*        l  *--->---*
- * </pre>
+ * ```
  *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
@@ -396,11 +396,11 @@ struct SatAnnulus {
      * annulus \a other.  Then the joining between the two annuli can
      * be expressed as follows:
      *
-     * <pre>
+     * ```
      *     [x ]                [x']
      *     [  ]  =  matching * [  ].
      *     [y ]                [y']
-     * </pre>
+     * ```
      *
      * \param other the annulus to compare with this.
      * \param matching returns details on how the curves on each annulus

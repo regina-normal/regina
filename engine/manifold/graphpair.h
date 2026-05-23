@@ -67,11 +67,11 @@ namespace regina {
  * the base orbifold of the second Seifert fibred space.  Then the curves
  * \a f0, \a o0, \a f1 and \a o1 are related as follows:
  *
- * <pre>
+ * ```
  *     [f1]       [f0]
  *     [  ] = M * [  ]
  *     [o1]       [o0]
- * </pre>
+ * ```
  *
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
@@ -108,11 +108,11 @@ class GraphPair : public Manifold {
          * The elements of the matching matrix combine to give the full
          * matrix \a M as follows:
          *
-         * <pre>
+         * ```
          *           [ mat00  mat01 ]
          *     M  =  [              ]
          *           [ mat10  mat11 ]
-         * </pre>
+         * ```
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *

@@ -73,7 +73,7 @@ namespace regina {
  * where the small tunnels show where the torus boundaries are joined
  * (possibly via layerings).
  *
- * <pre>
+ * ```
  *    /--------------------\     /-----------------\
  *    |                     -----                  |
  *    |                     -----                  |
@@ -81,7 +81,7 @@ namespace regina {
  *    |                     -----                  |
  *    |                     -----                  |
  *    \--------------------/     \-----------------/
- * </pre>
+ * ```
  *
  * The effect of the thin I-bundle and the two layerings is essentially
  * to join the two boundaries of the saturated region according to some
@@ -96,11 +96,11 @@ namespace regina {
  * Then the torus boundaries of the saturated region are identified by
  * the thin I-bundle and layerings according to the following relation:
  *
- * <pre>
+ * ```
  *     [f1]       [f0]
  *     [  ] = M * [  ]
  *     [o1]       [o0]
- * </pre>
+ * ```
  *
  * Note that the routines writeName() and writeTeXName() do _not_ offer
  * enough information to uniquely identify the triangulation, since this
