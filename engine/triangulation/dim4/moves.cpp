@@ -33,8 +33,6 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
-// TODO: Update args in this file
-
 namespace regina {
 
 namespace {
