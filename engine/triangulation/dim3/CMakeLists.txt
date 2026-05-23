@@ -11,7 +11,7 @@ SET ( FILES
   moves.cpp
   reorder.cpp
   retriangulate.cpp
-  simplifyglobal.cpp
+  simplify.cpp
   skeleton.cpp
   snappea.cpp
   subdivide.cpp

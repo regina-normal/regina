@@ -4,7 +4,7 @@ SET ( FILES
   hypersurfaces.cpp
   moves.cpp
   retriangulate.cpp
-  simplifyglobal.cpp
+  simplify.cpp
   skeleton.cpp
   subdivide.cpp
   triangulation4.cpp

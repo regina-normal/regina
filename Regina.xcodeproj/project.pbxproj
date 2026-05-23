@@ -636,12 +636,12 @@
 		0553FA982AEBE3AC00BE89A7 /* triangulation3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0311DBF0B5E00117BFC /* triangulation3.cpp */; };
 		0553FA992AEBE3AC00BE89A7 /* moves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0281DBF0B5E00117BFC /* moves.cpp */; };
 		0553FA9A2AEBE3AC00BE89A7 /* surfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A02D1DBF0B5E00117BFC /* surfaces.cpp */; };
-		0553FA9B2AEBE3AC00BE89A7 /* simplifyglobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0291DBF0B5E00117BFC /* simplifyglobal.cpp */; };
+		0553FA9B2AEBE3AC00BE89A7 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0291DBF0B5E00117BFC /* simplify.cpp */; };
 		0553FA9C2AEBE3AC00BE89A7 /* turaevviro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */; };
 		0553FA9D2AEBE3B100BE89A7 /* edge4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FE81DBF078800117BFC /* edge4.cpp */; };
 		0553FA9E2AEBE3B100BE89A7 /* hypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CB70628D0168C006B37B0 /* hypersurfaces.cpp */; };
 		0553FA9F2AEBE3B500BE89A7 /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEF1DBF078800117BFC /* skeleton.cpp */; };
-		0553FAA02AEBE3B500BE89A7 /* simplifyglobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */; };
+		0553FAA02AEBE3B500BE89A7 /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEE1DBF078800117BFC /* simplify.cpp */; };
 		0553FAA12AEBE3B500BE89A7 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13801FEB86E900171D66 /* retriangulate.cpp */; };
 		0553FAA22AEBE3B500BE89A7 /* moves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FED1DBF078800117BFC /* moves.cpp */; };
 		0553FAA32AEBE3B500BE89A7 /* subdivide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FF01DBF078800117BFC /* subdivide.cpp */; };
@@ -1693,7 +1693,7 @@
 		05F09FFD1DBF078800117BFC /* edge4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FE91DBF078800117BFC /* edge4.h */; };
 		05F0A0001DBF078800117BFC /* pentachoron4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FEC1DBF078800117BFC /* pentachoron4.h */; };
 		05F0A0011DBF078800117BFC /* moves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FED1DBF078800117BFC /* moves.cpp */; };
-		05F0A0021DBF078800117BFC /* simplifyglobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */; };
+		05F0A0021DBF078800117BFC /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEE1DBF078800117BFC /* simplify.cpp */; };
 		05F0A0031DBF078800117BFC /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEF1DBF078800117BFC /* skeleton.cpp */; };
 		05F0A0041DBF078800117BFC /* subdivide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FF01DBF078800117BFC /* subdivide.cpp */; };
 		05F0A0091DBF078800117BFC /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FF51DBF078800117BFC /* triangulation4.cpp */; };
@@ -1710,7 +1710,7 @@
 		05F0A0421DBF0B5E00117BFC /* reorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0261DBF0B5E00117BFC /* reorder.cpp */; };
 		05F0A0431DBF0B5E00117BFC /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0271DBF0B5E00117BFC /* retriangulate.cpp */; };
 		05F0A0441DBF0B5E00117BFC /* moves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0281DBF0B5E00117BFC /* moves.cpp */; };
-		05F0A0451DBF0B5E00117BFC /* simplifyglobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0291DBF0B5E00117BFC /* simplifyglobal.cpp */; };
+		05F0A0451DBF0B5E00117BFC /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0291DBF0B5E00117BFC /* simplify.cpp */; };
 		05F0A0461DBF0B5E00117BFC /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A02A1DBF0B5E00117BFC /* skeleton.cpp */; };
 		05F0A0471DBF0B5E00117BFC /* snappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A02B1DBF0B5E00117BFC /* snappea.cpp */; };
 		05F0A0481DBF0B5E00117BFC /* subdivide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A02C1DBF0B5E00117BFC /* subdivide.cpp */; };
@@ -4658,7 +4658,7 @@
 		05F09FE91DBF078800117BFC /* edge4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge4.h; sourceTree = "<group>"; };
 		05F09FEC1DBF078800117BFC /* pentachoron4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pentachoron4.h; sourceTree = "<group>"; };
 		05F09FED1DBF078800117BFC /* moves.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moves.cpp; sourceTree = "<group>"; };
-		05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplifyglobal.cpp; sourceTree = "<group>"; };
+		05F09FEE1DBF078800117BFC /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
 		05F09FEF1DBF078800117BFC /* skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skeleton.cpp; sourceTree = "<group>"; };
 		05F09FF01DBF078800117BFC /* subdivide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = subdivide.cpp; sourceTree = "<group>"; };
 		05F09FF51DBF078800117BFC /* triangulation4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation4.cpp; sourceTree = "<group>"; };
@@ -4676,7 +4676,7 @@
 		05F0A0261DBF0B5E00117BFC /* reorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = reorder.cpp; sourceTree = "<group>"; };
 		05F0A0271DBF0B5E00117BFC /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
 		05F0A0281DBF0B5E00117BFC /* moves.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moves.cpp; sourceTree = "<group>"; };
-		05F0A0291DBF0B5E00117BFC /* simplifyglobal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplifyglobal.cpp; sourceTree = "<group>"; };
+		05F0A0291DBF0B5E00117BFC /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
 		05F0A02A1DBF0B5E00117BFC /* skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skeleton.cpp; sourceTree = "<group>"; };
 		05F0A02B1DBF0B5E00117BFC /* snappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappea.cpp; sourceTree = "<group>"; };
 		05F0A02C1DBF0B5E00117BFC /* subdivide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = subdivide.cpp; sourceTree = "<group>"; };
@@ -8832,7 +8832,7 @@
 				05F0A0281DBF0B5E00117BFC /* moves.cpp */,
 				05F0A0261DBF0B5E00117BFC /* reorder.cpp */,
 				05F0A0271DBF0B5E00117BFC /* retriangulate.cpp */,
-				05F0A0291DBF0B5E00117BFC /* simplifyglobal.cpp */,
+				05F0A0291DBF0B5E00117BFC /* simplify.cpp */,
 				05F0A02A1DBF0B5E00117BFC /* skeleton.cpp */,
 				05F0A02B1DBF0B5E00117BFC /* snappea.cpp */,
 				05F0A02C1DBF0B5E00117BFC /* subdivide.cpp */,
@@ -8860,7 +8860,7 @@
 				05F09FED1DBF078800117BFC /* moves.cpp */,
 				05F09FEC1DBF078800117BFC /* pentachoron4.h */,
 				05DC13801FEB86E900171D66 /* retriangulate.cpp */,
-				05F09FEE1DBF078800117BFC /* simplifyglobal.cpp */,
+				05F09FEE1DBF078800117BFC /* simplify.cpp */,
 				05F09FEF1DBF078800117BFC /* skeleton.cpp */,
 				05F09FF01DBF078800117BFC /* subdivide.cpp */,
 				053CB70528D0168B006B37B0 /* tetrahedron4.h */,
@@ -10271,7 +10271,7 @@
 				05A628262AE921700049739E /* randutils.cpp in Sources */,
 				0553FAE22AEBE6B500BE89A7 /* gluingperms8.cpp in Sources */,
 				0553FAF92AEBE6ED00BE89A7 /* gauss.cpp in Sources */,
-				0553FAA02AEBE3B500BE89A7 /* simplifyglobal.cpp in Sources */,
+				0553FAA02AEBE3B500BE89A7 /* simplify.cpp in Sources */,
 				0553FAE82AEBE6C400BE89A7 /* treeconstraint.cpp in Sources */,
 				0553FB842AEBE86300BE89A7 /* offload_handler.cpp in Sources */,
 				05A628142AE920510049739E /* memstream.cpp in Sources */,
@@ -10281,7 +10281,7 @@
 				0553FB922AEBE86300BE89A7 /* signed_dec.cpp in Sources */,
 				0553FB8E2AEBE86300BE89A7 /* collection.cpp in Sources */,
 				0553FA8C2AEBE3AC00BE89A7 /* homologicaldata.cpp in Sources */,
-				0553FA9B2AEBE3AC00BE89A7 /* simplifyglobal.cpp in Sources */,
+				0553FA9B2AEBE3AC00BE89A7 /* simplify.cpp in Sources */,
 				05A6281F2AE921580049739E /* matrixops.cpp in Sources */,
 				05A6281B2AE921580049739E /* matrix2.cpp in Sources */,
 				0553FB622AEBE7E100BE89A7 /* edge_classes.cpp in Sources */,
@@ -11039,7 +11039,7 @@
 				057B0CB826A506840017F5EA /* covers.cpp in Sources */,
 				0518B9D329D595540020ADC1 /* edge_classes.cpp in Sources */,
 				05F0A0361DBF0B5E00117BFC /* angle.cpp in Sources */,
-				05F0A0451DBF0B5E00117BFC /* simplifyglobal.cpp in Sources */,
+				05F0A0451DBF0B5E00117BFC /* simplify.cpp in Sources */,
 				05A067221DFA68190047872E /* pillowtwosphere.cpp in Sources */,
 				05F0A04F1DBF0B5E00117BFC /* turaevviro.cpp in Sources */,
 				05A73C8A19B2EF130099C617 /* fundgroup.cpp in Sources */,
@@ -11129,7 +11129,7 @@
 				059802DF26683C6D002D5D57 /* xmlhypersurfacereader.cpp in Sources */,
 				05C265B6282C948700232420 /* facetpairing5.cpp in Sources */,
 				052FA029180600FB00FAE4DF /* disc.cpp in Sources */,
-				05F0A0021DBF078800117BFC /* simplifyglobal.cpp in Sources */,
+				05F0A0021DBF078800117BFC /* simplify.cpp in Sources */,
 				05A0673A1DFA68190047872E /* standardtri.cpp in Sources */,
 				054208751DF0D0B50018AB24 /* definition.cpp in Sources */,
 				05721EE21F97153E00A83FFC /* jenkins.cpp in Sources */,
