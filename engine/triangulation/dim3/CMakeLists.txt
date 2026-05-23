@@ -8,9 +8,9 @@ SET ( FILES
   hydrate.cpp
   insertlayered.cpp
   knot.cpp
+  moves.cpp
   reorder.cpp
   retriangulate.cpp
-  simplify.cpp
   simplifyglobal.cpp
   skeleton.cpp
   snappea.cpp

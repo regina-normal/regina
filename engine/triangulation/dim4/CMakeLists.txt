@@ -2,8 +2,8 @@
 SET ( FILES
   edge4.cpp
   hypersurfaces.cpp
+  moves.cpp
   retriangulate.cpp
-  simplify.cpp
   simplifyglobal.cpp
   skeleton.cpp
   subdivide.cpp
