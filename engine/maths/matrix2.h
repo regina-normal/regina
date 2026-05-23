@@ -176,10 +176,9 @@ class Matrix2 {
          *
          * This routine only works for integer matrices whose determinant is +1.
          * Otherwise the inverse (if it even exists) cannot be an integer
-         * matrix, and so this routine will throw an exception instead.
-         * This is a change of behaviour as of Regina ≥ 8.0: older versions of
-         * Regina (≤ 7.x) returned the zero matrix instead of throwing an
-         * exception.
+         * matrix, and so this routine will throw an exception.
+         * This is a change of behaviour as of Regina 8.0: older versions of
+         * Regina (≤ 7.x) returned the zero matrix to indicate failure instead.
          *
          * \exception NoSolution This matrix does not have determinant ±1.
          *
@@ -230,9 +229,9 @@ class Matrix2 {
          *
          * This routine only works for integer matrices whose determinant is +1.
          * Otherwise the inverse (if it even exists) cannot be an integer
-         * matrix, and so this routine will throw an exception instead.
-         * This is a change of behaviour as of Regina ≥ 8.0: older versions of
-         * Regina (≤ 7.x) returned `false` instead of throwing an exception.
+         * matrix, and so this routine will throw an exception.
+         * This is a change of behaviour as of Regina 8.0: older versions of
+         * Regina (≤ 7.x) returned `false` to indicate failure instead.
          *
          * \exception NoSolution This matrix does not have determinant ±1.
          */

@@ -28,6 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <climits>
 #include "link/examplelink.h"
 #include "link/link.h"
 #include "maths/matrix.h"
@@ -180,7 +181,7 @@ class SnapPeaTest : public testing::Test {
 
             ASSERT_FALSE(s.isNull());
 
-            s.fill(m, l);
+            ASSERT_NO_THROW({ s.fill(m, l); });
 
             EXPECT_EQ(s.homologyFilled().str(), expectedH1);
             EXPECT_EQ(s.fundamentalGroupFilled().abelianisation().str(),
@@ -211,6 +212,16 @@ class SnapPeaTest : public testing::Test {
                 EXPECT_EQ(t.homology().str(), expectedH1);
                 EXPECT_EQ(t.homologyFilled().str(), expectedH1);
             }
+        }
+
+        static void testFillingError(SnapPeaTriangulation s, int m, int l,
+                const char* name) {
+            SCOPED_TRACE_CSTRING(name);
+            SCOPED_TRACE_NUMERIC(m);
+            SCOPED_TRACE_NUMERIC(l);
+
+            EXPECT_FALSE(s.isNull());
+            EXPECT_THROW({ s.fill(m, l); }, regina::InvalidArgument);
         }
 };
 
@@ -276,6 +287,16 @@ TEST_F(SnapPeaTest, filling) {
     testFilledHomology(n4_9_2, 0, 0, "Z + Z_2", "N 4_9^2");
     testFilledHomology(n4_9_2, 1, 0, "Z", "N 4_9^2");
     testFilledHomology(n4_9_2, -1, 0, "Z", "N 4_9^2");
+
+    // Try some invalid filling coefficients:
+    testFillingError(m2_1, 3, 0, "M 2_1");
+    testFillingError(m2_1, -4, 6, "M 2_1");
+    testFillingError(n4_9_2, 2, 3, "N 4_9^2");
+    testFillingError(n4_9_2, 0, 1, "N 4_9^2");
+
+    // It is difficult to trigger a failed floating-point conversion:
+    // on some platforms (including Ben's), SnapPea's internal real type is
+    // precise enough to accurately represent any native C++ integer.
 }
 
 TEST_F(SnapPeaTest, link) {

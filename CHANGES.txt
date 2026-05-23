@@ -357,6 +357,11 @@ Version 8.0  [ TODO ]
         Class safe_tuple_element<...>:
             - This is now deprecated, since its only purpose is to support
               CallableArg (which is also deprecated).
+        Class SnapPeaTriangulation:
+            - Routine fill() now throws an exception on error, and no longer
+              returns a boolean (which used to indicate success or failure).
+            - Routine unfill() now throws an exception when called on a null
+              SnapPea triangulation (previously it silently did nothing).
         Class SpatialLink:
             - New inner type NodeIterator, and new member functions
               beginNodes() and endNodes().

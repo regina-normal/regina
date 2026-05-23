@@ -194,17 +194,20 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
                     "non-orientable cusps."));
             return false;
         }
-        if (tri_->fill(m, l, index.row()))
+        try {
+            tri_->fill(m, l, index.row());
             return true;
-        ReginaSupport::info(nullptr,
-            tr("I could not use these filling coefficients."),
-            tr("<qt>SnapPea rejected them, and I'm not sure why.  "
-                "This could happen (for instance) if the coefficients "
-                "are too large for SnapPea to represent exactly "
-                "using its internal floating point data type.<p>"
-                "If you are not sure what is happening, please feel "
-                "free to contact the Regina developers.</qt>"));
-        return false;
+        } catch (const regina::InvalidArgument&) {
+            ReginaSupport::info(nullptr,
+                tr("I could not use these filling coefficients."),
+                tr("<qt>SnapPea rejected them, and I'm not sure why.  "
+                    "This could happen (for instance) if the coefficients "
+                    "are too large for SnapPea to represent exactly "
+                    "using its internal floating point data type.<p>"
+                    "If you are not sure what is happening, please feel "
+                    "free to contact the Regina developers.</qt>"));
+            return false;
+        }
     } else
         return false;
 }

@@ -369,7 +369,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * class notes for further details on declared isomorphisms.
          *
          * If this is not a declared isomorphism, this routine will throw an
-         * exception.
+         * exception.  This is a change of behaviour as of Regina 8.0: older
+         * versions of Regina (≤ 7.x) returned `false` instead.
          *
          * This operation is (very) fast constant time.
          *
