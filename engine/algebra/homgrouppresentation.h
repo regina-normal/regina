@@ -368,15 +368,15 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * already stored internally).  See the HomGroupPresentation
          * class notes for further details on declared isomorphisms.
          *
-         * If this is not a declared isomorphism then this routine
-         * will do nothing and simply return \c false.
+         * If this is not a declared isomorphism, this routine will throw an
+         * exception.
          *
          * This operation is (very) fast constant time.
          *
-         * \return \c true if and only if the inversion operation was
-         * successful (i.e., if this is a declared isomorphism).
+         * \exception NoSolution This homomorphism is not a declared
+         * isomorphism (and so the inversion operation could not be completed).
          */
-        bool invert();
+        void invert();
 
         /**
          * Verifies the map is a valid homomorphism.  Specifically, this

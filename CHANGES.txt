@@ -146,6 +146,9 @@ Version 8.0  [ TODO ]
               UnsolvedCase exception if an integer overflow occurs when
               transferring information from an abelian group to a group
               expression.
+        Class HomGroupPresentation:
+            - Routine invert() now throws an exception if the homomorphism is
+              not a declared isomorphism.
         Class InfinityBase<...>:
             - Moved into the regina::detail namespace.  This class was never
               intended for end users.

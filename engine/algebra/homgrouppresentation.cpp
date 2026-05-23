@@ -33,6 +33,7 @@
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
 #include "maths/numbertheory.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -260,13 +261,12 @@ bool HomGroupPresentation::simplify() {
     return retval;
 }
 
-bool HomGroupPresentation::invert() {
+void HomGroupPresentation::invert() {
     if (inv_) {
         domain_.swap(codomain_);
         map_.swap(*inv_);
-        return true;
-    }
-    return false;
+    } else
+        throw NoSolution();
 }
 
 bool HomGroupPresentation::verify() const {
