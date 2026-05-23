@@ -39,6 +39,8 @@
 #include "../../docstrings/triangulation/dim4/triangle4.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
+using namespace pybind11::literals;
+
 using regina::Triangle;
 using regina::TriangleEmbedding;
 using regina::Face;
@@ -87,15 +89,13 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
         .def("boundaryComponent", &Triangle<4>::boundaryComponent,
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("face", &regina::python::face<4, 2>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::face)
+            "lowerdim"_a, "face"_a, rbase::face)
         .def("vertex", &Triangle<4>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge", &Triangle<4>::edge,
             pybind11::return_value_policy::reference, rbase::edge)
         .def("faceMapping", &regina::python::faceMapping<4, 2>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::faceMapping)
+            "lowerdim"_a, "face"_a, rbase::faceMapping)
         .def("vertexMapping", &Triangle<4>::vertexMapping, rbase::vertexMapping)
         .def("edgeMapping", &Triangle<4>::edgeMapping, rbase::edgeMapping)
         .def("triangleType", &Triangle<4>::triangleType, rbase::triangleType)

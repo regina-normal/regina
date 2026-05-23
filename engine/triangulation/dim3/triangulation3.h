@@ -2198,12 +2198,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param axis indicates which axis of the octahedron the four new
          * tetrahedra should meet along; this must be 0 or 1.  Specifically:
          * consider the four original tetrahedra in the order described by
@@ -2214,7 +2214,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool move44(Edge<3>* e, int axis);
+        bool move44(Edge<3>* edge, int axis);
         /**
          * If possible, performs a 2-1 move at the given end of the given
          * edge of this triangulation.  This involves taking the given degree
@@ -2228,12 +2228,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * simplex and/or facet locks.  See Simplex<3>::lock() and
          * Simplex<3>::lockFacet() for further details on locks.
          *
-         * In order for this move to make sense and to not to change the
-         * topology, we require that:
+         * Let \a e denote the given edge.  In order for this move to make
+         * sense and to not to change the topology, we require that:
          *
-         * - the given edge \a e is valid and non-boundary;
+         * - the edge \a e is valid and non-boundary;
          *
-         * - the given edge \a e has degree one, whereupon we let \a t denote
+         * - the edge \a e has degree one, whereupon we let \a t denote
          *   the unique tetrahedron containing \a e;
          *
          * - the two faces of \a t that do _not_ contain \a e are not joined
@@ -2263,12 +2263,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param edgeEnd the end of the edge _opposite_ that at which the
          * second tetrahedron (to be merged) is joined.  This argument must be
          * 0 or 1, corresponding to the labelling (0,1) of the vertices of the
@@ -2276,7 +2276,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool move21(Edge<3>* e, int edgeEnd);
+        bool move21(Edge<3>* edge, int edgeEnd);
         /**
          * If possible, performs a 0-2 move about the two specified triangles.
          * This involves fattening these two triangles (which should share a
@@ -2287,9 +2287,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * The different variants of move02() allow the two triangles and their
          * common edge to be specified in different ways.  For this variant,
          * the common edge is referenced by both the embedding objects
-         * \a e0 and \a e1, and the the two triangles are
-         * `e0.tetrahedron()->triangle(e0.vertices()[t0])` and
-         * `e1.tetrahedron()->triangle(e1.vertices()[t1])`.
+         * \a emb0 and \a emb1, and the the two triangles are
+         * `emb0.tetrahedron()->triangle(emb0.vertices()[tri0])` and
+         * `emb1.tetrahedron()->triangle(emb1.vertices()[tri1])`.
          *
          * This triangulation will be changed directly.
          *
@@ -2301,12 +2301,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * To be able to perform this move, we require that:
          *
-         * - \a e0 and \a e1 are both embeddings of the same edge \a e;
+         * - \a emb0 and \a emb1 are both embeddings of the same edge \a e;
          *
          * - this common edge \a e is valid;
          *
-         * - \a t0 and \a t1 are both either 2 or 3 (which means that the two
-         *   triangles listed above do indeed contain \a e).
+         * - \a tri0 and \a tri1 are both either 2 or 3 (which means that the
+         *   two triangles listed above do indeed contain \a e).
          *
          * A note regarding facet locks: since this move pries open a _pair_ of
          * adjacent triangles and not just a single triangle, a lock on either
@@ -2320,25 +2320,28 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects can no longer be used.
-         * However, the arguments \a e0 and \a e1 _can_ still be used since
+         * However, the arguments \a emb0 and \a emb1 _can_ still be used since
          * a FaceEmbedding can happily outlive the face that it refers to;
          * see the FaceEmbedding class notes for further details.
          *
          * \pre The edge \a e is an edge of this triangulation.
          *
-         * \param e0 an embedding of the common edge \a e of the two
+         * \param emb0 an embedding of the common edge \a e of the two
          * triangles about which to perform the move.
-         * \param t0 indicates one of the triangles about which to perform the
-         * move, with respect to the edge embedding \a e0; this must be 2 or 3.
-         * \param e1 another embedding of the edge \a e.
-         * \param t1 indicates the other triangle about which to perform the
-         * move, with respect to the edge embedding \a e1; this must be 2 or 3.
+         * \param tri0 indicates one of the triangles about which to perform the
+         * move, with respect to the edge embedding \a emb0; this must be
+         * 2 or 3.
+         * \param emb1 another embedding of the edge \a e.
+         * \param tri1 indicates the other triangle about which to perform the
+         * move, with respect to the edge embedding \a emb1; this must be
+         * 2 or 3.
          * \return \c true if and only if the requested move was able to be
          * performed.
          *
          * \author Alex He
          */
-        bool move02(EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1);
+        bool move02(EdgeEmbedding<3> emb0, int tri0,
+            EdgeEmbedding<3> emb1, int tri1);
         /**
          * If possible, performs a 0-2 move about the two specified triangles.
          * This involves fattening these two triangles (which should share a
@@ -2347,10 +2350,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * an inverse to the 2-0 edge move.
          *
          * The different variants of move02() allow the two triangles and their
-         * common edge to be specified in different ways.  For this variant,
-         * the common edge is given as the argument \a e, and the two triangles
-         * are the triangles incident to \a e that are numbered \a t0 and \a t1
-         * (see below for how this numbering scheme works).
+         * common edge to be specified in different ways.  For this variant, the
+         * common edge is given as the argument \a edge, and the two triangles
+         * are the triangles incident to \a edge that are numbered \a tri0 and
+         * \a tri1 (see below for how this numbering scheme works).
          *
          * This triangulation will be changed directly.
          *
@@ -2362,23 +2365,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * To be able to perform this move, we require that:
          *
-         * - the given edge \a e is valid;
+         * - the given edge is valid;
          *
-         * - the numbers \a t0 and \a t1 are both less than or equal to
-         *   `e->degree()`, and strictly less than `e->degree()` if \a e is
-         *   non-boundary (as required by our numbering scheme for triangles).
+         * - the numbers \a tri0 and \a tri1 are both less than or equal to
+         *   `edge->degree()`, and strictly less than `edge->degree()` if
+         *   \a edge is non-boundary (as required by our numbering scheme for
+         *   triangles).
          *
-         * Our numbering scheme for triangles incident to \a e works as follows:
+         * Our numbering scheme for triangles incident to the given edge works
+         * as follows:
          *
-         * - For each \a i in the range `0 ≤ i < e->degree()`, we assign
+         * - For each \a i in the range `0 ≤ i < edge->degree()`, we assign
          *   the number \a i to the triangle
          *   `emb.tetrahedron()->triangle(emb.vertices()[3])`,
-         *   where \a emb denotes `e->embedding(i)`.
+         *   where \a emb denotes `edge->embedding(i)`.
          *
-         * - If \a e is a boundary edge, then we additionally assign the
-         *   number `e->degree()` to the boundary triangle
+         * - If \a edge is a boundary edge, then we additionally assign the
+         *   number `edge->degree()` to the boundary triangle
          *   `emb.tetrahedron()->triangle(emb.vertices()[2])`,
-         *   where this time \a emb denotes `e->back()`.
+         *   where this time \a emb denotes `edge->back()`.
          *
          * A note regarding facet locks: since this move pries open a _pair_ of
          * adjacent triangles and not just a single triangle, a lock on either
@@ -2394,23 +2399,23 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the common edge of the two triangles about which to
+         * \param edge the common edge of the two triangles about which to
          * perform the move.
-         * \param t0 the number assigned to one of two triangles about which
+         * \param tri0 the number assigned to one of two triangles about which
          * to perform the move, as described above.
-         * \param t1 the number assigned to the other triangle about which
+         * \param tri1 the number assigned to the other triangle about which
          * to perform the move, as described above.
          * \return \c true if and only if the requested move was able to be
          * performed.
          *
          * \author Alex He
          */
-        bool move02(Edge<3>* e, size_t t0, size_t t1);
+        bool move02(Edge<3>* edge, size_t tri0, size_t tri1);
         /**
          * If possible, performs a 0-2 move about the two specified triangles.
          * This involves fattening these two triangles (which should share a
@@ -2420,8 +2425,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * The different variants of move02() allow the two triangles and their
          * common edge to be specified in different ways.  For this variant,
-         * the two triangles are given as the arguments \a t0 and \a t1,
-         * and their common edge is `t0->edge(e0)` and `t1->edge(e1)`.
+         * the two triangles are given as the arguments \a tri0 and \a tri1,
+         * and their common edge is `tri0->edge(edge0)` and `tri1->edge(edge1)`.
          *
          * This triangulation will be changed directly.
          *
@@ -2433,8 +2438,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * To be able to perform this move, we require that:
          *
-         * - the edges `t0->edge(e0)` and `t1->edge(e1)` are the same edge
-         *   of this triangulation;
+         * - the edges `tri0->edge(edge0)` and `tri1->edge(edge1)` are the
+         *   same edge of this triangulation;
          *
          * - moreover, that common edge is valid.
          *
@@ -2453,22 +2458,22 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the arguments
-         * \a t0 and \a t1) can no longer be used.
+         * \a tri0 and \a tri1) can no longer be used.
          *
          * \pre The given triangles are both triangles of this triangulation.
          *
-         * \param t0 one of the two triangles about which to perform the move.
-         * \param e0 the edge at which \a t0 meets the other triangle \a t1;
-         * this must be 0, 1 or 2.
-         * \param t1 the other triangle about which to perform the move.
-         * \param e1 the edge at which \a t1 meets the other triangle \a t0;
-         * this must be 0, 1 or 2.
+         * \param tri0 one of the two triangles about which to perform the move.
+         * \param edge0 the edge at which \a tri0 meets the other triangle
+         * \a tri1; this must be 0, 1 or 2.
+         * \param tri1 the other triangle about which to perform the move.
+         * \param edge1 the edge at which \a tri1 meets the other triangle
+         * \a tri0; this must be 0, 1 or 2.
          * \return \c true if and only if the requested move was able to be
          * performed.
          *
          * \author Alex He
          */
-        bool move02(Triangle<3>* t0, int e0, Triangle<3>* t1, int e1);
+        bool move02(Triangle<3>* tri0, int edge0, Triangle<3>* tri1, int edge1);
         /**
          * If possible, performs a book opening move about the given triangle.
          * This involves taking a triangle that meets the boundary along
@@ -2506,19 +2511,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * will (trivially) preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
-         * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a t)
+         * (faces, components, etc.) will be reconstructed, which means any
+         * pointers to old skeletal objects (such as the argument \a triangle)
          * can no longer be used.
          *
          * See closeBook() for an inverse to this move.
          *
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * \param t the triangle about which to perform the move.
+         * \param triangle the triangle about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool openBook(Triangle<3>* t);
+        bool openBook(Triangle<3>* triangle);
         /**
          * If possible, performs a book closing move about the given edge.
          * This involves taking a boundary edge of the triangulation and
@@ -2554,18 +2559,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * See openBook() for an inverse to this move.
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool closeBook(Edge<3>* e);
+        bool closeBook(Edge<3>* edge);
         /**
          * If possible, performs an edge collapse move upon the given edge.
          * This involves collapsing the edge to a point, merging its two
@@ -2589,7 +2594,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * structure to implement the test).
          *
          * If you are trying to reduce the number of vertices without changing
-         * the topology, and if \a e is an edge connecting an internal vertex
+         * the topology, and if the given edge connects an internal vertex
          * with some different vertex, then either collapseEdge() or pinchEdge()
          * may be more appropriate for your situation (though you may find it
          * easier just to call minimiseVertices() instead).
@@ -2600,24 +2605,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * - The disadvantages of collapseEdge() are that it cannot always be
          *   performed, and its validity tests are expensive; pinchEdge() on
-         *   the other hand can always be used for edges \a e of the
-         *   type described above.
+         *   the other hand can always be used on edges of the type described
+         *   above.
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge to collapse.
+         * \param edge the edge to collapse.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool collapseEdge(Edge<3>* e);
+        bool collapseEdge(Edge<3>* edge);
 
         /**
          * Determines whether it is possible to perform a 4-4 move about the
@@ -2629,13 +2634,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is a edge of this triangulation.
          *
-         * \param e the candidate edge about which to perform the move.
+         * \param edge the candidate edge about which to perform the move.
          * \param axis indicates which axis of the enclosing octahedron the
          * four new proposed tetrahedra should meet along; this must be 0 or 1.
          * See move44() for details on exactly what this means.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool has44(Edge<3>* e, int axis) const;
+        bool has44(Edge<3>* edge, int axis) const;
         /**
          * Determines whether it is possible to perform a 2-1 move at the
          * given end of the given edge of this triangulation, without
@@ -2646,13 +2651,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is a edge of this triangulation.
          *
-         * \param e the candidate edge about which to perform the move.
+         * \param edge the candidate edge about which to perform the move.
          * \param edgeEnd indicates at which end of the edge \a e the move
          * does _not_ involve the adjacent tetrahedron; this should be 0 or 1.
          * See move21() for details on exactly what this means.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool has21(Edge<3>* e, int edgeEnd) const;
+        bool has21(Edge<3>* edge, int edgeEnd) const;
         /**
          * Determines whether it is possible to perform a 0-2 move about the
          * two specified triangles of this triangulation, without violating any
@@ -2664,21 +2669,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given embeddings refer to edges of this triangulation.
          *
-         * \param e0 an embedding of the common edge \a e of the two
+         * \param emb0 an embedding of the common edge \a e of the two
          * candidate triangles about which to perform the move.
-         * \param t0 indicates one of the candidate triangles about which to
-         * perform the move, with respect to the edge embedding \a e0; this
+         * \param tri0 indicates one of the candidate triangles about which to
+         * perform the move, with respect to the edge embedding \a emb0; this
          * must be 2 or 3.
-         * \param e1 another embedding of the edge \a e.
-         * \param t1 indicates the other candidate triangle about which to
-         * perform the move, with respect to the edge embedding \a e1; this
+         * \param emb1 another embedding of the edge \a e.
+         * \param tri1 indicates the other candidate triangle about which to
+         * perform the move, with respect to the edge embedding \a emb1; this
          * must be 2 or 3.
          * \return \c true if and only if the requested move can be performed.
          *
          * \author Alex He
          */
-        bool has02(EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1)
-            const;
+        bool has02(EdgeEmbedding<3> emb0, int tri0,
+            EdgeEmbedding<3> emb1, int tri1) const;
         /**
          * Determines whether it is possible to perform a 0-2 move about the
          * two specified triangles of this triangulation, without violating any
@@ -2690,17 +2695,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is a edge of this triangulation.
          *
-         * \param e the common edge of the two candidate triangles about which
-         * to perform the move.
-         * \param t0 the number assigned to one of two candidate triangles
+         * \param edge the common edge of the two candidate triangles about
+         * which to perform the move.
+         * \param tri0 the number assigned to one of two candidate triangles
          * about which to perform the move.
-         * \param t1 the number assigned to the other candidate triangle
+         * \param tri1 the number assigned to the other candidate triangle
          * about which to perform the move.
          * \return \c true if and only if the requested move can be performed.
          *
          * \author Alex He
          */
-        bool has02(Edge<3>* e, size_t t0, size_t t1) const;
+        bool has02(Edge<3>* edge, size_t tri0, size_t tri1) const;
         /**
          * Determines whether it is possible to perform a 0-2 move about the
          * two given triangles of this triangulation, without violating any
@@ -2712,19 +2717,20 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given triangles are both triangles of this triangulation.
          *
-         * \param t0 one of the two candidate triangles about which to perform
+         * \param tri0 one of the two candidate triangles about which to perform
          * the move.
-         * \param e0 the edge at which \a t0 meets the other triangle \a t1;
-         * this must be 0, 1 or 2.
-         * \param t1 the other candidate triangle about which to perform the
+         * \param edge0 the edge at which \a tri0 meets the other triangle
+         * \a tri1; this must be 0, 1 or 2.
+         * \param tri1 the other candidate triangle about which to perform the
          * move.
-         * \param e1 the edge at which \a t1 meets the other triangle \a t0;
-         * this must be 0, 1 or 2.
+         * \param edge1 the edge at which \a tri1 meets the other triangle
+         * \a tri0; this must be 0, 1 or 2.
          * \return \c true if and only if the requested move can be performed.
          *
          * \author Alex He
          */
-        bool has02(Triangle<3>* t0, int e0, Triangle<3>* t1, int e1) const;
+        bool has02(Triangle<3>* tri0, int edge0, Triangle<3>* tri1, int edge1)
+            const;
         /**
          * Determines whether it is possible to perform a book opening move
          * about the given triangle of this triangulation, without violating
@@ -2735,10 +2741,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * \param t the candidate triangle about which to perform the move.
+         * \param triangle the candidate triangle about which to perform the
+         * move.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool hasOpenBook(Triangle<3>* t) const;
+        bool hasOpenBook(Triangle<3>* triangle) const;
         /**
          * Determines whether it is possible to perform a book closing move
          * about the given edge of this triangulation, without violating any
@@ -2749,10 +2756,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the candidate edge about which to perform the move.
+         * \param edge the candidate edge about which to perform the move.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool hasCloseBook(Edge<3>* e) const;
+        bool hasCloseBook(Edge<3>* edge) const;
         /**
          * Determines whether it is possible to collapse the given edge of
          * this triangulation, without violating any simplex and/or facet locks.
@@ -2762,10 +2769,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the candidate edge to collapse.
+         * \param edge the candidate edge to collapse.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool hasCollapseEdge(Edge<3>* e) const;
+        bool hasCollapseEdge(Edge<3>* edge) const;
 
         /**
          * If possible, returns the triangulation obtained by performing a
@@ -2780,14 +2787,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is a edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param axis indicates which axis of the enclosing octahedron the
          * four new tetrahedra should meet along; this must be 0 or 1.  See
          * move44() for details on exactly what this means.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<3>> with44(Edge<3>* e, int axis) const;
+        std::optional<Triangulation<3>> with44(Edge<3>* edge, int axis) const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * 2-1 move at the given end of the given edge of this triangulation.
@@ -2801,14 +2808,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is a edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param edgeEnd indicates at which end of the edge \a e the move
          * does _not_ involve the adjacent tetrahedron; this should be 0 or 1.
          * See move21() for details on exactly what this means.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<3>> with21(Edge<3>* e, int edgeEnd) const;
+        std::optional<Triangulation<3>> with21(Edge<3>* edge, int edgeEnd)
+            const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * 0-2 move about the two specified triangles of this triangulation.
@@ -2823,20 +2831,22 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given embeddings refer to edges of this triangulation.
          *
-         * \param e0 an embedding of the common edge \a e of the two
+         * \param emb0 an embedding of the common edge \a e of the two
          * triangles about which to perform the move.
-         * \param t0 indicates one of the triangles about which to perform the
-         * move, with respect to the edge embedding \a e0; this must be 2 or 3.
-         * \param e1 another embedding of the edge \a e.
-         * \param t1 indicates the other triangle about which to perform the
-         * move, with respect to the edge embedding \a e1; this must be 2 or 3.
+         * \param tri0 indicates one of the triangles about which to perform the
+         * move, with respect to the edge embedding \a emb0; this must be
+         * 2 or 3.
+         * \param emb1 another embedding of the edge \a e.
+         * \param tri1 indicates the other triangle about which to perform the
+         * move, with respect to the edge embedding \a emb1; this must be
+         * 2 or 3.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          *
          * \author Alex He
          */
-        std::optional<Triangulation<3>> with02(EdgeEmbedding<3> e0, int t0,
-            EdgeEmbedding<3> e1, int t1) const;
+        std::optional<Triangulation<3>> with02(EdgeEmbedding<3> emb0, int tri0,
+            EdgeEmbedding<3> emb1, int tri1) const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * 0-2 move about the two specified triangles of this triangulation.
@@ -2851,19 +2861,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is a edge of this triangulation.
          *
-         * \param e the common edge of the two triangles about which to
+         * \param edge the common edge of the two triangles about which to
          * perform the move.
-         * \param t0 the number assigned to one of two triangles about which
+         * \param tri0 the number assigned to one of two triangles about which
          * to perform the move.
-         * \param t1 the number assigned to the other triangle about which
+         * \param tri1 the number assigned to the other triangle about which
          * to perform the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          *
          * \author Alex He
          */
-        std::optional<Triangulation<3>> with02(Edge<3>* e,
-            size_t t0, size_t t1) const;
+        std::optional<Triangulation<3>> with02(Edge<3>* edge,
+            size_t tri0, size_t tri1) const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * 0-2 move about the two given triangles of this triangulation.
@@ -2878,19 +2888,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given triangles are both triangles of this triangulation.
          *
-         * \param t0 one of the two triangles about which to perform the move.
-         * \param e0 the edge at which \a t0 meets the other triangle \a t1;
-         * this must be 0, 1 or 2.
-         * \param t1 the other triangle about which to perform the move.
-         * \param e1 the edge at which \a t1 meets the other triangle \a t0;
-         * this must be 0, 1 or 2.
+         * \param tri0 one of the two triangles about which to perform the move.
+         * \param edge0 the edge at which \a tri0 meets the other triangle
+         * \a tri1; this must be 0, 1 or 2.
+         * \param tri1 the other triangle about which to perform the move.
+         * \param edge1 the edge at which \a tri1 meets the other triangle
+         * \a tri0; this must be 0, 1 or 2.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          *
          * \author Alex He
          */
-        std::optional<Triangulation<3>> with02(Triangle<3>* t0, int e0,
-            Triangle<3>* t1, int e1) const;
+        std::optional<Triangulation<3>> with02(Triangle<3>* tri0, int edge0,
+            Triangle<3>* tri1, int edge1) const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * book opening move about the given triangle of this triangulation.
@@ -2904,11 +2914,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * \param t the triangle about which to perform the move.
+         * \param triangle the triangle about which to perform the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<3>> withOpenBook(Triangle<3>* t) const;
+        std::optional<Triangulation<3>> withOpenBook(Triangle<3>* triangle)
+            const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * book closing move about the given edge of this triangulation.
@@ -2922,11 +2933,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<3>> withCloseBook(Edge<3>* e) const;
+        std::optional<Triangulation<3>> withCloseBook(Edge<3>* edge) const;
         /**
          * If possible, returns the triangulation obtained by collapsing the
          * given edge of this triangulation.
@@ -2940,11 +2951,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge to collapse.
+         * \param edge the edge to collapse.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<3>> withCollapseEdge(Edge<3>* e) const;
+        std::optional<Triangulation<3>> withCollapseEdge(Edge<3>* edge) const;
 
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -2965,7 +2976,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param axis indicates which axis of the enclosing octahedron the
          * four new tetrahedra should meet along; this must be 0 or 1.  See
          * move44() for details on exactly what this means.
@@ -2976,7 +2987,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        [[deprecated]] bool fourFourMove(Edge<3>* e, int axis, bool ignored,
+        [[deprecated]] bool fourFourMove(Edge<3>* edge, int axis, bool ignored,
             bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -2997,7 +3008,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param edgeEnd indicates at which end of the edge \a e the move
          * does _not_ involve the adjacent tetrahedron; this should be 0 or 1.
          * See move21() for details on exactly what this means.
@@ -3008,7 +3019,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        [[deprecated]] bool twoOneMove(Edge<3>* e, int edgeEnd, bool ignored,
+        [[deprecated]] bool twoOneMove(Edge<3>* edge, int edgeEnd, bool ignored,
             bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -3032,13 +3043,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre The two given edge embeddings both refer to the same edge,
          * which must be an edge of this triangulation.
          *
-         * \param e0 an embedding of the common edge \a e of the two
+         * \param emb0 an embedding of the common edge \a e of the two
          * triangles about which to perform the move.
-         * \param t0 indicates one of the triangles about which to perform the
-         * move, with respect to the edge embedding \a e0; this must be 2 or 3.
-         * \param e1 another embedding of the edge \a e.
-         * \param t1 indicates the other triangle about which to perform the
-         * move, with respect to the edge embedding \a e1; this must be 2 or 3.
+         * \param tri0 indicates one of the triangles about which to perform the
+         * move, with respect to the edge embedding \a emb0; this must be
+         * 2 or 3.
+         * \param emb1 another embedding of the edge \a e.
+         * \param tri1 indicates the other triangle about which to perform the
+         * move, with respect to the edge embedding \a emb1; this must be
+         * 2 or 3.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -3048,8 +3061,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \author Alex He
          */
-        [[deprecated]] bool zeroTwoMove(EdgeEmbedding<3> e0, int t0,
-            EdgeEmbedding<3> e1, int t1, bool ignored, bool perform = true);
+        [[deprecated]] bool zeroTwoMove(EdgeEmbedding<3> emb0, int tri0,
+            EdgeEmbedding<3> emb1, int tri1, bool ignored, bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs a
          * 0-2 move about the two specified triangles of this triangulation.
@@ -3071,11 +3084,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the common edge of the two triangles about which to
+         * \param edge the common edge of the two triangles about which to
          * perform the move.
-         * \param t0 the number assigned to one of two triangles about which
+         * \param tri0 the number assigned to one of two triangles about which
          * to perform the move.
-         * \param t1 the number assigned to the other triangle about which
+         * \param tri1 the number assigned to the other triangle about which
          * to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
@@ -3086,7 +3099,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \author Alex He
          */
-        [[deprecated]] bool zeroTwoMove(Edge<3>* e, size_t t0, size_t t1,
+        [[deprecated]] bool zeroTwoMove(Edge<3>* edge, size_t tri0, size_t tri1,
             bool ignored, bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -3109,12 +3122,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given triangles are both triangles of this triangulation.
          *
-         * \param t0 one of the two triangles about which to perform the move.
-         * \param e0 the edge at which \a t0 meets the other triangle \a t1;
-         * this must be 0, 1 or 2.
-         * \param t1 the other triangle about which to perform the move.
-         * \param e1 the edge at which \a t1 meets the other triangle \a t0;
-         * this must be 0, 1 or 2.
+         * \param tri0 one of the two triangles about which to perform the move.
+         * \param edge0 the edge at which \a tri0 meets the other triangle
+         * \a tri1; this must be 0, 1 or 2.
+         * \param tri1 the other triangle about which to perform the move.
+         * \param edge1 the edge at which \a tri1 meets the other triangle
+         * \a tri0; this must be 0, 1 or 2.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -3124,8 +3137,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \author Alex He
          */
-        [[deprecated]] bool zeroTwoMove(Triangle<3>* t0, int e0,
-            Triangle<3>* t1, int e1, bool ignored, bool perform = true);
+        [[deprecated]] bool zeroTwoMove(Triangle<3>* tri0, int edge0,
+            Triangle<3>* tri1, int edge1, bool ignored, bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs a
          * book opening move about the given triangle of this triangulation.
@@ -3147,7 +3160,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given triangle is a triangle of this triangulation.
          *
-         * \param t the triangle about which to perform the move.
+         * \param triangle the triangle about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -3155,7 +3168,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        [[deprecated]] bool openBook(Triangle<3>* t, bool ignored,
+        [[deprecated]] bool openBook(Triangle<3>* triangle, bool ignored,
             bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -3178,7 +3191,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -3186,7 +3199,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        [[deprecated]] bool closeBook(Edge<3>* e, bool ignored,
+        [[deprecated]] bool closeBook(Edge<3>* edge, bool ignored,
             bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs an
@@ -3209,7 +3222,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge to collapse.
+         * \param edge the edge to collapse.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -3217,7 +3230,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        [[deprecated]] bool collapseEdge(Edge<3>* e, bool ignored,
+        [[deprecated]] bool collapseEdge(Edge<3>* edge, bool ignored,
             bool perform = true);
 
         /**
@@ -4138,16 +4151,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   then this move effectively drills out the edge, leaving
          *   an ideal torus or Klein bottle boundary component.
          *
-         * We do not allow \a e to lie entirely on the triangulation boundary,
-         * because the implementation actually collapses an internal curve
-         * _parallel_ to \a e, not the edge \a e itself (and so if \a e is a
-         * boundary edge then the topological effect would not be as intended).
-         * We do allow \a e to be an internal edge with both endpoints on the
-         * boundary, but note that in this case the resulting topological
-         * operation would render the triangulation invalid.
+         * We do not allow the given edge \a e to lie entirely on the
+         * triangulation boundary, because the implementation actually
+         * collapses an internal curve _parallel_ to \a e, not the edge \a e
+         * itself (and so if \a e is a boundary edge then the topological
+         * effect would not be as intended).  We do allow \a e to be an
+         * internal edge with both endpoints on the boundary, but note that in
+         * this case the resulting topological operation would render the
+         * triangulation invalid.
          *
          * If you are trying to reduce the number of vertices without changing
-         * the topology, and if \a e is an edge connecting an internal vertex
+         * the topology, and if the given edge connects an internal vertex
          * with some different vertex, then either collapseEdge() or pinchEdge()
          * may be more appropriate for your situation (though you may find it
          * easier just to call minimiseVertices() instead).
@@ -4158,8 +4172,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * - The disadvantages of collapseEdge() are that it cannot always be
          *   performed, and its validity tests are expensive; pinchEdge() on
-         *   the other hand can always be used for edges \a e of the
-         *   type described above.
+         *   the other hand can always be used on edges of the type described
+         *   above.
          *
          * This operation works by prying open a triangle \a t and inserting a
          * two-tetrahedron gadget \a g within the resulting triangular pillow.
@@ -4173,18 +4187,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * \pre The given edge is an internal edge of this triangulation
-         * (that is, \a e does not lie entirely within the boundary).
+         * (that is, the given edge does not lie entirely within the boundary).
          *
          * \exception InvalidArgument The given edge lies entirely within the
          * boundary of the triangulation.
          *
-         * \param e the edge to collapse.
+         * \param edge the edge to collapse.
          */
-        void pinchEdge(Edge<3>* e);
+        void pinchEdge(Edge<3>* edge);
 
         /**
          * Punctures this manifold by thickening the given triangle into a
@@ -4291,23 +4305,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * solid torus along a given curve.
          *
          * The boundary component to be filled should be passed as the
-         * argument \a bc; if the triangulation has exactly one
-         * boundary component then you may omit \a bc (i.e., pass \c null),
-         * and the (unique) boundary component will be inferred.
+         * argument \a boundary; if the triangulation has exactly one
+         * boundary component then you may omit \a boundary (i.e., pass
+         * the default value of `null`), and the (unique) boundary component
+         * will be inferred.
          *
          * If the boundary component cannot be inferred, and/or if the
          * selected boundary component is not a two-triangle torus, then
-         * this routine will do nothing and return \c false.
+         * this routine will do nothing and return `false`.
          *
          * Otherwise the given boundary component will be filled with a
          * solid torus whose meridional curve cuts the edges
-         * `bc->edge(0)`, `bc->edge(1)` and `bc->edge(2)`
+         * `boundary->edge(0)`, `boundary->edge(1)` and `boundary->edge(2)`
          * a total of \a cuts0, \a cuts1 and \a cuts2 times respectively.
          *
          * For the filling to be performed successfully, the integers
          * \a cuts0, \a cuts1 and \a cuts2 must be coprime, and two of
          * them must add to give the third.  Otherwise, as above, this
-         * routine will do nothing and return \c false.
+         * routine will do nothing and return `false`.
          *
          * The triangulation will be simplified before returning.
          *
@@ -4318,26 +4333,26 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * indexed in the boundary component.
          *
          * \param cuts0 the number of times that the meridional curve of
-         * the new solid torus should cut the edge `bc->edge(0)`.
+         * the new solid torus should cut the edge `boundary->edge(0)`.
          * \param cuts1 the number of times that the meridional curve of
-         * the new solid torus should cut the edge `bc->edge(1)`.
+         * the new solid torus should cut the edge `boundary->edge(1)`.
          * \param cuts2 the number of times that the meridional curve of
-         * the new solid torus should cut the edge `bc->edge(2)`.
-         * \param bc the boundary component to fill.  If the triangulation
-         * has precisely one boundary component then this may be \c null.
-         * \return \c true if the boundary component was filled successfully,
-         * or \c false if one of the required conditions as described
+         * the new solid torus should cut the edge `boundary->edge(2)`.
+         * \param boundary the boundary component to fill.  If the triangulation
+         * has precisely one boundary component then this may be `null`.
+         * \return `true` if the boundary component was filled successfully,
+         * or `false` if one of the required conditions as described
          * above is not satisfied.
          */
         bool fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
-            BoundaryComponent<3>* bc = nullptr);
+            BoundaryComponent<3>* boundary = nullptr);
 
         /**
          * Fills a two-triangle torus boundary component by attaching a
          * solid torus along a given curve.
          *
          * The three edges of the boundary component should be passed as
-         * the arguments \a e0, \a e1 and \a e2.
+         * the arguments \a edge0, \a edge1 and \a edge2.
          * The boundary component will then be filled with a
          * solid torus whose meridional curve cuts these three edges
          * \a cuts0, \a cuts1 and \a cuts2 times respectively.
@@ -4347,33 +4362,34 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * component must be a two-triangle torus.  Moreover, the integers
          * \a cuts0, \a cuts1 and \a cuts2 must be coprime, and two of
          * them must add to give the third.  If any of these conditions
-         * are not met, then this routine will do nothing and return \c false.
+         * are not met, then this routine will do nothing and return `false`.
          *
          * The triangulation will be simplified before returning.
          *
          * There are two versions of fillTorus(); the other takes a boundary
-         * component, and sets \a e0, \a e1 and \a e2 to its three edges
-         * according to Regina's own edge numbering.
+         * component, and sets \a edge0, \a edge1 and \a edge2 to its three
+         * edges according to Regina's own edge numbering.
          * This version of fillTorus() should be used when you know how the
          * filling curve cuts each boundary edge but you do not know how these
          * edges are indexed in the corresponding boundary component.
          *
-         * \param e0 one of the three edges of the boundary component to fill.
-         * \param e1 the second of the three edges of the boundary component
+         * \param edge0 one of the three edges of the boundary component to
+         * fill.
+         * \param edge1 the second of the three edges of the boundary component
          * to fill.
-         * \param e2 the second of the three edges of the boundary component
+         * \param edge2 the second of the three edges of the boundary component
          * to fill.
          * \param cuts0 the number of times that the meridional curve of
-         * the new solid torus should cut the edge \a e0.
+         * the new solid torus should cut the edge \a edge0.
          * \param cuts1 the number of times that the meridional curve of
-         * the new solid torus should cut the edge \a e1.
+         * the new solid torus should cut the edge \a edge1.
          * \param cuts2 the number of times that the meridional curve of
-         * the new solid torus should cut the edge \a e2.
-         * \return \c true if the boundary component was filled successfully,
-         * or \c false if one of the required conditions as described
+         * the new solid torus should cut the edge \a edge2.
+         * \return `true` if the boundary component was filled successfully,
+         * or `false` if one of the required conditions as described
          * above is not satisfied.
          */
-        bool fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
+        bool fillTorus(Edge<3>* edge0, Edge<3>* edge1, Edge<3>* edge2,
             size_t cuts0, size_t cuts1, size_t cuts2);
 
         /**
@@ -5513,199 +5529,202 @@ inline bool Triangulation<3>::minimizeVertices() {
     return minimiseVertices();
 }
 
-inline bool Triangulation<3>::move44(Edge<3>* e, int axis) {
-    return internal44(e, axis, true, true);
+inline bool Triangulation<3>::move44(Edge<3>* edge, int axis) {
+    return internal44(edge, axis, true, true);
 }
 
-inline bool Triangulation<3>::move21(Edge<3>* e, int edgeEnd) {
-    return internal21(e, edgeEnd, true, true);
+inline bool Triangulation<3>::move21(Edge<3>* edge, int edgeEnd) {
+    return internal21(edge, edgeEnd, true, true);
 }
 
-inline bool Triangulation<3>::move02(EdgeEmbedding<3> e0, int t0,
-        EdgeEmbedding<3> e1, int t1) {
-    return internal02(e0, t0, e1, t1, true, true);
+inline bool Triangulation<3>::move02(EdgeEmbedding<3> emb0, int tri0,
+        EdgeEmbedding<3> emb1, int tri1) {
+    return internal02(emb0, tri0, emb1, tri1, true, true);
 }
 
-inline bool Triangulation<3>::move02(Edge<3>* e, size_t t0, size_t t1) {
-    return internal02(e, t0, t1, true, true);
+inline bool Triangulation<3>::move02(Edge<3>* edge, size_t tri0, size_t tri1) {
+    return internal02(edge, tri0, tri1, true, true);
 }
 
-inline bool Triangulation<3>::move02(Triangle<3>* t0, int e0,
-        Triangle<3>* t1, int e1) {
-    return internal02(t0, e0, t1, e1, true, true);
+inline bool Triangulation<3>::move02(Triangle<3>* tri0, int edge0,
+        Triangle<3>* tri1, int edge1) {
+    return internal02(tri0, edge0, tri1, edge1, true, true);
 }
 
-inline bool Triangulation<3>::openBook(Triangle<3>* t) {
-    return internalOpenBook(t, true, true);
+inline bool Triangulation<3>::openBook(Triangle<3>* triangle) {
+    return internalOpenBook(triangle, true, true);
 }
 
-inline bool Triangulation<3>::closeBook(Edge<3>* e) {
-    return internalCloseBook(e, true, true);
+inline bool Triangulation<3>::closeBook(Edge<3>* edge) {
+    return internalCloseBook(edge, true, true);
 }
 
-inline bool Triangulation<3>::collapseEdge(Edge<3>* e) {
-    return internalCollapseEdge(e, true, true);
+inline bool Triangulation<3>::collapseEdge(Edge<3>* edge) {
+    return internalCollapseEdge(edge, true, true);
 }
 
-inline bool Triangulation<3>::has44(Edge<3>* e, int axis) const {
-    return const_cast<Triangulation<3>*>(this)->internal44(e, axis,
+inline bool Triangulation<3>::has44(Edge<3>* edge, int axis) const {
+    return const_cast<Triangulation<3>*>(this)->internal44(edge, axis,
         true, false);
 }
 
-inline bool Triangulation<3>::has21(Edge<3>* e, int edgeEnd) const {
-    return const_cast<Triangulation<3>*>(this)->internal21(e, edgeEnd,
+inline bool Triangulation<3>::has21(Edge<3>* edge, int edgeEnd) const {
+    return const_cast<Triangulation<3>*>(this)->internal21(edge, edgeEnd,
         true, false);
 }
 
-inline bool Triangulation<3>::has02(EdgeEmbedding<3> e0, int t0,
-        EdgeEmbedding<3> e1, int t1) const {
-    return const_cast<Triangulation<3>*>(this)->internal02(e0, t0, e1, t1,
+inline bool Triangulation<3>::has02(EdgeEmbedding<3> emb0, int tri0,
+        EdgeEmbedding<3> emb1, int tri1) const {
+    return const_cast<Triangulation<3>*>(this)->internal02(
+        emb0, tri0, emb1, tri1, true, false);
+}
+
+inline bool Triangulation<3>::has02(Edge<3>* edge, size_t tri0, size_t tri1)
+        const {
+    return const_cast<Triangulation<3>*>(this)->internal02(edge, tri0, tri1,
         true, false);
 }
 
-inline bool Triangulation<3>::has02(Edge<3>* e, size_t t0, size_t t1) const {
-    return const_cast<Triangulation<3>*>(this)->internal02(e, t0, t1,
+inline bool Triangulation<3>::has02(Triangle<3>* tri0, int edge0,
+        Triangle<3>* tri1, int edge1) const {
+    return const_cast<Triangulation<3>*>(this)->internal02(
+        tri0, edge0, tri1, edge1, true, false);
+}
+
+inline bool Triangulation<3>::hasOpenBook(Triangle<3>* triangle) const {
+    return const_cast<Triangulation<3>*>(this)->internalOpenBook(triangle,
         true, false);
 }
 
-inline bool Triangulation<3>::has02(Triangle<3>* t0, int e0,
-        Triangle<3>* t1, int e1) const {
-    return const_cast<Triangulation<3>*>(this)->internal02(t0, e0, t1, e1,
+inline bool Triangulation<3>::hasCloseBook(Edge<3>* edge) const {
+    return const_cast<Triangulation<3>*>(this)->internalCloseBook(edge,
         true, false);
 }
 
-inline bool Triangulation<3>::hasOpenBook(Triangle<3>* t) const {
-    return const_cast<Triangulation<3>*>(this)->internalOpenBook(t,
-        true, false);
-}
-
-inline bool Triangulation<3>::hasCloseBook(Edge<3>* e) const {
-    return const_cast<Triangulation<3>*>(this)->internalCloseBook(e,
-        true, false);
-}
-
-inline bool Triangulation<3>::hasCollapseEdge(Edge<3>* e) const {
-    return const_cast<Triangulation<3>*>(this)->internalCollapseEdge(e,
+inline bool Triangulation<3>::hasCollapseEdge(Edge<3>* edge) const {
+    return const_cast<Triangulation<3>*>(this)->internalCollapseEdge(edge,
         true, false);
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::with44(
-        Edge<3>* e, int axis) const {
-    if (! has44(e, axis))
+        Edge<3>* edge, int axis) const {
+    if (! has44(edge, axis))
         return {};
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->internal44(ans->translate(e), axis, false, true);
+    ans->internal44(ans->translate(edge), axis, false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::with21(
-        Edge<3>* e, int edgeEnd) const {
-    if (! has21(e, edgeEnd))
+        Edge<3>* edge, int edgeEnd) const {
+    if (! has21(edge, edgeEnd))
         return {};
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->internal21(ans->translate(e), edgeEnd, false, true);
+    ans->internal21(ans->translate(edge), edgeEnd, false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::with02(
-        EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1) const {
-    if (! has02(e0, t0, e1, t1))
+        EdgeEmbedding<3> emb0, int tri0, EdgeEmbedding<3> emb1, int tri1)
+        const {
+    if (! has02(emb0, tri0, emb1, tri1))
         return {};
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->internal02(ans->translate(e0), t0, ans->translate(e1), t1,
+    ans->internal02(ans->translate(emb0), tri0, ans->translate(emb1), tri1,
         false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::with02(
-        Edge<3>* e, size_t t0, size_t t1) const {
-    if (! has02(e, t0, t1))
+        Edge<3>* edge, size_t tri0, size_t tri1) const {
+    if (! has02(edge, tri0, tri1))
         return {};
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->internal02(ans->translate(e), t0, t1, false, true);
+    ans->internal02(ans->translate(edge), tri0, tri1, false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::with02(
-        Triangle<3>* t0, int e0, Triangle<3>* t1, int e1) const {
-    if (! has02(t0, e0, t1, e1))
+        Triangle<3>* tri0, int edge0, Triangle<3>* tri1, int edge1) const {
+    if (! has02(tri0, edge0, tri1, edge1))
         return {};
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->internal02(ans->translate(t0), e0, ans->translate(t1), e1,
+    ans->internal02(ans->translate(tri0), edge0, ans->translate(tri1), edge1,
         false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::withOpenBook(
-        Triangle<3>* t) const {
-    if (! hasOpenBook(t))
+        Triangle<3>* triangle) const {
+    if (! hasOpenBook(triangle))
         return {};
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->internalOpenBook(ans->translate(t), false, true);
+    ans->internalOpenBook(ans->translate(triangle), false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::withCloseBook(
-        Edge<3>* e) const {
-    if (! hasCloseBook(e))
+        Edge<3>* edge) const {
+    if (! hasCloseBook(edge))
         return {};
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->internalCloseBook(ans->translate(e), false, true);
+    ans->internalCloseBook(ans->translate(edge), false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<3>> Triangulation<3>::withCollapseEdge(
-        Edge<3>* e) const {
-    if (! hasCollapseEdge(e))
+        Edge<3>* edge) const {
+    if (! hasCollapseEdge(edge))
         return {};
 
     std::optional<Triangulation<3>> ans(std::in_place, *this);
-    ans->internalCollapseEdge(ans->translate(e), false, true);
+    ans->internalCollapseEdge(ans->translate(edge), false, true);
     return ans;
 }
 
-inline bool Triangulation<3>::fourFourMove(Edge<3>* e, int axis,
+inline bool Triangulation<3>::fourFourMove(Edge<3>* edge, int axis,
         bool, bool perform) {
-    return internal44(e, axis, true, perform);
+    return internal44(edge, axis, true, perform);
 }
 
-inline bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
+inline bool Triangulation<3>::twoOneMove(Edge<3>* edge, int edgeEnd,
         bool, bool perform) {
-    return internal21(e, edgeEnd, true, perform);
+    return internal21(edge, edgeEnd, true, perform);
 }
 
-inline bool Triangulation<3>::zeroTwoMove(EdgeEmbedding<3> e0, int t0,
-        EdgeEmbedding<3> e1, int t1, bool, bool perform) {
-    return internal02(e0, t0, e1, t1, true, perform);
+inline bool Triangulation<3>::zeroTwoMove(EdgeEmbedding<3> emb0, int tri0,
+        EdgeEmbedding<3> emb1, int tri1, bool, bool perform) {
+    return internal02(emb0, tri0, emb1, tri1, true, perform);
 }
 
-inline bool Triangulation<3>::zeroTwoMove(Edge<3>* e, size_t t0, size_t t1,
+inline bool Triangulation<3>::zeroTwoMove(Edge<3>* edge,
+        size_t tri0, size_t tri1, bool, bool perform) {
+    return internal02(edge, tri0, tri1, true, perform);
+}
+
+inline bool Triangulation<3>::zeroTwoMove(Triangle<3>* tri0, int edge0,
+        Triangle<3>* tri1, int edge1, bool, bool perform) {
+    return internal02(tri0, edge0, tri1, edge1, true, perform);
+}
+
+inline bool Triangulation<3>::openBook(Triangle<3>* triangle,
         bool, bool perform) {
-    return internal02(e, t0, t1, true, perform);
+    return internalOpenBook(triangle, true, perform);
 }
 
-inline bool Triangulation<3>::zeroTwoMove(Triangle<3>* t0, int e0,
-        Triangle<3>* t1, int e1, bool, bool perform) {
-    return internal02(t0, e0, t1, e1, true, perform);
+inline bool Triangulation<3>::closeBook(Edge<3>* edge, bool, bool perform) {
+    return internalCloseBook(edge, true, perform);
 }
 
-inline bool Triangulation<3>::openBook(Triangle<3>* t, bool, bool perform) {
-    return internalOpenBook(t, true, perform);
-}
-
-inline bool Triangulation<3>::closeBook(Edge<3>* e, bool, bool perform) {
-    return internalCloseBook(e, true, perform);
-}
-
-inline bool Triangulation<3>::collapseEdge(Edge<3>* e, bool, bool perform) {
-    return internalCollapseEdge(e, true, perform);
+inline bool Triangulation<3>::collapseEdge(Edge<3>* edge, bool, bool perform) {
+    return internalCollapseEdge(edge, true, perform);
 }
 
 inline bool Triangulation<3>::truncateIdeal() {

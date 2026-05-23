@@ -921,13 +921,13 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * simplex and/or facet locks.  See Simplex<4>::lock() and
          * Simplex<4>::lockFacet() for further details on locks.
          *
-         * For this move to make sense, the initial configuration of four
-         * pentachora around the given edge \a e should be equivalent to the
-         * join of a double edge and a square with diagonal given by the
-         * edge \a e. The 4-4 move then essentially performs a 2-2 move on this
-         * square, with the new diagonal of the square corresponding precisely
-         * to the new edge of this triangulation that will join the four new
-         * pentachora.
+         * Let \a e denote the given edge.  For this move to make sense, the
+         * initial configuration of four pentachora around \a e should be
+         * equivalent to the join of a double edge and a square with diagonal
+         * given by \a e. The 4-4 move then essentially performs a 2-2 move on
+         * this square, with the new diagonal of the square corresponding
+         * precisely to the new edge of this triangulation that will join the
+         * four new pentachora.
          *
          * Therefore, to be able to perform this move (and to do so without
          * changing the topology), we require that:
@@ -943,18 +943,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          *
          * \author Alex He
          */
-        bool move44(Edge<4>* e);
+        bool move44(Edge<4>* edge);
         /**
          * If possible, performs a book opening move about the given
          * tetrahedron.  This involves taking a tetrahedron that meets the
@@ -998,16 +998,16 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a t)
+         * any pointers to old skeletal objects (such as the argument \a tet)
          * can no longer be used.
          *
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * \param t the tetrahedron about which to perform the move.
+         * \param tet the tetrahedron about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool openBook(Tetrahedron<4>* t);
+        bool openBook(Tetrahedron<4>* tet);
 
         /**
          * If possible, performs an edge collapse move upon the given edge.
@@ -1032,7 +1032,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * structures to implement the test).
          *
          * If you are trying to reduce the number of vertices without changing
-         * the topology, and if \a e is an edge connecting an internal vertex
+         * the topology, and if the given edge connects an internal vertex
          * with some different vertex, then either collapseEdge() or snapEdge()
          * may be more appropriate for your situation.
          *
@@ -1042,7 +1042,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * - The disadvantages of collapseEdge() are that it cannot always be
          *   performed, and its validity tests are expensive; snapEdge() on
-         *   the other hand can always be used for edges \a e of the type
+         *   the other hand can always be used on edges of the type
          *   described above.
          *
          * If this triangulation is currently oriented, then this operation
@@ -1050,16 +1050,16 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge to collapse.
+         * \param edge the edge to collapse.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool collapseEdge(Edge<4>* e);
+        bool collapseEdge(Edge<4>* edge);
 
         /**
          * If possible, performs an edge snap move about the given edge.
@@ -1090,7 +1090,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * - The disadvantages of collapseEdge() are that it cannot always be
          *   performed, and its validity tests are expensive; snapEdge() on
-         *   the other hand can always be used for edges \a e of the type
+         *   the other hand can always be used on edges of the type
          *   described above.
          *
          * This operation essentially works by taking a triangle \a f that
@@ -1108,18 +1108,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
+         * any pointers to old skeletal objects (such as the argument \a edge)
          * can no longer be used.
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge whose endpoints are to be snapped together.
+         * \param edge the edge whose endpoints are to be snapped together.
          * \return \c true if and only if the requested move was able to be
          * performed.
          *
          * \author Alex He
          */
-        bool snapEdge(Edge<4>* e);
+        bool snapEdge(Edge<4>* edge);
 
         /**
          * Determines whether it is possible to perform a 4-4 move about the
@@ -1131,10 +1131,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the candidate edge about which to perform the move.
+         * \param edge the candidate edge about which to perform the move.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool has44(Edge<4>* e) const;
+        bool has44(Edge<4>* edge) const;
         /**
          * Determines whether it is possible to perform a book opening move
          * about the given tetrahedron of this triangulation, without
@@ -1145,10 +1145,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * \param t the candidate tetrahedron about which to perform the move.
+         * \param tet the candidate tetrahedron about which to perform the move.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool hasOpenBook(Tetrahedron<4>* t) const;
+        bool hasOpenBook(Tetrahedron<4>* tet) const;
         /**
          * Determines whether it is possible to collapse the given edge of
          * this triangulation, without violating any simplex and/or facet locks.
@@ -1158,10 +1158,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the candidate edge to collapse.
+         * \param edge the candidate edge to collapse.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool hasCollapseEdge(Edge<4>* e) const;
+        bool hasCollapseEdge(Edge<4>* edge) const;
         /**
          * Determines whether it is possible to snap together the endpoints of
          * the given edge of this triangulation.
@@ -1171,11 +1171,11 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the candidate edge whose endpoints would be snapped
+         * \param edge the candidate edge whose endpoints would be snapped
          * together.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool hasSnapEdge(Edge<4>* e) const;
+        bool hasSnapEdge(Edge<4>* edge) const;
 
         /**
          * If possible, returns the triangulation obtained by performing a
@@ -1190,11 +1190,11 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> with44(Edge<4>* e) const;
+        std::optional<Triangulation<4>> with44(Edge<4>* edge) const;
         /**
          * If possible, returns the triangulation obtained by performing a
          * book opening move about the given tetrahedron of this triangulation.
@@ -1208,11 +1208,11 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * \param t the tetrahedron about which to perform the move.
+         * \param tet the tetrahedron about which to perform the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> withOpenBook(Tetrahedron<4>* t) const;
+        std::optional<Triangulation<4>> withOpenBook(Tetrahedron<4>* tet) const;
         /**
          * If possible, returns the triangulation obtained by collapsing the
          * given edge of this triangulation.
@@ -1226,11 +1226,11 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge to collapse.
+         * \param edge the edge to collapse.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> withCollapseEdge(Edge<4>* e) const;
+        std::optional<Triangulation<4>> withCollapseEdge(Edge<4>* edge) const;
         /**
          * If possible, returns the triangulation obtained by snapping together
          * the endpoints of the given edge of this triangulation.
@@ -1243,11 +1243,11 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge whose endpoints are to be snapped together.
+         * \param edge the edge whose endpoints are to be snapped together.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<4>> withSnapEdge(Edge<4>* e) const;
+        std::optional<Triangulation<4>> withSnapEdge(Edge<4>* edge) const;
 
         /**
          * Deprecated routine that tests for and optionally performes a
@@ -1268,7 +1268,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -1278,7 +1278,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \author Alex He
          */
-        [[deprecated]] bool fourFourMove(Edge<4>* e, bool ignored,
+        [[deprecated]] bool fourFourMove(Edge<4>* edge, bool ignored,
             bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -1301,7 +1301,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
-         * \param t the tetrahedron about which to perform the move.
+         * \param tet the tetrahedron about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -1309,7 +1309,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        [[deprecated]] bool openBook(Tetrahedron<4>* t, bool ignored,
+        [[deprecated]] bool openBook(Tetrahedron<4>* tet, bool ignored,
             bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs an
@@ -1332,7 +1332,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge to collapse.
+         * \param edge the edge to collapse.
          : \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -1340,7 +1340,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        [[deprecated]] bool collapseEdge(Edge<4>* e, bool ignored,
+        [[deprecated]] bool collapseEdge(Edge<4>* edge, bool ignored,
             bool perform = true);
         /**
          * Deprecated routine that tests for and optionally performs an
@@ -1362,7 +1362,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \pre The given edge is an edge of this triangulation.
          *
-         * \param e the edge about which to perform the move.
+         * \param edge the edge about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -1372,7 +1372,7 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * \author Alex He
          */
-        [[deprecated]] bool snapEdge(Edge<4>* e, bool ignored,
+        [[deprecated]] bool snapEdge(Edge<4>* edge, bool ignored,
             bool perform = true);
 
         /*@}*/
@@ -1853,95 +1853,96 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, int threads,
         *this, height, threads, tracker);
 }
 
-inline bool Triangulation<4>::move44(Edge<4>* e) {
-    return internal44(e, true, true);
+inline bool Triangulation<4>::move44(Edge<4>* edge) {
+    return internal44(edge, true, true);
 }
 
-inline bool Triangulation<4>::openBook(Tetrahedron<4>* t) {
-    return internalOpenBook(t, true, true);
+inline bool Triangulation<4>::openBook(Tetrahedron<4>* tet) {
+    return internalOpenBook(tet, true, true);
 }
 
-inline bool Triangulation<4>::collapseEdge(Edge<4>* e) {
-    return internalCollapseEdge(e, true, true);
+inline bool Triangulation<4>::collapseEdge(Edge<4>* edge) {
+    return internalCollapseEdge(edge, true, true);
 }
 
-inline bool Triangulation<4>::snapEdge(Edge<4>* e) {
-    return internalSnapEdge(e, true, true);
+inline bool Triangulation<4>::snapEdge(Edge<4>* edge) {
+    return internalSnapEdge(edge, true, true);
 }
 
-inline bool Triangulation<4>::has44(Edge<4>* e) const {
-    return const_cast<Triangulation<4>*>(this)->internal44(e, true, false);
+inline bool Triangulation<4>::has44(Edge<4>* edge) const {
+    return const_cast<Triangulation<4>*>(this)->internal44(edge, true, false);
 }
 
-inline bool Triangulation<4>::hasOpenBook(Tetrahedron<4>* t) const {
-    return const_cast<Triangulation<4>*>(this)->internalOpenBook(t,
+inline bool Triangulation<4>::hasOpenBook(Tetrahedron<4>* tet) const {
+    return const_cast<Triangulation<4>*>(this)->internalOpenBook(tet,
         true, false);
 }
 
-inline bool Triangulation<4>::hasCollapseEdge(Edge<4>* e) const {
-    return const_cast<Triangulation<4>*>(this)->internalCollapseEdge(e,
+inline bool Triangulation<4>::hasCollapseEdge(Edge<4>* edge) const {
+    return const_cast<Triangulation<4>*>(this)->internalCollapseEdge(edge,
         true, false);
 }
 
-inline bool Triangulation<4>::hasSnapEdge(Edge<4>* e) const {
-    return const_cast<Triangulation<4>*>(this)->internalSnapEdge(e,
+inline bool Triangulation<4>::hasSnapEdge(Edge<4>* edge) const {
+    return const_cast<Triangulation<4>*>(this)->internalSnapEdge(edge,
         true, false);
 }
 
-inline std::optional<Triangulation<4>> Triangulation<4>::with44(Edge<4>* e)
+inline std::optional<Triangulation<4>> Triangulation<4>::with44(Edge<4>* edge)
         const {
-    if (! has44(e))
+    if (! has44(edge))
         return {};
 
     std::optional<Triangulation<4>> ans(std::in_place, *this);
-    ans->internal44(ans->translate(e), false, true);
+    ans->internal44(ans->translate(edge), false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<4>> Triangulation<4>::withOpenBook(
-        Tetrahedron<4>* t) const {
-    if (! hasOpenBook(t))
+        Tetrahedron<4>* tet) const {
+    if (! hasOpenBook(tet))
         return {};
 
     std::optional<Triangulation<4>> ans(std::in_place, *this);
-    ans->internalOpenBook(ans->translate(t), false, true);
+    ans->internalOpenBook(ans->translate(tet), false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<4>> Triangulation<4>::withCollapseEdge(
-        Edge<4>* e) const {
-    if (! hasCollapseEdge(e))
+        Edge<4>* edge) const {
+    if (! hasCollapseEdge(edge))
         return {};
 
     std::optional<Triangulation<4>> ans(std::in_place, *this);
-    ans->internalCollapseEdge(ans->translate(e), false, true);
+    ans->internalCollapseEdge(ans->translate(edge), false, true);
     return ans;
 }
 
 inline std::optional<Triangulation<4>> Triangulation<4>::withSnapEdge(
-        Edge<4>* e) const {
-    if (! hasSnapEdge(e))
+        Edge<4>* edge) const {
+    if (! hasSnapEdge(edge))
         return {};
 
     std::optional<Triangulation<4>> ans(std::in_place, *this);
-    ans->internalSnapEdge(ans->translate(e), false, true);
+    ans->internalSnapEdge(ans->translate(edge), false, true);
     return ans;
 }
 
-inline bool Triangulation<4>::fourFourMove(Edge<4>* e, bool, bool perform) {
-    return internal44(e, true, perform);
+inline bool Triangulation<4>::fourFourMove(Edge<4>* edge, bool, bool perform) {
+    return internal44(edge, true, perform);
 }
 
-inline bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool, bool perform) {
-    return internalOpenBook(t, true, perform);
+inline bool Triangulation<4>::openBook(Tetrahedron<4>* tet,
+        bool, bool perform) {
+    return internalOpenBook(tet, true, perform);
 }
 
-inline bool Triangulation<4>::collapseEdge(Edge<4>* e, bool, bool perform) {
-    return internalCollapseEdge(e, true, perform);
+inline bool Triangulation<4>::collapseEdge(Edge<4>* edge, bool, bool perform) {
+    return internalCollapseEdge(edge, true, perform);
 }
 
-inline bool Triangulation<4>::snapEdge(Edge<4>* e, bool, bool perform) {
-    return internalSnapEdge(e, true, perform);
+inline bool Triangulation<4>::snapEdge(Edge<4>* edge, bool, bool perform) {
+    return internalSnapEdge(edge, true, perform);
 }
 
 inline bool Triangulation<4>::idealToFinite() {

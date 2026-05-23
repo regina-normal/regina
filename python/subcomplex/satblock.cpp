@@ -37,6 +37,8 @@
 #include "../helpers.h"
 #include "../docstrings/subcomplex/satblock.h"
 
+using namespace pybind11::literals;
+
 using regina::SatBlock;
 using regina::SatBlockModel;
 
@@ -63,7 +65,7 @@ void addSatBlock(pybind11::module_& m) {
         .def("nextBoundaryAnnulus", &SatBlock::nextBoundaryAnnulus,
             pybind11::return_value_policy::reference, rdoc::nextBoundaryAnnulus)
         .def("abbr", &SatBlock::abbr,
-            pybind11::arg("tex") = false, rdoc::abbr)
+            "tex"_a = false, rdoc::abbr)
         // We cannot bind the comparison operators in the normal way:
         // see https://github.com/pybind/pybind11/issues/1487 for details.
         .def("__lt__", [](const SatBlock& lhs, const SatBlock& rhs) {

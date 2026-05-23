@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/utilities/bitmask.h"
 
+using namespace pybind11::literals;
+
 using regina::Bitmask;
 using regina::Bitmask1;
 using regina::Bitmask2;
@@ -66,7 +68,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
                 }
             }
             b.set(arg.begin(), arg.end(), value);
-        }, pybind11::arg("indices"), pybind11::arg("value"), rdoc::set_2)
+        }, "indices"_a, "value"_a, rdoc::set_2)
         .def(pybind11::self &= pybind11::self, rdoc::__iand)
         .def(pybind11::self |= pybind11::self, rdoc::__ior)
         .def(pybind11::self ^= pybind11::self, rdoc::__ixor)
@@ -115,7 +117,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
                 }
             }
             b.set(arg.begin(), arg.end(), value);
-        }, pybind11::arg("indices"), pybind11::arg("value"), rdoc::set_2)
+        }, "indices"_a, "value"_a, rdoc::set_2)
         .def("reset", pybind11::overload_cast<>(&Bitmask::reset), rdoc::reset)
         .def("reset", pybind11::overload_cast<size_t>(&Bitmask::reset),
             rdoc::reset_2)

@@ -38,6 +38,8 @@
 #include "../../docstrings/triangulation/detail/facetpairing.h"
 #include "../../docstrings/triangulation/facetpairing3.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::BoolSet;
 using regina::FacetPairing;
@@ -86,12 +88,10 @@ void addFacetPairing3(pybind11::module_& m) {
         .def_static("fromTextRep", &FacetPairing<3>::fromTextRep,
             rbase::fromTextRep)
         .def("dot", &FacetPairing<3>::dot,
-            pybind11::arg("prefix") = nullptr,
-            pybind11::arg("subgraph") = false,
-            pybind11::arg("labels") = false,
+            "prefix"_a = nullptr, "subgraph"_a = false, "labels"_a = false,
             rbase::dot)
         .def_static("dotHeader", &FacetPairing<3>::dotHeader,
-            pybind11::arg("graphName") = nullptr, rbase::dotHeader)
+            "graphName"_a = nullptr, rbase::dotHeader)
         .def("divideConnected", &FacetPairing<3>::divideConnected,
             rbase::divideConnected)
         .def("isClosed", &FacetPairing<3>::isClosed, rbase::isClosed)
@@ -124,8 +124,7 @@ void addFacetPairing3(pybind11::module_& m) {
         .def_static("findAllPairings", &FacetPairing<3>::findAllPairings<
             const std::function<void(const FacetPairing<3>&,
                 FacetPairing<3>::IsoList)>&>,
-            pybind11::arg("nSimplices"), pybind11::arg("boundary"),
-            pybind11::arg("nBdryFacets"), pybind11::arg("action"),
+            "nSimplices"_a, "boundary"_a, "nBdryFacets"_a, "action"_a,
             rbase::findAllPairings)
     ;
     regina::python::add_output_rich(c);

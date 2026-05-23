@@ -2149,7 +2149,7 @@ class TriangulationBase :
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
+         * any pointers to old skeletal objects (such as the argument \a face)
          * can no longer be used.
          *
          * See the page on \ref pachner for definitions and terminology
@@ -2176,12 +2176,12 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the move.
+         * \param face the <i>k</i>-face about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
         template <int k> requires (k >= 0 && k <= dim)
-        bool pachner(Face<dim, k>* f);
+        bool pachner(Face<dim, k>* face);
 
         /**
          * Performs a (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the
@@ -2219,10 +2219,10 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the move.
+         * \param face the <i>k</i>-face about which to perform the move.
          */
         template <int k> requires (k >= 0 && k <= dim)
-        void pachner(Face<dim, k>* f, Unprotected);
+        void pachner(Face<dim, k>* face, Unprotected);
 
         /**
          * If possible, performs a 2-0 move about the given <i>k</i>-face of
@@ -2242,7 +2242,7 @@ class TriangulationBase :
          * The requirements for the move to not change the topology depend
          * upon the facial dimension \a k.  In all cases:
          *
-         * - the face \a f must be valid and non-boundary, and must have
+         * - the given face \a f must be valid and non-boundary, and must have
          *   degree 2;
          *
          * - the two top-dimensional simplices on either side of \a f must be
@@ -2283,7 +2283,7 @@ class TriangulationBase :
          *
          * Note that after performing this move, all skeletal objects
          * (faces, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
+         * any pointers to old skeletal objects (such as the argument \a face)
          * can no longer be used.
          *
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
@@ -2291,12 +2291,12 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the move.
+         * \param face the <i>k</i>-face about which to perform the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
         template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-        bool move20(Face<dim, k>* f);
+        bool move20(Face<dim, k>* face);
 
         /**
          * If possible, performs a boundary shelling move upon the given
@@ -2355,11 +2355,12 @@ class TriangulationBase :
          *
          * \pre The given simplex is a simplex of this triangulation.
          *
-         * \param s the top-dimensional simplex upon which to perform the move.
+         * \param simplex the top-dimensional simplex upon which to perform
+         * the move.
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        bool shellBoundary(Simplex<dim>* s) requires (standardDim(dim));
+        bool shellBoundary(Simplex<dim>* simplex) requires (standardDim(dim));
 
         /**
          * Determines whether it is possible to perform a
@@ -2375,11 +2376,12 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the candidate move.
+         * \param face the <i>k</i>-face about which to perform the candidate
+         * move.
          * \return \c true if and only if the requested move can be performed.
          */
         template <int k> requires (k >= 0 && k <= dim)
-        bool hasPachner(Face<dim, k>* f) const;
+        bool hasPachner(Face<dim, k>* face) const;
 
         /**
          * Determines whether it is possible to perform a 2-0 move about the
@@ -2394,11 +2396,12 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the candidate move.
+         * \param face the <i>k</i>-face about which to perform the candidate
+         * move.
          * \return \c true if and only if the requested move can be performed.
          */
         template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-        bool has20(Face<dim, k>* f) const;
+        bool has20(Face<dim, k>* face) const;
 
         /**
          * Determines whether it is possible to perform a boundary shelling
@@ -2415,11 +2418,11 @@ class TriangulationBase :
          *
          * \pre The given simplex is a simplex of this triangulation.
          *
-         * \param s the top-dimensional simplex upon which to perform the
+         * \param simplex the top-dimensional simplex upon which to perform the
          * candidate move.
          * \return \c true if and only if the requested move can be performed.
          */
-        bool hasShellBoundary(Simplex<dim>* s) const
+        bool hasShellBoundary(Simplex<dim>* simplex) const
             requires (standardDim(dim));
 
         /**
@@ -2439,12 +2442,12 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the move.
+         * \param face the <i>k</i>-face about which to perform the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         template <int k> requires (k >= 0 && k <= dim)
-        std::optional<Triangulation<dim>> withPachner(Face<dim, k>* f) const;
+        std::optional<Triangulation<dim>> withPachner(Face<dim, k>* face) const;
 
         /**
          * If possible, returns the triangulation obtained by performing a
@@ -2462,12 +2465,12 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the move.
+         * \param face the <i>k</i>-face about which to perform the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-        std::optional<Triangulation<dim>> with20(Face<dim, k>* f) const;
+        std::optional<Triangulation<dim>> with20(Face<dim, k>* face) const;
 
         /**
          * If possible, returns the triangulation obtained by performing a
@@ -2488,12 +2491,13 @@ class TriangulationBase :
          *
          * \pre The given simplex is a simplex of this triangulation.
          *
-         * \param s the top-dimensional simplex upon which to perform the move.
+         * \param simplex the top-dimensional simplex upon which to perform
+         * the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        std::optional<Triangulation<dim>> withShellBoundary(Simplex<dim>* s)
-            const requires (standardDim(dim));
+        std::optional<Triangulation<dim>> withShellBoundary(
+            Simplex<dim>* simplex) const requires (standardDim(dim));
 
         /**
          * Deprecated routine that tests for and optionally performs a
@@ -2518,7 +2522,7 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the move.
+         * \param face the <i>k</i>-face about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -2527,7 +2531,7 @@ class TriangulationBase :
          * \return \c true if and only if the requested move could be performed.
          */
         template <int k> requires (k >= 0 && k <= dim)
-        [[deprecated]] bool pachner(Face<dim, k>* f, bool ignored,
+        [[deprecated]] bool pachner(Face<dim, k>* face, bool ignored,
             bool perform = true);
 
         /**
@@ -2552,7 +2556,7 @@ class TriangulationBase :
          *
          * \tparam k the dimension of the given face.
          *
-         * \param f the <i>k</i>-face about which to perform the move.
+         * \param face the <i>k</i>-face about which to perform the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -2561,7 +2565,7 @@ class TriangulationBase :
          * \return \c true if and only if the requested move could be performed.
          */
         template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-        [[deprecated]] bool twoZeroMove(Face<dim, k>* f, bool ignored,
+        [[deprecated]] bool twoZeroMove(Face<dim, k>* face, bool ignored,
             bool perform = true);
 
         /**
@@ -2589,7 +2593,8 @@ class TriangulationBase :
          *
          * \pre The given simplex is a simplex of this triangulation.
          *
-         * \param s the top-dimensional simplex upon which to perform the move.
+         * \param simplex the top-dimensional simplex upon which to perform
+         * the move.
          * \param ignored an argument that is ignored.  In earlier versions of
          * Regina this argument controlled whether we check if the move can be
          * performed; however, now this check is done always.
@@ -2597,7 +2602,7 @@ class TriangulationBase :
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        [[deprecated]] bool shellBoundary(Simplex<dim>* s, bool ignored,
+        [[deprecated]] bool shellBoundary(Simplex<dim>* simplex, bool ignored,
             bool perform = true) requires (standardDim(dim));
 
         /*@}*/
@@ -6389,105 +6394,105 @@ inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= dim)
-inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f) {
-    return internalPachner(f, true, true);
+inline bool TriangulationBase<dim>::pachner(Face<dim, k>* face) {
+    return internalPachner(face, true, true);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= dim)
-inline void TriangulationBase<dim>::pachner(Face<dim, k>* f, Unprotected) {
-    internalPachner(f, false, true);
+inline void TriangulationBase<dim>::pachner(Face<dim, k>* face, Unprotected) {
+    internalPachner(face, false, true);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-inline bool TriangulationBase<dim>::move20(Face<dim, k>* f) {
-    return internal20(f, true, true);
+inline bool TriangulationBase<dim>::move20(Face<dim, k>* face) {
+    return internal20(face, true, true);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s)
+inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* simplex)
         requires (standardDim(dim)) {
-    return internalShellBoundary(s, true, true);
+    return internalShellBoundary(simplex, true, true);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= dim)
-bool TriangulationBase<dim>::hasPachner(Face<dim, k>* f) const {
-    return const_cast<TriangulationBase<dim>*>(this)->internalPachner(f,
+bool TriangulationBase<dim>::hasPachner(Face<dim, k>* face) const {
+    return const_cast<TriangulationBase<dim>*>(this)->internalPachner(face,
         true, false);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-bool TriangulationBase<dim>::has20(Face<dim, k>* f) const {
-    return const_cast<TriangulationBase<dim>*>(this)->internal20(f,
+bool TriangulationBase<dim>::has20(Face<dim, k>* face) const {
+    return const_cast<TriangulationBase<dim>*>(this)->internal20(face,
         true, false);
 }
 
 template <int dim> requires (supportedDim(dim))
-bool TriangulationBase<dim>::hasShellBoundary(Simplex<dim>* s) const
+bool TriangulationBase<dim>::hasShellBoundary(Simplex<dim>* simplex) const
         requires (standardDim(dim)) {
-    return const_cast<TriangulationBase<dim>*>(this)->internalShellBoundary(s,
-        true, false);
+    return const_cast<TriangulationBase<dim>*>(this)->internalShellBoundary(
+        simplex, true, false);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= dim)
 std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
-        Face<dim, k>* f) const {
-    if (! hasPachner(f))
+        Face<dim, k>* face) const {
+    if (! hasPachner(face))
         return {};
 
     std::optional<Triangulation<dim>> ans(std::in_place,
         static_cast<const Triangulation<dim>&>(*this));
-    ans->internalPachner(ans->translate(f), false, true);
+    ans->internalPachner(ans->translate(face), false, true);
     return ans;
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
 std::optional<Triangulation<dim>> TriangulationBase<dim>::with20(
-        Face<dim, k>* f) const {
-    if (! has20(f))
+        Face<dim, k>* face) const {
+    if (! has20(face))
         return {};
 
     std::optional<Triangulation<dim>> ans(std::in_place,
         static_cast<const Triangulation<dim>&>(*this));
-    ans->internal20(ans->translate(f), false, true);
+    ans->internal20(ans->translate(face), false, true);
     return ans;
 }
 
 template <int dim> requires (supportedDim(dim))
 std::optional<Triangulation<dim>> TriangulationBase<dim>::withShellBoundary(
-        Simplex<dim>* s) const requires (standardDim(dim)) {
-    if (! hasShellBoundary(s))
+        Simplex<dim>* simplex) const requires (standardDim(dim)) {
+    if (! hasShellBoundary(simplex))
         return {};
 
     std::optional<Triangulation<dim>> ans(std::in_place,
         static_cast<const Triangulation<dim>&>(*this));
-    ans->internalShellBoundary(ans->simplex(s->index()), false, true);
+    ans->internalShellBoundary(ans->simplex(simplex->index()), false, true);
     return ans;
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= dim)
-inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool,
+inline bool TriangulationBase<dim>::pachner(Face<dim, k>* face, bool,
         bool perform) {
-    return internalPachner(f, true, perform);
+    return internalPachner(face, true, perform);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-inline bool TriangulationBase<dim>::twoZeroMove(Face<dim, k>* f, bool,
+inline bool TriangulationBase<dim>::twoZeroMove(Face<dim, k>* face, bool,
         bool perform) {
-    return internal20(f, true, perform);
+    return internal20(face, true, perform);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* s, bool,
+inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* simplex, bool,
         bool perform) requires (standardDim(dim)) {
-    return internalShellBoundary(s, true, perform);
+    return internalShellBoundary(simplex, true, perform);
 }
 
 template <int dim> requires (supportedDim(dim))

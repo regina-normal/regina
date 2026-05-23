@@ -44,6 +44,8 @@
 #include "../helpers.h"
 #include "../docstrings/treewidth/treedecomposition.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::TreeBag;
 using regina::TreeDecomposition;
@@ -250,7 +252,7 @@ void addTreeDecomposition(pybind11::module_& m) {
             t.reroot(costSame.data(), costReverse.data(), costRoot.data());
         }, rdoc::reroot_2)
         .def("dot", &TreeDecomposition::dot,
-            pybind11::arg("dark") = false, rdoc::dot)
+            "dark"_a = false, rdoc::dot)
         .def("pace", &TreeDecomposition::pace, rdoc::pace)
         .def_static("fromPACE",
             overload_cast<const std::string&>(&TreeDecomposition::fromPACE),

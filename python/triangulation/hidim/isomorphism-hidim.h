@@ -35,6 +35,8 @@
 #include "../../helpers.h"
 #include "../../docstrings/triangulation/isomorphism.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Isomorphism;
 
@@ -79,8 +81,7 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
         .def("inverse", &Isomorphism<dim>::inverse, rdoc::inverse)
         .def("inc", [](Isomorphism<dim>& iso) { ++iso; }, rdoc::__inc)
         .def_static("random", &Isomorphism<dim>::random,
-            pybind11::arg(), pybind11::arg("even") = false,
-            rdoc::random)
+            "nSimplices"_a, "even"_a = false, rdoc::random)
         .def_static("identity", &Isomorphism<dim>::identity, rdoc::identity)
     ;
     regina::python::add_output_rich(c);

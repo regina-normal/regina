@@ -40,6 +40,8 @@
 #include "../../docstrings/triangulation/dim4/edge4.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
+using namespace pybind11::literals;
+
 using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Face;
@@ -88,13 +90,11 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
         .def("boundaryComponent", &Edge<4>::boundaryComponent,
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("face", &regina::python::face<4, 1>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::face)
+            "lowerdim"_a, "face"_a, rbase::face)
         .def("vertex", &Edge<4>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("faceMapping", &regina::python::faceMapping<4, 1>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::faceMapping)
+            "lowerdim"_a, "face"_a, rbase::faceMapping)
         .def("vertexMapping", &Edge<4>::vertexMapping, rbase::vertexMapping)
         .def("isLoop", &Edge<4>::isLoop, rbase::isLoop)
         .def("degree", &Edge<4>::degree, rbase::degree)

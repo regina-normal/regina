@@ -36,6 +36,8 @@
 #include "../../docstrings/triangulation/alias/facenumber.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
+using namespace pybind11::literals;
+
 using regina::Face;
 using regina::FaceEmbedding;
 
@@ -126,12 +128,10 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     }
     if constexpr (subdim > 0) {
         c.def("face", &regina::python::face<dim, subdim>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::face);
+            "lowerdim"_a, "face"_a, rbase::face);
         c.def("faceMapping",
             &regina::python::faceMapping<dim, subdim>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::faceMapping);
+            "lowerdim"_a, "face"_a, rbase::faceMapping);
     }
     if constexpr (subdim > 4) {
         c.def("pentachoron", &Face<dim, subdim>::pentachoron,

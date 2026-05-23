@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/triangulation/facenumbering.h"
 
+using namespace pybind11::literals;
+
 void addFaceNumbering(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
@@ -46,8 +48,7 @@ void addFaceNumbering(pybind11::module_& m) {
                 [=](auto d) {
             return regina::faceOppositeEdge<d>(i, j);
         });
-    }, pybind11::arg("dim"), pybind11::arg("i"), pybind11::arg("j"),
-        rdoc::faceOppositeEdge);
+    }, "dim"_a, "i"_a, "j"_a, rdoc::faceOppositeEdge);
 
     RDOC_SCOPE_END
 }

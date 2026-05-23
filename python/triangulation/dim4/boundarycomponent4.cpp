@@ -36,6 +36,8 @@
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/detail/boundarycomponent.h"
 
+using namespace pybind11::literals;
+
 using regina::BoundaryComponent;
 
 void addBoundaryComponent4(pybind11::module_& m, pybind11::module_& internal) {
@@ -65,7 +67,7 @@ void addBoundaryComponent4(pybind11::module_& m, pybind11::module_& internal) {
         .def("facets", &BoundaryComponent<4>::facets, rbase::facets)
         .def("faces", (regina::python::facesFunc<BoundaryComponent<4>>)(
                 &BoundaryComponent<4>::faces),
-            pybind11::arg("subdim"), rbase::faces)
+            "subdim"_a, rbase::faces)
         .def("tetrahedra", &BoundaryComponent<4>::tetrahedra, rbase::tetrahedra)
         .def("triangles", &BoundaryComponent<4>::triangles, rbase::triangles)
         .def("edges", &BoundaryComponent<4>::edges, rbase::edges)
@@ -75,7 +77,7 @@ void addBoundaryComponent4(pybind11::module_& m, pybind11::module_& internal) {
         .def("face", (regina::python::faceFunc<BoundaryComponent<4>>)(
                 &BoundaryComponent<4>::face),
             pybind11::return_value_policy::reference,
-            pybind11::arg("subdim"), pybind11::arg("index"), rbase::face)
+            "subdim"_a, "index"_a, rbase::face)
         .def("tetrahedron", &BoundaryComponent<4>::tetrahedron,
             pybind11::return_value_policy::reference, rbase::tetrahedron)
         .def("triangle", &BoundaryComponent<4>::triangle,

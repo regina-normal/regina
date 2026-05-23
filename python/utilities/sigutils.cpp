@@ -36,6 +36,8 @@
 #include "../helpers/bytesequence.h"
 #include "../docstrings/utilities/sigutils.h"
 
+using namespace pybind11::literals;
+
 using regina::Base64Encoder;
 using regina::Base64SigEncoding;
 using regina::Bitmask;
@@ -209,9 +211,7 @@ void addSigUtils(pybind11::module_& m) {
     using Wrapper = regina::python::CachedDecoder<regina::Base64Decoder>;
     auto c = pybind11::class_<Wrapper>(m, "Base64Decoder", rdoc::__class)
         .def(pybind11::init<const std::string&, bool>(),
-            pybind11::arg("string"),
-            pybind11::arg("skipInitialWhitespace") = true,
-            rdoc::__init)
+            "string"_a, "skipInitialWhitespace"_a = true, rdoc::__init)
         .def("skipWhitespace", &Decoder::skipWhitespace, rdoc::skipWhitespace)
         .def("done",
             pybind11::overload_cast<>(&Decoder::done, pybind11::const_),
@@ -338,9 +338,7 @@ void addSigUtils(pybind11::module_& m) {
     using Wrapper = regina::python::CachedDecoder<regina::Base64BitDecoder>;
     auto c = pybind11::class_<Wrapper>(m, "Base64BitDecoder", rdoc::__class)
         .def(pybind11::init<const std::string&, bool>(),
-            pybind11::arg("string"),
-            pybind11::arg("skipInitialWhitespace") = true,
-            rdoc::__init)
+            "string"_a, "skipInitialWhitespace"_a = true, rdoc::__init)
         .def("maybeDone", &Decoder::maybeDone, rdoc::maybeDone)
         .def("noMoreBits", &Decoder::noMoreBits, rdoc::noMoreBits)
         .def("remainingBits", &Decoder::remainingBits, rdoc::remainingBits)

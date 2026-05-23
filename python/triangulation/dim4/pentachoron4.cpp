@@ -35,6 +35,8 @@
 #include "../../docstrings/triangulation/dim4/pentachoron4.h"
 #include "../../docstrings/triangulation/detail/simplex.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Pentachoron;
 
@@ -74,7 +76,7 @@ void addPentachoron4(pybind11::module_& m) {
         .def("component", &Pentachoron<4>::component,
             pybind11::return_value_policy::reference, rbase::component)
         .def("face", &regina::python::face<4, 4>,
-            pybind11::arg("subdim"), pybind11::arg("face"), rbase::face)
+            "subdim"_a, "face"_a, rbase::face)
         .def("vertex", &Pentachoron<4>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge",
@@ -88,7 +90,7 @@ void addPentachoron4(pybind11::module_& m) {
         .def("tetrahedron", &Pentachoron<4>::tetrahedron,
             pybind11::return_value_policy::reference, rbase::tetrahedron)
         .def("faceMapping", &regina::python::faceMapping<4, 4>,
-            pybind11::arg("subdim"), pybind11::arg("face"), rbase::faceMapping)
+            "subdim"_a, "face"_a, rbase::faceMapping)
         .def("vertexMapping", &Pentachoron<4>::vertexMapping,
             rbase::vertexMapping)
         .def("edgeMapping", &Pentachoron<4>::edgeMapping, rbase::edgeMapping)

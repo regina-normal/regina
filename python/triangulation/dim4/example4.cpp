@@ -36,7 +36,8 @@
 #include "../../docstrings/triangulation/example4.h"
 #include "../../docstrings/triangulation/detail/example.h"
 
-using namespace regina::python;
+using namespace pybind11::literals;
+
 using regina::Example;
 
 void addExample4(pybind11::module_& m) {
@@ -79,9 +80,7 @@ void addExample4(pybind11::module_& m) {
         .def_static("bundleWithMonodromy", &Example<4>::bundleWithMonodromy,
             rdoc::bundleWithMonodromy)
         .def_static("spun", &Example<4>::spun,
-            pybind11::arg("knot"),
-            pybind11::arg("breakOpen") = regina::StrandRef(),
-            rdoc::spun)
+            "knot"_a, "breakOpen"_a = regina::StrandRef(), rdoc::spun)
     ;
     regina::python::no_eq_static(c);
 

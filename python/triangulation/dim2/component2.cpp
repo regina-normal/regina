@@ -36,6 +36,8 @@
 #include "../../docstrings/triangulation/dim2/component2.h"
 #include "../../docstrings/triangulation/detail/component.h"
 
+using namespace pybind11::literals;
+
 using regina::Component;
 
 void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
@@ -62,7 +64,7 @@ void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasLocks", &Component<2>::hasLocks, rbase::hasLocks)
         .def("faces",
             (regina::python::facesFunc<Component<2>>)(&Component<2>::faces),
-            pybind11::arg("subdim"), rdoc::faces)
+            "subdim"_a, rdoc::faces)
         .def("vertices", &Component<2>::vertices, rbase::vertices)
         .def("edges", &Component<2>::edges, rbase::edges)
         .def("boundaryComponents", &Component<2>::boundaryComponents,
@@ -73,8 +75,8 @@ void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("face",
             (regina::python::faceFunc<Component<2>>)(&Component<2>::face),
-            pybind11::arg("subdim"), pybind11::arg("index"),
-            pybind11::return_value_policy::reference, rdoc::face)
+            pybind11::return_value_policy::reference,
+            "subdim"_a, "index"_a, rdoc::face)
         .def("edge", &Component<2>::edge,
             pybind11::return_value_policy::reference, rbase::edge)
         .def("vertex", &Component<2>::vertex,

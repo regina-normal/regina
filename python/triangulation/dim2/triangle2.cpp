@@ -35,6 +35,8 @@
 #include "../../docstrings/triangulation/dim2/triangle2.h"
 #include "../../docstrings/triangulation/detail/simplex.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Triangle;
 
@@ -73,7 +75,7 @@ void addTriangle2(pybind11::module_& m) {
         .def("component", &Triangle<2>::component,
             pybind11::return_value_policy::reference, rbase::component)
         .def("face", &regina::python::face<2, 2>,
-            pybind11::arg("subdim"), pybind11::arg("face"), rbase::face)
+            "subdim"_a, "face"_a, rbase::face)
         .def("vertex", &Triangle<2>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge",
@@ -83,7 +85,7 @@ void addTriangle2(pybind11::module_& m) {
             overload_cast<int, int>(&Triangle<2>::edge, pybind11::const_),
             pybind11::return_value_policy::reference, rbase::edge_2)
         .def("faceMapping", &regina::python::faceMapping<2, 2>,
-            pybind11::arg("subdim"), pybind11::arg("face"), rbase::faceMapping)
+            "subdim"_a, "face"_a, rbase::faceMapping)
         .def("vertexMapping", &Triangle<2>::vertexMapping, rbase::vertexMapping)
         .def("edgeMapping", &Triangle<2>::edgeMapping, rbase::edgeMapping)
         .def("orientation", &Triangle<2>::orientation, rbase::orientation)

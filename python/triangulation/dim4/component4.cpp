@@ -36,6 +36,8 @@
 #include "../../docstrings/triangulation/dim4/component4.h"
 #include "../../docstrings/triangulation/detail/component.h"
 
+using namespace pybind11::literals;
+
 using regina::Component;
 
 void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
@@ -66,7 +68,7 @@ void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasLocks", &Component<4>::hasLocks, rbase::hasLocks)
         .def("faces",
             (regina::python::facesFunc<Component<4>>)(&Component<4>::faces),
-            pybind11::arg("subdim"), rdoc::faces)
+            "subdim"_a, rdoc::faces)
         .def("vertices", &Component<4>::vertices, rbase::vertices)
         .def("edges", &Component<4>::edges, rbase::edges)
         .def("triangles", &Component<4>::triangles, rbase::triangles)
@@ -79,8 +81,8 @@ void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::pentachoron)
         .def("face",
             (regina::python::faceFunc<Component<4>>)(&Component<4>::face),
-            pybind11::arg("subdim"), pybind11::arg("index"),
-            pybind11::return_value_policy::reference, rdoc::face)
+            pybind11::return_value_policy::reference,
+            "subdim"_a, "index"_a, rdoc::face)
         .def("tetrahedron", &Component<4>::tetrahedron,
             pybind11::return_value_policy::reference, rbase::tetrahedron)
         .def("triangle", &Component<4>::triangle,

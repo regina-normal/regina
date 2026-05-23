@@ -34,6 +34,8 @@
 #include "../helpers.h"
 #include "../docstrings/link/tangle.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Crossing;
 using regina::StrandRef;
@@ -65,9 +67,9 @@ void addTangle(pybind11::module_& m) {
             rdoc::translate_2)
         .def("swap", &Tangle::swap, rdoc::swap)
         .def("twist", &Tangle::twist,
-            pybind11::arg("sign") = 1, rdoc::twist)
+            "sign"_a = 1, rdoc::twist)
         .def("turn", &Tangle::turn,
-            pybind11::arg("direction") = 1, rdoc::turn)
+            "direction"_a = 1, rdoc::turn)
         .def("changeAll", &Tangle::changeAll, rdoc::changeAll)
         .def("add", &Tangle::add, rdoc::add)
         .def("box", &Tangle::box, rdoc::box)
@@ -92,7 +94,7 @@ void addTangle(pybind11::module_& m) {
             overload_cast<Crossing*>(&Tangle::withR2, pybind11::const_),
             rdoc::withR2_2)
         .def("simplifyToLocalMinimum", &Tangle::simplifyToLocalMinimum,
-            pybind11::arg("perform") = true, rdoc::simplifyToLocalMinimum)
+            "perform"_a = true, rdoc::simplifyToLocalMinimum)
         .def("brief", overload_cast<>(&Tangle::brief, pybind11::const_),
             rdoc::brief)
         .def("orientedGauss",
@@ -108,7 +110,7 @@ void addTangle(pybind11::module_& m) {
         }, rdoc::fromOrientedGauss)
         .def_static("fromOrientedGauss", [](const std::vector<std::string>& v) {
             return Tangle::fromOrientedGauss(v.begin(), v.end());
-        }, pybind11::arg("tokens"), rdoc::fromOrientedGauss_2)
+        }, "tokens"_a, rdoc::fromOrientedGauss_2)
     ;
     #if defined(__GNUC__)
     // The following routines are deprecated, but we still need to bind
@@ -121,20 +123,11 @@ void addTangle(pybind11::module_& m) {
     #endif
     #endif
     c.def("r1", overload_cast<Crossing*, bool, bool>(&Tangle::r1),
-            pybind11::arg(),
-            pybind11::arg("ignored"),
-            pybind11::arg("perform") = true,
-            rdoc::r1_2) // deprecated
+            "crossing"_a, "ignored"_a, "perform"_a = true, rdoc::r1_2)
         .def("r2", overload_cast<StrandRef, bool, bool>(&Tangle::r2),
-            pybind11::arg(),
-            pybind11::arg("ignored"),
-            pybind11::arg("perform") = true,
-            rdoc::r2_3) // deprecated
+            "arc"_a, "ignored"_a, "perform"_a = true, rdoc::r2_3)
         .def("r2", overload_cast<Crossing*, bool, bool>(&Tangle::r2),
-            pybind11::arg(),
-            pybind11::arg("ignored"),
-            pybind11::arg("perform") = true,
-            rdoc::r2_4) // deprecated
+            "crossing"_a, "ignored"_a, "perform"_a = true, rdoc::r2_4)
     ;
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop

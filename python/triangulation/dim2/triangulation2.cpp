@@ -43,6 +43,8 @@
 #include "../../docstrings/utilities/snapshot.h"
 #include "../isosig-bindings.h" // must come after docstrings
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::AbelianGroup;
 using regina::ByteSequence;
@@ -63,10 +65,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Triangulation<2>&>(), rdoc::__copy)
         .def(pybind11::init<const Triangulation<2>&, bool, bool>(),
-            pybind11::arg("src"),
-            pybind11::arg("cloneProps"),
-            pybind11::arg("cloneLocks") = true,
-            rdoc::__init)
+            "src"_a, "cloneProps"_a, "cloneLocks"_a = true, rdoc::__init)
         .def(pybind11::init<const std::string&>(), rdoc::__init_2)
         .def("isReadOnlySnapshot", &Triangulation<2>::isReadOnlySnapshot,
             rbase2::isReadOnlySnapshot)
@@ -107,7 +106,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
                 ans[i] = t.newSimplex();
             return ans;
         }, pybind11::return_value_policy::reference_internal,
-            pybind11::arg("k"), rbase::newSimplices)
+            "k"_a, rbase::newSimplices)
         .def("newTriangles", [](Triangulation<2>& t, size_t k) {
             pybind11::tuple ans(k);
             for (size_t i = 0; i < k; ++i)
@@ -189,8 +188,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
             rbase::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<2>)>&>,
-            pybind11::arg("other"), pybind11::arg("action"),
-            rbase::findAllIsomorphisms)
+            "other"_a, "action"_a, rbase::findAllIsomorphisms)
         .def("findAllIsomorphisms", [](const Triangulation<2>& t,
                 const Triangulation<2>& other) {
             std::vector<Isomorphism<2>> isos;
@@ -199,15 +197,14 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
                 return false;
             });
             return isos;
-        }, pybind11::arg("other"), rbase::findAllIsomorphisms)
+        }, "other"_a, rbase::findAllIsomorphisms)
         .def("makeCanonical", &Triangulation<2>::makeCanonical,
             rbase::makeCanonical)
         .def("isContainedIn", &Triangulation<2>::isContainedIn,
             rbase::isContainedIn)
         .def("findAllSubcomplexesIn", &Triangulation<2>::findAllSubcomplexesIn<
                 const std::function<bool(const Isomorphism<2>)>&>,
-            pybind11::arg("other"), pybind11::arg("action"),
-            rbase::findAllSubcomplexesIn)
+            "other"_a, "action"_a, rbase::findAllSubcomplexesIn)
         .def("findAllSubcomplexesIn", [](const Triangulation<2>& t,
                 const Triangulation<2>& other) {
             std::vector<Isomorphism<2>> isos;
@@ -216,7 +213,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
                 return false;
             });
             return isos;
-        }, pybind11::arg("other"), rbase::findAllSubcomplexesIn)
+        }, "other"_a, rbase::findAllSubcomplexesIn)
         .def("isEmpty", &Triangulation<2>::isEmpty, rbase::isEmpty)
         .def("isValid", &Triangulation<2>::isValid, rbase::isValid)
         .def("eulerChar", &Triangulation<2>::eulerChar, rdoc::eulerChar)
@@ -257,10 +254,9 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
         .def("isSphere", &Triangulation<2>::isSphere, rdoc::isSphere)
         .def("isBall", &Triangulation<2>::isBall, rdoc::isBall)
         .def("reorderBFS", &Triangulation<2>::reorderBFS,
-            pybind11::arg("reverse") = false, rbase::reorderBFS)
+            "reverse"_a = false, rbase::reorderBFS)
         .def("randomiseLabelling", &Triangulation<2>::randomiseLabelling,
-            pybind11::arg("preserveOrientation") = true,
-            rbase::randomiseLabelling)
+            "preserveOrientation"_a = true, rbase::randomiseLabelling)
         .def("orient", &Triangulation<2>::orient, rbase::orient)
         .def("reflect", &Triangulation<2>::reflect, rbase::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents,
@@ -268,16 +264,15 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
         .def("homology",
             static_cast<AbelianGroup (Triangulation<2>::*)(int) const>(
                 &Triangulation<2>::homology),
-            pybind11::arg("k") = 1, rbase::homology)
+            "k"_a = 1, rbase::homology)
         .def("knowsHomology",
             static_cast<bool (Triangulation<2>::*)(int, bool) const>(
                 &Triangulation<2>::knowsHomology),
-            pybind11::arg("k") = 1, pybind11::arg("cachedOnly") = false,
-            rbase::knowsHomology)
+            "k"_a = 1, "cachedOnly"_a = false, rbase::knowsHomology)
         .def("markedHomology",
             static_cast<MarkedAbelianGroup (Triangulation<2>::*)(int) const>(
                 &Triangulation<2>::markedHomology),
-            pybind11::arg("k") = 1, rbase::markedHomology)
+            "k"_a = 1, rbase::markedHomology)
         .def("boundaryMap",
             static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
             &Triangulation<2>::boundaryMap), rbase::boundaryMap)
@@ -353,18 +348,17 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
             // Language::Python (i.e., the Python implementation of
             // Language::Current), and so we explicitly use that as our
             // default instead.
-            pybind11::arg("language") = regina::Language::Python,
-            rbase::source)
+            "language"_a = regina::Language::Python, rbase::source)
         .def("dumpConstruction", [](const Triangulation<2>& tri) {
             // Deprecated, so reimplement this ourselves.
             return tri.source(regina::Language::Cxx);
         }, rbase::dumpConstruction)
         .def("dot", &Triangulation<2>::dot,
-            pybind11::arg("labels") = false, rbase::dot)
+            "labels"_a = false, rbase::dot)
         .def_static("fromGluings", [](size_t size, const std::vector<
                 std::tuple<size_t, int, size_t, regina::Perm<3>>>& g) {
             return Triangulation<2>::fromGluings(size, g.begin(), g.end());
-        }, pybind11::arg("size"), pybind11::arg("gluings"), rbase::fromGluings)
+        }, "size"_a, "gluings"_a, rbase::fromGluings)
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
     #if defined(__GNUC__)
@@ -377,43 +371,30 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     #endif
     #endif
-    c.def("pachner",
+    c.def("pachner", // deprecated
             overload_cast<Face<2, 2>*, bool, bool>(
                 &Triangulation<2>::pachner<2>),
-            pybind11::arg(),
-            pybind11::arg("ignored"),
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("pachner",
+            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
+        .def("pachner", // deprecated
             overload_cast<Face<2, 1>*, bool, bool>(
                 &Triangulation<2>::pachner<1>),
-            pybind11::arg(),
-            pybind11::arg("ignored"),
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
-        .def("pachner",
+            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
+        .def("pachner", // deprecated
             overload_cast<Face<2, 0>*, bool, bool>(
                 &Triangulation<2>::pachner<0>),
-            pybind11::arg(),
-            pybind11::arg("ignored"),
-            pybind11::arg("perform") = true,
-            rbase::pachner_2) // deprecated
+            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
         // For twoZeroMove(), the new function has a different name (move20).
         // We therefore give a default value for "ignored" in order to preserve
         // backward compatibility in cases where both boolean arguments are
         // omitted.
-        .def("twoZeroMove", &Triangulation<2>::twoZeroMove<0>,
-            pybind11::arg(),
-            pybind11::arg("ignored") = true,
-            pybind11::arg("perform") = true,
-            rbase::twoZeroMove) // deprecated
-        .def("shellBoundary",
+        .def("twoZeroMove", &Triangulation<2>::twoZeroMove<0>, // deprecated
+            "face"_a, "ignored"_a = true, "perform"_a = true,
+            rbase::twoZeroMove)
+        .def("shellBoundary", // deprecated
             overload_cast<Simplex<2>*, bool, bool>(
                 &Triangulation<2>::shellBoundary),
-            pybind11::arg(),
-            pybind11::arg("ignored"),
-            pybind11::arg("perform") = true,
-            rbase::shellBoundary_2) // deprecated
+            "simplex"_a, "ignored"_a, "perform"_a = true,
+            rbase::shellBoundary_2)
     ;
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
@@ -442,10 +423,7 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_packet_constructor<>(wrap, rdoc::__default);
     regina::python::add_packet_constructor<const Triangulation<2>&, bool,
         bool>(wrap,
-        pybind11::arg("src"),
-        pybind11::arg("cloneProps"),
-        pybind11::arg("cloneLocks") = true,
-        rdoc::__init);
+        "src"_a, "cloneProps"_a, "cloneLocks"_a = true, rdoc::__init);
     regina::python::add_packet_constructor<const std::string&>(wrap,
         rdoc::__init_2);
 

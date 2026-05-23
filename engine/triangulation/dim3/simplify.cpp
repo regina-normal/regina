@@ -875,15 +875,15 @@ bool Triangulation<3>::internalCollapseEdge(Edge<3>* e, bool check,
     return true;
 }
 
-void Triangulation<3>::pinchEdge(Edge<3>* e) {
-    if (e->isBoundary())
+void Triangulation<3>::pinchEdge(Edge<3>* edge) {
+    if (edge->isBoundary())
         throw InvalidArgument("pinchEdge() requires an internal edge");
 
     // Find a triangular face containing e (this will be the face that
     // connects e->front() with e->back()).
     // Our plan is to insert two tetrahedra in its place.
-    Tetrahedron<3>* open = e->front().tetrahedron();
-    Perm<4> vertices = e->front().vertices();
+    Tetrahedron<3>* open = edge->front().tetrahedron();
+    Perm<4> vertices = edge->front().vertices();
     bool locked = open->isFacetLocked(vertices[3]);
 
     // The following ChangeAndClearSpan is essential, since we use

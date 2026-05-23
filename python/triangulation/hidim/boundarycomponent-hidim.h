@@ -35,6 +35,8 @@
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/detail/boundarycomponent.h"
 
+using namespace pybind11::literals;
+
 using regina::BoundaryComponent;
 
 template <int dim> requires (regina::supportedDim(dim))
@@ -64,13 +66,13 @@ void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
         .def("facets", &BoundaryComponent<dim>::facets, rbase::facets)
         .def("faces", (regina::python::facesFunc<BoundaryComponent<dim>>)(
                 &BoundaryComponent<dim>::faces),
-            pybind11::arg("subdim"), rbase::faces)
+            "subdim"_a, rbase::faces)
         .def("facet", &BoundaryComponent<dim>::facet,
             pybind11::return_value_policy::reference, rbase::facet)
         .def("face", (regina::python::faceFunc<BoundaryComponent<dim>>)(
                 &BoundaryComponent<dim>::face),
             pybind11::return_value_policy::reference,
-            pybind11::arg("subdim"), pybind11::arg("index"), rbase::face)
+            "subdim"_a, "index"_a, rbase::face)
         .def("component", &BoundaryComponent<dim>::component,
             pybind11::return_value_policy::reference, rbase::component)
         .def("triangulation", &BoundaryComponent<dim>::triangulation,

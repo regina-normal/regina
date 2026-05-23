@@ -38,6 +38,8 @@
 #include "../../docstrings/triangulation/dim4/tetrahedron4.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
+using namespace pybind11::literals;
+
 using regina::Tetrahedron;
 using regina::TetrahedronEmbedding;
 using regina::Face;
@@ -88,8 +90,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def("boundaryComponent", &Tetrahedron<4>::boundaryComponent,
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("face", &regina::python::face<4, 3>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::face)
+            "lowerdim"_a, "face"_a, rbase::face)
         .def("vertex", &Tetrahedron<4>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge", &Tetrahedron<4>::edge,
@@ -97,8 +98,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def("triangle", &Tetrahedron<4>::triangle,
             pybind11::return_value_policy::reference, rbase::triangle)
         .def("faceMapping", &regina::python::faceMapping<4, 3>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::faceMapping)
+            "lowerdim"_a, "face"_a, rbase::faceMapping)
         .def("vertexMapping", &Tetrahedron<4>::vertexMapping,
             rbase::vertexMapping)
         .def("edgeMapping", &Tetrahedron<4>::edgeMapping, rbase::edgeMapping)

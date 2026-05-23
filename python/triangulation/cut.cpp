@@ -42,6 +42,8 @@
 #include "../helpers.h"
 #include "../docstrings/triangulation/cut.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Cut;
 using regina::FacetPairing;
@@ -56,7 +58,7 @@ void addCut(pybind11::module_& m) {
         .def(pybind11::init<const Cut&>(), rdoc::__copy)
         .def(pybind11::init([](const std::vector<int>& sides) {
             return new Cut(sides.begin(), sides.end());
-        }), pybind11::arg("sides"), rdoc::__init_3)
+        }), "sides"_a, rdoc::__init_3)
         .def("side", &Cut::side, rdoc::side)
         .def("set", &Cut::set, rdoc::set)
         .def("size", overload_cast<>(&Cut::size, pybind11::const_), rdoc::size)
@@ -223,7 +225,7 @@ void addCut(pybind11::module_& m) {
                         "dimensions 2..8.");
 #endif /* REGINA_HIGHDIM */
             }
-        }, pybind11::arg("dim"), rdoc::inclusion)
+        }, "dim"_a, rdoc::inclusion)
         .def("swap", &Cut::swap, rdoc::swap)
         .def("inc", &Cut::inc, rdoc::inc)
         .def("incFixedSizes", &Cut::incFixedSizes, rdoc::incFixedSizes)

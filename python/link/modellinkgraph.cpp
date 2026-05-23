@@ -35,6 +35,8 @@
 #include "../helpers/flags.h"
 #include "../docstrings/link/modellinkgraph.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::ModelLinkGraphNode;
 using regina::ModelLinkGraphArc;
@@ -130,8 +132,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
             &ModelLinkGraph::flype, pybind11::const_), rdoc::flype_2)
         .def("plantri", &ModelLinkGraph::plantri, rdoc::plantri)
         .def("canonicalPlantri", &ModelLinkGraph::canonicalPlantri,
-            pybind11::arg("allowReflection") = true,
-            pybind11::arg("tight") = false,
+            "allowReflection"_a = true, "tight"_a = false,
             rdoc::canonicalPlantri)
         .def("extendedPlantri", &ModelLinkGraph::extendedPlantri,
             rdoc::extendedPlantri)
@@ -143,18 +144,16 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::generateAnyLink)
         .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
             const std::function<void(regina::Link&&)>&>,
-            pybind11::arg("action"), rdoc::generateMinimalLinks)
+            "action"_a, rdoc::generateMinimalLinks)
         .def("generateAllLinks", &ModelLinkGraph::generateAllLinks<
             const std::function<void(regina::Link&&)>&>,
-            pybind11::arg("action"), rdoc::generateAllLinks)
+            "action"_a, rdoc::generateAllLinks)
         .def("canonical", &ModelLinkGraph::canonical,
-            pybind11::arg("allowReflection") = true,
-            rdoc::canonical)
+            "allowReflection"_a = true, rdoc::canonical)
         .def_static("generateAllEmbeddings",
             &ModelLinkGraph::generateAllEmbeddings<
                 const std::function<void(regina::ModelLinkGraph&&)>&>,
-            pybind11::arg("pairing"), pybind11::arg("allowReflection"),
-            pybind11::arg("constraints"), pybind11::arg("action"),
+            "pairing"_a, "allowReflection"_a, "constraints"_a, "action"_a,
             rdoc::generateAllEmbeddings)
         .def("randomise", &ModelLinkGraph::randomise, rdoc::randomise)
     ;

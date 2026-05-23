@@ -35,6 +35,8 @@
 #include "../../docstrings/triangulation/dim3/tetrahedron3.h"
 #include "../../docstrings/triangulation/detail/simplex.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Tetrahedron;
 
@@ -75,7 +77,7 @@ void addTetrahedron3(pybind11::module_& m) {
         .def("component", &Tetrahedron<3>::component,
             pybind11::return_value_policy::reference, rbase::component)
         .def("face", &regina::python::face<3, 3>,
-            pybind11::arg("subdim"), pybind11::arg("face"), rbase::face)
+            "subdim"_a, "face"_a, rbase::face)
         .def("vertex", &Tetrahedron<3>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("edge",
@@ -87,7 +89,7 @@ void addTetrahedron3(pybind11::module_& m) {
         .def("triangle", &Tetrahedron<3>::triangle,
             pybind11::return_value_policy::reference, rbase::triangle)
         .def("faceMapping", &regina::python::faceMapping<3, 3>,
-            pybind11::arg("subdim"), pybind11::arg("face"), rbase::faceMapping)
+            "subdim"_a, "face"_a, rbase::faceMapping)
         .def("vertexMapping", &Tetrahedron<3>::vertexMapping,
             rbase::vertexMapping)
         .def("edgeMapping", &Tetrahedron<3>::edgeMapping, rbase::edgeMapping)

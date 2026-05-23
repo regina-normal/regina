@@ -37,6 +37,8 @@
 #include "../../docstrings/triangulation/alias/facenumber.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
+using namespace pybind11::literals;
+
 using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Face;
@@ -93,13 +95,11 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         .def("boundaryComponent", &Edge<2>::boundaryComponent,
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("face", &regina::python::face<2, 1>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::face)
+            "lowerdim"_a, "face"_a, rbase::face)
         .def("vertex", &Edge<2>::vertex,
             pybind11::return_value_policy::reference, rbase::vertex)
         .def("faceMapping", &regina::python::faceMapping<2, 1>,
-            pybind11::arg("lowerdim"), pybind11::arg("face"),
-            rbase::faceMapping)
+            "lowerdim"_a, "face"_a, rbase::faceMapping)
         .def("vertexMapping", &Edge<2>::vertexMapping, rbase::vertexMapping)
         .def("join", &Edge<2>::join, rbase::join)
         .def("isLoop", &Edge<2>::isLoop, rbase::isLoop)

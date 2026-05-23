@@ -35,6 +35,8 @@
 #include "../helpers/packet.h"
 #include "../docstrings/link/spatiallink.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::SpatialLink;
 
@@ -48,11 +50,11 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
         .def(pybind11::init([](
                 const std::vector<std::vector<std::array<double, 3>>>& nodes) {
             return new SpatialLink(nodes.begin(), nodes.end());
-        }), pybind11::arg("components"), rdoc::__init)
+        }), "components"_a, rdoc::__init)
         .def(pybind11::init([](
                 const std::vector<std::vector<SpatialLink::Node>>& nodes) {
             return new SpatialLink(nodes.begin(), nodes.end());
-        }), pybind11::arg("components"), rdoc::__init)
+        }), "components"_a, rdoc::__init)
         .def("size", &SpatialLink::size, rdoc::size)
         .def("isEmpty", &SpatialLink::isEmpty, rdoc::isEmpty)
         .def("countComponents", &SpatialLink::countComponents,
@@ -78,7 +80,7 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("scale", &SpatialLink::scale, rdoc::scale)
         .def("translate", &SpatialLink::translate, rdoc::translate)
         .def("reflect", &SpatialLink::reflect,
-            pybind11::arg("axis") = 2, rdoc::reflect)
+            "axis"_a = 2, rdoc::reflect)
         .def("refine", overload_cast<>(&SpatialLink::refine),
             rdoc::refine)
         .def("refine", overload_cast<int>(&SpatialLink::refine),

@@ -33,6 +33,8 @@
 #include "../helpers.h"
 #include "../docstrings/progress/progresstracker.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::ProgressTracker;
 using regina::ProgressTrackerBase;
@@ -66,8 +68,7 @@ void addProgressTracker(pybind11::module_& m) {
             rdoc::percentChanged)
         .def("percent", &ProgressTracker::percent, rdoc::percent)
         .def("newStage", &ProgressTracker::newStage,
-            pybind11::arg(), pybind11::arg("weight") = 1,
-            rdoc::newStage)
+            "desc"_a, "weight"_a = 1, rdoc::newStage)
         .def("setPercent", &ProgressTracker::setPercent, rdoc::setPercent)
         .def("setFinished", &ProgressTracker::setFinished, rdoc::setFinished)
     ;

@@ -36,6 +36,8 @@
 #include "../../docstrings/triangulation/example3.h"
 #include "../../docstrings/triangulation/detail/example.h"
 
+using namespace pybind11::literals;
+
 using regina::Example;
 
 void addExample3(pybind11::module_& m) {
@@ -69,9 +71,9 @@ void addExample3(pybind11::module_& m) {
         .def_static("augTriSolidTorus", &Example<3>::augTriSolidTorus,
             rdoc::augTriSolidTorus)
         .def_static("sfsOverSphere", &Example<3>::sfsOverSphere,
-            pybind11::arg("a1") = 1, pybind11::arg("b1") = 0,
-            pybind11::arg("a2") = 1, pybind11::arg("b2") = 0,
-            pybind11::arg("a3") = 1, pybind11::arg("b3") = 0,
+            "a1"_a = 1, "b1"_a = 0,
+            "a2"_a = 1, "b2"_a = 0,
+            "a3"_a = 1, "b3"_a = 0,
             rdoc::sfsOverSphere)
         .def_static("weeks", &Example<3>::weeks, rdoc::weeks)
         .def_static("weberSeifert", &Example<3>::weberSeifert,

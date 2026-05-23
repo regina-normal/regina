@@ -3819,25 +3819,25 @@ class Link :
         Link whiteheadDouble(bool positive = true) const;
 
         /**
-         * Returns \a k cables of this link, all parallel to each
-         * other using the given framing.
+         * Returns the given number of cables of this link, all parallel to
+         * each other using the given framing.
          *
          * This routine creates a new link by:
          *
          * - treating each component of this link as a ribbon, using the
          *   given framing;
          *
-         * - creating \a k parallel copies of the original link,
+         * - creating \a cables parallel copies of the original link,
          *   following each other side-by-side along these ribbons.
          *
          * This link will not be modified.
          *
-         * \param k the number of parallel copies to create.
+         * \param cables the number of parallel copies to create.
          * This must be non-negative.
          * \param framing the framing under which these copies will be parallel.
-         * \return \a k parallel copies of this link.
+         * \return \a cables parallel copies of this link.
          */
-        Link parallel(int k, Framing framing = Framing::Seifert) const;
+        Link parallel(int cables, Framing framing = Framing::Seifert) const;
 
         /**
          * Returns the parity projection of this knot.
