@@ -32,6 +32,7 @@
 #include <cstring>
 #include <list>
 #include "packet/packet.h"
+#include "utilities/exception.h"
 #include "utilities/i18nutils.h"
 
 using regina::Packet;
@@ -180,8 +181,10 @@ int main(int argc, char* argv[]) {
         "UTF-8", regina::i18n::Locale::codeset());
 
     // Do the actual work.
-    std::shared_ptr<Packet> tree = regina::open(file.c_str());
-    if (! tree) {
+    std::shared_ptr<Packet> tree;
+    try {
+        tree = regina::open(file.c_str());
+    } catch (const regina::FileError&) {
         std::cerr << "File " << file << " could not be read.\n";
         return 1;
     }

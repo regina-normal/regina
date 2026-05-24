@@ -34,5 +34,9 @@ regfiletype @TESTDIR@/8-or.rga
 regfiletype @TESTDIR@/b5.rga
 regfiletype @INVALIDFILE@
 regfiletype @BADFILE@
+regfiletype @BADFILE@.gz
+regfiletype @TESTDIR@/test.rga.bz2
+regfiletype @TESTDIR@/test.rga.gz
+regfiletype @TESTDIR@/empty.rga
 regfiletype @TESTDIR@/test-v2.rga @TESTDIR@/b5.rga
 regfiletype @TESTDIR@/test-v2.rga @TESTDIR@/test.rga @INVALIDFILE@ @BADFILE@ @TESTDIR@/b5.rga @TESTDIR@/8-or.rga

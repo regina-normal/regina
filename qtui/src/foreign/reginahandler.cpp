@@ -40,17 +40,20 @@
 
 std::shared_ptr<regina::Packet> ReginaHandler::importData(
         const QString& filename, ReginaMain* parentWidget) const {
-    std::shared_ptr<regina::Packet> ans = regina::open(
-        static_cast<const char*>(QFile::encodeName(filename)));
-    if (! ans)
+    try {
+        auto ans = regina::open(
+            static_cast<const char*>(QFile::encodeName(filename)));
+        if (ans->label().empty())
+            ans->setLabel("Imported data");
+        return ans;
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
                 arg(filename.toHtmlEscaped()));
-    else if (ans->label().empty())
-        ans->setLabel("Imported data");
-    return ans;
+        return {};
+    }
 }
 
 PacketFilter* ReginaHandler::canExport() const {

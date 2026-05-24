@@ -103,14 +103,12 @@ int main(int argc, char* argv[]) {
 
     bool error = false;
     for (const auto& f : files) {
-        std::shared_ptr<regina::Packet> data = regina::open(f.c_str());
-        if (!data) {
+        try {
+            ans->append(regina::open(f.c_str()));
+        } catch (const regina::FileError&) {
             std::cerr << "File " << f << " could not be read.\n";
             error = true;
-            continue;
         }
-
-        ans->append(data);
     }
 
     // Tidy up the final data file and write it.

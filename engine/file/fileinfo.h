@@ -54,8 +54,8 @@ namespace regina {
  * Stores information about a Regina data file, including file format and
  * version.
  *
- * Routine identify() can be used to determine this information for a
- * given file.
+ * The static routine identify() can be used to determine this information
+ * for a given file.
  *
  * As of Regina 4.94, the ancient first-generation binary files
  * (FileFormat::BinaryGen1) are no longer supported, and this class cannot
@@ -79,12 +79,8 @@ class FileInfo : public Output<FileInfo> {
         std::string engine_;
             /**< The version of the calculation engine that wrote this file. */
         bool compressed_;
-            /**< \c true if this file is stored in compressed format,
-                 \c false otherwise.  Currently this option only applies
-                 to XML data files. */
-        bool invalid_;
-            /**< \c true if the file metadata could not be read,
-                 \c false otherwise. */
+            /**< `true` if this file is stored in compressed format,
+                 or `false` otherwise. */
 
     public:
         /**
@@ -134,19 +130,22 @@ class FileInfo : public Output<FileInfo> {
          */
         const std::string& engine() const;
         /**
-         * Returns whether this file is stored in compressed format.
-         * Currently this option only applies to XML data files.
+         * Returns whether this file is stored in compressed XML format.
          *
          * \return \c true if this file is compressed or \c false otherwise.
          */
         bool isCompressed() const;
         /**
-         * Returns whether the file metadata could not be read.
+         * Deprecated routine that now always returns `false`.
          *
-         * \return \c true if the metadata could not be read, \c false
-         * otherwise.
+         * \deprecated As of Regina 8.0 this function is irrelevant, since
+         * identify() now only returns a concrete FileInfo object if it can
+         * successfully locate and parse Regina's file metadata.  That is, as
+         * of Regina 8.0, every FileInfo object is now valid.
+         *
+         * \return `false`.
          */
-        bool isInvalid() const;
+        [[deprecated]] bool isInvalid() const;
 
         /**
          * Sets this to be a copy of the given file information.
@@ -176,9 +175,6 @@ class FileInfo : public Output<FileInfo> {
          * engine, and use the same compression type.  The pathnames of
          * the files being described are ignored.
          *
-         * It is safe to compare FileInfo objects even if one or both is
-         * invalid.  Two invalid FileInfo objects will compare as equal.
-         *
          * \param other the file information to compare with this.
          * \return \c true if and only if this and the given file information
          * describe the same format and version, as described above.
@@ -186,7 +182,21 @@ class FileInfo : public Output<FileInfo> {
         bool operator == (const FileInfo& other) const;
 
         /**
-         * Return information about the given Regina data file.
+         * Returns information about the given Regina data file.
+         *
+         * If the given file cannot be read, then this routine will throw a
+         * FileError exception.  If the file _can_ be read but it cannot be
+         * identified as a Regina data file (in particular, if Regina's file
+         * metadata could not be located and parsed), then this routine will
+         * return \nullopt.
+         *
+         * All of this is a change of behaviour as of Regina 8.0.  Older
+         * versions of Regina (≤ 7.x) would return \nullopt for unreadable files
+         * or readable non-XML files, and would return an "invalid" FileInfo
+         * object for readable XML files without valid Regina metadata.
+         * Modern Regina now delineates these error conditions differently
+         * (and hopefully more sensibly), and has no concept of an "invalid"
+         * FileInfo object at all.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given path _name_,
@@ -194,9 +204,12 @@ class FileInfo : public Output<FileInfo> {
          * routines.  If a FileInfo structure is returned, its pathname()
          * routine will use the same encoding that is passed here.
          *
+         * \exception FileError An error occurred whilst reading the file.
+         *
          * \param idPathname the pathname of the data file to be examined.
          * \return a FileInfo structure containing information about the
-         * given file, or \nullopt if the file type could not be identified.
+         * given file, or \nullopt if the file was readable but its type
+         * could not be identified.
          */
         static std::optional<FileInfo> identify(std::string idPathname);
 
@@ -271,7 +284,7 @@ inline bool FileInfo::isCompressed() const {
 }
 
 inline bool FileInfo::isInvalid() const {
-    return invalid_;
+    return false;
 }
 
 inline void FileInfo::swap(FileInfo& other) noexcept {
@@ -279,15 +292,11 @@ inline void FileInfo::swap(FileInfo& other) noexcept {
     std::swap(format_, other.format_);
     engine_.swap(other.engine_);
     std::swap(compressed_, other.compressed_);
-    std::swap(invalid_, other.invalid_);
 }
 
 inline bool FileInfo::operator == (const FileInfo& other) const {
-    if (invalid_)
-        return other.invalid_;
-    else
-        return (! other.invalid_) && format_ == other.format_ &&
-            compressed_ == other.compressed_ && engine_ == other.engine_;
+    return format_ == other.format_ && compressed_ == other.compressed_ &&
+        engine_ == other.engine_;
 }
 
 inline void swap(FileInfo& a, FileInfo& b) noexcept {

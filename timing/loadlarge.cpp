@@ -30,7 +30,8 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <packet/packet.h>
+#include "packet/packet.h"
+#include "utilities/exception.h"
 
 void usage(const char* program) {
     std::cerr << "Load a (typically large) file into memory." << std::endl;
@@ -58,18 +59,17 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Loading..." << std::endl;
-    std::shared_ptr<regina::Packet> tree = regina::open(file);
-    if (! tree) {
+    try {
+        auto tree = regina::open(file);
+        if (traverse) {
+            std::cout << "Traversing..." << std::endl;
+            for (auto p = tree; p; p = p->nextTreePacket())
+                ;
+        }
+    } catch (const regina::FileError&) {
         std::cerr << "ERROR: Could not load file: " << file << std::endl;
         return 1;
     }
-
-    if (traverse) {
-        std::cout << "Traversing..." << std::endl;
-        for (auto p = tree; p; p = p->nextTreePacket())
-            ;
-    }
-
     std::cout << "Done." << std::endl;
     return 0;
 }

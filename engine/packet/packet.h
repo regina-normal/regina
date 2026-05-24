@@ -2780,10 +2780,17 @@ const Held& static_packet_cast(const Packet& p) {
  * This uses Regina's native XML file format; it does not matter whether
  * the XML file is compressed or uncompressed.
  *
- * If the file could not be opened or the top-level packet in the tree
- * could not be read, this routine will return \c null.  If some packet deeper
- * within the tree could not be read then that particular packet (and
- * its descendants, if any) will simply be ignored.
+ * If the file could not be opened, or if the top-level packet in the tree
+ * could not be parsed (i.e., the file does not appear to contain any usable
+ * Regina data), then this routine will throw an exception.  This is a change
+ * in behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) would
+ * return \c null instead.
+ *
+ * If some packet deeper within the tree could not be read, that particular
+ * packet (and its descendants, if any) will simply be ignored.  This allows
+ * older versions of Regina to read files created by newer versions of Regina,
+ * by simply ignoring any features from the newer version that the older
+ * version does not understand.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file _name_, and simply
@@ -2796,8 +2803,13 @@ const Held& static_packet_cast(const Packet& p) {
  * Python's own built-in open() function.  You can access Regina's open()
  * function by calling `regina.open()`.
  *
+ * \exception FileError An error occurred whilst reading the file, and/or
+ * the file does not appear to contain any usable Regina data.
+ *
  * \param filename the pathname of the file to read from.
- * \return the packet tree read from file, or \c null on error.
+ * \return the packet tree read from file.  As of Regina 8.0, if this routine
+ * returns at all (as opposed to throwing an exception), then the pointer it
+ * returns will not be `null`.
  *
  * \ingroup packet
  */
@@ -2809,17 +2821,29 @@ std::shared_ptr<Packet> open(const char* filename);
  * This uses Regina's native XML file format; it does not matter whether
  * the XML file is compressed or uncompressed.
  *
- * If the stream could not be read or if the top-level packet in the tree
- * could not be read, then this routine will return \c null.  If some packet
- * deeper within the tree could not be read then that particular packet (and
- * its descendants, if any) will simply be ignored.
+ * If the stream could not be read, or if the top-level packet in the tree
+ * could not be parsed (i.e., the file does not appear to contain any usable
+ * Regina data), then this routine will throw an exception.  This is a change
+ * in behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) would
+ * return \c null instead.
+ *
+ * If some packet deeper within the tree could not be read, that particular
+ * packet (and its descendants, if any) will simply be ignored.  This allows
+ * older versions of Regina to read files created by newer versions of Regina,
+ * by simply ignoring any features from the newer version that the older
+ * version does not understand.
  *
  * \pre The given stream is open for reading.
  *
  * \nopython Instead you can use the variant of open() that takes a filename.
  *
+ * \exception FileError An error occurred whilst reading the file, and/or
+ * the file does not appear to contain any usable Regina data.
+ *
  * \param in the input stream to read from.
- * \return the packet tree read from file, or \c null on error.
+ * \return the packet tree read from file.  As of Regina 8.0, if this routine
+ * returns at all (as opposed to throwing an exception), then the pointer it
+ * returns will not be `null`.
  *
  * \ingroup packet
  */

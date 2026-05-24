@@ -85,3 +85,7 @@ dump(regina.open(testpath + '/file4.rga'))
 dump(regina.open(testpath + '/file5.rga'))
 dump(regina.open(testpath + '/file6.rga'))
 
+try:
+    regina.open('/no/such/file')
+except FileError:
+    print('Caught exception')

@@ -132,6 +132,15 @@ Version 8.0  [ TODO ]
               tables are used for face numbering queries.
         Class FaithfulAssignment:
             - Deprecated, since this can be tested via std::common_type_t.
+        Class FileInfo:
+            - Routine identify() now throws an exception if the file cannot be
+              read.  It now returns no value (i.e., std::nullopt) if the file
+              is readable but cannot be identified as a Regina data file (even
+              if the file is valid XML, which marks a change from previous
+              behaviour).  There is no longer any situation in which this
+              routine returns an "invalid" FileInfo object.
+            - Routine isInvalid() is now deprecated and always returns false,
+              since identify() now never returns an invalid FileInfo object.
         Class FixedArray:
             - Now has a default constructor that creates an empty array.
             - New constructor that takes an iterator range.
@@ -483,6 +492,10 @@ Version 8.0  [ TODO ]
         Function maxPermDegree():
             - New constexpr function that returns the largest supported degree
               of permutation.
+        Function open():
+            - Both versions of this function now throw an exception if a file
+              error occurs or if the top-level packet cannot be parsed
+              (previously, open() indicated such errors by returning null).
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a
               precondition that the given value is not infinity.

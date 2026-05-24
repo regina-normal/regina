@@ -302,10 +302,10 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         return;
     }
 
-    std::shared_ptr<regina::Packet> data = regina::open(
-        static_cast<const char*>(QFile::encodeName(f)));
-
-    if (! data) {
+    std::shared_ptr<regina::Packet> data;
+    try {
+        data = regina::open(static_cast<const char*>(QFile::encodeName(f)));
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(this,
             tr("I could not open the selected file."),
             tr("<qt>Please check that the file <tt>%1</tt> "
@@ -347,10 +347,10 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         return;
     }
 
-    std::shared_ptr<regina::Packet> data = regina::open(
-        static_cast<const char*>(QFile::encodeName(f)));
-
-    if (! data) {
+    std::shared_ptr<regina::Packet> data;
+    try {
+        data = regina::open(static_cast<const char*>(QFile::encodeName(f)));
+    } catch (const regina::FileError&) {
         ReginaSupport::warn(this,
             tr("I could not open the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "

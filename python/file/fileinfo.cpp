@@ -47,7 +47,9 @@ void addFileInfo(pybind11::module_& m) {
             rdoc::formatDescription)
         .def("engine", &FileInfo::engine, rdoc::engine)
         .def("isCompressed", &FileInfo::isCompressed, rdoc::isCompressed)
-        .def("isInvalid", &FileInfo::isInvalid, rdoc::isInvalid)
+        .def("isInvalid", [](const FileInfo&) { // deprecated
+            return false;
+        }, rdoc::isInvalid)
         .def("swap", &FileInfo::swap, rdoc::swap)
         .def_static("identify", &FileInfo::identify, rdoc::identify)
     ;

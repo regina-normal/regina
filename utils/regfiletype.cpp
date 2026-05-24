@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "file/fileinfo.h"
+#include "utilities/exception.h"
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -69,11 +70,15 @@ int main(int argc, char* argv[]) {
         if (argc != 2)
             std::cout << "[ " << argv[i] << " ]\n";
 
-        auto info = regina::FileInfo::identify(argv[i]);
-        if (info)
-            info->writeTextLong(std::cout);
-        else
-            std::cout << "Unknown file format or file could not be opened.\n";
+        try {
+            auto info = regina::FileInfo::identify(argv[i]);
+            if (info)
+                info->writeTextLong(std::cout);
+            else
+                std::cout << "Unknown file format.\n";
+        } catch (const regina::FileError&) {
+            std::cout << "The file could not be read.\n";
+        }
 
         if (argc != 2)
             std::cout << std::endl;
