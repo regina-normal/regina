@@ -216,9 +216,10 @@ class Attachment : public Packet {
          * this must be strictly positive.
          * \param alloc describes if/how this packet should claim ownership
          * of the given block of data; see the notes above for details.
-         * \param filename the filename to associated with this attachment;
+         * \param filename the filename to associate with this attachment;
          * typically this would be a filename only, with no directory prefixes.
-         * See filename() for details on how this string will be used.
+         * The file does not need to exist, and this constructor will not try to
+         * open it.  See filename() for details on how this string will be used.
          */
         Attachment(char* data, size_t size, OwnershipPolicy alloc,
             std::string filename);
@@ -385,7 +386,8 @@ class Attachment : public Packet {
          * \param filename the new filename to associated with this attachment;
          * this will override the previously stored filename.  Typically
          * this would be a filename only, with no directory prefixes.
-         * See filename() for details on how this string will be used.
+         * The file does not need to exist, and this routine will not try to
+         * open it.  See filename() for details on how this string will be used.
          */
         void reset(char* data, size_t size, OwnershipPolicy alloc,
             std::string filename);
