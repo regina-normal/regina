@@ -628,34 +628,33 @@ std::shared_ptr<Packet> Packet::cloneAsSibling(bool cloneDescendants,
     return ans;
 }
 
-bool Packet::save(const char* filename, bool compressed, FileFormat format)
+void Packet::save(const char* filename, bool compressed, FileFormat format)
         const {
     std::ofstream out(filename, std::ios_base::out | std::ios_base::binary);
-    // We don't test whether the file was opened, since
-    // save(std::ostream&, bool) tests this for us as the first thing it does.
-    return save(out, compressed, format);
+    if (! out)
+        throw FileError("Could not write to the given file");
+    save(out, compressed, format);
 }
 
-bool Packet::save(std::ostream& s, bool compressed, FileFormat format) const {
-    // Note: save(const char*, bool) relies on us testing here whether s
-    // was successfully opened.  If anyone removes this test, then they
-    // should add a corresponding test to save(const char*, bool) instead.
+void Packet::save(std::ostream& s, bool compressed, FileFormat format) const {
     if (! s)
-        return false;
+        throw FileError("The given output stream has an error");
 
     if (compressed) {
         try {
             zstr::ostream out(s);
             writeXMLFile(out, format);
         } catch (const zstr::Exception& e) {
-            std::cerr << "ERROR: Could not save with compression: "
-                << e.what() << std::endl;
-            return false;
+            std::cerr << "ERROR: " << e.what() << std::endl;
+            throw FileError("An error occurred during compression");
         }
     } else {
         writeXMLFile(s, format);
     }
-    return true;
+
+    if (! s)
+        throw FileError(
+            "An error occurred whilst writing to the output stream");
 }
 
 void Packet::internalCloneDescendants(Packet& parent) const {

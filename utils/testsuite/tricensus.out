@@ -134,6 +134,21 @@ Usage: tricensus <output-file>
 --------------------
 Exit code: 1
 ============================================================
+TEST: tricensus -t1 -i @INVALIDFILE@
+--------------------
+Starting census generation...
+0:1 0:0 0:3 0:2
+Finished.
+Output file @INVALIDFILE@ could not be written.
+--------------------
+Exit code: 1
+============================================================
+TEST: tricensus -t1 -i -s @INVALIDFILE@
+--------------------
+Signature file @INVALIDFILE@ could not be written.
+--------------------
+Exit code: 1
+============================================================
 TEST: tricensus -t2 -i -s @TESTOUT@
 --------------------
 Starting census generation...

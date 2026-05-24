@@ -46,6 +46,7 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "utilities/exception.h"
 
 #define WORD_face (dimension == 4 ? "facet" : dimension == 2 ? "edge" : "face")
 #define WORD_Face (dimension == 4 ? "Facet" : dimension == 2 ? "Edge" : "Face")
@@ -1086,12 +1087,11 @@ int runCensus() {
     // Write the completed census to file.
     if (textOutput) {
         sigStream.close();
-    } else {
-        if (! parent->save(outFile.c_str())) {
-            std::cerr << "Output file " << outFile
-                << " could not be written.\n";
-            return 1;
-        }
+    } else try {
+        parent->save(outFile.c_str());
+    } catch (const regina::FileError&) {
+        std::cerr << "Output file " << outFile << " could not be written.\n";
+        return 1;
     }
 
     std::cout << "Total triangulations: " << nSolns << std::endl;

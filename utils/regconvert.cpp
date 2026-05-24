@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "packet/packet.h"
+#include "utilities/exception.h"
 #include <cstdlib>
 #include <cstring>
 
@@ -132,22 +133,19 @@ int main(int argc, char* argv[]) {
     }
 
     // Write the new file.
-    bool result;
     if (newFile.empty()) {
         // Standard output
         if (typeOpt == 'u') {
             tree->writeXMLFile(std::cout, version);
-            result = true;
-        } else
-            result = false;
-        newFile = "<stdout>"; // (for error messages)
-    } else {
+        } else {
+            std::cerr << "File <stdout> could not be written.\n";
+            return 1;
+        }
+    } else try {
         // Real output file.
         // Use compressed / uncompressed XML
-        result = tree->save(newFile.c_str(), typeOpt == 'x', version);
-    }
-
-    if (! result) {
+        tree->save(newFile.c_str(), typeOpt == 'x', version);
+    } catch (const regina::FileError&) {
         std::cerr << "File " << newFile << " could not be written.\n";
         return 1;
     }

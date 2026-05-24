@@ -32,6 +32,7 @@
 #include <cstring>
 #include <list>
 #include "packet/container.h"
+#include "utilities/exception.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -115,7 +116,9 @@ int main(int argc, char* argv[]) {
     // Tidy up the final data file and write it.
     if (outputFile.empty())
         ans->writeXMLFile(std::cout);
-    else if (! ans->save(outputFile.c_str())) {
+    else try {
+        ans->save(outputFile.c_str());
+    } catch (const regina::FileError&) {
         std::cerr << "File " << outputFile << " could not be written.\n";
         error = true;
     }

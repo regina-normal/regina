@@ -1532,12 +1532,18 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Typically this will be called from the root of the packet
          * tree, which will save the entire packet tree to file.
          *
+         * This routine will throw an exception if an error occurs whilst
+         * writing the file.  This is a change of behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
          * \pre The given packet does not depend on its parent.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_,
          * and simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The _contents_ of the file will be written using UTF-8.
+         *
+         * \exception FileError An error occurred whilst writing the file.
          *
          * \param filename the pathname of the file to write to.
          * \param compressed \c true if the XML data should be compressed,
@@ -1546,9 +1552,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * You should use the default (FileFormat::Current) unless you need
          * your file to be readable by older versions of Regina.  This must
          * not be FileFormat::BinaryGen1, which is no longer supported.
-         * \return \c true if and only if the file was successfully written.
          */
-        bool save(const char* filename, bool compressed = true,
+        void save(const char* filename, bool compressed = true,
             FileFormat format = FileFormat::Current) const;
 
         /**
@@ -1561,6 +1566,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree, which will write the entire packet tree to the given
          * output stream.
          *
+         * This routine will throw an exception if an error occurs whilst
+         * writing the data.  This is a change of behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
          * \pre The given stream is open for writing.
          * \pre The given packet does not depend on its parent.
          *
@@ -1569,6 +1578,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * XML data file directly to an open Python file, you can still use
          * writeXMLFile() for this.
          *
+         * \exception FileError An error occurred whilst writing the data.
+         *
          * \param s the output stream to which to write.
          * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
@@ -1576,9 +1587,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * You should use the default (FileFormat::Current) unless you need
          * your file to be readable by older versions of Regina.  This must
          * not be FileFormat::BinaryGen1, which is no longer supported.
-         * \return \c true if and only if the data was successfully written.
          */
-        bool save(std::ostream& s, bool compressed = true,
+        void save(std::ostream& s, bool compressed = true,
             FileFormat format = FileFormat::Current) const;
 
         /**

@@ -725,11 +725,9 @@ bool ReginaMain::saveFile() {
             writeTree = child;
     }
 
-    if (writeTree->save(static_cast<const char*>(
-            QFile::encodeName(localFile)))) {
-        setModified(false);
-        return true;
-    } else {
+    try {
+        writeTree->save(static_cast<const char*>(QFile::encodeName(localFile)));
+    } catch (regina::FileError&) {
         ReginaSupport::warn(this,
             tr("<qt>I could not save the data file <tt>%1</tt>.</qt>").
                 arg(localFile.toHtmlEscaped()),
@@ -737,6 +735,9 @@ bool ReginaMain::saveFile() {
                 "to this file."));
         return false;
     }
+
+    setModified(false);
+    return true;
 }
 
 void ReginaMain::renameWindow(const QString& newName) {

@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "packet/packet.h"
+#include "utilities/exception.h"
 #include "reginahandler.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -57,15 +58,17 @@ PacketFilter* ReginaHandler::canExport() const {
 }
 
 bool ReginaHandler::exportData(const regina::Packet& data,
-        const QString& fileName, QWidget* parentWidget) const {
-    if (! data.save(QFile::encodeName(fileName), compressed_, format_)) {
+        const QString& filename, QWidget* parentWidget) const {
+    try {
+        data.save(QFile::encodeName(filename), compressed_, format_);
+        return true;
+    } catch (const regina::FileError&) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
+            "to the file <tt>%1</tt>.</qt>").arg(filename.toHtmlEscaped()));
         return false;
     }
-    return true;
 }
 

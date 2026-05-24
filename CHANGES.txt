@@ -338,6 +338,9 @@ Version 8.0  [ TODO ]
             - New exception class.
         Class OutputBase:
             - Removed completely.
+        Class Packet:
+            - The save() routines now throw exceptions on error, and no longer
+              return booleans (which used to indicate success or failure).
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:

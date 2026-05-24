@@ -178,7 +178,8 @@ class NotImplemented : public ReginaException {
 };
 
 /**
- * An exception thrown when trying to access data from the filesystem.
+ * An exception thrown when trying to read or write data to/from the
+ * filesystem.
  *
  * This could occur, for instance, when trying to read data from the
  * Regina or SnapPea census databases.
