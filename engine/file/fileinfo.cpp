@@ -63,7 +63,7 @@ namespace {
     }
 }
 
-std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
+FileInfo FileInfo::identify(std::string idPathname) {
     // Check for an XML file.
     bool compressed = false;
     if (! fileStartsWith(idPathname.c_str(), "<?xml")) {
@@ -80,13 +80,9 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
             if ((! in.eof()) && (s == "<?xml"))
                 compressed = true;
             else
-                return std::nullopt; // cannot identify file type
+                throw InvalidInput("The given file does not appear to be XML");
         } catch (const zstr::Exception& e) {
-            // We have a decompression error - since the file is openable, we
-            // will assume for now that the file is not actually compressed (at
-            // least not using this compression algorithm).
-            // Mark this as openable but with an unknown format.
-            return std::nullopt;
+            throw InvalidInput("An error occurred during file decompression");
         }
     }
 
@@ -95,8 +91,8 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     ans.pathname_ = std::move(idPathname);
     ans.format_ = FileFormat::Current;
 
-    // Note: we cannot use the idPathname argument from here on, since we moved its data out.
-    // We must use ans.pathname_ instead.
+    // Note: we cannot use the idPathname argument from here on, since we moved
+    // its data out.  We must use ans.pathname_ instead.
 
     std::ifstream file(ans.pathname_.c_str(),
         std::ios_base::in | std::ios_base::binary);
@@ -110,10 +106,10 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
 
         // Start by slurping in the opening "<?xml".
         if (in.eof())
-            return std::nullopt;
+            throw InvalidInput("Missing XML file prefix");
         in >> s;
         if (s != "<?xml")
-            return std::nullopt;
+            throw InvalidInput("Invalid XML file prefix");
 
         // Hunt for the matching "...?>".
         // Try skipping through several strings in case there are extra
@@ -122,7 +118,7 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
         int i;
         for (i = 0; ; i++) {
             if (in.eof())
-                return std::nullopt;
+                throw InvalidInput("Incomplete XML file prefix");
             in >> s;
             if (s.length() >= 2 &&
                     s[s.length() - 2] == '?' &&
@@ -134,38 +130,34 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
             // spec supports only version, encoding and standalone arguments
             // at present.
             if (i >= 10)
-                return std::nullopt;
+                throw InvalidInput("Overlong XML file prefix");
         }
 
         // The next thing we see should be the <reginadata ...> element.
         if (in.eof())
-            return std::nullopt;
+            throw InvalidInput("Missing root Regina XML element");
         in >> s;
         if (s == "<regina")
             ans.format_ = FileFormat::XmlGen3;
         else if (s == "<reginadata")
             ans.format_ = FileFormat::XmlGen2;
         else
-            return std::nullopt;
+            throw InvalidInput("Invalid root Regina XML element");
 
         // Next should be the engine version.
         if (in.eof())
-            return std::nullopt;
+            throw InvalidInput("Missing engine version");
         in >> s;
-        if (s.length() < 8)
-            return std::nullopt;
-        if (s.substr(0, 8).compare("engine=\"") != 0)
-            return std::nullopt;
+        if (s.length() < 8 || s.substr(0, 8).compare("engine=\"") != 0)
+            throw InvalidInput("Invalid engine version");
 
         // We've found the engine attribute; extract its value.
         std::string::size_type pos = s.find('"', 8);
         if (pos == std::string::npos)
-            return std::nullopt;
+            throw InvalidInput("Malformed engine version");
         ans.engine_ = s.substr(8, pos - 8);
     } catch (const zstr::Exception& e) {
-        // As before, we treat a decompression error as an unidentified file
-        // type.
-        return std::nullopt;
+        throw InvalidInput("An error occurred during file decompression");
     }
 
     // That's as far as we need to go; we've extracted everything we want.

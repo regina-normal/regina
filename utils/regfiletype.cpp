@@ -71,13 +71,11 @@ int main(int argc, char* argv[]) {
             std::cout << "[ " << argv[i] << " ]\n";
 
         try {
-            auto info = regina::FileInfo::identify(argv[i]);
-            if (info)
-                info->writeTextLong(std::cout);
-            else
-                std::cout << "Unknown file format.\n";
+            regina::FileInfo::identify(argv[i]).writeTextLong(std::cout);
         } catch (const regina::FileError&) {
             std::cout << "The file could not be read.\n";
+        } catch (const regina::InvalidInput&) {
+            std::cout << "Unknown file format.\n";
         }
 
         if (argc != 2)

@@ -133,12 +133,10 @@ Version 8.0  [ TODO ]
         Class FaithfulAssignment:
             - Deprecated, since this can be tested via std::common_type_t.
         Class FileInfo:
-            - Routine identify() now throws an exception if the file cannot be
-              read.  It now returns no value (i.e., std::nullopt) if the file
-              is readable but cannot be identified as a Regina data file (even
-              if the file is valid XML, which marks a change from previous
-              behaviour).  There is no longer any situation in which this
-              routine returns an "invalid" FileInfo object.
+            - Routine identify() now returns a plain FileInfo (not a
+              std::optional<FileInfo>), and throws an exception on error
+              instead of returning std::nullopt or returning an "invalid"
+              FileInfo object.
             - Routine isInvalid() is now deprecated and always returns false,
               since identify() now never returns an invalid FileInfo object.
         Class FixedArray:

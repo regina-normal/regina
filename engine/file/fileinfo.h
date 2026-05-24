@@ -184,19 +184,14 @@ class FileInfo : public Output<FileInfo> {
         /**
          * Returns information about the given Regina data file.
          *
-         * If the given file cannot be read, then this routine will throw a
-         * FileError exception.  If the file _can_ be read but it cannot be
-         * identified as a Regina data file (in particular, if Regina's file
-         * metadata could not be located and parsed), then this routine will
-         * return \nullopt.
-         *
-         * All of this is a change of behaviour as of Regina 8.0.  Older
-         * versions of Regina (≤ 7.x) would return \nullopt for unreadable files
-         * or readable non-XML files, and would return an "invalid" FileInfo
-         * object for readable XML files without valid Regina metadata.
-         * Modern Regina now delineates these error conditions differently
-         * (and hopefully more sensibly), and has no concept of an "invalid"
-         * FileInfo object at all.
+         * If the given file cannot be read, or if it cannot be identified as
+         * a Regina data file, then this routine will throw an exception.
+         * This is a change of behaviour as of Regina 8.0: older versions of
+         * Regina (≤ 7.x) would return either \nullopt (`std::nullopt` in C++,
+         * or `None` in Python) or an "invalid" FileInfo object (depending upon
+         * the exact error condition).  Nowadays this function returns a
+         * FileInfo (not a `std::optional<FileInfo>`), and there is no concept
+         * of an "invalid" FileInfo object at all.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given path _name_,
@@ -204,14 +199,17 @@ class FileInfo : public Output<FileInfo> {
          * routines.  If a FileInfo structure is returned, its pathname()
          * routine will use the same encoding that is passed here.
          *
-         * \exception FileError An error occurred whilst reading the file.
+         * \exception FileError The file could not be read.
+         *
+         * \exception InvalidInput The file could be read, but it does not
+         * appear to be a Regina data file (in particular, Regina's file
+         * metadata could not be located and parsed).
          *
          * \param idPathname the pathname of the data file to be examined.
          * \return a FileInfo structure containing information about the
-         * given file, or \nullopt if the file was readable but its type
-         * could not be identified.
+         * given Regina data file.
          */
-        static std::optional<FileInfo> identify(std::string idPathname);
+        static FileInfo identify(std::string idPathname);
 
         /**
          * Writes a short text representation of this object to the
