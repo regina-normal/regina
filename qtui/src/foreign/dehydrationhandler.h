@@ -56,7 +56,7 @@ class DehydrationHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+        std::shared_ptr<regina::Packet> importData(const QString& filename,
             ReginaMain* parentWidget) const override;
 
     private:

@@ -45,11 +45,11 @@ PacketFilter* CSVSurfaceHandler::canExport() const {
 }
 
 bool CSVSurfaceHandler::exportData(const regina::Packet& data,
-        const QString& fileName, QWidget* parentWidget) const {
+        const QString& filename, QWidget* parentWidget) const {
     auto& list = regina::static_packet_cast<regina::NormalSurfaces>(data);
     try {
         if (list.saveCSVStandard(
-                static_cast<const char*>(QFile::encodeName(fileName))))
+                static_cast<const char*>(QFile::encodeName(filename))))
             return true;
     } catch (const regina::UnsolvedCase&) {
         ReginaSupport::warn(parentWidget,
@@ -63,7 +63,7 @@ bool CSVSurfaceHandler::exportData(const regina::Packet& data,
         QObject::tr("The export failed."),
         QObject::tr("<qt>An unknown error occurred, probably related "
         "to file I/O.  Please check that you have permissions to write "
-        "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
+        "to the file <tt>%1</tt>.</qt>").arg(filename.toHtmlEscaped()));
     return false;
 }
 

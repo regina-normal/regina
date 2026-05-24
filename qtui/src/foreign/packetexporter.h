@@ -79,7 +79,7 @@ class PacketExporter {
          * box).
          */
         virtual bool exportData(const regina::Packet& data,
-            const QString& fileName, QWidget* parentWidget) const = 0;
+            const QString& filename, QWidget* parentWidget) const = 0;
 
         /**
          * Returns an appropriate filename extension for exporting the

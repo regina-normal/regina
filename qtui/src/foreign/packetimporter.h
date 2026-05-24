@@ -72,7 +72,7 @@ class PacketImporter {
          * imported tree.
          */
         virtual std::shared_ptr<regina::Packet> importData(
-            const QString& fileName, ReginaMain* parentWidget) const = 0;
+            const QString& filename, ReginaMain* parentWidget) const = 0;
 
         /**
          * Should the GUI inform the user that their preferred codec

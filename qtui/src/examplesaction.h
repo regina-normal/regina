@@ -76,7 +76,7 @@ class ExamplesAction : public QMenu {
          *
          * The filename should be relative to the Regina examples directory.
          */
-        void addUrl(const QString& fileName, const QString& description);
+        void addUrl(const QString& filename, const QString& description);
 
         /**
          * Fill this action with Regina's standard example files.

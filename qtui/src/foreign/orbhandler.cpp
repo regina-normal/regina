@@ -41,16 +41,16 @@
 
 const OrbHandler OrbHandler::instance;
 
-std::shared_ptr<regina::Packet> OrbHandler::importData(const QString& fileName,
+std::shared_ptr<regina::Packet> OrbHandler::importData(const QString& filename,
         ReginaMain* parentWidget) const {
     std::shared_ptr<regina::Packet> ans = regina::readOrb(
-        static_cast<const char*>(QFile::encodeName(fileName)));
+        static_cast<const char*>(QFile::encodeName(filename)));
     if (! ans)
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Orb / Casson format.").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
     return ans;
 }
 
