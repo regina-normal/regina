@@ -31,6 +31,7 @@
 #include "foreign/dehydration.h"
 #include "packet/container.h"
 #include "packet/text.h"
+#include "utilities/exception.h"
 
 #include "dehydrationhandler.h"
 #include "reginamain.h"
@@ -51,9 +52,11 @@ std::shared_ptr<regina::Packet> DehydrationHandler::importData(
         "Callahan, Hildebrand and Weeks, published in "
         "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>");
 
-    std::shared_ptr<regina::Packet> ans = regina::readDehydrationList(
-        static_cast<const char*>(QFile::encodeName(filename)));
-    if (! ans) {
+    std::shared_ptr<regina::Packet> ans;
+    try {
+        ans = regina::readDehydrationList(
+            static_cast<const char*>(QFile::encodeName(filename)));
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "

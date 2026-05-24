@@ -60,6 +60,8 @@ void addForeignIsoSig(pybind11::module_& m) {
                     return regina::readSigList<regina::Triangulation<dim>>(
                         filename, colSigs, colLabels, ignoreLines);
                 });
+            } catch (const regina::ReginaException&) {
+                throw;
             } catch (const std::runtime_error&) {
                 throw regina::InvalidArgument(
                     "The given dimension is out of range.");

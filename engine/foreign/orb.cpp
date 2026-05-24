@@ -55,6 +55,7 @@
 
 #include "foreign/orb.h"
 #include "triangulation/dim3.h"
+#include "utilities/exception.h"
 #include "utilities/stringutils.h"
 
 // This macro was originally provided in casson.h:
@@ -100,7 +101,7 @@ const int vertex_at_faces[4][4] =
  * data structure.
  *
  * If the conversion cannot be performed (e.g., the Casson format has
- * inconsistent tetrahedron gluings), then this routine returns \c null.
+ * inconsistent tetrahedron gluings), then this routine throws an exception.
  */
 std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
         CassonFormat *cf ) {
@@ -358,35 +359,29 @@ void freeCassonFormat( CassonFormat *cf )
  * data structure, and to use standard C++ string and I/O streams
  * instead of Qt strings and I/O streams.
  *
- * This routine returns \c null in case of error.
+ * This routine throws an exception in case of error.
  */
 std::shared_ptr<PacketOf<Triangulation<3>>> readTriangulation(std::istream &ts) {
     std::string line, file_id;
 
     getline(ts, line);
     if (line != "% orb") {
-        std::cerr << "Orb / Casson file is not in the correct format."
-            << std::endl;
-        return {};
+        throw InvalidInput("Not an Orb / Casson file");
     }
 
     getline(ts, file_id);
 
     CassonFormat* cf = readCassonFormat( ts );
     if (! verifyCassonFormat( cf )) {
-        std::cerr << "Error verifying Orb / Casson file." << std::endl;
         freeCassonFormat( cf );
-        return {};
+        throw InvalidInput("Error verifying Orb / Casson file");
     }
 
     auto manifold = cassonToTriangulation( cf );
     freeCassonFormat( cf );
 
-    if (! manifold) {
-        std::cerr << "Orb / Casson file contains invalid or inconsistent data."
-            << std::endl;
-        return {};
-    }
+    if (! manifold)
+        throw InvalidInput("Invalid or inconsistent Orb / Casson data");
 
     manifold->setLabel(file_id);
     return manifold;
@@ -396,11 +391,8 @@ std::shared_ptr<PacketOf<Triangulation<3>>> readTriangulation(std::istream &ts) 
 
 std::shared_ptr<PacketOf<Triangulation<3>>> readOrb(const char *filename) {
     std::ifstream file(filename);
-
-    if (! file) {
-        std::cerr << "Error opening Orb / Casson file." << std::endl;
-        return nullptr;
-    }
+    if (! file)
+        throw FileError("Could not open the given file");
 
     return readTriangulation(file);
 }

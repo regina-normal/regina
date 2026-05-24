@@ -30,6 +30,7 @@
 
 #include "foreign/orb.h"
 #include "triangulation/dim3.h"
+#include "utilities/exception.h"
 
 #include "orbhandler.h"
 #include "reginamain.h"
@@ -43,14 +44,21 @@ const OrbHandler OrbHandler::instance;
 
 std::shared_ptr<regina::Packet> OrbHandler::importData(const QString& filename,
         ReginaMain* parentWidget) const {
-    std::shared_ptr<regina::Packet> ans = regina::readOrb(
-        static_cast<const char*>(QFile::encodeName(filename)));
-    if (! ans)
+    try {
+        return regina::readOrb(
+            static_cast<const char*>(QFile::encodeName(filename)));
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
-            QObject::tr("The import failed."),
-            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in Orb / Casson format.").
-                arg(filename.toHtmlEscaped()));
-    return ans;
+            QObject::tr("I could not read the selected file."),
+            QObject::tr("<qt>Please check that you have permissions to read "
+                "the file <tt>%1</tt>.</qt>").arg(filename.toHtmlEscaped()));
+        return nullptr;
+    } catch (const regina::InvalidInput&) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("I could not open the selected file."),
+            QObject::tr("<qt>The file <tt>%1</tt> does not appear to be an "
+                "Orb / Casson file.</qt>").arg(filename.toHtmlEscaped()));
+        return nullptr;
+    }
 }
 

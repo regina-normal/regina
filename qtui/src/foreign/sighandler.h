@@ -107,9 +107,11 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
         signatures = QObject::tr("isomorphism signatures");
     }
 
-    std::shared_ptr<regina::Packet> ans = regina::readSigList<PacketType>(
-        static_cast<const char*>(QFile::encodeName(filename)));
-    if (! ans) {
+    std::shared_ptr<regina::Packet> ans;
+    try {
+        ans = regina::readSigList<PacketType>(
+            static_cast<const char*>(QFile::encodeName(filename)));
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "

@@ -62,8 +62,10 @@ for dim in range(2, 9):
     testTri(dim)
 
 print('Non-existent file:')
-c = readSigList(3, '/no/such/file')
-print(c)
+try:
+    c = readSigList(3, '/no/such/file')
+except FileError:
+    print('Caught exception')
 print()
 
 print('Bad dimension:')

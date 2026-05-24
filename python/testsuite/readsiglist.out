@@ -111,7 +111,7 @@ The following could not be interpreted as 8-D triangulation signatures:
 junk
 
 Non-existent file:
-None
+Caught exception
 
 Bad dimension:
 Caught exception

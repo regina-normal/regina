@@ -58,7 +58,7 @@ std::shared_ptr<Container> readSigList(const char *filename, int colSigs,
     // Open the file.
     std::ifstream in(filename);
     if (! in)
-        return nullptr;
+        throw FileError("Could not open the given file");
 
     // Ignore the specified number of lines.
     std::string line;

@@ -35,6 +35,7 @@
 #include "packet/container.h"
 #include "packet/text.h"
 #include "triangulation/dim3.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -43,7 +44,7 @@ std::shared_ptr<Container> readDehydrationList(const char *filename,
     // Open the file.
     std::ifstream in(filename);
     if (! in)
-        return nullptr;
+        throw FileError("Could not open the given file");
 
     // Ignore the specified number of lines.
     std::string line;
