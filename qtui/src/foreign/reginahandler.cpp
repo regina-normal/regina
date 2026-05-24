@@ -39,15 +39,15 @@
 #include <QTextDocument>
 
 std::shared_ptr<regina::Packet> ReginaHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
+        const QString& filename, ReginaMain* parentWidget) const {
     std::shared_ptr<regina::Packet> ans = regina::open(
-        static_cast<const char*>(QFile::encodeName(fileName)));
+        static_cast<const char*>(QFile::encodeName(filename)));
     if (! ans)
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
     else if (ans->label().empty())
         ans->setLabel("Imported data");
     return ans;

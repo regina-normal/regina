@@ -51,13 +51,13 @@ namespace {
 const PythonHandler PythonHandler::instance;
 
 std::shared_ptr<regina::Packet> PythonHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
-    QFile f(fileName);
+        const QString& filename, ReginaMain* parentWidget) const {
+    QFile f(filename);
     if (! f.open(QIODevice::ReadOnly)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The import failed."), 
             QObject::tr("<qt>I could not read from the file <tt>%1</tt>.</qt>").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
         return nullptr;
     }
     QTextStream in(&f);
@@ -128,15 +128,15 @@ PacketFilter* PythonHandler::canExport() const {
 }
 
 bool PythonHandler::exportData(const regina::Packet& data,
-        const QString& fileName, QWidget* parentWidget) const {
+        const QString& filename, QWidget* parentWidget) const {
     auto& script = static_cast<const regina::Script&>(data);
 
-    QFile f(fileName);
+    QFile f(filename);
     if (! f.open(QIODevice::WriteOnly)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>I could not write to the file <tt>%1</tt>.</qt>").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
         return false;
     }
     QTextStream out(&f);

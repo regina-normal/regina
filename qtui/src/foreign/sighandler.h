@@ -72,7 +72,7 @@ class SigHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+        std::shared_ptr<regina::Packet> importData(const QString& filename,
             ReginaMain* parentWidget) const override;
 
     private:
@@ -87,7 +87,7 @@ const SigHandler<PacketType> SigHandler<PacketType>::instance;
 
 template <regina::SignatureReconstructible PacketType>
 std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
+        const QString& filename, ReginaMain* parentWidget) const {
     QString explnSuffix;
     QString signatures;
     if constexpr (std::is_same_v<PacketType, regina::Link>) {
@@ -108,13 +108,13 @@ std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
     }
 
     std::shared_ptr<regina::Packet> ans = regina::readSigList<PacketType>(
-        static_cast<const char*>(QFile::encodeName(fileName)));
+        static_cast<const char*>(QFile::encodeName(filename)));
     if (! ans) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
-                .arg(fileName.toHtmlEscaped()));
+                .arg(filename.toHtmlEscaped()));
         return nullptr;
     }
 

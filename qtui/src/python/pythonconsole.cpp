@@ -439,17 +439,17 @@ void PythonConsole::runScript(regina::Script* script) {
 }
 
 void PythonConsole::saveLog() {
-    QString fileName =
+    QString filename =
         QFileDialog::getSaveFileName(this, tr("Save Session Transcript"),
         QString(), tr(FILTER_ALL));
-    if (! fileName.isEmpty()) {
-        QFile f(fileName);
+    if (! filename.isEmpty()) {
+        QFile f(filename);
         if (! f.open(QIODevice::WriteOnly))
             ReginaSupport::warn(this,
                 tr("I could not save the session transcript."),
                 tr("<qt>An error occurred whilst "
                 "attempting to write to the file <tt>%1</tt>.</qt>").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
         else {
             QTextStream out(&f);
             out.setEncoding(QStringConverter::Utf8);

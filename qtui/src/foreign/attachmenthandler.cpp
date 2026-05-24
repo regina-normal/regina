@@ -41,15 +41,15 @@
 const AttachmentHandler AttachmentHandler::instance;
 
 std::shared_ptr<regina::Packet> AttachmentHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
+        const QString& filename, ReginaMain* parentWidget) const {
     std::shared_ptr<regina::Attachment> ans =
         std::make_shared<regina::Attachment>(
-        static_cast<const char*>(QFile::encodeName(fileName)));
+        static_cast<const char*>(QFile::encodeName(filename)));
     if (ans->isNull()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and non-empty.</qt>").arg(fileName.toHtmlEscaped()));
+            "is readable and non-empty.</qt>").arg(filename.toHtmlEscaped()));
         return nullptr;
     } else
         ans->setLabel(ans->filename());
