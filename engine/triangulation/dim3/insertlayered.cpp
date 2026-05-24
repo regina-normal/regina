@@ -77,7 +77,7 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     return newTet;
 }
 
-bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
+void Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
         BoundaryComponent<3>* boundary) {
     // Check that the cuts arguments are valid.
     int maxCuts;
@@ -88,23 +88,26 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
     else if (cuts0 == cuts1 + cuts2)
         maxCuts = 0;
     else
-        return false;
+        throw InvalidArgument(
+            "The largest integer argument must be the sum of the other two");
 
     if (std::gcd(cuts0, cuts1) != 1)
-        return false;
+        throw InvalidArgument(
+            "The three integer arguments must be pairwise coprime");
 
     // Deduce the boundary component if one was not given.
     if (! boundary) {
         if (countBoundaryComponents() != 1)
-            return false;
+            throw InvalidArgument("You may only omit the boundary argument "
+                "if this triangulation has exactly one boundary component");
         boundary = boundaryComponents_.front();
     }
 
     // Check that the boundary component is indeed a 2-triangle torus.
-    if (boundary->countTriangles() != 2)
-        return false;
-    if (boundary->eulerChar() != 0 || ! boundary->isOrientable())
-        return false;
+    if (boundary->countTriangles() != 2 || boundary->eulerChar() != 0 ||
+            ! boundary->isOrientable())
+        throw InvalidArgument(
+            "The boundary component to fill must be a two-triangle torus");
 
     // Identify the two boundary triangles and their relationships to the
     // three boundary edges.
@@ -265,21 +268,22 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
     }
 
     simplify();
-    return true;
 }
 
-bool Triangulation<3>::fillTorus(Edge<3>* edge0, Edge<3>* edge1, Edge<3>* edge2,
+void Triangulation<3>::fillTorus(Edge<3>* edge0, Edge<3>* edge1, Edge<3>* edge2,
         size_t cuts0, size_t cuts1, size_t cuts2) {
     if (edge0 == edge1 || edge0 == edge2 || edge1 == edge2)
-        return false;
+        throw InvalidArgument("The three given edges must be distinct");
 
     BoundaryComponent<3>* boundary = edge0->boundaryComponent();
     if ((! boundary) || boundary != edge1->boundaryComponent() ||
             boundary != edge2->boundaryComponent())
-        return false;
+        throw InvalidArgument("The three given edges must all belong to "
+            "a common boundary component");
 
     if (boundary->countEdges() != 3)
-        return false;
+        throw InvalidArgument(
+            "The boundary component to fill must have precisely three edges");
 
     // edge0, edge1 and edge2 are now known to be the three distinct edges
     // of boundary.
@@ -300,7 +304,8 @@ bool Triangulation<3>::fillTorus(Edge<3>* edge0, Edge<3>* edge1, Edge<3>* edge2,
             return fillTorus(cuts2, cuts1, cuts0, boundary);
     }
 
-    return false;
+    // We should never be able to reach this point.
+    throw ImpossibleScenario("Impossible boundary edge combination");
 }
 
 Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(

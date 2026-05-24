@@ -4304,25 +4304,27 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Fills a two-triangle torus boundary component by attaching a
          * solid torus along a given curve.
          *
-         * The boundary component to be filled should be passed as the
-         * argument \a boundary; if the triangulation has exactly one
-         * boundary component then you may omit \a boundary (i.e., pass
-         * the default value of `null`), and the (unique) boundary component
-         * will be inferred.
+         * The given boundary component will be filled with a solid torus
+         * whose meridional curve cuts the three edges `boundary->edge(0)`,
+         * `boundary->edge(1)` and `boundary->edge(2)` a total of \a cuts0,
+         * \a cuts1 and \a cuts2 times respectively.
          *
-         * If the boundary component cannot be inferred, and/or if the
-         * selected boundary component is not a two-triangle torus, then
-         * this routine will do nothing and return `false`.
+         * If the triangulation has exactly one boundary component then you may
+         * omit the \a boundary argument (i.e., you may pass the default value
+         * of `null`), in which case the (unique) boundary component will be
+         * inferred.  If you try to do this but there is not exactly one
+         * boundary component then this routine will throw an exception.
          *
-         * Otherwise the given boundary component will be filled with a
-         * solid torus whose meridional curve cuts the edges
-         * `boundary->edge(0)`, `boundary->edge(1)` and `boundary->edge(2)`
-         * a total of \a cuts0, \a cuts1 and \a cuts2 times respectively.
+         * For the filling to be performed successfully:
          *
-         * For the filling to be performed successfully, the integers
-         * \a cuts0, \a cuts1 and \a cuts2 must be coprime, and two of
-         * them must add to give the third.  Otherwise, as above, this
-         * routine will do nothing and return `false`.
+         * - the boundary component to fill must be a two-triangle torus;
+         * - the integers \a cuts0, \a cuts1 and \a cuts2 must be coprime;
+         * - the largest of these integers must be the sum of the other two.
+         *
+         * If any of these conditions is not met, then this routine will again
+         * throw an exception.  This exception throwing is a change in behaviour
+         * as of Regina 8.0: older versions of Regina (≤ 7.x) returned `false`
+         * to indicate failure instead.
          *
          * The triangulation will be simplified before returning.
          *
@@ -4331,6 +4333,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * use the other version if you know how the filling curve cuts
          * each boundary edge but you do not know how these edges are
          * indexed in the boundary component.
+         *
+         * \exception InvalidArgument Either the boundary component could not
+         * be inferred, it is not a two-triangle torus, the three given integers
+         * are not coprime, and/or the largest integer is not the sum of the
+         * other two.
          *
          * \param cuts0 the number of times that the meridional curve of
          * the new solid torus should cut the edge `boundary->edge(0)`.
@@ -4344,7 +4351,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * or `false` if one of the required conditions as described
          * above is not satisfied.
          */
-        bool fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
+        void fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             BoundaryComponent<3>* boundary = nullptr);
 
         /**
@@ -4357,12 +4364,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * solid torus whose meridional curve cuts these three edges
          * \a cuts0, \a cuts1 and \a cuts2 times respectively.
          *
-         * For the filling to be performed successfully, the three given
-         * edges must belong to the same boundary component, and this boundary
-         * component must be a two-triangle torus.  Moreover, the integers
-         * \a cuts0, \a cuts1 and \a cuts2 must be coprime, and two of
-         * them must add to give the third.  If any of these conditions
-         * are not met, then this routine will do nothing and return `false`.
+         * For the filling to be performed successfully:
+         *
+         * - the three given edges must be distinct and must belong to the
+         *   same boundary component;
+         * - this boundary component must be a two-triangle torus;
+         * - the integers \a cuts0, \a cuts1 and \a cuts2 must be coprime;
+         * - the largest of these integers must be the sum of the other two.
+         *
+         * If any of these conditions is not met, then this routine will throw
+         * an exception.  This is a change in behaviour as of Regina 8.0: older
+         * versions of Regina (≤ 7.x) returned `false` to indicate failure
+         * instead.
          *
          * The triangulation will be simplified before returning.
          *
@@ -4372,6 +4385,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * This version of fillTorus() should be used when you know how the
          * filling curve cuts each boundary edge but you do not know how these
          * edges are indexed in the corresponding boundary component.
+         *
+         * \exception InvalidArgument Either the three given edges are not
+         * distinct, they do not belong to a common boundary component, their
+         * common boundary component is not a two-triangle torus, the three
+         * given integers are not coprime, and/or the largest integer is not
+         * the sum of the other two.
          *
          * \param edge0 one of the three edges of the boundary component to
          * fill.
@@ -4389,7 +4408,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * or `false` if one of the required conditions as described
          * above is not satisfied.
          */
-        bool fillTorus(Edge<3>* edge0, Edge<3>* edge1, Edge<3>* edge2,
+        void fillTorus(Edge<3>* edge0, Edge<3>* edge1, Edge<3>* edge2,
             size_t cuts0, size_t cuts1, size_t cuts2);
 
         /**
