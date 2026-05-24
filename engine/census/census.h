@@ -99,10 +99,9 @@ class CensusDB {
         /**
          * Creates a new reference to one of Regina's census databases.
          *
-         * This constructor will not run any checks (e.g., it will not
-         * verify that the database exists, or that it is stored in the correct
-         * format).  Note that even if the database does not exist, the
-         * lookupKey() routine will fail gracefully.
+         * This constructor will not run any checks (e.g., it will not verify
+         * that the database exists, or that it is stored in the correct
+         * format).
          *
          * \param filename the filename where the database is stored.
          * \param desc a human-readable description of the database.
@@ -182,18 +181,17 @@ class CensusDB {
          * _must_ be 2, since Regina's databases currently use
          * second-generation isomorphism signatures as their keys.
          *
+         * \exception FileError An error occurred at the database level (e.g.,
+         * the database could not be opened).
+         *
          * \param isoSig the isomorphism signature to search for; this must be
          * of the same generation that is passed as a template parameter.
          * \param action a function (or other callable type) that will
          * be called for each match in the database.
-         * \return `true` if the lookup was correctly performed, or \c false
-         * if some error occurred (e.g., the database could not be opened).
-         * Note in particular that if there were no matches but no errors,
-         * then the return value will be \c true.
          */
         template <int generation, VoidCallback<CensusHit&&> Action>
         requires (generation == 2)
-        bool lookupKey(const std::string& isoSig, Action&& action) const;
+        void lookupKey(const std::string& isoSig, Action&& action) const;
 
         /**
          * Sets this to be a clone of the given database reference.
@@ -417,6 +415,10 @@ class Census {
          * logarithmic-time lookup in each database (here "logarithmic"
          * means logarithmic in the size of the database).
          *
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
+         *
          * \param tri the triangulation that you wish to search for.
          * \return a list of all database matches.
          */
@@ -463,6 +465,10 @@ class Census {
          * is not already of the correct generation), and then it performs a
          * logarithmic-time lookup in each database (where "logarithmic" means
          * logarithmic in the size of the database).
+         *
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
          *
          * \param isoSig the isomorphism signature of the triangulation that
          * you wish to search for; this may be either first-generation or

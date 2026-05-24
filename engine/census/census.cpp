@@ -46,7 +46,7 @@ CensusDB* Census::christy_ = nullptr;
 bool Census::dbInit_ = false;
 
 // Instantiate this template, which we use in the python bindings.
-template bool CensusDB::lookupKey<2, const std::function<void(CensusHit&&)>&>(
+template void CensusDB::lookupKey<2, const std::function<void(CensusHit&&)>&>(
     const std::string&, const std::function<void(CensusHit&&)>&) const;
 
 std::list<CensusHit> Census::lookup(const Triangulation<3>& tri) {
@@ -99,6 +99,7 @@ std::list<CensusHit> Census::lookup(const std::string& isoSig) {
         hits.push_back(std::move(hit));
     };
 
+    // Any of these calls to lookupKey() might throw a FileError exception.
     closedOr_->lookupKey<2>(isoSig, push);
     closedNor_->lookupKey<2>(isoSig, push);
     closedHyp_->lookupKey<2>(isoSig, push);

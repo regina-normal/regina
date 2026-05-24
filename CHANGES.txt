@@ -97,10 +97,15 @@ Version 8.0  [ TODO ]
         Class Census:
             - The string-based lookup() can now take either a first-generation
               or second-generation isomorphism signature.
+            - All lookup() routines now throw an exception if they encounter a
+              database error.
+            - All of Regina's databases are now upgraded to use
+              second-generation instead of first-generation signatures.
         Class CensusDB:
-            - Renamed lookup() to lookupKey<1>().  The template argument
-              indicates the generation of isomorphism signature that the
-              database uses for its keys, and is subject to change in future
+            - Renamed lookup() to lookupKey<...>(), and made it throw an
+              exception on error instead of returning a boolean.  The template
+              argument indicates the generation of isomorphism signature that
+              the database uses for its keys, and is subject to change in future
               versions of Regina.  The old lookup() is removed completely.
         Class ChildIterator<const_>:
             - The type std::iterator_traits<ChildIterator<...>>::value_type

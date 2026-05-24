@@ -670,29 +670,36 @@ void Tri3SurfacesUI::refresh() {
             "Not recognised</qt>"));
     }
 
-    if (tri_->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        hits = regina::Census::lookup(*tri_);
-        if (hits.empty()) {
-            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
-        } else if (hits.size() == 1) {
-            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
-                .arg(QString(hits.front().name().c_str()).toHtmlEscaped()));
-        } else {
-            QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
-                .arg(hits.size());
-            for (const auto& hit : hits) {
-                ans += "<br>";
-                ans += QString(hit.name().c_str()).toHtmlEscaped();
+    try {
+        if (tri_->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
+                hits = regina::Census::lookup(*tri_);
+            if (hits.empty()) {
+                census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;"
+                    "Not found</qt>"));
+            } else if (hits.size() == 1) {
+                census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
+                    .arg(QString(hits.front().name().c_str()).toHtmlEscaped()));
+            } else {
+                QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
+                    .arg(hits.size());
+                for (const auto& hit : hits) {
+                    ans += "<br>";
+                    ans += QString(hit.name().c_str()).toHtmlEscaped();
+                }
+                ans += "</qt>";
+                census->setText(ans);
             }
-            ans += "</qt>";
-            census->setText(ans);
+        } else {
+            // The triangulation is too large to be found in the census.
+            // Avoid the overhead of calling neoSig().
+            hits.clear();
+            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
         }
-    } else {
+    } catch (const regina::FileError&) {
         hits.clear();
-
-        // The triangulation is too large to be found in the census.
-        // Avoid the overhead of calling neoSig().
-        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
+        census->setText(
+            tr("<qt><b>Census:</b>&nbsp;&nbsp;Database error<br>"
+                "(check your installation)</qt>"));
     }
 }
 

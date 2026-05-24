@@ -69,11 +69,11 @@ namespace regina {
 
 template <int generation, VoidCallback<CensusHit&&> Action>
 requires (generation == 2)
-bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
+void CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
     // On some platforms, looking up an empty key triggers the
     // error MDB_BAD_VALSIZE when using LMDB.
     if (isoSig.empty())
-        return true;
+        return; // no hits
 
 #if defined(REGINA_KVSTORE_QDBM)
     VILLA* db;
@@ -81,7 +81,7 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
         std::cerr << "ERROR: Could not open QDBM database: "
             << filename_ << std::endl;
         std::cerr << "       -> " << dperrmsg(dpecode) << std::endl;
-        return false;
+        throw FileError("Could not open QDBM database");
     }
 
     CBLIST* records = vlgetlist(db, isoSig.c_str(), isoSig.length());
@@ -100,7 +100,7 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
             << filename_ << std::endl;
         std::cerr << "       -> " << tcbdberrmsg(tcbdbecode(db)) << std::endl;
         tcbdbdel(db);
-        return false;
+        throw FileError("Could not open Tokyo Cabinet database");
     }
 
     if (isoSig.length() > INT_MAX) {
@@ -128,7 +128,7 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
         std::cerr << "ERROR: Could not create LMDB environment: "
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
-        return false;
+        throw FileError("Could not create LMDB environment");
     }
     /*
     // LMDB normally requires that you set the maximum map size before calling
@@ -140,7 +140,7 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
         ::mdb_env_close(db);
-        return false;
+        throw FileError("Could not set LMDB map size");
     }
     */
     // We still need to pass a file mode to mdb_env_open, and we use 0664 here;
@@ -152,7 +152,7 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
         ::mdb_env_close(db);
-        return false;
+        throw FileError("Could not open LMDB environment");
     }
     MDB_txn* txn = nullptr;
     if ((rv = ::mdb_txn_begin(db, nullptr, MDB_RDONLY, &txn))) {
@@ -160,7 +160,7 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
         ::mdb_env_close(db);
-        return false;
+        throw FileError("Could not create LMDB transaction");
     }
     MDB_dbi dbi = 0;
     if ((rv = ::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi))) {
@@ -169,7 +169,7 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
         std::cerr << "       -> error code " << rv << std::endl;
         ::mdb_txn_abort(txn);
         ::mdb_env_close(db);
-        return false;
+        throw FileError("Could not open LMDB database");
     }
     MDB_cursor* cursor = nullptr;
     if ((rv = ::mdb_cursor_open(txn, dbi, &cursor))) {
@@ -178,7 +178,7 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
         std::cerr << "       -> error code " << rv << std::endl;
         ::mdb_txn_abort(txn);
         ::mdb_env_close(db);
-        return false;
+        throw FileError("Could not create LMDB cursor");
     }
     MDB_val key { isoSig.size(), const_cast<char*>(isoSig.data()) };
     MDB_val value;
@@ -198,15 +198,13 @@ bool CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
             ::mdb_cursor_close(cursor);
             ::mdb_txn_abort(txn);
             ::mdb_env_close(db);
-            return false;
+            throw FileError("Could not search LMDB database");
         }
     }
     ::mdb_cursor_close(cursor);
     ::mdb_txn_abort(txn);
     ::mdb_env_close(db);
 #endif
-
-    return true;
 }
 
 } // namespace regina

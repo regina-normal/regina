@@ -58,7 +58,7 @@ void addCensus(pybind11::module_& m) {
                 const std::string& isoSig,
                 const std::function<void(CensusHit&&)>& action) {
             if (generation == 2)
-                return db.lookupKey<2>(isoSig, action);
+                db.lookupKey<2>(isoSig, action);
             else
                 throw regina::InvalidArgument("This generation of "
                     "signature is not supported by CensusDB");
