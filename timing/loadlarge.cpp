@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
             for (auto p = tree; p; p = p->nextTreePacket())
                 ;
         }
-    } catch (const regina::FileError&) {
+    } catch (const regina::ReginaException&) {
         std::cerr << "ERROR: Could not load file: " << file << std::endl;
         return 1;
     }

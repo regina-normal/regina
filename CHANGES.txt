@@ -491,8 +491,8 @@ Version 8.0  [ TODO ]
             - New constexpr function that returns the largest supported degree
               of permutation.
         Function open():
-            - Both versions of this function now throw an exception if a file
-              error occurs or if the top-level packet cannot be parsed
+            - Both versions of this function now throw an exception if the
+              file is unreadable or if no usable Regina data could be found
               (previously, open() indicated such errors by returning null).
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a

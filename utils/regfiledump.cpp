@@ -187,6 +187,10 @@ int main(int argc, char* argv[]) {
     } catch (const regina::FileError&) {
         std::cerr << "File " << file << " could not be read.\n";
         return 1;
+    } catch (const regina::InvalidInput&) {
+        std::cerr << "File " << file
+            << " does not appear to be a Regina data file.\n";
+        return 1;
     }
 
     if (dumpOpt != 'n') {

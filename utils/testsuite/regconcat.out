@@ -325,7 +325,7 @@ TEST: regconcat @TESTDIR@/tiny.rga @BADFILE@ @TESTDIR@/b5.rga
 --------------------
 XML Error: Document is empty
 
-File @BADFILE@ could not be read.
+File @BADFILE@ does not appear to be a Regina data file.
 <?xml version="1.0"?>
 <regina engine="_">
 <container label="Combined Data">
@@ -705,7 +705,7 @@ TEST: regconcat -o @TESTOUT@ @TESTDIR@/tiny.rga @BADFILE@ @TESTDIR@/b5.rga
 --------------------
 XML Error: Document is empty
 
-File @BADFILE@ could not be read.
+File @BADFILE@ does not appear to be a Regina data file.
 --------------------
 Exit code: 1
 --------------------

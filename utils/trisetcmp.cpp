@@ -232,16 +232,22 @@ int main(int argc, char* argv[]) {
         tree1 = regina::open(file1.c_str());
     } catch (const regina::FileError&) {
         std::cerr << "File " << file1 << " could not be read.\n";
-        std::cerr << "Please check that it exists and that it is a "
-            "Regina data file.\n";
+        std::cerr << "Please check that you have permissions to read it.\n";
+        return 1;
+    } catch (const regina::InvalidInput&) {
+        std::cerr << "File " << file1 << " could not be opened.\n";
+        std::cerr << "It does not appear to be a Regina data file.\n";
         return 1;
     }
     try {
         tree2 = regina::open(file2.c_str());
     } catch (const regina::FileError&) {
         std::cerr << "File " << file2 << " could not be read.\n";
-        std::cerr << "Please check that it exists and that it is a "
-            "Regina data file.\n";
+        std::cerr << "Please check that you have permissions to read it.\n";
+        return 1;
+    } catch (const regina::InvalidInput&) {
+        std::cerr << "File " << file2 << " could not be opened.\n";
+        std::cerr << "It does not appear to be a Regina data file.\n";
         return 1;
     }
 

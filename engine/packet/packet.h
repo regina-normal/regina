@@ -2782,9 +2782,11 @@ const Held& static_packet_cast(const Packet& p) {
  *
  * If the file could not be opened, or if the top-level packet in the tree
  * could not be parsed (i.e., the file does not appear to contain any usable
- * Regina data), then this routine will throw an exception.  This is a change
- * in behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) would
- * return \c null instead.
+ * Regina data), then this routine will throw an exception.  Multiple exception
+ * types are possible: remember that you can just catch the base class
+ * ReginaException if you wish to catch them all together.  This exception
+ * throwing is a change in behaviour as of Regina 8.0: older versions of
+ * Regina (≤ 7.x) would return \c null instead.
  *
  * If some packet deeper within the tree could not be read, that particular
  * packet (and its descendants, if any) will simply be ignored.  This allows
@@ -2803,8 +2805,10 @@ const Held& static_packet_cast(const Packet& p) {
  * Python's own built-in open() function.  You can access Regina's open()
  * function by calling `regina.open()`.
  *
- * \exception FileError An error occurred whilst reading the file, and/or
- * the file does not appear to contain any usable Regina data.
+ * \exception FileError The file could not be read.
+ *
+ * \exception InvalidInput The file does not appear to contain any usable
+ * Regina data.
  *
  * \param filename the pathname of the file to read from.
  * \return the packet tree read from file.  As of Regina 8.0, if this routine
@@ -2822,10 +2826,12 @@ std::shared_ptr<Packet> open(const char* filename);
  * the XML file is compressed or uncompressed.
  *
  * If the stream could not be read, or if the top-level packet in the tree
- * could not be parsed (i.e., the file does not appear to contain any usable
- * Regina data), then this routine will throw an exception.  This is a change
- * in behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) would
- * return \c null instead.
+ * could not be parsed (i.e., the stream does not appear to contain any usable
+ * Regina data), then this routine will throw an exception.  Multiple exception
+ * types are possible: remember that you can just catch the base class
+ * ReginaException if you wish to catch them all together.  This exception
+ * throwing is a change in behaviour as of Regina 8.0: older versions of
+ * Regina (≤ 7.x) would return \c null instead.
  *
  * If some packet deeper within the tree could not be read, that particular
  * packet (and its descendants, if any) will simply be ignored.  This allows
@@ -2837,8 +2843,10 @@ std::shared_ptr<Packet> open(const char* filename);
  *
  * \nopython Instead you can use the variant of open() that takes a filename.
  *
- * \exception FileError An error occurred whilst reading the file, and/or
- * the file does not appear to contain any usable Regina data.
+ * \exception FileError The file could not be read.
+ *
+ * \exception InvalidInput The file does not appear to contain any usable
+ * Regina data.
  *
  * \param in the input stream to read from.
  * \return the packet tree read from file.  As of Regina 8.0, if this routine

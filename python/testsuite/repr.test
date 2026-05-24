@@ -456,7 +456,6 @@ dump(Signature('abbc.ac'))
 # ----------------------------------------------------------------------
 
 dump(FileInfo.identify(testpath + '/file3.rga'))
-dump(FileInfo.identify(testpath + '/pdf.test'))
 
 # ----------------------------------------------------------------------
 # progress/

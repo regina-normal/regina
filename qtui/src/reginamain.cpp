@@ -307,10 +307,15 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         data = regina::open(static_cast<const char*>(QFile::encodeName(f)));
     } catch (const regina::FileError&) {
         ReginaSupport::sorry(this,
+            tr("I could not read the selected file."),
+            tr("<qt>Please check that you have permissions to read "
+                "the file <tt>%1</tt>.</qt>").arg(f.toHtmlEscaped()));
+        return;
+    } catch (const regina::InvalidInput&) {
+        ReginaSupport::sorry(this,
             tr("I could not open the selected file."),
-            tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in Regina format.</qt>").
-            arg(f.toHtmlEscaped()));
+            tr("<qt>The file <tt>%1</tt> does not appear to be a "
+                "Regina data file.</qt>").arg(f.toHtmlEscaped()));
         return;
     }
 
@@ -354,8 +359,15 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         ReginaSupport::warn(this,
             tr("I could not open the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
-            "Please mail the authors for assistance.").
-            arg(description.toHtmlEscaped()));
+                "Please mail the authors for assistance.").
+                arg(description.toHtmlEscaped()));
+        return;
+    } catch (const regina::InvalidInput&) {
+        ReginaSupport::warn(this,
+            tr("I could not open the example that you requested."),
+            tr("<qt>The example \"%1\" does not appear to be a Regina "
+                "data file.  Please mail the authors for assistance.").
+                arg(description.toHtmlEscaped()));
         return;
     }
 

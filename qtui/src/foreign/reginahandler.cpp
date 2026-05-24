@@ -49,8 +49,15 @@ std::shared_ptr<regina::Packet> ReginaHandler::importData(
     } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
-            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in Regina format.</qt>").
+            QObject::tr("<qt>Please check that you have permissions to read "
+                "the file <tt>%1</tt>.</qt>").
+                arg(filename.toHtmlEscaped()));
+        return {};
+    } catch (const regina::InvalidInput&) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("The import failed."),
+            QObject::tr("<qt>The file <tt>%1</tt> does not appear to be a "
+                "Regina data file.</qt>").
                 arg(filename.toHtmlEscaped()));
         return {};
     }

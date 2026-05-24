@@ -153,8 +153,8 @@ std::shared_ptr<Packet> open(std::istream& s) {
                     // TODO: Should we distinguish decompression vs read errors?
                     std::cerr << "ERROR: " << e.what() << std::endl;
                     delete[] buf;
-                    throw FileError("An error occurred whilst reading "
-                        "from the input stream");
+                    throw InvalidInput(
+                        "An error occurred during file decompression");
                 }
                 if (chunkRead == 0)
                     break;
@@ -260,14 +260,13 @@ std::shared_ptr<Packet> open(std::istream& s) {
             // child packet that we return and delete the old parent container.
             return p->firstChild();
         } else
-            throw FileError(
+            throw InvalidInput(
                 "The file does not contain any usable Regina data");
     } catch (const zstr::Exception& e) {
         // TODO: Should we distinguish decompression vs read errors?
         std::cerr << "ERROR: " << e.what() << std::endl;
         delete[] buf;
-        throw FileError(
-            "An error occurred whilst reading from the input stream");
+        throw InvalidInput("An error occurred during file decompression");
     }
 }
 

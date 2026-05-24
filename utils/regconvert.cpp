@@ -132,6 +132,10 @@ int main(int argc, char* argv[]) {
     } catch (const regina::FileError&) {
         std::cerr << "File " << oldFile << " could not be read.\n";
         return 1;
+    } catch (const regina::InvalidInput&) {
+        std::cerr << "File " << oldFile
+            << " does not appear to be a Regina data file.\n";
+        return 1;
     }
 
     // Write the new file.

@@ -163,7 +163,7 @@ TEST: regconvert @BADFILE@
 --------------------
 XML Error: Document is empty
 
-File @BADFILE@ could not be read.
+File @BADFILE@ does not appear to be a Regina data file.
 --------------------
 Exit code: 1
 ============================================================
