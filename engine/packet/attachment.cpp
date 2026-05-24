@@ -46,17 +46,18 @@ Attachment::Attachment(const char* pathname) :
     // Open the file.
     FILE* in = fopen(pathname, "rb");
     if (! in)
-        return;
+        throw FileError("Could not open the given file");
 
     // Get the file size.
     struct stat s;
     if (fstat(fileno(in), &s)) {
         fclose(in);
-        return;
+        throw FileError("Could not determine the size of the given file");
     }
     size_t size = s.st_size;
 
     if (size == 0) {
+        // This is legitimately an empty attachment.
         fclose(in);
         return;
     }
@@ -66,7 +67,7 @@ Attachment::Attachment(const char* pathname) :
     if (fread(data, 1, size, in) != size) {
         fclose(in);
         delete[] data;
-        return;
+        throw FileError("Could not read the contents of the given file");
     }
 
     // Is there more to the file that we weren't expecting?
@@ -74,7 +75,7 @@ Attachment::Attachment(const char* pathname) :
     if (fread(&c, 1, 1, in) > 0) {
         fclose(in);
         delete[] data;
-        return;
+        throw FileError("The given file contains more data than expected");
     }
 
     // All good!
@@ -150,26 +151,22 @@ void Attachment::reset(char* data, size_t size, OwnershipPolicy alloc,
     filename_ = std::move(filename);
 }
 
-bool Attachment::save(const char* pathname) const {
+void Attachment::save(const char* pathname) const {
     if (! data_)
-        return false;
+        throw FailedPrecondition("This attachment is empty");
 
     // Use FILE* for symmetry with the file load routine.
 
-    // Open the file.
     FILE* out = fopen(pathname, "wb");
     if (!out)
-        return false;
+        throw FileError("Could not write to the given file");
 
-    // Is there anything to write?
     if (fwrite(data_, 1, size_, out) != size_) {
         fclose(out);
-        return false;
+        throw FileError("An error occurred whilst writing to the given file");
     }
 
-    // All done.
     fclose(out);
-    return true;
 }
 
 void Attachment::writeXMLPacketData(std::ostream& out, FileFormat format,

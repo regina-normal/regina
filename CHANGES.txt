@@ -26,6 +26,11 @@ Version 8.0  [ TODO ]
               but no longer needs to support rbegin() and rend()).
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
+        Class Attachment:
+            - The filename constructor now throws an exception on error,
+              instead of creating an empty attachment.
+            - The save() routine also throws an exception on error, and no
+              longer returns a boolean (which used to indicate success/failure).
         Class Base64BitEncoder, Base64BitDecoder:
             - New classes to support signatures that pack bits into base64
               strings, without worrying about byte/character boundaries.
@@ -323,10 +328,12 @@ Version 8.0  [ TODO ]
               arc count for some arc type on the boundary is so large that it
               cannot fit into a size_t.
         Class NormalSurfaces:
-            - Routines saveCSVEdgeWeight() and saveCSVStandard() now throw an
-              exception if the underlying algorithms encounter an impossible
+            - Routines saveCSVEdgeWeight() and saveCSVStandard() now throw
+              exceptions if the underlying algorithms encounter an impossible
               memory requirement (typically due to some normal coordinate
-              being too large to fit into a size_t).
+              being too large to fit into a size_t), or if an error occurs
+              whilst writing to file.  They no longer return booleans (which
+              were previously used to indicate file errors).
             - The "transformation constructor" could throw an exception when
               using the FilterDisjoint transformation in the presence of
               enormous normal coordinates (again because an impossible memory
@@ -361,8 +368,9 @@ Version 8.0  [ TODO ]
             - This is now deprecated, since its only purpose is to support
               CallableArg (which is also deprecated).
         Class SnapPeaTriangulation:
-            - Routine fill() now throws an exception on error, and no longer
-              returns a boolean (which used to indicate success or failure).
+            - Routines fill() and saveSnapPea() now throw exceptions on error,
+              and no longer return booleans (which used to indicate success
+              or failure).
             - Routine unfill() now throws an exception when called on a null
               SnapPea triangulation (previously it silently did nothing).
         Class SpatialLink:

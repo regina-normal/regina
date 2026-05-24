@@ -896,6 +896,10 @@ class NormalSurfaces :
          * ``my "normal" surface's name`` would be stored as
          * ``"my ""normal"" surface's name"``.
          *
+         * If an error occurs whilst writing the file, this routine will throw
+         * an exception.  This is a change of behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
@@ -915,13 +919,14 @@ class NormalSurfaces :
          * algorithm has encountered a normal surface with some coordinate
          * at least `2^64`.
          *
+         * \exception FileError An error occurred whilst writing the file.
+         *
          * \param filename the name of the CSV file to export to.
          * \param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExport indicating which additional properties of
          * surfaces should be included in the export.
-         * \return \c true if the export was successful, or \c false otherwise.
          */
-        bool saveCSVStandard(const char* filename,
+        void saveCSVStandard(const char* filename,
             Flags<SurfaceExport> additionalFields = SurfaceExport::All) const;
 
         /**
@@ -949,6 +954,10 @@ class NormalSurfaces :
          * ``my "normal" surface's name`` would be stored as
          * ``"my ""normal"" surface's name"``.
          *
+         * If an error occurs whilst writing the file, this routine will throw
+         * an exception.  This is a change of behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
@@ -968,13 +977,14 @@ class NormalSurfaces :
          * algorithm has encountered a normal surface with some coordinate
          * at least `2^64`.
          *
+         * \exception FileError An error occurred whilst writing the file.
+         *
          * \param filename the name of the CSV file to export to.
          * \param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExport indicating which additional properties of
          * surfaces should be included in the export.
-         * \return \c true if the export was successful, or \c false otherwise.
          */
-        bool saveCSVEdgeWeight(const char* filename,
+        void saveCSVEdgeWeight(const char* filename,
             Flags<SurfaceExport> additionalFields = SurfaceExport::All) const;
 
         /**

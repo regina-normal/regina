@@ -43,5 +43,10 @@ pdf = Attachment(testpath + '/sample.pdf')
 print('Null:', pdf.isNull())
 print('Size:', pdf.size())
 
+try:
+    pdf = Attachment('/no/such/path')
+except:
+    print('Caught exception')
+
 # TODO: Export and compare.
 

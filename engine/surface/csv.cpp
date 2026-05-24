@@ -158,11 +158,11 @@ namespace {
     }
 }
 
-bool NormalSurfaces::saveCSVStandard(const char* filename,
+void NormalSurfaces::saveCSVStandard(const char* filename,
         Flags<SurfaceExport> additionalFields) const {
     std::ofstream out(filename);
     if (! out)
-        return false;
+        throw FileError("Could not write to the given file");;
 
     size_t n = triangulation().size();
 
@@ -222,16 +222,13 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
         }
         out << std::endl;
     }
-
-    // All done!
-    return true;
 }
 
-bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
+void NormalSurfaces::saveCSVEdgeWeight(const char* filename,
         Flags<SurfaceExport> additionalFields) const {
     std::ofstream out(filename);
     if (! out)
-        return false;
+        throw FileError("Could not write to the given file");;
 
     size_t n = triangulation().countEdges();
 
@@ -257,9 +254,6 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
         }
         out << std::endl;
     }
-
-    // All done!
-    return true;
 }
 
 } // namespace regina

@@ -993,10 +993,15 @@ void SnapPeaTriangulation::snapPea(std::ostream& out) const {
     free(file);
 }
 
-bool SnapPeaTriangulation::saveSnapPea(const char* filename) const {
-    if (! (data_ && filename && *filename))
-        return false;
-    return regina::snappea::write_triangulation(data_, filename);
+void SnapPeaTriangulation::saveSnapPea(const char* filename) const {
+    if (! data_)
+        throw SnapPeaIsNull("SnapPeaTriangulation::saveSnapPea");
+
+    if (! (filename && *filename))
+        throw FileError("The given filename is null or empty");
+
+    if (! regina::snappea::write_triangulation(data_, filename))
+        throw FileError("Could not write SnapPea data to the given file");
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(

@@ -30,6 +30,7 @@
 
 // Regina core includes:
 #include "packet/attachment.h"
+#include "utilities/exception.h"
 
 // UI includes:
 #include "attachmentui.h"
@@ -142,8 +143,9 @@ void AttachmentUI::save() {
     if (file.isEmpty())
         return;
 
-    if (! attachment->save(
-            static_cast<const char*>(QFile::encodeName(file)))) {
+    try {
+        attachment->save(static_cast<const char*>(QFile::encodeName(file)));
+    } catch (const regina::FileError&) {
         ReginaSupport::warn(ui, QObject::tr("I could not save the attachment."),
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
@@ -173,8 +175,10 @@ void AttachmentUI::view() {
         return;
     }
 
-    if (! attachment->save(static_cast<const char*>(QFile::encodeName(
-            temp->localFileName())))) {
+    try {
+        attachment->save(
+            static_cast<const char*>(QFile::encodeName(temp->localFileName())));
+    } catch (const regina::FileError&) {
         ReginaSupport::warn(ui, tr("<qt>An error occurred whilst "
             "writing the attachment to the temporary file <i>%1</i>.</qt>").
             arg(temp->localFileName()));

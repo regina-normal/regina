@@ -2269,18 +2269,23 @@ class SnapPeaTriangulation :
          * SnapPea-specific information that Regina does not use (e.g.,
          * peripheral curves).
          *
-         * If this is a null triangulation, then the file will not be
-         * written and this routine will return \c false.
+         * If this is a null triangulation, or if an error occurs whilst
+         * writing the file, then this routine will throw an exception.
+         * This is a change in behaviour as of Regina 8.0: older versions of
+         * Regina (≤ 7.x) returned `false` instead.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The _contents_ of the file will be written using UTF-8.
          *
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
+         *
+         * \exception FileError An error occurred whilst writing the file.
+         *
          * \param filename the name of the SnapPea file to which to write.
-         * \return \c true if and only if the file was successfully written.
          */
-        bool saveSnapPea(const char* filename) const;
+        void saveSnapPea(const char* filename) const;
 
         /*@}*/
         /**
