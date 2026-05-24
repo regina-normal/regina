@@ -727,7 +727,7 @@ bool ReginaMain::saveFile() {
 
     try {
         writeTree->save(static_cast<const char*>(QFile::encodeName(localFile)));
-    } catch (regina::FileError&) {
+    } catch (const regina::FileError&) {
         ReginaSupport::warn(this,
             tr("<qt>I could not save the data file <tt>%1</tt>.</qt>").
                 arg(localFile.toHtmlEscaped()),

@@ -286,18 +286,18 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
     }
 }
 
-bool Triangulation<3>::saveSnapPea(const char* filename) const {
+void Triangulation<3>::saveSnapPea(const char* filename) const {
     // Sanity checks.
     // Although snapPea() will also check these conditions, we need to
     // check them now so if we fail then we do so before the file is opened.
     if ((! isValid()) || hasBoundaryTriangles() || simplices_.empty())
-        return false;
+        throw NotImplemented("SnapPea exports are only available "
+            "for valid, non-empty triangulations with no boundary triangles");
 
     std::ofstream out(filename);
     if (!out)
-        return false;
+        throw FileError("Could not write to the given file");
     snapPea(out);
-    return true;
 }
 
 std::string Triangulation<3>::recogniser() const {
@@ -354,19 +354,19 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
     out << "end" << std::endl;
 }
 
-bool Triangulation<3>::saveRecogniser(const char* filename) const {
+void Triangulation<3>::saveRecogniser(const char* filename) const {
     // Sanity checks.
     // Although recogniser() will also check these conditions, we need to
     // check them now so if we fail then we do so before the file is opened.
     if ((! isValid()) || hasBoundaryTriangles())
-        return false;
+        throw NotImplemented("Recogniser exports are only available "
+            "for valid triangulations with no boundary triangles");
 
     // Write to file or stdout as appropriate.
     std::ofstream out(filename);
     if (! out)
-        return false;
+        throw FileError("Could not write to the given file");
     recogniser(out);
-    return true;
 }
 
 SnapPeaTriangulation* Triangulation<3>::isSnapPea() {

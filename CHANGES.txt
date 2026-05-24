@@ -443,8 +443,9 @@ Version 8.0  [ TODO ]
               The exception to this rule: irreducibility (a precondition of
               hasCompressingDisc()) is expensive to test, and so remains an
               untested precondition of knowsCompressingDisc() also.
-            - The fillTorus() routines now throw exceptions on error, and no
-              longer return booleans (which used to indicate success/failure).
+            - Routines fillTorus(), saveRecogniser(), saveRecognizer() and
+              saveSnapPea() now throw exceptions on error, and no longer return
+              booleans (which used to indicate success or failure).
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.

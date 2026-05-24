@@ -4630,18 +4630,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * SnapPea cannot represent triangulations that are empty, invalid,
          * or contain boundary triangles.  If any of these conditions is
-         * true then the file will not be written and this routine will
-         * return \c false.
+         * true, or if an error occurs whilst writing the file, then this
+         * routine will throw an exception.  This is a change of behaviour
+         * as of Regina 8.0: older versions of Regina (≤ 7.x) returned `false`
+         * instead.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The _contents_ of the file will be written using UTF-8.
          *
+         * \exception NotImplemented The triangulation is invalid, empty,
+         * and/or contains boundary triangles.
+         *
+         * \exception FileError An error occurred whilst writing the file.
+         *
          * \param filename the name of the SnapPea file to which to write.
-         * \return \c true if and only if the file was successfully written.
          */
-        bool saveSnapPea(const char* filename) const;
+        void saveSnapPea(const char* filename) const;
 
         /**
          * Returns a string that expresses this triangulation in
@@ -4719,35 +4725,49 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Recogniser exports are currently not available for triangulations
          * that are invalid or contain boundary triangles.  If either of these
-         * conditions is true then the file will not be written, and
-         * this routine will return \c false.
+         * conditions is true, or if an error occurs whilst writing the file,
+         * then this routine will throw an exception.  This is a change of
+         * behaviour as of Regina 8.0: older versions of Regina (≤ 7.x)
+         * returned `false` instead.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The _contents_ of the file will be written using UTF-8.
          *
+         * \exception NotImplemented The triangulation is invalid and/or
+         * contains boundary triangles.
+         *
+         * \exception FileError An error occurred whilst writing the file.
+         *
          * \param filename the name of the Recogniser file to which to write.
-         * \return \c true if and only if the file was successfully written.
          */
-        bool saveRecogniser(const char* filename) const;
+        void saveRecogniser(const char* filename) const;
 
         /**
          * A synonym for saveRecogniser().  This writes this triangulation to
          * the given file in Matveev's 3-manifold recogniser format.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true, or if an error occurs whilst writing the file,
+         * then this routine will throw an exception.  This is a change of
+         * behaviour as of Regina 8.0: older versions of Regina (≤ 7.x)
+         * returned `false` instead.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The _contents_ of the file will be written using UTF-8.
          *
+         * \exception NotImplemented The triangulation is invalid and/or
+         * contains boundary triangles.
+         *
+         * \exception FileError An error occurred whilst writing the file.
+         *
          * \param filename the name of the Recogniser file to which to write.
-         * \return \c true if and only if the file was successfully written.
          */
-        bool saveRecognizer(const char* filename) const;
+        void saveRecognizer(const char* filename) const;
 
         /*@}*/
         /**
@@ -5791,8 +5811,8 @@ inline void Triangulation<3>::recognizer(std::ostream& out) const {
     recogniser(out);
 }
 
-inline bool Triangulation<3>::saveRecognizer(const char* filename) const {
-    return saveRecogniser(filename);
+inline void Triangulation<3>::saveRecognizer(const char* filename) const {
+    saveRecogniser(filename);
 }
 
 } // namespace regina

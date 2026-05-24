@@ -62,8 +62,11 @@ bool RecogniserHandler::exportData(const regina::Packet& data,
                 "to the 3-manifold recogniser format."));
         return false;
     }
-    if (! tri.saveRecogniser(
-            static_cast<const char*>(QFile::encodeName(filename)))) {
+    try {
+        tri.saveRecogniser(
+            static_cast<const char*>(QFile::encodeName(filename)));
+        return true;
+    } catch (const regina::FileError&) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."),
             QObject::tr("<qt>An unknown error occurred, probably related "
@@ -71,6 +74,5 @@ bool RecogniserHandler::exportData(const regina::Packet& data,
             "to the file <tt>%1</tt>.</qt>").arg(filename.toHtmlEscaped()));
         return false;
     }
-    return true;
 }
 
