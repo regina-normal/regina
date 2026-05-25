@@ -64,10 +64,10 @@ R"doc(Determines if the two given tetrahedra together form a snapped
 2-sphere.
 
 Even though SnappedTwoSphere is a two-dimensional class and so does
-not inherit from StandardTriangulation, this routine nevertheless
+not inherit from StandardSubcomplex<3>, this routine nevertheless
 returns by (smart) pointer for consistency with the
-StandardTriangulation recognition routines (which use pointers because
-of the polymorphic StandardTriangulation class hierarchy).
+StandardSubcomplex<3> recognition routines (which use pointers because
+of the polymorphic StandardSubcomplex class hierarchy).
 
 Precondition:
     The two given tetrahedra are distinct.
@@ -92,10 +92,10 @@ returned will be clones of the original 3-balls, not the original
 3-balls themselves.
 
 Even though SnappedTwoSphere is a two-dimensional class and so does
-not inherit from StandardTriangulation, this routine nevertheless
+not inherit from StandardSubcomplex<3>, this routine nevertheless
 returns by (smart) pointer for consistency with the
-StandardTriangulation recognition routines (which use pointers because
-of the polymorphic StandardTriangulation class hierarchy).
+StandardSubcomplex<3> recognition routines (which use pointers because
+of the polymorphic StandardSubcomplex class hierarchy).
 
 Precondition:
     The two given snapped 3-balls use distinct tetrahedra.

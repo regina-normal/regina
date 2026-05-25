@@ -40,7 +40,7 @@ using regina::SnapPeaCensusTri;
 void addSnapPeaCensusTri(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnapPeaCensusTri)
 
-    auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
+    auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardSubcomplex<3>>
             (m, "SnapPeaCensusTri", rdoc::__class)
         .def(pybind11::init<const SnapPeaCensusTri&>(), rdoc::__copy)
         .def("swap", &SnapPeaCensusTri::swap, rdoc::swap)

@@ -53,13 +53,13 @@ void addSnapPeaCensusTri(pybind11::module_& m);
 void addSnappedBall(pybind11::module_& m);
 void addSnappedTwoSphere(pybind11::module_& m);
 void addSpiralSolidTorus(pybind11::module_& m);
-void addStandardTriangulation(pybind11::module_& m);
+void addStandardSubcomplex(pybind11::module_& m);
 void addTriSolidTorus(pybind11::module_& m);
 void addTrivialTri(pybind11::module_& m);
 void addTxICore(pybind11::module_& m);
 
 void addSubcomplexClasses(pybind11::module_& m) {
-    addStandardTriangulation(m);
+    addStandardSubcomplex(m);
     addAugTriSolidTorus(m);
     addLayeredChain(m);
     addLayeredChainPair(m);

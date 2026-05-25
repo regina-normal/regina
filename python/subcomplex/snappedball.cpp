@@ -40,7 +40,7 @@ using regina::SnappedBall;
 void addSnappedBall(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnappedBall)
 
-    auto c = pybind11::class_<SnappedBall, regina::StandardTriangulation>
+    auto c = pybind11::class_<SnappedBall, regina::StandardSubcomplex<3>>
             (m, "SnappedBall", rdoc::__class)
         .def(pybind11::init<const SnappedBall&>(), rdoc::__copy)
         .def("swap", &SnappedBall::swap, rdoc::swap)

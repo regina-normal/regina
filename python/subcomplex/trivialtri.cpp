@@ -40,7 +40,7 @@ using regina::TrivialTri;
 void addTrivialTri(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TrivialTri)
 
-    auto c = pybind11::class_<TrivialTri, regina::StandardTriangulation>(
+    auto c = pybind11::class_<TrivialTri, regina::StandardSubcomplex<3>>(
             m, "TrivialTri", rdoc::__class)
         .def(pybind11::init<const TrivialTri&>(), rdoc::__copy)
         .def("swap", &TrivialTri::swap, rdoc::swap)

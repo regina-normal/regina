@@ -24,15 +24,15 @@ degenerate (2,1,1) mobius strip and layer over the mobius strip
 boundary (including the minimal (1,1,0) triangulation) are not
 described by this class.
 
-All optional StandardTriangulation routines are implemented for this
+All optional StandardSubcomplex routines are implemented for this
 class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
 as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
-StandardTriangulation subclasses. Note that the only way to create
-these objects (aside from copying or moving) is via the static member
+StandardSubcomplex subclasses. Note that the only way to create these
+objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
 // Docstring regina::python::doc::LayeredSolidTorus::__copy
@@ -54,10 +54,10 @@ presence of redundant layerings (i.e., consecutive layerings that
 topologically cancel each other out).
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass, as
-noted above, is weaker than combinatorial isomorphism).
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass, as noted
+above, is weaker than combinatorial isomorphism).
 
 Parameter ``other``:
     the layered solid torus to compare with this.
@@ -194,8 +194,8 @@ or gluings. That is, the two boundary triangles of the layered solid
 torus must in fact be boundary triangles of the component.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``comp``:
     the triangulation component to examine.
@@ -216,8 +216,8 @@ tetrahedron furthest from the boundary of the torus, i.e. the
 tetrahedron glued to itself with a twist.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tet``:
     the tetrahedron to examine as a potential base.
@@ -242,8 +242,8 @@ extend this smaller layered solid torus to a larger layered solid
 torus.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tet``:
     the tetrahedron to examine as a potential top level of a layered

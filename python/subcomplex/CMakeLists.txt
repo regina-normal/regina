@@ -25,7 +25,7 @@ SET ( FILES
   snappedball.cpp
   snappedtwosphere.cpp
   spiralsolidtorus.cpp
-  standardtri.cpp
+  standardsubcomplex.cpp
   trisolidtorus.cpp
   trivialtri.cpp
   txicore.cpp

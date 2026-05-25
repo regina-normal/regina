@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -28,44 +28,23 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include "manifold/sfs.h"
-#include "subcomplex/augtrisolidtorus.h"
-#include "triangulation/dim3.h"
-#include "../helpers.h"
-#include "../docstrings/subcomplex/augtrisolidtorus.h"
+#include "subcomplex/standardsubcomplex.h"
 
-using regina::AugTriSolidTorus;
+namespace regina {
 
-void addAugTriSolidTorus(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(AugTriSolidTorus)
-
-    auto c = pybind11::class_<AugTriSolidTorus, regina::StandardSubcomplex<3>>
-            (m, "AugTriSolidTorus", rdoc::__class)
-        .def(pybind11::init<const AugTriSolidTorus&>(), rdoc::__copy)
-        .def("swap", &AugTriSolidTorus::swap, rdoc::swap)
-        .def("core", &AugTriSolidTorus::core,
-            pybind11::return_value_policy::reference_internal, rdoc::core)
-        .def("augTorus", &AugTriSolidTorus::augTorus,
-            pybind11::return_value_policy::reference_internal, rdoc::augTorus)
-        .def("edgeGroupRoles", &AugTriSolidTorus::edgeGroupRoles,
-            rdoc::edgeGroupRoles)
-        .def("chainLength", &AugTriSolidTorus::chainLength, rdoc::chainLength)
-        .def("chainType", &AugTriSolidTorus::chainType, rdoc::chainType)
-        .def("torusAnnulus", &AugTriSolidTorus::torusAnnulus,
-            rdoc::torusAnnulus)
-        .def("hasLayeredChain", &AugTriSolidTorus::hasLayeredChain,
-            rdoc::hasLayeredChain)
-        .def_static("recognise", &AugTriSolidTorus::recognise, rdoc::recognise)
-        .def_readonly_static("CHAIN_NONE", &AugTriSolidTorus::CHAIN_NONE)
-        .def_readonly_static("CHAIN_MAJOR", &AugTriSolidTorus::CHAIN_MAJOR)
-        .def_readonly_static("CHAIN_AXIS", &AugTriSolidTorus::CHAIN_AXIS)
-    ;
-    regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output_rich(c);
-    regina::python::add_global_swap<AugTriSolidTorus, rdoc>(m);
-
-    RDOC_SCOPE_END
+template <>
+std::unique_ptr<StandardSubcomplex<4>> StandardSubcomplex<4>::recognise(
+        Component<4>* comp) {
+    // For now, a placeholder.
+    return nullptr;
 }
+
+template <>
+std::unique_ptr<StandardSubcomplex<4>> StandardSubcomplex<4>::recognise(
+        const Triangulation<4>& tri) {
+    // Again, a placeholder.
+    return nullptr;
+}
+
+} // namespace regina
 

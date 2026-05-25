@@ -584,7 +584,9 @@ SpatialLink : class -> EqualityType.ByValue
 SpiralSolidTorus : class -> EqualityType.ByValue
 StandardCppInteger : concept
 StandardStringifiable : concept
-StandardTriangulation : class -> EqualityType.NeverInstantiated
+StandardSubcomplex3 : class -> EqualityType.NeverInstantiated
+StandardSubcomplex4 : class -> EqualityType.NeverInstantiated
+StandardTriangulation : alias -> StandardSubcomplex3
 StrandRef : class -> EqualityType.ByValue
 StrictWeakOrder : concept
 Stringifiable : concept

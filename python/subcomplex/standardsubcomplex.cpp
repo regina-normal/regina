@@ -32,37 +32,45 @@
 #include <pybind11/stl.h>
 #include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 #include "../helpers.h"
-#include "../docstrings/subcomplex/standardtri.h"
+#include "../docstrings/subcomplex/standardsubcomplex.h"
 
 using pybind11::overload_cast;
-using regina::StandardTriangulation;
 
-void addStandardTriangulation(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(StandardTriangulation)
+template <int dim> requires (dim == 3 || dim == 4)
+void addStandardSubcomplexDim(pybind11::module_& m, const char* name) {
+    using Subcomplex = regina::StandardSubcomplex<dim>;
 
-    auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation",
-            rdoc::__class)
-        .def("name", &StandardTriangulation::name, rdoc::name)
-        .def("texName", &StandardTriangulation::texName, rdoc::texName)
-        .def("manifold", &StandardTriangulation::manifold, rdoc::manifold)
-        .def("homology", &StandardTriangulation::homology, rdoc::homology)
+    RDOC_SCOPE_BEGIN(StandardSubcomplex)
+
+    auto c = pybind11::class_<Subcomplex>(m, name, rdoc::__class)
+        .def("name", &Subcomplex::name, rdoc::name)
+        .def("texName", &Subcomplex::texName, rdoc::texName)
+        .def("manifold", &Subcomplex::manifold, rdoc::manifold)
+        .def("homology", &Subcomplex::homology, rdoc::homology)
+        .def_static("recognise", overload_cast<regina::Component<dim>*>(
+            &Subcomplex::recognise), rdoc::recognise)
         .def_static("recognise",
-            overload_cast<regina::Component<3>*>(
-            &StandardTriangulation::recognise), rdoc::recognise)
-        .def_static("recognise",
-            overload_cast<const regina::Triangulation<3>&>(
-            &StandardTriangulation::recognise), rdoc::recognise_2)
+            overload_cast<const regina::Triangulation<dim>&>(
+            &Subcomplex::recognise), rdoc::recognise_2)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
-    // Also leave the equality operators for subclasses to wrap, since
-    // each subclass of StandardTriangulation provides its own custom
-    // == and != operators.
+    // Also leave the equality operators for subclasses to wrap, since each
+    // subclass of StandardSubcomplex provides its own custom ==, != operators.
     regina::python::no_eq_abstract(c);
 
     RDOC_SCOPE_END
+}
+
+void addStandardSubcomplex(pybind11::module_& m) {
+    addStandardSubcomplexDim<3>(m, "StandardSubcomplex3");
+    addStandardSubcomplexDim<4>(m, "StandardSubcomplex4");
+
+    // Deprecated type aliases:
+    m.attr("StandardTriangulation") = m.attr("StandardSubcomplex3");
 }
 

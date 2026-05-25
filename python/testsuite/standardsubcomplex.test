@@ -74,7 +74,7 @@ def describe(t, name):
 	print(name + ':')
 	print(prefix(1) + 'NeoSig: ' + t.neoSig())
 	
-	std = StandardTriangulation.recognise(t)
+	std = StandardSubcomplex3.recognise(t)
 	if std:
 		mfd = std.manifold()
 		if mfd:

@@ -40,7 +40,7 @@ using regina::TriSolidTorus;
 void addTriSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TriSolidTorus)
 
-    auto c = pybind11::class_<TriSolidTorus, regina::StandardTriangulation>
+    auto c = pybind11::class_<TriSolidTorus, regina::StandardSubcomplex<3>>
             (m, "TriSolidTorus", rdoc::__class)
         .def(pybind11::init<const TriSolidTorus&>(), rdoc::__copy)
         .def("swap", &TriSolidTorus::swap, rdoc::swap)

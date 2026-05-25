@@ -45,15 +45,15 @@ does not use any faces from tetrahedron *i*.
 Note that all three tetrahedra in the triangular solid torus must be
 distinct.
 
-All optional StandardTriangulation routines are implemented for this
+All optional StandardSubcomplex routines are implemented for this
 class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
 as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
-StandardTriangulation subclasses. Note that the only way to create
-these objects (aside from copying or moving) is via the static member
+StandardSubcomplex subclasses. Note that the only way to create these
+objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
 // Docstring regina::python::doc::TriSolidTorus::__copy
@@ -64,7 +64,7 @@ static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 specific presentation of a triangular solid torus.
 
-Unlike the parameterised subclasses of StandardTriangulation, this
+Unlike the parameterised subclasses of StandardSubcomplex<3>, this
 TriSolidTorus subclass represents a fixed structure, and so its
 comparisons test not for the _structure_ but the precise _location_ of
 this structure within the enclosing triangulation.
@@ -199,8 +199,8 @@ they may be identified with each other or with faces of other
 tetrahedra.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tet``:
     the tetrahedron to examine.

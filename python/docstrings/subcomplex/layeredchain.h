@@ -47,14 +47,14 @@ Note that for the purposes of manifold() and homology(), a layered
 chain containing only one tetrahedron will be considered as a
 standalone tetrahedron that forms a 3-ball (and not a solid torus).
 
-All optional StandardTriangulation routines are implemented for this
+All optional StandardSubcomplex routines are implemented for this
 class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
 as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
-StandardTriangulation subclasses.)doc";
+StandardSubcomplex subclasses.)doc";
 
 // Docstring regina::python::doc::LayeredChain::__copy
 static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
@@ -68,10 +68,10 @@ Specifically, two layered chains will compare as equal if and only if
 they have the same index (i.e., the same number of tetrahedra).
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass means
-they describe isomorphic structures).
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass means they
+describe isomorphic structures).
 
 Parameter ``other``:
     the structure with which this will be compared.

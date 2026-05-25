@@ -29,7 +29,7 @@
  **************************************************************************/
 
 #include "split/signature.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/example3.h"
 
 #include "testhelper.h"
@@ -102,7 +102,7 @@ static void verifyDecomp(const Triangulation<3>& tri, const char* name,
 
             foundH1.addGroup(summand.homology());
 
-            auto stdTri = regina::StandardTriangulation::recognise(summand);
+            auto stdTri = regina::StandardSubcomplex<3>::recognise(summand);
             EXPECT_TRUE(stdTri);
             if (stdTri) {
                 auto stdMfd = stdTri->manifold();

@@ -41,16 +41,16 @@ Note that (unless a (1,1,0) layered solid torus is used with the 0
 edge glued to an axis edge) the resulting space will be a Seifert
 fibred space over the 2-sphere with at most three exceptional fibres.
 
-Of the optional StandardTriangulation routines, manifold() is
-implemented for most augmented triangular solid tori and homology() is
-not implemented at all.
+Of the optional StandardSubcomplex routines, manifold() is implemented
+for most augmented triangular solid tori and homology() is not
+implemented at all.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
 as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
-StandardTriangulation subclasses. Note that the only way to create
-these objects (aside from copying or moving) is via the static member
+StandardSubcomplex subclasses. Note that the only way to create these
+objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
 // Docstring regina::python::doc::AugTriSolidTorus::__copy
@@ -73,10 +73,10 @@ Specifically, two structures will compare as equal if and only if:
   attached to the same numbered annulus.
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass is more
+specific than combinatorial isomorphism, since this test does not
 account for the many symmetries in an augmented triangular solid
 torus).
 
@@ -184,8 +184,8 @@ R"doc(Determines if the given triangulation component is an augmented
 triangular solid torus.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``comp``:
     the triangulation component to examine.

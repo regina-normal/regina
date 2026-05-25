@@ -38,7 +38,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -69,18 +69,18 @@ namespace regina {
  * The \a length of the layered loop is the number of tetrahedra it
  * contains.  A layered loop must contain at least one tetrahedron.
  *
- * All optional StandardTriangulation routines are implemented for this class.
+ * All optional StandardSubcomplex routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
  *
  * \ingroup subcomplex
  */
-class LayeredLoop : public StandardTriangulation {
+class LayeredLoop : public StandardSubcomplex<3> {
     private:
         size_t length_;
             /**< The length of this layered loop. */
@@ -145,7 +145,7 @@ class LayeredLoop : public StandardTriangulation {
          * untwisted.
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
@@ -160,8 +160,8 @@ class LayeredLoop : public StandardTriangulation {
          * Determines if the given triangulation component is a layered loop.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param comp the triangulation component to examine.
          * \return a structure containing details of the layered loop, or

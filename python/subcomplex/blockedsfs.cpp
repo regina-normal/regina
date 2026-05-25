@@ -41,7 +41,7 @@ using regina::BlockedSFS;
 void addBlockedSFS(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BlockedSFS)
 
-    auto c = pybind11::class_<BlockedSFS, regina::StandardTriangulation>(
+    auto c = pybind11::class_<BlockedSFS, regina::StandardSubcomplex<3>>(
             m, "BlockedSFS", rdoc::__class)
         .def(pybind11::init<const BlockedSFS&>(), rdoc::__copy)
         .def("swap", &BlockedSFS::swap, rdoc::swap)

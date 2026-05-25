@@ -40,7 +40,7 @@ using regina::SpiralSolidTorus;
 void addSpiralSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SpiralSolidTorus)
 
-    auto c = pybind11::class_<SpiralSolidTorus, regina::StandardTriangulation>
+    auto c = pybind11::class_<SpiralSolidTorus, regina::StandardSubcomplex<3>>
             (m, "SpiralSolidTorus", rdoc::__class)
         .def(pybind11::init<const SpiralSolidTorus&>(), rdoc::__copy)
         .def("swap", &SpiralSolidTorus::swap, rdoc::swap)

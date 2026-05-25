@@ -34,7 +34,7 @@
 #include "manifold/simplesurfacebundle.h"
 #include "snappea/snappeatriangulation.h"
 #include "split/signature.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
@@ -1582,7 +1582,7 @@ static void verifySimplificationName(const TriangulationTest<3>::TestCase& test,
     EXPECT_EQ(t.size(), expectSize);
     EXPECT_EQ(t.isOriented(), test.tri.isOrientable());
 
-    auto std = regina::StandardTriangulation::recognise(t);
+    auto std = regina::StandardSubcomplex<3>::recognise(t);
     if (std)
         EXPECT_EQ(std->name(), expectName);
     else

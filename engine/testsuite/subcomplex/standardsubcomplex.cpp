@@ -29,20 +29,20 @@
  **************************************************************************/
 
 #include "manifold/manifold.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim3.h"
 
 #include "testhelper.h"
 
 using regina::Manifold;
-using regina::StandardTriangulation;
+using regina::StandardSubcomplex;
 using regina::Triangulation;
 
 static void testRecognition(const char* dehydration,
         const char* triName, const char* mfdName) {
     SCOPED_TRACE_CSTRING(triName);
 
-    auto std = StandardTriangulation::recognise(
+    auto std = StandardSubcomplex<3>::recognise(
         Triangulation<3>::rehydrate(dehydration));
     ASSERT_NE(std, nullptr);
     EXPECT_EQ(std->name(), triName);
@@ -56,7 +56,7 @@ void testRecognitionSig(const char* isoSig,
         const char* triName, const char* mfdName) {
     SCOPED_TRACE_CSTRING(triName);
 
-    auto std = StandardTriangulation::recognise(
+    auto std = StandardSubcomplex<3>::recognise(
         Triangulation<3>::fromSig(isoSig));
     ASSERT_NE(std, nullptr);
     EXPECT_EQ(std->name(), triName);
@@ -66,7 +66,7 @@ void testRecognitionSig(const char* isoSig,
     EXPECT_EQ(mfd->name(), mfdName);
 }
 
-TEST(StandardTriangulationTest, recognition) {
+TEST(StandardSubcomplex3Test, recognition) {
     // Closed orientable triangulations:
     testRecognition("baaaawr", "C(1)", "S3");
     testRecognition("baaaawf", "L(1,0)", "S3");

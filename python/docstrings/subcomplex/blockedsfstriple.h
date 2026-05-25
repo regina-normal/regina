@@ -92,8 +92,8 @@ enough information to uniquely identify the triangulation, since this
 essentially requires 2-dimensional assemblings of saturated blocks.
 For full details, writeTextLong() may be used instead.
 
-The optional StandardTriangulation routine manifold() is implemented
-for this class, but homology() is not.
+The optional StandardSubcomplex routine manifold() is implemented for
+this class, but homology() is not.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -121,10 +121,10 @@ comparison operators), presented in the same order, and with their
 torus boundaries joined using the same pair of 2-by-2 matrices.
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass is more
+specific than combinatorial isomorphism, since this test does not
 account for the many symmetries in a blocked Seifert fibred space).
 
 Parameter ``other``:
@@ -198,8 +198,8 @@ R"doc(Determines if the given triangulation is a blocked sequence of three
 Seifert fibred spaces, as described in the class notes above.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tri``:
     the triangulation to examine.

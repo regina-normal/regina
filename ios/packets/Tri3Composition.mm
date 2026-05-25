@@ -55,7 +55,7 @@
 #import "subcomplex/snappedball.h"
 #import "subcomplex/snappedtwosphere.h"
 #import "subcomplex/spiralsolidtorus.h"
-#import "subcomplex/standardtri.h"
+#import "subcomplex/standardsubcomplex.h"
 #import "subcomplex/txicore.h"
 #import "triangulation/dim3.h"
 
@@ -125,7 +125,7 @@
 
     self.isosig.text = @(self.packet->isoSig().c_str());
     
-    auto stdTri = regina::StandardTriangulation::recognise(self.packet);
+    auto stdTri = regina::StandardSubcomplex<3>::recognise(self.packet);
     if (stdTri)
         self.standard.text = @(stdTri->name().c_str());
     else

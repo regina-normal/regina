@@ -40,7 +40,7 @@ using regina::LayeredSolidTorus;
 void addLayeredSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredSolidTorus)
 
-    auto c = pybind11::class_<LayeredSolidTorus, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredSolidTorus, regina::StandardSubcomplex<3>>
             (m, "LayeredSolidTorus", rdoc::__class)
         .def(pybind11::init<const LayeredSolidTorus&>(), rdoc::__copy)
         .def("swap", &LayeredSolidTorus::swap, rdoc::swap)

@@ -51,16 +51,16 @@ plug must all point from one common tip of the plug to the other
 interior triangle). The gluings must also be made so that the
 resulting triangulation component is orientable.
 
-Of the optional StandardTriangulation routines, manifold() is
-implemented for most plugged triangular solid tori and homology() is
-not implemented at all.
+Of the optional StandardSubcomplex routines, manifold() is implemented
+for most plugged triangular solid tori and homology() is not
+implemented at all.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
 as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
-StandardTriangulation subclasses. Note that the only way to create
-these objects (aside from copying or moving) is via the static member
+StandardSubcomplex subclasses. Note that the only way to create these
+objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
 // Docstring regina::python::doc::PlugTriSolidTorus::__copy
@@ -77,10 +77,10 @@ numbered annuli either both have no chains attached or both have
 chains of the same length attached in the same (major/minor) manner.
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass is more
+specific than combinatorial isomorphism, since this test does not
 account for the many symmetries in a plugged triangular solid torus).
 
 Parameter ``other``:
@@ -161,8 +161,8 @@ R"doc(Determines if the given triangulation component is a plugged
 triangular solid torus.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``comp``:
     the triangulation component to examine.

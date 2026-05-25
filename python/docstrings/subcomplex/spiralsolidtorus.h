@@ -48,7 +48,7 @@ Note also that class TriSolidTorus represents a spiralled solid torus
 with precisely three tetrahedra. A spiralled solid torus with only one
 tetrahedron is in fact a (1,2,3) layered solid torus.
 
-All optional StandardTriangulation routines are implemented for this
+All optional StandardSubcomplex routines are implemented for this
 class.
 
 This class implements C++ move semantics and adheres to the C++
@@ -74,10 +74,10 @@ Specifically, two spiralled solid tori will compare as equal if and
 only if they have the same size (i.e., the same number of tetrahedra).
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass means
-they describe isomorphic structures).
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass means they
+describe isomorphic structures).
 
 Parameter ``other``:
     the structure with which this will be compared.
@@ -147,8 +147,8 @@ be boundary triangles within the overall triangulation, i.e., they may
 be identified with each other or with triangles of other tetrahedra.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tet``:
     the tetrahedron to examine.

@@ -28,7 +28,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
 #include "subcomplex/augtrisolidtorus.h"
 #include "subcomplex/blockedsfs.h"
 #include "subcomplex/blockedsfsloop.h"
@@ -46,24 +45,8 @@
 
 namespace regina {
 
-AbelianGroup StandardTriangulation::homology() const {
-    throw NotImplemented("The homology() routine is currently not "
-        "implemented for this particular standard triangulation");
-}
-
-std::string StandardTriangulation::name() const {
-    std::ostringstream ans;
-    writeName(ans);
-    return ans.str();
-}
-
-std::string StandardTriangulation::texName() const {
-    std::ostringstream ans;
-    writeTeXName(ans);
-    return ans.str();
-}
-
-std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
+template <>
+std::unique_ptr<StandardSubcomplex<3>> StandardSubcomplex<3>::recognise(
         Component<3>* comp) {
     if (auto ans = TrivialTri::recognise(comp))
         return ans;
@@ -85,7 +68,8 @@ std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
     return nullptr;
 }
 
-std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
+template <>
+std::unique_ptr<StandardSubcomplex<3>> StandardSubcomplex<3>::recognise(
         const Triangulation<3>& tri) {
     if (tri.countComponents() != 1)
         return nullptr;

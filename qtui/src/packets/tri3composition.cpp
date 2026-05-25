@@ -49,7 +49,7 @@
 #include "subcomplex/snappedball.h"
 #include "subcomplex/snappedtwosphere.h"
 #include "subcomplex/spiralsolidtorus.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "subcomplex/txicore.h"
 #include "triangulation/dim3.h"
 
@@ -265,7 +265,7 @@ void Tri3CompositionUI::refresh() {
     lastComponent = nullptr;
 
     // Try to identify the triangulation.
-    standard = regina::StandardTriangulation::recognise(*tri_);
+    standard = regina::StandardSubcomplex<3>::recognise(*tri_);
     if (standard) {
         standardTri->setText(standard->name().c_str());
         standardTri->setEnabled(true);

@@ -164,7 +164,7 @@
 #include "../docstrings/subcomplex/snappedball.h"
 #include "../docstrings/subcomplex/snappedtwosphere.h"
 #include "../docstrings/subcomplex/spiralsolidtorus.h"
-#include "../docstrings/subcomplex/standardtri.h"
+#include "../docstrings/subcomplex/standardsubcomplex.h"
 #include "../docstrings/subcomplex/trisolidtorus.h"
 #include "../docstrings/subcomplex/trivialtri.h"
 #include "../docstrings/subcomplex/txicore.h"

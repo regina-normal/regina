@@ -194,7 +194,7 @@ must be presented in the same order with the same horizontal/vertical
 reflections and joined together in the same way.
 
 Like the comparison operators for most parameterised subclasses of
-StandardTriangulation, it does not matter how the constituent
+StandardSubcomplex<3>, it does not matter how the constituent
 tetrahedra and/or their vertices are numbered. However, this test is
 more specific than combinatorial isomorphism of the underlying
 subcomplex of the triangulation, since it does not account for the

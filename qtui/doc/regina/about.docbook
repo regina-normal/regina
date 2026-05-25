@@ -275,8 +275,7 @@ True
       <literal>std::optional</literal>.
      </para></listitem>
      <listitem><para>
-      When returning polymorphic objects (such as
-      <literal>Packet</literal> or <literal>StandardTriangulation</literal>),
+      When returning polymorphic objects (such as <literal>Packet</literal>),
       you cannot avoid returning by pointer since the exact type is not known
       at compile time.  In such cases, &regina; now returns a smart pointer
       (typically <literal>std::shared_ptr</literal> for packets and

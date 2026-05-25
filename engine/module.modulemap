@@ -104,7 +104,7 @@ module ReginaEngine {
     header "subcomplex/snappedball.h"
     header "subcomplex/snappedtwosphere.h"
     header "subcomplex/spiralsolidtorus.h"
-    header "subcomplex/standardtri.h"
+    header "subcomplex/standardsubcomplex.h"
     header "subcomplex/trisolidtorus.h"
     header "subcomplex/trivialtri.h"
     header "subcomplex/txicore.h"

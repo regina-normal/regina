@@ -42,7 +42,7 @@ using regina::PluggedTorusBundle;
 void addPluggedTorusBundle(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PluggedTorusBundle)
 
-    auto c = pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
+    auto c = pybind11::class_<PluggedTorusBundle, regina::StandardSubcomplex<3>>
             (m, "PluggedTorusBundle", rdoc::__class)
         .def(pybind11::init<const PluggedTorusBundle&>(), rdoc::__copy)
         .def("swap", &PluggedTorusBundle::swap, rdoc::swap)

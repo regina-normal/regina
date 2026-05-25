@@ -41,7 +41,7 @@ using regina::BlockedSFSLoop;
 void addBlockedSFSLoop(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BlockedSFSLoop)
 
-    auto c = pybind11::class_<BlockedSFSLoop, regina::StandardTriangulation>(
+    auto c = pybind11::class_<BlockedSFSLoop, regina::StandardSubcomplex<3>>(
             m, "BlockedSFSLoop", rdoc::__class)
         .def(pybind11::init<const BlockedSFSLoop&>(), rdoc::__copy)
         .def("swap", &BlockedSFSLoop::swap, rdoc::swap)

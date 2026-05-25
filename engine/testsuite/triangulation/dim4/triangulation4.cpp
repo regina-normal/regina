@@ -30,7 +30,7 @@
 
 #include "algebra/intersectionform.h"
 #include "manifold/manifold.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
@@ -487,7 +487,7 @@ static void verifyBoundaryManifolds(const TriangulationTest<4>::TestCase& test,
         Triangulation<3> t = bc->build();
         t.simplify();
 
-        if (auto std = regina::StandardTriangulation::recognise(t)) {
+        if (auto std = regina::StandardSubcomplex<3>::recognise(t)) {
             if (auto mfd = std->manifold())
                 EXPECT_EQ(mfd->name(), *it);
             else

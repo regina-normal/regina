@@ -36,7 +36,7 @@
 #define __TRI3COMPOSITION_H
 
 #include "packet/packet.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim3.h"
 
 #include "../packettabui.h"
@@ -80,7 +80,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         regina::Triangulation<3>* tri_;
         regina::Packet* triAsPacket_;
         regina::Packet* compare_;
-        std::unique_ptr<regina::StandardTriangulation> standard;
+        std::unique_ptr<regina::StandardSubcomplex<3>> standard;
         std::string sig_;
         std::optional<regina::Isomorphism<3>> isomorphism;
         IsomorphismType isoType;

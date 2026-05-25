@@ -72,8 +72,8 @@ enough information to uniquely identify the triangulation, since this
 essentially requires 2-dimensional assemblings of saturated blocks.
 For more detail, writeTextLong() may be used instead.
 
-The optional StandardTriangulation routine manifold() is implemented
-for this class, but homology() is not.
+The optional StandardSubcomplex routine manifold() is implemented for
+this class, but homology() is not.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -107,10 +107,10 @@ Specifically, two structures will compare as equal if and only if:
   operators), and use the same attaching matrices.
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass is more
+specific than combinatorial isomorphism, since this test does not
 account for the many possible symmetries in a plugged torus bundle).
 
 Parameter ``other``:
@@ -181,8 +181,8 @@ a thin I-bundle via optional layerings, as described in the class
 notes above.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tri``:
     the triangulation to examine.

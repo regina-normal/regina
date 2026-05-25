@@ -70,18 +70,18 @@ namespace regina {
  * only one tetrahedron is in fact a layered loop with a twist
  * (see class LayeredLoop).
  *
- * All optional StandardTriangulation routines are implemented for this class.
+ * All optional StandardSubcomplex routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
  *
  * \ingroup subcomplex
  */
-class LayeredChainPair : public StandardTriangulation {
+class LayeredChainPair : public StandardSubcomplex<3> {
     private:
         LayeredChain chain_[2];
             /**< The two layered chains that make up this pair. */
@@ -127,7 +127,7 @@ class LayeredChainPair : public StandardTriangulation {
          * respective lengths, _and_ appear in the same order.
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass is more specific than combinatorial isomorphism, due
@@ -144,8 +144,8 @@ class LayeredChainPair : public StandardTriangulation {
          * chain pair.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param comp the triangulation component to examine.
          * \return a structure containing details of the layered chain pair,

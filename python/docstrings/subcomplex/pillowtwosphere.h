@@ -62,10 +62,10 @@ static constexpr const char recognise[] =
 R"doc(Determines if the two given triangles together form a pillow 2-sphere.
 
 Even though PillowTwoSphere is a two-dimensional class and so does not
-inherit from StandardTriangulation, this routine nevertheless returns
-by (smart) pointer for consistency with the StandardTriangulation
+inherit from StandardSubcomplex<3>, this routine nevertheless returns
+by (smart) pointer for consistency with the StandardSubcomplex<3>
 recognition routines (which use pointers because of the polymorphic
-StandardTriangulation class hierarchy).
+StandardSubcomplex class hierarchy).
 
 Precondition:
     The two given triangles are distinct.

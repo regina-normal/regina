@@ -111,6 +111,7 @@ for dir in $dirs; do
         *-impl.h ) ;;
         link/graph.h ) ;;
         manifold/notation.h ) ;;
+        subcomplex/standardtri.h ) ;;
         triangulation/dim?.h ) ;;
         triangulation/facetpairing.h ) ;;
         triangulation/forward.h ) ;;

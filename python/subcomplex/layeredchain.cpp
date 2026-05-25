@@ -40,7 +40,7 @@ using regina::LayeredChain;
 void addLayeredChain(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredChain)
 
-    auto c = pybind11::class_<LayeredChain, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredChain, regina::StandardSubcomplex<3>>
             (m, "LayeredChain", rdoc::__class)
         .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>(),
             rdoc::__init)

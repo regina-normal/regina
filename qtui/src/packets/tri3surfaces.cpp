@@ -32,7 +32,7 @@
 #include "census/census.h"
 #include "manifold/handlebody.h"
 #include "snappea/snappeatriangulation.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -342,7 +342,7 @@ void Tri3SurfacesUI::refresh() {
     name.clear();
 
     // Begin with the combinatorial recognition.
-    auto std = regina::StandardTriangulation::recognise(*tri_);
+    auto std = regina::StandardSubcomplex<3>::recognise(*tri_);
     if (std) {
         auto mfd = std->manifold();
         if (mfd) {

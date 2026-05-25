@@ -318,7 +318,7 @@ dump(SFSAlt.altSet(sfsAnnulus));
 # subcomplex/
 # ----------------------------------------------------------------------
 
-dump(StandardTriangulation.recognise(Example3.figureEight()))
+dump(StandardSubcomplex3.recognise(Example3.figureEight()))
 
 dump(TxIDiagonalCore(6,1))
 dump(TxIParallelCore())

@@ -40,7 +40,7 @@ using regina::LayeredTorusBundle;
 void addLayeredTorusBundle(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredTorusBundle)
 
-    auto c = pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredTorusBundle, regina::StandardSubcomplex<3>>
             (m, "LayeredTorusBundle", rdoc::__class)
         .def(pybind11::init<const LayeredTorusBundle&>(), rdoc::__copy)
         .def("swap", &LayeredTorusBundle::swap, rdoc::swap)

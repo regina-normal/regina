@@ -40,7 +40,7 @@ using regina::LayeredLoop;
 void addLayeredLoop(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredLoop)
 
-    auto c = pybind11::class_<LayeredLoop, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredLoop, regina::StandardSubcomplex<3>>
             (m, "LayeredLoop", rdoc::__class)
         .def(pybind11::init<const LayeredLoop&>(), rdoc::__copy)
         .def("swap", &LayeredLoop::swap, rdoc::swap)

@@ -19,15 +19,15 @@ R"doc(Represents a snapped 3-ball in a triangulation. A snapped 3-ball is a
 single tetrahedron with two faces glued to each other to form a 3-ball
 with a two triangle boundary.
 
-All optional StandardTriangulation routines are implemented for this
+All optional StandardSubcomplex routines are implemented for this
 class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
 as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
-StandardTriangulation subclasses. Note that the only way to create
-these objects (aside from copying or moving) is via the static member
+StandardSubcomplex subclasses. Note that the only way to create these
+objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
 // Docstring regina::python::doc::SnappedBall::__copy
@@ -38,7 +38,7 @@ static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 specific presentation of a snapped 3-ball.
 
-Unlike the parameterised subclasses of StandardTriangulation, this
+Unlike the parameterised subclasses of StandardSubcomplex<3>, this
 SnappedBall subclass represents a fixed structure, and so its
 comparisons test not for the _structure_ but the precise _location_ of
 this structure within the enclosing triangulation.
@@ -127,8 +127,8 @@ boundary triangles within the overall triangulation, i.e., they may be
 identified with each other or with triangles of other tetrahedra.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tet``:
     the tetrahedron to examine as a potential 3-ball.

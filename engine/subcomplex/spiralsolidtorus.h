@@ -39,7 +39,7 @@
 
 #include "regina-core.h"
 #include "maths/perm.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -80,8 +80,7 @@ namespace regina {
  * torus with precisely three tetrahedra.  A spiralled solid torus with
  * only one tetrahedron is in fact a (1,2,3) layered solid torus.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardSubcomplex routines are implemented for this class.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -91,7 +90,7 @@ namespace regina {
  *
  * \ingroup subcomplex
  */
-class SpiralSolidTorus : public StandardTriangulation {
+class SpiralSolidTorus : public StandardSubcomplex<3> {
     private:
         size_t nTet_;
             /**< The number of tetrahedra in this spiralled solid torus. */
@@ -208,7 +207,7 @@ class SpiralSolidTorus : public StandardTriangulation {
          * tetrahedra).
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
@@ -280,8 +279,8 @@ class SpiralSolidTorus : public StandardTriangulation {
          * or with triangles of other tetrahedra.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param tet the tetrahedron to examine.
          * \param useVertexRoles a permutation describing the role each
