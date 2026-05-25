@@ -51,8 +51,7 @@ class AbelianGroup;
 
 /**
  * \defgroup manifold Standard Manifolds
- * Standard manifolds in various dimensions whose structures are
- * well-understood.
+ * Standard 3-manifolds whose structures are well-understood.
  */
 
 /**
@@ -102,25 +101,25 @@ class Manifold : public Output<Manifold> {
         virtual ~Manifold() = default;
 
         /**
-         * Returns the common name of this 3-manifold as a human-readable
+         * Returns the common name of this manifold as a human-readable
          * string.
          *
-         * \return the common name of this 3-manifold.
+         * \return the common name of this manifold.
          */
         std::string name() const;
 
         /**
-         * Returns the common name of this 3-manifold in TeX format.
+         * Returns the common name of this manifold in TeX format.
          *
          * The TeX will assume that we are within math mode, and no leading
          * or trailing dollar signs will be included.
          *
-         * \return the common name of this 3-manifold in TeX format.
+         * \return the common name of this manifold in TeX format.
          */
         std::string texName() const;
 
         /**
-         * Returns details of the structure of this 3-manifold that might not
+         * Returns details of the structure of this manifold that might not
          * be evident from its common name.  For instance, for an orbit space
          * S³/G this routine might return the full Seifert structure.
          *
@@ -150,7 +149,7 @@ class Manifold : public Output<Manifold> {
          * will implement construct() in future releases of Regina.
          *
          * \exception NotImplemented Explicit construction is not yet
-         * implemented for this particular 3-manifold.
+         * implemented for this particular manifold.
          *
          * \exception FileError The construction needs to be read from file (as
          * opposed to computed on the fly), but the file is inaccessible or its
@@ -183,7 +182,7 @@ class Manifold : public Output<Manifold> {
          * will implement homology() in future releases of Regina.
          *
          * \exception NotImplemented Homology calculation is not yet
-         * implemented for this particular 3-manifold.
+         * implemented for this particular manifold.
          *
          * \exception FileError The homology needs to be read from file (as
          * opposed to computed), but the file is inaccessible or its contents
@@ -238,7 +237,7 @@ class Manifold : public Output<Manifold> {
         std::weak_ordering operator <=> (const Manifold& rhs) const;
 
         /**
-         * Writes the common name of this 3-manifold as a human-readable
+         * Writes the common name of this manifold as a human-readable
          * string to the given output stream.
          *
          * \nopython Instead use name(), which takes no arguments and
@@ -250,7 +249,7 @@ class Manifold : public Output<Manifold> {
         virtual std::ostream& writeName(std::ostream& out) const = 0;
 
         /**
-         * Writes the common name of this 3-manifold in TeX format to the
+         * Writes the common name of this manifold in TeX format to the
          * given output stream.
          *
          * The TeX should assume that we are within math mode, and no leading
@@ -265,14 +264,14 @@ class Manifold : public Output<Manifold> {
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
 
         /**
-         * Writes details of the structure of this 3-manifold that
-         * might not be evident from its common name to the given output
-         * stream.  For instance, for an orbit space S³/G this routine
-         * might write the full Seifert structure.
+         * Writes details of the structure of this manifold that might not be
+         * evident from its common name to the given output stream.
+         * For instance, for an orbit space S³/G this routine might write the
+         * full Seifert structure.
          *
-         * This routine may write nothing if no additional
-         * details are deemed necessary.  The default implementation of
-         * this routine behaves in this way.
+         * This routine may write nothing if no additional details are deemed
+         * necessary.  The default implementation of this routine behaves in
+         * this way.
          *
          * \nopython Instead use structure(), which takes no arguments and
          * returns a string.
