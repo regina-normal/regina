@@ -51,8 +51,6 @@ namespace regina {
  * A dialog used to select a packet or packet subtree to export.
  */
 class ExportDialog : public QDialog {
-    Q_OBJECT
-
     private:
         /**
          * Internal components:
@@ -82,9 +80,8 @@ class ExportDialog : public QDialog {
             PacketFilter* useFilter, bool useCodec, const QString& dialogTitle);
 
         /**
-         * Returns whether or not there are any packets at all made
-         * available for export.  If not, an appropriate error is
-         * displayed to the user.
+         * Returns whether or not there are any packets at all made available
+         * for export.  If not, an appropriate error is displayed to the user.
          *
          * This routine should be called before the dialog is displayed,
          * and the operation aborted if it returns \c false.
@@ -96,16 +93,12 @@ class ExportDialog : public QDialog {
          */
         std::shared_ptr<regina::Packet> selectedPacket();
 
-    protected slots:
+    private:
         /**
-         * Ok has been clicked.
+         * Called when the user presses Ok (i.e., they have chosen a packet
+         * and are ready to perform the export).
          */
-        virtual void slotOk();
-
-        /**
-         * The user wants to learn more about text encodings.
-         */
-        virtual void slotEncodingInfo();
+        void okPressed();
 };
 
 inline std::shared_ptr<regina::Packet> ExportDialog::selectedPacket() {

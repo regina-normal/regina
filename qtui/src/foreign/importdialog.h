@@ -55,8 +55,6 @@ namespace regina {
  * tree.  If the dialog is cancelled however, no further action will be taken.
  */
 class ImportDialog : public QDialog {
-    Q_OBJECT
-
     private:
         /**
          * Internal components:
@@ -96,16 +94,12 @@ class ImportDialog : public QDialog {
          */
         bool validate();
 
-    protected slots:
+    private:
         /**
-         * Ok has been clicked.
+         * Called when the user presses Ok (i.e., they have chosen a parent
+         * packet and are ready to perform the import).
          */
-        virtual void slotOk();
-
-        /**
-         * The user wishes to learn more about text encodings.
-         */
-        virtual void slotEncodingInfo();
+        void okPressed();
 };
 
 #endif
