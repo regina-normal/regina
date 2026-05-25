@@ -133,8 +133,18 @@ struct SharedPacket {
          * On error, this returns a null packet.
          */
         static SharedPacket open(const char* buffer, size_t size) {
+            // Note: Swift cannot (at the time of writing) catch C++ exceptions.
             mem_istream s(buffer, buffer + size);
-            return regina::open(s);
+            try {
+                return regina::open(s);
+            } catch (const FileError&) {
+                // An I/O error occurred.
+                // This would be unusual for a memory buffer.
+                return {};
+            } catch (const InvalidInput&) {
+                // The file does not appear to contain any usable Regina data.
+                return {};
+            }
         }
 
         /**
@@ -145,7 +155,7 @@ struct SharedPacket {
          */
         std::string save() const {
             std::ostringstream s;
-            packet_->save(s, false);
+            packet->writeXMLFile(s);
             return std::move(s).str();
         }
 

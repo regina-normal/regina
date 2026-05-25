@@ -2843,7 +2843,7 @@ std::shared_ptr<Packet> open(const char* filename);
  *
  * \nopython Instead you can use the variant of open() that takes a filename.
  *
- * \exception FileError The file could not be read.
+ * \exception FileError The stream could not be read.
  *
  * \exception InvalidInput The file does not appear to contain any usable
  * Regina data.
