@@ -54,11 +54,6 @@
  *
  * These chooser classes would be *much* better using templates, but
  * boundary components are not yet templatised.
- *
- * Note that we do *not* use Q_OBJECT with the chooser classes.
- * This is because many of the chooser classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * classes do not use slots or signals, I believe this is okay.
  */
 class BoundaryComponent4Chooser :
         public QComboBox, public regina::PacketListener {
@@ -148,11 +143,6 @@ class BoundaryComponent4Chooser :
 
 /**
  * A dialog used to select a single boundary component of a given triangulation.
- *
- * Note that we do *not* use Q_OBJECT with the chooser dialog classes.
- * This is because many of the chooser dialog classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * dialog classes do not use slots or signals, I believe this is okay.
  */
 class BoundaryComponent4Dialog : public QDialog {
     private:

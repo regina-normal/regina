@@ -61,7 +61,6 @@ namespace regina::syntax {
  */
 class SyntaxHighlighter : public QSyntaxHighlighter
 {
-    Q_OBJECT
 public:
     explicit SyntaxHighlighter(QObject *parent = nullptr);
     explicit SyntaxHighlighter(QTextDocument *document);

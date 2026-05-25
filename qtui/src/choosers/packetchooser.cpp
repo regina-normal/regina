@@ -283,8 +283,8 @@ PacketDialog::PacketDialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 std::shared_ptr<Packet> PacketDialog::choose(QWidget* parent,

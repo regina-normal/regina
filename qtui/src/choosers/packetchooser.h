@@ -79,8 +79,6 @@ namespace regina {
  * we hold a shared_ptr to it here.
  */
 class PacketChooser : public QComboBox, public regina::PacketListener {
-    Q_OBJECT
-
     public:
         /**
          * How do we describe the root of the packet (which is hidden to
@@ -177,7 +175,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
         void packetWasRenamed(regina::Packet& packet) override;
         void packetBeingDestroyed(regina::PacketShell packet) override;
 
-    public slots:
+    public:
         /**
          * Updates this chooser to reflect to the current state of the
          * packet tree.
@@ -204,8 +202,6 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
  * A dialog used to select a single packet.
  */
 class PacketDialog : public QDialog {
-    Q_OBJECT
-
     private:
         /**
          * Internal components:

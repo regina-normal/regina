@@ -54,11 +54,6 @@
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
- *
- * Note that we do *not* use Q_OBJECT with the chooser classes.
- * This is because many of the chooser classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * classes do not use slots or signals, I believe this is okay.
  */
 template <int dim, int subdim>
 requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
@@ -148,11 +143,6 @@ class FaceChooser : public QComboBox, public regina::PacketListener {
 
 /**
  * A dialog used to select a single subdim-face of a given triangulation.
- *
- * Note that we do *not* use Q_OBJECT with the chooser dialog classes.
- * This is because many of the chooser dialog classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * dialog classes do not use slots or signals, I believe this is okay.
  */
 template <int dim, int subdim>
 requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
@@ -326,8 +316,8 @@ FaceDialog<dim, subdim>::FaceDialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 template <int dim, int subdim>

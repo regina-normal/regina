@@ -47,8 +47,6 @@
  * automatically by this class.
  */
 class TriSigChooser : public QComboBox {
-    Q_OBJECT
-
     public:
         /**
          * Constructor that fills the chooser with all available variants

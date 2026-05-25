@@ -55,11 +55,6 @@ namespace regina {
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
- *
- * Note that we do *not* use Q_OBJECT with the chooser classes.
- * This is because many of the chooser classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * classes do not use slots or signals, I believe this is okay.
  */
 class CuspChooser : public QComboBox, public regina::PacketListener {
     public:
@@ -160,11 +155,6 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
 
 /**
  * A dialog used to select a single cusp of a given triangulation.
- *
- * Note that we do *not* use Q_OBJECT with the chooser dialog classes.
- * This is because many of the chooser dialog classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * dialog classes do not use slots or signals, I believe this is okay.
  */
 class CuspDialog : public QDialog {
     private:

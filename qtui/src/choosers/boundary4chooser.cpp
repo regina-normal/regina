@@ -143,8 +143,8 @@ BoundaryComponent4Dialog::BoundaryComponent4Dialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 regina::BoundaryComponent<4>* BoundaryComponent4Dialog::choose(
