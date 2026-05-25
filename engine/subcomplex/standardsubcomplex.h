@@ -63,13 +63,14 @@ class Manifold;
  * An abstract base class for various types of well-understood combinatorial
  * subcomplexes within a <i>dim</i>-dimensional triangulation.
  *
- * Each subclass describes a particular type of well-understood combinatorial
- * subcomplex.  A single subclass could describe one particular subcomplex
- * (e.g., a one-tetrahedron snapped ball), or an entire parameterised family of
- * subcomplexes (e.g., layered solid tori).  These subcomplexes could describe
- * smaller parts of triangulations (e.g., layered solid tori, which appear in
- * many different larger 3-dimensional constructions), or they could describe
- * entire triangulations (e.g., the infinite family of layered lens spaces).
+ * Each subclass of StandardSubcomplex describes a particular type of
+ * well-understood combinatorial subcomplex.  A single subclass could describe
+ * one particular subcomplex (e.g., a one-tetrahedron snapped ball), or an
+ * entire parameterised family (e.g., layered solid tori).  These subcomplexes
+ * could describe smaller parts of triangulations (e.g., layered solid tori,
+ * which appear in many different larger 3-dimensional constructions), or they
+ * could describe entire triangulations (e.g., the infinite family of layered
+ * lens spaces).
  *
  * A specific instance of a StandardSubcomplex would typically be associated
  * with a concrete triangulation, and would typically store details of where
@@ -143,7 +144,8 @@ class StandardSubcomplex : public Output<StandardSubcomplex<dim>> {
 
         /**
          * Returns the manifold represented by this subcomplex, if this is
-         * known.  Currently this feature is only available in dimension 3.
+         * known to Regina.  Currently this feature is only available in
+         * dimension 3.
          *
          * Subclasses of StandardSubcomplex may choose whether or not to
          * implement this routine.  Moreover, if a subclass describes a
@@ -169,7 +171,7 @@ class StandardSubcomplex : public Output<StandardSubcomplex<dim>> {
 
         /**
          * Returns the first homology group of this subcomplex, if this is
-         * known.
+         * known to Regina.
          *
          * This routine does _not_ call `Triangulation<dim>::homology()` on
          * the associated triangulation.  Instead the homology is calculated
@@ -335,7 +337,7 @@ class StandardSubcomplex : public Output<StandardSubcomplex<dim>> {
          */
         StandardSubcomplex(const StandardSubcomplex&) = default;
         /**
-         * Assignment operator.  This does nothing, since the base class
+         * Copy assignment operator.  This does nothing, since the base class
          * StandardSubcomplex does not hold any data of its own.
          */
         StandardSubcomplex& operator = (const StandardSubcomplex&) = default;

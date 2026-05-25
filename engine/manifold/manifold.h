@@ -29,7 +29,8 @@
  **************************************************************************/
 
 /*! \file manifold/manifold.h
- *  \brief Deals with the underlying 3-manifolds of triangulations.
+ *  \brief Deals with the underlying manifolds that are represented by
+ *  triangulations.
  */
 
 #ifndef __REGINA_MANIFOLD_H
@@ -49,66 +50,79 @@ namespace regina {
 class AbelianGroup;
 
 /**
- * \defgroup manifold Standard 3-Manifolds
- * Standard 3-manifolds whose structures are well-understood.
+ * \defgroup manifold Standard Manifolds
+ * Standard manifolds in various dimensions whose structures are
+ * well-understood.
  */
 
 /**
- * Represents a particular 3-manifold, independent of how it might be
- * triangulated.  This is an abstract base class: its subclasses correspond
- * to different families of 3-manifolds.
+ * An abstract base class for various well-understood 3-manifolds.
  *
- * Each subclass:
+ * Each subclass of Manifold describes a particular type of well-understood
+ * 3-manifold.  A single subclass could describe one particular manifold
+ * (e.g., the 3-sphere), or an entire parameterised family (e.g., lens spaces).
+ * Manifolds do _not_ encode specific triangulations; instead they describe the
+ * topology of a manifold, independent of how it might be triangulated.
  *
- * - must override all pure virtual functions (of course);
+ * Importantly, these subclasses do not aim to classify all 3-manifolds:
+ * there are many 3-manifolds that are not represented by any subclass of
+ * Manifold at all.
  *
- * - may optionally override construct(), homology() and/or writeStructure(),
- *   if they are able to provide this functionality;
+ * When defining a new subclass of Manifold:
  *
- * - must _not_ override writeTextShort() or writeTextLong(), since these
+ * - you must override the pure virtual functions writeName(), writeTeXName(),
+ *   and isHyperbolic();
+ *
+ * - optionally, you can override construct(), homology() and/or
+ *   writeStructure() if your class is able to provide this functionality;
+ *
+ * - you must _not_ override writeTextShort() or writeTextLong(), since these
  *   routines are not virtual, and are provided directly by the Manifold base
  *   class;
  *
- * - must provide value semantics (including at least a copy constructor and
- *   assignment operator);
+ * - you must provide value semantics (including at least a copy constructor
+ *   and assignment operator);
  *
- * - must provide comparison operators (== and !=);
+ * - you must provide comparison operators (== and !=);
  *
- * - must provide member and global swap functions, for consistency across all
- *   Manifold subclasses.
+ * - optionally, you may incorporate your subclass into the global ordering on
+ *   manifolds (operator <=>);
+ *
+ * - you must provide member and global swap functions, for consistency across
+ *   all Manifold subclasses.
  *
  * \ingroup manifold
  */
 class Manifold : public Output<Manifold> {
     public:
         /**
-         * A destructor that does nothing.
+         * A virtual destructor.  This does nothing, since the base class
+         * Manifold does not hold any data of its own.
          */
         virtual ~Manifold() = default;
 
         /**
-         * Returns the common name of this 3-manifold as a
-         * human-readable string.
+         * Returns the common name of this 3-manifold as a human-readable
+         * string.
          *
          * \return the common name of this 3-manifold.
          */
         std::string name() const;
+
         /**
          * Returns the common name of this 3-manifold in TeX format.
-         * No leading or trailing dollar signs will be included.
          *
-         * \warning The behaviour of this routine has changed as of
-         * Regina 4.3; in earlier versions, leading and trailing dollar
-         * signs were provided.
+         * The TeX will assume that we are within math mode, and no leading
+         * or trailing dollar signs will be included.
          *
          * \return the common name of this 3-manifold in TeX format.
          */
         std::string texName() const;
+
         /**
-         * Returns details of the structure of this 3-manifold that
-         * might not be evident from its common name.  For instance, for
-         * an orbit space S³/G this routine might return the full
-         * Seifert structure.
+         * Returns details of the structure of this 3-manifold that might not
+         * be evident from its common name.  For instance, for an orbit space
+         * S³/G this routine might return the full Seifert structure.
          *
          * This routine may return the empty string if no additional
          * details are deemed necessary.
@@ -116,16 +130,26 @@ class Manifold : public Output<Manifold> {
          * \return a string describing additional structural details.
          */
         std::string structure() const;
+
         /**
-         * Returns a triangulation of this 3-manifold, if such a
-         * construction has been implemented.  For details of which types of
-         * 3-manifolds have implemented this routine, see the class notes
-         * for each corresponding subclasses of Manifold.
+         * Returns a triangulation of this manifold, if such a construction
+         * has been implemented.
          *
-         * The default implemention of this routine just throws a
-         * NotImplemented exception.
+         * Subclasses of Manifold may choose whether or not to implement this
+         * routine.  Moreover, if a subclass describes a parameterised family
+         * of manifolds, it may choose to implement this only for some members
+         * of the family.  If construction has not been implemented for this
+         * particular manifold, then this routine should throw a NotImplemented
+         * exception.
          *
-         * \exception NotImplemented Explicit construction has not yet been
+         * Individual subclasses of Manifold should explain in their class
+         * notes whether they implement construct().  The default implementation
+         * provided by this base class just throws a NotImplemented exception.
+         *
+         * It is expected that over time, more subclasses of Manifold
+         * will implement construct() in future releases of Regina.
+         *
+         * \exception NotImplemented Explicit construction is not yet
          * implemented for this particular 3-manifold.
          *
          * \exception FileError The construction needs to be read from file (as
@@ -135,20 +159,30 @@ class Manifold : public Output<Manifold> {
          * triangulations from the SnapPea census databases that are installed
          * with Regina.
          *
-         * \return a triangulation of this 3-manifold, if this
-         * construction has been implemented.
+         * \return a triangulation of this manifold, if this construction has
+         * been implemented.
          */
         virtual Triangulation<3> construct() const;
+
         /**
-         * Returns the first homology group of this 3-manifold, if such
-         * a routine has been implemented.  For details of which types of
-         * 3-manifolds have implemented this routine, see the class notes
-         * for each corresponding subclasses of Manifold.
+         * Returns the first homology group of this manifold, if this is known
+         * to Regina.
          *
-         * The default implemention of this routine just throws a
-         * NotImplemented exception.
+         * Subclasses of Manifold may choose whether or not to implement this
+         * routine.  Moreover, if a subclass describes a parameterised family
+         * of manifolds, it may choose to implement this only for some members
+         * of the family.  If homology has not been implemented for this
+         * particular manifold, then this routine should throw a NotImplemented
+         * exception.
          *
-         * \exception NotImplemented Homology calculation has not yet been
+         * Individual subclasses of Manifold should explain in their class
+         * notes whether they implement homology().  The default implementation
+         * provided by this base class just throws a NotImplemented exception.
+         *
+         * It is expected that over time, more subclasses of Manifold
+         * will implement homology() in future releases of Regina.
+         *
+         * \exception NotImplemented Homology calculation is not yet
          * implemented for this particular 3-manifold.
          *
          * \exception FileError The homology needs to be read from file (as
@@ -157,8 +191,8 @@ class Manifold : public Output<Manifold> {
          * for the subclass SnapPeaCensusManifold, which reads its results from
          * the SnapPea census databases that are installed with Regina.
          *
-         * \return the first homology group of this 3-manifold, if this
-         * functionality has been implemented.
+         * \return the first homology group, if this is implemented for this
+         * particular manifold.
          */
         virtual AbelianGroup homology() const;
 
@@ -204,32 +238,32 @@ class Manifold : public Output<Manifold> {
         std::weak_ordering operator <=> (const Manifold& rhs) const;
 
         /**
-         * Writes the common name of this 3-manifold as a
-         * human-readable string to the given output stream.
+         * Writes the common name of this 3-manifold as a human-readable
+         * string to the given output stream.
          *
-         * \nopython Instead use the variant name() that takes no arguments
-         * and returns a string.
+         * \nopython Instead use name(), which takes no arguments and
+         * returns a string.
          *
          * \param out the output stream to which to write.
          * \return a reference to the given output stream.
          */
         virtual std::ostream& writeName(std::ostream& out) const = 0;
+
         /**
-         * Writes the common name of this 3-manifold in TeX format to
-         * the given output stream.  No leading or trailing dollar signs
-         * will be included.
+         * Writes the common name of this 3-manifold in TeX format to the
+         * given output stream.
          *
-         * \warning The behaviour of this routine has changed as of
-         * Regina 4.3; in earlier versions, leading and trailing dollar
-         * signs were provided.
+         * The TeX should assume that we are within math mode, and no leading
+         * or trailing dollar signs should be included.
          *
-         * \nopython Instead use the variant texName() that takes no arguments
-         * and returns a string.
+         * \nopython Instead use texName(), which takes no arguments and
+         * returns a string.
          *
          * \param out the output stream to which to write.
          * \return a reference to the given output stream.
          */
         virtual std::ostream& writeTeXName(std::ostream& out) const = 0;
+
         /**
          * Writes details of the structure of this 3-manifold that
          * might not be evident from its common name to the given output
@@ -240,83 +274,67 @@ class Manifold : public Output<Manifold> {
          * details are deemed necessary.  The default implementation of
          * this routine behaves in this way.
          *
-         * \nopython Instead use the variant structure() that takes no
-         * arguments and returns a string.
+         * \nopython Instead use structure(), which takes no arguments and
+         * returns a string.
          *
          * \param out the output stream to which to write.
          * \return a reference to the given output stream.
          */
-        virtual std::ostream& writeStructure(std::ostream& out) const;
+        virtual std::ostream& writeStructure(std::ostream& out) const {
+            return out;
+        }
 
         /**
-         * Writes a short text representation of this object to the
-         * given output stream.
+         * Writes a short text representation of this object to the given
+         * output stream.
          *
-         * Subclasses must not override this routine.  They should
-         * override writeName() instead.
+         * Subclasses must not override this routine.  They should override
+         * writeName() instead.
          *
          * \nopython Use str() instead.
          *
          * \param out the output stream to which to write.
          */
-        void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const {
+            writeName(out);
+        }
+
         /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
+         * Writes a detailed text representation of this object to the given
+         * output stream.
          *
-         * Subclasses must not override this routine.  They should
-         * override writeName() and writeStructure() instead.
+         * Subclasses must not override this routine.  They should override
+         * writeName() and writeStructure() instead.
          *
          * \nopython Use detail() instead.
          *
          * \param out the output stream to which to write.
          */
-        void writeTextLong(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const {
+            writeName(out);
+            std::string details = structure();
+            if (! details.empty())
+                out << " ( " << details << " )";
+            out << std::endl;
+        }
 
     protected:
         /**
-         * A default constructor.
-         *
-         * This does nothing in the base Manifold class, and is not for
-         * public use.  It is declared here so that subclasses can use it
-         * implicitly in their own default constructors.
+         * Default constructor.  This does nothing, since the base class
+         * Manifold does not hold any data of its own.
          */
         Manifold() = default;
         /**
-         * A copy constructor.
-         *
-         * This does nothing in the base Manifold class, and is not for
-         * public use.  It is declared here so that subclasses can use it
-         * implicitly in their own copy constructors.
+         * Copy constructor.  This does nothing, since the base class
+         * Manifold does not hold any data of its own.
          */
         Manifold(const Manifold&) = default;
         /**
-         * A copy assignment operator.
-         *
-         * This does nothing in the base Manifold class, and is not for
-         * public use.  It is declared here so that subclasses can use it
-         * implicitly in their own copy assignment operators.
+         * Copy assignment operator.  This does nothing, since the base class
+         * Manifold does not hold any data of its own.
          */
         Manifold& operator = (const Manifold&) = default;
 };
-
-// Inline functions for Manifold
-
-inline std::ostream& Manifold::writeStructure(std::ostream& out) const {
-    return out;
-}
-
-inline void Manifold::writeTextShort(std::ostream& out) const {
-    writeName(out);
-}
-
-inline void Manifold::writeTextLong(std::ostream& out) const {
-    writeName(out);
-    std::string details = structure();
-    if (! details.empty())
-        out << " ( " << details << " )";
-    out << std::endl;
-}
 
 } // namespace regina
 
