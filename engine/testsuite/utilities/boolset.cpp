@@ -53,22 +53,8 @@ TEST_F(BoolSetTest, byteCode) {
     EXPECT_EQ(bsBoth.byteCode(), 3);
     EXPECT_EQ(bsNone.byteCode(), 0);
 
-    for (const auto x : cases) {
+    for (const auto x : cases)
         EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromByteCode(x.byteCode()), x); });
-
-        for (const auto y : cases) {
-            {
-                BoolSet tmp = x;
-                EXPECT_TRUE(tmp.setByteCode(y.byteCode()));
-                EXPECT_EQ(tmp, y);
-            }
-        }
-
-        BoolSet tmp = x;
-        EXPECT_FALSE(tmp.setByteCode(-1));
-        EXPECT_FALSE(tmp.setByteCode(4));
-        EXPECT_EQ(tmp, x);
-    }
 
     EXPECT_THROW({ BoolSet::fromByteCode(-1); }, regina::InvalidArgument);
     EXPECT_THROW({ BoolSet::fromByteCode(4); }, regina::InvalidArgument);
@@ -222,55 +208,15 @@ TEST_F(BoolSetTest, stringCode) {
     EXPECT_STREQ(bsNone.stringCode(), "--");
 
     for (const auto x : cases) {
-        for (const auto y : cases) {
-            std::string code = y.stringCode();
-            ASSERT_EQ(code.size(), 2);
-            {
-                BoolSet tmp = x;
-                EXPECT_TRUE(tmp.setStringCode(code));
-                EXPECT_EQ(tmp, y);
-            }
-            code[0] = std::tolower(code[0]);
-            {
-                BoolSet tmp = x;
-                EXPECT_TRUE(tmp.setStringCode(code));
-                EXPECT_EQ(tmp, y);
-            }
-            code[1] = std::tolower(code[1]);
-            {
-                BoolSet tmp = x;
-                EXPECT_TRUE(tmp.setStringCode(code));
-                EXPECT_EQ(tmp, y);
-            }
-            code[0] = std::toupper(code[0]);
-            {
-                BoolSet tmp = x;
-                EXPECT_TRUE(tmp.setStringCode(code));
-                EXPECT_EQ(tmp, y);
-            }
-        }
-
-        {
-            std::string code = x.stringCode();
-            ASSERT_EQ(code.size(), 2);
-            EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
-            code[0] = std::tolower(code[0]);
-            EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
-            code[1] = std::tolower(code[1]);
-            EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
-            code[0] = std::toupper(code[0]);
-            EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
-        }
-
-        BoolSet tmp = x;
-        EXPECT_FALSE(tmp.setStringCode("FT"));
-        EXPECT_FALSE(tmp.setStringCode("T- "));
-        EXPECT_FALSE(tmp.setStringCode(" T-"));
-        EXPECT_FALSE(tmp.setStringCode("T "));
-        EXPECT_FALSE(tmp.setStringCode(" F"));
-        EXPECT_FALSE(tmp.setStringCode(" "));
-        EXPECT_FALSE(tmp.setStringCode(""));
-        EXPECT_EQ(tmp, x);
+        std::string code = x.stringCode();
+        ASSERT_EQ(code.size(), 2);
+        EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
+        code[0] = std::tolower(code[0]);
+        EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
+        code[1] = std::tolower(code[1]);
+        EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
+        code[0] = std::toupper(code[0]);
+        EXPECT_NO_THROW({ EXPECT_EQ(BoolSet::fromStringCode(code), x); });
     }
 
     EXPECT_THROW({ BoolSet::fromStringCode("FT"); }, regina::InvalidArgument);

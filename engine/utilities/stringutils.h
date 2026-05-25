@@ -280,7 +280,7 @@ T parse(const std::string& str) {
  * If any unexpected characters are found (including leading or trailing
  * whitespace), then again this routine will throw an exception.
  *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's parse() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -320,7 +320,7 @@ T parse(const std::string& str) {
  * Otherwise the conversion will be deemed unsuccessful, and this routine will
  * throw an exception.
  *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's parse() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
@@ -345,8 +345,8 @@ T parse(const std::string& str) {
 }
 
 /**
- * Converts the entire given string to a native integer of type \a T
- * and reports whether this conversion was successful.
+ * Deprecated routine that converts the entire given string to a native
+ * integer of type \a T and reports whether this conversion was successful.
  *
  * If the integer encoded by the given string is out of range for type \a T,
  * then this routine will return \c false and the value of \a dest will be
@@ -357,6 +357,9 @@ T parse(const std::string& str) {
  * If any unexpected characters are found (including leading or trailing
  * whitespace), then again this routine will return \c false and the value of
  * \a dest will be left unchanged.
+ *
+ * \deprecated Instead use `dest = parse<T>(str)`, which performs the same
+ * conversion (but which returns by value, and throws an exception on error).
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
@@ -370,7 +373,7 @@ T parse(const std::string& str) {
  * \ingroup utilities
  */
 template <CppInteger T>
-bool valueOf(const std::string& str, T& dest) {
+[[deprecated]] bool valueOf(const std::string& str, T& dest) {
     try {
         dest = parse<T>(str);
         return true;
@@ -380,8 +383,8 @@ bool valueOf(const std::string& str, T& dest) {
 }
 
 /**
- * Converts the entire given string to a double precision real number and
- * reports whether this conversion was successful.
+ * Deprecated routine that converts the entire given string to a double
+ * precision real number and reports whether this conversion was successful.
  *
  * If the number encoded by the given string is out of range for a \c double,
  * then this routine will return \c false and the value of \a dest will be
@@ -392,6 +395,9 @@ bool valueOf(const std::string& str, T& dest) {
  * If any unexpected characters are found (including leading or trailing
  * whitespace), then again this routine will return \c false, and the value of
  * \a dest will be left unchanged.
+ *
+ * \deprecated Instead use `dest = parse<double>(str)`, which performs the same
+ * conversion (but which returns by value, and throws an exception on error).
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
@@ -404,7 +410,7 @@ bool valueOf(const std::string& str, T& dest) {
  *
  * \ingroup utilities
  */
-inline bool valueOf(const std::string& str, double& dest) {
+[[deprecated]] inline bool valueOf(const std::string& str, double& dest) {
     try {
         dest = parse<double>(str);
         return true;
@@ -414,8 +420,8 @@ inline bool valueOf(const std::string& str, double& dest) {
 }
 
 /**
- * Converts the entire given string to a boolean and reports whether
- * this conversion was successful.
+ * Deprecated routine that converts the entire given string to a boolean and
+ * reports whether this conversion was successful.
  *
  * If the given string begins with `T`, `t` or `1`,
  * then the string will be successfully converted to \c true.
@@ -423,6 +429,9 @@ inline bool valueOf(const std::string& str, double& dest) {
  * then the string will be successfully converted to \c false.
  * Otherwise the conversion will be unsuccessful and the argument \a dest will
  * be left unchanged.
+ *
+ * \deprecated Instead use `dest = parse<bool>(str)`, which performs the same
+ * conversion (but which returns by value, and throws an exception on error).
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
@@ -435,7 +444,7 @@ inline bool valueOf(const std::string& str, double& dest) {
  *
  * \ingroup utilities
  */
-inline bool valueOf(const std::string& str, bool& dest) {
+[[deprecated]] inline bool valueOf(const std::string& str, bool& dest) {
     try {
         dest = parse<bool>(str);
         return true;
@@ -454,7 +463,7 @@ inline bool valueOf(const std::string& str, bool& dest) {
  * unchanged and \c false will be returned.  Both upper-case and lower-case
  * codes (or a mix of the two) are accepted by this routine.
  *
- * \deprecated Use BoolSet::fromStringCode() instead, which performs the same
+ * \deprecated Instead use BoolSet::fromStringCode(), which performs the same
  * conversion (but which returns by value, and throws an exception on error).
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python.

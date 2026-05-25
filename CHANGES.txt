@@ -86,6 +86,8 @@ Version 8.0  [ TODO ]
                 byte code is not valid.
               + New routine fromStringCode(), which likewise throws an exception
                 if the given string code is not valid.
+              + Routines setByteCode() and setStringCode() are now deprecated;
+                use fromByteCode() and fromStringCode() instead.
         Class BoundaryComponent<dim>:
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
