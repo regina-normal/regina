@@ -341,7 +341,7 @@ T parse(const std::string& str) {
     else if (str[0] == 'F' || str[0] == 'f' || str[0] == '0')
         return false;
     else
-        throw "String is unconvertible";
+        throw InvalidArgument("String is unconvertible");
 }
 
 /**
