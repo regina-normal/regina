@@ -99,6 +99,12 @@ class Manifold;
  * - you must provide member and global swap functions, for consistency across
  *   all StandardSubcomplex subclasses.
  *
+ * \python Python does not support templates.  Instead this class can be used
+ * by appending the dimension as a suffix (e.g., StandardSubcomplex3 and
+ * StandardSubcomplex4 for dimensions 3 and 4).
+ *
+ * \tparam dim the dimension of triangulation in which the subcomplexes live.
+ *
  * \ingroup subcomplex
  */
 template <int dim> requires (dim == 3 || dim == 4)
