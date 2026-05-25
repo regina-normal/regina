@@ -3,6 +3,7 @@ SET ( FILES
   boundary4chooser.cpp
   cuspchooser.cpp
   edgeintchooser.cpp
+  packetchooser.cpp
   trisigchooser.cpp
   )
 

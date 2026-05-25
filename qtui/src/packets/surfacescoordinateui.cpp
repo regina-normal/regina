@@ -38,10 +38,10 @@
 #include "coordinatechooser.h"
 #include "surfacescoordinateui.h"
 #include "reginasupport.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
+#include "choosers/packetchooser.h"
 
 #include <QHeaderView>
 #include <QLabel>

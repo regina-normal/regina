@@ -36,11 +36,11 @@
 // UI includes:
 #include "examplecreator.h"
 #include "tri4creator.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "reginaprefset.h"
+#include "choosers/packetchooser.h"
 
 #include <QCheckBox>
 #include <QComboBox>

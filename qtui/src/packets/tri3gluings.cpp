@@ -43,7 +43,6 @@
 #include "eltmovedialog3.h"
 #include "tri3gluings.h"
 #include "auxtoolbar.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "patiencedialog.h"
 #include "progressdialogs.h"
@@ -52,6 +51,7 @@
 #include "reginasupport.h"
 #include "choosers/boundary3chooser.h"
 #include "choosers/facechooser.h"
+#include "choosers/packetchooser.h"
 
 #include <memory>
 #include <thread>

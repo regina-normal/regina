@@ -38,11 +38,11 @@
 // UI includes:
 #include "linkcrossings.h"
 #include "linkmovedialog.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 
 #include <thread>
 #include <QAction>

@@ -35,10 +35,10 @@
 
 // UI includes:
 #include "snappeacreator.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 
 #include <QComboBox>
 #include <QHBoxLayout>

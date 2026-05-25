@@ -30,10 +30,10 @@
 
 // UI includes:
 #include "tri4composition.h"
-#include "../packetchooser.h"
-#include "../packetfilter.h"
 #include "elidedlabel.h"
+#include "packetfilter.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 #include "choosers/trisigchooser.h"
 
 #include <memory>

@@ -36,10 +36,10 @@
 // UI includes:
 #include "examplecreator.h"
 #include "linkcreator.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 
 #include <QComboBox>
 #include <QHBoxLayout>

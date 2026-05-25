@@ -37,10 +37,10 @@
 #include "auxtoolbar.h"
 #include "edittableview.h"
 #include "eltmovedialog2.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 
 #include <memory>
 #include <QAction>

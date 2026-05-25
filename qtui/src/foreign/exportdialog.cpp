@@ -33,8 +33,8 @@
 #include "exportdialog.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "../packetchooser.h"
-#include "../packetfilter.h"
+#include "packetfilter.h"
+#include "choosers/packetchooser.h"
 
 #include <QDialogButtonBox>
 #include <QFrame>

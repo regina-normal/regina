@@ -37,12 +37,12 @@
 #include "docwidget.h"
 #include "edittableview.h"
 #include "scriptui.h"
-#include "packetchooser.h"
 #include "packeteditiface.h"
 #include "packetmanager.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 
 #include "syntax/definition.h"
 #include "syntax/repository.h"

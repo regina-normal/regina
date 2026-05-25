@@ -55,11 +55,11 @@
 
 // UI includes:
 #include "tri3composition.h"
-#include "../packetchooser.h"
-#include "../packeteditiface.h"
-#include "../packetfilter.h"
 #include "elidedlabel.h"
+#include "packeteditiface.h"
+#include "packetfilter.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 #include "choosers/trisigchooser.h"
 
 #include <memory>

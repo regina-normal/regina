@@ -29,10 +29,10 @@
  **************************************************************************/
 
 #include "newpacketdialog.h"
-#include "packetchooser.h"
 #include "packetcreator.h"
 #include "packetfilter.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 
 #include <QBoxLayout>
 #include <QDialog>

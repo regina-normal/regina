@@ -40,13 +40,13 @@
 #include "tri4gluings.h"
 #include "auxtoolbar.h"
 #include "edittableview.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "choosers/boundary4chooser.h"
 #include "choosers/facechooser.h"
+#include "choosers/packetchooser.h"
 
 #include <memory>
 #include <thread>

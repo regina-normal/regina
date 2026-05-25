@@ -512,7 +512,6 @@
 		0543AE9C1811E12A002758F8 /* importdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A42E1811D91E002CC2AE /* importdialog.h */; };
 		0543AE9D1811E12A002758F8 /* introdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5711811D920002CC2AE /* introdialog.h */; };
 		0543AE9E1811E12A002758F8 /* newpacketdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5771811D920002CC2AE /* newpacketdialog.h */; };
-		0543AE9F1811E12A002758F8 /* packetchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A57A1811D920002CC2AE /* packetchooser.h */; };
 		0543AEA01811E12A002758F8 /* packeteditiface.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A57E1811D920002CC2AE /* packeteditiface.h */; };
 		0543AEA11811E12A002758F8 /* packettabui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5831811D920002CC2AE /* packettabui.h */; };
 		0543AEA21811E12A002758F8 /* packettreeview.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5851811D920002CC2AE /* packettreeview.h */; };
@@ -926,7 +925,6 @@
 		0564A9431811D921002CC2AE /* messagelayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5741811D920002CC2AE /* messagelayer.cpp */; };
 		0564A9441811D921002CC2AE /* newpacketdialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5761811D920002CC2AE /* newpacketdialog.cpp */; };
 		0564A9451811D921002CC2AE /* newpackets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5781811D920002CC2AE /* newpackets.cpp */; };
-		0564A9461811D921002CC2AE /* packetchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5791811D920002CC2AE /* packetchooser.cpp */; };
 		0564A9471811D921002CC2AE /* packetcreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A57B1811D920002CC2AE /* packetcreator.cpp */; };
 		0564A9481811D921002CC2AE /* packeteditiface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A57D1811D920002CC2AE /* packeteditiface.cpp */; };
 		0564A9491811D921002CC2AE /* packetmanager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5801811D920002CC2AE /* packetmanager.cpp */; };
@@ -1665,6 +1663,7 @@
 		05E62A852FBFFD8D00AE1B84 /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A222FBFFD8D00AE1B84 /* isosig.cpp */; };
 		05E62A882FC0099900AE1B84 /* exhaustive-tri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */; };
 		05E62A932FC0932A00AE1B84 /* pyconcepts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A912FC0932A00AE1B84 /* pyconcepts.cpp */; };
+		05E62A962FC4323000AE1B84 /* packetchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A952FC4323000AE1B84 /* packetchooser.cpp */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -3264,8 +3263,6 @@
 		0564A5761811D920002CC2AE /* newpacketdialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = newpacketdialog.cpp; sourceTree = "<group>"; };
 		0564A5771811D920002CC2AE /* newpacketdialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = newpacketdialog.h; sourceTree = "<group>"; };
 		0564A5781811D920002CC2AE /* newpackets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = newpackets.cpp; sourceTree = "<group>"; };
-		0564A5791811D920002CC2AE /* packetchooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packetchooser.cpp; sourceTree = "<group>"; };
-		0564A57A1811D920002CC2AE /* packetchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetchooser.h; sourceTree = "<group>"; };
 		0564A57B1811D920002CC2AE /* packetcreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packetcreator.cpp; sourceTree = "<group>"; };
 		0564A57C1811D920002CC2AE /* packetcreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetcreator.h; sourceTree = "<group>"; };
 		0564A57D1811D920002CC2AE /* packeteditiface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packeteditiface.cpp; sourceTree = "<group>"; };
@@ -4628,6 +4625,8 @@
 		05E62A8E2FC092FA00AE1B84 /* maths.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = maths.h; sourceTree = "<group>"; };
 		05E62A902FC0932A00AE1B84 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05E62A912FC0932A00AE1B84 /* pyconcepts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pyconcepts.cpp; sourceTree = "<group>"; };
+		05E62A942FC4323000AE1B84 /* packetchooser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = packetchooser.h; sourceTree = "<group>"; };
+		05E62A952FC4323000AE1B84 /* packetchooser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = packetchooser.cpp; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -7281,8 +7280,6 @@
 				0564A5781811D920002CC2AE /* newpackets.cpp */,
 				05318CA22A84F9F200E89B9D /* org.computop.Regina.desktop */,
 				05318CA32A84F9F200E89B9D /* org.computop.regina.metainfo.xml */,
-				0564A5791811D920002CC2AE /* packetchooser.cpp */,
-				0564A57A1811D920002CC2AE /* packetchooser.h */,
 				0564A57B1811D920002CC2AE /* packetcreator.cpp */,
 				0564A57C1811D920002CC2AE /* packetcreator.h */,
 				0564A57D1811D920002CC2AE /* packeteditiface.cpp */,
@@ -7353,6 +7350,8 @@
 				0564A4131811D91E002CC2AE /* edgeintchooser.h */,
 				059AF9881C53BE4000FB1A14 /* facechooser.h */,
 				059AF9891C53BE4000FB1A14 /* facename.h */,
+				05E62A952FC4323000AE1B84 /* packetchooser.cpp */,
+				05E62A942FC4323000AE1B84 /* packetchooser.h */,
 				05E5312E1C53C48600ECEB72 /* simplexchooser.h */,
 				0545A0482FB5994E008D3ADB /* trisigchooser.h */,
 				0545A0492FB5994E008D3ADB /* trisigchooser.cpp */,
@@ -10656,7 +10655,6 @@
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
 				0543AE9D1811E12A002758F8 /* introdialog.h in Sources */,
 				0543AE9E1811E12A002758F8 /* newpacketdialog.h in Sources */,
-				0543AE9F1811E12A002758F8 /* packetchooser.h in Sources */,
 				0543AEA01811E12A002758F8 /* packeteditiface.h in Sources */,
 				0543AEA11811E12A002758F8 /* packettabui.h in Sources */,
 				0543AEA21811E12A002758F8 /* packettreeview.h in Sources */,
@@ -10757,6 +10755,7 @@
 				0564A8101811D921002CC2AE /* recogniserhandler.cpp in Sources */,
 				0564A9681811D921002CC2AE /* tri3gluings.cpp in Sources */,
 				051691B91C5AD5AC00DC69EC /* hypermatchingui.cpp in Sources */,
+				05E62A962FC4323000AE1B84 /* packetchooser.cpp in Sources */,
 				0507C5A71C54495D00D1C86C /* eltmovedialog4.cpp in Sources */,
 				0564A9501811D921002CC2AE /* tri2ui.cpp in Sources */,
 				0564A96C1811D921002CC2AE /* skeletonwindow.cpp in Sources */,
@@ -10824,7 +10823,6 @@
 				0564A97F1811D921002CC2AE /* reginamain.cpp in Sources */,
 				05A73CCE19B2F1AB0099C617 /* snappeagluings.cpp in Sources */,
 				0564A9511811D921002CC2AE /* eltmovedialog3.cpp in Sources */,
-				0564A9461811D921002CC2AE /* packetchooser.cpp in Sources */,
 				0564A94D1811D921002CC2AE /* tri2creator.cpp in Sources */,
 				054208E41DF0D2F30018AB24 /* qtmatcher.cpp in Sources */,
 				0564A9641811D921002CC2AE /* tri3algebra.cpp in Sources */,
