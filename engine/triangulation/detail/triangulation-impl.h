@@ -739,7 +739,7 @@ std::string TriangulationBase<dim>::source(Language language) const {
         case Language::Cxx:    ans << "});\n"; break;
         case Language::Python: ans << "])\n";  break;
     }
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))

@@ -983,7 +983,7 @@ Vector<Integer> HomMarkedAbelianGroup::evalSNF(const Vector<Integer>& input)
 std::string HomMarkedAbelianGroup::summary() const {
     std::ostringstream out;
     summary(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void HomMarkedAbelianGroup::summary(std::ostream& out) const {

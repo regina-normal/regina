@@ -223,7 +223,7 @@ Triangulation<3>::Triangulation(const Triangulation<3>& src, bool cloneProps,
 std::string Triangulation<3>::snapPea() const {
     std::ostringstream out;
     snapPea(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Triangulation<3>::snapPea(std::ostream& out) const {
@@ -303,13 +303,13 @@ void Triangulation<3>::saveSnapPea(const char* filename) const {
 std::string Triangulation<3>::recogniser() const {
     std::ostringstream out;
     recogniser(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 std::string Triangulation<3>::recognizer() const {
     std::ostringstream out;
     recogniser(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Triangulation<3>::recogniser(std::ostream& out) const {

@@ -1006,13 +1006,13 @@ inline Cyclotomic& Cyclotomic::operator /= (const Cyclotomic& other) {
 inline std::string Cyclotomic::str(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, false, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline std::string Cyclotomic::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline void swap(Cyclotomic& a, Cyclotomic& b) noexcept {

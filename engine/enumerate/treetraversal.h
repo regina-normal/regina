@@ -1526,7 +1526,7 @@ template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
 inline std::string TreeTraversal<Constraint, Ban, IntType>::typeString() const {
     std::ostringstream out;
     dumpTypes(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>

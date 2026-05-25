@@ -119,7 +119,7 @@ void add_output_rich(pybind11::class_<T, options...>& c,
                         "__qualname__")).cast<std::string_view>() << ": ";
                 c.writeTextShort(s);
                 s << '>';
-                return s.str();
+                return std::move(s).str();
             });
             break;
 
@@ -167,7 +167,7 @@ void add_output_basic(pybind11::class_<T, options...>& c,
                     << pybind11::str(pybind11::type::handle_of<T>().attr(
                         "__qualname__")).cast<std::string_view>()
                     << ": " << c.str() << '>';
-                return s.str();
+                return std::move(s).str();
             });
             break;
 
@@ -206,7 +206,7 @@ void add_output_ostream(pybind11::class_<T, options...>& c,
     auto func = [](const T& x) {
         std::ostringstream s;
         s << x;
-        return s.str();
+        return std::move(s).str();
     };
 
     c.def("__str__", func);
@@ -219,7 +219,7 @@ void add_output_ostream(pybind11::class_<T, options...>& c,
                     << pybind11::str(pybind11::type::handle_of<T>().attr(
                         "__qualname__")).cast<std::string_view>()
                     << ": " << c << '>';
-                return s.str();
+                return std::move(s).str();
             });
             break;
 
@@ -260,7 +260,7 @@ void add_output_custom(pybind11::class_<T, options...>& c,
     c.def("__str__", [outputFunction](const T& x) {
         std::ostringstream s;
         outputFunction(x, s);
-        return s.str();
+        return std::move(s).str();
     });
 
     c.def("__repr__", [outputFunction](const T& c) {
@@ -270,7 +270,7 @@ void add_output_custom(pybind11::class_<T, options...>& c,
                 "__qualname__")).cast<std::string_view>() << ": ";
         outputFunction(c, s);
         s << '>';
-        return s.str();
+        return std::move(s).str();
     });
 }
 
@@ -305,7 +305,7 @@ void add_output_custom(pybind11::class_<T, options...>& c,
     c.def("__str__", [outputFunction](const T& x) {
         std::ostringstream s;
         outputFunction(x, s);
-        return s.str();
+        return std::move(s).str();
     });
 
     c.def("__repr__", [outputFunction, className](const T& c) {
@@ -313,7 +313,7 @@ void add_output_custom(pybind11::class_<T, options...>& c,
         s << '<' << className << ": ";
         outputFunction(c, s);
         s << '>';
-        return s.str();
+        return std::move(s).str();
     });
 }
 

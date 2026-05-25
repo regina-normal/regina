@@ -444,7 +444,7 @@ void Tangle::changeAll() {
 std::string Tangle::brief() const {
     std::ostringstream out;
     brief(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Tangle::brief(std::ostream& out) const {

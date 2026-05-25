@@ -273,13 +273,13 @@ std::ostream& operator << (std::ostream& out, const Rational& rat) {
 std::string Rational::str() const {
     std::ostringstream out;
     out << *this;
-    return out.str();
+    return std::move(out).str();
 }
 
 std::string Rational::tex() const {
     std::ostringstream out;
     writeTeX(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 std::ostream& Rational::writeTeX(std::ostream &out) const {

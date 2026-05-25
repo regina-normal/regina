@@ -182,7 +182,7 @@ bool Link::parseSignedGaussTerm(const std::string& s,
 std::string Link::gauss() const {
     std::ostringstream out;
     gauss(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::gauss(std::ostream& out) const {
@@ -235,7 +235,7 @@ std::vector<int> Link::gaussData() const {
 std::string Link::orientedGauss() const {
     std::ostringstream out;
     orientedGauss(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::orientedGauss(std::ostream& out) const {
@@ -318,7 +318,7 @@ std::vector<std::string> Link::orientedGaussData() const {
 std::string Tangle::orientedGauss() const {
     std::ostringstream out;
     orientedGauss(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Tangle::orientedGauss(std::ostream& out) const {
@@ -354,7 +354,7 @@ Tangle Tangle::fromOrientedGauss(const std::string& s) {
 std::string Link::signedGauss() const {
     std::ostringstream out;
     signedGauss(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::signedGauss(std::ostream& out) const {

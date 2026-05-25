@@ -916,7 +916,7 @@ void TreeDecomposition::writeDot(std::ostream& out, bool dark) const {
 std::string TreeDecomposition::dot(bool dark) const {
     std::ostringstream out;
     writeDot(out, dark);
-    return out.str();
+    return std::move(out).str();
 }
 
 void TreeDecomposition::writePACE(std::ostream& out) const {
@@ -949,7 +949,7 @@ void TreeDecomposition::writePACE(std::ostream& out) const {
 std::string TreeDecomposition::pace() const {
     std::ostringstream out;
     writePACE(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void TreeDecomposition::writeTextShort(std::ostream& out) const {

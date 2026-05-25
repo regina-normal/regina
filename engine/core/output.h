@@ -238,17 +238,17 @@ struct Output<T, true> {
     inline std::string str() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out, false);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string utf8() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out, true);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string detail() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextLong(out);
-        return out.str();
+        return std::move(out).str();
     }
 };
 
@@ -257,17 +257,17 @@ struct Output<T, false> {
     inline std::string str() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string utf8() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string detail() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextLong(out);
-        return out.str();
+        return std::move(out).str();
     }
 };
 

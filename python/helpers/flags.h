@@ -150,7 +150,7 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(hexWidth) << std::setfill('0')
                 << f.baseValue();
-            return out.str();
+            return std::move(out).str();
         })
         .def("__repr__", [](Flags f) {
             std::ostringstream out;
@@ -159,7 +159,7 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
                     "__name__")).cast<std::string_view>()
                 << ": 0x" << std::hex << std::setw(hexWidth)
                 << std::setfill('0') << f.baseValue() << '>';
-            return out.str();
+            return std::move(out).str();
         })
         ;
     regina::python::add_eq_operators(f, rdoc::__eq_2);

@@ -59,7 +59,7 @@ template <int dim> requires (supportedDim(dim))
 std::string GluingPerms<dim>::data() const {
     std::ostringstream out;
     dumpData(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <int dim> requires (supportedDim(dim))

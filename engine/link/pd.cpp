@@ -161,7 +161,7 @@ std::vector<std::array<int, 4>> Link::pdData() const {
 std::string Link::pd() const {
     std::ostringstream out;
     pd(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::pd(std::ostream& out) const {

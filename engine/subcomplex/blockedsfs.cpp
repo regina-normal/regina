@@ -429,7 +429,7 @@ std::optional<std::string> BlockedSFS::findPluggedTori(bool thin, int id,
     if (p1 != 2 || q1 != -1)
         ans << " | " << p1 << ',' << q1;
     ans << ')';
-    return ans.str();
+    return std::move(ans).str();
 }
 
 } // namespace regina

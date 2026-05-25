@@ -614,13 +614,13 @@ inline void GluingPermSearcher<2>::dumpTaggedData(std::ostream& out) const {
 inline std::string GluingPermSearcher<2>::taggedData() const {
     std::ostringstream out;
     dumpTaggedData(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline std::string GluingPermSearcher<2>::data() const {
     std::ostringstream out;
     dumpData(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline char GluingPermSearcher<2>::dataTagInternal() const {

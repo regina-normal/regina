@@ -53,7 +53,7 @@ Link Link::fromJenkins(const std::string& str) {
 std::string Link::jenkins() const {
     std::ostringstream out;
     jenkins(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::jenkins(std::ostream& out) const {

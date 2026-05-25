@@ -1485,14 +1485,14 @@ template <CoefficientDomain T>
 inline std::string Polynomial<T>::str(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, false, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>
 inline std::string Polynomial<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>

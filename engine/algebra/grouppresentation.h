@@ -1954,13 +1954,13 @@ inline void GroupExpression::erase() {
 inline std::string GroupExpression::str(bool alphaGen) const {
     std::ostringstream out;
     writeTextShort(out, false, alphaGen);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline std::string GroupExpression::utf8(bool alphaGen) const {
     std::ostringstream out;
     writeTextShort(out, true, alphaGen);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {

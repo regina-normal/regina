@@ -219,11 +219,12 @@ void GroupExpression::substitute(const std::vector<GroupExpression>& expansions,
 //       Free products with amalgamation. Currently simplify()
 //       isn't smart enough for this.
 std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
-    std::ostringstream out;
+    // Get the trivial case out of the way first.
+    if (nGenerators_ == 0)
+        return "0";
 
     // Run through cases.
-    if (nGenerators_ == 0)
-        { out << 0; return out.str(); }
+    std::ostringstream out;
 
     // Let's record the abelianisation.
     AbelianGroup ab =  abelianisation();
@@ -231,13 +232,13 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
     // abelian test
     if (identifyAbelian()) {
         ab.writeTextShort(out, moreUtf8);
-        return out.str();
+        return std::move(out).str();
     }
 
     // not (clearly) abelian.  Check if free.
     if (relations_.empty()) {
         out << "Free(" << nGenerators_ << ")";
-        return out.str();
+        return std::move(out).str();
     }
 
     // Check if its an extension over Z.
@@ -267,7 +268,7 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
                     out<<" \u21A6 "; // mapsto symbol in unicode
                     AUT->evaluate(i).writeTextShort(out, moreUtf8, numGen<27);
                 }
-                return out.str();
+                return std::move(out).str();
             } // domain not recognised, but it is an extension
             // TODO: put in something here for this case.
         }
@@ -289,7 +290,7 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
                 out << facStr;
         }
         out << " )";
-        return out.str();
+        return std::move(out).str();
     }
 
     // TODO: let's put in the undergraduate test for finiteness, that every
@@ -2096,7 +2097,7 @@ void GroupExpression::writeXMLData(std::ostream& out) const {
 std::string GroupExpression::tex() const {
     std::ostringstream out;
     writeTeX(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void GroupExpression::writeTeX(std::ostream& out) const {
@@ -2143,7 +2144,7 @@ void GroupExpression::writeTextShort(std::ostream& out, bool utf8,
 std::string GroupPresentation::tex() const {
     std::ostringstream out;
     writeTeX(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void GroupPresentation::writeTeX(std::ostream& out) const {
@@ -2198,7 +2199,7 @@ void GroupPresentation::writeTextLong(std::ostream& out) const {
 std::string GroupPresentation::compact() const {
     std::ostringstream out;
     writeTextCompact(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void GroupPresentation::writeTextCompact(std::ostream& out) const {
@@ -2336,7 +2337,7 @@ std::string GroupPresentation::gap(const std::string& groupVariable) const {
         }
     }
     out << "]; end,[]);";
-    return out.str();
+    return std::move(out).str();
 }
 
 } // namespace regina

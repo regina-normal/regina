@@ -947,7 +947,7 @@ inline size_t SatRegion::countBoundaryAnnuli() const {
 inline std::string SatRegion::blockAbbrs(bool tex) const {
     std::ostringstream s;
     writeBlockAbbrs(s, tex);
-    return s.str();
+    return std::move(s).str();
 }
 
 inline void SatRegion::writeTextLong(std::ostream& out) const {

@@ -6285,7 +6285,7 @@ template <int dim> requires (supportedDim(dim))
 inline std::string TriangulationBase<dim>::dot(bool labels) const {
     std::ostringstream ans;
     writeDot(ans, labels);
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))

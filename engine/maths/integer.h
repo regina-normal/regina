@@ -3949,7 +3949,7 @@ template <bool withInfinity>
 inline std::string IntegerBase<withInfinity>::tightEncoding() const {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, *this);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <bool withInfinity>
@@ -4038,7 +4038,7 @@ template <bool withInfinity>
 std::string tightEncoding(IntegerBase<withInfinity> value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, std::move(value));
-    return out.str();
+    return std::move(out).str();
 }
 
 // Inline functions for NativeInteger

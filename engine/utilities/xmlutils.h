@@ -107,7 +107,7 @@ template <Writeable T>
 inline std::string xmlValueTag(const std::string& tagName, const T& value) {
     std::ostringstream out;
     out << '<' << tagName << " value=\"" << value << "\"/>";
-    return out.str();
+    return std::move(out).str();
 }
 
 #ifndef __APIDOCS

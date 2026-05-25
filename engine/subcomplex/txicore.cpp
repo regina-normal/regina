@@ -36,13 +36,13 @@ namespace regina {
 std::string TxICore::name() const {
     std::ostringstream out;
     writeName(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 std::string TxICore::texName() const {
     std::ostringstream out;
     writeTeXName(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void TxICore::swapBaseData(TxICore& other) noexcept {

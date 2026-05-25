@@ -98,7 +98,7 @@ std::tuple<const SatBlock*, size_t, bool, bool>
 std::string SatBlock::abbr(bool tex) const {
     std::ostringstream s;
     writeAbbr(s, tex);
-    return s.str();
+    return std::move(s).str();
 }
 
 } // namespace regina

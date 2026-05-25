@@ -215,7 +215,7 @@ template <int dim> requires (supportedDim(dim))
 std::string FacetPairingBase<dim>::dotHeader(const char* graphName) {
     std::ostringstream ans;
     writeDotHeader(ans, graphName);
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -236,7 +236,7 @@ std::string FacetPairingBase<dim>::dot(
         const char* prefix, bool subgraph, bool labels) const {
     std::ostringstream ans;
     writeDot(ans, prefix, subgraph, labels);
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -287,7 +287,7 @@ std::string FacetPairingBase<dim>::textRep() const {
         ans << dest(f).simp << ' ' << dest(f).facet;
     }
 
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))

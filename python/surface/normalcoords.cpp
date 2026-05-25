@@ -116,13 +116,13 @@ void addNormalCoords(pybind11::module_& m) {
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(4) << std::setfill('0')
                 << e.intValue();
-            return out.str();
+            return std::move(out).str();
         })
         .def("__repr__", [](NormalEncoding e) {
             std::ostringstream out;
             out << "<regina.NormalEncoding: 0x" << std::hex << std::setw(4)
                 << std::setfill('0') << e.intValue() << '>';
-            return out.str();
+            return std::move(out).str();
         })
         ;
     regina::python::add_eq_operators(e, rdoc::__eq);

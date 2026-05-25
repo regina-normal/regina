@@ -443,7 +443,7 @@ inline std::string Signature::str(const std::string& cycleOpen,
         const std::string& cycleClose, const std::string& cycleJoin) const {
     std::ostringstream s;
     writeCycles(s, cycleOpen, cycleClose, cycleJoin);
-    return s.str();
+    return std::move(s).str();
 }
 
 inline void Signature::writeTextShort(std::ostream& out) const {

@@ -1129,7 +1129,7 @@ inline std::string Laurent2<T>::str(const char* varX, const char* varY)
         const {
     std::ostringstream out;
     writeTextShort(out, false, varX, varY);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>
@@ -1137,7 +1137,7 @@ inline std::string Laurent2<T>::utf8(const char* varX, const char* varY)
         const {
     std::ostringstream out;
     writeTextShort(out, true, varX, varY);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>

@@ -210,7 +210,7 @@ struct TightEncodable {
     std::string tightEncoding() const {
         std::ostringstream out;
         static_cast<const T*>(this)->tightEncode(out);
-        return out.str();
+        return std::move(out).str();
     }
 
     /**
@@ -316,7 +316,7 @@ template <CppInteger IntType>
 std::string tightEncoding(IntType value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, value);
-    return out.str();
+    return std::move(out).str();
 }
 
 /**

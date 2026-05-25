@@ -890,7 +890,7 @@ std::string Link::brief() const {
 
     std::ostringstream out;
     brief(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::brief(std::ostream& out) const {
@@ -1674,13 +1674,13 @@ std::string Link::source(Language language) const {
         out << ';';
     out << '\n';
 
-    return out.str();
+    return std::move(out).str();
 }
 
 std::string Link::pace() const {
     std::ostringstream out;
     writePACE(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::writePACE(std::ostream& out) const {

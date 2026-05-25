@@ -46,7 +46,7 @@ namespace regina {
 std::string Link::dt(bool alpha) const {
     std::ostringstream out;
     dt(out, alpha);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::dt(std::ostream& out, bool alpha) const {
