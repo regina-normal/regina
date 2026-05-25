@@ -194,7 +194,7 @@ class StandardSubcomplex : public Output<StandardSubcomplex<dim>> {
          * implemented for this particular subcomplex, then this routine should
          * throw a NotImplemented exception.
          *
-         * Individual subclasses of `StandardSubcomplex<3>` should explain
+         * Individual subclasses of StandardSubcomplex should explain
          * in their class notes whether they implement homology().
          * The default implementation provided by this base class just throws
          * a NotImplemented exception.
