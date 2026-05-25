@@ -54,6 +54,11 @@ signature of the triangulation, and then performs a logarithmic-time
 lookup in each database (here "logarithmic" means logarithmic in the
 size of the database).
 
+Exception ``FileError``:
+    An error occurred within one of the databases. Typically this
+    would indicate that some database could not be opened (e.g., it
+    might not be installed correctly on the system).
+
 Parameter ``tri``:
     the triangulation that you wish to search for.
 
@@ -103,6 +108,11 @@ isomorphism signature that it needs (but only if the given signature
 is not already of the correct generation), and then it performs a
 logarithmic-time lookup in each database (where "logarithmic" means
 logarithmic in the size of the database).
+
+Exception ``FileError``:
+    An error occurred within one of the databases. Typically this
+    would indicate that some database could not be opened (e.g., it
+    might not be installed correctly on the system).
 
 Parameter ``isoSig``:
     the isomorphism signature of the triangulation that you wish to
@@ -173,8 +183,6 @@ R"doc(Creates a new reference to one of Regina's census databases.
 
 This constructor will not run any checks (e.g., it will not verify
 that the database exists, or that it is stored in the correct format).
-Note that even if the database does not exist, the lookupKey() routine
-will fail gracefully.
 
 Parameter ``filename``:
     the filename where the database is stored.
@@ -259,19 +267,17 @@ Template parameter ``generation``:
     Regina's databases currently use second-generation isomorphism
     signatures as their keys.
 
+Exception ``FileError``:
+    An error occurred at the database level (e.g., the database could
+    not be opened).
+
 Parameter ``isoSig``:
     the isomorphism signature to search for; this must be of the same
     generation that is passed as a template parameter.
 
 Parameter ``action``:
     a function (or other callable type) that will be called for each
-    match in the database.
-
-Returns:
-    ``True`` if the lookup was correctly performed, or ``False`` if
-    some error occurred (e.g., the database could not be opened). Note
-    in particular that if there were no matches but no errors, then
-    the return value will be ``True``.)doc";
+    match in the database.)doc";
 
 // Docstring regina::python::doc::CensusDB::swap
 static constexpr const char swap[] =

@@ -482,6 +482,10 @@ represented by a pair of double quotes. Thus the string ``my "normal"
 surface's name`` would be stored as ``"my ""normal"" surface's
 name"``.
 
+If an error occurs whilst writing the file, this routine will throw an
+exception. This is a change of behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` instead.
+
 Internationalisation:
     This routine makes no assumptions about the character encoding
     used in the given file _name_, and simply passes it through
@@ -502,16 +506,16 @@ Exception ``UnsolvedCase``:
     machine, this would mean that the algorithm has encountered a
     normal surface with some coordinate at least ``2^64``.
 
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
 Parameter ``filename``:
     the name of the CSV file to export to.
 
 Parameter ``additionalFields``:
     a bitwise OR combination of constants from regina::SurfaceExport
     indicating which additional properties of surfaces should be
-    included in the export.
-
-Returns:
-    ``True`` if the export was successful, or ``False`` otherwise.)doc";
+    included in the export.)doc";
 
 // Docstring regina::python::doc::NormalSurfaces::saveCSVStandard
 static constexpr const char saveCSVStandard[] =
@@ -539,6 +543,10 @@ represented by a pair of double quotes. Thus the string ``my "normal"
 surface's name`` would be stored as ``"my ""normal"" surface's
 name"``.
 
+If an error occurs whilst writing the file, this routine will throw an
+exception. This is a change of behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` instead.
+
 Internationalisation:
     This routine makes no assumptions about the character encoding
     used in the given file _name_, and simply passes it through
@@ -559,16 +567,16 @@ Exception ``UnsolvedCase``:
     machine, this would mean that the algorithm has encountered a
     normal surface with some coordinate at least ``2^64``.
 
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
 Parameter ``filename``:
     the name of the CSV file to export to.
 
 Parameter ``additionalFields``:
     a bitwise OR combination of constants from regina::SurfaceExport
     indicating which additional properties of surfaces should be
-    included in the export.
-
-Returns:
-    ``True`` if the export was successful, or ``False`` otherwise.)doc";
+    included in the export.)doc";
 
 // Docstring regina::python::doc::NormalSurfaces::size
 static constexpr const char size[] =

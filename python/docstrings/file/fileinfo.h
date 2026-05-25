@@ -18,8 +18,8 @@ static constexpr const char __class[] =
 R"doc(Stores information about a Regina data file, including file format and
 version.
 
-Routine identify() can be used to determine this information for a
-given file.
+The static routine identify() can be used to determine this
+information for a given file.
 
 As of Regina 4.94, the ancient first-generation binary files
 (FileFormat::BinaryGen1) are no longer supported, and this class
@@ -44,9 +44,6 @@ For two FileInfo objects to compare as equal, they must have the same
 file formats, use the same version of the calculation engine, and use
 the same compression type. The pathnames of the files being described
 are ignored.
-
-It is safe to compare FileInfo objects even if one or both is invalid.
-Two invalid FileInfo objects will compare as equal.
 
 Parameter ``other``:
     the file information to compare with this.
@@ -98,7 +95,16 @@ Parameter ``b``:
 
 // Docstring regina::python::doc::FileInfo::identify
 static constexpr const char identify[] =
-R"doc(Return information about the given Regina data file.
+R"doc(Returns information about the given Regina data file.
+
+If the given file cannot be read, or if it cannot be identified as a
+Regina data file, then this routine will throw an exception. This is a
+change of behaviour as of Regina 8.0: older versions of Regina (≤ 7.x)
+would return either ``None`` (``std::nullopt`` in C++, or ``None`` in
+Python) or an "invalid" FileInfo object (depending upon the exact
+error condition). Nowadays this function returns a FileInfo (not a
+``std::optional<FileInfo>``), and there is no concept of an "invalid"
+FileInfo object at all.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -107,27 +113,40 @@ Internationalisation:
     structure is returned, its pathname() routine will use the same
     encoding that is passed here.
 
+Exception ``FileError``:
+    The file could not be read.
+
+Exception ``InvalidInput``:
+    The file could be read, but it does not appear to be a Regina data
+    file (in particular, Regina's file metadata could not be located
+    and parsed).
+
 Parameter ``idPathname``:
     the pathname of the data file to be examined.
 
 Returns:
-    a FileInfo structure containing information about the given file,
-    or ``None`` if the file type could not be identified.)doc";
+    a FileInfo structure containing information about the given Regina
+    data file.)doc";
 
 // Docstring regina::python::doc::FileInfo::isCompressed
 static constexpr const char isCompressed[] =
-R"doc(Returns whether this file is stored in compressed format. Currently
-this option only applies to XML data files.
+R"doc(Returns whether this file is stored in compressed XML format.
 
 Returns:
     ``True`` if this file is compressed or ``False`` otherwise.)doc";
 
 // Docstring regina::python::doc::FileInfo::isInvalid
 static constexpr const char isInvalid[] =
-R"doc(Returns whether the file metadata could not be read.
+R"doc(Deprecated routine that now always returns ``False``.
+
+.. deprecated::
+    As of Regina 8.0 this function is irrelevant, since identify() now
+    only returns a concrete FileInfo object if it can successfully
+    locate and parse Regina's file metadata. That is, as of Regina
+    8.0, every FileInfo object is now valid.
 
 Returns:
-    ``True`` if the metadata could not be read, ``False`` otherwise.)doc";
+    ``False``.)doc";
 
 // Docstring regina::python::doc::FileInfo::pathname
 static constexpr const char pathname[] =

@@ -80,10 +80,20 @@ R"doc(Reads a Regina data file, and returns the corresponding packet tree.
 This uses Regina's native XML file format; it does not matter whether
 the XML file is compressed or uncompressed.
 
-If the file could not be opened or the top-level packet in the tree
-could not be read, this routine will return ``None``. If some packet
-deeper within the tree could not be read then that particular packet
-(and its descendants, if any) will simply be ignored.
+If the file could not be opened, or if the top-level packet in the
+tree could not be parsed (i.e., the file does not appear to contain
+any usable Regina data), then this routine will throw an exception.
+Multiple exception types are possible: remember that you can just
+catch the base class ReginaException if you wish to catch them all
+together. This exception throwing is a change in behaviour as of
+Regina 8.0: older versions of Regina (≤ 7.x) would return ``None``
+instead.
+
+If some packet deeper within the tree could not be read, that
+particular packet (and its descendants, if any) will simply be
+ignored. This allows older versions of Regina to read files created by
+newer versions of Regina, by simply ignoring any features from the
+newer version that the older version does not understand.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -98,11 +108,19 @@ Python:
     built-in open() function. You can access Regina's open() function
     by calling ``regina.open()``.
 
+Exception ``FileError``:
+    The file could not be read.
+
+Exception ``InvalidInput``:
+    The file does not appear to contain any usable Regina data.
+
 Parameter ``filename``:
     the pathname of the file to read from.
 
 Returns:
-    the packet tree read from file, or ``None`` on error.)doc";
+    the packet tree read from file. As of Regina 8.0, if this routine
+    returns at all (as opposed to throwing an exception), then the
+    pointer it returns will not be ``None``.)doc";
 
 struct ChildIterator {
 
@@ -1254,6 +1272,10 @@ This is the preferred way of saving a Regina data file. Typically this
 will be called from the root of the packet tree, which will save the
 entire packet tree to file.
 
+This routine will throw an exception if an error occurs whilst writing
+the file. This is a change of behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` instead.
+
 Precondition:
     The given packet does not depend on its parent.
 
@@ -1262,6 +1284,9 @@ Internationalisation:
     used in the given file _name_, and simply passes it through
     unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
+
+Exception ``FileError``:
+    An error occurred whilst writing the file.
 
 Parameter ``filename``:
     the pathname of the file to write to.
@@ -1274,10 +1299,7 @@ Parameter ``format``:
     indicates which of Regina's XML file formats to write. You should
     use the default (FileFormat::Current) unless you need your file to
     be readable by older versions of Regina. This must not be
-    FileFormat::BinaryGen1, which is no longer supported.
-
-Returns:
-    ``True`` if and only if the file was successfully written.)doc";
+    FileFormat::BinaryGen1, which is no longer supported.)doc";
 
 // Docstring regina::python::doc::Packet::setLabel
 static constexpr const char setLabel[] =

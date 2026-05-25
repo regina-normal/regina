@@ -494,24 +494,29 @@ static constexpr const char fillTorus[] =
 R"doc(Fills a two-triangle torus boundary component by attaching a solid
 torus along a given curve.
 
-The boundary component to be filled should be passed as the argument
-*boundary*; if the triangulation has exactly one boundary component
-then you may omit *boundary* (i.e., pass the default value of
-``None``), and the (unique) boundary component will be inferred.
-
-If the boundary component cannot be inferred, and/or if the selected
-boundary component is not a two-triangle torus, then this routine will
-do nothing and return ``False``.
-
-Otherwise the given boundary component will be filled with a solid
-torus whose meridional curve cuts the edges ``boundary->edge(0)``,
+The given boundary component will be filled with a solid torus whose
+meridional curve cuts the three edges ``boundary->edge(0)``,
 ``boundary->edge(1)`` and ``boundary->edge(2)`` a total of *cuts0*,
 *cuts1* and *cuts2* times respectively.
 
-For the filling to be performed successfully, the integers *cuts0*,
-*cuts1* and *cuts2* must be coprime, and two of them must add to give
-the third. Otherwise, as above, this routine will do nothing and
-return ``False``.
+If the triangulation has exactly one boundary component then you may
+omit the *boundary* argument (i.e., you may pass the default value of
+``None``), in which case the (unique) boundary component will be
+inferred. If you try to do this but there is not exactly one boundary
+component then this routine will throw an exception.
+
+For the filling to be performed successfully:
+
+* the boundary component to fill must be a two-triangle torus;
+
+* the integers *cuts0*, *cuts1* and *cuts2* must be coprime;
+
+* the largest of these integers must be the sum of the other two.
+
+If any of these conditions is not met, then this routine will again
+throw an exception. This exception throwing is a change in behaviour
+as of Regina 8.0: older versions of Regina (≤ 7.x) returned ``False``
+to indicate failure instead.
 
 The triangulation will be simplified before returning.
 
@@ -519,6 +524,11 @@ There are two versions of fillTorus(); the other takes three explicit
 edges instead of a boundary component. You should use the other
 version if you know how the filling curve cuts each boundary edge but
 you do not know how these edges are indexed in the boundary component.
+
+Exception ``InvalidArgument``:
+    Either the boundary component could not be inferred, it is not a
+    two-triangle torus, the three given integers are not coprime,
+    and/or the largest integer is not the sum of the other two.
 
 Parameter ``cuts0``:
     the number of times that the meridional curve of the new solid
@@ -551,12 +561,21 @@ arguments *edge0*, *edge1* and *edge2*. The boundary component will
 then be filled with a solid torus whose meridional curve cuts these
 three edges *cuts0*, *cuts1* and *cuts2* times respectively.
 
-For the filling to be performed successfully, the three given edges
-must belong to the same boundary component, and this boundary
-component must be a two-triangle torus. Moreover, the integers
-*cuts0*, *cuts1* and *cuts2* must be coprime, and two of them must add
-to give the third. If any of these conditions are not met, then this
-routine will do nothing and return ``False``.
+For the filling to be performed successfully:
+
+* the three given edges must be distinct and must belong to the same
+  boundary component;
+
+* this boundary component must be a two-triangle torus;
+
+* the integers *cuts0*, *cuts1* and *cuts2* must be coprime;
+
+* the largest of these integers must be the sum of the other two.
+
+If any of these conditions is not met, then this routine will throw an
+exception. This is a change in behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` to indicate failure
+instead.
 
 The triangulation will be simplified before returning.
 
@@ -566,6 +585,13 @@ according to Regina's own edge numbering. This version of fillTorus()
 should be used when you know how the filling curve cuts each boundary
 edge but you do not know how these edges are indexed in the
 corresponding boundary component.
+
+Exception ``InvalidArgument``:
+    Either the three given edges are not distinct, they do not belong
+    to a common boundary component, their common boundary component is
+    not a two-triangle torus, the three given integers are not
+    coprime, and/or the largest integer is not the sum of the other
+    two.
 
 Parameter ``edge0``:
     one of the three edges of the boundary component to fill.
@@ -3707,8 +3733,10 @@ recogniser format.
 
 Recogniser exports are currently not available for triangulations that
 are invalid or contain boundary triangles. If either of these
-conditions is true then the file will not be written, and this routine
-will return ``False``.
+conditions is true, or if an error occurs whilst writing the file,
+then this routine will throw an exception. This is a change of
+behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) returned
+``False`` instead.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -3716,20 +3744,26 @@ Internationalisation:
     unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
-Parameter ``filename``:
-    the name of the Recogniser file to which to write.
+Exception ``NotImplemented``:
+    The triangulation is invalid and/or contains boundary triangles.
 
-Returns:
-    ``True`` if and only if the file was successfully written.)doc";
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
+Parameter ``filename``:
+    the name of the Recogniser file to which to write.)doc";
 
 // Docstring regina::python::doc::Triangulation3::saveRecognizer
 static constexpr const char saveRecognizer[] =
 R"doc(A synonym for saveRecogniser(). This writes this triangulation to the
 given file in Matveev's 3-manifold recogniser format.
 
-Precondition:
-    This triangulation is not invalid, and does not contain any
-    boundary triangles.
+Recogniser exports are currently not available for triangulations that
+are invalid or contain boundary triangles. If either of these
+conditions is true, or if an error occurs whilst writing the file,
+then this routine will throw an exception. This is a change of
+behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) returned
+``False`` instead.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -3737,11 +3771,14 @@ Internationalisation:
     unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
-Parameter ``filename``:
-    the name of the Recogniser file to which to write.
+Exception ``NotImplemented``:
+    The triangulation is invalid and/or contains boundary triangles.
 
-Returns:
-    ``True`` if and only if the file was successfully written.)doc";
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
+Parameter ``filename``:
+    the name of the Recogniser file to which to write.)doc";
 
 // Docstring regina::python::doc::Triangulation3::saveSnapPea
 static constexpr const char saveSnapPea[] =
@@ -3767,8 +3804,10 @@ Regarding what gets stored in the SnapPea data file:
   function is not virtual).
 
 SnapPea cannot represent triangulations that are empty, invalid, or
-contain boundary triangles. If any of these conditions is true then
-the file will not be written and this routine will return ``False``.
+contain boundary triangles. If any of these conditions is true, or if
+an error occurs whilst writing the file, then this routine will throw
+an exception. This is a change of behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` instead.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -3776,11 +3815,15 @@ Internationalisation:
     unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
-Parameter ``filename``:
-    the name of the SnapPea file to which to write.
+Exception ``NotImplemented``:
+    The triangulation is invalid, empty, and/or contains boundary
+    triangles.
 
-Returns:
-    ``True`` if and only if the file was successfully written.)doc";
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
+Parameter ``filename``:
+    the name of the SnapPea file to which to write.)doc";
 
 // Docstring regina::python::doc::Triangulation3::simplify
 static constexpr const char simplify[] =

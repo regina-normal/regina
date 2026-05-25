@@ -51,7 +51,8 @@ struct FileError {
 
 // Docstring regina::python::doc::FileError::__class
 static constexpr const char __class[] =
-R"doc(An exception thrown when trying to access data from the filesystem.
+R"doc(An exception thrown when trying to read or write data to/from the
+filesystem.
 
 This could occur, for instance, when trying to read data from the
 Regina or SnapPea census databases.

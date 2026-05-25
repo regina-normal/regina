@@ -253,11 +253,17 @@ static constexpr const char removeTrue[] = R"doc(Removes ``True`` from this set 
 
 // Docstring regina::python::doc::BoolSet::setByteCode
 static constexpr const char setByteCode[] =
-R"doc(Sets this to be the boolean set represented by the given byte code.
-See byteCode() for more information on byte codes.
+R"doc(Deprecated routine that sets this to be the boolean set represented by
+the given byte code. See byteCode() for more information on byte
+codes.
 
 If *code* is not a valid byte code, then this routine will do nothing
 and return ``False``.
+
+.. deprecated::
+    Instead of ``b.setByteCode(code)``, use ``b =
+    BoolSet.fromByteCode(code)``. Note that fromByteCode() will report
+    any errors by throwing an exception.
 
 Parameter ``code``:
     the byte code that will determine the new value of this set.
@@ -267,14 +273,20 @@ Returns:
 
 // Docstring regina::python::doc::BoolSet::setStringCode
 static constexpr const char setStringCode[] =
-R"doc(Sets this to be the boolean set represented by the given string code.
-See stringCode() for more information on string codes.
+R"doc(Deprecated routine that sets this to be the boolean set represented by
+the given string code. See stringCode() for more information on string
+codes.
 
 Both upper-case and lower-case codes (or a mix of the two) are
 accepted by this routine.
 
 If *code* is not a valid string code, then this routine will do
 nothing and return ``False``.
+
+.. deprecated::
+    Instead of ``b.setStringCode(code)``, use ``b =
+    BoolSet.fromStringCode(code)``. Note that fromStringCode() will
+    report any errors by throwing an exception.
 
 Parameter ``code``:
     the string code that will determine the new value of this set.

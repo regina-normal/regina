@@ -305,10 +305,16 @@ Parameter ``b``:
 
 // Docstring regina::python::doc::Matrix2::inverse
 static constexpr const char inverse[] =
-R"doc(Calculates the inverse of this matrix. This matrix is not changed.
+R"doc(Returns the inverse of this matrix. This matrix will not be changed.
 
-This routine only works for integer matrices whose determinant is
-either +1 or -1.
+This routine only works for integer matrices whose determinant is +1.
+Otherwise the inverse (if it even exists) cannot be an integer matrix,
+and so this routine will throw an exception. This is a change of
+behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) returned
+the zero matrix to indicate failure instead.
+
+Exception ``NoSolution``:
+    This matrix does not have determinant ±1.
 
 Returns:
     the inverse of this matrix. If this matrix does not have
@@ -316,14 +322,16 @@ Returns:
 
 // Docstring regina::python::doc::Matrix2::invert
 static constexpr const char invert[] =
-R"doc(Inverts this matrix.
+R"doc(Inverts this matrix. This matrix is changed to reflect the result.
 
-This routine only works for integer matrices whose determinant is
-either +1 or -1. Otherwise this matrix is left unchanged.
+This routine only works for integer matrices whose determinant is +1.
+Otherwise the inverse (if it even exists) cannot be an integer matrix,
+and so this routine will throw an exception. This is a change of
+behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) returned
+``False`` to indicate failure instead.
 
-Returns:
-    ``True`` if this matrix was successfully inverted (i.e., its
-    determinant was +1 or -1), or ``False`` otherwise.)doc";
+Exception ``NoSolution``:
+    This matrix does not have determinant ±1.)doc";
 
 // Docstring regina::python::doc::Matrix2::isIdentity
 static constexpr const char isIdentity[] =

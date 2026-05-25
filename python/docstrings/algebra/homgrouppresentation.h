@@ -258,14 +258,15 @@ isomorphism (which means that the inverse map is already stored
 internally). See the HomGroupPresentation class notes for further
 details on declared isomorphisms.
 
-If this is not a declared isomorphism then this routine will do
-nothing and simply return ``False``.
+If this is not a declared isomorphism, this routine will throw an
+exception. This is a change of behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` instead.
 
 This operation is (very) fast constant time.
 
-Returns:
-    ``True`` if and only if the inversion operation was successful
-    (i.e., if this is a declared isomorphism).)doc";
+Exception ``NoSolution``:
+    This homomorphism is not a declared isomorphism (and so the
+    inversion operation could not be completed).)doc";
 
 // Docstring regina::python::doc::HomGroupPresentation::knowsInverse
 static constexpr const char knowsInverse[] =

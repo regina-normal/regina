@@ -89,14 +89,22 @@ maintained. That is, if the given file should later change its
 contents on the filesystem, the change will _not_ be reflected in this
 attachment packet.
 
-If the file could not be read or is empty, then no attachment will be
-stored. You can test this by calling isNull().
+If the file is empty, then no attachment will be stored. You can test
+this by calling isNull().
+
+If the file could not be read, then this routine will throw an
+exception. This is a change in behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) would just store no attachment in this
+scenario instead.
 
 The filename that is stored with this attachment (i.e., the string
 that will be returned by filename()) will be the argument *pathname*
 with any directory prefixes removed (i.e., just the final filename
 component). If an error occurs when attempting to remove directory
 prefixes, the filename will be the empty string.
+
+Exception ``FileError``:
+    An error occurred whilst reading the file.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -146,9 +154,10 @@ Parameter ``alloc``:
     block of data; see the notes above for details.
 
 Parameter ``filename``:
-    the filename to associated with this attachment; typically this
-    would be a filename only, with no directory prefixes. See
-    filename() for details on how this string will be used.)doc";
+    the filename to associate with this attachment; typically this
+    would be a filename only, with no directory prefixes. The file
+    does not need to exist, and this constructor will not try to open
+    it. See filename() for details on how this string will be used.)doc";
 
 // Docstring regina::python::doc::Attachment::data
 static constexpr const char data[] =
@@ -267,28 +276,36 @@ Parameter ``alloc``:
 Parameter ``filename``:
     the new filename to associated with this attachment; this will
     override the previously stored filename. Typically this would be a
-    filename only, with no directory prefixes. See filename() for
-    details on how this string will be used.)doc";
+    filename only, with no directory prefixes. The file does not need
+    to exist, and this routine will not try to open it. See filename()
+    for details on how this string will be used.)doc";
 
 // Docstring regina::python::doc::Attachment::save
 static constexpr const char save[] =
 R"doc(Saves the contents of this attachment to the given file.
 
-If this packet does not currently hold a non-empty attachment (i.e.,
-if isNull() returns ``True``), then this routine will do nothing and
-simply return ``False``.
+If this packet does not currently hold a non-empty attachment, or if
+an error occurs whilst writing to file, then this routine will throw
+an exception. This is a change in behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` instead.
+
+Precondition:
+    This packet holds a non-empty attachment; that is, isNull()
+    returns ``False``.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
     used in the given file _name_, and simply passes it unchanged to
     low-level C/C++ file I/O routines.
 
-Parameter ``pathname``:
-    the full pathname of the file to write.
+Exception ``FailedPrecondition``:
+    This packet does not currently hold a non-empty attachment.
 
-Returns:
-    ``True`` if the file was successfully written, or ``False``
-    otherwise.)doc";
+Exception ``FileError``:
+    An error occurred whilst writing to file.
+
+Parameter ``pathname``:
+    the full pathname of the file to write.)doc";
 
 // Docstring regina::python::doc::Attachment::size
 static constexpr const char size[] =
