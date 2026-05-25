@@ -55,34 +55,28 @@ namespace {
             }
 
             void initialChars(const std::string& chars) override {
-                std::vector<std::string> tokens = basicTokenise(chars);
+                try {
+                    for (const std::string& t : basicTokenise(chars)) {
+                        auto split = t.find('^');
+                        if (split == t.length()) {
+                            exp_.reset();
+                            return;
+                        }
 
-                std::string genStr, powStr;
-                size_t gen;
-                long pow;
-                std::string::size_type split;
-                for (const std::string& t : tokens) {
-                    split = t.find('^');
-                    if (split == t.length()) {
-                        exp_.reset();
-                        break;
+                        size_t gen = parse<size_t>(t.substr(0, split));
+                        long pow = parse<long>(t.substr(split + 1,
+                            t.length() - split - 1));
+
+                        // We already have gen >= 0, since size_t is unsigned.
+                        if (gen >= nGens_) {
+                            exp_.reset();
+                            return;
+                        }
+
+                        exp_->addTermLast(gen, pow);
                     }
-
-                    genStr = t.substr(0, split);
-                    powStr = t.substr(split + 1, t.length() - split - 1);
-
-                    if ((! valueOf(genStr, gen)) || (! valueOf(powStr, pow))) {
-                        exp_.reset();
-                        break;
-                    }
-
-                    // We already have gen >= 0, since size_t is unsigned.
-                    if (gen >= nGens_) {
-                        exp_.reset();
-                        break;
-                    }
-
-                    exp_->addTermLast(gen, pow);
+                } catch (const InvalidArgument&) {
+                    exp_.reset();
                 }
             }
     };
@@ -90,21 +84,19 @@ namespace {
 
 void XMLAbelianGroupReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
-    size_t rank;
-    if (valueOf(tagProps.lookup("rank"), rank))
-        if (rank >= 0) {
-            group_ = AbelianGroup(rank);
-        }
+    try {
+        group_ = AbelianGroup(parse<size_t>(tagProps.lookup("rank")));
+    } catch (const InvalidArgument&) {
+        // Just leave group_ unset.
+    }
 }
 
 void XMLAbelianGroupReader::initialChars(const std::string& chars) {
     if (group_) {
-        std::vector<std::string> tokens = basicTokenise(chars);
         try {
-            for (const std::string& t : tokens)
+            for (const std::string& t : basicTokenise(chars))
                 group_->addTorsion(Integer(t));
-        } catch (const regina::InvalidArgument&) {
-            // Unparseable.
+        } catch (const InvalidArgument&) {
             group_.reset();
         }
     }
@@ -112,11 +104,13 @@ void XMLAbelianGroupReader::initialChars(const std::string& chars) {
 
 void XMLGroupPresentationReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
-    size_t nGen;
-    if (valueOf(tagProps.lookup("generators"), nGen)) {
+    try {
+        size_t nGen = parse<size_t>(tagProps.lookup("generators"));
         group_ = GroupPresentation();
         if (nGen)
             group_->addGenerator(nGen);
+    } catch (const InvalidArgument&) {
+        // It must have been parse() that failed - just leave group_ unset.
     }
 }
 

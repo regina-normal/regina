@@ -286,7 +286,7 @@ namespace regina {
  *    is reason why a class or function cannot or should not be wrapped.
  *    If a class or function is not available in Python then you will
  *    see a bold <b>Python:</b> note indicating this.  See for instance
- *    the class MarkedVector, or the function valueOf().
+ *    the class MarkedVector, or the various `parse<...>()` functions.
  *
  *  - Most of Regina's classes and functions use the same interface
  *    in both C++ and Python, but occasionally there are differences

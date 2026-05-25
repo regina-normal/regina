@@ -39,10 +39,16 @@ namespace regina {
 void XMLNormalSurfaceReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
         XMLElementReader*) {
-    if (! valueOf(props.lookup("len"), vecLen_))
+    try {
+        vecLen_ = parse<ssize_t>(props.lookup("len"));
+    } catch (const InvalidArgument&) {
         vecLen_ = -1;
-    if (! valueOf(props.lookup("enc"), vecEnc_))
+    }
+    try {
+        vecEnc_ = parse<int>(props.lookup("enc"));
+    } catch (const InvalidArgument&) {
         vecEnc_ = 0;
+    }
     name_ = props.lookup("name");
 }
 
@@ -59,19 +65,15 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
 
     // Create a new vector and read all non-zero entries.
     Vector<LargeInteger> vec(vecLen_);
-
-    size_t pos;
-    LargeInteger value;
-    for (size_t i = 0; i < tokens.size(); i += 2) {
-        if (! valueOf(tokens[i], pos)) // note: this ensures pos >= 0
-            return;
-        if (pos >= vecLen_)
-            return;
-        try {
+    try {
+        for (size_t i = 0; i < tokens.size(); i += 2) {
+            size_t pos = parse<size_t>(tokens[i]);
+            if (pos >= vecLen_)
+                return;
             vec[pos] = tokens[i + 1];
-        } catch (const regina::InvalidArgument&) {
-            return;
         }
+    } catch (const InvalidArgument&) {
+        return;
     }
 
     if (vecEnc_ != 0)
@@ -90,31 +92,22 @@ XMLElementReader* XMLNormalSurfaceReader::startSubElement(
     if (! surface_)
         return new XMLElementReader();
 
-    if (subTagName == "euler") {
-        try {
+    try {
+        if (subTagName == "euler") {
             surface_->eulerChar_ = props.lookup("value");
-        } catch (const regina::InvalidArgument&) {
+        } else if (subTagName == "orbl") {
+            surface_->orientable_ = parse<bool>(props.lookup("value"));
+        } else if (subTagName == "twosided") {
+            surface_->twoSided_ = parse<bool>(props.lookup("value"));
+        } else if (subTagName == "connected") {
+            surface_->connected_ = parse<bool>(props.lookup("value"));
+        } else if (subTagName == "realbdry") {
+            surface_->realBoundary_ = parse<bool>(props.lookup("value"));
+        } else if (subTagName == "compact") {
+            surface_->compact_ = parse<bool>(props.lookup("value"));
         }
-    } else if (subTagName == "orbl") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->orientable_ = val;
-    } else if (subTagName == "twosided") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->twoSided_ = val;
-    } else if (subTagName == "connected") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->connected_ = val;
-    } else if (subTagName == "realbdry") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->realBoundary_ = val;
-    } else if (subTagName == "compact") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->compact_ = val;
+    } catch (const InvalidArgument&) {
+        // Fall through to the default XMLElementReader below.
     }
     return new XMLElementReader();
 }
@@ -129,19 +122,17 @@ XMLNormalSurfacesReader::XMLNormalSurfacesReader(
     if (! tri_)
         return;
 
-    // Extract the list parameters from the attributes.
-    int coords;
-    Flags<NormalList>::BaseInt listType;
-    Flags<NormalAlg>::BaseInt algorithm;
-    if (valueOf(props.lookup("coords"), coords) &&
-            valueOf(props.lookup("type"), listType) &&
-            valueOf(props.lookup("algorithm"), algorithm)) {
-        // Parameters look sane; create the empty list.
+    // Extract the list parameters from the attributes and create an empty list.
+    try {
         list_ = make_packet<NormalSurfaces>(std::in_place,
-            static_cast<NormalCoords>(coords),
-            Flags<NormalList>::fromBase(listType),
-            Flags<NormalAlg>::fromBase(algorithm),
+            static_cast<NormalCoords>(parse<int>(props.lookup("coords"))),
+            Flags<NormalList>::fromBase(
+                parse<Flags<NormalList>::BaseInt>(props.lookup("type"))),
+            Flags<NormalAlg>::fromBase(
+                parse<Flags<NormalAlg>::BaseInt>(props.lookup("algorithm"))),
             *tri_);
+    } catch (const InvalidArgument&) {
+        // Do not create the surface list.
     }
 }
 
@@ -175,28 +166,37 @@ XMLElementReader* XMLLegacyNormalSurfacesReader::startContentSubElement(
     } else {
         // The surface list has not yet been created.
         if (subTagName == "params") {
-            long coords;
-            Flags<NormalList>::BaseInt listType;
-            Flags<NormalAlg>::BaseInt algorithm;
-            bool embedded;
-            if (valueOf(props.lookup("flavourid"), coords)) {
-                if (valueOf(props.lookup("type"), listType) &&
-                        valueOf(props.lookup("algorithm"), algorithm)) {
-                    // Parameters look sane; create the empty list.
-                    list_ = make_packet<NormalSurfaces>(std::in_place,
-                        static_cast<NormalCoords>(coords),
-                        Flags<NormalList>::fromBase(listType),
-                        Flags<NormalAlg>::fromBase(algorithm),
-                        tri_);
-                } else if (valueOf(props.lookup("embedded"), embedded)) {
-                    // Parameters look sane but use the old format.
-                    list_ = make_packet<NormalSurfaces>(std::in_place,
-                        static_cast<NormalCoords>(coords),
+            NormalCoords coords;
+            try {
+                coords = static_cast<NormalCoords>(
+                    parse<long>(props.lookup("flavourid")));
+            } catch (const InvalidArgument&) {
+                // A coordinate system is mandatory.  Abort.
+                return new XMLElementReader();
+            }
+
+            // First try for the new format.
+            try {
+                list_ = make_packet<NormalSurfaces>(std::in_place, coords,
+                    Flags<NormalList>::fromBase(
+                        parse<Flags<NormalList>::BaseInt>(
+                        props.lookup("type"))),
+                    Flags<NormalAlg>::fromBase(
+                        parse<Flags<NormalAlg>::BaseInt>(
+                        props.lookup("algorithm"))),
+                    tri_);
+            } catch (const InvalidArgument&) {
+                // No go.  See if we have the old format instead.
+                try {
+                    bool embedded = parse<bool>(props.lookup("embedded"));
+                    list_ = make_packet<NormalSurfaces>(std::in_place, coords,
                         NormalList::Legacy | (embedded ?
                             NormalList::EmbeddedOnly :
                             NormalList::ImmersedSingular),
                         NormalAlg::Legacy,
                         tri_);
+                } catch (const InvalidArgument&) {
+                    // Neither format worked.  Do not create an empty list.
                 }
             }
         }

@@ -39,8 +39,11 @@ namespace regina {
 void XMLAngleStructureReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
         XMLElementReader*) {
-    if (! valueOf(props.lookup("len"), vecLen))
+    try {
+        vecLen = parse<ssize_t>(props.lookup("len"));
+    } catch (const InvalidArgument&) {
         vecLen = -1;
+    }
 }
 
 void XMLAngleStructureReader::initialChars(const std::string& chars) {
@@ -53,19 +56,15 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
 
     // Create a new vector and read all non-zero entries.
     VectorInt vec(vecLen);
-
-    size_t pos;
-    Integer value;
-    for (size_t i = 0; i < tokens.size(); i += 2) {
-        if (! valueOf(tokens[i], pos)) // note: this ensures pos >= 0
-            return;
-        if (pos >= vecLen)
-            return;
-        try {
+    try {
+        for (size_t i = 0; i < tokens.size(); i += 2) {
+            size_t pos = parse<size_t>(tokens[i]);
+            if (pos >= vecLen)
+                return;
             vec[pos] = tokens[i + 1];
-        } catch (const regina::InvalidArgument&) {
-            return;
         }
+    } catch (const InvalidArgument&) {
+        return;
     }
 
     angles_ = AngleStructure(tri_, std::move(vec));
@@ -81,17 +80,24 @@ XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
         return;
 
     // Extract the list parameters from the attributes.
-    // We will (unnecessarily) allow the algorithm to be missing.
     bool tautOnly;
-    if (! valueOf(props.lookup("tautonly"), tautOnly))
+    try {
+        tautOnly = parse<bool>(props.lookup("tautonly"));
+    } catch (const InvalidArgument&) {
         return;
+    }
 
-    Flags<AngleAlg>::BaseInt algorithm;
-    if (! valueOf(props.lookup("algorithm"), algorithm))
-        algorithm = static_cast<Flags<AngleAlg>::BaseInt>(AngleAlg::Legacy);
+    Flags<AngleAlg> algorithm;
+    try {
+        algorithm = Flags<AngleAlg>::fromBase(
+            parse<Flags<AngleAlg>::BaseInt>(props.lookup("algorithm")));
+    } catch (const InvalidArgument&) {
+        // We will (unnecessarily) allow the algorithm to be missing.
+        algorithm = AngleAlg::Legacy;
+    }
 
-    list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
-        Flags<AngleAlg>::fromBase(algorithm), *tri_);
+    list_ = make_packet<AngleStructures>(std::in_place, tautOnly, algorithm,
+        *tri_);
 }
 
 XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
@@ -106,13 +112,14 @@ XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
     if (subTagName == "struct")
         return new XMLAngleStructureReader(list_->triangulation_);
 
-    bool b;
-    if (subTagName == "spanstrict") {
-        if (valueOf(props.lookup("value"), b))
-            list_->doesSpanStrict_ = b;
-    } else if (subTagName == "spantaut") {
-        if (valueOf(props.lookup("value"), b))
-            list_->doesSpanTaut_ = b;
+    try {
+        if (subTagName == "spanstrict") {
+            list_->doesSpanStrict_ = parse<bool>(props.lookup("value"));
+        } else if (subTagName == "spantaut") {
+            list_->doesSpanTaut_ = parse<bool>(props.lookup("value"));
+        }
+    } catch (const InvalidArgument&) {
+        // Fall through to the default XMLElementReader below.
     }
     return new XMLElementReader();
 }
@@ -130,22 +137,21 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (list_) {
-        bool b;
-        // The angle structure list has already been created.
-        if (subTagName == "struct") {
-            return new XMLAngleStructureReader(list_->triangulation_);
-        } else if (subTagName == "spanstrict") {
-            if (valueOf(props.lookup("value"), b))
-                list_->doesSpanStrict_ = b;
-        } else if (subTagName == "spantaut") {
-            if (valueOf(props.lookup("value"), b))
-                list_->doesSpanTaut_ = b;
-        } else if (subTagName == "allowstrict") {
-            if (valueOf(props.lookup("value"), b))
-                list_->doesSpanStrict_ = b;
-        } else if (subTagName == "allowtaut") {
-            if (valueOf(props.lookup("value"), b))
-                list_->doesSpanTaut_ = b;
+        try {
+            // The angle structure list has already been created.
+            if (subTagName == "struct") {
+                return new XMLAngleStructureReader(list_->triangulation_);
+            } else if (subTagName == "spanstrict") {
+                list_->doesSpanStrict_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "spantaut") {
+                list_->doesSpanTaut_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "allowstrict") {
+                list_->doesSpanStrict_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "allowtaut") {
+                list_->doesSpanTaut_ = parse<bool>(props.lookup("value"));
+            }
+        } catch (const InvalidArgument&) {
+            // Fall through to the default XMLElementReader below.
         }
     } else {
         // The angle structure list has not yet been created.
@@ -153,14 +159,22 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
             // All of these parameters are optional, to support older
             // file formats.
             bool tautOnly;
-            Flags<AngleAlg>::BaseInt algorithm;
-            if (! valueOf(props.lookup("tautonly"), tautOnly))
+            try {
+                tautOnly = parse<bool>(props.lookup("tautonly"));
+            } catch (const InvalidArgument&) {
                 tautOnly = false;
-            if (! valueOf(props.lookup("algorithm"), algorithm))
-                algorithm = static_cast<Flags<AngleAlg>::BaseInt>(
-                    AngleAlg::Legacy);
+            }
+
+            Flags<AngleAlg> algorithm;
+            try {
+                algorithm = Flags<AngleAlg>::fromBase(
+                    parse<Flags<AngleAlg>::BaseInt>(props.lookup("algorithm")));
+            } catch (const InvalidArgument&) {
+                algorithm = AngleAlg::Legacy;
+            }
+
             list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
-                Flags<AngleAlg>::fromBase(algorithm), tri_);
+                algorithm, tri_);
         } else if (subTagName == "struct") {
             // Eep, we are getting angle structures but no parameters were
             // ever specified.  This was how data files looked in
@@ -178,6 +192,7 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
         // However, we silently ignore such properties in this case, since
         // they are trivial to recreate (given that the list is empty).
     }
+
     return new XMLElementReader();
 }
 

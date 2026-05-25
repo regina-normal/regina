@@ -303,17 +303,14 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     // Read the raw values.
     // Check the range of each value while we're at it.
     for (size_t i = 0; i < nSimp * (dim + 1); ++i) {
-        size_t val;
-
-        if (! valueOf(tokens[2 * i], val))
-            throw InvalidArgument(
-                "fromTextRep(): contains non-integer simplex");
+        // The calls to parse() here will throw an InvalidArgument on error
+        // (which is what we want).
+        size_t val = parse<size_t>(tokens[2 * i]);
         if (val > nSimp)
             throw InvalidArgument("fromTextRep(): simplex out of range");
         ans.pairs_[i].simp = val;
 
-        if (! valueOf(tokens[2 * i + 1], val))
-            throw InvalidArgument("fromTextRep(): contains non-integer facet");
+        val = parse<size_t>(tokens[2 * i + 1]);
         if (val > dim)
             throw InvalidArgument("fromTextRep(): facet out of range");
         ans.pairs_[i].facet = static_cast<int>(val);

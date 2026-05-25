@@ -35,203 +35,124 @@
 
 #include "testhelper.h"
 
-template <regina::CppInteger Native>
-static void testValueOf(Native value) {
-    SCOPED_TRACE_INTEGER(value);
+using regina::InvalidArgument;
 
-    Native dest = 3;
-    EXPECT_TRUE(regina::valueOf(regina::toString(value), dest));
-    EXPECT_EQ(dest, value);
+template <regina::CppInteger Native>
+static void testParse(Native value) {
+    SCOPED_TRACE_INTEGER(value);
+    EXPECT_NO_THROW({
+        EXPECT_EQ(regina::parse<Native>(regina::toString(value)), value); });
 }
 
 template <regina::CppInteger Native>
-static void testValueOf() {
+static void testParse() {
     SCOPED_TRACE_TYPE(Native);
 
-    {
-        Native dest = 3;
-        EXPECT_TRUE(regina::valueOf("0", dest));
-        EXPECT_EQ(dest, 0);
-    }
-    {
-        Native dest = 3;
-        EXPECT_TRUE(regina::valueOf("10", dest));
-        EXPECT_EQ(dest, 10);
-    }
+    EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("0"), 0); });
+    EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("10"), 10); });
 
-    testValueOf<Native>(std::numeric_limits<Native>::min());
+    testParse<Native>(std::numeric_limits<Native>::min());
     for (Native i = 1; i <= 10; ++i)
-        testValueOf<Native>(std::numeric_limits<Native>::min() + i);
-    testValueOf<Native>(std::numeric_limits<Native>::min() / 2);
-    testValueOf<Native>(std::numeric_limits<Native>::max() / 2);
+        testParse<Native>(std::numeric_limits<Native>::min() + i);
+    testParse<Native>(std::numeric_limits<Native>::min() / 2);
+    testParse<Native>(std::numeric_limits<Native>::max() / 2);
     for (Native i = 1; i <= 10; ++i)
-        testValueOf<Native>(std::numeric_limits<Native>::max() - i);
-    testValueOf<Native>(std::numeric_limits<Native>::max());
+        testParse<Native>(std::numeric_limits<Native>::max() - i);
+    testParse<Native>(std::numeric_limits<Native>::max());
 
     if constexpr (regina::SignedCppInteger<Native>) {
-        testValueOf<Native>(-128);
-        testValueOf<Native>(-100);
+        EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("-128"), -128); });
+        EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("-100"), -100); });
     }
-    testValueOf<Native>(100);
-    testValueOf<Native>(127);
+    EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("100"), 100); });
+    EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("127"), 127); });
     if constexpr (regina::UnsignedCppInteger<Native>) {
-        testValueOf<Native>(200);
-        testValueOf<Native>(255);
+        EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("200"), 200); });
+        EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("255"), 255); });
     }
 
     if constexpr (regina::SignedCppInteger<Native>) {
-        {
-            Native dest = 3;
-            EXPECT_TRUE(regina::valueOf("-1", dest));
-            EXPECT_EQ(dest, -1);
-        }
-        {
-            Native dest = 3;
-            EXPECT_TRUE(regina::valueOf("-10", dest));
-            EXPECT_EQ(dest, -10);
-        }
+        EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("-1"), -1); });
+        EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>("-10"), -10); });
     } else {
-        {
-            Native dest = 3;
-            EXPECT_FALSE(regina::valueOf("-1", dest));
-            EXPECT_EQ(dest, 3);
-        }
-        {
-            Native dest = 3;
-            EXPECT_FALSE(regina::valueOf("-10", dest));
-            EXPECT_EQ(dest, 3);
-        }
+        EXPECT_THROW({ regina::parse<Native>("-1"); }, InvalidArgument);
+        EXPECT_THROW({ regina::parse<Native>("-10"); }, InvalidArgument);
     }
 
     // Cases that should fail for all integer types:
-    {
-        Native dest = 3;
-        EXPECT_FALSE(regina::valueOf("", dest));
-        EXPECT_FALSE(regina::valueOf(" ", dest));
-        EXPECT_FALSE(regina::valueOf("-", dest));
-        EXPECT_FALSE(regina::valueOf("x", dest));
-        EXPECT_EQ(dest, 3);
-    }
+    EXPECT_THROW({ regina::parse<Native>(""); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<Native>(" "); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<Native>("-"); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<Native>("x"); }, InvalidArgument);
 
     // Trailing characters should cause a failure.
-    // The value of dest is theoretically undefined, but in practice valueOf()
-    // should do its best with the string that it was given, and we check this
-    // here.
-    {
-        Native dest = 3;
-        EXPECT_FALSE(regina::valueOf("0 ", dest));
-        EXPECT_EQ(dest, 3);
-    }
-    {
-        Native dest = 3;
-        EXPECT_FALSE(regina::valueOf("0x", dest));
-        EXPECT_EQ(dest, 3);
-    }
-    {
-        Native dest = 3;
-        EXPECT_FALSE(regina::valueOf("10 ", dest));
-        EXPECT_EQ(dest, 3);
-    }
-    if constexpr (regina::SignedCppInteger<Native>) {
-        {
-            Native dest = 3;
-            EXPECT_FALSE(regina::valueOf("-1 ", dest));
-            EXPECT_EQ(dest, 3);
-        }
-        {
-            Native dest = 3;
-            EXPECT_FALSE(regina::valueOf("-10 ", dest));
-            EXPECT_EQ(dest, 3);
-        }
-    } else {
-        {
-            Native dest = 3;
-            EXPECT_FALSE(regina::valueOf("-1 ", dest));
-            EXPECT_EQ(dest, 3);
-        }
-        {
-            Native dest = 3;
-            EXPECT_FALSE(regina::valueOf("-10 ", dest));
-            EXPECT_EQ(dest, 3);
-        }
-    }
+    EXPECT_THROW({ regina::parse<Native>("0 "); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<Native>("0x"); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<Native>("10 "); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<Native>("-1 "); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<Native>("-10 "); }, InvalidArgument);
 
     // What to do about leading whitespace?  Functions like strtol() can
     // handle it, but we claim that any whitespace at all should cause a
     // failure, so test for that.
     {
-        Native dest = 3;
-        EXPECT_FALSE(regina::valueOf(" 0", dest));
-        EXPECT_FALSE(regina::valueOf(" 10", dest));
-        EXPECT_FALSE(regina::valueOf(" -1", dest));
-        EXPECT_FALSE(regina::valueOf(" -10", dest));
-        EXPECT_EQ(dest, 3);
+        EXPECT_THROW({ regina::parse<Native>(" 0"); }, InvalidArgument);
+        EXPECT_THROW({ regina::parse<Native>(" 10"); }, InvalidArgument);
+        EXPECT_THROW({ regina::parse<Native>(" -1"); }, InvalidArgument);
+        EXPECT_THROW({ regina::parse<Native>(" -10"); }, InvalidArgument);
     }
 
-    // Check how valueOf() behaves in the presence of overflow.
+    // Check how parse() behaves in the presence of overflow.
     {
-        Native dest = 3;
         regina::Integer overflow = std::numeric_limits<Native>::max();
         for (int i = 0; i < 10; ++i) {
             ++overflow;
             SCOPED_TRACE_REGINA(overflow);
-            EXPECT_FALSE(regina::valueOf(overflow.str(), dest));
+            EXPECT_THROW({ regina::parse<Native>(overflow.str()); },
+                InvalidArgument);
         }
-        EXPECT_EQ(dest, 3);
     }
     {
-        Native dest = 3;
         regina::Integer overflow = std::numeric_limits<Native>::min();
         for (int i = 0; i < 10; ++i) {
             --overflow;
             SCOPED_TRACE_REGINA(overflow);
-            EXPECT_FALSE(regina::valueOf(overflow.str(), dest));
+            EXPECT_THROW({ regina::parse<Native>(overflow.str()); },
+                InvalidArgument);
         }
-        EXPECT_EQ(dest, 3);
     }
 }
 
-TEST(StringUtilsTest, valueOf) {
+TEST(StringUtilsTest, parse) {
     // Tests for integer types:
 
-    testValueOf<signed char>();
-    testValueOf<short>();
-    testValueOf<int>();
-    testValueOf<long>();
-    testValueOf<long long>();
-    testValueOf<ssize_t>();
+    testParse<signed char>();
+    testParse<short>();
+    testParse<int>();
+    testParse<long>();
+    testParse<long long>();
+    testParse<ssize_t>();
 
-    testValueOf<unsigned char>();
-    testValueOf<unsigned short>();
-    testValueOf<unsigned int>();
-    testValueOf<unsigned long>();
-    testValueOf<unsigned long long>();
-    testValueOf<size_t>();
+    testParse<unsigned char>();
+    testParse<unsigned short>();
+    testParse<unsigned int>();
+    testParse<unsigned long>();
+    testParse<unsigned long long>();
+    testParse<size_t>();
 
     #ifdef INT128_AVAILABLE
-    testValueOf<regina::Int128>();
-    testValueOf<regina::UInt128>();
+    testParse<regina::Int128>();
+    testParse<regina::UInt128>();
     #endif
 
     // Some very basic tests for double:
+    EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<double>("2.5"), 2.5); });
+    EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<double>("-2.5"), -2.5); });
+    EXPECT_THROW({ regina::parse<double>(" 2.5"); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<double>("2.5 "); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<double>(""); }, InvalidArgument);
+    EXPECT_THROW({ regina::parse<double>(" "); }, InvalidArgument);
 
-    {
-        double dest = 3.0;
-        EXPECT_TRUE(regina::valueOf("2.5", dest));
-        EXPECT_EQ(dest, 2.5);
-    }
-    {
-        double dest = 3.0;
-        EXPECT_TRUE(regina::valueOf("-2.5", dest));
-        EXPECT_EQ(dest, -2.5);
-    }
-    {
-        double dest = 3.0;
-        EXPECT_FALSE(regina::valueOf(" 2.5", dest));
-        EXPECT_FALSE(regina::valueOf("2.5 ", dest));
-        EXPECT_EQ(dest, 3.0);
-    }
-
-    // TODO: Properly test valueOf() for bool, double, BoolSet.
+    // TODO: Properly test parse() for bool, double, BoolSet.
 }
 

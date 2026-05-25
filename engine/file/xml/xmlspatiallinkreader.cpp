@@ -41,10 +41,13 @@ XMLSpatialLinkReader::XMLSpatialLinkReader(XMLTreeResolver& res,
         XMLPacketReader(res, std::move(parent), anon, std::move(label),
             std::move(id)),
         link_(make_packet<SpatialLink>()) {
-    double radius;
-    if (valueOf(props.lookup("radius"), radius))
+    try {
+        double radius = parse<double>(props.lookup("radius"));
         if (radius > 0)
             link_->radius_ = radius;
+    } catch (const InvalidArgument&) {
+        // Just leave the radius unset.
+    }
 }
 
 std::shared_ptr<Packet> XMLSpatialLinkReader::packetToCommit() {

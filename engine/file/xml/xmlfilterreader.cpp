@@ -37,34 +37,36 @@ namespace regina {
 XMLElementReader* XMLLegacyFilterReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if (! filter_)
-        if (subTagName == "filter") {
-            int type;
-            // Run through all the filter types that the file format supports.
-            if (valueOf(props.lookup("typeid"), type)) {
-                switch (static_cast<SurfaceFilterType>(type)) {
-                    case SurfaceFilterType::LegacyDefault:
-                        return dataReader_ =
-                            new XMLPlainFilterReader(resolver_,
-                                parent_, anon_, label_, id_);
-                    case SurfaceFilterType::Properties:
-                        return dataReader_ =
-                            new XMLLegacyPropertiesFilterReader(resolver_,
-                                parent_, anon_, label_, id_);
-                    case SurfaceFilterType::Combination:
-                        return dataReader_ =
-                            new XMLLegacyCombinationFilterReader(resolver_,
-                                parent_, anon_, label_, id_);
-                    default:
-                        return new XMLPacketReader(resolver_,
+    if ((! filter_) && subTagName == "filter") {
+        try {
+            // Run through all filter types that the file format supports.
+            switch (static_cast<SurfaceFilterType>(
+                    parse<int>(props.lookup("typeid")))) {
+                case SurfaceFilterType::LegacyDefault:
+                    return dataReader_ =
+                        new XMLPlainFilterReader(resolver_,
                             parent_, anon_, label_, id_);
-                }
+                case SurfaceFilterType::Properties:
+                    return dataReader_ =
+                        new XMLLegacyPropertiesFilterReader(resolver_,
+                            parent_, anon_, label_, id_);
+                case SurfaceFilterType::Combination:
+                    return dataReader_ =
+                        new XMLLegacyCombinationFilterReader(resolver_,
+                            parent_, anon_, label_, id_);
+                default:
+                    return new XMLPacketReader(resolver_,
+                        parent_, anon_, label_, id_);
             }
+        } catch (const InvalidArgument&) {
+            // Fall through to the default XMLElementReader below.
         }
+    }
     return new XMLElementReader();
 }
 
-void XMLLegacyFilterReader::endContentSubElement(const std::string&, XMLElementReader*) {
+void XMLLegacyFilterReader::endContentSubElement(const std::string&,
+        XMLElementReader*) {
     if (dataReader_)
         filter_ = dataReader_->packetToCommit();
 }
@@ -73,8 +75,8 @@ XMLCombinationFilterReader::XMLCombinationFilterReader(
         XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
         std::string label, std::string id,
         const regina::xml::XMLPropertyDict& props) :
-        XMLPacketReader(res, std::move(parent), anon, std::move(label), std::move(id)),
-        filter_(nullptr) {
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)), filter_(nullptr) {
     std::string type = props.lookup("op");
     if (type == "and") {
         filter_ = std::make_shared<SurfaceFilterCombination>();

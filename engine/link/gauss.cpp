@@ -143,9 +143,11 @@ bool Link::parseOrientedGaussTerm(const std::string& s,
     else
         return false;
 
-    if (! valueOf(s.substr(2), crossing))
+    try {
+        crossing = parse<size_t>(s.substr(2));
+    } catch (const InvalidArgument&) {
         return false;
-
+    }
     return (crossing > 0 && crossing <= nCross);
 }
 
@@ -169,9 +171,11 @@ bool Link::parseSignedGaussTerm(const std::string& s,
     else
         return false;
 
-    if (! valueOf(s.substr(1, len - 2), crossing))
+    try {
+        crossing = parse<size_t>(s.substr(1, len - 2));
+    } catch (const InvalidArgument&) {
         return false;
-
+    }
     return (crossing > 0 && crossing <= nCross);
 }
 

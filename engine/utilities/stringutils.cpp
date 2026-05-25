@@ -29,11 +29,7 @@
  **************************************************************************/
 
 #include <cstdlib>
-#include <cctype>
-#include <climits>
-#include "maths/integer.h"
 #include "utilities/stringutils.h"
-#include "utilities/boolset.h"
 
 namespace regina {
 
@@ -59,42 +55,6 @@ std::string stripWhitespace(const std::string& str) {
         --end;
 
     return str.substr(start, end - start);
-}
-
-bool valueOf(const std::string& str, double& dest) {
-    if (str.empty() || std::isspace(str.front()))
-        return false;
-
-    size_t pos = 0;
-    try {
-        double ans = std::stod(str, std::addressof(pos));
-        if (pos != str.size())
-            return false;
-        dest = ans;
-        return true;
-    } catch (const std::logic_error&) {
-        // Either the string was unconvertible, or the value was out of range.
-        return false;
-    }
-}
-
-bool valueOf(const std::string& str, bool& dest) {
-    if (str.empty())
-        return false;
-
-    if (str[0] == 't' || str[0] == 'T' || str[0] == '1') {
-        dest = true;
-        return true;
-    }
-    if (str[0] == 'F' || str[0] == 'f' || str[0] == '0') {
-        dest = false;
-        return true;
-    }
-    return false;
-}
-
-bool valueOf(const std::string& str, BoolSet& dest) {
-    return dest.setStringCode(str);
 }
 
 std::string stringToToken(std::string str) {

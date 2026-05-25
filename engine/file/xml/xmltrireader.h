@@ -368,71 +368,66 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
     if (tokens.size() != 2 * (dim + 1))
         return;
 
-    ssize_t simpIndex;
     Perm<dim + 1> perm;
-    Simplex<dim>* adjSimp;
-    int adjFacet;
     for (int k = 0; k <= dim; ++k) {
-        if (! valueOf(tokens[2 * k], simpIndex))
-            continue;
-        if (simpIndex < 0 || simpIndex >= static_cast<ssize_t>(tri_->size()))
-            continue;
+        try {
+            ssize_t simpIndex = parse<ssize_t>(tokens[2 * k]);
+            if (simpIndex < 0 ||
+                    simpIndex >= static_cast<ssize_t>(tri_->size()))
+                continue;
 
-        if constexpr (dim == 2) {
-            // Image packs are not supported at all by Perm<3>.
-            typename Perm<dim + 1>::Index permIndex;
-            if (! valueOf(tokens[2 * k + 1], permIndex))
-                continue;
-            if (permIndex < 0 || permIndex >= Perm<dim + 1>::nPerms)
-                continue;
-            perm = Perm<dim + 1>::Sn[permIndex];
-        } else if (permIndex_) {
-            // Note: Perm::Index is a signed type.
-            typename Perm<dim + 1>::Index permIndex;
-            if (! valueOf(tokens[2 * k + 1], permIndex))
-                continue;
-            if (permIndex < 0 || permIndex >= Perm<dim + 1>::nPerms)
-                continue;
-            perm = Perm<dim + 1>::Sn[permIndex];
-        } else {
-            // Note: Perm::ImagePack is an unsigned type.
-            // However, in Regina 3.0 and 3.1 for 3-D triangulations, this was
-            // written as a plain char (which on many platforms is signed).
-            // So, just to be safe, for Perm<4> we read the image pack as an
-            // int (which will happily capture a signed or unsigned char).
-            if constexpr (dim == 3) {
-                int signedImagePack;
-                if (! valueOf(tokens[2 * k + 1], signedImagePack))
+            if constexpr (dim == 2) {
+                // Image packs are not supported at all by Perm<3>.
+                auto permIndex = parse<typename Perm<dim + 1>::Index>(
+                    tokens[2 * k + 1]);
+                if (permIndex < 0 || permIndex >= Perm<dim + 1>::nPerms)
                     continue;
-                if (signedImagePack < -128 /* minimum signed char */ ||
-                        signedImagePack > 255 /* maximum unsigned char */)
+                perm = Perm<dim + 1>::Sn[permIndex];
+            } else if (permIndex_) {
+                // Note: Perm::Index is a signed type.
+                auto permIndex = parse<typename Perm<dim + 1>::Index>(
+                    tokens[2 * k + 1]);
+                if (permIndex < 0 || permIndex >= Perm<dim + 1>::nPerms)
                     continue;
-
-                auto imagePack = static_cast<Perm<dim + 1>::ImagePack>(
-                    signedImagePack);
-                if (! Perm<dim + 1>::isImagePack(imagePack))
-                    continue;
-                perm = Perm<dim + 1>::fromImagePack(imagePack);
+                perm = Perm<dim + 1>::Sn[permIndex];
             } else {
-                typename Perm<dim + 1>::ImagePack imagePack;
-                if (! valueOf(tokens[2 * k + 1], imagePack))
-                    continue;
-                if (! Perm<dim + 1>::isImagePack(imagePack))
-                    continue;
-                perm = Perm<dim + 1>::fromImagePack(imagePack);
+                // Note: Perm::ImagePack is an unsigned type.  However, in
+                // Regina 3.0 and 3.1 for 3-D triangulations, this was written
+                // as a plain char (which on many platforms is signed).
+                // So to be safe, for Perm<4> we read the image pack as an int
+                // (which will happily capture a signed or unsigned char).
+                if constexpr (dim == 3) {
+                    int signedImagePack = parse<int>(tokens[2 * k + 1]);
+                    if (signedImagePack < -128 /* minimum signed char */ ||
+                            signedImagePack > 255 /* maximum unsigned char */)
+                        continue;
+
+                    auto imagePack = static_cast<uint8_t>(signedImagePack);
+                    if (! Perm<dim + 1>::isImagePack(imagePack))
+                        continue;
+                    perm = Perm<dim + 1>::fromImagePack(imagePack);
+                } else {
+                    auto imagePack = parse<typename Perm<dim + 1>::ImagePack>(
+                        tokens[2 * k + 1]);
+                    if (! Perm<dim + 1>::isImagePack(imagePack))
+                        continue;
+                    perm = Perm<dim + 1>::fromImagePack(imagePack);
+                }
             }
+
+            Simplex<dim>* adjSimp = tri_->simplices()[simpIndex];
+            int adjFacet = perm[k];
+            if (adjSimp == simplex_ && adjFacet == k)
+                continue;
+            if (simplex_->adjacentSimplex(k))
+                continue;
+            if (adjSimp->adjacentSimplex(adjFacet))
+                continue;
+
+            simplex_->joinRaw(k, adjSimp, perm);
+        } catch (const InvalidArgument&) {
+            // Skip this gluing, which we cannot parse.
         }
-
-        adjSimp = tri_->simplices()[simpIndex];
-        adjFacet = perm[k];
-        if (adjSimp == simplex_ && adjFacet == k)
-            continue;
-        if (simplex_->adjacentSimplex(k))
-            continue;
-        if (adjSimp->adjacentSimplex(adjFacet))
-            continue;
-
-        simplex_->joinRaw(k, adjSimp, perm);
     }
 }
 
@@ -448,10 +443,14 @@ template <int dim> requires (supportedDim(dim))
 void XMLLegacySimplicesReader<dim>::startElement(
         const std::string& /* tagName */,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
-    size_t size;
-    if (valueOf(props.lookup(XMLLegacyTriangulationTags<dim>::size), size))
+    try {
+        size_t size = parse<size_t>(props.lookup(
+            XMLLegacyTriangulationTags<dim>::size));
         for ( ; size > 0; --size)
             tri_->newSimplexRaw();
+    } catch (const InvalidArgument&) {
+        // Do not add any simplices.
+    }
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -549,64 +548,49 @@ inline XMLElementReader*
     else if (subTagName == "H1")
         return new AbelianGroupPropertyReader(tri_->homology_[0]);
 
-    if constexpr (dim == 3) {
-        // We don't read boundary component properties since they're stored
-        // across multiple property tags and they're easy to calculate anyway.
-        if (subTagName == "zeroeff") {
-            bool b;
-            if (valueOf(props.lookup("value"), b))
-                tri_->prop_.zeroEfficient_ = b;
-        } else if (subTagName == "oneeff") {
-            bool b;
-            if (valueOf(props.lookup("value"), b))
-                tri_->prop_.oneEfficient_ = b;
-        } else if (subTagName == "threesphere") {
-            bool b;
-            if (valueOf(props.lookup("value"), b))
-                tri_->prop_.threeSphere_ = b;
-        } else if (subTagName == "handlebody") {
-            ssize_t genus;
-            if (valueOf(props.lookup("value"), genus))
+    try {
+        if constexpr (dim == 3) {
+            // Don't read boundary component properties - they're stored across
+            // multiple property tags, and they're easy to calculate anyway.
+            if (subTagName == "zeroeff") {
+                tri_->prop_.zeroEfficient_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "oneeff") {
+                tri_->prop_.oneEfficient_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "threesphere") {
+                tri_->prop_.threeSphere_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "handlebody") {
+                ssize_t genus = parse<ssize_t>(props.lookup("value"));
                 if (genus >= -1)
                     tri_->prop_.handlebody_ = genus;
-        } else if (subTagName == "threeball") {
-            bool b;
-            // If threeball is false, we don't do anything since this
-            // might or might not still be a handelbody of some other genus.
-            if (valueOf(props.lookup("value"), b))
-                if (b)
+            } else if (subTagName == "threeball") {
+                // If threeball is false, we don't do anything since this
+                // might or might not still be a handlebody of some other genus.
+                if (parse<bool>(props.lookup("value")))
                     tri_->prop_.handlebody_ = 0;
-        } else if (subTagName == "solidtorus") {
-            bool b;
-            // If solidtorus is false, we don't do anything since this
-            // might or might not still be a handelbody of some other genus.
-            if (valueOf(props.lookup("value"), b))
-                if (b)
+            } else if (subTagName == "solidtorus") {
+                // If solidtorus is false, we don't do anything since this
+                // might or might not still be a handlebody of some other genus.
+                if (parse<bool>(props.lookup("value")))
                     tri_->prop_.handlebody_ = 1;
-        } else if (subTagName == "txi") {
-            bool b;
-            if (valueOf(props.lookup("value"), b))
-                tri_->prop_.TxI_ = b;
-        } else if (subTagName == "irreducible") {
-            bool b;
-            if (valueOf(props.lookup("value"), b))
-                tri_->prop_.irreducible_ = b;
-        } else if (subTagName == "compressingdisc") {
-            bool b;
-            if (valueOf(props.lookup("compressingdisc"), b))
-                tri_->prop_.compressingDisc_ = b;
-        } else if (subTagName == "haken") {
-            bool b;
-            if (valueOf(props.lookup("haken"), b))
-                tri_->prop_.haken_ = b;
-        } else if (subTagName == "H1Rel") {
-            return new AbelianGroupPropertyReader(tri_->prop_.H1Rel_);
+            } else if (subTagName == "txi") {
+                tri_->prop_.TxI_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "irreducible") {
+                tri_->prop_.irreducible_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "compressingdisc") {
+                tri_->prop_.compressingDisc_ = parse<bool>(
+                    props.lookup("value"));
+            } else if (subTagName == "haken") {
+                tri_->prop_.haken_ = parse<bool>(props.lookup("value"));
+            } else if (subTagName == "H1Rel") {
+                return new AbelianGroupPropertyReader(tri_->prop_.H1Rel_);
+            }
+        } else if constexpr (dim == 4) {
+            if (subTagName == "H2")
+                return new AbelianGroupPropertyReader(tri_->homology_[1]);
         }
-    } else if constexpr (dim == 4) {
-        if (subTagName == "H2")
-            return new AbelianGroupPropertyReader(tri_->homology_[1]);
+    } catch (const InvalidArgument&) {
+        // Fall through to the default XMLElementReader below.
     }
-
     return new XMLElementReader();
 }
 

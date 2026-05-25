@@ -182,8 +182,11 @@ inline XMLLinkCrossingsReader::XMLLinkCrossingsReader(Link* link) :
 
 inline void XMLLinkCrossingsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
-    if (! valueOf(props.lookup("size"), size_))
+    try {
+        size_ = parse<size_t>(props.lookup("size"));
+    } catch (const InvalidArgument&) {
         link_ = nullptr;
+    }
 }
 
 inline bool XMLLinkCrossingsReader::broken() const {
@@ -208,8 +211,11 @@ inline XMLLinkComponentsReader::XMLLinkComponentsReader(Link* link) :
 
 inline void XMLLinkComponentsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
-    if (! valueOf(props.lookup("size"), size_))
+    try {
+        size_ = parse<size_t>(props.lookup("size"));
+    } catch (const InvalidArgument&) {
         link_ = nullptr;
+    }
 }
 
 inline bool XMLLinkComponentsReader::broken() const {

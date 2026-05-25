@@ -499,6 +499,12 @@ Version 8.0  [ TODO ]
             - Both versions of this function now throw an exception if the
               file is unreadable or if no usable Regina data could be found
               (previously, open() indicated such errors by returning null).
+        Function parse():
+            - New templated functions that replace the old valueOf(), but
+              instead return by value and throw exceptions on error.  These
+              support 128-bit integers (if the platform does), include range
+              checking, and are strict with regards to unexpected characters
+              (including leading or trailing whitespace).
         Function readDehydrationList(), readOrb(), readSigList():
             - These functions now throw exceptions on error, instead of
               returning null.
@@ -522,25 +528,28 @@ Version 8.0  [ TODO ]
             - New function to select an optimised bitmask type based on a
               number of bits that is not known until runtime.
         Function valueOf():
-            - The native C++ integer versions of valueOf() are now templated,
-              and now support 128-bit integers (if the platform supports them).
-            - All integer versions now return false if the integer encoded by
-              the string is out of range for the relevant integer type.
-            - All numeric versions of valueOf() (native integers and double)
-              have been tightened with respect to unexpected characters,
-              including leading and trailing whitespace:
-              + they always return false, as the documentation has always
-                promised (in the past, they succeeded in the presence of
-                leading whitespace);
-              + instead of performing the conversion "as best it can", the
-                documentation now states that the value stored in dest is
-                left unchanged.
-            - All versions of valueOf() now leave dest unchanged if there was
-              an error (as opposed to leaving dest undefined, as was the case
-              for integer versions, or setting dest to a fixed false/empty
-              value, as was the case for bool and BoolSet versions).
-            - The BoolSet version is now deprecated; use the identical
-              BoolSet::setStringCode() instead.
+            - All valueOf() functions are now deprecated.  For most types you
+              should use parse<...>() instead; these return by value and throw
+              exceptions on error.  For BoolSet, use BoolSet::fromStringCode().
+            - The valueOf() functions have changes as a result of the migration
+              to parse<...>():
+              + The native C++ integer versions of valueOf() are now templated,
+                and support 128-bit integers (if the platform supports them).
+              + All integer versions now return false if the integer encoded by
+                the string is out of range for the relevant integer type.
+              + All numeric versions of valueOf() (native integers and double)
+                have been tightened with respect to unexpected characters,
+                including leading and trailing whitespace:
+                * they always return false, as the documentation has always
+                  promised (in the past, they succeeded in the presence of
+                  leading whitespace);
+                * instead of performing the conversion "as best it can", the
+                  documentation now states that the value stored in dest is
+                  left unchanged.
+              + All versions of valueOf() now leave dest unchanged if there was
+                an error (as opposed to leaving dest undefined, as was the case
+                for integer versions, or setting dest to a fixed false/empty
+                value, as was the case for bool and BoolSet versions).
         Type alias DoubleLong:
             - A native C++ integer type that is twice the size of a long.
         Type alias Int128, UInt128:
