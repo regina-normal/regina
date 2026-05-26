@@ -175,12 +175,12 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * `beta + b.alpha`), or if there are no exceptional fibres then
  * it is presented as a single (1,b) fibre.
  *
- * The Manifold routines homology() and construct() are only
- * implemented in some cases.  The homology() routine is
- * implemented if and only if the base orbifold has no punctures.
- * The construct() routine is implemented only for lens spaces and
- * Seifert fibred spaces over the 2-sphere without punctures or reflector
- * boundaries.
+ * The optional Manifold routine isHyperbolic() is implemented always for
+ * this class.  The optional routines homology() and construct() are only
+ * implemented in some cases: homology() is implemented if and only if the
+ * base orbifold has no punctures, and construct() is implemented only for
+ * lens spaces and Seifert fibred spaces over the 2-sphere without punctures
+ * or reflector boundaries.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,

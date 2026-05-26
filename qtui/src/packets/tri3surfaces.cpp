@@ -346,7 +346,11 @@ void Tri3SurfacesUI::refresh() {
     if (std) {
         auto mfd = std->manifold();
         if (mfd) {
-            isHyp = mfd->isHyperbolic();
+            try {
+                isHyp = mfd->isHyperbolic();
+            } catch (const regina::NotImplemented&) {
+                // No change to what we currently know regarding isHyp.
+            }
             name = mfd->name();
 
             // If we have the 3-sphere, 3-ball or solid torus, then

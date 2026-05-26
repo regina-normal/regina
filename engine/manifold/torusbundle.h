@@ -63,8 +63,8 @@ namespace regina {
  *     [b]       [q]
  * ```
  *
- * All optional Manifold routines except for construct() are implemented
- * for this class.
+ * The optional Manifold routines homology() and isHyperbolic() are
+ * implemented, but the optional routine construct() is not.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.

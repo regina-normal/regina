@@ -38,6 +38,7 @@
 #define __REGINA_MANIFOLD_H
 #endif
 
+#include <sstream>
 #include "regina-core.h"
 #include "algebra/abeliangroup.h"
 #include "triangulation/forward.h"
@@ -69,10 +70,10 @@ class AbelianGroup;
  *
  * When defining a new subclass of Manifold:
  *
- * - you must override the pure virtual functions writeName(), writeTeXName(),
- *   and isHyperbolic();
+ * - you must override the pure virtual functions writeName() and
+ *   writeTeXName();
  *
- * - optionally, you can override construct(), homology() and/or
+ * - optionally, you can override construct(), homology(), isHyperbolic() and/or
  *   writeStructure() if your class is able to provide this functionality;
  *
  * - you must _not_ override writeTextShort() or writeTextLong(), since these
@@ -106,7 +107,11 @@ class Manifold : public Output<Manifold> {
          *
          * \return the common name of this manifold.
          */
-        std::string name() const;
+        inline std::string name() const {
+            std::ostringstream ans;
+            writeName(ans);
+            return std::move(ans).str();
+        }
 
         /**
          * Returns the common name of this manifold in TeX format.
@@ -116,7 +121,11 @@ class Manifold : public Output<Manifold> {
          *
          * \return the common name of this manifold in TeX format.
          */
-        std::string texName() const;
+        inline std::string texName() const {
+            std::ostringstream ans;
+            writeTeXName(ans);
+            return std::move(ans).str();
+        }
 
         /**
          * Returns details of the structure of this manifold that might not
@@ -128,7 +137,11 @@ class Manifold : public Output<Manifold> {
          *
          * \return a string describing additional structural details.
          */
-        std::string structure() const;
+        inline std::string structure() const {
+            std::ostringstream ans;
+            writeStructure(ans);
+            return std::move(ans).str();
+        }
 
         /**
          * Returns a triangulation of this manifold, if such a construction
@@ -193,15 +206,41 @@ class Manifold : public Output<Manifold> {
          * \return the first homology group, if this is implemented for this
          * particular manifold.
          */
-        virtual AbelianGroup homology() const;
+        virtual AbelianGroup homology() const {
+            throw NotImplemented("homology() is not implemented "
+                "for this particular 3-manifold");
+        }
 
         /**
-         * Returns whether or not this is a finite-volume hyperbolic manifold.
+         * Returns whether or not this is a finite-volume hyperbolic manifold,
+         * if this is known to Regina.
+         *
+         * Subclasses of Manifold may choose whether or not to implement this
+         * routine.  Moreover, if a subclass describes a parameterised family
+         * of manifolds, it may choose to implement this only for some members
+         * of the family.  If hyperbolicity testing has not been implemented
+         * for this particular manifold, then this routine should throw a
+         * NotImplemented exception.
+         *
+         * Individual subclasses of Manifold should explain in their class
+         * notes whether they implement isHyperbolic().  The default
+         * implementation provided by this base class just throws a
+         * NotImplemented exception.
+         *
+         * As of Regina 8.0, _all_ 3-manifold classes implement isHyperbolic()
+         * (though it is possible that the future there will be new manifold
+         * classes that do not).
+         *
+         * \exception NotImplemented Hyperbolicity testing is not yet
+         * implemented for this particular manifold.
          *
          * \return \c true if this is a finite-volume hyperbolic
          * manifold, or \c false if not.
          */
-        virtual bool isHyperbolic() const = 0;
+        virtual bool isHyperbolic() const {
+            throw NotImplemented("isHyperbolic() is not implemented "
+                "for this particular 3-manifold");
+        }
 
         /**
          * Compares representations of two 3-manifolds according to an
