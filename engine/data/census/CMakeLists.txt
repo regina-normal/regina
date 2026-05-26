@@ -1,9 +1,9 @@
 
 SET(CENSUSDATADIR "${PKGDATADIR}/data/census")
 
-INCLUDE_DIRECTORIES(${ENGINE_INCLUDES})
+INCLUDE_DIRECTORIES(${ENGINE_INCLUDES} ${LIBLZMA_INCLUDE_DIRS})
 ADD_EXECUTABLE(mkcensusdb mkcensusdb.cpp)
-TARGET_LINK_LIBRARIES(mkcensusdb ${LIBLZMA_LIBRARIES} ${KVStore_LIBRARIES})
+TARGET_LINK_LIBRARIES(mkcensusdb ${ZLIB_LIBRARIES} ${LIBLZMA_LIBRARIES} ${KVStore_LIBRARIES})
 IF (REGINA_KVSTORE_LMDB)
   ADD_EXECUTABLE(optimise-lmdb optimise-lmdb.cpp)
   ADD_EXECUTABLE(compact-lmdb compact-lmdb.cpp)
@@ -18,6 +18,8 @@ SET(censusdata_DATA
   cusped-hyp-nor-census-9.${DB_EXT}
   cusped-hyp-or-census-9.${DB_EXT}
   christy-knots-links.${DB_EXT}
+  classical.${DB_EXT}
+  virtual.${DB_EXT}
   )
 
 FOREACH(db ${censusdata_DATA})

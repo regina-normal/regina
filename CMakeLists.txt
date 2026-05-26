@@ -278,7 +278,7 @@ MACRO_LOG_FEATURE(ZLIB_FOUND
   TRUE)
 
 FIND_PACKAGE(LibLZMA)
-INCLUDE_DIRECTORIES(${LIBLZMA_INCLUDE_DIRS})
+# We only use the liblzma headers deeper in the build tree.
 MACRO_LOG_FEATURE(LIBLZMA_FOUND
   "liblzma"
   "Essential: xz compression support"
