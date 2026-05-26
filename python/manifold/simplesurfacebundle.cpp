@@ -39,7 +39,7 @@ using regina::SimpleSurfaceBundle;
 void addSimpleSurfaceBundle(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SimpleSurfaceBundle)
 
-    auto c = pybind11::class_<SimpleSurfaceBundle, regina::Manifold>
+    auto c = pybind11::class_<SimpleSurfaceBundle, regina::Manifold<3>>
             (m, "SimpleSurfaceBundle", rdoc::__class)
         .def(pybind11::init<int>(), rdoc::__init)
         .def(pybind11::init<const SimpleSurfaceBundle&>(), rdoc::__copy)
@@ -51,6 +51,8 @@ void addSimpleSurfaceBundle(pybind11::module_& m) {
         .def_readonly_static("RP2xS1", &SimpleSurfaceBundle::RP2xS1)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
+    // Do not bind comparison operators, since these are already inherited
+    // via Manifold<3> and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
     regina::python::add_global_swap<SimpleSurfaceBundle, rdoc>(m);
 

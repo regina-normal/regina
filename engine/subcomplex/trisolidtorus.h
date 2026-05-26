@@ -298,7 +298,7 @@ class TriSolidTorus : public StandardSubcomplex<3> {
         static std::unique_ptr<TriSolidTorus> recognise(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

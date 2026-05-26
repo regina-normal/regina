@@ -36,7 +36,7 @@
 
 namespace regina {
 
-std::unique_ptr<Manifold> BlockedSFSTriple::manifold() const {
+std::unique_ptr<Manifold<3>> BlockedSFSTriple::manifold() const {
     try {
         // Go ahead and create the Seifert fibred spaces.
         SFSpace end0 = end_[0].createSFS(false);

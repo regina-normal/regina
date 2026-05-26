@@ -36,7 +36,7 @@
 
 namespace regina {
 
-std::unique_ptr<Manifold> BlockedSFSLoop::manifold() const {
+std::unique_ptr<Manifold<3>> BlockedSFSLoop::manifold() const {
     try {
         SFSpace sfs = region_.createSFS(false);
         if (sfs.punctures() == 1) {

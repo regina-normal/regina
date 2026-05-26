@@ -344,7 +344,10 @@ LinkSigEncoding : concept
 LinkSigPrintable : class -> EqualityType.NeverInstantiated
 Locale : class -> EqualityType.NeverInstantiated
 LockViolation : exception
-Manifold : class -> EqualityType.NeverInstantiated
+Manifold : alias -> Manifold3
+Manifold3 : class -> EqualityType.NeverInstantiated
+ManifoldOptions : documentation
+ManifoldOptions3 : class -> EqualityType.NeverInstantiated
 MarkedAbelianGroup : class -> EqualityType.ByValue
 Matrix2 : class -> EqualityType.ByValue
 Matrix3D : class -> EqualityType.ByValue

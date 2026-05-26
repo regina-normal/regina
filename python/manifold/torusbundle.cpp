@@ -41,8 +41,8 @@ using regina::TorusBundle;
 void addTorusBundle(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TorusBundle)
 
-    auto c = pybind11::class_<TorusBundle, regina::Manifold>(m, "TorusBundle",
-            rdoc::__class)
+    auto c = pybind11::class_<TorusBundle, regina::Manifold<3>>(m,
+            "TorusBundle", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Matrix2&>(), rdoc::__init)
         .def(pybind11::init<long, long, long, long>(), rdoc::__init_2)
@@ -52,6 +52,8 @@ void addTorusBundle(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rdoc::monodromy)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
+    // Do not bind comparison operators, since these are already inherited
+    // via Manifold<3> and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
     regina::python::add_global_swap<TorusBundle, rdoc>(m);
 

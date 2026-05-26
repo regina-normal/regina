@@ -39,7 +39,7 @@ using regina::LensSpace;
 void addLensSpace(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LensSpace)
 
-    auto c = pybind11::class_<LensSpace, regina::Manifold>(m, "LensSpace",
+    auto c = pybind11::class_<LensSpace, regina::Manifold<3>>(m, "LensSpace",
             rdoc::__class)
         .def(pybind11::init<unsigned long, unsigned long>(), rdoc::__init)
         .def(pybind11::init<const LensSpace&>(), rdoc::__copy)
@@ -49,7 +49,7 @@ void addLensSpace(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     // Do not bind comparison operators, since these are already inherited
-    // from Manifold and we do not want to hide those more general versions.
+    // via Manifold<3> and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
     regina::python::add_global_swap<LensSpace, rdoc>(m);
 

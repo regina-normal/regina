@@ -148,7 +148,7 @@ std::unique_ptr<LayeredTorusBundle> LayeredTorusBundle::hunt(
     return ans;
 }
 
-std::unique_ptr<Manifold> LayeredTorusBundle::manifold() const {
+std::unique_ptr<Manifold<3>> LayeredTorusBundle::manifold() const {
     // Note that this one-liner appears again in homology(), where
     // we use the underlying TorusBundle for homology calculations.
     return std::make_unique<TorusBundle>(core_->parallelReln() * reln_);

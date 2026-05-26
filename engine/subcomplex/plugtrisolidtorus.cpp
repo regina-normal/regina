@@ -90,7 +90,7 @@ void PlugTriSolidTorus::writeTextLong(std::ostream& out) const {
     writeName(out);
 }
 
-std::unique_ptr<Manifold> PlugTriSolidTorus::manifold() const {
+std::unique_ptr<Manifold<3>> PlugTriSolidTorus::manifold() const {
     std::unique_ptr<SFSpace> ans(new SFSpace());
     ans->insertFibre(2, -1);
     ans->insertFibre(3, 1);

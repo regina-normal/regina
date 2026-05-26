@@ -76,7 +76,7 @@ namespace regina {
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional Manifold routines homology() and isHyperbolic() are
+ * The optional Manifold<3> routines homology() and isHyperbolic() are
  * implemented, but the optional routine construct() is not.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
@@ -91,7 +91,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class GraphLoop : public Manifold {
+class GraphLoop : public Manifold<3> {
     private:
         SFSpace sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */

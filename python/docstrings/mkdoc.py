@@ -80,7 +80,7 @@ MEMBER_BLACKLIST = [
 ]
 
 GLOBAL_OVERLOADS = [
-    'swap', '__add', '__bor', '__div', '__mul', '__sub'
+    'swap', '__add', '__bor', '__cmp', '__div', '__mul', '__sub'
 ]
 
 TYPE_RANK = [

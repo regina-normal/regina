@@ -265,7 +265,7 @@ class BlockedSFSTriple : public StandardSubcomplex<3> {
          */
         bool operator == (const BlockedSFSTriple& other) const;
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;

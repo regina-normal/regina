@@ -402,7 +402,7 @@ void no_eq_static(pybind11::class_<T, options...>& c) {
  * subclasses are responsible for providing operators `==` and `!=` in Python.
  *
  * This should only be used with C++ abstract base classes whose subclasses
- * provide their own equality tests (e.g., Manifold or StandardSubcomplex<dim>).
+ * provide their own equality tests (e.g., StandardSubcomplex<dim>).
  * Under normal circumstances (i.e., unless the user is deliberately trying to
  * do this), it would be impossible for Python users to call the `==` or `!=`
  * operators from the base class.

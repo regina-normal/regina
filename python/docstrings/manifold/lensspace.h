@@ -24,7 +24,7 @@ circle bundle over ``S²`` with Euler class *p*. In ``L(p,q)`` if you
 take a generator *g* of ``H_1`` and evaluate the torsion linking form
 on it, then ``<g,g> = [± r² q/p]`` in Q/Z where *r* is an integer.
 
-All optional Manifold routines are implemented for this class.
+All optional Manifold<3> routines are implemented for this class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just

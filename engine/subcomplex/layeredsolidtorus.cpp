@@ -609,7 +609,7 @@ std::unique_ptr<LayeredSolidTorus> LayeredSolidTorus::recognise(
         nullptr);
 }
 
-std::unique_ptr<Manifold> LayeredSolidTorus::manifold() const {
+std::unique_ptr<Manifold<3>> LayeredSolidTorus::manifold() const {
     return std::make_unique<Handlebody>(1);
 }
 

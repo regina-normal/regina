@@ -1661,6 +1661,8 @@
 		05E62A982FC462D300AE1B84 /* standardsubcomplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62A972FC462CA00AE1B84 /* standardsubcomplex.h */; };
 		05E62A9B2FC4730600AE1B84 /* standardsubcomplex4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A9A2FC4730600AE1B84 /* standardsubcomplex4.cpp */; };
 		05E62A9D2FC4732100AE1B84 /* standardsubcomplex4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A9A2FC4730600AE1B84 /* standardsubcomplex4.cpp */; };
+		05E62A9F2FC5C6C700AE1B84 /* manifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A9E2FC5C6C700AE1B84 /* manifold.cpp */; };
+		05E62AA02FC5C6C700AE1B84 /* manifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A9E2FC5C6C700AE1B84 /* manifold.cpp */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -4625,6 +4627,7 @@
 		05E62A972FC462CA00AE1B84 /* standardsubcomplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = standardsubcomplex.h; sourceTree = "<group>"; };
 		05E62A992FC4632A00AE1B84 /* standardsubcomplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = standardsubcomplex.h; sourceTree = "<group>"; };
 		05E62A9A2FC4730600AE1B84 /* standardsubcomplex4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = standardsubcomplex4.cpp; sourceTree = "<group>"; };
+		05E62A9E2FC5C6C700AE1B84 /* manifold.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = manifold.cpp; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -6393,6 +6396,7 @@
 				054208A21DF0D2740018AB24 /* handlebody.h */,
 				054208A31DF0D2740018AB24 /* lensspace.cpp */,
 				054208A41DF0D2740018AB24 /* lensspace.h */,
+				05E62A9E2FC5C6C700AE1B84 /* manifold.cpp */,
 				054208A61DF0D2740018AB24 /* manifold.h */,
 				052F9CCE180600FA00FAE4DF /* notation.h */,
 				052F9CD9180600FA00FAE4DF /* order.cpp */,
@@ -10389,6 +10393,7 @@
 				0553FAE62AEBE6B500BE89A7 /* gluingperms3.cpp in Sources */,
 				0553FB242AEBE73A00BE89A7 /* layering.cpp in Sources */,
 				0553FA8A2AEBE3AC00BE89A7 /* reorder.cpp in Sources */,
+				05E62AA02FC5C6C700AE1B84 /* manifold.cpp in Sources */,
 				0553FB5E2AEBE7E100BE89A7 /* homology.cpp in Sources */,
 				0553FA872AEBE39A00BE89A7 /* triangulation2.cpp in Sources */,
 				0553FA772AEBE36E00BE89A7 /* xmlsurfacewriter.cpp in Sources */,
@@ -10900,6 +10905,7 @@
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,
 				05F0A0411DBF0B5E00117BFC /* insertlayered.cpp in Sources */,
 				05C1BEAA1DCA7CA9007C946B /* boundary2.cpp in Sources */,
+				05E62A9F2FC5C6C700AE1B84 /* manifold.cpp in Sources */,
 				0518BA1B29D595B00020ADC1 /* representations.cpp in Sources */,
 				05A73C8419B2EEC50099C617 /* csv.cpp in Sources */,
 				05B7FFC725AC22D3003BAF5C /* HilbertSeries.cpp in Sources */,

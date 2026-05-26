@@ -7,6 +7,7 @@ SET ( FILES
   graphtriple.cpp
   handlebody.cpp
   lensspace.cpp
+  manifold.cpp
   sfs.cpp
   sfsalt.cpp
   simplesurfacebundle.cpp

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -28,36 +28,21 @@
  *                                                                        *
  **************************************************************************/
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include "manifold/snappeacensusmfd.h"
-#include "../helpers.h"
-#include "../docstrings/manifold/snappeacensusmfd.h"
+#include "manifold/manifold.h"
+#include "triangulation/dim3.h"
 
-using regina::SnapPeaCensusManifold;
+namespace regina {
 
-void addSnapPeaCensusManifold(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(SnapPeaCensusManifold)
+// We keep construct() here in the .cpp file so that we do not need to include
+// the full triangulation headers in manifold.h.
 
-    auto c = pybind11::class_<SnapPeaCensusManifold, regina::Manifold<3>>
-            (m, "SnapPeaCensusManifold", rdoc::__class)
-        .def(pybind11::init<char, size_t>(), rdoc::__init)
-        .def(pybind11::init<const SnapPeaCensusManifold&>(), rdoc::__copy)
-        .def("swap", &SnapPeaCensusManifold::swap, rdoc::swap)
-        .def("section", &SnapPeaCensusManifold::section, rdoc::section)
-        .def("index", &SnapPeaCensusManifold::index, rdoc::index)
-        .def_readonly_static("SEC_5", &SnapPeaCensusManifold::SEC_5)
-        .def_readonly_static("SEC_6_OR", &SnapPeaCensusManifold::SEC_6_OR)
-        .def_readonly_static("SEC_6_NOR", &SnapPeaCensusManifold::SEC_6_NOR)
-        .def_readonly_static("SEC_7_OR", &SnapPeaCensusManifold::SEC_7_OR)
-        .def_readonly_static("SEC_7_NOR", &SnapPeaCensusManifold::SEC_7_NOR)
-    ;
-    regina::python::add_eq_operators(c, rdoc::__eq);
-    // Do not bind comparison operators, since these are already inherited
-    // via Manifold<3> and we do not want to hide those more general versions.
-    regina::python::add_output_rich(c);
-    regina::python::add_global_swap<SnapPeaCensusManifold, rdoc>(m);
-
-    RDOC_SCOPE_END
+template <int dim> requires (dim == 3)
+Triangulation<dim> Manifold<dim>::construct() const {
+    throw NotImplemented(
+        "construct() is not implemented for this particular manifold");
 }
+
+template Triangulation<3> Manifold<3>::construct() const;
+
+} // namespace regina
 

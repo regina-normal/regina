@@ -45,7 +45,8 @@ SnapPeaCensusManifold are identical, and so may be freely mixed.
 Furthermore, the section and index parameters of a SnapPeaCensusTri
 are identical to those of its corresponding SnapPeaCensusManifold.
 
-All of the optional Manifold routines are implemented for this class.
+All of the optional Manifold<3> routines are implemented for this
+class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just

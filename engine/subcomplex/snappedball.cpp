@@ -52,7 +52,7 @@ std::unique_ptr<SnappedBall> SnappedBall::recognise(Tetrahedron<3>* tet) {
     return nullptr;
 }
 
-std::unique_ptr<Manifold> SnappedBall::manifold() const {
+std::unique_ptr<Manifold<3>> SnappedBall::manifold() const {
     return std::make_unique<Handlebody>(0);
 }
 

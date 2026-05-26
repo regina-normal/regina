@@ -51,7 +51,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 class AbelianGroup;
-class Manifold;
+template <int dim> requires (dim == 3) class Manifold;
 
 /**
  * \defgroup subcomplex Standard Triangulations and Subcomplexes
@@ -155,7 +155,7 @@ class StandardSubcomplexOptions<3> {
          * \return the underlying manifold, or `null` if manifold recognition
          * is not yet implemented for this particular subcomplex.
          */
-        virtual std::unique_ptr<Manifold> manifold() const {
+        virtual std::unique_ptr<Manifold<3>> manifold() const {
             return {};
         }
 
@@ -247,7 +247,7 @@ class StandardSubcomplexOptions<3> {
  * triangulation (or part thereof) to a static recognition routine such as
  * `StandardSubcomplex<dim>::recognise(const Triangulation<dim>&)`.
  *
- * When defining a new subclass of StandardSubcomplex<dim>:
+ * When defining a new subclass of `StandardSubcomplex<dim>`:
  *
  * - you must override the pure virtual functions writeName() and
  *   writeTeXName();

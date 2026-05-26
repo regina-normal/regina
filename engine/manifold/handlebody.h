@@ -38,7 +38,7 @@
 #endif
 
 #include "regina-core.h"
-#include "manifold.h"
+#include "manifold/manifold.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -47,7 +47,7 @@ namespace regina {
 /**
  * Represents an orientable handlebody.
  *
- * All optional Manifold routines are implemented for this class.
+ * All optional Manifold<3> routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
@@ -56,7 +56,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class Handlebody : public Manifold {
+class Handlebody : public Manifold<3> {
     private:
         size_t genus_;
             /**< The number of handles. */

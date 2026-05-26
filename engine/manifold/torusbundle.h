@@ -63,7 +63,7 @@ namespace regina {
  *     [b]       [q]
  * ```
  *
- * The optional Manifold routines homology() and isHyperbolic() are
+ * The optional Manifold<3> routines homology() and isHyperbolic() are
  * implemented, but the optional routine construct() is not.
  *
  * This class supports copying but does not implement separate move operations,
@@ -76,7 +76,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class TorusBundle : public Manifold {
+class TorusBundle : public Manifold<3> {
     private:
         Matrix2 monodromy_;
             /**< The monodromy describing how the two torus boundaries

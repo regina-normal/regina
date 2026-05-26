@@ -39,7 +39,7 @@ using regina::Handlebody;
 void addHandlebody(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Handlebody)
 
-    auto c = pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody",
+    auto c = pybind11::class_<Handlebody, regina::Manifold<3>>(m, "Handlebody",
             rdoc::__class)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<const Handlebody&>(), rdoc::__copy)
@@ -47,6 +47,8 @@ void addHandlebody(pybind11::module_& m) {
         .def("genus", &Handlebody::genus, rdoc::genus)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
+    // Do not bind comparison operators, since these are already inherited
+    // via Manifold<3> and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
     regina::python::add_global_swap<Handlebody, rdoc>(m);
 
