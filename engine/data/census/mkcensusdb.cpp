@@ -35,7 +35,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "utilities/zstr.h" // Does not include regina-config.h
+#include "utilities/bxzstr/bxzstr.hpp" // Does not include regina-config.h
 
 #if defined(REGINA_KVSTORE_QDBM)
   #include <depot.h>
@@ -165,8 +165,8 @@ int main(int argc, char* argv[]) {
     // The following try-catch block is to catch input decompression errors.
     try {
         // Prepare to decompress the input file.
-        // Note that zstr can handle both compressed and uncompressed inputs.
-        zstr::istream in(file);
+        // Note that bxzstr can handle both compressed and uncompressed inputs.
+        bxz::istream in(file);
 
         // Fill the database with the user-supplied key-value pairs.
         std::string sig, name;
@@ -230,7 +230,7 @@ int main(int argc, char* argv[]) {
     #endif
             ++tot;
         }
-    } catch (const zstr::Exception& e) {
+    } catch (const std::exception& e) {
         std::cerr << "ERROR: Could not read input: " << e.what() << std::endl;
         DB_CLOSE(db);
         std::exit(1);
