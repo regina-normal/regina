@@ -254,6 +254,8 @@ class ManifoldOptions<3> {
  *
  * \python Python does not support templates.  Instead this class can be used
  * by appending the dimension as a suffix (e.g., Manifold3 for dimensions 3).
+ * Moreover, in Python the name Manifold is now a deprecated alias for
+ * Manifold3 (for backward compatibility with code written for Regina ≤ 7.x).
  *
  * \tparam dim the dimension of manifold under consideration.  Currently this
  * is restricted to dimension 3 only, but the intent is to support other
