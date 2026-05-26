@@ -69,10 +69,10 @@ namespace regina {
 
 template <int generation, VoidCallback<CensusHit&&> Action>
 requires (generation == 2)
-void CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
+void CensusDB::lookupKey(const std::string& sig, Action&& action) const {
     // On some platforms, looking up an empty key triggers the
     // error MDB_BAD_VALSIZE when using LMDB.
-    if (isoSig.empty())
+    if (sig.empty())
         return; // no hits
 
 #if defined(REGINA_KVSTORE_QDBM)
@@ -84,7 +84,7 @@ void CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
         throw FileError("Could not open QDBM database");
     }
 
-    CBLIST* records = vlgetlist(db, isoSig.c_str(), isoSig.length());
+    CBLIST* records = vlgetlist(db, sig.c_str(), sig.length());
     if (records) {
         int n = cblistnum(records);
         for (int i = 0; i < n; ++i)
@@ -103,14 +103,14 @@ void CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
         throw FileError("Could not open Tokyo Cabinet database");
     }
 
-    if (isoSig.length() > INT_MAX) {
+    if (sig.length() > INT_MAX) {
         // This key is too long for Tokyo Cabinet to handle.
         // However.. this also means that we know the database does not
         // contain it.  So instead of writing an error, just treat this
         // as item-not-found.
     } else {
-        TCLIST* records = tcbdbget4(db, isoSig.c_str(),
-            static_cast<int>(isoSig.length()));
+        TCLIST* records = tcbdbget4(db, sig.c_str(),
+            static_cast<int>(sig.length()));
         if (records) {
             int n = tclistnum(records);
             for (int i = 0; i < n; ++i)
@@ -180,7 +180,7 @@ void CensusDB::lookupKey(const std::string& isoSig, Action&& action) const {
         ::mdb_env_close(db);
         throw FileError("Could not create LMDB cursor");
     }
-    MDB_val key { isoSig.size(), const_cast<char*>(isoSig.data()) };
+    MDB_val key { sig.size(), const_cast<char*>(sig.data()) };
     MDB_val value;
     rv = mdb_cursor_get(cursor, &key, &value, MDB_SET_KEY);
     while (true) {

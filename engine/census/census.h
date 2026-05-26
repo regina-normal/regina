@@ -60,12 +60,12 @@ class CensusHit;
  * databases.
  *
  * A census database stores a list of key-value pairs.  The keys are
- * isomorphism signatures of triangulations (currently second-generation
- * signatures as returned by `Triangulation<dim>::neoSig()`, but see the
- * notes below).  The values are human-readable names (typically the names of
- * the triangulations and/or the names of the underlying manifolds).
- * A key may appear multiple times (associated with different human-readable
- * names) within the same database.
+ * isomorphism signatures of triangulations or knot/link signatures (currently
+ * second-generation signatures as returned by `Triangulation<dim>::neoSig()`
+ * or `Link::neoSig()`, but see the notes below).  The values are
+ * human-readable names (typically the names of the triangulations, the links,
+ * and/or the underlying manifolds).  A key may appear multiple times
+ * (associated with different human-readable names) within the same database.
  *
  * Ordinary users should not need to interact with CensusDB directly;
  * instead you would typically use one of the high-level Census::lookup()
@@ -74,7 +74,7 @@ class CensusHit;
  *
  * - The _keys_ used for census databases are subject to change in future
  *   versions of Regina.  Currently (as of Regina 8.0) these keys are
- *   second-generation isomorphism signatures.
+ *   second-generation signatures.
  *
  * - The _format_ used to store census databases is an internal implementation
  *   detail, also subject to change in future releases of Regina.  Even if you
@@ -155,12 +155,13 @@ class CensusDB {
          * this routine is called.
          *
          * The argument \a key should be a <i>g</i>th-generation isomorphism
-         * signature, where \a g is passed as a template argument.  Only one
-         * value of \a g is allowed: the same generation of signature that the
-         * database uses internally for its keys.  This means that the way you
-         * call lookupKey() will change if/when the database key type changes;
-         * this is by design, since you will of course need to change what you
-         * pass as an argument also.
+         * signature or knot/link signature, where the generation \a g is
+         * passed as a template argument.  Only one value of \a g is allowed:
+         * the same generation of signature that the database uses internally
+         * for its keys.  This means that the way you call lookupKey() will
+         * change if/when the database key type changes; this is by design,
+         * since you will of course need to change what you pass as an argument
+         * also.
          *
          * If you are using this routine yourself, you will need to
          * include the extra header census/census-impl.h (which is _not_
@@ -176,22 +177,23 @@ class CensusDB {
          * format used internally by the database), then this routine will
          * throw an InvalidArgument exception.
          *
-         * \tparam generation the generation of isomorphism signature that you
-         * are passing in the argument \a isoSig.  Currently \a generation
-         * _must_ be 2, since Regina's databases currently use
-         * second-generation isomorphism signatures as their keys.
+         * \tparam generation the generation of isomorphism signature or
+         * knot/link signature that you are passing in the argument \a sig.
+         * Currently \a generation _must_ be 2, since Regina's databases
+         * currently use second-generation signatures as their keys.
          *
          * \exception FileError An error occurred at the database level (e.g.,
          * the database could not be opened).
          *
-         * \param isoSig the isomorphism signature to search for; this must be
-         * of the same generation that is passed as a template parameter.
+         * \param sig the isomorphism signature or knot/link signature to
+         * search for; this must be of the same generation that is passed as a
+         * template parameter.
          * \param action a function (or other callable type) that will
          * be called for each match in the database.
          */
         template <int generation, VoidCallback<CensusHit&&> Action>
         requires (generation == 2)
-        void lookupKey(const std::string& isoSig, Action&& action) const;
+        void lookupKey(const std::string& sig, Action&& action) const;
 
         /**
          * Sets this to be a clone of the given database reference.
