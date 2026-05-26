@@ -208,8 +208,8 @@ Tri3SnapPeaUI::Tri3SnapPeaUI(regina::PacketOf<Triangulation<3>>* packet,
     // Finish off.
 
     connect(btnToSnapPea, SIGNAL(clicked()), this, SLOT(toSnapPea()));
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3SnapPeaUI::updatePreferences);
 }
 
 Tri3SnapPeaUI::~Tri3SnapPeaUI() {

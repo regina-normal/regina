@@ -143,8 +143,8 @@ Tri4HomologyFundUI::Tri4HomologyFundUI(
 
     master->addLayout(fundLayout, tr("Fundamental Group"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri4HomologyFundUI::updatePreferences);
 }
 
 regina::Packet* Tri4HomologyFundUI::getPacket() {

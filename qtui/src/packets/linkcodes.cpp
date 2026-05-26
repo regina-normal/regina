@@ -98,8 +98,8 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
     code->setAcceptRichText(false);
     layout->addWidget(code, 1);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &LinkCodesUI::updatePreferences);
 
     editIface = new PacketEditTextEditor(code);
 }

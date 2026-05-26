@@ -616,8 +616,8 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     surfaceActionList.push_back(actCrush);
     connect(actCrush, SIGNAL(triggered()), this, SLOT(crush()));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &SurfacesCoordinateUI::updatePreferences);
 }
 
 SurfacesCoordinateUI::~SurfacesCoordinateUI() {

@@ -151,8 +151,8 @@ HyperSummaryUI::HyperSummaryUI(
     // Add some space at the end.
     paneLayout->addStretch(1);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &HyperSummaryUI::updatePreferences);
 }
 
 regina::Packet* HyperSummaryUI::getPacket() {

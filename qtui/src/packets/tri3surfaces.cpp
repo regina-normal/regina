@@ -313,8 +313,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
 
     layout->addStretch(2);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3SurfacesUI::updatePreferences);
 
     manifold->setContextMenuPolicy(Qt::CustomContextMenu);
     census->setContextMenuPolicy(Qt::CustomContextMenu);

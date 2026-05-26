@@ -137,7 +137,22 @@ void CommandEdit::keyPressEvent(QKeyEvent* event) {
         QLineEdit::keyPressEvent(event);
 }
 
-void CommandEdit::complete(QString completion) {
+void CommandEdit::offerCompletion(QCompleter* completer) {
+    // Disconnect activated signals from the given completer and use our own
+    // instead, since the default action is to completely replace the text.
+    disconnect(completer, nullptr, this, nullptr);
+    connect(completer, qOverload<const QString&>(&QCompleter::activated),
+        this, &CommandEdit::completePortion);
+    connect(completer, qOverload<const QString&>(&QCompleter::highlighted),
+        this, &CommandEdit::completePortion);
+
+    // Tell the completer to give suggestions immediately.
+    // The normal operation is to wait until the user types something,
+    // but here the user has already typed.
+    completer->complete();
+}
+
+void CommandEdit::completePortion(const QString& completion) {
     setText(lineStart + completion + lineEnd);
     setCursorPosition(lineStart.length() + completion.length());
 }

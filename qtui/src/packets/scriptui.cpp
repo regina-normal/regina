@@ -370,8 +370,8 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
 
     // Notify us if the preferences (e.g., the default fixed-width font)
     // change.
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &ScriptUI::updatePreferences);
 }
 
 ScriptUI::~ScriptUI() {

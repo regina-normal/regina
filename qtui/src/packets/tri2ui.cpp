@@ -62,8 +62,8 @@ Tri2UI::Tri2UI(regina::PacketOf<regina::Triangulation<2>>* packet,
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(new Tri2CompositionUI(packet, this), QObject::tr("&Composition"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri2UI::updatePreferences);
 }
 
 const std::vector<QAction*>& Tri2UI::getPacketTypeActions() {

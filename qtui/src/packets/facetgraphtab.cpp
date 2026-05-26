@@ -129,8 +129,8 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     // Finish off.
     baseLayout->addWidget(stack);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &FacetGraphTab::updatePreferences);
 }
 
 void FacetGraphTab::updatePreferences() {

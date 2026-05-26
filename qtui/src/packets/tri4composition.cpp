@@ -83,6 +83,7 @@ Tri4CompositionUI::Tri4CompositionUI(
 
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
+    // Contextless connections are ok: senders will be destroyed with [this].
     connect(isoSig, &QPushButton::customContextMenuRequested,
         [this](const QPoint& p) {
             contextIsoSig(p, isoSig);

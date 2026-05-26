@@ -149,8 +149,8 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
 
     refresh();
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &SpatialLinkUI::updatePreferences);
 }
 
 Packet* SpatialLinkUI::getPacket() {

@@ -481,8 +481,8 @@ HyperCoordinateUI::HyperCoordinateUI(
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &HyperCoordinateUI::updatePreferences);
 }
 
 HyperCoordinateUI::~HyperCoordinateUI() {

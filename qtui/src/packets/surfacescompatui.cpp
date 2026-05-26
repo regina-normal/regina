@@ -108,8 +108,8 @@ SurfacesCompatibilityUI::SurfacesCompatibilityUI(
     stack->addWidget(layerNone);
     uiLayout->addWidget(stack);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &SurfacesCompatibilityUI::updatePreferences);
 
     refresh();
 }

@@ -79,8 +79,8 @@ SnapPeaUI::SnapPeaUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
 
     editIface = new PacketEditTabbedUI(this);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &SnapPeaUI::updatePreferences);
 }
 
 SnapPeaUI::~SnapPeaUI() {

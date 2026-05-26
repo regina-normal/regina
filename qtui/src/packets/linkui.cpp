@@ -71,8 +71,8 @@ LinkUI::LinkUI(regina::PacketOf<Link>* packet, PacketPane* newEnclosingPane) :
 
     editIface = new PacketEditTabbedUI(this);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &LinkUI::updatePreferences);
 }
 
 LinkUI::~LinkUI() {

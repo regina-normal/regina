@@ -517,8 +517,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     connect(actDiagramComponents, SIGNAL(triggered()), this,
         SLOT(diagramComponents()));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &LinkCrossingsUI::updatePreferences);
 
     // Tidy up.
 

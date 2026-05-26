@@ -34,9 +34,8 @@ QString ShortRunner::run(bool mergeStderr) {
     // Start the child process running.
     proc.setProcessChannelMode(mergeStderr ?
         QProcess::MergedChannels : QProcess::SeparateChannels);
-    connect(&proc, SIGNAL(started()), this, SLOT(processStarted()));
-    connect(&proc, SIGNAL(finished(int, QProcess::ExitStatus)),
-        this, SLOT(processFinished()));
+    connect(&proc, &QProcess::started, this, &ShortRunner::processStarted);
+    connect(&proc, &QProcess::finished, this, &ShortRunner::processFinished);
 
     // Since we need to collect output, we must use start() and not
     // startDetached().

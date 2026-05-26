@@ -63,8 +63,6 @@ namespace regina::python {
  * PacketManager::launchPythonConsole() should be used.
  */
 class PythonConsole : public QMainWindow {
-    Q_OBJECT
-
     friend class regina::python::PythonOutputStream;
     friend class CommandEdit;
     private:
@@ -142,7 +140,6 @@ class PythonConsole : public QMainWindow {
         void executeLine(const char* line);
         void runScript(regina::Script* script);
 
-    public slots:
         /**
          * Save a log of the current session.
          */
@@ -166,7 +163,7 @@ class PythonConsole : public QMainWindow {
         /**
          * Help -> What's this has been acctivated.
          */
-        void contextHelpActivated();
+        void contextHelp();
 
         /**
          * Cut selected text from the command area.
@@ -213,7 +210,6 @@ class PythonConsole : public QMainWindow {
          */
         static QString initialIndent(const QString& line);
 
-    private slots:
         /**
          * Process the command currently on the input line.
          */

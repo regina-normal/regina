@@ -113,8 +113,8 @@ SnapPeaAlgebraUI::SnapPeaAlgebraUI(
 
     master->addLayout(layout, tr("Unfilled manifold"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &SnapPeaAlgebraUI::updatePreferences);
 }
 
 regina::Packet* SnapPeaAlgebraUI::getPacket() {

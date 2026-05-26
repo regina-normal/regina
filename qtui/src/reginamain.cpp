@@ -99,8 +99,8 @@ ReginaMain::ReginaMain(ReginaManager* useManager, bool starterWindow) :
     setModified(false);
     updateTreeActions();
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &ReginaMain::updatePreferences);
 }
 
 ReginaMain::~ReginaMain() {

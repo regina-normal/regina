@@ -119,7 +119,6 @@
 		050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E741B9BD6F400C1F681 /* commandedit.cpp */; };
 		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
 		050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E751B9BD6F400C1F681 /* commandedit.h */; };
-		050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E771B9BD6F400C1F681 /* pythonconsole.h */; };
 		051261A7278D65B9006A55B1 /* intersectionform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051261A5278D65B8006A55B1 /* intersectionform.cpp */; };
 		051261A9278D65B9006A55B1 /* intersectionform.h in Headers */ = {isa = PBXBuildFile; fileRef = 051261A6278D65B8006A55B1 /* intersectionform.h */; };
 		051261AB278D65D8006A55B1 /* intersectionform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051261AA278D65D8006A55B1 /* intersectionform.cpp */; };
@@ -10780,7 +10779,6 @@
 				0591E8471C4F773800793A9C /* tri4skeleton.h in Sources */,
 				0591E8481C4F773C00793A9C /* tri4ui.h in Sources */,
 				050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */,
-				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
 				051691B81C5AD5AC00DC69EC /* hypercoordinateui.cpp in Sources */,
 				050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */,
 				05866B7E2E52AF4C00C74465 /* eltmovedialog2.cpp in Sources */,

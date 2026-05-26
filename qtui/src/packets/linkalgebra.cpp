@@ -120,8 +120,8 @@ LinkGroupUI::LinkGroupUI(regina::PacketOf<regina::Link>* packet,
     // ---------- Finishing up ----------
 
     pages->setCurrentIndex(0);
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &LinkGroupUI::updatePreferences);
 }
 
 regina::Packet* LinkGroupUI::getPacket() {

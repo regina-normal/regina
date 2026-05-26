@@ -329,8 +329,8 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
 
     updateLabels();
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &LinkPolynomialUI::updatePreferences);
 
     alexander->setContextMenuPolicy(Qt::CustomContextMenu);
     jones->setContextMenuPolicy(Qt::CustomContextMenu);

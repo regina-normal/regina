@@ -203,8 +203,8 @@ Tri3HomologyFundUI::Tri3HomologyFundUI(
 
     master->addLayout(fundLayout, tr("Fundamental Group"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3HomologyFundUI::updatePreferences);
 }
 
 regina::Packet* Tri3HomologyFundUI::getPacket() {
@@ -382,8 +382,8 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(
 
     invArea->addStretch(1);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3TuraevViroUI::updatePreferences);
 }
 
 regina::Packet* Tri3TuraevViroUI::getPacket() {
@@ -786,8 +786,8 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
 
     refreshLabels();
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3CellularInfoUI::updatePreferences);
 }
 
 
