@@ -4,7 +4,7 @@ Large census data files
 This directory contains the raw data that mkcensusdb sources to create the
 highly optimised census databases used by Census::lookup().
 
-Each *.zsig file in this directory is a gzipped text file in the form:
+Each *.xzsig file in this directory is an xz-compressed text file in the form:
 
 <isosig> <manifold_name>
 <isosig> <manifold_name>
@@ -13,7 +13,7 @@ Each *.zsig file in this directory is a gzipped text file in the form:
 
 All isomorphism signatures are second-generation.
 
-The extension .zsig is used (instead of something more sensible, like .sig.gz)
+The extension .xzsig is used (instead of something more sensible, like .sig.xz)
 so that ${INPUT_FILE_BASE} does the right thing in xcode's custom build rules.
 
- -- Ben Burton <bab@maths.uq.edu.au>, Mon, 11 May 2026 13:09:17 +1000
+ -- Ben Burton <bab@maths.uq.edu.au>, Tue, 26 May 2026 16:25:08 +1000
