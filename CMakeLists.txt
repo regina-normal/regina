@@ -273,8 +273,16 @@ FIND_PACKAGE(ZLIB)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 MACRO_LOG_FEATURE(ZLIB_FOUND
   "zlib"
-  "Essential: compression support"
+  "Essential: gzip compression support"
   "http://www.gzip.org/zlib/"
+  TRUE)
+
+FIND_PACKAGE(LibLZMA)
+INCLUDE_DIRECTORIES(${LIBLZMA_INCLUDE_DIRS})
+MACRO_LOG_FEATURE(LIBLZMA_FOUND
+  "liblzma"
+  "Essential: xz compression support"
+  "https://tukaani.org/xz/"
   TRUE)
 
 FIND_PACKAGE(LibXml2)

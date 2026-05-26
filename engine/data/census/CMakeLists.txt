@@ -3,7 +3,7 @@ SET(CENSUSDATADIR "${PKGDATADIR}/data/census")
 
 INCLUDE_DIRECTORIES(${ENGINE_INCLUDES})
 ADD_EXECUTABLE(mkcensusdb mkcensusdb.cpp)
-TARGET_LINK_LIBRARIES(mkcensusdb ${ZLIB_LIBRARIES} ${KVStore_LIBRARIES})
+TARGET_LINK_LIBRARIES(mkcensusdb ${LIBLZMA_LIBRARIES} ${KVStore_LIBRARIES})
 IF (REGINA_KVSTORE_LMDB)
   ADD_EXECUTABLE(optimise-lmdb optimise-lmdb.cpp)
   ADD_EXECUTABLE(compact-lmdb compact-lmdb.cpp)
