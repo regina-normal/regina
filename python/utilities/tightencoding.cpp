@@ -31,8 +31,7 @@
 #include <pybind11/pybind11.h>
 #include "maths/integer.h"
 #include "utilities/tightencoding.h"
-#include "../helpers/docstrings.h"
-#include "../docstrings/utilities/tightencoding.h"
+#include "../helpers.h"
 
 using pybind11::overload_cast;
 

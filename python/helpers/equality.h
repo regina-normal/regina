@@ -407,6 +407,12 @@ void no_eq_static(pybind11::class_<T, options...>& c) {
  * do this), it would be impossible for Python users to call the `==` or `!=`
  * operators from the base class.
  *
+ * Here by "abstract" we mean that classes that are "philosophically abstract",
+ * not technically abstract in the C++ sense.  That is: they should be
+ * non-constructible base classes with virtual functions that subclasses
+ * override; however, we do not actually require at least one virtual function
+ * to be pure.
+ *
  * To use this for some C++ class \a T in Regina, simply call
  * `regina::python::no_eq_abstract(c)`, where \a c is the
  * `pybind11::class_` object that wraps \a T.  The effect will be as follows:
@@ -423,8 +429,14 @@ void no_eq_static(pybind11::class_<T, options...>& c) {
  * is that different docstrings will be supplied.
  */
 template <typename T, typename... options>
-requires (std::is_abstract_v<T> && ! std::equality_comparable<T>)
+requires ((! std::equality_comparable<T>) &&
+    (! std::is_default_constructible_v<T>) &&
+    (! std::is_copy_constructible_v<T>))
 void no_eq_abstract(pybind11::class_<T, options...>& c) {
+    // Note: the requires clause does not enforce std::is_polymorphic_v<T>,
+    // because that would disallow the trivial StandardSubcomplexOptions<4>
+    // (which _would_ have virtual functions if there were any optional
+    // subcomplex features in dimension 4, except there are not).
     auto func = [](const T&, const T&) {
         throw std::runtime_error(
             "It should be impossible to create objects of this class, and so "

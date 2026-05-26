@@ -38,6 +38,13 @@ def isConcept(object):
         object = object.__base__
     return False
 
+def isDocOnly(object):
+    while object:
+        if object is Documentation:
+            return True
+        object = object.__base__
+    return False
+
 def isException(object):
     while object:
         if object is Exception:
@@ -58,6 +65,8 @@ def classInfo(name, object):
             print(name, ': exception')
         elif isConcept(object):
             print(name, ': concept')
+        elif isDocOnly(object):
+            print(name, ': documentation')
         else:
             print(name, ': class ->', object.equalityType)
     else:

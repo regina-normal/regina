@@ -394,12 +394,16 @@ Version 8.0  [ TODO ]
               identifying the closest non-adjacent pair of link nodes that are
               connected in the relative neighbourhood graph.  Thanks to
               Kate Turner for this suggestion.
-        Class StandardSubcomplex<dim>, StandardTriangulation:
+        Class StandardSubcomplex<dim>, StandardSubcomplexOptions<dim>,
+                StandardTriangulation:
             - The old 3-dimensional StandardTriangulation class has been
               replaced by a new class template StandardSubcomplex<dim>.
               Currently this new class is available only in dimensions 3 and 4.
             - The old name StandardTriangulation is now a deprecated alias for
               StandardSubcomplex<3>.
+            - Optional features that subclasses may choose whether to implement
+              (such as manifold() and homology() in dimension 3) are now
+              described by the new base class StandardSubcomplexOptions<dim>.
         Class StrandRef:
             - New routine reset().
         Class SubtreeIterator<const_>:

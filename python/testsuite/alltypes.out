@@ -78,6 +78,7 @@ DiscSpec : class -> EqualityType.ByValue
 DiscSpecIterator : class -> EqualityType.ByValue
 DiscType : class -> EqualityType.ByValue
 DivisionByZero : exception
+Documentation : documentation
 Domain : concept
 DoubleDescription : class -> EqualityType.NeverInstantiated
 Edge2 : alias -> Face2_1
@@ -586,6 +587,9 @@ StandardCppInteger : concept
 StandardStringifiable : concept
 StandardSubcomplex3 : class -> EqualityType.NeverInstantiated
 StandardSubcomplex4 : class -> EqualityType.NeverInstantiated
+StandardSubcomplexOptions : documentation
+StandardSubcomplexOptions3 : class -> EqualityType.NeverInstantiated
+StandardSubcomplexOptions4 : class -> EqualityType.NeverInstantiated
 StandardTriangulation : alias -> StandardSubcomplex3
 StrandRef : class -> EqualityType.ByValue
 StrictWeakOrder : concept

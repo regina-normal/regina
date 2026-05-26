@@ -15,27 +15,41 @@ struct Manifold {
 
 // Docstring regina::python::doc::Manifold::__class
 static constexpr const char __class[] =
-R"doc(Represents a particular 3-manifold, independent of how it might be
-triangulated. This is an abstract base class: its subclasses
-correspond to different families of 3-manifolds.
+R"doc(An abstract base class for various well-understood 3-manifolds.
 
-Each subclass:
+Each subclass of Manifold describes a particular type of well-
+understood 3-manifold. A single subclass could describe one particular
+manifold (e.g., the 3-sphere), or an entire parameterised family
+(e.g., lens spaces). Manifolds do _not_ encode specific
+triangulations; instead they describe the topology of a manifold,
+independent of how it might be triangulated.
 
-* must override all pure virtual functions (of course);
+Importantly, these subclasses do not aim to classify all 3-manifolds:
+there are many 3-manifolds that are not represented by any subclass of
+Manifold at all.
 
-* may optionally override construct(), homology() and/or
-  writeStructure(), if they are able to provide this functionality;
+When defining a new subclass of Manifold:
 
-* must _not_ override writeTextShort() or writeTextLong(), since these
-  routines are not virtual, and are provided directly by the Manifold
-  base class;
+* you must override the pure virtual functions writeName(),
+  writeTeXName(), and isHyperbolic();
 
-* must provide value semantics (including at least a copy constructor
-  and assignment operator);
+* optionally, you can override construct(), homology() and/or
+  writeStructure() if your class is able to provide this
+  functionality;
 
-* must provide comparison operators (== and !=);
+* you must _not_ override writeTextShort() or writeTextLong(), since
+  these routines are not virtual, and are provided directly by the
+  Manifold base class;
 
-* must provide member and global swap functions, for consistency
+* you must provide value semantics (including at least a copy
+  constructor and assignment operator);
+
+* you must provide comparison operators (== and !=);
+
+* optionally, you may incorporate your subclass into the global
+  ordering on manifolds (operator <=>);
+
+* you must provide member and global swap functions, for consistency
   across all Manifold subclasses.)doc";
 
 // Docstring regina::python::doc::Manifold::__cmp
@@ -77,17 +91,26 @@ Returns:
 
 // Docstring regina::python::doc::Manifold::construct
 static constexpr const char construct[] =
-R"doc(Returns a triangulation of this 3-manifold, if such a construction has
-been implemented. For details of which types of 3-manifolds have
-implemented this routine, see the class notes for each corresponding
-subclasses of Manifold.
+R"doc(Returns a triangulation of this manifold, if such a construction has
+been implemented.
 
-The default implemention of this routine just throws a NotImplemented
+Subclasses of Manifold may choose whether or not to implement this
+routine. Moreover, if a subclass describes a parameterised family of
+manifolds, it may choose to implement this only for some members of
+the family. If construction has not been implemented for this
+particular manifold, then this routine should throw a NotImplemented
 exception.
 
+Individual subclasses of Manifold should explain in their class notes
+whether they implement construct(). The default implementation
+provided by this base class just throws a NotImplemented exception.
+
+It is expected that over time, more subclasses of Manifold will
+implement construct() in future releases of Regina.
+
 Exception ``NotImplemented``:
-    Explicit construction has not yet been implemented for this
-    particular 3-manifold.
+    Explicit construction is not yet implemented for this particular
+    manifold.
 
 Exception ``FileError``:
     The construction needs to be read from file (as opposed to
@@ -98,22 +121,30 @@ Exception ``FileError``:
     installed with Regina.
 
 Returns:
-    a triangulation of this 3-manifold, if this construction has been
+    a triangulation of this manifold, if this construction has been
     implemented.)doc";
 
 // Docstring regina::python::doc::Manifold::homology
 static constexpr const char homology[] =
-R"doc(Returns the first homology group of this 3-manifold, if such a routine
-has been implemented. For details of which types of 3-manifolds have
-implemented this routine, see the class notes for each corresponding
-subclasses of Manifold.
+R"doc(Returns the first homology group of this manifold, if this is known to
+Regina.
 
-The default implemention of this routine just throws a NotImplemented
-exception.
+Subclasses of Manifold may choose whether or not to implement this
+routine. Moreover, if a subclass describes a parameterised family of
+manifolds, it may choose to implement this only for some members of
+the family. If homology has not been implemented for this particular
+manifold, then this routine should throw a NotImplemented exception.
+
+Individual subclasses of Manifold should explain in their class notes
+whether they implement homology(). The default implementation provided
+by this base class just throws a NotImplemented exception.
+
+It is expected that over time, more subclasses of Manifold will
+implement homology() in future releases of Regina.
 
 Exception ``NotImplemented``:
-    Homology calculation has not yet been implemented for this
-    particular 3-manifold.
+    Homology calculation is not yet implemented for this particular
+    manifold.
 
 Exception ``FileError``:
     The homology needs to be read from file (as opposed to computed),
@@ -123,8 +154,8 @@ Exception ``FileError``:
     census databases that are installed with Regina.
 
 Returns:
-    the first homology group of this 3-manifold, if this functionality
-    has been implemented.)doc";
+    the first homology group, if this is implemented for this
+    particular manifold.)doc";
 
 // Docstring regina::python::doc::Manifold::isHyperbolic
 static constexpr const char isHyperbolic[] =
@@ -136,14 +167,14 @@ Returns:
 
 // Docstring regina::python::doc::Manifold::name
 static constexpr const char name[] =
-R"doc(Returns the common name of this 3-manifold as a human-readable string.
+R"doc(Returns the common name of this manifold as a human-readable string.
 
 Returns:
-    the common name of this 3-manifold.)doc";
+    the common name of this manifold.)doc";
 
 // Docstring regina::python::doc::Manifold::structure
 static constexpr const char structure[] =
-R"doc(Returns details of the structure of this 3-manifold that might not be
+R"doc(Returns details of the structure of this manifold that might not be
 evident from its common name. For instance, for an orbit space S³/G
 this routine might return the full Seifert structure.
 
@@ -155,15 +186,13 @@ Returns:
 
 // Docstring regina::python::doc::Manifold::texName
 static constexpr const char texName[] =
-R"doc(Returns the common name of this 3-manifold in TeX format. No leading
-or trailing dollar signs will be included.
+R"doc(Returns the common name of this manifold in TeX format.
 
-.. warning::
-    The behaviour of this routine has changed as of Regina 4.3; in
-    earlier versions, leading and trailing dollar signs were provided.
+The TeX will assume that we are within math mode, and no leading or
+trailing dollar signs will be included.
 
 Returns:
-    the common name of this 3-manifold in TeX format.)doc";
+    the common name of this manifold in TeX format.)doc";
 
 }; // struct Manifold
 

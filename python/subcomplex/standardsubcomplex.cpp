@@ -43,14 +43,13 @@ using pybind11::overload_cast;
 template <int dim> requires (dim == 3 || dim == 4)
 void addStandardSubcomplexDim(pybind11::module_& m, const char* name) {
     using Subcomplex = regina::StandardSubcomplex<dim>;
+    using Options = regina::StandardSubcomplexOptions<dim>;
 
     RDOC_SCOPE_BEGIN(StandardSubcomplex)
 
-    auto c = pybind11::class_<Subcomplex>(m, name, rdoc::__class)
+    auto c = pybind11::class_<Subcomplex, Options>(m, name, rdoc::__class)
         .def("name", &Subcomplex::name, rdoc::name)
         .def("texName", &Subcomplex::texName, rdoc::texName)
-        .def("manifold", &Subcomplex::manifold, rdoc::manifold)
-        .def("homology", &Subcomplex::homology, rdoc::homology)
         .def_static("recognise", overload_cast<regina::Component<dim>*>(
             &Subcomplex::recognise), rdoc::recognise)
         .def_static("recognise",
@@ -67,6 +66,30 @@ void addStandardSubcomplexDim(pybind11::module_& m, const char* name) {
 }
 
 void addStandardSubcomplex(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(StandardSubcomplexOptions)
+
+    // 4-D gets the generic implementation.
+    auto c = pybind11::class_<regina::StandardSubcomplexOptions<4>>(m,
+            "StandardSubcomplexOptions4", rdoc::__class);
+    regina::python::no_eq_abstract(c);
+
+    RDOC_SCOPE_SWITCH(StandardSubcomplexOptions3)
+
+    // 3-D gets a specialised implementation.
+    using Options = regina::StandardSubcomplexOptions<3>;
+    auto c = pybind11::class_<Options>(m, "StandardSubcomplexOptions3",
+            rdoc::__class)
+        .def("manifold", &Options::manifold, rdoc::manifold)
+        .def("homology", &Options::homology, rdoc::homology)
+    ;
+    regina::python::no_eq_abstract(c);
+
+    RDOC_SCOPE_SWITCH(StandardSubcomplexOptions)
+
+    regina::python::add_doc_only_class<rdoc>(m, "StandardSubcomplexOptions");
+
+    RDOC_SCOPE_END
+
     addStandardSubcomplexDim<3>(m, "StandardSubcomplex3");
     addStandardSubcomplexDim<4>(m, "StandardSubcomplex4");
 

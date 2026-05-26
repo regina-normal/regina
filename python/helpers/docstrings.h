@@ -97,7 +97,40 @@
 
 #define RDOC_TODO regina::python::doc::common::todo
 
-namespace regina::python::doc::common {
+namespace regina::python {
+
+/**
+ * A common base class to use for all documentation-only classes.
+ */
+struct DocOnlyBase {
+};
+
+/**
+ * An empty C++ class that we can wrap in order to create a documentation-only
+ * class in Python.
+ *
+ * These C++ types need to be unique for each Python documentation-only class.
+ * Therefore we supply the docstring helper class (containing the actual
+ * documentation that we wish to offer through Python) as a template argument.
+ */
+template <ClassDocType Docs>
+struct DocOnlyClass : DocOnlyBase {
+};
+
+/**
+ * Adds a empty documentation-only class.
+ *
+ * This provides a way to import C++ class notes into Python that would
+ * otherwise not be attached to any Python class.
+ *
+ * The Python class will be empty, except for the docstring.
+ */
+template <ClassDocType Docs>
+void add_doc_only_class(pybind11::module_& m, const char* name) {
+    pybind11::class_<DocOnlyClass<Docs>, DocOnlyBase>(m, name, Docs::__class);
+}
+
+namespace doc::common {
     // Note: docstrings should be wrapped at 70 characters per line;
     // the hard maximum is 72.
 
@@ -106,6 +139,6 @@ R"doc(The Python documentation for this class or function has not yet been
 extracted from the C++ source code. Please inform the Regina developers
 about this omission.)doc";
 
-} // namespace regina::python::doc::common
+} } // namespace regina::python::doc::common
 
 #endif
