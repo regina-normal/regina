@@ -99,7 +99,7 @@ void LayeredChain::invert() {
     bottomVertexRoles_ = bottomVertexRoles_ * Perm<4>(3, 2, 1, 0);
 }
 
-std::unique_ptr<Manifold> LayeredChain::manifold() const {
+std::unique_ptr<Manifold<3>> LayeredChain::manifold() const {
     return std::make_unique<Handlebody>(index_ <= 1 ? 0 : 1);
 }
 

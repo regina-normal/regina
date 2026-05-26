@@ -36,7 +36,7 @@
 
 namespace regina {
 
-std::unique_ptr<Manifold> BlockedSFSPair::manifold() const {
+std::unique_ptr<Manifold<3>> BlockedSFSPair::manifold() const {
     try {
         SFSpace sfs0 = region_[0].createSFS(false);
         SFSpace sfs1 = region_[1].createSFS(false);

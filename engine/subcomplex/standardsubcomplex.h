@@ -51,13 +51,178 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 class AbelianGroup;
-class Manifold;
+template <int dim> requires (dim == 3) class Manifold;
 
 /**
  * \defgroup subcomplex Standard Triangulations and Subcomplexes
  * Standard triangulations and subcomplexes of triangulations whose
  * structures are well-understood.
  */
+
+/**
+ * Optional features that standard subcomplex classes may choose to implement.
+ *
+ * As described in the StandardSubcomplex class notes, each subclass of
+ * `StandardSubcomplex<dim>` describes a particular type of well-understood
+ * combinatorial subcomplex within a <i>dim</i>-dimensional triangulation.
+ *
+ * Every such subclass _must_ implement basic features, such as writing the
+ * subcomplex name in English and in TeX.  However, there are other features
+ * that are optional for subclasses to implement: examples in dimension 3
+ * include returning the underlying manifold, or the expected first homology.
+ *
+ * This base class `StandardSubcomplexOptions<dim>` describes those optional
+ * features as virtual functions, and provides default implementations that
+ * indicate to the user in some appropriate way that the feature is not
+ * implemented (e.g., by returning `null`, or throwing an exception).
+ * Each subclass of `StandardSubcomplex<dim>` may, if desired, override any of
+ * these virtual functions to provide a real implementation.  If a subclass
+ * describes a parameterised family of subcomplexes, it may even choose to
+ * implement these features only for some members of the family (falling back
+ * to the default "not impemented" behaviour for the others).
+ *
+ * These optional features are specific to the dimension, and so this class
+ * should be specialised where necessary (for example, the virtual functions
+ * `manifold()` and `homology()` as discussed earlier are provided by the
+ * specialisation `StandardSubcomplexOptions<3>`).  The generic implementation
+ * of StandardSubcomplexOptions has no functions at all.
+ *
+ * \python Python does not support templates.  Instead this class can be used
+ * by appending the dimension as a suffix (e.g., StandardSubcomplexOptions3 and
+ * StandardSubcomplexOptions4 for dimensions 3 and 4).
+ *
+ * \tparam dim the dimension of triangulation in which the subcomplexes live.
+ *
+ * \ingroup subcomplex
+ */
+template <int dim> requires (dim == 3 || dim == 4)
+class StandardSubcomplexOptions {
+    protected:
+        /**
+         * Default constructor.  This does nothing, since this base class
+         * does not hold any data of its own.
+         */
+        StandardSubcomplexOptions() = default;
+        /**
+         * Copy constructor.  This does nothing, since this base class
+         * does not hold any data of its own.
+         */
+        StandardSubcomplexOptions(const StandardSubcomplexOptions&) = default;
+        /**
+         * Copy assignment operator.  This does nothing, since this base class
+         * does not hold any data of its own.
+         */
+        StandardSubcomplexOptions& operator = (
+            const StandardSubcomplexOptions&) = default;
+};
+
+/**
+ * Describes optional features that standard 3-dimensional subcomplex classes
+ * may choose to implement.  See the generic StandardSubcomplexOptions class
+ * notes for an overview of how such optional features work.
+ *
+ * This class provides these optional features as virtual functions, with
+ * default implementations that indicate to the user in some appropriate way
+ * that the feature is not implemented (e.g., by returning `null`, or throwing
+ * an exception).  Each subclass of `StandardSubcomplex<3>` may, if desired,
+ * override any of these virtual functions to provide a real implementation.
+ *
+ * Individual subcomplex classes should explain in their class notes which of
+ * these optional features they implement.
+ *
+ * \pyclassname{StandardSubcomplexOptions3}
+ *
+ * \ingroup subcomplex
+ */
+template <>
+class StandardSubcomplexOptions<3> {
+    public:
+        /**
+         * Returns the 3-manifold represented by this subcomplex, if this is
+         * known to Regina.
+         *
+         * This is an optional feature that subcomplex classes may choose
+         * whether to implement; see the StandardSubcomplexOptions class notes
+         * for an overview of how such optional features work.
+         *
+         * If 3-manifold recognition has not been implemented for this
+         * particular subcomplex, this routine should return `null` (which is
+         * what the default implementation does).
+         *
+         * It is expected that over time, more subcomplex classes will
+         * implement manifold() in future releases of Regina.
+         *
+         * \return the underlying manifold, or `null` if manifold recognition
+         * is not yet implemented for this particular subcomplex.
+         */
+        virtual std::unique_ptr<Manifold<3>> manifold() const {
+            return {};
+        }
+
+        /**
+         * Returns the first homology group of this subcomplex, if this is
+         * known to Regina.
+         *
+         * This is an optional feature that subcomplex classes may choose
+         * whether to implement; see the StandardSubcomplexOptions class notes
+         * for an overview of how such optional features work.
+         *
+         * If homology has not been implemented for this particular subcomplex,
+         * this routine should return throw a NotImplemented exception (which is
+         * what the default implementation does).
+         *
+         * This routine does _not_ call `Triangulation<dim>::homology()` on
+         * the associated triangulation.  Instead the homology is calculated
+         * directly from the known properties of this subcomplex.  This can
+         * (for example) be used to assist with unit testing for subcomplex
+         * recognition routines.
+         *
+         * Most users will not need this routine, since it is only implemented
+         * for some subcomplexes (as opposed to `Triangulation<dim>::homology()`
+         * which is implemented always).
+         *
+         * For subclasses that describe an entire triangulation (as opposed to
+         * just a part thereof), the results of this routine should match the
+         * homology group obtained by calling `Triangulation<dim>::homology()`.
+         *
+         * It is expected that over time, more subcomplex classes will
+         * implement homology() in future releases of Regina.
+         *
+         * \exception NotImplemented Homology calculation is not yet
+         * implemented for this particular subcomplex.
+         *
+         * \exception FileError The homology needs to be read from file (as
+         * opposed to computed), but the file is inaccessible or its contents
+         * cannot be read and parsed correctly.  Currently this can only happen
+         * for the subclass SnapPeaCensusTri, which reads its results from
+         * the SnapPea census databases that are installed with Regina.
+         *
+         * \return the first homology group, if this is implemented for this
+         * particular subcomplex.
+         */
+        virtual AbelianGroup homology() const {
+            throw NotImplemented("homology() is not implemented for this "
+                "particular subcomplex");
+        }
+
+    protected:
+        /**
+         * Default constructor.  This does nothing, since this base class
+         * does not hold any data of its own.
+         */
+        StandardSubcomplexOptions() = default;
+        /**
+         * Copy constructor.  This does nothing, since this base class
+         * does not hold any data of its own.
+         */
+        StandardSubcomplexOptions(const StandardSubcomplexOptions&) = default;
+        /**
+         * Copy assignment operator.  This does nothing, since this base class
+         * does not hold any data of its own.
+         */
+        StandardSubcomplexOptions& operator = (
+            const StandardSubcomplexOptions&) = default;
+};
 
 /**
  * An abstract base class for various types of well-understood combinatorial
@@ -82,13 +247,14 @@ class Manifold;
  * triangulation (or part thereof) to a static recognition routine such as
  * `StandardSubcomplex<dim>::recognise(const Triangulation<dim>&)`.
  *
- * When defining a new subclass of StandardSubcomplex<dim>:
+ * When defining a new subclass of `StandardSubcomplex<dim>`:
  *
  * - you must override the pure virtual functions writeName() and
  *   writeTeXName();
  *
- * - optionally, you can override manifold() and/or homology() if your class
- *   is able to provide this functionality;
+ * - optionally, you can implement the extra features offered through
+ *   `StandardSubcomplexOptions<dim>` (such as manifold() and homology() in
+ *   dimension 3);
  *
  * - optionally, you can override writeTextShort() and writeTextLong(), though
  *   this base class provides sensible default implementations based on
@@ -109,7 +275,9 @@ class Manifold;
  * \ingroup subcomplex
  */
 template <int dim> requires (dim == 3 || dim == 4)
-class StandardSubcomplex : public Output<StandardSubcomplex<dim>> {
+class StandardSubcomplex :
+        public StandardSubcomplexOptions<dim>,
+        public Output<StandardSubcomplex<dim>> {
     public:
         /**
          * A virtual destructor.  This does nothing, since the base class
@@ -140,83 +308,6 @@ class StandardSubcomplex : public Output<StandardSubcomplex<dim>> {
             std::ostringstream ans;
             writeTeXName(ans);
             return std::move(ans).str();
-        }
-
-        /**
-         * Returns the manifold represented by this subcomplex, if this is
-         * known to Regina.  Currently this feature is only available in
-         * dimension 3.
-         *
-         * Subclasses of StandardSubcomplex may choose whether or not to
-         * implement this routine.  Moreover, if a subclass describes a
-         * parameterised family of subcomplexes, it may choose to implement
-         * this only for some members of the family.  A return value of `null`
-         * indicates that recognition has not been implemented for this
-         * particular subcomplex.
-         *
-         * Individual subclasses of `StandardSubcomplex<3>` should explain
-         * in their class notes whether they implement manifold().
-         * The default implementation provided by this base class simply
-         * returns `null`.
-         *
-         * It is expected that over time, more subclasses of StandardSubcomplex
-         * will implement manifold() in future releases of Regina.
-         *
-         * \return the underlying manifold, or `null` if manifold recognition
-         * is not yet implemented for this particular subcomplex.
-         */
-        virtual std::unique_ptr<Manifold> manifold() const {
-            return {};
-        }
-
-        /**
-         * Returns the first homology group of this subcomplex, if this is
-         * known to Regina.
-         *
-         * This routine does _not_ call `Triangulation<dim>::homology()` on
-         * the associated triangulation.  Instead the homology is calculated
-         * directly from the known properties of this subcomplex.  This can
-         * (for example) be used to assist with unit testing for subcomplex
-         * recognition routines.
-         *
-         * Most users will not need this routine, since it is only implemented
-         * for some subcomplexes (as opposed to `Triangulation<dim>::homology()`
-         * which is implemented always).
-         *
-         * For subclasses that describe an entire triangulation (as opposed to
-         * just a part thereof), the results of this routine should match the
-         * homology group obtained by calling `Triangulation<dim>::homology()`.
-         *
-         * Subclasses of StandardSubcomplex may choose whether or not to
-         * implement this routine.  Moreover, if a subclass describes a
-         * parameterised family of subcomplexes, it may choose to implement
-         * this only for some members of the family.  If homology has not been
-         * implemented for this particular subcomplex, then this routine should
-         * throw a NotImplemented exception.
-         *
-         * Individual subclasses of StandardSubcomplex should explain
-         * in their class notes whether they implement homology().
-         * The default implementation provided by this base class just throws
-         * a NotImplemented exception.
-         *
-         * It is expected that over time, more subclasses of StandardSubcomplex
-         * will implement homology() in future releases of Regina.
-         *
-         * \exception NotImplemented Homology calculation is not yet
-         * implemented for this particular subcomplex.
-         *
-         * \exception FileError The homology needs to be read from file (as
-         * opposed to computed), but the file is inaccessible or its contents
-         * cannot be read and parsed correctly.  Currently this can only happen
-         * for the subclass SnapPeaCensusTri, which reads its results from
-         * the SnapPea census databases that are installed with Regina.
-         *
-         * \return the first homology group, if this is implemented for this
-         * particular subcomplex.
-         */
-        virtual AbelianGroup homology() const {
-            throw NotImplemented("homology() is not implemented for this "
-                "particular subcomplex");
         }
 
         /**

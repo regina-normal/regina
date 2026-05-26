@@ -446,7 +446,6 @@
 		054208B81DF0D2740018AB24 /* handlebody.h in Headers */ = {isa = PBXBuildFile; fileRef = 054208A21DF0D2740018AB24 /* handlebody.h */; };
 		054208B91DF0D2740018AB24 /* lensspace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208A31DF0D2740018AB24 /* lensspace.cpp */; };
 		054208BA1DF0D2740018AB24 /* lensspace.h in Headers */ = {isa = PBXBuildFile; fileRef = 054208A41DF0D2740018AB24 /* lensspace.h */; };
-		054208BB1DF0D2740018AB24 /* manifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208A51DF0D2740018AB24 /* manifold.cpp */; };
 		054208BC1DF0D2740018AB24 /* manifold.h in Headers */ = {isa = PBXBuildFile; fileRef = 054208A61DF0D2740018AB24 /* manifold.h */; };
 		054208BD1DF0D2740018AB24 /* sfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208A71DF0D2740018AB24 /* sfs.cpp */; };
 		054208BE1DF0D2740018AB24 /* sfs.h in Headers */ = {isa = PBXBuildFile; fileRef = 054208A81DF0D2740018AB24 /* sfs.h */; };
@@ -720,7 +719,6 @@
 		0553FB062AEBE6ED00BE89A7 /* dt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033220A17C1E00FC74ED /* dt.cpp */; };
 		0553FB072AEBE6FC00BE89A7 /* graphloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0542089B1DF0D2740018AB24 /* graphloop.cpp */; };
 		0553FB082AEBE6FC00BE89A7 /* graphpair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0542089D1DF0D2740018AB24 /* graphpair.cpp */; };
-		0553FB092AEBE6FC00BE89A7 /* manifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208A51DF0D2740018AB24 /* manifold.cpp */; };
 		0553FB0A2AEBE6FC00BE89A7 /* graphtriple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0542089F1DF0D2740018AB24 /* graphtriple.cpp */; };
 		0553FB0B2AEBE6FC00BE89A7 /* snappeacensusmfd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208AD1DF0D2740018AB24 /* snappeacensusmfd.cpp */; };
 		0553FB0C2AEBE6FC00BE89A7 /* simplesurfacebundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208AB1DF0D2740018AB24 /* simplesurfacebundle.cpp */; };
@@ -1663,6 +1661,17 @@
 		05E62A982FC462D300AE1B84 /* standardsubcomplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62A972FC462CA00AE1B84 /* standardsubcomplex.h */; };
 		05E62A9B2FC4730600AE1B84 /* standardsubcomplex4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A9A2FC4730600AE1B84 /* standardsubcomplex4.cpp */; };
 		05E62A9D2FC4732100AE1B84 /* standardsubcomplex4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A9A2FC4730600AE1B84 /* standardsubcomplex4.cpp */; };
+		05E62A9F2FC5C6C700AE1B84 /* manifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A9E2FC5C6C700AE1B84 /* manifold.cpp */; };
+		05E62AA02FC5C6C700AE1B84 /* manifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A9E2FC5C6C700AE1B84 /* manifold.cpp */; };
+		05E62AAE2FC5F1AF00AE1B84 /* strict_fstream.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AAA2FC5F1AF00AE1B84 /* strict_fstream.hpp */; };
+		05E62AAF2FC5F1AF00AE1B84 /* compression_types.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA42FC5F1AF00AE1B84 /* compression_types.hpp */; };
+		05E62AB02FC5F1AF00AE1B84 /* zstd_stream_wrapper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AAC2FC5F1AF00AE1B84 /* zstd_stream_wrapper.hpp */; };
+		05E62AB12FC5F1AF00AE1B84 /* bxzstr_config.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA22FC5F1AF00AE1B84 /* bxzstr_config.hpp */; };
+		05E62AB22FC5F1AF00AE1B84 /* z_stream_wrapper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AAB2FC5F1AF00AE1B84 /* z_stream_wrapper.hpp */; };
+		05E62AB32FC5F1AF00AE1B84 /* bz_stream_wrapper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA32FC5F1AF00AE1B84 /* bz_stream_wrapper.hpp */; };
+		05E62AB42FC5F1AF00AE1B84 /* stream_wrapper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA92FC5F1AF00AE1B84 /* stream_wrapper.hpp */; };
+		05E62AB52FC5F1AF00AE1B84 /* lzma_stream_wrapper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA62FC5F1AF00AE1B84 /* lzma_stream_wrapper.hpp */; };
+		05E62AB62FC5F1AF00AE1B84 /* bxzstr.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA12FC5F1AF00AE1B84 /* bxzstr.hpp */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -2939,7 +2948,6 @@
 		054208A21DF0D2740018AB24 /* handlebody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = handlebody.h; sourceTree = "<group>"; };
 		054208A31DF0D2740018AB24 /* lensspace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lensspace.cpp; sourceTree = "<group>"; };
 		054208A41DF0D2740018AB24 /* lensspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lensspace.h; sourceTree = "<group>"; };
-		054208A51DF0D2740018AB24 /* manifold.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = manifold.cpp; sourceTree = "<group>"; };
 		054208A61DF0D2740018AB24 /* manifold.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = manifold.h; sourceTree = "<group>"; };
 		054208A71DF0D2740018AB24 /* sfs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sfs.cpp; sourceTree = "<group>"; };
 		054208A81DF0D2740018AB24 /* sfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sfs.h; sourceTree = "<group>"; };
@@ -4628,6 +4636,19 @@
 		05E62A972FC462CA00AE1B84 /* standardsubcomplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = standardsubcomplex.h; sourceTree = "<group>"; };
 		05E62A992FC4632A00AE1B84 /* standardsubcomplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = standardsubcomplex.h; sourceTree = "<group>"; };
 		05E62A9A2FC4730600AE1B84 /* standardsubcomplex4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = standardsubcomplex4.cpp; sourceTree = "<group>"; };
+		05E62A9E2FC5C6C700AE1B84 /* manifold.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = manifold.cpp; sourceTree = "<group>"; };
+		05E62AA12FC5F1AF00AE1B84 /* bxzstr.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = bxzstr.hpp; sourceTree = "<group>"; };
+		05E62AA22FC5F1AF00AE1B84 /* bxzstr_config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = bxzstr_config.hpp; sourceTree = "<group>"; };
+		05E62AA32FC5F1AF00AE1B84 /* bz_stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = bz_stream_wrapper.hpp; sourceTree = "<group>"; };
+		05E62AA42FC5F1AF00AE1B84 /* compression_types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = compression_types.hpp; sourceTree = "<group>"; };
+		05E62AA52FC5F1AF00AE1B84 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		05E62AA62FC5F1AF00AE1B84 /* lzma_stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = lzma_stream_wrapper.hpp; sourceTree = "<group>"; };
+		05E62AA72FC5F1AF00AE1B84 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05E62AA82FC5F1AF00AE1B84 /* regina.patch */ = {isa = PBXFileReference; lastKnownFileType = text; path = regina.patch; sourceTree = "<group>"; };
+		05E62AA92FC5F1AF00AE1B84 /* stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stream_wrapper.hpp; sourceTree = "<group>"; };
+		05E62AAA2FC5F1AF00AE1B84 /* strict_fstream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = strict_fstream.hpp; sourceTree = "<group>"; };
+		05E62AAB2FC5F1AF00AE1B84 /* z_stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = z_stream_wrapper.hpp; sourceTree = "<group>"; };
+		05E62AAC2FC5F1AF00AE1B84 /* zstd_stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = zstd_stream_wrapper.hpp; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -6396,7 +6417,7 @@
 				054208A21DF0D2740018AB24 /* handlebody.h */,
 				054208A31DF0D2740018AB24 /* lensspace.cpp */,
 				054208A41DF0D2740018AB24 /* lensspace.h */,
-				054208A51DF0D2740018AB24 /* manifold.cpp */,
+				05E62A9E2FC5C6C700AE1B84 /* manifold.cpp */,
 				054208A61DF0D2740018AB24 /* manifold.h */,
 				052F9CCE180600FA00FAE4DF /* notation.h */,
 				052F9CD9180600FA00FAE4DF /* order.cpp */,
@@ -6807,6 +6828,7 @@
 				052F9E69180600FB00FAE4DF /* bitmask.h */,
 				052F9E6A180600FB00FAE4DF /* boolset.cpp */,
 				052F9E6B180600FB00FAE4DF /* boolset.h */,
+				05E62AAD2FC5F1AF00AE1B84 /* bxzstr */,
 				0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */,
 				0545A0112F9ADCE8008D3ADB /* bytesequence.h */,
 				052F9E63180600FB00FAE4DF /* CMakeLists.txt */,
@@ -8802,6 +8824,25 @@
 			path = concepts;
 			sourceTree = "<group>";
 		};
+		05E62AAD2FC5F1AF00AE1B84 /* bxzstr */ = {
+			isa = PBXGroup;
+			children = (
+				05E62AA12FC5F1AF00AE1B84 /* bxzstr.hpp */,
+				05E62AA22FC5F1AF00AE1B84 /* bxzstr_config.hpp */,
+				05E62AA32FC5F1AF00AE1B84 /* bz_stream_wrapper.hpp */,
+				05E62AA42FC5F1AF00AE1B84 /* compression_types.hpp */,
+				05E62AA52FC5F1AF00AE1B84 /* LICENSE */,
+				05E62AA62FC5F1AF00AE1B84 /* lzma_stream_wrapper.hpp */,
+				05E62AA72FC5F1AF00AE1B84 /* README.txt */,
+				05E62AA82FC5F1AF00AE1B84 /* regina.patch */,
+				05E62AA92FC5F1AF00AE1B84 /* stream_wrapper.hpp */,
+				05E62AAA2FC5F1AF00AE1B84 /* strict_fstream.hpp */,
+				05E62AAB2FC5F1AF00AE1B84 /* z_stream_wrapper.hpp */,
+				05E62AAC2FC5F1AF00AE1B84 /* zstd_stream_wrapper.hpp */,
+			);
+			path = bxzstr;
+			sourceTree = "<group>";
+		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -9078,6 +9119,15 @@
 				0512E09026DF34D100DDB222 /* sfsalt.h in Headers */,
 				059493092920B1C300940F0D /* permgroup.h in Headers */,
 				059D023A25BB08B7004150F7 /* retriangulate-impl.h in Headers */,
+				05E62AAE2FC5F1AF00AE1B84 /* strict_fstream.hpp in Headers */,
+				05E62AAF2FC5F1AF00AE1B84 /* compression_types.hpp in Headers */,
+				05E62AB02FC5F1AF00AE1B84 /* zstd_stream_wrapper.hpp in Headers */,
+				05E62AB12FC5F1AF00AE1B84 /* bxzstr_config.hpp in Headers */,
+				05E62AB22FC5F1AF00AE1B84 /* z_stream_wrapper.hpp in Headers */,
+				05E62AB32FC5F1AF00AE1B84 /* bz_stream_wrapper.hpp in Headers */,
+				05E62AB42FC5F1AF00AE1B84 /* stream_wrapper.hpp in Headers */,
+				05E62AB52FC5F1AF00AE1B84 /* lzma_stream_wrapper.hpp in Headers */,
+				05E62AB62FC5F1AF00AE1B84 /* bxzstr.hpp in Headers */,
 				05E62A982FC462D300AE1B84 /* standardsubcomplex.h in Headers */,
 				052F9F5E180600FB00FAE4DF /* text.h in Headers */,
 				05A067111DFA68190047872E /* blockedsfstriple.h in Headers */,
@@ -10248,7 +10298,6 @@
 				0553FAE32AEBE6B500BE89A7 /* gluingpermsearcher2.cpp in Sources */,
 				0553FAF72AEBE6ED00BE89A7 /* pass.cpp in Sources */,
 				0553FAC42AEBE3C700BE89A7 /* triangulation7.cpp in Sources */,
-				0553FB092AEBE6FC00BE89A7 /* manifold.cpp in Sources */,
 				0553FA672AEBDF5600BE89A7 /* homgrouppresentation.cpp in Sources */,
 				051CBE872DE561480019D73D /* arrow.cpp in Sources */,
 				0553FAFA2AEBE6ED00BE89A7 /* examplelink.cpp in Sources */,
@@ -10394,6 +10443,7 @@
 				0553FAE62AEBE6B500BE89A7 /* gluingperms3.cpp in Sources */,
 				0553FB242AEBE73A00BE89A7 /* layering.cpp in Sources */,
 				0553FA8A2AEBE3AC00BE89A7 /* reorder.cpp in Sources */,
+				05E62AA02FC5C6C700AE1B84 /* manifold.cpp in Sources */,
 				0553FB5E2AEBE7E100BE89A7 /* homology.cpp in Sources */,
 				0553FA872AEBE39A00BE89A7 /* triangulation2.cpp in Sources */,
 				0553FA772AEBE36E00BE89A7 /* xmlsurfacewriter.cpp in Sources */,
@@ -10905,6 +10955,7 @@
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,
 				05F0A0411DBF0B5E00117BFC /* insertlayered.cpp in Sources */,
 				05C1BEAA1DCA7CA9007C946B /* boundary2.cpp in Sources */,
+				05E62A9F2FC5C6C700AE1B84 /* manifold.cpp in Sources */,
 				0518BA1B29D595B00020ADC1 /* representations.cpp in Sources */,
 				05A73C8419B2EEC50099C617 /* csv.cpp in Sources */,
 				05B7FFC725AC22D3003BAF5C /* HilbertSeries.cpp in Sources */,
@@ -11161,7 +11212,6 @@
 				05721EE61F97153E00A83FFC /* jones.cpp in Sources */,
 				05B7FFC825AC22D3003BAF5C /* full_cone.cpp in Sources */,
 				05C265B5282C948700232420 /* facetpairing3.cpp in Sources */,
-				054208BB1DF0D2740018AB24 /* manifold.cpp in Sources */,
 				0518B9C829D595490020ADC1 /* cusp_cross_sections.cpp in Sources */,
 				05098A6628F24CBC005E4716 /* typeutils.cpp in Sources */,
 				052F9EF3180600FB00FAE4DF /* treeconstraint.cpp in Sources */,

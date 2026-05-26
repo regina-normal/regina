@@ -31,7 +31,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include "utilities/osutils.h"
-#include "../helpers/docstrings.h"
+#include "../helpers.h"
 #include "../docstrings/utilities/osutils.h"
 
 void addOSUtils(pybind11::module_& m) {

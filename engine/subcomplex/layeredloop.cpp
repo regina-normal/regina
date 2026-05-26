@@ -36,7 +36,7 @@
 
 namespace regina {
 
-std::unique_ptr<Manifold> LayeredLoop::manifold() const {
+std::unique_ptr<Manifold<3>> LayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.
         return std::make_unique<LensSpace>(length_, 1);

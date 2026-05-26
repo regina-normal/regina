@@ -78,6 +78,7 @@ DiscSpec : class -> EqualityType.ByValue
 DiscSpecIterator : class -> EqualityType.ByValue
 DiscType : class -> EqualityType.ByValue
 DivisionByZero : exception
+Documentation : documentation
 Domain : concept
 DoubleDescription : class -> EqualityType.NeverInstantiated
 Edge2 : alias -> Face2_1
@@ -343,7 +344,10 @@ LinkSigEncoding : concept
 LinkSigPrintable : class -> EqualityType.NeverInstantiated
 Locale : class -> EqualityType.NeverInstantiated
 LockViolation : exception
-Manifold : class -> EqualityType.NeverInstantiated
+Manifold : alias -> Manifold3
+Manifold3 : class -> EqualityType.NeverInstantiated
+ManifoldOptions : documentation
+ManifoldOptions3 : class -> EqualityType.NeverInstantiated
 MarkedAbelianGroup : class -> EqualityType.ByValue
 Matrix2 : class -> EqualityType.ByValue
 Matrix3D : class -> EqualityType.ByValue
@@ -586,6 +590,9 @@ StandardCppInteger : concept
 StandardStringifiable : concept
 StandardSubcomplex3 : class -> EqualityType.NeverInstantiated
 StandardSubcomplex4 : class -> EqualityType.NeverInstantiated
+StandardSubcomplexOptions : documentation
+StandardSubcomplexOptions3 : class -> EqualityType.NeverInstantiated
+StandardSubcomplexOptions4 : class -> EqualityType.NeverInstantiated
 StandardTriangulation : alias -> StandardSubcomplex3
 StrandRef : class -> EqualityType.ByValue
 StrictWeakOrder : concept

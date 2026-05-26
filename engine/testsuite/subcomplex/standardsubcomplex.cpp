@@ -34,7 +34,6 @@
 
 #include "testhelper.h"
 
-using regina::Manifold;
 using regina::StandardSubcomplex;
 using regina::Triangulation;
 

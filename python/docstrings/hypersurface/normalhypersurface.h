@@ -452,8 +452,8 @@ links, then you should call isThinEdgeLink(), which has much less
 overhead.
 
 A hypersurface (or its positive rational multiple) could be the
-normalised link of many edges. The return value will be a pair (*v*,
-*thin*), where:
+normalised link of many edges. The return value will be a pair ``(v,
+thin)``, where:
 
 * *v* is a vector containing all such edges. This will begin with the
   edges for which this hypersurface is a thin link, followed by the
@@ -465,7 +465,7 @@ normalised link of many edges. The return value will be a pair (*v*,
   be compared to ``v.size()``.
 
 If no positive rational multiple of this hypersurface is the
-normalised link of any edge, then *link* will be 0 and *v* will be the
+normalised link of any edge, then *thin* will be 0 and *v* will be the
 empty vector.
 
 Note that the results of this routine are not cached. Thus the results
@@ -500,7 +500,7 @@ testing for only thin links may be a little faster, but not by much).
 
 A hypersurface (or its positive rational multiple) could be the
 normalised link of many tetrahedra. The return value will be a pair
-(*v*, *thin*), where:
+``(v, thin)``, where:
 
 * *v* is a vector containing all such tetrahedra. This will begin with
   the tetrahedra for which this hypersurface is a thin link, followed
@@ -513,7 +513,7 @@ normalised link of many tetrahedra. The return value will be a pair
   it will often be compared to ``v.size()``.
 
 If no positive rational multiple of this hypersurface is the
-normalised link of any tetrahedron, then *link* will be 0 and *v* will
+normalised link of any tetrahedron, then *thin* will be 0 and *v* will
 be the empty vector.
 
 Note that the results of this routine are not cached. Thus the results
@@ -548,7 +548,7 @@ links may be a little faster, but not by much).
 
 A hypersurface (or its positive rational multiple) could be the
 normalised link of many triangles. The return value will be a pair
-(*v*, *thin*), where:
+``(v, thin)``, where:
 
 * *v* is a vector containing all such triangles. This will begin with
   the triangles for which this hypersurface is a thin link, followed
@@ -561,7 +561,7 @@ normalised link of many triangles. The return value will be a pair
   it will often be compared to ``v.size()``.
 
 If no positive rational multiple of this hypersurface is the
-normalised link of any triangle, then *link* will be 0 and *v* will be
+normalised link of any triangle, then *thin* will be 0 and *v* will be
 the empty vector.
 
 Note that the results of this routine are not cached. Thus the results

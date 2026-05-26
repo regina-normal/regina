@@ -161,7 +161,7 @@ AbelianGroup TriSolidTorus::homology() const {
     return AbelianGroup(1);
 }
 
-std::unique_ptr<Manifold> TriSolidTorus::manifold() const {
+std::unique_ptr<Manifold<3>> TriSolidTorus::manifold() const {
     return std::make_unique<Handlebody>(1);
 }
 

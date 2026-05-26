@@ -38,7 +38,7 @@
 #endif
 
 #include "regina-core.h"
-#include "manifold.h"
+#include "manifold/manifold.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -49,7 +49,7 @@ namespace regina {
  * Only 2-sphere bundles, twisted 2-sphere bundles and projective plane
  * bundles are considered.
  *
- * All optional Manifold routines are implemented for this class.
+ * All optional Manifold<3> routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
@@ -58,7 +58,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class SimpleSurfaceBundle : public Manifold {
+class SimpleSurfaceBundle : public Manifold<3> {
     public:
         /**
          * Represents the orientable 2-sphere bundle over the circle.

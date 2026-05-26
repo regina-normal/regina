@@ -38,7 +38,7 @@
 
 namespace regina {
 
-std::unique_ptr<Manifold> AugTriSolidTorus::manifold() const {
+std::unique_ptr<Manifold<3>> AugTriSolidTorus::manifold() const {
     std::unique_ptr<SFSpace> ans(new SFSpace());
     if (chainType_ == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.

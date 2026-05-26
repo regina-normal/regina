@@ -273,7 +273,7 @@ class LayeredChain : public StandardSubcomplex<3> {
          */
         bool operator == (const LayeredChain& other) const;
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

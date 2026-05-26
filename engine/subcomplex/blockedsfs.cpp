@@ -243,7 +243,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
     return std::nullopt;
 }
 
-std::unique_ptr<Manifold> BlockedSFS::manifold() const {
+std::unique_ptr<Manifold<3>> BlockedSFS::manifold() const {
     try {
         SFSpace ans = region_.createSFS(false);
 

@@ -78,8 +78,8 @@ base orbifold of the second end space. Then the curves *f*', *o*',
 See the page on notation for Seifert fibred spaces for details on some
 of the terminology used above.
 
-The optional Manifold routine homology() is implemented, but the
-optional routine construct() is not.
+The optional Manifold<3> routines homology() and isHyperbolic() are
+implemented, but the optional routine construct() is not.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever

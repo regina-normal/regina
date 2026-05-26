@@ -39,7 +39,7 @@ using regina::SnapPeaCensusManifold;
 void addSnapPeaCensusManifold(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnapPeaCensusManifold)
 
-    auto c = pybind11::class_<SnapPeaCensusManifold, regina::Manifold>
+    auto c = pybind11::class_<SnapPeaCensusManifold, regina::Manifold<3>>
             (m, "SnapPeaCensusManifold", rdoc::__class)
         .def(pybind11::init<char, size_t>(), rdoc::__init)
         .def(pybind11::init<const SnapPeaCensusManifold&>(), rdoc::__copy)
@@ -53,6 +53,8 @@ void addSnapPeaCensusManifold(pybind11::module_& m) {
         .def_readonly_static("SEC_7_NOR", &SnapPeaCensusManifold::SEC_7_NOR)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
+    // Do not bind comparison operators, since these are already inherited
+    // via Manifold<3> and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
     regina::python::add_global_swap<SnapPeaCensusManifold, rdoc>(m);
 

@@ -42,7 +42,7 @@ using regina::SFSpace;
 void addGraphPair(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GraphPair)
 
-    auto c = pybind11::class_<GraphPair, regina::Manifold>(m, "GraphPair",
+    auto c = pybind11::class_<GraphPair, regina::Manifold<3>>(m, "GraphPair",
             rdoc::__class)
         .def(pybind11::init<const SFSpace&, const SFSpace&,
             long, long, long, long>(), rdoc::__init)
@@ -58,7 +58,7 @@ void addGraphPair(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     // Do not bind comparison operators, since these are already inherited
-    // from Manifold and we do not want to hide those more general versions.
+    // via Manifold<3> and we do not want to hide those more general versions.
     regina::python::add_output_rich(c);
     regina::python::add_global_swap<GraphPair, rdoc>(m);
 

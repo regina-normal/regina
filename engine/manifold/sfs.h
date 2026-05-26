@@ -40,7 +40,7 @@
 #include <list>
 #include <optional>
 #include "regina-core.h"
-#include "manifold.h"
+#include "manifold/manifold.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -175,12 +175,12 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * `beta + b.alpha`), or if there are no exceptional fibres then
  * it is presented as a single (1,b) fibre.
  *
- * The Manifold routines homology() and construct() are only
- * implemented in some cases.  The homology() routine is
- * implemented if and only if the base orbifold has no punctures.
- * The construct() routine is implemented only for lens spaces and
- * Seifert fibred spaces over the 2-sphere without punctures or reflector
- * boundaries.
+ * The optional Manifold<3> routine isHyperbolic() is implemented always for
+ * this class.  The optional routines homology() and construct() are only
+ * implemented in some cases: homology() is implemented if and only if the
+ * base orbifold has no punctures, and construct() is implemented only for
+ * lens spaces and Seifert fibred spaces over the 2-sphere without punctures
+ * or reflector boundaries.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -201,7 +201,7 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  *
  * \ingroup manifold
  */
-class SFSpace : public Manifold {
+class SFSpace : public Manifold<3> {
     public:
         /**
          * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3, \c n4

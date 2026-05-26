@@ -31,8 +31,8 @@ identify the torus boundaries so that, in additive terms:
     [b]       [q]
 ```
 
-All optional Manifold routines except for construct() are implemented
-for this class.
+The optional Manifold<3> routines homology() and isHyperbolic() are
+implemented, but the optional routine construct() is not.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just

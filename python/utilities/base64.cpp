@@ -30,7 +30,7 @@
 
 #include <pybind11/pybind11.h>
 #include "utilities/base64.h"
-#include "../helpers/docstrings.h"
+#include "../helpers.h"
 #include "../docstrings/utilities/base64.h"
 
 using namespace pybind11::literals;

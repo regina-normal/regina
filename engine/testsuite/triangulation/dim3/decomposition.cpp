@@ -69,8 +69,8 @@ static void verifyDecomp(const Triangulation<3>& tri, const char* name,
     // projective plane (i.e., summands() should always return a solution).
     //
     // PRE: The manifolds we expect to see are given in sorted order, and all
-    // corresponding Manifold classes have implementations of
-    // Manifold::homology() (i.e., they do not throw regina::NotImplemented).
+    // corresponding subclasses of Manifold<3> have implementations of
+    // Manifold<3>::homology() (i.e., they do not throw regina::NotImplemented).
 
     SCOPED_TRACE_CSTRING(name);
 

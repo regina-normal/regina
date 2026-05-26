@@ -150,7 +150,7 @@ std::unique_ptr<LayeredChainPair> LayeredChainPair::recognise(
     return nullptr;
 }
 
-std::unique_ptr<Manifold> LayeredChainPair::manifold() const {
+std::unique_ptr<Manifold<3>> LayeredChainPair::manifold() const {
     std::unique_ptr<SFSpace> ans(new SFSpace());
 
     ans->insertFibre(2, -1);

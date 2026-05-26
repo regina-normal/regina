@@ -153,7 +153,7 @@ class LayeredChainPair : public StandardSubcomplex<3> {
          */
         static std::unique_ptr<LayeredChainPair> recognise(
             const Component<3>* comp);
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

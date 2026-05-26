@@ -118,7 +118,7 @@ std::unique_ptr<LayeredLensSpace> LayeredLensSpace::recognise(
     return nullptr;
 }
 
-std::unique_ptr<Manifold> LayeredLensSpace::manifold() const {
+std::unique_ptr<Manifold<3>> LayeredLensSpace::manifold() const {
     return std::make_unique<LensSpace>(p_, q_);
 }
 

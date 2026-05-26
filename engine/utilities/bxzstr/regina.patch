@@ -1,0 +1,13 @@
+diff --git a/engine/utilities/bxzstr/bxzstr.hpp b/engine/utilities/bxzstr/bxzstr.hpp
+index 4aba53fe1..dd95eb578 100644
+--- a/engine/utilities/bxzstr/bxzstr.hpp
++++ b/engine/utilities/bxzstr/bxzstr.hpp
+@@ -7,7 +7,7 @@
+  * file from the zstr project (https://github.com/mateidavid/zstr)
+  * written by Matei David (https://github.com/mateidavid). */
+ 
+-#include "config.hpp"
++#include "bxzstr_config.hpp"
+ 
+ #ifndef BXZSTR_BXZSTR_HPP
+ #define BXZSTR_BXZSTR_HPP

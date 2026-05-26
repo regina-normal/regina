@@ -31,7 +31,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include "maths/matrixops.h"
-#include "../helpers/docstrings.h"
+#include "../helpers.h"
 #include "../docstrings/maths/matrixops.h"
 
 using pybind11::overload_cast;

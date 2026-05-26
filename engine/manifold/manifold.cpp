@@ -28,40 +28,21 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
-#include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
 
-std::string Manifold::name() const {
-    std::ostringstream ans;
-    writeName(ans);
-    return std::move(ans).str();
+// We keep construct() here in the .cpp file so that we do not need to include
+// the full triangulation headers in manifold.h.
+
+template <int dim> requires (dim == 3)
+Triangulation<dim> Manifold<dim>::construct() const {
+    throw NotImplemented(
+        "construct() is not implemented for this particular manifold");
 }
 
-std::string Manifold::texName() const {
-    std::ostringstream ans;
-    writeTeXName(ans);
-    return std::move(ans).str();
-}
-
-std::string Manifold::structure() const {
-    std::ostringstream ans;
-    writeStructure(ans);
-    return std::move(ans).str();
-}
-
-Triangulation<3> Manifold::construct() const {
-    throw NotImplemented("The construct() routine is currently not "
-        "implemented for this particular 3-manifold");
-}
-
-AbelianGroup Manifold::homology() const {
-    throw NotImplemented("The homology() routine is currently not "
-        "implemented for this particular 3-manifold");
-}
+template Triangulation<3> Manifold<3>::construct() const;
 
 } // namespace regina
 

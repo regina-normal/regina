@@ -310,6 +310,22 @@ Version 8.0  [ TODO ]
               FixedArray internally, which is not copy-assignable).  If you
               need to copy a tableaux, the copy constructor remains available
               (and move assignment is still available also).
+        Class Manifold<dim>, ManifoldOptions<dim>:
+            - The old 3-dimensional Manifold class has been replaced by a new
+              class template Manifold<dim>.  Currently this new class is
+              available only in dimension 3, but the framework is set up now
+              to support other dimensions in future versions of Regina.
+            - The old name Manifold cannot be kept as a C++ type alias, since
+              the same name is now used for the new class template.  However,
+              in Python, Manifold is now a deprecated type alias for Manifold3.
+            - Optional features that subclasses may choose whether to implement
+              (such as isHyperbolic() and homology() in dimension 3) are now
+              described by the new base class ManifoldOptions<dim>.
+            - For 3-manifolds, isHyperbolic() is now optional (not mandatory)
+              for subclasses to implement, and should throw an exception if it
+              is not implemented for this particular 3-manifold.
+            - The comparision operator <=> is now a global function (not a
+              member function of Manifold), and is specific to 3-manifolds.
         Class Matrix2:
             - Routines inverse() and invert() now throw an exception if the
               matrix does not have determinant ±1.  This also means that
@@ -394,12 +410,16 @@ Version 8.0  [ TODO ]
               identifying the closest non-adjacent pair of link nodes that are
               connected in the relative neighbourhood graph.  Thanks to
               Kate Turner for this suggestion.
-        Class StandardSubcomplex<dim>, StandardTriangulation:
+        Class StandardSubcomplex<dim>, StandardSubcomplexOptions<dim>,
+                StandardTriangulation:
             - The old 3-dimensional StandardTriangulation class has been
               replaced by a new class template StandardSubcomplex<dim>.
               Currently this new class is available only in dimensions 3 and 4.
             - The old name StandardTriangulation is now a deprecated alias for
               StandardSubcomplex<3>.
+            - Optional features that subclasses may choose whether to implement
+              (such as manifold() and homology() in dimension 3) are now
+              described by the new base class StandardSubcomplexOptions<dim>.
         Class StrandRef:
             - New routine reset().
         Class SubtreeIterator<const_>:

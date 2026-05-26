@@ -142,7 +142,7 @@ std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
     return nullptr;
 }
 
-std::unique_ptr<Manifold> TrivialTri::manifold() const {
+std::unique_ptr<Manifold<3>> TrivialTri::manifold() const {
     switch (type_) {
         case SPHERE_4_VERTEX:
             return std::make_unique<LensSpace>(1, 0);

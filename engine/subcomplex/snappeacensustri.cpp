@@ -167,7 +167,7 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
     return nullptr;
 }
 
-std::unique_ptr<Manifold> SnapPeaCensusTri::manifold() const {
+std::unique_ptr<Manifold<3>> SnapPeaCensusTri::manifold() const {
     return std::make_unique<SnapPeaCensusManifold>(section_, index_);
 }
 

@@ -17,7 +17,7 @@ struct Handlebody {
 static constexpr const char __class[] =
 R"doc(Represents an orientable handlebody.
 
-All optional Manifold routines are implemented for this class.
+All optional Manifold<3> routines are implemented for this class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just

@@ -199,7 +199,7 @@ std::unique_ptr<SpiralSolidTorus> SpiralSolidTorus::recognise(
     return ans;
 }
 
-std::unique_ptr<Manifold> SpiralSolidTorus::manifold() const {
+std::unique_ptr<Manifold<3>> SpiralSolidTorus::manifold() const {
     return std::make_unique<Handlebody>(1);
 }
 

@@ -51,7 +51,7 @@ namespace {
     const TxIParallelCore core_T_p;
 }
 
-std::unique_ptr<Manifold> PluggedTorusBundle::manifold() const {
+std::unique_ptr<Manifold<3>> PluggedTorusBundle::manifold() const {
     try {
         SFSpace sfs = region_.createSFS(false);
         if (sfs.punctures() == 1) {

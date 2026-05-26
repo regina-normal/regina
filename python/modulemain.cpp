@@ -294,6 +294,20 @@ Nevertheless, they are made available here as empty classes with
 docstrings, which means you can access concept _documentation_ here
 in Python. Try ``help(Ring)`` for an example.)doc");
 
+    // An empty base class to use for all documentation-only classes.
+    pybind11::class_<regina::python::DocOnlyBase>(m, "Documentation",
+R"doc(A common base class for all documentation-only classes.
+
+A _documentation-only class_ gives a way for Python users to access
+C++ documentation that would otherwise not be attached to any concrete
+Python class.  For example, within Python, Triangulation is a
+documentation-only class that offers generic information about
+triangulations (as opposed to the concrete classes Triangulation2,
+Triangulation3, etc., which provide the real functionality in each
+dimension).
+
+Try ``help(Triangulation)`` to see what this documentation looks like.)doc");
+
     // Components from subdirectories, which appear in order of dependency:
     //
     // - In some cases the bindings require this; in particular, when a value
