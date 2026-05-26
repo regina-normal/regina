@@ -172,7 +172,7 @@ class CensusDB {
          * \python This function is available in Python, and the \a action
          * argument may be a pure Python function.  Since Python does not
          * support C++ templates, the generation should be passed as an
-         * initial argument at runtime: `lookupKey(generation, isoSig, action)`.
+         * initial argument at runtime: `lookupKey(generation, sig, action)`.
          * If \a generation does not match the one allowed value (i.e., the
          * format used internally by the database), then this routine will
          * throw an InvalidArgument exception.
