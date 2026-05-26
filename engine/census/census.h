@@ -243,8 +243,8 @@ class CensusDB {
 void swap(CensusDB& a, CensusDB& b) noexcept;
 
 /**
- * Stores a single "hit" indicating that some given triangulation has
- * been located in one of Regina's in-built census databases.
+ * Stores a single "hit" indicating that some given triangulation or link
+ * diagram has been located in one of Regina's in-built census databases.
  *
  * You cannot construct or modify instances of this class yourself,
  * other than through the standard copy/move/swap operations.
@@ -261,9 +261,10 @@ class CensusHit {
     private:
         std::string name_;
             /**< The human-readable name associated with the triangulation
-                 in the database. */
+                 or link diagram in the database. */
         const CensusDB* db_;
-            /**< The database in which the triangulation was found. */
+            /**< The database in which the triangulation or link diagram
+                 was found. */
 
     public:
         /**
@@ -294,16 +295,16 @@ class CensusHit {
          */
         void swap(CensusHit& other) noexcept;
         /**
-         * Returns the human-readable name associated with the
-         * triangulation in the database.  This typically contains the name of
-         * the triangulation and/or the name of the underlying manifold.
+         * Returns the human-readable name associated with the triangulation
+         * or link diagram in the database.  This would typically contain the
+         * name of the triangulation, the link, and/or the underlying manifold.
          *
          * \return the human-readable name for this hit.
          */
         const std::string& name() const;
         /**
          * Returns details of the census database in which the
-         * triangulation was found.
+         * triangulation or link diagram was found.
          *
          * \return the database for this hit.
          */
