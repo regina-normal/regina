@@ -901,7 +901,7 @@ links, then you should call isThinEdgeLink(), which has much less
 overhead.
 
 A surface (or its positive rational multiple) could be the normalised
-link of many edges. The return value will be a pair (*v*, *thin*),
+link of many edges. The return value will be a pair ``(v, thin)``,
 where:
 
 * *v* is a vector containing all such edges. This will begin with the
@@ -914,7 +914,7 @@ where:
   be compared to ``v.size()``.
 
 If no positive rational multiple of this surface is the normalised
-link of any edge, then *link* will be 0 and *v* will be the empty
+link of any edge, then *thin* will be 0 and *v* will be the empty
 vector.
 
 Note that the results of this routine are not cached. Thus the results
@@ -947,7 +947,7 @@ use essentially the same implementation (so testing for only thin
 links may be a little faster, but not by much).
 
 A surface (or its positive rational multiple) could be the normalised
-link of many triangles. The return value will be a pair (*v*, *thin*),
+link of many triangles. The return value will be a pair ``(v, thin)``,
 where:
 
 * *v* is a vector containing all such triangles. This will begin with
@@ -960,7 +960,7 @@ where:
   will often be compared to ``v.size()``.
 
 If no positive rational multiple of this surface is the normalised
-link of any triangle, then *link* will be 0 and *v* will be the empty
+link of any triangle, then *thin* will be 0 and *v* will be the empty
 vector.
 
 Note that the results of this routine are not cached. Thus the results

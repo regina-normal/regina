@@ -39,7 +39,7 @@ passing a triangulation (or part thereof) to a static recognition
 routine such as ``StandardSubcomplex<dim>::recognise(const
 Triangulation<dim>&)``.
 
-When defining a new subclass of StandardSubcomplex<dim>:
+When defining a new subclass of `StandardSubcomplex<dim>`:
 
 * you must override the pure virtual functions writeName() and
   writeTeXName();
