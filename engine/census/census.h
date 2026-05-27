@@ -94,21 +94,33 @@ class CensusDB {
             /**< The filename where the database is stored. */
         std::string desc_;
             /**< A human-readable description of this database. */
+        size_t maxSize_;
+            /**< The maximum number of top-dimensional simplices and/or
+                 crossings for any entry in the database, or 0 if this is not
+                 known. */
 
     public:
         /**
-         * Creates a new reference to one of Regina's census databases.
+         * Creates a new reference to a census database.
+         *
+         * The database should use the same format as Regina's in-built census
+         * databases (and this format depends upon your build configuration);
+         * however, it does not actually need to be one of those in-built
+         * databases, and it may be located anywhere on the filesystem.
          *
          * This constructor will not run any checks (e.g., it will not verify
-         * that the database exists, or that it is stored in the correct
-         * format).
+         * that the database exists, that it is stored in the correct format,
+         * or that the \a maxSize argument is correct).
          *
          * \param filename the filename where the database is stored.
          * \param desc a human-readable description of the database.
          * See the desc() routine for further information on how this
          * description might be used.
+         * \param maxSize the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in the database, or 0 (the default) if this
+         * is not known.  This can be used to optimise database lookups.
          */
-        CensusDB(std::string filename, std::string desc);
+        CensusDB(std::string filename, std::string desc, size_t maxSize = 0);
 
         /**
          * Creates a new clone of the given database reference.
@@ -121,6 +133,24 @@ class CensusDB {
          * The reference that was passed will no longer be usable.
          */
         CensusDB(CensusDB&&) noexcept = default;
+
+        /**
+         * Returns a reference to one of Regina's in-built census databases,
+         * stored in the standard census database location on the filesystem.
+         *
+         * The database will be assumed to live in the directory
+         * `GlobalDirs::census()`.
+         *
+         * \param basename the base of the database filename, with no file
+         * extension and no directory information.
+         * \param desc a human-readable description for the database.
+         * \param maxSize the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in the database, or 0 (the default) if this
+         * is not known.  This can be used to optimise database lookups.
+         * \return the resulting database reference.
+         */
+        static CensusDB global(const char* basename, const char* desc,
+            size_t maxSize = 0);
 
         /**
          * Returns the filename where this database is stored.
@@ -139,6 +169,19 @@ class CensusDB {
          * \return the database description.
          */
         const std::string& desc() const;
+
+        /**
+         * Returns the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in this database, or 0 if this information
+         * is not known.
+         *
+         * If this _is_ known, it can be used to optimise database lookups
+         * (in particular, to avoid lookups entirely when it is known that the
+         * key will not be found).
+         *
+         * \return the database description.
+         */
+        size_t maxSize() const;
 
         /**
          * Searches for the given key in this database.
@@ -368,33 +411,31 @@ void swap(CensusHit& a, CensusHit& b) noexcept;
  */
 class Census {
     private:
-        static CensusDB* closedOr_;
+        static CensusDB closedOr_;
             /**< A census of closed orientable prime 3-manifold triangulations,
                  or `null` if lookup() is yet to be called. */
-        static CensusDB* closedNor_;
+        static CensusDB closedNor_;
             /**< A census of closed non-orientable P²-irreducible 3-manifold
                  triangulations, or `null` if lookup() is yet to be called. */
-        static CensusDB* closedHyp_;
+        static CensusDB closedHyp_;
             /**< A census of closed hyperbolic 3-manifold triangulations,
                  or `null` if lookup() is yet to be called. */
-        static CensusDB* cuspedHypOr_;
+        static CensusDB cuspedHypOr_;
             /**< A census of cusped hyperbolic orientable 3-manifold
                  triangulations, or `null` if lookup() is yet to be called. */
-        static CensusDB* cuspedHypNor_;
+        static CensusDB cuspedHypNor_;
             /**< A census of cusped hyperbolic non-orientable 3-manifold
                  triangulations, or `null` if lookup() is yet to be called. */
-        static CensusDB* christy_;
+        static CensusDB christy_;
             /**< Joe Christy's collection of knot and link complements
                  (which shipped as a Regina sample file until version 5.96),
                  or `null` if lookup() is yet to be called. */
-        static CensusDB* classicalKnots_;
+        static CensusDB classicalKnots_;
             /**< A census of classical prime knot diagrams,
                  or `null` if lookup() is yet to be called. */
-        static CensusDB* virtualKnots_;
+        static CensusDB virtualKnots_;
             /**< A census of virtual prime knot diagrams,
                  or `null` if lookup() is yet to be called. */
-        static bool dbInit_;
-            /**< Have the census databases been initialised yet? */
 
     public:
         /**
@@ -497,26 +538,19 @@ class Census {
 
         // Make this class non-constructible.
         Census() = delete;
-
-    private:
-        /**
-         * Constructs a CensusDB object for one of Regina's in-built
-         * census databases, stored in the standard census database
-         * location on the filesystem.
-         *
-         * \param filename the filename for the database, without directory
-         * information.  This routine will build the full pathname by joining
-         * the given filename with the standard census database directory.
-         * \param desc a human-readable description for the database.
-         * \return the new database specifier.
-         */
-        static CensusDB* standardDB(const char* filename, const char* desc);
 };
 
 // Inline functions for CensusDB:
 
-inline CensusDB::CensusDB(std::string filename, std::string desc) :
-        filename_(std::move(filename)), desc_(std::move(desc)) {
+inline CensusDB::CensusDB(std::string filename, std::string desc,
+        size_t maxSize) : filename_(std::move(filename)),
+        desc_(std::move(desc)), maxSize_(maxSize) {
+}
+
+inline CensusDB CensusDB::global(const char* basename, const char* desc,
+        size_t maxSize) {
+    return CensusDB(GlobalDirs::census() + "/" + basename + "." REGINA_DB_EXT,
+        desc, maxSize);
 }
 
 inline const std::string& CensusDB::filename() const {
@@ -525,6 +559,10 @@ inline const std::string& CensusDB::filename() const {
 
 inline const std::string& CensusDB::desc() const {
     return desc_;
+}
+
+inline size_t CensusDB::maxSize() const {
+    return maxSize_;
 }
 
 inline void CensusDB::swap(CensusDB& other) noexcept {

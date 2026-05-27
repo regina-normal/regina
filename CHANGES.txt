@@ -110,6 +110,11 @@ Version 8.0  [ TODO ]
               argument indicates the generation of isomorphism signature that
               the database uses for its keys, and is subject to change in future
               versions of Regina.  The old lookup() is removed completely.
+            - The constructor now takes an extra optional argument indicating
+              the maximum size of triangulation or link in the census.
+            - New routine global() for accessing Regina's in-built databases.
+            - New routine maxSize() to help avoid lookups when it is clear
+              that there will be no hits.
         Class ChildIterator<const_>:
             - The type std::iterator_traits<ChildIterator<...>>::value_type
               is now just Packet (without any const qualifiers), regardless of

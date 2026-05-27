@@ -49,9 +49,12 @@ void addCensus(pybind11::module_& m) {
 
     auto db = pybind11::class_<CensusDB>(m, "CensusDB", rdoc::__class)
         .def(pybind11::init<const std::string&, const std::string&>(),
-            rdoc::__init)
+            "filename"_a, "desc"_a, "maxSize"_a = 0, rdoc::__init)
         .def(pybind11::init<const CensusDB&>(), rdoc::__copy)
+        .def_static("global", &CensusDB::global,
+            "basename"_a, "desc"_a, "maxSize"_a = 0, rdoc::global)
         .def("filename", &CensusDB::filename, rdoc::filename)
+        .def("maxSize", &CensusDB::maxSize, rdoc::maxSize)
         .def("desc", &CensusDB::desc, rdoc::desc)
         .def("swap", &CensusDB::swap, rdoc::swap)
         .def("lookupKey", [](const CensusDB& db, int generation,

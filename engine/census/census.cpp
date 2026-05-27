@@ -37,15 +37,22 @@
 
 namespace regina {
 
-CensusDB* Census::closedOr_ = nullptr;
-CensusDB* Census::closedNor_ = nullptr;
-CensusDB* Census::closedHyp_ = nullptr;
-CensusDB* Census::cuspedHypOr_ = nullptr;
-CensusDB* Census::cuspedHypNor_ = nullptr;
-CensusDB* Census::christy_ = nullptr;
-CensusDB* Census::classicalKnots_ = nullptr;
-CensusDB* Census::virtualKnots_ = nullptr;
-bool Census::dbInit_ = false;
+CensusDB Census::closedOr_ = CensusDB::global("closed-or-census-11",
+    "Closed census (orientable)", 11);
+CensusDB Census::closedNor_ = CensusDB::global("closed-nor-census-11",
+    "Closed census (non-orientable)", 11);
+CensusDB Census::closedHyp_ = CensusDB::global("closed-hyp-census-full",
+    "Hodgson-Weeks closed hyperbolic census", 32);
+CensusDB Census::cuspedHypOr_ = CensusDB::global("cusped-hyp-or-census-9",
+    "Cusped hyperbolic census (orientable)", 9);
+CensusDB Census::cuspedHypNor_ = CensusDB::global("cusped-hyp-nor-census-9",
+    "Cusped hyperbolic census (non-orientable)", 9);
+CensusDB Census::christy_ = CensusDB::global("christy-knots-links",
+    "Christy's collection of knot/link complements", 22);
+CensusDB Census::classicalKnots_ = CensusDB::global("classical",
+    "Prime classical knots", 16);
+CensusDB Census::virtualKnots_ = CensusDB::global("virtual",
+    "Prime virtual knots", 6);
 
 // Instantiate this template, which we use in the python bindings.
 template void CensusDB::lookupKey<2, const std::function<void(CensusHit&&)>&>(
@@ -79,22 +86,6 @@ std::list<CensusHit> Census::lookup(const std::string& sig) {
             return {};
     }
 
-    if (! dbInit_) {
-        closedOr_ = standardDB("closed-or-census-11." REGINA_DB_EXT,
-            "Closed census (orientable)");
-        closedNor_ = standardDB("closed-nor-census-11." REGINA_DB_EXT,
-            "Closed census (non-orientable)");
-        closedHyp_ = standardDB("closed-hyp-census-full." REGINA_DB_EXT,
-            "Hodgson-Weeks closed hyperbolic census");
-        cuspedHypOr_ = standardDB("cusped-hyp-or-census-9." REGINA_DB_EXT,
-            "Cusped hyperbolic census (orientable)");
-        cuspedHypNor_ = standardDB("cusped-hyp-nor-census-9." REGINA_DB_EXT,
-            "Cusped hyperbolic census (non-orientable)");
-        christy_ = standardDB("christy-knots-links." REGINA_DB_EXT,
-            "Christy's collection of knot/link complements");
-        dbInit_ = true;
-    }
-
     std::list<CensusHit> hits;
 
     auto push = [&hits](CensusHit hit) {
@@ -102,18 +93,14 @@ std::list<CensusHit> Census::lookup(const std::string& sig) {
     };
 
     // Any of these calls to lookupKey() might throw a FileError exception.
-    closedOr_->lookupKey<2>(sig, push);
-    closedNor_->lookupKey<2>(sig, push);
-    closedHyp_->lookupKey<2>(sig, push);
-    cuspedHypOr_->lookupKey<2>(sig, push);
-    cuspedHypNor_->lookupKey<2>(sig, push);
-    christy_->lookupKey<2>(sig, push);
+    closedOr_.lookupKey<2>(sig, push);
+    closedNor_.lookupKey<2>(sig, push);
+    closedHyp_.lookupKey<2>(sig, push);
+    cuspedHypOr_.lookupKey<2>(sig, push);
+    cuspedHypNor_.lookupKey<2>(sig, push);
+    christy_.lookupKey<2>(sig, push);
 
     return hits;
-}
-
-CensusDB* Census::standardDB(const char* filename, const char* desc) {
-    return new CensusDB(GlobalDirs::census() + "/" + filename, desc);
 }
 
 } // namespace regina
