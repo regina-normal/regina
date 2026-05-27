@@ -315,4 +315,40 @@ TEST_F(CensusTest, lookup) {
     // Hyperbolic knots & links, multiple hits:
     verifyLookup("k3WQS7WmZ7pbm6QZelNa", "L408001", "L410005");
     verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt", "L408001", "L410005");
+    // Classical and virtual knots:
+    verifyLookup("eputWe", "4ah_1", "v4_1");
+    verifyLookup("eabcdbadcvbZa", "4ah_1", "v4_1");
+
+    // Ensure that our maxSize() optimisation does not cut out any hits.
+    // The following examples are of the largest size in each database.
+    verifyLookup("lxWISepmv9Foi2BqsJJeKa",
+        "Hyp_2.08566020 (Z_30) : #18");
+    verifyLookup("lLLLPLQPccdfegiijijkkhsmdghudpawk",
+        "Hyp_2.08566020 (Z_30) : #18");
+    verifyLookup("lZsZoev908-oaUHZnipsyZTa",
+        "SFS [RP2: (2,1) (3,1) (3,1)] : #44");
+    verifyLookup("lLLvLPQQcbcihihjkihjktsdddlmkfjjw",
+        "SFS [RP2: (2,1) (3,1) (3,1)] : #44");
+    verifyLookup("jxWYWZq7+FaS1memen", "o9_20087 : #23");
+    verifyLookup("jLvAAMQaefeghhhiineqsoaiihr", "o9_20087 : #23");
+    verifyLookup("jZWZUIWd-FaAO2jzfh2a", "n9_6707 : #37");
+    verifyLookup("jLLLwQQccefiigihhgouumtrnhi", "n9_6707 : #37");
+    verifyLookup(
+        "GpaqyGOW4irPHrcIYIAl7YAJtZZJZJRR777-xolbHkrv1wcxCreNvqmtO2dO5wrSfLLa",
+        "5.4664495824442309 : v2972(-4, 1)");
+    verifyLookup(
+        "GLAMzMLLLLvwwLwMwQwQQQcbcbdefghjknmsrvuvvBxBCAzCEFFFCEDEhhjhhhhqkaqbqkppvguvpakgqhqdtdfsk",
+        "5.4664495824442309 : v2972(-4, 1)");
+    verifyLookup(
+        "wxzqn3doxZgv2QXyuwL06-VUvMaajnNsrePu4nNDAOcc",
+        "L111314");
+    verifyLookup(
+        "wLvLLAPMvMMwPQPkcehfjijklpmqopttruuvuvviadcfvfamncargetcnndchh",
+        "L111314");
+    verifyLookup("gZmxZiAS", "v6_452");
+    verifyLookup("gababcdcdefeftMp8", "v6_452");
+    verifyLookup("qVzZziSzvp8rqmaKYXOsOvZ9y",
+        "16nh_0784279");
+    verifyLookup("qabcdbefcdghaijefklmhgnokjilpnopmRszvvbFMZHhc",
+        "16nh_0784279");
 }

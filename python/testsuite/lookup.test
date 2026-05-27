@@ -38,7 +38,9 @@ def search(sig):
 	print()
 
 search('foo')
-search('cV6cqb') # 2nd-gen
-search('cPcbbbiht') # 1st-gen
-search('nhpkp7wn5L5-YBairvzHzOOQc') # 2nd-gen
-search('nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng') # 1st-gen
+search('cV6cqb') # 2nd-gen triangulation
+search('cPcbbbiht') # 1st-gen triangulation
+search('nhpkp7wn5L5-YBairvzHzOOQc') # 2nd-gen triangulation
+search('nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng') # 1st-gen triangulation
+search('eputWe') # 2nd-gen knot
+search('eabcdbadcvbZa') # 1st-gen knot

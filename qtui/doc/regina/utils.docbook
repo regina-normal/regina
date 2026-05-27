@@ -19,7 +19,7 @@
 
   <refnamediv>
    <refname>censuslookup</refname>
-   <refpurpose>Search for triangulations in &regina;'s census databases</refpurpose>
+   <refpurpose>Search for triangulations or link diagrams in &regina;'s census databases</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -36,28 +36,42 @@
   <refsect1>
    <title>Description</title>
    <para>
-    This utility searches for the given 3-manifold triangulations in the various
-    census databases that are shipped with&regina;.
+    This utility searches for the given 3-manifold triangulations and/or link
+    diagrams in the various census databases that are shipped with &regina;.
    </para>
    <para>
-    You should present the trianguations using their <firstterm>isomorphism
-    signatures</firstterm>.  These are short text strings that identify
-    the triangulation uniquely up to combinatorial isomorphism
-    (i.e., up to relabellings of the tetrahedra and/or their vertices).
+    You should present trianguations using their
+    <firstterm>isomorphism signatures</firstterm> (short text strings that
+    identify triangulations uniquely up to relabelling of their tetrahedra
+    and/or their vertices).
+    You should present link diagrams using their
+    <firstterm>knot/link signatures</firstterm> (short text strings that
+    identify link diagrams uniquely up to relabelling, reflection and/or
+    rotation of the entire diagram, and/or reversal of individual link
+    components).
+   </para>
+   <para>
     You can use first-generation signatures (as used by
     &regina;&nbsp;&le;&nbsp;7.x) or second-generation signatures (as
     introduced in &regina;&nbsp;8.0); either will be understood.
+    You can also include a mix of both triangulations and links in the
+    same call to <command>censuslookup</command>.
    </para>
    <para>
-    From the graphical user interface, you can view the isomorphism signature
-    of a triangulation by switching to the <guilabel>Composition</guilabel>
-    tab in the triangulation viewer.  From &python; you can fetch the
-    second-generation isomorphism signature of the triangulation
-    <userinput>x</userinput> by calling <userinput>x.neoSig()</userinput>
-    (if you need a first-generation signature for compatibility with older
-    versions of &regina;, call <userinput>x.isoSig()</userinput> instead).
+    From the graphical user interface, you can view isomorphism signatures
+    by switching to the <guilabel>Composition</guilabel> tab in the
+    triangulation viewer, and you can view knot/link signatures by switching
+    to the <guilabel>Codes</guilabel> tab in the link viewer.
+    From &python; you can fetch the second-generation signature of a
+    triangulation or link <userinput>x</userinput> by calling
+    <userinput>x.neoSig()</userinput>.
+    If you need a first-generation signature for compatibility with older
+    versions of &regina;, instead call <userinput>x.isoSig()</userinput>
+    for triangulations, or <userinput>x.knotSig()</userinput> for links.
+   </para>
+   <para>
     For a full and precise specification of first-generation isomorphism
-    signatures, see
+    signatures of 3-manifold triangulations, see
     <emphasis>Simplification paths in the Pachner graphs of closed
     orientable 3-manifold triangulations</emphasis>, Burton, 2011,
     arXiv:1110.6080.
@@ -138,6 +152,19 @@
     cPcbbbiht: 2 hits
         m004 : #1 -- Cusped hyperbolic census (orientable)
         L104001 -- Hyperbolic knot and link complements
+
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    This example uses knot/link signatures:
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>censuslookup eputWe</userinput>
+    eputWe: 2 hits
+        4ah_1 -- Prime classical knots
+        v4_1 -- Prime virtual knots
 
     <prompt>example$</prompt>
 </screen>

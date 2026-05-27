@@ -60,7 +60,8 @@ std::list<CensusHit> Census::lookupAs<Triangulation<3>>(
         case 1:
             // We need to do the lookup with a second-generation signature.
             try {
-                return lookup(Triangulation<3>::fromSig(sig).neoSig());
+                return lookupAs<Triangulation<3>>(
+                    Triangulation<3>::fromSig(sig).neoSig());
             } catch (const InvalidArgument&) {
                 return {}; // not an isomorphism signature.
             }
@@ -112,7 +113,7 @@ std::list<CensusHit> Census::lookupAs<Link>(const std::string& sig) {
         case 1:
             // We need to do the lookup with a second-generation signature.
             try {
-                return lookup(Link::fromSig(sig).neoSig());
+                return lookupAs<Link>(Link::fromSig(sig).neoSig());
             } catch (const InvalidArgument&) {
                 return {}; // not an isomorphism signature.
             }

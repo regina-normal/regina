@@ -32,14 +32,14 @@
 #include <iostream>
 #include "census/census.h"
 #include "file/globaldirs.h"
-#include "triangulation/dim3.h"
+#include "utilities/exception.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:" << std::endl;
-    std::cerr << "    " << progName << " <isosig> ..." << std::endl;
+    std::cerr << "    " << progName << " <sig> ..." << std::endl;
     std::cerr << "    " << progName
         << " [ -v, --version | -?, --help ]" << std::endl;
     std::cerr << std::endl;
@@ -52,7 +52,8 @@ void usage(const char* progName, const std::string& error = std::string()) {
 int main(int argc, char* argv[]) {
     // Parse the command line.
     if (argc < 2)
-        usage(argv[0], "Please specify one or more isomorphism signatures.");
+        usage(argv[0], "Please specify one or more isomorphism signatures "
+            "or knot/link signatures.");
 
     // Check for standard arguments:
     for (int i = 1; i < argc; ++i) {

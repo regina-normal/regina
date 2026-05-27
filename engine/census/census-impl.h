@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file census/gluingperms-impl.h
- *  \brief Contains implementation details for the CensusDB::lookup()
+ *  \brief Contains implementation details for the CensusDB::lookupKey()
  *  template function.
  *
  *  This file is _not_ included automatically by census.h.

@@ -2,7 +2,7 @@ Large census data files
 -----------------------
 
 This directory contains the raw data that mkcensusdb sources to create the
-highly optimised census databases used by Census::lookup().
+highly optimised census databases used by Census::lookup() / Census::lookupAs().
 
 Each *.xzsig file in this directory is an xz-compressed text file in the form:
 
