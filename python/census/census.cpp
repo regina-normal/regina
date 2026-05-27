@@ -75,7 +75,7 @@ void addCensus(pybind11::module_& m) {
 
     auto h = pybind11::class_<CensusHit>(m, "CensusHit", rdoc::__class)
         .def(pybind11::init<const CensusHit&>(), rdoc::__copy)
-        .def("swap", &CensusDB::swap, rdoc::swap)
+        .def("swap", &CensusHit::swap, rdoc::swap)
         .def("name", &CensusHit::name, rdoc::name)
         .def("db", &CensusHit::db,
             pybind11::return_value_policy::reference, rdoc::db)
