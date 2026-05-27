@@ -84,13 +84,21 @@ std::list<CensusHit> Census::lookupAs<Triangulation<3>>(
             "Christy's collection of knot/link complements", 22));
     }
 
+    size_t size;
+    try {
+        size = Triangulation<3>::isoSigComponentSize(sig);
+    } catch (const InvalidArgument&) {
+        return {}; // not an isomorphism signature.
+    }
+
     std::list<CensusHit> hits;
     auto push = [&hits](CensusHit hit) {
         hits.push_back(std::move(hit));
     };
     for (const auto& db : tri3_) {
         // Any of these calls to lookupKey() might throw a FileError exception.
-        db.lookupKey<2>(sig, push);
+        if (size <= db.maxSize())
+            db.lookupKey<2>(sig, push);
     }
     return hits;
 }
