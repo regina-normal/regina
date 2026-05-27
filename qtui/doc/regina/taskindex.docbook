@@ -1304,7 +1304,7 @@
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-graphs-nice">nice tree
    decompositions</link></secondaryie>
-  <secondaryie><link linkend="link-odd-writhe">odd writhe</link></secondaryie>
+  <secondaryie><link linkend="link-virtual-properties">odd writhe</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
   <secondaryie><link linkend="link-new-cables">parallel cables,
    building</link></secondaryie>
@@ -1320,14 +1320,14 @@
   <secondaryie><link linkend="link-new-cables">Seifert
    framing</link></secondaryie>
   <secondaryie><link linkend="link-selfframe">self framing</link></secondaryie>
-  <secondaryie><link linkend="link-odd-writhe">self-linking
+  <secondaryie><link linkend="link-virtual-properties">self-linking
    number</link></secondaryie>
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
   <secondaryie><link linkend="link-treewidth">treewidth,
    improving</link></secondaryie>
-  <secondaryie><link linkend="link-virtual-genus">virtual
+  <secondaryie><link linkend="link-virtual-properties">virtual
    genus</link></secondaryie>
   <secondaryie><link linkend="links">virtual versus
    classical</link></secondaryie>
@@ -1500,7 +1500,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-odd-writhe">odd writhe</link></primaryie>
+  <primaryie><link linkend="link-virtual-properties">odd writhe</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1843,7 +1843,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-odd-writhe">self-linking
+  <primaryie><link linkend="link-virtual-properties">self-linking
    number</link></primaryie>
  </indexentry>
 
@@ -2449,7 +2449,7 @@
  <indexentry>
   <primaryie>virtual links</primaryie>
   <secondaryie><link linkend="links">overview</link></secondaryie>
-  <secondaryie><link linkend="link-virtual-genus">virtual
+  <secondaryie><link linkend="link-virtual-properties">virtual
    genus</link></secondaryie>
  </indexentry>
 
