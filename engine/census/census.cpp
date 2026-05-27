@@ -32,75 +32,119 @@
 #include <cstdlib>
 #include <functional>
 #include "census/census-impl.h"
-#include "file/globaldirs.h"
+#include "link/link.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
 
-CensusDB Census::closedOr_ = CensusDB::global("closed-or-census-11",
-    "Closed census (orientable)", 11);
-CensusDB Census::closedNor_ = CensusDB::global("closed-nor-census-11",
-    "Closed census (non-orientable)", 11);
-CensusDB Census::closedHyp_ = CensusDB::global("closed-hyp-census-full",
-    "Hodgson-Weeks closed hyperbolic census", 32);
-CensusDB Census::cuspedHypOr_ = CensusDB::global("cusped-hyp-or-census-9",
-    "Cusped hyperbolic census (orientable)", 9);
-CensusDB Census::cuspedHypNor_ = CensusDB::global("cusped-hyp-nor-census-9",
-    "Cusped hyperbolic census (non-orientable)", 9);
-CensusDB Census::christy_ = CensusDB::global("christy-knots-links",
-    "Christy's collection of knot/link complements", 22);
-CensusDB Census::classicalKnots_ = CensusDB::global("classical",
-    "Prime classical knots", 16);
-CensusDB Census::virtualKnots_ = CensusDB::global("virtual",
-    "Prime virtual knots", 6);
+std::vector<CensusDB> Census::knots_;
+std::vector<CensusDB> Census::tri3_;
 
 // Instantiate this template, which we use in the python bindings.
 template void CensusDB::lookupKey<2, const std::function<void(CensusHit&&)>&>(
     const std::string&, const std::function<void(CensusHit&&)>&) const;
 
-std::list<CensusHit> Census::lookup(const Triangulation<3>& tri) {
-    return lookup(tri.neoSig());
-}
+// The census databases currently use second-generation signatures as keys.
+// Note: "a" is both a first-generation and second-generation signature
+// (for both triangulations and link diagrams).  However, generation("a")
+// guarantees to return 2 and so it will be treated as we hope in the code
+// below.
 
-std::list<CensusHit> Census::lookup(const std::string& sig) {
-    // The census databases currently use second-generation signatures as keys.
+template <>
+std::list<CensusHit> Census::lookupAs<Triangulation<3>>(
+        const std::string& sig) {
     switch (IsoSigPrintable::generation(sig)) {
         case 2:
             // Go ahead and perform the database lookups.
-            // Note: "a" is both a first-generation and second-generation
-            // signature.  However, generation("a") guarantees to return 2
-            // and so it will land in this case as we would like it to.
             break;
         case 1:
             // We need to do the lookup with a second-generation signature.
             try {
                 return lookup(Triangulation<3>::fromSig(sig).neoSig());
             } catch (const InvalidArgument&) {
-                // The given string is not an isomorphism signature.
-                // There will be no hits.
-                return {};
+                return {}; // not an isomorphism signature.
             }
         default:
-            // The given string is not an isomorphism signature.
-            // There will be no hits.
-            return {};
+            return {}; // not an isomorphism signature.
+    }
+
+    if (tri3_.empty()) {
+        tri3_.reserve(6);
+        tri3_.push_back(CensusDB::global("closed-or-census-11",
+            "Closed census (orientable)", 11));
+        tri3_.push_back(CensusDB::global("closed-nor-census-11",
+            "Closed census (non-orientable)", 11));
+        tri3_.push_back(CensusDB::global("closed-hyp-census-full",
+            "Hodgson-Weeks closed hyperbolic census", 32));
+        tri3_.push_back(CensusDB::global("cusped-hyp-or-census-9",
+            "Cusped hyperbolic census (orientable)", 9));
+        tri3_.push_back(CensusDB::global("cusped-hyp-nor-census-9",
+            "Cusped hyperbolic census (non-orientable)", 9));
+        tri3_.push_back(CensusDB::global("christy-knots-links",
+            "Christy's collection of knot/link complements", 22));
     }
 
     std::list<CensusHit> hits;
-
     auto push = [&hits](CensusHit hit) {
         hits.push_back(std::move(hit));
     };
-
-    // Any of these calls to lookupKey() might throw a FileError exception.
-    closedOr_.lookupKey<2>(sig, push);
-    closedNor_.lookupKey<2>(sig, push);
-    closedHyp_.lookupKey<2>(sig, push);
-    cuspedHypOr_.lookupKey<2>(sig, push);
-    cuspedHypNor_.lookupKey<2>(sig, push);
-    christy_.lookupKey<2>(sig, push);
-
+    for (const auto& db : tri3_) {
+        // Any of these calls to lookupKey() might throw a FileError exception.
+        db.lookupKey<2>(sig, push);
+    }
     return hits;
+}
+
+template <>
+std::list<CensusHit> Census::lookupAs<Link>(const std::string& sig) {
+    switch (LinkSigPrintable::generation(sig)) {
+        case 2:
+            // Go ahead and perform the database lookups.
+            break;
+        case 1:
+            // We need to do the lookup with a second-generation signature.
+            try {
+                return lookup(Link::fromSig(sig).neoSig());
+            } catch (const InvalidArgument&) {
+                return {}; // not an isomorphism signature.
+            }
+        default:
+            return {}; // not an isomorphism signature.
+    }
+
+    if (knots_.empty()) {
+        knots_.reserve(2);
+        knots_.push_back(CensusDB::global("classical",
+            "Prime classical knots", 16));
+        knots_.push_back(CensusDB::global("virtual",
+            "Prime virtual knots", 6));
+    }
+
+    std::list<CensusHit> hits;
+    auto push = [&hits](CensusHit hit) {
+        hits.push_back(std::move(hit));
+    };
+    for (const auto& db : knots_) {
+        // Any of these calls to lookupKey() might throw a FileError exception.
+        db.lookupKey<2>(sig, push);
+    }
+    return hits;
+}
+
+std::list<CensusHit> Census::lookup(const std::string& sig) {
+    auto tri3 = lookupAs<Triangulation<3>>(sig);
+    auto links = lookupAs<Link>(sig);
+
+    if (tri3.empty())
+        return links;
+    else if (links.empty())
+        return tri3;
+    else {
+        // I'm not sure this can even occur with the census databases we
+        // currently have..?
+        tri3.splice(tri3.end(), std::move(links));
+        return tri3;
+    }
 }
 
 } // namespace regina

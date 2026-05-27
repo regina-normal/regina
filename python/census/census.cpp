@@ -32,6 +32,7 @@
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
 #include "census/census.h"
+#include "link/link.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../docstrings/census/census.h"
@@ -42,13 +43,14 @@ using pybind11::overload_cast;
 using regina::Census;
 using regina::CensusDB;
 using regina::CensusHit;
+using regina::Link;
 using regina::Triangulation;
 
 void addCensus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(CensusDB)
 
     auto db = pybind11::class_<CensusDB>(m, "CensusDB", rdoc::__class)
-        .def(pybind11::init<const std::string&, const std::string&>(),
+        .def(pybind11::init<const std::string&, const std::string&, size_t>(),
             "filename"_a, "desc"_a, "maxSize"_a = 0, rdoc::__init)
         .def(pybind11::init<const CensusDB&>(), rdoc::__copy)
         .def_static("global", &CensusDB::global,
@@ -93,11 +95,11 @@ void addCensus(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Census)
 
     auto c = pybind11::class_<Census>(m, "Census", rdoc::__class)
+        .def_static("lookup", &Census::lookup<Triangulation<3>>, rdoc::lookup)
+        .def_static("lookup", &Census::lookup<Link>, rdoc::lookup)
         .def_static("lookup",
-            overload_cast<const Triangulation<3>&>(&Census::lookup),
-            rdoc::lookup)
-        .def_static("lookup",
-            overload_cast<const std::string&>(&Census::lookup), rdoc::lookup_2)
+            static_cast<std::list<CensusHit> (*)(const std::string&)>(
+                &Census::lookup), rdoc::lookup_2)
     ;
     regina::python::no_eq_static(c);
 

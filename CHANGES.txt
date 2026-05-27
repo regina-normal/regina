@@ -98,9 +98,13 @@ Version 8.0  [ TODO ]
             - This is now deprecated, since its implementation is drifting
               increasingly further away from modern C++ standards.
         Class Census:
+            - Added support for knot/link databases.  This includes converting
+              the old lookup(const Triangulation<3>&) into a template function
+              that can take either a triangulation or a link diagram, plus a
+              new template function lookupAs<ObjectType>(signature).
             - The string-based lookup() can now take either a first-generation
               or second-generation isomorphism signature.
-            - All lookup() routines now throw an exception if they encounter a
+            - All lookup routines now throw an exception if they encounter a
               database error.
             - All of Regina's databases are now upgraded to use
               second-generation instead of first-generation signatures.

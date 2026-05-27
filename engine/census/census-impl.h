@@ -44,6 +44,7 @@
 #endif
 
 #include "regina-config.h" // For key-value store macros (REGINA_KVSTORE_*)
+#include "utilities/exception.h"
 
 #include <iostream>
 #include <cstdlib>

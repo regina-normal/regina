@@ -15,32 +15,40 @@ struct Census {
 
 // Docstring regina::python::doc::Census::__class
 static constexpr const char __class[] =
-R"doc(A utility class used to search for triangulations across one or more
-3-manifold census databases.
+R"doc(Searches for triangulations and link diagrams across Regina's in-built
+census databases.
 
 This class consists of static routines only. The main entry point (and
 typically the only way that you would use this class) is via the
-various static lookup() routines.
+various static routines lookup() and lookupAs().
+
+This class does not initialise the list of databases until the first
+time they are needed by a lookup routine; moreover, it initialises the
+3-manifold databases independently from the link databases. This means
+that you _can_ call GlobalDirs::setDirs() or GlobalDirs::deduceDirs()
+if you need to; however, to ensure that the new directory
+configuration is respected, you must make this GlobalDirs call
+_before_ the first census lookup.
 
 .. warning::
-    This class is not thread-safe, in that it performs some global
-    initialisation the first time one of the lookup() functions is
-    called. If you need thread-safety, you can always call lookup()
-    with an empty string when initialising your program, and ensure
-    this has finished before you allow any subsequent "normal" calls
-    to lookup() from other threads.)doc";
+    This class is not thread-safe, since (as noted above) it performs
+    global initialisation the first time that a 3-manifold lookup is
+    performed, and also the first time that a link lookup is
+    performed. If you need thread safety, you can always call lookup()
+    with an empty string when initialising your program, before
+    spawning any other threads.)doc";
 
 // Docstring regina::python::doc::Census::lookup
 static constexpr const char lookup[] =
-R"doc(Searches for the given triangulation through all of Regina's in-built
-census databases.
+R"doc(Searches for the given triangulation or link diagram within all of
+Regina's in-built census databases.
 
-Internally, the census databases store isomorphism signatures as
-opposed to fully fleshed-out triangulations. If you already have an
-isomorphism signature for the triangulation, then you can call the
-variant lookup(const std::string&) instead, which (if your signature
-is of the right generation) will be faster since it avoids some extra
-overhead.
+Internally, the databases store isomorphism signatures and knot/link
+signature (not fully fleshed-out triangulations and links). If you
+already have a signature for your object then you can call the variant
+``lookupAs<ObjectType>(const std::string&)`` instead, which (assuming
+your signature is of the right generation) will be faster since it
+avoids some extra overhead.
 
 Note that there may be many hits (possibly from multiple databases,
 and in some cases possibly even within the same database). Therefore a
@@ -49,52 +57,95 @@ individual matches. Even if there are no matches at all, a list will
 still be returned; you can call empty() on this list to test whether
 any matches were found.
 
-This routine is fast: it first computes the relevant isomorphism
-signature of the triangulation, and then performs a logarithmic-time
-lookup in each database (here "logarithmic" means logarithmic in the
-size of the database).
+This routine is fast: it first computes the relevant signature of the
+object, and then performs a logarithmic-time lookup in each relevant
+database (here "logarithmic" means logarithmic in the size of the
+database).
 
 Exception ``FileError``:
     An error occurred within one of the databases. Typically this
     would indicate that some database could not be opened (e.g., it
     might not be installed correctly on the system).
 
-Parameter ``tri``:
-    the triangulation that you wish to search for.
+Template parameter ``ObjectType``:
+    the type of object that you are searching for; this would
+    typically be ``Triangulation<3>`` or ``Link``.
+
+Parameter ``object``:
+    the triangulation or link diagram that you wish to search for.
 
 Returns:
     a list of all database matches.)doc";
 
 // Docstring regina::python::doc::Census::lookup_2
 static constexpr const char lookup_2[] =
-R"doc(Searches for the given triangulation through all of Regina's in-built
-census databases.
+R"doc(Searches for any triangulation or link diagram with the given
+signature within all of Regina's in-built census databases, without
+knowing in advance the original object type.
 
-For this routine you specify the triangulation by giving its
-isomorphism signature. This may be either second-generation (as
-returned by ``Triangulation<dim>::neoSig()``), or first-generation (as
-returned by ``Triangulation<dim>::isoSig()``); either form of
-signature will yield the same results.
+This routine is similar to lookupAs(), except that you do not need to
+provide an object type in advance. Instead it will search _all_
+databases, including triangulations _and_ link diagrams, and will
+return all hits that it finds. It is possible (though unlikely) that
+the hits will include a mix of different types of object.
 
-Calling lookup() on an isomorphism signature _may_ be faster than
-calling lookup() on the triangulation itself:
+As with lookupAs(), the given signature may be either second-
+generation (as returned by ``Triangulation<dim>::neoSig()`` or
+``Link::neoSig()``), or first-generation (as returned by
+``Triangulation<dim>::isoSig()`` or ``Link::knotSig()``).
 
-* If the signature is of the same generation as is used internally by
-  the census databases, this will avoid some overhead (since the
-  triangulation variant must compute the signature to use as a lookup
-  key).
+See lookupAs() for further information.
 
-* If the signature is of a different generation from the one used
-  internally by the census databases, then this will add overhead
-  (since this routine will need to reconstruct the triangulation and
-  then compute the generation of signature that it needs to perform
-  the internal database lookups).
+Exception ``FileError``:
+    An error occurred within one of the databases. Typically this
+    would indicate that some database could not be opened (e.g., it
+    might not be installed correctly on the system).
 
-A general rule of thumb is this: if you already have an isomorphism
-signature, you should call this string-based routine (regardless of
-which generation of signature you have), since reconstruction is
-reasonably fast. If you do not already have an isomorphism signature,
-just call the triangulation-based lookup routine.
+Parameter ``sig``:
+    an isomorphism signature or knot/link signature that you wish to
+    search for; this may be either first-generation or second-
+    generation.
+
+Returns:
+    a list of all database matches.)doc";
+
+// Docstring regina::python::doc::Census::lookupAs
+static constexpr const char lookupAs[] =
+R"doc(Searches for the triangulation or link diagram with the given
+signature within all of Regina's in-built census databases.
+
+This routine assumes you know what kind of object you are searching
+for (i.e., whether it is a 3-manifold triangulation or a link
+diagram). You specify the type of object through the template argument
+*ObjectType*, and you specify the object itself by passing its
+signature (either an isomorphism signature for a triangulation, or a
+knot/link signature for a link diagram). The signature may be either
+second-generation (from ``Triangulation<dim>::neoSig()`` or
+``Link::neoSig()``), or first-generation (from
+``Triangulation<dim>::isoSig()`` or ``Link::knotSig()``); either
+generation of signature will yield the same results.
+
+Calling lookupAs() on a signature will yield the same results as
+calling lookup() on the corresponding triangulation or link diagram,
+but it offers different performance:
+
+* If the signature is of the _same_ generation as is used internally
+  by the census databases, then passing a signature to lookupAs() will
+  avoid some overhead (since the variant of lookup() that takes a
+  triangulation or link diagram must otherwise compute the signature
+  to use as a lookup key).
+
+* If the signature is of a _different_ generation from the one used
+  internally by the census databases, then lookupAs() will _add_
+  overhead (since it will need to reconstruct the triangulation or
+  link diagram and _then_ compute the generation of signature that it
+  needs to perform the internal database lookups).
+
+A general rule of thumb is this: if you already have a signature, you
+should call this string-based routine (regardless of which generation
+of signature you have), since reconstruction is reasonably fast. If
+you do not already have a signature, just call the triangulation-based
+or link-based lookup().
 
 Note that there may be many hits (possibly from multiple databases,
 and in some cases possibly even within the same database). Therefore a
@@ -103,21 +154,25 @@ individual matches. Even if there are no matches at all, a list will
 still be returned; you can call empty() on this list to test whether
 any matches were found.
 
-This routine is fast: it first recomputes the generation of
-isomorphism signature that it needs (but only if the given signature
-is not already of the correct generation), and then it performs a
-logarithmic-time lookup in each database (where "logarithmic" means
-logarithmic in the size of the database).
+This routine is fast: it first recomputes the generation of signature
+that it needs (but only if the given signature is not already of the
+correct generation), and then it performs a logarithmic-time lookup in
+each database (where "logarithmic" means logarithmic in the size of
+the database).
 
 Exception ``FileError``:
     An error occurred within one of the databases. Typically this
     would indicate that some database could not be opened (e.g., it
     might not be installed correctly on the system).
 
-Parameter ``isoSig``:
-    the isomorphism signature of the triangulation that you wish to
-    search for; this may be either first-generation or second-
-    generation.
+Template parameter ``ObjectType``:
+    the type of object that you are searching for; this would
+    typically be ``Triangulation<3>`` or ``Link``.
+
+Parameter ``sig``:
+    the isomorphism signature or knot/link signature of the
+    triangulation or link diagram that you wish to search for; this
+    may be either first-generation or second-generation.
 
 Returns:
     a list of all database matches.)doc";
@@ -132,12 +187,13 @@ R"doc(Stores the location and description of one of Regina's in-built census
 databases.
 
 A census database stores a list of key-value pairs. The keys are
-isomorphism signatures of triangulations (currently second-generation
-signatures as returned by ``Triangulation<dim>::neoSig()``, but see
-the notes below). The values are human-readable names (typically the
-names of the triangulations and/or the names of the underlying
-manifolds). A key may appear multiple times (associated with different
-human-readable names) within the same database.
+isomorphism signatures of triangulations or knot/link signatures
+(currently second-generation signatures as returned by
+``Triangulation<dim>::neoSig()`` or ``Link::neoSig()``, but see the
+notes below). The values are human-readable names (typically the names
+of the triangulations, the links, and/or the underlying manifolds). A
+key may appear multiple times (associated with different human-
+readable names) within the same database.
 
 Ordinary users should not need to interact with CensusDB directly;
 instead you would typically use one of the high-level Census::lookup()
@@ -146,7 +202,7 @@ correct type of search key(s). There are two reasons for this:
 
 * The _keys_ used for census databases are subject to change in future
   versions of Regina. Currently (as of Regina 8.0) these keys are
-  second-generation isomorphism signatures.
+  second-generation signatures.
 
 * The _format_ used to store census databases is an internal
   implementation detail, also subject to change in future releases of
@@ -179,10 +235,16 @@ Returns:
 
 // Docstring regina::python::doc::CensusDB::__init
 static constexpr const char __init[] =
-R"doc(Creates a new reference to one of Regina's census databases.
+R"doc(Creates a new reference to a census database.
+
+The database should use the same format as Regina's in-built census
+databases (and this format depends upon your build configuration);
+however, it does not actually need to be one of those in-built
+databases, and it may be located anywhere on the filesystem.
 
 This constructor will not run any checks (e.g., it will not verify
-that the database exists, or that it is stored in the correct format).
+that the database exists, that it is stored in the correct format, or
+that the *maxSize* argument is correct).
 
 Parameter ``filename``:
     the filename where the database is stored.
@@ -190,7 +252,12 @@ Parameter ``filename``:
 Parameter ``desc``:
     a human-readable description of the database. See the desc()
     routine for further information on how this description might be
-    used.)doc";
+    used.
+
+Parameter ``maxSize``:
+    the maximum number of top-dimensional simplices and/or crossings
+    for any entry in the database, or 0 (the default) if this is not
+    known. This can be used to optimise database lookups.)doc";
 
 // Docstring regina::python::doc::CensusDB::desc
 static constexpr const char desc[] =
@@ -209,6 +276,29 @@ R"doc(Returns the filename where this database is stored.
 
 Returns:
     the database filename.)doc";
+
+// Docstring regina::python::doc::CensusDB::global
+static constexpr const char global[] =
+R"doc(Returns a reference to one of Regina's in-built census databases,
+stored in the standard census database location on the filesystem.
+
+The database will be assumed to live in the directory
+``GlobalDirs::census()``.
+
+Parameter ``basename``:
+    the base of the database filename, with no file extension and no
+    directory information.
+
+Parameter ``desc``:
+    a human-readable description for the database.
+
+Parameter ``maxSize``:
+    the maximum number of top-dimensional simplices and/or crossings
+    for any entry in the database, or 0 (the default) if this is not
+    known. This can be used to optimise database lookups.
+
+Returns:
+    the resulting database reference.)doc";
 
 // Docstring regina::python::doc::CensusDB::global_swap
 static constexpr const char global_swap[] =
@@ -238,13 +328,13 @@ value of *action* will be ignored (typically *action* would return
 Note that the database will be opened and closed every time this
 routine is called.
 
-The argument *key* should be a *g*th-generation isomorphism signature,
-where *g* is passed as a template argument. Only one value of *g* is
-allowed: the same generation of signature that the database uses
-internally for its keys. This means that the way you call lookupKey()
-will change if/when the database key type changes; this is by design,
-since you will of course need to change what you pass as an argument
-also.
+The argument *key* should be a *g*th-generation isomorphism signature
+or knot/link signature, where the generation *g* is passed as a
+template argument. Only one value of *g* is allowed: the same
+generation of signature that the database uses internally for its
+keys. This means that the way you call lookupKey() will change if/when
+the database key type changes; this is by design, since you will of
+course need to change what you pass as an argument also.
 
 If you are using this routine yourself, you will need to include the
 extra header census/census-impl.h (which is _not_ automatically
@@ -256,28 +346,42 @@ Python:
     This function is available in Python, and the *action* argument
     may be a pure Python function. Since Python does not support C++
     templates, the generation should be passed as an initial argument
-    at runtime: ``lookupKey(generation, isoSig, action)``. If
+    at runtime: ``lookupKey(generation, sig, action)``. If
     *generation* does not match the one allowed value (i.e., the
     format used internally by the database), then this routine will
     throw an InvalidArgument exception.
 
 Template parameter ``generation``:
-    the generation of isomorphism signature that you are passing in
-    the argument *isoSig*. Currently *generation* _must_ be 2, since
-    Regina's databases currently use second-generation isomorphism
-    signatures as their keys.
+    the generation of isomorphism signature or knot/link signature
+    that you are passing in the argument *sig*. Currently *generation*
+    _must_ be 2, since Regina's databases currently use second-
+    generation signatures as their keys.
 
 Exception ``FileError``:
     An error occurred at the database level (e.g., the database could
     not be opened).
 
-Parameter ``isoSig``:
-    the isomorphism signature to search for; this must be of the same
-    generation that is passed as a template parameter.
+Parameter ``sig``:
+    the isomorphism signature or knot/link signature to search for;
+    this must be of the same generation that is passed as a template
+    parameter.
 
 Parameter ``action``:
     a function (or other callable type) that will be called for each
     match in the database.)doc";
+
+// Docstring regina::python::doc::CensusDB::maxSize
+static constexpr const char maxSize[] =
+R"doc(Returns the maximum number of top-dimensional simplices and/or
+crossings for any entry in this database, or 0 if this information is
+not known.
+
+If this _is_ known, it can be used to optimise database lookups (in
+particular, to avoid lookups entirely when it is known that the key
+will not be found).
+
+Returns:
+    the database description.)doc";
 
 // Docstring regina::python::doc::CensusDB::swap
 static constexpr const char swap[] =
@@ -292,8 +396,8 @@ struct CensusHit {
 
 // Docstring regina::python::doc::CensusHit::__class
 static constexpr const char __class[] =
-R"doc(Stores a single "hit" indicating that some given triangulation has
-been located in one of Regina's in-built census databases.
+R"doc(Stores a single "hit" indicating that some given triangulation or link
+diagram has been located in one of Regina's in-built census databases.
 
 You cannot construct or modify instances of this class yourself, other
 than through the standard copy/move/swap operations. The only way to
@@ -323,8 +427,8 @@ Returns:
 
 // Docstring regina::python::doc::CensusHit::db
 static constexpr const char db[] =
-R"doc(Returns details of the census database in which the triangulation was
-found.
+R"doc(Returns details of the census database in which the triangulation or
+link diagram was found.
 
 Returns:
     the database for this hit.)doc";
@@ -344,9 +448,9 @@ Parameter ``b``:
 
 // Docstring regina::python::doc::CensusHit::name
 static constexpr const char name[] =
-R"doc(Returns the human-readable name associated with the triangulation in
-the database. This typically contains the name of the triangulation
-and/or the name of the underlying manifold.
+R"doc(Returns the human-readable name associated with the triangulation or
+link diagram in the database. This would typically contain the name of
+the triangulation, the link, and/or the underlying manifold.
 
 Returns:
     the human-readable name for this hit.)doc";
