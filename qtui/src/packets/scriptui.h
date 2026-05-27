@@ -120,8 +120,6 @@ class ScriptValueDelegate : public QStyledItemDelegate {
  */
 class ScriptUI : public QObject, public PacketUI,
         public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -170,18 +168,11 @@ class ScriptUI : public QObject, public PacketUI,
         void packetWasRenamed(regina::Packet& packet) override;
         void packetBeingDestroyed(regina::PacketShell packet) override;
 
-    public slots:
         /**
          * Add or remove script variables.
          */
         void addVariable();
         void removeSelectedVariables();
-
-        /**
-         * Enable or disable the remove variable(s) button according to
-         * the current table selection.
-         */
-        void updateRemoveState();
 
         /**
          * Handle python execution.
@@ -195,6 +186,12 @@ class ScriptUI : public QObject, public PacketUI,
         void updatePreferences();
 
     private:
+        /**
+         * Enable or disable the remove variable(s) button according to
+         * the current table selection.
+         */
+        void updateRemoveState();
+
         /**
          * Updates the tab width in the text area according to the
          * global preferences.

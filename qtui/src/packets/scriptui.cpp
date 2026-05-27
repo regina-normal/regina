@@ -317,7 +317,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         "refers to a single packet.  "
         "This allows your script to easily access the other packets in "
         "this data file."));
-    connect(actAdd, SIGNAL(triggered()), this, SLOT(addVariable()));
+    connect(actAdd, &QAction::triggered, this, &ScriptUI::addVariable);
     actionBar->addAction(actAdd);
     scriptActionList.push_back(actAdd);
 
@@ -334,11 +334,12 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         "refers to a single packet.  "
         "This allows your script to easily access the other packets in "
         "this data file."));
-    connect(actRemove, SIGNAL(triggered()), this,
-        SLOT(removeSelectedVariables()));
-    connect(varTable->selectionModel(),
-        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-        this, SLOT(updateRemoveState()));
+    connect(actRemove, &QAction::triggered, this,
+        &ScriptUI::removeSelectedVariables);
+    connect(varTable->selectionModel(), &QItemSelectionModel::selectionChanged,
+        this, [this](const QItemSelection& selection) {
+            actRemove->setEnabled(! selection.empty());
+        });
     actionBar->addAction(actRemove);
     scriptActionList.push_back(actRemove);
 
@@ -353,7 +354,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actRun->setToolTip(tr("Execute the Python script"));
     actRun->setWhatsThis(tr("Execute this Python script.  The "
         "script will be run in a separate Python console."));
-    connect(actRun, SIGNAL(triggered()), this, SLOT(execute()));
+    connect(actRun, &QAction::triggered, this, &ScriptUI::execute);
     actionBar->addAction(actRun);
     scriptActionList.push_back(actRun);
 

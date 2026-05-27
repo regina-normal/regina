@@ -1671,6 +1671,7 @@
 		05E62AB42FC5F1AF00AE1B84 /* stream_wrapper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA92FC5F1AF00AE1B84 /* stream_wrapper.hpp */; };
 		05E62AB52FC5F1AF00AE1B84 /* lzma_stream_wrapper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA62FC5F1AF00AE1B84 /* lzma_stream_wrapper.hpp */; };
 		05E62AB62FC5F1AF00AE1B84 /* bxzstr.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AA12FC5F1AF00AE1B84 /* bxzstr.hpp */; };
+		05E62ABF2FC691BD00AE1B84 /* liblzma.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E62ABE2FC691BD00AE1B84 /* liblzma.xcframework */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -4648,6 +4649,7 @@
 		05E62AAA2FC5F1AF00AE1B84 /* strict_fstream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = strict_fstream.hpp; sourceTree = "<group>"; };
 		05E62AAB2FC5F1AF00AE1B84 /* z_stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = z_stream_wrapper.hpp; sourceTree = "<group>"; };
 		05E62AAC2FC5F1AF00AE1B84 /* zstd_stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = zstd_stream_wrapper.hpp; sourceTree = "<group>"; };
+		05E62ABE2FC691BD00AE1B84 /* liblzma.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = liblzma.xcframework; path = ../../Library/Frameworks/liblzma.xcframework; sourceTree = "<absolute>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -4959,6 +4961,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05E62ABF2FC691BD00AE1B84 /* liblzma.xcframework in Frameworks */,
 				0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */,
 				05E0F1722582427000965440 /* libz.tbd in Frameworks */,
 			);
@@ -6877,6 +6880,7 @@
 				057ED9C32581BAAE004F0068 /* graphviz.xcframework */,
 				0567B4AC2581ABA20022EA5D /* libgmp.xcframework */,
 				0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */,
+				05E62ABE2FC691BD00AE1B84 /* liblzma.xcframework */,
 				0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */,
 				057EDEF82582370B004F0068 /* Python.xcframework */,
 				057EDF1925823779004F0068 /* XZ.xcframework */,
