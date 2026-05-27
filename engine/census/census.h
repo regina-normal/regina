@@ -350,8 +350,9 @@ class CensusHit {
 void swap(CensusHit& a, CensusHit& b) noexcept;
 
 /**
- * A utility class used to search for triangulations across one or more
- * 3-manifold census databases.
+ * A utility class used to search for triangulations and link diagrams across
+ * one or more census databases.  Regina's census databases include various
+ * collections of 3-manifold triangulations and link diagrams.
  *
  * This class consists of static routines only.  The main entry point
  * (and typically the only way that you would use this class) is via the
@@ -368,29 +369,30 @@ void swap(CensusHit& a, CensusHit& b) noexcept;
 class Census {
     private:
         static CensusDB* closedOr_;
-            /**< The census of closed orientable prime 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
+            /**< A census of closed orientable prime 3-manifold triangulations,
+                 or `null` if lookup() is yet to be called. */
         static CensusDB* closedNor_;
-            /**< The census of closed non-orientable P²-irreducible 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
+            /**< A census of closed non-orientable P²-irreducible 3-manifold
+                 triangulations, or `null` if lookup() is yet to be called. */
         static CensusDB* closedHyp_;
-            /**< The census of closed hyperbolic 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
+            /**< A census of closed hyperbolic 3-manifold triangulations,
+                 or `null` if lookup() is yet to be called. */
         static CensusDB* cuspedHypOr_;
-            /**< The census of cusped hyperbolic orientable 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
+            /**< A census of cusped hyperbolic orientable 3-manifold
+                 triangulations, or `null` if lookup() is yet to be called. */
         static CensusDB* cuspedHypNor_;
-            /**< The census of cusped hyperbolic non-orientable 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
+            /**< A census of cusped hyperbolic non-orientable 3-manifold
+                 triangulations, or `null` if lookup() is yet to be called. */
         static CensusDB* christy_;
-            /**< Joe Christy's collection of knot and link complements,
-                 which were shipped as a Regina sample file until version 5.96.
-                 This will only be initialised when lookup() is first called. */
+            /**< Joe Christy's collection of knot and link complements
+                 (which shipped as a Regina sample file until version 5.96),
+                 or `null` if lookup() is yet to be called. */
+        static CensusDB* classicalKnots_;
+            /**< A census of classical prime knot diagrams,
+                 or `null` if lookup() is yet to be called. */
+        static CensusDB* virtualKnots_;
+            /**< A census of virtual prime knot diagrams,
+                 or `null` if lookup() is yet to be called. */
         static bool dbInit_;
             /**< Have the census databases been initialised yet? */
 
@@ -427,34 +429,47 @@ class Census {
          */
         static std::list<CensusHit> lookup(const Triangulation<3>& tri);
         /**
-         * Searches for the given triangulation through all of Regina's
-         * in-built census databases.
+         * Searches for the given triangulation or link diagram through all of
+         * Regina's in-built census databases.
          *
-         * For this routine you specify the triangulation by giving its
-         * isomorphism signature.  This may be either second-generation (as
-         * returned by `Triangulation<dim>::neoSig()`), or first-generation
-         * (as returned by `Triangulation<dim>::isoSig()`); either form of
-         * signature will yield the same results.
+         * For this routine you specify a triangulation or link diagram by
+         * giving its isomorphism signature or knot/link signature respectively.
+         * This may be either second-generation (as returned by
+         * `Triangulation<dim>::neoSig()` or `Link::neoSig()`), or
+         * first-generation (as returned by `Triangulation<dim>::isoSig()` or
+         * `Link::knotSig()`).  Either generation of signature will yield the
+         * same results.
          *
-         * Calling lookup() on an isomorphism signature _may_ be faster than
-         * calling lookup() on the triangulation itself:
+         * Calling lookup() on a signature is a little different from calling
+         * lookup() on a triangulation or link diagram, both in terms of
+         * performance and in terms of the results:
          *
          * - If the signature is of the same generation as is used internally
-         *   by the census databases, this will avoid some overhead (since the
-         *   triangulation variant must compute the signature to use as a
-         *   lookup key).
+         *   by the census databases, then passing the signature to lookup()
+         *   will avoid some overhead (since the variant of lookup() that
+         *   takes a triangulation or link diagram must otherwise compute the
+         *   signature to use as a lookup key).
          *
          * - If the signature is of a different generation from the one used
-         *   internally by the census databases, then this will add overhead
+         *   internally by the census databases, then this will _add_ overhead
          *   (since this routine will need to reconstruct the triangulation
-         *   and then compute the generation of signature that it needs to
-         *   perform the internal database lookups).
+         *   or link diagram and _then_ compute the generation of signature
+         *   that it needs to perform the internal database lookups).
+         *
+         * - Finally, since routine just accepts a string, it is possible that
+         *   it will search through more databases than necessary (since it
+         *   does not know whether it is a signature for a triangulation or a
+         *   link diagram).  Moreover, it is possible (but unlikely) that you
+         *   will get hits of the wrong type (e.g., knot census hits for a
+         *   triangulation signature).
          *
          * A general rule of thumb is this: if you already have an isomorphism
          * signature, you should call this string-based routine (regardless of
          * which generation of signature you have), since reconstruction is
          * reasonably fast.  If you do not already have an isomorphism
-         * signature, just call the triangulation-based lookup routine.
+         * signature, or if it is important to avoid hits that involve the
+         * wrong type of object (e.g., triangulations instead of link diagrams),
+         * just call the triangulation-based or link-based lookup routine.
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
@@ -464,8 +479,8 @@ class Census {
          * empty() on this list to test whether any matches were found.
          *
          * This routine is fast: it first recomputes the generation of
-         * isomorphism signature that it needs (but only if the given signature
-         * is not already of the correct generation), and then it performs a
+         * signature that it needs (but only if the given signature is not
+         * already of the correct generation), and then it performs a
          * logarithmic-time lookup in each database (where "logarithmic" means
          * logarithmic in the size of the database).
          *
@@ -473,12 +488,12 @@ class Census {
          * Typically this would indicate that some database could not be opened
          * (e.g., it might not be installed correctly on the system).
          *
-         * \param isoSig the isomorphism signature of the triangulation that
-         * you wish to search for; this may be either first-generation or
-         * second-generation.
+         * \param sig the isomorphism signature or knot/link signature of the
+         * triangulation or link diagram that you wish to search for; this may
+         * be either first-generation or second-generation.
          * \return a list of all database matches.
          */
-        static std::list<CensusHit> lookup(const std::string& isoSig);
+        static std::list<CensusHit> lookup(const std::string& sig);
 
         // Make this class non-constructible.
         Census() = delete;

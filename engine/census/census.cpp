@@ -43,6 +43,8 @@ CensusDB* Census::closedHyp_ = nullptr;
 CensusDB* Census::cuspedHypOr_ = nullptr;
 CensusDB* Census::cuspedHypNor_ = nullptr;
 CensusDB* Census::christy_ = nullptr;
+CensusDB* Census::classicalKnots_ = nullptr;
+CensusDB* Census::virtualKnots_ = nullptr;
 bool Census::dbInit_ = false;
 
 // Instantiate this template, which we use in the python bindings.
@@ -53,9 +55,9 @@ std::list<CensusHit> Census::lookup(const Triangulation<3>& tri) {
     return lookup(tri.neoSig());
 }
 
-std::list<CensusHit> Census::lookup(const std::string& isoSig) {
+std::list<CensusHit> Census::lookup(const std::string& sig) {
     // The census databases currently use second-generation signatures as keys.
-    switch (IsoSigPrintable::generation(isoSig)) {
+    switch (IsoSigPrintable::generation(sig)) {
         case 2:
             // Go ahead and perform the database lookups.
             // Note: "a" is both a first-generation and second-generation
@@ -65,7 +67,7 @@ std::list<CensusHit> Census::lookup(const std::string& isoSig) {
         case 1:
             // We need to do the lookup with a second-generation signature.
             try {
-                return lookup(Triangulation<3>::fromSig(isoSig).neoSig());
+                return lookup(Triangulation<3>::fromSig(sig).neoSig());
             } catch (const InvalidArgument&) {
                 // The given string is not an isomorphism signature.
                 // There will be no hits.
@@ -100,12 +102,12 @@ std::list<CensusHit> Census::lookup(const std::string& isoSig) {
     };
 
     // Any of these calls to lookupKey() might throw a FileError exception.
-    closedOr_->lookupKey<2>(isoSig, push);
-    closedNor_->lookupKey<2>(isoSig, push);
-    closedHyp_->lookupKey<2>(isoSig, push);
-    cuspedHypOr_->lookupKey<2>(isoSig, push);
-    cuspedHypNor_->lookupKey<2>(isoSig, push);
-    christy_->lookupKey<2>(isoSig, push);
+    closedOr_->lookupKey<2>(sig, push);
+    closedNor_->lookupKey<2>(sig, push);
+    closedHyp_->lookupKey<2>(sig, push);
+    cuspedHypOr_->lookupKey<2>(sig, push);
+    cuspedHypNor_->lookupKey<2>(sig, push);
+    christy_->lookupKey<2>(sig, push);
 
     return hits;
 }
