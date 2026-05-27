@@ -3172,12 +3172,12 @@
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
 		05583A6019B8041F00076187 /* ReginaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaDocument.h; sourceTree = "<group>"; };
 		05583A6119B8041F00076187 /* ReginaDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaDocument.mm; sourceTree = "<group>"; };
-		055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census-full.zsig"; sourceTree = "<group>"; };
-		055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census-11.zsig"; sourceTree = "<group>"; };
-		055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-11.zsig"; sourceTree = "<group>"; };
-		055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census-9.zsig"; sourceTree = "<group>"; };
-		055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census-9.zsig"; sourceTree = "<group>"; };
-		055ABEA319B499DC00044C1B /* christy-knots-links.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "christy-knots-links.zsig"; sourceTree = "<group>"; };
+		055ABE9E19B499DC00044C1B /* closed-hyp-census-full.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census-full.xzsig"; sourceTree = "<group>"; };
+		055ABE9F19B499DC00044C1B /* closed-nor-census-11.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census-11.xzsig"; sourceTree = "<group>"; };
+		055ABEA019B499DC00044C1B /* closed-or-census-11.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-11.xzsig"; sourceTree = "<group>"; };
+		055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census-9.xzsig"; sourceTree = "<group>"; };
+		055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census-9.xzsig"; sourceTree = "<group>"; };
+		055ABEA319B499DC00044C1B /* christy-knots-links.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "christy-knots-links.xzsig"; sourceTree = "<group>"; };
 		055ABEA419B499DC00044C1B /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		055BC3E82653380600E5E34C /* sigutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigutils.h; sourceTree = "<group>"; };
 		055BC3EC265338FC00E5E34C /* pd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pd.cpp; sourceTree = "<group>"; };
@@ -8282,14 +8282,14 @@
 		05B14EAC19B4240D002138C0 /* census */ = {
 			isa = PBXGroup;
 			children = (
-				055ABEA319B499DC00044C1B /* christy-knots-links.zsig */,
-				055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */,
-				055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */,
-				055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */,
+				055ABEA319B499DC00044C1B /* christy-knots-links.xzsig */,
+				055ABE9E19B499DC00044C1B /* closed-hyp-census-full.xzsig */,
+				055ABE9F19B499DC00044C1B /* closed-nor-census-11.xzsig */,
+				055ABEA019B499DC00044C1B /* closed-or-census-11.xzsig */,
 				05B14EB019B4240D002138C0 /* CMakeLists.txt */,
 				055BC3EF2653392000E5E34C /* compact-lmdb.cpp */,
-				055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */,
-				055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */,
+				055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.xzsig */,
+				055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.xzsig */,
 				05B14EB419B4240D002138C0 /* mkcensusdb.cpp */,
 				055BC3F02653392000E5E34C /* optimise-lmdb.cpp */,
 				055ABEA419B499DC00044C1B /* README.txt */,
@@ -9883,12 +9883,12 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/engine/data/census/christy-knots-links.zsig",
-				"$(SRCROOT)/engine/data/census/closed-hyp-census-full.zsig",
-				"$(SRCROOT)/engine/data/census/closed-nor-census-11.zsig",
-				"$(SRCROOT)/engine/data/census/closed-or-census-11.zsig",
-				"$(SRCROOT)/engine/data/census/cusped-hyp-nor-census-9.zsig",
-				"$(SRCROOT)/engine/data/census/cusped-hyp-or-census-9.zsig",
+				"$(SRCROOT)/engine/data/census/christy-knots-links.xzsig",
+				"$(SRCROOT)/engine/data/census/closed-hyp-census-full.xzsig",
+				"$(SRCROOT)/engine/data/census/closed-nor-census-11.xzsig",
+				"$(SRCROOT)/engine/data/census/closed-or-census-11.xzsig",
+				"$(SRCROOT)/engine/data/census/cusped-hyp-nor-census-9.xzsig",
+				"$(SRCROOT)/engine/data/census/cusped-hyp-or-census-9.xzsig",
 			);
 			outputFileListPaths = (
 			);
@@ -9902,7 +9902,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\n# The rpath points to the executable directory, but\n# the executable may be a symlink which means that\n# libtokyocabinet cannot be found.\n#\n# This issue is (in particular) seen when creating an archive.\n#\n# Put libtokyocabinet explicitly on the DYLD_LIBRARY_PATH.\nexport DYLD_LIBRARY_PATH=\"${BUILT_PRODUCTS_DIR}\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.zsig \"$output\"/$i.tdb\ndone\n";
+			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\n# The rpath points to the executable directory, but\n# the executable may be a symlink which means that\n# libtokyocabinet cannot be found.\n#\n# This issue is (in particular) seen when creating an archive.\n#\n# Put libtokyocabinet explicitly on the DYLD_LIBRARY_PATH.\nexport DYLD_LIBRARY_PATH=\"${BUILT_PRODUCTS_DIR}\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.xzsig \"$output\"/$i.tdb\ndone\n";
 		};
 		05DADB1021926A2300DC80E1 /* Copy Databases and Handbook */ = {
 			isa = PBXShellScriptBuildPhase;
