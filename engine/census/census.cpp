@@ -131,13 +131,21 @@ std::list<CensusHit> Census::lookupAs<Link>(const std::string& sig) {
             "Green's virtual knots", "Green", 6));
     }
 
+    size_t size;
+    try {
+        size = Link::sigDiagramComponentSize(sig);
+    } catch (const InvalidArgument&) {
+        return {}; // not a knot/link signature.
+    }
+
     std::list<CensusHit> hits;
     auto push = [&hits](CensusHit hit) {
         hits.push_back(std::move(hit));
     };
     for (const auto& db : knots_) {
         // Any of these calls to lookupKey() might throw a FileError exception.
-        db.lookupKey<2>(sig, push);
+        if (size <= db.maxSize())
+            db.lookupKey<2>(sig, push);
     }
     return hits;
 }
