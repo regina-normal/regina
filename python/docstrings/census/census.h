@@ -185,6 +185,170 @@ Returns:
 
 }; // struct Census
 
+struct CensusCollection {
+
+// Docstring regina::python::doc::CensusCollection::__class
+static constexpr const char __class[] =
+R"doc(A collection of references to in-built census databases, all of which
+store the same type of topological object.
+
+Ordinary users should not need to interact with CensusCollection
+directly; instead you would typically use one of the high-level
+Census::lookup() routines, which searches all of Regina's in-built
+databases using the correct type of search key(s).
+
+This class is essentially a halfway point between the CensusDB (which
+manages a single database) and Census (which offers high-level lookup
+routines for end users). See those two classes for further
+information.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.
+
+Template parameter ``ObjectType``:
+    the type of object stored in this collection of databases; this
+    would typically be ``Triangulation<3>`` or ``Link``.)doc";
+
+// Docstring regina::python::doc::CensusCollection::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given collection.)doc";
+
+// Docstring regina::python::doc::CensusCollection::__default
+static constexpr const char __default[] = R"doc(Creates an empty collection of databases.)doc";
+
+// Docstring regina::python::doc::CensusCollection::appendDB
+static constexpr const char appendDB[] =
+R"doc(Appends a new database to the end of this collection. The database
+will not be given an identifying tag.
+
+The database is assumed to be one of Regina's in-built census
+databases, stored in the standard census database location described
+by ``GlobalDirs::census()``.
+
+Parameter ``basename``:
+    the base of the database filename, with no file extension and no
+    directory information.
+
+Parameter ``desc``:
+    a human-readable description for the database.
+
+Parameter ``maxSize``:
+    the maximum number of top-dimensional simplices and/or crossings
+    for any entry in the database. This must not be zero.)doc";
+
+// Docstring regina::python::doc::CensusCollection::appendDB_2
+static constexpr const char appendDB_2[] =
+R"doc(Appends a new database to the end of this collection.
+
+The database is assumed to be one of Regina's in-built census
+databases, stored in the standard census database location described
+by ``GlobalDirs::census()``.
+
+Parameter ``basename``:
+    the base of the database filename, with no file extension and no
+    directory information.
+
+Parameter ``desc``:
+    a human-readable description for the database.
+
+Parameter ``tag``:
+    a short human-readable string that identifies this database; see
+    CensusDB::tag() for further information on how tags are used.
+
+Parameter ``maxSize``:
+    the maximum number of top-dimensional simplices and/or crossings
+    for any entry in the database. This must not be zero.)doc";
+
+// Docstring regina::python::doc::CensusCollection::empty
+static constexpr const char empty[] =
+R"doc(Determines whether this collection of databases is empty.
+
+Returns:
+    ``True`` if and only if there are no databases in this collection.)doc";
+
+// Docstring regina::python::doc::CensusCollection::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given database collections.
+
+This global routine simply calls CensusCollection::swap(); it is
+provided so that CensusCollection meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first database collection whose contents should be swapped.
+
+Parameter ``b``:
+    the second database collection whose contents should be swapped.)doc";
+
+// Docstring regina::python::doc::CensusCollection::lookup
+static constexpr const char lookup[] =
+R"doc(Searches for the given object within all of the databases in this
+collection.
+
+Exception ``FileError``:
+    An error occurred within one of the databases. Typically this
+    would indicate that some database could not be opened (e.g., it
+    might not be installed correctly on the system).
+
+Parameter ``object``:
+    the object that you wish to search for.
+
+Returns:
+    a list of all database matches.)doc";
+
+// Docstring regina::python::doc::CensusCollection::lookup_2
+static constexpr const char lookup_2[] =
+R"doc(Searches for the object with the given signature within all of the
+databases in this collection.
+
+The given signature may be either second-generation or first-
+generation; either will yield the same results.
+
+Calling lookup() on a signature will yield the same results as calling
+lookup() on the corresponding object (i.e., the triangulation or link
+diagram, but it offers different performance:
+
+* If the signature is of the _same_ generation as is used internally
+  by the census databases, then passing a signature directly will
+  avoid the overhead of computing it.
+
+* If the signature is of a _different_ generation from the one used
+  internally by the census databases, then passing a signature will
+  _add_ overhead (since it must reconstruct the object and then
+  compute the generation of signature that the databases need).
+
+Exception ``FileError``:
+    An error occurred within one of the databases. Typically this
+    would indicate that some database could not be opened (e.g., it
+    might not be installed correctly on the system).
+
+Parameter ``sig``:
+    the isomorphism signature or knot/link signature of the object
+    that you wish to search for; this may be either first-generation
+    or second-generation.
+
+Returns:
+    a list of all database matches.)doc";
+
+// Docstring regina::python::doc::CensusCollection::reserve
+static constexpr const char reserve[] =
+R"doc(Reserves space for the given number of databases in this collection.
+
+This is like `std::vector::reserve()`: it is ultimately harmless if
+the given size estimate turns out to be wrong.
+
+Parameter ``the``:
+    new capacity for this collection of databases.)doc";
+
+// Docstring regina::python::doc::CensusCollection::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given collection.
+
+Parameter ``other``:
+    the collection whose contents are to be swapped with this.)doc";
+
+}; // struct CensusCollection
+
 struct CensusDB {
 
 // Docstring regina::python::doc::CensusDB::__class

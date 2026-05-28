@@ -1883,7 +1883,7 @@ Exception ``InvalidArgument``:
 
 Parameter ``sig``:
     a signature of some *dim*-dimensional triangulation. Note that
-    isomorphism signature are case-sensitive (unlike, for example,
+    isomorphism signatures are case-sensitive (unlike, for example,
     dehydration strings for 3-manifolds).
 
 Returns:

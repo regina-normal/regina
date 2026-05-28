@@ -290,6 +290,8 @@ class CensusDB {
 
         /**
          * Sets this to be a clone of the given database reference.
+         *
+         * \return a reference to this object.
          */
         CensusDB& operator = (const CensusDB&) = default;
 
@@ -297,6 +299,8 @@ class CensusDB {
          * Moves the given database reference into this object.
          *
          * The reference that was passed will no longer be usable.
+         *
+         * \return a reference to this object.
          */
         CensusDB& operator = (CensusDB&&) noexcept = default;
 
@@ -443,6 +447,188 @@ class CensusHit {
 void swap(CensusHit& a, CensusHit& b) noexcept;
 
 /**
+ * A collection of references to in-built census databases, all of which store
+ * the same type of topological object.
+ *
+ * Ordinary users should not need to interact with CensusCollection directly;
+ * instead you would typically use one of the high-level Census::lookup()
+ * routines, which searches all of Regina's in-built databases using the
+ * correct type of search key(s).
+ *
+ * This class is essentially a halfway point between the CensusDB (which
+ * manages a single database) and Census (which offers high-level lookup
+ * routines for end users).  See those two classes for further information.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \tparam ObjectType the type of object stored in this collection of databases;
+ * this would typically be `Triangulation<3>` or `Link`.
+ *
+ * \ingroup census
+ */
+template <SignatureReconstructible ObjectType>
+class CensusCollection {
+    private:
+        std::vector<CensusDB> databases_;
+            /**< The databases in this collection. */
+        size_t maxSize_ { 0 };
+            /**< The maximum size (number of crossings, or number of
+                 top-dimensional simplices) of any object stored in any of
+                 these databases. */
+
+    public:
+        /**
+         * Creates an empty collection of databases.
+         */
+        CensusCollection() = default;
+        /**
+         * Creates a new copy of the given collection.
+         */
+        CensusCollection(const CensusCollection&) = default;
+        /**
+         * Moves the given collection into this new object.
+         *
+         * The collection that was passed will no longer be usable.
+         */
+        CensusCollection(CensusCollection&&) noexcept = default;
+        /**
+         * Sets this to be a copy of the given collection.
+         *
+         * \return a reference to this collection.
+         */
+        CensusCollection& operator = (const CensusCollection&) = default;
+        /**
+         * Moves the given collectioninto this object.
+         *
+         * The collection that was passed will no longer be usable.
+         *
+         * \return a reference to this collection.
+         */
+        CensusCollection& operator = (CensusCollection&&) noexcept = default;
+        /**
+         * Swaps the contents of this and the given collection.
+         *
+         * \param other the collection whose contents are to be swapped with
+         * this.
+         */
+        void swap(CensusCollection& other) noexcept;
+
+        /**
+         * Determines whether this collection of databases is empty.
+         *
+         * \return `true` if and only if there are no databases in this
+         * collection.
+         */
+        bool empty() const;
+
+        /**
+         * Appends a new database to the end of this collection.
+         * The database will not be given an identifying tag.
+         *
+         * The database is assumed to be one of Regina's in-built census
+         * databases, stored in the standard census database location
+         * described by `GlobalDirs::census()`.
+         *
+         * \param basename the base of the database filename, with no file
+         * extension and no directory information.
+         * \param desc a human-readable description for the database.
+         * \param maxSize the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in the database.  This must not be zero.
+         */
+        void appendDB(const char* basename, const char* desc, size_t maxSize);
+
+        /**
+         * Reserves space for the given number of databases in this collection.
+         *
+         * This is like `std::vector::reserve()`: it is ultimately harmless if
+         * the given size estimate turns out to be wrong.
+         *
+         * \param the new capacity for this collection of databases.
+         */
+        void reserve(size_t capacity);
+
+        /**
+         * Appends a new database to the end of this collection.
+         *
+         * The database is assumed to be one of Regina's in-built census
+         * databases, stored in the standard census database location
+         * described by `GlobalDirs::census()`.
+         *
+         * \param basename the base of the database filename, with no file
+         * extension and no directory information.
+         * \param desc a human-readable description for the database.
+         * \param tag a short human-readable string that identifies this
+         * database; see CensusDB::tag() for further information on how tags
+         * are used.
+         * \param maxSize the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in the database.  This must not be zero.
+         */
+        void appendDB(const char* basename, const char* desc, const char* tag,
+                size_t maxSize);
+
+        /**
+         * Searches for the given object within all of the databases in this
+         * collection.
+         *
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
+         *
+         * \param object the object that you wish to search for.
+         * \return a list of all database matches.
+         */
+        std::list<CensusHit> lookup(const ObjectType& object);
+
+        /**
+         * Searches for the object with the given signature within all of the
+         * databases in this collection.
+         *
+         * The given signature may be either second-generation or
+         * first-generation; either will yield the same results.
+         *
+         * Calling lookup() on a signature will yield the same results as
+         * calling lookup() on the corresponding object (i.e., the
+         * triangulation or link diagram, but it offers different performance:
+         *
+         * - If the signature is of the _same_ generation as is used internally
+         *   by the census databases, then passing a signature directly will
+         *   avoid the overhead of computing it.
+         *
+         * - If the signature is of a _different_ generation from the one used
+         *   internally by the census databases, then passing a signature will
+         *   _add_ overhead (since it must reconstruct the object and then
+         *   compute the generation of signature that the databases need).
+         *
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
+         *
+         * \param sig the isomorphism signature or knot/link signature of the
+         * object that you wish to search for; this may be either
+         * first-generation or second-generation.
+         * \return a list of all database matches.
+         */
+        std::list<CensusHit> lookup(const std::string& sig);
+};
+
+/**
+ * Swaps the contents of the given database collections.
+ *
+ * This global routine simply calls CensusCollection::swap(); it is provided
+ * so that CensusCollection meets the C++ Swappable requirements.
+ *
+ * \param a the first database collection whose contents should be swapped.
+ * \param b the second database collection whose contents should be swapped.
+ *
+ * \ingroup census
+ */
+template <SignatureReconstructible ObjectType>
+void swap(CensusCollection<ObjectType>& a, CensusCollection<ObjectType>& b)
+    noexcept;
+
+/**
  * Searches for triangulations and link diagrams across Regina's in-built
  * census databases.
  *
@@ -468,15 +654,11 @@ void swap(CensusHit& a, CensusHit& b) noexcept;
 class Census {
     private:
         /**
-         * The in-built census databases for knot/link diagrams, or the empty
-         * vector if these have not yet been initialised.
+         * The in-built census databases for the given type of object, or the
+         * empty collection if these have not yet been initialised.
          */
-        static std::vector<CensusDB> knots_;
-        /**
-         * The in-built census databases for 3-manifold triangulations, or the
-         * empty vector if these have not yet been initialised.
-         */
-        static std::vector<CensusDB> tri3_;
+        template <SignatureReconstructible ObjectType>
+        inline static CensusCollection<ObjectType> databases_ {};
 
     public:
         /**
@@ -615,6 +797,17 @@ class Census {
 
         // Make this class non-constructible.
         Census() = delete;
+
+    private:
+        /**
+         * Fills the database collection for the given object type with the
+         * relevant in-built databases that are shipped with Regina.
+         *
+         * \tparam ObjectType the type of object stored in the collection in
+         * question; this would typically be `Triangulation<3>` or `Link`.
+         */
+        template <SignatureReconstructible ObjectType>
+        static void fillDatabases();
 };
 
 // Inline functions for CensusDB:
@@ -697,11 +890,61 @@ inline void swap(CensusHit& a, CensusHit& b) noexcept {
     a.swap(b);
 }
 
+// Inline functions for CensusCollection:
+
+template <SignatureReconstructible ObjectType>
+inline void CensusCollection<ObjectType>::swap(CensusCollection& other)
+        noexcept {
+    databases_.swap(other);
+    std::swap(maxSize_, other.maxSize_);
+}
+
+template <SignatureReconstructible ObjectType>
+inline bool CensusCollection<ObjectType>::empty() const {
+    return databases_.empty();
+}
+
+template <SignatureReconstructible ObjectType>
+inline void CensusCollection<ObjectType>::appendDB(const char* basename,
+        const char* desc, size_t maxSize) {
+    databases_.push_back(CensusDB::global(basename, desc, maxSize));
+    if (maxSize > maxSize_)
+        maxSize_ = maxSize;
+}
+
+template <SignatureReconstructible ObjectType>
+inline void CensusCollection<ObjectType>::reserve(size_t capacity) {
+    databases_.reserve(capacity);
+}
+
+template <SignatureReconstructible ObjectType>
+inline void CensusCollection<ObjectType>::appendDB(const char* basename,
+        const char* desc, const char* tag, size_t maxSize) {
+    databases_.push_back(CensusDB::global(basename, desc, tag, maxSize));
+    if (maxSize > maxSize_)
+        maxSize_ = maxSize;
+}
+
+template <SignatureReconstructible ObjectType>
+inline void swap(CensusCollection<ObjectType>& a,
+        CensusCollection<ObjectType>& b) noexcept {
+    a.swap(b);
+}
+
 // Inline functions for Census:
 
 template <SignatureReconstructible ObjectType>
 inline std::list<CensusHit> Census::lookup(const ObjectType& object) {
-    return lookupAs<ObjectType>(object.neoSig());
+    if (databases_<ObjectType>.empty())
+        fillDatabases<ObjectType>();
+    return databases_<ObjectType>.lookup(object);
+}
+
+template <SignatureReconstructible ObjectType>
+inline std::list<CensusHit> Census::lookupAs(const std::string& sig) {
+    if (databases_<ObjectType>.empty())
+        fillDatabases<ObjectType>();
+    return databases_<ObjectType>.lookup(sig);
 }
 
 } // namespace regina

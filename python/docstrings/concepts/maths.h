@@ -51,6 +51,9 @@ static constexpr const char __concept[] =
 R"doc(One of Regina's mathematical types that allows reconstruction from
 string-based signatures, up to combinatorial isomorphism.
 
+In particular, second-generation signatures must be supported via
+``T::neoSig()``.
+
 Examples of such types include ``Triangulation<dim>`` and Link.
 
 Concepts:

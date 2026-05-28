@@ -60,7 +60,9 @@ When defining a new subclass of `Manifold<dim>`:
 Python:
     Python does not support templates. Instead this class can be used
     by appending the dimension as a suffix (e.g., Manifold3 for
-    dimensions 3).
+    dimensions 3). Moreover, in Python the name Manifold is now a
+    deprecated alias for Manifold3 (for backward compatibility with
+    code written for Regina ≤ 7.x).
 
 Template parameter ``dim``:
     the dimension of manifold under consideration. Currently this is

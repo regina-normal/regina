@@ -208,6 +208,71 @@ void CensusDB::lookupKey(const std::string& sig, Action&& action) const {
 #endif
 }
 
+template <SignatureReconstructible ObjectType>
+std::list<CensusHit> CensusCollection<ObjectType>::lookup(
+        const ObjectType& object) {
+    size_t size = object.size();
+    if (size > maxSize_)
+        return {}; // there will be no hits
+
+    std::string sig = object.neoSig();
+
+    std::list<CensusHit> hits;
+    auto push = [&hits](CensusHit hit) {
+        hits.push_back(std::move(hit));
+    };
+
+    // The calls to CensusDB::lookupKey() below could throw a FileError.
+    for (const auto& db : databases_)
+        if (size <= db.maxSize())
+            db.template lookupKey<2>(sig, push);
+    return hits;
+}
+
+template <SignatureReconstructible ObjectType>
+std::list<CensusHit> CensusCollection<ObjectType>::lookup(
+        const std::string& sig) {
+    size_t size;
+    try {
+        if constexpr (std::same_as<ObjectType, Link>) {
+            size = ObjectType::sigDiagramComponentSize(sig);
+        } else {
+            size = ObjectType::isoSigComponentSize(sig);
+        }
+    } catch (const InvalidArgument&) {
+        return {}; // invalid signature - there will be no hits
+    }
+    if (size > maxSize_)
+        return {}; // too large - there will be no hits
+
+    int generation = ObjectType::PrintableSigEncoding::generation(sig);
+    if (generation == 0)
+        return {}; // invalid signature - there will be no hits
+
+    std::list<CensusHit> hits;
+    auto push = [&hits](CensusHit hit) {
+        hits.push_back(std::move(hit));
+    };
+
+    // The calls to CensusDB::lookupKey() below could throw a FileError.
+    if (generation == 2) {
+        for (const auto& db : databases_)
+            if (size <= db.maxSize())
+                db.template lookupKey<2>(sig, push);
+    } else {
+        // We need to do the lookup with a second-generation signature.
+        try {
+            std::string neoSig = ObjectType::fromSig(sig).neoSig();
+            for (const auto& db : databases_)
+                if (size <= db.maxSize())
+                    db.template lookupKey<2>(neoSig, push);
+        } catch (const InvalidArgument&) {
+            return {}; // invalid signature - there will be no hits
+        }
+    }
+    return hits;
+}
+
 } // namespace regina
 
 #endif

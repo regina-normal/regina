@@ -777,6 +777,15 @@ class Link :
 
     public:
         /**
+         * An alias for the default knot/link signature encoding, which
+         * encodes signatures as printable strings.
+         *
+         * This alias is provided to assist with generic code that can work
+         * with both links and triangulations.
+         */
+        using PrintableSigEncoding = LinkSigPrintable;
+
+        /**
          * The name of the variable used in the Alexander polynomial, as
          * returned by alexander().  This is provided to help with
          * pretty-printing Alexander polynomials for human consumption.

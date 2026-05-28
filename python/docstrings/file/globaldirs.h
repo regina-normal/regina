@@ -35,7 +35,7 @@ static constexpr const char census[] =
 R"doc(Returns the directory containing the large machine-encoded census data
 files. These data files are not human-browsable: instead they are
 built for fast performance and small size. Users can access them by
-calling Census::lookup().
+calling Census::lookup() or Census::lookupAs().
 
 On a typical GNU/Linux system, this directory might (for example) be
 ``/usr/local/share/regina/data/census``.

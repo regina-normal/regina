@@ -164,6 +164,15 @@ class TriangulationBase :
             /**< A compile-time constant that gives the dimension of the
                  triangulation. */
 
+        /**
+         * An alias for the default isomorphism signature encoding, which
+         * encodes signatures as printable strings.
+         *
+         * This alias is provided to assist with generic code that can work
+         * with both triangulations and links.
+         */
+        using PrintableSigEncoding = IsoSigPrintable;
+
     protected:
         MarkedVector<Simplex<dim>> simplices_;
             /**< The top-dimensional simplices that form the triangulation. */
