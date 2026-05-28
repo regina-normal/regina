@@ -35,12 +35,13 @@
 #ifndef __TRI3SURFACES_H
 #define __TRI3SURFACES_H
 
-#include "census/census.h"
-#include "triangulation/forward.h"
+#include "concepts/maths.h"
+#include "triangulation/dim3.h"
 #include "../packettabui.h"
 
 class QAbstractButton;
 class QLabel;
+template <regina::SignatureReconstructible ObjectType> class CensusWidget;
 
 namespace regina {
     class Packet;
@@ -64,7 +65,6 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         regina::Triangulation<3>* tri_;
         regina::Packet* triAsPacket_;
         std::string name;
-        std::list<regina::CensusHit> hits;
 
         /**
          * Internal components
@@ -97,7 +97,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnHaken;
         QAbstractButton* btnStrict;
         QLabel* manifold;
-        QLabel* census;
+        CensusWidget<regina::Triangulation<3>>* census;
 
     public:
         /**
@@ -132,9 +132,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
          * Support clipboard actions.
          */
         void contextManifold(const QPoint& pos);
-        void contextCensus(const QPoint& pos);
         void copyManifold();
-        void copyCensus();
 };
 
 #endif

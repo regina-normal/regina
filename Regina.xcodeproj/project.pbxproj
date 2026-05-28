@@ -4658,6 +4658,7 @@
 		05E62AD92FC7070F00AE1B84 /* verify-snappea-census-data.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "verify-snappea-census-data.py"; sourceTree = "<group>"; };
 		05E62ADB2FC7070F00AE1B84 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05E62ADC2FC7070F00AE1B84 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05E62AE42FC85A3800AE1B84 /* censuswidget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = censuswidget.h; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -7437,6 +7438,7 @@
 				0564A5991811D920002CC2AE /* anglesui.h */,
 				0582FDF02731FE8D00203AE7 /* attachmentui.cpp */,
 				0582FDEF2731FE8D00203AE7 /* attachmentui.h */,
+				05E62AE42FC85A3800AE1B84 /* censuswidget.h */,
 				0564A59A1811D920002CC2AE /* compatcanvas.cpp */,
 				0564A59B1811D920002CC2AE /* compatcanvas.h */,
 				0564A59C1811D920002CC2AE /* containerui.cpp */,
