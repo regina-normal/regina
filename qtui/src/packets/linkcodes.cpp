@@ -35,6 +35,7 @@
 #include "linkcodes.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
+#include "packets/censuswidget.h"
 
 #include <QComboBox>
 #include <QLabel>
@@ -99,6 +100,12 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
     layout->addWidget(code, 1);
 
     editIface = new PacketEditTextEditor(code);
+
+    census = new CensusWidget<regina::Link>(link, ui);
+    census->setWhatsThis(tr("<qt>Indicates whether this link diagram "
+        "appears in any of Regina's in-built census databases.  "
+        "If so, the name of the link diagram will be shown.</qt>"));
+    layout->addWidget(census);
 }
 
 LinkCodesUI::~LinkCodesUI() {
@@ -246,6 +253,8 @@ void LinkCodesUI::refresh() {
     }
 
     code->setPlainText(ans);
+
+    census->refresh();
 }
 
 void LinkCodesUI::typeChanged(int) {

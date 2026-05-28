@@ -16,6 +16,8 @@ Version 8.0  [ TODO ]
         - More use of constexpr throughout the calculation engine.
         - Classes designed for static use only (e.g., PacketInfo) now have
           their default constructors explicitly disabled.
+        - Added classical and virtual knot tables to the in-built census
+          databases.
         - Regina now requires liblzma at build time (but not runtime).
     ENGINE:
         Class AbelianGroup:

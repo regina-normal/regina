@@ -76,13 +76,13 @@ std::list<CensusHit> Census::lookupAs<Triangulation<3>>(
         tri3_.push_back(CensusDB::global("closed-nor-census-11",
             "Closed census (non-orientable)", 11));
         tri3_.push_back(CensusDB::global("closed-hyp-census-full",
-            "Hodgson-Weeks closed hyperbolic census", "Hodgson-Weeks", 32));
+            "Hodgson-Weeks closed hyperbolic census", 32));
         tri3_.push_back(CensusDB::global("cusped-hyp-or-census-9",
             "Cusped hyperbolic census (orientable)", 9));
         tri3_.push_back(CensusDB::global("cusped-hyp-nor-census-9",
             "Cusped hyperbolic census (non-orientable)", 9));
         tri3_.push_back(CensusDB::global("christy-knots-links",
-            "Christy's collection of knot/link complements", "Christy", 22));
+            "Christy's collection of knot/link complements", 22));
     }
 
     size_t size;

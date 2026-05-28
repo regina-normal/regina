@@ -43,10 +43,6 @@ class QAbstractButton;
 class QLabel;
 template <regina::SignatureReconstructible ObjectType> class CensusWidget;
 
-namespace regina {
-    class Packet;
-};
-
 /**
  * A triangulation page for viewing normal surface properties.
  */

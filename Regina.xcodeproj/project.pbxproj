@@ -4659,6 +4659,8 @@
 		05E62ADB2FC7070F00AE1B84 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05E62ADC2FC7070F00AE1B84 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05E62AE42FC85A3800AE1B84 /* censuswidget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = censuswidget.h; sourceTree = "<group>"; };
+		05E62AE52FC867F000AE1B84 /* green.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = green.xzsig; sourceTree = "<group>"; };
+		05E62AE62FC867F000AE1B84 /* mkgreen.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = mkgreen.py; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -8825,11 +8827,13 @@
 				05E62AC62FC7070F00AE1B84 /* compact-lmdb.cpp */,
 				05E62AC72FC7070F00AE1B84 /* cusped-hyp-nor-census-9.xzsig */,
 				05E62AC82FC7070F00AE1B84 /* cusped-hyp-or-census-9.xzsig */,
+				05E62AE52FC867F000AE1B84 /* green.xzsig */,
 				05E62AC92FC7070F00AE1B84 /* maxsize-link.py */,
 				05E62ACA2FC7070F00AE1B84 /* maxsize-tri.py */,
 				05E62ACB2FC7070F00AE1B84 /* mkcensusdb.cpp */,
 				05E62ACC2FC7070F00AE1B84 /* mkgen2-link.py */,
 				05E62ACD2FC7070F00AE1B84 /* mkgen2-tri.py */,
+				05E62AE62FC867F000AE1B84 /* mkgreen.py */,
 				05E62ACE2FC7070F00AE1B84 /* optimise-lmdb.cpp */,
 				05E62ACF2FC7070F00AE1B84 /* README.txt */,
 				05E62AD02FC7070F00AE1B84 /* virtual.xzsig */,
@@ -9906,6 +9910,9 @@
 				"$(SRCROOT)/engine/data/census/closed-or-census-11.xzsig",
 				"$(SRCROOT)/engine/data/census/cusped-hyp-nor-census-9.xzsig",
 				"$(SRCROOT)/engine/data/census/cusped-hyp-or-census-9.xzsig",
+				"$(SRCROOT)/engine/data/census/classical.xzsig",
+				"$(SRCROOT)/engine/data/census/virtual.xzsig",
+				"$(SRCROOT)/engine/data/census/green.xzsig",
 			);
 			outputFileListPaths = (
 			);
@@ -9919,7 +9926,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\n# The rpath points to the executable directory, but\n# the executable may be a symlink which means that\n# libtokyocabinet cannot be found.\n#\n# This issue is (in particular) seen when creating an archive.\n#\n# Put libtokyocabinet explicitly on the DYLD_LIBRARY_PATH.\nexport DYLD_LIBRARY_PATH=\"${BUILT_PRODUCTS_DIR}\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.xzsig \"$output\"/$i.tdb\ndone\n";
+			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\n# The rpath points to the executable directory, but\n# the executable may be a symlink which means that\n# libtokyocabinet cannot be found.\n#\n# This issue is (in particular) seen when creating an archive.\n#\n# Put libtokyocabinet explicitly on the DYLD_LIBRARY_PATH.\nexport DYLD_LIBRARY_PATH=\"${BUILT_PRODUCTS_DIR}\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links classical virtual green; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.xzsig \"$output\"/$i.tdb\ndone\n";
 		};
 		05DADB1021926A2300DC80E1 /* Copy Databases and Handbook */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9937,6 +9944,9 @@
 				"$(BUILD_DIR)/closed-or-census-11.tdb",
 				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
 				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
+				"$(BUILD_DIR)/classical.tdb",
+				"$(BUILD_DIR)/virtual.tdb",
+				"$(BUILD_DIR)/green.tdb",
 			);
 			name = "Copy Databases and Handbook";
 			outputFileListPaths = (
@@ -9953,7 +9963,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nfor i in regina regina-xml; do\n  cp -pr \"${BUILD_DIR}\"/docs-$i \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n";
+			shellScript = "set -e\n\nfor i in regina regina-xml; do\n  cp -pr \"${BUILD_DIR}\"/docs-$i \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links classical virtual green; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n";
 		};
 		05F37DE929C6B2A500A6203B /* Sign Libraries */ = {
 			isa = PBXShellScriptBuildPhase;
