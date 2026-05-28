@@ -129,11 +129,6 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         void calculateStrict();
 
         /**
-         * Notify that preferences have changed.
-         */
-        void updatePreferences();
-
-        /**
          * Support clipboard actions.
          */
         void contextManifold(const QPoint& pos);
@@ -141,9 +136,5 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         void copyManifold();
         void copyCensus();
 };
-
-inline void Tri3SurfacesUI::updatePreferences() {
-    refresh();
-}
 
 #endif

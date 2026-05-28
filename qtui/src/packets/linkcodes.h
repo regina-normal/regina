@@ -86,11 +86,6 @@ class LinkCodesUI : public QObject, public PacketViewerTab {
          * Change which code is displayed.
          */
         void typeChanged(int index);
-
-        /**
-         * Notify that preferences have changed.
-         */
-        void updatePreferences();
 };
 
 inline PacketEditIface* LinkCodesUI::getEditIface() {

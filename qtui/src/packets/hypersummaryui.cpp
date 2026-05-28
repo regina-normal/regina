@@ -151,8 +151,9 @@ HyperSummaryUI::HyperSummaryUI(
     // Add some space at the end.
     paneLayout->addStretch(1);
 
+    // If the unicode flag changes, redraw everything.
     connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
-        this, &HyperSummaryUI::updatePreferences);
+        this, &HyperSummaryUI::refresh);
 }
 
 regina::Packet* HyperSummaryUI::getPacket() {
@@ -389,11 +390,5 @@ void HyperSummaryUI::refresh() {
         // does not support spun normal surfaces.
         totSpun->hide();
     }
-}
-
-void HyperSummaryUI::updatePreferences() {
-    // It's possible that the unicode flag has changed.
-    // Redraw everything.
-    refresh();
 }
 

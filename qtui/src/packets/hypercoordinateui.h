@@ -169,11 +169,6 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
          * Provides auto-resizing of columns.
          */
         void columnResized(int section, int oldSize, int newSize);
-
-        /**
-         * Note that preferences have changed.
-         */
-        void updatePreferences();
 };
 
 inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces) :

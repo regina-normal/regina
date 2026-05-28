@@ -120,8 +120,10 @@ LinkGroupUI::LinkGroupUI(regina::PacketOf<regina::Link>* packet,
     // ---------- Finishing up ----------
 
     pages->setCurrentIndex(0);
+
+    // If the unicode flag changes, redraw everything.
     connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
-        this, &LinkGroupUI::updatePreferences);
+        this, &LinkGroupUI::refresh);
 }
 
 regina::Packet* LinkGroupUI::getPacket() {
@@ -147,10 +149,5 @@ void LinkGroupUI::refresh() {
         groupBelow->setGroup(groups.second);
         pages->setCurrentIndex(1);
     }
-}
-
-void LinkGroupUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    refresh();
 }
 

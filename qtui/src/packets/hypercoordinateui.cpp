@@ -481,8 +481,9 @@ HyperCoordinateUI::HyperCoordinateUI(
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
 
+    // If we've changed the unicode setting, then we may need some redrawing.
     connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
-        this, &HyperCoordinateUI::updatePreferences);
+        model, &HyperModel::rebuildUnicode);
 }
 
 HyperCoordinateUI::~HyperCoordinateUI() {
@@ -557,10 +558,5 @@ void HyperCoordinateUI::columnResized(int section, int, int newSize) {
     for (int i = nNonCoordSections; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
-}
-
-void HyperCoordinateUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    model->rebuildUnicode();
 }
 

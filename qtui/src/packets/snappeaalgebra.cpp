@@ -113,8 +113,9 @@ SnapPeaAlgebraUI::SnapPeaAlgebraUI(
 
     master->addLayout(layout, tr("Unfilled manifold"));
 
+    // If the unicode flag changes, redraw everything.
     connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
-        this, &SnapPeaAlgebraUI::updatePreferences);
+        this, &SnapPeaAlgebraUI::refresh);
 }
 
 regina::Packet* SnapPeaAlgebraUI::getPacket() {
@@ -174,9 +175,4 @@ void SnapPeaAlgebraUI::refresh() {
     unfilledH1->show();
     unfilledFundGroupTitle->show();
     unfilledFundGroup->show();
-}
-
-void SnapPeaAlgebraUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    refresh();
 }

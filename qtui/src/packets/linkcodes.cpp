@@ -98,9 +98,6 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
     code->setAcceptRichText(false);
     layout->addWidget(code, 1);
 
-    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
-        this, &LinkCodesUI::updatePreferences);
-
     editIface = new PacketEditTextEditor(code);
 }
 
@@ -117,6 +114,7 @@ QWidget* LinkCodesUI::getInterface() {
 }
 
 void LinkCodesUI::refresh() {
+    // Don't use unicode because we want clipboard copy to fetch pure ASCII.
     QString ans;
     if (type->currentIndex() == 1) {
         code->setWhatsThis("A description of this knot using "
@@ -247,13 +245,6 @@ void LinkCodesUI::refresh() {
         code->setWordWrapMode(QTextOption::WordWrap);
     }
 
-    /* Don't use unicode because we want clipboard copy to fetch pure ASCII.
-    if (ReginaPrefSet::global().displayUnicode) {
-        ans.replace(' ', QChar(0x2002)); // enspace
-        ans.replace('-', QChar(0x2212)); // minus
-    }
-    */
-
     code->setPlainText(ans);
 }
 
@@ -281,10 +272,6 @@ void LinkCodesUI::typeChanged(int) {
             break;
     }
 
-    refresh();
-}
-
-void LinkCodesUI::updatePreferences() {
     refresh();
 }
 

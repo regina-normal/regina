@@ -101,12 +101,6 @@ class LinkGroupUI : public QObject, public PacketViewerTab {
         regina::Packet* getPacket() override;
         QWidget* getInterface() override;
         void refresh() override;
-
-    public slots:
-        /**
-         * Note that preferences have changed.
-         */
-        void updatePreferences();
 };
 
 #endif

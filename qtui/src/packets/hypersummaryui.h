@@ -82,12 +82,6 @@ class HyperSummaryUI : public QObject, public PacketViewerTab {
         regina::Packet* getPacket() override;
         QWidget* getInterface() override;
         void refresh() override;
-
-    public slots:
-        /**
-         * Notify that preferences have changed.
-         */
-        void updatePreferences();
 };
 
 #endif

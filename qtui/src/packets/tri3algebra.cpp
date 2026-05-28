@@ -382,8 +382,9 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(
 
     invArea->addStretch(1);
 
+    // If the unicode flag changes, redraw everything.
     connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
-        this, &Tri3TuraevViroUI::updatePreferences);
+        this, &Tri3TuraevViroUI::refresh);
 }
 
 regina::Packet* Tri3TuraevViroUI::getPacket() {
@@ -506,11 +507,6 @@ bool Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
         }
     invariants->addTopLevelItem(item);
     return true;
-}
-
-void Tri3TuraevViroUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    refresh();
 }
 
 //////////////////////////////////////////////////////////////////////////////

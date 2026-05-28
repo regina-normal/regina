@@ -89,18 +89,9 @@ class Tri3SnapPeaUI : public QObject, public PacketViewerTab {
 
     public slots:
         /**
-         * Update properties.
-         */
-        void updatePreferences();
-
-        /**
          * Convert this to a full SnapPea triangulation.
          */
         void toSnapPea();
 };
-
-inline void Tri3SnapPeaUI::updatePreferences() {
-    refresh();
-}
 
 #endif

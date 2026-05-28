@@ -313,8 +313,9 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
 
     layout->addStretch(2);
 
+    // If the automatic calculation threshold changes, we should refresh.
     connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
-        this, &Tri3SurfacesUI::updatePreferences);
+        this, &Tri3SurfacesUI::refresh);
 
     manifold->setContextMenuPolicy(Qt::CustomContextMenu);
     census->setContextMenuPolicy(Qt::CustomContextMenu);

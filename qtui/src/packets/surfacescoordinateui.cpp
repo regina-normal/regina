@@ -616,8 +616,9 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     surfaceActionList.push_back(actCrush);
     connect(actCrush, SIGNAL(triggered()), this, SLOT(crush()));
 
+    // If we've changed the unicode setting, then we may need some redrawing.
     connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
-        this, &SurfacesCoordinateUI::updatePreferences);
+        model, &SurfaceModel::rebuildUnicode);
 }
 
 SurfacesCoordinateUI::~SurfacesCoordinateUI() {
@@ -757,10 +758,5 @@ void SurfacesCoordinateUI::columnResized(int section, int, int newSize) {
     for (int i = nNonCoordSections; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
-}
-
-void SurfacesCoordinateUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    model->rebuildUnicode();
 }
 
