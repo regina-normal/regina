@@ -315,10 +315,10 @@ class CensusDB {
         /**
          * Tests whether this and the given object represent the same database.
          *
-         * Two databases are considered the same if they have identical
-         * filenames (as returned by the filename() function), _and_ they
-         * were given the same maximum size arguments upon construction.
-         * The database descriptions and tags are irrelevant here.
+         * Two databases are considered the same if and only if they have
+         * identical filenames (as returned by the filename() function).
+         * The database descriptions and tags are irrelevant here, as are the
+         * maximum size arguments passed to the class constructor.
          *
          * \param rhs the database to compare this against.
          * \return \c true if and only if this and the given object represent
@@ -754,7 +754,7 @@ inline void CensusDB::swap(CensusDB& other) noexcept {
 }
 
 inline bool CensusDB::operator == (const CensusDB& rhs) const {
-    return filename_ == rhs.filename_ && maxSize_ == rhs.maxSize_;
+    return filename_ == rhs.filename_;
 }
 
 inline void swap(CensusDB& a, CensusDB& b) noexcept {

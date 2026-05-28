@@ -122,8 +122,6 @@ Version 8.0  [ TODO ]
               identifying the database, and the maximum size of triangulation
               or link in the database.  These arguments are accessible via the
               new routines tag() and maxSize().
-            - The comparision operators (==, !=) now also compare the maximum
-              sizes that were passed to the class constructor.
             - New routine global() for accessing Regina's in-built databases.
         Class ChildIterator<const_>:
             - The type std::iterator_traits<ChildIterator<...>>::value_type
