@@ -854,6 +854,26 @@ Link Link::fromSig(const std::string& sig) {
     }
 }
 
+size_t Link::sigDiagramComponentSize(const std::string& sig) {
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
+
+    // Get the empty link out of the way first.
+    switch (dec.peek()) {
+        case Base64Encoder::spare[0]:
+            return 0; // empty link
+        case 0:
+            throw InvalidArgument("sigDiagramComponentSize(): empty signature");
+        default:
+            break;
+    }
+
+    try {
+        return dec.decodeSize().first;
+    } catch (const InvalidInput&) {
+        throw InvalidArgument("sigDiagramComponentSize(): invalid signature");
+    }
+}
+
 Link Link::fromSig(const ByteSequence& sig) {
     Link ans;
 

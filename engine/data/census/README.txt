@@ -14,7 +14,11 @@ Each *.xzsig file in this directory is an xz-compressed text file in the form:
 All signatures are second-generation isomorphism signatures or knot/link
 signatures.
 
+Note: all triangulations and link diagrams in these databases must be connected.
+(This is because the census lookup code uses the signature prefix to deduce
+the triangulation/link size).
+
 The extension .xzsig is used (instead of something more sensible, like .sig.xz)
 so that ${INPUT_FILE_BASE} does the right thing in xcode's custom build rules.
 
- -- Ben Burton <bab@maths.uq.edu.au>, Tue, 26 May 2026 16:25:08 +1000
+ -- Ben Burton <bab@maths.uq.edu.au>, Thu, 28 May 2026 22:22:34 +1000

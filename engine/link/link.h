@@ -6344,6 +6344,51 @@ class Link :
         [[deprecated]] static Link fromKnotSig(const std::string& sig);
 
         /**
+         * Deduces the number of crossings in a connected link diagram from
+         * its string-based knot/link signature.  This may be either a
+         * first-generation signature (computed via `knotSig()`),
+         * or a second-generation signature (computed via `neoSig()`).
+         *
+         * See knotSig() and neoSig() for general information on
+         * first-generation and second-generation isomorphism signatures.
+         *
+         * Regarding connectivity and components:
+         *
+         * - If the given signature describes a connected link diagram, this
+         *   routine will return the total number of crossings in that diagram.
+         *   This is the intended use case for this routine.
+         *
+         * - If the signature describes a _disconnected_ link diagram, this
+         *   routine will only return the number of crossings in the first
+         *   connected diagram component.  If you need the total size of a
+         *   disconnected link diagram, you will need to reconstruct the full
+         *   diagram by calling fromSig() instead.
+         *
+         * - If the signature describes the empty link, this routine
+         *   will return zero.
+         *
+         * This routine is very fast, since it only examines the first few
+         * characters of the given signature (in which the size of the first
+         * diagram component is encoded).  However, a side-effect of this is
+         * that it is possible to pass an _invalid_ signature and still
+         * receive a positive result.  If you need to test whether a signature
+         * is valid or not, you must call fromSig() instead, which will examine
+         * the entire signature in full.
+         *
+         * \exception InvalidArgument The given string was not a valid
+         * string-based knot/link signature.  As described above, invalid
+         * signatures are not always detected; this exception will only be
+         * thrown if the error is so severe that the diagram component size
+         * cannot be deduced from the first few characters.
+         *
+         * \param sig a signature of some link diagram.  Note that signatures
+         * are case-sensitive.
+         * \return the size of the first connected diagram component, or 0 if
+         * the given signature describes the empty link.
+         */
+        static size_t sigDiagramComponentSize(const std::string& sig);
+
+        /**
          * Reconstructs a classical or virtual link from its given tight
          * encoding.  See the page on \ref tight "tight encodings" for details.
          *

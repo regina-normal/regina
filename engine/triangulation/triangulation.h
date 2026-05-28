@@ -4029,7 +4029,7 @@ class TriangulationBase :
          * the component size cannot be deduced from the first few characters.
          *
          * \param sig a signature of some <i>dim</i>-dimensional triangulation.
-         * Note that isomorphism signature are case-sensitive
+         * Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * \return the size of the first connected component, or 0 if the
          * given signature describes the empty triangulation.

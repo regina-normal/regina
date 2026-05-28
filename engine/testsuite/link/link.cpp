@@ -3654,8 +3654,11 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     SCOPED_TRACE_NUMERIC(reverse);
     SCOPED_TRACE_NUMERIC(rotate);
 
+    static constexpr bool stringBased = std::same_as<
+        typename Encoding::Signature, std::string>;
+
     auto sig = link.sig<generation, Encoding>(reflect, reverse, rotate);
-    if constexpr (std::same_as<typename Encoding::Signature, std::string>) {
+    if constexpr (stringBased) {
         // The string-based signatures are always non-empty.
         EXPECT_FALSE(sig.empty());
     } else {
@@ -3675,6 +3678,25 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
             EXPECT_EQ(LinkSigPrintable::generation(sig), 2);
         else
             EXPECT_EQ(LinkSigPrintable::generation(sig), generation);
+    }
+
+    if constexpr (stringBased) {
+        size_t sigSize = Link::sigDiagramComponentSize(sig);
+        if (link.countComponents() <= 1)
+            EXPECT_EQ(sigSize, link.size());
+        else {
+            // The diagram might or might not be connected.
+            auto bits = link.diagramComponents();
+            bool found = false;
+            for (const auto& c : link.diagramComponents())
+                if (sigSize == c.size()) {
+                    found = true;
+                    break;
+                }
+            if (! found)
+                ADD_FAILURE() << "sigDiagramComponentSize() does not "
+                    "match any diagram component";
+        }
     }
 
     if (reflect) {
@@ -3782,7 +3804,7 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     }
 
     // Verify the "magic" string constructor.
-    if constexpr (std::same_as<typename Encoding::Signature, std::string>) {
+    if constexpr (stringBased) {
         EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
     }
 }
