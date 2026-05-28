@@ -9923,6 +9923,9 @@
 				"$(BUILD_DIR)/closed-or-census-11.tdb",
 				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
 				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
+				"$(BUILD_DIR)/classical.tdb",
+				"$(BUILD_DIR)/virtual.tdb",
+				"$(BUILD_DIR)/green.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -9960,6 +9963,9 @@
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-or-census-11.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-nor-census-9.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-or-census-9.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/classical.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/virtual.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/green.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
