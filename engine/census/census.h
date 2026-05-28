@@ -517,6 +517,11 @@ class Census {
          * logarithmic-time lookup in each database (where "logarithmic" means
          * logarithmic in the size of the database).
          *
+         * \python Python does not support C++ templates.  Instead you should
+         * pass the object type at runtime, using the argument order
+         * `lookupAs(objectType, sig)`.  An example that uses the signature of
+         * the figure eight knot is `lookupAs(Link, "eputWe")`.
+         *
          * \exception FileError An error occurred within one of the databases.
          * Typically this would indicate that some database could not be opened
          * (e.g., it might not be installed correctly on the system).

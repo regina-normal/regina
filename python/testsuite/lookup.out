@@ -31,3 +31,25 @@ Hits: 2
   Prime classical knots  -  4ah_1
   Prime virtual knots  -  v4_1
 
+SEARCH: <class 'regina.engine.Link'> eputWe
+Hits: 2
+  Prime classical knots  -  4ah_1
+  Prime virtual knots  -  v4_1
+
+SEARCH: <class 'regina.engine.Triangulation3'> eputWe
+Hits: 0
+
+SEARCH: <class 'regina.engine.Triangulation4'> eputWe
+Caught exception
+
+SEARCH: <class 'regina.engine.Link'> cV6cqb
+Hits: 0
+
+SEARCH: <class 'regina.engine.Triangulation3'> cV6cqb
+Hits: 2
+  Cusped hyperbolic census (orientable)  -  m004 : #1
+  Christy's collection of knot/link complements  -  L104001
+
+SEARCH: <class 'regina.engine.Triangulation4'> cV6cqb
+Caught exception
+

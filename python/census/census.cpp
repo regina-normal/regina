@@ -97,6 +97,16 @@ void addCensus(pybind11::module_& m) {
     auto c = pybind11::class_<Census>(m, "Census", rdoc::__class)
         .def_static("lookup", &Census::lookup<Triangulation<3>>, rdoc::lookup)
         .def_static("lookup", &Census::lookup<Link>, rdoc::lookup)
+        .def_static("lookupAs",
+                [](pybind11::type objectType, const std::string& sig) {
+            if (objectType.is(pybind11::type::of<regina::Triangulation<3>>())) {
+                return Census::lookupAs<Triangulation<3>>(sig);
+            } else if (objectType.is(pybind11::type::of<regina::Link>())) {
+                return Census::lookupAs<Link>(sig);
+            } else {
+                throw regina::InvalidArgument("Not a supported object type");
+            }
+        }, "objectType"_a, "sig"_a, rdoc::lookupAs)
         .def_static("lookup",
             static_cast<std::list<CensusHit> (*)(const std::string&)>(
                 &Census::lookup), rdoc::lookup_2)
