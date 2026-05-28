@@ -20,6 +20,7 @@ SET(censusdata_DATA
   christy-knots-links.${DB_EXT}
   classical.${DB_EXT}
   virtual.${DB_EXT}
+  green.${DB_EXT}
   )
 
 FOREACH(db ${censusdata_DATA})

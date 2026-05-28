@@ -122,11 +122,13 @@ std::list<CensusHit> Census::lookupAs<Link>(const std::string& sig) {
     }
 
     if (knots_.empty()) {
-        knots_.reserve(2);
+        knots_.reserve(3);
         knots_.push_back(CensusDB::global("classical",
             "Prime classical knots", 16));
         knots_.push_back(CensusDB::global("virtual",
             "Prime virtual knots", 6));
+        knots_.push_back(CensusDB::global("green",
+            "Green's virtual knot tables", 6));
     }
 
     std::list<CensusHit> hits;

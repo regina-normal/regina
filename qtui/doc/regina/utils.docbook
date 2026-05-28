@@ -162,9 +162,10 @@
 
 <screen>
     <prompt>example$</prompt> <userinput>censuslookup eputWe</userinput>
-    eputWe: 2 hits
+    eputWe: 3 hits
         4ah_1 -- Prime classical knots
         v4_1 -- Prime virtual knots
+        4.108 -- Green's virtual knot tables
 
     <prompt>example$</prompt>
 </screen>

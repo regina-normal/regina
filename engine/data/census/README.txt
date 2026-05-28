@@ -6,12 +6,13 @@ highly optimised census databases used by Census::lookup() / Census::lookupAs().
 
 Each *.xzsig file in this directory is an xz-compressed text file in the form:
 
-<isosig> <manifold_name>
-<isosig> <manifold_name>
+<sig> <manifold_or_link_name>
+<sig> <manifold_or_link_name>
 ...
-<isosig> <manifold_name>
+<sig> <manifold_or_link_name>
 
-All isomorphism signatures are second-generation.
+All signatures are second-generation isomorphism signatures or knot/link
+signatures.
 
 The extension .xzsig is used (instead of something more sensible, like .sig.xz)
 so that ${INPUT_FILE_BASE} does the right thing in xcode's custom build rules.
