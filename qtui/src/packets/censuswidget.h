@@ -101,6 +101,11 @@ void CensusWidget<ObjectType>::refresh() {
             for (const auto& hit : hits_) {
                 ans += "<br>";
                 ans += QString(hit.name().c_str()).toHtmlEscaped();
+                // If there are multiple hits, display database tags
+                // where we have them.
+                if (! hit.db().tag().empty())
+                    ans += QString(" <i>(%1)</i>").arg(
+                        QString(hit.db().tag().c_str()).toHtmlEscaped());
             }
             ans += "</qt>";
             setText(ans);
@@ -126,6 +131,8 @@ void CensusWidget<ObjectType>::contextCensus(const QPoint& pos) {
         } else {
             for (const auto& hit : hits_) {
                 ans += hit.name().c_str();
+                if (! hit.db().tag().empty())
+                    ans = ans + " (" + hit.db().tag().c_str() + ')';
                 ans += "\n";
             }
         }
