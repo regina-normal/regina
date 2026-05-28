@@ -48,6 +48,8 @@ BoundaryComponent7 : class -> EqualityType.ByReference
 BoundaryComponent8 : class -> EqualityType.ByReference
 CanConstruct : concept
 Census : class -> EqualityType.NeverInstantiated
+CensusCollection3 : class -> EqualityType.NeverInstantiated
+CensusCollectionLink : class -> EqualityType.NeverInstantiated
 CensusDB : class -> EqualityType.ByValue
 CensusHit : class -> EqualityType.ByValue
 CensusPurge : enum

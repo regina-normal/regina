@@ -316,8 +316,9 @@ class CensusDB {
          * Tests whether this and the given object represent the same database.
          *
          * Two databases are considered the same if they have identical
-         * filenames (as returned by the filename() function).  The database
-         * descriptions and tags are irrelevant here.
+         * filenames (as returned by the filename() function), _and_ they
+         * were given the same maximum size arguments upon construction.
+         * The database descriptions and tags are irrelevant here.
          *
          * \param rhs the database to compare this against.
          * \return \c true if and only if this and the given object represent
@@ -447,8 +448,8 @@ class CensusHit {
 void swap(CensusHit& a, CensusHit& b) noexcept;
 
 /**
- * A collection of references to in-built census databases, all of which store
- * the same type of topological object.
+ * Holds references to all of Regina's in-built census databases for a
+ * particular type of topological object.
  *
  * Ordinary users should not need to interact with CensusCollection directly;
  * instead you would typically use one of the high-level Census::lookup()
@@ -459,115 +460,39 @@ void swap(CensusHit& a, CensusHit& b) noexcept;
  * manages a single database) and Census (which offers high-level lookup
  * routines for end users).  See those two classes for further information.
  *
- * This class implements C++ move semantics and adheres to the C++ Swappable
- * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
+ * This class does not initialise its list of databases until the first time
+ * they are needed by a lookup routine.  This means that you can call
+ * GlobalDirs::setDirs() or GlobalDirs::deduceDirs() if you need to fix the
+ * database locations; however, you must do this _before_ the first census
+ * lookup.
  *
- * \tparam ObjectType the type of object stored in this collection of databases;
- * this would typically be `Triangulation<3>` or `Link`.
+ * \warning This class is not thread-safe, since (as noted above) it performs
+ * global initialisation the first time that a 3-manifold lookup is performed,
+ * and also the first time that a link lookup is performed.  If you need thread
+ * safety, you can always call lookup() with an empty string when initialising
+ * your program, before spawning any other threads.
+ *
+ * \tparam ObjectType the type of object stored in this collection of databases.
+ * At present, this must be `Triangulation<3>` or `Link`.
+ *
+ * \python Python does not support C++ templates.  For triangulations, you
+ * should append the dimension as a suffix to the type name (e.g.,
+ * `CensusCollection3` for the object type `Triangulation<3>`); for links
+ * you should use the type name `CensusCollectionLink`.
  *
  * \ingroup census
  */
 template <SignatureReconstructible ObjectType>
 class CensusCollection {
     private:
-        std::vector<CensusDB> databases_;
+        inline static std::vector<CensusDB> databases_ {};
             /**< The databases in this collection. */
-        size_t maxSize_ { 0 };
+        inline static size_t maxSize_ { 0 };
             /**< The maximum size (number of crossings, or number of
                  top-dimensional simplices) of any object stored in any of
                  these databases. */
 
     public:
-        /**
-         * Creates an empty collection of databases.
-         */
-        CensusCollection() = default;
-        /**
-         * Creates a new copy of the given collection.
-         */
-        CensusCollection(const CensusCollection&) = default;
-        /**
-         * Moves the given collection into this new object.
-         *
-         * The collection that was passed will no longer be usable.
-         */
-        CensusCollection(CensusCollection&&) noexcept = default;
-        /**
-         * Sets this to be a copy of the given collection.
-         *
-         * \return a reference to this collection.
-         */
-        CensusCollection& operator = (const CensusCollection&) = default;
-        /**
-         * Moves the given collectioninto this object.
-         *
-         * The collection that was passed will no longer be usable.
-         *
-         * \return a reference to this collection.
-         */
-        CensusCollection& operator = (CensusCollection&&) noexcept = default;
-        /**
-         * Swaps the contents of this and the given collection.
-         *
-         * \param other the collection whose contents are to be swapped with
-         * this.
-         */
-        void swap(CensusCollection& other) noexcept;
-
-        /**
-         * Determines whether this collection of databases is empty.
-         *
-         * \return `true` if and only if there are no databases in this
-         * collection.
-         */
-        bool empty() const;
-
-        /**
-         * Appends a new database to the end of this collection.
-         * The database will not be given an identifying tag.
-         *
-         * The database is assumed to be one of Regina's in-built census
-         * databases, stored in the standard census database location
-         * described by `GlobalDirs::census()`.
-         *
-         * \param basename the base of the database filename, with no file
-         * extension and no directory information.
-         * \param desc a human-readable description for the database.
-         * \param maxSize the maximum number of top-dimensional simplices and/or
-         * crossings for any entry in the database.  This must not be zero.
-         */
-        void appendDB(const char* basename, const char* desc, size_t maxSize);
-
-        /**
-         * Reserves space for the given number of databases in this collection.
-         *
-         * This is like `std::vector::reserve()`: it is ultimately harmless if
-         * the given size estimate turns out to be wrong.
-         *
-         * \param the new capacity for this collection of databases.
-         */
-        void reserve(size_t capacity);
-
-        /**
-         * Appends a new database to the end of this collection.
-         *
-         * The database is assumed to be one of Regina's in-built census
-         * databases, stored in the standard census database location
-         * described by `GlobalDirs::census()`.
-         *
-         * \param basename the base of the database filename, with no file
-         * extension and no directory information.
-         * \param desc a human-readable description for the database.
-         * \param tag a short human-readable string that identifies this
-         * database; see CensusDB::tag() for further information on how tags
-         * are used.
-         * \param maxSize the maximum number of top-dimensional simplices and/or
-         * crossings for any entry in the database.  This must not be zero.
-         */
-        void appendDB(const char* basename, const char* desc, const char* tag,
-                size_t maxSize);
-
         /**
          * Searches for the given object within all of the databases in this
          * collection.
@@ -579,7 +504,7 @@ class CensusCollection {
          * \param object the object that you wish to search for.
          * \return a list of all database matches.
          */
-        std::list<CensusHit> lookup(const ObjectType& object);
+        static std::list<CensusHit> lookup(const ObjectType& object);
 
         /**
          * Searches for the object with the given signature within all of the
@@ -610,23 +535,19 @@ class CensusCollection {
          * first-generation or second-generation.
          * \return a list of all database matches.
          */
-        std::list<CensusHit> lookup(const std::string& sig);
-};
+        static std::list<CensusHit> lookup(const std::string& sig);
 
-/**
- * Swaps the contents of the given database collections.
- *
- * This global routine simply calls CensusCollection::swap(); it is provided
- * so that CensusCollection meets the C++ Swappable requirements.
- *
- * \param a the first database collection whose contents should be swapped.
- * \param b the second database collection whose contents should be swapped.
- *
- * \ingroup census
- */
-template <SignatureReconstructible ObjectType>
-void swap(CensusCollection<ObjectType>& a, CensusCollection<ObjectType>& b)
-    noexcept;
+        // Make this class non-constructible.
+        CensusCollection() = delete;
+
+    private:
+        /**
+         * Fills this database collection with the relevant in-built databases
+         * that are shipped with Regina.  This function must be specialised
+         * for each supported \a ObjectType.
+         */
+        static void init();
+};
 
 /**
  * Searches for triangulations and link diagrams across Regina's in-built
@@ -638,10 +559,10 @@ void swap(CensusCollection<ObjectType>& a, CensusCollection<ObjectType>& b)
  *
  * This class does not initialise the list of databases until the first time
  * they are needed by a lookup routine; moreover, it initialises the 3-manifold
- * databases independently from the link databases.  This means that you _can_
- * call GlobalDirs::setDirs() or GlobalDirs::deduceDirs() if you need to;
- * however, to ensure that the new directory configuration is respected, you
- * must make this GlobalDirs call _before_ the first census lookup.
+ * databases independently from the link databases.  This means that you can
+ * call GlobalDirs::setDirs() or GlobalDirs::deduceDirs() if you need to fix
+ * the database locations; however, you must do this _before_ the first census
+ * lookup.
  *
  * \warning This class is not thread-safe, since (as noted above) it performs
  * global initialisation the first time that a 3-manifold lookup is performed,
@@ -652,14 +573,6 @@ void swap(CensusCollection<ObjectType>& a, CensusCollection<ObjectType>& b)
  * \ingroup census
  */
 class Census {
-    private:
-        /**
-         * The in-built census databases for the given type of object, or the
-         * empty collection if these have not yet been initialised.
-         */
-        template <SignatureReconstructible ObjectType>
-        inline static CensusCollection<ObjectType> databases_ {};
-
     public:
         /**
          * Searches for the given triangulation or link diagram within all of
@@ -688,8 +601,8 @@ class Census {
          * Typically this would indicate that some database could not be opened
          * (e.g., it might not be installed correctly on the system).
          *
-         * \tparam ObjectType the type of object that you are searching for;
-         * this would typically be `Triangulation<3>` or `Link`.
+         * \tparam ObjectType the type of object that you are searching for.
+         * At present, this must be `Triangulation<3>` or `Link`.
          *
          * \param object the triangulation or link diagram that you wish to
          * search for.
@@ -756,8 +669,8 @@ class Census {
          * Typically this would indicate that some database could not be opened
          * (e.g., it might not be installed correctly on the system).
          *
-         * \tparam ObjectType the type of object that you are searching for;
-         * this would typically be `Triangulation<3>` or `Link`.
+         * \tparam ObjectType the type of object that you are searching for.
+         * At present, this must be `Triangulation<3>` or `Link`.
          *
          * \param sig the isomorphism signature or knot/link signature of the
          * triangulation or link diagram that you wish to search for; this may
@@ -797,17 +710,6 @@ class Census {
 
         // Make this class non-constructible.
         Census() = delete;
-
-    private:
-        /**
-         * Fills the database collection for the given object type with the
-         * relevant in-built databases that are shipped with Regina.
-         *
-         * \tparam ObjectType the type of object stored in the collection in
-         * question; this would typically be `Triangulation<3>` or `Link`.
-         */
-        template <SignatureReconstructible ObjectType>
-        static void fillDatabases();
 };
 
 // Inline functions for CensusDB:
@@ -852,7 +754,7 @@ inline void CensusDB::swap(CensusDB& other) noexcept {
 }
 
 inline bool CensusDB::operator == (const CensusDB& rhs) const {
-    return filename_ == rhs.filename_;
+    return filename_ == rhs.filename_ && maxSize_ == rhs.maxSize_;
 }
 
 inline void swap(CensusDB& a, CensusDB& b) noexcept {
@@ -890,61 +792,16 @@ inline void swap(CensusHit& a, CensusHit& b) noexcept {
     a.swap(b);
 }
 
-// Inline functions for CensusCollection:
-
-template <SignatureReconstructible ObjectType>
-inline void CensusCollection<ObjectType>::swap(CensusCollection& other)
-        noexcept {
-    databases_.swap(other);
-    std::swap(maxSize_, other.maxSize_);
-}
-
-template <SignatureReconstructible ObjectType>
-inline bool CensusCollection<ObjectType>::empty() const {
-    return databases_.empty();
-}
-
-template <SignatureReconstructible ObjectType>
-inline void CensusCollection<ObjectType>::appendDB(const char* basename,
-        const char* desc, size_t maxSize) {
-    databases_.push_back(CensusDB::global(basename, desc, maxSize));
-    if (maxSize > maxSize_)
-        maxSize_ = maxSize;
-}
-
-template <SignatureReconstructible ObjectType>
-inline void CensusCollection<ObjectType>::reserve(size_t capacity) {
-    databases_.reserve(capacity);
-}
-
-template <SignatureReconstructible ObjectType>
-inline void CensusCollection<ObjectType>::appendDB(const char* basename,
-        const char* desc, const char* tag, size_t maxSize) {
-    databases_.push_back(CensusDB::global(basename, desc, tag, maxSize));
-    if (maxSize > maxSize_)
-        maxSize_ = maxSize;
-}
-
-template <SignatureReconstructible ObjectType>
-inline void swap(CensusCollection<ObjectType>& a,
-        CensusCollection<ObjectType>& b) noexcept {
-    a.swap(b);
-}
-
 // Inline functions for Census:
 
 template <SignatureReconstructible ObjectType>
 inline std::list<CensusHit> Census::lookup(const ObjectType& object) {
-    if (databases_<ObjectType>.empty())
-        fillDatabases<ObjectType>();
-    return databases_<ObjectType>.lookup(object);
+    return CensusCollection<ObjectType>::lookup(object);
 }
 
 template <SignatureReconstructible ObjectType>
 inline std::list<CensusHit> Census::lookupAs(const std::string& sig) {
-    if (databases_<ObjectType>.empty())
-        fillDatabases<ObjectType>();
-    return databases_<ObjectType>.lookup(sig);
+    return CensusCollection<ObjectType>::lookup(sig);
 }
 
 } // namespace regina

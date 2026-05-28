@@ -60,32 +60,39 @@ std::list<CensusHit> Census::lookup(const std::string& sig) {
 }
 
 template <>
-void Census::fillDatabases<Triangulation<3>>() {
-    using Tri = Triangulation<3>;
-    databases_<Tri>.reserve(6);
-    databases_<Tri>.appendDB("closed-or-census-11",
-        "Closed census (orientable)", 11);
-    databases_<Tri>.appendDB("closed-nor-census-11",
-        "Closed census (non-orientable)", 11);
-    databases_<Tri>.appendDB("closed-hyp-census-full",
-        "Hodgson-Weeks closed hyperbolic census", 32);
-    databases_<Tri>.appendDB("cusped-hyp-or-census-9",
-        "Cusped hyperbolic census (orientable)", 9);
-    databases_<Tri>.appendDB("cusped-hyp-nor-census-9",
-        "Cusped hyperbolic census (non-orientable)", 9);
-    databases_<Tri>.appendDB("christy-knots-links",
-        "Christy's collection of knot/link complements", 22);
+void CensusCollection<Triangulation<3>>::init() {
+    // IMPORTANT: Do not forget to update the maximum sizes (both in each
+    // CensusDB creation and also at the end of this list) if/when the
+    // databases change!
+    databases_.reserve(6);
+    databases_.push_back(CensusDB::global("closed-or-census-11",
+        "Closed census (orientable)", 11));
+    databases_.push_back(CensusDB::global("closed-nor-census-11",
+        "Closed census (non-orientable)", 11));
+    databases_.push_back(CensusDB::global("closed-hyp-census-full",
+        "Hodgson-Weeks closed hyperbolic census", 32));
+    databases_.push_back(CensusDB::global("cusped-hyp-or-census-9",
+        "Cusped hyperbolic census (orientable)", 9));
+    databases_.push_back(CensusDB::global("cusped-hyp-nor-census-9",
+        "Cusped hyperbolic census (non-orientable)", 9));
+    databases_.push_back(CensusDB::global("christy-knots-links",
+        "Christy's collection of knot/link complements", 22));
+    maxSize_ = 32;
 }
 
 template <>
-void Census::fillDatabases<Link>() {
-    databases_<Link>.reserve(3);
-    databases_<Link>.appendDB("classical",
-        "Prime classical knots", "classical", 16);
-    databases_<Link>.appendDB("virtual",
-        "Virtual knots", "virtual", 6);
-    databases_<Link>.appendDB("green",
-        "Green's virtual knots", "Green", 6);
+void CensusCollection<Link>::init() {
+    // IMPORTANT: Do not forget to update the maximum sizes (both in each
+    // CensusDB creation and also at the end of this list) if/when the
+    // databases change!
+    databases_.reserve(3);
+    databases_.push_back(CensusDB::global("classical",
+        "Prime classical knots", "classical", 16));
+    databases_.push_back(CensusDB::global("virtual",
+        "Virtual knots", "virtual", 6));
+    databases_.push_back(CensusDB::global("green",
+        "Green's virtual knots", "Green", 6));
+    maxSize_ = 16;
 }
 
 // Instantiate this template, which we use in the python bindings.
@@ -95,10 +102,10 @@ template void CensusDB::lookupKey<2, const std::function<void(CensusHit&&)>&>(
 // Other instantiations that we need:
 template std::list<CensusHit> CensusCollection<Triangulation<3>>::lookup(
     const Triangulation<3>&);
-template std::list<CensusHit> CensusCollection<Link>::lookup(const Link&);
-
 template std::list<CensusHit> CensusCollection<Triangulation<3>>::lookup(
     const std::string&);
+
+template std::list<CensusHit> CensusCollection<Link>::lookup(const Link&);
 template std::list<CensusHit> CensusCollection<Link>::lookup(
     const std::string&);
 

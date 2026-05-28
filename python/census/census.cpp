@@ -46,6 +46,25 @@ using regina::CensusHit;
 using regina::Link;
 using regina::Triangulation;
 
+template <regina::SignatureReconstructible ObjectType>
+void addCensusCollection(pybind11::module_& m, const char* name) {
+    using Collection = regina::CensusCollection<ObjectType>;
+
+    RDOC_SCOPE_BEGIN(CensusCollection)
+
+    auto c = pybind11::class_<Collection>(m, name, rdoc::__class)
+        .def_static("lookup",
+            overload_cast<const ObjectType&>(&Collection::lookup),
+            rdoc::lookup)
+        .def_static("lookup",
+            overload_cast<const std::string&>(&Collection::lookup),
+            rdoc::lookup_2)
+    ;
+    regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_END
+}
+
 void addCensus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(CensusDB)
 
@@ -122,5 +141,8 @@ void addCensus(pybind11::module_& m) {
     regina::python::no_eq_static(c);
 
     RDOC_SCOPE_END
+
+    addCensusCollection<Triangulation<3>>(m, "CensusCollection3");
+    addCensusCollection<Link>(m, "CensusCollectionLink");
 }
 

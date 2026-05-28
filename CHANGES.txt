@@ -99,13 +99,15 @@ Version 8.0  [ TODO ]
         Class CallableArg<...>:
             - This is now deprecated, since its implementation is drifting
               increasingly further away from modern C++ standards.
-        Class Census:
+        Class Census, CensusCollection:
             - Added support for knot/link databases.  This includes converting
-              the old lookup(const Triangulation<3>&) into a template function
-              that can take either a triangulation or a link diagram, plus a
-              new template function lookupAs<ObjectType>(signature).
-            - The string-based lookup() can now take either a first-generation
-              or second-generation isomorphism signature.
+              Census::lookup(const Triangulation<3>&) into a template function
+              that can now take _either_ a triangulation or a link diagram, plus
+              a new template function Census::lookupAs<ObjectType>(signature).
+            - New class CensusCollection<ObjectType> to support census lookup
+              for a particular object type (3-manifold triangulation or link).
+            - The string-based Census::lookup() can now take either a
+              first-generation or second-generation signature.
             - All lookup routines now throw an exception if they encounter a
               database error.
             - All of Regina's databases are now upgraded to use
@@ -120,6 +122,8 @@ Version 8.0  [ TODO ]
               identifying the database, and the maximum size of triangulation
               or link in the database.  These arguments are accessible via the
               new routines tag() and maxSize().
+            - The comparision operators (==, !=) now also compare the maximum
+              sizes that were passed to the class constructor.
             - New routine global() for accessing Regina's in-built databases.
         Class ChildIterator<const_>:
             - The type std::iterator_traits<ChildIterator<...>>::value_type

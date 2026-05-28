@@ -211,6 +211,9 @@ void CensusDB::lookupKey(const std::string& sig, Action&& action) const {
 template <SignatureReconstructible ObjectType>
 std::list<CensusHit> CensusCollection<ObjectType>::lookup(
         const ObjectType& object) {
+    if (databases_.empty())
+        init();
+
     size_t size = object.size();
     if (size > maxSize_)
         return {}; // there will be no hits
@@ -232,6 +235,9 @@ std::list<CensusHit> CensusCollection<ObjectType>::lookup(
 template <SignatureReconstructible ObjectType>
 std::list<CensusHit> CensusCollection<ObjectType>::lookup(
         const std::string& sig) {
+    if (databases_.empty())
+        init();
+
     size_t size;
     try {
         if constexpr (std::same_as<ObjectType, Link>) {
