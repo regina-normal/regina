@@ -273,14 +273,17 @@ static void verifyLookup(const char* isoSig, const char* name) {
     EXPECT_EQ(hits.front().name(), name);
 }
 
-static void verifyLookup(const char* isoSig, const char* name1,
-        const char* name2) {
+static void verifyLookup(const char* isoSig,
+        std::initializer_list<std::string> names) {
     SCOPED_TRACE_CSTRING(isoSig);
 
     auto hits = Census::lookup(isoSig);
-    ASSERT_EQ(hits.size(), 2);
-    EXPECT_EQ(hits.front().name(), name1);
-    EXPECT_EQ(hits.back().name(), name2);
+    ASSERT_EQ(hits.size(), names.size());
+
+    auto a = hits.begin();
+    auto b = names.begin();
+    for ( ; a != hits.end(); ++a, ++b)
+        EXPECT_EQ(a->name(), *b);
 }
 
 TEST_F(CensusTest, lookup) {
@@ -298,26 +301,24 @@ TEST_F(CensusTest, lookup) {
         "SFS [S2: (2,1) (3,1) (5,-4)] : #1");
     // Closed orientable & closed hyperbolic censuses:
     verifyLookup("kFsYkeXlZ-pa2bpzGfLd",
-        "Hyp_1.28448530 (Z_6) : #12",
-        "1.2844853004683544 : m004(6, 1)");
+        { "Hyp_1.28448530 (Z_6) : #12", "1.2844853004683544 : m004(6, 1)" });
     verifyLookup("kLLvLQQkcdjgjijhihihsfrovojgng",
-        "Hyp_1.28448530 (Z_6) : #12",
-        "1.2844853004683544 : m004(6, 1)");
+        { "Hyp_1.28448530 (Z_6) : #12", "1.2844853004683544 : m004(6, 1)" });
     // Closed non-orientable census:
     verifyLookup("gtJLT-bUykjdt", "T x I / [ 1,1 | 1,0 ] : #1");
     verifyLookup("gvLQQcdefeffdwnplhe", "T x I / [ 1,1 | 1,0 ] : #1");
     // Cusped orientable census, hyperbolic knots & links:
-    verifyLookup("cV6cqb", "m004 : #1", "L104001");
-    verifyLookup("cPcbbbiht", "m004 : #1", "L104001");
+    verifyLookup("cV6cqb", { "m004 : #1", "L104001" });
+    verifyLookup("cPcbbbiht", { "m004 : #1", "L104001" });
     // Cusped non-orientable census:
     verifyLookup("bJrc", "m000 : #1");
     verifyLookup("bkaaid", "m000 : #1");
     // Hyperbolic knots & links, multiple hits:
-    verifyLookup("k3WQS7WmZ7pbm6QZelNa", "L408001", "L410005");
-    verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt", "L408001", "L410005");
+    verifyLookup("k3WQS7WmZ7pbm6QZelNa", { "L408001", "L410005" });
+    verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt", { "L408001", "L410005" });
     // Classical and virtual knots:
-    verifyLookup("eputWe", "4ah_1", "v4_1");
-    verifyLookup("eabcdbadcvbZa", "4ah_1", "v4_1");
+    verifyLookup("eputWe", { "4ah_1", "v4_1", "4.108" });
+    verifyLookup("eabcdbadcvbZa", { "4ah_1", "v4_1", "4.108" });
 
     // Ensure that our maxSize() optimisation does not cut out any hits.
     // The following examples are of the largest size in each database.
@@ -345,8 +346,8 @@ TEST_F(CensusTest, lookup) {
     verifyLookup(
         "wLvLLAPMvMMwPQPkcehfjijklpmqopttruuvuvviadcfvfamncargetcnndchh",
         "L111314");
-    verifyLookup("gZmxZiAS", "v6_452");
-    verifyLookup("gababcdcdefeftMp8", "v6_452");
+    verifyLookup("gZmxZiAS", { "v6_452", "6.1176" });
+    verifyLookup("gababcdcdefeftMp8", { "v6_452", "6.1176" });
     verifyLookup("qVzZziSzvp8rqmaKYXOsOvZ9y",
         "16nh_0784279");
     verifyLookup("qabcdbefcdghaijefklmhgnokjilpnopmRszvvbFMZHhc",

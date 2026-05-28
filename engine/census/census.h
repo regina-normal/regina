@@ -58,8 +58,8 @@ template <int dim> requires (supportedDim(dim)) class Triangulation;
  */
 
 /**
- * Stores the location and description of one of Regina's in-built census
- * databases.
+ * Stores the location and other identifying information for one of Regina's
+ * in-built census databases.
  *
  * A census database stores a list of key-value pairs.  The keys are
  * isomorphism signatures of triangulations or knot/link signatures (currently
@@ -95,7 +95,10 @@ class CensusDB {
         std::string filename_;
             /**< The filename where the database is stored. */
         std::string desc_;
-            /**< A human-readable description of this database. */
+            /**< A detailed human-readable description of this database. */
+        std::string tag_;
+            /**< A short human-readable string that identifies this database,
+                 or the empty string if no such tag is necessary. */
         size_t maxSize_;
             /**< The maximum number of top-dimensional simplices and/or
                  crossings for any entry in the database, or 0 if this is not
@@ -118,11 +121,15 @@ class CensusDB {
          * \param desc a human-readable description of the database.
          * See the desc() routine for further information on how this
          * description might be used.
+         * \param tag a short human-readable string that identifies this
+         * database, or the empty string if no such tag is necessary.
+         * See tag() for further information on how tags are used.
          * \param maxSize the maximum number of top-dimensional simplices and/or
          * crossings for any entry in the database, or 0 (the default) if this
          * is not known.  This can be used to optimise database lookups.
          */
-        CensusDB(std::string filename, std::string desc, size_t maxSize = 0);
+        CensusDB(std::string filename, std::string desc,
+            std::string tag = {}, size_t maxSize = 0);
 
         /**
          * Creates a new clone of the given database reference.
@@ -143,6 +150,9 @@ class CensusDB {
          * The database will be assumed to live in the directory
          * `GlobalDirs::census()`.
          *
+         * This variant of global() will not give the database an identifying
+         * tag.
+         *
          * \param basename the base of the database filename, with no file
          * extension and no directory information.
          * \param desc a human-readable description for the database.
@@ -153,6 +163,26 @@ class CensusDB {
          */
         static CensusDB global(const char* basename, const char* desc,
             size_t maxSize = 0);
+
+        /**
+         * Returns a reference to one of Regina's in-built census databases,
+         * stored in the standard census database location on the filesystem.
+         *
+         * The database will be assumed to live in the directory
+         * `GlobalDirs::census()`.
+         *
+         * \param basename the base of the database filename, with no file
+         * extension and no directory information.
+         * \param desc a human-readable description for the database.
+         * \param tag a short human-readable string that identifies this
+         * database; see tag() for further information on how tags are used.
+         * \param maxSize the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in the database, or 0 (the default) if this
+         * is not known.  This can be used to optimise database lookups.
+         * \return the resulting database reference.
+         */
+        static CensusDB global(const char* basename, const char* desc,
+            const char* tag, size_t maxSize = 0);
 
         /**
          * Returns the filename where this database is stored.
@@ -173,6 +203,23 @@ class CensusDB {
         const std::string& desc() const;
 
         /**
+         * Returns a short human-readable string that identifies this database,
+         * or the empty string if no such tag has been deemed necessary.
+         *
+         * Tags may be used in scenarios where triangulations or link diagrams
+         * are likely to appear in multiple databases, and where the name of
+         * a triangulation or link may be confusing without knowledge of
+         * which database it came from.
+         *
+         * An example is Regina's virtual knot census versus Regina's classical
+         * knot census, which use the tags `virtual` and `classical`
+         * respectively.
+         *
+         * \return the database tag, or the empty string if there is no tag.
+         */
+        const std::string& tag() const;
+
+        /**
          * Returns the maximum number of top-dimensional simplices and/or
          * crossings for any entry in this database, or 0 if this information
          * is not known.
@@ -181,7 +228,8 @@ class CensusDB {
          * (in particular, to avoid lookups entirely when it is known that the
          * key will not be found).
          *
-         * \return the database description.
+         * \return the maximum number of top-dimensional simplices and/or
+         * crossings.
          */
         size_t maxSize() const;
 
@@ -265,7 +313,7 @@ class CensusDB {
          *
          * Two databases are considered the same if they have identical
          * filenames (as returned by the filename() function).  The database
-         * descriptions are irrelevant here.
+         * descriptions and tags are irrelevant here.
          *
          * \param rhs the database to compare this against.
          * \return \c true if and only if this and the given object represent
@@ -572,14 +620,20 @@ class Census {
 // Inline functions for CensusDB:
 
 inline CensusDB::CensusDB(std::string filename, std::string desc,
-        size_t maxSize) : filename_(std::move(filename)),
-        desc_(std::move(desc)), maxSize_(maxSize) {
+        std::string tag, size_t maxSize) : filename_(std::move(filename)),
+        desc_(std::move(desc)), tag_(std::move(tag)), maxSize_(maxSize) {
 }
 
 inline CensusDB CensusDB::global(const char* basename, const char* desc,
         size_t maxSize) {
     return CensusDB(GlobalDirs::census() + "/" + basename + "." REGINA_DB_EXT,
-        desc, maxSize);
+        desc, {} /* no tag */, maxSize);
+}
+
+inline CensusDB CensusDB::global(const char* basename, const char* desc,
+        const char* tag, size_t maxSize) {
+    return CensusDB(GlobalDirs::census() + "/" + basename + "." REGINA_DB_EXT,
+        desc, tag, maxSize);
 }
 
 inline const std::string& CensusDB::filename() const {
@@ -590,6 +644,10 @@ inline const std::string& CensusDB::desc() const {
     return desc_;
 }
 
+inline const std::string& CensusDB::tag() const {
+    return tag_;
+}
+
 inline size_t CensusDB::maxSize() const {
     return maxSize_;
 }
@@ -597,6 +655,7 @@ inline size_t CensusDB::maxSize() const {
 inline void CensusDB::swap(CensusDB& other) noexcept {
     filename_.swap(other.filename_);
     desc_.swap(other.desc_);
+    tag_.swap(other.tag_);
 }
 
 inline bool CensusDB::operator == (const CensusDB& rhs) const {

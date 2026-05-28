@@ -22,19 +22,22 @@ Hits: 2
   Christy's collection of knot/link complements  -  L111449
 
 SEARCH: eputWe
-Hits: 2
+Hits: 3
   Prime classical knots  -  4ah_1
-  Prime virtual knots  -  v4_1
+  Virtual knots  -  v4_1
+  Green's virtual knots  -  4.108
 
 SEARCH: eabcdbadcvbZa
-Hits: 2
+Hits: 3
   Prime classical knots  -  4ah_1
-  Prime virtual knots  -  v4_1
+  Virtual knots  -  v4_1
+  Green's virtual knots  -  4.108
 
 SEARCH: <class 'regina.engine.Link'> eputWe
-Hits: 2
+Hits: 3
   Prime classical knots  -  4ah_1
-  Prime virtual knots  -  v4_1
+  Virtual knots  -  v4_1
+  Green's virtual knots  -  4.108
 
 SEARCH: <class 'regina.engine.Triangulation3'> eputWe
 Hits: 0

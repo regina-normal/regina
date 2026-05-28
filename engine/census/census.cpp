@@ -76,13 +76,13 @@ std::list<CensusHit> Census::lookupAs<Triangulation<3>>(
         tri3_.push_back(CensusDB::global("closed-nor-census-11",
             "Closed census (non-orientable)", 11));
         tri3_.push_back(CensusDB::global("closed-hyp-census-full",
-            "Hodgson-Weeks closed hyperbolic census", 32));
+            "Hodgson-Weeks closed hyperbolic census", "Hodgson-Weeks", 32));
         tri3_.push_back(CensusDB::global("cusped-hyp-or-census-9",
             "Cusped hyperbolic census (orientable)", 9));
         tri3_.push_back(CensusDB::global("cusped-hyp-nor-census-9",
             "Cusped hyperbolic census (non-orientable)", 9));
         tri3_.push_back(CensusDB::global("christy-knots-links",
-            "Christy's collection of knot/link complements", 22));
+            "Christy's collection of knot/link complements", "Christy", 22));
     }
 
     size_t size;
@@ -124,11 +124,11 @@ std::list<CensusHit> Census::lookupAs<Link>(const std::string& sig) {
     if (knots_.empty()) {
         knots_.reserve(3);
         knots_.push_back(CensusDB::global("classical",
-            "Prime classical knots", 16));
+            "Prime classical knots", "classical", 16));
         knots_.push_back(CensusDB::global("virtual",
-            "Prime virtual knots", 6));
+            "Virtual knots", "virtual", 6));
         knots_.push_back(CensusDB::global("green",
-            "Green's virtual knot tables", 6));
+            "Green's virtual knots", "Green", 6));
     }
 
     std::list<CensusHit> hits;

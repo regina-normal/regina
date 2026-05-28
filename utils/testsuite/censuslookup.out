@@ -1,7 +1,7 @@
 ============================================================
 TEST: censuslookup
 --------------------
-Please specify one or more isomorphism signatures.
+Please specify one or more isomorphism signatures or knot/link signatures.
 
 Usage:
     censuslookup <sig> ...
@@ -109,27 +109,30 @@ Exit code: 0
 ============================================================
 TEST: censuslookup eputWe
 --------------------
-eputWe: 2 hits
+eputWe: 3 hits
     4ah_1 -- Prime classical knots
-    v4_1 -- Prime virtual knots
+    v4_1 -- Virtual knots
+    4.108 -- Green's virtual knots
 
 --------------------
 Exit code: 0
 ============================================================
 TEST: censuslookup eabcdbadcvbZa
 --------------------
-eabcdbadcvbZa: 2 hits
+eabcdbadcvbZa: 3 hits
     4ah_1 -- Prime classical knots
-    v4_1 -- Prime virtual knots
+    v4_1 -- Virtual knots
+    4.108 -- Green's virtual knots
 
 --------------------
 Exit code: 0
 ============================================================
 TEST: censuslookup eputWe cPcbbbiht
 --------------------
-eputWe: 2 hits
+eputWe: 3 hits
     4ah_1 -- Prime classical knots
-    v4_1 -- Prime virtual knots
+    v4_1 -- Virtual knots
+    4.108 -- Green's virtual knots
 
 cPcbbbiht: 2 hits
     m004 : #1 -- Cusped hyperbolic census (orientable)

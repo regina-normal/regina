@@ -160,6 +160,12 @@ correct generation), and then it performs a logarithmic-time lookup in
 each database (where "logarithmic" means logarithmic in the size of
 the database).
 
+Python:
+    Python does not support C++ templates. Instead you should pass the
+    object type at runtime, using the argument order
+    ``lookupAs(objectType, sig)``. An example that uses the signature
+    of the figure eight knot is ``lookupAs(Link, "eputWe")``.
+
 Exception ``FileError``:
     An error occurred within one of the databases. Typically this
     would indicate that some database could not be opened (e.g., it
@@ -183,8 +189,8 @@ struct CensusDB {
 
 // Docstring regina::python::doc::CensusDB::__class
 static constexpr const char __class[] =
-R"doc(Stores the location and description of one of Regina's in-built census
-databases.
+R"doc(Stores the location and other identifying information for one of
+Regina's in-built census databases.
 
 A census database stores a list of key-value pairs. The keys are
 isomorphism signatures of triangulations or knot/link signatures
@@ -224,7 +230,7 @@ R"doc(Tests whether this and the given object represent the same database.
 
 Two databases are considered the same if they have identical filenames
 (as returned by the filename() function). The database descriptions
-are irrelevant here.
+and tags are irrelevant here.
 
 Parameter ``rhs``:
     the database to compare this against.
@@ -253,6 +259,11 @@ Parameter ``desc``:
     a human-readable description of the database. See the desc()
     routine for further information on how this description might be
     used.
+
+Parameter ``tag``:
+    a short human-readable string that identifies this database, or
+    the empty string if no such tag is necessary. See tag() for
+    further information on how tags are used.
 
 Parameter ``maxSize``:
     the maximum number of top-dimensional simplices and/or crossings
@@ -285,12 +296,42 @@ stored in the standard census database location on the filesystem.
 The database will be assumed to live in the directory
 ``GlobalDirs::census()``.
 
+This variant of global() will not give the database an identifying
+tag.
+
 Parameter ``basename``:
     the base of the database filename, with no file extension and no
     directory information.
 
 Parameter ``desc``:
     a human-readable description for the database.
+
+Parameter ``maxSize``:
+    the maximum number of top-dimensional simplices and/or crossings
+    for any entry in the database, or 0 (the default) if this is not
+    known. This can be used to optimise database lookups.
+
+Returns:
+    the resulting database reference.)doc";
+
+// Docstring regina::python::doc::CensusDB::global_2
+static constexpr const char global_2[] =
+R"doc(Returns a reference to one of Regina's in-built census databases,
+stored in the standard census database location on the filesystem.
+
+The database will be assumed to live in the directory
+``GlobalDirs::census()``.
+
+Parameter ``basename``:
+    the base of the database filename, with no file extension and no
+    directory information.
+
+Parameter ``desc``:
+    a human-readable description for the database.
+
+Parameter ``tag``:
+    a short human-readable string that identifies this database; see
+    tag() for further information on how tags are used.
 
 Parameter ``maxSize``:
     the maximum number of top-dimensional simplices and/or crossings
@@ -381,7 +422,7 @@ particular, to avoid lookups entirely when it is known that the key
 will not be found).
 
 Returns:
-    the database description.)doc";
+    the maximum number of top-dimensional simplices and/or crossings.)doc";
 
 // Docstring regina::python::doc::CensusDB::swap
 static constexpr const char swap[] =
@@ -389,6 +430,23 @@ R"doc(Swaps the contents of this and the given database reference.
 
 Parameter ``other``:
     the database reference whose contents are to be swapped with this.)doc";
+
+// Docstring regina::python::doc::CensusDB::tag
+static constexpr const char tag[] =
+R"doc(Returns a short human-readable string that identifies this database,
+or the empty string if no such tag has been deemed necessary.
+
+Tags may be used in scenarios where triangulations or link diagrams
+are likely to appear in multiple databases, and where the name of a
+triangulation or link may be confusing without knowledge of which
+database it came from.
+
+An example is Regina's virtual knot census versus Regina's classical
+knot census, which use the tags ``virtual`` and ``classical``
+respectively.
+
+Returns:
+    the database tag, or the empty string if there is no tag.)doc";
 
 }; // struct CensusDB
 

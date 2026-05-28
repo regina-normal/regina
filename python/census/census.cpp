@@ -50,14 +50,22 @@ void addCensus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(CensusDB)
 
     auto db = pybind11::class_<CensusDB>(m, "CensusDB", rdoc::__class)
-        .def(pybind11::init<const std::string&, const std::string&, size_t>(),
-            "filename"_a, "desc"_a, "maxSize"_a = 0, rdoc::__init)
+        .def(pybind11::init<const std::string&, const std::string&,
+                const std::string&, size_t>(),
+            "filename"_a, "desc"_a, "tag"_a = std::string(), "maxSize"_a = 0,
+            rdoc::__init)
         .def(pybind11::init<const CensusDB&>(), rdoc::__copy)
-        .def_static("global", &CensusDB::global,
+        .def_static("global",
+            overload_cast<const char*, const char*, size_t>(&CensusDB::global),
             "basename"_a, "desc"_a, "maxSize"_a = 0, rdoc::global)
+        .def_static("global",
+            overload_cast<const char*, const char*, const char*, size_t>(
+                &CensusDB::global),
+            "basename"_a, "desc"_a, "tag"_a, "maxSize"_a = 0, rdoc::global_2)
         .def("filename", &CensusDB::filename, rdoc::filename)
         .def("maxSize", &CensusDB::maxSize, rdoc::maxSize)
         .def("desc", &CensusDB::desc, rdoc::desc)
+        .def("tag", &CensusDB::tag, rdoc::tag)
         .def("swap", &CensusDB::swap, rdoc::swap)
         .def("lookupKey", [](const CensusDB& db, int generation,
                 const std::string& isoSig,
