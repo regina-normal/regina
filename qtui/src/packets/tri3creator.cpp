@@ -115,7 +115,7 @@ namespace {
         R"((?:[^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+))*)"
         R"([^0-9\-]*$)");
     const QRegularExpression reSFSParamPair(R"((-?\d+)[^0-9\-]+(-?\d+))");
-    const QRegularExpression reIsoSig(R"(^([A-Za-z0-9+-]+)$)");
+    const QRegularExpression reIsoSig(R"(^([A-Za-z0-9.+-]+)$)");
     const QRegularExpression reDehydration(R"(^([A-Za-z]+)$)");
     const QRegularExpression reSignature(R"(^([\(\)\.,;:\|\-A-Za-z]+)$)");
 }

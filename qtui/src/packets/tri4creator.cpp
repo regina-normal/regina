@@ -94,7 +94,7 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    const QRegularExpression reIsoSig("^([A-Za-z0-9+-]+)$");
+    const QRegularExpression reIsoSig("^([A-Za-z0-9.+-]+)$");
 }
 
 Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {

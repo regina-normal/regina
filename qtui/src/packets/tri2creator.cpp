@@ -85,7 +85,7 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    const QRegularExpression reIsoSig("^([A-Za-z0-9+-]+)$");
+    const QRegularExpression reIsoSig("^([A-Za-z0-9.+-]+)$");
 }
 
 Tri2Creator::Tri2Creator(ReginaMain*) {
