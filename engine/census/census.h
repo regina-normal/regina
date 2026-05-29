@@ -482,7 +482,7 @@ void swap(CensusHit& a, CensusHit& b) noexcept;
  *
  * \ingroup census
  */
-template <SignatureReconstructible ObjectType>
+template <SignatureEncodable ObjectType>
 class CensusCollection {
     private:
         inline static std::vector<CensusDB> databases_ {};
@@ -608,7 +608,7 @@ class Census {
          * search for.
          * \return a list of all database matches.
          */
-        template <SignatureReconstructible ObjectType>
+        template <SignatureEncodable ObjectType>
         static std::list<CensusHit> lookup(const ObjectType& object);
         /**
          * Searches for the triangulation or link diagram with the given
@@ -677,7 +677,7 @@ class Census {
          * be either first-generation or second-generation.
          * \return a list of all database matches.
          */
-        template <SignatureReconstructible ObjectType>
+        template <SignatureEncodable ObjectType>
         static std::list<CensusHit> lookupAs(const std::string& sig);
         /**
          * Searches for any triangulation or link diagram with the given
@@ -794,12 +794,12 @@ inline void swap(CensusHit& a, CensusHit& b) noexcept {
 
 // Inline functions for Census:
 
-template <SignatureReconstructible ObjectType>
+template <SignatureEncodable ObjectType>
 inline std::list<CensusHit> Census::lookup(const ObjectType& object) {
     return CensusCollection<ObjectType>::lookup(object);
 }
 
-template <SignatureReconstructible ObjectType>
+template <SignatureEncodable ObjectType>
 inline std::list<CensusHit> Census::lookupAs(const std::string& sig) {
     return CensusCollection<ObjectType>::lookup(sig);
 }

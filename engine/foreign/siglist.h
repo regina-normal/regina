@@ -120,7 +120,7 @@ class Container;
  *
  * \ingroup foreign
  */
-template <SignatureReconstructible ObjectType>
+template <SignatureEncodable ObjectType>
 requires PacketHeldType<ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename,
     int colSigs = 0, int colLabels = -1, size_t ignoreLines = 0);

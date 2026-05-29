@@ -91,7 +91,7 @@ void addConceptsClasses(pybind11::module_& m) {
         "ArbitraryPrecisionIntegerVector");
     add_concept<rdoc::IntegerVector>(m, "IntegerVector");
     add_concept<rdoc::SignatureType>(m, "SignatureType");
-    add_concept<rdoc::SignatureReconstructible>(m, "SignatureReconstructible");
+    add_concept<rdoc::SignatureEncodable>(m, "SignatureEncodable");
 
     RDOC_SCOPE_END
 }

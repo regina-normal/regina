@@ -99,8 +99,8 @@ concept SignatureType =
     };
 
 /**
- * One of Regina's mathematical types that allows reconstruction from
- * string-based signatures, up to combinatorial isomorphism.
+ * One of Regina's mathematical types that allows generation of and
+ * reconstruction from string-based signatures, up to combinatorial isomorphism.
  *
  * In particular, second-generation signatures must be supported via
  * `T::neoSig()`.
@@ -108,7 +108,7 @@ concept SignatureType =
  * Examples of such types include `Triangulation<dim>` and Link.
  */
 template <typename T>
-concept SignatureReconstructible =
+concept SignatureEncodable =
     requires(const T obj, const std::string sig) {
         { T::fromSig(sig) } -> std::same_as<T>;
         { obj.neoSig() } -> std::same_as<std::string>;

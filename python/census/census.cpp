@@ -46,7 +46,7 @@ using regina::CensusHit;
 using regina::Link;
 using regina::Triangulation;
 
-template <regina::SignatureReconstructible ObjectType>
+template <regina::SignatureEncodable ObjectType>
 void addCensusCollection(pybind11::module_& m, const char* name) {
     using Collection = regina::CensusCollection<ObjectType>;
 

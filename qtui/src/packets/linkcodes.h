@@ -41,7 +41,7 @@
 
 class QTextEdit;
 class QComboBox;
-template <regina::SignatureReconstructible ObjectType> class CensusWidget;
+template <regina::SignatureEncodable ObjectType> class CensusWidget;
 
 /**
  * A packet viewer tab for viewing text-based codes for a link.

@@ -565,7 +565,7 @@ SelfSentinelInputIterator : concept
 SigCensus : class -> EqualityType.NeverInstantiated
 SigPartialIsomorphism : class -> EqualityType.ByValue
 Signature : class -> EqualityType.ByValue
-SignatureReconstructible : concept
+SignatureEncodable : concept
 SignatureType : concept
 SignedCppInteger : concept
 SimpleSurfaceBundle : class -> EqualityType.ByValue
