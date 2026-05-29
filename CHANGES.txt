@@ -245,6 +245,8 @@ Version 8.0  [ TODO ]
               The dimension now appears as a template parameter for the
               relevant class constants and static functions, and in most cases
               it can be deduced automatically.
+            - New static routines IsoSigPrintable::generation() and
+              IsoSigPrintable::componentSize().
         Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
             - Now deprecated, in favour of the new concepts
               ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
@@ -280,7 +282,7 @@ Version 8.0  [ TODO ]
               argument that takes both a link and its signature, the signature
               will now be passed as a second-generation signature using a binary
               encoding (so as a byte sequence, not a string).
-            - New routines sigGeneration() and sigDiagramComponentSize().
+            - New routines sigGeneration() and sigComponentSize().
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.
@@ -475,9 +477,10 @@ Version 8.0  [ TODO ]
               order (Encoding, Type).  The Python bindings for these routines
               now take the encoding and type as optional runtime arguments
               (not suffixes to the function names).
-            - The routine isoSigComponentSize() now throws an exception if the
-              signature is found to be invalid, and explicitly supports the
-              empty triangulation.
+            - Renamed isoSigComponentSize() to sigComponentSize(); the old name
+              is kept as a deprecated alias.  This routine now throws an
+              exception if the signature is found to be invalid, and explicitly
+              supports the empty triangulation.
             - New routine sigGeneration().
             - The interfaces for isomorphism signature types and encodings have
               changed; see the changelog for IsoSigClassic / IsoSigDegrees and

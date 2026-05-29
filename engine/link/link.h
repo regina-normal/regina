@@ -6388,9 +6388,9 @@ class Link :
          * See knotSig() and neoSig() for general information on
          * first-generation and second-generation isomorphism signatures.
          *
-         * Regarding connectivity and components:
+         * An important warning regarding connectivity and components:
          *
-         * - If the given signature describes a connected link diagram, this
+         * - If the given signature describes a _connected_ link diagram, this
          *   routine will return the total number of crossings in that diagram.
          *   This is the intended use case for this routine.
          *
@@ -6422,7 +6422,7 @@ class Link :
          * \return the size of the first connected diagram component, or 0 if
          * the given signature describes the empty link.
          */
-        static size_t sigDiagramComponentSize(const std::string& sig);
+        static size_t sigComponentSize(const std::string& sig);
 
         /**
          * Reconstructs a classical or virtual link from its given tight

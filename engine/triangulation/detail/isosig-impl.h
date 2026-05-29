@@ -1171,16 +1171,6 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
 }
 
 template <int dim> requires (supportedDim(dim))
-size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
-    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
-    try {
-        return dec.decodeSize().first;
-    } catch (const InvalidInput&) {
-        throw InvalidArgument("isoSigComponentSize(): invalid signature");
-    }
-}
-
-template <int dim> requires (supportedDim(dim))
 Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
     BitDecoder dec(sig.begin(), sig.end());
 

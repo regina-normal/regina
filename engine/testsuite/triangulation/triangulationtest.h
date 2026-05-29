@@ -1261,7 +1261,7 @@ class TriangulationTest : public testing::Test {
             }
 
             if constexpr (stringBased) {
-                size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
+                size_t sigSize = Triangulation<dim>::sigComponentSize(sig);
                 if (tri.isEmpty()) {
                     EXPECT_EQ(sigSize, 0);
                 } else {
@@ -1270,7 +1270,7 @@ class TriangulationTest : public testing::Test {
                         if (sigSize == tri.component(c)->size())
                             break;
                     if (c == tri.countComponents())
-                        ADD_FAILURE() << "isoSigComponentSize() does not "
+                        ADD_FAILURE() << "sigComponentSize() does not "
                             "match any component";
                 }
             }

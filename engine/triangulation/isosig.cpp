@@ -56,5 +56,14 @@ int IsoSigPrintable::generation(const std::string& sig) {
     }
 }
 
+size_t IsoSigPrintable::componentSize(const std::string& sig) {
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
+    try {
+        return dec.decodeSize().first;
+    } catch (const InvalidInput&) {
+        throw InvalidArgument("Invalid signature");
+    }
+}
+
 } // namespace regina
 

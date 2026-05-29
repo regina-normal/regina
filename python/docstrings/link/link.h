@@ -5578,8 +5578,8 @@ Returns:
     ``std::string`` for string-based encodings, or ByteSequence for
     binary encodings.)doc";
 
-// Docstring regina::python::doc::Link::sigDiagramComponentSize
-static constexpr const char sigDiagramComponentSize[] =
+// Docstring regina::python::doc::Link::sigComponentSize
+static constexpr const char sigComponentSize[] =
 R"doc(Deduces the number of crossings in a connected link diagram from its
 string-based knot/link signature. This may be either a first-
 generation signature (computed via ``knotSig()``), or a second-
@@ -5588,9 +5588,9 @@ generation signature (computed via ``neoSig()``).
 See knotSig() and neoSig() for general information on first-generation
 and second-generation isomorphism signatures.
 
-Regarding connectivity and components:
+An important warning regarding connectivity and components:
 
-* If the given signature describes a connected link diagram, this
+* If the given signature describes a _connected_ link diagram, this
   routine will return the total number of crossings in that diagram.
   This is the intended use case for this routine.
 

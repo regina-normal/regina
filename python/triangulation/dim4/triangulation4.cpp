@@ -462,8 +462,10 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
             rbase::fromIsoSig)
         .def_static("sigGeneration", &Triangulation<4>::sigGeneration,
             rbase::sigGeneration)
-        .def_static("isoSigComponentSize",
-            &Triangulation<4>::isoSigComponentSize, rbase::isoSigComponentSize)
+        .def_static("sigComponentSize",
+            &Triangulation<4>::sigComponentSize, rbase::sigComponentSize)
+        .def_static("isoSigComponentSize", // deprecated
+            &Triangulation<4>::sigComponentSize, rbase::isoSigComponentSize)
         .def("source", &Triangulation<4>::source,
             // The default should be Language::Current, but in C++ that
             // evaluates to Language::Cxx.  We need it to evaluate to

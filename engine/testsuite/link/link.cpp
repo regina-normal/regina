@@ -3681,7 +3681,7 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     }
 
     if constexpr (stringBased) {
-        size_t sigSize = Link::sigDiagramComponentSize(sig);
+        size_t sigSize = Link::sigComponentSize(sig);
         if (link.countComponents() <= 1)
             EXPECT_EQ(sigSize, link.size());
         else {
@@ -3694,7 +3694,7 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
                     break;
                 }
             if (! found)
-                ADD_FAILURE() << "sigDiagramComponentSize() does not "
+                ADD_FAILURE() << "sigComponentSize() does not "
                     "match any diagram component";
         }
     }

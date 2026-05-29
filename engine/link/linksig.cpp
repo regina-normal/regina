@@ -854,7 +854,7 @@ int Link::sigGeneration(const std::string& sig) {
     }
 }
 
-size_t Link::sigDiagramComponentSize(const std::string& sig) {
+size_t Link::sigComponentSize(const std::string& sig) {
     Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
 
     // Get the empty link out of the way first.
@@ -862,7 +862,7 @@ size_t Link::sigDiagramComponentSize(const std::string& sig) {
         case Base64Encoder::spare[0]:
             return 0; // empty link
         case 0:
-            throw InvalidArgument("sigDiagramComponentSize(): empty signature");
+            throw InvalidArgument("sigComponentSize(): empty signature");
         default:
             break;
     }
@@ -870,7 +870,7 @@ size_t Link::sigDiagramComponentSize(const std::string& sig) {
     try {
         return dec.decodeSize().first;
     } catch (const InvalidInput&) {
-        throw InvalidArgument("sigDiagramComponentSize(): invalid signature");
+        throw InvalidArgument("sigComponentSize(): invalid signature");
     }
 }
 

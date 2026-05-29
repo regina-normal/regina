@@ -4037,9 +4037,9 @@ class TriangulationBase :
          * See isoSig() and neoSig() for general information on first-generation
          * and second-generation isomorphism signatures.
          *
-         * Regarding connectivity and components:
+         * An important warning regarding connectivity and components:
          *
-         * - If the given signature describes a connected triangulation, this
+         * - If the given signature describes a _connected_ triangulation, this
          *   routine will return the size of that triangulation (i.e., the
          *   number of top-dimensional simplices).  This is the intended
          *   use case for this routine.
@@ -4061,16 +4061,34 @@ class TriangulationBase :
          * is valid or not, you must call fromSig() instead, which will examine
          * the entire signature in full.
          *
-         * \warning Do not mix isomorphism signatures between dimensions!
-         * It is possible that the same string could describe both a
-         * \a p-dimensional triangulation and a \a q-dimensional triangulation
-         * for different dimensions \a p and \a q.
+         * \exception InvalidArgument The given string was not a valid
+         * string-based isomorphism signature.  As described above, invalid
+         * signatures are not always detected; this exception will only be
+         * thrown if the error is so severe that the component size cannot be
+         * deduced from the first few characters.
+         *
+         * \param sig an isomorphism signature of some triangulation;
+         * this may be either first-generation or second-generation.
+         * Note that isomorphism signatures are case-sensitive
+         * (unlike, for example, dehydration strings for 3-manifolds).
+         * \return the size of the first connected component, or 0 if the
+         * given signature describes the empty triangulation.
+         */
+        static size_t sigComponentSize(const std::string& sig);
+
+        /**
+         * Deprecated alias for sigComponentSize(), to deduce the number of
+         * top-dimensional simplices in a connected triangulation from its
+         * string-based isomorphism signature.
+         *
+         * \deprecated You should call this as sigComponentSize() instead.
+         *
+         * See sigComponentSize() for further details.
          *
          * \exception InvalidArgument The given string was not a valid
          * string-based <i>dim</i>-dimensional isomorphism signature.
-         * As described above, invalid signatures are not always detected;
-         * this exception will only be thrown if the error is so severe that
-         * the component size cannot be deduced from the first few characters.
+         * Note that, as described in more detail in sigComponentSize(),
+         * invalid signatures are not always detected.
          *
          * \param sig a signature of some <i>dim</i>-dimensional triangulation.
          * Note that isomorphism signatures are case-sensitive
@@ -4078,7 +4096,8 @@ class TriangulationBase :
          * \return the size of the first connected component, or 0 if the
          * given signature describes the empty triangulation.
          */
-        static size_t isoSigComponentSize(const std::string& sig);
+        [[deprecated]] static size_t isoSigComponentSize(
+            const std::string& sig);
 
         /**
          * Reconstructs a triangulation from its given tight encoding.
@@ -6764,6 +6783,19 @@ template <int dim> requires (supportedDim(dim))
 inline int TriangulationBase<dim>::sigGeneration(const std::string& sig) {
     // Use a common implementation that works for all dimensions.
     return IsoSigPrintable::generation(sig);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline size_t TriangulationBase<dim>::sigComponentSize(const std::string& sig) {
+    // Use a common implementation that works for all dimensions.
+    return IsoSigPrintable::componentSize(sig);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline size_t TriangulationBase<dim>::isoSigComponentSize(
+        const std::string& sig) {
+    // Use a common implementation that works for all dimensions.
+    return IsoSigPrintable::componentSize(sig);
 }
 
 template <int dim> requires (supportedDim(dim))

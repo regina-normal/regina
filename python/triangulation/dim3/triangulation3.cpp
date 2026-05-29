@@ -727,8 +727,10 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
             rbase::fromIsoSig)
         .def_static("sigGeneration", &Triangulation<3>::sigGeneration,
             rbase::sigGeneration)
-        .def_static("isoSigComponentSize",
-            &Triangulation<3>::isoSigComponentSize, rbase::isoSigComponentSize)
+        .def_static("sigComponentSize",
+            &Triangulation<3>::sigComponentSize, rbase::sigComponentSize)
+        .def_static("isoSigComponentSize", // deprecated
+            &Triangulation<3>::sigComponentSize, rbase::isoSigComponentSize)
         .def("source", &Triangulation<3>::source,
             // The default should be Language::Current, but in C++ that
             // evaluates to Language::Cxx.  We need it to evaluate to

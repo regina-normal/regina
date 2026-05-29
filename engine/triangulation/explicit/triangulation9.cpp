@@ -55,7 +55,6 @@ template std::pair<std::string, Isomorphism<9>>
     IsoSigRidgeDegrees<9>>(bool) const;
 
 template Triangulation<9> TriangulationBase<9>::fromSig(const std::string&);
-template size_t TriangulationBase<9>::isoSigComponentSize(const std::string&);
 
 template AbelianGroup TriangulationBase<9>::homology<1>() const;
 template AbelianGroup TriangulationBase<9>::homology<2>() const;

@@ -240,11 +240,7 @@ std::list<CensusHit> CensusCollection<ObjectType>::lookup(
 
     size_t size;
     try {
-        if constexpr (std::same_as<ObjectType, Link>) {
-            size = ObjectType::sigDiagramComponentSize(sig);
-        } else {
-            size = ObjectType::isoSigComponentSize(sig);
-        }
+        size = ObjectType::sigComponentSize(sig);
     } catch (const InvalidArgument&) {
         return {}; // invalid signature - there will be no hits
     }

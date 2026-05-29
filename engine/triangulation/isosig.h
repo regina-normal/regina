@@ -1148,6 +1148,33 @@ class IsoSigPrintable {
          */
         static int generation(const std::string& sig);
 
+        /**
+         * Deduces the number of top-dimensional simplices in a connected
+         * triangulation from its string-based isomorphism signature.
+         *
+         * This provides the real implementation of
+         * `Triangulation<dim>::sigComponentSize()`; it is provided here because
+         * the same implementation can be used for every dimension \a dim.
+         *
+         * Note that this routine does _not_ always detect invalid signatures.
+         *
+         * See `Triangulation<dim>::sigComponentSize()` for further details.
+         *
+         * \exception InvalidArgument The given string was not a valid
+         * string-based isomorphism signature.  Invalid signatures are not
+         * always detected; this exception will only be thrown if the error is
+         * so severe that the component size cannot be deduced from the first
+         * few characters.
+         *
+         * \param sig an isomorphism signature of some triangulation.
+         * This may have been encoded by either IsoSigPrintable or
+         * IsoSigPrintableLockFree, may be any generation of isomorphism
+         * signature, and may be from a triangulation of any dimension.
+         * \return the size of the first connected component, or 0 if the
+         * given signature describes the empty triangulation.
+         */
+        static size_t componentSize(const std::string& sig);
+
         // Make this class non-constructible.
         IsoSigPrintable() = delete;
 };

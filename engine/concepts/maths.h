@@ -113,6 +113,7 @@ concept SignatureReconstructible =
         { T::fromSig(sig) } -> std::same_as<T>;
         { obj.neoSig() } -> std::same_as<std::string>;
         { T::sigGeneration(sig) } -> std::same_as<int>;
+        { T::sigComponentSize(sig) } -> std::same_as<size_t>;
     };
 
 } // namespace regina
