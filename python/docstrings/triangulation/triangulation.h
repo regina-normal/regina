@@ -1837,49 +1837,19 @@ Returns:
 
 // Docstring regina::python::doc::detail::TriangulationBase::isoSigComponentSize
 static constexpr const char isoSigComponentSize[] =
-R"doc(Deduces the number of top-dimensional simplices in a connected
-triangulation from its string-based isomorphism signature. This may be
-either a first-generation signature (computed via ``isoSig()``), or a
-second-generation signature (computed via ``neoSig()``).
+R"doc(Deprecated alias for sigComponentSize(), to deduce the number of top-
+dimensional simplices in a connected triangulation from its string-
+based isomorphism signature.
 
-See isoSig() and neoSig() for general information on first-generation
-and second-generation isomorphism signatures.
+.. deprecated::
+    You should call this as sigComponentSize() instead.
 
-Regarding connectivity and components:
-
-* If the given signature describes a connected triangulation, this
-  routine will return the size of that triangulation (i.e., the number
-  of top-dimensional simplices). This is the intended use case for
-  this routine.
-
-* If the signature describes a _disconnected_ triangulation, this
-  routine will only return the size of the first component. If you
-  need the total size of a disconnected triangulation, you will need
-  to reconstruct the full triangulation by calling fromSig() instead.
-
-* If the signature describes the empty triangulation, this routine
-  will return zero.
-
-This routine is very fast, since it only examines the first few
-characters of the given signature (in which the size of the first
-component is encoded). However, a side-effect of this is that it is
-possible to pass an _invalid_ isomorphism signature and still receive
-a positive result. If you need to test whether a signature is valid or
-not, you must call fromSig() instead, which will examine the entire
-signature in full.
-
-.. warning::
-    Do not mix isomorphism signatures between dimensions! It is
-    possible that the same string could describe both a
-    *p*-dimensional triangulation and a *q*-dimensional triangulation
-    for different dimensions *p* and *q*.
+See sigComponentSize() for further details.
 
 Exception ``InvalidArgument``:
     The given string was not a valid string-based *dim*-dimensional
-    isomorphism signature. As described above, invalid signatures are
-    not always detected; this exception will only be thrown if the
-    error is so severe that the component size cannot be deduced from
-    the first few characters.
+    isomorphism signature. Note that, as described in more detail in
+    sigComponentSize(), invalid signatures are not always detected.
 
 Parameter ``sig``:
     a signature of some *dim*-dimensional triangulation. Note that
@@ -3140,6 +3110,56 @@ Returns:
     the isomorphism signature of this triangulation. This will be of
     type ``std::string`` for string-based encodings, or ByteSequence
     for binary encodings.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase::sigComponentSize
+static constexpr const char sigComponentSize[] =
+R"doc(Deduces the number of top-dimensional simplices in a connected
+triangulation from its string-based isomorphism signature. This may be
+either a first-generation signature (computed via ``isoSig()``), or a
+second-generation signature (computed via ``neoSig()``).
+
+See isoSig() and neoSig() for general information on first-generation
+and second-generation isomorphism signatures.
+
+An important warning regarding connectivity and components:
+
+* If the given signature describes a _connected_ triangulation, this
+  routine will return the size of that triangulation (i.e., the number
+  of top-dimensional simplices). This is the intended use case for
+  this routine.
+
+* If the signature describes a _disconnected_ triangulation, this
+  routine will only return the size of the first component. If you
+  need the total size of a disconnected triangulation, you will need
+  to reconstruct the full triangulation by calling fromSig() instead.
+
+* If the signature describes the empty triangulation, this routine
+  will return zero.
+
+This routine is very fast, since it only examines the first few
+characters of the given signature (in which the size of the first
+component is encoded). However, a side-effect of this is that it is
+possible to pass an _invalid_ isomorphism signature and still receive
+a positive result. If you need to test whether a signature is valid or
+not, you must call fromSig() instead, which will examine the entire
+signature in full.
+
+Exception ``InvalidArgument``:
+    The given string was not a valid string-based isomorphism
+    signature. As described above, invalid signatures are not always
+    detected; this exception will only be thrown if the error is so
+    severe that the component size cannot be deduced from the first
+    few characters.
+
+Parameter ``sig``:
+    an isomorphism signature of some triangulation; this may be either
+    first-generation or second-generation. Note that isomorphism
+    signatures are case-sensitive (unlike, for example, dehydration
+    strings for 3-manifolds).
+
+Returns:
+    the size of the first connected component, or 0 if the given
+    signature describes the empty triangulation.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase::sigGeneration
 static constexpr const char sigGeneration[] =
