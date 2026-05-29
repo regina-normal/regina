@@ -32,7 +32,7 @@
 #include "triangulation/triangulation.h"
 #include "../../helpers.h"
 #include "../facehelper.h"
-#include "../../docstrings/triangulation/detail/simplex.h"
+#include "../../docstrings/triangulation/simplex.h"
 
 using namespace pybind11::literals;
 

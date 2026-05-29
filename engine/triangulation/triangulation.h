@@ -63,7 +63,7 @@
 #include "triangulation/detail/component.h"
 #include "triangulation/detail/boundarycomponent.h"
 #include "triangulation/detail/face.h"
-#include "triangulation/detail/simplex.h"
+#include "triangulation/simplex.h"
 #include "triangulation/isomorphism.h"
 #include "triangulation/isosig.h"
 #include "utilities/exception.h"

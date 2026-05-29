@@ -22,7 +22,6 @@ if (${REGINA_INSTALL_DEV})
     facetpairing-impl.h
     isosig-impl.h
     retriangulate.h
-    simplex.h
     strings.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation/detail" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

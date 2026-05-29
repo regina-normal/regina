@@ -48,6 +48,7 @@ if (${REGINA_INSTALL_DEV})
     isosigencoding.h
     isosigtype.h
     pachner.h
+    simplex.h
     triangulation.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
