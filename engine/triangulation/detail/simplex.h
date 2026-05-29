@@ -66,8 +66,9 @@ namespace detail {
  *
  * Although this is a specialisation of the Face class template, this
  * class is typically referred to using the alias Simplex<dim>.
- * For Regina's \ref stddim "standard dimensions", you can also use the
- * aliases Triangle<2>, Tetrahedron<3> and Pentachoron<4>.
+ * For Regina's \ref stddim "standard dimensions" you can also use the
+ * aliases Triangle<2>, Tetrahedron<3>, and Pentachoron<4> (or in Python,
+ * `Triangle2`, `Tetrahedron3`, and `Pentachoron4`).
  *
  * Top-dimensional simplices cannot exist in isolation (without a
  * triangulation object), and they cannot be created or destroyed directly.
