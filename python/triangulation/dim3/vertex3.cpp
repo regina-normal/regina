@@ -58,7 +58,7 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplex", &VertexEmbedding<3>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("tetrahedron", &VertexEmbedding<3>::tetrahedron,
-            pybind11::return_value_policy::reference, rbase::tetrahedron)
+            pybind11::return_value_policy::reference, rbase::simplex_dim3)
         .def("face", &VertexEmbedding<3>::face, rbase::face)
         .def("vertex", &VertexEmbedding<3>::vertex, rbase::vertex)
         .def("vertices", &VertexEmbedding<3>::vertices, rbase::vertices)

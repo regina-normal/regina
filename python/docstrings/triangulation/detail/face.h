@@ -1010,12 +1010,6 @@ Returns:
 
 // Docstring regina::python::doc::detail::FaceEmbeddingBase::pentachoron
 static constexpr const char pentachoron[] =
-R"doc(An alias for simplex() in dimension 4.
-
-See simplex() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::pentachoron_2
-static constexpr const char pentachoron_2[] =
 R"doc(An alias for face() for faces of dimension 4.
 
 See face() for further information.)doc";
@@ -1032,26 +1026,32 @@ tetrahedron() in the case *dim* = 3).
 Returns:
     the top-dimensional simplex.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::tetrahedron
-static constexpr const char tetrahedron[] =
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex_dim2
+static constexpr const char simplex_dim2[] =
+R"doc(An alias for simplex() in dimension 2.
+
+See simplex() for further information.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex_dim3
+static constexpr const char simplex_dim3[] =
 R"doc(An alias for simplex() in dimension 3.
 
 See simplex() for further information.)doc";
 
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::tetrahedron_2
-static constexpr const char tetrahedron_2[] =
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex_dim4
+static constexpr const char simplex_dim4[] =
+R"doc(An alias for simplex() in dimension 4.
+
+See simplex() for further information.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::tetrahedron
+static constexpr const char tetrahedron[] =
 R"doc(An alias for face() for faces of dimension 3.
 
 See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceEmbeddingBase::triangle
 static constexpr const char triangle[] =
-R"doc(An alias for simplex() in dimension 2.
-
-See simplex() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::triangle_2
-static constexpr const char triangle_2[] =
 R"doc(An alias for face() for faces of dimension 2.
 
 See face() for further information.)doc";

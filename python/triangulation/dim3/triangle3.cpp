@@ -57,9 +57,9 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplex", &TriangleEmbedding<3>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("tetrahedron", &TriangleEmbedding<3>::tetrahedron,
-            pybind11::return_value_policy::reference, rbase::tetrahedron)
+            pybind11::return_value_policy::reference, rbase::simplex_dim3)
         .def("face", &TriangleEmbedding<3>::face, rbase::face)
-        .def("triangle", &TriangleEmbedding<3>::triangle, rbase::triangle_2)
+        .def("triangle", &TriangleEmbedding<3>::triangle, rbase::triangle)
         .def("vertices", &TriangleEmbedding<3>::vertices, rbase::vertices)
     ;
     regina::python::add_output_rich(e);

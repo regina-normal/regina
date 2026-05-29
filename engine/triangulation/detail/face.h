@@ -208,6 +208,8 @@ class FaceEmbeddingBase :
          * An alias for simplex() in dimension 2.
          *
          * See simplex() for further information.
+         *
+         * \pydocname{simplex_dim2}
          */
         Simplex<dim>* triangle() const requires (dim == 2);
 
@@ -215,6 +217,8 @@ class FaceEmbeddingBase :
          * An alias for simplex() in dimension 3.
          *
          * See simplex() for further information.
+         *
+         * \pydocname{simplex_dim3}
          */
         Simplex<dim>* tetrahedron() const requires (dim == 3);
 
@@ -222,6 +226,8 @@ class FaceEmbeddingBase :
          * An alias for simplex() in dimension 4.
          *
          * See simplex() for further information.
+         *
+         * \pydocname{simplex_dim4}
          */
         Simplex<dim>* pentachoron() const requires (dim == 4);
 

@@ -55,10 +55,10 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplex", &TetrahedronEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("pentachoron", &TetrahedronEmbedding<4>::pentachoron,
-            pybind11::return_value_policy::reference, rbase::pentachoron)
+            pybind11::return_value_policy::reference, rbase::simplex_dim4)
         .def("face", &TetrahedronEmbedding<4>::face, rbase::face)
         .def("tetrahedron", &TetrahedronEmbedding<4>::tetrahedron,
-            rbase::tetrahedron_2)
+            rbase::tetrahedron)
         .def("vertices", &TetrahedronEmbedding<4>::vertices, rbase::vertices)
     ;
     regina::python::add_output_rich(e);

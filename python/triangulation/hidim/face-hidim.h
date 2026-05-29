@@ -63,13 +63,13 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
         e.def("edge", &FaceEmbedding<dim, subdim>::edge, rbase::edge);
     else if constexpr (subdim == 2)
         e.def("triangle", &FaceEmbedding<dim, subdim>::triangle,
-            rbase::triangle_2);
+            rbase::triangle);
     else if constexpr (subdim == 3)
         e.def("tetrahedron", &FaceEmbedding<dim, subdim>::tetrahedron,
-            rbase::tetrahedron_2);
+            rbase::tetrahedron);
     else if constexpr (subdim == 4)
         e.def("pentachoron", &FaceEmbedding<dim, subdim>::pentachoron,
-            rbase::pentachoron_2);
+            rbase::pentachoron);
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 

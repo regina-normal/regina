@@ -53,7 +53,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplex", &VertexEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("pentachoron", &VertexEmbedding<4>::pentachoron,
-            pybind11::return_value_policy::reference, rbase::pentachoron)
+            pybind11::return_value_policy::reference, rbase::simplex_dim4)
         .def("face", &VertexEmbedding<4>::face, rbase::face)
         .def("vertex", &VertexEmbedding<4>::vertex, rbase::vertex)
         .def("vertices", &VertexEmbedding<4>::vertices, rbase::vertices)

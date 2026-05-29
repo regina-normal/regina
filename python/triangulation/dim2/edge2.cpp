@@ -54,7 +54,7 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplex", &EdgeEmbedding<2>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("triangle", &EdgeEmbedding<2>::triangle,
-            pybind11::return_value_policy::reference, rbase::triangle)
+            pybind11::return_value_policy::reference, rbase::simplex_dim2)
         .def("face", &EdgeEmbedding<2>::face, rbase::face)
         .def("edge", &EdgeEmbedding<2>::edge, rbase::edge)
         .def("vertices", &EdgeEmbedding<2>::vertices, rbase::vertices)
