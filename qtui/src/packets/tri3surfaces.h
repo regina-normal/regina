@@ -35,7 +35,7 @@
 #ifndef __TRI3SURFACES_H
 #define __TRI3SURFACES_H
 
-#include "concepts/maths.h"
+#include "census/census.h"
 #include "triangulation/dim3.h"
 #include "../packettabui.h"
 
