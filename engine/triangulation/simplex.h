@@ -33,9 +33,9 @@
  *  triangulation.
  */
 
-#ifndef __REGINA_SIMPLEX_H_DETAIL
+#ifndef __REGINA_SIMPLEX_H
 #ifndef __DOXYGEN
-#define __REGINA_SIMPLEX_H_DETAIL
+#define __REGINA_SIMPLEX_H
 #endif
 
 #include "regina-core.h"

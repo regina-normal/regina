@@ -28,9 +28,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __REGINA_BOUNDARYCOMPONENT_H_DETAIL
+#ifndef __REGINA_BOUNDARYCOMPONENT_H
 #ifndef __DOXYGEN
-#define __REGINA_BOUNDARYCOMPONENT_H_DETAIL
+#define __REGINA_BOUNDARYCOMPONENT_H
 #endif
 
 /*! \file triangulation/boundarycomponent.h
