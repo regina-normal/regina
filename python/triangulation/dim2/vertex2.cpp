@@ -32,8 +32,6 @@
 #include "triangulation/dim2.h"
 #include "../../helpers.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/alias/face.h"
-#include "../../docstrings/triangulation/alias/facenumber.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
 using regina::Vertex;
@@ -43,8 +41,7 @@ using regina::FaceEmbedding;
 
 void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
-    RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
-        alias::SimplexVoid)
+    RDOC_SCOPE_BASE(detail::FaceEmbeddingBase)
 
     auto e = pybind11::class_<FaceEmbedding<2, 0>>(m, "FaceEmbedding2_0",
             rdoc::__class)
@@ -54,9 +51,9 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplex", &VertexEmbedding<2>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("triangle", &VertexEmbedding<2>::triangle,
-            pybind11::return_value_policy::reference, rbase3::triangle)
+            pybind11::return_value_policy::reference, rbase::triangle)
         .def("face", &VertexEmbedding<2>::face, rbase::face)
-        .def("vertex", &VertexEmbedding<2>::vertex, rbase2::vertex)
+        .def("vertex", &VertexEmbedding<2>::vertex, rbase::vertex)
         .def("vertices", &VertexEmbedding<2>::vertices, rbase::vertices)
     ;
     regina::python::add_output_rich(e);

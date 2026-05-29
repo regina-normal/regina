@@ -988,6 +988,12 @@ Parameter ``vertices``:
     See vertices() for details of how this permutation should be
     structured.)doc";
 
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::edge
+static constexpr const char edge[] =
+R"doc(An alias for face() for faces of dimension 1.
+
+See face() for further information.)doc";
+
 // Docstring regina::python::doc::detail::FaceEmbeddingBase::face
 static constexpr const char face[] =
 R"doc(Returns the corresponding face number of simplex(). This identifies
@@ -1002,6 +1008,18 @@ Returns:
     the corresponding face number of the top-dimensional simplex. This
     will be between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.)doc";
 
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::pentachoron
+static constexpr const char pentachoron[] =
+R"doc(An alias for simplex() in dimension 4.
+
+See simplex() for further information.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::pentachoron_2
+static constexpr const char pentachoron_2[] =
+R"doc(An alias for face() for faces of dimension 4.
+
+See face() for further information.)doc";
+
 // Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex
 static constexpr const char simplex[] =
 R"doc(Returns the top-dimensional simplex in which the underlying
@@ -1013,6 +1031,36 @@ tetrahedron() in the case *dim* = 3).
 
 Returns:
     the top-dimensional simplex.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::tetrahedron
+static constexpr const char tetrahedron[] =
+R"doc(An alias for simplex() in dimension 3.
+
+See simplex() for further information.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::tetrahedron_2
+static constexpr const char tetrahedron_2[] =
+R"doc(An alias for face() for faces of dimension 3.
+
+See face() for further information.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::triangle
+static constexpr const char triangle[] =
+R"doc(An alias for simplex() in dimension 2.
+
+See simplex() for further information.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::triangle_2
+static constexpr const char triangle_2[] =
+R"doc(An alias for face() for faces of dimension 2.
+
+See face() for further information.)doc";
+
+// Docstring regina::python::doc::detail::FaceEmbeddingBase::vertex
+static constexpr const char vertex[] =
+R"doc(An alias for face() for faces of dimension 0.
+
+See face() for further information.)doc";
 
 // Docstring regina::python::doc::detail::FaceEmbeddingBase::vertices
 static constexpr const char vertices[] =

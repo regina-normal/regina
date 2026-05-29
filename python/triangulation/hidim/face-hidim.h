@@ -33,7 +33,6 @@
 #include "../../helpers.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/alias/facenumber.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
 using namespace pybind11::literals;
@@ -46,7 +45,7 @@ requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 void addFace(pybind11::module_& m, pybind11::module_& internal,
         const char* name, const char* embName) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
-    RDOC_SCOPE_BASE_2(detail::FaceEmbeddingBase, alias::FaceNumber)
+    RDOC_SCOPE_BASE(detail::FaceEmbeddingBase)
 
     auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName,
             rdoc::__class)
@@ -59,18 +58,18 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
         .def("vertices", &FaceEmbedding<dim, subdim>::vertices, rbase::vertices)
     ;
     if constexpr (subdim == 0)
-        e.def("vertex", &FaceEmbedding<dim, subdim>::vertex, rbase2::vertex);
+        e.def("vertex", &FaceEmbedding<dim, subdim>::vertex, rbase::vertex);
     else if constexpr (subdim == 1)
-        e.def("edge", &FaceEmbedding<dim, subdim>::edge, rbase2::edge);
+        e.def("edge", &FaceEmbedding<dim, subdim>::edge, rbase::edge);
     else if constexpr (subdim == 2)
         e.def("triangle", &FaceEmbedding<dim, subdim>::triangle,
-            rbase2::triangle);
+            rbase::triangle_2);
     else if constexpr (subdim == 3)
         e.def("tetrahedron", &FaceEmbedding<dim, subdim>::tetrahedron,
-            rbase2::tetrahedron);
+            rbase::tetrahedron_2);
     else if constexpr (subdim == 4)
         e.def("pentachoron", &FaceEmbedding<dim, subdim>::pentachoron,
-            rbase2::pentachoron);
+            rbase::pentachoron_2);
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rbase::__eq);
 

@@ -41,8 +41,6 @@
 #include "core/output.h"
 #include "maths/perm.h"
 #include "triangulation/facenumbering.h"
-#include "triangulation/alias/face.h"
-#include "triangulation/alias/facenumber.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
@@ -149,9 +147,7 @@ class FaceBase;
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 class FaceEmbeddingBase :
-        public ShortOutput<FaceEmbeddingBase<dim, subdim>>,
-        public alias::SimplexVoid<FaceEmbeddingBase<dim, subdim>, dim>,
-        public alias::FaceNumber<FaceEmbeddingBase<dim, subdim>, subdim> {
+        public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
     private:
         Simplex<dim>* simplex_;
             /**< The top-dimensional simplex in which the underlying
@@ -209,6 +205,27 @@ class FaceEmbeddingBase :
         Simplex<dim>* simplex() const;
 
         /**
+         * An alias for simplex() in dimension 2.
+         *
+         * See simplex() for further information.
+         */
+        Simplex<dim>* triangle() const requires (dim == 2);
+
+        /**
+         * An alias for simplex() in dimension 3.
+         *
+         * See simplex() for further information.
+         */
+        Simplex<dim>* tetrahedron() const requires (dim == 3);
+
+        /**
+         * An alias for simplex() in dimension 4.
+         *
+         * See simplex() for further information.
+         */
+        Simplex<dim>* pentachoron() const requires (dim == 4);
+
+        /**
          * Returns the corresponding face number of simplex().
          * This identifies which face of the top-dimensional simplex
          * simplex() refers to the underlying <i>subdim</i>-face of the
@@ -223,6 +240,41 @@ class FaceEmbeddingBase :
          * inclusive.
          */
         int face() const;
+
+        /**
+         * An alias for face() for faces of dimension 0.
+         *
+         * See face() for further information.
+         */
+        int vertex() const requires (subdim == 0);
+
+        /**
+         * An alias for face() for faces of dimension 1.
+         *
+         * See face() for further information.
+         */
+        int edge() const requires (subdim == 1);
+
+        /**
+         * An alias for face() for faces of dimension 2.
+         *
+         * See face() for further information.
+         */
+        int triangle() const requires (subdim == 2);
+
+        /**
+         * An alias for face() for faces of dimension 3.
+         *
+         * See face() for further information.
+         */
+        int tetrahedron() const requires (subdim == 3);
+
+        /**
+         * An alias for face() for faces of dimension 4.
+         *
+         * See face() for further information.
+         */
+        int pentachoron() const requires (subdim == 4);
 
         /**
          * Maps vertices (0,...,\a subdim) of the underlying <i>subdim</i>-face
@@ -1490,8 +1542,64 @@ inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::simplex() const {
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::triangle() const
+        requires (dim == 2) {
+    return simplex_;
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::tetrahedron() const
+        requires (dim == 3) {
+    return simplex_;
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::pentachoron() const
+        requires (dim == 4) {
+    return simplex_;
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline int FaceEmbeddingBase<dim, subdim>::face() const {
     return FaceNumbering<dim, subdim>::faceNumber(vertices_);
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline int FaceEmbeddingBase<dim, subdim>::vertex() const
+        requires (subdim == 0) {
+    return face();
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline int FaceEmbeddingBase<dim, subdim>::edge() const
+        requires (subdim == 1) {
+    return face();
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline int FaceEmbeddingBase<dim, subdim>::triangle() const
+        requires (subdim == 2) {
+    return face();
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline int FaceEmbeddingBase<dim, subdim>::tetrahedron() const
+        requires (subdim == 3) {
+    return face();
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline int FaceEmbeddingBase<dim, subdim>::pentachoron() const
+        requires (subdim == 4) {
+    return face();
 }
 
 template <int dim, int subdim>
@@ -2014,4 +2122,3 @@ void FaceBase<dim, subdim>::relabel(Perm<dim + 1> adjust) {
 } } // namespace regina::detail
 
 #endif
-

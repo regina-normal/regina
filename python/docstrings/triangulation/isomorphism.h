@@ -330,6 +330,18 @@ Exception ``InvalidArgument``:
 Parameter ``tri``:
     the triangulation to which this isomorphism should be applied.)doc";
 
+// Docstring regina::python::doc::Isomorphism::edgePerm
+static constexpr const char edgePerm[] =
+R"doc(An alias for facetPerm() in dimension 2.
+
+See facetPerm() for further information.)doc";
+
+// Docstring regina::python::doc::Isomorphism::facePerm
+static constexpr const char facePerm[] =
+R"doc(An alias for facetPerm() in dimension 3.
+
+See facetPerm() for further information.)doc";
+
 // Docstring regina::python::doc::Isomorphism::facetPerm
 static constexpr const char facetPerm[] =
 R"doc(Determines the permutation that is applied to the (*dim* + 1) facets
@@ -410,6 +422,12 @@ Returns:
     ``True`` if this is an identity isomorphism, or ``False``
     otherwise.)doc";
 
+// Docstring regina::python::doc::Isomorphism::pentImage
+static constexpr const char pentImage[] =
+R"doc(An alias for simpImage() in dimension 4.
+
+See simpImage() for further information.)doc";
+
 // Docstring regina::python::doc::Isomorphism::random
 static constexpr const char random[] =
 R"doc(Returns a random isomorphism for the given number of simplices. This
@@ -436,6 +454,18 @@ Parameter ``even``:
 Returns:
     the new random isomorphism.)doc";
 
+// Docstring regina::python::doc::Isomorphism::setEdgePerm
+static constexpr const char setEdgePerm[] =
+R"doc(An alias for the Python-only routine setFacetPerm() in dimension 2.
+
+See setFacetPerm() for further information.)doc";
+
+// Docstring regina::python::doc::Isomorphism::setFacePerm
+static constexpr const char setFacePerm[] =
+R"doc(An alias for the Python-only routine setFacetPerm() in dimension 3.
+
+See setFacetPerm() for further information.)doc";
+
 // Docstring regina::python::doc::Isomorphism::setFacetPerm
 static constexpr const char setFacetPerm[] =
 R"doc(Python-only routine that sets the permutation that is applied to the
@@ -454,6 +484,12 @@ Parameter ``sourceSimp``:
 Parameter ``perm``:
     the new permutation that should be applied to the facets of the
     source simplex.)doc";
+
+// Docstring regina::python::doc::Isomorphism::setPentImage
+static constexpr const char setPentImage[] =
+R"doc(An alias for the Python-only routine setSimpImage() in dimension 4.
+
+See setSimpImage() for further information.)doc";
 
 // Docstring regina::python::doc::Isomorphism::setSimpImage
 static constexpr const char setSimpImage[] =
@@ -475,6 +511,18 @@ Parameter ``sourceSimp``:
 Parameter ``image``:
     the index of the new destination simplex that the source simplex
     should map to.)doc";
+
+// Docstring regina::python::doc::Isomorphism::setTetImage
+static constexpr const char setTetImage[] =
+R"doc(An alias for the Python-only routine setSimpImage() in dimension 3.
+
+See setSimpImage() for further information.)doc";
+
+// Docstring regina::python::doc::Isomorphism::setTriImage
+static constexpr const char setTriImage[] =
+R"doc(An alias for the Python-only routine setSimpImage() in dimension 2.
+
+See setSimpImage() for further information.)doc";
 
 // Docstring regina::python::doc::Isomorphism::simpImage
 static constexpr const char simpImage[] =
@@ -515,6 +563,18 @@ numbers of simplices; if so then they will be adjusted accordingly.
 
 Parameter ``other``:
     the isomorphism whose contents are to be swapped with this.)doc";
+
+// Docstring regina::python::doc::Isomorphism::tetImage
+static constexpr const char tetImage[] =
+R"doc(An alias for simpImage() in dimension 3.
+
+See simpImage() for further information.)doc";
+
+// Docstring regina::python::doc::Isomorphism::triImage
+static constexpr const char triImage[] =
+R"doc(An alias for simpImage() in dimension 2.
+
+See simpImage() for further information.)doc";
 
 }; // struct Isomorphism
 

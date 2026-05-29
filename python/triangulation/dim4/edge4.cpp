@@ -35,8 +35,6 @@
 #include "../../helpers/tableview.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/alias/face.h"
-#include "../../docstrings/triangulation/alias/facenumber.h"
 #include "../../docstrings/triangulation/dim4/edge4.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
@@ -50,8 +48,7 @@ using regina::python::wrapTableView;
 
 void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
-    RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
-        alias::SimplexVoid)
+    RDOC_SCOPE_BASE(detail::FaceEmbeddingBase)
 
     auto e = pybind11::class_<FaceEmbedding<4, 1>>(m, "FaceEmbedding4_1",
             rdoc::__class)
@@ -61,9 +58,9 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplex", &EdgeEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("pentachoron", &EdgeEmbedding<4>::pentachoron,
-            pybind11::return_value_policy::reference, rbase3::pentachoron)
+            pybind11::return_value_policy::reference, rbase::pentachoron)
         .def("face", &EdgeEmbedding<4>::face, rbase::face)
-        .def("edge", &EdgeEmbedding<4>::edge, rbase2::edge)
+        .def("edge", &EdgeEmbedding<4>::edge, rbase::edge)
         .def("vertices", &EdgeEmbedding<4>::vertices, rbase::vertices)
     ;
     regina::python::add_output_rich(e);

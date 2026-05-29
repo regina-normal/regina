@@ -34,7 +34,6 @@
 #include "triangulation/facetpairing.h"
 #include "../../helpers.h"
 #include "../../docstrings/triangulation/isomorphism.h"
-#include "../../docstrings/triangulation/alias/isomorphism.h"
 
 using namespace pybind11::literals;
 
@@ -44,7 +43,6 @@ using regina::Perm;
 
 void addIsomorphism4(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Isomorphism)
-    RDOC_SCOPE_BASE(alias::IsomorphismImage)
 
     auto c = pybind11::class_<Isomorphism<4>>(m, "Isomorphism4", rdoc::__class)
         .def(pybind11::init<const Isomorphism<4>&>(), rdoc::__copy)
@@ -58,10 +56,10 @@ void addIsomorphism4(pybind11::module_& m) {
             iso.simpImage(s) = image;
         }, rdoc::setSimpImage)
         .def("pentImage", overload_cast<size_t>(
-            &Isomorphism<4>::pentImage, pybind11::const_), rbase::pentImage)
+            &Isomorphism<4>::pentImage, pybind11::const_), rdoc::pentImage)
         .def("setPentImage", [](Isomorphism<4>& iso, size_t s, ssize_t image) {
             iso.pentImage(s) = image;
-        }, rbase::setPentImage)
+        }, rdoc::setPentImage)
         .def("facetPerm", overload_cast<size_t>(
             &Isomorphism<4>::facetPerm, pybind11::const_), rdoc::facetPerm)
         .def("setFacetPerm", [](Isomorphism<4>& iso, size_t s, Perm<5> p) {

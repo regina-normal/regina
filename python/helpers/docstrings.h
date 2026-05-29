@@ -90,10 +90,6 @@
 #define RDOC_SCOPE_BASE_2(base, base2) \
     using rbase = regina::python::doc::base; \
     using rbase2 = regina::python::doc::base2;
-#define RDOC_SCOPE_BASE_3(base, base2, base3) \
-    using rbase = regina::python::doc::base; \
-    using rbase2 = regina::python::doc::base2; \
-    using rbase3 = regina::python::doc::base3;
 
 #define RDOC_TODO regina::python::doc::common::todo
 

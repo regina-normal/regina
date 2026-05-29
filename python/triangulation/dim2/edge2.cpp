@@ -33,8 +33,6 @@
 #include "../../helpers.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/alias/face.h"
-#include "../../docstrings/triangulation/alias/facenumber.h"
 #include "../../docstrings/triangulation/detail/face.h"
 
 using namespace pybind11::literals;
@@ -46,8 +44,7 @@ using regina::FaceEmbedding;
 
 void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
-    RDOC_SCOPE_BASE_3(detail::FaceEmbeddingBase, alias::FaceNumber,
-        alias::SimplexVoid)
+    RDOC_SCOPE_BASE(detail::FaceEmbeddingBase)
 
     auto e = pybind11::class_<FaceEmbedding<2, 1>>(m, "FaceEmbedding2_1",
             rdoc::__class)
@@ -57,9 +54,9 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplex", &EdgeEmbedding<2>::simplex,
             pybind11::return_value_policy::reference, rbase::simplex)
         .def("triangle", &EdgeEmbedding<2>::triangle,
-            pybind11::return_value_policy::reference, rbase3::triangle)
+            pybind11::return_value_policy::reference, rbase::triangle)
         .def("face", &EdgeEmbedding<2>::face, rbase::face)
-        .def("edge", &EdgeEmbedding<2>::edge, rbase2::edge)
+        .def("edge", &EdgeEmbedding<2>::edge, rbase::edge)
         .def("vertices", &EdgeEmbedding<2>::vertices, rbase::vertices)
     ;
     regina::python::add_output_rich(e);

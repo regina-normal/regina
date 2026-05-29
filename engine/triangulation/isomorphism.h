@@ -981,37 +981,37 @@ inline ssize_t Isomorphism<dim>::simpImage(size_t sourceSimp) const {
 template <int dim> requires (supportedDim(dim))
 inline ssize_t& Isomorphism<dim>::triImage(size_t sourceSimp)
         requires (dim == 2) {
-    return simpImage(sourceSimp);
+    return simpImage_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
 inline ssize_t Isomorphism<dim>::triImage(size_t sourceSimp) const
         requires (dim == 2) {
-    return simpImage(sourceSimp);
+    return simpImage_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
 inline ssize_t& Isomorphism<dim>::tetImage(size_t sourceSimp)
         requires (dim == 3) {
-    return simpImage(sourceSimp);
+    return simpImage_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
 inline ssize_t Isomorphism<dim>::tetImage(size_t sourceSimp) const
         requires (dim == 3) {
-    return simpImage(sourceSimp);
+    return simpImage_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
 inline ssize_t& Isomorphism<dim>::pentImage(size_t sourceSimp)
         requires (dim == 4) {
-    return simpImage(sourceSimp);
+    return simpImage_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
 inline ssize_t Isomorphism<dim>::pentImage(size_t sourceSimp) const
         requires (dim == 4) {
-    return simpImage(sourceSimp);
+    return simpImage_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -1027,25 +1027,25 @@ inline Perm<dim+1> Isomorphism<dim>::facetPerm(size_t sourceSimp) const {
 template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1>& Isomorphism<dim>::edgePerm(size_t sourceSimp)
         requires (dim == 2) {
-    return facetPerm(sourceSimp);
+    return facetPerm_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1> Isomorphism<dim>::edgePerm(size_t sourceSimp) const
         requires (dim == 2) {
-    return facetPerm(sourceSimp);
+    return facetPerm_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1>& Isomorphism<dim>::facePerm(size_t sourceSimp)
         requires (dim == 3) {
-    return facetPerm(sourceSimp);
+    return facetPerm_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
 inline Perm<dim + 1> Isomorphism<dim>::facePerm(size_t sourceSimp) const
         requires (dim == 3) {
-    return facetPerm(sourceSimp);
+    return facetPerm_[sourceSimp];
 }
 
 template <int dim> requires (supportedDim(dim))
