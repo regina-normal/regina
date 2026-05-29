@@ -46,7 +46,7 @@
  * A widget that locates a triangulation or link diagram within Regina's
  * in-built census databases.
  */
-template <regina::SignatureEncodable ObjectType>
+template <regina::CensusSearchable ObjectType>
 class CensusWidget : public QLabel {
     private:
         /**
@@ -75,7 +75,7 @@ class CensusWidget : public QLabel {
 
 #endif
 
-template <regina::SignatureEncodable ObjectType>
+template <regina::CensusSearchable ObjectType>
 CensusWidget<ObjectType>::CensusWidget(ObjectType* obj, QWidget* parent) :
         QLabel(parent), obj_(obj) {
     setAlignment(Qt::AlignCenter);
@@ -86,7 +86,7 @@ CensusWidget<ObjectType>::CensusWidget(ObjectType* obj, QWidget* parent) :
         this, &CensusWidget<ObjectType>::contextCensus);
 }
 
-template <regina::SignatureEncodable ObjectType>
+template <regina::CensusSearchable ObjectType>
 void CensusWidget<ObjectType>::refresh() {
     try {
         hits_ = regina::Census::lookup(*obj_);
@@ -117,7 +117,7 @@ void CensusWidget<ObjectType>::refresh() {
     }
 }
 
-template <regina::SignatureEncodable ObjectType>
+template <regina::CensusSearchable ObjectType>
 void CensusWidget<ObjectType>::contextCensus(const QPoint& pos) {
     if (hits_.empty())
         return;

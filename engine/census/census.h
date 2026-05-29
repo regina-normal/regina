@@ -58,6 +58,27 @@ template <int dim> requires (supportedDim(dim)) class Triangulation;
  */
 
 /**
+ * A type of mathematical object that can be looked up within Regina's
+ * in-built census databases.
+ *
+ * This concept refers to the underlying mathematical types that the databases
+ * encode (e.g., triangulation or link types), not the strings that are
+ * actually used to encode these object within the databases.
+ *
+ * Currently the only supported types here are Triangulation<3> and Link.
+ * This list may grow as more census data ships in future versions of Regina.
+ *
+ * This concept includes `SignatureEncodable<T>` as an explicit requirement.
+ * Although this requirement is redundant (since the full list of supported
+ * types is already hard-coded directly in this concept), it is kept as a
+ * reminder that census databases require signatures to use as lookup keys.
+ */
+template <typename T>
+concept CensusSearchable =
+    SignatureEncodable<T> &&
+    (std::same_as<T, Link> || std::same_as<T, Triangulation<3>>);
+
+/**
  * Stores the location and other identifying information for one of Regina's
  * in-built census databases.
  *
@@ -482,7 +503,7 @@ void swap(CensusHit& a, CensusHit& b) noexcept;
  *
  * \ingroup census
  */
-template <SignatureEncodable ObjectType>
+template <CensusSearchable ObjectType>
 class CensusCollection {
     private:
         inline static std::vector<CensusDB> databases_ {};
@@ -608,7 +629,7 @@ class Census {
          * search for.
          * \return a list of all database matches.
          */
-        template <SignatureEncodable ObjectType>
+        template <CensusSearchable ObjectType>
         static std::list<CensusHit> lookup(const ObjectType& object);
         /**
          * Searches for the triangulation or link diagram with the given
@@ -677,7 +698,7 @@ class Census {
          * be either first-generation or second-generation.
          * \return a list of all database matches.
          */
-        template <SignatureEncodable ObjectType>
+        template <CensusSearchable ObjectType>
         static std::list<CensusHit> lookupAs(const std::string& sig);
         /**
          * Searches for any triangulation or link diagram with the given
@@ -794,12 +815,12 @@ inline void swap(CensusHit& a, CensusHit& b) noexcept {
 
 // Inline functions for Census:
 
-template <SignatureEncodable ObjectType>
+template <CensusSearchable ObjectType>
 inline std::list<CensusHit> Census::lookup(const ObjectType& object) {
     return CensusCollection<ObjectType>::lookup(object);
 }
 
-template <SignatureEncodable ObjectType>
+template <CensusSearchable ObjectType>
 inline std::list<CensusHit> Census::lookupAs(const std::string& sig) {
     return CensusCollection<ObjectType>::lookup(sig);
 }

@@ -615,6 +615,35 @@ Parameter ``other``:
 
 }; // struct CensusHit
 
+struct CensusSearchable {
+
+// Docstring regina::python::doc::CensusSearchable::__concept
+static constexpr const char __concept[] =
+R"doc(A type of mathematical object that can be looked up within Regina's
+in-built census databases.
+
+This concept refers to the underlying mathematical types that the
+databases encode (e.g., triangulation or link types), not the strings
+that are actually used to encode these object within the databases.
+
+Currently the only supported types here are Triangulation<3> and Link.
+This list may grow as more census data ships in future versions of
+Regina.
+
+This concept includes ``SignatureEncodable<T>`` as an explicit
+requirement. Although this requirement is redundant (since the full
+list of supported types is already hard-coded directly in this
+concept), it is kept as a reminder that census databases require
+signatures to use as lookup keys.
+
+Concepts:
+    CensusSearchable is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
+
+}; // struct CensusSearchable
+
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

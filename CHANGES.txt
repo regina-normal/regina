@@ -627,10 +627,6 @@ Version 8.0  [ TODO ]
                 IntegralDomain, ReginaBitmask, ReginaQitmask, Ring, RingLike,
                 SameModCVRef, StrictWeakOrder, TerminatingCallback, VoidCallback
                 (defined in concepts/core.h)
-              + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
-                IntegerComparable, IntegerCompatible, ReginaInteger,
-                StandardCppInteger, SignedCppInteger, UnsignedCppInteger
-                (defined in utilities/intutils.h)
               + InherentlyTightEncodable, Readable, RichStringifiable,
                 StandardStringifiable, Stringifiable, Writable (defined in
                 concepts/io.h)
@@ -645,8 +641,13 @@ Version 8.0  [ TODO ]
               + PacketClass, PacketHeldType, TextPacket, WrappedPacket
                 (defined in concepts/packet.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
+              + CensusSearchable (defined in census/census.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
+              + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
+                IntegerComparable, IntegerCompatible, ReginaInteger,
+                StandardCppInteger, SignedCppInteger, UnsignedCppInteger
+                (defined in utilities/intutils.h)
               + LinkSigEncoding (defined in link/linksig.h)
               + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
         Header foreign/fromsiglist-impl.h:

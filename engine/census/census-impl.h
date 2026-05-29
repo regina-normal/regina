@@ -208,7 +208,7 @@ void CensusDB::lookupKey(const std::string& sig, Action&& action) const {
 #endif
 }
 
-template <SignatureEncodable ObjectType>
+template <CensusSearchable ObjectType>
 std::list<CensusHit> CensusCollection<ObjectType>::lookup(
         const ObjectType& object) {
     if (databases_.empty())
@@ -232,7 +232,7 @@ std::list<CensusHit> CensusCollection<ObjectType>::lookup(
     return hits;
 }
 
-template <SignatureEncodable ObjectType>
+template <CensusSearchable ObjectType>
 std::list<CensusHit> CensusCollection<ObjectType>::lookup(
         const std::string& sig) {
     if (databases_.empty())

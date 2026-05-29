@@ -46,7 +46,7 @@ using regina::CensusHit;
 using regina::Link;
 using regina::Triangulation;
 
-template <regina::SignatureEncodable ObjectType>
+template <regina::CensusSearchable ObjectType>
 void addCensusCollection(pybind11::module_& m, const char* name) {
     using Collection = regina::CensusCollection<ObjectType>;
 
@@ -140,9 +140,13 @@ void addCensus(pybind11::module_& m) {
     ;
     regina::python::no_eq_static(c);
 
-    RDOC_SCOPE_END
+    RDOC_SCOPE_SWITCH_MAIN
 
     addCensusCollection<Triangulation<3>>(m, "CensusCollection3");
     addCensusCollection<Link>(m, "CensusCollectionLink");
+
+    regina::python::add_concept<rdoc::CensusSearchable>(m, "CensusSearchable");
+
+    RDOC_SCOPE_END
 }
 
