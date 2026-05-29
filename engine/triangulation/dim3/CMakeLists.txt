@@ -35,7 +35,6 @@ if (${REGINA_INSTALL_DEV})
     component3.h
     edge3.h
     homologicaldata.h
-    tetrahedron3.h
     triangle3.h
     triangulation3.h
     vertex3.h

@@ -5159,7 +5159,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
             detail::TriangulationBase<dim>::clearBaseProperties();
         }
 
-    friend class detail::SimplexBase<dim>;
+    friend class Face<dim, dim>;
     friend class detail::TriangulationBase<dim>;
 };
 

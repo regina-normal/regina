@@ -72,12 +72,9 @@ requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 class Face;
 
 template <int dim> requires (supportedDim(dim)) class Face<dim, dim>;
-template <> class Face<2, 2>;
-template <> class Face<3, 3>;
 template <> class Face<3, 2>; // test shape, linking surface
 template <> class Face<3, 1>; // linking surface
 template <> class Face<3, 0>; // build links, linking surface, output type
-template <> class Face<4, 4>;
 template <> class Face<4, 3>; // linking surface
 template <> class Face<4, 2>; // linking surface
 template <> class Face<4, 1>; // build links, linking surface

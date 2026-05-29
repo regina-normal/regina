@@ -1652,14 +1652,12 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
             bool alwaysModify, ProgressTrackerObjective* tracker);
 
     friend class regina::Face<4, 4>;
-    friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
     friend class regina::XMLTriangulationReader<4>;
 };
 
 } // namespace regina
 // Some more headers that are required for inline functions:
-#include "triangulation/dim4/pentachoron4.h"
 #include "triangulation/dim4/tetrahedron4.h"
 #include "triangulation/dim4/triangle4.h"
 #include "triangulation/dim4/edge4.h"

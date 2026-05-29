@@ -23,7 +23,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     component4.h
     edge4.h
-    pentachoron4.h
     tetrahedron4.h
     triangle4.h
     triangulation4.h

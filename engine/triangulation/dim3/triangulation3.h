@@ -5146,7 +5146,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         static Triangulation<3> fromSnapPea(std::istream& in);
 
     friend class regina::Face<3, 3>;
-    friend class regina::detail::SimplexBase<3>;
     friend class regina::detail::TriangulationBase<3>;
     friend class PacketData<Triangulation<3>>;
     friend class regina::XMLTriangulationReader<3>;
@@ -5282,7 +5281,6 @@ inline Triangulation<3>::~Triangulation() {
 
 } // namespace regina
 // Some more headers that are required for inline functions:
-#include "triangulation/dim3/tetrahedron3.h"
 #include "triangulation/dim3/triangle3.h"
 #include "triangulation/dim3/edge3.h"
 #include "triangulation/dim3/vertex3.h"

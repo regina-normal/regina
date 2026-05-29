@@ -46,67 +46,66 @@ void addSimplex(pybind11::module_& m, const char* name) {
     // We use the global scope here because all of Simplex's members are
     // inherited, and so Simplex's own docstring namespace does not exist.
     RDOC_SCOPE_BEGIN(Simplex)
-    RDOC_SCOPE_BASE(detail::SimplexBase)
 
     auto c = pybind11::class_<regina::Simplex<dim>>(m, name,
             rdoc::__class)
-        .def("description", &Simplex<dim>::description, rbase::description)
+        .def("description", &Simplex<dim>::description, rdoc::description)
         .def("setDescription", &Simplex<dim>::setDescription,
-            rbase::setDescription)
-        .def("index", &Simplex<dim>::index, rbase::index)
+            rdoc::setDescription)
+        .def("index", &Simplex<dim>::index, rdoc::index)
         .def("adjacentSimplex", &Simplex<dim>::adjacentSimplex,
-            pybind11::return_value_policy::reference, rbase::adjacentSimplex)
+            pybind11::return_value_policy::reference, rdoc::adjacentSimplex)
         .def("adjacentGluing", &Simplex<dim>::adjacentGluing,
-            rbase::adjacentGluing)
+            rdoc::adjacentGluing)
         .def("adjacentFacet", &Simplex<dim>::adjacentFacet,
-            rbase::adjacentFacet)
-        .def("hasBoundary", &Simplex<dim>::hasBoundary, rbase::hasBoundary)
-        .def("join", &Simplex<dim>::join, rbase::join)
+            rdoc::adjacentFacet)
+        .def("hasBoundary", &Simplex<dim>::hasBoundary, rdoc::hasBoundary)
+        .def("join", &Simplex<dim>::join, rdoc::join)
         .def("unjoin", &Simplex<dim>::unjoin,
-            pybind11::return_value_policy::reference, rbase::unjoin)
-        .def("isolate", &Simplex<dim>::isolate, rbase::isolate)
-        .def("lock", &Simplex<dim>::lock, rbase::lock)
-        .def("lockFacet", &Simplex<dim>::lockFacet, rbase::lockFacet)
-        .def("unlock", &Simplex<dim>::unlock, rbase::unlock)
-        .def("unlockFacet", &Simplex<dim>::unlockFacet, rbase::unlockFacet)
-        .def("unlockAll", &Simplex<dim>::unlockAll, rbase::unlockAll)
-        .def("isLocked", &Simplex<dim>::isLocked, rbase::isLocked)
+            pybind11::return_value_policy::reference, rdoc::unjoin)
+        .def("isolate", &Simplex<dim>::isolate, rdoc::isolate)
+        .def("lock", &Simplex<dim>::lock, rdoc::lock)
+        .def("lockFacet", &Simplex<dim>::lockFacet, rdoc::lockFacet)
+        .def("unlock", &Simplex<dim>::unlock, rdoc::unlock)
+        .def("unlockFacet", &Simplex<dim>::unlockFacet, rdoc::unlockFacet)
+        .def("unlockAll", &Simplex<dim>::unlockAll, rdoc::unlockAll)
+        .def("isLocked", &Simplex<dim>::isLocked, rdoc::isLocked)
         .def("isFacetLocked", &Simplex<dim>::isFacetLocked,
-            rbase::isFacetLocked)
-        .def("lockMask", &Simplex<dim>::lockMask, rbase::lockMask)
+            rdoc::isFacetLocked)
+        .def("lockMask", &Simplex<dim>::lockMask, rdoc::lockMask)
         .def("triangulation", &Simplex<dim>::triangulation,
-            rbase::triangulation)
+            rdoc::triangulation)
         .def("component", &Simplex<dim>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("face", &regina::python::face<dim, dim>,
-            "subdim"_a, "face"_a, rbase::face)
+            "subdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Simplex<dim>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex)
+            pybind11::return_value_policy::reference, rdoc::vertex)
         .def("edge", overload_cast<int>(&Simplex<dim>::edge, pybind11::const_),
-            pybind11::return_value_policy::reference, rbase::edge)
+            pybind11::return_value_policy::reference, rdoc::edge)
         .def("edge",
             overload_cast<int, int>(&Simplex<dim>::edge, pybind11::const_),
-            pybind11::return_value_policy::reference, rbase::edge_2)
+            pybind11::return_value_policy::reference, rdoc::edge_2)
         .def("triangle", &Simplex<dim>::triangle,
-            pybind11::return_value_policy::reference, rbase::triangle)
+            pybind11::return_value_policy::reference, rdoc::triangle)
         .def("tetrahedron", &Simplex<dim>::tetrahedron,
-            pybind11::return_value_policy::reference, rbase::tetrahedron)
+            pybind11::return_value_policy::reference, rdoc::tetrahedron)
         .def("pentachoron", &Simplex<dim>::pentachoron,
-            pybind11::return_value_policy::reference, rbase::pentachoron)
+            pybind11::return_value_policy::reference, rdoc::pentachoron)
         .def("faceMapping", &regina::python::faceMapping<dim, dim>,
-            "subdim"_a, "face"_a, rbase::faceMapping)
+            "subdim"_a, "face"_a, rdoc::faceMapping)
         .def("vertexMapping", &Simplex<dim>::vertexMapping,
-            rbase::vertexMapping)
-        .def("edgeMapping", &Simplex<dim>::edgeMapping, rbase::edgeMapping)
+            rdoc::vertexMapping)
+        .def("edgeMapping", &Simplex<dim>::edgeMapping, rdoc::edgeMapping)
         .def("triangleMapping", &Simplex<dim>::triangleMapping,
-            rbase::triangleMapping)
+            rdoc::triangleMapping)
         .def("tetrahedronMapping", &Simplex<dim>::tetrahedronMapping,
-            rbase::tetrahedronMapping)
+            rdoc::tetrahedronMapping)
         .def("pentachoronMapping", &Simplex<dim>::pentachoronMapping,
-            rbase::pentachoronMapping)
-        .def("orientation", &Simplex<dim>::orientation, rbase::orientation)
+            rdoc::pentachoronMapping)
+        .def("orientation", &Simplex<dim>::orientation, rdoc::orientation)
         .def("facetInMaximalForest", &Simplex<dim>::facetInMaximalForest,
-            rbase::facetInMaximalForest)
+            rdoc::facetInMaximalForest)
         .def_readonly_static("dimension", &Simplex<dim>::dimension)
         .def_readonly_static("subdimension", &Simplex<dim>::subdimension)
     ;

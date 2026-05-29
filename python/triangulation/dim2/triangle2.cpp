@@ -32,7 +32,6 @@
 #include "triangulation/dim2.h"
 #include "../../helpers.h"
 #include "../facehelper.h"
-#include "../../docstrings/triangulation/dim2/triangle2.h"
 #include "../../docstrings/triangulation/detail/simplex.h"
 
 using namespace pybind11::literals;
@@ -41,56 +40,54 @@ using pybind11::overload_cast;
 using regina::Triangle;
 
 void addTriangle2(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Triangle2)
-    RDOC_SCOPE_BASE(detail::SimplexBase)
+    RDOC_SCOPE_BEGIN(Simplex)
 
     auto c = pybind11::class_<regina::Simplex<2>>(m, "Simplex2", rdoc::__class)
-        .def("description", &Triangle<2>::description, rbase::description)
+        .def("description", &Triangle<2>::description, rdoc::description)
         .def("setDescription", &Triangle<2>::setDescription,
-            rbase::setDescription)
-        .def("index", &Triangle<2>::index, rbase::index)
+            rdoc::setDescription)
+        .def("index", &Triangle<2>::index, rdoc::index)
         .def("adjacentTriangle", &Triangle<2>::adjacentTriangle,
             pybind11::return_value_policy::reference, rdoc::adjacentTriangle)
         .def("adjacentSimplex", &Triangle<2>::adjacentSimplex,
-            pybind11::return_value_policy::reference, rbase::adjacentSimplex)
+            pybind11::return_value_policy::reference, rdoc::adjacentSimplex)
         .def("adjacentGluing", &Triangle<2>::adjacentGluing,
-            rbase::adjacentGluing)
+            rdoc::adjacentGluing)
         .def("adjacentEdge", &Triangle<2>::adjacentEdge, rdoc::adjacentEdge)
-        .def("adjacentFacet", &Triangle<2>::adjacentFacet, rbase::adjacentFacet)
-        .def("hasBoundary", &Triangle<2>::hasBoundary, rbase::hasBoundary)
-        .def("join", &Triangle<2>::join, rbase::join)
+        .def("adjacentFacet", &Triangle<2>::adjacentFacet, rdoc::adjacentFacet)
+        .def("hasBoundary", &Triangle<2>::hasBoundary, rdoc::hasBoundary)
+        .def("join", &Triangle<2>::join, rdoc::join)
         .def("unjoin", &Triangle<2>::unjoin,
-            pybind11::return_value_policy::reference, rbase::unjoin)
-        .def("isolate", &Triangle<2>::isolate, rbase::isolate)
-        .def("lock", &Triangle<2>::lock, rbase::lock)
-        .def("lockFacet", &Triangle<2>::lockFacet, rbase::lockFacet)
-        .def("unlock", &Triangle<2>::unlock, rbase::unlock)
-        .def("unlockFacet", &Triangle<2>::unlockFacet, rbase::unlockFacet)
-        .def("unlockAll", &Triangle<2>::unlockAll, rbase::unlockAll)
-        .def("isLocked", &Triangle<2>::isLocked, rbase::isLocked)
-        .def("isFacetLocked", &Triangle<2>::isFacetLocked,
-            rbase::isFacetLocked)
-        .def("lockMask", &Triangle<2>::lockMask, rbase::lockMask)
-        .def("triangulation", &Triangle<2>::triangulation, rbase::triangulation)
+            pybind11::return_value_policy::reference, rdoc::unjoin)
+        .def("isolate", &Triangle<2>::isolate, rdoc::isolate)
+        .def("lock", &Triangle<2>::lock, rdoc::lock)
+        .def("lockFacet", &Triangle<2>::lockFacet, rdoc::lockFacet)
+        .def("unlock", &Triangle<2>::unlock, rdoc::unlock)
+        .def("unlockFacet", &Triangle<2>::unlockFacet, rdoc::unlockFacet)
+        .def("unlockAll", &Triangle<2>::unlockAll, rdoc::unlockAll)
+        .def("isLocked", &Triangle<2>::isLocked, rdoc::isLocked)
+        .def("isFacetLocked", &Triangle<2>::isFacetLocked, rdoc::isFacetLocked)
+        .def("lockMask", &Triangle<2>::lockMask, rdoc::lockMask)
+        .def("triangulation", &Triangle<2>::triangulation, rdoc::triangulation)
         .def("component", &Triangle<2>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("face", &regina::python::face<2, 2>,
-            "subdim"_a, "face"_a, rbase::face)
+            "subdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Triangle<2>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex)
+            pybind11::return_value_policy::reference, rdoc::vertex)
         .def("edge",
             overload_cast<int>(&Triangle<2>::edge, pybind11::const_),
-            pybind11::return_value_policy::reference, rbase::edge)
+            pybind11::return_value_policy::reference, rdoc::edge)
         .def("edge",
             overload_cast<int, int>(&Triangle<2>::edge, pybind11::const_),
-            pybind11::return_value_policy::reference, rbase::edge_2)
+            pybind11::return_value_policy::reference, rdoc::edge_2)
         .def("faceMapping", &regina::python::faceMapping<2, 2>,
-            "subdim"_a, "face"_a, rbase::faceMapping)
-        .def("vertexMapping", &Triangle<2>::vertexMapping, rbase::vertexMapping)
-        .def("edgeMapping", &Triangle<2>::edgeMapping, rbase::edgeMapping)
-        .def("orientation", &Triangle<2>::orientation, rbase::orientation)
+            "subdim"_a, "face"_a, rdoc::faceMapping)
+        .def("vertexMapping", &Triangle<2>::vertexMapping, rdoc::vertexMapping)
+        .def("edgeMapping", &Triangle<2>::edgeMapping, rdoc::edgeMapping)
+        .def("orientation", &Triangle<2>::orientation, rdoc::orientation)
         .def("facetInMaximalForest", &Triangle<2>::facetInMaximalForest,
-            rbase::facetInMaximalForest)
+            rdoc::facetInMaximalForest)
         .def_readonly_static("dimension", &Triangle<2>::dimension)
         .def_readonly_static("subdimension", &Triangle<2>::subdimension)
     ;

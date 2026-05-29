@@ -461,7 +461,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         void cloneSkeleton(const Triangulation& src);
 
     friend class regina::Face<2, 2>;
-    friend class regina::detail::SimplexBase<2>;
     friend class regina::detail::TriangulationBase<2>;
 };
 
@@ -474,7 +473,6 @@ inline void Triangulation<2>::clearAllProperties() {
 
 } // namespace regina
 // Some more headers that are required for inline functions:
-#include "triangulation/dim2/triangle2.h"
 #include "triangulation/dim2/component2.h"
 namespace regina {
 

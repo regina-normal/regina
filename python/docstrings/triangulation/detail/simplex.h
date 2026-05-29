@@ -42,12 +42,6 @@ Each simplex may have an optional description. This is typically a
 human-readable piece of text. Descriptions are not required, and do
 not need to be unique.
 
-For Regina's standard dimensions, this template is specialised and
-offers significant extra functionality. In order to use these
-specialised classes, you will need to include the corresponding
-triangulation headers (e.g., triangulation/dim2.h for *dim* = 2, or
-triangulation/dim3.h for *dim* = 3).
-
 Simplices do not support value semantics: they cannot be copied,
 swapped, or manually constructed. Their location in memory defines
 them, and they are often passed and compared by pointer. End users are
@@ -62,38 +56,19 @@ Python:
 Template parameter ``dim``:
     the dimension of the underlying triangulation.)doc";
 
-}; // struct Simplex
+// Docstring regina::python::doc::Simplex::adjacentEdge
+static constexpr const char adjacentEdge[] =
+R"doc(An alias for adjacentFacet() in dimension 2.
 
-namespace detail {
+See adjacentFacet() for further information.)doc";
 
-struct SimplexBase {
+// Docstring regina::python::doc::Simplex::adjacentFace
+static constexpr const char adjacentFace[] =
+R"doc(An alias for adjacentFacet() in dimension 3.
 
-// Docstring regina::python::doc::detail::SimplexBase::__class
-static constexpr const char __class[] =
-R"doc(Helper class that provides core functionality for a top-dimensional
-simplex in a *dim*-manifold triangulation.
+See adjacentFacet() for further information.)doc";
 
-Each top-dimensional simplex is represented by the class Simplex<dim>,
-which uses this as a base class. End users should not need to refer to
-SimplexBase directly.
-
-See the Simplex template class notes for further information,
-including details of how the vertices and facets of each simplex are
-numbered.
-
-Neither this class nor the "end user" class Simplex<dim> support value
-semantics: they cannot be copied, swapped, or manually constructed.
-Their memory is managed by the Triangulation class, and their
-locations in memory define them. See Simplex<dim> for further details.
-
-Python:
-    This base class is not present, but the "end user" class
-    Simplex<dim> is.
-
-Template parameter ``dim``:
-    the dimension of the underlying triangulation.)doc";
-
-// Docstring regina::python::doc::detail::SimplexBase::adjacentFacet
+// Docstring regina::python::doc::Simplex::adjacentFacet
 static constexpr const char adjacentFacet[] =
 R"doc(If the given facet of this simplex is glued to facet *f* of some
 adjacent simplex, then this routine returns the adjacent facet number
@@ -115,7 +90,7 @@ Returns:
     the corresponding facet number of the adjacent simplex that is
     glued to the given facet of this simplex.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::adjacentGluing
+// Docstring regina::python::doc::Simplex::adjacentGluing
 static constexpr const char adjacentGluing[] =
 R"doc(Returns a permutation that indicates precisely how this simplex is
 glued to the adjacent simplex across the given facet.
@@ -145,7 +120,13 @@ Returns:
     a permutation that maps the vertices of this simplex to the
     vertices of the adjacent simplex, as described above.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::adjacentSimplex
+// Docstring regina::python::doc::Simplex::adjacentPentachoron
+static constexpr const char adjacentPentachoron[] =
+R"doc(An alias for adjacentSimplex() in dimension 4.
+
+See adjacentSimplex() for further information.)doc";
+
+// Docstring regina::python::doc::Simplex::adjacentSimplex
 static constexpr const char adjacentSimplex[] =
 R"doc(Returns the adjacent simplex that is glued to the given facet of this
 simplex. If there is no adjacent simplex (i.e., the given facet lies
@@ -160,7 +141,19 @@ Returns:
     the adjacent simplex glued to the given facet, or ``None`` if the
     given facet lies on the boundary.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::component
+// Docstring regina::python::doc::Simplex::adjacentTetrahedron
+static constexpr const char adjacentTetrahedron[] =
+R"doc(An alias for adjacentSimplex() in dimension 3.
+
+See adjacentSimplex() for further information.)doc";
+
+// Docstring regina::python::doc::Simplex::adjacentTriangle
+static constexpr const char adjacentTriangle[] =
+R"doc(An alias for adjacentSimplex() in dimension 2.
+
+See adjacentSimplex() for further information.)doc";
+
+// Docstring regina::python::doc::Simplex::component
 static constexpr const char component[] =
 R"doc(Returns the connected component of the triangulation to which this
 simplex belongs.
@@ -168,7 +161,7 @@ simplex belongs.
 Returns:
     the component containing this simplex.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::description
+// Docstring regina::python::doc::Simplex::description
 static constexpr const char description[] =
 R"doc(Returns the description associated with this simplex.
 
@@ -176,13 +169,13 @@ Returns:
     the description of this simplex, or the empty string if no
     description is stored.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::edge
+// Docstring regina::python::doc::Simplex::edge
 static constexpr const char edge[] =
 R"doc(A dimension-specific alias for face<1>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::edge_2
+// Docstring regina::python::doc::Simplex::edge_2
 static constexpr const char edge_2[] =
 R"doc(Returns the edge of this simplex that connects the two given vertices
 of this simplex.
@@ -205,13 +198,13 @@ Returns:
     the edge of this simplex that connects vertices *i* and *j* of
     this simplex.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::edgeMapping
+// Docstring regina::python::doc::Simplex::edgeMapping
 static constexpr const char edgeMapping[] =
 R"doc(A dimension-specific alias for faceMapping<1>().
 
 See faceMapping() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::face
+// Docstring regina::python::doc::Simplex::face
 static constexpr const char face[] =
 R"doc(Returns the *subdim*-face of the underlying triangulation that appears
 as the given *subdim*-face of this simplex.
@@ -235,7 +228,7 @@ Parameter ``face``:
 Returns:
     the corresponding *subdim*-face of the triangulation.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::faceMapping
+// Docstring regina::python::doc::Simplex::faceMapping
 static constexpr const char faceMapping[] =
 R"doc(Examines the given *subdim*-face of this simplex, and returns the
 mapping between the underlying *subdim*-face of the triangulation and
@@ -331,7 +324,7 @@ Returns:
     a mapping from the vertices of the underlying *subdim*-face of the
     triangulation to the vertices of this simplex.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::facetInMaximalForest
+// Docstring regina::python::doc::Simplex::facetInMaximalForest
 static constexpr const char facetInMaximalForest[] =
 R"doc(Determines whether the given facet of this simplex belongs to the
 maximal forest that has been chosen for the dual 1-skeleton of the
@@ -365,7 +358,7 @@ Returns:
     corresponds to a dual edge in the maximal forest chosen for the
     dual 1-skeleton.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::hasBoundary
+// Docstring regina::python::doc::Simplex::hasBoundary
 static constexpr const char hasBoundary[] =
 R"doc(Determines if this simplex has any facets that lie on the
 triangulation boundary. In other words, this routine determines
@@ -375,7 +368,7 @@ adjacent simplex.
 Returns:
     ``True`` if and only if this simplex has any boundary facets.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::index
+// Docstring regina::python::doc::Simplex::index
 static constexpr const char index[] =
 R"doc(Returns the index of this simplex in the underlying triangulation.
 
@@ -388,7 +381,7 @@ from the underlying triangulation.
 Returns:
     the index of this simplex.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::isFacetLocked
+// Docstring regina::python::doc::Simplex::isFacetLocked
 static constexpr const char isFacetLocked[] =
 R"doc(Determines whether the given facet of this top-dimensional simplex is
 locked.
@@ -414,7 +407,7 @@ Parameter ``facet``:
 Returns:
     ``True`` if and only if the given facet of this simplex is locked.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::isLocked
+// Docstring regina::python::doc::Simplex::isLocked
 static constexpr const char isLocked[] =
 R"doc(Determines whether this top-dimensional simplex is locked.
 
@@ -435,7 +428,7 @@ triangulation has any locked *dim*-simplices or facets at all.
 Returns:
     ``True`` if and only if this simplex is locked.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::isolate
+// Docstring regina::python::doc::Simplex::isolate
 static constexpr const char isolate[] =
 R"doc(Unglues this simplex from any adjacent simplices. As a result, every
 facet of this simplex will become a boundary facet, and this simplex
@@ -453,7 +446,7 @@ Exception ``LockViolation``:
     See lockFacet() for further details on how facet locks work and
     what their implications are.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::join
+// Docstring regina::python::doc::Simplex::join
 static constexpr const char join[] =
 R"doc(Joins the given facet of this simplex to some facet of another
 simplex. The other simplex will be updated automatically (i.e., you
@@ -505,7 +498,7 @@ Parameter ``gluing``:
     map to the vertices of *you* across the new gluing. This
     permutation should be in the form described by adjacentGluing().)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::lock
+// Docstring regina::python::doc::Simplex::lock
 static constexpr const char lock[] =
 R"doc(Locks this top-dimensional simplex.
 
@@ -548,7 +541,7 @@ Changing locks is considered a modification of the triangulation (in
 particular, if the triangulation is wrapped in a packet then the
 appropriate change events will be fired).)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::lockFacet
+// Docstring regina::python::doc::Simplex::lockFacet
 static constexpr const char lockFacet[] =
 R"doc(Locks the given facet of this top-dimensional simplex.
 
@@ -631,7 +624,7 @@ Parameter ``facet``:
     indicates which facet of this simplex to lock; this must be
     between 0 and *dim* inclusive.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::lockMask
+// Docstring regina::python::doc::Simplex::lockMask
 static constexpr const char lockMask[] =
 R"doc(Returns a bitmask indicating which of this simplex and/or its
 individual facets are locked.
@@ -658,7 +651,7 @@ Returns:
     locked. This bitmask will be returned using a native C++ unsigned
     integer type of the appropriate size.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::orientation
+// Docstring regina::python::doc::Simplex::orientation
 static constexpr const char orientation[] =
 R"doc(Returns the orientation of this simplex in the *dim*-dimensional
 triangulation.
@@ -677,19 +670,19 @@ have orientation +1.
 Returns:
     +1 or -1 according to the orientation of this simplex.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::pentachoron
+// Docstring regina::python::doc::Simplex::pentachoron
 static constexpr const char pentachoron[] =
 R"doc(A dimension-specific alias for face<4>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::pentachoronMapping
+// Docstring regina::python::doc::Simplex::pentachoronMapping
 static constexpr const char pentachoronMapping[] =
 R"doc(A dimension-specific alias for faceMapping<4>().
 
 See faceMapping() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::setDescription
+// Docstring regina::python::doc::Simplex::setDescription
 static constexpr const char setDescription[] =
 R"doc(Sets the description associated with this simplex.
 
@@ -702,38 +695,38 @@ to the empty string.
 Parameter ``desc``:
     the new description to assign to this simplex.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::tetrahedron
+// Docstring regina::python::doc::Simplex::tetrahedron
 static constexpr const char tetrahedron[] =
 R"doc(A dimension-specific alias for face<3>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::tetrahedronMapping
+// Docstring regina::python::doc::Simplex::tetrahedronMapping
 static constexpr const char tetrahedronMapping[] =
 R"doc(A dimension-specific alias for faceMapping<3>().
 
 See faceMapping() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::triangle
+// Docstring regina::python::doc::Simplex::triangle
 static constexpr const char triangle[] =
 R"doc(A dimension-specific alias for face<2>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::triangleMapping
+// Docstring regina::python::doc::Simplex::triangleMapping
 static constexpr const char triangleMapping[] =
 R"doc(A dimension-specific alias for faceMapping<2>().
 
 See faceMapping() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::triangulation
+// Docstring regina::python::doc::Simplex::triangulation
 static constexpr const char triangulation[] =
 R"doc(Returns the triangulation to which this simplex belongs.
 
 Returns:
     a reference to the triangulation containing this simplex.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::unjoin
+// Docstring regina::python::doc::Simplex::unjoin
 static constexpr const char unjoin[] =
 R"doc(Unglues the given facet of this simplex from whatever it is joined to.
 As a result, the given facet of this simplex will become a boundary
@@ -760,7 +753,7 @@ Returns:
     the simplex that was originally glued to the given facet of this
     simplex, or ``None`` if this was already a boundary facet.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::unlock
+// Docstring regina::python::doc::Simplex::unlock
 static constexpr const char unlock[] =
 R"doc(Unlocks this top-dimensional simplex.
 
@@ -781,7 +774,7 @@ its facets in a single function call. Also,
 Triangulation<dim>::unlockAll() offers a simple way to unlock all
 *dim*-simplices and their facets across an entire triangulation.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::unlockAll
+// Docstring regina::python::doc::Simplex::unlockAll
 static constexpr const char unlockAll[] =
 R"doc(Unlocks this top-dimensional simplex and all of its facets.
 
@@ -800,7 +793,7 @@ facets are already unlocked.
 See also Triangulation<dim>::unlockAll() for a simple way to unlock
 all *dim*-simplices and their facets across an entire triangulation.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::unlockFacet
+// Docstring regina::python::doc::Simplex::unlockFacet
 static constexpr const char unlockFacet[] =
 R"doc(Unlocks the given facet of this top-dimensional simplex.
 
@@ -830,21 +823,19 @@ Parameter ``facet``:
     indicates which facet of this simplex to unlock; this must be
     between 0 and *dim* inclusive.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::vertex
+// Docstring regina::python::doc::Simplex::vertex
 static constexpr const char vertex[] =
 R"doc(A dimension-specific alias for face<0>().
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::SimplexBase::vertexMapping
+// Docstring regina::python::doc::Simplex::vertexMapping
 static constexpr const char vertexMapping[] =
 R"doc(A dimension-specific alias for faceMapping<0>().
 
 See faceMapping() for further information.)doc";
 
-}; // struct SimplexBase
-
-} // namespace detail
+}; // struct Simplex
 
 } // namespace regina::python::doc
 
