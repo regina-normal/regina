@@ -45,7 +45,6 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/facetspec.h"
-#include "triangulation/alias/isomorphism.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
 #include "utilities/exception.h"
@@ -113,8 +112,7 @@ namespace regina {
 template <int dim> requires (supportedDim(dim))
 class Isomorphism :
         public Output<Isomorphism<dim>>,
-        public TightEncodable<Isomorphism<dim>>,
-        public alias::IsomorphismImage<Isomorphism<dim>, dim> {
+        public TightEncodable<Isomorphism<dim>> {
     protected:
         size_t size_;
             /**< The number of simplices in the source triangulation. */
@@ -248,6 +246,54 @@ class Isomorphism :
          * that the source simplex maps to.
          */
         ssize_t simpImage(size_t sourceSimp) const;
+        /**
+         * An alias for simpImage() in dimension 2.
+         *
+         * See simpImage() for further information.
+         *
+         * \nopython For Python users, triImage() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setTriImage() instead.
+         */
+        ssize_t& triImage(size_t sourceSimp) requires (dim == 2);
+        /**
+         * An alias for simpImage() in dimension 2.
+         *
+         * See simpImage() for further information.
+         */
+        ssize_t triImage(size_t sourceSimp) const requires (dim == 2);
+        /**
+         * An alias for simpImage() in dimension 3.
+         *
+         * See simpImage() for further information.
+         *
+         * \nopython For Python users, tetImage() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setTetImage() instead.
+         */
+        ssize_t& tetImage(size_t sourceSimp) requires (dim == 3);
+        /**
+         * An alias for simpImage() in dimension 3.
+         *
+         * See simpImage() for further information.
+         */
+        ssize_t tetImage(size_t sourceSimp) const requires (dim == 3);
+        /**
+         * An alias for simpImage() in dimension 4.
+         *
+         * See simpImage() for further information.
+         *
+         * \nopython For Python users, pentImage() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setPentImage() instead.
+         */
+        ssize_t& pentImage(size_t sourceSimp) requires (dim == 4);
+        /**
+         * An alias for simpImage() in dimension 4.
+         *
+         * See simpImage() for further information.
+         */
+        ssize_t pentImage(size_t sourceSimp) const requires (dim == 4);
 #ifdef __APIDOCS
         /**
          * Python-only routine that sets the image of the given source
@@ -270,6 +316,33 @@ class Isomorphism :
          * source simplex should map to.
          */
         void setSimpImage(size_t sourceSimp, ssize_t image);
+        /**
+         * An alias for the Python-only routine setSimpImage() in dimension 2.
+         *
+         * See setSimpImage() for further information.
+         *
+         * \nocpp For C++ users, triImage() is used for both reading and
+         * writing: just write `triImage(sourceSimp) = image`.
+         */
+        void setTriImage(size_t sourceSimp, ssize_t image) requires (dim == 2);
+        /**
+         * An alias for the Python-only routine setSimpImage() in dimension 3.
+         *
+         * See setSimpImage() for further information.
+         *
+         * \nocpp For C++ users, tetImage() is used for both reading and
+         * writing: just write `tetImage(sourceSimp) = image`.
+         */
+        void setTetImage(size_t sourceSimp, ssize_t image) requires (dim == 3);
+        /**
+         * An alias for the Python-only routine setSimpImage() in dimension 4.
+         *
+         * See setSimpImage() for further information.
+         *
+         * \nocpp For C++ users, pentImage() is used for both reading and
+         * writing: just write `pentImage(sourceSimp) = image`.
+         */
+        void setPentImage(size_t sourceSimp, ssize_t image) requires (dim == 4);
 #endif
         /**
          * Returns a read-write reference to the permutation that is
@@ -312,6 +385,38 @@ class Isomorphism :
          * source simplex.
          */
         Perm<dim+1> facetPerm(size_t sourceSimp) const;
+        /**
+         * An alias for facetPerm() in dimension 2.
+         *
+         * See facetPerm() for further information.
+         *
+         * \nopython For Python users, edgePerm() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setEdgePerm() instead.
+         */
+        Perm<dim + 1>& edgePerm(size_t sourceSimp) requires (dim == 2);
+        /**
+         * An alias for facetPerm() in dimension 2.
+         *
+         * See facetPerm() for further information.
+         */
+        Perm<dim + 1> edgePerm(size_t sourceSimp) const requires (dim == 2);
+        /**
+         * An alias for facetPerm() in dimension 3.
+         *
+         * See facetPerm() for further information.
+         *
+         * \nopython For Python users, facePerm() is a read-only function
+         * that returns by value.  For write access, use the Python-only
+         * routine setFacePerm() instead.
+         */
+        Perm<dim + 1>& facePerm(size_t sourceSimp) requires (dim == 3);
+        /**
+         * An alias for facetPerm() in dimension 3.
+         *
+         * See facetPerm() for further information.
+         */
+        Perm<dim + 1> facePerm(size_t sourceSimp) const requires (dim == 3);
 #ifdef __APIDOCS
         /**
          * Python-only routine that sets the permutation that is applied to
@@ -333,6 +438,26 @@ class Isomorphism :
          * of the source simplex.
          */
         void setFacetPerm(size_t sourceSimp, Perm<dim+1> perm);
+        /**
+         * An alias for the Python-only routine setFacetPerm() in dimension 2.
+         *
+         * See setFacetPerm() for further information.
+         *
+         * \nocpp For C++ users, edgePerm() is used for both reading and
+         * writing: just write `edgePerm(sourceSimp) = perm`.
+         */
+        void setEdgePerm(size_t sourceSimp, Perm<dim+1> perm)
+            requires (dim == 2);
+        /**
+         * An alias for the Python-only routine setFacetPerm() in dimension 3.
+         *
+         * See setFacetPerm() for further information.
+         *
+         * \nocpp For C++ users, facePerm() is used for both reading and
+         * writing: just write `facePerm(sourceSimp) = perm`.
+         */
+        void setFacePerm(size_t sourceSimp, Perm<dim+1> perm)
+            requires (dim == 3);
 #endif
         /**
          * Determines the image of the given source simplex facet
@@ -854,6 +979,42 @@ inline ssize_t Isomorphism<dim>::simpImage(size_t sourceSimp) const {
 }
 
 template <int dim> requires (supportedDim(dim))
+inline ssize_t& Isomorphism<dim>::triImage(size_t sourceSimp)
+        requires (dim == 2) {
+    return simpImage(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline ssize_t Isomorphism<dim>::triImage(size_t sourceSimp) const
+        requires (dim == 2) {
+    return simpImage(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline ssize_t& Isomorphism<dim>::tetImage(size_t sourceSimp)
+        requires (dim == 3) {
+    return simpImage(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline ssize_t Isomorphism<dim>::tetImage(size_t sourceSimp) const
+        requires (dim == 3) {
+    return simpImage(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline ssize_t& Isomorphism<dim>::pentImage(size_t sourceSimp)
+        requires (dim == 4) {
+    return simpImage(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline ssize_t Isomorphism<dim>::pentImage(size_t sourceSimp) const
+        requires (dim == 4) {
+    return simpImage(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1>& Isomorphism<dim>::facetPerm(size_t sourceSimp) {
     return facetPerm_[sourceSimp];
 }
@@ -861,6 +1022,30 @@ inline Perm<dim+1>& Isomorphism<dim>::facetPerm(size_t sourceSimp) {
 template <int dim> requires (supportedDim(dim))
 inline Perm<dim+1> Isomorphism<dim>::facetPerm(size_t sourceSimp) const {
     return facetPerm_[sourceSimp];
+}
+
+template <int dim> requires (supportedDim(dim))
+inline Perm<dim + 1>& Isomorphism<dim>::edgePerm(size_t sourceSimp)
+        requires (dim == 2) {
+    return facetPerm(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline Perm<dim + 1> Isomorphism<dim>::edgePerm(size_t sourceSimp) const
+        requires (dim == 2) {
+    return facetPerm(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline Perm<dim + 1>& Isomorphism<dim>::facePerm(size_t sourceSimp)
+        requires (dim == 3) {
+    return facetPerm(sourceSimp);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline Perm<dim + 1> Isomorphism<dim>::facePerm(size_t sourceSimp) const
+        requires (dim == 3) {
+    return facetPerm(sourceSimp);
 }
 
 template <int dim> requires (supportedDim(dim))
