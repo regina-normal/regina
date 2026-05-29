@@ -33,59 +33,55 @@
 #include "triangulation/dim2.h"
 #include "../../helpers.h"
 #include "../facehelper.h"
-#include "../../docstrings/triangulation/detail/boundarycomponent.h"
+#include "../../docstrings/triangulation/boundarycomponent.h"
 
 using namespace pybind11::literals;
 
 using regina::BoundaryComponent;
 
 void addBoundaryComponent2(pybind11::module_& m, pybind11::module_& internal) {
-    // We use the global scope here because all of BoundaryComponent's members
-    // are inherited, and so BoundaryComponent's own docstring namespace
-    // does not exist.
-    RDOC_SCOPE_BEGIN_MAIN
-    RDOC_SCOPE_BASE(detail::BoundaryComponentBase)
+    RDOC_SCOPE_BEGIN(BoundaryComponent)
 
     auto c = pybind11::class_<BoundaryComponent<2>>(m, "BoundaryComponent2",
             rdoc::BoundaryComponent::__class)
-        .def("index", &BoundaryComponent<2>::index, rbase::index)
-        .def("size", &BoundaryComponent<2>::size, rbase::size)
+        .def("index", &BoundaryComponent<2>::index, rdoc::index)
+        .def("size", &BoundaryComponent<2>::size, rdoc::size)
         .def("countRidges", &BoundaryComponent<2>::countRidges,
-            rbase::countRidges)
+            rdoc::countRidges)
         .def("countFaces",
             (regina::python::countFacesFunc<BoundaryComponent<2>>)(
                 &BoundaryComponent<2>::countFaces),
-            rbase::countFaces)
-        .def("countEdges", &BoundaryComponent<2>::countEdges, rbase::countEdges)
+            rdoc::countFaces)
+        .def("countEdges", &BoundaryComponent<2>::countEdges, rdoc::countEdges)
         .def("countVertices", &BoundaryComponent<2>::countVertices,
-            rbase::countVertices)
-        .def("facets", &BoundaryComponent<2>::facets, rbase::facets)
+            rdoc::countVertices)
+        .def("facets", &BoundaryComponent<2>::facets, rdoc::facets)
         .def("faces", (regina::python::facesFunc<BoundaryComponent<2>>)(
                 &BoundaryComponent<2>::faces),
-            "subdim"_a, rbase::faces)
-        .def("edges", &BoundaryComponent<2>::edges, rbase::edges)
-        .def("vertices", &BoundaryComponent<2>::vertices, rbase::vertices)
+            "subdim"_a, rdoc::faces)
+        .def("edges", &BoundaryComponent<2>::edges, rdoc::edges)
+        .def("vertices", &BoundaryComponent<2>::vertices, rdoc::vertices)
         .def("facet", &BoundaryComponent<2>::facet,
-            pybind11::return_value_policy::reference, rbase::facet)
+            pybind11::return_value_policy::reference, rdoc::facet)
         .def("face", (regina::python::faceFunc<BoundaryComponent<2>>)(
                 &BoundaryComponent<2>::face),
             pybind11::return_value_policy::reference,
-            "subdim"_a, "index"_a, rbase::face)
+            "subdim"_a, "index"_a, rdoc::face)
         .def("edge", &BoundaryComponent<2>::edge,
-            pybind11::return_value_policy::reference, rbase::edge)
+            pybind11::return_value_policy::reference, rdoc::edge)
         .def("vertex", &BoundaryComponent<2>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex)
+            pybind11::return_value_policy::reference, rdoc::vertex)
         .def("component", &BoundaryComponent<2>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("triangulation", &BoundaryComponent<2>::triangulation,
-            rbase::triangulation)
-        .def("eulerChar", &BoundaryComponent<2>::eulerChar, rbase::eulerChar)
-        .def("isReal", &BoundaryComponent<2>::isReal, rbase::isReal)
-        .def("isIdeal", &BoundaryComponent<2>::isIdeal, rbase::isIdeal)
+            rdoc::triangulation)
+        .def("eulerChar", &BoundaryComponent<2>::eulerChar, rdoc::eulerChar)
+        .def("isReal", &BoundaryComponent<2>::isReal, rdoc::isReal)
+        .def("isIdeal", &BoundaryComponent<2>::isIdeal, rdoc::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<2>::isInvalidVertex,
-            rbase::isInvalidVertex)
+            rdoc::isInvalidVertex)
         .def("isOrientable", &BoundaryComponent<2>::isOrientable,
-            rbase::isOrientable)
+            rdoc::isOrientable)
         .def_readonly_static("dimension", &BoundaryComponent<2>::dimension)
         .def_readonly_static("allFaces", &BoundaryComponent<2>::allFaces)
         .def_readonly_static("allowVertex", &BoundaryComponent<2>::allowVertex)

@@ -31,8 +31,8 @@
 #include "triangulation/dim2.h"
 #include "triangulation/detail/boundarycomponent-impl.h"
 
-namespace regina::detail {
+namespace regina {
 
-template BoundaryComponentBase<2>::~BoundaryComponentBase();
+template BoundaryComponent<2>::~BoundaryComponent();
 
-} // namespace regina::detail
+} // namespace regina

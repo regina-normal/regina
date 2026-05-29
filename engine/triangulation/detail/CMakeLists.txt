@@ -13,7 +13,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     algebra-impl.h
-    boundarycomponent.h
     canonical-impl.h
     component.h
     example.h

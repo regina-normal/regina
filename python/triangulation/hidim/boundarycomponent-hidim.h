@@ -33,7 +33,7 @@
 #include "triangulation/triangulation.h"
 #include "../../helpers.h"
 #include "../facehelper.h"
-#include "../../docstrings/triangulation/detail/boundarycomponent.h"
+#include "../../docstrings/triangulation/boundarycomponent.h"
 
 using namespace pybind11::literals;
 
@@ -47,48 +47,44 @@ void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
     // - we do not recognise ideal or invalid vertices;
     // - we can still triangulate a real boundary component.
 
-    // We use the global scope here because all of BoundaryComponent's members
-    // are inherited, and so BoundaryComponent's own docstring namespace
-    // does not exist.
-    RDOC_SCOPE_BEGIN_MAIN
-    RDOC_SCOPE_BASE(detail::BoundaryComponentBase)
+    RDOC_SCOPE_BEGIN(BoundaryComponent)
 
     auto c = pybind11::class_<BoundaryComponent<dim>>(m, name,
             rdoc::BoundaryComponent::__class)
-        .def("index", &BoundaryComponent<dim>::index, rbase::index)
-        .def("size", &BoundaryComponent<dim>::size, rbase::size)
+        .def("index", &BoundaryComponent<dim>::index, rdoc::index)
+        .def("size", &BoundaryComponent<dim>::size, rdoc::size)
         .def("countRidges", &BoundaryComponent<dim>::countRidges,
-            rbase::countRidges)
+            rdoc::countRidges)
         .def("countFaces",
             (regina::python::countFacesFunc<BoundaryComponent<dim>>)(
                 &BoundaryComponent<dim>::countFaces),
-            rbase::countFaces)
-        .def("facets", &BoundaryComponent<dim>::facets, rbase::facets)
+            rdoc::countFaces)
+        .def("facets", &BoundaryComponent<dim>::facets, rdoc::facets)
         .def("faces", (regina::python::facesFunc<BoundaryComponent<dim>>)(
                 &BoundaryComponent<dim>::faces),
-            "subdim"_a, rbase::faces)
+            "subdim"_a, rdoc::faces)
         .def("facet", &BoundaryComponent<dim>::facet,
-            pybind11::return_value_policy::reference, rbase::facet)
+            pybind11::return_value_policy::reference, rdoc::facet)
         .def("face", (regina::python::faceFunc<BoundaryComponent<dim>>)(
                 &BoundaryComponent<dim>::face),
             pybind11::return_value_policy::reference,
-            "subdim"_a, "index"_a, rbase::face)
+            "subdim"_a, "index"_a, rdoc::face)
         .def("component", &BoundaryComponent<dim>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("triangulation", &BoundaryComponent<dim>::triangulation,
-            rbase::triangulation)
+            rdoc::triangulation)
         .def("build", [](const BoundaryComponent<dim>& b) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<dim-1>(b.build());
-        }, rbase::build)
-        .def("isReal", &BoundaryComponent<dim>::isReal, rbase::isReal)
-        .def("isIdeal", &BoundaryComponent<dim>::isIdeal, rbase::isIdeal)
+        }, rdoc::build)
+        .def("isReal", &BoundaryComponent<dim>::isReal, rdoc::isReal)
+        .def("isIdeal", &BoundaryComponent<dim>::isIdeal, rdoc::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<dim>::isInvalidVertex,
-            rbase::isInvalidVertex)
+            rdoc::isInvalidVertex)
         .def("isOrientable", &BoundaryComponent<dim>::isOrientable,
-            rbase::isOrientable)
+            rdoc::isOrientable)
         .def_readonly_static("dimension", &BoundaryComponent<dim>::dimension)
         .def_readonly_static("allFaces", &BoundaryComponent<dim>::allFaces)
         .def_readonly_static("allowVertex",
@@ -97,15 +93,15 @@ void addBoundaryComponent(pybind11::module_& m, pybind11::module_& internal,
     ;
     if constexpr (dim == 5) {
         c.def("countPentachora", &BoundaryComponent<dim>::countPentachora,
-            rbase::countPentachora);
+            rdoc::countPentachora);
         c.def("pentachoron", &BoundaryComponent<dim>::pentachoron,
-            pybind11::return_value_policy::reference, rbase::pentachoron);
+            pybind11::return_value_policy::reference, rdoc::pentachoron);
         c.def("pentachora", &BoundaryComponent<dim>::pentachora,
-            rbase::pentachora);
+            rdoc::pentachora);
     }
     if constexpr (dim == 6) {
         c.def("countPentachora", &BoundaryComponent<dim>::countPentachora,
-            rbase::countPentachora);
+            rdoc::countPentachora);
     }
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);

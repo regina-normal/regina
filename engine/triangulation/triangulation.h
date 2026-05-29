@@ -61,7 +61,7 @@
 #include "maths/matrix.h"
 #include "packet/packet.h"
 #include "triangulation/detail/component.h"
-#include "triangulation/detail/boundarycomponent.h"
+#include "triangulation/boundarycomponent.h"
 #include "triangulation/face.h"
 #include "triangulation/simplex.h"
 #include "triangulation/isomorphism.h"
@@ -4834,7 +4834,7 @@ class TriangulationBase :
     // BoundaryComponent<dim>::buildRealBoundary() calls
     // Triangulation<dim-1>::reorderFaces().
     template <int dim_> requires (supportedDim(dim_))
-    friend class regina::detail::BoundaryComponentBase;
+    friend class regina::BoundaryComponent;
 
     friend class regina::XMLLegacySimplicesReader<dim>;
     friend class regina::XMLSimplexReader<dim>;

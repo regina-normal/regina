@@ -32,13 +32,13 @@
 #include "triangulation/hidim.h"
 #include "triangulation/detail/boundarycomponent-impl.h"
 
-namespace regina::detail {
+namespace regina {
 
 // Don't cascade instantiations all the way down through the dimensions...
-extern template BoundaryComponentBase<4>::~BoundaryComponentBase();
+extern template BoundaryComponent<4>::~BoundaryComponent();
 
-template BoundaryComponentBase<5>::~BoundaryComponentBase();
+template BoundaryComponent<5>::~BoundaryComponent();
 
-template Triangulation<4>* BoundaryComponentBase<5>::buildRealBoundary() const;
+template Triangulation<4>* BoundaryComponent<5>::buildRealBoundary() const;
 
-} // namespace regina::detail
+} // namespace regina

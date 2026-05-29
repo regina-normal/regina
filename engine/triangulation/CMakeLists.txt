@@ -27,6 +27,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    boundarycomponent.h
     cut.h
     dim2.h
     dim3.h
