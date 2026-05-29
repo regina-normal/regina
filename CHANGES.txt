@@ -19,6 +19,8 @@ Version 8.0  [ TODO ]
         - Added classical and virtual knot tables to the in-built census
           databases.
         - Regina now requires liblzma at build time (but not runtime).
+        - Substantially simplified the source code layout and class hierarchy
+          around triangulations and related classes.
     ENGINE:
         Class AbelianGroup:
             - The constructor that takes invariant factors as a container
