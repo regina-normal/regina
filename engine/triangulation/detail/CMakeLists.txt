@@ -17,7 +17,6 @@ if (${REGINA_INSTALL_DEV})
     canonical-impl.h
     component.h
     example.h
-    face.h
     facetpairing.h
     facetpairing-impl.h
     isosig-impl.h

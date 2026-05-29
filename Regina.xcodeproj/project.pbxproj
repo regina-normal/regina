@@ -473,7 +473,6 @@
 		054209271DF28C990018AB24 /* rule.h in Headers */ = {isa = PBXBuildFile; fileRef = 054209221DF28C990018AB24 /* rule.h */; };
 		05431F201C40F260009BC072 /* canonical-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F151C40F260009BC072 /* canonical-impl.h */; };
 		05431F211C40F260009BC072 /* component.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F171C40F260009BC072 /* component.h */; };
-		05431F221C40F260009BC072 /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F181C40F260009BC072 /* face.h */; };
 		05431F241C40F260009BC072 /* facetpairing-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1A1C40F260009BC072 /* facetpairing-impl.h */; };
 		05431F251C40F260009BC072 /* facetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1B1C40F260009BC072 /* facetpairing.h */; };
 		05431F271C40F260009BC072 /* isosig-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1D1C40F260009BC072 /* isosig-impl.h */; };
@@ -1669,6 +1668,7 @@
 		05E62AE22FC708DA00AE1B84 /* snappea-census-sec7n.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 05E62AD72FC7070F00AE1B84 /* snappea-census-sec7n.dat */; };
 		05E62AE32FC708DE00AE1B84 /* snappea-census-sec7o.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 05E62AD82FC7070F00AE1B84 /* snappea-census-sec7o.dat */; };
 		05E62AE82FCA3E4E00AE1B84 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AE72FCA3E4E00AE1B84 /* simplex.h */; };
+		05E62AEC2FCA41E900AE1B84 /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AEB2FCA41E900AE1B84 /* face.h */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -2967,7 +2967,6 @@
 		05431F151C40F260009BC072 /* canonical-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "canonical-impl.h"; sourceTree = "<group>"; };
 		05431F161C40F260009BC072 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05431F171C40F260009BC072 /* component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
-		05431F181C40F260009BC072 /* face.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		05431F1A1C40F260009BC072 /* facetpairing-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "facetpairing-impl.h"; sourceTree = "<group>"; };
 		05431F1B1C40F260009BC072 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05431F1D1C40F260009BC072 /* isosig-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "isosig-impl.h"; sourceTree = "<group>"; };
@@ -4645,6 +4644,7 @@
 		05E62AE72FCA3E4E00AE1B84 /* simplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
 		05E62AE92FCA3E9700AE1B84 /* simplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = simplex.h; sourceTree = "<group>"; };
 		05E62AEA2FCA3E9700AE1B84 /* triangulation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
+		05E62AEB2FCA41E900AE1B84 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -6777,6 +6777,7 @@
 				052F9E3F180600FB00FAE4DF /* example3.h */,
 				055114C31DCC45FD00EC753C /* example4.cpp */,
 				055114C41DCC45FD00EC753C /* example4.h */,
+				05E62AEB2FCA41E900AE1B84 /* face.h */,
 				055114D01DCC71A700EC753C /* facenumbering.h */,
 				052F9E41180600FB00FAE4DF /* facepair.cpp */,
 				052F9E42180600FB00FAE4DF /* facepair.h */,
@@ -7055,7 +7056,6 @@
 				05431F161C40F260009BC072 /* CMakeLists.txt */,
 				05431F171C40F260009BC072 /* component.h */,
 				054C6A7C1DCC20DA005373F0 /* example.h */,
-				05431F181C40F260009BC072 /* face.h */,
 				05C265C128307D0500232420 /* facetpairing-canonical-impl.h */,
 				05431F1A1C40F260009BC072 /* facetpairing-impl.h */,
 				05431F1B1C40F260009BC072 /* facetpairing.h */,
@@ -9017,7 +9017,6 @@
 				052F9FE1180600FB00FAE4DF /* sigcensus.h in Headers */,
 				054208831DF0D0B50018AB24 /* state_p.h in Headers */,
 				05A067311DFA68190047872E /* satregion.h in Headers */,
-				05431F221C40F260009BC072 /* face.h in Headers */,
 				052F9F0F180600FB00FAE4DF /* isosig.h in Headers */,
 				059802F826683C6D002D5D57 /* xmlcallback.h in Headers */,
 				052F9F5C180600FB00FAE4DF /* script.h in Headers */,
@@ -9170,6 +9169,7 @@
 				054208B81DF0D2740018AB24 /* handlebody.h in Headers */,
 				054208781DF0D0B50018AB24 /* format_p.h in Headers */,
 				059802E926683C6D002D5D57 /* xmlhypersurfacereader.h in Headers */,
+				05E62AEC2FCA41E900AE1B84 /* face.h in Headers */,
 				0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */,
 				05754CE7258D7D6400236ED7 /* randutils.h in Headers */,
 				05A0673B1DFA68190047872E /* standardtri.h in Headers */,

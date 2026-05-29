@@ -35,6 +35,7 @@ if (${REGINA_INSTALL_DEV})
     example2.h
     example3.h
     example4.h
+    face.h
     forward.h
     facenumbering.h
     facepair.h

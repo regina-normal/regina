@@ -117,37 +117,62 @@ enum class TriangleType {
 };
 
 namespace detail {
+    template <int dim> requires (supportedDim(dim)) class TriangulationBase;
+    template <int dim> requires (supportedDim(dim)) class BoundaryComponentBase;
 
-template <int dim> requires (supportedDim(dim)) class TriangulationBase;
-template <int dim> requires (supportedDim(dim)) class BoundaryComponentBase;
-
-template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-class FaceBase;
+    template <int dim, int subdim>
+    requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+    class FaceBase;
+}
 
 /**
- * Helper class that provides core functionality for describing how a
- * <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation appears within
- * each top-dimensional simplex.
+ * Details how a <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation
+ * appears within each top-dimensional simplex.
  *
- * Each such appearance is described by a FaceEmbedding<dim, subdim> object,
- * which uses this as a base class.  End users should not need to refer
- * to FaceEmbeddingBase directly.
+ * For small-dimensional faces, this class is typically described using
+ * dimension-specific type aliases: VertexEmbedding<dim>, EdgeEmbedding<dim>,
+ * TriangleEmbedding<dim>, TetrahedronEmbedding<dim> and
+ * PentachoronEmbedding<dim> refer to the cases
+ * \a subdim = 0, 1, 2, 3 and 4 respectively.
  *
- * See the FaceEmbedding template class notes for further information.
+ * For a <i>dim</i>-dimensional triangulation \a T, each <i>subdim</i>-face
+ * \a F typically belongs to many top-dimensional simplices of \a T,
+ * and therefore has many associated FaceEmbedding objects.  These individual
+ * FaceEmbedding objects correspond to the top-dimensional simplices of the
+ * link of \a F (which is a (\a dim - \a subdim - 1)-dimensional triangulation).
  *
- * \python This base class is not present, but the "end user" class
- * FaceEmbedding<dim, subdim> is.
+ * As of Regina 7.0, a FaceEmbedding can happily outlive its face - even if the
+ * underlying Face object is destroyed (e.g., because the triangulation
+ * changed), if you made a local copy of a FaceEmbedding beforehand then its
+ * simplex(), face() and vertices() routines will continue to return the same
+ * values as they did before, back when the underlying Face still existed.
+ * A FaceEmbedding cannot, however, outlive its top-dimensional simplex,
+ * because internally a FaceEmbedding references the Simplex object in which
+ * it lives (i.e., it does not just store an integer simplex index).
+ *
+ * If \a dim is one of Regina's \ref stddim "standard dimensions", then
+ * this template is specialised to offer additional dimension-specific aliases.
+ * In order to use these specialised classes, you will need to include the
+ * corresponding triangulation headers (e.g., triangulation/dim2.h for
+ * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \python Python does not support templates.  Instead this class
+ * can be used by appending dimensions \a dim and \a subdim as suffices
+ * (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).
  *
  * \tparam dim the dimension of the underlying triangulation.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
  *
- * \ingroup detail
+ * \headerfile triangulation/triangulation.h
+ *
+ * \ingroup triangulation
  */
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-class FaceEmbeddingBase :
-        public ShortOutput<FaceEmbeddingBase<dim, subdim>> {
+class FaceEmbedding : public ShortOutput<FaceEmbedding<dim, subdim>> {
     private:
         Simplex<dim>* simplex_;
             /**< The top-dimensional simplex in which the underlying
@@ -165,7 +190,7 @@ class FaceEmbeddingBase :
          * \nopython This is because the C++ assignment operators
          * are not accessible to Python.
          */
-        FaceEmbeddingBase();
+        FaceEmbedding();
         /**
          * Creates a new object containing the given data.
          *
@@ -176,21 +201,20 @@ class FaceEmbeddingBase :
          * vertex numbers of \a simplex.  See vertices() for details of how
          * this permutation should be structured.
          */
-        FaceEmbeddingBase(Simplex<dim>* simplex, Perm<dim + 1> vertices);
+        FaceEmbedding(Simplex<dim>* simplex, Perm<dim + 1> vertices);
         /**
          * Creates a new copy of the given object.
          *
          * \param cloneMe the object to copy.
          */
-        FaceEmbeddingBase(const FaceEmbeddingBase& cloneMe) = default;
+        FaceEmbedding(const FaceEmbedding& cloneMe) = default;
 
         /**
          * Makes this a copy of the given object.
          *
          * \param cloneMe the object to copy.
          */
-        FaceEmbeddingBase& operator = (const FaceEmbeddingBase& cloneMe) =
-            default;
+        FaceEmbedding& operator = (const FaceEmbedding& cloneMe) = default;
 
         /**
          * Returns the top-dimensional simplex in which the underlying
@@ -337,7 +361,7 @@ class FaceEmbeddingBase :
          * \param rhs the object to compare with this.
          * \return \c true if and only if both object are identical.
          */
-        bool operator == (const FaceEmbeddingBase& rhs) const;
+        bool operator == (const FaceEmbedding& rhs) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -359,110 +383,9 @@ class FaceEmbeddingBase :
          * silently converted to a permutation and passed to the new
          * (\a simplex, \a vertices) constructor instead.
          */
-        FaceEmbeddingBase(Simplex<dim>*, int);
-
-    friend class FaceBase<dim, subdim>;
-};
-
-} // namespace regina::detail -> namespace regina
-
-/**
- * Details how a <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation
- * appears within each top-dimensional simplex.
- *
- * For small-dimensional faces, this class is typically described using
- * dimension-specific type aliases: VertexEmbedding<dim>, EdgeEmbedding<dim>,
- * TriangleEmbedding<dim>, TetrahedronEmbedding<dim> and
- * PentachoronEmbedding<dim> refer to the cases
- * \a subdim = 0, 1, 2, 3 and 4 respectively.
- *
- * For a <i>dim</i>-dimensional triangulation \a T, each <i>subdim</i>-face
- * \a F typically belongs to many top-dimensional simplices of \a T,
- * and therefore has many associated FaceEmbedding objects.  These individual
- * FaceEmbedding objects correspond to the top-dimensional simplices of the
- * link of \a F (which is a (\a dim - \a subdim - 1)-dimensional triangulation).
- *
- * As of Regina 7.0, a FaceEmbedding can happily outlive its face - even if the
- * underlying Face object is destroyed (e.g., because the triangulation
- * changed), if you made a local copy of a FaceEmbedding beforehand then its
- * simplex(), face() and vertices() routines will continue to return the same
- * values as they did before, back when the underlying Face still existed.
- * A FaceEmbedding cannot, however, outlive its top-dimensional simplex,
- * because internally a FaceEmbedding references the Simplex object in which
- * it lives (i.e., it does not just store an integer simplex index).
- *
- * If \a dim is one of Regina's \ref stddim "standard dimensions", then
- * this template is specialised to offer additional dimension-specific aliases.
- * In order to use these specialised classes, you will need to include the
- * corresponding triangulation headers (e.g., triangulation/dim2.h for
- * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
- *
- * These objects are small enough to pass by value and swap with std::swap(),
- * with no need for any specialised move operations or swap functions.
- *
- * \python Python does not support templates.  Instead this class
- * can be used by appending dimensions \a dim and \a subdim as suffices
- * (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples above).
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam subdim the dimension of the faces of the underlying triangulation.
- *
- * \headerfile triangulation/triangulation.h
- *
- * \ingroup triangulation
- */
-template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
-    public:
-        /**
-         * Default constructor.  This object is unusable until it has
-         * some data assigned to it using `operator =`.
-         *
-         * \nopython This is because the C++ assignment operators are
-         * not accessible to Python.
-         */
-        FaceEmbedding() = default;
-
-        /**
-         * Creates a new object containing the given data.
-         *
-         * \param simplex the top-dimensional simplex in which the
-         * underlying <i>subdim</i>-face of the triangulation is contained.
-         * \param vertices a mapping from the vertices of the underlying
-         * <i>subdim</i>-face of the triangulation to the corresponding
-         * vertex numbers of \a simplex.  See FaceEmbeddingBase::vertices()
-         * for details of how this permutation should be structured.
-         */
-        FaceEmbedding(Simplex<dim>* simplex, Perm<dim + 1> vertices) :
-                detail::FaceEmbeddingBase<dim, subdim>(simplex, vertices) {
-        }
-
-        /**
-         * Creates a new copy of the given object.
-         *
-         * \param cloneMe the object to copy.
-         */
-        FaceEmbedding(const FaceEmbedding& cloneMe) = default;
-
-        /**
-         * Sets this to be a copy of the given object.
-         *
-         * \param cloneMe the object to copy.
-         */
-        FaceEmbedding& operator = (const FaceEmbedding& cloneMe) = default;
-
-    private:
-        /**
-         * Explicitly disable the old (\a simplex, \a face) constructor from
-         * Regina 6.0.1 and earlier.
-         *
-         * This is so that, if the user unintentionally calls the old
-         * (\a simplex, \a face) constructor, the face argument will not be
-         * silently converted to a permutation and passed to the new
-         * (\a simplex, \a vertices) constructor instead.
-         */
         FaceEmbedding(Simplex<dim>*, int);
+
+    friend class detail::FaceBase<dim, subdim>;
 };
 
 #ifndef __DOXYGEN
@@ -1524,107 +1447,102 @@ class Face : public detail::FaceBase<dim, subdim> {
     friend class detail::TriangulationBase<dim>;
 };
 
-namespace detail {
-
-// Inline functions for FaceEmbeddingBase
+// Inline functions for FaceEmbedding
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase() : simplex_(nullptr) {
+inline FaceEmbedding<dim, subdim>::FaceEmbedding() : simplex_(nullptr) {
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase(
+inline FaceEmbedding<dim, subdim>::FaceEmbedding(
         Simplex<dim>* simplex, Perm<dim + 1> vertices) :
         simplex_(simplex), vertices_(vertices) {
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::simplex() const {
+inline Simplex<dim>* FaceEmbedding<dim, subdim>::simplex() const {
     return simplex_;
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::triangle() const
+inline Simplex<dim>* FaceEmbedding<dim, subdim>::triangle() const
         requires (dim == 2) {
     return simplex_;
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::tetrahedron() const
+inline Simplex<dim>* FaceEmbedding<dim, subdim>::tetrahedron() const
         requires (dim == 3) {
     return simplex_;
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::pentachoron() const
+inline Simplex<dim>* FaceEmbedding<dim, subdim>::pentachoron() const
         requires (dim == 4) {
     return simplex_;
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline int FaceEmbeddingBase<dim, subdim>::face() const {
+inline int FaceEmbedding<dim, subdim>::face() const {
     return FaceNumbering<dim, subdim>::faceNumber(vertices_);
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline int FaceEmbeddingBase<dim, subdim>::vertex() const
-        requires (subdim == 0) {
+inline int FaceEmbedding<dim, subdim>::vertex() const requires (subdim == 0) {
     return face();
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline int FaceEmbeddingBase<dim, subdim>::edge() const
-        requires (subdim == 1) {
+inline int FaceEmbedding<dim, subdim>::edge() const requires (subdim == 1) {
     return face();
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline int FaceEmbeddingBase<dim, subdim>::triangle() const
-        requires (subdim == 2) {
+inline int FaceEmbedding<dim, subdim>::triangle() const requires (subdim == 2) {
     return face();
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline int FaceEmbeddingBase<dim, subdim>::tetrahedron() const
+inline int FaceEmbedding<dim, subdim>::tetrahedron() const
         requires (subdim == 3) {
     return face();
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline int FaceEmbeddingBase<dim, subdim>::pentachoron() const
+inline int FaceEmbedding<dim, subdim>::pentachoron() const
         requires (subdim == 4) {
     return face();
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Perm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
+inline Perm<dim+1> FaceEmbedding<dim, subdim>::vertices() const {
     return vertices_;
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceEmbeddingBase<dim, subdim>::operator == (
-        const FaceEmbeddingBase& rhs) const {
+inline bool FaceEmbedding<dim, subdim>::operator == (const FaceEmbedding& rhs)
+        const {
     return simplex_->index() == rhs.simplex_->index() &&
         vertices_ == rhs.vertices_;
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out)
+inline void FaceEmbedding<dim, subdim>::writeTextShort(std::ostream& out)
         const {
     if constexpr (subdim == 0)
         out << simplex_->index() << " (" << vertices_[0] << ')';
@@ -1634,6 +1552,8 @@ inline void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out)
 }
 
 // Inline functions for FaceBase
+
+namespace detail {
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)

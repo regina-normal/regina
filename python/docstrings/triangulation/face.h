@@ -141,6 +141,34 @@ R"doc(Creates a new copy of the given object.
 Parameter ``cloneMe``:
     the object to copy.)doc";
 
+// Docstring regina::python::doc::FaceEmbedding::__eq
+static constexpr const char __eq[] =
+R"doc(Tests whether this and the given object are identical.
+
+Here _identical_ means that two FaceEmbedding objects refer to the
+same-numbered face of the same-numbered simplex, _and_ have the same
+embedding permutations as returned by vertices().
+
+In particular, since this test only examines face/simplex/vertex
+_numbers_ (not object pointers), it is meaningful to compare two
+FaceEmbedding objects from different underlying triangulations.
+
+.. warning::
+    The meaning of this comparison changed in Regina 7.0. In older
+    versions of Regina, to compare as equal, two FaceEmbedding objects
+    (i) had to be faces of the same Simplex object (a stronger
+    requirement that effectively restricted this test to faces of the
+    same triangulation); but also (ii) only had to refer to the same-
+    numbered face, not use the same full embedding permutations (a
+    weaker requirement that nowadays would incur an unacceptable
+    performance cost).
+
+Parameter ``rhs``:
+    the object to compare with this.
+
+Returns:
+    ``True`` if and only if both object are identical.)doc";
+
 // Docstring regina::python::doc::FaceEmbedding::__init
 static constexpr const char __init[] =
 R"doc(Creates a new object containing the given data.
@@ -152,8 +180,114 @@ Parameter ``simplex``:
 Parameter ``vertices``:
     a mapping from the vertices of the underlying *subdim*-face of the
     triangulation to the corresponding vertex numbers of *simplex*.
-    See FaceEmbeddingBase::vertices() for details of how this
-    permutation should be structured.)doc";
+    See vertices() for details of how this permutation should be
+    structured.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::edge
+static constexpr const char edge[] =
+R"doc(An alias for face() for faces of dimension 1.
+
+See face() for further information.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::face
+static constexpr const char face[] =
+R"doc(Returns the corresponding face number of simplex(). This identifies
+which face of the top-dimensional simplex simplex() refers to the
+underlying *subdim*-face of the triangulation.
+
+If the face dimension *subdim* is at most 4, then you can also access
+this face number through a dimension-specific alias (e.g., edge() in
+the case *subdim* = 1).
+
+Returns:
+    the corresponding face number of the top-dimensional simplex. This
+    will be between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::pentachoron
+static constexpr const char pentachoron[] =
+R"doc(An alias for face() for faces of dimension 4.
+
+See face() for further information.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::simplex
+static constexpr const char simplex[] =
+R"doc(Returns the top-dimensional simplex in which the underlying
+*subdim*-face of the triangulation is contained.
+
+If the triangulation dimension *dim* is at most 4, then you can also
+access this simplex through a dimension-specific alias (e.g.,
+tetrahedron() in the case *dim* = 3).
+
+Returns:
+    the top-dimensional simplex.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::simplex_dim2
+static constexpr const char simplex_dim2[] =
+R"doc(An alias for simplex() in dimension 2.
+
+See simplex() for further information.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::simplex_dim3
+static constexpr const char simplex_dim3[] =
+R"doc(An alias for simplex() in dimension 3.
+
+See simplex() for further information.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::simplex_dim4
+static constexpr const char simplex_dim4[] =
+R"doc(An alias for simplex() in dimension 4.
+
+See simplex() for further information.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::tetrahedron
+static constexpr const char tetrahedron[] =
+R"doc(An alias for face() for faces of dimension 3.
+
+See face() for further information.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::triangle
+static constexpr const char triangle[] =
+R"doc(An alias for face() for faces of dimension 2.
+
+See face() for further information.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::vertex
+static constexpr const char vertex[] =
+R"doc(An alias for face() for faces of dimension 0.
+
+See face() for further information.)doc";
+
+// Docstring regina::python::doc::FaceEmbedding::vertices
+static constexpr const char vertices[] =
+R"doc(Maps vertices (0,...,*subdim*) of the underlying *subdim*-face of the
+triangulation to the corresponding vertex numbers of simplex().
+
+If the link of the underlying *subdim*-face is orientable, then this
+permutation also maps (*subdim*+1, ..., *dim*) to the remaining vertex
+numbers of simplex() in a manner that preserves orientation as you
+walk through the many different FaceEmbedding objects for the same
+underlying *subdim*-face.
+
+This routine returns the same permutation as
+``simplex()->faceMapping<subdim>(face())`` (and this routine is faster
+if you already have a FaceEmbedding). See Simplex<dim>::faceMapping()
+for details.
+
+.. warning::
+    Be aware that if the triangulation changes then the skeleton will
+    be recomputed, and there is no guarantee that the new Face objects
+    will use the same inherent labelling as the old ones. In
+    particular, after the triangulation changes, the FaceEmbedding for
+    the same face of the same simplex might return a different
+    permutation for ``vertices()``. Likewise, if you keep a copy of an
+    old FaceEmbedding ``emb`` and then change the triangulation, the
+    connection between ``emb.vertices()`` (which will not be updated)
+    and ``emb.simplex()->faceMapping<subdim>(emb.face())`` (which will
+    be updated) will be lost.
+
+Returns:
+    a mapping from the vertices of the underlying *subdim*-face to the
+    corresponding vertices of simplex().)doc";
 
 }; // struct FaceEmbedding
 
@@ -914,187 +1048,6 @@ R"doc(A dimension-specific alias for faceMapping<0>().
 See faceMapping() for further information.)doc";
 
 }; // struct FaceBase
-
-struct FaceEmbeddingBase {
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::__class
-static constexpr const char __class[] =
-R"doc(Helper class that provides core functionality for describing how a
-*subdim*-face of a *dim*-dimensional triangulation appears within each
-top-dimensional simplex.
-
-Each such appearance is described by a FaceEmbedding<dim, subdim>
-object, which uses this as a base class. End users should not need to
-refer to FaceEmbeddingBase directly.
-
-See the FaceEmbedding template class notes for further information.
-
-Python:
-    This base class is not present, but the "end user" class
-    FaceEmbedding<dim, subdim> is.
-
-Template parameter ``dim``:
-    the dimension of the underlying triangulation.
-
-Template parameter ``subdim``:
-    the dimension of the faces of the underlying triangulation.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::__copy
-static constexpr const char __copy[] =
-R"doc(Creates a new copy of the given object.
-
-Parameter ``cloneMe``:
-    the object to copy.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::__eq
-static constexpr const char __eq[] =
-R"doc(Tests whether this and the given object are identical.
-
-Here _identical_ means that two FaceEmbedding objects refer to the
-same-numbered face of the same-numbered simplex, _and_ have the same
-embedding permutations as returned by vertices().
-
-In particular, since this test only examines face/simplex/vertex
-_numbers_ (not object pointers), it is meaningful to compare two
-FaceEmbedding objects from different underlying triangulations.
-
-.. warning::
-    The meaning of this comparison changed in Regina 7.0. In older
-    versions of Regina, to compare as equal, two FaceEmbedding objects
-    (i) had to be faces of the same Simplex object (a stronger
-    requirement that effectively restricted this test to faces of the
-    same triangulation); but also (ii) only had to refer to the same-
-    numbered face, not use the same full embedding permutations (a
-    weaker requirement that nowadays would incur an unacceptable
-    performance cost).
-
-Parameter ``rhs``:
-    the object to compare with this.
-
-Returns:
-    ``True`` if and only if both object are identical.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::__init
-static constexpr const char __init[] =
-R"doc(Creates a new object containing the given data.
-
-Parameter ``simplex``:
-    the top-dimensional simplex in which the underlying *subdim*-face
-    of the triangulation is contained.
-
-Parameter ``vertices``:
-    a mapping from the vertices of the underlying *subdim*-face of the
-    triangulation to the corresponding vertex numbers of *simplex*.
-    See vertices() for details of how this permutation should be
-    structured.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::edge
-static constexpr const char edge[] =
-R"doc(An alias for face() for faces of dimension 1.
-
-See face() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::face
-static constexpr const char face[] =
-R"doc(Returns the corresponding face number of simplex(). This identifies
-which face of the top-dimensional simplex simplex() refers to the
-underlying *subdim*-face of the triangulation.
-
-If the face dimension *subdim* is at most 4, then you can also access
-this face number through a dimension-specific alias (e.g., edge() in
-the case *subdim* = 1).
-
-Returns:
-    the corresponding face number of the top-dimensional simplex. This
-    will be between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::pentachoron
-static constexpr const char pentachoron[] =
-R"doc(An alias for face() for faces of dimension 4.
-
-See face() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex
-static constexpr const char simplex[] =
-R"doc(Returns the top-dimensional simplex in which the underlying
-*subdim*-face of the triangulation is contained.
-
-If the triangulation dimension *dim* is at most 4, then you can also
-access this simplex through a dimension-specific alias (e.g.,
-tetrahedron() in the case *dim* = 3).
-
-Returns:
-    the top-dimensional simplex.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex_dim2
-static constexpr const char simplex_dim2[] =
-R"doc(An alias for simplex() in dimension 2.
-
-See simplex() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex_dim3
-static constexpr const char simplex_dim3[] =
-R"doc(An alias for simplex() in dimension 3.
-
-See simplex() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::simplex_dim4
-static constexpr const char simplex_dim4[] =
-R"doc(An alias for simplex() in dimension 4.
-
-See simplex() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::tetrahedron
-static constexpr const char tetrahedron[] =
-R"doc(An alias for face() for faces of dimension 3.
-
-See face() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::triangle
-static constexpr const char triangle[] =
-R"doc(An alias for face() for faces of dimension 2.
-
-See face() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::vertex
-static constexpr const char vertex[] =
-R"doc(An alias for face() for faces of dimension 0.
-
-See face() for further information.)doc";
-
-// Docstring regina::python::doc::detail::FaceEmbeddingBase::vertices
-static constexpr const char vertices[] =
-R"doc(Maps vertices (0,...,*subdim*) of the underlying *subdim*-face of the
-triangulation to the corresponding vertex numbers of simplex().
-
-If the link of the underlying *subdim*-face is orientable, then this
-permutation also maps (*subdim*+1, ..., *dim*) to the remaining vertex
-numbers of simplex() in a manner that preserves orientation as you
-walk through the many different FaceEmbedding objects for the same
-underlying *subdim*-face.
-
-This routine returns the same permutation as
-``simplex()->faceMapping<subdim>(face())`` (and this routine is faster
-if you already have a FaceEmbedding). See Simplex<dim>::faceMapping()
-for details.
-
-.. warning::
-    Be aware that if the triangulation changes then the skeleton will
-    be recomputed, and there is no guarantee that the new Face objects
-    will use the same inherent labelling as the old ones. In
-    particular, after the triangulation changes, the FaceEmbedding for
-    the same face of the same simplex might return a different
-    permutation for ``vertices()``. Likewise, if you keep a copy of an
-    old FaceEmbedding ``emb`` and then change the triangulation, the
-    connection between ``emb.vertices()`` (which will not be updated)
-    and ``emb.simplex()->faceMapping<subdim>(emb.face())`` (which will
-    be updated) will be lost.
-
-Returns:
-    a mapping from the vertices of the underlying *subdim*-face to the
-    corresponding vertices of simplex().)doc";
-
-}; // struct FaceEmbeddingBase
 
 } // namespace detail
 

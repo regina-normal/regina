@@ -41,7 +41,7 @@
 #include "docstrings/core/engine.h"
 #include "docstrings/core/regina-core.h"
 #include "docstrings/python/equality.h"
-#include "docstrings/triangulation/detail/face.h" // for TriangleType
+#include "docstrings/triangulation/face.h" // for TriangleType
 
 // Additional headers for timeExceptions():
 #include "maths/perm.h"

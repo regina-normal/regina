@@ -33,7 +33,7 @@
 #include "../../helpers.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/detail/face.h"
+#include "../../docstrings/triangulation/face.h"
 
 using namespace pybind11::literals;
 
@@ -45,7 +45,6 @@ requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 void addFace(pybind11::module_& m, pybind11::module_& internal,
         const char* name, const char* embName) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
-    RDOC_SCOPE_BASE(detail::FaceEmbeddingBase)
 
     auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName,
             rdoc::__class)
@@ -53,25 +52,25 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
             rdoc::__init)
         .def(pybind11::init<const FaceEmbedding<dim, subdim>&>(), rdoc::__copy)
         .def("simplex", &FaceEmbedding<dim, subdim>::simplex,
-            pybind11::return_value_policy::reference, rbase::simplex)
-        .def("face", &FaceEmbedding<dim, subdim>::face, rbase::face)
-        .def("vertices", &FaceEmbedding<dim, subdim>::vertices, rbase::vertices)
+            pybind11::return_value_policy::reference, rdoc::simplex)
+        .def("face", &FaceEmbedding<dim, subdim>::face, rdoc::face)
+        .def("vertices", &FaceEmbedding<dim, subdim>::vertices, rdoc::vertices)
     ;
     if constexpr (subdim == 0)
-        e.def("vertex", &FaceEmbedding<dim, subdim>::vertex, rbase::vertex);
+        e.def("vertex", &FaceEmbedding<dim, subdim>::vertex, rdoc::vertex);
     else if constexpr (subdim == 1)
-        e.def("edge", &FaceEmbedding<dim, subdim>::edge, rbase::edge);
+        e.def("edge", &FaceEmbedding<dim, subdim>::edge, rdoc::edge);
     else if constexpr (subdim == 2)
         e.def("triangle", &FaceEmbedding<dim, subdim>::triangle,
-            rbase::triangle);
+            rdoc::triangle);
     else if constexpr (subdim == 3)
         e.def("tetrahedron", &FaceEmbedding<dim, subdim>::tetrahedron,
-            rbase::tetrahedron);
+            rdoc::tetrahedron);
     else if constexpr (subdim == 4)
         e.def("pentachoron", &FaceEmbedding<dim, subdim>::pentachoron,
-            rbase::pentachoron);
+            rdoc::pentachoron);
     regina::python::add_output_rich(e);
-    regina::python::add_eq_operators(e, rbase::__eq);
+    regina::python::add_eq_operators(e, rdoc::__eq);
 
     // We use the global scope here because all of Face's members are
     // inherited, and so Face's own docstring namespace does not exist.

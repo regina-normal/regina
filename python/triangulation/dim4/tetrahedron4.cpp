@@ -34,7 +34,7 @@
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
 #include "../../docstrings/triangulation/dim4/tetrahedron4.h"
-#include "../../docstrings/triangulation/detail/face.h"
+#include "../../docstrings/triangulation/face.h"
 
 using namespace pybind11::literals;
 
@@ -45,7 +45,6 @@ using regina::FaceEmbedding;
 
 void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(FaceEmbedding)
-    RDOC_SCOPE_BASE(detail::FaceEmbeddingBase)
 
     auto e = pybind11::class_<FaceEmbedding<4, 3>>(m, "FaceEmbedding4_3",
             rdoc::__class)
@@ -53,16 +52,16 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::__init)
         .def(pybind11::init<const TetrahedronEmbedding<4>&>(), rdoc::__copy)
         .def("simplex", &TetrahedronEmbedding<4>::simplex,
-            pybind11::return_value_policy::reference, rbase::simplex)
+            pybind11::return_value_policy::reference, rdoc::simplex)
         .def("pentachoron", &TetrahedronEmbedding<4>::pentachoron,
-            pybind11::return_value_policy::reference, rbase::simplex_dim4)
-        .def("face", &TetrahedronEmbedding<4>::face, rbase::face)
+            pybind11::return_value_policy::reference, rdoc::simplex_dim4)
+        .def("face", &TetrahedronEmbedding<4>::face, rdoc::face)
         .def("tetrahedron", &TetrahedronEmbedding<4>::tetrahedron,
-            rbase::tetrahedron)
-        .def("vertices", &TetrahedronEmbedding<4>::vertices, rbase::vertices)
+            rdoc::tetrahedron)
+        .def("vertices", &TetrahedronEmbedding<4>::vertices, rdoc::vertices)
     ;
     regina::python::add_output_rich(e);
-    regina::python::add_eq_operators(e, rbase::__eq);
+    regina::python::add_eq_operators(e, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(Tetrahedron4)
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
