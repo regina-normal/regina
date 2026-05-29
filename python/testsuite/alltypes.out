@@ -54,6 +54,7 @@ CensusDB : class -> EqualityType.ByValue
 CensusHit : class -> EqualityType.ByValue
 CensusPurge : enum
 CensusPurgeFlags : alias -> enum CensusPurge
+CensusSearchable : concept
 CharIterator : concept
 ChildIterator : class -> EqualityType.ByValue
 ClosedPrimeMinSearcher : class -> EqualityType.ByReference
