@@ -5626,6 +5626,43 @@ Returns:
     the size of the first connected diagram component, or 0 if the
     given signature describes the empty link.)doc";
 
+// Docstring regina::python::doc::Link::sigGeneration
+static constexpr const char sigGeneration[] =
+R"doc(Identifies whether the given string-based knot/link signature is
+first-generation or second-generation.
+
+This routine aims to be fast, and does not verify the entire
+signature; instead it reads just enough of the initial characters to
+make its decision. What this means is:
+
+* If the given signature _is_ a first-generation or second-generation
+  signature, this routine guarantees to return 1 or 2 respectively.
+
+* Otherwise, there are no guarantees: this output _could_ return 0
+  (indicating that it identified *sig* as being neither of these), or
+  it could still return 1 or 2 (indicating that, whilst invalid, *sig*
+  nevertheless has a prefix that _looks_ like a first-generation or
+  second-generation signature).
+
+As a special case, for the empty link and zero-crossing unlinks, the
+first-generation and second-generation signatures are identical (``_``
+for the empty link, or ``aa…a`` for a zero-crossing unlink). In these
+scenarios, sigGeneration() will return 2.
+
+If you need to verify the _validity_ of a signature, this is not the
+correct routine to use - instead you should test whether
+``fromSig(sig)`` throws an exception.
+
+Parameter ``sig``:
+    a string-based knot/link signature of some generation.
+
+Returns:
+    1 or 2 if *sig* is a first-generation or second-generation
+    signature respectively, or 0 if *sig* was explicitly discovered to
+    be neither of these. As described above, if \s sig is _not_ a
+    knot/link signature of any generation, this routine could return
+    any of the values 0, 1 or 2.)doc";
+
 // Docstring regina::python::doc::Link::signedGauss
 static constexpr const char signedGauss[] =
 R"doc(Returns a signed Gauss code for this knot, presented as a string.

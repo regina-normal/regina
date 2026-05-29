@@ -320,10 +320,10 @@ static constexpr const char __copy[] = R"doc(Creates a new clone of the given da
 static constexpr const char __eq[] =
 R"doc(Tests whether this and the given object represent the same database.
 
-Two databases are considered the same if they have identical filenames
-(as returned by the filename() function), _and_ they were given the
-same maximum size arguments upon construction. The database
-descriptions and tags are irrelevant here.
+Two databases are considered the same if and only if they have
+identical filenames (as returned by the filename() function). The
+database descriptions and tags are irrelevant here, as are the maximum
+size arguments passed to the class constructor.
 
 Parameter ``rhs``:
     the database to compare this against.

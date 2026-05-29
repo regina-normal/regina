@@ -725,6 +725,8 @@ alias, to avoid people misinterpreting the return value as a boolean.)doc")
         .def_static("fromIsoSig", // deprecated
             overload_cast<const std::string&>(&Triangulation<3>::fromSig),
             rbase::fromIsoSig)
+        .def_static("sigGeneration", &Triangulation<3>::sigGeneration,
+            rbase::sigGeneration)
         .def_static("isoSigComponentSize",
             &Triangulation<3>::isoSigComponentSize, rbase::isoSigComponentSize)
         .def("source", &Triangulation<3>::source,

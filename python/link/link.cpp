@@ -251,6 +251,7 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def_static("fromKnotSig", // deprecated
             overload_cast<const std::string&>(&Link::fromSig),
             rdoc::fromKnotSig)
+        .def_static("sigGeneration", &Link::sigGeneration, rdoc::sigGeneration)
         .def_static("sigDiagramComponentSize", &Link::sigDiagramComponentSize,
             rdoc::sigDiagramComponentSize)
         .def("swap", &Link::swap, rdoc::swap)

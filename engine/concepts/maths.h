@@ -110,12 +110,9 @@ concept SignatureType =
 template <typename T>
 concept SignatureReconstructible =
     requires(const T obj, const std::string sig) {
-        typename T::PrintableSigEncoding;
         { T::fromSig(sig) } -> std::same_as<T>;
         { obj.neoSig() } -> std::same_as<std::string>;
-        { obj.template neoSig<typename T::PrintableSigEncoding>() } ->
-            std::same_as<std::string>;
-        { T::PrintableSigEncoding::generation(sig) } -> std::same_as<int>;
+        { T::sigGeneration(sig) } -> std::same_as<int>;
     };
 
 } // namespace regina

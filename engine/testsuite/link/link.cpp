@@ -3675,9 +3675,9 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
 
     if constexpr (std::same_as<Encoding, LinkSigPrintable>) {
         if (link.size() == 0)
-            EXPECT_EQ(LinkSigPrintable::generation(sig), 2);
+            EXPECT_EQ(Link::sigGeneration(sig), 2);
         else
-            EXPECT_EQ(LinkSigPrintable::generation(sig), generation);
+            EXPECT_EQ(Link::sigGeneration(sig), generation);
     }
 
     if constexpr (stringBased) {

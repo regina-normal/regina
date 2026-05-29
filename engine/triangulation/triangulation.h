@@ -3994,6 +3994,41 @@ class TriangulationBase :
             const std::string& sig);
 
         /**
+         * Identifies whether the given string-based isomorphism signature is
+         * first-generation or second-generation.
+         *
+         * This routine aims to be fast, and does not verify the entire
+         * signature; instead it reads just enough of the initial characters
+         * to make its decision.  What this means is:
+         *
+         * - If the given signature _is_ a first-generation or
+         *   second-generation signature, this routine guarantees to return
+         *   1 or 2 respectively.
+         *
+         * - Otherwise, there are no guarantees: this output _could_ return 0
+         *   (indicating that it identified \a sig as being neither of these),
+         *   or it could still return 1 or 2 (indicating that, whilst invalid,
+         *   \a sig nevertheless has a prefix that _looks_ like a
+         *   first-generation or second-generation signature).
+         *
+         * As a special case, for the empty triangulation, the first-generation
+         * and second-generation signatures are identical (both are the single
+         * letter `a`).  In this scenario, sigGeneration() will return 2.
+         *
+         * If you need to verify the _validity_ of a signature, this is not
+         * the correct routine to use - instead you should test whether
+         * `fromSig(sig)` throws an exception.
+         *
+         * \param sig a string-based knot/link signature of some generation.
+         * \return 1 or 2 if \a sig is a first-generation or second-generation
+         * signature respectively, or 0 if \a sig was explicitly discovered to
+         * be neither of these.  As described above, if \s sig is _not_ a
+         * knot/link signature of any generation, this routine could return
+         * any of the values 0, 1 or 2.
+         */
+        static int sigGeneration(const std::string& sig);
+
+        /**
          * Deduces the number of top-dimensional simplices in a connected
          * triangulation from its string-based isomorphism signature.  This may
          * be either a first-generation signature (computed via `isoSig()`),
@@ -6723,6 +6758,12 @@ template <int dim> requires (supportedDim(dim))
 inline Triangulation<dim> TriangulationBase<dim>::fromIsoSig(
         const std::string& sig) {
     return TriangulationBase<dim>::fromSig(sig);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline int TriangulationBase<dim>::sigGeneration(const std::string& sig) {
+    // Use a common implementation that works for all dimensions.
+    return IsoSigPrintable::generation(sig);
 }
 
 template <int dim> requires (supportedDim(dim))

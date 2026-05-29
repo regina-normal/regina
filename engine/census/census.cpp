@@ -37,12 +37,6 @@
 
 namespace regina {
 
-// The census databases currently use second-generation signatures as keys.
-// Note: "a" is both a first-generation and second-generation signature
-// (for both triangulations and link diagrams).  However, generation("a")
-// guarantees to return 2 and so it will be treated as we hope in the code
-// below.
-
 std::list<CensusHit> Census::lookup(const std::string& sig) {
     auto tri3 = lookupAs<Triangulation<3>>(sig);
     auto links = lookupAs<Link>(sig);

@@ -1255,9 +1255,9 @@ class TriangulationTest : public testing::Test {
 
             if constexpr (std::same_as<Encoding, IsoSigPrintable>) {
                 if (tri.size() == 0)
-                    EXPECT_EQ(IsoSigPrintable::generation(sig), 2);
+                    EXPECT_EQ(Triangulation<dim>::sigGeneration(sig), 2);
                 else
-                    EXPECT_EQ(IsoSigPrintable::generation(sig), gen);
+                    EXPECT_EQ(Triangulation<dim>::sigGeneration(sig), gen);
             }
 
             if constexpr (stringBased) {

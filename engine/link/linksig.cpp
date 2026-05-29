@@ -415,36 +415,6 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
     }
 }
 
-int LinkSigPrintable::generation(const std::string& sig) {
-    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
-
-    // Get the empty link out of the way first.
-    switch (dec.peek()) {
-        case Base64Encoder::spare[0]:
-            return 2; // empty link
-        case 0:
-            return 0;
-    }
-
-    try {
-        // Read through components until we find one with non-zero size.
-        auto sizeAndWidth = dec.decodeSize();
-        while (sizeAndWidth.first == 0) {
-            // This component is a zero-crossing unknot.  Keep looking.
-            if (dec.done())
-                return 2; // the entire link is a zero-crossing unlink
-            sizeAndWidth = dec.decodeSize();
-        }
-
-        // We have found a component with non-zero size.  The next character
-        // tells us the generation (see the Link::fromSig() implementation for
-        // why).
-        return (dec.peek() == 'a' ? 1 : 2);
-    } catch (const InvalidInput&) {
-        return 0;
-    }
-}
-
 ByteSequence LinkSigBinary::encodeEmpty() {
     return {};
 }
@@ -851,6 +821,36 @@ Link Link::fromSig(const std::string& sig) {
         // Any exception caught here was thrown by the decoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid base64 encoding");
+    }
+}
+
+int Link::sigGeneration(const std::string& sig) {
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
+
+    // Get the empty link out of the way first.
+    switch (dec.peek()) {
+        case Base64Encoder::spare[0]:
+            return 2; // empty link
+        case 0:
+            return 0;
+    }
+
+    try {
+        // Read through components until we find one with non-zero size.
+        auto sizeAndWidth = dec.decodeSize();
+        while (sizeAndWidth.first == 0) {
+            // This component is a zero-crossing unknot.  Keep looking.
+            if (dec.done())
+                return 2; // the entire link is a zero-crossing unlink
+            sizeAndWidth = dec.decodeSize();
+        }
+
+        // We have found a component with non-zero size.  The next character
+        // tells us the generation (see the Link::fromSig() implementation for
+        // why).
+        return (dec.peek() == 'a' ? 1 : 2);
+    } catch (const InvalidInput&) {
+        return 0;
     }
 }
 

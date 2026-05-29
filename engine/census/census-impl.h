@@ -251,7 +251,7 @@ std::list<CensusHit> CensusCollection<ObjectType>::lookup(
     if (size > maxSize_)
         return {}; // too large - there will be no hits
 
-    int generation = ObjectType::PrintableSigEncoding::generation(sig);
+    int generation = ObjectType::sigGeneration(sig);
     if (generation == 0)
         return {}; // invalid signature - there will be no hits
 
@@ -259,6 +259,11 @@ std::list<CensusHit> CensusCollection<ObjectType>::lookup(
     auto push = [&hits](CensusHit hit) {
         hits.push_back(std::move(hit));
     };
+
+    // The census databases currently use second-generation signatures as keys.
+    // Note: "a" is both a first-generation and second-generation signature
+    // (for both triangulations and link diagrams).  However, sigGeneration("a")
+    // guarantees to return 2 and so it will be handled correctly here.
 
     // The calls to CensusDB::lookupKey() below could throw a FileError.
     if (generation == 2) {

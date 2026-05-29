@@ -3141,6 +3141,42 @@ Returns:
     type ``std::string`` for string-based encodings, or ByteSequence
     for binary encodings.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase::sigGeneration
+static constexpr const char sigGeneration[] =
+R"doc(Identifies whether the given string-based isomorphism signature is
+first-generation or second-generation.
+
+This routine aims to be fast, and does not verify the entire
+signature; instead it reads just enough of the initial characters to
+make its decision. What this means is:
+
+* If the given signature _is_ a first-generation or second-generation
+  signature, this routine guarantees to return 1 or 2 respectively.
+
+* Otherwise, there are no guarantees: this output _could_ return 0
+  (indicating that it identified *sig* as being neither of these), or
+  it could still return 1 or 2 (indicating that, whilst invalid, *sig*
+  nevertheless has a prefix that _looks_ like a first-generation or
+  second-generation signature).
+
+As a special case, for the empty triangulation, the first-generation
+and second-generation signatures are identical (both are the single
+letter ``a``). In this scenario, sigGeneration() will return 2.
+
+If you need to verify the _validity_ of a signature, this is not the
+correct routine to use - instead you should test whether
+``fromSig(sig)`` throws an exception.
+
+Parameter ``sig``:
+    a string-based knot/link signature of some generation.
+
+Returns:
+    1 or 2 if *sig* is a first-generation or second-generation
+    signature respectively, or 0 if *sig* was explicitly discovered to
+    be neither of these. As described above, if \s sig is _not_ a
+    knot/link signature of any generation, this routine could return
+    any of the values 0, 1 or 2.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase::simplex
 static constexpr const char simplex[] =
 R"doc(Returns the top-dimensional simplex at the given index in the

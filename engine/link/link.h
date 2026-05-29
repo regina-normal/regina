@@ -777,15 +777,6 @@ class Link :
 
     public:
         /**
-         * An alias for the default knot/link signature encoding, which
-         * encodes signatures as printable strings.
-         *
-         * This alias is provided to assist with generic code that can work
-         * with both links and triangulations.
-         */
-        using PrintableSigEncoding = LinkSigPrintable;
-
-        /**
          * The name of the variable used in the Alexander polynomial, as
          * returned by alexander().  This is provided to help with
          * pretty-printing Alexander polynomials for human consumption.
@@ -6351,6 +6342,42 @@ class Link :
          * \return the reconstructed link diagram.
          */
         [[deprecated]] static Link fromKnotSig(const std::string& sig);
+
+        /**
+         * Identifies whether the given string-based knot/link signature is
+         * first-generation or second-generation.
+         *
+         * This routine aims to be fast, and does not verify the entire
+         * signature; instead it reads just enough of the initial characters
+         * to make its decision.  What this means is:
+         *
+         * - If the given signature _is_ a first-generation or
+         *   second-generation signature, this routine guarantees to return
+         *   1 or 2 respectively.
+         *
+         * - Otherwise, there are no guarantees: this output _could_ return 0
+         *   (indicating that it identified \a sig as being neither of these),
+         *   or it could still return 1 or 2 (indicating that, whilst invalid,
+         *   \a sig nevertheless has a prefix that _looks_ like a
+         *   first-generation or second-generation signature).
+         *
+         * As a special case, for the empty link and zero-crossing unlinks,
+         * the first-generation and second-generation signatures are identical
+         * (`_` for the empty link, or `aa…a` for a zero-crossing unlink).
+         * In these scenarios, sigGeneration() will return 2.
+         *
+         * If you need to verify the _validity_ of a signature, this is not
+         * the correct routine to use - instead you should test whether
+         * `fromSig(sig)` throws an exception.
+         *
+         * \param sig a string-based knot/link signature of some generation.
+         * \return 1 or 2 if \a sig is a first-generation or second-generation
+         * signature respectively, or 0 if \a sig was explicitly discovered to
+         * be neither of these.  As described above, if \s sig is _not_ a
+         * knot/link signature of any generation, this routine could return
+         * any of the values 0, 1 or 2.
+         */
+        static int sigGeneration(const std::string& sig);
 
         /**
          * Deduces the number of crossings in a connected link diagram from

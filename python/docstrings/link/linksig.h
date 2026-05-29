@@ -481,45 +481,6 @@ LinkSigPrintable will return the signature ``a`` in this case.
 Returns:
     the signature of the zero-crossing unknot.)doc";
 
-// Docstring regina::python::doc::LinkSigPrintable::generation
-static constexpr const char generation[] =
-R"doc(Identifies whether the given signature is a first-generation or
-second-generation signature, as encoded by LinkSigPrintable.
-
-This routine aims to be fast, and does not verify the entire
-signature; instead it reads just enough of the initial characters to
-make its decision. What this means is:
-
-* If the given signature _is_ a first-generation or second-generation
-  signature as encoded by LinkSigPrintable, this routine guarantees to
-  return 1 or 2 respectively.
-
-* Otherwise, there are no guarantees: this output _could_ return 0
-  (indicating that it identified *sig* as being neither of these), or
-  it could still return 1 or 2 (indicating that, whilst invalid, *sig*
-  nevertheless has a prefix that _looks_ like a first-generation or
-  second-generation signature).
-
-As a special case, for the empty link and zero-crossing unlinks, the
-first-generation and second-generation signatures are identical (``_``
-for the empty link, or ``aa…a`` for a zero-crossing unlink). In these
-scenarios, generation() will return 2.
-
-If you need to verify the _validity_ of a signature, this is not the
-correct routine to use - instead you should test whether
-``Link::fromSig(sig)`` throws an exception.
-
-Parameter ``sig``:
-    a printable knot/link signature of some generation.
-
-Returns:
-    1 or 2 if *sig* is a first-generation or second-generation
-    signature respectively as encoded via LinkSigPrintable, or 0 if
-    *sig* was explicitly discovered to be neither of these. As
-    described above, if \s sig is _not_ a printable knot/link
-    signature of any generation, this routine could return any of the
-    values 0, 1 or 2.)doc";
-
 // Docstring regina::python::doc::LinkSigPrintable::length
 static constexpr const char length[] =
 R"doc(Precomputes the length of the signature that encodes the given

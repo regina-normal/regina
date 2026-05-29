@@ -460,6 +460,8 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
         .def_static("fromIsoSig", // deprecated
             overload_cast<const std::string&>(&Triangulation<4>::fromSig),
             rbase::fromIsoSig)
+        .def_static("sigGeneration", &Triangulation<4>::sigGeneration,
+            rbase::sigGeneration)
         .def_static("isoSigComponentSize",
             &Triangulation<4>::isoSigComponentSize, rbase::isoSigComponentSize)
         .def("source", &Triangulation<4>::source,
