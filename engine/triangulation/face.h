@@ -515,22 +515,24 @@ class FaceBase :
         BoundaryComponent<dim>* boundaryComponent_;
             /**< The boundary component that this face is a part of,
                  or \c null if this face is internal. */
-        EnableIf<allowsNonOrientableLinks, bool, true> linkOrientable_;
+        [[no_unique_address]] EnableIf<allowsNonOrientableLinks, bool, true>
+                linkOrientable_;
             /**< Is the link of this face orientable? */
-        EnableIf<allowsInvalidFaces && standardDim(dim), unsigned, VALID>
-                whyInvalid_;
+        [[no_unique_address]] EnableIf<allowsInvalidFaces && standardDim(dim),
+                unsigned, VALID> whyInvalid_;
             /**< Indicates whether this face is valid and, if it is not,
                  lists all the reasons why.  This should be a bitwise
                  combination of Validity constants. */
-        EnableIf<allowsInvalidFaces && ! standardDim(dim), bool, true> valid_;
+        [[no_unique_address]] EnableIf<allowsInvalidFaces && ! standardDim(dim),
+                bool, true> valid_;
             /**< Is this face valid?  This is for use in non-standard
                  dimensions, where we only test for one type of validity
                  (bad self-identifications). */
-        EnableIf<subdim == 2, TriangleType, TriangleType::Unknown>
-                triangleType_;
+        [[no_unique_address]] EnableIf<subdim == 2, TriangleType,
+                TriangleType::Unknown> triangleType_;
             /**< The combinatorial type of this triangle, or
                  TriangleType::Unknown if this has not yet been determined. */
-        EnableIf<subdim == 2, int, -1> triangleSubtype_;
+        [[no_unique_address]] EnableIf<subdim == 2, int, -1> triangleSubtype_;
             /**< Indicates the vertex or edge number that plays a special role
                  for the triangle type specified by triangleType_.  This is only
                  relevant for some triangle types, and it will be -1 if this is

@@ -258,6 +258,8 @@ def process_comment(comment, preserveAmpersands):
                r"```\n\1\n```\n", s, flags=re.DOTALL)
     s = re.sub(r'[\\@]warning\s?(.*?)\s?\n\n',
                r'\n\n$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
+    s = re.sub(r'[\\@]important\s?(.*?)\s?\n\n',
+               r'\n\n$.. important::\n\n\1\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]note\s?(.*?)\s?\n\n',
                r'\n\n$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]pyclassname{(\S+)}',

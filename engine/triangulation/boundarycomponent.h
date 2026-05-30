@@ -180,7 +180,7 @@ class BoundaryComponent:
             }
         }
 
-        EnableIf<! allFaces, size_t, 0> nRidges_;
+        [[no_unique_address]] EnableIf<! allFaces, size_t, 0> nRidges_;
             /**< The number of `(dim-2)`-faces in the boundary component.
                  We only store this if \a allFaces is `false`; that is,
                  we are not storing the `(dim-2)`-faces themselves). */
@@ -188,8 +188,8 @@ class BoundaryComponent:
         bool orientable_;
             /**< Is this boundary component orientable? */
 
-        EnableIf<canBuild, typename TriangulationTraits<dim>::Lower*, nullptr>
-                boundary_;
+        [[no_unique_address]] EnableIf<canBuild,
+                typename TriangulationTraits<dim>::Lower*, nullptr> boundary_;
             /**< A full triangulation of the boundary component.
                  This may be pre-computed when the triangulation skeleton
                  is constructed, or it may be \c null in which case it

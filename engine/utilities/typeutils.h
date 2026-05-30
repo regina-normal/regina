@@ -54,12 +54,20 @@ namespace regina {
  * A struct that holds either a single value of type \a T or nothing at all,
  * depending on whether the given compile-time condition holds.
  *
- * If \a condition is \c true, then this struct holds a single data member
+ * If \a condition is `true`, then this struct holds a single data member
  * \a value of type \a T, which will be initialised on construction with
  * \a defaultValue.
  *
- * The advantage to using this class over std::conditional is that it
+ * The advantage to using this class over `std::conditional` is that it
  * supports assigning a default value on construction.
+ *
+ * \important This struct was designed for use with data members in class
+ * templates.  In such situations, it is usually desirable to declare the
+ * data member `[[no_unique_address]]`, so that if \a condition is `false`
+ * then it takes up no space in the class that contains it.  See the
+ * implementation of `Face<dim, subdim>` for an example of this.
+ *
+ * \nopython
  *
  * \tparam condition \c true if the data member should be included, or
  * \c false if this struct should be empty.

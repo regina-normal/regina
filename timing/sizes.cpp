@@ -136,6 +136,20 @@ int main() {
     SHOW_SIZE(Simplex<3>);
     SHOW_SIZE(Simplex<4>);
     SHOW_SIZE(Simplex<5>);
+    SHOW_SIZE(Vertex<2>);
+    SHOW_SIZE(Vertex<3>);
+    SHOW_SIZE(Vertex<4>);
+    SHOW_SIZE(Vertex<5>);
+    SHOW_SIZE(Edge<2>);
+    SHOW_SIZE(Edge<3>);
+    SHOW_SIZE(Edge<4>);
+    SHOW_SIZE(Edge<5>);
+    SHOW_SIZE(Triangle<3>);
+    SHOW_SIZE(Triangle<4>);
+    SHOW_SIZE(Triangle<5>);
+    SHOW_SIZE(Tetrahedron<4>);
+    SHOW_SIZE(Tetrahedron<5>);
+    SHOW_SIZE(Pentachoron<5>);
     std::cout << std::endl;
 
     std::cout << "Surfaces and Structures:" << std::endl;
