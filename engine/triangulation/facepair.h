@@ -46,7 +46,8 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 /**
- * Represents a pair of tetrahedron face numbers.
+ * Represents a pair of tetrahedron face numbers within a 3-dimensional
+ * triangulation.
  *
  * Note that we are not storing triangle numbers in a triangulation
  * skeleton, but merely face numbers 0, 1, 2 and 3 in a single

@@ -42,7 +42,7 @@
 #endif
 
 #include "link/link.h"
-#include "triangulation/facetpairing3.h"
+#include "triangulation/facetpairing.h"
 #include "utilities/fixedarray.h"
 #include <set>
 

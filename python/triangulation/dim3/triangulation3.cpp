@@ -39,7 +39,7 @@
 #include "snappea/snappeatriangulation.h"
 #include "surface/normalsurface.h"
 #include "triangulation/example3.h"
-#include "triangulation/facetpairing3.h"
+#include "triangulation/facetpairing.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../../helpers.h"
 #include "../../helpers/packet.h"

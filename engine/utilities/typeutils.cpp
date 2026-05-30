@@ -37,7 +37,6 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 #include "triangulation/hidim.h"
 #include "utilities/typeutils.h"
 #include <unordered_map>
@@ -147,11 +146,6 @@ namespace {
                 std::string("regina.FacetSpec") +
                     regina::detail::Strings<i>::dim);
             registerType(typeid(FacetPairing<i>),
-                std::string("regina.FacetPairing") +
-                    regina::detail::Strings<i>::dim);
-            // We see FacetPairingBase show up in some swap() functions.
-            registerType(
-                typeid(regina::detail::FacetPairingBase<i>),
                 std::string("regina.FacetPairing") +
                     regina::detail::Strings<i>::dim);
 

@@ -38,7 +38,6 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 #include "../helpers.h"
 #include "../docstrings/triangulation/cut.h"
 

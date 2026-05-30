@@ -29,7 +29,7 @@
  **************************************************************************/
 
 #include "gluingperms-bindings.h"
-#include "triangulation/facetpairing3.h"
+#include "triangulation/dim3.h"
 
 void addGluingPerms3(pybind11::module_& m) {
     addGluingPerms<3>(m, "GluingPerms3");

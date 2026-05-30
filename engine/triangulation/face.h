@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file triangulation/detail/face.h
- *  \brief Implementation details for lower-dimensional faces of triangulations.
+ *  \brief Data structures for lower-dimensional faces of triangulations.
  */
 
 #ifndef __REGINA_FACE_H

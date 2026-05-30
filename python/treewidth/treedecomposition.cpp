@@ -37,7 +37,6 @@
 #include "link/link.h"
 #include "treewidth/treedecomposition-impl.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"

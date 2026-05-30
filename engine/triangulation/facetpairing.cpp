@@ -32,12 +32,22 @@
 #include <sstream>
 #include <vector>
 #include "triangulation/facepair.h"
-#include "triangulation/facetpairing3.h"
+#include "triangulation/facetpairing.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
+// This file includes the implementations of graph structure queries that are
+// specific to dimension 3.
+//
+// We do this via specialisations, so that we can keep the implementations out
+// of the headers and we do not need to explicitly instantiate every routine.
+//
+// Note: Our private helper functions must come first in this file, since we
+// cannot specialise them after using them in the public query routines.
+
 namespace regina {
 
+template <>
 void FacetPairing<3>::followChain(ssize_t& tet, FacePair& faces) const {
     FacetSpec<3> dest1, dest2;
     while (true) {
@@ -61,27 +71,7 @@ void FacetPairing<3>::followChain(ssize_t& tet, FacePair& faces) const {
     }
 }
 
-bool FacetPairing<3>::hasBrokenDoubleEndedChain() const {
-    // Search for the end edge of the first chain.
-    // Skip the last tetrahedron -- any of the two ends will do.
-    for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
-        for (int baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
-                // Here's a face that matches to the same tetrahedron.
-                if (hasBrokenDoubleEndedChain(baseTet, baseFace))
-                    return true;
-
-                // There's no sense in looking for more
-                // self-identifications in this tetrahedron, since if
-                // there's another (different) one it must be a
-                // one-tetrahedron component (and so not applicable).
-                break;
-            }
-
-    // Nothing found.  Boring.
-    return false;
-}
-
+template <>
 bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
         int baseFace) const {
     // Follow the chain along and see how far we get.
@@ -125,13 +115,15 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
     return false;
 }
 
-bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
-    // Search for the end edge of the chain.
-    for (size_t baseTet = 0; baseTet < size_; baseTet++)
+template <>
+bool FacetPairing<3>::hasBrokenDoubleEndedChain() const {
+    // Search for the end edge of the first chain.
+    // Skip the last tetrahedron -- any of the two ends will do.
+    for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
-                if (hasOneEndedChainWithDoubleHandle(baseTet, baseFace))
+                if (hasBrokenDoubleEndedChain(baseTet, baseFace))
                     return true;
 
                 // There's no sense in looking for more
@@ -145,6 +137,7 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
     return false;
 }
 
+template <>
 bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
         int baseFace) const {
     // Follow the chain along and see how far we get.
@@ -176,14 +169,14 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
     return (handle >= 2);
 }
 
-bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
-    // Search for the end edge of the first chain.
-    // Skip the last tetrahedron -- any of the two ends will do.
-    for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
+template <>
+bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
+    // Search for the end edge of the chain.
+    for (size_t baseTet = 0; baseTet < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
-                if (hasWedgedDoubleEndedChain(baseTet, baseFace))
+                if (hasOneEndedChainWithDoubleHandle(baseTet, baseFace))
                     return true;
 
                 // There's no sense in looking for more
@@ -197,6 +190,7 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
     return false;
 }
 
+template <>
 bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
         int baseFace) const {
     // Follow the chain along and see how far we get.
@@ -264,13 +258,15 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
     return false;
 }
 
-bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
-    // Search for the end edge of the chain.
-    for (size_t baseTet = 0; baseTet < size_; baseTet++)
+template <>
+bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
+    // Search for the end edge of the first chain.
+    // Skip the last tetrahedron -- any of the two ends will do.
+    for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
-                if (hasOneEndedChainWithStrayBigon(baseTet, baseFace))
+                if (hasWedgedDoubleEndedChain(baseTet, baseFace))
                     return true;
 
                 // There's no sense in looking for more
@@ -284,6 +280,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
     return false;
 }
 
+template <>
 bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
         int baseFace) const {
     // Follow the chain along and see how far we get.
@@ -361,14 +358,14 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
     return false;
 }
 
-bool FacetPairing<3>::hasTripleOneEndedChain() const {
-    // Search for the end edge of the first chain.
-    // Skip the last two tetrahedra -- any of the three chains will do.
-    for (size_t baseTet = 0; baseTet + 2 < size_; baseTet++)
+template <>
+bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
+    // Search for the end edge of the chain.
+    for (size_t baseTet = 0; baseTet < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
             if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
-                if (hasTripleOneEndedChain(baseTet, baseFace))
+                if (hasOneEndedChainWithStrayBigon(baseTet, baseFace))
                     return true;
 
                 // There's no sense in looking for more
@@ -382,6 +379,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain() const {
     return false;
 }
 
+template <>
 bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
         int baseFace) const {
     // Follow the chain along and see how far we get.
@@ -446,6 +444,29 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
     return false;
 }
 
+template <>
+bool FacetPairing<3>::hasTripleOneEndedChain() const {
+    // Search for the end edge of the first chain.
+    // Skip the last two tetrahedra -- any of the three chains will do.
+    for (size_t baseTet = 0; baseTet + 2 < size_; baseTet++)
+        for (int baseFace = 0; baseFace < 3; baseFace++)
+            if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
+                // Here's a face that matches to the same tetrahedron.
+                if (hasTripleOneEndedChain(baseTet, baseFace))
+                    return true;
+
+                // There's no sense in looking for more
+                // self-identifications in this tetrahedron, since if
+                // there's another (different) one it must be a
+                // one-tetrahedron component (and so not applicable).
+                break;
+            }
+
+    // Nothing found.  Boring.
+    return false;
+}
+
+template <>
 bool FacetPairing<3>::hasSingleStar() const {
     size_t half[4], all[8];
     int f1, f2, i;
@@ -496,6 +517,7 @@ bool FacetPairing<3>::hasSingleStar() const {
     return false;
 }
 
+template <>
 bool FacetPairing<3>::hasDoubleStar() const {
     size_t all[7];
 
@@ -556,6 +578,7 @@ bool FacetPairing<3>::hasDoubleStar() const {
     return false;
 }
 
+template <>
 bool FacetPairing<3>::hasDoubleSquare() const {
     // We use ssize_t everywhere here because it makes for fewer
     // signed/unsigned comparisons that need to be cast away.

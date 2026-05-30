@@ -113,7 +113,7 @@ template <int dim> requires (supportedDim(dim))
 class Isomorphism :
         public Output<Isomorphism<dim>>,
         public TightEncodable<Isomorphism<dim>> {
-    protected:
+    private:
         size_t size_;
             /**< The number of simplices in the source triangulation. */
         ssize_t* simpImage_;

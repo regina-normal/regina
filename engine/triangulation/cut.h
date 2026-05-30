@@ -43,6 +43,7 @@
 #include <utility>
 #include "concepts/iterator.h"
 #include "core/output.h"
+#include "triangulation/forward.h"
 #include "utilities/exception.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -51,10 +52,7 @@ namespace regina {
 
 class Link;
 class ModelLinkGraph;
-template <int dim> requires (supportedDim(dim)) class FacetPairing;
 template <int dim> requires (supportedDim(dim)) struct FacetSpec;
-template <int dim> requires (supportedDim(dim)) class Isomorphism;
-template <int dim> requires (supportedDim(dim)) class Triangulation;
 template <int n> requires (2 <= n && n <= maxPermDegree()) class Perm;
 
 /**

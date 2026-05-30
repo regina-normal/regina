@@ -15,7 +15,6 @@ if (${REGINA_INSTALL_DEV})
     algebra-impl.h
     canonical-impl.h
     example.h
-    facetpairing.h
     facetpairing-impl.h
     isosig-impl.h
     retriangulate.h

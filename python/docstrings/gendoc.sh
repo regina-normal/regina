@@ -113,7 +113,7 @@ for dir in $dirs; do
         manifold/notation.h ) ;;
         subcomplex/standardtri.h ) ;;
         triangulation/dim?.h ) ;;
-        triangulation/facetpairing.h ) ;;
+        triangulation/facetpairing3.h ) ;;
         triangulation/forward.h ) ;;
         triangulation/generic.h ) ;;
         triangulation/graph.h ) ;;

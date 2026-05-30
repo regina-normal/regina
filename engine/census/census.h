@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "concepts/maths.h"
 #include "file/globaldirs.h"
+#include "triangulation/forward.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -50,7 +51,6 @@ namespace regina {
 
 class CensusHit;
 class Link;
-template <int dim> requires (supportedDim(dim)) class Triangulation;
 
 /**
  * \defgroup census Census of Triangulations

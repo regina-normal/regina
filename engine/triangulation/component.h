@@ -34,7 +34,7 @@
 #endif
 
 /*! \file triangulation/detail/component.h
- *  \brief Implementation details for connected components of triangulations.
+ *  \brief Data structures for connected components of triangulations.
  */
 
 #include <ranges>
@@ -106,12 +106,9 @@ class Component : public ShortOutput<Component<dim>>, public MarkedElement {
                  if \a dim is one of Regina's standard dimensions; otherwise
                  this is an empty data member. */
 
-    protected:
         bool valid_;
             /**< Is this component valid?  See Triangulation<dim>::isValid()
              for details on what this means. */
-
-    private:
         size_t boundaryFacets_;
             /**< The number of boundary facets. */
         bool orientable_;
@@ -659,7 +656,7 @@ class Component : public ShortOutput<Component<dim>>, public MarkedElement {
         Component(const Component&) = delete;
         Component& operator = (const Component&) = delete;
 
-    protected:
+    private:
         /**
          * Default constructor.
          *

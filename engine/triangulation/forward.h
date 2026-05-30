@@ -82,7 +82,6 @@ requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 class FaceEmbedding;
 
 template <int dim> requires (supportedDim(dim)) class FacetPairing;
-template <> class FacetPairing<3>;
 
 template <int dim> requires (supportedDim(dim)) class Isomorphism;
 

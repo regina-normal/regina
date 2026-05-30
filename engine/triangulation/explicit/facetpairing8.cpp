@@ -30,14 +30,14 @@
 
 #include "triangulation/detail/facetpairing-canonical-impl.h"
 
-namespace regina::detail {
+namespace regina {
 
-template bool FacetPairingBase<8>::isCanonical() const;
+template bool FacetPairing<8>::isCanonical() const;
 template std::pair<FacetPairing<8>, Isomorphism<8>>
-    FacetPairingBase<8>::canonicalInternal<false>() const;
+    FacetPairing<8>::canonicalInternal<false>() const;
 template std::pair<FacetPairing<8>, FacetPairing<8>::IsoList>
-    FacetPairingBase<8>::canonicalInternal<true>() const;
-template bool FacetPairingBase<8>::isCanonicalInternal(
-    FacetPairingBase<8>::IsoList* list) const;
+    FacetPairing<8>::canonicalInternal<true>() const;
+template bool FacetPairing<8>::isCanonicalInternal(
+    FacetPairing<8>::IsoList* list) const;
 
-} // namespace regina::detail
+} // namespace regina

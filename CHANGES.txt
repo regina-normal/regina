@@ -94,6 +94,9 @@ Version 8.0  [ TODO ]
               + Routines setByteCode() and setStringCode() are now deprecated;
                 use fromByteCode() and fromStringCode() instead.
         Class BoundaryComponent<dim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class BoundaryComponentBase is gone.
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
         Class ByteSequence:
@@ -130,6 +133,9 @@ Version 8.0  [ TODO ]
               is now just Packet (without any const qualifiers), regardless of
               whether the ChildIterator argument const_ is true or false.
         Class Component<dim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class ComponentBase is gone.
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
             - New routines triangulation(), countFacets(), and hasLocks().
@@ -153,6 +159,20 @@ Version 8.0  [ TODO ]
               regina::detail are now gone.
             - New class constant hasNumberingTables to indicate whether lookup
               tables are used for face numbering queries.
+        Class FaceEmbedding<dim, subdim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class FaceEmbeddingBase is gone.
+        Class FacetPairing<dim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class FacetPairingBase is gone.
+            - New routine hasDoubleEdge(); also, hasTripleEdge() is now
+              available in all dimensions.
+            - The deprecated version of FacetPairing<3>::followChain() that
+              takes an unsigned integer reference has been removed completely.
+              You should use the newer version (from Regina 7.1) that takes a
+              signed integer reference instead.
         Class FaithfulAssignment:
             - Deprecated, since this can be tested via std::common_type_t.
         Class FileInfo:
@@ -416,6 +436,10 @@ Version 8.0  [ TODO ]
         Class safe_tuple_element<...>:
             - This is now deprecated, since its only purpose is to support
               CallableArg (which is also deprecated).
+        Class Simplex<dim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class SimplexBase is gone.
         Class SnapPeaTriangulation:
             - Routines fill() and saveSnapPea() now throw exceptions on error,
               and no longer return booleans (which used to indicate success
@@ -658,6 +682,9 @@ Version 8.0  [ TODO ]
         Header foreign/isosig.h:
             - Renamed to foreign/siglist.h.  The old header is kept but
               deprecated.
+        Header triangulation/facetpairing3.h:
+            - Merged into triangulation/facetpairing.h.  The old header is
+              kept but deprecated.
         Header triangulation/generic.h:
             - Renamed to triangulation/hidim.h, to make it clear that this is
               meant to be the "everything you need" header for working in

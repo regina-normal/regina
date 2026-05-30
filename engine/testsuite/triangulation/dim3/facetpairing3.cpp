@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/facetpairing3.h"
+#include "triangulation/facetpairing.h"
 
 #include "../facetpairingtest.h"
 

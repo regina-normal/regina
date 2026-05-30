@@ -34,7 +34,7 @@
 #endif
 
 /*! \file triangulation/boundarycomponent.h
- *  \brief Implementation details for boundary components of triangulations.
+ *  \brief Data structures for boundary components of triangulations.
  */
 
 #include <ranges>

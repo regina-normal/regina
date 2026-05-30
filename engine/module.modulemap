@@ -129,7 +129,6 @@ module ReginaEngine {
     header "triangulation/facenumbering.h"
     header "triangulation/facepair.h"
     header "triangulation/facetpairing.h"
-    header "triangulation/facetpairing3.h"
     header "triangulation/facetspec.h"
     header "triangulation/hidim.h"
     header "triangulation/isomorphism.h"

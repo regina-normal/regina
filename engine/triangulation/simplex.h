@@ -29,8 +29,7 @@
  **************************************************************************/
 
 /*! \file triangulation/detail/simplex.h
- *  \brief Implementation details for top-dimensional simplices in a
- *  triangulation.
+ *  \brief Data structures for top-dimensional simplices in a triangulation.
  */
 
 #ifndef __REGINA_SIMPLEX_H

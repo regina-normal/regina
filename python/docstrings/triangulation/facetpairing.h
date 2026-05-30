@@ -13,6 +13,29 @@ namespace regina::python::doc {
 
 struct FacetPairing {
 
+// Docstring regina::python::doc::FacetPairing::__array
+static constexpr const char __array[] =
+R"doc(Returns the other facet to which the given simplex facet is paired.
+This is a convenience operator whose behaviour is identical to that of
+dest(const FacetSpec<dim>&).
+
+If the given facet is left deliberately unmatched, the value returned
+will be boundary (as returned by FacetSpec<dim>::isBoundary()).
+
+Precondition:
+    The given facet is a real simplex facet (not boundary, before-the-
+    start or past-the-end).
+
+Python:
+    This routine returns by value, not by reference, since Python
+    cannot enforce constness otherwise.
+
+Parameter ``source``:
+    the facet under investigation.
+
+Returns:
+    the other facet to which the given facet is paired.)doc";
+
 // Docstring regina::python::doc::FacetPairing::__class
 static constexpr const char __class[] =
 R"doc(Represents the dual graph of a *dim*-manifold triangulation; that is,
@@ -54,10 +77,9 @@ context:
   facet is ordered first by simplex number and then by facet number,
   and where the boundary is ordered last).
 
-For dimension 3, this FacetPairing class template is specialised and
-offers more functionality. In order to use this specialised class, you
-will need to include the corresponding header
-triangulation/facetpairing3.h.
+In dimension 3, this class offers extra functionality compared to
+other dimensions. In particular, it offers several extra routines for
+finding informative subgraphs within the dual graph.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -78,95 +100,7 @@ R"doc(Creates a new copy of the given facet pairing.
 Parameter ``src``:
     the facet pairing to clone.)doc";
 
-// Docstring regina::python::doc::FacetPairing::__init
-static constexpr const char __init[] =
-R"doc(Creates the dual graph of the given triangulation. This is the facet
-pairing that describes how the facets of simplices in the given
-triangulation are joined together, as described in the class notes.
-
-Calling ``FacetPairing<dim>(tri)`` is equivalent to calling
-``tri.pairing()``.
-
-Precondition:
-    The given triangulation is not empty.
-
-Parameter ``tri``:
-    the triangulation whose facet pairing should be constructed.)doc";
-
-// Docstring regina::python::doc::FacetPairing::global_swap
-static constexpr const char global_swap[] =
-R"doc(Swaps the contents of the given facet pairings.
-
-This global routine simply calls FacetPairing<dim>::swap(); it is
-provided so that FacetPairing<dim> meets the C++ Swappable
-requirements.
-
-Parameter ``a``:
-    the first facet pairing whose contents should be swapped.
-
-Parameter ``b``:
-    the second facet pairing whose contents should be swapped.)doc";
-
-}; // struct FacetPairing
-
-namespace detail {
-
-struct FacetPairingBase {
-
-// Docstring regina::python::doc::detail::FacetPairingBase::__array
-static constexpr const char __array[] =
-R"doc(Returns the other facet to which the given simplex facet is paired.
-This is a convenience operator whose behaviour is identical to that of
-dest(const FacetSpec<dim>&).
-
-If the given facet is left deliberately unmatched, the value returned
-will be boundary (as returned by FacetSpec<dim>::isBoundary()).
-
-Precondition:
-    The given facet is a real simplex facet (not boundary, before-the-
-    start or past-the-end).
-
-Python:
-    This routine returns by value, not by reference, since Python
-    cannot enforce constness otherwise.
-
-Parameter ``source``:
-    the facet under investigation.
-
-Returns:
-    the other facet to which the given facet is paired.)doc";
-
-// Docstring regina::python::doc::detail::FacetPairingBase::__class
-static constexpr const char __class[] =
-R"doc(Provides core functionality for facet pairings (that is, dual graphs)
-of *dim*-dimensional triangulations.
-
-Such a facet pairing is represented by the class FacetPairing<dim>,
-which uses this as a base class. End users should not need to refer to
-FacetPairingBase directly.
-
-See the FacetPairing class notes for further information.
-
-Both this class and the "end user" class FacetPairing<dim> implement
-C++ move semantics, and FacetPairing<dim> also adheres to the C++
-Swappable requirement. These classes are designed to avoid deep copies
-wherever possible, even when passing or returning objects by value.
-
-Python:
-    This base class is not present, but the "end user" class
-    FacetPairing<dim> is.
-
-Template parameter ``dim``:
-    the dimension of the triangulation.)doc";
-
-// Docstring regina::python::doc::detail::FacetPairingBase::__copy
-static constexpr const char __copy[] =
-R"doc(Creates a new copy of the given facet pairing.
-
-Parameter ``src``:
-    the facet pairing to clone.)doc";
-
-// Docstring regina::python::doc::detail::FacetPairingBase::__eq
+// Docstring regina::python::doc::FacetPairing::__eq
 static constexpr const char __eq[] =
 R"doc(Determines if this and the given facet pairing are identical.
 
@@ -177,11 +111,15 @@ Returns:
     ``True`` if and only if this and the given facet pairing are
     identical.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::__init
+// Docstring regina::python::doc::FacetPairing::__init
 static constexpr const char __init[] =
-R"doc(Creates the facet pairing of given triangulation. This is the facet
-pairing that describes how the facets of simplices in the given
-triangulation are joined together, as described in the class notes.
+R"doc(Creates the dual graph of the given triangulation. This is the facet
+pairing that describes how the facets of top-dimensional simplices in
+the given triangulation are joined together, as described in the class
+notes.
+
+Calling ``FacetPairing<dim>(tri)`` is equivalent to calling
+``tri.pairing()``.
 
 Precondition:
     The given triangulation is not empty.
@@ -189,24 +127,7 @@ Precondition:
 Parameter ``tri``:
     the triangulation whose facet pairing should be constructed.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::__init_2
-static constexpr const char __init_2[] =
-R"doc(Reads a new facet pairing from the given input stream. This routine
-reads data in the format written by textRep().
-
-This routine will skip any initial whitespace in the given input
-stream. Once it finds its first non-whitespace character, it will read
-the _entire_ line from the input stream and expect that line to
-containin the text representation of a facet pairing.
-
-Exception ``InvalidInput``:
-    The data found in the input stream is invalid, incomplete, or
-    incorrectly formatted.
-
-Parameter ``in``:
-    the input stream from which to read.)doc";
-
-// Docstring regina::python::doc::detail::FacetPairingBase::canonical
+// Docstring regina::python::doc::FacetPairing::canonical
 static constexpr const char canonical[] =
 R"doc(Returns the canonical form of this facet pairing, along with one
 isomorphism that transforms this pairing into canonial form.
@@ -228,7 +149,7 @@ Returns:
     a pair (*c*, *iso*), where *c* is the canonical form and *iso* is
     one isomorphism that converts this facet pairing into *c*.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::canonicalAll
+// Docstring regina::python::doc::FacetPairing::canonicalAll
 static constexpr const char canonicalAll[] =
 R"doc(Returns the canonical form of this facet pairing, along with the list
 of all isomorphisms that transform this pairing into canonial form.
@@ -253,7 +174,7 @@ Returns:
     is the list of all isomorphisms that convert this facet pairing
     into *c*.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::dest
+// Docstring regina::python::doc::FacetPairing::dest
 static constexpr const char dest[] =
 R"doc(Returns the other facet to which the given simplex facet is paired. If
 the given facet is left deliberately unmatched, the value returned
@@ -273,7 +194,7 @@ Parameter ``source``:
 Returns:
     the other facet to which the given facet is paired.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::dest_2
+// Docstring regina::python::doc::FacetPairing::dest_2
 static constexpr const char dest_2[] =
 R"doc(Returns the other facet to which the given simplex facet is paired. If
 the given facet is left deliberately unmatched, the value returned
@@ -294,7 +215,7 @@ Parameter ``facet``:
 Returns:
     the other facet to which the given facet is paired.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::divideConnected
+// Docstring regina::python::doc::FacetPairing::divideConnected
 static constexpr const char divideConnected[] =
 R"doc(Returns a cut that divides this facet pairing into two connected
 pieces, both of size at least *minSide*.
@@ -323,7 +244,7 @@ Returns:
     the best possible cut as described above, or ``None`` if no such
     cut exists.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::dot
+// Docstring regina::python::doc::FacetPairing::dot
 static constexpr const char dot[] =
 R"doc(Returns a Graphviz DOT representation of the graph that describes this
 facet pairing.
@@ -378,7 +299,7 @@ Parameter ``labels``:
 Returns:
     the output of writeDot(), as outlined above.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::dotHeader
+// Docstring regina::python::doc::FacetPairing::dotHeader
 static constexpr const char dotHeader[] =
 R"doc(Returns header information for a Graphviz DOT file that will describe
 the graphs for one or more facet pairings. See the dot() documentation
@@ -415,7 +336,7 @@ Returns:
 See also:
     http://www.graphviz.org/)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::findAllPairings
+// Docstring regina::python::doc::FacetPairing::findAllPairings
 static constexpr const char findAllPairings[] =
 R"doc(Generates all possible facet pairings satisfying the given
 constraints. Only connected facet pairings (pairings in which each
@@ -504,7 +425,7 @@ Parameter ``args``:
     following the initial facet pairing argument and the optional
     automorphism argument.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::findAutomorphisms
+// Docstring regina::python::doc::FacetPairing::findAutomorphisms
 static constexpr const char findAutomorphisms[] =
 R"doc(Returns the set of all combinatorial automorphisms of this facet
 pairing, assuming the pairing is already in canonical form.
@@ -525,7 +446,50 @@ Precondition:
 Returns:
     the list of all automorphisms.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::fromTextRep
+// Docstring regina::python::doc::FacetPairing::followChain
+static constexpr const char followChain[] =
+R"doc(Follows a chain in a 3-dimensional facet pairing as far as possible
+from the given point.
+
+A chain in a 3-dimensional facet pairing is the underlying facet
+pairing for a layered chain; specifically it involves one tetrahedron
+joined to a second along two faces, the remaining two faces of the
+second tetrahedron joined to a third and so on. A chain can involve as
+few as one tetrahedron or as many as we like. Note that the remaining
+two faces of the first tetrahedron and the remaining two faces of the
+final tetrahedron remain unaccounted for by this structure.
+
+This routine begins with two faces of a given tetrahedron, described
+by parameters *tet* and *faces*. If these two faces are both joined to
+some different tetrahedron, parameter *tet* will be changed to this
+new tetrahedron and parameter *faces* will be changed to the remaining
+faces of this new tetrahedron (i.e., the two faces that were not
+joined to the original faces of the original tetrahedron).
+
+This procedure is repeated as far as possible until either the two
+faces in question join to two different tetrahedra, the two faces join
+to each other, or at least one of the two faces is unmatched.
+
+Thus, given one end of a chain, this procedure can be used to follow
+the face pairings through to the other end of the chain.
+
+.. warning::
+    You must be sure when calling this routine that you are not inside
+    a chain that loops back onto itself! If the facet pairing forms a
+    large loop with each tetrahedron joined by two faces to the next,
+    this routine will cycle around the loop forever and never return.
+
+Parameter ``tet``:
+    the index in the underlying triangulation of the tetrahedron to
+    begin at. This parameter will be modified directly by this routine
+    as a way of returning the results.
+
+Parameter ``faces``:
+    the pair of face numbers in the given tetrahedron at which we
+    begin. This parameter will also be modified directly by this
+    routine as a way of returning results.)doc";
+
+// Docstring regina::python::doc::FacetPairing::fromTextRep
 static constexpr const char fromTextRep[] =
 R"doc(Reconstructs a facet pairing from a text-based representation. This
 text-based representation must be in the format produced by routine
@@ -542,20 +506,121 @@ Parameter ``rep``:
 Returns:
     the corresponding facet pairing.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::hasMultiEdge
+// Docstring regina::python::doc::FacetPairing::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the given facet pairings.
+
+This global routine simply calls FacetPairing<dim>::swap(); it is
+provided so that FacetPairing<dim> meets the C++ Swappable
+requirements.
+
+Parameter ``a``:
+    the first facet pairing whose contents should be swapped.
+
+Parameter ``b``:
+    the second facet pairing whose contents should be swapped.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasBrokenDoubleEndedChain
+static constexpr const char hasBrokenDoubleEndedChain[] =
+R"doc(Determines whether this 3-dimensional facet pairing contains a broken
+double-ended chain.
+
+A chain involves a sequence of tetrahedra, each joined to the next
+along two faces, and is described in detail in the documentation for
+followChain().
+
+A one-ended chain is a chain in which the first tetrahedron is also
+joined to itself along one face (i.e., the underlying facet pairing
+for a layered solid torus). A double-ended chain is a chain in which
+the first tetrahedron is joined to itself along one face and the final
+tetrahedron is also joined to itself along one face (i.e., the
+underlying facet pairing for a layered lens space).
+
+A broken double-ended chain consists of two one-ended chains (using
+distinct sets of tetrahedra) joined together along one face. The
+remaining two faces (one from each chain) that were unaccounted for by
+the individual one-ended chains remain unaccounted for by this broken
+double-ended chain.
+
+In this routine we are interested specifically in finding a broken
+double-ended chain that is not a part of a complete double-ended
+chain, i.e., the final two unaccounted faces are not joined together.
+
+A facet pairing containing a broken double-ended chain cannot model a
+closed minimal irreducible P²-irreducible 3-manifold triangulation on
+more than two tetrahedra. See "Face pairing graphs and 3-manifold
+enumeration", Benjamin A. Burton, J. Knot Theory Ramifications 13
+(2004), 1057--1101.
+
+Returns:
+    ``True`` if and only if this facet pairing contains a broken
+    double-ended chain that is not part of a complete double-ended
+    chain.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasDoubleEdge
+static constexpr const char hasDoubleEdge[] =
+R"doc(Determines whether the underlying graph for this facet pairing
+contains a double edge.
+
+This corresponds to two distinct top-dimensional simplices joined to
+each other along at least two of their facets.
+
+Note that this routine does not consider loops in the underlying
+graph, only edges between distinct nodes.
+
+This routine is identical to calling ``hasMultiEdge<2>()``.
+
+Returns:
+    ``True`` if and only if the underlying graph has a double edge.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasDoubleSquare
+static constexpr const char hasDoubleSquare[] =
+R"doc(Determines whether this 3-dimensional facet pairing contains a double-
+edged square.
+
+A double-edged square involves four distinct tetrahedra that meet each
+other as follows. Two pairs of tetrahedra are joined along two pairs
+of faces each. Then each tetrahedron is joined along a single face to
+one tetrahedron of the other pair. The four tetrahedron faces not yet
+joined to anything (one from each tetrahedron) remain unaccounted for
+by this structure.
+
+Returns:
+    ``True`` if and only if this facet pairing contains a double-edged
+    square.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasDoubleStar
+static constexpr const char hasDoubleStar[] =
+R"doc(Determines whether this 3-dimensional facet pairing contains a double-
+edged star.
+
+A double-edged star involves two tetrahedra that are adjacent along
+two separate pairs of faces, where the four remaining faces of these
+tetrahedra are joined to four entirely new tetrahedra (so that none of
+the six tetrahedra described in this structure are the same).
+
+Returns:
+    ``True`` if and only if this facet pairing contains a double-edged
+    star.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasMultiEdge
 static constexpr const char hasMultiEdge[] =
 R"doc(Determines whether the underlying graph for this facet pairing
 contains an edge of multiplicity *k*, where *k* does not need to be
 known until runtime.
 
 An edge of multiplicity *k* corresponds to two distinct top-
-dimensional simplices joined to each other along *k* of their facets.
+dimensional simplices joined to each other along at least *k* of their
+facets.
 
 Note that this routine does not consider loops in the underlying
 graph, only edges between distinct nodes.
 
 For C++ programmers who know *k* at compile time, it is faster to call
 the template function ``hasMultiEdge<k>()`` instead.
+
+For the cases ``k = 2`` and ``k = 3``, you can also access this
+functionality via the aliases hasDoubleEdge() and hasTripleEdge().
 
 Exception ``InvalidArgument``:
     The argument *k* is outside the supported range.
@@ -568,7 +633,195 @@ Returns:
     ``True`` if and only if the underyling graph has an edge of
     multiplicity *k*.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::isCanonical
+// Docstring regina::python::doc::FacetPairing::hasOneEndedChainWithDoubleHandle
+static constexpr const char hasOneEndedChainWithDoubleHandle[] =
+R"doc(Determines whether this 3-dimensional facet pairing contains a one-
+ended chain with a double handle.
+
+A chain involves a sequence of tetrahedra, each joined to the next
+along two faces, and is described in detail in the documentation for
+followChain().
+
+A one-ended chain is a chain in which the first tetrahedron is also
+joined to itself along one face (i.e., the underlying facet pairing
+for a layered solid torus).
+
+A one-ended chain with a double handle begins with a one-ended chain.
+The two faces that are unaccounted for by this one-ended chain must be
+joined to two different tetrahedra, and these two tetrahedra must be
+joined to each other along two faces. The remaining two faces of these
+two tetrahedra remain unaccounted for by this structure.
+
+A facet pairing containing a one-ended chain with a double handle
+cannot model a closed minimal irreducible P²-irreducible 3-manifold
+triangulation on more than two tetrahedra. See "Face pairing graphs
+and 3-manifold enumeration", Benjamin A. Burton, J. Knot Theory
+Ramifications 13 (2004), 1057--1101.
+
+Returns:
+    ``True`` if and only if this facet pairing contains a one-ended
+    chain with a double handle.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasOneEndedChainWithStrayBigon
+static constexpr const char hasOneEndedChainWithStrayBigon[] =
+R"doc(Determines whether this 3-dimensional facet pairing contains a one-
+ended chain with a stray bigon.
+
+A chain involves a sequence of tetrahedra, each joined to the next
+along two faces, and is described in detail in the documentation for
+followChain().
+
+A one-ended chain is a chain in which the first tetrahedron is also
+joined to itself along one face (i.e., the underlying facet pairing
+for a layered solid torus).
+
+A one-ended chain with a stray bigon describes the following
+structure. We begin with a one-ended chain. Two new tetrahedra are
+added; these are joined to each other along two pairs of faces, and
+one of the new tetrahedra is joined to the end of the one-ended chain.
+We then ensure that:
+
+* This configuration is not part of a longer one-ended chain that
+  encompasses all of the aforementioned tetrahedra;
+
+* There is no extra tetrahedron that is joined to both the two new
+  tetrahedra and the end of the chain;
+
+* There is no extra tetrahedron that is joined to the end of the chain
+  along one face and the far new tetrahedron along two additional
+  faces (where by "the far new tetrahedron" we mean the new
+  tetrahedron that was not originally joined to the chain).
+
+Aside from these constraints, the remaining four tetrahedron faces
+(two faces of the far new tetrahedron, one face of the other new
+tetrahedron, and one face at the end of the chain) remain unaccounted
+for by this structure.
+
+A facet pairing containing a structure of this type cannot model a
+closed minimal irreducible P²-irreducible 3-manifold triangulation on
+more than two tetrahedra. See "Enumeration of non-orientable
+3-manifolds using face-pairing graphs and union-find", Benjamin A.
+Burton, Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
+
+Returns:
+    ``True`` if and only if this facet pairing contains a one-ended
+    chain with a stray bigon.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasSingleStar
+static constexpr const char hasSingleStar[] =
+R"doc(Determines whether this 3-dimensional facet pairing contains a single-
+edged star.
+
+A single-edged star involves two tetrahedra that are adjacent along a
+single face, where the six remaining faces of these tetrahedra are
+joined to six entirely new tetrahedra (so that none of the eight
+tetrahedra described in this structure are the same).
+
+Returns:
+    ``True`` if and only if this facet pairing contains a single-edged
+    star.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasTripleEdge
+static constexpr const char hasTripleEdge[] =
+R"doc(Determines whether the underlying graph for this facet pairing
+contains a triple edge.
+
+This corresponds to two distinct top-dimensional simplices joined to
+each other along at least three of their facets.
+
+Note that this routine does not consider loops in the underlying
+graph, only edges between distinct nodes.
+
+In dimension 3, a facet pairing containing a triple edge cannot model
+a closed minimal irreducible P²-irreducible 3-manifold triangulation
+on more than two tetrahedra. See "Face pairing graphs and 3-manifold
+enumeration", Benjamin A. Burton, J. Knot Theory Ramifications 13
+(2004), 1057--1101.
+
+This routine is identical to calling ``hasMultiEdge<3>()``.
+
+Returns:
+    ``True`` if and only if the underlying graph has a triple edge.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasTripleOneEndedChain
+static constexpr const char hasTripleOneEndedChain[] =
+R"doc(Determines whether this 3-dimensional facet pairing contains a triple
+one-ended chain.
+
+A chain involves a sequence of tetrahedra, each joined to the next
+along two faces, and is described in detail in the documentation for
+followChain().
+
+A one-ended chain is a chain in which the first tetrahedron is also
+joined to itself along one face (i.e., the underlying facet pairing
+for a layered solid torus).
+
+A triple one-ended chain is created from three one-ended chains as
+follows. Two new tetrahedra are added, and each one-ended chain is
+joined to each of the new tetrahedra along a single face. The
+remaining two faces (one from each of the new tetrahedra) remain
+unaccounted for by this structure.
+
+A facet pairing containing a triple one-ended chain cannot model a
+closed minimal irreducible P²-irreducible 3-manifold triangulation on
+more than two tetrahedra. See "Enumeration of non-orientable
+3-manifolds using face-pairing graphs and union-find", Benjamin A.
+Burton, Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
+
+Returns:
+    ``True`` if and only if this facet pairing contains a triple one-
+    ended chain.)doc";
+
+// Docstring regina::python::doc::FacetPairing::hasWedgedDoubleEndedChain
+static constexpr const char hasWedgedDoubleEndedChain[] =
+R"doc(Determines whether this 3-dimensional facet pairing contains a wedged
+double-ended chain.
+
+A chain involves a sequence of tetrahedra, each joined to the next
+along two faces, and is described in detail in the documentation for
+followChain().
+
+A one-ended chain is a chain in which the first tetrahedron is also
+joined to itself along one face (i.e., the underlying facet pairing
+for a layered solid torus). A double-ended chain is a chain in which
+the first tetrahedron is joined to itself along one face and the final
+tetrahedron is also joined to itself along one face (i.e., the
+underlying facet pairing for a layered lens space).
+
+A wedged double-ended chain is created from two one-ended chains as
+follows. Two new tetrahedra are added, and each one-ended chain is
+joined to each of the new tetrahedra along a single face. In addition,
+the two new tetrahedra are joined to each other along a single face.
+The remaining two faces (one from each of the new tetrahedra) remain
+unaccounted for by this structure.
+
+An alternative way of viewing a wedged double-ended chain is as an
+ordinary double-ended chain, where one of the internal tetrahedra is
+removed and replaced with a pair of tetrahedra joined to each other.
+Whereas the original tetrahedron met its two neighbouring tetrahedra
+along two faces each (giving a total of four face identifications),
+the two new tetrahedra now meet each of the two neighbouring
+tetrahedra along a single face each (again giving four face
+identifications).
+
+Note that if this alternate construction is used to replace one of the
+end tetrahedra of the double-ended chain (not an internal
+tetrahedron), the resulting structure will either be a triple edge or
+a one-ended chain with a double handle (according to whether the
+original chain has zero or positive length). See hasTripleEdge() and
+hasOneEndedChainWithDoubleHandle() for further details.
+
+A facet pairing containing a wedged double-ended chain cannot model a
+closed minimal irreducible P²-irreducible 3-manifold triangulation on
+more than two tetrahedra. See "Enumeration of non-orientable
+3-manifolds using face-pairing graphs and union-find", Benjamin A.
+Burton, Discrete Comput. Geom. 38 (2007), no. 3, 527--571.
+
+Returns:
+    ``True`` if and only if this facet pairing contains a wedged
+    double-ended chain.)doc";
+
+// Docstring regina::python::doc::FacetPairing::isCanonical
 static constexpr const char isCanonical[] =
 R"doc(Determines whether this facet pairing is in canonical form.
 
@@ -583,12 +836,12 @@ Precondition:
 Returns:
     ``True`` if and only if this facet pairing is in canonical form.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::isClosed
+// Docstring regina::python::doc::FacetPairing::isClosed
 static constexpr const char isClosed[] =
 R"doc(Determines whether this facet pairing is closed. A closed facet
 pairing has no unmatched facets.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::isConnected
+// Docstring regina::python::doc::FacetPairing::isConnected
 static constexpr const char isConnected[] =
 R"doc(Determines whether this facet pairing is connected.
 
@@ -601,7 +854,7 @@ connected.
 Returns:
     ``True`` if and only if this pairing is connected.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::isUnmatched
+// Docstring regina::python::doc::FacetPairing::isUnmatched
 static constexpr const char isUnmatched[] =
 R"doc(Determines whether the given simplex facet has been left deliberately
 unmatched.
@@ -617,7 +870,7 @@ Returns:
     ``True`` if the given facet has been left unmatched, or ``False``
     if the given facet is paired with some other facet.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::isUnmatched_2
+// Docstring regina::python::doc::FacetPairing::isUnmatched_2
 static constexpr const char isUnmatched_2[] =
 R"doc(Determines whether the given simplex facet has been left deliberately
 unmatched.
@@ -634,7 +887,7 @@ Returns:
     ``True`` if the given facet has been left unmatched, or ``False``
     if the given facet is paired with some other facet.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::size
+// Docstring regina::python::doc::FacetPairing::size
 static constexpr const char size[] =
 R"doc(Returns the number of simplices whose facets are described by this
 facet pairing.
@@ -646,14 +899,14 @@ Python:
 Returns:
     the number of simplices under consideration.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::swap
+// Docstring regina::python::doc::FacetPairing::swap
 static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given facet pairing.
 
 Parameter ``other``:
     the facet pairing whose contents are to be swapped with this.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::textRep
+// Docstring regina::python::doc::FacetPairing::textRep
 static constexpr const char textRep[] =
 R"doc(Returns a text-based representation that can be used to reconstruct
 this facet pairing. This reconstruction is done through the routine
@@ -667,7 +920,7 @@ The string returned will contain no newlines.
 Returns:
     a text-based representation of this facet pairing.)doc";
 
-// Docstring regina::python::doc::detail::FacetPairingBase::toTextRep
+// Docstring regina::python::doc::FacetPairing::toTextRep
 static constexpr const char toTextRep[] =
 R"doc(Deprecated routine that returns a text-based representation that can
 be used to reconstruct this facet pairing.
@@ -679,9 +932,7 @@ be used to reconstruct this facet pairing.
 Returns:
     a text-based representation of this facet pairing.)doc";
 
-}; // struct FacetPairingBase
-
-} // namespace detail
+}; // struct FacetPairing
 
 } // namespace regina::python::doc
 

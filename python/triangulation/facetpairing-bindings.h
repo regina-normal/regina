@@ -36,7 +36,7 @@
 #include "triangulation/facetpairing.h"
 #include "triangulation/hidim.h"
 #include "../helpers.h"
-#include "../docstrings/triangulation/detail/facetpairing.h"
+#include "../docstrings/triangulation/facetpairing.h"
 
 using namespace pybind11::literals;
 
@@ -49,63 +49,66 @@ using regina::Triangulation;
 template <int dim> requires (regina::supportedDim(dim))
 void addFacetPairing(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(FacetPairing)
-    RDOC_SCOPE_BASE(detail::FacetPairingBase)
 
     auto c = pybind11::class_<regina::FacetPairing<dim>>(m, name, rdoc::__class)
         .def(pybind11::init<const FacetPairing<dim>&>(), rdoc::__copy)
         .def(pybind11::init<const Triangulation<dim>&>(), rdoc::__init)
-        .def("swap", &FacetPairing<dim>::swap, rbase::swap)
-        .def("size", &FacetPairing<dim>::size, rbase::size)
-        .def("__len__", &FacetPairing<dim>::size, rbase::size)
+        .def("swap", &FacetPairing<dim>::swap, rdoc::swap)
+        .def("size", &FacetPairing<dim>::size, rdoc::size)
+        .def("__len__", &FacetPairing<dim>::size, rdoc::size)
         // We do not ask dest() or operator[] to return by reference,
         // since FacetSpec is lightweight and we want to enforce constness.
         // Use the default policy for (const T&) which is to return by copy.
         .def("dest", overload_cast<const FacetSpec<dim>&>(
-            &FacetPairing<dim>::dest, pybind11::const_), rbase::dest)
+            &FacetPairing<dim>::dest, pybind11::const_), rdoc::dest)
         .def("dest", overload_cast<size_t, int>(
-            &FacetPairing<dim>::dest, pybind11::const_), rbase::dest_2)
+            &FacetPairing<dim>::dest, pybind11::const_), rdoc::dest_2)
         .def("__getitem__", overload_cast<const FacetSpec<dim>&>(
             &FacetPairing<dim>::operator[], pybind11::const_),
-            rbase::__array)
+            rdoc::__array)
         .def("isUnmatched", overload_cast<const FacetSpec<dim>&>(
             &FacetPairing<dim>::isUnmatched, pybind11::const_),
-            rbase::isUnmatched)
+            rdoc::isUnmatched)
         .def("isUnmatched", overload_cast<size_t, int>(
             &FacetPairing<dim>::isUnmatched, pybind11::const_),
-            rbase::isUnmatched_2)
-        .def("isClosed", &FacetPairing<dim>::isClosed, rbase::isClosed)
-        .def("isConnected", &FacetPairing<dim>::isConnected, rbase::isConnected)
+            rdoc::isUnmatched_2)
+        .def("isClosed", &FacetPairing<dim>::isClosed, rdoc::isClosed)
+        .def("isConnected", &FacetPairing<dim>::isConnected, rdoc::isConnected)
         .def("hasMultiEdge", (bool (FacetPairing<dim>::*)(int) const)(
                 &FacetPairing<dim>::hasMultiEdge),
-            rbase::hasMultiEdge)
-        .def("isCanonical", &FacetPairing<dim>::isCanonical, rbase::isCanonical)
-        .def("canonical", &FacetPairing<dim>::canonical, rbase::canonical)
+            rdoc::hasMultiEdge)
+        .def("hasDoubleEdge", &FacetPairing<dim>::hasDoubleEdge,
+            rdoc::hasDoubleEdge)
+        .def("hasTripleEdge", &FacetPairing<dim>::hasTripleEdge,
+            rdoc::hasTripleEdge)
+        .def("isCanonical", &FacetPairing<dim>::isCanonical, rdoc::isCanonical)
+        .def("canonical", &FacetPairing<dim>::canonical, rdoc::canonical)
         .def("canonicalAll", &FacetPairing<dim>::canonicalAll,
-            rbase::canonicalAll)
+            rdoc::canonicalAll)
         .def("findAutomorphisms", &FacetPairing<dim>::findAutomorphisms,
-            rbase::findAutomorphisms)
-        .def("textRep", &FacetPairing<dim>::textRep, rbase::textRep)
+            rdoc::findAutomorphisms)
+        .def("textRep", &FacetPairing<dim>::textRep, rdoc::textRep)
         .def("toTextRep", &FacetPairing<dim>::textRep, // deprecated
-            rbase::toTextRep)
+            rdoc::toTextRep)
         .def_static("fromTextRep", &FacetPairing<dim>::fromTextRep,
-            rbase::fromTextRep)
+            rdoc::fromTextRep)
         .def("dot", &FacetPairing<dim>::dot,
             "prefix"_a = nullptr, "subgraph"_a = false, "labels"_a = false,
-            rbase::dot)
+            rdoc::dot)
         .def_static("dotHeader", &FacetPairing<dim>::dotHeader,
-            "graphName"_a = nullptr, rbase::dotHeader)
+            "graphName"_a = nullptr, rdoc::dotHeader)
         .def("divideConnected", &FacetPairing<dim>::divideConnected,
-            rbase::divideConnected)
+            rdoc::divideConnected)
         .def_static("findAllPairings",
             &FacetPairing<dim>::template findAllPairings<
                 const std::function<void(const FacetPairing<dim>&,
                     typename FacetPairing<dim>::IsoList)>&>,
             "nSimplices"_a, "boundary"_a, "nBdryFacets"_a, "action"_a,
-            rbase::findAllPairings)
+            rdoc::findAllPairings)
     ;
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
-    regina::python::add_eq_operators(c, rbase::__eq);
+    regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_global_swap<FacetPairing<dim>, rdoc>(m);
 
     RDOC_SCOPE_END

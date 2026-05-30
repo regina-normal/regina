@@ -35,6 +35,8 @@
 #ifndef __SIGHANDLER_H
 #define __SIGHANDLER_H
 
+#include "triangulation/forward.h"
+
 #include "foreign/siglist.h"
 #include "packetimporter.h"
 #include "reginamain.h"
@@ -46,7 +48,6 @@
 
 namespace regina {
     class Link;
-    template <int dim> requires (supportedDim(dim)) class Triangulation;
 }
 
 /**

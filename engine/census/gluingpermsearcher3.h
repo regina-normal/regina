@@ -45,7 +45,8 @@
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "census/purgeflags.h"
-#include "triangulation/facetpairing3.h"
+#include "triangulation/facetpairing.h"
+#include "triangulation/isomorphism.h"
 #include "utilities/exception.h"
 #include "utilities/qitmask.h"
 

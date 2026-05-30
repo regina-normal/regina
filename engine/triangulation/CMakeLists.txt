@@ -6,7 +6,7 @@ SET ( FILES
   example2.cpp
   example3.cpp
   example4.cpp
-  facetpairing3.cpp
+  facetpairing.cpp
   facepair.cpp
   isosig.cpp
   )

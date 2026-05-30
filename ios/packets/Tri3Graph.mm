@@ -36,7 +36,7 @@
 #import "Tri3ViewController.h"
 #import "Tri3Graph.h"
 #import "treewidth/treedecomposition.h"
-#import "triangulation/facetpairing3.h"
+#import "triangulation/facetpairing.h"
 #import "triangulation/dim3.h"
 #import "gvc.h"
 

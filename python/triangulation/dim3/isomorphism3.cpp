@@ -31,7 +31,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include "triangulation/dim3.h"
-#include "triangulation/facetpairing3.h"
+#include "triangulation/facetpairing.h"
 #include "../../helpers.h"
 #include "../../docstrings/triangulation/isomorphism.h"
 
