@@ -155,7 +155,7 @@ void Triangulation<3>::calculateVertexLinks() {
                 }
 
                 ideal_ = true;
-                vertex->component()->ideal_ = true;
+                vertex->component()->ideal_.value = true;
 
                 auto* bc = new BoundaryComponent<3>();
                 bc->push_back(vertex);
@@ -216,13 +216,6 @@ void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
             (*me)->type_ = (*you)->type_;
             (*me)->subtype_ = (*you)->subtype_;
         }
-    }
-
-    {
-        auto me = components_.begin();
-        auto you = src.components_.begin();
-        for ( ; me != components_.end(); ++me, ++you)
-            (*me)->ideal_ = (*you)->ideal_;
     }
 }
 

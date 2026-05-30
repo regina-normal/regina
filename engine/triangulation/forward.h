@@ -58,9 +58,6 @@ namespace regina {
 template <int dim> requires (supportedDim(dim)) class BoundaryComponent;
 
 template <int dim> requires (supportedDim(dim)) class Component;
-template <> class Component<2>;
-template <> class Component<3>;
-template <> class Component<4>;
 
 template <int dim> requires (supportedDim(dim)) class Example;
 template <> class Example<2>;

@@ -49,36 +49,42 @@
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
-namespace detail {
 
-template <int dim> requires (supportedDim(dim)) class TriangulationBase;
+namespace detail {
+    template <int dim> requires (supportedDim(dim)) class TriangulationBase;
+}
 
 /**
- * Helper class that provides core functionality for a connected component
- * of a <i>dim</i>-manifold triangulation.
+ * A connected component of a <i>dim</i>-manifold triangulation.
  *
- * Each connected component is represented by the class Component<dim>,
- * which uses this as a base class.  End users should not need to refer
- * to ComponentBase directly.
+ * Components are highly temporary: whenever a triangulation changes, all
+ * of its component objects will be deleted and new ones will be created
+ * in their place.
  *
- * See the Component class notes for further information.
+ * For Regina's \ref stddim "standard dimensions", this template is specialised
+ * and offers more functionality.  In order to use these specialised classes,
+ * you will need to include the corresponding triangulation headers (e.g.,
+ * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
+ * for \a dim = 3).
  *
- * Neither this class nor the "end user" class Component<dim> support
- * value semantics: they cannot be copied, swapped, or manually constructed.
- * Their memory is managed by the Triangulation class, and their locations
- * in memory define them.  See Component<dim> for further details.
+ * Components do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
  *
- * \python This base class is not present, but the "end user"
- * class Component<dim> is.
+ * \python Python does not support templates.  Instead
+ * this class can be used by appending the dimension as a suffix
+ * (e.g., Component2 and Component3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
  *
- * \ingroup detail
+ * \headerfile triangulation/triangulation.h
+ *
+ * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
-class ComponentBase :
-        public ShortOutput<ComponentBase<dim>>,
-        public MarkedElement {
+class Component : public ShortOutput<Component<dim>>, public MarkedElement {
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -110,6 +116,9 @@ class ComponentBase :
             /**< The number of boundary facets. */
         bool orientable_;
             /**< Is the component orientable? */
+        [[no_unique_address]]
+                EnableIf<standardDim(dim) && (dim > 2), bool, false> ideal_;
+            /**< Is the component ideal? */
 
     public:
         /**
@@ -558,6 +567,28 @@ class ComponentBase :
          * \return \c true if and only if this component has boundary facet(s).
          */
         bool hasBoundaryFacets() const;
+
+        /**
+         * An alias for hasBoundaryFacets() in dimension 2.
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryEdges() const requires (dim == 2);
+
+        /**
+         * An alias for hasBoundaryFacets() in dimension 3.
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTriangles() const requires (dim == 3);
+
+        /**
+         * An alias for hasBoundaryFacets() in dimension 4.
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTetrahedra() const requires (dim == 4);
+
         /**
          * Returns the number of boundary facets in this component.
          *
@@ -573,6 +604,48 @@ class ComponentBase :
         size_t countBoundaryFacets() const;
 
         /**
+         * An alias for countBoundaryFacets() in dimension 2.
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryEdges() const requires (dim == 2);
+
+        /**
+         * An alias for countBoundaryFacets() in dimension 3.
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTriangles() const requires (dim == 3);
+
+        /**
+         * An alias for countBoundaryFacets() in dimension 4.
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTetrahedra() const requires (dim == 4);
+
+        /**
+         * Determines if this component is ideal.
+         * This is the case if and only if it contains an ideal vertex
+         * as described by `Vertex<dim>::isIdeal()`.
+         *
+         * \return \c true if and only if this component is ideal.
+         */
+        bool isIdeal() const requires (standardDim(dim) && dim > 2);
+
+        /**
+         * Determines if this component is closed.
+         * This is the case if and only if it has no boundary.
+         *
+         * Note that ideal components and components with invalid vertices
+         * are not closed (these can only appear in dimensions ≥ 3).
+         * See `Vertex<dim>::isBoundary()` for details.
+         *
+         * \return \c true if and only if this component is closed.
+         */
+        bool isClosed() const requires (standardDim(dim));
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -583,8 +656,8 @@ class ComponentBase :
         void writeTextShort(std::ostream& out) const;
 
         // Make this class non-copyable.
-        ComponentBase(const ComponentBase&) = delete;
-        ComponentBase& operator = (const ComponentBase&) = delete;
+        Component(const Component&) = delete;
+        Component& operator = (const Component&) = delete;
 
     protected:
         /**
@@ -592,97 +665,47 @@ class ComponentBase :
          *
          * Marks the component as orientable, with no boundary facets.
          */
-        ComponentBase();
+        Component();
 
     friend class Triangulation<dim>;
-    friend class TriangulationBase<dim>;
-};
-
-} // namespace regina::detail -> namespace regina
-
-/**
- * A connected component of a <i>dim</i>-manifold triangulation.
- *
- * Components are highly temporary: whenever a triangulation changes, all
- * of its component objects will be deleted and new ones will be created
- * in their place.
- *
- * For Regina's \ref stddim "standard dimensions", this template is specialised
- * and offers more functionality.  In order to use these specialised classes,
- * you will need to include the corresponding triangulation headers (e.g.,
- * triangulation/dim2.h for \a dim = 2, or triangulation/dim3.h
- * for \a dim = 3).
- *
- * Components do not support value semantics: they cannot be copied, swapped,
- * or manually constructed.  Their location in memory defines them, and
- * they are often passed and compared by pointer.  End users are never
- * responsible for their memory management; this is all taken care of by
- * the Triangulation to which they belong.
- *
- * \python Python does not support templates.  Instead
- * this class can be used by appending the dimension as a suffix
- * (e.g., Component2 and Component3 for dimensions 2 and 3).
- *
- * \tparam dim the dimension of the underlying triangulation.
- *
- * \headerfile triangulation/triangulation.h
- *
- * \ingroup triangulation
- */
-template <int dim> requires (supportedDim(dim))
-class Component : public detail::ComponentBase<dim> {
-    static_assert(! standardDim(dim),
-        "The generic implementation of Component<dim> "
-        "should not be used for Regina's standard dimensions.");
-
-    private:
-        /**
-         * Default constructor.
-         *
-         * Marks the component as orientable, with no boundary facets.
-         */
-        Component() = default;
-
     friend class detail::TriangulationBase<dim>;
 };
 
-namespace detail {
-
-// Inline functions for ComponentBase
+// Inline functions for Component
 
 template <int dim> requires (supportedDim(dim))
-inline ComponentBase<dim>::ComponentBase() :
+inline Component<dim>::Component() :
         valid_(true), boundaryFacets_(0), orientable_(true) {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::index() const {
+inline size_t Component<dim>::index() const {
     return markedIndex();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Triangulation<dim>& ComponentBase<dim>::triangulation() const {
+inline Triangulation<dim>& Component<dim>::triangulation() const {
     // This is a connected component, so simplices_ must be non-empty.
     return simplices_.front()->triangulation();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::size() const {
+inline size_t Component<dim>::size() const {
     return simplices_.size();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::simplices() const {
+inline auto Component<dim>::simplices() const {
     return std::views::all(simplices_);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Simplex<dim>* ComponentBase<dim>::simplex(size_t index) const {
+inline Simplex<dim>* Component<dim>::simplex(size_t index) const {
     return simplices_[index];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool ComponentBase<dim>::hasLocks() const {
+inline bool Component<dim>::hasLocks() const {
     for (auto s : simplices_)
         if (s->lockMask())
             return true;
@@ -691,7 +714,7 @@ inline bool ComponentBase<dim>::hasLocks() const {
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim >= 0 && subdim <= dim)
-inline size_t ComponentBase<dim>::countFaces() const
+inline size_t Component<dim>::countFaces() const
         requires (standardDim(dim)) {
     if constexpr (subdim == dim)
         return size();
@@ -700,7 +723,7 @@ inline size_t ComponentBase<dim>::countFaces() const
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countFaces(int subdim) const
+inline size_t Component<dim>::countFaces(int subdim) const
         requires (standardDim(dim)) {
     if (subdim == dim)
         return size();
@@ -713,37 +736,37 @@ inline size_t ComponentBase<dim>::countFaces(int subdim) const
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countVertices() const
+inline size_t Component<dim>::countVertices() const
         requires (standardDim(dim)) {
     return countFaces<0>();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countEdges() const
+inline size_t Component<dim>::countEdges() const
         requires (standardDim(dim)) {
     return countFaces<1>();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countTriangles() const
+inline size_t Component<dim>::countTriangles() const
         requires (standardDim(dim)) {
     return countFaces<2>();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countTetrahedra() const
+inline size_t Component<dim>::countTetrahedra() const
         requires (standardDim(dim) && dim >= 3) {
     return countFaces<3>();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countPentachora() const
+inline size_t Component<dim>::countPentachora() const
         requires (standardDim(dim) && dim >= 4) {
     return countFaces<4>();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countFacets() const {
+inline size_t Component<dim>::countFacets() const {
     if constexpr (standardDim(dim)) {
         return static_cast<const Component<dim>*>(this)->
             template countFaces<dim - 1>();
@@ -753,18 +776,18 @@ inline size_t ComponentBase<dim>::countFacets() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countBoundaryComponents() const {
+inline size_t Component<dim>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim >= 0 && subdim < dim)
-inline auto ComponentBase<dim>::faces() const requires (standardDim(dim)) {
+inline auto Component<dim>::faces() const requires (standardDim(dim)) {
     return std::views::all(std::get<subdim>(faces_));
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::faces(int subdim) const
+inline auto Component<dim>::faces(int subdim) const
         requires (standardDim(dim)) {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument("faces(): unsupported face dimension");
@@ -775,20 +798,17 @@ inline auto ComponentBase<dim>::faces(int subdim) const
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::vertices() const
-        requires (standardDim(dim)) {
+inline auto Component<dim>::vertices() const requires (standardDim(dim)) {
     return faces<0>();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::edges() const
-        requires (standardDim(dim)) {
+inline auto Component<dim>::edges() const requires (standardDim(dim)) {
     return faces<1>();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::triangles() const
-        requires (standardDim(dim)) {
+inline auto Component<dim>::triangles() const requires (standardDim(dim)) {
     if constexpr (dim == 2)
         return std::views::all(simplices_);
     else
@@ -796,7 +816,7 @@ inline auto ComponentBase<dim>::triangles() const
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::tetrahedra() const
+inline auto Component<dim>::tetrahedra() const
         requires (standardDim(dim) && dim >= 3) {
     if constexpr (dim == 3)
         return std::views::all(simplices_);
@@ -805,7 +825,7 @@ inline auto ComponentBase<dim>::tetrahedra() const
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::pentachora() const
+inline auto Component<dim>::pentachora() const
         requires (standardDim(dim) && dim >= 4) {
     if constexpr (dim == 4)
         return std::views::all(simplices_);
@@ -814,19 +834,19 @@ inline auto ComponentBase<dim>::pentachora() const
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::boundaryComponents() const {
+inline auto Component<dim>::boundaryComponents() const {
     return std::views::all(boundaryComponents_);
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim >= 0 && subdim < dim)
-inline Face<dim, subdim>* ComponentBase<dim>::face(size_t index) const
+inline Face<dim, subdim>* Component<dim>::face(size_t index) const
         requires (standardDim(dim)) {
     return std::get<subdim>(faces_)[index];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline auto ComponentBase<dim>::face(int subdim, size_t index) const
+inline auto Component<dim>::face(int subdim, size_t index) const
         requires (standardDim(dim)) {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument("face(): unsupported face dimension");
@@ -837,21 +857,21 @@ inline auto ComponentBase<dim>::face(int subdim, size_t index) const
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Vertex* ComponentBase<dim>::vertex(
+inline TriangulationTraits<dim>::Vertex* Component<dim>::vertex(
         size_t index) const
         requires (standardDim(dim)) {
     return face<0>(index);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Edge* ComponentBase<dim>::edge(
+inline TriangulationTraits<dim>::Edge* Component<dim>::edge(
         size_t index) const
         requires (standardDim(dim)) {
     return face<1>(index);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Triangle* ComponentBase<dim>::triangle(
+inline TriangulationTraits<dim>::Triangle* Component<dim>::triangle(
         size_t index) const
         requires (standardDim(dim)) {
     if constexpr (dim == 2)
@@ -861,7 +881,7 @@ inline TriangulationTraits<dim>::Triangle* ComponentBase<dim>::triangle(
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Tetrahedron* ComponentBase<dim>::tetrahedron(
+inline TriangulationTraits<dim>::Tetrahedron* Component<dim>::tetrahedron(
         size_t index) const
         requires (standardDim(dim) && dim >= 3) {
     if constexpr (dim == 3)
@@ -871,7 +891,7 @@ inline TriangulationTraits<dim>::Tetrahedron* ComponentBase<dim>::tetrahedron(
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Pentachoron* ComponentBase<dim>::pentachoron(
+inline TriangulationTraits<dim>::Pentachoron* Component<dim>::pentachoron(
         size_t index) const
         requires (standardDim(dim) && dim >= 4) {
     if constexpr (dim == 4)
@@ -881,38 +901,82 @@ inline TriangulationTraits<dim>::Pentachoron* ComponentBase<dim>::pentachoron(
 }
 
 template <int dim> requires (supportedDim(dim))
-inline BoundaryComponent<dim>* ComponentBase<dim>::boundaryComponent(
-        size_t index) const {
+inline BoundaryComponent<dim>* Component<dim>::boundaryComponent(size_t index)
+        const {
     return boundaryComponents_[index];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool ComponentBase<dim>::isValid() const {
+inline bool Component<dim>::isValid() const {
     return valid_;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool ComponentBase<dim>::isOrientable() const {
+inline bool Component<dim>::isOrientable() const {
     return orientable_;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool ComponentBase<dim>::hasBoundaryFacets() const {
+inline bool Component<dim>::hasBoundaryFacets() const {
     return boundaryFacets_;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t ComponentBase<dim>::countBoundaryFacets() const {
+inline bool Component<dim>::hasBoundaryEdges() const requires (dim == 2) {
     return boundaryFacets_;
 }
 
 template <int dim> requires (supportedDim(dim))
-void ComponentBase<dim>::writeTextShort(std::ostream& out) const {
+inline bool Component<dim>::hasBoundaryTriangles() const requires (dim == 3) {
+    return boundaryFacets_;
+}
+
+template <int dim> requires (supportedDim(dim))
+inline bool Component<dim>::hasBoundaryTetrahedra() const requires (dim == 4) {
+    return boundaryFacets_;
+}
+
+template <int dim> requires (supportedDim(dim))
+inline size_t Component<dim>::countBoundaryFacets() const {
+    return boundaryFacets_;
+}
+
+template <int dim> requires (supportedDim(dim))
+inline size_t Component<dim>::countBoundaryEdges() const
+        requires (dim == 2) {
+    return boundaryFacets_;
+}
+
+template <int dim> requires (supportedDim(dim))
+inline size_t Component<dim>::countBoundaryTriangles() const
+        requires (dim == 3) {
+    return boundaryFacets_;
+}
+
+template <int dim> requires (supportedDim(dim))
+inline size_t Component<dim>::countBoundaryTetrahedra()
+        const requires (dim == 4) {
+    return boundaryFacets_;
+}
+
+template <int dim> requires (supportedDim(dim))
+inline bool Component<dim>::isIdeal() const
+        requires (standardDim(dim) && dim > 2) {
+    return ideal_.value;
+}
+
+template <int dim> requires (supportedDim(dim))
+inline bool Component<dim>::isClosed() const requires (standardDim(dim)) {
+    return (boundaryComponents().empty());
+}
+
+template <int dim> requires (supportedDim(dim))
+void Component<dim>::writeTextShort(std::ostream& out) const {
     if (simplices_.size() == 1)
-        out << "Component with 1 " << Strings<dim>::simplex;
+        out << "Component with 1 " << detail::Strings<dim>::simplex;
     else
         out << "Component with " << simplices_.size() << ' '
-            << Strings<dim>::simplices;
+            << detail::Strings<dim>::simplices;
     out << ':';
 
     if (simplices_.front()->triangulation().countComponents() == 1) {
@@ -923,7 +987,7 @@ void ComponentBase<dim>::writeTextShort(std::ostream& out) const {
     }
 }
 
-} } // namespace regina::detail
+} // namespace regina
 
 #endif
 

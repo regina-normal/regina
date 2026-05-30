@@ -32,7 +32,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    component3.h
     edge3.h
     homologicaldata.h
     triangle3.h

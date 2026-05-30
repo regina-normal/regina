@@ -21,7 +21,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    component4.h
     edge4.h
     tetrahedron4.h
     triangle4.h

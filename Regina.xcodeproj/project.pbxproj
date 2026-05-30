@@ -1686,10 +1686,8 @@
 		05F09FBF1DBEF01800117BFC /* dim2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBC1DBEF01800117BFC /* dim2.h */; };
 		05F09FC01DBEF01800117BFC /* dim3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBD1DBEF01800117BFC /* dim3.h */; };
 		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
-		05F09FD41DBF01B600117BFC /* component2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FC81DBF01B600117BFC /* component2.h */; };
 		05F09FDA1DBF01B600117BFC /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCE1DBF01B600117BFC /* triangulation2.cpp */; };
 		05F09FDB1DBF01B600117BFC /* triangulation2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FCF1DBF01B600117BFC /* triangulation2.h */; };
-		05F09FFB1DBF078800117BFC /* component4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FE71DBF078800117BFC /* component4.h */; };
 		05F09FFC1DBF078800117BFC /* edge4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FE81DBF078800117BFC /* edge4.cpp */; };
 		05F09FFD1DBF078800117BFC /* edge4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FE91DBF078800117BFC /* edge4.h */; };
 		05F0A0011DBF078800117BFC /* moves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FED1DBF078800117BFC /* moves.cpp */; };
@@ -1701,7 +1699,6 @@
 		05F0A00B1DBF078800117BFC /* vertex4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FF71DBF078800117BFC /* vertex4.cpp */; };
 		05F0A00C1DBF078800117BFC /* vertex4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FF81DBF078800117BFC /* vertex4.h */; };
 		05F0A0361DBF0B5E00117BFC /* angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0191DBF0B5E00117BFC /* angle.cpp */; };
-		05F0A0391DBF0B5E00117BFC /* component3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F0A01D1DBF0B5E00117BFC /* component3.h */; };
 		05F0A03A1DBF0B5E00117BFC /* crushtri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */; };
 		05F0A03B1DBF0B5E00117BFC /* decompose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A01F1DBF0B5E00117BFC /* decompose.cpp */; };
 		05F0A03E1DBF0B5E00117BFC /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0221DBF0B5E00117BFC /* homology.cpp */; };
@@ -2296,18 +2293,15 @@
 		05098B0B28FECBD9005E4716 /* special.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = special.test; sourceTree = "<group>"; };
 		05098B0E2900186E005E4716 /* triangle4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangle4.h; sourceTree = "<group>"; };
 		05098B0F2900186E005E4716 /* tetrahedron4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tetrahedron4.h; sourceTree = "<group>"; };
-		05098B112900186E005E4716 /* component4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component4.h; sourceTree = "<group>"; };
 		05098B122900186E005E4716 /* triangulation4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation4.h; sourceTree = "<group>"; };
 		05098B132900186E005E4716 /* edge4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = edge4.h; sourceTree = "<group>"; };
 		05098B142900186E005E4716 /* vertex4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
-		05098B162900186E005E4716 /* component3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component3.h; sourceTree = "<group>"; };
 		05098B182900186E005E4716 /* triangulation3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation3.h; sourceTree = "<group>"; };
 		05098B192900186E005E4716 /* homologicaldata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
 		05098B1A2900186E005E4716 /* triangle3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangle3.h; sourceTree = "<group>"; };
 		05098B1B2900186E005E4716 /* vertex3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
 		05098B1C2900186E005E4716 /* edge3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = edge3.h; sourceTree = "<group>"; };
 		05098B1D2900186E005E4716 /* example.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
-		05098B202900186E005E4716 /* component2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component2.h; sourceTree = "<group>"; };
 		05098B212900186E005E4716 /* triangulation2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation2.h; sourceTree = "<group>"; };
 		05098B262900186E005E4716 /* example4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example4.h; sourceTree = "<group>"; };
 		05098B272900186E005E4716 /* facetpairing3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
@@ -4662,11 +4656,9 @@
 		05F09FBD1DBEF01800117BFC /* dim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim3.h; sourceTree = "<group>"; };
 		05F09FBE1DBEF01800117BFC /* dim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4.h; sourceTree = "<group>"; };
 		05F09FC71DBF01B600117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05F09FC81DBF01B600117BFC /* component2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component2.h; sourceTree = "<group>"; };
 		05F09FCE1DBF01B600117BFC /* triangulation2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation2.cpp; sourceTree = "<group>"; };
 		05F09FCF1DBF01B600117BFC /* triangulation2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation2.h; sourceTree = "<group>"; };
 		05F09FE61DBF078800117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05F09FE71DBF078800117BFC /* component4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component4.h; sourceTree = "<group>"; };
 		05F09FE81DBF078800117BFC /* edge4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge4.cpp; sourceTree = "<group>"; };
 		05F09FE91DBF078800117BFC /* edge4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge4.h; sourceTree = "<group>"; };
 		05F09FED1DBF078800117BFC /* moves.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moves.cpp; sourceTree = "<group>"; };
@@ -4679,7 +4671,6 @@
 		05F09FF81DBF078800117BFC /* vertex4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
 		05F0A0191DBF0B5E00117BFC /* angle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = angle.cpp; sourceTree = "<group>"; };
 		05F0A01C1DBF0B5E00117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05F0A01D1DBF0B5E00117BFC /* component3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component3.h; sourceTree = "<group>"; };
 		05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crushtri.cpp; sourceTree = "<group>"; };
 		05F0A01F1DBF0B5E00117BFC /* decompose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = decompose.cpp; sourceTree = "<group>"; };
 		05F0A0221DBF0B5E00117BFC /* homology.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homology.cpp; sourceTree = "<group>"; };
@@ -5376,7 +5367,6 @@
 		05098B0D2900186E005E4716 /* dim4 */ = {
 			isa = PBXGroup;
 			children = (
-				05098B112900186E005E4716 /* component4.h */,
 				05098B132900186E005E4716 /* edge4.h */,
 				05098B0F2900186E005E4716 /* tetrahedron4.h */,
 				05098B0E2900186E005E4716 /* triangle4.h */,
@@ -5389,7 +5379,6 @@
 		05098B152900186E005E4716 /* dim3 */ = {
 			isa = PBXGroup;
 			children = (
-				05098B162900186E005E4716 /* component3.h */,
 				05098B1C2900186E005E4716 /* edge3.h */,
 				05098B192900186E005E4716 /* homologicaldata.h */,
 				05098B1A2900186E005E4716 /* triangle3.h */,
@@ -5402,7 +5391,6 @@
 		05098B1E2900186E005E4716 /* dim2 */ = {
 			isa = PBXGroup;
 			children = (
-				05098B202900186E005E4716 /* component2.h */,
 				05098B212900186E005E4716 /* triangulation2.h */,
 			);
 			path = dim2;
@@ -8823,7 +8811,6 @@
 			isa = PBXGroup;
 			children = (
 				05F09FC71DBF01B600117BFC /* CMakeLists.txt */,
-				05F09FC81DBF01B600117BFC /* component2.h */,
 				05F09FCE1DBF01B600117BFC /* triangulation2.cpp */,
 				05F09FCF1DBF01B600117BFC /* triangulation2.h */,
 			);
@@ -8836,7 +8823,6 @@
 				05FF74E31DCB12F700FC2CB4 /* 600cell.py */,
 				05F0A0191DBF0B5E00117BFC /* angle.cpp */,
 				05F0A01C1DBF0B5E00117BFC /* CMakeLists.txt */,
-				05F0A01D1DBF0B5E00117BFC /* component3.h */,
 				05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */,
 				05F0A01F1DBF0B5E00117BFC /* decompose.cpp */,
 				05C265992824917700232420 /* edge3.h */,
@@ -8869,7 +8855,6 @@
 			isa = PBXGroup;
 			children = (
 				05F09FE61DBF078800117BFC /* CMakeLists.txt */,
-				05F09FE71DBF078800117BFC /* component4.h */,
 				05F09FE81DBF078800117BFC /* edge4.cpp */,
 				05F09FE91DBF078800117BFC /* edge4.h */,
 				053CB70628D0168C006B37B0 /* hypersurfaces.cpp */,
@@ -8905,7 +8890,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				052F9F11180600FB00FAE4DF /* orb.h in Headers */,
-				05F09FFB1DBF078800117BFC /* component4.h in Headers */,
 				057FDAF72EE7ACC3000C706E /* core.h in Headers */,
 				050C646A1DA1019B00C9420F /* anglestructure.h in Headers */,
 				05F0A00A1DBF078800117BFC /* triangulation4.h in Headers */,
@@ -9107,7 +9091,6 @@
 				052F9F77180600FB00FAE4DF /* covers.h in Headers */,
 				0545A0122F9ADCE8008D3ADB /* bytesequence.h in Headers */,
 				05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */,
-				05F09FD41DBF01B600117BFC /* component2.h in Headers */,
 				05772ED0270CF9F900D26D8A /* fileformat.h in Headers */,
 				052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */,
 				05A1C55B2EF37050004A309E /* array.h in Headers */,
@@ -9132,7 +9115,6 @@
 				05F0A04C1DBF0B5E00117BFC /* triangle3.h in Headers */,
 				05B7002725AC2305003BAF5C /* input.h in Headers */,
 				05A067351DFA68190047872E /* snappedball.h in Headers */,
-				05F0A0391DBF0B5E00117BFC /* component3.h in Headers */,
 				05B7002225AC2305003BAF5C /* dynamic_bitset.h in Headers */,
 				05C2659B2824917700232420 /* edge3.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,

@@ -5284,7 +5284,6 @@ inline Triangulation<3>::~Triangulation() {
 #include "triangulation/dim3/triangle3.h"
 #include "triangulation/dim3/edge3.h"
 #include "triangulation/dim3/vertex3.h"
-#include "triangulation/dim3/component3.h"
 namespace regina {
 
 #ifndef __APIDOCS

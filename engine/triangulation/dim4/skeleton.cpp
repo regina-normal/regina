@@ -128,7 +128,7 @@ void Triangulation<4>::calculateVertexLinks() {
                                 foundIdeal < vertexLinkSummary_) &&
                             ! vertex->buildLink().isSphere())) {
                     // We have an ideal vertex.
-                    vertex->component()->ideal_ = true;
+                    vertex->component()->ideal_.value = true;
                     vertex->flags_ |= Vertex<4>::FLAG_IDEAL;
                     if (foundIdeal >= 0)
                         ++foundIdeal;
@@ -214,12 +214,6 @@ void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
         auto you = src.vertices().begin();
         for ( ; me != vertices().end(); ++me, ++you)
             (*me)->flags_ = (*you)->flags_;
-    }
-    {
-        auto me = components_.begin();
-        auto you = src.components_.begin();
-        for ( ; me != components_.end(); ++me, ++you)
-            (*me)->ideal_ = (*you)->ideal_;
     }
 }
 

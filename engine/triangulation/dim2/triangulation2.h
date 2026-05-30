@@ -468,11 +468,6 @@ inline void Triangulation<2>::clearAllProperties() {
     clearBaseProperties();
 }
 
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "triangulation/dim2/component2.h"
-namespace regina {
-
 // Inline functions for Triangulation<2>
 
 inline Triangulation<2>::Triangulation(const Triangulation& src,

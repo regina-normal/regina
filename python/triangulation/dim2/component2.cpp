@@ -42,56 +42,55 @@ using regina::Component;
 
 void addComponent2(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(Component2)
-    RDOC_SCOPE_BASE(detail::ComponentBase)
 
     auto c = pybind11::class_<Component<2>>(m, "Component2", rdoc::__class)
-        .def("index", &Component<2>::index, rbase::index)
+        .def("index", &Component<2>::index, rdoc::index)
         .def("triangulation", &Component<2>::triangulation,
-            rbase::triangulation)
-        .def("size", &Component<2>::size, rbase::size)
+            rdoc::triangulation)
+        .def("size", &Component<2>::size, rdoc::size)
         .def("countTriangles", &Component<2>::countTriangles,
-            rbase::countTriangles)
+            rdoc::countTriangles)
         .def("countFaces", (regina::python::countFacesFunc<Component<2>>)(
             &Component<2>::countFaces), rdoc::countFaces)
-        .def("countEdges", &Component<2>::countEdges, rbase::countEdges)
+        .def("countEdges", &Component<2>::countEdges, rdoc::countEdges)
         .def("countVertices", &Component<2>::countVertices,
-            rbase::countVertices)
-        .def("countFacets", &Component<2>::countFacets, rbase::countFacets)
+            rdoc::countVertices)
+        .def("countFacets", &Component<2>::countFacets, rdoc::countFacets)
         .def("countBoundaryComponents", &Component<2>::countBoundaryComponents,
-            rbase::countBoundaryComponents)
-        .def("simplices", &Component<2>::simplices, rbase::simplices)
-        .def("triangles", &Component<2>::triangles, rbase::triangles)
-        .def("hasLocks", &Component<2>::hasLocks, rbase::hasLocks)
+            rdoc::countBoundaryComponents)
+        .def("simplices", &Component<2>::simplices, rdoc::simplices)
+        .def("triangles", &Component<2>::triangles, rdoc::triangles)
+        .def("hasLocks", &Component<2>::hasLocks, rdoc::hasLocks)
         .def("faces",
             (regina::python::facesFunc<Component<2>>)(&Component<2>::faces),
             "subdim"_a, rdoc::faces)
-        .def("vertices", &Component<2>::vertices, rbase::vertices)
-        .def("edges", &Component<2>::edges, rbase::edges)
+        .def("vertices", &Component<2>::vertices, rdoc::vertices)
+        .def("edges", &Component<2>::edges, rdoc::edges)
         .def("boundaryComponents", &Component<2>::boundaryComponents,
-            rbase::boundaryComponents)
+            rdoc::boundaryComponents)
         .def("triangle", &Component<2>::triangle,
-            pybind11::return_value_policy::reference, rbase::triangle)
+            pybind11::return_value_policy::reference, rdoc::triangle)
         .def("simplex", &Component<2>::simplex,
-            pybind11::return_value_policy::reference, rbase::simplex)
+            pybind11::return_value_policy::reference, rdoc::simplex)
         .def("face",
             (regina::python::faceFunc<Component<2>>)(&Component<2>::face),
             pybind11::return_value_policy::reference,
             "subdim"_a, "index"_a, rdoc::face)
         .def("edge", &Component<2>::edge,
-            pybind11::return_value_policy::reference, rbase::edge)
+            pybind11::return_value_policy::reference, rdoc::edge)
         .def("vertex", &Component<2>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex)
+            pybind11::return_value_policy::reference, rdoc::vertex)
         .def("boundaryComponent", &Component<2>::boundaryComponent,
-            pybind11::return_value_policy::reference, rbase::boundaryComponent)
-        .def("isValid", &Component<2>::isValid, rbase::isValid)
-        .def("isOrientable", &Component<2>::isOrientable, rbase::isOrientable)
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
+        .def("isValid", &Component<2>::isValid, rdoc::isValid)
+        .def("isOrientable", &Component<2>::isOrientable, rdoc::isOrientable)
         .def("isClosed", &Component<2>::isClosed, rdoc::isClosed)
         .def("hasBoundaryFacets", &Component<2>::hasBoundaryFacets,
-            rbase::hasBoundaryFacets)
+            rdoc::hasBoundaryFacets)
         .def("hasBoundaryEdges", &Component<2>::hasBoundaryEdges,
             rdoc::hasBoundaryEdges)
         .def("countBoundaryFacets", &Component<2>::countBoundaryFacets,
-            rbase::countBoundaryFacets)
+            rdoc::countBoundaryFacets)
         .def("countBoundaryEdges", &Component<2>::countBoundaryEdges,
             rdoc::countBoundaryEdges)
         .def_readonly_static("dimension", &Component<2>::dimension)

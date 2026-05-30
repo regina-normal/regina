@@ -42,31 +42,30 @@ void addComponent(pybind11::module_& m, pybind11::module_& internal,
     // We use the global scope here because all of Component's members are
     // inherited, and so Component's own docstring namespace does not exist.
     RDOC_SCOPE_BEGIN_MAIN
-    RDOC_SCOPE_BASE(detail::ComponentBase)
 
     auto c = pybind11::class_<Component<dim>>(m, name, rdoc::Component::__class)
-        .def("index", &Component<dim>::index, rbase::index)
+        .def("index", &Component<dim>::index, rdoc::index)
         .def("triangulation", &Component<dim>::triangulation,
-            rbase::triangulation)
-        .def("size", &Component<dim>::size, rbase::size)
-        .def("countFacets", &Component<dim>::countFacets, rbase::countFacets)
+            rdoc::triangulation)
+        .def("size", &Component<dim>::size, rdoc::size)
+        .def("countFacets", &Component<dim>::countFacets, rdoc::countFacets)
         .def("countBoundaryComponents",
             &Component<dim>::countBoundaryComponents,
-            rbase::countBoundaryComponents)
-        .def("simplices", &Component<dim>::simplices, rbase::simplices)
+            rdoc::countBoundaryComponents)
+        .def("simplices", &Component<dim>::simplices, rdoc::simplices)
         .def("simplex", &Component<dim>::simplex,
-            pybind11::return_value_policy::reference, rbase::simplex)
-        .def("hasLocks", &Component<dim>::hasLocks, rbase::hasLocks)
+            pybind11::return_value_policy::reference, rdoc::simplex)
+        .def("hasLocks", &Component<dim>::hasLocks, rdoc::hasLocks)
         .def("boundaryComponents", &Component<dim>::boundaryComponents,
-            rbase::boundaryComponents)
+            rdoc::boundaryComponents)
         .def("boundaryComponent", &Component<dim>::boundaryComponent,
-            pybind11::return_value_policy::reference, rbase::boundaryComponent)
-        .def("isValid", &Component<dim>::isValid, rbase::isValid)
-        .def("isOrientable", &Component<dim>::isOrientable, rbase::isOrientable)
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
+        .def("isValid", &Component<dim>::isValid, rdoc::isValid)
+        .def("isOrientable", &Component<dim>::isOrientable, rdoc::isOrientable)
         .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets,
-            rbase::hasBoundaryFacets)
+            rdoc::hasBoundaryFacets)
         .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets,
-            rbase::countBoundaryFacets)
+            rdoc::countBoundaryFacets)
         .def_readonly_static("dimension", &Component<dim>::dimension)
     ;
     regina::python::add_output_rich(c);

@@ -13,7 +13,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    component2.h
     triangulation2.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation/dim2" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

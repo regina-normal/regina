@@ -1662,7 +1662,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
 #include "triangulation/dim4/triangle4.h"
 #include "triangulation/dim4/edge4.h"
 #include "triangulation/dim4/vertex4.h"
-#include "triangulation/dim4/component4.h"
 namespace regina {
 
 #ifndef __APIDOCS

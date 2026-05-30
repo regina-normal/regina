@@ -710,6 +710,8 @@ void TriangulationBase<dim>::cloneSkeleton(const TriangulationBase<dim>& src) {
         me->valid_ = you->valid_;
         me->boundaryFacets_ = you->boundaryFacets_;
         me->orientable_ = you->orientable_;
+        if constexpr (standardDim(dim) && dim > 2)
+            me->ideal_ = you->ideal_;
 
         // We will clone the face lists later, once we have cloned the faces.
     }
