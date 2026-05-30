@@ -44,6 +44,7 @@
 #include "triangulation/forward.h"
 #include "triangulation/detail/strings.h"
 #include "utilities/markedvector.h"
+#include "utilities/typeutils.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -88,6 +89,16 @@ class ComponentBase :
             /**< List of top-dimensional simplices in the component. */
         std::vector<BoundaryComponent<dim>*> boundaryComponents_;
             /**< List of boundary components in the component. */
+
+        template <int subdim>
+        using FaceVector = std::vector<Face<dim, subdim>*>;
+            /**< The type used to hold all <i>subdim</i>-faces of this
+                 component. */
+        [[no_unique_address]] TupleOverRange<standardDim(dim) ? 0 : dim, dim,
+                FaceVector> faces_;
+            /**< A tuple of vectors holding faces of this component, but only
+                 if \a dim is one of Regina's standard dimensions; otherwise
+                 this is an empty data member. */
 
     protected:
         bool valid_;
@@ -180,44 +191,85 @@ class ComponentBase :
         bool hasLocks() const;
 
         /**
+         * Returns the number of <i>subdim</i>-faces in this component.
+         *
+         * This is the fastest way to count faces if you know \a subdim
+         * at compile time.
+         *
+         * For convenience, this routine explicitly supports the case
+         * `subdim == dim`.  This is _not_ the case for the routines
+         * face() and faces(), which give access to individual faces
+         * (the reason relates to the fact that top-dimensional simplices
+         * are built manually, whereas lower-dimensional faces are deduced
+         * properties).
+         *
+         * \nopython Instead use the variant `countFaces(subdim)`.
+         *
+         * \tparam subdim the face dimension.
+         *
+         * \return the number of <i>subdim</i>-faces.
+         */
+        template <int subdim> requires (subdim >= 0 && subdim <= dim)
+        size_t countFaces() const requires (standardDim(dim));
+
+        /**
+         * Returns the number of <i>subdim</i>-faces in this component,
+         * where the face dimension does not need to be known until runtime.
+         *
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function `countFaces<subdim>()`
+         * instead, which is (slightly) faster.
+         *
+         * For convenience, this routine explicitly supports the case
+         * `subdim == dim`.  This is _not_ the case for the routines
+         * face() and faces(), which give access to individual faces
+         * (the reason relates to the fact that top-dimensional simplices
+         * are built manually, whereas lower-dimensional faces are deduced
+         * properties).
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range (i.e., negative or greater than \a dim).
+         *
+         * \param subdim the face dimension; this must be between 0 and \a dim
+         * inclusive.
+         * \return the number of <i>subdim</i>-faces.
+         */
+        size_t countFaces(int subdim) const requires (standardDim(dim));
+
+        /**
          * A dimension-specific alias for countFaces<0>().
          *
          * See countFaces() for further information.
          */
-        size_t countVertices() const
-            requires (standardDim(dim));
+        size_t countVertices() const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for countFaces<1>().
          *
          * See countFaces() for further information.
          */
-        size_t countEdges() const
-            requires (standardDim(dim));
+        size_t countEdges() const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for countFaces<2>().
          *
          * See countFaces() for further information.
          */
-        size_t countTriangles() const
-            requires (standardDim(dim));
+        size_t countTriangles() const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for countFaces<3>().
          *
          * See countFaces() for further information.
          */
-        size_t countTetrahedra() const
-            requires (standardDim(dim) && dim >= 3);
+        size_t countTetrahedra() const requires (standardDim(dim) && dim >= 3);
 
         /**
          * A dimension-specific alias for countFaces<4>().
          *
          * See countFaces() for further information.
          */
-        size_t countPentachora() const
-            requires (standardDim(dim) && dim >= 4);
+        size_t countPentachora() const requires (standardDim(dim) && dim >= 4);
 
         /**
          * Returns the number of `(dim-1)`-faces in this component.
@@ -238,20 +290,81 @@ class ComponentBase :
         size_t countBoundaryComponents() const;
 
         /**
+         * Returns an object that allows iteration through and random access
+         * to all <i>subdim</i>-faces in this component, in a way that is
+         * optimised for C++ programmers.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use `auto` (just like this declaration does).
+         *
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, subdim>* f : comp.faces<subdim>()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
+         * long as this component object exists.  In particular,
+         * the object will become invalid any time that the triangulation
+         * changes (since all component objects will be destroyed
+         * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call faces() again each time you need it.
+         *
+         * \nopython Instead use the variant `faces(subdim)`.
+         *
+         * \tparam subdim the face dimension.
+         *
+         * \return access to the list of all <i>subdim</i>-faces.
+         */
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
+        auto faces() const requires (standardDim(dim));
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all <i>subdim</i>-faces in this component, in a way that is
+         * optimised for Python programmers.
+         *
+         * C++ users should not use this routine.  The return type must be fixed
+         * at compile time, and so it is typically a `std::variant` that can
+         * hold any of the lightweight view types returned from the templated
+         * `faces<subdim>()` function.  This means that the return value will
+         * still need compile-time knowledge of \a subdim to extract and
+         * use the appropriate face objects.  However, once you know \a subdim
+         * at compile time, you are much better off using the (simpler and
+         * faster) routine `faces<subdim>()` instead.
+         *
+         * For Python users, this routine is much more useful: the return type
+         * can be chosen at runtime, and so this routine returns a single
+         * lightweight view granting access to all of the <i>subdim</i>-faces
+         * of the component, which you can use immediately.
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range (i.e., negative, or greater than `dim-1`).
+         *
+         * \param subdim the face dimension; this must be between 0 and `dim-1`
+         * inclusive.
+         * \return access to the list of all <i>subdim</i>-faces.
+         */
+        auto faces(int subdim) const requires (standardDim(dim));
+
+        /**
          * A dimension-specific alias for faces<0>().
          *
          * See faces() for further information.
          */
-        auto vertices() const
-            requires (standardDim(dim));
+        auto vertices() const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for faces<1>().
          *
          * See faces() for further information.
          */
-        auto edges() const
-            requires (standardDim(dim));
+        auto edges() const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for faces<2>(), or an alias for
@@ -259,8 +372,7 @@ class ComponentBase :
          *
          * See faces() for further information.
          */
-        auto triangles() const
-            requires (standardDim(dim));
+        auto triangles() const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for faces<3>(), or an alias for
@@ -268,8 +380,7 @@ class ComponentBase :
          *
          * See faces() for further information.
          */
-        auto tetrahedra() const
-            requires (standardDim(dim) && dim >= 3);
+        auto tetrahedra() const requires (standardDim(dim) && dim >= 3);
 
         /**
          * A dimension-specific alias for faces<4>(), or an alias for
@@ -277,8 +388,7 @@ class ComponentBase :
          *
          * See faces() for further information.
          */
-        auto pentachora() const
-            requires (standardDim(dim) && dim >= 4);
+        auto pentachora() const requires (standardDim(dim) && dim >= 4);
 
         /**
          * Returns an object that allows iteration through and random access
@@ -308,6 +418,59 @@ class ComponentBase :
          * \return access to the list of all boundary components.
          */
         auto boundaryComponents() const;
+
+        /**
+         * Returns the requested <i>subdim</i>-face in this component, in a
+         * way that is optimised for C++ programmers.
+         *
+         * Note that the index of a face in the component need
+         * not be the index of the same face in the overall triangulation.
+         *
+         * \nopython Instead use the variant `face(subdim, index)`.
+         *
+         * \tparam subdim the face dimension.
+         *
+         * \param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * \return the requested face.
+         */
+        template <int subdim> requires (subdim >= 0 && subdim < dim)
+        Face<dim, subdim>* face(size_t index) const requires (standardDim(dim));
+
+        /**
+         * Returns the requested <i>subdim</i>-face in this component, in a
+         * way that is optimised for Python programmers.
+         *
+         * C++ users should not use this routine.  The return type must be
+         * fixed at compile time, and so it is typically a `std::variant` that
+         * could store a pointer to any class `Face<dim, ...>`.  This means you
+         * cannot access the face directly: you will still need some kind of
+         * compile-time knowledge of \a subdim before you can extract and use
+         * an appropriate `Face<dim, subdim>` object from \a v.  However, once
+         * you know \a subdim at compile time, you are better off using the
+         * (simpler and faster) routine `face<subdim>()` instead.
+         *
+         * For Python users, this routine is much more useful: the return type
+         * can be chosen at runtime, and so this routine simply returns a
+         * `Face<dim, subdim>` object of the appropriate face dimension that
+         * you can use immediately.
+         *
+         * The specific return type for C++ programmers will be
+         * `std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>`.
+         *
+         * Note that the index of a face in the component need
+         * not be the index of the same face in the overall triangulation.
+         *
+         * \exception InvalidArgument The face dimension \a subdim is outside
+         * the supported range (i.e., negative, or greater than `dim-1`).
+         *
+         * \param subdim the face dimension; this must be between 0 and `dim-1`
+         * inclusive.
+         * \param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * \return the requested face.
+         */
+        auto face(int subdim, size_t index) const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for face<0>().
@@ -527,33 +690,56 @@ inline bool ComponentBase<dim>::hasLocks() const {
 }
 
 template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim <= dim)
+inline size_t ComponentBase<dim>::countFaces() const
+        requires (standardDim(dim)) {
+    if constexpr (subdim == dim)
+        return size();
+    else
+        return std::get<subdim>(faces_).size();
+}
+
+template <int dim> requires (supportedDim(dim))
+inline size_t ComponentBase<dim>::countFaces(int subdim) const
+        requires (standardDim(dim)) {
+    if (subdim == dim)
+        return size();
+    if (subdim < 0 || subdim > dim)
+        throw InvalidArgument("countFaces(): unsupported face dimension");
+
+    return select_constexpr<0, dim, size_t>(subdim, [this](auto k) {
+        return std::get<k>(faces_).size();
+    });
+}
+
+template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countVertices() const
         requires (standardDim(dim)) {
-    return static_cast<const Component<dim>*>(this)->template countFaces<0>();
+    return countFaces<0>();
 }
 
 template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countEdges() const
         requires (standardDim(dim)) {
-    return static_cast<const Component<dim>*>(this)->template countFaces<1>();
+    return countFaces<1>();
 }
 
 template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countTriangles() const
         requires (standardDim(dim)) {
-    return static_cast<const Component<dim>*>(this)->template countFaces<2>();
+    return countFaces<2>();
 }
 
 template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countTetrahedra() const
         requires (standardDim(dim) && dim >= 3) {
-    return static_cast<const Component<dim>*>(this)->template countFaces<3>();
+    return countFaces<3>();
 }
 
 template <int dim> requires (supportedDim(dim))
 inline size_t ComponentBase<dim>::countPentachora() const
         requires (standardDim(dim) && dim >= 4) {
-    return static_cast<const Component<dim>*>(this)->template countFaces<4>();
+    return countFaces<4>();
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -572,15 +758,32 @@ inline size_t ComponentBase<dim>::countBoundaryComponents() const {
 }
 
 template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim < dim)
+inline auto ComponentBase<dim>::faces() const requires (standardDim(dim)) {
+    return std::views::all(std::get<subdim>(faces_));
+}
+
+template <int dim> requires (supportedDim(dim))
+inline auto ComponentBase<dim>::faces(int subdim) const
+        requires (standardDim(dim)) {
+    if (subdim < 0 || subdim >= dim)
+        throw InvalidArgument("faces(): unsupported face dimension");
+
+    return select_constexpr_as_variant<0, dim>(subdim, [this](auto k) {
+        return std::views::all(std::get<k>(faces_));
+    });
+}
+
+template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::vertices() const
         requires (standardDim(dim)) {
-    return static_cast<const Component<dim>*>(this)->template faces<0>();
+    return faces<0>();
 }
 
 template <int dim> requires (supportedDim(dim))
 inline auto ComponentBase<dim>::edges() const
         requires (standardDim(dim)) {
-    return static_cast<const Component<dim>*>(this)->template faces<1>();
+    return faces<1>();
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -589,7 +792,7 @@ inline auto ComponentBase<dim>::triangles() const
     if constexpr (dim == 2)
         return std::views::all(simplices_);
     else
-        return static_cast<const Component<dim>*>(this)->template faces<2>();
+        return faces<2>();
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -598,7 +801,7 @@ inline auto ComponentBase<dim>::tetrahedra() const
     if constexpr (dim == 3)
         return std::views::all(simplices_);
     else
-        return static_cast<const Component<dim>*>(this)->template faces<3>();
+        return faces<3>();
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -607,7 +810,7 @@ inline auto ComponentBase<dim>::pentachora() const
     if constexpr (dim == 4)
         return std::views::all(simplices_);
     else
-        return static_cast<const Component<dim>*>(this)->template faces<4>();
+        return faces<4>();
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -616,17 +819,35 @@ inline auto ComponentBase<dim>::boundaryComponents() const {
 }
 
 template <int dim> requires (supportedDim(dim))
+template <int subdim> requires (subdim >= 0 && subdim < dim)
+inline Face<dim, subdim>* ComponentBase<dim>::face(size_t index) const
+        requires (standardDim(dim)) {
+    return std::get<subdim>(faces_)[index];
+}
+
+template <int dim> requires (supportedDim(dim))
+inline auto ComponentBase<dim>::face(int subdim, size_t index) const
+        requires (standardDim(dim)) {
+    if (subdim < 0 || subdim >= dim)
+        throw InvalidArgument("face(): unsupported face dimension");
+
+    return select_constexpr_as_variant<0, dim>(subdim, [this, index](auto k) {
+        return std::get<k>(faces_)[index];
+    });
+}
+
+template <int dim> requires (supportedDim(dim))
 inline TriangulationTraits<dim>::Vertex* ComponentBase<dim>::vertex(
         size_t index) const
         requires (standardDim(dim)) {
-    return static_cast<const Component<dim>*>(this)->template face<0>(index);
+    return face<0>(index);
 }
 
 template <int dim> requires (supportedDim(dim))
 inline TriangulationTraits<dim>::Edge* ComponentBase<dim>::edge(
         size_t index) const
         requires (standardDim(dim)) {
-    return static_cast<const Component<dim>*>(this)->template face<1>(index);
+    return face<1>(index);
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -636,8 +857,7 @@ inline TriangulationTraits<dim>::Triangle* ComponentBase<dim>::triangle(
     if constexpr (dim == 2)
         return simplices_[index];
     else
-        return static_cast<const Component<dim>*>(this)->
-            template face<2>(index);
+        return face<2>(index);
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -647,8 +867,7 @@ inline TriangulationTraits<dim>::Tetrahedron* ComponentBase<dim>::tetrahedron(
     if constexpr (dim == 3)
         return simplices_[index];
     else
-        return static_cast<const Component<dim>*>(this)->
-            template face<3>(index);
+        return face<3>(index);
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -658,8 +877,7 @@ inline TriangulationTraits<dim>::Pentachoron* ComponentBase<dim>::pentachoron(
     if constexpr (dim == 4)
         return simplices_[index];
     else
-        return static_cast<const Component<dim>*>(this)->
-            template face<4>(index);
+        return face<4>(index);
 }
 
 template <int dim> requires (supportedDim(dim))

@@ -53,14 +53,6 @@ void Triangulation<3>::calculateSkeleton() {
         // Sets valid, ideal, Vertex<3>.link,
         //     Vertex<3>.linkEulerChar, Component<3>.ideal,
         //     boundaryComponents, Vertex<3>.boundaryComponent
-
-    // Flesh out the details of each component.
-    for (auto v : vertices())
-        v->component()->vertices_.push_back(v);
-    for (auto e : edges())
-        e->component()->edges_.push_back(e);
-    for (auto t : triangles())
-        t->component()->triangles_.push_back(t);
 }
 
 void Triangulation<3>::checkPermutations() {
@@ -229,16 +221,8 @@ void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
     {
         auto me = components_.begin();
         auto you = src.components_.begin();
-        for ( ; me != components_.end(); ++me, ++you) {
+        for ( ; me != components_.end(); ++me, ++you)
             (*me)->ideal_ = (*you)->ideal_;
-
-            for (auto f : (*you)->vertices_)
-                (*me)->vertices_.push_back(vertex(f->index()));
-            for (auto f : (*you)->edges_)
-                (*me)->edges_.push_back(edge(f->index()));
-            for (auto f : (*you)->triangles_)
-                (*me)->triangles_.push_back(triangle(f->index()));
-        }
     }
 }
 

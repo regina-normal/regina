@@ -59,16 +59,6 @@ void Triangulation<4>::calculateSkeleton() {
         calculateEdgeLinks();
         // Sets:
         // - Edge<4>::link_, but only for edges with bad self-identifications
-
-    // Flesh out the details of each component.
-    for (auto v : vertices())
-        v->component()->vertices_.push_back(v);
-    for (auto e : edges())
-        e->component()->edges_.push_back(e);
-    for (auto t : triangles())
-        t->component()->triangles_.push_back(t);
-    for (auto t : tetrahedra())
-        t->component()->tetrahedra_.push_back(t);
 }
 
 void Triangulation<4>::calculateVertexLinks() {
@@ -228,18 +218,8 @@ void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
     {
         auto me = components_.begin();
         auto you = src.components_.begin();
-        for ( ; me != components_.end(); ++me, ++you) {
+        for ( ; me != components_.end(); ++me, ++you)
             (*me)->ideal_ = (*you)->ideal_;
-
-            for (auto f : (*you)->vertices_)
-                (*me)->vertices_.push_back(vertex(f->index()));
-            for (auto f : (*you)->edges_)
-                (*me)->edges_.push_back(edge(f->index()));
-            for (auto f : (*you)->triangles_)
-                (*me)->triangles_.push_back(triangle(f->index()));
-            for (auto f : (*you)->tetrahedra_)
-                (*me)->tetrahedra_.push_back(tetrahedron(f->index()));
-        }
     }
 }
 

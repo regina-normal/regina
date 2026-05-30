@@ -607,7 +607,6 @@
 		0553FA832AEBE36E00BE89A7 /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802BF26683C6D002D5D57 /* xmlsurfacereader.cpp */; };
 		0553FA842AEBE36E00BE89A7 /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802D426683C6D002D5D57 /* xmlfilterreader.cpp */; };
 		0553FA852AEBE36E00BE89A7 /* xmllinkreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802D826683C6D002D5D57 /* xmllinkreader.cpp */; };
-		0553FA862AEBE39A00BE89A7 /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCC1DBF01B600117BFC /* skeleton.cpp */; };
 		0553FA872AEBE39A00BE89A7 /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCE1DBF01B600117BFC /* triangulation2.cpp */; };
 		0553FA882AEBE3AC00BE89A7 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0271DBF0B5E00117BFC /* retriangulate.cpp */; };
 		0553FA892AEBE3AC00BE89A7 /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
@@ -1688,7 +1687,6 @@
 		05F09FC01DBEF01800117BFC /* dim3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBD1DBEF01800117BFC /* dim3.h */; };
 		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
 		05F09FD41DBF01B600117BFC /* component2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FC81DBF01B600117BFC /* component2.h */; };
-		05F09FD81DBF01B600117BFC /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCC1DBF01B600117BFC /* skeleton.cpp */; };
 		05F09FDA1DBF01B600117BFC /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCE1DBF01B600117BFC /* triangulation2.cpp */; };
 		05F09FDB1DBF01B600117BFC /* triangulation2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FCF1DBF01B600117BFC /* triangulation2.h */; };
 		05F09FFB1DBF078800117BFC /* component4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FE71DBF078800117BFC /* component4.h */; };
@@ -4665,7 +4663,6 @@
 		05F09FBE1DBEF01800117BFC /* dim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4.h; sourceTree = "<group>"; };
 		05F09FC71DBF01B600117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05F09FC81DBF01B600117BFC /* component2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component2.h; sourceTree = "<group>"; };
-		05F09FCC1DBF01B600117BFC /* skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skeleton.cpp; sourceTree = "<group>"; };
 		05F09FCE1DBF01B600117BFC /* triangulation2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation2.cpp; sourceTree = "<group>"; };
 		05F09FCF1DBF01B600117BFC /* triangulation2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation2.h; sourceTree = "<group>"; };
 		05F09FE61DBF078800117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -8827,7 +8824,6 @@
 			children = (
 				05F09FC71DBF01B600117BFC /* CMakeLists.txt */,
 				05F09FC81DBF01B600117BFC /* component2.h */,
-				05F09FCC1DBF01B600117BFC /* skeleton.cpp */,
 				05F09FCE1DBF01B600117BFC /* triangulation2.cpp */,
 				05F09FCF1DBF01B600117BFC /* triangulation2.h */,
 			);
@@ -10302,7 +10298,6 @@
 				0553FB7C2AEBE7F700BE89A7 /* precision.cpp in Sources */,
 				0553FA852AEBE36E00BE89A7 /* xmllinkreader.cpp in Sources */,
 				0553FB712AEBE7E900BE89A7 /* matrix_generators.cpp in Sources */,
-				0553FA862AEBE39A00BE89A7 /* skeleton.cpp in Sources */,
 				05A628262AE921700049739E /* randutils.cpp in Sources */,
 				0553FAE22AEBE6B500BE89A7 /* gluingperms8.cpp in Sources */,
 				0553FAF92AEBE6ED00BE89A7 /* gauss.cpp in Sources */,
@@ -11221,7 +11216,6 @@
 				05CAE65427450D89007C93F3 /* gluingperms8.cpp in Sources */,
 				05ACC9F72AFC674C000CF07F /* knotplot.cpp in Sources */,
 				052F9F5B180600FB00FAE4DF /* script.cpp in Sources */,
-				05F09FD81DBF01B600117BFC /* skeleton.cpp in Sources */,
 				0518B9E529D595680020ADC1 /* homology.cpp in Sources */,
 				05FE04FF2DBEB3E1001432AC /* operations.cpp in Sources */,
 				05A0671C1DFA68190047872E /* layeredsolidtorus.cpp in Sources */,

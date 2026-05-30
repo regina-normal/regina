@@ -457,9 +457,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          */
         void clearAllProperties();
 
-        void calculateSkeleton();
-        void cloneSkeleton(const Triangulation& src);
-
     friend class regina::Face<2, 2>;
     friend class regina::detail::TriangulationBase<2>;
 };

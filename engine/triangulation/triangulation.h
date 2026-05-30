@@ -5728,8 +5728,9 @@ inline size_t TriangulationBase<dim>::countFaces(int subdim) const {
     if (subdim < 0 || subdim > dim)
         throw InvalidArgument("countFaces(): unsupported face dimension");
 
+    ensureSkeleton();
     return select_constexpr<0, dim, size_t>(subdim, [this](auto k) {
-        return countFaces<k>();
+        return std::get<k>(faces_).size();
     });
 }
 
@@ -5809,8 +5810,9 @@ inline auto TriangulationBase<dim>::faces(int subdim) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument("faces(): unsupported face dimension");
 
+    ensureSkeleton();
     return select_constexpr_as_variant<0, dim>(subdim, [this](auto k) {
-        return faces<k>();
+        return std::views::all(std::get<k>(faces_));
     });
 }
 
@@ -5890,8 +5892,9 @@ inline auto TriangulationBase<dim>::face(int subdim, size_t index) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument("face(): unsupported face dimension");
 
+    ensureSkeleton();
     return select_constexpr_as_variant<0, dim>(subdim, [this, index](auto k) {
-        return face<k>(index);
+        return std::get<k>(faces_)[index];
     });
 }
 

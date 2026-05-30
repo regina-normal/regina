@@ -180,6 +180,8 @@ void TriangulationBase<dim>::calculateFaces() {
                 // A new face!
                 f = new Face<dim, dim-1>(s->component_);
                 std::get<dim - 1>(faces_).push_back(f);
+                if constexpr (standardDim(dim))
+                    std::get<dim - 1>(s->component_->faces_).push_back(f);
                 auto map = Face<dim, dim-1>::ordering(facet);
 
                 adj = s->adjacentSimplex(facet);
@@ -236,6 +238,8 @@ void TriangulationBase<dim>::calculateFaces() {
 
                 f = new Face<dim, dim-2>(s->component_);
                 std::get<dim - 2>(faces_).push_back(f);
+                if constexpr (standardDim(dim))
+                    std::get<dim - 2>(s->component_->faces_).push_back(f);
                 auto map = Face<dim, dim-2>::ordering(start);
                 if (map.sign() != s->orientation_)
                     map = map * Perm<dim + 1>(dim - 1, dim);
@@ -329,6 +333,8 @@ void TriangulationBase<dim>::calculateFaces() {
 
                 f = new Face<dim, subdim>(s->component_);
                 std::get<subdim>(faces_).push_back(f);
+                if constexpr (standardDim(dim))
+                    std::get<subdim>(s->component_->faces_).push_back(f);
                 auto map = Face<dim, subdim>::ordering(start);
                 if (map.sign() != s->orientation_)
                     map = map * Perm<dim + 1>(dim - 1, dim);
@@ -704,6 +710,8 @@ void TriangulationBase<dim>::cloneSkeleton(const TriangulationBase<dim>& src) {
         me->valid_ = you->valid_;
         me->boundaryFacets_ = you->boundaryFacets_;
         me->orientable_ = you->orientable_;
+
+        // We will clone the face lists later, once we have cloned the faces.
     }
 
     // Faces (uses components, boundary components):
@@ -720,6 +728,17 @@ void TriangulationBase<dim>::cloneSkeleton(const TriangulationBase<dim>& src) {
                 (cloneBoundaryFaces(*me, kFaces), ...);
             }, (*you)->faces_);
         }
+    }
+
+    // Face lists in components:
+    if constexpr (standardDim(dim)) {
+        auto me = components_.begin();
+        auto you = src.components_.begin();
+        for ( ; me != components_.end(); ++me, ++you)
+            for_constexpr<0, dim>([this, me, you](auto subdim) {
+                for (auto f : std::get<subdim>((*you)->faces_))
+                    std::get<subdim>((*me)->faces_).push_back(clonedFace(f));
+            });
     }
 
     // Simplices (uses faces, components):
