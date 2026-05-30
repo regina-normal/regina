@@ -169,14 +169,11 @@ class TriangulationBase :
             /**< The top-dimensional simplices that form the triangulation. */
 
     private:
-        /**
-         * The storage type used to hold all <i>subdim</i>-faces of this
-         * triangulation.
-         */
         template <int subdim>
         using FaceVector = MarkedVector<Face<dim, subdim>>;
-
-        TupleOverRange<FaceVector, dim> faces_;
+            /**< The type used to hold all <i>subdim</i>-faces of this
+                 triangulation. */
+        TupleOverRange<0, dim, FaceVector> faces_;
             /**< A tuple of vectors whose <i>k</i>th element holds all
                  <i>k</i>-faces of this triangulation. */
 

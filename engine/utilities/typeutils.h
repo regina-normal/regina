@@ -336,29 +336,32 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
  *
  * Essentially, the purpose of this function declaration is to expand a
  * compile-time integer sequence \a seq into a tuple type whose elements are
- * built from the individual integers in \a seq.
+ * built from the individual integers in \a seq.  The integers in the sequence
+ * will be adjusted by the given offset (which allows us to work around the
+ * fact that std::make_integer_sequence always starts its sequences at zero).
  *
  * \ingroup detail
  */
-template <template <int> typename Element, int... index>
+template <int offset, template <int> typename Element, int... index>
 static auto sequenceToTuple(std::integer_sequence<int, index...>) ->
-    std::tuple<Element<index>...>;
+    std::tuple<Element<index + offset>...>;
 
 } // namespace detail
 
 #endif
 
 /**
- * A tuple containing the types `Element<0>, Element<1>, ..., Element<to-1>`.
+ * A tuple containing the types `Element<from>, Element<from+1>, ...,
+ * Element<to-1>`.
  *
  * \tparam Element a type template (or type alias) which takes an integer
  * as its only template argument.
  *
  * \ingroup utilities
  */
-template <template <int> typename Element, int to>
-using TupleOverRange = decltype(detail::sequenceToTuple<Element>(
-    std::make_integer_sequence<int, to>()));
+template <int from, int to, template <int> typename Element>
+using TupleOverRange = decltype(detail::sequenceToTuple<from, Element>(
+    std::make_integer_sequence<int, to - from>()));
 
 /**
  * Deprecated alternative to std::tuple_element that gracefully handles an
