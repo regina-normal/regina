@@ -48,8 +48,9 @@ struct SignatureEncodable {
 
 // Docstring regina::python::doc::SignatureEncodable::__concept
 static constexpr const char __concept[] =
-R"doc(One of Regina's mathematical types that allows reconstruction from
-string-based signatures, up to combinatorial isomorphism.
+R"doc(One of Regina's mathematical types that allows generation of and
+reconstruction from string-based signatures, up to combinatorial
+isomorphism.
 
 In particular, second-generation signatures must be supported via
 ``T::neoSig()``.
@@ -57,11 +58,10 @@ In particular, second-generation signatures must be supported via
 Examples of such types include ``Triangulation<dim>`` and Link.
 
 Concepts:
-    SignatureEncodable is a C++ concept. Concepts work with the
-    C++ compiler at build time: you cannot test in Python which
-    concepts are satisfied by which types. Instead, what this Python
-    wrapper offers is the concept _documentation_ (which you are
-    reading now).)doc";
+    SignatureEncodable is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct SignatureEncodable
 
