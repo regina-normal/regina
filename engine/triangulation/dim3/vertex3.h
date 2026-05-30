@@ -175,7 +175,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
         [[deprecated]] inline static constexpr Link INVALID = Link::Invalid;
 
     private:
-        Link link_;
+        Link linkType_;
             /**< A broad categorisation of the topology of the vertex link. */
         long linkEulerChar_;
             /**< Specifies the Euler characteristic of the vertex link. */
@@ -358,20 +358,20 @@ inline Face<3, 0>::Face(Component<3>* component) :
 }
 
 inline Vertex<3>::Link Face<3, 0>::linkType() const {
-    return link_;
+    return linkType_;
 }
 
 inline bool Face<3, 0>::isLinkClosed() const {
-    return (link_ != Link::Disc && link_ != Link::Invalid);
+    return (linkType_ != Link::Disc && linkType_ != Link::Invalid);
 }
 
 inline bool Face<3, 0>::isIdeal() const {
-    return (link_ == Link::Torus || link_ == Link::KleinBottle ||
-        link_ == Link::NonStandardCusp);
+    return (linkType_ == Link::Torus || linkType_ == Link::KleinBottle ||
+        linkType_ == Link::NonStandardCusp);
 }
 
 inline bool Face<3, 0>::isStandard() const {
-    return (link_ != Link::NonStandardCusp && link_ != Link::Invalid);
+    return (linkType_ != Link::NonStandardCusp && linkType_ != Link::Invalid);
 }
 
 inline long Face<3, 0>::linkEulerChar() const {

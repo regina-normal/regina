@@ -135,22 +135,22 @@ void Triangulation<3>::calculateVertexLinks() {
             // We haven't added ideal vertices to the boundary list yet,
             // so this must be real boundary.
             if (vertex->linkEulerChar_ == 1)
-                vertex->link_ = Vertex<3>::Link::Disc;
+                vertex->linkType_ = Vertex<3>::Link::Disc;
             else {
-                vertex->link_ = Vertex<3>::Link::Invalid;
+                vertex->linkType_ = Vertex<3>::Link::Invalid;
                 vertex->whyInvalid_.value |= Vertex<3>::INVALID_LINK;
                 valid_ = vertex->component_->valid_ = false;
                 standard_ = false;
             }
         } else {
             if (vertex->linkEulerChar_ == 2)
-                vertex->link_ = Vertex<3>::Link::Sphere;
+                vertex->linkType_ = Vertex<3>::Link::Sphere;
             else {
                 if (vertex->linkEulerChar_ == 0)
-                    vertex->link_ = (vertex->isLinkOrientable() ?
+                    vertex->linkType_ = (vertex->isLinkOrientable() ?
                         Vertex<3>::Link::Torus : Vertex<3>::Link::KleinBottle);
                 else {
-                    vertex->link_ = Vertex<3>::Link::NonStandardCusp;
+                    vertex->linkType_ = Vertex<3>::Link::NonStandardCusp;
                     standard_ = false;
                 }
 
@@ -203,7 +203,7 @@ void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
         auto me = vertices().begin();
         auto you = src.vertices().begin();
         for ( ; me != vertices().end(); ++me, ++you) {
-            (*me)->link_ = (*you)->link_;
+            (*me)->linkType_ = (*you)->linkType_;
             (*me)->linkEulerChar_ = (*you)->linkEulerChar_;
             // Leave linkTri_ as built-on-demand for now.
         }
