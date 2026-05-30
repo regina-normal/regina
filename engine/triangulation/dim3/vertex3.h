@@ -179,7 +179,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
             /**< A broad categorisation of the topology of the vertex link. */
         long linkEulerChar_;
             /**< Specifies the Euler characteristic of the vertex link. */
-        Triangulation<2>* linkTri_;
+        Triangulation<2>* link_;
             /**< A triangulation of the vertex link.  This will only be
                  constructed on demand; until then it will be null.
                  We keep this as a pointer to avoid instantiating the
@@ -354,7 +354,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
 
 inline Face<3, 0>::Face(Component<3>* component) :
         detail::FaceBase<3, 0>(component),
-        linkEulerChar_(0), linkTri_(nullptr) {
+        linkEulerChar_(0), link_(nullptr) {
 }
 
 inline Vertex<3>::Link Face<3, 0>::linkType() const {

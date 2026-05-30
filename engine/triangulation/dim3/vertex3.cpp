@@ -35,11 +35,11 @@
 namespace regina {
 
 Vertex<3>::~Face() {
-    delete linkTri_;
+    delete link_;
 }
 
 const Triangulation<2>& Face<3, 0>::buildLink() const {
-    if (! linkTri_) {
+    if (! link_) {
         // Build the triangulation.
         auto* ans = new Triangulation<2>();
         ans->newTriangles(degree());
@@ -86,9 +86,9 @@ const Triangulation<2>& Face<3, 0>::buildLink() const {
 
         // This is a construct-on-demand member: cast away constness to
         // set it here.
-        const_cast<Vertex<3>*>(this)->linkTri_ = ans;
+        const_cast<Vertex<3>*>(this)->link_ = ans;
     }
-    return *linkTri_;
+    return *link_;
 }
 
 Isomorphism<3> Face<3, 0>::buildLinkInclusion() const {
