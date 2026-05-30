@@ -42,6 +42,7 @@
 #include <functional>
 #include <typeinfo>
 #include <stdexcept>
+#include <tuple>
 #include <variant>
 #include "regina-core.h"
 
@@ -330,9 +331,34 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
     using type = out_of_range;
 };
 
+/**
+ * A non-existent function used to construct the type TupleOverRange<...>.
+ *
+ * Essentially, the purpose of this function declaration is to expand a
+ * compile-time integer sequence \a seq into a tuple type whose elements are
+ * built from the individual integers in \a seq.
+ *
+ * \ingroup detail
+ */
+template <template <int> typename Element, int... index>
+static auto sequenceToTuple(std::integer_sequence<int, index...>) ->
+    std::tuple<Element<index>...>;
+
 } // namespace detail
 
 #endif
+
+/**
+ * A tuple containing the types `Element<0>, Element<1>, ..., Element<to-1>`.
+ *
+ * \tparam Element a type template (or type alias) which takes an integer
+ * as its only template argument.
+ *
+ * \ingroup utilities
+ */
+template <template <int> typename Element, int to>
+using TupleOverRange = decltype(detail::sequenceToTuple<Element>(
+    std::make_integer_sequence<int, to>()));
 
 /**
  * Deprecated alternative to std::tuple_element that gracefully handles an
@@ -355,6 +381,8 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
  * \c volatile modifiers).
  * \tparam out_of_range the type to use if \a pos is not a valid index
  * into \a tuple.
+ *
+ * \ingroup utilities
  */
 template <int pos, typename tuple, typename out_of_range = void>
 using safe_tuple_element [[deprecated]] =
@@ -475,6 +503,8 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  * wish to obtain.
  * \return the preferred display name for this type in Python, or \c null
  * if the default C++-to-Python name conversion mechanism should be used.
+ *
+ * \ingroup utilities
  */
 const char* pythonTypename(const std::type_info* t);
 

@@ -170,23 +170,15 @@ class TriangulationBase :
 
     private:
         /**
-         * The sequence of all subface dimensions `0,...,(dim-1)`.
+         * The storage type used to hold all <i>subdim</i>-faces of this
+         * triangulation.
          */
-        using subdimensions = std::make_integer_sequence<int, dim>;
+        template <int subdim>
+        using FaceVector = MarkedVector<Face<dim, subdim>>;
 
-        /**
-         * A non-existent function used to construct the type of the \a faces_
-         * tuple.  Essentially, this lets us pull apart the integer pack
-         * \a subdimensions.  The return type is the tuple type that we want.
-         */
-        template <int... subdim>
-        static auto seqToFaces(std::integer_sequence<int, subdim...>) ->
-            std::tuple<MarkedVector<Face<dim, subdim>>...>;
-
-        decltype(seqToFaces(subdimensions())) faces_;
-            /**< A tuple of vectors holding all faces of this triangulation.
-                 Specifically, `std::get<k>(faces_)[i]` is a pointer to the
-                 ith k-face of the triangulation. */
+        TupleOverRange<FaceVector, dim> faces_;
+            /**< A tuple of vectors whose <i>k</i>th element holds all
+                 <i>k</i>-faces of this triangulation. */
 
     protected:
         MarkedVector<Component<dim>> components_;
