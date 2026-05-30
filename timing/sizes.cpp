@@ -128,6 +128,14 @@ int main() {
     SHOW_SIZE(Component<3>);
     SHOW_SIZE(Component<4>);
     SHOW_SIZE(Component<5>);
+    SHOW_SIZE(BoundaryComponent<2>);
+    SHOW_SIZE(BoundaryComponent<3>);
+    SHOW_SIZE(BoundaryComponent<4>);
+    SHOW_SIZE(BoundaryComponent<5>);
+    SHOW_SIZE(Simplex<2>);
+    SHOW_SIZE(Simplex<3>);
+    SHOW_SIZE(Simplex<4>);
+    SHOW_SIZE(Simplex<5>);
     std::cout << std::endl;
 
     std::cout << "Surfaces and Structures:" << std::endl;
