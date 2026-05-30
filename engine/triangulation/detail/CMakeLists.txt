@@ -14,7 +14,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     algebra-impl.h
     canonical-impl.h
-    component.h
     example.h
     facetpairing.h
     facetpairing-impl.h

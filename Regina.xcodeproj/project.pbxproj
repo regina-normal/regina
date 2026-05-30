@@ -472,7 +472,6 @@
 		054209261DF28C990018AB24 /* keywordlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 054209211DF28C990018AB24 /* keywordlist.h */; };
 		054209271DF28C990018AB24 /* rule.h in Headers */ = {isa = PBXBuildFile; fileRef = 054209221DF28C990018AB24 /* rule.h */; };
 		05431F201C40F260009BC072 /* canonical-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F151C40F260009BC072 /* canonical-impl.h */; };
-		05431F211C40F260009BC072 /* component.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F171C40F260009BC072 /* component.h */; };
 		05431F241C40F260009BC072 /* facetpairing-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1A1C40F260009BC072 /* facetpairing-impl.h */; };
 		05431F251C40F260009BC072 /* facetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1B1C40F260009BC072 /* facetpairing.h */; };
 		05431F271C40F260009BC072 /* isosig-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431F1D1C40F260009BC072 /* isosig-impl.h */; };
@@ -1668,6 +1667,7 @@
 		05E62AE82FCA3E4E00AE1B84 /* simplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AE72FCA3E4E00AE1B84 /* simplex.h */; };
 		05E62AEC2FCA41E900AE1B84 /* face.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AEB2FCA41E900AE1B84 /* face.h */; };
 		05E62AF02FCA464200AE1B84 /* boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AEF2FCA464200AE1B84 /* boundarycomponent.h */; };
+		05E62AF32FCB2D2100AE1B84 /* component.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AF22FCB2D2100AE1B84 /* component.h */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -2956,7 +2956,6 @@
 		054209221DF28C990018AB24 /* rule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rule.h; sourceTree = "<group>"; };
 		05431F151C40F260009BC072 /* canonical-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "canonical-impl.h"; sourceTree = "<group>"; };
 		05431F161C40F260009BC072 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05431F171C40F260009BC072 /* component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
 		05431F1A1C40F260009BC072 /* facetpairing-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "facetpairing-impl.h"; sourceTree = "<group>"; };
 		05431F1B1C40F260009BC072 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05431F1D1C40F260009BC072 /* isosig-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "isosig-impl.h"; sourceTree = "<group>"; };
@@ -4637,6 +4636,8 @@
 		05E62AED2FCA461F00AE1B84 /* boundarycomponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
 		05E62AEE2FCA461F00AE1B84 /* face.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = face.h; sourceTree = "<group>"; };
 		05E62AEF2FCA464200AE1B84 /* boundarycomponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
+		05E62AF12FCB2D1100AE1B84 /* component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
+		05E62AF22FCB2D2100AE1B84 /* component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -5342,6 +5343,7 @@
 			isa = PBXGroup;
 			children = (
 				05E62AED2FCA461F00AE1B84 /* boundarycomponent.h */,
+				05E62AF12FCB2D1100AE1B84 /* component.h */,
 				05098B2A2900186E005E4716 /* cut.h */,
 				05098B6C290019DF005E4716 /* detail */,
 				05098B1E2900186E005E4716 /* dim2 */,
@@ -6745,6 +6747,7 @@
 			isa = PBXGroup;
 			children = (
 				05E62AEF2FCA464200AE1B84 /* boundarycomponent.h */,
+				05E62AF22FCB2D2100AE1B84 /* component.h */,
 				05431F061C40F213009BC072 /* detail */,
 				05F09FC21DBF018400117BFC /* dim2 */,
 				05F09FC31DBF018B00117BFC /* dim3 */,
@@ -7039,7 +7042,6 @@
 				05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */,
 				05431F151C40F260009BC072 /* canonical-impl.h */,
 				05431F161C40F260009BC072 /* CMakeLists.txt */,
-				05431F171C40F260009BC072 /* component.h */,
 				054C6A7C1DCC20DA005373F0 /* example.h */,
 				05C265C128307D0500232420 /* facetpairing-canonical-impl.h */,
 				05431F1A1C40F260009BC072 /* facetpairing-impl.h */,
@@ -9032,7 +9034,6 @@
 				051806AC2C2B9512001470F1 /* fixedarray.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* rational.h in Headers */,
 				05E221D52CEC24F3009D5D4E /* permsn.h in Headers */,
-				05431F211C40F260009BC072 /* component.h in Headers */,
 				059802F126683C6D002D5D57 /* xmlanglestructreader.h in Headers */,
 				05CBE6ED273B6504009F0674 /* validityconstraints.h in Headers */,
 				0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */,
@@ -9180,6 +9181,7 @@
 				052F9FDA180600FB00FAE4DF /* winged_edge.h in Headers */,
 				05E6297E2FBFAB6800AE1B84 /* isomorphism.h in Headers */,
 				05A067271DFA68190047872E /* plugtrisolidtorus.h in Headers */,
+				05E62AF32FCB2D2100AE1B84 /* component.h in Headers */,
 				05A0672B1DFA68190047872E /* satblock.h in Headers */,
 				052FA097180600FB00FAE4DF /* trieset.h in Headers */,
 				052121C12662F50A0041FD89 /* pd-impl.h in Headers */,

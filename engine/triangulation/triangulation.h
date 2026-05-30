@@ -60,7 +60,7 @@
 #include "algebra/markedabeliangroup.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
-#include "triangulation/detail/component.h"
+#include "triangulation/component.h"
 #include "triangulation/boundarycomponent.h"
 #include "triangulation/face.h"
 #include "triangulation/simplex.h"

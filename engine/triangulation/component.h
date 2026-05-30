@@ -28,9 +28,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __REGINA_COMPONENT_H_DETAIL
+#ifndef __REGINA_COMPONENT_H
 #ifndef __DOXYGEN
-#define __REGINA_COMPONENT_H_DETAIL
+#define __REGINA_COMPONENT_H
 #endif
 
 /*! \file triangulation/detail/component.h

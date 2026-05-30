@@ -34,7 +34,7 @@
 #include "../../helpers.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/dim2/component2.h"
-#include "../../docstrings/triangulation/detail/component.h"
+#include "../../docstrings/triangulation/component.h"
 
 using namespace pybind11::literals;
 
