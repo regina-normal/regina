@@ -33,7 +33,6 @@
 #include "triangulation/dim4.h"
 #include "../../helpers.h"
 #include "../facehelper.h"
-#include "../../docstrings/triangulation/dim4/component4.h"
 #include "../../docstrings/triangulation/component.h"
 
 using namespace pybind11::literals;
@@ -41,7 +40,7 @@ using namespace pybind11::literals;
 using regina::Component;
 
 void addComponent4(pybind11::module_& m, pybind11::module_& internal) {
-    RDOC_SCOPE_BEGIN(Component4)
+    RDOC_SCOPE_BEGIN(Component)
 
     auto c = pybind11::class_<Component<4>>(m, "Component4", rdoc::__class)
         .def("index", &Component<4>::index, rdoc::index)

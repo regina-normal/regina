@@ -39,9 +39,7 @@ using regina::Component;
 template <int dim> requires (regina::supportedDim(dim))
 void addComponent(pybind11::module_& m, pybind11::module_& internal,
         const char* name) {
-    // We use the global scope here because all of Component's members are
-    // inherited, and so Component's own docstring namespace does not exist.
-    RDOC_SCOPE_BEGIN_MAIN
+    RDOC_SCOPE_BEGIN(Component)
 
     auto c = pybind11::class_<Component<dim>>(m, name, rdoc::Component::__class)
         .def("index", &Component<dim>::index, rdoc::index)
