@@ -1567,7 +1567,7 @@ void Face<dim, dim>::join(int myFacet, Simplex<dim>* you,
 
     adj_[myFacet] = you;
     gluing_[myFacet] = gluing;
-    you->adj_[yourFacet] = static_cast<Simplex<dim>*>(this);
+    you->adj_[yourFacet] = this;
     you->gluing_[yourFacet] = gluing.inverse();
 }
 
@@ -1578,7 +1578,7 @@ inline void Face<dim, dim>::joinRaw(int myFacet, Simplex<dim>* you,
 
     adj_[myFacet] = you;
     gluing_[myFacet] = gluing;
-    you->adj_[yourFacet] = static_cast<Simplex<dim>*>(this);
+    you->adj_[yourFacet] = this;
     you->gluing_[yourFacet] = gluing.inverse();
 }
 

@@ -768,8 +768,7 @@ inline size_t Component<dim>::countPentachora() const
 template <int dim> requires (supportedDim(dim))
 inline size_t Component<dim>::countFacets() const {
     if constexpr (standardDim(dim)) {
-        return static_cast<const Component<dim>*>(this)->
-            template countFaces<dim - 1>();
+        return std::get<dim - 1>(faces_).size();
     } else {
         return ((dim + 1) * simplices_.size() + boundaryFacets_) / 2;
     }
