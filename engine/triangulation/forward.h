@@ -90,6 +90,11 @@ template <> class Triangulation<2>;
 template <> class Triangulation<3>;
 template <> class Triangulation<4>;
 
+class NormalHypersurface;
+class NormalHypersurfaces;
+class NormalSurface;
+class NormalSurfaces;
+
 /**
  * Refers to a top-dimensional simplex in a <i>dim</i>-dimensional
  * triangulation.
@@ -332,6 +337,25 @@ struct TriangulationTraits {
     using Pentachoron = Face<dim, 4>;
 
     /**
+     * A type alias for a normal hypersurface within a <i>dim</i>-dimensional
+     * triangulation, or NoSuchType if Regina does not support such objects
+     * in this dimension.
+     *
+     * In particular, this will be the type regina::NormalSurface if `dim == 3`,
+     * or regina::NormalHypersurface if `dim == 4`.
+     */
+    using Hypersurface = regina::NoSuchType;
+    /**
+     * A type alias for a list of normal hypersurfaces within a
+     * <i>dim</i>-dimensional triangulation, or NoSuchType if Regina does not
+     * support such objects in this dimension.
+     *
+     * In particular, this will be the type regina::NormalSurfaces if
+     * `dim == 3`, or regina::NormalHypersurfaces if `dim == 4`.
+     */
+    using Hypersurfaces = regina::NoSuchType;
+
+    /**
      * A type alias for a triangulation of dimension `dim + 1`, or NoSuchType
      * if \a dim is the largest supported dimension in Regina.
      */
@@ -352,6 +376,9 @@ struct TriangulationTraits<2> {
     using Tetrahedron = regina::NoSuchType;
     using Pentachoron = regina::NoSuchType;
 
+    using Hypersurface = regina::NoSuchType;
+    using Hypersurfaces = regina::NoSuchType;
+
     using Higher = Triangulation<3>;
     using Lower = regina::NoSuchType;
 };
@@ -364,6 +391,9 @@ struct TriangulationTraits<3> {
     using Tetrahedron = Face<3, 3>;
     using Pentachoron = regina::NoSuchType;
 
+    using Hypersurface = NormalSurface;
+    using Hypersurfaces = NormalSurfaces;
+
     using Higher = Triangulation<4>;
     using Lower = Triangulation<2>;
 };
@@ -375,6 +405,9 @@ struct TriangulationTraits<maxDim()> {
     using Triangle = Face<maxDim(), 2>;
     using Tetrahedron = Face<maxDim(), 3>;
     using Pentachoron = Face<maxDim(), 4>;
+
+    using Hypersurface = NormalHypersurface;
+    using Hypersurfaces = NormalHypersurfaces;
 
     using Higher = regina::NoSuchType;
     using Lower = Triangulation<maxDim() - 1>;
