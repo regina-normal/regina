@@ -155,31 +155,17 @@ class BoundaryComponent:
         static constexpr bool allFaces = standardDim(dim);
 
     private:
-        /**
-         * The sequence of dimensions of all faces that we store.
-         */
-        using subdimensions = std::conditional_t<allFaces,
-            std::make_integer_sequence<int, dim> /* 0,...,(dim-1) */,
-            std::integer_sequence<int, dim - 1> /* (dim-1) only */>;
+        template <int subdim>
+        using FaceVector = std::vector<Face<dim, subdim>*>;
+            /**< The type used to hold all <i>subdim</i>-faces of this
+                 boundary component. */
 
-        /**
-         * A non-existent function used to construct the type of the \a faces_
-         * tuple.  Essentially, this lets us pull apart the integer pack
-         * \a subdimensions.  The return type is the tuple type that we want.
-         */
-        template <int... subdim>
-        static auto seqToFaces(std::integer_sequence<int, subdim...>) ->
-            std::tuple<std::vector<Face<dim, subdim>*>...>;
-
-        /**
-         * A tuple of arrays of faces of this boundary component.
-         * If allFaces is true, then std::get<k>(faces_)[i] is a pointer to
-         * the ith k-face of the boundary component.
-         * If allFaces is false, then the tuple has only one element, and
-         * std::get<0>(faces_)[i] is a pointer to the ith (dim-1)-face of the
-         * boundary component.
-         */
-        decltype(seqToFaces(subdimensions())) faces_;
+        TupleOverRange<allFaces ? 0 : dim - 1, dim, FaceVector> faces_;
+            /**< A tuple of vectors holding faces of this boundary component.
+                 If \a allFaces is `true`, then the <i>k</i>th element of this
+                 tuple holds all <i>k</i>-faces of this boundary component.
+                 If \a allFaces is `false` then the tuple has only one element,
+                 which holds the `(dim-1)`-faces of this boundary component. */
 
         /**
          * A compile-time constant function that returns the index of
@@ -193,24 +179,11 @@ class BoundaryComponent:
                 return (subdim == dim - 1 ? 0 : -1);
             }
         }
-        /**
-         * A compile-time constant giving an index of the faces_ tuple
-         * whose corresponding face list is guaranteed to be non-empty.
-         *
-         * If allFaces is true, we use the vertex list since every
-         * boundary component (real, ideal or invalid) has a vertex.
-         * If allFaces is false, we use the (dim-1)-face list since only
-         * real boundaries are recognised in this case.
-         * Either way, the tuple index we need works out to be 0.
-         */
-        static constexpr int nonEmptyIndex_ = 0;
 
-        /**
-         * The number of (dim-2)-faces in the boundary component.  We only
-         * store this if allFaces is false (i.e., we are not storing the
-         * (dim-2)-faces themselves).
-         */
         EnableIf<! allFaces, size_t, 0> nRidges_;
+            /**< The number of `(dim-2)`-faces in the boundary component.
+                 We only store this if \a allFaces is `false`; that is,
+                 we are not storing the `(dim-2)`-faces themselves). */
 
         bool orientable_;
             /**< Is this boundary component orientable? */
@@ -727,11 +700,11 @@ class BoundaryComponent:
          */
         Triangulation<dim>& triangulation() const {
             // If allFaces is true, then there may be no (dim-1)-simplices,
-            // but there is always a vertex.
-            // If allFaces is false, then we are guaranteed at least one
-            // (dim-1)-simplex.
-            // Either way, the array at tuple index 0 should be non-empty/
-            return std::get<nonEmptyIndex_>(faces_).front()->triangulation();
+            // but there is always a vertex.  If allFaces is false, then we
+            // are guaranteed at least one (dim-1)-simplex, since ideal
+            // boundary is not recognised in this case.
+            // Either way, the array at tuple index 0 should be non-empty.
+            return std::get<0>(faces_).front()->triangulation();
         }
 
         /**
@@ -741,12 +714,9 @@ class BoundaryComponent:
          * \return the component containing this boundary component.
          */
         Component<dim>* component() const {
-            // If allFaces is true, then there may be no (dim-1)-simplices,
-            // but there is always a vertex.
-            // If allFaces is false, then we are guaranteed at least one
-            // (dim-1)-simplex.
-            // Either way, the array at tuple index 0 should be non-empty/
-            return std::get<nonEmptyIndex_>(faces_).front()->component();
+            // Following the same logic as in triangulation(), the array at
+            // tuple index 0 should be non-empty.
+            return std::get<0>(faces_).front()->component();
         }
 
         /**
