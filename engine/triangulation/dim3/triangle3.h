@@ -176,12 +176,6 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
         [[deprecated]] inline static constexpr TriangleType L31 =
             TriangleType::L31;
 
-    private:
-        int subtype_;
-            /**< Specifies the vertex or edge that plays a special role
-                 for the triangle type specified by \a type.  This is only
-                 relevant for some triangle types. */
-
     public:
         /**
          * Deprecated function that returns the combinatorial type of this

@@ -208,14 +208,6 @@ void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
             // Leave link_ as built-on-demand for now.
         }
     }
-
-    {
-        auto me = triangles().begin();
-        auto you = src.triangles().begin();
-        for ( ; me != triangles().end(); ++me, ++you) {
-            (*me)->subtype_ = (*you)->subtype_;
-        }
-    }
 }
 
 } // namespace regina
