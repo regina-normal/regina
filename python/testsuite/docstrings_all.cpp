@@ -187,7 +187,6 @@
 #include "../docstrings/triangulation/dim3/homologicaldata.h"
 #include "../docstrings/triangulation/dim3/triangulation3.h"
 #include "../docstrings/triangulation/dim3/vertex3.h"
-#include "../docstrings/triangulation/dim4/edge4.h"
 #include "../docstrings/triangulation/dim4/triangulation4.h"
 #include "../docstrings/triangulation/dim4/vertex4.h"
 #include "../docstrings/triangulation/example.h"

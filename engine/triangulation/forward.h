@@ -69,9 +69,8 @@ requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 class Face;
 
 template <int dim> requires (supportedDim(dim)) class Face<dim, dim>;
-template <> class Face<3, 0>; // build links, output type
-template <> class Face<4, 1>; // build links
-template <> class Face<4, 0>; // build links, output ideal/etc.
+template <> class Face<3, 0>; // output type
+template <> class Face<4, 0>; // output ideal/etc.
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)

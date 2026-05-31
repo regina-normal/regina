@@ -96,9 +96,9 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<2>(v.buildLink());
-        }, rdoc::buildLink)
+        }, rbase::buildLink)
         .def("buildLinkInclusion", &Vertex<3>::buildLinkInclusion,
-            rdoc::buildLinkInclusion)
+            rbase::buildLinkInclusion)
         .def("isLinkClosed", &Vertex<3>::isLinkClosed, rdoc::isLinkClosed)
         .def("isIdeal", &Vertex<3>::isIdeal, rdoc::isIdeal)
         .def("isBoundary", &Vertex<3>::isBoundary, rbase::isBoundary)

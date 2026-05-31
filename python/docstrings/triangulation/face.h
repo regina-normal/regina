@@ -454,6 +454,84 @@ Returns:
     face does not lie entirely within the boundary of the
     triangulation.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase::buildLink
+static constexpr const char buildLink[] =
+R"doc(Returns a full triangulation describing the link of this face.
+
+This routine is fast (it uses a pre-computed triangulation where
+possible). The downside is that the triangulation is read-only (though
+you can always clone it).
+
+Regarding the labelling of `(dim - subdim - 1)`-simplices (the
+highest-dimensional simplices) in the link:
+
+* Let ``k = dim - subdim - 1`` denote the dimension of the link. The
+  *k*-simplices of the link will be numbered as follows. Let *i* lie
+  between 0 and degree()-1 inclusive, let *simp* represent
+  ``embedding(i).simplex()``, and let *f* represent
+  ``embedding(i).face()``. Then ``buildLink()->simplex(i)`` is the
+  *k*-simplex of the link that links face *f* of simplex *simp*. In
+  other words, ``buildLink()->simplex(i)`` slices through the interior
+  of simplex *simp* of the surrounding *dim*-dimensional
+  triangulation, and is parallel to the *k*-face _opposite_
+  *subdim*-face *f* of that simplex.
+
+* The vertices of each *k*-simplex of the link will be numbered as
+  follows. Following the discussion above, suppose that
+  ``buildLink()->simplex(i)`` sits within the *dim*-simplex *s* and is
+  parallel to the *k*-face *g* within *s*. Then vertices ``0,...,k``
+  of the *k*-simplex ``buildLink()->simplex(i)`` will be parallel to
+  vertices ``0,...,k`` of the ``Face<dim, k>`` representing *g*.
+
+* If you need this labelling data in a format that is easy to compute
+  with, you can call buildLinkInclusion() to retrieve this information
+  as an isomorphism.
+
+Python:
+    Since Python does not distinguish between const and non-const,
+    this routine will return by value (thus making a deep copy of the
+    link). You are free to modify the triangulation that is returned.
+
+Returns:
+    the read-only triangulated link of this face.)doc";
+
+// Docstring regina::python::doc::detail::FaceBase::buildLinkInclusion
+static constexpr const char buildLinkInclusion[] =
+R"doc(Returns details of how the highest-dimensional simplices are labelled
+in the triangulated link of this face. This is a companion function to
+buildLink(), which returns a full triangulation of the link.
+
+The documentation for buildLink() describes in plain English exactly
+how the link will be triangulated. This function essentially returns
+the same information in a machine-readable form.
+
+Specifically, this function returns an isomorphism that describes how
+the individual `(dim - subdim - 1)`-simplices of the triangulated link
+(that is, the highest-dimensional simplices of the link) sit within
+the top-dimensional simplices of the original triangulation. Let ``k =
+dim - subdim - 1`` denote the dimension of the link. If *iso* is the
+isomorphism returned, then ``iso.simpImage(i)`` will indicate which
+top-dimensional simplex *s* of the enclosing *dim*-dimensional
+triangulation contains the *i*th *k*-simplex of the link. Moreover,
+``iso.facetPerm(i)`` will indicate exactly where this *i*th
+*k*-simplex sits within *s:* it will map ``0,...,k`` to the vertices
+of *s* that are parallel to vertices ``0,...,k`` of this *k*-simplex,
+and it will map ``k+1,...,dim`` to the vertices of *s* that represent
+vertices ``0,...,subdim`` of this face respectively.
+
+Strictly speaking, this is an abuse of the Isomorphism class (the
+domain is a triangulation of the wrong dimension, and the map between
+top-dimensional simplices is not 1-to-1). We use it anyway, but you
+should not attempt to call any high-level routines (such as
+Isomorphism::apply).
+
+This is the same isomorphism that was accessible through the old
+buildLinkDetail() function in Regina 6.0.1 and earlier.
+
+Returns:
+    details of how buildLink() labels the highest-dimensional
+    simplices of the triangulated link.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase::component
 static constexpr const char component[] =
 R"doc(Returns the component of the triangulation to which this face belongs.

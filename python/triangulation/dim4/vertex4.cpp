@@ -90,9 +90,9 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<3>(v.buildLink());
-        }, rdoc::buildLink)
+        }, rbase::buildLink)
         .def("buildLinkInclusion", &Vertex<4>::buildLinkInclusion,
-            rdoc::buildLinkInclusion)
+            rbase::buildLinkInclusion)
         .def("isLinkOrientable", &Vertex<4>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("isValid", &Vertex<4>::isValid, rbase::isValid)

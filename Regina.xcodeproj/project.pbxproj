@@ -1685,7 +1685,6 @@
 		05F09FDA1DBF01B600117BFC /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FCE1DBF01B600117BFC /* triangulation2.cpp */; };
 		05F09FDB1DBF01B600117BFC /* triangulation2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FCF1DBF01B600117BFC /* triangulation2.h */; };
 		05F09FFC1DBF078800117BFC /* edge4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FE81DBF078800117BFC /* edge4.cpp */; };
-		05F09FFD1DBF078800117BFC /* edge4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FE91DBF078800117BFC /* edge4.h */; };
 		05F0A0011DBF078800117BFC /* moves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FED1DBF078800117BFC /* moves.cpp */; };
 		05F0A0021DBF078800117BFC /* simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEE1DBF078800117BFC /* simplify.cpp */; };
 		05F0A0031DBF078800117BFC /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FEF1DBF078800117BFC /* skeleton.cpp */; };
@@ -2287,7 +2286,6 @@
 		05098B0A28FECBD9005E4716 /* flype.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = flype.out; sourceTree = "<group>"; };
 		05098B0B28FECBD9005E4716 /* special.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = special.test; sourceTree = "<group>"; };
 		05098B122900186E005E4716 /* triangulation4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation4.h; sourceTree = "<group>"; };
-		05098B132900186E005E4716 /* edge4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = edge4.h; sourceTree = "<group>"; };
 		05098B142900186E005E4716 /* vertex4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
 		05098B182900186E005E4716 /* triangulation3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation3.h; sourceTree = "<group>"; };
 		05098B192900186E005E4716 /* homologicaldata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -4646,7 +4644,6 @@
 		05F09FCF1DBF01B600117BFC /* triangulation2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation2.h; sourceTree = "<group>"; };
 		05F09FE61DBF078800117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05F09FE81DBF078800117BFC /* edge4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge4.cpp; sourceTree = "<group>"; };
-		05F09FE91DBF078800117BFC /* edge4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge4.h; sourceTree = "<group>"; };
 		05F09FED1DBF078800117BFC /* moves.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moves.cpp; sourceTree = "<group>"; };
 		05F09FEE1DBF078800117BFC /* simplify.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplify.cpp; sourceTree = "<group>"; };
 		05F09FEF1DBF078800117BFC /* skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skeleton.cpp; sourceTree = "<group>"; };
@@ -5353,7 +5350,6 @@
 		05098B0D2900186E005E4716 /* dim4 */ = {
 			isa = PBXGroup;
 			children = (
-				05098B132900186E005E4716 /* edge4.h */,
 				05098B122900186E005E4716 /* triangulation4.h */,
 				05098B142900186E005E4716 /* vertex4.h */,
 			);
@@ -8833,7 +8829,6 @@
 			children = (
 				05F09FE61DBF078800117BFC /* CMakeLists.txt */,
 				05F09FE81DBF078800117BFC /* edge4.cpp */,
-				05F09FE91DBF078800117BFC /* edge4.h */,
 				053CB70628D0168C006B37B0 /* hypersurfaces.cpp */,
 				05F09FED1DBF078800117BFC /* moves.cpp */,
 				05DC13801FEB86E900171D66 /* retriangulate.cpp */,
@@ -9121,7 +9116,6 @@
 				0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */,
 				05754CE7258D7D6400236ED7 /* randutils.h in Headers */,
 				05A0673B1DFA68190047872E /* standardtri.h in Headers */,
-				05F09FFD1DBF078800117BFC /* edge4.h in Headers */,
 				052F9F3A180600FB00FAE4DF /* matrixops.h in Headers */,
 				052F9F95180600FB00FAE4DF /* positioned_tet.h in Headers */,
 				05431F7E1C40F3C9009BC072 /* offload_handler.h in Headers */,
