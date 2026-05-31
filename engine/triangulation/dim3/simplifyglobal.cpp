@@ -581,12 +581,15 @@ template bool Triangulation<3>::simplifyToLocalMinimumInternal<
 template bool Triangulation<3>::simplifyToLocalMinimumInternal<
     Triangulation<3>::SimplifyContext::UpDownDescent>(bool);
 
-bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
+bool Triangulation<3>::simplifyUpDown( ssize_t max23, bool alwaysModify,
+        ProgressTrackerObjective* tracker ) {
+    //TODO Review use of tracker.
     if ( (not alwaysModify) and size() <= 1 ) {
+        if (tracker) {
+            tracker->setFinished();
+        }
         return false;
     }
-
-    //TODO Add support for progress tracking.
 
     // We want our default max23 to be big enough that this routine is often
     // effective at simplifying triangulations that are otherwise difficult
@@ -607,7 +610,15 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
         ssize_t perform23 = ( consec23 < max23 ) ? consec23 : max23;
 
         int COEFF_REPS = 6;
-        for ( int rep = 0; rep < COEFF_REPS; ++rep ) {
+        for ( int rep = 1; rep <= COEFF_REPS; ++rep ) {
+            if (tracker) {
+                tracker->newStage( "Trying run of "
+                        + std::to_string(perform23)
+                        + " random 2-3 moves, round "
+                        + std::to_string(rep) + "/"
+                        + std::to_string(COEFF_REPS) );
+            }
+
             // Attempt perform23 consecutive random 2-3 moves.
             for ( ssize_t i = 0; i < perform23; ++i ) {
                 // Pick a random triangle through which to do a 2-3 move.
@@ -615,7 +626,6 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
                         RandomEngine::rand( working.countTriangles() ) );
                 working.pachner(triangle);
             }
-            //std::cout << working.size() << std::endl;   //TODO
 
             // Start by simplifying using only 2-0, 2-1 and 4-4 moves (in
             // particular, no 3-2 moves, since we don't want to immediately undo
@@ -623,19 +633,27 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
             // subsequent moves to go somewhere new.
             working.simplifyInternal<SimplifyContext::UpDownDescent>();
             working.simplifyInternal<SimplifyContext::Best>();
-            //std::cout << working.size() << std::endl;   //TODO
+            if (tracker) {
+                tracker->setObjective( working.size() );
+            }
             if ( working.size() < origSize ) {
                 // We already simplified, so we might as well stop now.
                 swap(working);
+                if (tracker) {
+                    tracker->setFinished();
+                }
                 return true;
+            } else if ( tracker && tracker->isCancelled() ) {
+                if (alwaysModify) {
+                    swap(working);
+                }
+                tracker->setFinished();
+                return false;
             }
         }
     }
 
-    // Finish up by trying really hard to simplify (using the full
-    // simplification routine, not just the internal routine that we use for
-    // intermediate "down" sequences). The built-in randomness should hopefully
-    // help to take us somewhere new.
+    // Finish up by trying really hard to simplify.
     bool simplified = working.simplify(); // Did working.simplify() succeed?
     while (simplified) {
         simplified = working.simplify();
@@ -643,6 +661,9 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
     simplified = ( working.size() < origSize ); // Did we reduce size overall?
     if ( simplified or alwaysModify ) {
         swap(working);
+    }
+    if (tracker) {
+        tracker->setFinished();
     }
     return simplified;
 }

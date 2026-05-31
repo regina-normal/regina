@@ -1800,6 +1800,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * should be thrown).  Of course, however, having locks may make the
          * simplification less effective in reducing the number of tetrahedra.
          *
+         * This routine might take a little time for larger triangulations
+         * and/or larger values of `max23`, so you can pass a progress tracker
+         * to this routine. This routine will notify the tracker each time it
+         * starts a new stage of the procedure, where each stage consists of a
+         * sequence of consecutive random 2-3 moves followed by an attempted
+         * simplification. At each stage, the value of the tracker's objective
+         * will be set to the size of the triangulation reached at the end of
+         * the previous completed stage.
+         *
          * \warning The specific behaviour of this routine is likely to change
          * between releases.
          *
@@ -1814,13 +1823,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * tetrahedra than the triangulation began with, or `false` if this
          * triangulation should only be modified if this operation succeeded in
          * strictly reducing the total number of tetrahedra.
+         * \param tracker a progress tracker through which progress will be
+         * reported, or `null` if no progress reporting is required.
          *
          * \return `true` if and only if the number of tetrahedra was strictly
          * reduced.
          *
          * \author Alex He
          */
-        bool simplifyUpDown( ssize_t max23 = -1, bool alwaysModify = false );
+        bool simplifyUpDown( ssize_t max23 = -1, bool alwaysModify = false,
+                ProgressTrackerObjective* tracker = nullptr );
 
         /**
          * Attempts to simplify this triangulation using a slow but
