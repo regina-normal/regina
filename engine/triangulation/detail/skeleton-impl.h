@@ -678,6 +678,10 @@ void TriangulationBase<dim>::cloneFaces(const FaceList& srcFaces) {
             else
                 me->valid_ = you->valid_;
         }
+        if constexpr (subdim == 2) {
+            me->triangleType_ = you->triangleType_;
+            me->triangleSubtype_ = you->triangleSubtype_;
+        }
     }
 }
 
