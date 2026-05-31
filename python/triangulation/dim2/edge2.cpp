@@ -52,7 +52,10 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         .def(pybind11::init<const EdgeEmbedding<2>&>(), rdoc::__copy)
         .def("simplex", &EdgeEmbedding<2>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex)
-        .def("triangle", &EdgeEmbedding<2>::triangle,
+        // So: clang can resolve triangle() but gcc cannot.
+        // We could fix this with a static_cast, but we will just bind to
+        // simplex() instead (which gcc _can_ resolve).
+        .def("triangle", &EdgeEmbedding<2>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex_dim2)
         .def("face", &EdgeEmbedding<2>::face, rdoc::face)
         .def("edge", &EdgeEmbedding<2>::edge, rdoc::edge)

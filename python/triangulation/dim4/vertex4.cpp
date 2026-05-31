@@ -51,7 +51,10 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         .def(pybind11::init<const VertexEmbedding<4>&>(), rdoc::__copy)
         .def("simplex", &VertexEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex)
-        .def("pentachoron", &VertexEmbedding<4>::pentachoron,
+        // So: clang can resolve pentachoron() but gcc cannot.
+        // We could fix this with a static_cast, but we will just bind to
+        // simplex() instead (which gcc _can_ resolve).
+        .def("pentachoron", &VertexEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex_dim4)
         .def("face", &VertexEmbedding<4>::face, rdoc::face)
         .def("vertex", &VertexEmbedding<4>::vertex, rdoc::vertex)

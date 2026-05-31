@@ -49,7 +49,10 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
         .def(pybind11::init<const VertexEmbedding<2>&>(), rdoc::__copy)
         .def("simplex", &VertexEmbedding<2>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex)
-        .def("triangle", &VertexEmbedding<2>::triangle,
+        // So: clang can resolve triangle() but gcc cannot.
+        // We could fix this with a static_cast, but we will just bind to
+        // simplex() instead (which gcc _can_ resolve).
+        .def("triangle", &VertexEmbedding<2>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex_dim2)
         .def("face", &VertexEmbedding<2>::face, rdoc::face)
         .def("vertex", &VertexEmbedding<2>::vertex, rdoc::vertex)

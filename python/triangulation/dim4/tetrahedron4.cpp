@@ -52,7 +52,10 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def(pybind11::init<const TetrahedronEmbedding<4>&>(), rdoc::__copy)
         .def("simplex", &TetrahedronEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex)
-        .def("pentachoron", &TetrahedronEmbedding<4>::pentachoron,
+        // So: clang can resolve pentachoron() but gcc cannot.
+        // We could fix this with a static_cast, but we will just bind to
+        // simplex() instead (which gcc _can_ resolve).
+        .def("pentachoron", &TetrahedronEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex_dim4)
         .def("face", &TetrahedronEmbedding<4>::face, rdoc::face)
         .def("tetrahedron", &TetrahedronEmbedding<4>::tetrahedron,

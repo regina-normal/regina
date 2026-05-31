@@ -54,7 +54,10 @@ void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
         .def(pybind11::init<const EdgeEmbedding<3>&>(), rdoc::__copy)
         .def("simplex", &EdgeEmbedding<3>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex)
-        .def("tetrahedron", &EdgeEmbedding<3>::tetrahedron,
+        // So: clang can resolve tetrahedron() but gcc cannot.
+        // We could fix this with a static_cast, but we will just bind to
+        // simplex() instead (which gcc _can_ resolve).
+        .def("tetrahedron", &EdgeEmbedding<3>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex_dim3)
         .def("face", &EdgeEmbedding<3>::face, rdoc::face)
         .def("edge", &EdgeEmbedding<3>::edge, rdoc::edge)
