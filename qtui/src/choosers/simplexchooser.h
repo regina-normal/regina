@@ -40,7 +40,6 @@
 #include "triangulation/forward.h"
 
 #include "choosers/facename.h"
-
 #include <QBoxLayout>
 #include <QDialog>
 #include <QDialogButtonBox>

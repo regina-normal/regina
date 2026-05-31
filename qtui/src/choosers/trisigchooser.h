@@ -36,6 +36,7 @@
 #ifndef __TRISIGCHOOSER_H
 #define __TRISIGCHOOSER_H
 
+#include "reginaqt.h"
 #include <QComboBox>
 #include "reginaprefset.h"
 
