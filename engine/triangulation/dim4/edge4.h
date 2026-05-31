@@ -75,100 +75,6 @@ namespace regina {
 template <>
 class Face<4, 1> : public detail::FaceBase<4, 1> {
     private:
-        Triangulation<2>* link_;
-            /**< A triangulation of the edge link.  This will only be
-                 constructed on demand; until then it will be null.
-                 We keep this as a pointer to avoid instantiating the
-                 lower-dimensional triangulation classes here in the header. */
-
-    public:
-        /**
-         * Default destructor.
-         */
-        ~Face();
-
-        /**
-         * Returns a full 2-manifold triangulation describing
-         * the link of this edge.
-         *
-         * This routine is fast (it uses a pre-computed triangulation
-         * where possible).  The downside is that the triangulation is
-         * read-only (though you can always clone it).
-         *
-         * Regarding the labelling of triangles in the edge link:
-         *
-         * - The triangles of the edge link are numbered as follows.
-         *   Let \a i lie between 0 and degree()-1 inclusive, let
-         *   \a pent represent `embedding(i).pentachoron()`,
-         *   and let \a e represent `embedding(i).edge()`.
-         *   Then `buildLink()->triangle(i)` is the triangle
-         *   in the edge link that links edge \a e of pentachoron \a pent.
-         *   In other words, `buildLink()->triangle(i)` in the edge link
-         *   is parallel to triangle `pent->triangle(e)` in the
-         *   surrounding 4-manifold triangulation.
-         *
-         * - The vertices of each triangle in the edge link are
-         *   numbered as follows.  Following the discussion above,
-         *   suppose that `buildLink()->triangle(i)`
-         *   sits within \c pent and is parallel to
-         *   `pent->triangle(e)`.
-         *   Then vertices 0,1,2 of the triangle in the link will be
-         *   parallel to vertices 0,1,2 of the corresponding Triangle<4>.
-         *   The permutation `pent->triangleMapping(e)` will map
-         *   vertices 0,1,2 of the triangle in the link to the
-         *   corresponding vertices of \c pent (those opposite \c e),
-         *   and will map 3 and 4 to the vertices of \c e itself.
-         *
-         * - If you need this labelling data in a format that is easy to
-         *   compute with, you can call buildLinkInclusion() to retrieve
-         *   this information as an isomorphism.
-         *
-         * \python Since Python does not distinguish between const and
-         * non-const, this routine will return by value (thus making a
-         * deep copy of the edge link).  You are free to modify the
-         * triangulation that is returned.
-         *
-         * \return the read-only triangulated link of this edge.
-         */
-        const Triangulation<2>& buildLink() const;
-
-        /**
-         * Returns details of how the triangles are labelled in the link
-         * of this edge.  This is a companion function to buildLink(),
-         * which returns a full 2-manifold triangulation of the edge link.
-         *
-         * The documentation for buildLink() describes in plain English
-         * exactly how the edge link will be triangulated.  This function
-         * essentially returns the same information in a machine-readable form.
-         *
-         * Specifically, this function returns an Isomorphism<4> that describes
-         * how the individual triangles of the link sit within the pentachora
-         * of the original triangulation.  If \a p is the isomorphism returned,
-         * then `p.pentImage(i)` will indicate which pentachoron
-         * \a pent of the 4-manifold triangulation contains the <i>i</i>th
-         * triangle of the link.  Moreover, `p.facetPerm(i)` will
-         * indicate exactly where the <i>i</i>th triangle sits within
-         * \a pent: (i) it will send 3,4 to the vertices of \a pent that lie
-         * on the edge that the triangle links, with 3 and 4 mapping to
-         * vertices 0 and 1 respectively of the corresponding Edge<4>;
-         * and (ii) it will send 0,1,2 to the vertices of \a pent that
-         * are parallel to vertices 0,1,2 of this triangle.
-         *
-         * Strictly speaking, this is an abuse of the Isomorphism<4> class
-         * (the domain is a triangulation of the wrong dimension, and
-         * the map is not 1-to-1 into the range pentachora).  We use
-         * it anyway, but you should not attempt to call any high-level
-         * routines (such as Isomorphism<4>::apply).
-         *
-         * This is the same isomorphism that was accessible through the
-         * old buildLinkDetail() function in Regina 6.0.1 and earlier.
-         *
-         * \return details of how buildLink() labels the triangles of
-         * the edge link.
-         */
-        Isomorphism<4> buildLinkInclusion() const;
-
-    private:
         /**
          * Creates a new edge and marks it as belonging to the
          * given triangulation component.
@@ -185,7 +91,7 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
 // Inline functions for Edge<4>
 
 inline Face<4, 1>::Face(Component<4>* component) :
-        detail::FaceBase<4, 1>(component), link_(nullptr) {
+        detail::FaceBase<4, 1>(component) {
 }
 
 } // namespace regina

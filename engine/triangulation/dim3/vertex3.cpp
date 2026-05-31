@@ -34,12 +34,17 @@
 
 namespace regina {
 
-Vertex<3>::~Face() {
-    delete link_;
+namespace detail {
+
+template <>
+void FaceBase<3, 0>::destroyLink() {
+    // Deleting null is always safe.
+    delete link_.value;
 }
 
-const Triangulation<2>& Face<3, 0>::buildLink() const {
-    if (! link_) {
+template <>
+const Triangulation<2>& FaceBase<3, 0>::buildLink() const {
+    if (! link_.value) {
         // Build the triangulation.
         auto* ans = new Triangulation<2>();
         ans->newTriangles(degree());
@@ -86,12 +91,13 @@ const Triangulation<2>& Face<3, 0>::buildLink() const {
 
         // This is a construct-on-demand member: cast away constness to
         // set it here.
-        const_cast<Vertex<3>*>(this)->link_ = ans;
+        const_cast<FaceBase<3, 0>*>(this)->link_.value = ans;
     }
-    return *link_;
+    return *link_.value;
 }
 
-Isomorphism<3> Face<3, 0>::buildLinkInclusion() const {
+template <>
+Isomorphism<3> FaceBase<3, 0>::buildLinkInclusion() const {
     Isomorphism<3> inclusion(degree());
 
     size_t i = 0;
@@ -103,5 +109,7 @@ Isomorphism<3> Face<3, 0>::buildLinkInclusion() const {
 
     return inclusion;
 }
+
+} // namespace detail
 
 } // namespace regina

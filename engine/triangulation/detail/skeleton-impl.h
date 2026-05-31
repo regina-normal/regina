@@ -678,6 +678,8 @@ void TriangulationBase<dim>::cloneFaces(const FaceList& srcFaces) {
         me->valid_ = you->valid_;
         me->triangleType_ = you->triangleType_;
         me->triangleSubtype_ = you->triangleSubtype_;
+
+        // Leave link_ as built-on-demand for now.
     }
 }
 

@@ -75,12 +75,6 @@ namespace regina {
 template <>
 class Face<4, 0> : public detail::FaceBase<4, 0> {
     private:
-        Triangulation<3>* link_;
-            /**< A triangulation of the vertex link.  This will only be
-                 constructed on demand; until then it will be null.
-                 We keep this as a pointer to avoid instantiating the
-                 lower-dimensional triangulation classes here in the header. */
-
         static constexpr int FLAG_IDEAL = 1;
             /**< A bit of \a flags_ that is set if and only if this vertex
                  is ideal. */
@@ -93,91 +87,6 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
                  hold various properties of this vertex. */
 
     public:
-        /**
-         * Default destructor.
-         */
-        ~Face();
-
-        /**
-         * Returns a full 3-manifold triangulation describing
-         * the link of this vertex.
-         *
-         * This routine is fast (it uses a pre-computed triangulation).
-         * The downside is that the triangulation is read-only (though
-         * you can always clone it).
-         *
-         * Regarding the labelling of tetrahedra in the vertex link:
-         *
-         * - The tetrahedra of the vertex link are numbered as follows.
-         *   Let \a i lie between 0 and degree()-1 inclusive, let
-         *   \a pent represent `embedding(i).pentachoron()`,
-         *   and let \a v represent `embedding(i).vertex()`.
-         *   Then `buildLink()->tetrahedron(i)` is the tetrahedron
-         *   in the vertex link that "slices off" vertex \a v from
-         *   pentachoron \a pent.  In other words,
-         *   `buildLink()->tetrahedron(i)` in the vertex link
-         *   is parallel to tetrahedron `pent->tetrahedron(v)` in the
-         *   surrounding 4-manifold triangulation.
-         *
-         * - The vertices of each tetrahedron in the vertex link are
-         *   numbered as follows.  Following the discussion above,
-         *   suppose that `buildLink()->tetrahedron(i)`
-         *   sits within \c pent and is parallel to
-         *   `pent->tetrahedron(v)`.
-         *   Then vertices 0,1,2,3 of the tetrahedron in the link will be
-         *   parallel to vertices 0,1,2,3 of the corresponding Tetrahedron<4>.
-         *   The permutation `pent->tetrahedronMapping(v)` will map
-         *   vertices 0,1,2,3 of the tetrahedron in the link to the
-         *   corresponding vertices of \c pent (those opposite \c v),
-         *   and will map 4 to \c v itself.
-         *
-         * - If you need this labelling data in a format that is easy to
-         *   compute with, you can call buildLinkInclusion() to retrieve
-         *   this information as an isomorphism.
-         *
-         * \python Since Python does not distinguish between const and
-         * non-const, this routine will return by value (thus making a
-         * deep copy of the vertex link.  You are free to modify the
-         * triangulation that is returned.
-         *
-         * \return the read-only triangulated link of this vertex.
-         */
-        const Triangulation<3>& buildLink() const;
-
-        /**
-         * Returns details of how the tetrahedra are labelled in the link
-         * of this vertex.  This is a companion function to buildLink(),
-         * which returns a full 3-manifold triangulation of the vertex link.
-         *
-         * The documentation for buildLink() describes in plain English
-         * exactly how the vertex link will be triangulated.  This function
-         * essentially returns the same information in a machine-readable form.
-         *
-         * Specifically, this function returns an Isomorphism<4> that describes
-         * how the individual tetrahedra of the link sit within the pentachora
-         * of the original triangulation.  If \a p is the isomorphism returned,
-         * then `p.pentImage(i)` will indicate which pentachoron
-         * \a pent of the 4-manifold triangulation contains the <i>i</i>th
-         * tetrahedron of the link.  Moreover, `p.facetPerm(i)` will
-         * indicate exactly where the <i>i</i>th tetrahedron sits within
-         * \a pent: it will send 4 to the vertex of \a pent that the
-         * tetrahedron links, and it will send 0,1,2,3 to the vertices of
-         * \a pent that are parallel to vertices 0,1,2,3 of this tetrahedron.
-         *
-         * Strictly speaking, this is an abuse of the Isomorphism<4> class
-         * (the domain is a triangulation of the wrong dimension, and
-         * the map is not 1-to-1 into the range pentachora).  We use
-         * it anyway, but you should not attempt to call any high-level
-         * routines (such as Isomorphism<4>::apply).
-         *
-         * This is the same isomorphism that was accessible through the
-         * old buildLinkDetail() function in Regina 6.0.1 and earlier.
-         *
-         * \return details of how buildLink() labels the tetrahedra of
-         * the vertex link.
-         */
-        Isomorphism<4> buildLinkInclusion() const;
-
         /**
          * Determines if this vertex is an ideal vertex.
          * To be an ideal, a vertex must (i) be valid, and (ii) have
@@ -204,7 +113,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
 // Inline functions for Vertex<4>
 
 inline Face<4, 0>::Face(Component<4>* component) :
-        detail::FaceBase<4, 0>(component), link_(nullptr), flags_(0) {
+        detail::FaceBase<4, 0>(component), flags_(0) {
 }
 
 inline bool Face<4, 0>::isIdeal() const {

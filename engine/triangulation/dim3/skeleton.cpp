@@ -205,7 +205,6 @@ void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
         for ( ; me != vertices().end(); ++me, ++you) {
             (*me)->linkType_ = (*you)->linkType_;
             (*me)->linkEulerChar_ = (*you)->linkEulerChar_;
-            // Leave link_ as built-on-demand for now.
         }
     }
 }

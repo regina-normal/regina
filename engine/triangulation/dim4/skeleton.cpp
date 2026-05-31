@@ -206,8 +206,6 @@ void Triangulation<4>::calculateEdgeLinks() {
 void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
     TriangulationBase<4>::cloneSkeleton(src);
 
-    // Leave Vertex::link_ and Edge::link_ as built-on-demand for now.
-
     vertexLinkSummary_ = src.vertexLinkSummary_;
     {
         auto me = vertices().begin();

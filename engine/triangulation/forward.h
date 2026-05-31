@@ -293,6 +293,149 @@ template <int dim>
 requires (supportedDim(dim) && dim > 4)
 using PentachoronEmbedding = FaceEmbedding<dim, 4>;
 
+namespace detail {
+    /**
+     * Implementation details for SafeTriangulation<dim>.
+     * See SafeTriangulation for further information.
+     *
+     * \ingroup detail
+     */
+    template <int dim> requires (dim >= 0 && dim <= maxDim() + 1)
+    struct SafeTriangulationHelper {
+        /**
+         * A type alias for `Triangulation<dim>`, or regina::NoSuchType if
+         * \a dim is outside the supported range.
+         */
+         using type = Triangulation<dim>;
+    };
+
+    /**
+     * Implementation details for SafeFace<dim, subdim>.
+     * See SafeFace for further information.
+     *
+     * \ingroup detail
+     */
+    template <int dim, int subdim>
+    requires (supportedDim(dim) && subdim >= -1 && subdim <= std::max(dim, 4))
+    struct SafeFaceHelper {
+        /**
+         * A type alias for `Face<dim, subdim>`, or regina::NoSuchType if the
+         * pair `(dim, subdim)` is outside the supported range.
+         */
+         using type = Face<dim, subdim>;
+    };
+
+    #ifndef __DOXYGEN
+    template <>
+    struct SafeTriangulationHelper<0> {
+        using type = regina::NoSuchType;
+    };
+    template <>
+    struct SafeTriangulationHelper<1> {
+        using type = regina::NoSuchType;
+    };
+    template <>
+    struct SafeTriangulationHelper<maxDim() + 1> {
+        using type = regina::NoSuchType;
+    };
+
+    template <int dim> requires (supportedDim(dim))
+    struct SafeFaceHelper<dim, -1> {
+        using type = regina::NoSuchType;
+    };
+    template <>
+    struct SafeFaceHelper<2, 3> {
+        using type = regina::NoSuchType;
+    };
+    template <>
+    struct SafeFaceHelper<2, 4> {
+        using type = regina::NoSuchType;
+    };
+    template <>
+    struct SafeFaceHelper<3, 4> {
+        using type = regina::NoSuchType;
+    };
+    #endif // ! __DOXYGEN
+} // namespace detail
+
+/**
+ * Provides safe access to triangulations of the given dimension, where the
+ * template argument \a dim may be a little outside the supported range.
+ *
+ * For supported dimensions, `SafeTriangulation<dim>` will simply resolve to
+ * `Triangulation<dim>`.  For dimensions that are _not_ supported, it will
+ * resolve to regina::NoSuchType.
+ *
+ * The point of this traits class is so that we can do arithmetic on dimensions
+ * and avoid compile errors (e.g., when `Triangulation<1>` would otherwise
+ * appear in the `false` branch of a conditional).
+ *
+ * \nopython
+ *
+ * \ingroup triangulation
+ */
+template <int dim> requires (dim >= 0 && dim <= maxDim() + 1)
+using SafeTriangulation = typename detail::SafeTriangulationHelper<dim>::type;
+
+/**
+ * Provides safe access to faces of the given dimension, where the template
+ * arguments \a dim and \a subdim may be a little outside the supported range.
+ *
+ * For supported dimensions, `SafeFace<dim, subdim>` will simply resolve to
+ * `Face<dim, subdim>`.  For dimensions that are _not_ supported, it will
+ * resolve to regina::NoSuchType.
+ *
+ * The point of this traits class is so that we can do arithmetic on dimensions
+ * and avoid compile errors (e.g., when a type such as `Face<2, 3>` would
+ * otherwise appear in the `false` branch of a conditional).
+ *
+ * \nopython
+ *
+ * \ingroup triangulation
+ */
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= -1 && subdim <= std::max(dim, 4))
+using SafeFace = typename detail::SafeFaceHelper<dim, subdim>::type;
+
+/**
+ * Provides safe access to tetrahedra in triangulations of the given dimension,
+ * where the template argument \a dim may be any of Regina's supported
+ * dimensions.
+ *
+ * For dimensions \a dim ≥ 3, `SafeTetrahedron<dim>` will simply resolve to
+ * `Tetrahedron<dim>`.  For dimension 2, it will resolve to regina::NoSuchType.
+ *
+ * The point of this traits class is so that we can do arithmetic on dimensions
+ * and avoid compile errors (e.g., when a type such as `Tetrahedron<2>` would
+ * otherwise appear in the `false` branch of a conditional).
+ *
+ * \nopython
+ *
+ * \ingroup triangulation
+ */
+template <int dim> requires (supportedDim(dim))
+using SafeTetrahedron = typename detail::SafeFaceHelper<dim, 3>::type;
+
+/**
+ * Provides safe access to pentachora in triangulations of the given dimension,
+ * where the template argument \a dim may be any of Regina's supported
+ * dimensions.
+ *
+ * For dimensions \a dim ≥ 4, `SafePentachoron<dim>` will simply resolve to
+ * `Pentachoron<dim>`.  For dimensions 2 and 3, it will resolve to
+ * regina::NoSuchType.
+ *
+ * The point of this traits class is so that we can do arithmetic on dimensions
+ * and avoid compile errors (e.g., when a type such as `Pentachoron<3>` would
+ * otherwise appear in the `false` branch of a conditional).
+ *
+ * \nopython
+ *
+ * \ingroup triangulation
+ */
+template <int dim> requires (supportedDim(dim))
+using SafePentachoron = typename detail::SafeFaceHelper<dim, 4>::type;
+
 /**
  * Provides safe access to related types for triangulations of the given
  * dimension.

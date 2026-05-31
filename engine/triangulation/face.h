@@ -537,8 +537,19 @@ class FaceBase :
                  for the triangle type specified by triangleType_.  This is only
                  relevant for some triangle types, and it will be -1 if this is
                  either irrelevant or not yet determined. */
+        [[no_unique_address]] EnableIf<standardDim(dim) && dim - subdim >= 3,
+                SafeTriangulation<dim - subdim - 1>*, nullptr> link_;
+            /**< A triangulation of the link of this face.  This will only be
+                 constructed on demand; until then it will be `null`.  We keep
+                 this as a pointer to avoid instantiating the lower-dimensional
+                 triangulation classes here in the header. */
 
     public:
+        /**
+         * Default destructor.
+         */
+        ~FaceBase();
+
         /**
          * Returns the index of this face within the underlying
          * triangulation.
@@ -1296,6 +1307,89 @@ class FaceBase :
         bool isLocked() const requires (subdim == dim - 1);
 
         /**
+         * Returns a full triangulation describing the link of this face.
+         *
+         * This routine is fast (it uses a pre-computed triangulation where
+         * possible).  The downside is that the triangulation is read-only
+         * (though you can always clone it).
+         *
+         * Regarding the labelling of `(dim - subdim - 1)`-simplices (the
+         * highest-dimensional simplices) in the link:
+         *
+         * - Let `k = dim - subdim - 1` denote the dimension of the link.
+         *   The <i>k</i>-simplices of the link will be numbered as follows.
+         *   Let \a i lie between 0 and degree()-1 inclusive, let \a simp
+         *   represent `embedding(i).simplex()`, and let \a f represent
+         *   `embedding(i).face()`.  Then `buildLink()->simplex(i)` is the
+         *   <i>k</i>-simplex of the link that links face \a f of simplex
+         *   \a simp.  In other words, `buildLink()->simplex(i)` slices
+         *   through the interior of simplex \a simp of the surrounding
+         *   <i>dim</i>-dimensional triangulation, and is parallel to the
+         *   <i>k</i>-face _opposite_ <i>subdim</i>-face \a f of that simplex.
+         *
+         * - The vertices of each <i>k</i>-simplex of the link will be numbered
+         *   as follows.  Following the discussion above, suppose that
+         *   `buildLink()->simplex(i)` sits within the <i>dim</i>-simplex \a s
+         *   and is parallel to the <i>k</i>-face \a g within \a s.
+         *   Then vertices `0,...,k` of the <i>k</i>-simplex
+         *   `buildLink()->simplex(i)` will be parallel to vertices `0,...,k`
+         *   of the `Face<dim, k>` representing \a g.
+         *
+         * - If you need this labelling data in a format that is easy to
+         *   compute with, you can call buildLinkInclusion() to retrieve
+         *   this information as an isomorphism.
+         *
+         * \python Since Python does not distinguish between const and
+         * non-const, this routine will return by value (thus making a
+         * deep copy of the link).  You are free to modify the triangulation
+         * that is returned.
+         *
+         * \return the read-only triangulated link of this face.
+         */
+        const SafeTriangulation<dim - subdim - 1>& buildLink() const
+            requires (standardDim(dim) && dim - subdim >= 3);
+
+        /**
+         * Returns details of how the highest-dimensional simplices are
+         * labelled in the triangulated link of this face.  This is a companion
+         * function to buildLink(), which returns a full triangulation of the
+         * link.
+         *
+         * The documentation for buildLink() describes in plain English exactly
+         * how the link will be triangulated.  This function essentially
+         * returns the same information in a machine-readable form.
+         *
+         * Specifically, this function returns an isomorphism that describes
+         * how the individual `(dim - subdim - 1)`-simplices of the triangulated
+         * link (that is, the highest-dimensional simplices of the link) sit
+         * within the top-dimensional simplices of the original triangulation.
+         * Let `k = dim - subdim - 1` denote the dimension of the link.
+         * If \a iso is the isomorphism returned, then `iso.simpImage(i)` will
+         * indicate which top-dimensional simplex \a s of the enclosing
+         * <i>dim</i>-dimensional triangulation contains the <i>i</i>th
+         * <i>k</i>-simplex of the link.  Moreover, `iso.facetPerm(i)` will
+         * indicate exactly where this <i>i</i>th <i>k</i>-simplex sits within
+         * \a s: it will map `0,...,k` to the vertices of \a s that are parallel
+         * to vertices `0,...,k` of this <i>k</i>-simplex, and it will map
+         * `k+1,...,dim` to the vertices of \a s that represent vertices
+         * `0,...,subdim` of this face respectively.
+         *
+         * Strictly speaking, this is an abuse of the Isomorphism class (the
+         * domain is a triangulation of the wrong dimension, and the map
+         * between top-dimensional simplices is not 1-to-1).  We use it anyway,
+         * but you should not attempt to call any high-level routines (such as
+         * Isomorphism::apply).
+         *
+         * This is the same isomorphism that was accessible through the
+         * old buildLinkDetail() function in Regina 6.0.1 and earlier.
+         *
+         * \return details of how buildLink() labels the highest-dimensional
+         * simplices of the triangulated link.
+         */
+        Isomorphism<dim> buildLinkInclusion() const
+            requires (standardDim(dim) && dim - subdim >= 3);
+
+        /**
          * Returns the link of this vertex as a normal surface or hypersurface.
          *
          * Note that vertex linking (hyper)surfaces only ever contain triangles
@@ -1367,6 +1461,17 @@ class FaceBase :
          * to which the new face belongs.
          */
         FaceBase(Component<dim>* component);
+
+        /**
+         * Destroys the triangulated link.
+         *
+         * This is called from the destructor for those face dimensions where
+         * \a link_ is stored.  Although trivial, it is provided as a separate
+         * function so that we can implement it outside the headers (and thus
+         * hopefully avoid unnecessarily instantiating the lower-dimensional
+         * triangulation classes).
+         */
+        void destroyLink() requires (standardDim(dim) && dim - subdim >= 3);
 
     private:
         /**
@@ -1602,6 +1707,13 @@ inline void FaceEmbedding<dim, subdim>::writeTextShort(std::ostream& out)
 // Inline functions for FaceBase
 
 namespace detail {
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline FaceBase<dim, subdim>::~FaceBase() {
+    if constexpr (standardDim(dim) && dim - subdim >= 3)
+        destroyLink();
+}
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)

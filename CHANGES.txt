@@ -646,6 +646,10 @@ Version 8.0  [ TODO ]
         Type alias MakeSigned<T>, MakeUnsigned<T>:
             - New alternatives to std::make_signed_t<T> and
               std::make_unsigned_t<T> that allow for 128-bit integers also.
+        Type alias SafeTriangulation<dim>, SafeFace<dim, subdim>,
+                SafeTetrahedron<dim>, SafePentachoron<dim>:
+            - New type aliases to supporte generic code: these types behave
+              cleanly when the arguments dim/subdim are a little out of range.
         Constant is_cpp_integer_v<T>, is_signed_cpp_integer_v<T>,
                 is_unsigned_cpp_integer_v<T>:
             - New compile-time constant is_signed_cpp_integer_v<T>, for
