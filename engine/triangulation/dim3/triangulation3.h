@@ -1812,6 +1812,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning The specific behaviour of this routine is likely to change
          * between releases.
          *
+         * \python The global interpreter lock will be released while this
+         * function runs, so you can run it as a background computation
+         * without blocking the main Python thread.
+         *
          * \param max23 the maximum number of consecutive random 2-3 moves to
          * perform in a single "up" sequence. Note that this routine will
          * usually attempt several "up" sequences of differing lengths, and in

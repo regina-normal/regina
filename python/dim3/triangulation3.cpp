@@ -465,6 +465,7 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::arg("max23") = -1,
             pybind11::arg("alwaysModify") = false,
             pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::simplifyUpDown)
         .def("simplifyExhaustive", &Triangulation<3>::simplifyExhaustive,
             pybind11::arg("height") = 1,
