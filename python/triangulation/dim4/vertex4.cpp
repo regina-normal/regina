@@ -32,6 +32,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../../helpers.h"
+#include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
 #include "../../docstrings/triangulation/dim4/vertex4.h"
 #include "../../docstrings/triangulation/face.h"
@@ -100,7 +101,10 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadLink", &Vertex<4>::hasBadLink, rbase::hasBadLink)
         .def("isIdeal", &Vertex<4>::isIdeal, rdoc::isIdeal)
         .def("isBoundary", &Vertex<4>::isBoundary, rbase::isBoundary)
-        .def("linkingSurface", &Vertex<4>::linkingSurface, rbase::linkingSurface)
+        .def("linkingSurface",
+            static_cast<regina::python::vertexLinkingSurface<4>>(
+                &Vertex<4>::linkingSurface),
+            rbase::linkingSurface)
         .def_static("ordering", &Vertex<4>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(&Vertex<4>::faceNumber),

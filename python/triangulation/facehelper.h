@@ -82,6 +82,32 @@ template <FaceHolder T>
 using facesFunc = decltype(std::declval<T>().faces(0)) (T::*)(int) const;
 
 /**
+ * The type of the function pointer `Vertex<dim>::linkingSurface()`.
+ *
+ * This can help disambiguate the different variants of linkingSurface():
+ * although at most one is available for any `(dim, subdim)` combination,
+ * gcc is not able to distinguish between them without an explicit cast
+ * (but clang is fine).
+ */
+template <int dim> requires (dim == 3 || dim == 4)
+using vertexLinkingSurface =
+    regina::Hypersurface<dim> (regina::Vertex<dim>::*)() const;
+
+/**
+ * The type of the function pointer `Face<dim, subdim>::linkingSurface()`
+ * where `subdim > 0`.
+ *
+ * This can help disambiguate the different variants of linkingSurface():
+ * although at most one is available for any `(dim, subdim)` combination,
+ * gcc is not able to distinguish between them without an explicit cast
+ * (but clang is fine).
+ */
+template <int dim, int subdim> requires ((dim == 3 || dim == 4) && subdim > 0)
+using generalLinkingSurface =
+    std::pair<regina::Hypersurface<dim>, bool> (regina::Face<dim, subdim>::*)()
+        const;
+
+/**
  * The Python binding for the C++ template member function
  * `Face<dim, subdim>::face<lowerdim>(f)`, where the valid range for
  * the C++ template parameter \a lowerdim is `0, ..., subdim-1`.

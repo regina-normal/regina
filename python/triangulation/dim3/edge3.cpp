@@ -104,7 +104,10 @@ void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadLink", &Edge<3>::hasBadLink, rbase::hasBadLink)
         .def("isLinkOrientable", &Edge<3>::isLinkOrientable,
             rbase::isLinkOrientable)
-        .def("linkingSurface", &Edge<3>::linkingSurface, rbase::linkingSurface)
+        .def("linkingSurface",
+            static_cast<regina::python::generalLinkingSurface<3, 1>>(
+                &Edge<3>::linkingSurface),
+            rbase::linkingSurface)
         .def_static("ordering", &Edge<3>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<4>>(&Edge<3>::faceNumber),

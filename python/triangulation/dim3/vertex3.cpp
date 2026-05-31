@@ -37,6 +37,7 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "../../helpers.h"
+#include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
 #include "../../docstrings/triangulation/dim3/vertex3.h"
 #include "../../docstrings/triangulation/face.h"
@@ -124,7 +125,10 @@ being reserved for a different purpose in a future release.)doc")
         .def("isLinkOrientable", &Vertex<3>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("linkEulerChar", &Vertex<3>::linkEulerChar, rdoc::linkEulerChar)
-        .def("linkingSurface", &Vertex<3>::linkingSurface, rbase::linkingSurface)
+        .def("linkingSurface",
+            static_cast<regina::python::vertexLinkingSurface<3>>(
+                &Vertex<3>::linkingSurface),
+            rbase::linkingSurface)
         .def_static("ordering", &Vertex<3>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<4>>(&Vertex<3>::faceNumber),

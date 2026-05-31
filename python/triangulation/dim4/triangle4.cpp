@@ -114,7 +114,9 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadIdentification", &Triangle<4>::hasBadIdentification,
             rbase::hasBadIdentification)
         .def("hasBadLink", &Triangle<4>::hasBadLink, rbase::hasBadLink)
-        .def("linkingSurface", &Triangle<4>::linkingSurface,
+        .def("linkingSurface",
+            static_cast<regina::python::generalLinkingSurface<4, 2>>(
+                &Triangle<4>::linkingSurface),
             rbase::linkingSurface)
         .def_static("ordering", &Triangle<4>::ordering, rbase2::ordering)
         .def_static("faceNumber",

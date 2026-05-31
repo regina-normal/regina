@@ -119,7 +119,9 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def("isBoundary", &Tetrahedron<4>::isBoundary, rbase::isBoundary)
         .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest,
             rbase::inMaximalForest)
-        .def("linkingSurface", &Tetrahedron<4>::linkingSurface,
+        .def("linkingSurface",
+            static_cast<regina::python::generalLinkingSurface<4, 3>>(
+                &Tetrahedron<4>::linkingSurface),
             rbase::linkingSurface)
         .def_static("ordering", &Tetrahedron<4>::ordering, rbase2::ordering)
         .def_static("faceNumber",
