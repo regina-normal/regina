@@ -56,7 +56,9 @@ namespace regina {
  *
  * If \a condition is `true`, then this struct holds a single data member
  * \a value of type \a T, which will be initialised on construction with
- * \a defaultValue.
+ * \a defaultValue.  In all scenarios, this struct also holds a boolean
+ * class constant \a enabled indicating whether \a condition was `true` or
+ * `false` (i.e., whether the data member \a value exists).
  *
  * The advantage to using this class over `std::conditional` is that it
  * supports assigning a default value on construction.
@@ -81,6 +83,9 @@ namespace regina {
  */
 template <bool condition, typename T, T defaultValue>
 struct EnableIf {
+    static constexpr bool enabled = true;
+        /**< Indicates whether \a condition is `true`; that is, whether
+             the data member \a value exists. */
     T value { defaultValue };
         /**< The data member to store if \a condition is \c true. */
 };
@@ -88,6 +93,7 @@ struct EnableIf {
 #ifndef __DOXYGEN
 template <typename T, T defaultValue>
 struct EnableIf<false, T, defaultValue> {
+    static constexpr bool enabled = false;
 };
 #endif // __DOXYGEN
 

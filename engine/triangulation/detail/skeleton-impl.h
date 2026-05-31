@@ -670,18 +670,14 @@ void TriangulationBase<dim>::cloneFaces(const FaceList& srcFaces) {
             me->embeddings_.push_back(FaceEmbedding<dim, subdim>(
                 simplices_[emb.simplex()->index()], emb.vertices()));
 
-        if constexpr (Face<dim, subdim>::allowsNonOrientableLinks)
-            me->linkOrientable_ = you->linkOrientable_;
-        if constexpr (Face<dim, subdim>::allowsInvalidFaces) {
-            if constexpr (standardDim(dim))
-                me->whyInvalid_ = you->whyInvalid_;
-            else
-                me->valid_ = you->valid_;
-        }
-        if constexpr (subdim == 2) {
-            me->triangleType_ = you->triangleType_;
-            me->triangleSubtype_ = you->triangleSubtype_;
-        }
+        // Some of the following properties are only available for some
+        // (dim, subdim) combinations; however, the implicit assignment
+        // operator for EnableIf<...> will do the right thing regardless.
+        me->linkOrientable_ = you->linkOrientable_;
+        me->whyInvalid_ = you->whyInvalid_;
+        me->valid_ = you->valid_;
+        me->triangleType_ = you->triangleType_;
+        me->triangleSubtype_ = you->triangleSubtype_;
     }
 }
 
