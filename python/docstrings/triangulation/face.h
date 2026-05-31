@@ -868,6 +868,14 @@ considered to be on the boundary.
 Returns:
     ``True`` if and only if this face lies on the boundary.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase::isIdeal
+static constexpr const char isIdeal[] =
+R"doc(Determines if this is an ideal vertex. To be ideal, a vertex must (i)
+be valid, and (ii) have a closed vertex link that is not a sphere.
+
+Returns:
+    ``True`` if and only if this is an ideal vertex.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase::isLinkOrientable
 static constexpr const char isLinkOrientable[] =
 R"doc(Determines if the link of this face is orientable.

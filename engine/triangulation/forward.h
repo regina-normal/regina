@@ -70,7 +70,6 @@ class Face;
 
 template <int dim> requires (supportedDim(dim)) class Face<dim, dim>;
 template <> class Face<3, 0>; // output type
-template <> class Face<4, 0>; // output ideal/etc.
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)

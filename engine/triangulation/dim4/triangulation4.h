@@ -1656,11 +1656,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
     friend class regina::XMLTriangulationReader<4>;
 };
 
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "triangulation/dim4/vertex4.h"
-namespace regina {
-
 #ifndef __APIDOCS
 namespace detail {
     template <>

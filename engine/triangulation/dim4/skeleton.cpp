@@ -69,14 +69,14 @@ void Triangulation<4>::calculateVertexLinks() {
     for (auto bc : boundaryComponents())
         if (bc->isReal())
             for (auto v : bc->vertices())
-                v->flags_ |= Vertex<4>::FLAG_REAL_BOUNDARY;
+                v->vertexFlags_.value |= Vertex<4>::FLAG_REAL_BOUNDARY;
 
     // Look at each vertex link and see what it says about this 4-manifold
     // triangulation.
     long foundIdeal = 0; // -1 if we ever find an invalid vertex
     long remaining = countVertices();
     for (Vertex<4>* vertex : vertices()) {
-        if (vertex->flags_ & Vertex<4>::FLAG_REAL_BOUNDARY) {
+        if (vertex->vertexFlags_.value & Vertex<4>::FLAG_REAL_BOUNDARY) {
             // This vertex belongs to one or more boundary tetrahedra.
             // If the link is not a 3-ball then this vertex is invalid.
             // In particular, if vertexLinkSummary_ >= 0 then all vertices
@@ -129,7 +129,7 @@ void Triangulation<4>::calculateVertexLinks() {
                             ! vertex->buildLink().isSphere())) {
                     // We have an ideal vertex.
                     vertex->component()->ideal_.value = true;
-                    vertex->flags_ |= Vertex<4>::FLAG_IDEAL;
+                    vertex->vertexFlags_.value |= Vertex<4>::FLAG_IDEAL;
                     if (foundIdeal >= 0)
                         ++foundIdeal;
                     vertex->boundaryComponent_ = new BoundaryComponent<4>();
@@ -207,12 +207,6 @@ void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
     TriangulationBase<4>::cloneSkeleton(src);
 
     vertexLinkSummary_ = src.vertexLinkSummary_;
-    {
-        auto me = vertices().begin();
-        auto you = src.vertices().begin();
-        for ( ; me != vertices().end(); ++me, ++you)
-            (*me)->flags_ = (*you)->flags_;
-    }
 }
 
 } // namespace regina

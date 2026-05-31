@@ -486,9 +486,6 @@ class FaceBase :
         /**
          * Possible values of \a whyInvalid_.
          * These can be combined using bitwise OR.
-         *
-         * It would be nice to make this a scoped enumeration; if we do this,
-         * `whyInvalid_` would need to have type `Flags<Validity>`.
          */
         enum Validity {
             /**
@@ -507,6 +504,22 @@ class FaceBase :
             INVALID_LINK = 2
         };
 
+        /**
+         * Possible values of \a vertexFlags_.
+         * These can be combined using bitwise OR.
+         */
+        enum VertexFlags {
+            /**
+             * Signifies that this vertex is ideal.
+             */
+            FLAG_IDEAL = 1,
+            /**
+             * Signifies that this vertex is contained in one or more
+             * real boundary facets.
+             */
+            FLAG_REAL_BOUNDARY = 2
+        };
+
         typename FaceEmbeddingsList<dim, dim - subdim>::type embeddings_;
             /**< The list of all occurrences of this face within the
                  top-dimensional simplices of the underlying triangulation. */
@@ -515,6 +528,7 @@ class FaceBase :
         BoundaryComponent<dim>* boundaryComponent_;
             /**< The boundary component that this face is a part of,
                  or \c null if this face is internal. */
+
         [[no_unique_address]] EnableIf<allowsNonOrientableLinks, bool, true>
                 linkOrientable_;
             /**< Is the link of this face orientable? */
@@ -528,6 +542,10 @@ class FaceBase :
             /**< Is this face valid?  This is for use in non-standard
                  dimensions, where we only test for one type of validity
                  (bad self-identifications). */
+        [[no_unique_address]] EnableIf<dim == 4 && subdim == 0, int, 0>
+                vertexFlags_;
+            /**< A bitwise combination of VertexFlags constants that together
+                 hold various properties of this vertex. */
         [[no_unique_address]] EnableIf<subdim == 2, TriangleType,
                 TriangleType::Unknown> triangleType_;
             /**< The combinatorial type of this triangle, or
@@ -537,6 +555,7 @@ class FaceBase :
                  for the triangle type specified by triangleType_.  This is only
                  relevant for some triangle types, and it will be -1 if this is
                  either irrelevant or not yet determined. */
+
         [[no_unique_address]] EnableIf<standardDim(dim) && dim - subdim >= 3,
                 SafeTriangulation<dim - subdim - 1>*, nullptr> link_;
             /**< A triangulation of the link of this face.  This will only be
@@ -1168,6 +1187,15 @@ class FaceBase :
             requires (subdim == dim - 1);
 
         /**
+         * Determines if this is an ideal vertex.
+         * To be ideal, a vertex must (i) be valid, and (ii) have
+         * a closed vertex link that is not a sphere.
+         *
+         * \return \c true if and only if this is an ideal vertex.
+         */
+        bool isIdeal() const requires (dim == 4 && subdim == 0);
+
+        /**
          * For edges, determines whether this face is a loop.
          * A _loop_ is an edge whose two endpoints are identified.
          *
@@ -1570,7 +1598,7 @@ class FaceBase :
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 class Face : public detail::FaceBase<dim, subdim> {
-    static_assert(dim == 2 || subdim > 0 || dim > 4,
+    static_assert(dim != 3 || subdim > 0,
         "The generic implementation of Face<dim, subdim> "
         "should not be used for those face classes that are specialised "
         "in Regina's standard dimensions.");
@@ -1969,6 +1997,13 @@ inline void FaceBase<dim, subdim>::join(Face<dim, subdim>* you,
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline bool FaceBase<dim, subdim>::isIdeal() const
+        requires (dim == 4 && subdim == 0) {
+    return (vertexFlags_.value & FLAG_IDEAL);
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline bool FaceBase<dim, subdim>::isLoop() const requires (subdim == 1) {
     const auto& emb = front();
     const Simplex<dim>* simp = emb.simplex();
@@ -2144,7 +2179,7 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
         // Identify ideal vertices in dimension 4.
         if (! isValid())
             out << "invalid";
-        else if (static_cast<const Face<dim, subdim>*>(this)->isIdeal())
+        else if (isIdeal())
             out << "ideal";
         else if (isBoundary())
             out << "boundary";

@@ -1692,7 +1692,6 @@
 		05F0A0091DBF078800117BFC /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FF51DBF078800117BFC /* triangulation4.cpp */; };
 		05F0A00A1DBF078800117BFC /* triangulation4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FF61DBF078800117BFC /* triangulation4.h */; };
 		05F0A00B1DBF078800117BFC /* vertex4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FF71DBF078800117BFC /* vertex4.cpp */; };
-		05F0A00C1DBF078800117BFC /* vertex4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FF81DBF078800117BFC /* vertex4.h */; };
 		05F0A0361DBF0B5E00117BFC /* angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0191DBF0B5E00117BFC /* angle.cpp */; };
 		05F0A03A1DBF0B5E00117BFC /* crushtri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */; };
 		05F0A03B1DBF0B5E00117BFC /* decompose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A01F1DBF0B5E00117BFC /* decompose.cpp */; };
@@ -2286,7 +2285,6 @@
 		05098B0A28FECBD9005E4716 /* flype.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = flype.out; sourceTree = "<group>"; };
 		05098B0B28FECBD9005E4716 /* special.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = special.test; sourceTree = "<group>"; };
 		05098B122900186E005E4716 /* triangulation4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation4.h; sourceTree = "<group>"; };
-		05098B142900186E005E4716 /* vertex4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
 		05098B182900186E005E4716 /* triangulation3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation3.h; sourceTree = "<group>"; };
 		05098B192900186E005E4716 /* homologicaldata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
 		05098B1B2900186E005E4716 /* vertex3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
@@ -4651,7 +4649,6 @@
 		05F09FF51DBF078800117BFC /* triangulation4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation4.cpp; sourceTree = "<group>"; };
 		05F09FF61DBF078800117BFC /* triangulation4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation4.h; sourceTree = "<group>"; };
 		05F09FF71DBF078800117BFC /* vertex4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertex4.cpp; sourceTree = "<group>"; };
-		05F09FF81DBF078800117BFC /* vertex4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
 		05F0A0191DBF0B5E00117BFC /* angle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = angle.cpp; sourceTree = "<group>"; };
 		05F0A01C1DBF0B5E00117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crushtri.cpp; sourceTree = "<group>"; };
@@ -5351,7 +5348,6 @@
 			isa = PBXGroup;
 			children = (
 				05098B122900186E005E4716 /* triangulation4.h */,
-				05098B142900186E005E4716 /* vertex4.h */,
 			);
 			path = dim4;
 			sourceTree = "<group>";
@@ -8838,7 +8834,6 @@
 				05F09FF51DBF078800117BFC /* triangulation4.cpp */,
 				05F09FF61DBF078800117BFC /* triangulation4.h */,
 				05F09FF71DBF078800117BFC /* vertex4.cpp */,
-				05F09FF81DBF078800117BFC /* vertex4.h */,
 			);
 			path = dim4;
 			sourceTree = "<group>";
@@ -8995,7 +8990,6 @@
 				05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */,
 				05135AE028347BF600C4BFDC /* cut.h in Headers */,
 				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
-				05F0A00C1DBF078800117BFC /* vertex4.h in Headers */,
 				051A40812F7DE59500106DCA /* linksig-impl.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
 				051806AC2C2B9512001470F1 /* fixedarray.h in Headers */,

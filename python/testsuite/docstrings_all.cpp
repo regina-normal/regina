@@ -188,7 +188,6 @@
 #include "../docstrings/triangulation/dim3/triangulation3.h"
 #include "../docstrings/triangulation/dim3/vertex3.h"
 #include "../docstrings/triangulation/dim4/triangulation4.h"
-#include "../docstrings/triangulation/dim4/vertex4.h"
 #include "../docstrings/triangulation/example.h"
 #include "../docstrings/triangulation/example2.h"
 #include "../docstrings/triangulation/example3.h"

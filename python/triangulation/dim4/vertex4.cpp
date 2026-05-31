@@ -34,7 +34,6 @@
 #include "../../helpers.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/dim4/vertex4.h"
 #include "../../docstrings/triangulation/face.h"
 
 using regina::Vertex;
@@ -64,10 +63,12 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    RDOC_SCOPE_SWITCH(Vertex4)
+    // We use the global scope here because all of Face's members are
+    // inherited, and so Face's own docstring namespace does not exist.
+    RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc::__class)
+    auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc::Face::__class)
         .def("index", &Vertex<4>::index, rbase::index)
         .def("embedding", &Vertex<4>::embedding, rbase::embedding)
         .def("embeddings", &Vertex<4>::embeddings, rbase::embeddings)
@@ -99,7 +100,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadIdentification", &Vertex<4>::hasBadIdentification,
             rbase::hasBadIdentification)
         .def("hasBadLink", &Vertex<4>::hasBadLink, rbase::hasBadLink)
-        .def("isIdeal", &Vertex<4>::isIdeal, rdoc::isIdeal)
+        .def("isIdeal", &Vertex<4>::isIdeal, rbase::isIdeal)
         .def("isBoundary", &Vertex<4>::isBoundary, rbase::isBoundary)
         .def("linkingSurface",
             static_cast<regina::python::vertexLinkingSurface<4>>(
