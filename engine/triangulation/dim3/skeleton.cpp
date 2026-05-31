@@ -213,7 +213,6 @@ void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
         auto me = triangles().begin();
         auto you = src.triangles().begin();
         for ( ; me != triangles().end(); ++me, ++you) {
-            (*me)->type_ = (*you)->type_;
             (*me)->subtype_ = (*you)->subtype_;
         }
     }

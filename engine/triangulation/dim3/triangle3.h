@@ -177,9 +177,6 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
             TriangleType::L31;
 
     private:
-        TriangleType type_;
-            /**< Specifies the triangle type, or \a TriangleType::Unknown if the
-                 type has not yet been determined. */
         int subtype_;
             /**< Specifies the vertex or edge that plays a special role
                  for the triangle type specified by \a type.  This is only
@@ -256,8 +253,7 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
 
 // Inline functions for Triangle<3>
 
-inline Face<3, 2>::Face(Component<3>* component) :
-        FaceBase<3, 2>(component), type_(TriangleType::Unknown) {
+inline Face<3, 2>::Face(Component<3>* component) : FaceBase<3, 2>(component) {
 }
 
 inline TriangleType Face<3, 2>::type() {
