@@ -121,7 +121,7 @@ being reserved for a different purpose in a future release.)doc")
         .def("isLinkOrientable", &Vertex<3>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("linkEulerChar", &Vertex<3>::linkEulerChar, rdoc::linkEulerChar)
-        .def("linkingSurface", &Vertex<3>::linkingSurface, rdoc::linkingSurface)
+        .def("linkingSurface", &Vertex<3>::linkingSurface, rbase::linkingSurface)
         .def_static("ordering", &Vertex<3>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<4>>(&Vertex<3>::faceNumber),

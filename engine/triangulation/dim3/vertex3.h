@@ -324,18 +324,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          */
         long linkEulerChar() const;
 
-        /**
-         * Returns the link of this vertex as a normal surface.
-         *
-         * Note that vertex linking surfaces only ever contain triangles
-         * (not quadrilaterals).  Moreover, vertex links are always thin
-         * (i.e., after constructing the frontier of a regular neighbourhood
-         * of the vertex, no further normalisation steps are required).
-         *
-         * \return the corresponding vertex linking normal surface.
-         */
-        NormalSurface linkingSurface() const;
-
     private:
         /**
          * Creates a new vertex and marks it as belonging to the
@@ -376,10 +364,6 @@ inline bool Face<3, 0>::isStandard() const {
 
 inline long Face<3, 0>::linkEulerChar() const {
     return linkEulerChar_;
-}
-
-inline NormalSurface Face<3, 0>::linkingSurface() const {
-    return std::move(triangulation().linkingSurface(*this).first);
 }
 
 } // namespace regina

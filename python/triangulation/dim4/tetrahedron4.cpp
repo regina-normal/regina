@@ -33,7 +33,6 @@
 #include "../../helpers.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/dim4/tetrahedron4.h"
 #include "../../docstrings/triangulation/face.h"
 
 using namespace pybind11::literals;
@@ -63,10 +62,12 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    RDOC_SCOPE_SWITCH(Tetrahedron4)
+    // We use the global scope here because all of Face's members are
+    // inherited, and so Face's own docstring namespace does not exist.
+    RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3", rdoc::__class)
+    auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3", rdoc::Face::__class)
         .def("index", &Tetrahedron<4>::index, rbase::index)
         .def("degree", &Tetrahedron<4>::degree, rbase::degree)
         .def("embedding", &Tetrahedron<4>::embedding, rbase::embedding)
@@ -114,7 +115,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest,
             rbase::inMaximalForest)
         .def("linkingSurface", &Tetrahedron<4>::linkingSurface,
-            rdoc::linkingSurface)
+            rbase::linkingSurface)
         .def_static("ordering", &Tetrahedron<4>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(

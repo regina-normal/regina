@@ -34,7 +34,6 @@
 #include "../../helpers/tableview.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/dim3/edge3.h"
 #include "../../docstrings/triangulation/face.h"
 
 using namespace pybind11::literals;
@@ -64,10 +63,12 @@ void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    RDOC_SCOPE_SWITCH(Edge3)
+    // We use the global scope here because all of Face's members are
+    // inherited, and so Face's own docstring namespace does not exist.
+    RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<3, 1>>(m, "Face3_1", rdoc::__class)
+    auto c = pybind11::class_<Face<3, 1>>(m, "Face3_1", rdoc::Face::__class)
         .def("index", &Edge<3>::index, rbase::index)
         .def("embedding", &Edge<3>::embedding, rbase::embedding)
         .def("embeddings", &Edge<3>::embeddings, rbase::embeddings)
@@ -100,7 +101,7 @@ void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadLink", &Edge<3>::hasBadLink, rbase::hasBadLink)
         .def("isLinkOrientable", &Edge<3>::isLinkOrientable,
             rbase::isLinkOrientable)
-        .def("linkingSurface", &Edge<3>::linkingSurface, rdoc::linkingSurface)
+        .def("linkingSurface", &Edge<3>::linkingSurface, rbase::linkingSurface)
         .def_static("ordering", &Edge<3>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<4>>(&Edge<3>::faceNumber),

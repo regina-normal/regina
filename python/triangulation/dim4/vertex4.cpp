@@ -97,7 +97,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadLink", &Vertex<4>::hasBadLink, rbase::hasBadLink)
         .def("isIdeal", &Vertex<4>::isIdeal, rdoc::isIdeal)
         .def("isBoundary", &Vertex<4>::isBoundary, rbase::isBoundary)
-        .def("linkingSurface", &Vertex<4>::linkingSurface, rdoc::linkingSurface)
+        .def("linkingSurface", &Vertex<4>::linkingSurface, rbase::linkingSurface)
         .def_static("ordering", &Vertex<4>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(&Vertex<4>::faceNumber),

@@ -34,7 +34,6 @@
 #include "../../helpers/tableview.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/dim4/triangle4.h"
 #include "../../docstrings/triangulation/face.h"
 
 using namespace pybind11::literals;
@@ -64,10 +63,12 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    RDOC_SCOPE_SWITCH(Triangle4)
+    // We use the global scope here because all of Face's members are
+    // inherited, and so Face's own docstring namespace does not exist.
+    RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2", rdoc::__class)
+    auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2", rdoc::Face::__class)
         .def("index", &Triangle<4>::index, rbase::index)
         .def("embedding", &Triangle<4>::embedding, rbase::embedding)
         .def("embeddings", &Triangle<4>::embeddings, rbase::embeddings)
@@ -109,7 +110,7 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
             rbase::hasBadIdentification)
         .def("hasBadLink", &Triangle<4>::hasBadLink, rbase::hasBadLink)
         .def("linkingSurface", &Triangle<4>::linkingSurface,
-            rdoc::linkingSurface)
+            rbase::linkingSurface)
         .def_static("ordering", &Triangle<4>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(&Triangle<4>::faceNumber),

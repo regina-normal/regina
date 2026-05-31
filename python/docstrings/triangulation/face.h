@@ -918,6 +918,49 @@ Parameter ``gluing``:
     boundary facet will map to the inherent vertices of the given
     boundary facet across the new gluing.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase::linkingSurface
+static constexpr const char linkingSurface[] =
+R"doc(Returns the link of this vertex as a normal surface or hypersurface.
+
+Note that vertex linking (hyper)surfaces only ever contain triangles
+(in dimension 3) or tetrahedra (in dimension 4), not quadrilaterals or
+prisms. Moreover, vertex links are always thin; that is, after
+constructing the frontier of a regular neighbourhood of the vertex, no
+further normalisation steps are required.
+
+For faces of dimension ≥ 1, linkingSurface() returns a pair: the
+linking (hyper)surface, as well as a boolean indicating whether the
+link is thin. In contrast, for vertices this function returns just the
+linking (hyper)surface, since this will always be thin.
+
+Returns:
+    the corresponding vertex linking normal (hyper)surface.)doc";
+
+// Docstring regina::python::doc::detail::FaceBase::linkingSurface_2
+static constexpr const char linkingSurface_2[] =
+R"doc(Returns the link of this face as a normal surface or hypersurface.
+
+Constructing the link of a face begins with building the frontier of a
+regular neighbourhood of the face. If this is already a normal
+(hyper)surface, then then link is called _thin_. Otherwise some basic
+normalisation steps are performed until the (hyper)surface becomes
+normal; note that these normalisation steps could change the topology
+of the (hyper)surface, and in some pathological cases could even
+reduce it to the empty (hyper)surface.
+
+In dimension 3, normalising an arbitrary embedded surface is
+reasonably straightforward. However, in dimension 4, normalising an
+arbitrary embedded 3-manifold becomes much messier. Nevertheless, for
+_face links_ (our scenario here), normalisation remains a fairly
+simple process: essentially, any changes will be limited to operations
+analagous to compressions and boundary compressions along discs and
+3-balls, as well as removing trivial 4-sphere components.
+
+Returns:
+    a pair (*s*, *thin*), where *s* is the face-linking normal
+    (hyper)surface, and *thin* is ``True`` if and only if this link is
+    thin (i.e., no additional normalisation steps were required).)doc";
+
 // Docstring regina::python::doc::detail::FaceBase::lock
 static constexpr const char lock[] =
 R"doc(Locks this codimension-1-face.

@@ -120,18 +120,6 @@ must (i) be valid, and (ii) have a closed vertex link that is not a
 Returns:
     ``True`` if and only if this is an ideal vertex.)doc";
 
-// Docstring regina::python::doc::Vertex4::linkingSurface
-static constexpr const char linkingSurface[] =
-R"doc(Returns the link of this vertex as a normal hypersurface.
-
-Note that vertex linking hypersurfaces only ever contain tetrahedra
-(not prisms). Moreover, vertex links are always thin (i.e., after
-constructing the frontier of a regular neighbourhood of the vertex, no
-further normalisation steps are required).
-
-Returns:
-    the corresponding vertex linking normal hypersurface.)doc";
-
 }; // struct Vertex4
 
 } // namespace regina::python::doc

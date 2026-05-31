@@ -109,7 +109,7 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
         }, rdoc::buildLink)
         .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion,
             rdoc::buildLinkInclusion)
-        .def("linkingSurface", &Edge<4>::linkingSurface, rdoc::linkingSurface)
+        .def("linkingSurface", &Edge<4>::linkingSurface, rbase::linkingSurface)
         .def_static("ordering", &Edge<4>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(&Edge<4>::faceNumber),

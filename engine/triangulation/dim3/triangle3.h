@@ -240,25 +240,6 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
          */
         [[deprecated]] bool isCone();
 
-        /**
-         * Returns the link of this triangle as a normal surface.
-         *
-         * Constructing the link of a triangle begins with building the frontier
-         * of a regular neighbourhood of the triangle.  If this is already a
-         * normal surface, then then link is called _thin_.  Otherwise
-         * the usual normalisation steps are performed until the surface
-         * becomes normal; note that these normalisation steps could
-         * change the topology of the surface, and in some pathological
-         * cases could even reduce it to the empty surface.
-         *
-         * \return a pair (\a s, \a thin), where \a s is the triangle linking
-         * normal surface, and \a thin is \c true if and only if this link
-         * is thin (i.e., no additional normalisation steps were required).
-         *
-         * \return the corresponding triangle linking normal surface.
-         */
-        std::pair<NormalSurface, bool> linkingSurface() const;
-
     private:
         /**
          * Creates a new triangle and marks it as belonging to the
@@ -293,10 +274,6 @@ inline bool Face<3, 2>::isMobiusBand() {
 
 inline bool Face<3, 2>::isCone() {
     return formsCone();
-}
-
-inline std::pair<NormalSurface, bool> Face<3, 2>::linkingSurface() const {
-    return triangulation().linkingSurface(*this);
 }
 
 } // namespace regina

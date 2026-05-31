@@ -392,9 +392,7 @@
 		053CAB2D1DA710FE00A92F98 /* perm3.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB291DA710FE00A92F98 /* perm3.h */; };
 		053CAB2E1DA710FE00A92F98 /* perm4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB2A1DA710FE00A92F98 /* perm4.h */; };
 		053CAB2F1DA710FE00A92F98 /* perm5.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB2B1DA710FE00A92F98 /* perm5.h */; };
-		053CB70828D0168D006B37B0 /* tetrahedron4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70528D0168B006B37B0 /* tetrahedron4.h */; };
 		053CB70928D0168D006B37B0 /* hypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CB70628D0168C006B37B0 /* hypersurfaces.cpp */; };
-		053CB70B28D0168D006B37B0 /* triangle4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CB70728D0168C006B37B0 /* triangle4.h */; };
 		053ED6622B7D0ECB0008C8E5 /* 3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 053ED6612B7D0ECB0008C8E5 /* 3d.h */; };
 		054131092AF9E95A006AAD75 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 054131082AF9E95A006AAD75 /* Utilities.swift */; };
 		054131122AF9F246006AAD75 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0541310F2AF9F246006AAD75 /* README.txt */; };
@@ -1477,7 +1475,6 @@
 		05C1BED81DCA89DA007C946B /* triangulation6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BECA1DCA89DA007C946B /* triangulation6.cpp */; };
 		05C1BED91DCA89DA007C946B /* triangulation7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BECB1DCA89DA007C946B /* triangulation7.cpp */; };
 		05C1BEDA1DCA89DA007C946B /* triangulation8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BECC1DCA89DA007C946B /* triangulation8.cpp */; };
-		05C2659B2824917700232420 /* edge3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C265992824917700232420 /* edge3.h */; };
 		05C265A3282B3B3900232420 /* tri4composition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265A1282B3B3900232420 /* tri4composition.cpp */; };
 		05C265A4282B3B8200232420 /* tri4composition.h in Sources */ = {isa = PBXBuildFile; fileRef = 05C265A2282B3B3900232420 /* tri4composition.h */; };
 		05C265B3282C948700232420 /* facetpairing7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265B2282C947D00232420 /* facetpairing7.cpp */; };
@@ -2290,8 +2287,6 @@
 		05098B0928FECBD9005E4716 /* plantri.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = plantri.test; sourceTree = "<group>"; };
 		05098B0A28FECBD9005E4716 /* flype.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = flype.out; sourceTree = "<group>"; };
 		05098B0B28FECBD9005E4716 /* special.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = special.test; sourceTree = "<group>"; };
-		05098B0E2900186E005E4716 /* triangle4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangle4.h; sourceTree = "<group>"; };
-		05098B0F2900186E005E4716 /* tetrahedron4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tetrahedron4.h; sourceTree = "<group>"; };
 		05098B122900186E005E4716 /* triangulation4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation4.h; sourceTree = "<group>"; };
 		05098B132900186E005E4716 /* edge4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = edge4.h; sourceTree = "<group>"; };
 		05098B142900186E005E4716 /* vertex4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
@@ -2299,7 +2294,6 @@
 		05098B192900186E005E4716 /* homologicaldata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
 		05098B1A2900186E005E4716 /* triangle3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangle3.h; sourceTree = "<group>"; };
 		05098B1B2900186E005E4716 /* vertex3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
-		05098B1C2900186E005E4716 /* edge3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = edge3.h; sourceTree = "<group>"; };
 		05098B1D2900186E005E4716 /* example.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		05098B212900186E005E4716 /* triangulation2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation2.h; sourceTree = "<group>"; };
 		05098B262900186E005E4716 /* example4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example4.h; sourceTree = "<group>"; };
@@ -2859,9 +2853,7 @@
 		053CAB291DA710FE00A92F98 /* perm3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm3.h; sourceTree = "<group>"; };
 		053CAB2A1DA710FE00A92F98 /* perm4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm4.h; sourceTree = "<group>"; };
 		053CAB2B1DA710FE00A92F98 /* perm5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm5.h; sourceTree = "<group>"; };
-		053CB70528D0168B006B37B0 /* tetrahedron4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetrahedron4.h; sourceTree = "<group>"; };
 		053CB70628D0168C006B37B0 /* hypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypersurfaces.cpp; sourceTree = "<group>"; };
-		053CB70728D0168C006B37B0 /* triangle4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle4.h; sourceTree = "<group>"; };
 		053ED6612B7D0ECB0008C8E5 /* 3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3d.h; sourceTree = "<group>"; };
 		054131082AF9E95A006AAD75 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		0541310C2AF9F246006AAD75 /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
@@ -4190,7 +4182,6 @@
 		05C1BED11DCA89DA007C946B /* triangulation13.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation13.cpp; sourceTree = "<group>"; };
 		05C1BED21DCA89DA007C946B /* triangulation14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation14.cpp; sourceTree = "<group>"; };
 		05C1BED31DCA89DA007C946B /* triangulation15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation15.cpp; sourceTree = "<group>"; };
-		05C265992824917700232420 /* edge3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge3.h; sourceTree = "<group>"; };
 		05C265A1282B3B3900232420 /* tri4composition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4composition.cpp; sourceTree = "<group>"; };
 		05C265A2282B3B3900232420 /* tri4composition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4composition.h; sourceTree = "<group>"; };
 		05C265A5282C947B00232420 /* facetpairing4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing4.cpp; sourceTree = "<group>"; };
@@ -5366,8 +5357,6 @@
 			isa = PBXGroup;
 			children = (
 				05098B132900186E005E4716 /* edge4.h */,
-				05098B0F2900186E005E4716 /* tetrahedron4.h */,
-				05098B0E2900186E005E4716 /* triangle4.h */,
 				05098B122900186E005E4716 /* triangulation4.h */,
 				05098B142900186E005E4716 /* vertex4.h */,
 			);
@@ -5377,7 +5366,6 @@
 		05098B152900186E005E4716 /* dim3 */ = {
 			isa = PBXGroup;
 			children = (
-				05098B1C2900186E005E4716 /* edge3.h */,
 				05098B192900186E005E4716 /* homologicaldata.h */,
 				05098B1A2900186E005E4716 /* triangle3.h */,
 				05098B182900186E005E4716 /* triangulation3.h */,
@@ -8820,7 +8808,6 @@
 				05F0A01C1DBF0B5E00117BFC /* CMakeLists.txt */,
 				05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */,
 				05F0A01F1DBF0B5E00117BFC /* decompose.cpp */,
-				05C265992824917700232420 /* edge3.h */,
 				05E7DA332758760100B01C09 /* homologicaldata.cpp */,
 				05E7DA342758760100B01C09 /* homologicaldata.h */,
 				05F0A0221DBF0B5E00117BFC /* homology.cpp */,
@@ -8858,8 +8845,6 @@
 				05F09FEE1DBF078800117BFC /* simplify.cpp */,
 				05F09FEF1DBF078800117BFC /* skeleton.cpp */,
 				05F09FF01DBF078800117BFC /* subdivide.cpp */,
-				053CB70528D0168B006B37B0 /* tetrahedron4.h */,
-				053CB70728D0168C006B37B0 /* triangle4.h */,
 				05F09FF51DBF078800117BFC /* triangulation4.cpp */,
 				05F09FF61DBF078800117BFC /* triangulation4.h */,
 				05F09FF71DBF078800117BFC /* vertex4.cpp */,
@@ -8932,7 +8917,6 @@
 				052F9ECD180600FB00FAE4DF /* hilbertprimal.h in Headers */,
 				054208761DF0D0B50018AB24 /* definition.h in Headers */,
 				05A067251DFA68190047872E /* pluggedtorusbundle.h in Headers */,
-				053CB70828D0168D006B37B0 /* tetrahedron4.h in Headers */,
 				05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */,
 				05A0672F1DFA68190047872E /* satblocktypes.h in Headers */,
 				05E629812FBFB32100AE1B84 /* hidim.h in Headers */,
@@ -9046,7 +9030,6 @@
 				052F9F40180600FB00FAE4DF /* matrix2.h in Headers */,
 				05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */,
 				058C305F1DCAF6F8006162D2 /* forward.h in Headers */,
-				053CB70B28D0168D006B37B0 /* triangle4.h in Headers */,
 				054209231DF28C990018AB24 /* context.h in Headers */,
 				05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */,
 				057FDAFF2EE95CBB000C706E /* io.h in Headers */,
@@ -9109,7 +9092,6 @@
 				05B7002725AC2305003BAF5C /* input.h in Headers */,
 				05A067351DFA68190047872E /* snappedball.h in Headers */,
 				05B7002225AC2305003BAF5C /* dynamic_bitset.h in Headers */,
-				05C2659B2824917700232420 /* edge3.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,
 				054208BA1DF0D2740018AB24 /* lensspace.h in Headers */,
 				052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */,

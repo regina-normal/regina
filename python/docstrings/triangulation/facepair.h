@@ -15,7 +15,8 @@ struct FacePair {
 
 // Docstring regina::python::doc::FacePair::__class
 static constexpr const char __class[] =
-R"doc(Represents a pair of tetrahedron face numbers.
+R"doc(Represents a pair of tetrahedron face numbers within a 3-dimensional
+triangulation.
 
 Note that we are not storing triangle numbers in a triangulation
 skeleton, but merely face numbers 0, 1, 2 and 3 in a single

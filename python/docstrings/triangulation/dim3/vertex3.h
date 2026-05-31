@@ -159,18 +159,6 @@ for a different routine to be called link() in the future.
 Returns:
     a broad categorisation of the vertex link.)doc";
 
-// Docstring regina::python::doc::Vertex3::linkingSurface
-static constexpr const char linkingSurface[] =
-R"doc(Returns the link of this vertex as a normal surface.
-
-Note that vertex linking surfaces only ever contain triangles (not
-quadrilaterals). Moreover, vertex links are always thin (i.e., after
-constructing the frontier of a regular neighbourhood of the vertex, no
-further normalisation steps are required).
-
-Returns:
-    the corresponding vertex linking normal surface.)doc";
-
 struct Link {
 
 // Docstring regina::python::doc::Vertex3::Link::Disc

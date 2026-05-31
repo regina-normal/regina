@@ -111,29 +111,6 @@ buildLinkDetail() function in Regina 6.0.1 and earlier.
 Returns:
     details of how buildLink() labels the triangles of the edge link.)doc";
 
-// Docstring regina::python::doc::Edge4::linkingSurface
-static constexpr const char linkingSurface[] =
-R"doc(Returns the link of this edge as a normal hypersurface.
-
-Constructing the link of a edge begins with building the frontier of a
-regular neighbourhood of the edge. If this is already a normal
-hypersurface, then then link is called _thin_. Otherwise some basic
-normalisation steps are performed until the hypersurface becomes
-normal; note that these normalisation steps could change the topology
-of the hypersurface, and in some pathological cases could even reduce
-it to the empty hypersurface.
-
-Although normalisation of arbitrary embedded 3-manifolds is messy, for
-edge links the process is thankfully simpler. Essentially, any changes
-will be limited to operations analagous to compressions and boundary
-compressions along discs and 3-balls, as well as removing trivial
-4-sphere components.
-
-Returns:
-    a pair (*s*, *thin*), where *s* is the edge linking normal
-    hypersurface, and *thin* is ``True`` if and only if this link is
-    thin (i.e., no additional normalisation steps were required).)doc";
-
 }; // struct Edge4
 
 } // namespace regina::python::doc

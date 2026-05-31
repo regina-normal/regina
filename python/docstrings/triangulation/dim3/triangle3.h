@@ -62,26 +62,6 @@ identifications between its vertices and/or edges.
 Returns:
     ``True`` if and only if this triangle forms a Möbius band.)doc";
 
-// Docstring regina::python::doc::Triangle3::linkingSurface
-static constexpr const char linkingSurface[] =
-R"doc(Returns the link of this triangle as a normal surface.
-
-Constructing the link of a triangle begins with building the frontier
-of a regular neighbourhood of the triangle. If this is already a
-normal surface, then then link is called _thin_. Otherwise the usual
-normalisation steps are performed until the surface becomes normal;
-note that these normalisation steps could change the topology of the
-surface, and in some pathological cases could even reduce it to the
-empty surface.
-
-Returns:
-    a pair (*s*, *thin*), where *s* is the triangle linking normal
-    surface, and *thin* is ``True`` if and only if this link is thin
-    (i.e., no additional normalisation steps were required).
-
-Returns:
-    the corresponding triangle linking normal surface.)doc";
-
 // Docstring regina::python::doc::Triangle3::subtype
 static constexpr const char subtype[] =
 R"doc(Deprecated function that returns the vertex or edge number in this

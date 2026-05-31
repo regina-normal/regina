@@ -83,7 +83,7 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def("inMaximalForest", &Triangle<3>::inMaximalForest,
             rbase::inMaximalForest)
         .def("linkingSurface", &Triangle<3>::linkingSurface,
-            rdoc::linkingSurface)
+            rbase::linkingSurface)
         .def("isValid", &Triangle<3>::isValid, rbase::isValid)
         .def("hasBadIdentification", &Triangle<3>::hasBadIdentification,
             rbase::hasBadIdentification)

@@ -22,8 +22,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     edge4.h
-    tetrahedron4.h
-    triangle4.h
     triangulation4.h
     vertex4.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation/dim4" COMPONENT Development)
