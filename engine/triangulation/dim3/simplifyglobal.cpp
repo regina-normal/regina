@@ -586,14 +586,15 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
         return false;
     }
 
-    //TODO Update documentation!
     //TODO Add support for progress tracking.
 
-    // For our default max23, we follow SnapPea and make it proportional to
-    // size(). We also follow SnapPea in choosing the constant of
-    // proportionality to be 4.
+    // We want our default max23 to be big enough that this routine is often
+    // effective at simplifying triangulations that are otherwise difficult
+    // to simplify (otherwise there's not much point in using this routine).
+    // On the other hand, we don't want the default value to result in
+    // prohibitively long running times.
     if ( max23 < 0 ) {
-        max23 = size();
+        max23 = 128;
     }
     size_t origSize = size();
 
@@ -614,7 +615,7 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
                         RandomEngine::rand( working.countTriangles() ) );
                 working.pachner(triangle);
             }
-            std::cout << working.size() << std::endl;   //TODO
+            //std::cout << working.size() << std::endl;   //TODO
 
             // Start by simplifying using only 2-0, 2-1 and 4-4 moves (in
             // particular, no 3-2 moves, since we don't want to immediately undo
@@ -622,7 +623,7 @@ bool Triangulation<3>::simplifyUpDown(ssize_t max23, bool alwaysModify) {
             // subsequent moves to go somewhere new.
             working.simplifyInternal<SimplifyContext::UpDownDescent>();
             working.simplifyInternal<SimplifyContext::Best>();
-            std::cout << working.size() << std::endl;   //TODO
+            //std::cout << working.size() << std::endl;   //TODO
             if ( working.size() < origSize ) {
                 // We already simplified, so we might as well stop now.
                 swap(working);

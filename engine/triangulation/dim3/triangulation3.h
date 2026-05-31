@@ -1783,20 +1783,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool simplifyToLocalMinimum(bool perform = true);
 
         /**
-         * Attempts to simplify this triangulation by performing many random
-         * 2-3 moves, and attempting to simplify back down.
+         * Attempts to simplify this triangulation by making increasingly long
+         * sequences of random 2-3 moves, and then simplifying back down.
          *
          * This is a well-climbing heuristic that can be used when `simplify()`
-         * fails. In detail, this routine attempts to climb out of a well by
-         * performing a sequence of random 2-3 moves, interspersed with
-         * attempted simplifications that avoid 3-2 moves (and hence avoid
-         * directly undoing the random 2-3 moves); such intermediate
-         * simplifications use random 4-4 moves, together with all possible
-         * 2-0 edge moves, 2-1 moves, and 2-0 vertex moves. This routine then
-         * runs `simplify()` on the resulting triangulation, with the hope that
-         * this will avoid the well that we just climbed out from.
-         *
-         * This routine is partly inspired by techniques used in both the
+         * fails. It is partly inspired by techniques used in both the
          * `Triangulation<4>::simplifyUpDown()` routine (which predates this
          * routine), as well as SnapPea's `randomize_triangulation()` routine.
          *
@@ -1812,9 +1803,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \warning The specific behaviour of this routine is likely to change
          * between releases.
          *
-         * \param max23 the maximum number of random 2-3 moves to perform.
-         * If this is -1, then this routine will use the default value
-         * `4 * size()`.
+         * \param max23 the maximum number of consecutive random 2-3 moves to
+         * perform in a single "up" sequence. Note that this routine will
+         * usually attempt several "up" sequences of differing lengths, and in
+         * particular may eventually pass through triangulations with more
+         * than `size() + max23` tetrahedra. If this is -1, then a sensible
+         * default will be chosen.
          * \param alwaysModify `true` if this triangulation should always be
          * modified after this operation, even if the final endpoint has _more_
          * tetrahedra than the triangulation began with, or `false` if this
