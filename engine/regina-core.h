@@ -405,7 +405,7 @@ inline constexpr Unprotected unprotected;
  *
  * This type is declared but never defined.
  *
- * For an example of its use, see TriangulationTraits (where it acts as a
+ * For an example of its use, see SafeTriangulation (where it acts as a
  * placeholder for non-existent classes that would otherwise cause a compile
  * error).
  *

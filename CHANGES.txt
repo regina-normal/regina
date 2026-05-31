@@ -560,9 +560,6 @@ Version 8.0  [ TODO ]
               existence of a splitting surface) are no longer save alongside
               triangulations in data files, since they are easy to reconstruct
               (in some cases, using other invariants that _are_ saved).
-        Struct TriangulationTraits<dim>:
-            - New traits type to help with generic code for working with
-              triangulations of different dimensions.
         Class TypeTrie:
             - Now uses uint8_t instead of char for vector elements.  This
               affects the argument types for insert() and dominates().
@@ -646,6 +643,9 @@ Version 8.0  [ TODO ]
         Type alias MakeSigned<T>, MakeUnsigned<T>:
             - New alternatives to std::make_signed_t<T> and
               std::make_unsigned_t<T> that allow for 128-bit integers also.
+        Type alias SafeHypersurface<dim>, SafeHypersurfaces<dim>:
+            - New type aliases to support generic code: these provide access to
+              normal surface types in 3-D, and normal hypersurface types in 4-D.
         Type alias SafeTriangulation<dim>, SafeFace<dim, subdim>,
                 SafeTetrahedron<dim>, SafePentachoron<dim>:
             - New type aliases to supporte generic code: these types behave

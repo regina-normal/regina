@@ -990,40 +990,35 @@ class FaceBase :
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Vertex* vertex(int i) const
-            requires (subdim > 0);
+        Vertex<dim>* vertex(int i) const requires (subdim > 0);
 
         /**
          * A dimension-specific alias for face<1>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Edge* edge(int i) const
-            requires (subdim > 1);
+        Edge<dim>* edge(int i) const requires (subdim > 1);
 
         /**
          * A dimension-specific alias for face<2>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Triangle* triangle(int i) const
-            requires (subdim > 2);
+        Triangle<dim>* triangle(int i) const requires (subdim > 2);
 
         /**
          * A dimension-specific alias for face<3>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Tetrahedron* tetrahedron(int i) const
-            requires (subdim > 3);
+        SafeTetrahedron<dim>* tetrahedron(int i) const requires (subdim > 3);
 
         /**
          * A dimension-specific alias for face<4>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Pentachoron* pentachoron(int i) const
-            requires (subdim > 4);
+        SafePentachoron<dim>* pentachoron(int i) const requires (subdim > 4);
 
         /**
          * Examines the given <i>lowerdim</i>-dimensional subface of this face,
@@ -1405,7 +1400,7 @@ class FaceBase :
          *
          * \return the corresponding vertex linking normal (hyper)surface.
          */
-        Hypersurface<dim> linkingSurface() const
+        SafeHypersurface<dim> linkingSurface() const
             requires ((dim == 3 || dim == 4) && subdim == 0);
 
         /**
@@ -1431,7 +1426,7 @@ class FaceBase :
          * normal (hyper)surface, and \a thin is \c true if and only if this
          * link is thin (i.e., no additional normalisation steps were required).
          */
-        std::pair<Hypersurface<dim>, bool> linkingSurface() const
+        std::pair<SafeHypersurface<dim>, bool> linkingSurface() const
             requires ((dim == 3 || dim == 4) && subdim > 0);
 
         /**
@@ -1857,40 +1852,35 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline TriangulationTraits<dim>::Vertex*
-        FaceBase<dim, subdim>::vertex(int i) const
+inline Vertex<dim>* FaceBase<dim, subdim>::vertex(int i) const
         requires (subdim > 0) {
     return face<0>(i);
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline TriangulationTraits<dim>::Edge*
-        FaceBase<dim, subdim>::edge(int i) const
+inline Edge<dim>* FaceBase<dim, subdim>::edge(int i) const
         requires (subdim > 1) {
     return face<1>(i);
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline TriangulationTraits<dim>::Triangle*
-        FaceBase<dim, subdim>::triangle(int i) const
+inline Triangle<dim>* FaceBase<dim, subdim>::triangle(int i) const
         requires (subdim > 2) {
     return face<2>(i);
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline TriangulationTraits<dim>::Tetrahedron*
-        FaceBase<dim, subdim>::tetrahedron(int i) const
+inline SafeTetrahedron<dim>* FaceBase<dim, subdim>::tetrahedron(int i) const
         requires (subdim > 3) {
     return face<3>(i);
 }
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline TriangulationTraits<dim>::Pentachoron*
-        FaceBase<dim, subdim>::pentachoron(int i) const
+inline SafePentachoron<dim>* FaceBase<dim, subdim>::pentachoron(int i) const
         requires (subdim > 4) {
     return face<4>(i);
 }
@@ -2108,7 +2098,7 @@ inline bool FaceBase<dim, subdim>::isLocked() const
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Hypersurface<dim> FaceBase<dim, subdim>::linkingSurface() const
+inline SafeHypersurface<dim> FaceBase<dim, subdim>::linkingSurface() const
         requires ((dim == 3 || dim == 4) && subdim == 0) {
     // TODO
     return std::move(triangulation().linkingSurface(
@@ -2117,7 +2107,7 @@ inline Hypersurface<dim> FaceBase<dim, subdim>::linkingSurface() const
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline std::pair<Hypersurface<dim>, bool>
+inline std::pair<SafeHypersurface<dim>, bool>
             FaceBase<dim, subdim>::linkingSurface() const
             requires ((dim == 3 || dim == 4) && subdim > 0) {
     // TODO

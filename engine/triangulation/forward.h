@@ -366,7 +366,7 @@ namespace detail {
  * `Triangulation<dim>`.  For dimensions that are _not_ supported, it will
  * resolve to regina::NoSuchType.
  *
- * The point of this traits class is so that we can do arithmetic on dimensions
+ * The point of this type alias is so that we can do arithmetic on dimensions
  * and avoid compile errors (e.g., when `Triangulation<1>` would otherwise
  * appear in the `false` branch of a conditional).
  *
@@ -385,7 +385,7 @@ using SafeTriangulation = typename detail::SafeTriangulationHelper<dim>::type;
  * `Face<dim, subdim>`.  For dimensions that are _not_ supported, it will
  * resolve to regina::NoSuchType.
  *
- * The point of this traits class is so that we can do arithmetic on dimensions
+ * The point of this type alias is so that we can do arithmetic on dimensions
  * and avoid compile errors (e.g., when a type such as `Face<2, 3>` would
  * otherwise appear in the `false` branch of a conditional).
  *
@@ -405,7 +405,7 @@ using SafeFace = typename detail::SafeFaceHelper<dim, subdim>::type;
  * For dimensions \a dim ≥ 3, `SafeTetrahedron<dim>` will simply resolve to
  * `Tetrahedron<dim>`.  For dimension 2, it will resolve to regina::NoSuchType.
  *
- * The point of this traits class is so that we can do arithmetic on dimensions
+ * The point of this type alias is so that we can do arithmetic on dimensions
  * and avoid compile errors (e.g., when a type such as `Tetrahedron<2>` would
  * otherwise appear in the `false` branch of a conditional).
  *
@@ -425,7 +425,7 @@ using SafeTetrahedron = typename detail::SafeFaceHelper<dim, 3>::type;
  * `Pentachoron<dim>`.  For dimensions 2 and 3, it will resolve to
  * regina::NoSuchType.
  *
- * The point of this traits class is so that we can do arithmetic on dimensions
+ * The point of this type alias is so that we can do arithmetic on dimensions
  * and avoid compile errors (e.g., when a type such as `Pentachoron<3>` would
  * otherwise appear in the `false` branch of a conditional).
  *
@@ -436,143 +436,43 @@ using SafeTetrahedron = typename detail::SafeFaceHelper<dim, 3>::type;
 template <int dim> requires (supportedDim(dim))
 using SafePentachoron = typename detail::SafeFaceHelper<dim, 4>::type;
 
-/**
- * Provides safe access to related types for triangulations of the given
- * dimension.
- *
- * Typically these related types will be meaningful for some but not all
- * triangulation dimensions.  The point of this traits class is that, for
- * the cases that are _not_ meaningful, the relevant types will resolve to
- * regina::NoSuchType (and therefore avoid compiler errors by listing invalid
- * template parameters, such as `Triangulation<1>` or `Face<dim, dim + 1>`).
- *
- * \nopython
- *
- * \ingroup triangulation
- */
-template <int dim> requires (supportedDim(dim))
-struct TriangulationTraits {
+namespace detail {
     /**
-     * A type alias for a vertex of a <i>dim</i>-dimensional triangulation.
-     */
-    using Vertex = Face<dim, 0>;
-    /**
-     * A type alias for an edge of a <i>dim</i>-dimensional triangulation.
-     */
-    using Edge = Face<dim, 1>;
-    /**
-     * A type alias for a triangle of a <i>dim</i>-dimensional triangulation.
-     */
-    using Triangle = Face<dim, 2>;
-    /**
-     * A type alias for a tetrahedron of a <i>dim</i>-dimensional triangulation,
-     * or NoSuchType if `dim < 3`.
-     */
-    using Tetrahedron = Face<dim, 3>;
-    /**
-     * A type alias for a pentachoron of a <i>dim</i>-dimensional triangulation,
-     * or NoSuchType if `dim < 4`.
-     */
-    using Pentachoron = Face<dim, 4>;
-
-    /**
-     * A type alias for a triangulation of dimension `dim + 1`, or NoSuchType
-     * if \a dim is the largest supported dimension in Regina.
-     */
-    using Higher = Triangulation<dim + 1>;
-    /**
-     * A type alias for a triangulation of dimension `dim - 1`, or NoSuchType
-     * if \a dim is 2 (i.e., the lowest supported dimension in Regina).
-     */
-    using Lower = Triangulation<dim - 1>;
-};
-
-#ifndef __DOXYGEN
-template <>
-struct TriangulationTraits<2> {
-    using Vertex = Face<2, 0>;
-    using Edge = Face<2, 1>;
-    using Triangle = Face<2, 2>;
-    using Tetrahedron = regina::NoSuchType;
-    using Pentachoron = regina::NoSuchType;
-
-    using Higher = Triangulation<3>;
-    using Lower = regina::NoSuchType;
-};
-
-template <>
-struct TriangulationTraits<3> {
-    using Vertex = Face<3, 0>;
-    using Edge = Face<3, 1>;
-    using Triangle = Face<3, 2>;
-    using Tetrahedron = Face<3, 3>;
-    using Pentachoron = regina::NoSuchType;
-
-    using Higher = Triangulation<4>;
-    using Lower = Triangulation<2>;
-};
-
-template <>
-struct TriangulationTraits<maxDim()> {
-    using Vertex = Face<maxDim(), 0>;
-    using Edge = Face<maxDim(), 1>;
-    using Triangle = Face<maxDim(), 2>;
-    using Tetrahedron = Face<maxDim(), 3>;
-    using Pentachoron = Face<maxDim(), 4>;
-
-    using Higher = regina::NoSuchType;
-    using Lower = Triangulation<maxDim() - 1>;
-};
-#endif // ! __DOXYGEN
-
-/**
- * Provides safe access to types for normal surfaces or hypersurfaces within
- * triangulations of the given dimension.
- *
- * Typically these types will be meaningful for some but not all triangulation
- * dimensions.  The point of this traits class is that, for the cases that are
- * _not_ meaningful, the relevant types will resolve to regina::NoSuchType
- * (and therefore avoid compiler errors by listing invalid template parameters).
- *
- * \nopython
- *
- * \ingroup triangulation
- */
-template <int dim> requires (supportedDim(dim))
-struct HypersurfaceTraits {
-    /**
-     * A type alias for a normal hypersurface within a <i>dim</i>-dimensional
-     * triangulation, or NoSuchType if Regina does not support such objects
-     * in this dimension.
+     * Implementation details for SafeHypersurface<dim> and
+     * SafeHypersurfaces<dim>.  See those types for further information.
      *
-     * In particular, this will be the type regina::NormalSurface if `dim == 3`,
-     * or regina::NormalHypersurface if `dim == 4`.
+     * \ingroup detail
      */
-    using Hypersurface = regina::NoSuchType;
-    /**
-     * A type alias for a list of normal hypersurfaces within a
-     * <i>dim</i>-dimensional triangulation, or NoSuchType if Regina does not
-     * support such objects in this dimension.
-     *
-     * In particular, this will be the type regina::NormalSurfaces if
-     * `dim == 3`, or regina::NormalHypersurfaces if `dim == 4`.
-     */
-    using Hypersurfaces = regina::NoSuchType;
-};
+    template <int dim> requires (supportedDim(dim))
+    struct SafeHypersurfaceHelper {
+        /**
+         * A type alias for a normal hypersurface within a
+         * <i>dim</i>-dimensional triangulation, or NoSuchType if Regina does
+         * not support such objects in this dimension.
+         */
+        using Hypersurface = regina::NoSuchType;
+        /**
+         * A type alias for a list of normal hypersurfaces within a
+         * <i>dim</i>-dimensional triangulation, or NoSuchType if Regina does
+         * not support such objects in this dimension.
+         */
+        using Hypersurfaces = regina::NoSuchType;
+    };
 
-#ifndef __DOXYGEN
-template <>
-struct HypersurfaceTraits<3> {
-    using Hypersurface = NormalSurface;
-    using Hypersurfaces = NormalSurfaces;
-};
+    #ifndef __DOXYGEN
+    template <>
+    struct SafeHypersurfaceHelper<3> {
+        using Hypersurface = NormalSurface;
+        using Hypersurfaces = NormalSurfaces;
+    };
 
-template <>
-struct HypersurfaceTraits<4> {
-    using Hypersurface = NormalHypersurface;
-    using Hypersurfaces = NormalHypersurfaces;
-};
-#endif // ! __DOXYGEN
+    template <>
+    struct SafeHypersurfaceHelper<4> {
+        using Hypersurface = NormalHypersurface;
+        using Hypersurfaces = NormalHypersurfaces;
+    };
+    #endif // ! __DOXYGEN
+} // namespace detail
 
 /**
  * A type alias for a normal hypersurface within a <i>dim</i>-dimensional
@@ -582,8 +482,9 @@ struct HypersurfaceTraits<4> {
  * In particular, this will be the type regina::NormalSurface if `dim == 3`,
  * or regina::NormalHypersurface if `dim == 4`.
  */
-template <int dim>
-using Hypersurface = HypersurfaceTraits<dim>::Hypersurface;
+template <int dim> requires (supportedDim(dim))
+using SafeHypersurface =
+    typename detail::SafeHypersurfaceHelper<dim>::Hypersurface;
 
 /**
  * A type alias for a list of normal hypersurfaces within a
@@ -593,8 +494,9 @@ using Hypersurface = HypersurfaceTraits<dim>::Hypersurface;
  * In particular, this will be the type regina::NormalSurfaces if
  * `dim == 3`, or regina::NormalHypersurfaces if `dim == 4`.
  */
-template <int dim>
-using Hypersurfaces = HypersurfaceTraits<dim>::Hypersurfaces;
+template <int dim> requires (supportedDim(dim))
+using SafeHypersurfaces =
+    typename detail::SafeHypersurfaceHelper<dim>::Hypersurfaces;
 
 } // namespace regina
 

@@ -135,8 +135,7 @@ BoundaryComponent<dim>::~BoundaryComponent() {
 }
 
 template <int dim> requires (supportedDim(dim))
-TriangulationTraits<dim>::Lower* BoundaryComponent<dim>::buildRealBoundary()
-        const
+SafeTriangulation<dim - 1>* BoundaryComponent<dim>::buildRealBoundary() const
         requires (dim > 2) {
     // From the precondition, there is a positive number of (dim-1)-faces.
     const auto& allFacets = std::get<tupleIndex(dim-1)>(faces_);
@@ -244,7 +243,7 @@ TriangulationTraits<dim>::Lower* BoundaryComponent<dim>::buildRealBoundary()
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (dim > 2 && subdim >= 0 && subdim < dim)
 void BoundaryComponent<dim>::reorderAndRelabelFaces(
-        TriangulationTraits<dim>::Lower* tri,
+        SafeTriangulation<dim - 1>* tri,
         const std::vector<Face<dim, subdim>*>& reference) const {
     if constexpr (subdim == dim - 1) {
         // The (dim-1) faces are already in perfect correspondence.

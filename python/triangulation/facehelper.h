@@ -91,7 +91,7 @@ using facesFunc = decltype(std::declval<T>().faces(0)) (T::*)(int) const;
  */
 template <int dim> requires (dim == 3 || dim == 4)
 using vertexLinkingSurface =
-    regina::Hypersurface<dim> (regina::Vertex<dim>::*)() const;
+    regina::SafeHypersurface<dim> (regina::Vertex<dim>::*)() const;
 
 /**
  * The type of the function pointer `Face<dim, subdim>::linkingSurface()`
@@ -104,8 +104,8 @@ using vertexLinkingSurface =
  */
 template <int dim, int subdim> requires ((dim == 3 || dim == 4) && subdim > 0)
 using generalLinkingSurface =
-    std::pair<regina::Hypersurface<dim>, bool> (regina::Face<dim, subdim>::*)()
-        const;
+    std::pair<regina::SafeHypersurface<dim>, bool>
+        (regina::Face<dim, subdim>::*)() const;
 
 /**
  * The Python binding for the C++ template member function

@@ -483,31 +483,28 @@ class Component : public ShortOutput<Component<dim>>, public MarkedElement {
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Vertex* vertex(size_t index) const
-            requires (standardDim(dim));
+        Vertex<dim>* vertex(size_t index) const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for face<1>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Edge* edge(size_t index) const
-            requires (standardDim(dim));
+        Edge<dim>* edge(size_t index) const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for face<2>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Triangle* triangle(size_t index) const
-            requires (standardDim(dim));
+        Triangle<dim>* triangle(size_t index) const requires (standardDim(dim));
 
         /**
          * A dimension-specific alias for face<3>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Tetrahedron* tetrahedron(size_t index) const
+        SafeTetrahedron<dim>* tetrahedron(size_t index) const
             requires (standardDim(dim) && dim >= 3);
 
         /**
@@ -515,7 +512,7 @@ class Component : public ShortOutput<Component<dim>>, public MarkedElement {
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Pentachoron* pentachoron(size_t index) const
+        SafePentachoron<dim>* pentachoron(size_t index) const
             requires (standardDim(dim) && dim >= 4);
 
         /**
@@ -853,22 +850,19 @@ inline auto Component<dim>::face(int subdim, size_t index) const
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Vertex* Component<dim>::vertex(
-        size_t index) const
+inline Vertex<dim>* Component<dim>::vertex(size_t index) const
         requires (standardDim(dim)) {
     return face<0>(index);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Edge* Component<dim>::edge(
-        size_t index) const
+inline Edge<dim>* Component<dim>::edge(size_t index) const
         requires (standardDim(dim)) {
     return face<1>(index);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Triangle* Component<dim>::triangle(
-        size_t index) const
+inline Triangle<dim>* Component<dim>::triangle(size_t index) const
         requires (standardDim(dim)) {
     if constexpr (dim == 2)
         return simplices_[index];
@@ -877,8 +871,7 @@ inline TriangulationTraits<dim>::Triangle* Component<dim>::triangle(
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Tetrahedron* Component<dim>::tetrahedron(
-        size_t index) const
+inline SafeTetrahedron<dim>* Component<dim>::tetrahedron(size_t index) const
         requires (standardDim(dim) && dim >= 3) {
     if constexpr (dim == 3)
         return simplices_[index];
@@ -887,8 +880,7 @@ inline TriangulationTraits<dim>::Tetrahedron* Component<dim>::tetrahedron(
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Pentachoron* Component<dim>::pentachoron(
-        size_t index) const
+inline SafePentachoron<dim>* Component<dim>::pentachoron(size_t index) const
         requires (standardDim(dim) && dim >= 4) {
     if constexpr (dim == 4)
         return simplices_[index];

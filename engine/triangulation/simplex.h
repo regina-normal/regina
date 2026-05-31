@@ -722,38 +722,35 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Vertex* vertex(int i) const;
+        Vertex<dim>* vertex(int i) const;
 
         /**
          * A dimension-specific alias for face<1>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Edge* edge(int i) const;
+        Edge<dim>* edge(int i) const;
 
         /**
          * A dimension-specific alias for face<2>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Triangle* triangle(int i) const
-            requires (dim > 2);
+        Triangle<dim>* triangle(int i) const requires (dim > 2);
 
         /**
          * A dimension-specific alias for face<3>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Tetrahedron* tetrahedron(int i) const
-            requires (dim > 3);
+        SafeTetrahedron<dim>* tetrahedron(int i) const requires (dim > 3);
 
         /**
          * A dimension-specific alias for face<4>().
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Pentachoron* pentachoron(int i) const
-            requires (dim > 4);
+        SafePentachoron<dim>* pentachoron(int i) const requires (dim > 4);
 
         /**
          * Returns the edge of this simplex that connects the
@@ -1266,35 +1263,33 @@ inline Face<dim, subdim>* Face<dim, dim>::face(int face) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Vertex* Face<dim, dim>::vertex(int i) const {
+inline Vertex<dim>* Face<dim, dim>::vertex(int i) const {
     triangulation().ensureSkeleton();
     return std::get<0>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Edge* Face<dim, dim>::edge(int i) const {
+inline Edge<dim>* Face<dim, dim>::edge(int i) const {
     triangulation().ensureSkeleton();
     return std::get<1>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Triangle* Face<dim, dim>::triangle(int i) const
+inline Triangle<dim>* Face<dim, dim>::triangle(int i) const
         requires (dim > 2) {
     triangulation().ensureSkeleton();
     return std::get<2>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Tetrahedron* Face<dim, dim>::tetrahedron(
-        int i) const
+inline SafeTetrahedron<dim>* Face<dim, dim>::tetrahedron(int i) const
         requires (dim > 3) {
     triangulation().ensureSkeleton();
     return std::get<3>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline TriangulationTraits<dim>::Pentachoron* Face<dim, dim>::pentachoron(
-        int i) const
+inline SafePentachoron<dim>* Face<dim, dim>::pentachoron(int i) const
         requires (dim > 4) {
     triangulation().ensureSkeleton();
     return std::get<4>(faces_)[i];

@@ -865,7 +865,7 @@ class TriangulationTest : public testing::Test {
 
         static void verifyBoundaryLabellingDetail(
                 const regina::BoundaryComponent<dim>* bc,
-                const regina::TriangulationTraits<dim>::Lower& built,
+                const regina::SafeTriangulation<dim - 1>& built,
                 const char* context)
                 requires (dim > 2) {
             static_assert(regina::BoundaryComponent<dim>::allFaces);

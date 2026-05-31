@@ -188,8 +188,8 @@ class BoundaryComponent:
         bool orientable_;
             /**< Is this boundary component orientable? */
 
-        [[no_unique_address]] EnableIf<canBuild,
-                typename TriangulationTraits<dim>::Lower*, nullptr> boundary_;
+        [[no_unique_address]] EnableIf<canBuild, SafeTriangulation<dim - 1>*,
+                nullptr> boundary_;
             /**< A full triangulation of the boundary component.
                  This may be pre-computed when the triangulation skeleton
                  is constructed, or it may be \c null in which case it
@@ -647,8 +647,7 @@ class BoundaryComponent:
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Vertex* vertex(size_t index) const
-                requires (standardDim(dim)) {
+        Vertex<dim>* vertex(size_t index) const requires (standardDim(dim)) {
             return std::get<tupleIndex(0)>(faces_)[index];
         }
 
@@ -657,8 +656,7 @@ class BoundaryComponent:
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Edge* edge(size_t index) const
-                requires (standardDim(dim)) {
+        Edge<dim>* edge(size_t index) const requires (standardDim(dim)) {
             return std::get<tupleIndex(1)>(faces_)[index];
         }
 
@@ -667,7 +665,7 @@ class BoundaryComponent:
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Triangle* triangle(size_t index) const
+        Triangle<dim>* triangle(size_t index) const
                 requires (standardDim(dim) && dim > 2) {
             return std::get<tupleIndex(2)>(faces_)[index];
         }
@@ -677,7 +675,7 @@ class BoundaryComponent:
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Tetrahedron* tetrahedron(size_t index) const
+        SafeTetrahedron<dim>* tetrahedron(size_t index) const
                 requires (dim == 4) {
             return std::get<tupleIndex(3)>(faces_)[index];
         }
@@ -687,7 +685,7 @@ class BoundaryComponent:
          *
          * See face() for further information.
          */
-        TriangulationTraits<dim>::Pentachoron* pentachoron(size_t index) const
+        SafePentachoron<dim>* pentachoron(size_t index) const
                 requires (dim == 5) {
             return std::get<tupleIndex(4)>(faces_)[index];
         }
@@ -935,8 +933,7 @@ class BoundaryComponent:
          *
          * \return the triangulation of this boundary component.
          */
-        const TriangulationTraits<dim>::Lower& build() const
-                requires (dim > 2) {
+        const SafeTriangulation<dim - 1>& build() const requires (dim > 2) {
             if (boundary_.value)
                 return *boundary_.value; // Already cached or pre-computed.
             if constexpr (allowVertex) {
@@ -1034,7 +1031,7 @@ class BoundaryComponent:
          *
          * \return the newly created boundary triangulation.
          */
-        TriangulationTraits<dim>::Lower* buildRealBoundary() const
+        SafeTriangulation<dim - 1>* buildRealBoundary() const
             requires (dim > 2);
 
         /**
@@ -1068,7 +1065,7 @@ class BoundaryComponent:
          */
         template <int subdim>
         requires (dim > 2 && subdim >= 0 && subdim < dim)
-        void reorderAndRelabelFaces(TriangulationTraits<dim>::Lower* tri,
+        void reorderAndRelabelFaces(SafeTriangulation<dim - 1>* tri,
                 const std::vector<Face<dim, subdim>*>& reference) const;
 
     friend class Triangulation<dim>;
