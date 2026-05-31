@@ -56,18 +56,21 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
         .def("face", &FaceEmbedding<dim, subdim>::face, rdoc::face)
         .def("vertices", &FaceEmbedding<dim, subdim>::vertices, rdoc::vertices)
     ;
+    // For the dimension-specific aliases below, clang can resolve the
+    // overloads but gcc cannot.  We could fix this with a static_cast, but
+    // we will just bind to face() instead (which gcc _can_ resolve).
     if constexpr (subdim == 0)
-        e.def("vertex", &FaceEmbedding<dim, subdim>::vertex, rdoc::vertex);
+        e.def("vertex", &FaceEmbedding<dim, subdim>::face, rdoc::vertex);
     else if constexpr (subdim == 1)
-        e.def("edge", &FaceEmbedding<dim, subdim>::edge, rdoc::edge);
+        e.def("edge", &FaceEmbedding<dim, subdim>::face, rdoc::edge);
     else if constexpr (subdim == 2)
-        e.def("triangle", &FaceEmbedding<dim, subdim>::triangle,
+        e.def("triangle", &FaceEmbedding<dim, subdim>::face,
             rdoc::triangle);
     else if constexpr (subdim == 3)
-        e.def("tetrahedron", &FaceEmbedding<dim, subdim>::tetrahedron,
+        e.def("tetrahedron", &FaceEmbedding<dim, subdim>::face,
             rdoc::tetrahedron);
     else if constexpr (subdim == 4)
-        e.def("pentachoron", &FaceEmbedding<dim, subdim>::pentachoron,
+        e.def("pentachoron", &FaceEmbedding<dim, subdim>::face,
             rdoc::pentachoron);
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);

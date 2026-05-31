@@ -60,7 +60,9 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
         .def("pentachoron", &TriangleEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex_dim4)
         .def("face", &TriangleEmbedding<4>::face, rdoc::face)
-        .def("triangle", &TriangleEmbedding<4>::triangle, rdoc::triangle)
+        // Likewise: clang can resolve triangle() but gcc cannot.
+        // Bind to face() instead.
+        .def("triangle", &TriangleEmbedding<4>::face, rdoc::triangle)
         .def("vertices", &TriangleEmbedding<4>::vertices, rdoc::vertices)
     ;
     regina::python::add_output_rich(e);

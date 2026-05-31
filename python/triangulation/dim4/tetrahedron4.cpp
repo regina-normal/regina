@@ -58,7 +58,9 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def("pentachoron", &TetrahedronEmbedding<4>::simplex,
             pybind11::return_value_policy::reference, rdoc::simplex_dim4)
         .def("face", &TetrahedronEmbedding<4>::face, rdoc::face)
-        .def("tetrahedron", &TetrahedronEmbedding<4>::tetrahedron,
+        // Likewise: clang can resolve tetrahedron() but gcc cannot.
+        // Bind to face() instead.
+        .def("tetrahedron", &TetrahedronEmbedding<4>::face,
             rdoc::tetrahedron)
         .def("vertices", &TetrahedronEmbedding<4>::vertices, rdoc::vertices)
     ;
