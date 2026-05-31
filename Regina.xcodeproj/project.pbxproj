@@ -1708,7 +1708,6 @@
 		05F0A0471DBF0B5E00117BFC /* snappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A02B1DBF0B5E00117BFC /* snappea.cpp */; };
 		05F0A0481DBF0B5E00117BFC /* subdivide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A02C1DBF0B5E00117BFC /* subdivide.cpp */; };
 		05F0A0491DBF0B5E00117BFC /* surfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A02D1DBF0B5E00117BFC /* surfaces.cpp */; };
-		05F0A04C1DBF0B5E00117BFC /* triangle3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F0A0301DBF0B5E00117BFC /* triangle3.h */; };
 		05F0A04D1DBF0B5E00117BFC /* triangulation3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0311DBF0B5E00117BFC /* triangulation3.cpp */; };
 		05F0A04E1DBF0B5E00117BFC /* triangulation3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F0A0321DBF0B5E00117BFC /* triangulation3.h */; };
 		05F0A04F1DBF0B5E00117BFC /* turaevviro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */; };
@@ -4672,7 +4671,6 @@
 		05F0A02B1DBF0B5E00117BFC /* snappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappea.cpp; sourceTree = "<group>"; };
 		05F0A02C1DBF0B5E00117BFC /* subdivide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = subdivide.cpp; sourceTree = "<group>"; };
 		05F0A02D1DBF0B5E00117BFC /* surfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfaces.cpp; sourceTree = "<group>"; };
-		05F0A0301DBF0B5E00117BFC /* triangle3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle3.h; sourceTree = "<group>"; };
 		05F0A0311DBF0B5E00117BFC /* triangulation3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation3.cpp; sourceTree = "<group>"; };
 		05F0A0321DBF0B5E00117BFC /* triangulation3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation3.h; sourceTree = "<group>"; };
 		05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = turaevviro.cpp; sourceTree = "<group>"; };
@@ -8822,7 +8820,6 @@
 				05F0A02B1DBF0B5E00117BFC /* snappea.cpp */,
 				05F0A02C1DBF0B5E00117BFC /* subdivide.cpp */,
 				05F0A02D1DBF0B5E00117BFC /* surfaces.cpp */,
-				05F0A0301DBF0B5E00117BFC /* triangle3.h */,
 				05F0A0311DBF0B5E00117BFC /* triangulation3.cpp */,
 				05F0A0321DBF0B5E00117BFC /* triangulation3.h */,
 				0529AB912DF0445500F02D9C /* truncate.cpp */,
@@ -9088,7 +9085,6 @@
 				05B7002125AC2305003BAF5C /* nmz_nauty.h in Headers */,
 				059802E026683C6D002D5D57 /* xmllinkreader.h in Headers */,
 				05431F751C40F3C9009BC072 /* libnormaliz.h in Headers */,
-				05F0A04C1DBF0B5E00117BFC /* triangle3.h in Headers */,
 				05B7002725AC2305003BAF5C /* input.h in Headers */,
 				05A067351DFA68190047872E /* snappedball.h in Headers */,
 				05B7002225AC2305003BAF5C /* dynamic_bitset.h in Headers */,
