@@ -34,7 +34,6 @@
 #include "../../helpers.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/dim3/triangle3.h"
 #include "../../docstrings/triangulation/face.h"
 
 using namespace pybind11::literals;
@@ -64,10 +63,12 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    RDOC_SCOPE_SWITCH(Triangle3)
+    // We use the global scope here because all of Face's members are
+    // inherited, and so Face's own docstring namespace does not exist.
+    RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2", rdoc::__class)
+    auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2", rdoc::Face::__class)
         .def("index", &Triangle<3>::index, rbase::index)
         .def("embedding", &Triangle<3>::embedding, rbase::embedding)
         .def("embeddings", &Triangle<3>::embeddings, rbase::embeddings)
@@ -108,17 +109,11 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def("edgeMapping", &Triangle<3>::edgeMapping, rbase::edgeMapping)
         .def("join", &Triangle<3>::join, rbase::join)
         .def("triangleType", &Triangle<3>::triangleType, rbase::triangleType)
-        .def("type", &Triangle<3>::triangleType, rdoc::type) // deprecated
         .def("triangleSubtype", &Triangle<3>::triangleSubtype,
             rbase::triangleSubtype)
-        .def("subtype", &Triangle<3>::triangleSubtype,
-            rdoc::subtype) // deprecated
         .def("formsMobiusBand", &Triangle<3>::formsMobiusBand,
             rbase::formsMobiusBand)
-        .def("isMobiusBand", &Triangle<3>::formsMobiusBand,
-            rdoc::isMobiusBand) // deprecated
         .def("formsCone", &Triangle<3>::formsCone, rbase::formsCone)
-        .def("isCone", &Triangle<3>::formsCone, rdoc::isCone) // deprecated
         .def("lock", &Triangle<3>::lock, rbase::lock)
         .def("unlock", &Triangle<3>::unlock, rbase::unlock)
         .def("isLocked", &Triangle<3>::isLocked, rbase::isLocked)
@@ -142,18 +137,6 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::addStdView<
         decltype(std::declval<Triangle<3>>().embeddings())>(internal,
         "Face3_2_embeddings");
-
-    // Deprecated types and constants:
-    c.attr("Type") = m.attr("TriangleType");
-    c.attr("UNKNOWN_TYPE") = TriangleType::Unknown;
-    c.attr("TRIANGLE") = TriangleType::Triangle;
-    c.attr("SCARF") = TriangleType::Scarf;
-    c.attr("PARACHUTE") = TriangleType::Parachute;
-    c.attr("CONE") = TriangleType::Cone;
-    c.attr("MOBIUS") = TriangleType::Mobius;
-    c.attr("HORN") = TriangleType::Horn;
-    c.attr("DUNCEHAT") = TriangleType::DunceHat;
-    c.attr("L31") = TriangleType::L31;
 
     RDOC_SCOPE_END
 

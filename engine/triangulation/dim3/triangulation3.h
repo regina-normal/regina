@@ -5281,7 +5281,6 @@ inline Triangulation<3>::~Triangulation() {
 
 } // namespace regina
 // Some more headers that are required for inline functions:
-#include "triangulation/dim3/triangle3.h"
 #include "triangulation/dim3/vertex3.h"
 namespace regina {
 

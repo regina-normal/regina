@@ -33,7 +33,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     homologicaldata.h
-    triangle3.h
     triangulation3.h
     vertex3.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation/dim3" COMPONENT Development)

@@ -159,6 +159,14 @@ Version 8.0  [ TODO ]
               regina::detail are now gone.
             - New class constant hasNumberingTables to indicate whether lookup
               tables are used for face numbering queries.
+        Class Face<3, 2>:
+            - In Triangle<3> many things were deprecated in Regina 7.4, in
+              favour of new entities that are available to triangles in all
+              dimensions.  These deprecated entities included the functions
+              type(), subtype(), isMobiusBand() and isCone(), the type Type,
+              and several enum constants (e.g., CONE).  These old deprecated
+              entities have now been removed completely as part of the move
+              to a unified Face<dim, subdim> implementation.
         Class FaceEmbedding<dim, subdim>:
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
