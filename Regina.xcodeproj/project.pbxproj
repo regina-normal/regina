@@ -2291,7 +2291,6 @@
 		05098B142900186E005E4716 /* vertex4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
 		05098B182900186E005E4716 /* triangulation3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation3.h; sourceTree = "<group>"; };
 		05098B192900186E005E4716 /* homologicaldata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
-		05098B1A2900186E005E4716 /* triangle3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangle3.h; sourceTree = "<group>"; };
 		05098B1B2900186E005E4716 /* vertex3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
 		05098B1D2900186E005E4716 /* example.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		05098B212900186E005E4716 /* triangulation2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation2.h; sourceTree = "<group>"; };
@@ -5365,7 +5364,6 @@
 			isa = PBXGroup;
 			children = (
 				05098B192900186E005E4716 /* homologicaldata.h */,
-				05098B1A2900186E005E4716 /* triangle3.h */,
 				05098B182900186E005E4716 /* triangulation3.h */,
 				05098B1B2900186E005E4716 /* vertex3.h */,
 			);
