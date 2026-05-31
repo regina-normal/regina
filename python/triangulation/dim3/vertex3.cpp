@@ -91,21 +91,6 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("degree", &Vertex<3>::degree, rbase::degree)
         .def("linkType", &Vertex<3>::linkType, rdoc::linkType)
-        .def("link", [](const Vertex<3>&) -> Vertex<3>::Link {
-            // Removed completely in v7.0.  C++ does not get a deprecated
-            // alias.  Keep this here for Python users for a little while so
-            // that people can see what needs to be done.  Probably we can
-            // remove this placeholder routine in Regina 8.0.
-            throw std::runtime_error(
-                "Vertex3::link() has been renamed to Vertex3::linkType().  "
-                "You should change your code now, because the name link() "
-                "will be used for a different function in the future.");
-        }, R"doc(Old routine that was renamed in Regina 7.0.
-
-Please update your code to use Vertex3.linkType() instead, which does
-exactly what Vertex3.link() used to do in Regina 6.0.1 and earlier.
-The name link() has _not_ been kept as an alias because it is now
-being reserved for a different purpose in a future release.)doc")
         .def("buildLink", [](const Vertex<3>& v) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of
@@ -171,15 +156,6 @@ being reserved for a different purpose in a future release.)doc")
         .finalize()
 #endif
         ;
-
-    // Deprecated type alias and constants:
-    c.attr("LinkType") = c.attr("Link");
-    c.attr("SPHERE") = regina::Vertex<3>::Link::Sphere;
-    c.attr("DISC") = regina::Vertex<3>::Link::Disc;
-    c.attr("TORUS") = regina::Vertex<3>::Link::Torus;
-    c.attr("KLEIN_BOTTLE") = regina::Vertex<3>::Link::KleinBottle;
-    c.attr("NON_STANDARD_CUSP") = regina::Vertex<3>::Link::NonStandardCusp;
-    c.attr("INVALID") = regina::Vertex<3>::Link::Invalid;
 
     RDOC_SCOPE_END
 

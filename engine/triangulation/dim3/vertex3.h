@@ -116,64 +116,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
             Invalid = 6
         };
 
-        /**
-         * A deprecated type alias that represents a type of vertex link.
-         *
-         * \deprecated This has been renamed to Link, and is now a scoped
-         * enumeration.
-         */
-        using LinkType [[deprecated]] = Link;
-
-        /**
-         * A deprecated constant indicating one of the vertex link types.
-         *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Link::Sphere.
-         */
-        [[deprecated]] inline static constexpr Link SPHERE = Link::Sphere;
-
-        /**
-         * A deprecated constant indicating one of the vertex link types.
-         *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Link::Disc.
-         */
-        [[deprecated]] inline static constexpr Link DISC = Link::Disc;
-
-        /**
-         * A deprecated constant indicating one of the vertex link types.
-         *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Link::Torus.
-         */
-        [[deprecated]] inline static constexpr Link TORUS = Link::Torus;
-
-        /**
-         * A deprecated constant indicating one of the vertex link types.
-         *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Link::KleinBottle.
-         */
-        [[deprecated]] inline static constexpr Link KLEIN_BOTTLE =
-            Link::KleinBottle;
-
-        /**
-         * A deprecated constant indicating one of the vertex link types.
-         *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Link::NonStandardCusp.
-         */
-        [[deprecated]] inline static constexpr Link NON_STANDARD_CUSP =
-            Link::NonStandardCusp;
-
-        /**
-         * A deprecated constant indicating one of the vertex link types.
-         *
-         * \deprecated This has been renamed to the scoped enumeration constant
-         * Link::Invalid.
-         */
-        [[deprecated]] inline static constexpr Link INVALID = Link::Invalid;
-
     private:
         Link linkType_;
             /**< A broad categorisation of the topology of the vertex link. */
