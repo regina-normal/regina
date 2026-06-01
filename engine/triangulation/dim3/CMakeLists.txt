@@ -34,6 +34,5 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     homologicaldata.h
     triangulation3.h
-    vertex3.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation/dim3" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

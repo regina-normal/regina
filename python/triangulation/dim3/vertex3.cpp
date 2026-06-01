@@ -28,18 +28,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include "pybind11/pybind11.h"
-#if REGINA_PYBIND11_VERSION == 3
-#include <pybind11/native_enum.h>
-#endif
-#include <pybind11/stl.h>
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "../../helpers.h"
 #include "../facehelper.h"
 #include "../../docstrings/triangulation/facenumbering.h"
-#include "../../docstrings/triangulation/dim3/vertex3.h"
 #include "../../docstrings/triangulation/face.h"
 
 using regina::Face;
@@ -69,10 +63,12 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    RDOC_SCOPE_SWITCH(Vertex3)
+    // We use the global scope here because all of Face's members are
+    // inherited, and so Face's own docstring namespace does not exist.
+    RDOC_SCOPE_SWITCH_MAIN
     RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
 
-    auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0", rdoc::__class)
+    auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0", rdoc::Face::__class)
         .def("index", &Vertex<3>::index, rbase::index)
         .def("embedding", &Vertex<3>::embedding, rbase::embedding)
         .def("embeddings", &Vertex<3>::embeddings, rbase::embeddings)
@@ -90,7 +86,6 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
         .def("boundaryComponent", &Vertex<3>::boundaryComponent,
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("degree", &Vertex<3>::degree, rbase::degree)
-        .def("linkType", &Vertex<3>::linkType, rdoc::linkType)
         .def("buildLink", [](const Vertex<3>& v) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of
@@ -135,28 +130,6 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::addStdView<
         decltype(std::declval<Vertex<3>>().embeddings())>(internal,
         "Face3_0_embeddings");
-
-#if REGINA_PYBIND11_VERSION == 3
-    pybind11::native_enum<regina::Vertex<3>::Link>(c, "Link", "enum.Enum",
-            rdoc::Link::__class)
-#elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::Vertex<3>::Link>(c, "Link", rdoc::Link::__class)
-#else
-    #error "Unsupported pybind11 version"
-#endif
-        .value("Sphere", regina::Vertex<3>::Link::Sphere, rdoc::Link::Sphere)
-        .value("Disc", regina::Vertex<3>::Link::Disc, rdoc::Link::Disc)
-        .value("Torus", regina::Vertex<3>::Link::Torus, rdoc::Link::Torus)
-        .value("KleinBottle", regina::Vertex<3>::Link::KleinBottle,
-            rdoc::Link::KleinBottle)
-        .value("NonStandardCusp", regina::Vertex<3>::Link::NonStandardCusp,
-            rdoc::Link::NonStandardCusp)
-        .value("Invalid", regina::Vertex<3>::Link::Invalid,
-            rdoc::Link::Invalid)
-#if REGINA_PYBIND11_VERSION == 3
-        .finalize()
-#endif
-        ;
 
     RDOC_SCOPE_END
 

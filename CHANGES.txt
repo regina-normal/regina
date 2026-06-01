@@ -163,11 +163,13 @@ Version 8.0  [ TODO ]
               where subdim < dim - 1 (not just vertices in dimension 3).
             - New routine isInternal().
         Class Face<3, 0>:
-            - In Vertex<3> the type LinkType and several associated constants
-              (SPHERE, DISC, etc.) were deprecated in Regina 7.4 due to a
-              renaming.  These deprecated entities have now been removed
-              completely as part of the move to a unified Face<dim, subdim>
-              implementation.
+            - In Vertex<3>, the type Link (and its deprecated alias LinkType),
+              along with all the associated constants (Sphere, Disc, etc.) are
+              removed completely.  This is due to the move to a unified
+              Face<dim, subdim> implementation.  Likewise, the member function
+              linkType() has been removed, but you can easily access the same
+              information through other member functions (such as isIdeal(),
+              isStandard(), linkEulerChar(), isLinkOrientable(), etc.).
         Class Face<3, 2>:
             - In Triangle<3> many things were deprecated in Regina 7.4, in
               favour of new entities that are available to triangles in all

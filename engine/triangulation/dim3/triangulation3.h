@@ -5279,11 +5279,6 @@ inline Triangulation<3>::~Triangulation() {
     clearAllProperties();
 }
 
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "triangulation/dim3/vertex3.h"
-namespace regina {
-
 #ifndef __APIDOCS
 namespace detail {
     template <>

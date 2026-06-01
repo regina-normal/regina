@@ -1654,10 +1654,6 @@ class FaceBase :
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 class Face : public detail::FaceBase<dim, subdim> {
-    static_assert(dim != 3 || subdim > 0,
-        "The generic implementation of Face<dim, subdim> "
-        "should not be used for those face classes that are specialised "
-        "in Regina's standard dimensions.");
     static_assert(subdim < dim,
         "The generic implementation of Face<dim, subdim> "
         "should only be used for the case subdim < dim.");

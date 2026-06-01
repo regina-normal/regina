@@ -368,9 +368,6 @@ namespace {
         registerType(typeid(decltype(ModelLinkGraph().cells().arcs(0))),
             "<internal>.View[regina.ModelLinkGraphArc]");
 
-        // Enums that live within individual face classes:
-        registerType(typeid(Vertex<3>::Link), "regina.Vertex3.Link");
-
         registerType(typeid(PacketOf<Link>),
             "regina.PacketOfLink");
         registerType(typeid(PacketOf<AngleStructures>),

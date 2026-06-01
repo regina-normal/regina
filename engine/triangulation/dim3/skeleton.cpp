@@ -134,37 +134,26 @@ void Triangulation<3>::calculateVertexLinks() {
         if (vertex->isBoundary()) {
             // We haven't added ideal vertices to the boundary list yet,
             // so this must be real boundary.
-            if (vertex->linkEulerChar_.value == 1)
-                vertex->linkType_ = Vertex<3>::Link::Disc;
-            else {
-                vertex->linkType_ = Vertex<3>::Link::Invalid;
+            if (vertex->linkEulerChar_.value != 1) {
                 vertex->whyInvalid_.value |= Vertex<3>::INVALID_LINK;
                 valid_ = vertex->component_->valid_ = false;
                 standard_ = false;
             }
-        } else {
-            if (vertex->linkEulerChar_.value == 2)
-                vertex->linkType_ = Vertex<3>::Link::Sphere;
-            else {
-                if (vertex->linkEulerChar_.value == 0)
-                    vertex->linkType_ = (vertex->isLinkOrientable() ?
-                        Vertex<3>::Link::Torus : Vertex<3>::Link::KleinBottle);
-                else {
-                    vertex->linkType_ = Vertex<3>::Link::NonStandardCusp;
-                    standard_ = false;
-                }
+        } else if (vertex->linkEulerChar_.value != 2) {
+            // We have an ideal vertex.
+            ideal_ = true;
+            vertex->component()->ideal_.value = true;
 
-                ideal_ = true;
-                vertex->component()->ideal_.value = true;
+            if (vertex->linkEulerChar_.value != 0)
+                standard_ = false;
 
-                auto* bc = new BoundaryComponent<3>();
-                bc->push_back(vertex);
-                bc->orientable_ = vertex->isLinkOrientable();
-                vertex->boundaryComponent_ = bc;
-                ++nBoundaryFaces_[0];
-                boundaryComponents_.push_back(bc);
-                vertex->component()->boundaryComponents_.push_back(bc);
-            }
+            auto* bc = new BoundaryComponent<3>();
+            bc->push_back(vertex);
+            bc->orientable_ = vertex->isLinkOrientable();
+            vertex->boundaryComponent_ = bc;
+            ++nBoundaryFaces_[0];
+            boundaryComponents_.push_back(bc);
+            vertex->component()->boundaryComponents_.push_back(bc);
         }
     }
 }
@@ -198,14 +187,6 @@ void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
 
     ideal_ = src.ideal_;
     standard_ = src.standard_;
-
-    {
-        auto me = vertices().begin();
-        auto you = src.vertices().begin();
-        for ( ; me != vertices().end(); ++me, ++you) {
-            (*me)->linkType_ = (*you)->linkType_;
-        }
-    }
 }
 
 } // namespace regina

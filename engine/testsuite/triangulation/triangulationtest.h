@@ -752,7 +752,6 @@ class TriangulationTest : public testing::Test {
                     } else if (v->isIdeal()) {
                         ++foundIdeal;
                         if constexpr (dim == 3) {
-                            using Link = typename Vertex<dim>::Link;
                             EXPECT_TRUE(v->isBoundary());
                             EXPECT_FALSE(v->isInternal());
                             EXPECT_TRUE(v->isLinkClosed());

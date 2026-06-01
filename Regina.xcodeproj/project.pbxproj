@@ -1710,7 +1710,6 @@
 		05F0A04E1DBF0B5E00117BFC /* triangulation3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F0A0321DBF0B5E00117BFC /* triangulation3.h */; };
 		05F0A04F1DBF0B5E00117BFC /* turaevviro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */; };
 		05F0A0501DBF0B5E00117BFC /* vertex3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0341DBF0B5E00117BFC /* vertex3.cpp */; };
-		05F0A0511DBF0B5E00117BFC /* vertex3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F0A0351DBF0B5E00117BFC /* vertex3.h */; };
 		05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F2033120A17C1E00FC74ED /* dt-impl.h */; };
 		05F2033420A17C1E00FC74ED /* dt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033220A17C1E00FC74ED /* dt.cpp */; };
 		05F2033720A17C6000FC74ED /* knot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F2033620A17C6000FC74ED /* knot.cpp */; };
@@ -2287,7 +2286,6 @@
 		05098B122900186E005E4716 /* triangulation4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation4.h; sourceTree = "<group>"; };
 		05098B182900186E005E4716 /* triangulation3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation3.h; sourceTree = "<group>"; };
 		05098B192900186E005E4716 /* homologicaldata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
-		05098B1B2900186E005E4716 /* vertex3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
 		05098B1D2900186E005E4716 /* example.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		05098B212900186E005E4716 /* triangulation2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = triangulation2.h; sourceTree = "<group>"; };
 		05098B262900186E005E4716 /* example4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example4.h; sourceTree = "<group>"; };
@@ -4668,7 +4666,6 @@
 		05F0A0321DBF0B5E00117BFC /* triangulation3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation3.h; sourceTree = "<group>"; };
 		05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = turaevviro.cpp; sourceTree = "<group>"; };
 		05F0A0341DBF0B5E00117BFC /* vertex3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertex3.cpp; sourceTree = "<group>"; };
-		05F0A0351DBF0B5E00117BFC /* vertex3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertex3.h; sourceTree = "<group>"; };
 		05F2033120A17C1E00FC74ED /* dt-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dt-impl.h"; sourceTree = "<group>"; };
 		05F2033220A17C1E00FC74ED /* dt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dt.cpp; sourceTree = "<group>"; };
 		05F2033620A17C6000FC74ED /* knot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = knot.cpp; sourceTree = "<group>"; };
@@ -5357,7 +5354,6 @@
 			children = (
 				05098B192900186E005E4716 /* homologicaldata.h */,
 				05098B182900186E005E4716 /* triangulation3.h */,
-				05098B1B2900186E005E4716 /* vertex3.h */,
 			);
 			path = dim3;
 			sourceTree = "<group>";
@@ -8815,7 +8811,6 @@
 				0529AB912DF0445500F02D9C /* truncate.cpp */,
 				05F0A0331DBF0B5E00117BFC /* turaevviro.cpp */,
 				05F0A0341DBF0B5E00117BFC /* vertex3.cpp */,
-				05F0A0351DBF0B5E00117BFC /* vertex3.h */,
 			);
 			path = dim3;
 			sourceTree = "<group>";
@@ -8981,7 +8976,6 @@
 				052F9FA0180600FB00FAE4DF /* tersest_triangulation.h in Headers */,
 				0591E7F41C4F75C300793A9C /* gluingpermsearcher4.h in Headers */,
 				05F09FDB1DBF01B600117BFC /* triangulation2.h in Headers */,
-				05F0A0511DBF0B5E00117BFC /* vertex3.h in Headers */,
 				052F9F0D180600FB00FAE4DF /* dehydration.h in Headers */,
 				052F9F86180600FB00FAE4DF /* homology.h in Headers */,
 				05B7002325AC2305003BAF5C /* options.h in Headers */,

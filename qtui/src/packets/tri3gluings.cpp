@@ -71,7 +71,6 @@
 
 using regina::Packet;
 using regina::Triangulation;
-using VertexLink = regina::Vertex<3>::Link;
 
 namespace {
     /**
