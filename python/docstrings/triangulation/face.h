@@ -874,8 +874,8 @@ Returns:
 
 // Docstring regina::python::doc::detail::FaceBase::isIdeal
 static constexpr const char isIdeal[] =
-R"doc(Determines if this is an ideal vertex. To be ideal, a vertex must (i)
-be valid, and (ii) have a closed vertex link that is not a sphere.
+R"doc(Determines whether this is an ideal vertex. To be ideal, a vertex must
+(i) be valid, and (ii) have a closed vertex link that is not a sphere.
 
 Returns:
     ``True`` if and only if this is an ideal vertex.)doc";
@@ -933,6 +933,17 @@ whose two endpoints are identified.
 
 Returns:
     ``True`` if and only if this edge is a loop.)doc";
+
+// Docstring regina::python::doc::detail::FaceBase::isStandard
+static constexpr const char isStandard[] =
+R"doc(Determines whether this vertex is standard.
+
+This routine is specific to vertices in 3-dimensional triangulations.
+In this setting, a _standard_ vertex is one whose link is a sphere,
+disc, torus, or Klein bottle.
+
+Returns:
+    ``True`` if and only if this vertex is standard.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase::isValid
 static constexpr const char isValid[] =

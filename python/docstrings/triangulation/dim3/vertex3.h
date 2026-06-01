@@ -34,22 +34,6 @@ of by the Triangulation to which they belong.
 Python:
     This class is available to Python users under the name Vertex3.)doc";
 
-// Docstring regina::python::doc::Vertex3::isIdeal
-static constexpr const char isIdeal[] =
-R"doc(Determines if this vertex is an ideal vertex. This requires the vertex
-link to be closed and not a 2-sphere.
-
-Returns:
-    ``True`` if and only if this is an ideal vertex.)doc";
-
-// Docstring regina::python::doc::Vertex3::isStandard
-static constexpr const char isStandard[] =
-R"doc(Determines if this vertex is standard. This requires the vertex link
-to be a sphere, disc, torus or Klein bottle.
-
-Returns:
-    ``True`` if and only if this vertex is standard.)doc";
-
 // Docstring regina::python::doc::Vertex3::linkType
 static constexpr const char linkType[] =
 R"doc(Returns a broad categorisation of the link of the vertex. This
