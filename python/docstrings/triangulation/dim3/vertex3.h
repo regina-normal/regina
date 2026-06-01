@@ -42,13 +42,6 @@ link to be closed and not a 2-sphere.
 Returns:
     ``True`` if and only if this is an ideal vertex.)doc";
 
-// Docstring regina::python::doc::Vertex3::isLinkClosed
-static constexpr const char isLinkClosed[] =
-R"doc(Determines if the link of this vertex is closed.
-
-Returns:
-    ``True`` if and only if the link of this vertex is closed.)doc";
-
 // Docstring regina::python::doc::Vertex3::isStandard
 static constexpr const char isStandard[] =
 R"doc(Determines if this vertex is standard. This requires the vertex link

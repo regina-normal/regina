@@ -811,7 +811,8 @@ class BoundaryComponent:
          * \return \c true if and only if this boundary component is real.
          */
         bool isReal() const {
-            if constexpr (allFaces)
+            // Note: in dimension 2, all boundary components are real.
+            if constexpr (allFaces && dim > 2)
                 return ! std::get<tupleIndex(dim-1)>(faces_).empty();
             else
                 return true;
@@ -841,7 +842,8 @@ class BoundaryComponent:
          * \return \c true if and only if this boundary component is ideal.
          */
         bool isIdeal() const {
-            if constexpr (allFaces) {
+            // Note: in dimension 2, boundary components are never ideal.
+            if constexpr (allFaces && dim > 2) {
                 // Either Vertex::isValid() or Vertex::isIdeal() will do here.
                 return (std::get<tupleIndex(dim-1)>(faces_).empty() &&
                     std::get<tupleIndex(0)>(faces_).front()->isValid());
@@ -881,7 +883,8 @@ class BoundaryComponent:
          * single invalid vertex and nothing else.
          */
         bool isInvalidVertex() const {
-            if constexpr (allFaces) {
+            // Note: in dimension 2, boundary components are never invalid.
+            if constexpr (allFaces && dim > 2) {
                 return (std::get<tupleIndex(dim-1)>(faces_).empty() &&
                     ! std::get<tupleIndex(0)>(faces_).front()->isValid());
             } else {

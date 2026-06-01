@@ -865,6 +865,10 @@ For dimensions in which ideal and/or invalid vertices are both
 possible and recognised: both ideal and invalid vertices are
 considered to be on the boundary.
 
+Note that this is _not_ the negation of isLinkClosed(), since (for
+example) an ideal vertex will satisfy both isBoundary() and
+isLinkClosed().
+
 Returns:
     ``True`` if and only if this face lies on the boundary.)doc";
 
@@ -875,6 +879,20 @@ be valid, and (ii) have a closed vertex link that is not a sphere.
 
 Returns:
     ``True`` if and only if this is an ideal vertex.)doc";
+
+// Docstring regina::python::doc::detail::FaceBase::isLinkClosed
+static constexpr const char isLinkClosed[] =
+R"doc(Determines whether the link of this face is closed.
+
+This is true if and only if the face does not belong to any boundary
+facets of the triangulation.
+
+Note that this is _not_ the negation of isBoundary(), since (for
+example) an ideal vertex will satisfy both isBoundary() and
+isLinkClosed().
+
+Returns:
+    ``True`` if and only if the link of this vertex is closed.)doc";
 
 // Docstring regina::python::doc::detail::FaceBase::isLinkOrientable
 static constexpr const char isLinkOrientable[] =

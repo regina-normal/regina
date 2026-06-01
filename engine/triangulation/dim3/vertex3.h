@@ -139,14 +139,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
         Link linkType() const;
 
         /**
-         * Determines if the link of this vertex is closed.
-         *
-         * \return \c true if and only if the link of this vertex is
-         * closed.
-         */
-        bool isLinkClosed() const;
-
-        /**
          * Determines if this vertex is an ideal vertex.
          * This requires the vertex link to be closed and not a
          * 2-sphere.
@@ -186,10 +178,6 @@ inline Face<3, 0>::Face(Component<3>* component) :
 
 inline Vertex<3>::Link Face<3, 0>::linkType() const {
     return linkType_;
-}
-
-inline bool Face<3, 0>::isLinkClosed() const {
-    return (linkType_ != Link::Disc && linkType_ != Link::Invalid);
 }
 
 inline bool Face<3, 0>::isIdeal() const {

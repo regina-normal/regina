@@ -122,6 +122,10 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
         .def_readonly_static("hasNumberingTables",
             &Face<dim, subdim>::hasNumberingTables)
     ;
+    if constexpr (subdim < dim - 1) {
+        c.def("isLinkClosed", &Face<dim, subdim>::isLinkClosed,
+            rbase::isLinkClosed);
+    }
     if constexpr (subdim == 1) {
         c.def_static("faceNumber",
             pybind11::overload_cast<int, int>(&Face<dim, subdim>::faceNumber),

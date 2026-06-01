@@ -72,6 +72,7 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadIdentification", &Vertex<2>::hasBadIdentification,
             rbase::hasBadIdentification)
         .def("hasBadLink", &Vertex<2>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkClosed", &Vertex<2>::isLinkClosed, rbase::isLinkClosed)
         .def("isLinkOrientable", &Vertex<2>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("embedding", &Vertex<2>::embedding, rbase::embedding)

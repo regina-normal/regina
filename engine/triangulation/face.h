@@ -620,6 +620,10 @@ class FaceBase :
          * both possible and recognised: both ideal and invalid vertices
          * are considered to be on the boundary.
          *
+         * Note that this is _not_ the negation of isLinkClosed(), since (for
+         * example) an ideal vertex will satisfy both isBoundary() and
+         * isLinkClosed().
+         *
          * \return \c true if and only if this face lies on the boundary.
          */
         bool isBoundary() const;
@@ -970,6 +974,21 @@ class FaceBase :
          * making the face invalid), or \c false if the link is appropriate.
          */
         bool hasBadLink() const requires (standardDim(dim));
+
+        /**
+         * Determines whether the link of this face is closed.
+         *
+         * This is true if and only if the face does not belong to any
+         * boundary facets of the triangulation.
+         *
+         * Note that this is _not_ the negation of isBoundary(), since (for
+         * example) an ideal vertex will satisfy both isBoundary() and
+         * isLinkClosed().
+         *
+         * \return \c true if and only if the link of this vertex is
+         * closed.
+         */
+        bool isLinkClosed() const requires (subdim < dim - 1);
 
         /**
          * Determines if this is an ideal vertex.
@@ -1871,6 +1890,13 @@ inline bool FaceBase<dim, subdim>::hasBadLink() const
         return false;
     else
         return (whyInvalid_.value & INVALID_LINK);
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline bool FaceBase<dim, subdim>::isLinkClosed() const
+        requires (subdim < dim - 1) {
+    return ! (boundaryComponent_ && boundaryComponent_->isReal());
 }
 
 template <int dim, int subdim>

@@ -102,6 +102,7 @@ void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadIdentification", &Edge<3>::hasBadIdentification,
             rbase::hasBadIdentification)
         .def("hasBadLink", &Edge<3>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkClosed", &Edge<3>::isLinkClosed, rbase::isLinkClosed)
         .def("isLinkOrientable", &Edge<3>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("linkingSurface",

@@ -105,6 +105,7 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadIdentification", &Edge<4>::hasBadIdentification,
             rbase::hasBadIdentification)
         .def("hasBadLink", &Edge<4>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkClosed", &Edge<4>::isLinkClosed, rbase::isLinkClosed)
         .def("buildLink", [](const Edge<4>& e) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of

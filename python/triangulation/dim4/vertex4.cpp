@@ -100,6 +100,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadIdentification", &Vertex<4>::hasBadIdentification,
             rbase::hasBadIdentification)
         .def("hasBadLink", &Vertex<4>::hasBadLink, rbase::hasBadLink)
+        .def("isLinkClosed", &Vertex<4>::isLinkClosed, rbase::isLinkClosed)
         .def("isIdeal", &Vertex<4>::isIdeal, rbase::isIdeal)
         .def("isBoundary", &Vertex<4>::isBoundary, rbase::isBoundary)
         .def("linkingSurface",

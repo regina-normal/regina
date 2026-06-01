@@ -159,6 +159,8 @@ Version 8.0  [ TODO ]
               regina::detail are now gone.
             - New class constant hasNumberingTables to indicate whether lookup
               tables are used for face numbering queries.
+            - The routine isLinkClosed() is now available for all faces
+              where subdim < dim - 1 (not just vertices in dimension 3).
         Class Face<3, 0>:
             - In Vertex<3> the type LinkType and several associated constants
               (SPHERE, DISC, etc.) were deprecated in Regina 7.4 due to a
