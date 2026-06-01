@@ -138,15 +138,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          */
         Link linkType() const;
 
-        /**
-         * Determines if this vertex is standard.
-         * This requires the vertex link to be a sphere, disc, torus or
-         * Klein bottle.
-         *
-         * \return \c true if and only if this vertex is standard.
-         */
-        bool isStandard() const;
-
     private:
         /**
          * Creates a new vertex and marks it as belonging to the
@@ -169,10 +160,6 @@ inline Face<3, 0>::Face(Component<3>* component) :
 
 inline Vertex<3>::Link Face<3, 0>::linkType() const {
     return linkType_;
-}
-
-inline bool Face<3, 0>::isStandard() const {
-    return (linkType_ != Link::NonStandardCusp && linkType_ != Link::Invalid);
 }
 
 } // namespace regina

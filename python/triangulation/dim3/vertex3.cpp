@@ -100,13 +100,13 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
         .def("buildLinkInclusion", &Vertex<3>::buildLinkInclusion,
             rbase::buildLinkInclusion)
         .def("isBoundary", &Vertex<3>::isBoundary, rbase::isBoundary)
-        .def("isStandard", &Vertex<3>::isStandard, rdoc::isStandard)
         .def("isValid", &Vertex<3>::isValid, rbase::isValid)
         .def("hasBadIdentification", &Vertex<3>::hasBadIdentification,
             rbase::hasBadIdentification)
         .def("hasBadLink", &Vertex<3>::hasBadLink, rbase::hasBadLink)
         .def("isLinkClosed", &Vertex<3>::isLinkClosed, rbase::isLinkClosed)
         .def("isIdeal", &Vertex<3>::isIdeal, rbase::isIdeal)
+        .def("isStandard", &Vertex<3>::isStandard, rbase::isStandard)
         .def("isLinkOrientable", &Vertex<3>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("linkEulerChar", &Vertex<3>::linkEulerChar, rbase::linkEulerChar)

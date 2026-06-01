@@ -991,13 +991,24 @@ class FaceBase :
         bool isLinkClosed() const requires (subdim < dim - 1);
 
         /**
-         * Determines if this is an ideal vertex.
+         * Determines whether this is an ideal vertex.
          * To be ideal, a vertex must (i) be valid, and (ii) have
          * a closed vertex link that is not a sphere.
          *
          * \return \c true if and only if this is an ideal vertex.
          */
         bool isIdeal() const requires (subdim == 0 && standardDim(dim));
+
+        /**
+         * Determines whether this vertex is standard.
+         *
+         * This routine is specific to vertices in 3-dimensional triangulations.
+         * In this setting, a _standard_ vertex is one whose link is a sphere,
+         * disc, torus, or Klein bottle.
+         *
+         * \return \c true if and only if this vertex is standard.
+         */
+        bool isStandard() const requires (subdim == 0 && dim == 3);
 
         /**
          * Returns the Euler characteristic of the vertex link.
@@ -1910,6 +1921,23 @@ inline bool FaceBase<dim, subdim>::isIdeal() const
     } else {
         static_assert(dim == 4);
         return (vertexFlags_.value & FLAG_IDEAL);
+    }
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+bool FaceBase<dim, subdim>::isStandard() const requires (subdim == 0 && dim == 3) {
+    // Note: If the link has Euler characteristic < 2, then the vertex must
+    // belong to a boundary component (i.e., boundaryComponent_ is not null).
+    switch (linkEulerChar_.value) {
+        case 2: // link is a sphere
+            return true;
+        case 1: // link is a disc or projective plane
+            return boundaryComponent_->isReal();
+        case 0: // link is a torus, Klein bottle, annulus, or Mobius band
+            return ! boundaryComponent_->isReal();
+        default: // link is something else
+            return false;
     }
 }
 
