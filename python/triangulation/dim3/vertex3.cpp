@@ -109,7 +109,7 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasBadLink", &Vertex<3>::hasBadLink, rbase::hasBadLink)
         .def("isLinkOrientable", &Vertex<3>::isLinkOrientable,
             rbase::isLinkOrientable)
-        .def("linkEulerChar", &Vertex<3>::linkEulerChar, rdoc::linkEulerChar)
+        .def("linkEulerChar", &Vertex<3>::linkEulerChar, rbase::linkEulerChar)
         .def("linkingSurface",
             static_cast<regina::python::vertexLinkingSurface<3>>(
                 &Vertex<3>::linkingSurface),

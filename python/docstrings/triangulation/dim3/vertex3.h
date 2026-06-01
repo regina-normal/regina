@@ -57,16 +57,6 @@ to be a sphere, disc, torus or Klein bottle.
 Returns:
     ``True`` if and only if this vertex is standard.)doc";
 
-// Docstring regina::python::doc::Vertex3::linkEulerChar
-static constexpr const char linkEulerChar[] =
-R"doc(Returns the Euler characteristic of the vertex link.
-
-This routine does not require a full triangulation of the vertex link,
-and so can be much faster than calling buildLink().eulerChar().
-
-Returns:
-    the Euler characteristic of the vertex link.)doc";
-
 // Docstring regina::python::doc::Vertex3::linkType
 static constexpr const char linkType[] =
 R"doc(Returns a broad categorisation of the link of the vertex. This

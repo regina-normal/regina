@@ -112,14 +112,14 @@ void Triangulation<3>::calculateVertexLinks() {
 
         if (e->isBoundary()) {
             // Contribute to v_bdry.
-            end0->linkEulerChar_++;
+            end0->linkEulerChar_.value++;
             if (e->isValid())
-                end1->linkEulerChar_++;
+                end1->linkEulerChar_.value++;
         } else {
             // Contribute to 2 v_int.
-            end0->linkEulerChar_ += 2;
+            end0->linkEulerChar_.value += 2;
             if (e->isValid())
-                end1->linkEulerChar_ += 2;
+                end1->linkEulerChar_.value += 2;
         }
     }
 
@@ -128,13 +128,13 @@ void Triangulation<3>::calculateVertexLinks() {
 
     for (Vertex<3>* vertex : vertices()) {
         // Fix the Euler characteristic (subtract f, divide by two).
-        vertex->linkEulerChar_ = (vertex->linkEulerChar_
+        vertex->linkEulerChar_.value = (vertex->linkEulerChar_.value
             - static_cast<long>(vertex->degree())) / 2;
 
         if (vertex->isBoundary()) {
             // We haven't added ideal vertices to the boundary list yet,
             // so this must be real boundary.
-            if (vertex->linkEulerChar_ == 1)
+            if (vertex->linkEulerChar_.value == 1)
                 vertex->linkType_ = Vertex<3>::Link::Disc;
             else {
                 vertex->linkType_ = Vertex<3>::Link::Invalid;
@@ -143,10 +143,10 @@ void Triangulation<3>::calculateVertexLinks() {
                 standard_ = false;
             }
         } else {
-            if (vertex->linkEulerChar_ == 2)
+            if (vertex->linkEulerChar_.value == 2)
                 vertex->linkType_ = Vertex<3>::Link::Sphere;
             else {
-                if (vertex->linkEulerChar_ == 0)
+                if (vertex->linkEulerChar_.value == 0)
                     vertex->linkType_ = (vertex->isLinkOrientable() ?
                         Vertex<3>::Link::Torus : Vertex<3>::Link::KleinBottle);
                 else {
@@ -204,7 +204,6 @@ void Triangulation<3>::cloneSkeleton(const Triangulation& src) {
         auto you = src.vertices().begin();
         for ( ; me != vertices().end(); ++me, ++you) {
             (*me)->linkType_ = (*you)->linkType_;
-            (*me)->linkEulerChar_ = (*you)->linkEulerChar_;
         }
     }
 }

@@ -542,7 +542,10 @@ class FaceBase :
             /**< Is this face valid?  This is for use in non-standard
                  dimensions, where we only test for one type of validity
                  (bad self-identifications). */
-        [[no_unique_address]] EnableIf<dim == 4 && subdim == 0, int, 0>
+        [[no_unique_address]] EnableIf<subdim == 0 && dim == 3, long, 0>
+                linkEulerChar_;
+            /**< The Euler characteristic of the vertex link. */
+        [[no_unique_address]] EnableIf<subdim == 0 && dim == 4, int, 0>
                 vertexFlags_;
             /**< A bitwise combination of VertexFlags constants that together
                  hold various properties of this vertex. */
@@ -1193,7 +1196,17 @@ class FaceBase :
          *
          * \return \c true if and only if this is an ideal vertex.
          */
-        bool isIdeal() const requires (dim == 4 && subdim == 0);
+        bool isIdeal() const requires (subdim == 0 && dim == 4);
+
+        /**
+         * Returns the Euler characteristic of the vertex link.
+         *
+         * This is much faster than calling buildLink().eulerChar(), since it
+         * does not require a full triangulation of the vertex link.
+         *
+         * \return the Euler characteristic of the vertex link.
+         */
+        long linkEulerChar() const requires (subdim == 0 && dim == 3);
 
         /**
          * For edges, determines whether this face is a loop.
@@ -1998,8 +2011,15 @@ inline void FaceBase<dim, subdim>::join(Face<dim, subdim>* you,
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline bool FaceBase<dim, subdim>::isIdeal() const
-        requires (dim == 4 && subdim == 0) {
+        requires (subdim == 0 && dim == 4) {
     return (vertexFlags_.value & FLAG_IDEAL);
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline long FaceBase<dim, subdim>::linkEulerChar() const
+        requires (subdim == 0 && dim == 3) {
+    return linkEulerChar_.value;
 }
 
 template <int dim, int subdim>

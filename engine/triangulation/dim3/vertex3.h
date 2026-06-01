@@ -119,8 +119,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
     private:
         Link linkType_;
             /**< A broad categorisation of the topology of the vertex link. */
-        long linkEulerChar_;
-            /**< Specifies the Euler characteristic of the vertex link. */
 
     public:
         /**
@@ -166,17 +164,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          */
         bool isStandard() const;
 
-        /**
-         * Returns the Euler characteristic of the vertex link.
-         *
-         * This routine does not require a full triangulation of the
-         * vertex link, and so can be much faster than calling
-         * buildLink().eulerChar().
-         *
-         * \return the Euler characteristic of the vertex link.
-         */
-        long linkEulerChar() const;
-
     private:
         /**
          * Creates a new vertex and marks it as belonging to the
@@ -194,7 +181,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
 // Inline functions for Vertex<3>
 
 inline Face<3, 0>::Face(Component<3>* component) :
-        detail::FaceBase<3, 0>(component), linkEulerChar_(0) {
+        detail::FaceBase<3, 0>(component) {
 }
 
 inline Vertex<3>::Link Face<3, 0>::linkType() const {
@@ -212,10 +199,6 @@ inline bool Face<3, 0>::isIdeal() const {
 
 inline bool Face<3, 0>::isStandard() const {
     return (linkType_ != Link::NonStandardCusp && linkType_ != Link::Invalid);
-}
-
-inline long Face<3, 0>::linkEulerChar() const {
-    return linkEulerChar_;
 }
 
 } // namespace regina

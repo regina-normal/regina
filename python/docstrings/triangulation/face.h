@@ -1004,6 +1004,16 @@ Parameter ``gluing``:
     boundary facet will map to the inherent vertices of the given
     boundary facet across the new gluing.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase::linkEulerChar
+static constexpr const char linkEulerChar[] =
+R"doc(Returns the Euler characteristic of the vertex link.
+
+This is much faster than calling buildLink().eulerChar(), since it
+does not require a full triangulation of the vertex link.
+
+Returns:
+    the Euler characteristic of the vertex link.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase::linkingSurface
 static constexpr const char linkingSurface[] =
 R"doc(Returns the link of this vertex as a normal surface or hypersurface.

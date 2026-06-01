@@ -676,6 +676,7 @@ void TriangulationBase<dim>::cloneFaces(const FaceList& srcFaces) {
         me->linkOrientable_ = you->linkOrientable_;
         me->whyInvalid_ = you->whyInvalid_;
         me->valid_ = you->valid_;
+        me->linkEulerChar_ = you->linkEulerChar_;
         me->vertexFlags_ = you->vertexFlags_;
         me->triangleType_ = you->triangleType_;
         me->triangleSubtype_ = you->triangleSubtype_;
