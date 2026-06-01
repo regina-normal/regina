@@ -138,7 +138,7 @@ template bool TriangulationBase<15>::internalPachner(Face<15, 11>*, bool, bool);
 template bool TriangulationBase<15>::internalPachner(Face<15, 12>*, bool, bool);
 template bool TriangulationBase<15>::internalPachner(Face<15, 13>*, bool, bool);
 template bool TriangulationBase<15>::internalPachner(Face<15, 14>*, bool, bool);
-template bool TriangulationBase<15>::internalPachner(Face<15, 15>*, bool, bool);
+template bool TriangulationBase<15>::internalPachner(Simplex<15>*, bool, bool);
 
 template bool TriangulationBase<15>::internal20(Face<15, 0>*, bool, bool);
 template bool TriangulationBase<15>::internal20(Face<15, 1>*, bool, bool);

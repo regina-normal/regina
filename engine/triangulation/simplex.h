@@ -63,11 +63,10 @@ namespace detail {
  * For example, for 3-manifolds this class represents a tetrahedron, and for
  * 2-manifolds this class represents a triangle.
  *
- * Although this is a specialisation of the Face class template, this
- * class is typically referred to using the alias Simplex<dim>.
- * For Regina's \ref stddim "standard dimensions" you can also use the
- * aliases Triangle<2>, Tetrahedron<3>, and Pentachoron<4> (or in Python,
- * `Triangle2`, `Tetrahedron3`, and `Pentachoron4`).
+ * For Regina's \ref stddim "standard dimensions", you can also describe this
+ * class using the dimension-specific type aliases Triangle<2>, Tetrahedron<3>,
+ * and Pentachoron<4> (or in Python, `Triangle2`, `Tetrahedron3`, and
+ * `Pentachoron4`).
  *
  * Top-dimensional simplices cannot exist in isolation (without a
  * triangulation object), and they cannot be created or destroyed directly.
@@ -103,7 +102,7 @@ namespace detail {
  * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
-class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
+class Simplex : public MarkedElement, public Output<Simplex<dim>> {
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -146,7 +145,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
                  vertices of this simplex.  See Simplex<dim>::faceMapping()
                  for details. */
 
-        Simplex<dim>* adj_[dim + 1];
+        Simplex* adj_[dim + 1];
             /**< Stores the adjacent simplex glued to each facet of this
                  simplex.  Specifically, `adj_[f]` represents the
                  simplex joined to facet \a f of this simplex, or is 0
@@ -234,28 +233,28 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * \return the adjacent simplex glued to the given facet, or \c null
          * if the given facet lies on the boundary.
          */
-        Simplex<dim>* adjacentSimplex(int facet) const;
+        Simplex* adjacentSimplex(int facet) const;
 
         /**
          * An alias for adjacentSimplex() in dimension 2.
          *
          * See adjacentSimplex() for further information.
          */
-        Simplex<dim>* adjacentTriangle(int edge) const requires (dim == 2);
+        Simplex* adjacentTriangle(int edge) const requires (dim == 2);
 
         /**
          * An alias for adjacentSimplex() in dimension 3.
          *
          * See adjacentSimplex() for further information.
          */
-        Simplex<dim>* adjacentTetrahedron(int face) const requires (dim == 3);
+        Simplex* adjacentTetrahedron(int face) const requires (dim == 3);
 
         /**
          * An alias for adjacentSimplex() in dimension 4.
          *
          * See adjacentSimplex() for further information.
          */
-        Simplex<dim>* adjacentPentachoron(int facet) const requires (dim == 4);
+        Simplex* adjacentPentachoron(int facet) const requires (dim == 4);
 
         /**
          * Returns a permutation that indicates precisely how this
@@ -363,7 +362,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * new gluing.  This permutation should be in the form described
          * by adjacentGluing().
          */
-        void join(int myFacet, Simplex<dim>* you, Perm<dim+1> gluing);
+        void join(int myFacet, Simplex* you, Perm<dim+1> gluing);
         /**
          * Unglues the given facet of this simplex from whatever it is
          * joined to.  As a result, the given facet of this simplex
@@ -386,7 +385,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * \return the simplex that was originally glued to the given facet
          * of this simplex, or \c null if this was already a boundary facet.
          */
-        Simplex<dim>* unjoin(int myFacet);
+        Simplex* unjoin(int myFacet);
         /**
          * Unglues this simplex from any adjacent simplices.
          * As a result, every facet of this simplex will become a boundary
@@ -993,8 +992,8 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
         void writeTextLong(std::ostream& out) const;
 
         // Make this class non-copyable.
-        Face(const Face&) = delete;
-        Face& operator = (const Face&) = delete;
+        Simplex(const Simplex&) = delete;
+        Simplex& operator = (const Simplex&) = delete;
 
     private:
         /**
@@ -1003,7 +1002,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          *
          * \param tri the triangulation to which the new simplex belongs.
          */
-        Face(Triangulation<dim>* tri);
+        Simplex(Triangulation<dim>* tri);
         /**
          * Creates a new simplex whose description and locks are cloned
          * from the given simplex, and with no facets joined to anything.
@@ -1011,7 +1010,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * \param clone the simplex whose details should be cloned.
          * \param tri the triangulation to which the new simplex belongs.
          */
-        Face(const Face& clone, Triangulation<dim>* tri);
+        Simplex(const Simplex& clone, Triangulation<dim>* tri);
         /**
          * Creates a new simplex with the given description, no locks,
          * and no facets joined to anything.
@@ -1019,7 +1018,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * \param desc the description to give the new simplex.
          * \param tri the triangulation to which the new simplex belongs.
          */
-        Face(std::string desc, Triangulation<dim>* tri);
+        Simplex(std::string desc, Triangulation<dim>* tri);
 
         /**
          * Tests whether the <i>useDim</i>-face degrees of this and the
@@ -1033,7 +1032,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * as its image in \a other under the relabelling \a p.
          */
         template <int useDim> requires (useDim >= 0 && useDim < dim)
-        bool sameDegreesAt(const Face& other, Perm<dim+1> p) const;
+        bool sameDegreesAt(const Simplex& other, Perm<dim+1> p) const;
 
         /**
          * Tests whether the <i>k</i>-face degrees of this and the given
@@ -1049,7 +1048,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * \a other under the relabelling \a p.
          */
         template <int... useDim> requires ((useDim >= 0 && useDim < dim) && ...)
-        bool sameDegreesAt(const Face& other, Perm<dim+1> p,
+        bool sameDegreesAt(const Simplex& other, Perm<dim+1> p,
             std::integer_sequence<int, useDim...>) const;
 
         /**
@@ -1091,7 +1090,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * The preconditions and arguments for this routine are the same as
          * for join().  See join() for further details.
          */
-        void joinRaw(int myFacet, Simplex<dim>* you, Perm<dim+1> gluing);
+        void joinRaw(int myFacet, Simplex* you, Perm<dim+1> gluing);
 
         /**
          * A variant of unjoin() with no lock management, and no management
@@ -1103,7 +1102,7 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
          * The arguments for this routine are the same as for unjoin().
          * See unjoin() for further details.
          */
-        Simplex<dim>* unjoinRaw(int myFacet);
+        Simplex* unjoinRaw(int myFacet);
         /**
          * A variant of isolate() with no lock management, and no management
          * of the underlying triangulation.
@@ -1159,137 +1158,137 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
 
     // Face::relabel() adjusts Simplex::mappings_.
     template <int dim_, int subdim>
-    requires (supportedDim(dim_) && subdim >= 0 && subdim <= dim_)
+    requires (supportedDim(dim_) && subdim >= 0 && subdim < dim_)
     friend class Face;
 };
 
-// Inline functions for Simplex<dim> == Face<dim, dim>
+// Inline functions for Simplex<dim>
 
 template <int dim> requires (supportedDim(dim))
-inline Face<dim, dim>::Face(Triangulation<dim>* tri) : tri_(tri) {
+inline Simplex<dim>::Simplex(Triangulation<dim>* tri) : tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = nullptr;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Face<dim, dim>::Face(const Face& clone, Triangulation<dim>* tri) :
+inline Simplex<dim>::Simplex(const Simplex& clone, Triangulation<dim>* tri) :
         description_(clone.description_), locks_(clone.locks_), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = nullptr;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Face<dim, dim>::Face(std::string desc, Triangulation<dim>* tri) :
+inline Simplex<dim>::Simplex(std::string desc, Triangulation<dim>* tri) :
         description_(std::move(desc)), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = nullptr;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline const std::string& Face<dim, dim>::description() const {
+inline const std::string& Simplex<dim>::description() const {
     return description_;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void Face<dim, dim>::setDescription(const std::string& desc) {
+inline void Simplex<dim>::setDescription(const std::string& desc) {
     typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
     description_ = desc;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline size_t Face<dim, dim>::index() const {
+inline size_t Simplex<dim>::index() const {
     return markedIndex();
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Simplex<dim>* Face<dim, dim>::adjacentSimplex(int facet) const {
+inline Simplex<dim>* Simplex<dim>::adjacentSimplex(int facet) const {
     return adj_[facet];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Simplex<dim>* Face<dim, dim>::adjacentTriangle(int edge)
+inline Simplex<dim>* Simplex<dim>::adjacentTriangle(int edge)
         const requires (dim == 2) {
     return adj_[edge];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Simplex<dim>* Face<dim, dim>::adjacentTetrahedron(int face)
+inline Simplex<dim>* Simplex<dim>::adjacentTetrahedron(int face)
         const requires (dim == 3) {
     return adj_[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Simplex<dim>* Face<dim, dim>::adjacentPentachoron(int facet)
+inline Simplex<dim>* Simplex<dim>::adjacentPentachoron(int facet)
         const requires (dim == 4) {
     return adj_[facet];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline int Face<dim, dim>::adjacentFacet(int facet) const {
+inline int Simplex<dim>::adjacentFacet(int facet) const {
     return gluing_[facet][facet];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline int Face<dim, dim>::adjacentEdge(int edge) const requires (dim == 2) {
+inline int Simplex<dim>::adjacentEdge(int edge) const requires (dim == 2) {
     return gluing_[edge][edge];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline int Face<dim, dim>::adjacentFace(int face) const requires (dim == 3) {
+inline int Simplex<dim>::adjacentFace(int face) const requires (dim == 3) {
     return gluing_[face][face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim+1> Face<dim, dim>::adjacentGluing(int face) const {
+inline Perm<dim+1> Simplex<dim>::adjacentGluing(int face) const {
     return gluing_[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Triangulation<dim>& Face<dim, dim>::triangulation() const {
+inline Triangulation<dim>& Simplex<dim>::triangulation() const {
     return *tri_;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Component<dim>* Face<dim, dim>::component() const {
+inline Component<dim>* Simplex<dim>::component() const {
     triangulation().ensureSkeleton();
     return component_;
 }
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim >= 0 && subdim < dim)
-inline Face<dim, subdim>* Face<dim, dim>::face(int face) const {
+inline Face<dim, subdim>* Simplex<dim>::face(int face) const {
     triangulation().ensureSkeleton();
     return std::get<subdim>(faces_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Vertex<dim>* Face<dim, dim>::vertex(int i) const {
+inline Vertex<dim>* Simplex<dim>::vertex(int i) const {
     triangulation().ensureSkeleton();
     return std::get<0>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Edge<dim>* Face<dim, dim>::edge(int i) const {
+inline Edge<dim>* Simplex<dim>::edge(int i) const {
     triangulation().ensureSkeleton();
     return std::get<1>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Triangle<dim>* Face<dim, dim>::triangle(int i) const
+inline Triangle<dim>* Simplex<dim>::triangle(int i) const
         requires (dim > 2) {
     triangulation().ensureSkeleton();
     return std::get<2>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline SafeTetrahedron<dim>* Face<dim, dim>::tetrahedron(int i) const
+inline SafeTetrahedron<dim>* Simplex<dim>::tetrahedron(int i) const
         requires (dim > 3) {
     triangulation().ensureSkeleton();
     return std::get<3>(faces_)[i];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline SafePentachoron<dim>* Face<dim, dim>::pentachoron(int i) const
+inline SafePentachoron<dim>* Simplex<dim>::pentachoron(int i) const
         requires (dim > 4) {
     triangulation().ensureSkeleton();
     return std::get<4>(faces_)[i];
@@ -1297,58 +1296,58 @@ inline SafePentachoron<dim>* Face<dim, dim>::pentachoron(int i) const
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (subdim >= 0 && subdim < dim)
-inline Perm<dim + 1> Face<dim, dim>::faceMapping(int face) const {
+inline Perm<dim + 1> Simplex<dim>::faceMapping(int face) const {
     triangulation().ensureSkeleton();
     return std::get<subdim>(mappings_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim + 1> Face<dim, dim>::vertexMapping(int face) const {
+inline Perm<dim + 1> Simplex<dim>::vertexMapping(int face) const {
     triangulation().ensureSkeleton();
     return std::get<0>(mappings_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim + 1> Face<dim, dim>::edgeMapping(int face) const {
+inline Perm<dim + 1> Simplex<dim>::edgeMapping(int face) const {
     triangulation().ensureSkeleton();
     return std::get<1>(mappings_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim + 1> Face<dim, dim>::triangleMapping(int face) const
+inline Perm<dim + 1> Simplex<dim>::triangleMapping(int face) const
         requires (dim > 2) {
     triangulation().ensureSkeleton();
     return std::get<2>(mappings_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim + 1> Face<dim, dim>::tetrahedronMapping(int face) const
+inline Perm<dim + 1> Simplex<dim>::tetrahedronMapping(int face) const
         requires (dim > 3) {
     triangulation().ensureSkeleton();
     return std::get<3>(mappings_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Perm<dim + 1> Face<dim, dim>::pentachoronMapping(int face) const
+inline Perm<dim + 1> Simplex<dim>::pentachoronMapping(int face) const
         requires (dim > 4) {
     triangulation().ensureSkeleton();
     return std::get<4>(mappings_)[face];
 }
 
 template <int dim> requires (supportedDim(dim))
-inline int Face<dim, dim>::orientation() const {
+inline int Simplex<dim>::orientation() const {
     triangulation().ensureSkeleton();
     return orientation_;
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool Face<dim, dim>::facetInMaximalForest(int facet) const {
+inline bool Simplex<dim>::facetInMaximalForest(int facet) const {
     triangulation().ensureSkeleton();
     return dualForest_ & (FacetMask(1) << facet);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void Face<dim, dim>::writeTextShort(std::ostream& out) const {
+inline void Simplex<dim>::writeTextShort(std::ostream& out) const {
     out << dim << "-simplex " << index();
 
     int glued = 0;
@@ -1375,7 +1374,7 @@ inline void Face<dim, dim>::writeTextShort(std::ostream& out) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-bool Face<dim, dim>::hasBoundary() const {
+bool Simplex<dim>::hasBoundary() const {
     for (int i = 0; i <= dim; ++i)
         if (! adj_[i])
             return true;
@@ -1383,7 +1382,7 @@ bool Face<dim, dim>::hasBoundary() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void Face<dim, dim>::lock() {
+inline void Simplex<dim>::lock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (! (locks_ & mask)) {
         typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
@@ -1392,7 +1391,7 @@ inline void Face<dim, dim>::lock() {
 }
 
 template <int dim> requires (supportedDim(dim))
-void Face<dim, dim>::lockFacet(int facet) {
+void Simplex<dim>::lockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (! (locks_ & mask)) {
         typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
@@ -1406,12 +1405,12 @@ void Face<dim, dim>::lockFacet(int facet) {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void Face<dim, dim>::lockFacetRaw(int facet) {
+inline void Simplex<dim>::lockFacetRaw(int facet) {
     locks_ |= (LockMask(1) << facet);
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void Face<dim, dim>::unlock() {
+inline void Simplex<dim>::unlock() {
     static constexpr LockMask mask = (LockMask(1) << (dim + 1));
     if (locks_ & mask) {
         typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
@@ -1420,7 +1419,7 @@ inline void Face<dim, dim>::unlock() {
 }
 
 template <int dim> requires (supportedDim(dim))
-void Face<dim, dim>::unlockFacet(int facet) {
+void Simplex<dim>::unlockFacet(int facet) {
     const LockMask mask = (LockMask(1) << facet);
     if (locks_ & mask) {
         typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
@@ -1434,12 +1433,12 @@ void Face<dim, dim>::unlockFacet(int facet) {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void Face<dim, dim>::unlockFacetRaw(int facet) {
+inline void Simplex<dim>::unlockFacetRaw(int facet) {
     locks_ &= ~(LockMask(1) << facet);
 }
 
 template <int dim> requires (supportedDim(dim))
-void Face<dim, dim>::unlockAll() {
+void Simplex<dim>::unlockAll() {
     if (locks_) {
         typename Triangulation<dim>::template ChangeAndClearSpan<ChangeType::Cosmetic> span(*tri_);
         locks_ = 0;
@@ -1453,22 +1452,22 @@ void Face<dim, dim>::unlockAll() {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool Face<dim, dim>::isLocked() const {
+inline bool Simplex<dim>::isLocked() const {
     return (locks_ & (LockMask(1) << (dim + 1)));
 }
 
 template <int dim> requires (supportedDim(dim))
-inline bool Face<dim, dim>::isFacetLocked(int facet) const {
+inline bool Simplex<dim>::isFacetLocked(int facet) const {
     return (locks_ & (LockMask(1) << facet));
 }
 
 template <int dim> requires (supportedDim(dim))
-inline typename Face<dim, dim>::LockMask Face<dim, dim>::lockMask() const {
+inline typename Simplex<dim>::LockMask Simplex<dim>::lockMask() const {
     return locks_;
 }
 
 template <int dim> requires (supportedDim(dim))
-Simplex<dim>* Face<dim, dim>::unjoin(int myFacet) {
+Simplex<dim>* Simplex<dim>::unjoin(int myFacet) {
     if (! adj_[myFacet])
         return nullptr;
     if (isFacetLocked(myFacet))
@@ -1485,7 +1484,7 @@ Simplex<dim>* Face<dim, dim>::unjoin(int myFacet) {
 }
 
 template <int dim> requires (supportedDim(dim))
-inline Simplex<dim>* Face<dim, dim>::unjoinRaw(int myFacet) {
+inline Simplex<dim>* Simplex<dim>::unjoinRaw(int myFacet) {
     if (! adj_[myFacet])
         return nullptr;
 
@@ -1497,7 +1496,7 @@ inline Simplex<dim>* Face<dim, dim>::unjoinRaw(int myFacet) {
 }
 
 template <int dim> requires (supportedDim(dim))
-void Face<dim, dim>::isolate() {
+void Simplex<dim>::isolate() {
     // We need to check for lock violations before any changes are made,
     // since we promise to leave things unchanged if we throw a LockViolation.
     if (locks_) {
@@ -1531,7 +1530,7 @@ hasGluings:
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void Face<dim, dim>::isolateRaw() {
+inline void Simplex<dim>::isolateRaw() {
     for (int i = 0; i <= dim; ++i)
         if (auto you = adj_[i]) {
             you->adj_[gluing_[i][i]] = nullptr;
@@ -1540,8 +1539,7 @@ inline void Face<dim, dim>::isolateRaw() {
 }
 
 template <int dim> requires (supportedDim(dim))
-void Face<dim, dim>::join(int myFacet, Simplex<dim>* you,
-        Perm<dim+1> gluing) {
+void Simplex<dim>::join(int myFacet, Simplex* you, Perm<dim+1> gluing) {
     if (tri_ != you->tri_)
         throw InvalidArgument("You cannot join simplices from "
             "two different triangulations");
@@ -1566,7 +1564,7 @@ void Face<dim, dim>::join(int myFacet, Simplex<dim>* you,
 }
 
 template <int dim> requires (supportedDim(dim))
-inline void Face<dim, dim>::joinRaw(int myFacet, Simplex<dim>* you,
+inline void Simplex<dim>::joinRaw(int myFacet, Simplex* you,
         Perm<dim+1> gluing) {
     int yourFacet = gluing[myFacet];
 
@@ -1577,7 +1575,7 @@ inline void Face<dim, dim>::joinRaw(int myFacet, Simplex<dim>* you,
 }
 
 template <int dim> requires (supportedDim(dim))
-void Face<dim, dim>::writeTextLong(std::ostream& out) const {
+void Simplex<dim>::writeTextLong(std::ostream& out) const {
     out << dim << "-simplex " << index();
     if (! description_.empty())
         out << ": " << description_;
@@ -1604,7 +1602,7 @@ void Face<dim, dim>::writeTextLong(std::ostream& out) const {
 
 template <int dim> requires (supportedDim(dim))
 template <int useDim> requires (useDim >= 0 && useDim < dim)
-inline bool Face<dim, dim>::sameDegreesAt(const Face& other, Perm<dim + 1> p)
+inline bool Simplex<dim>::sameDegreesAt(const Simplex& other, Perm<dim + 1> p)
         const {
     for (int i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
         int j = FaceNumbering<dim, useDim>::faceNumber(
@@ -1618,7 +1616,7 @@ inline bool Face<dim, dim>::sameDegreesAt(const Face& other, Perm<dim + 1> p)
 
 template <int dim> requires (supportedDim(dim))
 template <int... useDim > requires ((useDim >= 0 && useDim < dim) && ...)
-inline bool Face<dim, dim>::sameDegreesAt(const Face& other,
+inline bool Simplex<dim>::sameDegreesAt(const Simplex& other,
         Perm<dim+1> p, std::integer_sequence<int, useDim...>) const {
     return (sameDegreesAt<useDim>(other, p) && ...);
 }

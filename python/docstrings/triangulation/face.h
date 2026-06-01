@@ -16,20 +16,13 @@ struct Face {
 // Docstring regina::python::doc::Face::__class
 static constexpr const char __class[] =
 R"doc(Represents a *subdim*-face in the skeleton of a *dim*-dimensional
-triangulation. There are two substantially different cases:
+triangulation.
 
-* The case *subdim* < *dim* represents a lower-dimensional face in a
-  triangulation. This is implemented by the generic class template (as
-  documented here), and is specialised for Regina's standard
-  dimensions (as discussed below).
-
-* The case *subdim* = *dim* represents a top-dimensional simplex in a
-  triangulation. This class has a very different interface, and is
-  implemented by the partial specialisation Face<dim, dim> (and again
-  specialised further for standard dimensions). This case is typically
-  referred to using the type alias Simplex<dim>, to make the
-  distinction clear. See the documentation for the specialisation
-  Face<dim, dim> for details on the interface that it provides.
+As of Regina 8.0, the class ``Face<dim, subdim>`` now exclusively
+describes lower-dimensional faces (that is, ``subdim < dim``). For
+top-dimensional simplices in a triangulation (the case ``subdim ==
+dim``), you should instead use Simplex<dim> which is now its own
+independent class.
 
 For small-dimensional faces, this class is typically described using
 dimension-specific type aliases: Vertex<dim>, Edge<dim>,
@@ -954,12 +947,6 @@ underlying Face still existed. A FaceEmbedding cannot, however,
 outlive its top-dimensional simplex, because internally a
 FaceEmbedding references the Simplex object in which it lives (i.e.,
 it does not just store an integer simplex index).
-
-If *dim* is one of Regina's standard dimensions, then this template is
-specialised to offer additional dimension-specific aliases. In order
-to use these specialised classes, you will need to include the
-corresponding triangulation headers (e.g., triangulation/dim2.h for
-*dim* = 2, or triangulation/dim3.h for *dim* = 3).
 
 These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap

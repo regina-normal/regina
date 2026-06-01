@@ -213,7 +213,7 @@ namespace {
                         vertices())),
                     "<internal>.View[regina.Vertex4]");
             } else {
-                registerType(typeid(Face<i, i>),
+                registerType(typeid(Simplex<i>),
                     std::string("regina.Simplex") +
                         regina::detail::Strings<i>::dim);
                 registerType(

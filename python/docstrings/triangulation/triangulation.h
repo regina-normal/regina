@@ -1481,8 +1481,8 @@ Returns:
     dimensional simplex or at least one locked facet of a top-
     dimensional simplex within this triangulation.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase::hasPachner
-static constexpr const char hasPachner[] =
+// Docstring regina::python::doc::detail::TriangulationBase::hasPachner_face
+static constexpr const char hasPachner_face[] =
 R"doc(Determines whether it is possible to perform a (*dim* + 1 - *k*)-(*k*
 + 1) Pachner move about the given *k*-face of this triangulation,
 without violating any simplex and/or facet locks.
@@ -1498,6 +1498,25 @@ Template parameter ``k``:
 
 Parameter ``face``:
     the *k*-face about which to perform the candidate move.
+
+Returns:
+    ``True`` if and only if the requested move can be performed.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase::hasPachner_simplex
+static constexpr const char hasPachner_simplex[] =
+R"doc(Determines whether it is possible to perform a 1-(*dim* + 1) Pachner
+move upon the given top-dimensional simplex of this triangulation,
+without violating any simplex locks.
+
+For more detail on Pachner moves and when they can be performed, see
+pachner().
+
+Precondition:
+    The given simplex is a simplex of this triangulation.
+
+Parameter ``simplex``:
+    the top-dimensional simplex upon which to perform the candidate
+    move.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
@@ -2464,6 +2483,85 @@ Parameter ``k``:
     the number of new top-dimensional simplices to add; this must be
     non-negative.)doc";
 
+// Docstring regina::python::doc::detail::TriangulationBase::oldPachner_face
+static constexpr const char oldPachner_face[] =
+R"doc(Deprecated routine that tests for and optionally performs a (*dim* + 1
+- *k*)-(*k* + 1) Pachner move about the given *k*-face of this
+triangulation.
+
+For more detail on Pachner moves and when they can be performed, see
+the variant of pachner() without the extra boolean arguments.
+
+This routine will always _check_ whether the requested move is legal
+and will not violate any simplex and/or facet locks (see
+Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
+on locks). If the move _is_ allowed, and if the argument *perform* is
+``True``, this routine will also _perform_ the move.
+
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    hasPachner(). If you wish to both check and perform the move, call
+    pachner() without the two extra boolean arguments.
+
+Precondition:
+    The given *k*-face is a *k*-face of this triangulation.
+
+Template parameter ``k``:
+    the dimension of the given face.
+
+Parameter ``face``:
+    the *k*-face about which to perform the move.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
+
+Parameter ``perform``:
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
+
+Returns:
+    ``True`` if and only if the requested move could be performed.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase::oldPachner_simplex
+static constexpr const char oldPachner_simplex[] =
+R"doc(Deprecated routine that tests for and optionally performs a 1-(*dim* +
+1) Pachner move upon the given top-dimensional simplex of this
+triangulation.
+
+For more detail on Pachner moves and when they can be performed, see
+the variant of pachner() without the extra boolean arguments.
+
+This routine will always _check_ whether the requested move is legal
+and will not violate any simplex locks (see Simplex<dim>::lock() for
+further details on locks). If the move _is_ allowed, and if the
+argument *perform* is ``True``, this routine will also _perform_ the
+move.
+
+.. deprecated::
+    If you just wish to test whether such a move is possible, call
+    hasPachner(). If you wish to both check and perform the move, call
+    pachner() without the two extra boolean arguments.
+
+Precondition:
+    The given simplex is a simplex of this triangulation.
+
+Parameter ``simplex``:
+    the top-dimensional simplex upon which to perform the move.
+
+Parameter ``ignored``:
+    an argument that is ignored. In earlier versions of Regina this
+    argument controlled whether we check if the move can be performed;
+    however, now this check is done always.
+
+Parameter ``perform``:
+    ``True`` if we should actually perform the move, assuming the move
+    is allowed.
+
+Returns:
+    ``True`` if and only if the requested move could be performed.)doc";
+
 // Docstring regina::python::doc::detail::TriangulationBase::orient
 static constexpr const char orient[] =
 R"doc(Relabels the vertices of top-dimensional simplices in this
@@ -2487,8 +2585,8 @@ taking place. Instead, any locks will be transformed accordingly
 (i.e., facets (*dim* - 1) and *dim* will exchange their lock states
 for those simplices that originally had negative orientation).)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase::pachner
-static constexpr const char pachner[] =
+// Docstring regina::python::doc::detail::TriangulationBase::pachner_face
+static constexpr const char pachner_face[] =
 R"doc(If possible, performs a (*dim* + 1 - *k*)-(*k* + 1) Pachner move about
 the given *k*-face. This involves replacing the (*dim* + 1 - *k*) top-
 dimensional simplices meeting that *k*-face with (*k* + 1) new top-
@@ -2534,13 +2632,6 @@ face will be formed from vertices 0,1,...,(*dim* - *k*) of
     call the variant of this function that takes an extra Unprotected
     argument.
 
-.. warning::
-    For the case *k* = *dim* in Regina's standard dimensions, the
-    labelling of the belt face has changed as of Regina 5.96 (the
-    first prerelease for Regina 6.0). In versions 5.1 and earlier, the
-    belt face was ``simplices().back()->vertex(dim)``, and as of
-    version 5.96 it is now ``simplices().back()->vertex(0)``.
-
 Precondition:
     The given *k*-face is a *k*-face of this triangulation.
 
@@ -2554,46 +2645,49 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase::pachner_2
-static constexpr const char pachner_2[] =
-R"doc(Deprecated routine that tests for and optionally performs a (*dim* + 1
-- *k*)-(*k* + 1) Pachner move about the given *k*-face of this
-triangulation.
+// Docstring regina::python::doc::detail::TriangulationBase::pachner_simplex
+static constexpr const char pachner_simplex[] =
+R"doc(If possible, performs a 1-(*dim* + 1) Pachner move upon the given top-
+dimensional simplex. This involves replacing the given simplex with
+(*dim* + 1) new top-dimensional simplices surrounding a new internal
+vertex.
 
-For more detail on Pachner moves and when they can be performed, see
-the variant of pachner() without the extra boolean arguments.
+This triangulation will be changed directly.
 
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
-on locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
+This move will only be performed if it will not violate any simplex
+locks. See Simplex<dim>::lock() for further details on locks. Since a
+1-(*dim* + 1) move can never change the topology of the manifold,
+there are no further constraints to test or enforce.
 
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasPachner(). If you wish to both check and perform the move, call
-    pachner() without the two extra boolean arguments.
+If this triangulation is currently oriented, then this Pachner move
+will label the new top-dimensional simplices in a way that preserves
+the orientation.
+
+Note that after performing this move, all skeletal objects (faces,
+components, etc.) will be reconstructed, which means any pointers to
+old skeletal objects can no longer be used.
+
+See the page on Pachner moves on triangulations for definitions and
+terminology relating to Pachner moves; note that for a 1-(*dim* + 1)
+move, the new belt face is simply the new internal vertex. After the
+move, this new vertex will be vertex 0 of ``simplices().back()``.
+
+.. warning::
+    In Regina's standard dimensions, the labelling of the new internal
+    vertex has changed as of Regina 5.96 (the first prerelease for
+    Regina 6.0). In versions 5.1 and earlier, the new vertex was
+    ``simplices().back()->vertex(dim)``, and as of version 5.96 it is
+    now ``simplices().back()->vertex(0)``.
 
 Precondition:
-    The given *k*-face is a *k*-face of this triangulation.
+    The given simplex is a simplex of this triangulation.
 
-Template parameter ``k``:
-    the dimension of the given face.
-
-Parameter ``face``:
-    the *k*-face about which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
+Parameter ``simplex``:
+    the top-dimensional simplex upon which to perform the move.
 
 Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
+    ``True`` if and only if the requested move was able to be
+    performed.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase::pairing
 static constexpr const char pairing[] =
@@ -3605,8 +3699,8 @@ Returns:
     the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase::withPachner
-static constexpr const char withPachner[] =
+// Docstring regina::python::doc::detail::TriangulationBase::withPachner_face
+static constexpr const char withPachner_face[] =
 R"doc(If possible, returns the triangulation obtained by performing a (*dim*
 + 1 - *k*)-(*k* + 1) Pachner move about the given *k*-face of this
 triangulation. If such a move is not allowed, or if such a move would
@@ -3626,6 +3720,28 @@ Template parameter ``k``:
 
 Parameter ``face``:
     the *k*-face about which to perform the move.
+
+Returns:
+    the new triangulation obtained by performing the requested move,
+    or no value if the requested move cannot be performed.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase::withPachner_simplex
+static constexpr const char withPachner_simplex[] =
+R"doc(If possible, returns the triangulation obtained by performing a
+1-(*dim* + 1) Pachner move upon the given top-dimensional simplex of
+this triangulation. If such a move is not allowed, or if such a move
+would violate any simplex locks, then this routine returns no value.
+
+This triangulation will not be changed.
+
+For more detail on Pachner moves and when they can be performed, see
+pachner().
+
+Precondition:
+    The given simplex is a simplex of this triangulation.
+
+Parameter ``simplex``:
+    the top-dimensional simplex upon which to perform the move.
 
 Returns:
     the new triangulation obtained by performing the requested move,

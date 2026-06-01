@@ -457,8 +457,8 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          */
         void clearAllProperties();
 
-    friend class regina::Face<2, 2>;
-    friend class regina::detail::TriangulationBase<2>;
+    friend class Simplex<2>;
+    friend class detail::TriangulationBase<2>;
 };
 
 // Inline functions that need to be defined before *other* inline funtions

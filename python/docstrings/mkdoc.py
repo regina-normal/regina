@@ -616,9 +616,9 @@ def extract(filename, node, parent_namespace, parent_types, output):
             return
 
         # Class template specialisations are a strange case.
-        # Sometimes we want them in full (e.g., Face<dim, dim>);
-        # sometimes we do not want the class docs but we want its members
-        # (e.g., the triangulation alias classes), and sometimes we
+        # Sometimes we want them in full (e.g., the old Face<dim, dim> from
+        # Regina 7.x); sometimes we do not want the class docs but we want its
+        # members (e.g., the triangulation alias classes), and sometimes we
         # do not want it at all (e.g., the old ListView specialisations).
         #
         # For now:

@@ -123,7 +123,7 @@ template bool TriangulationBase<12>::internalPachner(Face<12, 8>*, bool, bool);
 template bool TriangulationBase<12>::internalPachner(Face<12, 9>*, bool, bool);
 template bool TriangulationBase<12>::internalPachner(Face<12, 10>*, bool, bool);
 template bool TriangulationBase<12>::internalPachner(Face<12, 11>*, bool, bool);
-template bool TriangulationBase<12>::internalPachner(Face<12, 12>*, bool, bool);
+template bool TriangulationBase<12>::internalPachner(Simplex<12>*, bool, bool);
 
 template bool TriangulationBase<12>::internal20(Face<12, 0>*, bool, bool);
 template bool TriangulationBase<12>::internal20(Face<12, 1>*, bool, bool);

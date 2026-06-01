@@ -2153,15 +2153,10 @@ class TriangulationBase :
          * can call the variant of this function that takes an extra
          * Unprotected argument.
          *
-         * \warning For the case \a k = \a dim in Regina's
-         * \ref stddim "standard dimensions", the labelling of the belt face
-         * has changed as of Regina 5.96 (the first prerelease for Regina 6.0).
-         * In versions 5.1 and earlier, the belt face was
-         * `simplices().back()->vertex(dim)`, and as of version 5.96
-         * it is now `simplices().back()->vertex(0)`.
-         *
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
+         *
+         * \pydocname{pachner_face}
          *
          * \tparam k the dimension of the given face.
          *
@@ -2169,8 +2164,51 @@ class TriangulationBase :
          * \return \c true if and only if the requested move was able to be
          * performed.
          */
-        template <int k> requires (k >= 0 && k <= dim)
+        template <int k> requires (k >= 0 && k < dim)
         bool pachner(Face<dim, k>* face);
+
+        /**
+         * If possible, performs a 1-(\a dim + 1) Pachner move upon the given
+         * top-dimensional simplex.  This involves replacing the given simplex
+         * with (\a dim + 1) new top-dimensional simplices surrounding a new
+         * internal vertex.
+         *
+         * This triangulation will be changed directly.
+         *
+         * This move will only be performed if it will not violate any simplex
+         * locks.  See Simplex<dim>::lock() for further details on locks.
+         * Since a 1-(\a dim + 1) move can never change the topology of the
+         * manifold, there are no further constraints to test or enforce.
+         *
+         * If this triangulation is currently oriented, then this Pachner move
+         * will label the new top-dimensional simplices in a way that
+         * preserves the orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (faces, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects can no longer be used.
+         *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves; note that for a 1-(\a dim + 1) move, the
+         * new belt face is simply the new internal vertex.  After the move,
+         * this new vertex will be vertex 0 of `simplices().back()`.
+         *
+         * \warning In Regina's \ref stddim "standard dimensions", the
+         * labelling of the new internal vertex has changed as of Regina 5.96
+         * (the first prerelease for Regina 6.0).  In versions 5.1 and earlier,
+         * the new vertex was `simplices().back()->vertex(dim)`, and as of
+         * version 5.96 it is now `simplices().back()->vertex(0)`.
+         *
+         * \pre The given simplex is a simplex of this triangulation.
+         *
+         * \pydocname{pachner_simplex}
+         *
+         * \param simplex the top-dimensional simplex upon which to perform
+         * the move.
+         * \return \c true if and only if the requested move was able to be
+         * performed.
+         */
+        bool pachner(Simplex<dim>* simplex);
 
         /**
          * Performs a (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the
@@ -2210,7 +2248,7 @@ class TriangulationBase :
          *
          * \param face the <i>k</i>-face about which to perform the move.
          */
-        template <int k> requires (k >= 0 && k <= dim)
+        template <int k> requires (k >= 0 && k < dim)
         void pachner(Face<dim, k>* face, Unprotected);
 
         /**
@@ -2363,14 +2401,34 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
+         * \pydocname{hasPachner_face}
+         *
          * \tparam k the dimension of the given face.
          *
          * \param face the <i>k</i>-face about which to perform the candidate
          * move.
          * \return \c true if and only if the requested move can be performed.
          */
-        template <int k> requires (k >= 0 && k <= dim)
+        template <int k> requires (k >= 0 && k < dim)
         bool hasPachner(Face<dim, k>* face) const;
+
+        /**
+         * Determines whether it is possible to perform a 1-(\a dim + 1)
+         * Pachner move upon the given top-dimensional simplex of this
+         * triangulation, without violating any simplex locks.
+         *
+         * For more detail on Pachner moves and when they can be performed,
+         * see pachner().
+         *
+         * \pre The given simplex is a simplex of this triangulation.
+         *
+         * \pydocname{hasPachner_simplex}
+         *
+         * \param simplex the top-dimensional simplex upon which to perform
+         * the candidate move.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasPachner(Simplex<dim>* simplex) const;
 
         /**
          * Determines whether it is possible to perform a 2-0 move about the
@@ -2429,14 +2487,40 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
+         * \pydocname{withPachner_face}
+         *
          * \tparam k the dimension of the given face.
          *
          * \param face the <i>k</i>-face about which to perform the move.
          * \return the new triangulation obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
-        template <int k> requires (k >= 0 && k <= dim)
+        template <int k> requires (k >= 0 && k < dim)
         std::optional<Triangulation<dim>> withPachner(Face<dim, k>* face) const;
+
+        /**
+         * If possible, returns the triangulation obtained by performing a
+         * 1-(\a dim + 1) Pachner move upon the given top-dimensional simplex
+         * of this triangulation.  If such a move is not allowed, or if such
+         * a move would violate any simplex locks, then this routine returns
+         * no value.
+         *
+         * This triangulation will not be changed.
+         *
+         * For more detail on Pachner moves and when they can be performed,
+         * see pachner().
+         *
+         * \pre The given simplex is a simplex of this triangulation.
+         *
+         * \pydocname{withPachner_simplex}
+         *
+         * \param simplex the top-dimensional simplex upon which to perform
+         * the move.
+         * \return the new triangulation obtained by performing the requested
+         * move, or no value if the requested move cannot be performed.
+         */
+        std::optional<Triangulation<dim>> withPachner(Simplex<dim>* simplex)
+            const;
 
         /**
          * If possible, returns the triangulation obtained by performing a
@@ -2509,6 +2593,8 @@ class TriangulationBase :
          * \pre The given <i>k</i>-face is a <i>k</i>-face of this
          * triangulation.
          *
+         * \pydocname{oldPachner_face}
+         *
          * \tparam k the dimension of the given face.
          *
          * \param face the <i>k</i>-face about which to perform the move.
@@ -2519,8 +2605,42 @@ class TriangulationBase :
          * assuming the move is allowed.
          * \return \c true if and only if the requested move could be performed.
          */
-        template <int k> requires (k >= 0 && k <= dim)
+        template <int k> requires (k >= 0 && k < dim)
         [[deprecated]] bool pachner(Face<dim, k>* face, bool ignored,
+            bool perform = true);
+
+        /**
+         * Deprecated routine that tests for and optionally performs a
+         * 1-(\a dim + 1) Pachner move upon the given top-dimensional
+         * simplex of this triangulation.
+         *
+         * For more detail on Pachner moves and when they can be performed,
+         * see the variant of pachner() without the extra boolean arguments.
+         *
+         * This routine will always _check_ whether the requested move is legal
+         * and will not violate any simplex locks (see Simplex<dim>::lock() for
+         * further details on locks).  If the move _is_ allowed, and if the
+         * argument \a perform is \c true, this routine will also _perform_
+         * the move.
+         *
+         * \deprecated If you just wish to test whether such a move is
+         * possible, call hasPachner().  If you wish to both check and perform
+         * the move, call pachner() without the two extra boolean arguments.
+         *
+         * \pre The given simplex is a simplex of this triangulation.
+         *
+         * \pydocname{oldPachner_simplex}
+         *
+         * \param simplex the top-dimensional simplex upon which to perform
+         * the move.
+         * \param ignored an argument that is ignored.  In earlier versions of
+         * Regina this argument controlled whether we check if the move can be
+         * performed; however, now this check is done always.
+         * \param perform \c true if we should actually perform the move,
+         * assuming the move is allowed.
+         * \return \c true if and only if the requested move could be performed.
+         */
+        [[deprecated]] bool pachner(Simplex<dim>* simplex, bool ignored,
             bool perform = true);
 
         /**
@@ -4437,8 +4557,9 @@ class TriangulationBase :
                 const FaceList& srcFaces);
 
         /**
-         * Implements testing for and/or performing Pachner moves.
-         * See pachner() for details on what the location arguments mean.
+         * Implements testing for and/or performing Pachner moves about
+         * lower-dimensional faces.  See pachner() for details on what
+         * the location arguments mean.
          *
          * \pre The arguments \a check and \a perform are not both \c false.
          * \pre If \a perform is \c true but \a check is \c false, then it must
@@ -4456,8 +4577,31 @@ class TriangulationBase :
          * \return \c true if the requested checks pass, or if \a check was
          * \c false (which means no checks were performed at all).
          */
-        template <int k> requires (k >= 0 && k <= dim)
+        template <int k> requires (k >= 0 && k < dim)
         bool internalPachner(Face<dim, k>* f, bool check, bool perform);
+
+        /**
+         * Implements testing for and/or performing Pachner moves upon
+         * top-dimensional simplices.  See pachner() for details on what
+         * the location arguments mean.
+         *
+         * \pre The arguments \a check and \a perform are not both \c false.
+         * \pre If \a perform is \c true but \a check is \c false, then it must
+         * be known in advance that the requested move is legal and will not
+         * violate any simplex locks.
+         *
+         * \exception LockViolation This move would violate a simplex lock,
+         * and \a check was passed as \c false.  This exception will be
+         * thrown before any changes are made.
+         *
+         * \param check indicates whether we should check whether the move is
+         * legal and will not violate any locks.
+         * \param perform indicates whether we should actually perform the
+         * move, assuming any requested checks are successful.
+         * \return \c true if the requested checks pass, or if \a check was
+         * \c false (which means no checks were performed at all).
+         */
+        bool internalPachner(Simplex<dim>* s, bool check, bool perform);
 
         /**
          * Implements testing for and/or performing 2-0 moves.
@@ -5139,7 +5283,7 @@ class Triangulation : public detail::TriangulationBase<dim> {
             detail::TriangulationBase<dim>::clearBaseProperties();
         }
 
-    friend class Face<dim, dim>;
+    friend class Simplex<dim>;
     friend class detail::TriangulationBase<dim>;
 };
 
@@ -6439,13 +6583,18 @@ inline Isomorphism<dim> TriangulationBase<dim>::randomiseLabelling(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k> requires (k >= 0 && k <= dim)
+template <int k> requires (k >= 0 && k < dim)
 inline bool TriangulationBase<dim>::pachner(Face<dim, k>* face) {
     return internalPachner(face, true, true);
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k> requires (k >= 0 && k <= dim)
+inline bool TriangulationBase<dim>::pachner(Simplex<dim>* simplex) {
+    return internalPachner(simplex, true, true);
+}
+
+template <int dim> requires (supportedDim(dim))
+template <int k> requires (k >= 0 && k < dim)
 inline void TriangulationBase<dim>::pachner(Face<dim, k>* face, Unprotected) {
     internalPachner(face, false, true);
 }
@@ -6463,9 +6612,15 @@ inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* simplex)
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k> requires (k >= 0 && k <= dim)
+template <int k> requires (k >= 0 && k < dim)
 bool TriangulationBase<dim>::hasPachner(Face<dim, k>* face) const {
     return const_cast<TriangulationBase<dim>*>(this)->internalPachner(face,
+        true, false);
+}
+
+template <int dim> requires (supportedDim(dim))
+bool TriangulationBase<dim>::hasPachner(Simplex<dim>* simplex) const {
+    return const_cast<TriangulationBase<dim>*>(this)->internalPachner(simplex,
         true, false);
 }
 
@@ -6484,7 +6639,7 @@ bool TriangulationBase<dim>::hasShellBoundary(Simplex<dim>* simplex) const
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k> requires (k >= 0 && k <= dim)
+template <int k> requires (k >= 0 && k < dim)
 std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
         Face<dim, k>* face) const {
     if (! hasPachner(face))
@@ -6493,6 +6648,18 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
     std::optional<Triangulation<dim>> ans(std::in_place,
         static_cast<const Triangulation<dim>&>(*this));
     ans->internalPachner(ans->translate(face), false, true);
+    return ans;
+}
+
+template <int dim> requires (supportedDim(dim))
+std::optional<Triangulation<dim>> TriangulationBase<dim>::withPachner(
+        Simplex<dim>* simplex) const {
+    if (! hasPachner(simplex))
+        return {};
+
+    std::optional<Triangulation<dim>> ans(std::in_place,
+        static_cast<const Triangulation<dim>&>(*this));
+    ans->internalPachner(ans->translate(simplex), false, true);
     return ans;
 }
 
@@ -6522,10 +6689,16 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::withShellBoundary(
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int k> requires (k >= 0 && k <= dim)
+template <int k> requires (k >= 0 && k < dim)
 inline bool TriangulationBase<dim>::pachner(Face<dim, k>* face, bool,
         bool perform) {
     return internalPachner(face, true, perform);
+}
+
+template <int dim> requires (supportedDim(dim))
+inline bool TriangulationBase<dim>::pachner(Simplex<dim>* simplex, bool,
+        bool perform) {
+    return internalPachner(simplex, true, perform);
 }
 
 template <int dim> requires (supportedDim(dim))

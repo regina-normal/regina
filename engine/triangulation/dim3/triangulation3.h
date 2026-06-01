@@ -5145,10 +5145,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         static Triangulation<3> fromSnapPea(std::istream& in);
 
-    friend class regina::Face<3, 3>;
-    friend class regina::detail::TriangulationBase<3>;
+    friend class Simplex<3>;
+    friend class detail::TriangulationBase<3>;
     friend class PacketData<Triangulation<3>>;
-    friend class regina::XMLTriangulationReader<3>;
+    friend class XMLTriangulationReader<3>;
 };
 
 /**

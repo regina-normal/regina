@@ -79,7 +79,7 @@ template void TriangulationBase<3>::swapBaseData(TriangulationBase<3>&);
 template bool TriangulationBase<3>::internalPachner(Face<3, 0>*, bool, bool);
 template bool TriangulationBase<3>::internalPachner(Face<3, 1>*, bool, bool);
 template bool TriangulationBase<3>::internalPachner(Face<3, 2>*, bool, bool);
-template bool TriangulationBase<3>::internalPachner(Face<3, 3>*, bool, bool);
+template bool TriangulationBase<3>::internalPachner(Simplex<3>*, bool, bool);
 
 template bool TriangulationBase<3>::internal20(Face<3, 0>*, bool, bool);
 template bool TriangulationBase<3>::internal20(Face<3, 1>*, bool, bool);

@@ -1651,9 +1651,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         bool simplifyUpDownInternal(ssize_t max24, ssize_t max33,
             bool alwaysModify, ProgressTrackerObjective* tracker);
 
-    friend class regina::Face<4, 4>;
-    friend class regina::detail::TriangulationBase<4>;
-    friend class regina::XMLTriangulationReader<4>;
+    friend class Simplex<4>;
+    friend class detail::TriangulationBase<4>;
+    friend class XMLTriangulationReader<4>;
 };
 
 #ifndef __APIDOCS

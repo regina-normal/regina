@@ -156,6 +156,8 @@ Version 8.0  [ TODO ]
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
               and the old base class FaceBase is gone.
+            - Now requires subdim < dim.  Once again, Simplex<dim> is back to
+              being its own independent class.
             - The routine isLinkClosed() is now available for all faces
               where subdim < dim - 1 (not just vertices in dimension 3).
             - New routine isInternal().
@@ -462,6 +464,8 @@ Version 8.0  [ TODO ]
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
               and the old base class SimplexBase is gone.
+            - Simplex is now an independent class template, not a
+              specialisation of Face.
         Class SnapPeaTriangulation:
             - Routines fill() and saveSnapPea() now throw exceptions on error,
               and no longer return booleans (which used to indicate success
