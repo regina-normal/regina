@@ -34,16 +34,14 @@
 
 namespace regina {
 
-namespace detail {
-
 template <>
-void FaceBase<3, 0>::destroyLink() {
+void Face<3, 0>::destroyLink() {
     // Deleting null is always safe.
     delete link_.value;
 }
 
 template <>
-const Triangulation<2>& FaceBase<3, 0>::buildLink() const {
+const Triangulation<2>& Face<3, 0>::buildLink() const {
     if (! link_.value) {
         // Build the triangulation.
         auto* ans = new Triangulation<2>();
@@ -91,13 +89,13 @@ const Triangulation<2>& FaceBase<3, 0>::buildLink() const {
 
         // This is a construct-on-demand member: cast away constness to
         // set it here.
-        const_cast<FaceBase<3, 0>*>(this)->link_.value = ans;
+        const_cast<Face<3, 0>*>(this)->link_.value = ans;
     }
     return *link_.value;
 }
 
 template <>
-Isomorphism<3> FaceBase<3, 0>::buildLinkInclusion() const {
+Isomorphism<3> Face<3, 0>::buildLinkInclusion() const {
     Isomorphism<3> inclusion(degree());
 
     size_t i = 0;
@@ -109,7 +107,5 @@ Isomorphism<3> FaceBase<3, 0>::buildLinkInclusion() const {
 
     return inclusion;
 }
-
-} // namespace detail
 
 } // namespace regina

@@ -75,45 +75,43 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    // We use the global scope here because all of Face's members are
-    // inherited, and so Face's own docstring namespace does not exist.
-    RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE(FaceNumbering)
 
     auto c = pybind11::class_<regina::Face<dim, subdim>>(m, name,
             rdoc::Face::__class)
-        .def("isValid", &Face<dim, subdim>::isValid, rbase::isValid)
+        .def("isValid", &Face<dim, subdim>::isValid, rdoc::isValid)
         // Only standard dimensions offer hasBadLink().
         .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification,
-            rbase::hasBadIdentification)
+            rdoc::hasBadIdentification)
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable,
-            rbase::isLinkOrientable)
-        .def("degree", &Face<dim, subdim>::degree, rbase::degree)
-        .def("embedding", &Face<dim, subdim>::embedding, rbase::embedding)
-        .def("embeddings", &Face<dim, subdim>::embeddings, rbase::embeddings)
+            rdoc::isLinkOrientable)
+        .def("degree", &Face<dim, subdim>::degree, rdoc::degree)
+        .def("embedding", &Face<dim, subdim>::embedding, rdoc::embedding)
+        .def("embeddings", &Face<dim, subdim>::embeddings, rdoc::embeddings)
         .def("__iter__", [](const Face<dim, subdim>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
-            rbase::__iter__)
-        .def("front", &Face<dim, subdim>::front, rbase::front)
-        .def("back", &Face<dim, subdim>::back, rbase::back)
-        .def("index", &Face<dim, subdim>::index, rbase::index)
+            rdoc::__iter__)
+        .def("front", &Face<dim, subdim>::front, rdoc::front)
+        .def("back", &Face<dim, subdim>::back, rdoc::back)
+        .def("index", &Face<dim, subdim>::index, rdoc::index)
         .def("triangulation", &Face<dim, subdim>::triangulation,
-            rbase::triangulation)
+            rdoc::triangulation)
         .def("component", &Face<dim, subdim>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("boundaryComponent", &Face<dim, subdim>::boundaryComponent,
-            pybind11::return_value_policy::reference, rbase::boundaryComponent)
-        .def("isBoundary", &Face<dim, subdim>::isBoundary, rbase::isBoundary)
-        .def_static("ordering", &Face<dim, subdim>::ordering, rbase2::ordering)
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
+        .def("isBoundary", &Face<dim, subdim>::isBoundary, rdoc::isBoundary)
+        .def_static("ordering", &Face<dim, subdim>::ordering, rbase::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<dim+1>>(
                 &Face<dim, subdim>::faceNumber),
-            rbase2::faceNumber)
+            rbase::faceNumber)
         .def_static("containsVertex", &Face<dim, subdim>::containsVertex,
-            rbase2::containsVertex)
+            rbase::containsVertex)
         .def_readonly_static("nFaces", &Face<dim, subdim>::nFaces)
         .def_readonly_static("lexNumbering", &Face<dim, subdim>::lexNumbering)
         .def_readonly_static("oppositeDim", &Face<dim, subdim>::oppositeDim)
@@ -124,69 +122,69 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
     ;
     if constexpr (subdim < dim - 1) {
         c.def("isLinkClosed", &Face<dim, subdim>::isLinkClosed,
-            rbase::isLinkClosed);
+            rdoc::isLinkClosed);
     }
     if constexpr (subdim == 1) {
         c.def_static("faceNumber",
             pybind11::overload_cast<int, int>(&Face<dim, subdim>::faceNumber),
-            rbase2::faceNumber_2);
+            rbase::faceNumber_2);
     }
     if constexpr (subdim > 0) {
         c.def("face", &regina::python::face<dim, subdim>,
-            "lowerdim"_a, "face"_a, rbase::face);
+            "lowerdim"_a, "face"_a, rdoc::face);
         c.def("faceMapping",
             &regina::python::faceMapping<dim, subdim>,
-            "lowerdim"_a, "face"_a, rbase::faceMapping);
+            "lowerdim"_a, "face"_a, rdoc::faceMapping);
     }
     if constexpr (subdim > 4) {
         c.def("pentachoron", &Face<dim, subdim>::pentachoron,
-            pybind11::return_value_policy::reference, rbase::pentachoron);
+            pybind11::return_value_policy::reference, rdoc::pentachoron);
         c.def("pentachoronMapping", &Face<dim, subdim>::pentachoronMapping,
-            rbase::pentachoronMapping);
+            rdoc::pentachoronMapping);
     }
     if constexpr (subdim > 3) {
         c.def("tetrahedron", &Face<dim, subdim>::tetrahedron,
-            pybind11::return_value_policy::reference, rbase::tetrahedron);
+            pybind11::return_value_policy::reference, rdoc::tetrahedron);
         c.def("tetrahedronMapping", &Face<dim, subdim>::tetrahedronMapping,
-            rbase::tetrahedronMapping);
+            rdoc::tetrahedronMapping);
     }
     if constexpr (subdim > 2) {
         c.def("triangle", &Face<dim, subdim>::triangle,
-            pybind11::return_value_policy::reference, rbase::triangle);
+            pybind11::return_value_policy::reference, rdoc::triangle);
         c.def("triangleMapping", &Face<dim, subdim>::triangleMapping,
-            rbase::triangleMapping);
+            rdoc::triangleMapping);
     }
     if constexpr (subdim > 1) {
         c.def("edge", &Face<dim, subdim>::edge,
-            pybind11::return_value_policy::reference, rbase::edge);
+            pybind11::return_value_policy::reference, rdoc::edge);
         c.def("edgeMapping", &Face<dim, subdim>::edgeMapping,
-            rbase::edgeMapping);
+            rdoc::edgeMapping);
     }
     if constexpr (subdim > 0) {
         c.def("vertex", &Face<dim, subdim>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex);
+            pybind11::return_value_policy::reference, rdoc::vertex);
         c.def("vertexMapping", &Face<dim, subdim>::vertexMapping,
-            rbase::vertexMapping);
+            rdoc::vertexMapping);
     }
     if constexpr (subdim == 1) {
-        c.def("isLoop", &Face<dim, subdim>::isLoop, rbase::isLoop);
+        c.def("isLoop", &Face<dim, subdim>::isLoop, rdoc::isLoop);
     }
     if constexpr (subdim == 2) {
         c.def("triangleType", &Face<dim, subdim>::triangleType,
-            rbase::triangleType);
+            rdoc::triangleType);
         c.def("triangleSubtype", &Face<dim, subdim>::triangleSubtype,
-            rbase::triangleSubtype);
+            rdoc::triangleSubtype);
         c.def("formsMobiusBand", &Face<dim, subdim>::formsMobiusBand,
-            rbase::formsMobiusBand);
-        c.def("formsCone", &Face<dim, subdim>::formsCone, rbase::formsCone);
+            rdoc::formsMobiusBand);
+        c.def("formsCone", &Face<dim, subdim>::formsCone, rdoc::formsCone);
     }
     if constexpr (dim - subdim == 1) {
-        c.def("join", &Face<dim, subdim>::join, rbase::join);
-        c.def("lock", &Face<dim, subdim>::lock, rbase::lock);
-        c.def("unlock", &Face<dim, subdim>::unlock, rbase::unlock);
-        c.def("isLocked", &Face<dim, subdim>::isLocked, rbase::isLocked);
+        c.def("join", &Face<dim, subdim>::join, rdoc::join);
+        c.def("lock", &Face<dim, subdim>::lock, rdoc::lock);
+        c.def("unlock", &Face<dim, subdim>::unlock, rdoc::unlock);
+        c.def("isLocked", &Face<dim, subdim>::isLocked, rdoc::isLocked);
         c.def("inMaximalForest", &Face<dim, subdim>::inMaximalForest,
-            rbase::inMaximalForest);
+            rdoc::inMaximalForest);
     }
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c);

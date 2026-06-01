@@ -67,70 +67,68 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    // We use the global scope here because all of Face's members are
-    // inherited, and so Face's own docstring namespace does not exist.
-    RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE(FaceNumbering)
 
     auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3", rdoc::Face::__class)
-        .def("index", &Tetrahedron<4>::index, rbase::index)
-        .def("degree", &Tetrahedron<4>::degree, rbase::degree)
-        .def("embedding", &Tetrahedron<4>::embedding, rbase::embedding)
-        .def("embeddings", &Tetrahedron<4>::embeddings, rbase::embeddings)
+        .def("index", &Tetrahedron<4>::index, rdoc::index)
+        .def("degree", &Tetrahedron<4>::degree, rdoc::degree)
+        .def("embedding", &Tetrahedron<4>::embedding, rdoc::embedding)
+        .def("embeddings", &Tetrahedron<4>::embeddings, rdoc::embeddings)
         .def("__iter__", [](const Tetrahedron<4>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
-            rbase::__iter__)
-        .def("front", &Tetrahedron<4>::front, rbase::front)
-        .def("back", &Tetrahedron<4>::back, rbase::back)
+            rdoc::__iter__)
+        .def("front", &Tetrahedron<4>::front, rdoc::front)
+        .def("back", &Tetrahedron<4>::back, rdoc::back)
         .def("triangulation", &Tetrahedron<4>::triangulation,
-            rbase::triangulation)
+            rdoc::triangulation)
         .def("component", &Tetrahedron<4>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("boundaryComponent", &Tetrahedron<4>::boundaryComponent,
-            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
         .def("face", &regina::python::face<4, 3>,
-            "lowerdim"_a, "face"_a, rbase::face)
+            "lowerdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Tetrahedron<4>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex)
+            pybind11::return_value_policy::reference, rdoc::vertex)
         .def("edge", &Tetrahedron<4>::edge,
-            pybind11::return_value_policy::reference, rbase::edge)
+            pybind11::return_value_policy::reference, rdoc::edge)
         .def("triangle", &Tetrahedron<4>::triangle,
-            pybind11::return_value_policy::reference, rbase::triangle)
+            pybind11::return_value_policy::reference, rdoc::triangle)
         .def("faceMapping", &regina::python::faceMapping<4, 3>,
-            "lowerdim"_a, "face"_a, rbase::faceMapping)
+            "lowerdim"_a, "face"_a, rdoc::faceMapping)
         .def("vertexMapping", &Tetrahedron<4>::vertexMapping,
-            rbase::vertexMapping)
-        .def("edgeMapping", &Tetrahedron<4>::edgeMapping, rbase::edgeMapping)
+            rdoc::vertexMapping)
+        .def("edgeMapping", &Tetrahedron<4>::edgeMapping, rdoc::edgeMapping)
         .def("triangleMapping", &Tetrahedron<4>::triangleMapping,
-            rbase::triangleMapping)
-        .def("join", &Tetrahedron<4>::join, rbase::join)
-        .def("lock", &Tetrahedron<4>::lock, rbase::lock)
-        .def("unlock", &Tetrahedron<4>::unlock, rbase::unlock)
-        .def("isLocked", &Tetrahedron<4>::isLocked, rbase::isLocked)
-        .def("isValid", &Tetrahedron<4>::isValid, rbase::isValid)
+            rdoc::triangleMapping)
+        .def("join", &Tetrahedron<4>::join, rdoc::join)
+        .def("lock", &Tetrahedron<4>::lock, rdoc::lock)
+        .def("unlock", &Tetrahedron<4>::unlock, rdoc::unlock)
+        .def("isLocked", &Tetrahedron<4>::isLocked, rdoc::isLocked)
+        .def("isValid", &Tetrahedron<4>::isValid, rdoc::isValid)
         .def("hasBadIdentification", &Tetrahedron<4>::hasBadIdentification,
-            rbase::hasBadIdentification)
-        .def("hasBadLink", &Tetrahedron<4>::hasBadLink, rbase::hasBadLink)
+            rdoc::hasBadIdentification)
+        .def("hasBadLink", &Tetrahedron<4>::hasBadLink, rdoc::hasBadLink)
         .def("isLinkOrientable", &Tetrahedron<4>::isLinkOrientable,
-            rbase::isLinkOrientable)
-        .def("isBoundary", &Tetrahedron<4>::isBoundary, rbase::isBoundary)
-        .def("isInternal", &Tetrahedron<4>::isInternal, rbase::isInternal)
+            rdoc::isLinkOrientable)
+        .def("isBoundary", &Tetrahedron<4>::isBoundary, rdoc::isBoundary)
+        .def("isInternal", &Tetrahedron<4>::isInternal, rdoc::isInternal)
         .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest,
-            rbase::inMaximalForest)
+            rdoc::inMaximalForest)
         .def("linkingSurface",
             static_cast<regina::python::generalLinkingSurface<4, 3>>(
                 &Tetrahedron<4>::linkingSurface),
-            rbase::linkingSurface)
-        .def_static("ordering", &Tetrahedron<4>::ordering, rbase2::ordering)
+            rdoc::linkingSurface)
+        .def_static("ordering", &Tetrahedron<4>::ordering, rbase::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(
                 &Tetrahedron<4>::faceNumber),
-            rbase2::faceNumber)
+            rbase::faceNumber)
         .def_static("containsVertex", &Tetrahedron<4>::containsVertex,
-            rbase2::containsVertex)
+            rbase::containsVertex)
         .def_readonly_static("nFaces", &Tetrahedron<4>::nFaces)
         .def_readonly_static("lexNumbering", &Tetrahedron<4>::lexNumbering)
         .def_readonly_static("oppositeDim", &Tetrahedron<4>::oppositeDim)

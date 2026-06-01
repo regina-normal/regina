@@ -64,60 +64,58 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    // We use the global scope here because all of Face's members are
-    // inherited, and so Face's own docstring namespace does not exist.
-    RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE(FaceNumbering)
 
-    auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1", rdoc::Face::__class)
-        .def("index", &Edge<2>::index, rbase::index)
-        .def("isValid", &Edge<2>::isValid, rbase::isValid)
+    auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1", rdoc::__class)
+        .def("index", &Edge<2>::index, rdoc::index)
+        .def("isValid", &Edge<2>::isValid, rdoc::isValid)
         .def("hasBadIdentification", &Edge<2>::hasBadIdentification,
-            rbase::hasBadIdentification)
-        .def("hasBadLink", &Edge<2>::hasBadLink, rbase::hasBadLink)
+            rdoc::hasBadIdentification)
+        .def("hasBadLink", &Edge<2>::hasBadLink, rdoc::hasBadLink)
         .def("isLinkOrientable", &Edge<2>::isLinkOrientable,
-            rbase::isLinkOrientable)
-        .def("degree", &Edge<2>::degree, rbase::degree)
-        .def("embedding", &Edge<2>::embedding, rbase::embedding)
-        .def("embeddings", &Edge<2>::embeddings, rbase::embeddings)
+            rdoc::isLinkOrientable)
+        .def("degree", &Edge<2>::degree, rdoc::degree)
+        .def("embedding", &Edge<2>::embedding, rdoc::embedding)
+        .def("embeddings", &Edge<2>::embeddings, rdoc::embeddings)
         .def("__iter__", [](const Edge<2>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
-            rbase::__iter__)
-        .def("front", &Edge<2>::front, rbase::front)
-        .def("back", &Edge<2>::back, rbase::back)
-        .def("triangulation", &Edge<2>::triangulation, rbase::triangulation)
+            rdoc::__iter__)
+        .def("front", &Edge<2>::front, rdoc::front)
+        .def("back", &Edge<2>::back, rdoc::back)
+        .def("triangulation", &Edge<2>::triangulation, rdoc::triangulation)
         .def("component", &Edge<2>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("boundaryComponent", &Edge<2>::boundaryComponent,
-            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
         .def("face", &regina::python::face<2, 1>,
-            "lowerdim"_a, "face"_a, rbase::face)
+            "lowerdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Edge<2>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex)
+            pybind11::return_value_policy::reference, rdoc::vertex)
         .def("faceMapping", &regina::python::faceMapping<2, 1>,
-            "lowerdim"_a, "face"_a, rbase::faceMapping)
-        .def("vertexMapping", &Edge<2>::vertexMapping, rbase::vertexMapping)
-        .def("join", &Edge<2>::join, rbase::join)
-        .def("isLoop", &Edge<2>::isLoop, rbase::isLoop)
-        .def("lock", &Edge<2>::lock, rbase::lock)
-        .def("unlock", &Edge<2>::unlock, rbase::unlock)
-        .def("isLocked", &Edge<2>::isLocked, rbase::isLocked)
-        .def("isBoundary", &Edge<2>::isBoundary, rbase::isBoundary)
-        .def("isInternal", &Edge<2>::isInternal, rbase::isInternal)
+            "lowerdim"_a, "face"_a, rdoc::faceMapping)
+        .def("vertexMapping", &Edge<2>::vertexMapping, rdoc::vertexMapping)
+        .def("join", &Edge<2>::join, rdoc::join)
+        .def("isLoop", &Edge<2>::isLoop, rdoc::isLoop)
+        .def("lock", &Edge<2>::lock, rdoc::lock)
+        .def("unlock", &Edge<2>::unlock, rdoc::unlock)
+        .def("isLocked", &Edge<2>::isLocked, rdoc::isLocked)
+        .def("isBoundary", &Edge<2>::isBoundary, rdoc::isBoundary)
+        .def("isInternal", &Edge<2>::isInternal, rdoc::isInternal)
         .def("inMaximalForest", &Edge<2>::inMaximalForest,
-            rbase::inMaximalForest)
-        .def_static("ordering", &Edge<2>::ordering, rbase2::ordering)
+            rdoc::inMaximalForest)
+        .def_static("ordering", &Edge<2>::ordering, rbase::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<3>>(&Edge<2>::faceNumber),
-            rbase2::faceNumber)
+            rbase::faceNumber)
         .def_static("faceNumber",
             pybind11::overload_cast<int, int>(&Edge<2>::faceNumber),
-            rbase2::faceNumber_2)
+            rbase::faceNumber_2)
         .def_static("containsVertex", &Edge<2>::containsVertex,
-            rbase2::containsVertex)
+            rbase::containsVertex)
         .def_readonly_static("nFaces", &Edge<2>::nFaces)
         .def_readonly_static("lexNumbering", &Edge<2>::lexNumbering)
         .def_readonly_static("oppositeDim", &Edge<2>::oppositeDim)

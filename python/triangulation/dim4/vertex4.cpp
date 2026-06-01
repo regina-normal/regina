@@ -63,57 +63,55 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    // We use the global scope here because all of Face's members are
-    // inherited, and so Face's own docstring namespace does not exist.
-    RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE(FaceNumbering)
 
     auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc::Face::__class)
-        .def("index", &Vertex<4>::index, rbase::index)
-        .def("embedding", &Vertex<4>::embedding, rbase::embedding)
-        .def("embeddings", &Vertex<4>::embeddings, rbase::embeddings)
+        .def("index", &Vertex<4>::index, rdoc::index)
+        .def("embedding", &Vertex<4>::embedding, rdoc::embedding)
+        .def("embeddings", &Vertex<4>::embeddings, rdoc::embeddings)
         .def("__iter__", [](const Vertex<4>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
-            rbase::__iter__)
-        .def("front", &Vertex<4>::front, rbase::front)
-        .def("back", &Vertex<4>::back, rbase::back)
-        .def("triangulation", &Vertex<4>::triangulation, rbase::triangulation)
+            rdoc::__iter__)
+        .def("front", &Vertex<4>::front, rdoc::front)
+        .def("back", &Vertex<4>::back, rdoc::back)
+        .def("triangulation", &Vertex<4>::triangulation, rdoc::triangulation)
         .def("component", &Vertex<4>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("boundaryComponent", &Vertex<4>::boundaryComponent,
-            pybind11::return_value_policy::reference, rbase::boundaryComponent)
-        .def("degree", &Vertex<4>::degree, rbase::degree)
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
+        .def("degree", &Vertex<4>::degree, rdoc::degree)
         .def("buildLink", [](const Vertex<4>& v) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<3>(v.buildLink());
-        }, rbase::buildLink)
+        }, rdoc::buildLink)
         .def("buildLinkInclusion", &Vertex<4>::buildLinkInclusion,
-            rbase::buildLinkInclusion)
+            rdoc::buildLinkInclusion)
         .def("isLinkOrientable", &Vertex<4>::isLinkOrientable,
-            rbase::isLinkOrientable)
-        .def("isValid", &Vertex<4>::isValid, rbase::isValid)
+            rdoc::isLinkOrientable)
+        .def("isValid", &Vertex<4>::isValid, rdoc::isValid)
         .def("hasBadIdentification", &Vertex<4>::hasBadIdentification,
-            rbase::hasBadIdentification)
-        .def("hasBadLink", &Vertex<4>::hasBadLink, rbase::hasBadLink)
-        .def("isLinkClosed", &Vertex<4>::isLinkClosed, rbase::isLinkClosed)
-        .def("isIdeal", &Vertex<4>::isIdeal, rbase::isIdeal)
-        .def("isBoundary", &Vertex<4>::isBoundary, rbase::isBoundary)
-        .def("isInternal", &Vertex<4>::isInternal, rbase::isInternal)
+            rdoc::hasBadIdentification)
+        .def("hasBadLink", &Vertex<4>::hasBadLink, rdoc::hasBadLink)
+        .def("isLinkClosed", &Vertex<4>::isLinkClosed, rdoc::isLinkClosed)
+        .def("isIdeal", &Vertex<4>::isIdeal, rdoc::isIdeal)
+        .def("isBoundary", &Vertex<4>::isBoundary, rdoc::isBoundary)
+        .def("isInternal", &Vertex<4>::isInternal, rdoc::isInternal)
         .def("linkingSurface",
             static_cast<regina::python::vertexLinkingSurface<4>>(
                 &Vertex<4>::linkingSurface),
-            rbase::linkingSurface)
-        .def_static("ordering", &Vertex<4>::ordering, rbase2::ordering)
+            rdoc::linkingSurface)
+        .def_static("ordering", &Vertex<4>::ordering, rbase::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(&Vertex<4>::faceNumber),
-            rbase2::faceNumber)
+            rbase::faceNumber)
         .def_static("containsVertex", &Vertex<4>::containsVertex,
-            rbase2::containsVertex)
+            rbase::containsVertex)
         .def_readonly_static("nFaces", &Vertex<4>::nFaces)
         .def_readonly_static("lexNumbering", &Vertex<4>::lexNumbering)
         .def_readonly_static("oppositeDim", &Vertex<4>::oppositeDim)

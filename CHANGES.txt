@@ -153,15 +153,18 @@ Version 8.0  [ TODO ]
         Class DivisionByZero:
             - New exception class.
         Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
-            - Major overhaul of the many classes to support face numbering.
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class FaceBase is gone.
+            - The routine isLinkClosed() is now available for all faces
+              where subdim < dim - 1 (not just vertices in dimension 3).
+            - New routine isInternal().
+            - Major overhaul of the many classes that support face numbering.
               The new structure is simpler thanks to new features of modern
               C++ standards, and several of the old helper classes in
               regina::detail are now gone.
             - New class constant hasNumberingTables to indicate whether lookup
               tables are used for face numbering queries.
-            - The routine isLinkClosed() is now available for all faces
-              where subdim < dim - 1 (not just vertices in dimension 3).
-            - New routine isInternal().
         Class Face<3, 0>:
             - In Vertex<3>, the type Link (and its deprecated alias LinkType),
               along with all the associated constants (Sphere, Disc, etc.) are

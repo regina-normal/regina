@@ -1159,8 +1159,8 @@ class Face<dim, dim> : public MarkedElement, public Output<Face<dim, dim>> {
 
     // Face::relabel() adjusts Simplex::mappings_.
     template <int dim_, int subdim>
-    requires (supportedDim(dim_) && subdim >= 0 && subdim < dim_)
-    friend class detail::FaceBase;
+    requires (supportedDim(dim_) && subdim >= 0 && subdim <= dim_)
+    friend class Face;
 };
 
 // Inline functions for Simplex<dim> == Face<dim, dim>

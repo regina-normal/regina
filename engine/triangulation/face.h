@@ -118,10 +118,6 @@ enum class TriangleType {
 
 namespace detail {
     template <int dim> requires (supportedDim(dim)) class TriangulationBase;
-
-    template <int dim, int subdim>
-    requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-    class FaceBase;
 }
 
 /**
@@ -384,10 +380,12 @@ class FaceEmbedding : public ShortOutput<FaceEmbedding<dim, subdim>> {
          */
         FaceEmbedding(Simplex<dim>*, int);
 
-    friend class detail::FaceBase<dim, subdim>;
+    friend class Face<dim, subdim>;
 };
 
 #ifndef __DOXYGEN
+namespace detail {
+
 /**
  * Internal helper class that determines the data structure used to
  * store embeddings for a face of a triangulation.
@@ -433,39 +431,80 @@ struct FaceEmbeddingsList<dim, 1> {
      */
     using type = ShortArray<FaceEmbedding<dim, dim - 1>, 2>;
 };
+
+} // namespace detail
 #endif // __DOXYGEN
 
-namespace detail {
-
 /**
- * Helper class that provides core functionality for a <i>subdim</i>-face
- * in the skeleton of a <i>dim</i>-dimensional triangulation.
+ * Represents a <i>subdim</i>-face in the skeleton of a <i>dim</i>-dimensional
+ * triangulation.  There are two substantially different cases:
  *
- * Each <i>subdim</i>-face is described by a Face<dim, subdim> object,
- * which uses this as a base class.  End users should not need to refer
- * to FaceBase directly.
+ * - The case \a subdim \< \a dim represents a lower-dimensional face
+ *   in a triangulation.  This is implemented by the generic class
+ *   template (as documented here), and is specialised for Regina's
+ *   \ref stddim "standard dimensions" (as discussed below).
  *
- * See the Face template class notes for further information.
+ * - The case \a subdim = \a dim represents a top-dimensional simplex in
+ *   a triangulation.  This class has a very different interface, and is
+ *   implemented by the partial specialisation Face<dim, dim> (and again
+ *   specialised further for \ref stddim "standard dimensions").   This
+ *   case is typically referred to using the type alias Simplex<dim>, to
+ *   make the distinction clear.  See the documentation for the specialisation
+ *   Face<dim, dim> for details on the interface that it provides.
  *
- * Neither this class nor the "end user" class Face<dim> support
- * value semantics: they cannot be copied, swapped, or manually constructed.
- * Their memory is managed by the Triangulation class, and their locations
- * in memory define them.  See Face<dim> for further details.
+ * For small-dimensional faces, this class is typically described using
+ * dimension-specific type aliases: Vertex<dim>, Edge<dim>, Triangle<dim>,
+ * Tetrahedron<dim> and Pentachoron<dim> refer to the cases
+ * \a subdim = 0, 1, 2, 3 and 4 respectively.
  *
- * \python This base class is not present, but the "end user" class
- * Face<dim, subdim> is.
+ * A given <i>subdim</i>-face \a F of the triangulation may appear many
+ * times within the various top-dimensional simplices of the underlying
+ * triangulation.  As an extreme example, in a 1-vertex triangulation of
+ * a 3-manifold, the single vertex makes 4<i>n</i> such appearances,
+ * where \a n is the total number of tetrahedra.
+ *
+ * Each such appearance is described by a single FaceEmbedding object.  You can
+ * iterate through these appearances using begin() and end(), or using a
+ * range-based `for` loop:
+ *
+ * \code{.cpp}
+ * for (auto& emb : face) { ... }
+ * \endcode
+ *
+ * You can count these appearances by calling degree(), and you can also
+ * examine them using routines such as front(), back() and embedding().
+ *
+ * \warning Face objects are highly temporary: whenever a triangulation
+ * changes, all its face objects will be deleted and new ones will be
+ * created in their place.
+ *
+ * Faces do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
+ * \python Python does not support templates.  Instead
+ * this class can be used by appending dimensions \a dim and \a subdim as
+ * suffices (e.g., Face2_1 and Face3_0 for the two examples above).
  *
  * \tparam dim the dimension of the underlying triangulation.
  * \tparam subdim the dimension of the faces that this class represents.
  *
- * \ingroup detail
+ * \headerfile triangulation/triangulation.h
+ *
+ * \ingroup triangulation
  */
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-class FaceBase :
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+class Face :
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
         public ShortOutput<Face<dim, subdim>> {
+    static_assert(subdim < dim,
+        "The generic implementation of Face<dim, subdim> "
+        "should only be used for the case subdim < dim.");
+
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -520,7 +559,8 @@ class FaceBase :
             FLAG_REAL_BOUNDARY = 2
         };
 
-        typename FaceEmbeddingsList<dim, dim - subdim>::type embeddings_;
+        typename detail::FaceEmbeddingsList<dim, dim - subdim>::type
+                embeddings_;
             /**< The list of all occurrences of this face within the
                  top-dimensional simplices of the underlying triangulation. */
         Component<dim>* component_;
@@ -570,7 +610,7 @@ class FaceBase :
         /**
          * Default destructor.
          */
-        ~FaceBase();
+        ~Face();
 
         /**
          * Returns the index of this face within the underlying
@@ -1528,18 +1568,18 @@ class FaceBase :
         void writeTextShort(std::ostream& out) const;
 
         // Make this class non-copyable.
-        FaceBase(const FaceBase&) = delete;
-        FaceBase& operator = (const FaceBase&) = delete;
+        Face(const Face&) = delete;
+        Face& operator = (const Face&) = delete;
 
-    protected:
+    private:
         /**
-         * Creates a new face.  The face will be initialised as belong
-         * to no boundary component.
+         * Creates a new face and marks it as belonging to the given
+         * triangulation component.
          *
          * \param component the component of the underlying triangulation
          * to which the new face belongs.
          */
-        FaceBase(Component<dim>* component);
+        Face(Component<dim>* component);
 
         /**
          * Destroys the triangulated link.
@@ -1552,7 +1592,6 @@ class FaceBase :
          */
         void destroyLink() requires (standardDim(dim) && dim - subdim >= 3);
 
-    private:
         /**
          * Relabels the vertices of this face.
          *
@@ -1575,103 +1614,13 @@ class FaceBase :
          */
         void relabel(Perm<dim + 1> adjust);
 
-    friend class regina::Triangulation<dim>;
-    friend class regina::detail::TriangulationBase<dim>;
+    friend class Triangulation<dim>;
+    friend class detail::TriangulationBase<dim>;
 
     // BoundaryComponent<dim>::buildRealBoundary() calls
     // Face<dim-1, subdim>::relabel().
     template <int dim_> requires (supportedDim(dim_))
-    friend class regina::BoundaryComponent;
-};
-
-} // namespace regina::detail -> namespace regina
-
-/**
- * Represents a <i>subdim</i>-face in the skeleton of a <i>dim</i>-dimensional
- * triangulation.  There are two substantially different cases:
- *
- * - The case \a subdim \< \a dim represents a lower-dimensional face
- *   in a triangulation.  This is implemented by the generic class
- *   template (as documented here), and is specialised for Regina's
- *   \ref stddim "standard dimensions" (as discussed below).
- *
- * - The case \a subdim = \a dim represents a top-dimensional simplex in
- *   a triangulation.  This class has a very different interface, and is
- *   implemented by the partial specialisation Face<dim, dim> (and again
- *   specialised further for \ref stddim "standard dimensions").   This
- *   case is typically referred to using the type alias Simplex<dim>, to
- *   make the distinction clear.  See the documentation for the specialisation
- *   Face<dim, dim> for details on the interface that it provides.
- *
- * For small-dimensional faces, this class is typically described using
- * dimension-specific type aliases: Vertex<dim>, Edge<dim>, Triangle<dim>,
- * Tetrahedron<dim> and Pentachoron<dim> refer to the cases
- * \a subdim = 0, 1, 2, 3 and 4 respectively.
- *
- * A given <i>subdim</i>-face \a F of the triangulation may appear many
- * times within the various top-dimensional simplices of the underlying
- * triangulation.  As an extreme example, in a 1-vertex triangulation of
- * a 3-manifold, the single vertex makes 4<i>n</i> such appearances,
- * where \a n is the total number of tetrahedra.
- *
- * Each such appearance is described by a single FaceEmbedding object.  You can
- * iterate through these appearances using begin() and end(), or using a
- * range-based `for` loop:
- *
- * \code{.cpp}
- * for (auto& emb : face) { ... }
- * \endcode
- *
- * You can count these appearances by calling degree(), and you can also
- * examine them using routines such as front(), back() and embedding().
- *
- * \warning Face objects are highly temporary: whenever a triangulation
- * changes, all its face objects will be deleted and new ones will be
- * created in their place.
- *
- * For some types of faces in dimensions \a dim = 3 and 4, this template is
- * specialised to offer additional functionality.  In order to use these
- * specialised classes, you will need to include the corresponding triangulation
- * headers (triangulation/dim3.h or triangulation/dim4.h respectively).
- *
- * Faces do not support value semantics: they cannot be copied, swapped,
- * or manually constructed.  Their location in memory defines them, and
- * they are often passed and compared by pointer.  End users are never
- * responsible for their memory management; this is all taken care of by
- * the Triangulation to which they belong.
- *
- * \python Python does not support templates.  Instead
- * this class can be used by appending dimensions \a dim and \a subdim as
- * suffices (e.g., Face2_1 and Face3_0 for the two examples above).
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam subdim the dimension of the faces that this class represents.
- *
- * \headerfile triangulation/triangulation.h
- *
- * \ingroup triangulation
- */
-template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
-class Face : public detail::FaceBase<dim, subdim> {
-    static_assert(subdim < dim,
-        "The generic implementation of Face<dim, subdim> "
-        "should only be used for the case subdim < dim.");
-
-    protected:
-        /**
-         * Creates a new face and marks it as belonging to the given
-         * triangulation component.
-         *
-         * \param component the component of the underlying triangulation
-         * to which the new face belongs.
-         */
-        Face(Component<dim>* component) :
-                detail::FaceBase<dim, subdim>(component) {
-        }
-
-    friend class Triangulation<dim>;
-    friend class detail::TriangulationBase<dim>;
+    friend class BoundaryComponent;
 };
 
 // Inline functions for FaceEmbedding
@@ -1778,51 +1727,49 @@ inline void FaceEmbedding<dim, subdim>::writeTextShort(std::ostream& out)
             << vertices_.trunc(subdim + 1) << ')';
 }
 
-// Inline functions for FaceBase
-
-namespace detail {
+// Inline functions for Face
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline FaceBase<dim, subdim>::~FaceBase() {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Face<dim, subdim>::~Face() {
     if constexpr (standardDim(dim) && dim - subdim >= 3)
         destroyLink();
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline size_t FaceBase<dim, subdim>::index() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline size_t Face<dim, subdim>::index() const {
     return markedIndex();
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Triangulation<dim>& FaceBase<dim, subdim>::triangulation() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Triangulation<dim>& Face<dim, subdim>::triangulation() const {
     return front().simplex()->triangulation();
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Component<dim>* FaceBase<dim, subdim>::component() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Component<dim>* Face<dim, subdim>::component() const {
     return component_;
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline BoundaryComponent<dim>* FaceBase<dim, subdim>::boundaryComponent()
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline BoundaryComponent<dim>* Face<dim, subdim>::boundaryComponent()
         const {
     return boundaryComponent_;
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isBoundary() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::isBoundary() const {
     return boundaryComponent_;
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isInternal() const requires (standardDim(dim)) {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::isInternal() const requires (standardDim(dim)) {
     // We need to be valid, and have no boundary component.
     if constexpr (subdim == 0 || ! allowsInvalidFaces) {
         // Note: ideal and invalid vertices get their own boundary components.
@@ -1836,59 +1783,59 @@ inline bool FaceBase<dim, subdim>::isInternal() const requires (standardDim(dim)
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline size_t FaceBase<dim, subdim>::degree() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline size_t Face<dim, subdim>::degree() const {
     return embeddings_.size();
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::embedding(
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline const FaceEmbedding<dim, subdim>& Face<dim, subdim>::embedding(
         size_t index) const {
     return embeddings_[index];
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline auto FaceBase<dim, subdim>::embeddings() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline auto Face<dim, subdim>::embeddings() const {
     return std::views::all(embeddings_);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline auto FaceBase<dim, subdim>::begin() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline auto Face<dim, subdim>::begin() const {
     return embeddings_.begin();
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline auto FaceBase<dim, subdim>::end() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline auto Face<dim, subdim>::end() const {
     return embeddings_.end();
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::front() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline const FaceEmbedding<dim, subdim>& Face<dim, subdim>::front() const {
     return embeddings_.front();
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::back() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline const FaceEmbedding<dim, subdim>& Face<dim, subdim>::back() const {
     return embeddings_.back();
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::inMaximalForest() const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::inMaximalForest() const
         requires (subdim == dim - 1) {
     return embeddings_.front().simplex()->facetInMaximalForest(
         embeddings_.front().face());
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isLinkOrientable() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::isLinkOrientable() const {
     if constexpr (allowsNonOrientableLinks)
         return linkOrientable_.value;
     else
@@ -1896,8 +1843,8 @@ inline bool FaceBase<dim, subdim>::isLinkOrientable() const {
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isValid() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::isValid() const {
     if constexpr (! allowsInvalidFaces)
         return true;
     else if constexpr (standardDim(dim))
@@ -1907,8 +1854,8 @@ inline bool FaceBase<dim, subdim>::isValid() const {
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::hasBadIdentification() const {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::hasBadIdentification() const {
     if constexpr (! allowsInvalidFaces)
         return false;
     else if constexpr (standardDim(dim))
@@ -1918,8 +1865,8 @@ inline bool FaceBase<dim, subdim>::hasBadIdentification() const {
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::hasBadLink() const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::hasBadLink() const
         requires (standardDim(dim)) {
     if constexpr (! allowsInvalidFaces)
         return false;
@@ -1928,15 +1875,15 @@ inline bool FaceBase<dim, subdim>::hasBadLink() const
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isLinkClosed() const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::isLinkClosed() const
         requires (subdim < dim - 1) {
     return ! (boundaryComponent_ && boundaryComponent_->isReal());
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isIdeal() const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::isIdeal() const
         requires (subdim == 0 && standardDim(dim)) {
     if constexpr (dim == 2) {
         return false;
@@ -1949,8 +1896,8 @@ inline bool FaceBase<dim, subdim>::isIdeal() const
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-bool FaceBase<dim, subdim>::isStandard() const requires (subdim == 0 && dim == 3) {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+bool Face<dim, subdim>::isStandard() const requires (subdim == 0 && dim == 3) {
     // Note: If the link has Euler characteristic < 2, then the vertex must
     // belong to a boundary component (i.e., boundaryComponent_ is not null).
     switch (linkEulerChar_.value) {
@@ -1966,16 +1913,16 @@ bool FaceBase<dim, subdim>::isStandard() const requires (subdim == 0 && dim == 3
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline long FaceBase<dim, subdim>::linkEulerChar() const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline long Face<dim, subdim>::linkEulerChar() const
         requires (subdim == 0 && dim == 3) {
     return linkEulerChar_.value;
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 template <int lowerdim> requires (lowerdim >= 0 && lowerdim < subdim)
-inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
+inline Face<dim, lowerdim>* Face<dim, subdim>::face(int f) const {
     // Let S be the dim-simplex corresponding to the first embedding,
     // i.e., this->front().
     // Let face f of this subdim-face correspond to face inSimp of S.
@@ -1990,44 +1937,44 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Vertex<dim>* FaceBase<dim, subdim>::vertex(int i) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Vertex<dim>* Face<dim, subdim>::vertex(int i) const
         requires (subdim > 0) {
     return face<0>(i);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Edge<dim>* FaceBase<dim, subdim>::edge(int i) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Edge<dim>* Face<dim, subdim>::edge(int i) const
         requires (subdim > 1) {
     return face<1>(i);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Triangle<dim>* FaceBase<dim, subdim>::triangle(int i) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Triangle<dim>* Face<dim, subdim>::triangle(int i) const
         requires (subdim > 2) {
     return face<2>(i);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline SafeTetrahedron<dim>* FaceBase<dim, subdim>::tetrahedron(int i) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline SafeTetrahedron<dim>* Face<dim, subdim>::tetrahedron(int i) const
         requires (subdim > 3) {
     return face<3>(i);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline SafePentachoron<dim>* FaceBase<dim, subdim>::pentachoron(int i) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline SafePentachoron<dim>* Face<dim, subdim>::pentachoron(int i) const
         requires (subdim > 4) {
     return face<4>(i);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 template <int lowerdim> requires (lowerdim >= 0 && lowerdim < subdim)
-Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
+Perm<dim + 1> Face<dim, subdim>::faceMapping(int f) const {
     // Let S be the dim-simplex corresponding to the first embedding,
     // i.e., this->front().
     // Let face f of this subdim-face correspond to face inSimp of S.
@@ -2060,43 +2007,43 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Perm<dim + 1> FaceBase<dim, subdim>::vertexMapping(int face) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Perm<dim + 1> Face<dim, subdim>::vertexMapping(int face) const
         requires (subdim > 0) {
     return faceMapping<0>(face);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Perm<dim + 1> FaceBase<dim, subdim>::edgeMapping(int face) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Perm<dim + 1> Face<dim, subdim>::edgeMapping(int face) const
         requires (subdim > 1) {
     return faceMapping<1>(face);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Perm<dim + 1> FaceBase<dim, subdim>::triangleMapping(int face) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Perm<dim + 1> Face<dim, subdim>::triangleMapping(int face) const
         requires (subdim > 2) {
     return faceMapping<2>(face);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Perm<dim + 1> FaceBase<dim, subdim>::tetrahedronMapping(int face) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Perm<dim + 1> Face<dim, subdim>::tetrahedronMapping(int face) const
         requires (subdim > 3) {
     return faceMapping<3>(face);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline Perm<dim + 1> FaceBase<dim, subdim>::pentachoronMapping(int face) const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Perm<dim + 1> Face<dim, subdim>::pentachoronMapping(int face) const
         requires (subdim > 4) {
     return faceMapping<4>(face);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline void FaceBase<dim, subdim>::join(Face<dim, subdim>* you,
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline void Face<dim, subdim>::join(Face<dim, subdim>* you,
         Perm<dim> gluing) requires (subdim == dim - 1) {
     // The preconditions and locks will be checked by Simplex::join().
     // All we need to do is pull together the correct arguments.
@@ -2108,16 +2055,16 @@ inline void FaceBase<dim, subdim>::join(Face<dim, subdim>* you,
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isLoop() const requires (subdim == 1) {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::isLoop() const requires (subdim == 1) {
     const auto& emb = front();
     const Simplex<dim>* simp = emb.simplex();
     return simp->vertex(emb.vertices()[0]) == simp->vertex(emb.vertices()[1]);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline TriangleType FaceBase<dim, subdim>::triangleType()
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline TriangleType Face<dim, subdim>::triangleType()
         requires (subdim == 2 && dim >= 3) {
     if (triangleType_.value != TriangleType::Unknown)
         return triangleType_.value;
@@ -2178,16 +2125,16 @@ inline TriangleType FaceBase<dim, subdim>::triangleType()
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline int FaceBase<dim, subdim>::triangleSubtype()
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline int Face<dim, subdim>::triangleSubtype()
         requires (subdim == 2 && dim >= 3) {
     triangleType();
     return triangleSubtype_.value;
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::formsMobiusBand()
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::formsMobiusBand()
         requires (subdim == 2 && dim >= 3) {
     switch (triangleType()) {
         case TriangleType::L31:
@@ -2200,9 +2147,8 @@ inline bool FaceBase<dim, subdim>::formsMobiusBand()
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::formsCone()
-        requires (subdim == 2 && dim >= 3) {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::formsCone() requires (subdim == 2 && dim >= 3) {
     switch (triangleType()) {
         case TriangleType::DunceHat:
         case TriangleType::Cone:
@@ -2214,56 +2160,51 @@ inline bool FaceBase<dim, subdim>::formsCone()
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline void FaceBase<dim, subdim>::lock() requires (subdim == dim - 1) {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline void Face<dim, subdim>::lock() requires (subdim == dim - 1) {
     auto emb = front();
     emb.simplex()->lockFacet(emb.vertices()[dim]);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline void FaceBase<dim, subdim>::unlock() requires (subdim == dim - 1) {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline void Face<dim, subdim>::unlock() requires (subdim == dim - 1) {
     auto emb = front();
     emb.simplex()->unlockFacet(emb.vertices()[dim]);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isLocked() const
-        requires (subdim == dim - 1) {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline bool Face<dim, subdim>::isLocked() const requires (subdim == dim - 1) {
     auto emb = front();
     return emb.simplex()->isFacetLocked(emb.vertices()[dim]);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline SafeHypersurface<dim> FaceBase<dim, subdim>::linkingSurface() const
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline SafeHypersurface<dim> Face<dim, subdim>::linkingSurface() const
         requires ((dim == 3 || dim == 4) && subdim == 0) {
-    // TODO
-    return std::move(triangulation().linkingSurface(
-        static_cast<const Face<dim, subdim>&>(*this)).first);
+    return std::move(triangulation().linkingSurface(*this).first);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
 inline std::pair<SafeHypersurface<dim>, bool>
-            FaceBase<dim, subdim>::linkingSurface() const
+            Face<dim, subdim>::linkingSurface() const
             requires ((dim == 3 || dim == 4) && subdim > 0) {
-    // TODO
-    return triangulation().linkingSurface(
-        static_cast<const Face<dim, subdim>&>(*this));
+    return triangulation().linkingSurface(*this);
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+inline Face<dim, subdim>::Face(Component<dim>* component) :
         component_(component), boundaryComponent_(nullptr) {
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
-    out << Strings<subdim>::Face << ' ' << index() << ", ";
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+void Face<dim, subdim>::writeTextShort(std::ostream& out) const {
+    out << detail::Strings<subdim>::Face << ' ' << index() << ", ";
     if constexpr (dim == 3 && subdim == 0) {
         // Identify vertex links in dimension 3 in more detail.
         if (whyInvalid_.value)
@@ -2311,8 +2252,8 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
 }
 
 template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-void FaceBase<dim, subdim>::relabel(Perm<dim + 1> adjust) {
+requires (supportedDim(dim) && subdim >= 0 && subdim <= dim)
+void Face<dim, subdim>::relabel(Perm<dim + 1> adjust) {
     adjust.clear(subdim + 1);
     if (! adjust.isIdentity()) {
         if (adjust.sign() < 0) {
@@ -2351,6 +2292,6 @@ void FaceBase<dim, subdim>::relabel(Perm<dim + 1> adjust) {
     }
 }
 
-} } // namespace regina::detail
+} // namespace regina
 
 #endif

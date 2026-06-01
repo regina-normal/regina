@@ -68,64 +68,62 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    // We use the global scope here because all of Face's members are
-    // inherited, and so Face's own docstring namespace does not exist.
-    RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE(FaceNumbering)
 
     auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2", rdoc::Face::__class)
-        .def("index", &Triangle<4>::index, rbase::index)
-        .def("embedding", &Triangle<4>::embedding, rbase::embedding)
-        .def("embeddings", &Triangle<4>::embeddings, rbase::embeddings)
+        .def("index", &Triangle<4>::index, rdoc::index)
+        .def("embedding", &Triangle<4>::embedding, rdoc::embedding)
+        .def("embeddings", &Triangle<4>::embeddings, rdoc::embeddings)
         .def("__iter__", [](const Triangle<4>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
-            rbase::__iter__)
-        .def("front", &Triangle<4>::front, rbase::front)
-        .def("back", &Triangle<4>::back, rbase::back)
-        .def("triangulation", &Triangle<4>::triangulation, rbase::triangulation)
+            rdoc::__iter__)
+        .def("front", &Triangle<4>::front, rdoc::front)
+        .def("back", &Triangle<4>::back, rdoc::back)
+        .def("triangulation", &Triangle<4>::triangulation, rdoc::triangulation)
         .def("component", &Triangle<4>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("boundaryComponent", &Triangle<4>::boundaryComponent,
-            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
         .def("face", &regina::python::face<4, 2>,
-            "lowerdim"_a, "face"_a, rbase::face)
+            "lowerdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Triangle<4>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex)
+            pybind11::return_value_policy::reference, rdoc::vertex)
         .def("edge", &Triangle<4>::edge,
-            pybind11::return_value_policy::reference, rbase::edge)
+            pybind11::return_value_policy::reference, rdoc::edge)
         .def("faceMapping", &regina::python::faceMapping<4, 2>,
-            "lowerdim"_a, "face"_a, rbase::faceMapping)
-        .def("vertexMapping", &Triangle<4>::vertexMapping, rbase::vertexMapping)
-        .def("edgeMapping", &Triangle<4>::edgeMapping, rbase::edgeMapping)
-        .def("triangleType", &Triangle<4>::triangleType, rbase::triangleType)
+            "lowerdim"_a, "face"_a, rdoc::faceMapping)
+        .def("vertexMapping", &Triangle<4>::vertexMapping, rdoc::vertexMapping)
+        .def("edgeMapping", &Triangle<4>::edgeMapping, rdoc::edgeMapping)
+        .def("triangleType", &Triangle<4>::triangleType, rdoc::triangleType)
         .def("triangleSubtype", &Triangle<4>::triangleSubtype,
-            rbase::triangleSubtype)
+            rdoc::triangleSubtype)
         .def("formsMobiusBand", &Triangle<4>::formsMobiusBand,
-            rbase::formsMobiusBand)
-        .def("formsCone", &Triangle<4>::formsCone, rbase::formsCone)
-        .def("degree", &Triangle<4>::degree, rbase::degree)
-        .def("isBoundary", &Triangle<4>::isBoundary, rbase::isBoundary)
-        .def("isInternal", &Triangle<4>::isInternal, rbase::isInternal)
+            rdoc::formsMobiusBand)
+        .def("formsCone", &Triangle<4>::formsCone, rdoc::formsCone)
+        .def("degree", &Triangle<4>::degree, rdoc::degree)
+        .def("isBoundary", &Triangle<4>::isBoundary, rdoc::isBoundary)
+        .def("isInternal", &Triangle<4>::isInternal, rdoc::isInternal)
         .def("isLinkOrientable", &Triangle<4>::isLinkOrientable,
-            rbase::isLinkOrientable)
-        .def("isValid", &Triangle<4>::isValid, rbase::isValid)
+            rdoc::isLinkOrientable)
+        .def("isValid", &Triangle<4>::isValid, rdoc::isValid)
         .def("hasBadIdentification", &Triangle<4>::hasBadIdentification,
-            rbase::hasBadIdentification)
-        .def("hasBadLink", &Triangle<4>::hasBadLink, rbase::hasBadLink)
-        .def("isLinkClosed", &Triangle<4>::isLinkClosed, rbase::isLinkClosed)
+            rdoc::hasBadIdentification)
+        .def("hasBadLink", &Triangle<4>::hasBadLink, rdoc::hasBadLink)
+        .def("isLinkClosed", &Triangle<4>::isLinkClosed, rdoc::isLinkClosed)
         .def("linkingSurface",
             static_cast<regina::python::generalLinkingSurface<4, 2>>(
                 &Triangle<4>::linkingSurface),
-            rbase::linkingSurface)
-        .def_static("ordering", &Triangle<4>::ordering, rbase2::ordering)
+            rdoc::linkingSurface)
+        .def_static("ordering", &Triangle<4>::ordering, rbase::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(&Triangle<4>::faceNumber),
-            rbase2::faceNumber)
+            rbase::faceNumber)
         .def_static("containsVertex", &Triangle<4>::containsVertex,
-            rbase2::containsVertex)
+            rbase::containsVertex)
         .def_readonly_static("nFaces", &Triangle<4>::nFaces)
         .def_readonly_static("lexNumbering", &Triangle<4>::lexNumbering)
         .def_readonly_static("oppositeDim", &Triangle<4>::oppositeDim)

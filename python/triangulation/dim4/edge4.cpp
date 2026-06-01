@@ -67,67 +67,65 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_output_rich(e);
     regina::python::add_eq_operators(e, rdoc::__eq);
 
-    // We use the global scope here because all of Face's members are
-    // inherited, and so Face's own docstring namespace does not exist.
-    RDOC_SCOPE_SWITCH_MAIN
-    RDOC_SCOPE_BASE_2(detail::FaceBase, FaceNumbering)
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE(FaceNumbering)
 
     auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1", rdoc::Face::__class)
-        .def("index", &Edge<4>::index, rbase::index)
-        .def("embedding", &Edge<4>::embedding, rbase::embedding)
-        .def("embeddings", &Edge<4>::embeddings, rbase::embeddings)
+        .def("index", &Edge<4>::index, rdoc::index)
+        .def("embedding", &Edge<4>::embedding, rdoc::embedding)
+        .def("embeddings", &Edge<4>::embeddings, rdoc::embeddings)
         .def("__iter__", [](const Edge<4>& f) {
             // By default, make_iterator uses reference_internal.
             return pybind11::make_iterator<pybind11::return_value_policy::copy>(
                 f.begin(), f.end());
         }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
-            rbase::__iter__)
-        .def("front", &Edge<4>::front, rbase::front)
-        .def("back", &Edge<4>::back, rbase::back)
-        .def("triangulation", &Edge<4>::triangulation, rbase::triangulation)
+            rdoc::__iter__)
+        .def("front", &Edge<4>::front, rdoc::front)
+        .def("back", &Edge<4>::back, rdoc::back)
+        .def("triangulation", &Edge<4>::triangulation, rdoc::triangulation)
         .def("component", &Edge<4>::component,
-            pybind11::return_value_policy::reference, rbase::component)
+            pybind11::return_value_policy::reference, rdoc::component)
         .def("boundaryComponent", &Edge<4>::boundaryComponent,
-            pybind11::return_value_policy::reference, rbase::boundaryComponent)
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
         .def("face", &regina::python::face<4, 1>,
-            "lowerdim"_a, "face"_a, rbase::face)
+            "lowerdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Edge<4>::vertex,
-            pybind11::return_value_policy::reference, rbase::vertex)
+            pybind11::return_value_policy::reference, rdoc::vertex)
         .def("faceMapping", &regina::python::faceMapping<4, 1>,
-            "lowerdim"_a, "face"_a, rbase::faceMapping)
-        .def("vertexMapping", &Edge<4>::vertexMapping, rbase::vertexMapping)
-        .def("isLoop", &Edge<4>::isLoop, rbase::isLoop)
-        .def("degree", &Edge<4>::degree, rbase::degree)
-        .def("isBoundary", &Edge<4>::isBoundary, rbase::isBoundary)
-        .def("isInternal", &Edge<4>::isInternal, rbase::isInternal)
+            "lowerdim"_a, "face"_a, rdoc::faceMapping)
+        .def("vertexMapping", &Edge<4>::vertexMapping, rdoc::vertexMapping)
+        .def("isLoop", &Edge<4>::isLoop, rdoc::isLoop)
+        .def("degree", &Edge<4>::degree, rdoc::degree)
+        .def("isBoundary", &Edge<4>::isBoundary, rdoc::isBoundary)
+        .def("isInternal", &Edge<4>::isInternal, rdoc::isInternal)
         .def("isLinkOrientable", &Edge<4>::isLinkOrientable,
-            rbase::isLinkOrientable)
-        .def("isValid", &Edge<4>::isValid, rbase::isValid)
+            rdoc::isLinkOrientable)
+        .def("isValid", &Edge<4>::isValid, rdoc::isValid)
         .def("hasBadIdentification", &Edge<4>::hasBadIdentification,
-            rbase::hasBadIdentification)
-        .def("hasBadLink", &Edge<4>::hasBadLink, rbase::hasBadLink)
-        .def("isLinkClosed", &Edge<4>::isLinkClosed, rbase::isLinkClosed)
+            rdoc::hasBadIdentification)
+        .def("hasBadLink", &Edge<4>::hasBadLink, rdoc::hasBadLink)
+        .def("isLinkClosed", &Edge<4>::isLinkClosed, rdoc::isLinkClosed)
         .def("buildLink", [](const Edge<4>& e) {
             // Return a clone of the resulting triangulation.
             // This is because Python cannot enforce the constness of
             // the reference that would normally be returned.
             return new regina::Triangulation<2>(e.buildLink());
-        }, rbase::buildLink)
+        }, rdoc::buildLink)
         .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion,
-            rbase::buildLinkInclusion)
+            rdoc::buildLinkInclusion)
         .def("linkingSurface",
             static_cast<regina::python::generalLinkingSurface<4, 1>>(
                 &Edge<4>::linkingSurface),
-            rbase::linkingSurface)
-        .def_static("ordering", &Edge<4>::ordering, rbase2::ordering)
+            rdoc::linkingSurface)
+        .def_static("ordering", &Edge<4>::ordering, rbase::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<5>>(&Edge<4>::faceNumber),
-            rbase2::faceNumber)
+            rbase::faceNumber)
         .def_static("faceNumber",
             pybind11::overload_cast<int, int>(&Edge<4>::faceNumber),
-            rbase2::faceNumber_2)
+            rbase::faceNumber_2)
         .def_static("containsVertex", &Edge<4>::containsVertex,
-            rbase2::containsVertex)
+            rbase::containsVertex)
         .def_readonly_static("nFaces", &Edge<4>::nFaces)
         .def_readonly_static("lexNumbering", &Edge<4>::lexNumbering)
         .def_readonly_static("oppositeDim", &Edge<4>::oppositeDim)
