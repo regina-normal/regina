@@ -972,6 +972,25 @@ class FaceBase :
         bool hasBadLink() const requires (standardDim(dim));
 
         /**
+         * Determines if this is an ideal vertex.
+         * To be ideal, a vertex must (i) be valid, and (ii) have
+         * a closed vertex link that is not a sphere.
+         *
+         * \return \c true if and only if this is an ideal vertex.
+         */
+        bool isIdeal() const requires (subdim == 0 && dim == 4);
+
+        /**
+         * Returns the Euler characteristic of the vertex link.
+         *
+         * This is much faster than calling buildLink().eulerChar(), since it
+         * does not require a full triangulation of the vertex link.
+         *
+         * \return the Euler characteristic of the vertex link.
+         */
+        long linkEulerChar() const requires (subdim == 0 && dim == 3);
+
+        /**
          * Returns the <i>lowerdim</i>-face of the underlying triangulation
          * that appears as the given <i>lowerdim</i>-dimensional subface
          * of this face.
@@ -1188,25 +1207,6 @@ class FaceBase :
          */
         void join(Face<dim, subdim>* you, Perm<dim> gluing)
             requires (subdim == dim - 1);
-
-        /**
-         * Determines if this is an ideal vertex.
-         * To be ideal, a vertex must (i) be valid, and (ii) have
-         * a closed vertex link that is not a sphere.
-         *
-         * \return \c true if and only if this is an ideal vertex.
-         */
-        bool isIdeal() const requires (subdim == 0 && dim == 4);
-
-        /**
-         * Returns the Euler characteristic of the vertex link.
-         *
-         * This is much faster than calling buildLink().eulerChar(), since it
-         * does not require a full triangulation of the vertex link.
-         *
-         * \return the Euler characteristic of the vertex link.
-         */
-        long linkEulerChar() const requires (subdim == 0 && dim == 3);
 
         /**
          * For edges, determines whether this face is a loop.
@@ -1875,6 +1875,20 @@ inline bool FaceBase<dim, subdim>::hasBadLink() const
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline bool FaceBase<dim, subdim>::isIdeal() const
+        requires (subdim == 0 && dim == 4) {
+    return (vertexFlags_.value & FLAG_IDEAL);
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline long FaceBase<dim, subdim>::linkEulerChar() const
+        requires (subdim == 0 && dim == 3) {
+    return linkEulerChar_.value;
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 template <int lowerdim> requires (lowerdim >= 0 && lowerdim < subdim)
 inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
     // Let S be the dim-simplex corresponding to the first embedding,
@@ -2006,20 +2020,6 @@ inline void FaceBase<dim, subdim>::join(Face<dim, subdim>* you,
     emb0.simplex()->join(emb0.vertices()[dim], emb1.simplex(),
         emb1.vertices() * Perm<dim+1>::extend(gluing) *
             emb0.vertices().inverse());
-}
-
-template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline bool FaceBase<dim, subdim>::isIdeal() const
-        requires (subdim == 0 && dim == 4) {
-    return (vertexFlags_.value & FLAG_IDEAL);
-}
-
-template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline long FaceBase<dim, subdim>::linkEulerChar() const
-        requires (subdim == 0 && dim == 3) {
-    return linkEulerChar_.value;
 }
 
 template <int dim, int subdim>
