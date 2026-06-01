@@ -997,7 +997,7 @@ class FaceBase :
          *
          * \return \c true if and only if this is an ideal vertex.
          */
-        bool isIdeal() const requires (subdim == 0 && dim == 4);
+        bool isIdeal() const requires (subdim == 0 && standardDim(dim));
 
         /**
          * Returns the Euler characteristic of the vertex link.
@@ -1902,8 +1902,15 @@ inline bool FaceBase<dim, subdim>::isLinkClosed() const
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline bool FaceBase<dim, subdim>::isIdeal() const
-        requires (subdim == 0 && dim == 4) {
-    return (vertexFlags_.value & FLAG_IDEAL);
+        requires (subdim == 0 && standardDim(dim)) {
+    if constexpr (dim == 2) {
+        return false;
+    } else if constexpr (dim == 3) {
+        return boundaryComponent_ && ! boundaryComponent_->isReal();
+    } else {
+        static_assert(dim == 4);
+        return (vertexFlags_.value & FLAG_IDEAL);
+    }
 }
 
 template <int dim, int subdim>

@@ -139,15 +139,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
         Link linkType() const;
 
         /**
-         * Determines if this vertex is an ideal vertex.
-         * This requires the vertex link to be closed and not a
-         * 2-sphere.
-         *
-         * \return \c true if and only if this is an ideal vertex.
-         */
-        bool isIdeal() const;
-
-        /**
          * Determines if this vertex is standard.
          * This requires the vertex link to be a sphere, disc, torus or
          * Klein bottle.
@@ -178,11 +169,6 @@ inline Face<3, 0>::Face(Component<3>* component) :
 
 inline Vertex<3>::Link Face<3, 0>::linkType() const {
     return linkType_;
-}
-
-inline bool Face<3, 0>::isIdeal() const {
-    return (linkType_ == Link::Torus || linkType_ == Link::KleinBottle ||
-        linkType_ == Link::NonStandardCusp);
 }
 
 inline bool Face<3, 0>::isStandard() const {
