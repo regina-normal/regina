@@ -225,6 +225,9 @@ bool Triangulation<3>::isOneEfficient() const {
     // Check the preconditions before examining the cached value, since it's
     // possible the 1-efficiency value was cached from a newer calculation
     // engine that supports 1-efficiency testing in more settings.
+    //
+    // Note: validity and Euler characteristic are enough to ensure our
+    // preconditions on the vertex links.
     if (! isValid()) {
         throw FailedPrecondition(
             "1-efficiency testing requires a valid triangulation");
@@ -234,14 +237,12 @@ bool Triangulation<3>::isOneEfficient() const {
         throw FailedPrecondition(
             "1-efficiency testing requires an ideal triangulation");
     }
-    for (auto v : vertices()) {
-        if (v->linkType() != Vertex<3>::Link::Torus &&
-                v->linkType() != Vertex<3>::Link::KleinBottle)
+    for (auto v : vertices())
+        if (v->linkEulerChar() != 0) {
             throw FailedPrecondition(
                 "1-efficiency testing requires a triangulation whose "
                 "vertex links are all tori and/or Klein bottles");
-    }
-
+        }
     if (prop_.oneEfficient_.has_value())
         return *prop_.oneEfficient_;
 

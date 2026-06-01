@@ -5452,11 +5452,12 @@ inline bool Triangulation<3>::knowsOneEfficient(bool cachedOnly) const {
         return false;
 
     // Check the preconditions now, before going further.
+    // Note: validity and Euler characteristic are enough to ensure our
+    // preconditions on the vertex links.
     if (! (isValid() && isIdeal()))
         return false; // failed precondition
     for (auto v : vertices())
-        if (v->linkType() != Vertex<3>::Link::Torus &&
-                v->linkType() != Vertex<3>::Link::KleinBottle)
+        if (v->linkEulerChar() != 0)
             return false; // failed precondition
 
     if (prop_.oneEfficient_.has_value())
