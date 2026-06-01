@@ -526,8 +526,8 @@ class FaceBase :
         Component<dim>* component_;
             /**< The component that this face belongs to. */
         BoundaryComponent<dim>* boundaryComponent_;
-            /**< The boundary component that this face is a part of,
-                 or \c null if this face is internal. */
+            /**< The boundary component that this face is a part of, `null` if
+                 this face is not part of any boundary component. */
 
         [[no_unique_address]] EnableIf<allowsNonOrientableLinks, bool, true>
                 linkOrientable_;
@@ -627,6 +627,19 @@ class FaceBase :
          * \return \c true if and only if this face lies on the boundary.
          */
         bool isBoundary() const;
+
+        /**
+         * Determines whether this is an internal face; that is, a valid face
+         * whose link is a sphere.
+         *
+         * Since this routine is restricted to standard dimensions (where
+         * ideal vertices are recognised as such), it follows that this routine
+         * will return `true` if and only if isValid() is `true` _and_
+         * isBoundary() is `false`.
+         *
+         * \return \c true if and only if this is an internal face.
+         */
+        bool isInternal() const requires (standardDim(dim));
 
         /**
          * Returns the degree of this face.
@@ -1813,6 +1826,21 @@ inline bool FaceBase<dim, subdim>::isBoundary() const {
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline bool FaceBase<dim, subdim>::isInternal() const requires (standardDim(dim)) {
+    // We need to be valid, and have no boundary component.
+    if constexpr (subdim == 0 || ! allowsInvalidFaces) {
+        // Note: ideal and invalid vertices get their own boundary components.
+        return ! boundaryComponent_;
+    } else {
+        // This branch handles (dim, subdim) == (3,1), (4,1), (4,2).
+        // Here we _could_ be invalid due to bad self-identifications and
+        // have no boundary component, which means we must test both conditions.
+        return ! (boundaryComponent_ || whyInvalid_.value);
+    }
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline size_t FaceBase<dim, subdim>::degree() const {
     return embeddings_.size();
 }
@@ -2242,20 +2270,18 @@ void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
     out << Strings<subdim>::Face << ' ' << index() << ", ";
     if constexpr (dim == 3 && subdim == 0) {
         // Identify vertex links in dimension 3 in more detail.
-        switch (static_cast<const Face<dim, subdim>*>(this)->linkType()) {
-            case Face<dim, subdim>::Link::Sphere:
-                out << "internal"; break;
-            case Face<dim, subdim>::Link::Disc:
-                out << "boundary"; break;
-            case Face<dim, subdim>::Link::Torus:
-                out << "torus cusp"; break;
-            case Face<dim, subdim>::Link::KleinBottle:
-                out << "Klein bottle cusp"; break;
-            case Face<dim, subdim>::Link::NonStandardCusp:
-                out << "ideal"; break;
-            case Face<dim, subdim>::Link::Invalid:
-                out << "invalid"; break;
-        }
+        if (whyInvalid_.value)
+            out << "invalid";
+        else if (! boundaryComponent_)
+            out << "internal";
+        else if (boundaryComponent_->isReal())
+            out << "boundary";
+        else if (linkEulerChar_.value != 0)
+            out << "ideal";
+        else if (linkOrientable_.value)
+            out << "torus cusp";
+        else
+            out << "Klein bottle cusp";
     } else if constexpr (dim == 4 && subdim == 0) {
         // Identify ideal vertices in dimension 4.
         if (! isValid())

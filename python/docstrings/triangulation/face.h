@@ -880,6 +880,19 @@ R"doc(Determines whether this is an ideal vertex. To be ideal, a vertex must
 Returns:
     ``True`` if and only if this is an ideal vertex.)doc";
 
+// Docstring regina::python::doc::detail::FaceBase::isInternal
+static constexpr const char isInternal[] =
+R"doc(Determines whether this is an internal face; that is, a valid face
+whose link is a sphere.
+
+Since this routine is restricted to standard dimensions (where ideal
+vertices are recognised as such), it follows that this routine will
+return ``True`` if and only if isValid() is ``True`` _and_
+isBoundary() is ``False``.
+
+Returns:
+    ``True`` if and only if this is an internal face.)doc";
+
 // Docstring regina::python::doc::detail::FaceBase::isLinkClosed
 static constexpr const char isLinkClosed[] =
 R"doc(Determines whether the link of this face is closed.

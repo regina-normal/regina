@@ -156,9 +156,8 @@ void Triangulation<4>::calculateVertexLinks() {
         // cases separately under calculateEdgeLinks() below.
         if (! vertex->isValid()) {
             for (Vertex<3>* v : vertex->buildLink().vertices()) {
-                auto type = v->linkType();
-                if (type != Vertex<3>::Link::Sphere &&
-                        type != Vertex<3>::Link::Disc) {
+                // Is the link of v _not_ a sphere or disc?
+                if (v->isIdeal() || ! v->isValid()) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.
 

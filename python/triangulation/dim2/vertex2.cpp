@@ -93,6 +93,7 @@ void addVertex2(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rbase::boundaryComponent)
         .def("degree", &Vertex<2>::degree, rbase::degree)
         .def("isBoundary", &Vertex<2>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Vertex<2>::isInternal, rbase::isInternal)
         .def_static("ordering", &Vertex<2>::ordering, rbase2::ordering)
         .def_static("faceNumber",
             pybind11::overload_cast<regina::Perm<3>>(&Vertex<2>::faceNumber),

@@ -103,6 +103,7 @@ void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
         .def("isLinkClosed", &Vertex<4>::isLinkClosed, rbase::isLinkClosed)
         .def("isIdeal", &Vertex<4>::isIdeal, rbase::isIdeal)
         .def("isBoundary", &Vertex<4>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Vertex<4>::isInternal, rbase::isInternal)
         .def("linkingSurface",
             static_cast<regina::python::vertexLinkingSurface<4>>(
                 &Vertex<4>::linkingSurface),

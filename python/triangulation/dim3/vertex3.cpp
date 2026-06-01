@@ -100,6 +100,7 @@ void addVertex3(pybind11::module_& m, pybind11::module_& internal) {
         .def("buildLinkInclusion", &Vertex<3>::buildLinkInclusion,
             rbase::buildLinkInclusion)
         .def("isBoundary", &Vertex<3>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Vertex<3>::isInternal, rbase::isInternal)
         .def("isValid", &Vertex<3>::isValid, rbase::isValid)
         .def("hasBadIdentification", &Vertex<3>::hasBadIdentification,
             rbase::hasBadIdentification)

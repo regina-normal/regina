@@ -117,6 +117,7 @@ void addTetrahedron4(pybind11::module_& m, pybind11::module_& internal) {
         .def("isLinkOrientable", &Tetrahedron<4>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("isBoundary", &Tetrahedron<4>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Tetrahedron<4>::isInternal, rbase::isInternal)
         .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest,
             rbase::inMaximalForest)
         .def("linkingSurface",

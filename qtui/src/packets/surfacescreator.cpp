@@ -130,9 +130,9 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
 
     if ((coordSystem == regina::NormalCoords::QuadClosed ||
                 coordSystem == regina::NormalCoords::QuadOctClosed) && ! (
-            tri.countVertices() == 1 &&
-            tri.vertex(0)->linkType() == regina::Vertex<3>::Link::Torus &&
-            tri.isOriented())) {
+            tri.isOriented() && (! tri.hasBoundaryFacets()) &&
+            /* from here, all vertex links are closed & orientable */
+            tri.countVertices() == 1 && tri.vertex(0)->linkEulerChar() == 0)) {
         QString name = Coordinates::adjective(coordSystem, false);
         ReginaSupport::sorry(ui,
             ui->tr("I cannot use %1 coordinates with this "

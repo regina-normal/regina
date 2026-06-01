@@ -86,6 +86,7 @@ void addTriangle3(pybind11::module_& m, pybind11::module_& internal) {
         .def("front", &Triangle<3>::front, rbase::front)
         .def("back", &Triangle<3>::back, rbase::back)
         .def("isBoundary", &Triangle<3>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Triangle<3>::isInternal, rbase::isInternal)
         .def("inMaximalForest", &Triangle<3>::inMaximalForest,
             rbase::inMaximalForest)
         .def("linkingSurface",

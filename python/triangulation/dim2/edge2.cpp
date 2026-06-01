@@ -106,6 +106,7 @@ void addEdge2(pybind11::module_& m, pybind11::module_& internal) {
         .def("unlock", &Edge<2>::unlock, rbase::unlock)
         .def("isLocked", &Edge<2>::isLocked, rbase::isLocked)
         .def("isBoundary", &Edge<2>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Edge<2>::isInternal, rbase::isInternal)
         .def("inMaximalForest", &Edge<2>::inMaximalForest,
             rbase::inMaximalForest)
         .def_static("ordering", &Edge<2>::ordering, rbase2::ordering)

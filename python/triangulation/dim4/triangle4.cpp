@@ -108,6 +108,7 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
         .def("formsCone", &Triangle<4>::formsCone, rbase::formsCone)
         .def("degree", &Triangle<4>::degree, rbase::degree)
         .def("isBoundary", &Triangle<4>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Triangle<4>::isInternal, rbase::isInternal)
         .def("isLinkOrientable", &Triangle<4>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("isValid", &Triangle<4>::isValid, rbase::isValid)

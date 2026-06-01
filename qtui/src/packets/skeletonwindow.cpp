@@ -186,30 +186,29 @@ QVariant Vertex3Model::data(const QModelIndex& index, int role) const {
         switch (index.column()) {
             case 0:
                 return index.row();
-            case 1: {
-                switch (item->linkType()) {
-                    case Vertex<3>::Link::Sphere:
-                        return QString();
-                    case Vertex<3>::Link::Disc:
-                        return tr("Bdry");
-                    case Vertex<3>::Link::Torus:
-                        return tr("Ideal: Torus");
-                    case Vertex<3>::Link::KleinBottle:
-                        return tr("Ideal: Klein bottle");
-                    case Vertex<3>::Link::NonStandardCusp: {
-                        if (item->isLinkOrientable())
+            case 1:
+                if (! item->isValid())
+                    return tr("Invalid");
+                else if (! item->isBoundary())
+                    return QString(); // internal vertex
+                else if (item->boundaryComponent()->isReal())
+                    return tr("Bdry");
+                else {
+                    auto euler = item->linkEulerChar();
+                    if (item->isLinkOrientable()) {
+                        if (euler == 0)
+                            return tr("Ideal: Torus");
+                        else
                             return tr("Ideal: Genus %1 orbl").arg(
-                                1 - (item->linkEulerChar() / 2));
+                                1 - (euler / 2));
+                    } else {
+                        if (euler == 0)
+                            return tr("Ideal: Klein bottle");
                         else
                             return tr("Ideal: Genus %1 non-orbl").arg(
-                                2 - item->linkEulerChar());
+                                2 - euler);
                     }
-                    case Vertex<3>::Link::Invalid:
-                        return tr("Invalid");
-                    default:
-                        return tr("Unknown");
                 }
-            }
             case 2:
                 return static_cast<unsigned>(item->degree());
             case 3:

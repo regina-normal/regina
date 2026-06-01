@@ -99,6 +99,7 @@ void addEdge4(pybind11::module_& m, pybind11::module_& internal) {
         .def("isLoop", &Edge<4>::isLoop, rbase::isLoop)
         .def("degree", &Edge<4>::degree, rbase::degree)
         .def("isBoundary", &Edge<4>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Edge<4>::isInternal, rbase::isInternal)
         .def("isLinkOrientable", &Edge<4>::isLinkOrientable,
             rbase::isLinkOrientable)
         .def("isValid", &Edge<4>::isValid, rbase::isValid)

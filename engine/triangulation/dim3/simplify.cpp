@@ -374,8 +374,8 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
             for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
                 if (edge->vertex(0) != edge->vertex(1) &&
-                        (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
-                         edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
+                        (edge->vertex(0)->isInternal() ||
+                         edge->vertex(1)->isInternal())) {
                     // There must be a pinch-edge move here.
                     // Note: this *increases* the number of tetrahedra.
                     // We return true anyway, since this matches the behaviour
@@ -434,8 +434,8 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                 for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
                     if (edge->vertex(0) != edge->vertex(1) &&
-                            (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
-                             edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
+                            (edge->vertex(0)->isInternal() ||
+                             edge->vertex(1)->isInternal())) {
                         // Note: this *increases* the number of tetrahedra.
                         pinchEdge(edge);
                         changedNow = changed = true;

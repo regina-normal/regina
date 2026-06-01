@@ -98,6 +98,7 @@ void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
         .def("isLoop", &Edge<3>::isLoop, rbase::isLoop)
         .def("degree", &Edge<3>::degree, rbase::degree)
         .def("isBoundary", &Edge<3>::isBoundary, rbase::isBoundary)
+        .def("isInternal", &Edge<3>::isInternal, rbase::isInternal)
         .def("isValid", &Edge<3>::isValid, rbase::isValid)
         .def("hasBadIdentification", &Edge<3>::hasBadIdentification,
             rbase::hasBadIdentification)

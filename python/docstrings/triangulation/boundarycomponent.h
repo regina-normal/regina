@@ -29,10 +29,10 @@ Regina recognises three types of boundary components:
   a sphere. This is only possible for dimensions *dim* ≥ 3.
 
 * An _invalid vertex boundary component_ consists of a single invalid
-  invalid vertex that does not belong to a real boundary component.
-  This means the vertex link must be an ideal (*dim*-1)-manifold, or
-  an invalid (*dim*-1)-manifold with no real boundary. Invalid vertex
-  boundary components are only possible for dimensions *dim* ≥ 4.
+  vertex that does not belong to a real boundary component. This means
+  the vertex link must be an ideal (*dim*-1)-manifold, or an invalid
+  (*dim*-1)-manifold with no real boundary. Invalid vertex boundary
+  components are only possible for dimensions *dim* ≥ 4.
 
 Ideal and invalid vertex boundary components are _only_ recognised
 when *dim* is one of Regina's standard dimensions. This is because, in

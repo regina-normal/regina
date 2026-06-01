@@ -155,11 +155,11 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
         case NormalCoords::QuadOctClosed:
         {
             // Enforce our basic preconditions.
-            if (! (triangulation.isOriented() && triangulation.isIdeal() &&
-                    triangulation.countBoundaryComponents() == 1 &&
+            if (! (triangulation.isOriented() &&
+                    (! triangulation.hasBoundaryFacets()) &&
+                    /* from here, all vertex links are closed & orientable */
                     triangulation.countVertices() == 1 &&
-                    triangulation.vertex(0)->linkType() ==
-                        Vertex<3>::Link::Torus))
+                    triangulation.vertex(0)->linkEulerChar() == 0))
                 throw InvalidArgument(
                     "NormalCoords::QuadClosed and NormalCoords::QuadOctClosed "
                     "require an oriented ideal triangulation with "

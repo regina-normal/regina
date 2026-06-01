@@ -255,6 +255,11 @@ class TriangulationTest : public testing::Test {
                         ++bdry;
                     degreeSum += f->degree();
 
+                    if constexpr (regina::standardDim(dim)) {
+                        EXPECT_EQ(f->isInternal(),
+                            f->isValid() && ! f->isBoundary());
+                    }
+
                     EXPECT_EQ(f->component(),
                         f->front().simplex()->component());
 
@@ -421,39 +426,28 @@ class TriangulationTest : public testing::Test {
                         if (link.isSphere()) {
                             EXPECT_TRUE(v->isValid());
                             EXPECT_FALSE(v->isIdeal());
-                            if constexpr (dim == 3)
-                                EXPECT_EQ(v->linkType(),
-                                    Vertex<dim>::Link::Sphere);
+                            EXPECT_FALSE(v->isBoundary());
+                            EXPECT_TRUE(v->isInternal());
                         } else if (link.isBall()) {
                             EXPECT_TRUE(v->isValid());
                             EXPECT_FALSE(v->isIdeal());
-                            if constexpr (dim == 3)
-                                EXPECT_EQ(v->linkType(),
-                                    Vertex<dim>::Link::Disc);
+                            EXPECT_TRUE(v->isBoundary());
+                            EXPECT_FALSE(v->isInternal());
                         } else if (link.isValid() && link.isClosed()) {
                             EXPECT_TRUE(v->isValid());
                             EXPECT_TRUE(v->isIdeal());
+                            EXPECT_TRUE(v->isBoundary());
+                            EXPECT_FALSE(v->isInternal());
                             if constexpr (dim == 3) {
-                                if (link.eulerCharTri() == 0) {
-                                    if (link.isOrientable())
-                                        EXPECT_EQ(v->linkType(),
-                                            Vertex<dim>::Link::Torus);
-                                    else
-                                        EXPECT_EQ(v->linkType(),
-                                            Vertex<dim>::Link::KleinBottle);
-                                } else {
+                                if (link.eulerCharTri() != 0)
                                     allStandard = false;
-                                    EXPECT_EQ(v->linkType(),
-                                        Vertex<dim>::Link::NonStandardCusp);
-                                }
                             }
                         } else {
                             allStandard = false;
                             EXPECT_FALSE(v->isValid());
                             EXPECT_FALSE(v->isIdeal());
-                            if constexpr (dim == 3)
-                                EXPECT_EQ(v->linkType(),
-                                    Vertex<dim>::Link::Invalid);
+                            EXPECT_TRUE(v->isBoundary());
+                            EXPECT_FALSE(v->isInternal());
                         }
 
                         if constexpr (dim == 3)
@@ -750,27 +744,21 @@ class TriangulationTest : public testing::Test {
                         ++foundInvalid;
                         if constexpr (dim == 3) {
                             EXPECT_TRUE(v->isBoundary());
+                            EXPECT_FALSE(v->isInternal());
                             EXPECT_FALSE(v->isLinkClosed());
                             EXPECT_FALSE(v->isStandard());
                             EXPECT_FALSE(v->isIdeal());
-                            EXPECT_EQ(v->linkType(),
-                                Vertex<dim>::Link::Invalid);
                         }
                     } else if (v->isIdeal()) {
                         ++foundIdeal;
                         if constexpr (dim == 3) {
                             using Link = typename Vertex<dim>::Link;
                             EXPECT_TRUE(v->isBoundary());
+                            EXPECT_FALSE(v->isInternal());
                             EXPECT_TRUE(v->isLinkClosed());
                             if (v->isStandard()) {
-                                EXPECT_TRUE(
-                                    v->linkType() == Link::Torus ||
-                                    v->linkType() == Link::KleinBottle);
                                 EXPECT_EQ(v->linkEulerChar(), 0);
-                                EXPECT_EQ(v->isLinkOrientable(),
-                                    v->linkType() == Link::Torus);
                             } else {
-                                EXPECT_EQ(v->linkType(), Link::NonStandardCusp);
                                 EXPECT_NE(v->linkEulerChar(), 2);
                                 EXPECT_NE(v->linkEulerChar(), 0);
                             }
@@ -778,19 +766,19 @@ class TriangulationTest : public testing::Test {
                     } else if (v->isBoundary()) {
                         ++foundBall;
                         if constexpr (dim == 3) {
+                            EXPECT_FALSE(v->isInternal());
                             EXPECT_FALSE(v->isLinkClosed());
                             EXPECT_TRUE(v->isLinkOrientable());
                             EXPECT_TRUE(v->isStandard());
-                            EXPECT_EQ(v->linkType(), Vertex<dim>::Link::Disc);
                             EXPECT_EQ(v->linkEulerChar(), 1);
                         }
                     } else {
                         ++foundSphere;
                         if constexpr (dim == 3) {
+                            EXPECT_TRUE(v->isInternal());
                             EXPECT_TRUE(v->isLinkClosed());
                             EXPECT_TRUE(v->isLinkOrientable());
                             EXPECT_TRUE(v->isStandard());
-                            EXPECT_EQ(v->linkType(), Vertex<dim>::Link::Sphere);
                             EXPECT_EQ(v->linkEulerChar(), 2);
                         }
                     }

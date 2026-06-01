@@ -70,7 +70,7 @@ namespace detail {
  *   a sphere.  This is only possible for dimensions \a dim ≥ 3.
  *
  * - An _invalid vertex boundary component_ consists of a single invalid
- *   invalid vertex that does not belong to a real boundary component.  This
+ *   vertex that does not belong to a real boundary component.  This
  *   means the vertex link must be an ideal (<i>dim</i>-1)-manifold, or an
  *   invalid (<i>dim</i>-1)-manifold with no real boundary.  Invalid vertex
  *   boundary components are only possible for dimensions \a dim ≥ 4.
