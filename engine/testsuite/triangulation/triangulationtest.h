@@ -1689,8 +1689,27 @@ class TriangulationTest : public testing::Test {
         }
 
         /**
+         * Gives access to the function pointer type for a standard local move
+         * function.
+         */
+        template <int subdim> requires (0 <= subdim && subdim <= dim)
+        struct MoveFunc {
+            using type = bool(Triangulation<dim>::*)(
+                regina::Face<dim, subdim>*);
+        };
+
+        template <>
+        struct MoveFunc<dim> {
+            using type = bool(Triangulation<dim>::*)(regina::Simplex<dim>*);
+        };
+
+        /**
          * Tests all potential local moves of the form tri.move(f), where f is
-         * a subdim-face of the triangulation tri.
+         * either a lower-dimensional face or a top-dimensional simplex of the
+         * triangulation tri.  The argument *subdim* should be the dimension of
+         * the face/simplex f, and the argument *move* should be a pointer to
+         * one of the member functions of Triangulation<dim> that performs a
+         * local move, such as &Triangulation<dim>::pachner<subdim>.
          *
          * These tests are of a general nature that can be used with any type
          * of move - essentialy they verify that, if the move was performed,
@@ -1698,7 +1717,7 @@ class TriangulationTest : public testing::Test {
          *
          * More specific tests can be included through the optional preTest and
          * postTest arguments.  Specifically, when attempting to perform the
-         * move on the ith face:
+         * move on the ith face/simplex:
          *
          * - preTest(tri, i) will be called to determine in advance whether
          *   the move should be legal.  This returns a std::optional<bool>,
@@ -1710,22 +1729,22 @@ class TriangulationTest : public testing::Test {
          *   will be called.  This may run any additional tests (e.g,. verifying
          *   the combinatorics of the resulting triangulation).
          *
-         * It should surely be possible to deduce subdim automatically, and even
-         * to make move and sizeChange template parameters (so that verifyMove
-         * can be plugged into exhaustive testing code), but I am struggling
-         * to work out how to do this with pointers to member functions.
-         * I think the fact that Triangulation is templated is not helping.
+         * TODO: It should surely be possible to deduce *subdim* and the type
+         * of *move* automatically (avoiding the need for MoveFunc)?  I am
+         * struggling here with "couldn't infer template argument" errors;
+         * possibly the fact that Triangulation is templated is causing
+         * difficulties.  It would also be nice to make *move* and *sizeChange*
+         * template parameters, so that verifyMove can be plugged into
+         * exhaustive testing code.
          */
-        template <int subdim>
+        template <int subdim> requires (0 <= subdim && subdim <= dim)
         static void verifyMove(const Triangulation<dim>& tri,
-                const char* name,
-                bool(Triangulation<dim>::*move)(regina::Face<dim, subdim>*),
+                const char* name, typename MoveFunc<subdim>::type move,
                 int sizeChange,
                 std::optional<bool>(*preTest)(const Triangulation<dim>&,
                     size_t) = nullptr,
                 void(*postTest)(const Triangulation<dim>&,
                     const Triangulation<dim>&, size_t) = nullptr) {
-            static_assert(0 <= subdim && subdim <= dim);
             SCOPED_TRACE_CSTRING(name);
             SCOPED_TRACE_NAMED_NUMERIC("subdim", subdim);
 
