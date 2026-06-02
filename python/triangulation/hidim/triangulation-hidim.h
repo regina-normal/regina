@@ -51,6 +51,7 @@ using regina::Face;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
+using regina::Simplex;
 using regina::Triangulation;
 
 template <int dim> requires (regina::supportedDim(dim))
@@ -326,71 +327,43 @@ void addTriangulation(pybind11::module_& m, pybind11::module_& internal,
         }, "size"_a, "gluings"_a, rbase::fromGluings)
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
-    #if defined(__GNUC__)
-    // The following routines are deprecated, but we still need to bind
-    // them.  Silence the inevitable deprecation warnings that will occur.
-    #pragma GCC diagnostic push
-    #if defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wdeprecated"
-    #else
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #endif
-    #endif
-    // For twoZeroMove(), the new function has a different name (move20).
-    // We therefore give a default value for "ignored" in order to preserve
-    // backward compatibility in cases where both boolean arguments are omitted.
-    c.def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<0>,
-            "face"_a, "ignored"_a = true, "perform"_a = true,
-            rbase::twoZeroMove) // deprecated
-        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<1>,
-            "face"_a, "ignored"_a = true, "perform"_a = true,
-            rbase::twoZeroMove) // deprecated
-        .def("twoZeroMove", &Triangulation<dim>::template twoZeroMove<2>,
-            "face"_a, "ignored"_a = true, "perform"_a = true,
-            rbase::twoZeroMove) // deprecated
-    ;
-    #if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-    #endif
     regina::for_constexpr<0, dim>([&c](auto k) {
         c.def("translate", overload_cast<const regina::Face<dim, k>*>(
                 &Triangulation<dim>::template translate<k>, pybind11::const_),
             pybind11::return_value_policy::reference_internal,
-            rbase::translate);
+            rbase::translate_face);
         c.def("translate", overload_cast<const regina::FaceEmbedding<dim, k>&>(
                 &Triangulation<dim>::template translate<k>, pybind11::const_),
-            rbase::translate_2);
+            rbase::translate_embedding);
     });
-    c.def("translate", overload_cast<const regina::Simplex<dim>*>(
-            &Triangulation<dim>::template translate<dim>, pybind11::const_),
-        pybind11::return_value_policy::reference_internal, rbase::translate);
-    regina::for_constexpr<0, dim + 1>([&c](auto k) {
+    c.def("translate",
+        static_cast<Simplex<dim>* (Triangulation<dim>::*)(const Simplex<dim>*)
+            const>(&Triangulation<dim>::translate),
+        pybind11::return_value_policy::reference_internal,
+        rbase::translate_simplex);
+    regina::for_constexpr<0, dim>([&c](auto k) {
         c.def("pachner",
             overload_cast<Face<dim, k>*>(
                 &Triangulation<dim>::template pachner<k>),
-            rbase::pachner);
+            rbase::pachner_face);
         c.def("hasPachner", &Triangulation<dim>::template hasPachner<k>,
-            rbase::hasPachner);
+            rbase::hasPachner_face);
         c.def("withPachner", &Triangulation<dim>::template withPachner<k>,
-            rbase::withPachner);
-        #if defined(__GNUC__)
-        // The following routines are deprecated, but we still need to bind
-        // them.  Silence the inevitable deprecation warnings that will occur.
-        #pragma GCC diagnostic push
-        #if defined(__clang__)
-        #pragma GCC diagnostic ignored "-Wdeprecated"
-        #else
-        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        #endif
-        #endif
-        c.def("pachner", // deprecated
-            overload_cast<Face<dim, k>*, bool, bool>(
-                &Triangulation<dim>::template pachner<k>),
-            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2);
-        #if defined(__GNUC__)
-        #pragma GCC diagnostic pop
-        #endif
+            rbase::withPachner_face);
     });
+    c.def("pachner",
+        static_cast<bool (Triangulation<dim>::*)(Simplex<dim>*)>(
+            &Triangulation<dim>::pachner),
+        rbase::pachner_simplex);
+    c.def("hasPachner",
+        static_cast<bool (Triangulation<dim>::*)(Simplex<dim>*) const>(
+            &Triangulation<dim>::hasPachner),
+        rbase::hasPachner_simplex);
+    c.def("withPachner",
+        static_cast<std::optional<Triangulation<dim>>
+            (Triangulation<dim>::*)(Simplex<dim>*) const>(
+            &Triangulation<dim>::withPachner),
+        rbase::withPachner_simplex);
     regina::python::add_isosig_variants<dim>(c);
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);

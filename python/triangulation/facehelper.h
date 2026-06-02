@@ -117,7 +117,8 @@ using generalLinkingSurface =
  */
 template <int dim, int subdim>
 requires (subdim > 0)
-pybind11::object face(const Face<dim, subdim>& t, int lowerdim, int f) {
+pybind11::object face(const regina::SafeFace<dim, subdim>& t, int lowerdim,
+        int f) {
     if (lowerdim < 0 || lowerdim >= subdim)
         throw InvalidArgument("face(): unsupported subface dimension");
 
@@ -142,7 +143,8 @@ pybind11::object face(const Face<dim, subdim>& t, int lowerdim, int f) {
  */
 template <int dim, int subdim>
 requires (subdim > 0)
-Perm<dim + 1> faceMapping(const Face<dim, subdim>& t, int lowerdim, int f) {
+Perm<dim + 1> faceMapping(const regina::SafeFace<dim, subdim>& t, int lowerdim,
+        int f) {
     if (lowerdim < 0 || lowerdim >= subdim)
         throw InvalidArgument("faceMapping(): unsupported subface dimension");
     return select_constexpr<0, subdim, Perm<dim + 1>>(lowerdim,

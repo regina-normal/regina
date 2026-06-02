@@ -1039,20 +1039,13 @@ class TriangulationBase :
          * from a triangulation that is combinatorially identical to this,
          * and you wish to obtain the corresponding face of this triangulation.
          *
-         * Specifically:
-         *
-         * - For faces of dimension `k < dim`, if \a other refers to face \a i
-         *   of top-dimensional simplex number \a k of some other triangulation,
-         *   then this routine will return face \a i of top-dimensional simplex
-         *   number \a k of this triangulation.  Note that this routine does
-         *   _not_ use the face indices within each triangulation (which is
-         *   outside the user's control), but rather the simplex numbering
-         *   (which the user has full control over).
-         *
-         * - For top-dimensional simplices (i.e., faces of dimension `k = dim`),
-         *   this routine will simply translate top-dimensional simplex
-         *   number \a k of some other triangulation into top-dimensional
-         *   simplex number \a k of this triangulation.
+         * Specifically, if \a other refers to face \a i of top-dimensional
+         * simplex number \a k of some other triangulation, then this routine
+         * will return face \a i of top-dimensional simplex number \a k of this
+         * triangulation.  Note that this routine does _not_ use the face
+         * indices within each triangulation (which is outside the user's
+         * control), but rather the simplex numbering (which the user has full
+         * control over).
          *
          * This routine behaves correctly even if \a other is a null pointer.
          *
@@ -1061,13 +1054,41 @@ class TriangulationBase :
          * above, in typical scenarios both triangulations would actually be
          * combinatorially identical).
          *
+         * \pydocname{translate_face}
+         *
          * \tparam subdim the face dimension.
          *
          * \param other the face to translate.
          * \return the corresponding face of this triangulation.
          */
-        template <int subdim> requires (0 <= subdim && subdim <= dim)
+        template <int subdim> requires (0 <= subdim && subdim < dim)
         Face<dim, subdim>* translate(const Face<dim, subdim>* other) const;
+
+        /**
+         * Translates a top-dimensional simplex of some other triangulation
+         * into the corresponding top-dimensional simplex of this triangulation.
+         *
+         * Typically this routine would be used when the given simplex comes
+         * from a triangulation that is combinatorially identical to this, and
+         * you wish to obtain the corresponding simplex of this triangulation.
+         *
+         * This routine is provided for consistency with the variant of
+         * translate() that operates on faces; however, it is much simpler:
+         * it just returns `simplex(other->index())`.
+         *
+         * This routine behaves correctly even if \a other is a null pointer.
+         *
+         * \pre This triangulation contains at least as many top-dimensional
+         * simplices as the triangulation containing \a other (though, as noted
+         * above, in typical scenarios both triangulations would actually be
+         * combinatorially identical).
+         *
+         * \pydocname{translate_simplex}
+         *
+         * \param other the simplex to translate.
+         * \return the corresponding simplex of this triangulation.
+         */
+        Simplex<dim>* translate(const Simplex<dim>* other) const;
 
         /**
          * Translates a face embedding from some other triangulation into the
@@ -1088,6 +1109,8 @@ class TriangulationBase :
          * simplices as the triangulation containing \a other (though, as noted
          * above, in typical scenarios both triangulations would actually be
          * combinatorially identical).
+         *
+         * \pydocname{translate_embedding}
          *
          * \tparam subdim the face dimension.
          *
@@ -2571,148 +2594,6 @@ class TriangulationBase :
          */
         std::optional<Triangulation<dim>> withShellBoundary(
             Simplex<dim>* simplex) const requires (standardDim(dim));
-
-        /**
-         * Deprecated routine that tests for and optionally performs a
-         * (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the given
-         * <i>k</i>-face of this triangulation.
-         *
-         * For more detail on Pachner moves and when they can be performed,
-         * see the variant of pachner() without the extra boolean arguments.
-         *
-         * This routine will always _check_ whether the requested move is
-         * legal and will not violate any simplex and/or facet locks (see
-         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
-         * details on locks).  If the move _is_ allowed, and if the argument
-         * \a perform is \c true, this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is
-         * possible, call hasPachner().  If you wish to both check and perform
-         * the move, call pachner() without the two extra boolean arguments.
-         *
-         * \pre The given <i>k</i>-face is a <i>k</i>-face of this
-         * triangulation.
-         *
-         * \pydocname{oldPachner_face}
-         *
-         * \tparam k the dimension of the given face.
-         *
-         * \param face the <i>k</i>-face about which to perform the move.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        template <int k> requires (k >= 0 && k < dim)
-        [[deprecated]] bool pachner(Face<dim, k>* face, bool ignored,
-            bool perform = true);
-
-        /**
-         * Deprecated routine that tests for and optionally performs a
-         * 1-(\a dim + 1) Pachner move upon the given top-dimensional
-         * simplex of this triangulation.
-         *
-         * For more detail on Pachner moves and when they can be performed,
-         * see the variant of pachner() without the extra boolean arguments.
-         *
-         * This routine will always _check_ whether the requested move is legal
-         * and will not violate any simplex locks (see Simplex<dim>::lock() for
-         * further details on locks).  If the move _is_ allowed, and if the
-         * argument \a perform is \c true, this routine will also _perform_
-         * the move.
-         *
-         * \deprecated If you just wish to test whether such a move is
-         * possible, call hasPachner().  If you wish to both check and perform
-         * the move, call pachner() without the two extra boolean arguments.
-         *
-         * \pre The given simplex is a simplex of this triangulation.
-         *
-         * \pydocname{oldPachner_simplex}
-         *
-         * \param simplex the top-dimensional simplex upon which to perform
-         * the move.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool pachner(Simplex<dim>* simplex, bool ignored,
-            bool perform = true);
-
-        /**
-         * Deprecated routine that tests for and optionally performs a 2-0 move
-         * about the given <i>k</i>-face of this triangulation.
-         *
-         * For more detail on 2-0 moves and when they can be performed, see
-         * move20().
-         *
-         * This routine will always _check_ whether the requested move is
-         * legal and will not violate any simplex and/or facet locks (see
-         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
-         * details on locks).  If the move _is_ allowed, and if the argument
-         * \a perform is \c true, this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call has20().  If you wish to both check and perform the move, call
-         * move20(), which does not take the two extra boolean arguments.
-         *
-         * \pre The given <i>k</i>-face is a <i>k</i>-face of this
-         * triangulation.
-         *
-         * \tparam k the dimension of the given face.
-         *
-         * \param face the <i>k</i>-face about which to perform the move.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-        [[deprecated]] bool twoZeroMove(Face<dim, k>* face, bool ignored,
-            bool perform = true);
-
-        /**
-         * Deprecated routine that tests for and optionally performs a
-         * boundary shelling move on the given top-dimensional simplex.
-         *
-         * For more detail on boundary shelling moves and when they can be
-         * performed, see the variant of shellBoundary() without the extra
-         * boolean arguments.
-         *
-         * This routine will always _check_ whether the requested move is
-         * legal and will not violate any simplex and/or facet locks (see
-         * Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further
-         * details on locks).  If the move _is_ allowed, and if the argument
-         * \a perform is \c true, this routine will also _perform_ the move.
-         *
-         * This move is _only available in standard dimensions_, since Regina's
-         * notion of "valid faces" is weaker in higher dimensions (due to the
-         * need to solve undecidable problems).  See Face::isValid() for
-         * further discussion.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasShellBoundary().  If you wish to both check and perform the
-         * move, call shellBoundary() without the two extra boolean arguments.
-         *
-         * \pre The given simplex is a simplex of this triangulation.
-         *
-         * \param simplex the top-dimensional simplex upon which to perform
-         * the move.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool shellBoundary(Simplex<dim>* simplex, bool ignored,
-            bool perform = true) requires (standardDim(dim));
 
         /*@}*/
         /**
@@ -6119,18 +6000,21 @@ inline auto TriangulationBase<dim>::pentachoron(size_t index) const
 }
 
 template <int dim> requires (supportedDim(dim))
-template <int subdim> requires (0 <= subdim && subdim <= dim)
+template <int subdim> requires (0 <= subdim && subdim < dim)
 inline Face<dim, subdim>* TriangulationBase<dim>::translate(
         const Face<dim, subdim>* other) const {
     if (other) {
-        if constexpr (subdim < dim) {
-            const auto& emb = other->front();
-            return simplices_[emb.simplex()->index()]->template face<subdim>(
-                emb.face());
-        } else
-            return simplices_[other->index()];
+        const auto& emb = other->front();
+        return simplices_[emb.simplex()->index()]->template face<subdim>(
+            emb.face());
     } else
         return nullptr;
+}
+
+template <int dim> requires (supportedDim(dim))
+inline Simplex<dim>* TriangulationBase<dim>::translate(
+        const Simplex<dim>* other) const {
+    return (other ? simplices_[other->index()] : nullptr);
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -6686,32 +6570,6 @@ std::optional<Triangulation<dim>> TriangulationBase<dim>::withShellBoundary(
         static_cast<const Triangulation<dim>&>(*this));
     ans->internalShellBoundary(ans->simplex(simplex->index()), false, true);
     return ans;
-}
-
-template <int dim> requires (supportedDim(dim))
-template <int k> requires (k >= 0 && k < dim)
-inline bool TriangulationBase<dim>::pachner(Face<dim, k>* face, bool,
-        bool perform) {
-    return internalPachner(face, true, perform);
-}
-
-template <int dim> requires (supportedDim(dim))
-inline bool TriangulationBase<dim>::pachner(Simplex<dim>* simplex, bool,
-        bool perform) {
-    return internalPachner(simplex, true, perform);
-}
-
-template <int dim> requires (supportedDim(dim))
-template <int k> requires (k >= 0 && k <= 2 && k <= dim - 2)
-inline bool TriangulationBase<dim>::twoZeroMove(Face<dim, k>* face, bool,
-        bool perform) {
-    return internal20(face, true, perform);
-}
-
-template <int dim> requires (supportedDim(dim))
-inline bool TriangulationBase<dim>::shellBoundary(Simplex<dim>* simplex, bool,
-        bool perform) requires (standardDim(dim)) {
-    return internalShellBoundary(simplex, true, perform);
 }
 
 template <int dim> requires (supportedDim(dim))

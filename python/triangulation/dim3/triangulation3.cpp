@@ -57,6 +57,7 @@ using regina::AbelianGroup;
 using regina::ByteSequence;
 using regina::Example;
 using regina::Face;
+using regina::FaceEmbedding;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
@@ -245,27 +246,32 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
             // Just use face<2>(), which triangle() is an alias for.
             overload_cast<size_t>(&Triangulation<3>::face<2>, pybind11::const_),
             pybind11::return_value_policy::reference_internal, rbase::triangle)
-        .def("translate", overload_cast<const regina::Face<3, 0>*>(
+        .def("translate", overload_cast<const Face<3, 0>*>(
                 &Triangulation<3>::translate<0>, pybind11::const_),
-            pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", overload_cast<const regina::Face<3, 1>*>(
+            pybind11::return_value_policy::reference_internal,
+            rbase::translate_face)
+        .def("translate", overload_cast<const Face<3, 1>*>(
                 &Triangulation<3>::translate<1>, pybind11::const_),
-            pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", overload_cast<const regina::Face<3, 2>*>(
+            pybind11::return_value_policy::reference_internal,
+            rbase::translate_face)
+        .def("translate", overload_cast<const Face<3, 2>*>(
                 &Triangulation<3>::translate<2>, pybind11::const_),
-            pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", overload_cast<const regina::Simplex<3>*>(
-                &Triangulation<3>::translate<3>, pybind11::const_),
-            pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", overload_cast<const regina::FaceEmbedding<3, 0>&>(
+            pybind11::return_value_policy::reference_internal,
+            rbase::translate_face)
+        .def("translate",
+            static_cast<Simplex<3>* (Triangulation<3>::*)(const Simplex<3>*)
+                const>(&Triangulation<3>::translate),
+            pybind11::return_value_policy::reference_internal,
+            rbase::translate_simplex)
+        .def("translate", overload_cast<const FaceEmbedding<3, 0>&>(
                 &Triangulation<3>::translate<0>, pybind11::const_),
-            rbase::translate_2)
-        .def("translate", overload_cast<const regina::FaceEmbedding<3, 1>&>(
+            rbase::translate_embedding)
+        .def("translate", overload_cast<const FaceEmbedding<3, 1>&>(
                 &Triangulation<3>::translate<1>, pybind11::const_),
-            rbase::translate_2)
-        .def("translate", overload_cast<const regina::FaceEmbedding<3, 2>&>(
+            rbase::translate_embedding)
+        .def("translate", overload_cast<const FaceEmbedding<3, 2>&>(
                 &Triangulation<3>::translate<2>, pybind11::const_),
-            rbase::translate_2)
+            rbase::translate_embedding)
         .def("pairing", &Triangulation<3>::pairing, rbase::pairing)
         .def("isIsomorphicTo", &Triangulation<3>::isIsomorphicTo,
             rbase::isIsomorphicTo)
@@ -480,17 +486,18 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("minimizeVertices", // deprecated
             &Triangulation<3>::minimiseVertices, rdoc::minimizeVertices)
         .def("pachner",
-            overload_cast<Face<3, 3>*>(&Triangulation<3>::pachner<3>),
-            rbase::pachner)
+            static_cast<bool (Triangulation<3>::*)(Simplex<3>*)>(
+                &Triangulation<3>::pachner),
+            rbase::pachner_simplex)
         .def("pachner",
             overload_cast<Face<3, 2>*>(&Triangulation<3>::pachner<2>),
-            rbase::pachner)
+            rbase::pachner_face)
         .def("pachner",
             overload_cast<Face<3, 1>*>(&Triangulation<3>::pachner<1>),
-            rbase::pachner)
+            rbase::pachner_face)
         .def("pachner",
             overload_cast<Face<3, 0>*>(&Triangulation<3>::pachner<0>),
-            rbase::pachner)
+            rbase::pachner_face)
         .def("move44", &Triangulation<3>::move44, rdoc::move44)
         .def("move20", &Triangulation<3>::move20<0>, rbase::move20)
         .def("move20", &Triangulation<3>::move20<1>, rbase::move20)
@@ -520,10 +527,16 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("collapseEdge",
             overload_cast<regina::Edge<3>*>(&Triangulation<3>::collapseEdge),
             rdoc::collapseEdge)
-        .def("hasPachner", &Triangulation<3>::hasPachner<0>, rbase::hasPachner)
-        .def("hasPachner", &Triangulation<3>::hasPachner<1>, rbase::hasPachner)
-        .def("hasPachner", &Triangulation<3>::hasPachner<2>, rbase::hasPachner)
-        .def("hasPachner", &Triangulation<3>::hasPachner<3>, rbase::hasPachner)
+        .def("hasPachner", &Triangulation<3>::hasPachner<0>,
+            rbase::hasPachner_face)
+        .def("hasPachner", &Triangulation<3>::hasPachner<1>,
+            rbase::hasPachner_face)
+        .def("hasPachner", &Triangulation<3>::hasPachner<2>,
+            rbase::hasPachner_face)
+        .def("hasPachner",
+            static_cast<bool (Triangulation<3>::*)(Simplex<3>*) const>(
+                &Triangulation<3>::hasPachner),
+            rbase::hasPachner_simplex)
         .def("has44", &Triangulation<3>::has44, rdoc::has44)
         .def("has20", &Triangulation<3>::has20<0>, rbase::has20)
         .def("has20", &Triangulation<3>::has20<1>, rbase::has20)
@@ -550,13 +563,16 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasCollapseEdge", &Triangulation<3>::hasCollapseEdge,
             rdoc::hasCollapseEdge)
         .def("withPachner", &Triangulation<3>::withPachner<0>,
-            rbase::withPachner)
+            rbase::withPachner_face)
         .def("withPachner", &Triangulation<3>::withPachner<1>,
-            rbase::withPachner)
+            rbase::withPachner_face)
         .def("withPachner", &Triangulation<3>::withPachner<2>,
-            rbase::withPachner)
-        .def("withPachner", &Triangulation<3>::withPachner<3>,
-            rbase::withPachner)
+            rbase::withPachner_face)
+        .def("withPachner",
+            static_cast<std::optional<Triangulation<3>>
+                (Triangulation<3>::*)(Simplex<3>*) const>(
+                &Triangulation<3>::withPachner),
+            rbase::withPachner_simplex)
         .def("with44", &Triangulation<3>::with44, rdoc::with44)
         .def("with20", &Triangulation<3>::with20<0>, rbase::with20)
         .def("with20", &Triangulation<3>::with20<1>, rbase::with20)
@@ -744,94 +760,6 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::fromSnapPea)
         .def_readonly_static("dimension", &Triangulation<3>::dimension)
     ;
-    #if defined(__GNUC__)
-    // The following routines are deprecated, but we still need to bind
-    // them.  Silence the inevitable deprecation warnings that will occur.
-    #pragma GCC diagnostic push
-    #if defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wdeprecated"
-    #else
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #endif
-    #endif
-    c.def("pachner", // deprecated
-            overload_cast<Face<3, 3>*, bool, bool>(
-                &Triangulation<3>::pachner<3>),
-            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
-        .def("pachner", // deprecated
-            overload_cast<Face<3, 2>*, bool, bool>(
-                &Triangulation<3>::pachner<2>),
-            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
-        .def("pachner", // deprecated
-            overload_cast<Face<3, 1>*, bool, bool>(
-                &Triangulation<3>::pachner<1>),
-            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
-        .def("pachner", // deprecated
-            overload_cast<Face<3, 0>*, bool, bool>(
-                &Triangulation<3>::pachner<0>),
-            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
-        // For fourFourMove(), twoZeroMove(), twoOneMove() and zeroTwoMove(),
-        // the new functions have different names (move44, move20, etc.).
-        // We therefore give a default value for "ignored" in order to preserve
-        // backward compatibility in cases where both boolean arguments are
-        // omitted.
-        .def("fourFourMove",
-            overload_cast<regina::Edge<3>*, int, bool, bool>(
-                &Triangulation<3>::fourFourMove),
-            "edge"_a, "axis"_a, "ignored"_a = true, "perform"_a = true,
-            rdoc::fourFourMove) // deprecated
-        .def("twoZeroMove", &Triangulation<3>::twoZeroMove<0>,
-            "face"_a, "ignored"_a = true, "perform"_a = true,
-            rbase::twoZeroMove) // deprecated
-        .def("twoZeroMove", &Triangulation<3>::twoZeroMove<1>,
-            "face"_a, "ignored"_a = true, "perform"_a = true,
-            rbase::twoZeroMove) // deprecated
-        .def("twoOneMove",
-            overload_cast<regina::Edge<3>*, int, bool, bool>(
-                &Triangulation<3>::twoOneMove),
-            "edge"_a, "edgeEnd"_a, "ignored"_a = true, "perform"_a = true,
-            rdoc::twoOneMove)
-        .def("zeroTwoMove",
-            overload_cast<regina::EdgeEmbedding<3>, int,
-                regina::EdgeEmbedding<3>, int, bool, bool>(
-                &Triangulation<3>::zeroTwoMove),
-            "emb0"_a, "tri0"_a, "emb1"_a, "tri1"_a,
-            "ignored"_a = true, "perform"_a = true,
-            rdoc::zeroTwoMove)
-        .def("zeroTwoMove",
-            overload_cast<regina::Edge<3>*, size_t, size_t, bool, bool>(
-                &Triangulation<3>::zeroTwoMove),
-            "edge"_a, "tri0"_a, "tri1"_a,
-            "ignored"_a = true, "perform"_a = true,
-            rdoc::zeroTwoMove_2)
-        .def("zeroTwoMove",
-            overload_cast<regina::Triangle<3>*, int,
-                regina::Triangle<3>*, int, bool, bool>(
-                &Triangulation<3>::zeroTwoMove),
-            "tri0"_a, "edge0"_a, "tri1"_a, "edge1"_a,
-            "ignored"_a = true, "perform"_a = true,
-            rdoc::zeroTwoMove_3)
-        .def("openBook", // deprecated
-            overload_cast<regina::Triangle<3>*, bool, bool>(
-                &Triangulation<3>::openBook),
-            "triangle"_a, "ignored"_a, "perform"_a = true, rdoc::openBook_2)
-        .def("closeBook", // deprecated
-            overload_cast<regina::Edge<3>*, bool, bool>(
-                &Triangulation<3>::closeBook),
-            "edge"_a, "ignored"_a, "perform"_a = true, rdoc::closeBook_2)
-        .def("shellBoundary", // deprecated
-            overload_cast<Simplex<3>*, bool, bool>(
-                &Triangulation<3>::shellBoundary),
-            "simplex"_a, "ignored"_a, "perform"_a = true,
-            rbase::shellBoundary_2)
-        .def("collapseEdge", // deprecated
-            overload_cast<regina::Edge<3>*, bool, bool>(
-                &Triangulation<3>::collapseEdge),
-            "edge"_a, "ignored"_a, "perform"_a = true, rdoc::collapseEdge_2)
-    ;
-    #if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-    #endif
     regina::python::add_isosig_variants<3>(c);
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);

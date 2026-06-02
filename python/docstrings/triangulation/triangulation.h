@@ -2483,85 +2483,6 @@ Parameter ``k``:
     the number of new top-dimensional simplices to add; this must be
     non-negative.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase::oldPachner_face
-static constexpr const char oldPachner_face[] =
-R"doc(Deprecated routine that tests for and optionally performs a (*dim* + 1
-- *k*)-(*k* + 1) Pachner move about the given *k*-face of this
-triangulation.
-
-For more detail on Pachner moves and when they can be performed, see
-the variant of pachner() without the extra boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
-on locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasPachner(). If you wish to both check and perform the move, call
-    pachner() without the two extra boolean arguments.
-
-Precondition:
-    The given *k*-face is a *k*-face of this triangulation.
-
-Template parameter ``k``:
-    the dimension of the given face.
-
-Parameter ``face``:
-    the *k*-face about which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
-// Docstring regina::python::doc::detail::TriangulationBase::oldPachner_simplex
-static constexpr const char oldPachner_simplex[] =
-R"doc(Deprecated routine that tests for and optionally performs a 1-(*dim* +
-1) Pachner move upon the given top-dimensional simplex of this
-triangulation.
-
-For more detail on Pachner moves and when they can be performed, see
-the variant of pachner() without the extra boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex locks (see Simplex<dim>::lock() for
-further details on locks). If the move _is_ allowed, and if the
-argument *perform* is ``True``, this routine will also _perform_ the
-move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasPachner(). If you wish to both check and perform the move, call
-    pachner() without the two extra boolean arguments.
-
-Precondition:
-    The given simplex is a simplex of this triangulation.
-
-Parameter ``simplex``:
-    the top-dimensional simplex upon which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
 // Docstring regina::python::doc::detail::TriangulationBase::orient
 static constexpr const char orient[] =
 R"doc(Relabels the vertices of top-dimensional simplices in this
@@ -2949,50 +2870,6 @@ Parameter ``simplex``:
 Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
-
-// Docstring regina::python::doc::detail::TriangulationBase::shellBoundary_2
-static constexpr const char shellBoundary_2[] =
-R"doc(Deprecated routine that tests for and optionally performs a boundary
-shelling move on the given top-dimensional simplex.
-
-For more detail on boundary shelling moves and when they can be
-performed, see the variant of shellBoundary() without the extra
-boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
-on locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-This move is _only available in standard dimensions_, since Regina's
-notion of "valid faces" is weaker in higher dimensions (due to the
-need to solve undecidable problems). See Face::isValid() for further
-discussion.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasShellBoundary(). If you wish to both check and perform the
-    move, call shellBoundary() without the two extra boolean
-    arguments.
-
-Precondition:
-    The given simplex is a simplex of this triangulation.
-
-Parameter ``simplex``:
-    the top-dimensional simplex upon which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase::sig
 static constexpr const char sig[] =
@@ -3492,49 +3369,8 @@ non-const tetrahedron pointer in all higher dimensions.
 
 See face() for further information.)doc";
 
-// Docstring regina::python::doc::detail::TriangulationBase::translate
-static constexpr const char translate[] =
-R"doc(Translates a face of some other triangulation into the corresponding
-face of this triangulation, using simplex numbers for the translation.
-
-Typically this routine would be used when the given face comes from a
-triangulation that is combinatorially identical to this, and you wish
-to obtain the corresponding face of this triangulation.
-
-Specifically:
-
-* For faces of dimension ``k < dim``, if *other* refers to face *i* of
-  top-dimensional simplex number *k* of some other triangulation, then
-  this routine will return face *i* of top-dimensional simplex number
-  *k* of this triangulation. Note that this routine does _not_ use the
-  face indices within each triangulation (which is outside the user's
-  control), but rather the simplex numbering (which the user has full
-  control over).
-
-* For top-dimensional simplices (i.e., faces of dimension ``k =
-  dim``), this routine will simply translate top-dimensional simplex
-  number *k* of some other triangulation into top-dimensional simplex
-  number *k* of this triangulation.
-
-This routine behaves correctly even if *other* is a null pointer.
-
-Precondition:
-    This triangulation contains at least as many top-dimensional
-    simplices as the triangulation containing *other* (though, as
-    noted above, in typical scenarios both triangulations would
-    actually be combinatorially identical).
-
-Template parameter ``subdim``:
-    the face dimension.
-
-Parameter ``other``:
-    the face to translate.
-
-Returns:
-    the corresponding face of this triangulation.)doc";
-
-// Docstring regina::python::doc::detail::TriangulationBase::translate_2
-static constexpr const char translate_2[] =
+// Docstring regina::python::doc::detail::TriangulationBase::translate_embedding
+static constexpr const char translate_embedding[] =
 R"doc(Translates a face embedding from some other triangulation into the
 corresponding face embedding with respect to this triangulation, using
 simplex numbers for the translation.
@@ -3563,6 +3399,66 @@ Parameter ``other``:
 
 Returns:
     the corresponding face embedding in this triangulation.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase::translate_face
+static constexpr const char translate_face[] =
+R"doc(Translates a face of some other triangulation into the corresponding
+face of this triangulation, using simplex numbers for the translation.
+
+Typically this routine would be used when the given face comes from a
+triangulation that is combinatorially identical to this, and you wish
+to obtain the corresponding face of this triangulation.
+
+Specifically, if *other* refers to face *i* of top-dimensional simplex
+number *k* of some other triangulation, then this routine will return
+face *i* of top-dimensional simplex number *k* of this triangulation.
+Note that this routine does _not_ use the face indices within each
+triangulation (which is outside the user's control), but rather the
+simplex numbering (which the user has full control over).
+
+This routine behaves correctly even if *other* is a null pointer.
+
+Precondition:
+    This triangulation contains at least as many top-dimensional
+    simplices as the triangulation containing *other* (though, as
+    noted above, in typical scenarios both triangulations would
+    actually be combinatorially identical).
+
+Template parameter ``subdim``:
+    the face dimension.
+
+Parameter ``other``:
+    the face to translate.
+
+Returns:
+    the corresponding face of this triangulation.)doc";
+
+// Docstring regina::python::doc::detail::TriangulationBase::translate_simplex
+static constexpr const char translate_simplex[] =
+R"doc(Translates a top-dimensional simplex of some other triangulation into
+the corresponding top-dimensional simplex of this triangulation.
+
+Typically this routine would be used when the given simplex comes from
+a triangulation that is combinatorially identical to this, and you
+wish to obtain the corresponding simplex of this triangulation.
+
+This routine is provided for consistency with the variant of
+translate() that operates on faces; however, it is much simpler: it
+just returns ``simplex(other->index())``.
+
+This routine behaves correctly even if *other* is a null pointer.
+
+Precondition:
+    This triangulation contains at least as many top-dimensional
+    simplices as the triangulation containing *other* (though, as
+    noted above, in typical scenarios both triangulations would
+    actually be combinatorially identical).
+
+Parameter ``other``:
+    the simplex to translate.
+
+Returns:
+    the corresponding simplex of this triangulation.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase::triangle
 static constexpr const char triangle[] =
@@ -3610,46 +3506,6 @@ newly-triangulated components.
 
 Returns:
     a list of individual component triangulations.)doc";
-
-// Docstring regina::python::doc::detail::TriangulationBase::twoZeroMove
-static constexpr const char twoZeroMove[] =
-R"doc(Deprecated routine that tests for and optionally performs a 2-0 move
-about the given *k*-face of this triangulation.
-
-For more detail on 2-0 moves and when they can be performed, see
-move20().
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<dim>::lock() and Simplex<dim>::lockFacet() for further details
-on locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has20(). If you wish to both check and perform the move, call
-    move20(), which does not take the two extra boolean arguments.
-
-Precondition:
-    The given *k*-face is a *k*-face of this triangulation.
-
-Template parameter ``k``:
-    the dimension of the given face.
-
-Parameter ``face``:
-    the *k*-face about which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::detail::TriangulationBase::unlockAll
 static constexpr const char unlockAll[] =

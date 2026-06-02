@@ -49,6 +49,7 @@ using pybind11::overload_cast;
 using regina::AbelianGroup;
 using regina::ByteSequence;
 using regina::Face;
+using regina::FaceEmbedding;
 using regina::Isomorphism;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
@@ -168,21 +169,25 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference_internal, rbase::vertex)
         .def("edge", &Triangulation<2>::edge,
             pybind11::return_value_policy::reference_internal, rbase::edge)
-        .def("translate", overload_cast<const regina::Face<2, 0>*>(
+        .def("translate", overload_cast<const Face<2, 0>*>(
                 &Triangulation<2>::translate<0>, pybind11::const_),
-            pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", overload_cast<const regina::Face<2, 1>*>(
+            pybind11::return_value_policy::reference_internal,
+            rbase::translate_face)
+        .def("translate", overload_cast<const Face<2, 1>*>(
                 &Triangulation<2>::translate<1>, pybind11::const_),
-            pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", overload_cast<const regina::Simplex<2>*>(
-                &Triangulation<2>::translate<2>, pybind11::const_),
-            pybind11::return_value_policy::reference_internal, rbase::translate)
-        .def("translate", overload_cast<const regina::FaceEmbedding<2, 0>&>(
+            pybind11::return_value_policy::reference_internal,
+            rbase::translate_face)
+        .def("translate",
+            static_cast<Simplex<2>* (Triangulation<2>::*)(const Simplex<2>*)
+                const>(&Triangulation<2>::translate),
+            pybind11::return_value_policy::reference_internal,
+            rbase::translate_simplex)
+        .def("translate", overload_cast<const FaceEmbedding<2, 0>&>(
                 &Triangulation<2>::translate<0>, pybind11::const_),
-            rbase::translate_2)
-        .def("translate", overload_cast<const regina::FaceEmbedding<2, 1>&>(
+            rbase::translate_embedding)
+        .def("translate", overload_cast<const FaceEmbedding<2, 1>&>(
                 &Triangulation<2>::translate<1>, pybind11::const_),
-            rbase::translate_2)
+            rbase::translate_embedding)
         .def("pairing", &Triangulation<2>::pairing, rbase::pairing)
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo,
             rbase::isIsomorphicTo)
@@ -283,30 +288,39 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
             static_cast<MatrixInt (Triangulation<2>::*)(int) const>(
             &Triangulation<2>::dualToPrimal), rbase::dualToPrimal)
         .def("pachner",
-            overload_cast<Face<2, 2>*>(&Triangulation<2>::pachner<2>),
-            rbase::pachner)
+            static_cast<bool (Triangulation<2>::*)(Simplex<2>*)>(
+                &Triangulation<2>::pachner),
+            rbase::pachner_simplex)
         .def("pachner",
             overload_cast<Face<2, 1>*>(&Triangulation<2>::pachner<1>),
-            rbase::pachner)
+            rbase::pachner_face)
         .def("pachner",
             overload_cast<Face<2, 0>*>(&Triangulation<2>::pachner<0>),
-            rbase::pachner)
+            rbase::pachner_face)
         .def("move20", &Triangulation<2>::move20<0>, rbase::move20)
         .def("shellBoundary",
             overload_cast<Simplex<2>*>(&Triangulation<2>::shellBoundary),
             rbase::shellBoundary)
-        .def("hasPachner", &Triangulation<2>::hasPachner<0>, rbase::hasPachner)
-        .def("hasPachner", &Triangulation<2>::hasPachner<1>, rbase::hasPachner)
-        .def("hasPachner", &Triangulation<2>::hasPachner<2>, rbase::hasPachner)
+        .def("hasPachner", &Triangulation<2>::hasPachner<0>,
+            rbase::hasPachner_face)
+        .def("hasPachner", &Triangulation<2>::hasPachner<1>,
+            rbase::hasPachner_face)
+        .def("hasPachner",
+            static_cast<bool (Triangulation<2>::*)(Simplex<2>*) const>(
+                &Triangulation<2>::hasPachner),
+            rbase::hasPachner_simplex)
         .def("has20", &Triangulation<2>::has20<0>, rbase::has20)
         .def("hasShellBoundary", &Triangulation<2>::hasShellBoundary,
             rbase::hasShellBoundary)
         .def("withPachner", &Triangulation<2>::withPachner<0>,
-            rbase::withPachner)
+            rbase::withPachner_face)
         .def("withPachner", &Triangulation<2>::withPachner<1>,
-            rbase::withPachner)
-        .def("withPachner", &Triangulation<2>::withPachner<2>,
-            rbase::withPachner)
+            rbase::withPachner_face)
+        .def("withPachner",
+            static_cast<std::optional<Triangulation<2>>
+                (Triangulation<2>::*)(Simplex<2>*) const>(
+                &Triangulation<2>::withPachner),
+            rbase::withPachner_simplex)
         .def("with20", &Triangulation<2>::with20<0>, rbase::with20)
         .def("withShellBoundary", &Triangulation<2>::withShellBoundary,
             rbase::withShellBoundary)
@@ -365,44 +379,6 @@ void addTriangulation2(pybind11::module_& m, pybind11::module_& internal) {
         }, "size"_a, "gluings"_a, rbase::fromGluings)
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
-    #if defined(__GNUC__)
-    // The following routines are deprecated, but we still need to bind
-    // them.  Silence the inevitable deprecation warnings that will occur.
-    #pragma GCC diagnostic push
-    #if defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wdeprecated"
-    #else
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #endif
-    #endif
-    c.def("pachner", // deprecated
-            overload_cast<Face<2, 2>*, bool, bool>(
-                &Triangulation<2>::pachner<2>),
-            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
-        .def("pachner", // deprecated
-            overload_cast<Face<2, 1>*, bool, bool>(
-                &Triangulation<2>::pachner<1>),
-            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
-        .def("pachner", // deprecated
-            overload_cast<Face<2, 0>*, bool, bool>(
-                &Triangulation<2>::pachner<0>),
-            "face"_a, "ignored"_a, "perform"_a = true, rbase::pachner_2)
-        // For twoZeroMove(), the new function has a different name (move20).
-        // We therefore give a default value for "ignored" in order to preserve
-        // backward compatibility in cases where both boolean arguments are
-        // omitted.
-        .def("twoZeroMove", &Triangulation<2>::twoZeroMove<0>, // deprecated
-            "face"_a, "ignored"_a = true, "perform"_a = true,
-            rbase::twoZeroMove)
-        .def("shellBoundary", // deprecated
-            overload_cast<Simplex<2>*, bool, bool>(
-                &Triangulation<2>::shellBoundary),
-            "simplex"_a, "ignored"_a, "perform"_a = true,
-            rbase::shellBoundary_2)
-    ;
-    #if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-    #endif
     regina::python::add_isosig_variants<2>(c);
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);

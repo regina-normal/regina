@@ -76,7 +76,7 @@ void addTangle(pybind11::module_& m) {
         .def("negate", &Tangle::negate, rdoc::negate)
         .def("numClosure", &Tangle::numClosure, rdoc::numClosure)
         .def("denClosure", &Tangle::denClosure, rdoc::denClosure)
-        .def("r1", overload_cast<Crossing*>(&Tangle::r1), rdoc::r1)
+        .def("r1", &Tangle::r1, rdoc::r1)
         .def("r2", overload_cast<StrandRef>(&Tangle::r2), rdoc::r2)
         .def("r2", overload_cast<Crossing*>(&Tangle::r2), rdoc::r2_2)
         .def("hasR1", &Tangle::hasR1, rdoc::hasR1)
@@ -112,26 +112,6 @@ void addTangle(pybind11::module_& m) {
             return Tangle::fromOrientedGauss(v.begin(), v.end());
         }, "tokens"_a, rdoc::fromOrientedGauss_2)
     ;
-    #if defined(__GNUC__)
-    // The following routines are deprecated, but we still need to bind
-    // them.  Silence the inevitable deprecation warnings that will occur.
-    #pragma GCC diagnostic push
-    #if defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wdeprecated"
-    #else
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #endif
-    #endif
-    c.def("r1", overload_cast<Crossing*, bool, bool>(&Tangle::r1),
-            "crossing"_a, "ignored"_a, "perform"_a = true, rdoc::r1_2)
-        .def("r2", overload_cast<StrandRef, bool, bool>(&Tangle::r2),
-            "arc"_a, "ignored"_a, "perform"_a = true, rdoc::r2_3)
-        .def("r2", overload_cast<Crossing*, bool, bool>(&Tangle::r2),
-            "crossing"_a, "ignored"_a, "perform"_a = true, rdoc::r2_4)
-    ;
-    #if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-    #endif
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_global_swap<Tangle, rdoc>(m);

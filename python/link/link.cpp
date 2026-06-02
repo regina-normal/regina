@@ -645,38 +645,6 @@ void addLink(pybind11::module_& m, pybind11::module_& internal) {
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
         .def_readonly_static("affineIndexVar", Link::affineIndexVar)
     ;
-    #if defined(__GNUC__)
-    // The following routines are deprecated, but we still need to bind
-    // them.  Silence the inevitable deprecation warnings that will occur.
-    #pragma GCC diagnostic push
-    #if defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wdeprecated"
-    #else
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    #endif
-    #endif
-    l.def("r1", overload_cast<Crossing*, bool, bool>(&Link::r1),
-            "crossing"_a, "ignored"_a, "perform"_a = true, rdoc::r1_3)
-        .def("r1", overload_cast<StrandRef, int, int, bool, bool>(&Link::r1),
-            "arc"_a, "side"_a, "sign"_a, "ignored"_a, "perform"_a = true,
-            rdoc::r1_4)
-        .def("r2", overload_cast<StrandRef, bool, bool>(&Link::r2),
-            "arc"_a, "ignored"_a, "perform"_a = true, rdoc::r2_4)
-        .def("r2", overload_cast<Crossing*, bool, bool>(&Link::r2),
-            "crossing"_a, "ignored"_a, "perform"_a = true, rdoc::r2_5)
-        .def("r2", overload_cast<StrandRef, int, StrandRef, int, bool, bool>(
-                &Link::r2),
-            "upperArc"_a, "upperSide"_a, "lowerArc"_a, "lowerSide"_a,
-            "ignored"_a, "perform"_a = true,
-            rdoc::r2_6)
-        .def("r3", overload_cast<StrandRef, int, bool, bool>(&Link::r3),
-            "arc"_a, "side"_a, "ignored"_a, "perform"_a = true, rdoc::r3_3)
-        .def("r3", overload_cast<Crossing*, int, bool, bool>(&Link::r3),
-            "crossing"_a, "side"_a, "ignored"_a, "perform"_a = true, rdoc::r3_4)
-    ;
-    #if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-    #endif
     regina::python::add_output_rich(l);
     regina::python::add_tight_encoding(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);

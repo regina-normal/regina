@@ -248,44 +248,6 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Triangulation3::closeBook_2
-static constexpr const char closeBook_2[] =
-R"doc(Deprecated routine that tests for and optionally performs a book
-closing move about the given edge of this triangulation.
-
-For more details on book closing moves and when they can be performed,
-see the variant of closeBook() without the extra boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasCloseBook(). If you wish to both check and perform the move,
-    call closeBook() without the two extra boolean arguments.
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``edge``:
-    the edge about which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
 // Docstring regina::python::doc::Triangulation3::collapseEdge
 static constexpr const char collapseEdge[] =
 R"doc(If possible, performs an edge collapse move upon the given edge. This
@@ -340,45 +302,6 @@ Parameter ``edge``:
 Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
-
-// Docstring regina::python::doc::Triangulation3::collapseEdge_2
-static constexpr const char collapseEdge_2[] =
-R"doc(Deprecated routine that tests for and optionally performs an edge
-collapse move upon the given edge of this triangulation.
-
-For more details on edge collapse moves and when they can be
-performed, as well as the difference between edge collapse and edge
-pinch moves, see the variant of collapseEdge() without the extra
-boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
-locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasCollapseEdge(). If you wish to both check and perform the move,
-    call collapseEdge() without the two extra boolean arguments.
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``edge``:
-    the edge to collapse.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation3::connectedSumWith
 static constexpr const char connectedSumWith[] =
@@ -618,48 +541,6 @@ Returns:
     ``True`` if the boundary component was filled successfully, or
     ``False`` if one of the required conditions as described above is
     not satisfied.)doc";
-
-// Docstring regina::python::doc::Triangulation3::fourFourMove
-static constexpr const char fourFourMove[] =
-R"doc(Deprecated routine that tests for and optionally performs a 4-4 move
-about the given edge of this triangulation.
-
-For more details on 4-4 moves and when they can be performed, see
-move44().
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
-locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has44(). If you wish to both check and perform the move, call
-    move44().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``edge``:
-    the edge about which to perform the move.
-
-Parameter ``axis``:
-    indicates which axis of the enclosing octahedron the four new
-    tetrahedra should meet along; this must be 0 or 1. See move44()
-    for details on exactly what this means.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Triangulation3::fromSnapPea
 static constexpr const char fromSnapPea[] =
@@ -3233,44 +3114,6 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Triangulation3::openBook_2
-static constexpr const char openBook_2[] =
-R"doc(Deprecated routine that tests for and optionally performs a book
-opening move about the given triangle of this triangulation.
-
-For more details on book opening moves and when they can be performed,
-see the variant of openBook() without the extra boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasOpenBook(). If you wish to both check and perform the move,
-    call openBook() without the two extra boolean arguments.
-
-Precondition:
-    The given triangle is a triangle of this triangulation.
-
-Parameter ``triangle``:
-    the triangle about which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
 // Docstring regina::python::doc::Triangulation3::order
 static constexpr const char order[] =
 R"doc(Relabels tetrahedron vertices in this triangulation to give an ordered
@@ -4453,48 +4296,6 @@ Returns:
 See also:
     allCalculatedTuraevViro)doc";
 
-// Docstring regina::python::doc::Triangulation3::twoOneMove
-static constexpr const char twoOneMove[] =
-R"doc(Deprecated routine that tests for and optionally performs a 2-1 move
-at the given end of the given edge of this triangulation.
-
-For more details on 2-1 moves and when they can be performed, see
-move21().
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
-locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has21(). If you wish to both check and perform the move, call
-    move21().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``edge``:
-    the edge about which to perform the move.
-
-Parameter ``edgeEnd``:
-    indicates at which end of the edge *e* the move does _not_ involve
-    the adjacent tetrahedron; this should be 0 or 1. See move21() for
-    details on exactly what this means.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
 // Docstring regina::python::doc::Triangulation3::with02
 static constexpr const char with02[] =
 R"doc(If possible, returns the triangulation obtained by performing a 0-2
@@ -4724,165 +4525,6 @@ Parameter ``triangle``:
 Returns:
     the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation3::zeroTwoMove
-static constexpr const char zeroTwoMove[] =
-R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
-about the two specified triangles of this triangulation.
-
-For more detail on 0-2 moves and when they can be performed, and for
-full details on what the arguments to this function mean, see
-move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has02(). If you wish to both check and perform the move, call
-    move02().
-
-Precondition:
-    The two given edge embeddings both refer to the same edge, which
-    must be an edge of this triangulation.
-
-Parameter ``emb0``:
-    an embedding of the common edge *e* of the two triangles about
-    which to perform the move.
-
-Parameter ``tri0``:
-    indicates one of the triangles about which to perform the move,
-    with respect to the edge embedding *emb0*; this must be 2 or 3.
-
-Parameter ``emb1``:
-    another embedding of the edge *e*.
-
-Parameter ``tri1``:
-    indicates the other triangle about which to perform the move, with
-    respect to the edge embedding *emb1*; this must be 2 or 3.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.
-
-Author:
-    Alex He)doc";
-
-// Docstring regina::python::doc::Triangulation3::zeroTwoMove_2
-static constexpr const char zeroTwoMove_2[] =
-R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
-about the two specified triangles of this triangulation.
-
-For more detail on 0-2 moves and when they can be performed, and for
-full details on what the arguments to this function mean, see
-move02(Edge<3>*, size_t, size_t).
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has02(). If you wish to both check and perform the move, call
-    move02().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``edge``:
-    the common edge of the two triangles about which to perform the
-    move.
-
-Parameter ``tri0``:
-    the number assigned to one of two triangles about which to perform
-    the move.
-
-Parameter ``tri1``:
-    the number assigned to the other triangle about which to perform
-    the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.
-
-Author:
-    Alex He)doc";
-
-// Docstring regina::python::doc::Triangulation3::zeroTwoMove_3
-static constexpr const char zeroTwoMove_3[] =
-R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
-about the two given triangles of this triangulation.
-
-For more detail on 0-2 moves and when they can be performed, and for
-full details on what the arguments to this function mean, see
-move02(Triangle<3>*, int, Triangle<3>*, int).
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has02(). If you wish to both check and perform the move, call
-    move02().
-
-Precondition:
-    The given triangles are both triangles of this triangulation.
-
-Parameter ``tri0``:
-    one of the two triangles about which to perform the move.
-
-Parameter ``edge0``:
-    the edge at which *tri0* meets the other triangle *tri1*; this
-    must be 0, 1 or 2.
-
-Parameter ``tri1``:
-    the other triangle about which to perform the move.
-
-Parameter ``edge1``:
-    the edge at which *tri1* meets the other triangle *tri0*; this
-    must be 0, 1 or 2.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.
-
-Author:
-    Alex He)doc";
 
 }; // struct Triangulation3
 
