@@ -67,37 +67,6 @@ Concepts:
 
 }; // struct SimplexClass
 
-namespace detail {
-
-struct SafeFaceHelper {
-
-// Docstring regina::python::doc::detail::SafeFaceHelper::__class
-static constexpr const char __class[] =
-R"doc(Implementation details for SafeFace<dim, subdim>. See SafeFace for
-further information.)doc";
-
-}; // struct SafeFaceHelper
-
-struct SafeHypersurfaceHelper {
-
-// Docstring regina::python::doc::detail::SafeHypersurfaceHelper::__class
-static constexpr const char __class[] =
-R"doc(Implementation details for SafeHypersurface<dim> and
-SafeHypersurfaces<dim>. See those types for further information.)doc";
-
-}; // struct SafeHypersurfaceHelper
-
-struct SafeTriangulationHelper {
-
-// Docstring regina::python::doc::detail::SafeTriangulationHelper::__class
-static constexpr const char __class[] =
-R"doc(Implementation details for SafeTriangulation<dim>. See
-SafeTriangulation for further information.)doc";
-
-}; // struct SafeTriangulationHelper
-
-} // namespace detail
-
 } // namespace regina::python::doc
 
 #if defined(__GNUG__)

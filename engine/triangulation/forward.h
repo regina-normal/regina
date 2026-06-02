@@ -141,6 +141,8 @@ namespace detail {
      * Implementation details for SafeTriangulation<dim>.
      * See SafeTriangulation for further information.
      *
+     * \nopython
+     *
      * \ingroup detail
      */
     template <int dim> requires (dim >= 0 && dim <= maxDim() + 1)
@@ -155,6 +157,8 @@ namespace detail {
     /**
      * Implementation details for SafeFace<dim, subdim>.
      * See SafeFace for further information.
+     *
+     * \nopython
      *
      * \ingroup detail
      */
@@ -291,6 +295,8 @@ namespace detail {
      * Implementation details for SafeHypersurface<dim> and
      * SafeHypersurfaces<dim>.  See those types for further information.
      *
+     * \nopython
+     *
      * \ingroup detail
      */
     template <int dim> requires (supportedDim(dim))
@@ -331,6 +337,10 @@ namespace detail {
  *
  * In particular, this will be the type regina::NormalSurface if `dim == 3`,
  * or regina::NormalHypersurface if `dim == 4`.
+ *
+ * \nopython
+ *
+ * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
 using SafeHypersurface =
@@ -343,6 +353,10 @@ using SafeHypersurface =
  *
  * In particular, this will be the type regina::NormalSurfaces if
  * `dim == 3`, or regina::NormalHypersurfaces if `dim == 4`.
+ *
+ * \nopython
+ *
+ * \ingroup triangulation
  */
 template <int dim> requires (supportedDim(dim))
 using SafeHypersurfaces =
