@@ -11,59 +11,8 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::FaceNumbering
-static const char *FaceNumbering =
-R"doc(Specifies how *subdim*-faces are numbered within a *dim*-dimensional
-simplex.
-
-Regina uses the following general scheme for numbering faces:
-
-* For low-dimensional faces (``subdim < dim / 2``), faces are numbered
-  in lexicographical order according to their vertices. For example,
-  in a 3-dimensional triangulation, edges 0,...,5 contain vertices 01,
-  02, 03, 12, 13, 23 respectively.
-
-* For high-dimensional faces (``subdim ≥ dim / 2``), faces are
-  numbered in _reverse_ lexicographical order according to their
-  vertices. For example, in a 3-dimensional triangulation, triangles
-  0,...,3 contain vertices 123, 023, 013, 012 respectively.
-
-* As a consequence, unless ``subdim = (dim-1)/2``, we always have
-  *subdim*-face number *i* opposite (*dim*-1-*subdim*)-face number
-  *i*. For the special "halfway case" ``subdim = (dim-1)/2``, where
-  each *subdim*-face is opposite another *subdim*-face, we always have
-  *subdim*-face number *i* opposite *subdim*-face number
-  ``(nFaces-1-i)``.
-
-Every class Face<dim, subdim> inherits from this class, which means
-you can access these routines as Face<dim, subdim>::ordering(),
-Face<dim, subdim>::faceNumber(), and so on.
-
-An advantage of referring to FaceNumbering<dim, subdim> directly (as
-opposed to Face<dim, subdim>) is that its header is lightweight: it
-does not pull in the large and complex headers required by Face<dim,
-subdim>.
-
-This class is specialised (and optimised) in Regina's standard
-dimensions.
-
-Python:
-    This class is not available in Python. However, all of its
-    routines can be accessed through Face<dim, subdim> (which in
-    Python becomes Face*dim*_*subdim*, or one of the type aliases such
-    as Vertex3, Edge2 and so on).
-
-Template parameter ``dim``:
-    the dimension of the simplex whose faces we are numbering. Note
-    that dimension 1 _is_ supported for the purpose of face numbering,
-    even though it is not supported for building fully-fledged
-    triangulations.
-
-Template parameter ``subdim``:
-    the dimension of the faces that we are numbering.)doc";
-
 // Docstring regina::python::doc::faceOppositeEdge
-static const char *faceOppositeEdge =
+inline constexpr const char faceOppositeEdge[] =
 R"doc(Returns the (*dim*-2)-face number that is opposite the edge joining
 vertices *i* and *j* in a *dim*-dimensional simplex.
 
@@ -93,10 +42,61 @@ Parameter ``j``:
 Returns:
     the number of the (*dim*-2)-face opposite the given edge.)doc";
 
-namespace FaceNumbering_ {
+struct FaceNumbering {
 
-// Docstring regina::python::doc::FaceNumbering_::containsVertex
-static const char *containsVertex =
+// Docstring regina::python::doc::FaceNumbering::__class
+static constexpr const char __class[] =
+R"doc(Specifies how *subdim*-faces are numbered within a *dim*-dimensional
+simplex.
+
+Regina uses the following general scheme for numbering faces:
+
+* For low-dimensional faces (``subdim < dim / 2``), faces are numbered
+  in lexicographical order according to their vertices. For example,
+  in a 3-dimensional triangulation, edges 0,...,5 contain vertices 01,
+  02, 03, 12, 13, 23 respectively.
+
+* For high-dimensional faces (``subdim ≥ dim / 2``), faces are
+  numbered in _reverse_ lexicographical order according to their
+  vertices. For example, in a 3-dimensional triangulation, triangles
+  0,...,3 contain vertices 123, 023, 013, 012 respectively.
+
+* As a consequence, unless ``subdim = (dim-1)/2``, we always have
+  *subdim*-face number *i* opposite (*dim*-1-*subdim*)-face number
+  *i*. For the special "halfway case" ``subdim = (dim-1)/2``, where
+  each *subdim*-face is opposite another *subdim*-face, we always have
+  *subdim*-face number *i* opposite *subdim*-face number
+  ``(nFaces-1-i)``.
+
+Every class Face<dim, subdim> inherits from this class, which means
+you can access these routines as Face<dim, subdim>::ordering(),
+Face<dim, subdim>::faceNumber(), and so on.
+
+An advantage of referring to ``FaceNumbering<dim, subdim>`` directly
+(as opposed to ``Face<dim, subdim>``) is that its header is
+lightweight: it does not pull in the large and complex headers
+required by ``Face<dim, subdim>``.
+
+This class is specialised (and optimised) in Regina's standard
+dimensions.
+
+Python:
+    This class is not available in Python. However, all of its
+    routines can be accessed through Face<dim, subdim> (which in
+    Python becomes Face*dim*_*subdim*, or one of the type aliases such
+    as Vertex3, Edge2 and so on).
+
+Template parameter ``dim``:
+    the dimension of the simplex whose faces we are numbering. Note
+    that dimension 1 _is_ supported for the purpose of face numbering,
+    even though it is not supported for building fully-fledged
+    triangulations.
+
+Template parameter ``subdim``:
+    the dimension of the faces that we are numbering.)doc";
+
+// Docstring regina::python::doc::FaceNumbering::containsVertex
+static constexpr const char containsVertex[] =
 R"doc(Tests whether the given *subdim*-face of a *dim*-dimensional simplex
 contains the given vertex of the simplex.
 
@@ -112,8 +112,8 @@ Returns:
     ``True`` if and only if the given *subdim*-face contains the given
     vertex.)doc";
 
-// Docstring regina::python::doc::FaceNumbering_::faceNumber
-static const char *faceNumber =
+// Docstring regina::python::doc::FaceNumbering::faceNumber
+static constexpr const char faceNumber[] =
 R"doc(Identifies which *subdim*-face in a *dim*-dimensional simplex is
 represented by the first (*subdim* + 1) elements of the given
 permutation.
@@ -137,8 +137,8 @@ Returns:
     the corresponding *subdim*-face number in the *dim*-simplex. This
     will be between 0 and (*dim*+1 choose *subdim*+1)-1 inclusive.)doc";
 
-// Docstring regina::python::doc::FaceNumbering_::faceNumber_2
-static const char *faceNumber_2 =
+// Docstring regina::python::doc::FaceNumbering::faceNumber_2
+static constexpr const char faceNumber_2[] =
 R"doc(Identifies which edge in a *dim*-dimensional simplex joins the two
 given vertices of the simplex.
 
@@ -161,8 +161,8 @@ Returns:
     the number of the simplex edge spanned by the two given vertices.
     This will be between 0 and ``(dim+1 choose 2)-1`` inclusive.)doc";
 
-// Docstring regina::python::doc::FaceNumbering_::ordering
-static const char *ordering =
+// Docstring regina::python::doc::FaceNumbering::ordering
+static constexpr const char ordering[] =
 R"doc(Given a *subdim*-face number within a *dim*-dimensional simplex,
 returns the corresponding canonical ordering of the simplex vertices.
 
@@ -194,7 +194,7 @@ Parameter ``face``:
 Returns:
     the corresponding canonical ordering of the simplex vertices.)doc";
 
-}
+}; // struct FaceNumbering
 
 } // namespace regina::python::doc
 

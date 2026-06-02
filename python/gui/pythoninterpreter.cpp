@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -194,7 +194,7 @@ PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream::addBindings();
         pyStdOut.install("stdout");
         pyStdErr.install("stderr");
-    } catch (std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
         pyStdErr.write("ERROR: Could not redirect output streams: ");
         pyStdErr.write(e.what());
         pyStdErr.write("\n");
@@ -313,7 +313,7 @@ PythonInterpreter::PythonInterpreter(
             regina::python::PythonOutputStream::addBindings();
         pyStdOut.install("stdout");
         pyStdErr.install("stderr");
-    } catch (std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
         pyStdErr.write("ERROR: Could not redirect output streams: ");
         pyStdErr.write(e.what());
         pyStdErr.write("\n");
@@ -546,7 +546,7 @@ bool PythonInterpreter::importRegina(bool fixPythonPath) {
                 Py_INCREF(completer = c.ptr());
                 Py_INCREF(completerFunc = f.ptr());
             }
-        } catch (std::runtime_error&) {
+        } catch (const std::runtime_error&) {
         }
     } else {
         PyErr_Print();
@@ -640,7 +640,7 @@ bool PythonInterpreter::setVar(const char* name,
             errors.write("ERROR: Null PyObject\n");
             errors.flush();
         }
-    } catch (std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
         errors.write("ERROR: ");
         errors.write(e.what());
         errors.write("\n");
@@ -745,7 +745,7 @@ int PythonInterpreter::complete(const std::string& text, PythonCompleter& c) {
                 return which;
             }
         }
-    } catch (std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
         return -1;
     }
 }

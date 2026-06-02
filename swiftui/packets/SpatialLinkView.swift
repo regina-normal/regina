@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Swift User Interface                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -92,28 +92,24 @@ struct SpatialLink3D: ViewRepresentable {
 
         // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
         withExtendedLifetime(link) {
-            // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
-            // TODO: Audit all use of ListView
-            for i in 0..<link.countComponents() {
-                let nodes = link.componentSize(i)
-                if nodes == 0 {
+            var colour = 0
+            for c in link.__componentsUnsafe() {
+                if c.empty() {
                     continue
                 }
                 
                 var prev: regina.SpatialLink.Node?
-                
-                for j in 0..<nodes {
-                    let n = link.__nodeUnsafe(i, j).pointee
-                    scene.rootNode.addChildNode(ball(n, component: i, radius: radius, scene: scene))
+                for n in c {
+                    scene.rootNode.addChildNode(ball(n, component: colour, radius: radius, scene: scene))
                     
                     if let p = prev {
-                        scene.rootNode.addChildNode(arc(p, n, component: i, radius: radius, scene: scene))
+                        scene.rootNode.addChildNode(arc(p, n, component: colour, radius: radius, scene: scene))
                     }
                     prev = n
                 }
+                scene.rootNode.addChildNode(arc(prev!, c.__frontUnsafe().pointee, component: colour, radius: radius, scene: scene))
                 
-                let n = link.__nodeUnsafe(i, 0).pointee
-                scene.rootNode.addChildNode(arc(prev!, n, component: i, radius: radius, scene: scene))
+                colour += 1
             }
         }
     }
@@ -301,27 +297,21 @@ struct SpatialLinkVolume: View {
         
         // Since the Link functions obtain internal pointers into link, we need to ensure the lifespan of link.
         withExtendedLifetime(link) {
-            // We use index-based loops here, since visionOS struggles with C++ bindings for regina::ListView and std::vector (though macOS and iOS seem fine).
-            for i in 0..<link.countComponents() {
-                let nodes = link.componentSize(i)
-                if nodes == 0 {
+            for c in link.__componentsUnsafe() {
+                if c.empty() {
                     continue
                 }
                 
                 var prev: regina.SpatialLink.Node?
-                
-                for j in 0..<nodes {
-                    let n = link.__nodeUnsafe(i, j).pointee
+                for n in c {
                     root.addChild(ball(n, material: material))
-                    
+
                     if let p = prev {
                         root.addChild(arc(p, n, material: material))
                     }
                     prev = n
                 }
-                
-                let n = link.__nodeUnsafe(i, 0).pointee
-                root.addChild(arc(prev!, n, material: material))
+                root.addChild(arc(prev!, c.__frontUnsafe().pointee, material: material))
             }
         }
         

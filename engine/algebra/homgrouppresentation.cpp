@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,7 @@
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
 #include "maths/numbertheory.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -260,13 +261,12 @@ bool HomGroupPresentation::simplify() {
     return retval;
 }
 
-bool HomGroupPresentation::invert() {
+void HomGroupPresentation::invert() {
     if (inv_) {
         domain_.swap(codomain_);
         map_.swap(*inv_);
-        return true;
-    }
-    return false;
+    } else
+        throw NoSolution();
 }
 
 bool HomGroupPresentation::verify() const {

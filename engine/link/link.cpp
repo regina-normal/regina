@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,7 +37,25 @@
 
 namespace regina {
 
-Link::Link(const Link& cloneMe, bool cloneProps) : virtualGenus_(-1) {
+size_t Crossing::chordIndex() const {
+    long ans = 0;
+    StrandRef s = const_cast<Crossing*>(this)->upper();
+    for (++s; s.crossing() != this; ++s) {
+        if (s.strand() > 0)
+            ans += s.crossing()->sign();
+        else
+            ans -= s.crossing()->sign();
+    }
+    if (s.strand() > 0) {
+        // We returned to the upper strand without ever seeing the lower
+        // strand.  This cannot be a (virtual) knot diagram.
+        throw FailedPrecondition("Chord index requires the crossing "
+            "to belong to a single-component link");
+    }
+    return std::abs(ans);
+}
+
+Link::Link(const Link& cloneMe, bool cloneProps) {
     crossings_.reserve(cloneMe.crossings_.size());
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
@@ -874,7 +892,7 @@ std::string Link::brief() const {
 
     std::ostringstream out;
     brief(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::brief(std::ostream& out) const {
@@ -1140,19 +1158,19 @@ Link Link::whiteheadDouble(bool positive) const {
     return ans;
 }
 
-Link Link::parallel(int k, Framing framing) const {
+Link Link::parallel(int cables, Framing framing) const {
     // Get the special cases out of the way.
-    if (k == 0 || components_.empty())
+    if (cables == 0 || components_.empty())
         return Link();
-    if (k == 1)
+    if (cables == 1)
         return Link(*this);
     if (crossings_.empty())
-        return Link(components_.size() * k);
+        return Link(components_.size() * cables);
 
     Link ans;
-    FixedArray<Crossing*> tmp(k * k); // Used to build grids of crossings
+    FixedArray<Crossing*> tmp(cables * cables); // to build grids of crossings
 
-    // Crossing i of the original link:
+    // Crossing i of the original link (where k = #cables):
     //
     // +ve:    |                 -ve:    ^
     //     --- | --->                --- | --->
@@ -1166,18 +1184,20 @@ Link Link::parallel(int k, Framing framing) const {
     //          --- | --- | --->                      --- | --- | --->
     //  k^2 i + k-1 v ... v k^2 (i+1) - 1     k^2 i       | ... | k^2 (i+1) - k
 
-    // Create the k^2 crossings for each original, and join them
+    // Create the cables^2 crossings for each original, and join them
     // together internally.
     for (Crossing* c : crossings_) {
-        for (int i = 0; i < k * k; ++i)
+        for (int i = 0; i < cables * cables; ++i)
             ans.crossings_.push_back(tmp[i] = new Crossing(c->sign()));
 
-        for (int i = 0; i < k; ++i)
-            for (int j = 0; j < k - 1; ++j)
-                Link::join(tmp[k*i + j]->upper(), tmp[k*i + j+1]->upper());
-        for (int i = 0; i < k - 1; ++i)
-            for (int j = 0; j < k; ++j)
-                Link::join(tmp[k*i + j]->lower(), tmp[k*(i+1) + j]->lower());
+        for (int i = 0; i < cables; ++i)
+            for (int j = 0; j < cables - 1; ++j)
+                Link::join(tmp[cables*i + j]->upper(),
+                    tmp[cables*i + j+1]->upper());
+        for (int i = 0; i < cables - 1; ++i)
+            for (int j = 0; j < cables; ++j)
+                Link::join(tmp[cables*i + j]->lower(),
+                    tmp[cables*(i+1) + j]->lower());
     }
 
     // Walk around the original knot, and keep track of the left-hand
@@ -1197,7 +1217,7 @@ Link Link::parallel(int k, Framing framing) const {
     for (const StrandRef& start : components_) {
         if (! start) {
             // This component is a 0-crossing unknot.
-            for (int i = 0; i < k; ++i)
+            for (int i = 0; i < cables; ++i)
                 ans.components_.emplace_back();
             continue;
         }
@@ -1209,18 +1229,18 @@ Link Link::parallel(int k, Framing framing) const {
             ssize_t idx = s.crossing()->index();
             if (s.crossing()->sign() > 0) {
                 if (s.strand() == 1) {
-                    enterL = k*k * (idx+1) - k;
-                    enterDelta = -k;
+                    enterL = cables*cables * (idx+1) - cables;
+                    enterDelta = -cables;
                 } else {
-                    enterL = k*k * idx;
+                    enterL = cables*cables * idx;
                     enterDelta = 1;
                 }
             } else {
                 if (s.strand() == 1) {
-                    enterL = k*k * idx;
-                    enterDelta = k;
+                    enterL = cables*cables * idx;
+                    enterDelta = cables;
                 } else {
-                    enterL = k*k * idx + k-1;
+                    enterL = cables*cables * idx + cables-1;
                     enterDelta = -1;
                 }
             }
@@ -1228,7 +1248,7 @@ Link Link::parallel(int k, Framing framing) const {
 
             // Connect the previous grid to this.
             if (exitL >= 0) {
-                for (int i = 0; i < k; ++i)
+                for (int i = 0; i < cables; ++i)
                     Link::join(
                         ans.crossings_[exitL + i * exitDelta]->
                             strand(exitStrand),
@@ -1240,7 +1260,7 @@ Link Link::parallel(int k, Framing framing) const {
                 startStrand = enterStrand;
             }
 
-            exitL = enterL + (k-1) * (s.strand() == 1 ? 1 : k);
+            exitL = enterL + (cables-1) * (s.strand() == 1 ? 1 : cables);
             exitDelta = enterDelta;
             exitStrand = enterStrand;
 
@@ -1259,8 +1279,8 @@ Link Link::parallel(int k, Framing framing) const {
         } while (s != start);
 
         if (writhe == 0 || framing == Framing::Blackboard) {
-            // Close up the k new parallel link components.
-            for (int i = 0; i < k; ++i)
+            // Close up the new parallel link components.
+            for (int i = 0; i < cables; ++i)
                 Link::join(
                     ans.crossings_[exitL + i * exitDelta]->
                         strand(exitStrand),
@@ -1269,19 +1289,19 @@ Link Link::parallel(int k, Framing framing) const {
         } else if (writhe > 0) {
             // We want the Seifert framing, and the writhe is positive.
             // Insert the requisite number of negative twists
-            // before closing off the k parallel link components.
-            for (long w = 0; w < writhe * k; ++w) {
-                for (int j = 0; j < k - 1; ++j)
+            // before closing off the parallel link components.
+            for (long w = 0; w < writhe * cables; ++w) {
+                for (int j = 0; j < cables - 1; ++j)
                     ans.crossings_.push_back(tmp[j] = new Crossing(-1));
 
-                for (int j = 0; j < k - 2; ++j)
+                for (int j = 0; j < cables - 2; ++j)
                     Link::join(tmp[j]->lower(), tmp[j + 1]->lower());
 
                 if (w == 0) {
                     Link::join(
                         ans.crossings_[exitL]->strand(exitStrand),
                         tmp[0]->lower());
-                    for (int j = 1; j < k; ++j)
+                    for (int j = 1; j < cables; ++j)
                         Link::join(
                             ans.crossings_[exitL + j * exitDelta]->
                                 strand(exitStrand),
@@ -1289,43 +1309,43 @@ Link Link::parallel(int k, Framing framing) const {
                 } else {
                     Link::join(
                         ans.crossings_[exitL]->upper(), tmp[0]->lower());
-                    for (int j = 1; j < k - 1; ++j)
+                    for (int j = 1; j < cables - 1; ++j)
                         Link::join(
                             ans.crossings_[exitL + j]->upper(),
                             tmp[j - 1]->upper());
                     Link::join(
-                        ans.crossings_[exitL + (k - 2)]->lower(),
-                        tmp[k - 2]->upper());
+                        ans.crossings_[exitL + (cables - 2)]->lower(),
+                        tmp[cables - 2]->upper());
                 }
 
                 exitL = tmp[0]->index();
             }
 
-            for (int j = 0; j < k - 1; ++j)
+            for (int j = 0; j < cables - 1; ++j)
                 Link::join(
                     ans.crossings_[exitL + j]->upper(),
                     ans.crossings_[startL + j * startDelta]->
                         strand(startStrand));
             Link::join(
-                ans.crossings_[exitL + (k - 2)]->lower(),
-                ans.crossings_[startL + (k - 1) * startDelta]->
+                ans.crossings_[exitL + (cables - 2)]->lower(),
+                ans.crossings_[startL + (cables - 1) * startDelta]->
                     strand(startStrand));
         } else {
             // We want the Seifert framing, and the writhe is negative.
             // Insert the requisite number of positive twists
-            // before closing off the k parallel link components.
-            for (long w = 0; w < (-writhe) * k; ++w) {
-                for (int j = 0; j < k - 1; ++j)
+            // before closing off the parallel link components.
+            for (long w = 0; w < (-writhe) * cables; ++w) {
+                for (int j = 0; j < cables - 1; ++j)
                     ans.crossings_.push_back(tmp[j] = new Crossing(1));
 
-                for (int j = 0; j < k - 2; ++j)
+                for (int j = 0; j < cables - 2; ++j)
                     Link::join(tmp[j]->upper(), tmp[j + 1]->upper());
 
                 if (w == 0) {
                     Link::join(
                         ans.crossings_[exitL]->strand(exitStrand),
                         tmp[0]->upper());
-                    for (int j = 1; j < k; ++j)
+                    for (int j = 1; j < cables; ++j)
                         Link::join(
                             ans.crossings_[exitL + j * exitDelta]->
                                 strand(exitStrand),
@@ -1333,35 +1353,135 @@ Link Link::parallel(int k, Framing framing) const {
                 } else {
                     Link::join(
                         ans.crossings_[exitL]->lower(), tmp[0]->upper());
-                    for (int j = 1; j < k - 1; ++j)
+                    for (int j = 1; j < cables - 1; ++j)
                         Link::join(
                             ans.crossings_[exitL + j]->lower(),
                             tmp[j - 1]->lower());
                     Link::join(
-                        ans.crossings_[exitL + (k - 2)]->upper(),
-                        tmp[k - 2]->lower());
+                        ans.crossings_[exitL + (cables - 2)]->upper(),
+                        tmp[cables - 2]->lower());
                 }
 
                 exitL = tmp[0]->index();
             }
 
-            for (int j = 0; j < k - 1; ++j)
+            for (int j = 0; j < cables - 1; ++j)
                 Link::join(
                     ans.crossings_[exitL + j]->lower(),
                     ans.crossings_[startL + j * startDelta]->
                         strand(startStrand));
             Link::join(
-                ans.crossings_[exitL + (k - 2)]->upper(),
-                ans.crossings_[startL + (k - 1) * startDelta]->
+                ans.crossings_[exitL + (cables - 2)]->upper(),
+                ans.crossings_[startL + (cables - 1) * startDelta]->
                     strand(startStrand));
         }
 
-        // Take note of the k new link components.
-        for (int i = 0; i < k; ++i)
+        // Take note of the new link components.
+        for (int i = 0; i < cables; ++i)
             ans.components_.push_back(
                 ans.crossings_[startL + i * startDelta]->
                     strand(startStrand));
     }
+
+    return ans;
+}
+
+Link Link::parityProjection(size_t modBase) const {
+    if (components_.size() > 1)
+        throw FailedPrecondition("parityProjection() requires at most one "
+            "link component");
+    if (crossings_.empty()) {
+        // Either we have a 0-crossing unknot or the empty link.
+        // In both cases this is a no-op: return a copy of this link.
+        return { *this };
+    }
+
+    // Identify which crossings satisfy the parity condition, and for those
+    // that do, create a new crossing for the new link.
+    // We test the parity condition for all crossings in a single traversal of
+    // the knot, by keeping a running total of the +1/-1 signs as we walk past
+    // each crossing.
+    FixedArray<bool> seen(crossings_.size(), false);
+    FixedArray<long> firstSignSum(crossings_.size());
+    FixedArray<Crossing*> copy(crossings_.size(), nullptr);
+    long signSum = 0;
+    size_t nKept = 0;
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    do {
+        size_t idx = s.crossing()->index();
+        if (seen[idx]) {
+            // This is the second time we've walked past this crossing.
+            // Examine the running total now, immediately _before_ passing
+            // the crossing for the second time, and compare it to the sum as it
+            // was immediately _after_ passing the crossing for the first time.
+            if (modBase == 0) {
+                if (firstSignSum[idx] == signSum) {
+                    copy[idx] = new Crossing(s.crossing()->sign());
+                    ++nKept;
+                }
+            } else {
+                // Beware: the sign sums are signed, but modBase is unsigned.
+                // We do not want negative numbers to be treated as enormous
+                // positive numbers here.
+                if (std::abs(firstSignSum[idx] - signSum) % modBase == 0) {
+                    copy[idx] = new Crossing(s.crossing()->sign());
+                    ++nKept;
+                }
+            }
+        }
+
+        if (s.strand() > 0)
+            signSum += s.crossing()->sign();
+        else
+            signSum -= s.crossing()->sign();
+
+        if (! seen[idx]) {
+            // This is the first time we've walked past this crossing.  Record
+            // the running total as it is now, immediately _after_ passing the
+            // crossing.
+            firstSignSum[idx] = signSum;
+            seen[idx] = true;
+        }
+
+        ++s;
+    } while (s != start);
+
+    if (nKept == 0) {
+        // No crossings survive, so return the 0-crossing unknot.
+        // Note that there are no newly created Crossing objects to destroy.
+        return { 1 };
+    }
+
+    // Build the new knot.
+    // We know that at least one crossing survives.
+    // We try to be kind to the user: we insert the crossings in the same order
+    // as in the original link, and we mark the new component's starting point
+    // as the first surviving strand from the original knot traversal.
+    Link ans;
+    ans.crossings_.reserve(nKept);
+    for (auto c : copy)
+        if (c)
+            ans.crossings_.push_back(c);
+
+    start = components_.front();
+    s = start;
+    StrandRef prev;
+    do {
+        if (Crossing* cAlt = copy[s.crossing()->index()]) {
+            // This crossing survives!
+            StrandRef sAlt(cAlt, s.strand());
+            if (! prev)
+                ans.components_.push_back(sAlt);
+            else
+                join(prev, sAlt);
+            prev = sAlt;
+        }
+
+        ++s;
+    } while (s != start);
+    join(prev, ans.components_.front());
 
     return ans;
 }
@@ -1375,13 +1495,13 @@ bool Link::improveTreewidth(ssize_t maxAttempts, int height, int threads,
             "improveTreewidth() requires fewer than 64 link components");
     }
 
-    // The template option std::true_type means allow classical moves only,
-    // and std::false_type means allow both classical and virtual moves.
     if (isClassical())
-        return detail::improveTreewidthInternal<Link, std::true_type>(
+        return detail::improveTreewidthInternal<Link,
+                detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, maxAttempts, height, threads, tracker);
     else
-        return detail::improveTreewidthInternal<Link, std::false_type>(
+        return detail::improveTreewidthInternal<Link,
+                detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, maxAttempts, height, threads, tracker);
 }
 
@@ -1556,13 +1676,13 @@ std::string Link::source(Language language) const {
         out << ';';
     out << '\n';
 
-    return out.str();
+    return std::move(out).str();
 }
 
 std::string Link::pace() const {
     std::ostringstream out;
     writePACE(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::writePACE(std::ostream& out) const {

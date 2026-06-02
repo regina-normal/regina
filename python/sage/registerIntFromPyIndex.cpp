@@ -46,6 +46,7 @@
 #if 0
 #include <boost/python.hpp>
 #include <boost/optional.hpp>
+#include "utilities/intutils.h"
 
 using namespace boost::python;
 
@@ -53,7 +54,7 @@ namespace regina::python {
 
 // from_python conversion of python objects implementing PEP 357 to integer
 // type T. Calling the c'tor will register the conversion with boost::python.
-template<typename T>
+template<regina::CppInteger T>
 struct register_int_from_py_index {
 
     // Checks whether the given value can be held by the integer type T.

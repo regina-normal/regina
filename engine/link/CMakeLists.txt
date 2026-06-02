@@ -18,6 +18,7 @@ SET ( FILES
   jones.cpp
   knotplot.cpp
   link.cpp
+  linksig.cpp
   modellinkgraph.cpp
   operations.cpp
   pass.cpp
@@ -26,7 +27,6 @@ SET ( FILES
   reidemeister.cpp
   reidemeister-tangle.cpp
   rewrite.cpp
-  sig.cpp
   simplify.cpp
   spatiallink.cpp
   tangle.cpp
@@ -48,9 +48,10 @@ if (${REGINA_INSTALL_DEV})
     examplelink.h
     gauss-impl.h
     gauss-tangle-impl.h
-    graph.h
     jenkins-impl.h
     link.h
+    linksig.h
+    linksig-impl.h
     modellinkgraph.h
     modellinkgraph-impl.h
     pd-impl.h

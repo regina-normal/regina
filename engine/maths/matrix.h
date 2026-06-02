@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,8 @@
 #include "maths/forward.h"
 #include "maths/integer.h"
 #include "maths/ring.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -226,13 +228,9 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \nopython
          *
-         * \tparam U the type of object held by the given matrix \a src.
-         * It must be possible to _assign_ an object of type \a U to an
-         * object of type \a T.
-         *
          * \param src the matrix to clone.
          */
-        template <typename U>
+        template <AssignableTo<T> U>
         explicit Matrix(const Matrix<U>& src) :
                 rows_(src.rows()), cols_(src.columns()) {
             if (src.initialised()) {

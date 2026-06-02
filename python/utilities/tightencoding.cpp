@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,18 +31,9 @@
 #include <pybind11/pybind11.h>
 #include "maths/integer.h"
 #include "utilities/tightencoding.h"
-#include "../helpers/docstrings.h"
-#include "../docstrings/utilities/tightencoding.h"
+#include "../helpers.h"
 
 using pybind11::overload_cast;
-
-// Docstrings that are generated once but need to be reused across many
-// source files:
-namespace regina::python::doc::common {
-    const char* TightEncodable_encoding = TightEncodable_::tightEncoding;
-    const char* TightEncodable_decoding = TightEncodable_::tightDecoding;
-    const char* TightEncodable_hash = TightEncodable_::hash;
-}
 
 void addTightEncoding(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
@@ -50,15 +41,15 @@ void addTightEncoding(pybind11::module_& m) {
     // We cannot use overload_cast here because there is a templated
     // global tightEncoding() function.
     m.def("tightEncoding", static_cast<std::string(&)(long)>(
-        regina::tightEncoding), rdoc::tightEncoding);
+        regina::tightEncoding), rdoc::tightEncoding_CppInteger);
     m.def("tightEncoding", [](pybind11::int_ val) {
         // Go via regina's Integer class if we are given an integer argument
         // that does not fit into a native C++ long.
         return regina::Integer(pybind11::cast<std::string>(pybind11::str(val))).
             tightEncoding();
-    }, rdoc::tightEncoding);
+    }, rdoc::tightEncoding_CppInteger);
     m.def("tightEncoding", static_cast<std::string(&)(bool)>(
-        regina::tightEncoding), rdoc::tightEncoding_2);
+        regina::tightEncoding), rdoc::tightEncoding_bool);
     m.def("tightDecoding", [](const std::string& enc) {
         // Try a native integer conversion first.
         try {

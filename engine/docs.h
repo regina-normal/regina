@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,7 +37,7 @@
  *  <center><b>
  *  Regina<br>
  *  Software for low-dimensional topology<br>
- *  Copyright &copy; 1999&ndash;2025, The Regina development team
+ *  Copyright &copy; 1999&ndash;2026, The Regina development team
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related
@@ -63,7 +63,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for low-dimensional topology",
- *  http://regina-normal.github.io/ , 1999-2025.
+ *  http://regina-normal.github.io/ , 1999-2026.
  *
  *  <h3>Authors</h3>
  *
@@ -249,63 +249,6 @@ namespace regina {
  *  - Regina uses a right-handed coordinate system.
  */
 
-/*! \page bgl Boost Graph Library interface
- *
- * The namespace regina::graph provides an interface for various types of
- * objects from Regina to work directly with the Boost Graph Library (BGL).
- *
- * <h3>Triangulations</h3>
- *
- * After including the header triangulation/graph.h, any object of type
- * `regina::Triangulation<dim>` can be used directly as a graph with
- * the BGL.  Here the graph will be the _dual graph_ of the triangulation:
- * this is an undirected multigraph in which each node represents a
- * <i>dim</i>-simplex of the triangulation, and each arc represents a gluing
- * between two adjacent <i>dim</i>-simplices.
- *
- * Triangulations implement several BGL graph concepts, including:
- * - vertex link graph;
- * - edge list graph;
- * - adjacency graph;
- * - incidence graph;
- * - bidirectional graph;
- * - the read-only portions of property graph.
- *
- * Triangulations are _not_ mutable graphs - for the purposes of the BGL,
- * they are considered read-only.
- *
- * Dual vertices of the graph represent <i>dim</i>-dimensional simplices
- * of the underlying triangulation, and so are represented directly by a
- * pointer of type `regina::Simplex<dim>*`.  Dual edges (when
- * accessed through the BGL) must come with an orientation, and so are
- * represented by lightweight objects of type regina::graph::DualEdge<dim>.
- *
- * <h3>Knots and links</h3>
- *
- * After including the header link/graph.h, any object of type
- * regina::Link can be used directly as a graph with the BGL.
- * Here the graph will be the underlying 4-valent directed multigraph of the
- * link: every crossing of the link becomes a vertex of the graph, and every
- * directed arc between crossings becomes a directed edge.  Zero-crossing
- * unknot components of a link do not appear in this graph at all.
- *
- * Knots and links implement several BGL graph concepts, including:
- * - vertex link graph;
- * - edge list graph;
- * - adjacency graph;
- * - incidence graph;
- * - bidirectional graph;
- * - the read-only portions of property graph.
- *
- * Knots and links are _not_ mutable graphs - for the purposes of the BGL,
- * they are considered read-only.
- *
- * Vertices of the graph are represented directly by a pointer of type
- * `regina::Crossing*`.  Directed edges are represented by lightweight
- * `regina::StrandRef` objects; see the regina::StrandRef documentation
- * for how a StrandRef object is used to identify a directed arc of the link.
- */
-
 /*! \page pythonapi Python users
  *
  *  Regina's calculation engine is provided as a shared C++ library, and this
@@ -343,7 +286,7 @@ namespace regina {
  *    is reason why a class or function cannot or should not be wrapped.
  *    If a class or function is not available in Python then you will
  *    see a bold <b>Python:</b> note indicating this.  See for instance
- *    the class MarkedVector, or the function valueOf().
+ *    the class MarkedVector, or the various `parse<...>()` functions.
  *
  *  - Most of Regina's classes and functions use the same interface
  *    in both C++ and Python, but occasionally there are differences
@@ -414,12 +357,12 @@ namespace regina {
  *
  *  If you wish to find out how a particular class \a C behaves, you can
  *  examine the attribute `C.equalityType`.  This will return one of
- *  the values \c BY_VALUE, \c BY_REFERENCE, \c DISABLED or
- *  \c NEVER_INSTANTIATED respctively:
+ *  the values \c ByValue, \c ByReference, \c Disabled or
+ *  \c NeverInstantiated respctively:
  *
  *  \code{.unparsed}
  *  >>> print Triangulation3.equalityType
- *  BY_VALUE
+ *  ByValue
  *  \endcode
  *
  *  Packet subclasses are a special case: it is often meaningful to compare

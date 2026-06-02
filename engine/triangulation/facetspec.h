@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,8 @@
 #include <cstddef>
 #include <iostream>
 #include <sys/types.h> // for ssize_t
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -182,7 +184,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \nopython The postincrement operator is present in Python as the
      * member function inc().
      *
-     * \return A reference to this specifier.
+     * \return a reference to this specifier.
      */
     FacetSpec& operator ++ ();
     /**
@@ -197,7 +199,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \python This routine is named inc() since python does not
      * support the increment operator.
      *
-     * \return A copy of this specifier before it was incremented.
+     * \return a copy of this specifier before it was incremented.
      */
     FacetSpec operator ++ (int);
     /**
@@ -212,7 +214,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \nopython The postdecrement operator is present in Python as the
      * member function dec().
      *
-     * \return A reference to this specifier.
+     * \return a reference to this specifier.
      */
     FacetSpec& operator -- ();
     /**
@@ -227,7 +229,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * \python This routine is named dec() since python does not
      * support the decrement operator.
      *
-     * \return A copy of this specifier before it was decremented.
+     * \return a copy of this specifier before it was decremented.
      */
     FacetSpec operator -- (int);
 
@@ -256,7 +258,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      * other comparison operators that it generates _are_ available.
      *
      * \param rhs the specifier to compare with this.
-     * \return The result of the comparison between this and the given
+     * \return the result of the comparison between this and the given
      * specifier.
      */
     std::strong_ordering operator <=> (const FacetSpec<dim>& rhs) const;
@@ -311,7 +313,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
  *
  * \ingroup triangulation
  */
-template <int dim> requires (supportedDim(dim))
+template <int dim>
 std::ostream& operator << (std::ostream& out, const FacetSpec<dim>& spec);
 
 // Inline functions for FacetSpec
@@ -407,15 +409,12 @@ inline bool FacetSpec<dim>::operator == (const FacetSpec& rhs) const {
 template <int dim> requires (supportedDim(dim))
 inline std::strong_ordering FacetSpec<dim>::operator <=> (const FacetSpec& rhs)
         const {
-    if (simp < rhs.simp)
-        return std::strong_ordering::less;
-    else if (simp > rhs.simp)
-        return std::strong_ordering::greater;
-    else
-        return facet <=> rhs.facet;
+    if (auto c = simp <=> rhs.simp; c != 0)
+        return c;
+    return facet <=> rhs.facet;
 }
 
-template <int dim> requires (supportedDim(dim))
+template <int dim>
 inline std::ostream& operator << (std::ostream& out,
         const FacetSpec<dim>& spec) {
     return out << spec.simp << ':' << spec.facet;

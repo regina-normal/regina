@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,7 +30,7 @@
 
 #include <pybind11/pybind11.h>
 #include "maths/binom.h"
-#include "../helpers/docstrings.h"
+#include "../helpers.h"
 #include "../docstrings/maths/binom.h"
 
 void addBinom(pybind11::module_& m) {

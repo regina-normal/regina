@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,15 +50,17 @@
 #error "A system installation of pybind11 is being included instead of Regina's own patched version."
 #endif
 
+// #include "helpers/bytesequence.h"
+#include "helpers/concepts.h"
 #include "helpers/docstrings.h"
 #include "helpers/equality.h"
 // #include "helpers/flags.h"
 #include "helpers/gil.h"
 #include "helpers/globals.h"
 #include "helpers/output.h"
-#include "helpers/listview.h"
-#include "helpers/packet.h"
+// #include "helpers/packet.h"
 // #include "helpers/tableview.h"
 #include "helpers/tightencoding.h"
+#include "helpers/view.h"
 
 #endif

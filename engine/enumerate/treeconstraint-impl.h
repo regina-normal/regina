@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2025, Ben Burton                                   *
+ *  Copyright (c) 2011-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,6 +45,9 @@
 
 #include "enumerate/treeconstraint.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -147,13 +150,11 @@ BanTorusBoundary::BanTorusBoundary(
 
     // Which boundary faces are we banning?
     size_t nTriangles = tri_.countTriangles();
-    bool* banTriangle = new bool[nTriangles];
-    std::fill(banTriangle, banTriangle + nTriangles, false);
+    FixedArray<bool> banTriangle(nTriangles, false);
 
     // Which vertex links are we marking normal triangles around?
     size_t nVertices = tri_.countVertices();
-    bool* markVtx = new bool[nVertices];
-    std::fill(markVtx, markVtx + nVertices, false);
+    FixedArray<bool> markVtx(nVertices, false);
 
     BoundaryComponent<3>* bc;
     for (size_t i = 0; i < tri_.countBoundaryComponents(); ++i) {
@@ -209,9 +210,6 @@ BanTorusBoundary::BanTorusBoundary(
                     break;
                 }
         }
-
-    delete[] banTriangle;
-    delete[] markVtx;
 }
 
 } // namespace regina

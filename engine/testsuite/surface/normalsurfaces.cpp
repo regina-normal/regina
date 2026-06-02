@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,7 +36,7 @@
 #include "triangulation/dim3.h"
 
 #include "testhelper.h"
-#include "testexhaustive.h"
+#include "triangulation/exhaustive-tri.h"
 
 using regina::Example;
 using regina::NormalAlg;
@@ -116,17 +116,17 @@ static std::vector<CompactProfile> sortedCompactProfiles(
     return found;
 }
 
-template <typename Profile, bool checkIndividualProfiles = true>
-using ExpectProfiles = std::conditional_t<checkIndividualProfiles,
-    std::initializer_list<Profile> /* individual profiles */,
+template <bool checkIndividualProfiles>
+using CompactProfilesOrCount = std::conditional_t<checkIndividualProfiles,
+    std::initializer_list<CompactProfile> /* individual surface profiles */,
     size_t /* number of surfaces only */>;
 
 template <bool individualStd = true, bool individualANStd = true>
 static void compareCompactProfiles(const Triangulation<3>& tri,
-        ExpectProfiles<CompactProfile> expectQuad,
-        ExpectProfiles<CompactProfile, individualStd> extraStd,
-        ExpectProfiles<CompactProfile, individualANStd> extraANStd) {
-    // extraANStd should imply extraStd.
+        std::initializer_list<CompactProfile> expectQuad,
+        CompactProfilesOrCount<individualStd> extraStd,
+        CompactProfilesOrCount<individualANStd> extraANStd) {
+    // individualANStd should imply individualStd.
     static_assert(individualStd || ! individualANStd);
 
     // We assume all surfaces should be compact and connected.
@@ -784,7 +784,7 @@ TEST(NormalSurfacesTest, fundDualVsCD) {
         Example<3>::lst(1, 4), "LST(1,4,5)",
         NormalAlg::HilbertDual, NormalAlg::HilbertCD);
     verifyFundAlgorithms<NormalCoords::Quad>(
-        Triangulation<3>::fromIsoSig("dLQbccchhfo"), "m009",
+        Triangulation<3>::fromSig("dp1ha0a"), "m009",
         NormalAlg::HilbertDual, NormalAlg::HilbertCD);
 }
 

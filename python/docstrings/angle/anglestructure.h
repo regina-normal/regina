@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::AngleStructure
-static const char *AngleStructure =
+struct AngleStructure {
+
+// Docstring regina::python::doc::AngleStructure::__class
+static constexpr const char __class[] =
 R"doc(Represents an angle structure on a triangulation.
 
 Since Regina 7.0, you can modify or even destroy the original
@@ -26,10 +28,8 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-namespace AngleStructure_ {
-
-// Docstring regina::python::doc::AngleStructure_::__cmp
-static const char *__cmp =
+// Docstring regina::python::doc::AngleStructure::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares this against the given angle structure under a total ordering
 of all angle structures.
 
@@ -58,16 +58,16 @@ Parameter ``rhs``:
     the angle structure to compare this structure with.
 
 Returns:
-    The result of the comparison between this and the given angle
+    the result of the comparison between this and the given angle
     structure. This is marked as a weak ordering (not a strong
     ordering) to reflect the fact that angle structures in different
     triangulations could be considered equal under this comparison.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given angle structure.)doc";
+// Docstring regina::python::doc::AngleStructure::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given angle structure.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::AngleStructure::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given angle structure are identical.
 
 This routine is safe to call even if this and the given angle
@@ -88,8 +88,8 @@ Returns:
     ``True`` if and only if this and the given structure are
     identical.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::__init
-static const char *__init =
+// Docstring regina::python::doc::AngleStructure::__init
+static constexpr const char __init[] =
 R"doc(Creates a new copy of the given angle structure, but relocated to the
 given triangulation.
 
@@ -110,8 +110,8 @@ Parameter ``triangulation``:
     the triangulation on which this new angle structure will be
     placed.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::AngleStructure::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new angle structure on the given triangulation with the
 given coordinate vector.
 
@@ -126,13 +126,9 @@ Precondition:
     representation described in the notes for vector().
 
 Python:
-    The supported types for the template parameter *U* are
+    The supported element types for the given vector are
     regina::Integer and regina::LargeInteger. You may also, if you
     prefer, pass *vector* as a Python list of integers.
-
-Template parameter ``U``:
-    the type of object held by the given vector. It must be possible
-    to assign an object of type *U* to a regina::Integer.
 
 Parameter ``triang``:
     the triangulation on which this angle structure lies.
@@ -140,8 +136,8 @@ Parameter ``triang``:
 Parameter ``vector``:
     a vector containing the individual angles in the angle structure.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::angle
-static const char *angle =
+// Docstring regina::python::doc::AngleStructure::angle
+static constexpr const char angle[] =
 R"doc(Returns the requested angle in this angle structure. The angle
 returned will be scaled down; the actual angle is the returned value
 multiplied by π.
@@ -162,8 +158,8 @@ Parameter ``edgePair``:
 Returns:
     the requested angle scaled down by π.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::AngleStructure::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given angle structures.
 
 This global routine simply calls AngleStructure::swap(); it is
@@ -175,16 +171,16 @@ Parameter ``a``:
 Parameter ``b``:
     the second angle structure whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::isStrict
-static const char *isStrict =
+// Docstring regina::python::doc::AngleStructure::isStrict
+static constexpr const char isStrict[] =
 R"doc(Determines whether this is a strict angle structure. A strict angle
 structure has all angles strictly between (not including) 0 and π.
 
 Returns:
     ``True`` if and only if this is a strict angle structure.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::isTaut
-static const char *isTaut =
+// Docstring regina::python::doc::AngleStructure::isTaut
+static constexpr const char isTaut[] =
 R"doc(Determines whether this is a taut angle structure. A taut angle
 structure contains only angles 0 and π.
 
@@ -203,8 +199,8 @@ Topol. 4 (2000), pp. 369-395.
 Returns:
     ``True`` if and only if this is a taut structure.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::isVeering
-static const char *isVeering =
+// Docstring regina::python::doc::AngleStructure::isVeering
+static constexpr const char isVeering[] =
 R"doc(Determines whether this is a veering structure. A veering structure is
 taut angle structure with additional strong combinatorial constraints,
 which we do not outline here. For a definition, see C. D. Hodgson, J.
@@ -228,8 +224,8 @@ triangulation is non-orientable, then this routine will return
 Returns:
     ``True`` if and only if this is a veering structure.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::swap
-static const char *swap =
+// Docstring regina::python::doc::AngleStructure::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given angle structure. This is a
 fast (constant time) operation.
 
@@ -241,8 +237,8 @@ will be adjusted accordingly).
 Parameter ``other``:
     the angle structure whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::triangulation
-static const char *triangulation =
+// Docstring regina::python::doc::AngleStructure::triangulation
+static constexpr const char triangulation[] =
 R"doc(Returns the triangulation on which this angle structure lies.
 
 This will be a snapshot frozen in time of the triangulation that was
@@ -267,8 +263,8 @@ The rules for using the triangulation() reference are:
 Returns:
     a reference to the underlying triangulation.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::vector
-static const char *vector =
+// Docstring regina::python::doc::AngleStructure::vector
+static constexpr const char vector[] =
 R"doc(Gives read-only access to the integer vector that Regina uses
 internally to represent this angle structure.
 
@@ -289,8 +285,8 @@ as described above.
 Returns:
     the underlying integer vector.)doc";
 
-// Docstring regina::python::doc::AngleStructure_::writeXMLData
-static const char *writeXMLData =
+// Docstring regina::python::doc::AngleStructure::writeXMLData
+static constexpr const char writeXMLData[] =
 R"doc(Writes a chunk of XML containing this angle structure and all of its
 properties. This routine will be called from within
 AngleStructures::writeXMLPacketData().
@@ -301,7 +297,7 @@ Python:
 Parameter ``out``:
     the output stream to which the XML should be written.)doc";
 
-}
+}; // struct AngleStructure
 
 } // namespace regina::python::doc
 

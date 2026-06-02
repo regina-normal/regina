@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::gcd
-static const char *gcd =
+inline constexpr const char gcd[] =
 R"doc(Deprecated routine that calculates the greatest common divisor of two
 signed integers. This routine is not recursive.
 
@@ -32,7 +32,7 @@ Returns:
     the greatest common divisor of *a* and *b*.)doc";
 
 // Docstring regina::python::doc::gcdWithCoeffs
-static const char *gcdWithCoeffs =
+inline constexpr const char gcdWithCoeffs[] =
 R"doc(Calculates the greatest common divisor of two given integers and finds
 the smallest coefficients with which these integers combine to give
 their gcd. This routine is not recursive.
@@ -69,7 +69,7 @@ Returns:
     the final coefficient of *a*; and the final coefficient of *b*.)doc";
 
 // Docstring regina::python::doc::lcm
-static const char *lcm =
+inline constexpr const char lcm[] =
 R"doc(Deprecated routine that calculates the lowest common multiple of two
 signed integers. Although the arguments may be negative, the result is
 guaranteed to be non-negative.
@@ -93,7 +93,7 @@ Returns:
     the lowest common multiple of *a* and *b*.)doc";
 
 // Docstring regina::python::doc::modularInverse
-static const char *modularInverse =
+inline constexpr const char modularInverse[] =
 R"doc(Calculates the multiplicative inverse of one integer modulo another.
 Specifically, this computes the inverse of *k* modulo *n*, and returns
 a result between 0 and ``n - 1`` inclusive.
@@ -120,7 +120,7 @@ Returns:
     the inverse *v* for which ``k * v == 1 (mod n)``.)doc";
 
 // Docstring regina::python::doc::reducedMod
-static const char *reducedMod =
+inline constexpr const char reducedMod[] =
 R"doc(Reduces *k* modulo *modBase* to give the smallest possible absolute
 value. For instance, ``reducedMod(4,10) = 4`` but ``reducedMod(6,10) =
 -4``. In the case of a tie, the positive solution is taken.

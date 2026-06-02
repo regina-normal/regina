@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,10 +38,10 @@
 #include "coordinatechooser.h"
 #include "surfacescoordinateui.h"
 #include "reginasupport.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
+#include "choosers/packetchooser.h"
 
 #include <QHeaderView>
 #include <QLabel>
@@ -616,8 +616,9 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(
     surfaceActionList.push_back(actCrush);
     connect(actCrush, SIGNAL(triggered()), this, SLOT(crush()));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    // If we've changed the unicode setting, then we may need some redrawing.
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        model, &SurfaceModel::rebuildUnicode);
 }
 
 SurfacesCoordinateUI::~SurfacesCoordinateUI() {
@@ -757,10 +758,5 @@ void SurfacesCoordinateUI::columnResized(int section, int, int newSize) {
     for (int i = nNonCoordSections; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
-}
-
-void SurfacesCoordinateUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    model->rebuildUnicode();
 }
 

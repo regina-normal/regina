@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,8 @@
 #include "link/link.h"
 #include "surface/normalsurfaces.h"
 
-#include "testexhaustive.h"
+#include "link/exhaustive-link.h"
+#include "triangulation/exhaustive-tri.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::Algorithm;
@@ -43,6 +44,8 @@ using regina::FailedPrecondition;
 using regina::GroupPresentation;
 using regina::InvalidArgument;
 using regina::Link;
+using regina::LinkSigBinary;
+using regina::LinkSigPrintable;
 using regina::Triangulation;
 using regina::StrandRef;
 
@@ -53,21 +56,20 @@ static constexpr int JONES_THRESHOLD = 20;
 static bool isFigureEightComplement(const Triangulation<3>& tri) {
     // True means yes, this is the figure eight knot complement.
     // False means we don't have a definitive answer.
-    return tri.isoSig() == "cPcbbbiht";
+    return tri.neoSig() == "cV6cqb";
 }
 
 static bool isTrefoilComplement(const Triangulation<3>& tri) {
     // True means yes, this is the trefoil complement.
     // False means we don't have a definitive answer.
-    std::string sig = tri.isoSig();
+    std::string sig = tri.neoSig();
 
     // Regina's simplification heuristics have been found to produce these
     // trefoil complements in practice:
     for (const char* s : {
-            "cPcbbbadh", "cPcbbbadu",
-            "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "dLQabccbrwn",
-            "eLAkbbcddaikhc", "eLAkbbcddainqv", "eLAkbcbddducqn", "eLAkbcbdddmcxj",
-            "gLLMQaeefedfbaapgjr" })
+            "cV6Ika", "cV6IAa", "dN0Time", "dN0Timd", "dN0haxc", "dN0haxd",
+            "ehzBNfavf", "ehzBNfWuf", "ehrBRfHcj", "ehrBRfrTl", "ghCRSFjGnZKe",
+            "kFgXo7WmZV5iMHufbDVc" })
         if (sig == s)
             return true;
 
@@ -76,10 +78,9 @@ static bool isTrefoilComplement(const Triangulation<3>& tri) {
 
 static bool isCensusManifold(const Triangulation<3>& tri,
         const std::string& name) {
-    std::string sig = tri.isoSig();
     std::string altName = name + " : ";
 
-    auto hits = regina::Census::lookup(sig);
+    auto hits = regina::Census::lookup(tri);
     for (const auto& hit : hits)
         if (hit.name() == name ||
                 hit.name().substr(0, altName.size()) == altName)
@@ -1046,6 +1047,109 @@ TEST_F(LinkTest, parallel) {
     testManualCases(verifyParallel);
 }
 
+static void verifyClassicalChordIndex(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    if (link.size() == 0)
+        return; // no crossings to test
+
+    // We have ≥ 1 crossing, and so ≥ 1 component.
+
+    if (link.countComponents() == 1) {
+        for (auto c : link.crossings())
+            EXPECT_EQ(c->chordIndex(), 0);
+    } else if (link.countDiagramComponents() == 1) {
+        // There must be some crossing whose two strands do not connect via
+        // link traversal.
+        EXPECT_THROW({
+            for (auto c : link.crossings())
+                c->chordIndex();
+        }, FailedPrecondition);
+    }
+}
+
+static void verifyChordIndex(const TestCase& test,
+        std::initializer_list<size_t> expectedSorted) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    ASSERT_EQ(std::ranges::size(expectedSorted), test.link.size());
+
+    regina::FixedArray<size_t> found(test.link.size());
+    for (size_t i = 0; i < test.link.size(); ++i)
+        found[i] = test.link.crossing(i)->chordIndex();
+    std::ranges::sort(found);
+
+    size_t i = 0;
+    for (size_t expect : expectedSorted)
+        EXPECT_EQ(found[i++], expect);
+}
+
+TEST_F(LinkTest, chordIndex) {
+    testManualCases(verifyClassicalChordIndex, false /* no Gordian unknot */,
+        false /* classical only */);
+
+    // Some virtual knots:
+    verifyChordIndex(virtualTrefoil, { 1, 1 });
+    verifyChordIndex(kishino, { 1, 1, 1, 1 });
+    verifyChordIndex(gpv, { 1, 1, 1, 1 });
+
+    // The following case comes from a 9-crossing pair of virtual knots that
+    // are difficult to distinguish:
+    // iabcdefdacebghfgh-aflta, iabcdefgebdfchagh-aflnp
+    // Both have the same sorted chord indices.
+    TestCase mixed { Link("iabcdefdacebghfgh-aflta"), "Mixed indices" };
+    verifyChordIndex(mixed, { 0, 0, 1, 2, 2, 2, 2, 3 });
+}
+
+static void verifyClassicalParityProjection(const Link& link,
+        const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    if (link.countComponents() > 1)
+        return;
+
+    EXPECT_EQ(link.parityProjection(0), link);
+    EXPECT_EQ(link.parityProjection(2), link);
+    EXPECT_EQ(link.parityProjection(3), link);
+}
+
+static void verifyParityProjectionSize(const TestCase& test, size_t modBase,
+        size_t expect) {
+    SCOPED_TRACE_CSTRING(test.name);
+    SCOPED_TRACE_NUMERIC(modBase);
+
+    Link proj = test.link.parityProjection(modBase);
+    EXPECT_EQ(proj.countComponents(), test.link.countComponents());
+    EXPECT_EQ(proj.size(), expect);
+}
+
+TEST_F(LinkTest, parityProjection) {
+    testManualCases(verifyClassicalParityProjection,
+        false /* no Gordian unknot */, false /* classical only */);
+
+    // Some virtual knots where no crossings survive, because all crossings
+    // have chord index 1:
+    verifyParityProjectionSize(virtualTrefoil, 0, 0);
+    verifyParityProjectionSize(virtualTrefoil, 2, 0);
+    verifyParityProjectionSize(virtualTrefoil, 3, 0);
+
+    verifyParityProjectionSize(kishino, 0, 0);
+    verifyParityProjectionSize(kishino, 2, 0);
+    verifyParityProjectionSize(kishino, 3, 0);
+
+    verifyParityProjectionSize(gpv, 0, 0);
+    verifyParityProjectionSize(gpv, 2, 0);
+    verifyParityProjectionSize(gpv, 3, 0);
+
+    // A virtual knot where chord indices 0, 1, 2, 3 all appear,
+    // taken from the chordIndex test above:
+    TestCase mixed { Link("iabcdefdacebghfgh-aflta"), "Mixed indices" };
+    verifyParityProjectionSize(mixed, 0, 2);
+    verifyParityProjectionSize(mixed, 2, 6);
+    verifyParityProjectionSize(mixed, 3, 3);
+    verifyParityProjectionSize(mixed, 4, 2);
+}
+
 static void verifyAlexander(const TestCase& test,
         const regina::Polynomial<regina::Integer>& expected) {
     SCOPED_TRACE_CSTRING(test.name);
@@ -1778,7 +1882,7 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
                 foundSplit = true;
             else
                 ADD_FAILURE() << "Link splits into unexpected components: "
-                    << comp[0].isoSig() << ' ' << comp[1].isoSig();
+                    << comp[0].neoSig() << ' ' << comp[1].neoSig();
         }
     }
 
@@ -2303,7 +2407,7 @@ static void verifyR3(Link link, int crossing, int strand, int side,
     EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR1Down(const Link& link, const char* name) {
+static void verifyR1DownAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (size_t i = 0; i < link.size(); ++i) {
@@ -2324,7 +2428,7 @@ static void verifyR1Down(const Link& link, const char* name) {
     }
 }
 
-static void verifyR1Up(const Link& link, const char* name) {
+static void verifyR1UpAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (int side = 0; side <= 1; ++side)
@@ -2354,7 +2458,7 @@ static void verifyR1Up(const Link& link, const char* name) {
         }
 }
 
-static void verifyR2Down(const Link& link, const char* name) {
+static void verifyR2DownAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (size_t i = 0; i < link.size(); ++i) {
@@ -2393,7 +2497,7 @@ static void verifyR2Down(const Link& link, const char* name) {
     }
 }
 
-static void verifyR2Up(const Link& link, const char* name) {
+static void verifyR2UpAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (int uSide = 0; uSide <= 1; ++uSide)
@@ -2513,7 +2617,7 @@ static void verifyR2Up(const Link& link, const char* name) {
         }
 }
 
-static void verifyR3(const Link& link, const char* name) {
+static void verifyR3All(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     // Note: there is exactly one scenario in which alt == link (and with
@@ -2571,28 +2675,28 @@ static void verifyR3(const Link& link, const char* name) {
 }
 
 TEST_F(LinkTest, reidemeister1Down) {
-    testManualCases(verifyR1Down, false /* gordian */);
-    runCensusAllVirtual(verifyR1Down);
+    testManualCases(verifyR1DownAll, false /* gordian */);
+    runCensusAllVirtual(verifyR1DownAll);
 }
 
 TEST_F(LinkTest, reidemeister1Up) {
-    testManualCases(verifyR1Up, false /* gordian */);
-    runCensusAllVirtual(verifyR1Up, true /* small */);
+    testManualCases(verifyR1UpAll, false /* gordian */);
+    runCensusAllVirtual(verifyR1UpAll, true /* small */);
 }
 
 TEST_F(LinkTest, reidemeister2Down) {
-    testManualCases(verifyR2Down, false /* gordian */);
-    runCensusAllVirtual(verifyR2Down);
+    testManualCases(verifyR2DownAll, false /* gordian */);
+    runCensusAllVirtual(verifyR2DownAll);
 }
 
 TEST_F(LinkTest, reidemeister2Up) {
-    testManualCases(verifyR2Up, false /* gordian */);
-    runCensusAllVirtual(verifyR2Up, true /* small */);
+    testManualCases(verifyR2UpAll, false /* gordian */);
+    runCensusAllVirtual(verifyR2UpAll, true /* small */);
 }
 
 TEST_F(LinkTest, reidemeister3) {
-    testManualCases(verifyR3, false /* gordian */);
-    runCensusAllVirtual(verifyR3);
+    testManualCases(verifyR3All, false /* gordian */);
+    runCensusAllVirtual(verifyR3All);
 }
 
 TEST_F(LinkTest, reidemeisterMisc) {
@@ -3533,8 +3637,8 @@ static void verifyGraft(const Link& link, const char* name) {
             Link undo(mod, false);
             undo.graft(undo.strand(i), undo.strand(j));
             EXPECT_TRUE(isConsistent(undo));
-            EXPECT_EQ(undo.sig(false, false, false),
-                link.sig(false, false, false));;
+            EXPECT_EQ(undo.neoSig(false, false, false),
+                link.neoSig(false, false, false));;
         }
     }
 }
@@ -3543,61 +3647,113 @@ TEST_F(LinkTest, graft) {
     testManualCases(verifyGraft, false /* gordian */);
 }
 
+template <int generation, regina::LinkSigEncoding<generation> Encoding>
 static void verifySig(const Link& link, bool reflect, bool reverse,
         bool rotate) {
     SCOPED_TRACE_NUMERIC(reflect);
     SCOPED_TRACE_NUMERIC(reverse);
     SCOPED_TRACE_NUMERIC(rotate);
 
-    std::string sig = link.sig(reflect, reverse, rotate);
-    EXPECT_FALSE(sig.empty());
+    static constexpr bool stringBased = std::same_as<
+        typename Encoding::Signature, std::string>;
+
+    auto sig = link.sig<generation, Encoding>(reflect, reverse, rotate);
+    if constexpr (stringBased) {
+        // The string-based signatures are always non-empty.
+        EXPECT_FALSE(sig.empty());
+    } else {
+        // For byte-packed signatures we use the empty byte sequence to
+        // represent the empty link.
+        EXPECT_EQ(sig.empty(), link.isEmpty());
+    }
+    #if 0
+    // Here we can see how effective Signature::reserve() is.
+    if (reflect && reverse && rotate) // to avoid the same output eight times
+        std::cerr << sig.size() << ' ' << sig.capacity() << ' '
+            << link.size() << ' ' << link.countComponents() << std::endl;
+    #endif
+
+    if constexpr (std::same_as<Encoding, LinkSigPrintable>) {
+        if (link.size() == 0)
+            EXPECT_EQ(Link::sigGeneration(sig), 2);
+        else
+            EXPECT_EQ(Link::sigGeneration(sig), generation);
+    }
+
+    if constexpr (stringBased) {
+        size_t sigSize = Link::sigComponentSize(sig);
+        if (link.countComponents() <= 1)
+            EXPECT_EQ(sigSize, link.size());
+        else {
+            // The diagram might or might not be connected.
+            auto bits = link.diagramComponents();
+            bool found = false;
+            for (const auto& c : link.diagramComponents())
+                if (sigSize == c.size()) {
+                    found = true;
+                    break;
+                }
+            if (! found)
+                ADD_FAILURE() << "sigComponentSize() does not "
+                    "match any diagram component";
+        }
+    }
 
     if (reflect) {
         Link alt(link, false);
         alt.reflect();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
     }
     if (reverse) {
         Link alt(link, false);
         alt.reverse();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+            altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+            EXPECT_EQ(altSig, sig);
         }
     }
     if (rotate) {
         Link alt(link, false);
         alt.rotate();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
     }
     if (reflect && rotate) {
         Link alt(link, false);
         alt.reflect();
         alt.rotate();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
     }
     if (reflect && reverse) {
         Link alt(link, false);
         alt.reflect();
         alt.reverse();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+            altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+            EXPECT_EQ(altSig, sig);
         }
     }
     if (rotate && reverse) {
         Link alt(link, false);
         alt.rotate();
         alt.reverse();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+            altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+            EXPECT_EQ(altSig, sig);
         }
     }
     if (reflect && rotate && reverse) {
@@ -3605,11 +3761,13 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
         alt.reflect();
         alt.rotate();
         alt.reverse();
-        EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+        auto altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+        EXPECT_EQ(altSig, sig);
 
         for (size_t i = 1; i < alt.countComponents(); ++i) {
             alt.reverse(alt.component(i));
-            EXPECT_EQ(alt.sig(reflect, reverse, rotate), sig);
+            altSig = alt.sig<generation, Encoding>(reflect, reverse, rotate);
+            EXPECT_EQ(altSig, sig);
         }
     }
 
@@ -3626,7 +3784,8 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
         else
             EXPECT_EQ(recon.oddWrithe(), link.oddWrithe());
     }
-    EXPECT_EQ(recon.sig(reflect, reverse, rotate), sig);
+    auto reconSig = recon.sig<generation, Encoding>(reflect, reverse, rotate);
+    EXPECT_EQ(reconSig, sig);
     if (link.size() <= JONES_THRESHOLD) {
         if (reverse && link.countComponents() > 1) {
             // We could reverse some but not all components, which will do
@@ -3645,75 +3804,176 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     }
 
     // Verify the "magic" string constructor.
-    EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
+    if constexpr (stringBased) {
+        EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
+    }
 }
 
+template <int generation, regina::LinkSigEncoding<generation> Encoding>
 static void verifySig(const Link& link, const char* name) {
+    SCOPED_TRACE_TYPE(Encoding);
+
+    verifySig<generation, Encoding>(link, true, true, true);
+    verifySig<generation, Encoding>(link, true, false, true);
+    verifySig<generation, Encoding>(link, false, true, true);
+    verifySig<generation, Encoding>(link, false, false, true);
+    verifySig<generation, Encoding>(link, true, true, false);
+    verifySig<generation, Encoding>(link, true, false, false);
+    verifySig<generation, Encoding>(link, false, true, false);
+    verifySig<generation, Encoding>(link, false, false, false);
+
+    // Verify the precomputed length of the signature.
+    if (link.size() > 0 && link.isConnected()) {
+        regina::LinkSigData data(link, false, false, false);
+        EXPECT_EQ(Encoding::template length<generation>(data),
+            Encoding::template encode<generation>(data).size());
+    }
+}
+
+static void verifySigAllEncodings(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    verifySig(link, true, true, true);
-    verifySig(link, true, false, true);
-    verifySig(link, false, true, true);
-    verifySig(link, false, false, true);
-    verifySig(link, true, true, false);
-    verifySig(link, true, false, false);
-    verifySig(link, false, true, false);
-    verifySig(link, false, false, false);
+    verifySig<1, LinkSigPrintable>(link, name);
+    verifySig<2, LinkSigPrintable>(link, name);
+    verifySig<2, LinkSigBinary>(link, name);
+
+    // Also verify the signature re-encoding process.
+    EXPECT_EQ(LinkSigBinary::asString(link.neoSig<LinkSigBinary>()),
+        link.neoSig());
 }
 
 TEST_F(LinkTest, sig) {
-    testManualCases(verifySig);
+    testManualCases(verifySigAllEncodings);
+
+    // Test knots with 62, 63 and 64 crossings, where the base64 integer width
+    // changes from 1 (not encoded) to 1 (encoded) and then to 2 (encoded).
+    // Likewise, test knots with 15 and 16 crossings, where the packed integer
+    // width changes from half-bytes to bytes, and with 254, 255 and 256
+    // crossings, where the packed integer width changes from 1 (not encoded)
+    // to 1 (encoded) and then to 2 (encoded).
+    {
+        Link link = ExampleLink::torus(4, 5);
+        EXPECT_EQ(link.size(), 15);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySigAllEncodings(link, "Torus(4, 5)");
+    }
+    {
+        Link link = ExampleLink::torus(3, 8);
+        EXPECT_EQ(link.size(), 16);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySigAllEncodings(link, "Torus(3, 8)");
+    }
+    {
+        Link link = ExampleLink::torus(3, 31);
+        EXPECT_EQ(link.size(), 62);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySigAllEncodings(link, "Torus(3, 31)");
+    }
+    {
+        Link link = ExampleLink::torus(8, 9);
+        EXPECT_EQ(link.size(), 63);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySigAllEncodings(link, "Torus(8, 9)");
+    }
+    {
+        Link link = ExampleLink::torus(5, 16);
+        EXPECT_EQ(link.size(), 64);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySigAllEncodings(link, "Torus(5, 16)");
+    }
+    {
+        Link link = ExampleLink::torus(3, 127);
+        EXPECT_EQ(link.size(), 254);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySigAllEncodings(link, "Torus(3, 127)");
+    }
+    {
+        Link link = ExampleLink::torus(16, 17);
+        EXPECT_EQ(link.size(), 255);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySigAllEncodings(link, "Torus(16, 17)");
+    }
+    {
+        Link link = ExampleLink::torus(5, 64);
+        EXPECT_EQ(link.size(), 256);
+        EXPECT_EQ(link.countComponents(), 1);
+        verifySigAllEncodings(link, "Torus(5, 64)");
+    }
+
+    // Unless specified otherwise, all _second-generation_ signatures below
+    // were computed using Regina 8.0.
 
     // Test signatures that respect / ignore reflection:
-    EXPECT_EQ(trefoilRight.link.sig(true, true),  "dabcabcv-");
-    EXPECT_EQ(trefoilRight.link.sig(false, true), "dabcabcv-");
-    EXPECT_EQ(trefoilLeft.link.sig(true, true),   "dabcabcv-");
-    EXPECT_EQ(trefoilLeft.link.sig(false, true) , "dabcabcva");
+    EXPECT_EQ(trefoilRight.link.knotSig(true, true),  "dabcabcv-");
+    EXPECT_EQ(trefoilRight.link.knotSig(false, true), "dabcabcv-");
+    EXPECT_EQ(trefoilLeft.link.knotSig(true, true),   "dabcabcv-");
+    EXPECT_EQ(trefoilLeft.link.knotSig(false, true) , "dabcabcva");
+
+    EXPECT_EQ(trefoilRight.link.neoSig(true, true),  "dh9K");
+    EXPECT_EQ(trefoilRight.link.neoSig(false, true), "dh9K");
+    EXPECT_EQ(trefoilLeft.link.neoSig(true, true),   "dh9K");
+    EXPECT_EQ(trefoilLeft.link.neoSig(false, true) , "dhfK");
 
     // Test that reflection applies to the entire diagram only, not individual
     // connected components:
     {
         Link l = ExampleLink::trefoilRight();
         l.insertLink(ExampleLink::trefoilRight());
-        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcv-");
-        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.knotSig(true, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.knotSig(false, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.neoSig(true, true), "dh9Kdh9K");
+        EXPECT_EQ(l.neoSig(false, true), "dh9Kdh9K");
     }
     {
         Link l = ExampleLink::trefoilRight();
         l.insertLink(ExampleLink::trefoilLeft());
-        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcva");
-        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.knotSig(true, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.knotSig(false, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.neoSig(true, true), "dh9KdhfK");
+        EXPECT_EQ(l.neoSig(false, true), "dh9KdhfK");
     }
     {
         Link l = ExampleLink::trefoilLeft();
         l.insertLink(ExampleLink::trefoilRight());
-        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcva");
-        EXPECT_EQ(l.sig(false, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.knotSig(true, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.knotSig(false, true), "dabcabcv-dabcabcva");
+        EXPECT_EQ(l.neoSig(true, true), "dh9KdhfK");
+        EXPECT_EQ(l.neoSig(false, true), "dh9KdhfK");
     }
     {
         Link l = ExampleLink::trefoilLeft();
         l.insertLink(ExampleLink::trefoilLeft());
-        EXPECT_EQ(l.sig(true, true), "dabcabcv-dabcabcv-");
-        EXPECT_EQ(l.sig(false, true), "dabcabcvadabcabcva");
+        EXPECT_EQ(l.knotSig(true, true), "dabcabcv-dabcabcv-");
+        EXPECT_EQ(l.knotSig(false, true), "dabcabcvadabcabcva");
+        EXPECT_EQ(l.neoSig(true, true), "dh9Kdh9K");
+        EXPECT_EQ(l.neoSig(false, true), "dhfKdhfK");
     }
 
     // A link where all four reflection/reversal options give different sigs:
     Link asymmetric = Link::fromOrientedGauss(
         "-<6 +>3 -<5 +>2 -<4 -<1 +>1 +>5 -<3 +>6 -<2 +>4");
-    EXPECT_EQ(asymmetric.sig(true, true),   "gaabcdefbcfedPQ--");
-    EXPECT_EQ(asymmetric.sig(true, false),  "gaabcdefdcbefPQ--");
-    EXPECT_EQ(asymmetric.sig(false, true),  "gaabcdefbcfedPQaa");
-    EXPECT_EQ(asymmetric.sig(false, false), "gaabcdefdcbefPQaa");
+    EXPECT_EQ(asymmetric.knotSig(true, true),   "gaabcdefbcfedPQ--");
+    EXPECT_EQ(asymmetric.knotSig(true, false),  "gaabcdefdcbefPQ--");
+    EXPECT_EQ(asymmetric.knotSig(false, true),  "gaabcdefbcfedPQaa");
+    EXPECT_EQ(asymmetric.knotSig(false, false), "gaabcdefdcbefPQaa");
+    EXPECT_EQ(asymmetric.neoSig(true, true),   "g9bv-iQC");
+    EXPECT_EQ(asymmetric.neoSig(true, false),  "g9bv-ykS");
+    EXPECT_EQ(asymmetric.neoSig(false, true),  "g9bvaiQC");
+    EXPECT_EQ(asymmetric.neoSig(false, false), "g9bvaykS");
 
     // For the Hopf link, reversing one component is the same as reflection.
     {
         Link hopfNegative = ExampleLink::hopf(); // positive crossings
         hopfNegative.reflect();
 
-        EXPECT_EQ(hopfNegative.sig(true, true), "cabcabjp");
-        EXPECT_EQ(hopfNegative.sig(true, false), "cabcabjp");
-        EXPECT_EQ(hopfNegative.sig(false, true), "cabcabjp");
-        EXPECT_EQ(hopfNegative.sig(false, false), "cabcabja");
+        EXPECT_EQ(hopfNegative.knotSig(true, true), "cabcabjp");
+        EXPECT_EQ(hopfNegative.knotSig(true, false), "cabcabjp");
+        EXPECT_EQ(hopfNegative.knotSig(false, true), "cabcabjp");
+        EXPECT_EQ(hopfNegative.knotSig(false, false), "cabcabja");
+        EXPECT_EQ(hopfNegative.neoSig(true, true), "ctB");
+        EXPECT_EQ(hopfNegative.neoSig(true, false), "ctB");
+        EXPECT_EQ(hopfNegative.neoSig(false, true), "ctB");
+        EXPECT_EQ(hopfNegative.neoSig(false, false), "cty");
     }
 
     // The virtual trefoil is the same under rotation but not reflection.
@@ -3726,25 +3986,41 @@ TEST_F(LinkTest, sig) {
         Link both = rot;
         both.reflect();
 
-        EXPECT_EQ(link.sig(true, true, true), "cababdp");
-        EXPECT_EQ(rot.sig(true, true, true), "cababdp");
-        EXPECT_EQ(ref.sig(true, true, true), "cababdp");
-        EXPECT_EQ(both.sig(true, true, true), "cababdp");
+        EXPECT_EQ(link.knotSig(true, true, true), "cababdp");
+        EXPECT_EQ(rot.knotSig(true, true, true), "cababdp");
+        EXPECT_EQ(ref.knotSig(true, true, true), "cababdp");
+        EXPECT_EQ(both.knotSig(true, true, true), "cababdp");
+        EXPECT_EQ(link.neoSig(true, true, true), "cZt");
+        EXPECT_EQ(rot.neoSig(true, true, true), "cZt");
+        EXPECT_EQ(ref.neoSig(true, true, true), "cZt");
+        EXPECT_EQ(both.neoSig(true, true, true), "cZt");
 
-        EXPECT_EQ(link.sig(true, true, false), "cababdp");
-        EXPECT_EQ(rot.sig(true, true, false), "cababdp");
-        EXPECT_EQ(ref.sig(true, true, false), "cababdp");
-        EXPECT_EQ(both.sig(true, true, false), "cababdp");
+        EXPECT_EQ(link.knotSig(true, true, false), "cababdp");
+        EXPECT_EQ(rot.knotSig(true, true, false), "cababdp");
+        EXPECT_EQ(ref.knotSig(true, true, false), "cababdp");
+        EXPECT_EQ(both.knotSig(true, true, false), "cababdp");
+        EXPECT_EQ(link.neoSig(true, true, false), "cZt");
+        EXPECT_EQ(rot.neoSig(true, true, false), "cZt");
+        EXPECT_EQ(ref.neoSig(true, true, false), "cZt");
+        EXPECT_EQ(both.neoSig(true, true, false), "cZt");
 
-        EXPECT_EQ(link.sig(false, true, true), "cababdp");
-        EXPECT_EQ(rot.sig(false, true, true), "cababdp");
-        EXPECT_EQ(ref.sig(false, true, true), "cababda"); // different
-        EXPECT_EQ(both.sig(false, true, true), "cababda"); // different
+        EXPECT_EQ(link.knotSig(false, true, true), "cababdp");
+        EXPECT_EQ(rot.knotSig(false, true, true), "cababdp");
+        EXPECT_EQ(ref.knotSig(false, true, true), "cababda"); // ≠
+        EXPECT_EQ(both.knotSig(false, true, true), "cababda"); // ≠
+        EXPECT_EQ(link.neoSig(false, true, true), "cZt");
+        EXPECT_EQ(rot.neoSig(false, true, true), "cZt");
+        EXPECT_EQ(ref.neoSig(false, true, true), "cZq"); // ≠
+        EXPECT_EQ(both.neoSig(false, true, true), "cZq"); // ≠
 
-        EXPECT_EQ(link.sig(false, true, false), "cababdp");
-        EXPECT_EQ(rot.sig(false, true, false), "cababdp");
-        EXPECT_EQ(ref.sig(false, true, false), "cababda"); // different
-        EXPECT_EQ(both.sig(false, true, false), "cababda"); // different
+        EXPECT_EQ(link.knotSig(false, true, false), "cababdp");
+        EXPECT_EQ(rot.knotSig(false, true, false), "cababdp");
+        EXPECT_EQ(ref.knotSig(false, true, false), "cababda"); // ≠
+        EXPECT_EQ(both.knotSig(false, true, false), "cababda"); // ≠
+        EXPECT_EQ(link.neoSig(false, true, false), "cZt");
+        EXPECT_EQ(rot.neoSig(false, true, false), "cZt");
+        EXPECT_EQ(ref.neoSig(false, true, false), "cZq"); // ≠
+        EXPECT_EQ(both.neoSig(false, true, false), "cZq"); // ≠
     }
 
     // The GPV virtual knot gives four different sigs under all four
@@ -3758,26 +4034,42 @@ TEST_F(LinkTest, sig) {
         Link both = rot;
         both.reflect();
 
-        EXPECT_EQ(link.sig(true, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(rot.sig(true, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(ref.sig(true, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(both.sig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(link.knotSig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(rot.knotSig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(ref.knotSig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(both.knotSig(true, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(link.neoSig(true, true, true), "eBSp0c");
+        EXPECT_EQ(rot.neoSig(true, true, true), "eBSp0c");
+        EXPECT_EQ(ref.neoSig(true, true, true), "eBSp0c");
+        EXPECT_EQ(both.neoSig(true, true, true), "eBSp0c");
 
-        EXPECT_EQ(link.sig(true, true, false), "eabcbcdadZa-d"); // different
-        EXPECT_EQ(rot.sig(true, true, false), "eabacdcdbZa-d");
-        EXPECT_EQ(ref.sig(true, true, false), "eabcbcdadZa-d"); // different
-        EXPECT_EQ(both.sig(true, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(link.knotSig(true, true, false), "eabcbcdadZa-d"); // ≠
+        EXPECT_EQ(rot.knotSig(true, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(ref.knotSig(true, true, false), "eabcbcdadZa-d"); // ≠
+        EXPECT_EQ(both.knotSig(true, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(link.neoSig(true, true, false), "eNSFeg"); // ≠
+        EXPECT_EQ(rot.neoSig(true, true, false), "eBSp0c");
+        EXPECT_EQ(ref.neoSig(true, true, false), "eNSFeg"); // ≠
+        EXPECT_EQ(both.neoSig(true, true, false), "eBSp0c");
 
-        EXPECT_EQ(link.sig(false, true, true), "eabacdcdbZaaa"); // different
-        EXPECT_EQ(rot.sig(false, true, true), "eabacdcdbZaaa"); // different
-        EXPECT_EQ(ref.sig(false, true, true), "eabacdcdbZa-d");
-        EXPECT_EQ(both.sig(false, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(link.knotSig(false, true, true), "eabacdcdbZaaa"); // ≠
+        EXPECT_EQ(rot.knotSig(false, true, true), "eabacdcdbZaaa"); // ≠
+        EXPECT_EQ(ref.knotSig(false, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(both.knotSig(false, true, true), "eabacdcdbZa-d");
+        EXPECT_EQ(link.neoSig(false, true, true), "eBSa0c"); // ≠
+        EXPECT_EQ(rot.neoSig(false, true, true), "eBSa0c"); // ≠
+        EXPECT_EQ(ref.neoSig(false, true, true), "eBSp0c");
+        EXPECT_EQ(both.neoSig(false, true, true), "eBSp0c");
 
         // Four different signatures here:
-        EXPECT_EQ(link.sig(false, true, false), "eabcbcdadZaaa");
-        EXPECT_EQ(rot.sig(false, true, false), "eabacdcdbZaaa");
-        EXPECT_EQ(ref.sig(false, true, false), "eabcbcdadZa-d");
-        EXPECT_EQ(both.sig(false, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(link.knotSig(false, true, false), "eabcbcdadZaaa");
+        EXPECT_EQ(rot.knotSig(false, true, false), "eabacdcdbZaaa");
+        EXPECT_EQ(ref.knotSig(false, true, false), "eabcbcdadZa-d");
+        EXPECT_EQ(both.knotSig(false, true, false), "eabacdcdbZa-d");
+        EXPECT_EQ(link.neoSig(false, true, false), "eNSqeg");
+        EXPECT_EQ(rot.neoSig(false, true, false), "eBSa0c");
+        EXPECT_EQ(ref.neoSig(false, true, false), "eNSFeg");
+        EXPECT_EQ(both.neoSig(false, true, false), "eBSp0c");
     }
 
     // The Kishino knot is symmetric under both reflection and rotation, if we
@@ -3792,81 +4084,220 @@ TEST_F(LinkTest, sig) {
         Link both = rot;
         both.reflect();
 
-        EXPECT_EQ(link.sig(true, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(rot.sig(true, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(true, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(link.knotSig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(rot.knotSig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(true, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(link.neoSig(true, true, true), "eBCf0c");
+        EXPECT_EQ(rot.neoSig(true, true, true), "eBCf0c");
+        EXPECT_EQ(ref.neoSig(true, true, true), "eBCf0c");
+        EXPECT_EQ(both.neoSig(true, true, true), "eBCf0c");
 
-        EXPECT_EQ(link.sig(true, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(rot.sig(true, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(true, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(link.knotSig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(rot.knotSig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(true, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(link.neoSig(true, true, false), "eBCf0c");
+        EXPECT_EQ(rot.neoSig(true, true, false), "eBCf0c");
+        EXPECT_EQ(ref.neoSig(true, true, false), "eBCf0c");
+        EXPECT_EQ(both.neoSig(true, true, false), "eBCf0c");
 
-        EXPECT_EQ(link.sig(false, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(rot.sig(false, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(false, true, true), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(link.knotSig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(rot.knotSig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(false, true, true), "eabacdcdblbTa");
+        EXPECT_EQ(link.neoSig(false, true, true), "eBCf0c");
+        EXPECT_EQ(rot.neoSig(false, true, true), "eBCf0c");
+        EXPECT_EQ(ref.neoSig(false, true, true), "eBCf0c");
+        EXPECT_EQ(both.neoSig(false, true, true), "eBCf0c");
 
-        EXPECT_EQ(link.sig(false, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(rot.sig(false, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(false, true, false), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(link.knotSig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(rot.knotSig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(false, true, false), "eabacdcdblbTa");
+        EXPECT_EQ(link.neoSig(false, true, false), "eBCf0c");
+        EXPECT_EQ(rot.neoSig(false, true, false), "eBCf0c");
+        EXPECT_EQ(ref.neoSig(false, true, false), "eBCf0c");
+        EXPECT_EQ(both.neoSig(false, true, false), "eBCf0c");
 
-        EXPECT_EQ(link.sig(false, false, false), "eabcbcdadTalb"); // different
-        EXPECT_EQ(rot.sig(false, false, false), "eabacdcdblbTa");
-        EXPECT_EQ(ref.sig(false, false, false), "eabacdcdblbTa");
-        EXPECT_EQ(both.sig(false, false, false), "eabcbcdadTalb"); // different
+        EXPECT_EQ(link.knotSig(false, false, false), "eabcbcdadTalb"); // ≠
+        EXPECT_EQ(rot.knotSig(false, false, false), "eabacdcdblbTa");
+        EXPECT_EQ(ref.knotSig(false, false, false), "eabacdcdblbTa");
+        EXPECT_EQ(both.knotSig(false, false, false), "eabcbcdadTalb"); // ≠
+        EXPECT_EQ(link.neoSig(false, false, false), "eN0teg");
+        EXPECT_EQ(rot.neoSig(false, false, false), "eBCf0c");
+        EXPECT_EQ(ref.neoSig(false, false, false), "eBCf0c");
+        EXPECT_EQ(both.neoSig(false, false, false), "eN0teg");
     }
 
-    // Verify some signatures against actual hard-coded strings, to ensure
-    // that the single-component knot signature format from Regina ≤ 7.3
-    // matches the more general format in Regina ≥ 7.4.
+    // Verify some first-generation signatures against actual hard-coded
+    // strings, to ensure that the single-component knot signature format from
+    // Regina ≤ 7.3 matches the more general link signature format in
+    // Regina ≥ 7.4.
     //
-    // The following knot signatures were all computed using Regina 7.3.
-    EXPECT_EQ(unknot0.link.sig(), "a");
-    EXPECT_EQ(unknot1.link.sig(), "baabd");
-    EXPECT_EQ(unknot3.link.sig(), "dabcabchT");
-    EXPECT_EQ(unknotMonster.link.sig(), "kabcdefghijbefgdcjahixfvbdwGd");
-    EXPECT_EQ(unknotGordian.link.sig(), "-cncaabacadaeafagahaiajakalamanaoapaqarasatauavawaxayazaAaBaCaDaEaFavaGataHaIaJapaoaKaLalaMaNaOahaPaQaeaRaSabaTaUaVaWaXajaNaYaZafaQa0a1a2aUa3auaGa4a5a6aza7aBa8a9a+a-aabbbcbdbebfbgbhbibjbkblbmbnbobpbqbrbdbsbtbubvbwbxbybzbAbBb+aEaCbDbxaEb4aFbGbqaJaHbIbJbLamaobKbLbMbNbObibPbxbQbRbSbTb-aSacaUb0aVbWbVaXbHaYbraGbZb0bmb1b2b3bMbfb4b5b6bub7bRbzb8b9bAbSb+b-bsb5bacgbNbbc2b1blbccZbnaKaJbdcXaecWbfc1aUbdaRaabgc+b7bvbhcPbjbicbc3bLbjcpbMakadcIbHbIaYbsaFbkc6ayaDbCbDalc8a9b8bybQbwbhc6btb-bcbmcqbjcKbnb0bcckbicObhbac4bebrbmcbbgcTbBb9alcCa7aAakc5aEbwaFaaaTa2afcVbPagaZaYaOaiaecWaXb3aVB3NNT3NVoYNthlfdnryeRZac44044idYmmqb5MT6MAwhJx3YEkl-T9wMNu-F+rMu86EgBAxURTr1DzB6E60Z-7pYJKn2T");
-    EXPECT_EQ(trefoilLeft.link.sig(), "dabcabcv-");
-    EXPECT_EQ(trefoilRight.link.sig(), "dabcabcv-");
-    EXPECT_EQ(trefoil_r1x2.link.sig(), "faabcdeebcd1eFo");
-    EXPECT_EQ(trefoil_r1x6.link.sig(), "jaabccdeefggbhhdiifnwo-KN");
-    EXPECT_EQ(figureEight.link.sig(), "eabcdbadcvbZa");
-    EXPECT_EQ(figureEight_r1x2.link.sig(), "gaabcdbeffdcevtBy");
-    EXPECT_EQ(conway.link.sig(), "labcdbefcdghiefjkgaijkhRswfFoWa");
-    EXPECT_EQ(kinoshitaTerasaka.link.sig(), "labcdefgahefhijbkdijckgBvQcndZl");
-    EXPECT_EQ(gst.link.sig(), "WabcdefghijklmnopqrsetuvinwxohvyazABCDEpguFbzGBHIJqftKcAGCHLsrMIDNOPQjmRNOSTklUSPVyFKdLMJExwRUTQVFyCHZX4sCdFzZe6yV7-D5cCbUGXTBhbG");
-    EXPECT_EQ(rht_rht.link.sig(), "gabcabcdefdefvv--");
-    EXPECT_EQ(rht_lht.link.sig(), "gabcabcdefdefvv-a");
+    // The following first-generation signatures were all computed using
+    // Regina 7.3.
+    EXPECT_EQ(unknot0.link.knotSig(), "a");
+    EXPECT_EQ(unknot1.link.knotSig(), "baabd");
+    EXPECT_EQ(unknot3.link.knotSig(), "dabcabchT");
+    EXPECT_EQ(unknotMonster.link.knotSig(), "kabcdefghijbefgdcjahixfvbdwGd");
+    EXPECT_EQ(unknotGordian.link.knotSig(), "-cncaabacadaeafagahaiajakalamanaoapaqarasatauavawaxayazaAaBaCaDaEaFavaGataHaIaJapaoaKaLalaMaNaOahaPaQaeaRaSabaTaUaVaWaXajaNaYaZafaQa0a1a2aUa3auaGa4a5a6aza7aBa8a9a+a-aabbbcbdbebfbgbhbibjbkblbmbnbobpbqbrbdbsbtbubvbwbxbybzbAbBb+aEaCbDbxaEb4aFbGbqaJaHbIbJbLamaobKbLbMbNbObibPbxbQbRbSbTb-aSacaUb0aVbWbVaXbHaYbraGbZb0bmb1b2b3bMbfb4b5b6bub7bRbzb8b9bAbSb+b-bsb5bacgbNbbc2b1blbccZbnaKaJbdcXaecWbfc1aUbdaRaabgc+b7bvbhcPbjbicbc3bLbjcpbMakadcIbHbIaYbsaFbkc6ayaDbCbDalc8a9b8bybQbwbhc6btb-bcbmcqbjcKbnb0bcckbicObhbac4bebrbmcbbgcTbBb9alcCa7aAakc5aEbwaFaaaTa2afcVbPagaZaYaOaiaecWaXb3aVB3NNT3NVoYNthlfdnryeRZac44044idYmmqb5MT6MAwhJx3YEkl-T9wMNu-F+rMu86EgBAxURTr1DzB6E60Z-7pYJKn2T");
+    EXPECT_EQ(trefoilLeft.link.knotSig(), "dabcabcv-");
+    EXPECT_EQ(trefoilRight.link.knotSig(), "dabcabcv-");
+    EXPECT_EQ(trefoil_r1x2.link.knotSig(), "faabcdeebcd1eFo");
+    EXPECT_EQ(trefoil_r1x6.link.knotSig(), "jaabccdeefggbhhdiifnwo-KN");
+    EXPECT_EQ(figureEight.link.knotSig(), "eabcdbadcvbZa");
+    EXPECT_EQ(figureEight_r1x2.link.knotSig(), "gaabcdbeffdcevtBy");
+    EXPECT_EQ(conway.link.knotSig(), "labcdbefcdghiefjkgaijkhRswfFoWa");
+    EXPECT_EQ(kinoshitaTerasaka.link.knotSig(), "labcdefgahefhijbkdijckgBvQcndZl");
+    EXPECT_EQ(gst.link.knotSig(), "WabcdefghijklmnopqrsetuvinwxohvyazABCDEpguFbzGBHIJqftKcAGCHLsrMIDNOPQjmRNOSTklUSPVyFKdLMJExwRUTQVFyCHZX4sCdFzZe6yV7-D5cCbUGXTBhbG");
+    EXPECT_EQ(rht_rht.link.knotSig(), "gabcabcdefdefvv--");
+    EXPECT_EQ(rht_lht.link.knotSig(), "gabcabcdefdefvv-a");
 
-    // Add some hard-coded classical link signatures and virtual knot/link
-    // signatures (both of which are new to Regina 7.4), to ensure that nothing
-    // changes as we optimise the underlying algorithms in later releases.
+    // Add some hard-coded first-generation signatures for classical links and
+    // virtual knots/links (both signature types are new to Regina 7.4),
+    // to ensure that nothing changes as we optimise the code in later releases.
     // Unless indicated otherwise, all signatures below were computed using
     // Regina 7.4.
-    EXPECT_EQ(empty.link.sig(), "_"); // verified by hand
-    EXPECT_EQ(hopf.link.sig(), "cabcabjp"); // verified by hand
-    EXPECT_EQ(whitehead.link.sig(), "fabcadefbcedvfpd"); // verified by hand
-    EXPECT_EQ(borromean.link.sig(), "gabcdgaecfgbfdeLwto"); // verified by hand
-    EXPECT_EQ(trefoil_unknot_overlap.link.sig(), "fabcdeadefbcxb7h");
-    EXPECT_EQ(adams6_28.link.sig(), "gabcadefdgbcefvv--"); // verified by hand
+    EXPECT_EQ(empty.link.knotSig(), "_"); // hand-verified
+    EXPECT_EQ(hopf.link.knotSig(), "cabcabjp"); // hand-verified
+    EXPECT_EQ(whitehead.link.knotSig(), "fabcadefbcedvfpd"); // hand-verified
+    EXPECT_EQ(borromean.link.knotSig(), "gabcdgaecfgbfdeLwto"); // hand-verified
+    EXPECT_EQ(trefoil_unknot_overlap.link.knotSig(), "fabcdeadefbcxb7h");
+    EXPECT_EQ(adams6_28.link.knotSig(), "gabcadefdgbcefvv--"); // hand-verified
 
-    EXPECT_EQ(unlink2_0.link.sig(), "aa"); // verified by hand
-    EXPECT_EQ(unlink3_0.link.sig(), "aaa"); // verified by hand
-    EXPECT_EQ(unlink2_r2.link.sig(), "cabcabdf");
-    EXPECT_EQ(unlink2_r1r1.link.sig(), "baabdbaaba");
-    EXPECT_EQ(trefoil_unknot0.link.sig(), "dabcabcv-a");
-    EXPECT_EQ(trefoil_unknot1.link.sig(), "dabcabcv-baaba");
+    EXPECT_EQ(unlink2_0.link.knotSig(), "aa"); // hand-verified
+    EXPECT_EQ(unlink3_0.link.knotSig(), "aaa"); // hand-verified
+    EXPECT_EQ(unlink2_r2.link.knotSig(), "cabcabdf");
+    EXPECT_EQ(unlink2_r1r1.link.knotSig(), "baabdbaaba");
+    EXPECT_EQ(trefoil_unknot0.link.knotSig(), "dabcabcv-a");
+    EXPECT_EQ(trefoil_unknot1.link.knotSig(), "dabcabcv-baaba");
 
-    EXPECT_EQ(virtualTrefoil.link.sig(), "cababdp");
-    EXPECT_EQ(kishino.link.sig(), "eabacdcdblbTa");
-    EXPECT_EQ(gpv.link.sig(), "eabacdcdbZa-d");
-    EXPECT_EQ(virtualLink2.link.sig(), "bababd");
-    EXPECT_EQ(virtualLink3.link.sig(), "cabcacbjp");
-    EXPECT_EQ(virtualTrefoilx2.link.sig(),
+    EXPECT_EQ(virtualTrefoil.link.knotSig(), "cababdp");
+    EXPECT_EQ(kishino.link.knotSig(), "eabacdcdblbTa");
+    EXPECT_EQ(gpv.link.knotSig(), "eabacdcdbZa-d");
+    EXPECT_EQ(virtualLink2.link.knotSig(), "bababd");
+    EXPECT_EQ(virtualLink3.link.knotSig(), "cabcacbjp");
+    EXPECT_EQ(virtualTrefoilx2.link.knotSig(),
         "mabcadefghcijmbkldkijlefghNI8OF4-d");
-    EXPECT_EQ(virtualDisconnected.link.sig(), "cabcacbjpcabcabjpcababdp");
+    EXPECT_EQ(virtualDisconnected.link.knotSig(), "cabcacbjpcabcabjpcababdp");
+
+    // Likewise, verify some second-generation signatures against hard-coded
+    // strings to ensure that nothing changes in future releases.
+    //
+    // The following second-generation signatures were all computed using
+    // Regina 8.0.
+    EXPECT_EQ(unknot0.link.neoSig(), "a");
+    EXPECT_EQ(unknot1.link.neoSig(), "bn");
+    EXPECT_EQ(unknot3.link.neoSig(), "dhVK");
+    EXPECT_EQ(unknotMonster.link.neoSig(), "k-paCvdwqLnschc");
+    EXPECT_EQ(unknotGordian.link.neoSig(), "-cnc-----RZUTpZLR---3-ZAo+6rRSZLzseQGiraiiaiaaaaaaaVB3NN9VV7FowkgnLvTrmBRm+w2tz5txSv-NFKLI-hNZ3xlLvmXdoSWbeeqcNuGkUqbizSXq+4Xf4aXiLWGtiD1pSianVeseGXKzfr1AzPfBsLNrNzxDlnxdKmwmWvJBdScq+TxvPLuG3v2tMOWGIfMiYjXx6GrxC1bp9XhwQz1H6n1FcbvIK1eDcQeIODeG4ruumgKHTTvplYXoAOyoEzXha0Inf+wkgmJmOGaHWe3n");
+    EXPECT_EQ(trefoilLeft.link.neoSig(), "dh9K");
+    EXPECT_EQ(trefoilRight.link.neoSig(), "dh9K");
+    EXPECT_EQ(trefoil_r1x2.link.neoSig(), "f9W+bgn");
+    EXPECT_EQ(trefoil_r1x6.link.neoSig(), "jTnjN8vGqwCdw");
+    EXPECT_EQ(figureEight.link.neoSig(), "eputWe");
+    EXPECT_EQ(figureEight_r1x2.link.neoSig(), "gDd7niDI");
+    EXPECT_EQ(conway.link.neoSig(), "lV5mWM6jeYqLbyQh");
+    EXPECT_EQ(kinoshitaTerasaka.link.neoSig(), "l-flW2UPbuDXGPOg");
+    EXPECT_EQ(gst.link.neoSig(), "W---Dg9J0rqYtMeaaFyCrzkT2V7-paa4KeinohvapgubzBqftcAGCHsrIDjmNOklSPyFKdLMJExwRUTQV");
+    EXPECT_EQ(rht_rht.link.neoSig(), "ghhT-iAS");
+    EXPECT_EQ(rht_lht.link.neoSig(), "ghhThiAS");
+
+    EXPECT_EQ(empty.link.neoSig(), "_");
+    EXPECT_EQ(hopf.link.neoSig(), "ctB");
+    EXPECT_EQ(whitehead.link.neoSig(), "f3q7Gko");
+    EXPECT_EQ(borromean.link.neoSig(), "gVc1JwUJ");
+    EXPECT_EQ(trefoil_unknot_overlap.link.neoSig(), "fFWDJXk");
+    EXPECT_EQ(adams6_28.link.neoSig(), "g3bT-ywS");
+
+    EXPECT_EQ(unlink2_0.link.neoSig(), "aa");
+    EXPECT_EQ(unlink3_0.link.neoSig(), "aaa");
+    EXPECT_EQ(unlink2_r2.link.neoSig(), "cZz");
+    EXPECT_EQ(unlink2_r1r1.link.neoSig(), "bnbf");
+    EXPECT_EQ(trefoil_unknot0.link.neoSig(), "dh9Ka");
+    EXPECT_EQ(trefoil_unknot1.link.neoSig(), "dh9Kbf");
+
+    EXPECT_EQ(virtualTrefoil.link.neoSig(), "cZt");
+    EXPECT_EQ(kishino.link.neoSig(), "eBCf0c");
+    EXPECT_EQ(gpv.link.neoSig(), "eBSp0c");
+    EXPECT_EQ(virtualLink2.link.neoSig(), "bD");
+    EXPECT_EQ(virtualLink3.link.neoSig(), "ctR");
+    EXPECT_EQ(virtualTrefoilx2.link.neoSig(), "m33gaxPp8GWJI5sLD");
+    EXPECT_EQ(virtualDisconnected.link.neoSig(), "ctRctBcZt");
+
+    // This seems as good a place as any to ensure that the ByteSequence
+    // output routines behave correctly.  We test both trivial and non-trivial
+    // cases here.
+    {
+        regina::ByteSequence seq = empty.link.neoSig<LinkSigBinary>();
+        EXPECT_EQ(seq.asString(), "");
+
+        std::ostringstream out;
+        out << seq;
+        EXPECT_EQ(out.str(), "");
+    }
+    {
+        // Note: for the 0-crossing unknot the binary encoding is "\0", which
+        // does not play well with routines that expect C-style strings.
+        regina::ByteSequence seq = unknot0.link.neoSig<LinkSigBinary>();
+        EXPECT_EQ(seq.asString(), std::string(1, 0) /* One copy of '\0' */);
+
+        std::ostringstream out;
+        out << seq;
+        EXPECT_EQ(out.str(), "00");
+    }
+    {
+        // This second-generation signature was computed using Regina 8.0.
+        regina::ByteSequence seq = borromean.link.neoSig<LinkSigBinary>();
+        EXPECT_EQ(seq.asString(), "\x06\xafP\x8f\x96;\x2");
+
+        std::ostringstream out;
+        out << seq;
+        EXPECT_EQ(out.str(), "06:af:50:8f:96:3b:02");
+    }
+}
+
+static void verifyFromData(const Link& link, const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    for (int useZeroForEmpty = 0; useZeroForEmpty <= 1; ++useZeroForEmpty) {
+        SCOPED_TRACE_NUMERIC(useZeroForEmpty);
+
+        std::vector<int> signs;
+        signs.reserve(link.size());
+        for (auto c : link.crossings())
+            signs.push_back(c->sign());
+
+        std::vector<std::vector<int>> components;
+        components.reserve(link.countComponents());
+        for (auto c : link.components()) {
+            std::vector<int> comp;
+            if (! c) {
+                if (useZeroForEmpty)
+                    comp.push_back(0);
+            } else {
+                regina::StrandRef s = c;
+                do {
+                    int index = static_cast<int>(s.crossing()->index()) + 1;
+                    comp.push_back(s.strand() == 1 ? index : -index);
+                    ++s;
+                } while (s != c);
+            }
+            components.push_back(std::move(comp));
+        }
+
+        Link recon;
+        ASSERT_NO_THROW({ recon = Link::fromData(signs.begin(), signs.end(),
+            components.begin(), components.end()); });
+
+        // This should reconstruct the labelling precisely.
+        EXPECT_EQ(recon, link);
+    }
+}
+
+TEST_F(LinkTest, fromData) {
+    testManualCases(verifyFromData);
 }
 
 static void verifyGaussAndDT(const TestCase& test,
@@ -3893,7 +4324,7 @@ static void verifyGaussAndDT(const TestCase& test,
     // For "non-composite-like" knot diagrams, the only possible ambiguity
     // is reflection.  Use the reflection-distinguishing knot signature to
     // tell whether we reflected upon reconstruction.
-    std::string targetSig = test.link.sig(false);
+    std::string targetSig = test.link.neoSig(false);
 
     if (testGauss) {
         std::string code = test.link.gauss();
@@ -3914,10 +4345,10 @@ static void verifyGaussAndDT(const TestCase& test,
         EXPECT_NO_THROW({ EXPECT_EQ(Link(code), recon); });
 
         // If we reflected, undo this for our subsequent tests.
-        if (recon.sig(false) != targetSig)
+        if (recon.neoSig(false) != targetSig)
             recon.reflect();
 
-        EXPECT_EQ(recon.sig(false), targetSig);
+        EXPECT_EQ(recon.neoSig(false), targetSig);
         if (test.link.size() <= JONES_THRESHOLD)
             EXPECT_EQ(recon.jones(), test.link.jones());
     }
@@ -3954,10 +4385,10 @@ static void verifyGaussAndDT(const TestCase& test,
             });
 
             // If we reflected, undo this for our subsequent tests.
-            if (recon.sig(false) != targetSig)
+            if (recon.neoSig(false) != targetSig)
                 recon.reflect();
 
-            EXPECT_EQ(recon.sig(false), targetSig);
+            EXPECT_EQ(recon.neoSig(false), targetSig);
             if (test.link.size() <= JONES_THRESHOLD)
                 EXPECT_EQ(recon.jones(), test.link.jones());
         }

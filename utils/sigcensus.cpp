@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Form a census of splitting surface signatures of given order          *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -67,10 +67,15 @@ int main(int argc, char* argv[]) {
     }
 
     int order;
-    bool valid = regina::valueOf(argv[1], order);
-    if ((! valid) || order < 1 || order > MAXORDER)
+    try {
+        order = regina::parse<int>(argv[1]);
+    } catch (const regina::InvalidArgument&) {
         usage(argv[0],
-            "Only numerical orders between 1 and " MAXORDER_STR
+            "The order must be an integer between 1 and " MAXORDER_STR ".");
+    }
+    if (order < 1 || order > MAXORDER)
+        usage(argv[0],
+            "Only orders between 1 and " MAXORDER_STR
             " inclusive are accepted.");
 
     size_t result = regina::SigCensus::formCensus(order,

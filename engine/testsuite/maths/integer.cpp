@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -69,8 +69,8 @@ IntegerType gmpInteger(IntegerType x) {
 
 template <UnsignedCppInteger Native>
 struct NativeUnsignedLimits {
-    using Signed = regina::make_signed_cpp_t<Native>;
-    static_assert(regina::is_signed_cpp_integer_v<Signed>);
+    using Signed = regina::MakeSigned<Native>;
+    static_assert(regina::SignedCppInteger<Signed>);
 
     static constexpr Native min = std::numeric_limits<Native>::min();
     static constexpr Native max = std::numeric_limits<Native>::max();
@@ -127,8 +127,8 @@ struct NativeUnsignedLimits {
 
 template <SignedCppInteger Native>
 struct NativeSignedLimits {
-    using Unsigned = regina::make_unsigned_cpp_t<Native>;
-    static_assert(regina::is_unsigned_cpp_integer_v<Unsigned>);
+    using Unsigned = regina::MakeUnsigned<Native>;
+    static_assert(regina::UnsignedCppInteger<Unsigned>);
 
     static constexpr Native min = std::numeric_limits<Native>::min();
     static constexpr Native max = std::numeric_limits<Native>::max();
@@ -2693,13 +2693,10 @@ static void verifyCppInteger(Native native) {
     // ourselves also - try to avoid computing it twice.
     std::string str = regina::toString(native);
     SCOPED_TRACE_STDSTRING(str);
-    {
-        // Since we've computed the string version of native, this is probably
-        // a good spot to check valueOf().
-        Native dest;
-        EXPECT_TRUE(regina::valueOf(str, dest));
-        EXPECT_EQ(dest, native);
-    }
+
+    // Since we've computed the string version of native, this is probably
+    // a good spot to check parse().
+    EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>(str), native); });
 
     // Construction from Native:
     IntegerType large(native);
@@ -2738,7 +2735,7 @@ static void verifyCppInteger(Native native) {
     }
 
     // Construction and assignment from regina's NativeInteger class:
-    if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+    if constexpr (regina::SignedCppInteger<Native>) {
         ReginaNative n(native);
         EXPECT_EQ(n, native);
         EXPECT_EQ(n.str(), str);
@@ -2804,7 +2801,7 @@ static void verifyCppInteger(Native native) {
 
         static constexpr Native firstBit =
             static_cast<Native>(Native(1) << (sizeof(Native) * 8 - 1));
-        if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+        if constexpr (regina::SignedCppInteger<Native>) {
             EXPECT_NE(large, static_cast<Native>(native ^ firstBit));
             if (native >= 0)
                 EXPECT_GT(large, static_cast<Native>(native ^ firstBit));
@@ -2828,7 +2825,7 @@ static void verifyCppInteger(Native native) {
 
         // Do this all again, but with regina::NativeInteger (which is always
         // a signed type).
-        if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+        if constexpr (regina::SignedCppInteger<Native>) {
             EXPECT_EQ(large, ReginaNative(native));
             EXPECT_NE(large, ReginaNative(native + 1));
             if (native != maxNative) {
@@ -3107,7 +3104,7 @@ static void verifyCppIntegerPlusMinus(IntegerType lhs, Native rhs,
     if (lhs.isInfinite()) {
         EXPECT_TRUE(sum.isInfinite());
         EXPECT_EQ(lhs, sum);
-    } else if constexpr (regina::is_signed_cpp_integer_v<Native>) {
+    } else if constexpr (regina::SignedCppInteger<Native>) {
         EXPECT_FALSE(sum.isInfinite());
         if (rhs > 0) EXPECT_LT(lhs, sum);
         else if (rhs < 0) EXPECT_GT(lhs, sum);
@@ -3336,7 +3333,7 @@ static void verifyCppIntegerMultiplyDivide(IntegerType lhs, Native rhs,
         // Note: LargeInteger specifies that infinity * 0 == infinity.
         EXPECT_TRUE(product.isInfinite());
         EXPECT_EQ(lhs, product);
-    } else if constexpr (regina::is_unsigned_cpp_integer_v<Native>) {
+    } else if constexpr (regina::UnsignedCppInteger<Native>) {
         EXPECT_FALSE(product.isInfinite());
         EXPECT_EQ(product.sign(), rhs == 0 ? 0 : lhs.sign());
     } else {

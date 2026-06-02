@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,23 +49,12 @@ namespace regina {
 };
 
 /**
- * A filter function, used to determine whether a given cusp
- * should appear in the list.
- */
-using CuspFilterFunc = bool (*)(const regina::Cusp&);
-
-/**
  * A widget through which a single cusp of some SnapPea triangulation
  * can be selected.  An optional filter may be applied to restrict the
  * available selections.
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
- *
- * Note that we do *not* use Q_OBJECT with the chooser classes.
- * This is because many of the chooser classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * classes do not use slots or signals, I believe this is okay.
  */
 class CuspChooser : public QComboBox, public regina::PacketListener {
     public:
@@ -74,13 +63,21 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
             CUSP_NO_SELECTION = -2
         };
 
+        using Choice = int;
+
+        /**
+         * A filter function, used to determine whether a given cusp
+         * should appear in the list.
+         */
+        using Filter = bool (*)(const regina::Cusp&);
+
     private:
         regina::SnapPeaTriangulation* tri_;
             /**< The triangulation whose cusps we are choosing from. */
-        CuspFilterFunc filter_;
+        Filter filter_;
             /**< A filter to restrict the available selections, or
                  \c null if no filter is necessary. */
-        std::vector<int> options_;
+        std::vector<Choice> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -100,7 +97,7 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
          * will be offered.
          */
         CuspChooser(regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-                CuspFilterFunc filter, QWidget* parent,
+                Filter filter, QWidget* parent,
                 bool autoUpdate = true);
 
         /**
@@ -158,11 +155,6 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
 
 /**
  * A dialog used to select a single cusp of a given triangulation.
- *
- * Note that we do *not* use Q_OBJECT with the chooser dialog classes.
- * This is because many of the chooser dialog classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * dialog classes do not use slots or signals, I believe this is okay.
  */
 class CuspDialog : public QDialog {
     private:
@@ -177,14 +169,14 @@ class CuspDialog : public QDialog {
          */
         CuspDialog(QWidget* parent,
             regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-            CuspFilterFunc filter,
+            CuspChooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static int choose(QWidget* parent,
             regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-            CuspFilterFunc filter,
+            CuspChooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);

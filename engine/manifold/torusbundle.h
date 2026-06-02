@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,8 @@
 #include "manifold/manifold.h"
 #include "maths/matrix2.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**
@@ -55,14 +57,14 @@ namespace regina {
  * parallel).  Then we identify the torus boundaries so that, in
  * additive terms:
  *
- * <pre>
+ * ```
  *     [a]       [p]
  *     [ ] = M * [ ]
  *     [b]       [q]
- * </pre>
+ * ```
  *
- * All optional Manifold routines except for construct() are implemented
- * for this class.
+ * The optional Manifold<3> routines homology() and isHyperbolic() are
+ * implemented, but the optional routine construct() is not.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
@@ -74,7 +76,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class TorusBundle : public Manifold {
+class TorusBundle : public Manifold<3> {
     private:
         Matrix2 monodromy_;
             /**< The monodromy describing how the two torus boundaries
@@ -106,11 +108,11 @@ class TorusBundle : public Manifold {
          * passed separately.  They combine to give the full monodromy
          * matrix \a M as follows:
          *
-         * <pre>
+         * ```
          *           [ mon00  mon01 ]
          *     M  =  [              ]
          *           [ mon10  mon11 ]
-         * </pre>
+         * ```
          *
          * \pre The monodromy matrix formed from the given parameters
          * has determinant +1 or -1.

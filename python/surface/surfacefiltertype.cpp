@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,10 +44,10 @@ void addSurfaceFilterType(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::SurfaceFilterType>(m, "SurfaceFilterType",
-            "enum.Enum", rdoc_scope)
+            "enum.Enum", rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::SurfaceFilterType>(m, "SurfaceFilterType",
-            rdoc_scope)
+            rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif

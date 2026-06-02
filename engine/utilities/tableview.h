@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,8 @@
 #include <cstddef>
 #include <type_traits>
 #include "regina-core.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -97,25 +99,23 @@ namespace detail {
  * to point to different objects, but the objects they _point_ to can still
  * be modified.)
  *
- * This class is in a sense a multi-dimensional analogue to TableView
- * (though it does also support one-dimensional tables).
+ * This class is in a sense a multi-dimensional analogue to standard C++ views
+ * from the `std::ranges` library (though it does also support one-dimensional
+ * tables).
  *
- * Where this class differs from ListView is:
+ * Where this class differs from standard C++ views is:
  *
- * - TableView supports multi-dimensional tables, whereas ListView only
- *   supports one-dimensional lists.
- *
- * - TableView offers a smaller set of member functions, whereas ListView
- *   has a richer interface.
+ * - TableView supports multi-dimensional tables, whereas standard C++ views
+ *   only supports one-dimensional lists.
  *
  * - TableView is (for now) only designed to work with fixed-size C-style
  *   arrays of the form `Element[a][b]...[z]`, where the array
- *   dimensions are compile-time constants.  In contrast, ListView can also
- *   work with rich C++ container classes and variable-sized C-style arrays.
+ *   dimensions are compile-time constants.  In contrast, standard C++ views
+ *   can work with a variety of different container types.
  *
- * - While ListView has a purpose in C++ (to hide the "real" type used
- *   by the underlying implementation), TableView is primary for the Python
- *   bindings: its main benefit is to strictly enforce read-only access
+ * - While standard C++ views have a purpose in C++ (to hide the "real" type
+ *   used by the underlying implementation), TableView is primary for the
+ *   Python bindings: its main benefit is to strictly enforce read-only access
  *   (since Python loses all knowledge of constness, and sometimes allows
  *   users to change things that they should not).  Typically TableView
  *   would be used to wrap global constant arrays (such as regina::quadDefn,
@@ -219,7 +219,7 @@ class TableView {
          * from first to last.  See TableView::begin() for further details.
          *
          * This iterator is, in spirit, a bidirectional multipass iterator.
-         * However, we declare it using std::input_iterator_tag here because
+         * However, we declare it using `std::input_iterator_tag` here because
          * it does not necessarily return by reference (a requirement of
          * forward and bidirectional iterators in the C++ standard library).
          * In particular:
@@ -234,7 +234,7 @@ class TableView {
          *   \a reference is `const Element&`.
          *
          * For most iterator classes, Regina now uses specialisations of
-         * std::iterator_traits to provide access to their associated types
+         * `std::iterator_traits` to provide access to their associated types
          * (e.g., value_type).  However, this is not possible for
          * TableView::iterator since TableView is templated.  Therefore,
          * for TableView::iterator, we continue to provide these associated
@@ -243,7 +243,7 @@ class TableView {
          * Both \a iterator and \a const_iterator are the same type, since
          * TableView only offers read-only access to the underlying data.
          *
-         * \nopython TableView is an iterable type, but its __iter__()
+         * \nopython TableView is an iterable type, but its `__iter__()`
          * function returns an object of a different (hidden) iterator class.
          */
         class iterator {
@@ -299,6 +299,9 @@ class TableView {
                 /**
                  * The preincrement operator.
                  *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
                  * \return a reference to this iterator after the increment.
                  */
                 constexpr iterator& operator ++ () {
@@ -307,6 +310,9 @@ class TableView {
                 }
                 /**
                  * The postincrement operator.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
                  *
                  * \return a copy of this iterator before the increment took
                  * place.
@@ -319,6 +325,9 @@ class TableView {
                 /**
                  * The predecrement operator.
                  *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `TableView::begin()`).
+                 *
                  * \return a reference to this iterator after the decrement.
                  */
                 constexpr iterator& operator -- () {
@@ -327,6 +336,9 @@ class TableView {
                 }
                 /**
                  * The postdecrement operator.
+                 *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `TableView::begin()`).
                  *
                  * \return a copy of this iterator before the decrement took
                  * place.
@@ -510,7 +522,7 @@ class TableView {
          * \nocpp For C++ users, TableView provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the
          * subarrays or elements of this table in the usual way using a
-         * range-based \c for loop.
+         * range-based `for` loop.
          *
          * \return an iterator over the subarrays or elements of this table.
          */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2021-2025, Ben Burton                                   *
+ *  Copyright (c) 2021-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,8 +37,11 @@
 #define __REGINA_SHORTARRAY_H
 #endif
 
+#include <concepts>
 #include <vector>
 #include "regina-core.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -51,21 +54,21 @@ namespace regina {
  *
  * Here "stack-based" means that the array does not use dynamic memory
  * allocation; instead it reserves space for \a maxSize elements directly
- * on the stack.  In this sense, it is analogous to std::array<T, maxSize>
- * or indeed a plain C-style array T[maxSize].  Like these other types,
+ * on the stack.  In this sense, it is analogous to `std::array<T, maxSize>`
+ * or indeed a plain C-style array `T[maxSize]`.  Like these other types,
  * it is fast to access with very little space or time overhead, but it
  * cannot be moved or swapped in constant time.
  *
  * Where ShortArray differs from these other types is that its size can
  * vary at runtime.  Its default constructor initialises it to size zero, and
- * it supports push_back() and pop_back() operations and a size() query which
- * are all very fast.  The size is, however, limited to \a maxSize, and
+ * it supports `push_back()` and `pop_back()` operations and a `size()` query
+ * which are all very fast.  The size is, however, limited to \a maxSize, and
  * any attempt to push additional elements beyond this limit will result
  * in undefined behaviour.
  *
  * This class was designed with very small arrays in mind; an example is
  * the list of embeddings for a (<i>dim</i>-1)-dimensional face in a
- * <i>dim</i>-dimensional triangulationw, which always has size 1 or 2.
+ * <i>dim</i>-dimensional triangulation, which always has size 1 or 2.
  *
  * This class does not implement move constructors or move assignment,
  * since this cannot be done any faster than a linear-time copy operation.
@@ -75,7 +78,7 @@ namespace regina {
  *
  * \ingroup utilities
  */
-template <typename T, size_t maxSize>
+template <std::semiregular T, size_t maxSize>
 class ShortArray {
     public:
         /**

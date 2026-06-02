@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,10 +41,13 @@
 #include <cstdint>
 #include <iostream>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**
- * Represents a pair of tetrahedron face numbers.
+ * Represents a pair of tetrahedron face numbers within a 3-dimensional
+ * triangulation.
  *
  * Note that we are not storing triangle numbers in a triangulation
  * skeleton, but merely face numbers 0, 1, 2 and 3 in a single
@@ -166,7 +169,7 @@ class FacePair {
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
          *
-         * \return The result of the lexicographical comparison between this
+         * \return the result of the lexicographical comparison between this
          * and the given face pair.
          */
         std::strong_ordering operator <=> (const FacePair&) const = default;

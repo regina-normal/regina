@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,11 @@
  *  If you need it, you will need to include it yourself.
  */
 
+#ifndef __HELPERS_FLAGS_H
+#ifndef __DOXYGEN
+#define __HELPERS_FLAGS_H
+#endif
+
 #include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include <iomanip>
 #include <sstream>
@@ -49,6 +54,22 @@
 
 namespace regina::python {
 
+namespace doc::common {
+    // Note: docstrings should be wrapped at 70 characters per line;
+    // the hard maximum is 72.
+
+    inline constexpr const char bool_enum_for_flags[] =
+R"doc(Determines whether this flag has a non-zero numerical value.
+
+A zero flag will have no effect when it is combined with other flags
+using bitwise OR or XOR.
+
+Returns:
+    ``True`` if this is a non-zero flag, or ``False`` if this is a
+    zero flag.)doc";
+
+} // namespace doc::common
+
 /**
  * Adds Python bindings for a flag enumeration type, as well as a
  * full-featured regina::Flags class type built upon it.
@@ -60,14 +81,16 @@ namespace regina::python {
  * The extra string \a borDoc is the docstring that will be used for the
  * bitwise OR of two individual flags.
  *
- * The corresponding flags class is assumed to be regina::Flags<Enum>,
+ * The corresponding flags class is assumed to be `regina::Flags<Enum>`,
  * and will be given the Python class name `Flags_enumName`.
  *
- * This routine will define __str__ and __repr__ functions for the flags class,
- * so that users can easily see what value a combination of flags holds.  The
- * flag will be written in hexadecimal, using a minimum of \a hexWidth digits.
+ * This routine will define `__str__` and `__repr__` functions for the flags
+ * class, so that users can easily see what value a combination of flags holds.
+ * The flag will be written in hexadecimal, using a minimum of \a hexWidth
+ * digits.
  */
 template <typename Enum, int hexWidth = 4>
+requires (std::is_enum_v<Enum>)
 void add_flags(pybind11::module_& m, const std::string& enumName,
         std::initializer_list<std::tuple<const char*, Enum, const char*>>
             values,
@@ -98,7 +121,7 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
     RDOC_SCOPE_BEGIN(Flags)
 
     auto f = pybind11::class_<Flags>(m,
-            ("Flags_" + enumName).c_str(), rdoc_scope)
+            ("Flags_" + enumName).c_str(), rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<Enum>(), rdoc::__init)
         .def(pybind11::init<const Flags&>(), rdoc::__copy)
@@ -127,7 +150,7 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(hexWidth) << std::setfill('0')
                 << f.baseValue();
-            return out.str();
+            return std::move(out).str();
         })
         .def("__repr__", [](Flags f) {
             std::ostringstream out;
@@ -136,7 +159,7 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
                     "__name__")).cast<std::string_view>()
                 << ": 0x" << std::hex << std::setw(hexWidth)
                 << std::setfill('0') << f.baseValue() << '>';
-            return out.str();
+            return std::move(out).str();
         })
         ;
     regina::python::add_eq_operators(f, rdoc::__eq_2);
@@ -161,3 +184,4 @@ void add_flags(pybind11::module_& m, const std::string& enumName,
 
 } // namespace regina::python
 
+#endif

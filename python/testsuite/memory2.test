@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2025, Ben Burton
+# Copyright (c) 2015-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the independence and lifespans of engine-generated packets.
@@ -99,7 +99,7 @@ v = t.vertex(0).buildLink()
 print('Step 3')
 t = None # destroys t1 but not v1
 print('Step 4')
-print(v.isoSig())
+print(v.neoSig())
 
 print('Vertex link #2')
 print('Step 1')

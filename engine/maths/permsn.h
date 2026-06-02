@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,9 +45,11 @@
 #define __REGINA_PERMSN_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
-template <int n> class Perm;
+template <int n> requires (2 <= n && n <= maxPermDegree()) class Perm;
 
 /**
  * A lightweight array-like object that supports fast lookup and iteration
@@ -65,7 +67,7 @@ template <int n> class Perm;
  *   also use the standard `len()` function in Python.
  *
  * - Iteration.  Here you would typically iterate over `Perm<n>::Sn` in a
- *   range-based \c for loop, or use begin/end pairs such as
+ *   range-based `for` loop, or use begin/end pairs such as
  *   `Perm<n>::Sn.begin()` and `Perm<n>::Sn.end()`.
  *
  * Regarding indices and iteration:
@@ -86,11 +88,11 @@ template <int n> class Perm;
  *
  * Regarding time complexity:
  *
- * - For \a n ≤ 7, iteration steps and index-based lookup are both extremely
+ * - For `n ≤ 7`, iteration steps and index-based lookup are both extremely
  *   fast constant time.  Iterators are random-access (and satisfy all of the
  *   expected time complexity constraints that come with this).
  *
- * - For \a n ≥ 8, the time for a single iteration step is in linear in \a n,
+ * - For `n ≥ 8`, the time for a single iteration step is in linear in \a n,
  *   and index-based lookup is currently _quadratic_ in \a n.  Iterators are
  *   merely forward iterators, not random access.
  *
@@ -103,7 +105,6 @@ template <int n> class Perm;
  * or PermSn5_Lex).
  *
  * \tparam n the number of objects being permuted.
- * This must be between 2 and 16 inclusive.
  * \tparam order the way in which this class orders permutations for the
  * purposes of indexing and iteration.
  * \tparam codeType the constant `Perm<n>::codeType`.  You should allow the
@@ -112,6 +113,7 @@ template <int n> class Perm;
  * \ingroup maths
  */
 template <int n, PermOrder order, PermCodeType codeType = Perm<n>::codeType>
+requires (2 <= n && n <= maxPermDegree())
 struct PermSn {
     // This generic implementation is for n ≥ 8 (where codeType is Images).
     // There is a specialisation below for n ≤ 7.
@@ -152,7 +154,7 @@ struct PermSn {
      *   access iterator (\a n ≤ 7) or a forward iterator (\a n ≥ 8).  Using
      *   `Perm<n>::Sn` as an example, you would typically access iterators
      *   either via `Perm<n>::Sn.begin()` and `Perm<n>::Sn.end()`, or by using
-     *   a range-based \c for loop over `Perm<n>::Sn`.
+     *   a range-based `for` loop over `Perm<n>::Sn`.
      *
      * - In Python, this class and PermSn together implement the expected
      *   interface for Python iterators.  Using `Perm4.Sn` as an example, you
@@ -266,6 +268,9 @@ struct PermSn {
             /**
              * The preincrement operator.
              *
+             * \pre This iterator is dereferenceable (in particular,
+             * it is not past-the-end).
+             *
              * \nopython For Python users, this class implements the Python
              * iterator interface instead.  See __next__() for details.
              *
@@ -283,6 +288,9 @@ struct PermSn {
 
             /**
              * The postincrement operator.
+             *
+             * \pre This iterator is dereferenceable (in particular,
+             * it is not past-the-end).
              *
              * \nopython For Python users, this class implements the Python
              * iterator interface instead.  See __next__() for details.
@@ -501,7 +509,7 @@ struct PermSn {
      *
      * \nocpp For C++ users, PermSn provides the usual begin() and end()
      * functions instead.  In particular, you can iterate over all permutations
-     * in the usual way using a range-based \c for loop.
+     * in the usual way using a range-based `for` loop.
      *
      * \return an iterator over all permutations of \a n objects.
      */
@@ -701,9 +709,8 @@ namespace detail {
  * supported" way of accessing the <i>i</i>th permutation of \a m objects
  * using the type `Perm<n>` is `Perm<n>::extend(Perm<m>::Sn[i])`.
  *
- * \python This class does not live inside an inner `detail` namespace, though
- * as an internal class it is subject to change or removal without notice
- * (see the warning above).  Moreover, Python does not support templates,
+ * \python As an internal class, this is subject to change or removal without
+ * notice (see the warning above).  Moreover, Python does not support templates,
  * and so the name of this class is constructed by appending \a n, \a m and
  * \a order as suffixes (e.g., PermSubSn4_3_Sign, or PermSubSn5_3_Lex).
  * The only template parameters that are bound in Python are those that are
@@ -711,15 +718,16 @@ namespace detail {
  * deprecated constants such as `Perm4.S3`).
  *
  * \tparam n indicates the return type: permutations of \a m objects will be
- * returned as the larger type `Perm<n>`.  It is required that `2 ≤ n ≤ 5`.
+ * returned as the larger type `Perm<n>`.
  * \tparam m the number of objects being permuted in the group \a S_m that we
- * are enumerating.  It is required that `1 ≤ m < n`.
+ * are enumerating.
  * \tparam order the way in which this class orders permutations for the
  * purposes of indexing.
  *
  * \ingroup detail
  */
 template <int n, int m, PermOrder order = PermOrder::Sign>
+requires (1 <= m && m < n && n <= 5)
 #ifdef __APIDOCS
 struct PermSubSn {
     /**
@@ -777,8 +785,6 @@ struct PermSubSn;
 
 template <int n, PermOrder order>
 struct PermSubSn<n, 1, order> {
-    static_assert(n > 1);
-
     static constexpr Perm<n> at(int) {
         return {};
     }
@@ -798,8 +804,6 @@ struct PermSubSn<n, 1, order> {
 
 template <int n, PermOrder order>
 struct PermSubSn<n, 2, order> {
-    static_assert(n > 2);
-
     static constexpr Perm<n> at(int index) {
         return (index == 0 ? Perm<n>() : Perm<n>(0, 1) /* pair swap */);
     }
@@ -819,7 +823,6 @@ struct PermSubSn<n, 2, order> {
 
 template <int n, PermOrder order>
 struct PermSubSn<n, 3, order> {
-    static_assert(n > 3);
     static_assert(Perm<n>::codeType == PermCodeType::Index);
 
     private:
@@ -856,7 +859,6 @@ struct PermSubSn<n, 3, order> {
 
 template <int n, PermOrder order>
 struct PermSubSn<n, 4, order> {
-    static_assert(n > 4);
     static_assert(Perm<n>::codeType == PermCodeType::Index);
 
     private:

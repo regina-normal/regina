@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,12 +45,12 @@ PacketFilter* CSVSurfaceHandler::canExport() const {
 }
 
 bool CSVSurfaceHandler::exportData(const regina::Packet& data,
-        const QString& fileName, QWidget* parentWidget) const {
+        const QString& filename, QWidget* parentWidget) const {
     auto& list = regina::static_packet_cast<regina::NormalSurfaces>(data);
     try {
-        if (list.saveCSVStandard(
-                static_cast<const char*>(QFile::encodeName(fileName))))
-            return true;
+        list.saveCSVStandard(
+            static_cast<const char*>(QFile::encodeName(filename)));
+        return true;
     } catch (const regina::UnsolvedCase&) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
@@ -58,12 +58,13 @@ bool CSVSurfaceHandler::exportData(const regina::Packet& data,
             "coordinates so large that I cannot compute the necessary "
             "properties to export."));
         return false;
+    } catch (const regina::FileError&) {
+        ReginaSupport::warn(parentWidget,
+            QObject::tr("The export failed."),
+            QObject::tr("<qt>An unknown error occurred, probably related "
+            "to file I/O.  Please check that you have permissions to write "
+            "to the file <tt>%1</tt>.</qt>").arg(filename.toHtmlEscaped()));
+        return false;
     }
-    ReginaSupport::warn(parentWidget,
-        QObject::tr("The export failed."),
-        QObject::tr("<qt>An unknown error occurred, probably related "
-        "to file I/O.  Please check that you have permissions to write "
-        "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
-    return false;
 }
 

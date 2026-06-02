@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,8 @@
 #include <iostream>
 #include <string>
 #include "utilities/exception.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -176,7 +178,7 @@ class BoolSet {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the set to compare with this.
-         * \return The result of the subset comparison between this and the
+         * \return the result of the subset comparison between this and the
          * given set.
          */
         constexpr std::partial_ordering operator <=> (BoolSet rhs) const;
@@ -285,17 +287,22 @@ class BoolSet {
          */
         constexpr ByteCode byteCode() const;
         /**
-         * Sets this to be the boolean set represented by the given byte code.
-         * See byteCode() for more information on byte codes.
+         * Deprecated routine that sets this to be the boolean set represented
+         * by the given byte code.  See byteCode() for more information
+         * on byte codes.
          *
          * If \a code is not a valid byte code, then this routine will
          * do nothing and return \c false.
+         *
+         * \deprecated Instead of `b.setByteCode(code)`, use
+         * `b = BoolSet.fromByteCode(code)`.  Note that fromByteCode()
+         * will report any errors by throwing an exception.
          *
          * \param code the byte code that will determine the new value
          * of this set.
          * \return \c true if and only if \c code is a valid byte code.
          */
-        constexpr bool setByteCode(ByteCode code);
+        [[deprecated]] constexpr bool setByteCode(ByteCode code);
         /**
          * Creates a boolean set from the given byte code.
          * See byteCode() for more information on byte codes.
@@ -323,8 +330,9 @@ class BoolSet {
          */
         constexpr const char* stringCode() const;
         /**
-         * Sets this to be the boolean set represented by the given string code.
-         * See stringCode() for more information on string codes.
+         * Deprecated routine that sets this to be the boolean set represented
+         * by the given string code.  See stringCode() for more information
+         * on string codes.
          *
          * Both upper-case and lower-case codes (or a mix of the two) are
          * accepted by this routine.
@@ -332,11 +340,15 @@ class BoolSet {
          * If \a code is not a valid string code, then this routine will
          * do nothing and return \c false.
          *
+         * \deprecated Instead of `b.setStringCode(code)`, use
+         * `b = BoolSet.fromStringCode(code)`.  Note that fromStringCode()
+         * will report any errors by throwing an exception.
+         *
          * \param code the string code that will determine the new value
          * of this set.
          * \return \c true if and only if \c code is a valid string code.
          */
-        constexpr bool setStringCode(const std::string& code);
+        [[deprecated]] constexpr bool setStringCode(const std::string& code);
         /**
          * Creates a boolean set from the given string code.
          * See stringCode() for more information on string codes.
@@ -477,43 +489,42 @@ inline constexpr bool BoolSet::setByteCode(ByteCode code) {
 }
 inline constexpr BoolSet BoolSet::fromByteCode(ByteCode code) {
     if (code < 4)
-        return BoolSet(code);
+        return { code };
     else
-        throw InvalidArgument("The given argument was not a valid byte code");
+        throw InvalidArgument("Not a valid byte code");
 }
 
 inline constexpr const char* BoolSet::stringCode() const {
     return stringCodes[code_];
 }
-inline constexpr bool BoolSet::setStringCode(const std::string& code) {
-    if (code.length() != 2)
-        return false;
 
-    ByteCode byteCode = 0;
-    switch (code[0]) {
-        case 'T':
-        case 't':
-            byteCode |= trueBit; break;
-        case '-': break;
-        default: return false;
-    }
-    switch (code[1]) {
-        case 'F':
-        case 'f':
-            byteCode |= falseBit; break;
-        case '-': break;
-        default: return false;
-    }
-
-    code_ = byteCode;
-    return true;
-}
 inline constexpr BoolSet BoolSet::fromStringCode(const std::string& code) {
-    BoolSet ans;
-    if (ans.setStringCode(code))
-        return ans;
-    else
-        throw InvalidArgument("The given argument was not a valid string code");
+    if (code.length() == 2) {
+        ByteCode byteCode = 0;
+        switch (code[0]) {
+            case 'T':
+            case 't': byteCode |= trueBit; break;
+            case '-': break;
+            default: throw InvalidArgument("Not a valid string code");
+        }
+        switch (code[1]) {
+            case 'F':
+            case 'f': byteCode |= falseBit; break;
+            case '-': break;
+            default: throw InvalidArgument("Not a valid string code");
+        }
+        return { byteCode };
+    } else
+        throw InvalidArgument("Not a valid string code");
+}
+
+inline constexpr bool BoolSet::setStringCode(const std::string& code) {
+    try {
+        *this = fromStringCode(code);
+        return true;
+    } catch (const InvalidArgument&) {
+        return false;
+    }
 }
 
 } // namespace regina

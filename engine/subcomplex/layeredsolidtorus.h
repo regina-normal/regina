@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,8 +39,10 @@
 
 #include "regina-core.h"
 #include "maths/perm.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/facepair.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -54,18 +56,18 @@ namespace regina {
  * boundary (including the minimal (1,1,0) triangulation) are not
  * described by this class.
  *
- * All optional StandardTriangulation routines are implemented for this class.
+ * All optional StandardSubcomplex routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
  *
  * \ingroup subcomplex
  */
-class LayeredSolidTorus : public StandardTriangulation {
+class LayeredSolidTorus : public StandardSubcomplex<3> {
     private:
         size_t size_;
             /**< The number of tetrahedra in this torus. */
@@ -274,7 +276,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * layerings that topologically cancel each other out).
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass, as noted above, is weaker than combinatorial isomorphism).
@@ -345,8 +347,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * tetrahedron glued to itself with a twist.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param tet the tetrahedron to examine as a potential base.
          * \return a structure containing details of the layered solid torus,
@@ -371,8 +373,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * to a larger layered solid torus.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param tet the tetrahedron to examine as a potential top
          * level of a layered solid torus.
@@ -401,8 +403,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * triangles of the component.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param comp the triangulation component to examine.
          * \return a structure containing details of the layered solid torus,
@@ -411,7 +413,7 @@ class LayeredSolidTorus : public StandardTriangulation {
         static std::unique_ptr<LayeredSolidTorus> recognise(
             Component<3>* comp);
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

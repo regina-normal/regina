@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -481,8 +481,9 @@ HyperCoordinateUI::HyperCoordinateUI(
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    // If we've changed the unicode setting, then we may need some redrawing.
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        model, &HyperModel::rebuildUnicode);
 }
 
 HyperCoordinateUI::~HyperCoordinateUI() {
@@ -557,10 +558,5 @@ void HyperCoordinateUI::columnResized(int section, int, int newSize) {
     for (int i = nNonCoordSections; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
-}
-
-void HyperCoordinateUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    model->rebuildUnicode();
 }
 

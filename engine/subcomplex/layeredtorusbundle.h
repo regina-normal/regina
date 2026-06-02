@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,9 +39,11 @@
 
 #include "regina-core.h"
 #include "maths/matrix2.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "subcomplex/txicore.h"
 #include "triangulation/dim3.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -65,18 +67,18 @@ namespace regina {
  * the monodromy for this torus bundle over the circle can be calculated.
  * The manifold() routine returns details of the corresponding 3-manifold.
  *
- * All optional StandardTriangulation routines are implemented for this class.
+ * All optional StandardSubcomplex routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
  *
  * \ingroup subcomplex
  */
-class LayeredTorusBundle : public StandardTriangulation {
+class LayeredTorusBundle : public StandardSubcomplex<3> {
     private:
         const TxICore* core_;
             /**< The core `T × I` triangulation whose boundaries
@@ -174,19 +176,19 @@ class LayeredTorusBundle : public StandardTriangulation {
          * \a w.\a a_l + \a x.\a b_l, and that the upper β is parallel to
          * \a y.\a a_l + \a z.\a b_l.  Then the matrix returned will be
          *
-         * <pre>
+         * ```
          *     [ w  x ]
          *     [      ] .
          *     [ y  z ]
-         * </pre>
+         * ```
          *
          * In other words,
          *
-         * <pre>
+         * ```
          *     [ a_u ]                      [ a_l ]
          *     [     ]  =  layeringReln() * [     ] .
          *     [ b_u ]                      [ b_l ]
-         * </pre>
+         * ```
          *
          * It can be observed that this matrix expresses the upper
          * boundary curves in terms of the lower, whereas
@@ -194,13 +196,13 @@ class LayeredTorusBundle : public StandardTriangulation {
          * in terms of the upper.  This means that the monodromy
          * describing the overall torus bundle over the circle can be
          * calculated as
-         * <pre>
+         * ```
          *     M  =  layeringReln() * core().parallelReln()
-         * </pre>
+         * ```
          * or alternatively using the similar matrix
-         * <pre>
+         * ```
          *     M'  =  core().parallelReln() * layeringReln() .
-         * </pre>
+         * ```
          *
          * Note that in the degenerate case where there is no layering at
          * all, this matrix is still perfectly well defined; in this
@@ -225,7 +227,7 @@ class LayeredTorusBundle : public StandardTriangulation {
          * layered torus bundle will generally _not_ compare as equal.
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass is more specific than combinatorial isomorphism, since
@@ -242,8 +244,8 @@ class LayeredTorusBundle : public StandardTriangulation {
          * Determines if the given triangulation is a layered torus bundle.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param tri the triangulation to examine.
          * \return a structure containing details of the layered torus bundle,
@@ -252,7 +254,7 @@ class LayeredTorusBundle : public StandardTriangulation {
         static std::unique_ptr<LayeredTorusBundle> recognise(
             const Triangulation<3>& tri);
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

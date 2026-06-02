@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,12 +34,11 @@
 
 #include "testhelper.h"
 
+using regina::DoubleLong;
+
 // A positive odd integer whose square is a bit less than LONG_MAX:
 static constexpr long halfSizeOdd =
     (long(1) << (sizeof(long) * 4 - 4)) * 11 + 5;
-
-// An integer type that we can use to safely multiply longs.
-using DoubleSize = regina::IntOfSize<sizeof(long) * 2>::type;
 
 static void verifyReducedMod(long k, long modBase) {
     SCOPED_TRACE_NUMERIC(k);
@@ -137,8 +136,8 @@ static void verifyGcdWithCoeffs(long a, long b, long gcd) {
 
     EXPECT_EQ(d, gcd);
     EXPECT_GE(d, 0);
-    EXPECT_EQ(static_cast<DoubleSize>(u) * a + static_cast<DoubleSize>(v) * b,
-        static_cast<DoubleSize>(d));
+    EXPECT_EQ(static_cast<DoubleLong>(u) * a + static_cast<DoubleLong>(v) * b,
+        static_cast<DoubleLong>(d));
 
     if (a == 0 && b == 0) {
         EXPECT_EQ(d, 0);
@@ -238,7 +237,7 @@ static void verifyModularInverse(long n, long k) {
 
     EXPECT_GE(ans, 0);
     EXPECT_LT(ans, n);
-    EXPECT_EQ((static_cast<DoubleSize>(ans) * (k % n) - 1) % n, 0);
+    EXPECT_EQ((static_cast<DoubleLong>(ans) * (k % n) - 1) % n, 0);
 }
 
 static void verifyModularInverseAllCombs(long n, long k) {
@@ -258,10 +257,10 @@ static void verifyModularInverseExhaustive(long n) {
         long ans = regina::modularInverse(n, k);
         EXPECT_GE(ans, 0);
         EXPECT_LT(ans, n);
-        EXPECT_EQ((static_cast<DoubleSize>(ans) * k - 1) % n, 0);
+        EXPECT_EQ((static_cast<DoubleLong>(ans) * k - 1) % n, 0);
 
         // Element to invert not within standard range.
-        DoubleSize large = static_cast<DoubleSize>(n) * (n - 1) + k;
+        DoubleLong large = static_cast<DoubleLong>(n) * (n - 1) + k;
         if (large <= LONG_MAX)
             EXPECT_EQ(regina::modularInverse(n, static_cast<long>(large)), ans);
     }

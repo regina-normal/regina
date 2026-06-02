@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,7 +36,7 @@
 
 namespace regina {
 
-std::unique_ptr<Manifold> LayeredLoop::manifold() const {
+std::unique_ptr<Manifold<3>> LayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.
         return std::make_unique<LensSpace>(length_, 1);

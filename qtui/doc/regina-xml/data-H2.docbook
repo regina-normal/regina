@@ -38,6 +38,12 @@ H2 ::= (&xml-abeliangroup;)</synopsis>
    triangulation.  The group itself is described by the child
    &xml-abeliangroup; element.
   </para>
+  <para>
+   As of &regina;&nbsp;8.0, second homology is only stored for 4-dimensional
+   triangulations.  For 3-dimensional triangulations, the &xml-H2; element
+   will no longer be written to new data files, and will be ignored when
+   reading older data files.
+  </para>
 
   <refsect2>
    <title>Parents</title>

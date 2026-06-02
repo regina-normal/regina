@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,8 @@
 
 #include "regina-core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 #ifndef __APIDOCS
@@ -75,7 +77,7 @@ template <typename T, bool supportsUtf8 = false> struct Output;
  * Moreover, if your class does not benefit from unicode characters (i.e.,
  * the short and utf8 outputs are identical), then you may omit the \a utf8
  * argument entirely; in this case, you must set the template argument
- * \a supportsUtf8 as \c false.  Both \a writeTextShort() and
+ * \a supportsUtf8 as `false`.  Both \a writeTextShort() and
  * \a writeTextLong() may take additional arguments, as long as they are
  * optional.
  *
@@ -84,7 +86,7 @@ template <typename T, bool supportsUtf8 = false> struct Output;
  *
  * In return, this class will provide the functions str(), utf8() and detail(),
  * which return the short, utf8 and detailed outputs respectively in
- * std::string format.  It will also provide a global operator << that
+ * std::string format.  It will also provide a global operator `<<` that
  * allows you to write objects of type \a T to an arbitrary output stream.
  *
  * If your class is simple and has no need for detailed output then it may
@@ -93,12 +95,12 @@ template <typename T, bool supportsUtf8 = false> struct Output;
  *
  * \tparam T the class that provides the implementations of
  * \a writeTextShort() and \a writeTextLong().  Typically this will be
- * your own class (i.e., your class \a C derives from Output<C>).
+ * your own class (i.e., your class \a C derives from `Output<C>`).
  * However, this may be deeper in the class hierarchy.
  *
- * \tparam supportsUtf8 \c true if the class \a T can make use of the
- * richer unicode character set, or \c false if the short and utf8 outputs
- * are identical.  If this is \c false then T::writeTextShort() will only
+ * \tparam supportsUtf8 `true` if the class \a T can make use of the
+ * richer unicode character set, or `false` if the short and utf8 outputs
+ * are identical.  If this is `false` then `T::writeTextShort()` will only
  * ever be called in the form `writeTextShort(std::ostream&)`,
  * and you may for simplicity omit the second boolean \a utf8 argument.
  * This Output base class will still provide a utf8() function, but it will
@@ -106,8 +108,8 @@ template <typename T, bool supportsUtf8 = false> struct Output;
  *
  * \note Every object of this class that is ever instantiated _must_ be
  * derived from the class \a T.  In other words, end users can construct
- * objects of type \a T (which derives from Output<T>), but they cannot
- * construct objects of the parent class Output<T> itself.
+ * objects of type \a T (which derives from `Output<T>`), but they cannot
+ * construct objects of the parent class `Output<T>` itself.
  *
  * \python Not present, but the output routines str(), utf8() and
  * detail() will be provided directly through the various subclasses.
@@ -200,9 +202,9 @@ std::ostream& operator << (std::ostream& out,
  * Typically this will be your own class (i.e., your class \a C derives from
  * ShortOutput<C>).  However, this may be deeper in the class hierarchy.
  *
- * \tparam supportsUtf8 \c true if the class \a T can make use of the
- * richer unicode character set, or \c false if the short and utf8 outputs
- * are identical.  If this is \c false then T::writeTextShort() will only
+ * \tparam supportsUtf8 `true` if the class \a T can make use of the
+ * richer unicode character set, or `false` if the short and utf8 outputs
+ * are identical.  If this is `false` then `T::writeTextShort()` will only
  * ever be called in the form `writeTextShort(std::ostream&)`,
  * and you may for simplicity omit the second boolean \a utf8 argument.
  * This ShortOutput base class will still provide a utf8() function, but it
@@ -228,54 +230,6 @@ struct ShortOutput : public Output<T, supportsUtf8> {
     void writeTextLong(std::ostream& out) const;
 };
 
-/**
- * Provides a type alias to help identify where in the class hierarchy the
- * output functions T::str() and T::detail() are implemented.
- *
- * If \a T is a class derived (directly or indirectly) from some class
- * Output<...>, then `OutputBase<T>::type` is defined to be this
- * parent class Output<...>.  If \a T is derived from multiple Output<...>
- * classes (like SnapPeaTriangulation is), then this ambiguity will be
- * resolved if possible by prioritising Output<T, ...>.
- *
- * If \a T is not derived from any class Output<...>, then
- * `OutputBase<T>::type` is defined to be \a T itself.
- *
- * This helper class can be useful when trying to disambiguate between the
- * implementation of str() that is inherited from Output, versus an extended
- * implementation of str() (perhaps with more arguments) that is implemented
- * in the class \a T itself.
- *
- * \ingroup engine
- */
-template <typename T>
-requires std::is_class_v<T>
-struct OutputBase {
-    private:
-        // Implementation details:
-        static T& test(...);
-
-        template <bool supportsUtf8>
-        static Output<T, supportsUtf8>& test(const Output<T, supportsUtf8>&);
-
-        template <typename U, bool supportsUtf8>
-        static Output<U, supportsUtf8>& test(const Output<U, supportsUtf8>&);
-
-    public:
-        /**
-         * The class in which T::str() and T::detail() are implemented.
-         *
-         * If \a T is derived from the Output template class, then this
-         * type is the corresponding Output<X> base class.
-         * Otherwise, this type is \a T itself.
-         *
-         * \note The implementation of this type alias does not look for
-         * str() or detail() at all.  Instead, it is based purely on the
-         * inheritance condition as stated above.
-         */
-        using type = std::remove_reference_t<decltype(test(std::declval<T>()))>;
-};
-
 // Inline functions
 
 #ifndef __DOXYGEN
@@ -284,17 +238,17 @@ struct Output<T, true> {
     inline std::string str() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out, false);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string utf8() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out, true);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string detail() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextLong(out);
-        return out.str();
+        return std::move(out).str();
     }
 };
 
@@ -303,17 +257,17 @@ struct Output<T, false> {
     inline std::string str() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string utf8() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string detail() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextLong(out);
-        return out.str();
+        return std::move(out).str();
     }
 };
 

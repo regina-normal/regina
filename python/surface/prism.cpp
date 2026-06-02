@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@ using regina::PrismSpec;
 void addPrism(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PrismSpec)
 
-    auto c = pybind11::class_<PrismSpec>(m, "PrismSpec", rdoc_scope)
+    auto c = pybind11::class_<PrismSpec>(m, "PrismSpec", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t, int>(), rdoc::__init)
         .def(pybind11::init<const PrismSpec&>(), rdoc::__copy)

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,7 +30,7 @@
 
 #include <pybind11/pybind11.h>
 #include "utilities/intutils.h"
-#include "../helpers/docstrings.h"
+#include "../helpers.h"
 #include "../docstrings/utilities/intutils.h"
 
 void addIntUtils(pybind11::module_& m) {
@@ -38,6 +38,20 @@ void addIntUtils(pybind11::module_& m) {
 
     m.def("bitsRequired", regina::bitsRequired<long>, rdoc::bitsRequired);
     m.def("nextPowerOfTwo", regina::nextPowerOfTwo<long>, rdoc::nextPowerOfTwo);
+    m.def("supportsNativeIntegerSize", regina::supportsNativeIntegerSize,
+        rdoc::supportsNativeIntegerSize);
+
+    using regina::python::add_concept;
+    add_concept<rdoc::StandardCppInteger>(m, "StandardCppInteger");
+    add_concept<rdoc::CppInteger>(m, "CppInteger");
+    add_concept<rdoc::SignedCppInteger>(m, "SignedCppInteger");
+    add_concept<rdoc::UnsignedCppInteger>(m, "UnsignedCppInteger");
+    add_concept<rdoc::ArbitraryPrecisionInteger>(m,
+        "ArbitraryPrecisionInteger");
+    add_concept<rdoc::ReginaInteger>(m, "ReginaInteger");
+    add_concept<rdoc::AnyInteger>(m, "AnyInteger");
+    add_concept<rdoc::IntegerCompatible>(m, "IntegerCompatible");
+    add_concept<rdoc::IntegerComparable>(m, "IntegerComparable");
 
     RDOC_SCOPE_END
 }

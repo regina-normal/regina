@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@ using regina::Signature;
 void addSignature(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Signature)
 
-    auto c = pybind11::class_<Signature>(m, "Signature", rdoc_scope)
+    auto c = pybind11::class_<Signature>(m, "Signature", rdoc::__class)
         .def(pybind11::init<const std::string&>(), rdoc::__init)
         .def(pybind11::init<const Signature&>(), rdoc::__copy)
         .def("swap", &Signature::swap, rdoc::swap)
@@ -50,10 +50,9 @@ void addSignature(pybind11::module_& m) {
             const std::string&, const std::string&, const std::string&>(
             &Signature::str, pybind11::const_), rdoc::str)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<Signature>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Signature, rdoc>(m);
 
     RDOC_SCOPE_END
 }

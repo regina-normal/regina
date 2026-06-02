@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,8 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -441,7 +443,7 @@ inline std::string Signature::str(const std::string& cycleOpen,
         const std::string& cycleClose, const std::string& cycleJoin) const {
     std::ostringstream s;
     writeCycles(s, cycleOpen, cycleClose, cycleJoin);
-    return s.str();
+    return std::move(s).str();
 }
 
 inline void Signature::writeTextShort(std::ostream& out) const {

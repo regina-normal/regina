@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,6 +45,8 @@
 #define __REGINA_PERM3_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**
@@ -67,7 +69,7 @@ namespace regina {
  * permutation in the array Perm<3>::Sn.  This is consistent with the
  * second-generation codes used in classes Perm<4>,...,Perm<7>.
  *
- * You can iterate through all permutations using a range-based \c for loop
+ * You can iterate through all permutations using a range-based `for` loop
  * over \a Sn, and this will be extremely fast in both C++ and Python:
  *
  * \code{.cpp}
@@ -75,14 +77,13 @@ namespace regina {
  * \endcode
  *
  * This behaviour does not generalise to the large permutation classes Perm<n>
- * with \a n ≥ 8, which are not as tightly optimised: such range-based \c for
+ * with \a n ≥ 8, which are not as tightly optimised: such range-based `for`
  * loops are still supported for \a n ≥ 8 but will be significantly slower in
  * Python than in C++.  See the generic Perm class notes for further details.
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
- * \python Since Python does not support templates, this class is
- * made available under the name Perm3.
+ * \pyclassname{Perm3}
  *
  * \ingroup maths
  */
@@ -153,7 +154,7 @@ class Perm<3> {
          * between 0 and 5 inclusive.
          *
          * You can also iterate over all permutations in \a Sn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<3>::Sn) { ... }
@@ -207,7 +208,7 @@ class Perm<3> {
          * must be between 0 and 5 inclusive.
          *
          * You can also iterate over all permutations in \a orderedSn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<3>::orderedSn) { ... }
@@ -773,7 +774,7 @@ class Perm<3> {
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
          *
-         * \return The result that indicates which permutation appears earlier
+         * \return the result that indicates which permutation appears earlier
          * in \a Sn.
          */
         constexpr std::strong_ordering operator <=> (const Perm&) const =
@@ -816,9 +817,6 @@ class Perm<3> {
          * The thread safety of this routine is of course dependent on
          * the thread safety of your uniform random bit generator \a gen.
          *
-         * \tparam URBG A type which, once any references are removed, must
-         * adhere to the C++ \a UniformRandomBitGenerator concept.
-         *
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
@@ -829,8 +827,8 @@ class Perm<3> {
          * returned with equal probability).
          * \return a random permutation.
          */
-        template <typename URBG>
-        static Perm rand(URBG&& gen, bool even = false);
+        template <std::uniform_random_bit_generator URBG>
+        static Perm rand(URBG& gen, bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -957,7 +955,7 @@ class Perm<3> {
          * name __hash__().  This allows permutations to be used as keys in
          * Python dictionaries and sets.
          *
-         * \return The integer hash of this permutation.
+         * \return the integer hash of this permutation.
          */
         constexpr size_t hash() const;
 
@@ -1032,41 +1030,35 @@ class Perm<3> {
 
         /**
          * Extends a <i>k</i>-element permutation to an 3-element permutation.
-         * where 2 ≤ \a k \< 3.  The only possible value of \a k is 2, but
+         * where `2 ≤ k < 3`.  The only possible value of \a k is 2, but
          * this routine is kept as a template function for consistency
          * with the other classes' Perm<n>::extend() routines.
          *
          * The resulting permutation will map 0,1 to their respective images
          * under \a p, and will map the "unused" element 3 to itself.
          *
-         * \tparam k the number of elements for the input permutation;
-         * this must be exactly 2.
-         *
          * \param p a permutation on two elements.
          * \return the same permutation expressed as a permutation on
          * three elements.
          */
-        template <int k>
+        template <int k> requires (k == 2)
         static constexpr Perm<3> extend(Perm<k> p);
 
         /**
-         * Restricts a <i>k</i>-element permutation to an 3-element
-         * permutation, where \a k > 3.
+         * Restricts a <i>k</i>-element permutation to a 3-element
+         * permutation, where `k > 3`.
          *
          * The resulting permutation will map 0,1,2 to their
          * respective images under \a p, and will ignore the "unused" images
-         * \a p[3],...,\a p[<i>k</i>-1].
+         * `p[3],...,p[k-1]`.
          *
          * \pre The given permutation maps 0,1,2 to 0,1,2 in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than 3.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * 3 elements.
          */
-        template <int k>
+        template <int k> requires (3 < k)
         static constexpr Perm<3> contract(Perm<k> p);
 
         /**
@@ -1151,11 +1143,9 @@ class Perm<3> {
         /**
          * Converts between an index into Perm<3>::Sn and an index into
          * Perm<3>::orderedSn.  This conversion works in either direction.
-         *
-         * \tparam Int a native integer type; this would typically be
-         * either \c int or \a Code.
          */
-        template <typename Int>
+        template <CppInteger Int>
+        requires (sizeof(Int) >= sizeof(Code))
         static constexpr Int convOrderedUnordered(Int index);
 
         /**
@@ -1184,8 +1174,8 @@ class Perm<3> {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <CharIterator iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        template <CharIterator Iterator>
+        static Perm tightDecode(Iterator start, Iterator limit,
             bool noTrailingData);
 
     friend class PermSn<3, PermOrder::Sign>;
@@ -1194,7 +1184,8 @@ class Perm<3> {
 
 // Inline functions for Perm<3>
 
-template <typename Int>
+template <CppInteger Int>
+requires (sizeof(Int) >= sizeof(Perm<3>::Code))
 inline constexpr Int Perm<3>::convOrderedUnordered(Int index) {
     // S3 is almost the same as orderedS3, except that we
     // swap indices 2 <--> 3.
@@ -1381,8 +1372,8 @@ inline Perm<3> Perm<3>::rand(bool even) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename URBG>
-inline Perm<3> Perm<3>::rand(URBG&& gen, bool even) {
+template <std::uniform_random_bit_generator URBG>
+inline Perm<3> Perm<3>::rand(URBG& gen, bool even) {
     if (even) {
         std::uniform_int_distribution<short> d(0, 2);
         return S3[2 * d(gen)];
@@ -1419,8 +1410,8 @@ inline Perm<3> Perm<3>::tightDecode(std::istream& input) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <CharIterator iterator>
-Perm<3> Perm<3>::tightDecode(iterator start, iterator limit,
+template <CharIterator Iterator>
+Perm<3> Perm<3>::tightDecode(Iterator start, Iterator limit,
         bool noTrailingData) {
     if (start == limit)
         throw InvalidInput("The tight encoding is incomplete");

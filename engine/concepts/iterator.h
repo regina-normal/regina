@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,9 @@
 #endif
 
 #include <iterator>
-#include "regina-core.h"
+#include "concepts/core.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -133,8 +135,7 @@ concept SelfSentinelInputIterator =
 template <typename T>
 concept CharIterator =
     std::input_iterator<T> &&
-    std::same_as<char, std::remove_const_t<std::remove_reference_t<
-        decltype(*std::declval<T&>())>>>;
+    std::same_as<char, std::remove_cvref_t<decltype(*std::declval<T&>())>>;
 
 /**
  * An input iterator that iterates over packets.
@@ -152,17 +153,106 @@ concept PacketIterator =
         std::same_as<const Packet&, decltype(*std::declval<T&>())>);
 
 /**
- * A type that can be iterated over via `begin()` and `end()` member functions.
+ * A container-like type that can be iterated over via `begin()` and `end()`
+ * member functions.
+ *
+ * The corresponding iterator type must be a forward iterator.
  *
  * \ingroup concepts
  */
 template <typename T>
 concept Iterable =
     requires(T x) {
-        { x.begin() };
-        { x.end() };
-        requires std::same_as<decltype(x.begin()), decltype(x.end())>;
-        requires std::forward_iterator<decltype(x.begin())>;
+        { x.begin() } -> std::forward_iterator;
+        { x.end() } -> std::same_as<decltype(x.begin())>;
+    };
+
+/**
+ * A container-like type that can be iterated over via `begin()`
+ * and `end()` member functions, and whose elements can be assigned or
+ * converted to the type \a Target.
+ *
+ * The corresponding iterator type must be a forward iterator.
+ *
+ * Here _elements_ means the values obtained when dereferencing iterators.
+ * When converting elements to the type \a Target, both construction and the
+ * assignment operator should be supported, and implicit conversion should be
+ * supported also.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Target>
+concept IterableFor =
+    Iterable<T> &&
+    ForwardIteratorFor<decltype(std::declval<T>().begin()), Target>;
+
+/**
+ * A container-like type that can be iterated over both forwards and backwards
+ * via `begin()` and `end()` member functions, and whose elements can be
+ * assigned or converted to the type \a Target.
+ *
+ * The corresponding iterator type must be a bidirectional iterator.
+ *
+ * Here _elements_ means the values obtained when dereferencing iterators.
+ * When converting elements to the type \a Target, both construction and the
+ * assignment operator should be supported, and implicit conversion should be
+ * supported also.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Target>
+concept BidirectionalIterableFor =
+    Iterable<T> &&
+    BidirectionalIteratorFor<decltype(std::declval<T>().begin()), Target>;
+
+/**
+ * A container-like type that can be iterated over in a random access manner
+ * via `begin()` and `end()` member functions, and whose elements can be
+ * assigned or converted to the type \a Target.
+ *
+ * The corresponding iterator type must be a random access iterator.
+ *
+ * Here _elements_ means the values obtained when dereferencing iterators.
+ * When converting elements to the type \a Target, both construction and the
+ * assignment operator should be supported, and implicit conversion should be
+ * supported also.
+ *
+ * \ingroup concepts
+ */
+template <typename T, typename Target>
+concept RandomAccessIterableFor =
+    Iterable<T> &&
+    RandomAccessIteratorFor<decltype(std::declval<T>().begin()), Target>;
+
+/**
+ * An output iterator type.
+ *
+ * The reason for using OutputIterator instead of std::output_iterator is that
+ * this concept does not require you to specify the output type in advance.
+ * Instead, the output type is deduced automatically via `std::iter_value_t`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept OutputIterator =
+    std::input_or_output_iterator<T> &&
+    std::output_iterator<T, std::iter_value_t<T>>;
+
+/**
+ * A container-like type whose elements can be access via indexing.
+ *
+ * We do _not_ require that the elements be accessible via iteration.
+ * We do however require some other parts of a standard container interface,
+ * including `T::value_type` and `T::size()`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept IndexedContainer =
+    requires(T x, size_t index) {
+        typename T::value_type;
+        { x.size() } -> std::convertible_to<size_t>;
+        { x[index] } -> SameModCVRef<typename T::value_type>;
     };
 
 } // namespace regina

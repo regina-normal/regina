@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,12 +45,6 @@
 #include <vector>
 
 /**
- * A filter function, used to determine whether a given boundary component
- * should appear in the list.
- */
-using BoundaryComponentFilterFunc = bool (*)(regina::BoundaryComponent<3>*);
-
-/**
  * A widget through which a single boundary component of some triangulation
  * can be selected.  An optional filter may be applied to restrict the
  * available selections.
@@ -60,22 +54,26 @@ using BoundaryComponentFilterFunc = bool (*)(regina::BoundaryComponent<3>*);
  *
  * These chooser classes would be *much* better using templates, but
  * boundary components are not yet templatised.
- *
- * Note that we do *not* use Q_OBJECT with the chooser classes.
- * This is because many of the chooser classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * classes do not use slots or signals, I believe this is okay.
  */
 class BoundaryComponent3Chooser :
         public QComboBox, public regina::PacketListener {
+    public:
+        using Choice = regina::BoundaryComponent<3>*;
+
+        /**
+         * A filter function, used to determine whether a given boundary
+         * component should appear in the list.
+         */
+        using Filter = bool (*)(Choice);
+
     private:
         regina::Triangulation<3>* tri_;
             /**< The triangulation whose boundary components we are
                  choosing from. */
-        BoundaryComponentFilterFunc filter_;
+        Filter filter_;
             /**< A filter to restrict the available selections, or
                  \c null if no filter is necessary. */
-        std::vector<regina::BoundaryComponent<3>*> options_;
+        std::vector<Choice> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -96,8 +94,7 @@ class BoundaryComponent3Chooser :
          */
         BoundaryComponent3Chooser(
                 regina::PacketOf<regina::Triangulation<3>>* tri,
-                BoundaryComponentFilterFunc filter, QWidget* parent,
-                bool autoUpdate = true);
+                Filter filter, QWidget* parent, bool autoUpdate = true);
 
         /**
          * Returns the currently selected boundary component.
@@ -146,11 +143,6 @@ class BoundaryComponent3Chooser :
 
 /**
  * A dialog used to select a single boundary component of a given triangulation.
- *
- * Note that we do *not* use Q_OBJECT with the chooser dialog classes.
- * This is because many of the chooser dialog classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * dialog classes do not use slots or signals, I believe this is okay.
  */
 class BoundaryComponent3Dialog : public QDialog {
     private:
@@ -165,14 +157,14 @@ class BoundaryComponent3Dialog : public QDialog {
          */
         BoundaryComponent3Dialog(QWidget* parent,
             regina::PacketOf<regina::Triangulation<3>>* tri,
-            BoundaryComponentFilterFunc filter,
+            BoundaryComponent3Chooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::BoundaryComponent<3>* choose(QWidget* parent,
             regina::PacketOf<regina::Triangulation<3>>* tri,
-            BoundaryComponentFilterFunc filter,
+            BoundaryComponent3Chooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);

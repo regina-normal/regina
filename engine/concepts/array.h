@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,8 @@
 #include <concepts>
 #include "regina-core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**
@@ -65,7 +67,7 @@ template <typename T, typename Element>
 concept ConstRefArrayOf =
     std::is_reference_v<T> &&
     std::is_const_v<std::remove_reference_t<T>> &&
-    ArrayOf<std::remove_const_t<std::remove_reference_t<T>>, Element>;
+    ArrayOf<std::remove_cvref_t<T>, Element>;
 
 } // namespace regina
 

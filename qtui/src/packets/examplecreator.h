@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,11 +40,11 @@
 #include <QString>
 
 /**
- * A ready-made example triangulation or link that Regina can create.
+ * A ready-made example object that Regina can create.
  *
  * The class \a Object would typically be `Triangulation<dim>` or `Link`.
  */
-template <typename Object>
+template <regina::PacketHeldType Object>
 class ExampleCreator {
     public:
         using CreatorFunc = Object (*)();

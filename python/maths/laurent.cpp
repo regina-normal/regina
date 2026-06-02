@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/laurent.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Integer;
 using regina::Laurent;
@@ -43,7 +45,7 @@ using regina::Laurent;
 void addLaurent(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Laurent)
 
-    auto c = pybind11::class_<Laurent<Integer>>(m, "Laurent", rdoc_scope)
+    auto c = pybind11::class_<Laurent<Integer>>(m, "Laurent", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent<Integer>&>(), rdoc::__copy)
         .def(pybind11::init([](long exp) { // deprecated
@@ -53,8 +55,7 @@ void addLaurent(pybind11::module_& m) {
         }), rdoc::__init)
         .def(pybind11::init([](long minExp, const std::vector<Integer>& c) {
             return new Laurent<Integer>(minExp, c.begin(), c.end());
-        }), pybind11::arg("minExp"), pybind11::arg("coefficients"),
-            rdoc::__init_2)
+        }), "minExp"_a, "coefficients"_a, rdoc::__init_2)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Laurent<Integer>::*)()>(
@@ -64,7 +65,7 @@ void addLaurent(pybind11::module_& m) {
         .def("init", [](Laurent<Integer>& p, long minExp,
                 const std::vector<Integer>& c) {
             p.init(minExp, c.begin(), c.end());
-        }, pybind11::arg("minExp"), pybind11::arg("coefficients"), rdoc::init_3)
+        }, "minExp"_a, "coefficients"_a, rdoc::init_3)
         .def("minExp", &Laurent<Integer>::minExp, rdoc::minExp)
         .def("maxExp", &Laurent<Integer>::maxExp, rdoc::maxExp)
         .def("isZero", &Laurent<Integer>::isZero, rdoc::isZero)
@@ -92,20 +93,19 @@ void addLaurent(pybind11::module_& m) {
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
-        .def(pybind11::self * Integer(), rdoc_global::__mul)
-        .def(Integer() * pybind11::self, rdoc_global::__mul_2)
-        .def(pybind11::self / Integer(), rdoc_global::__div)
-        .def(pybind11::self + pybind11::self, rdoc_global::__add)
-        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
-        .def(pybind11::self * pybind11::self, rdoc_global::__mul_3)
-        .def(- pybind11::self, rdoc_global::__sub)
+        .def(pybind11::self * Integer(), rdoc::__mul)
+        .def(Integer() * pybind11::self, rdoc::__mul_2)
+        .def(pybind11::self / Integer(), rdoc::__div)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_3)
+        .def(- pybind11::self, rdoc::__sub)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-
-    regina::python::add_global_swap<Laurent<Integer>>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Laurent<Integer>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

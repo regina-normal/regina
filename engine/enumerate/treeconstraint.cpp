@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2025, Ben Burton                                   *
+ *  Copyright (c) 2011-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,6 +30,7 @@
 
 #include "enumerate/treeconstraint-impl.h"
 #include "snappea/snappeatriangulation.h"
+#include "utilities/fixedarray.h"
 
 namespace regina {
 
@@ -63,14 +64,13 @@ void LPConstraintEulerPositive::addRows(
         detail::LPCol<constraints.size(), Coefficient>* col,
         const Triangulation<3>& tri,
         const size_t* columnPerm) {
-    int* obj = new int[7 * tri.size()];
-    size_t tet, i;
-    Perm<4> p;
-    for (i = 0; i < 7 * tri.size(); ++i)
+    FixedArray<int> obj(7 * tri.size());
+
+    for (size_t i = 0; i < 7 * tri.size(); ++i)
         obj[i] = 1;
-    for (i = 0; i < tri.countTriangles(); ++i) {
-        tet = tri.triangle(i)->front().tetrahedron()->index();
-        p = tri.triangle(i)->front().vertices();
+    for (size_t i = 0; i < tri.countTriangles(); ++i) {
+        size_t tet = tri.triangle(i)->front().tetrahedron()->index();
+        Perm<4> p = tri.triangle(i)->front().vertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
         --obj[7 * tet + p[2]];
@@ -78,35 +78,32 @@ void LPConstraintEulerPositive::addRows(
         --obj[7 * tet + 5];
         --obj[7 * tet + 6];
     }
-    for (i = 0; i < tri.countEdges(); ++i) {
-        tet = tri.edge(i)->front().tetrahedron()->index();
-        p = tri.edge(i)->front().vertices();
+    for (size_t i = 0; i < tri.countEdges(); ++i) {
+        size_t tet = tri.edge(i)->front().tetrahedron()->index();
+        Perm<4> p = tri.edge(i)->front().vertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
         ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][0]];
         ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][1]];
     }
 
-    for (i = 0; i < 7 * tri.size(); ++i)
+    for (size_t i = 0; i < 7 * tri.size(); ++i)
         col[i].extra[0] = obj[columnPerm[i]];
 
     col[7 * tri.size()].extra[0] = -1;
-
-    delete[] obj;
 }
 
 void LPConstraintEulerZero::addRows(
         detail::LPCol<constraints.size(), Coefficient>* col,
         const Triangulation<3>& tri,
         const size_t* columnPerm) {
-    int* obj = new int[7 * tri.size()];
-    size_t tet, i;
-    Perm<4> p;
-    for (i = 0; i < 7 * tri.size(); ++i)
+    FixedArray<int> obj(7 * tri.size());
+
+    for (size_t i = 0; i < 7 * tri.size(); ++i)
         obj[i] = 1;
-    for (i = 0; i < tri.countTriangles(); ++i) {
-        tet = tri.triangle(i)->front().tetrahedron()->index();
-        p = tri.triangle(i)->front().vertices();
+    for (size_t i = 0; i < tri.countTriangles(); ++i) {
+        size_t tet = tri.triangle(i)->front().tetrahedron()->index();
+        Perm<4> p = tri.triangle(i)->front().vertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
         --obj[7 * tet + p[2]];
@@ -114,21 +111,19 @@ void LPConstraintEulerZero::addRows(
         --obj[7 * tet + 5];
         --obj[7 * tet + 6];
     }
-    for (i = 0; i < tri.countEdges(); ++i) {
-        tet = tri.edge(i)->front().tetrahedron()->index();
-        p = tri.edge(i)->front().vertices();
+    for (size_t i = 0; i < tri.countEdges(); ++i) {
+        size_t tet = tri.edge(i)->front().tetrahedron()->index();
+        Perm<4> p = tri.edge(i)->front().vertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
         ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][0]];
         ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][1]];
     }
 
-    for (i = 0; i < 7 * tri.size(); ++i)
+    for (size_t i = 0; i < 7 * tri.size(); ++i)
         col[i].extra[0] = obj[columnPerm[i]];
 
     col[7 * tri.size()].extra[0] = -1;
-
-    delete[] obj;
 }
 
 void LPConstraintNonSpun::addRows(

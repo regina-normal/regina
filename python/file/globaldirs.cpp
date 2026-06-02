@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,13 +33,15 @@
 #include "../helpers.h"
 #include "../docstrings/file/globaldirs.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::GlobalDirs;
 
 void addGlobalDirs(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GlobalDirs)
 
-    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs", rdoc_scope)
+    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs", rdoc::__class)
         .def_static("home", &GlobalDirs::home, rdoc::home)
         .def_static("pythonModule", &GlobalDirs::pythonModule,
             rdoc::pythonModule)
@@ -48,10 +50,8 @@ void addGlobalDirs(pybind11::module_& m) {
         .def_static("engineDocs", &GlobalDirs::engineDocs, rdoc::engineDocs)
         .def_static("data", &GlobalDirs::data, rdoc::data)
         .def_static("setDirs", overload_cast<const std::string&,
-                const std::string&, const std::string&>(
-            &GlobalDirs::setDirs),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("censusDir") = std::string(),
+                const std::string&, const std::string&>(&GlobalDirs::setDirs),
+            "homeDir"_a, "pythonDir"_a, "censusDir"_a = std::string(),
             rdoc::setDirs)
         .def_static("deduceDirs", &GlobalDirs::deduceDirs, rdoc::deduceDirs)
     ;

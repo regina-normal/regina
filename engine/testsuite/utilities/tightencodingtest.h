@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,7 +43,7 @@
  * minor convenience of not having to type out the template parameters for
  * TightEncodingTest every time it is used.
  */
-template <typename T, bool hasDecoding = true>
+template <regina::InherentlyTightEncodable T>
 requires std::equality_comparable<T> && regina::Stringifiable<T>
 class TightEncodingTest {
     public:
@@ -62,36 +62,34 @@ class TightEncodingTest {
                 EXPECT_LE(c, 126);
             }
 
-            if constexpr (hasDecoding) {
-                EXPECT_NO_THROW({
-                    T dec = T::tightDecoding(enc);
-                    EXPECT_EQ(dec, obj);
-                });
+            EXPECT_NO_THROW({
+                T dec = T::tightDecoding(enc);
+                EXPECT_EQ(dec, obj);
+            });
 
-                EXPECT_NO_THROW({
-                    std::istringstream input(enc);
-                    T dec = T::tightDecode(input);
-                    EXPECT_EQ(dec, obj);
-                });
+            EXPECT_NO_THROW({
+                std::istringstream input(enc);
+                T dec = T::tightDecode(input);
+                EXPECT_EQ(dec, obj);
+            });
 
-                // Strings being decoded cannot have trailing whitespace.
-                EXPECT_THROW({
-                    T::tightDecoding(enc + ' ');
-                }, regina::InvalidArgument);
+            // Strings being decoded cannot have trailing whitespace.
+            EXPECT_THROW({
+                T::tightDecoding(enc + ' ');
+            }, regina::InvalidArgument);
 
-                // Streams being decoded should ignore (and not consume)
-                // any trailing characters.
-                EXPECT_NO_THROW({
-                    std::istringstream input(enc + "x y z");
-                    T dec = T::tightDecode(input);
-                    EXPECT_EQ(dec, obj);
+            // Streams being decoded should ignore (and not consume)
+            // any trailing characters.
+            EXPECT_NO_THROW({
+                std::istringstream input(enc + "x y z");
+                T dec = T::tightDecode(input);
+                EXPECT_EQ(dec, obj);
 
-                    char c;
-                    input >> c;
-                    ASSERT_TRUE(input);
-                    EXPECT_EQ(c, 'x');
-                });
-            }
+                char c;
+                input >> c;
+                ASSERT_TRUE(input);
+                EXPECT_EQ(c, 'x');
+            });
         }
 };
 

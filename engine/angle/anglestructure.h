@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,7 +37,7 @@
 #define __REGINA_ANGLESTRUCTURE_H
 #endif
 
-#include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "angle/angleflags.h"
 #include "maths/forward.h"
@@ -45,6 +45,8 @@
 #include "maths/vector.h"
 #include "triangulation/forward.h"
 #include "utilities/snapshot.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -160,18 +162,15 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * the given triangulation, according to the integer vector
          * representation described in the notes for vector().
          *
-         * \python The supported types for the template parameter \a U are
+         * \python The supported element types for the given vector are
          * regina::Integer and regina::LargeInteger.  You may also, if you
          * prefer, pass \a vector as a Python list of integers.
-         *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::Integer.
          *
          * \param triang the triangulation on which this angle structure lies.
          * \param vector a vector containing the individual angles in the
          * angle structure.
          */
-        template <typename U>
+        template <AssignableTo<Integer&> U>
         AngleStructure(const Triangulation<3>& triang,
             const Vector<U>& vector);
 
@@ -207,15 +206,12 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::Integer.
-         *
          * \param triang a snapshot, frozen in time, of the triangulation on
          * which this angle structure lies.
          * \param vector a vector containing the individual angles in the
          * angle structure.
          */
-        template <typename U>
+        template <AssignableTo<Integer&> U>
         AngleStructure(const SnapshotRef<Triangulation<3>>& triang,
             const Vector<U>& vector);
 
@@ -450,7 +446,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the angle structure to compare this structure with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * angle structure.  This is marked as a weak ordering (not a strong
          * ordering) to reflect the fact that angle structures in different
          * triangulations could be considered equal under this comparison.
@@ -504,7 +500,7 @@ void swap(AngleStructure& a, AngleStructure& b) noexcept;
 
 // Inline functions for AngleStructure
 
-template <typename U>
+template <AssignableTo<Integer&> U>
 inline AngleStructure::AngleStructure(const Triangulation<3>& triang,
         const Vector<U>& vector) :
         vector_(vector), triangulation_(triang), flags_(0) {
@@ -515,7 +511,7 @@ inline AngleStructure::AngleStructure(const Triangulation<3>& triang,
         vector_(std::move(vector)), triangulation_(triang), flags_(0) {
 }
 
-template <typename U>
+template <AssignableTo<Integer&> U>
 inline AngleStructure::AngleStructure(
         const SnapshotRef<Triangulation<3>>& triang, const Vector<U>& vector) :
         vector_(vector), triangulation_(triang), flags_(0) {

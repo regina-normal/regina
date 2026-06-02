@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,16 +41,16 @@
 const SnapPeaHandler SnapPeaHandler::instance;
 
 std::shared_ptr<regina::Packet> SnapPeaHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
+        const QString& filename, ReginaMain* parentWidget) const {
     try {
         return regina::make_packet<regina::SnapPeaTriangulation>(std::in_place,
-            static_cast<const char*>(QFile::encodeName(fileName)));
+            static_cast<const char*>(QFile::encodeName(filename)));
     } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
                 "is readable and in SnapPea format.</qt>").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
         return nullptr;
     }
 }
@@ -60,10 +60,17 @@ PacketFilter* SnapPeaHandler::canExport() const {
 }
 
 bool SnapPeaHandler::exportData(const regina::Packet& data,
-        const QString& fileName, QWidget* parentWidget) const {
+        const QString& filename, QWidget* parentWidget) const {
     // Cast all the way up to Triangulation<3>, so that we catch both
     // Triangulation<3> and SnapPeaTriangulation packets.
     auto& tri = regina::static_triangulation3_cast(data);
+    if (tri.isEmpty()) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("This triangulation is empty."),
+            QObject::tr("I can only export non-empty triangulations "
+                "to SnapPea format."));
+        return false;
+    }
     if (! tri.isValid()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This triangulation is not valid."),
@@ -78,15 +85,16 @@ bool SnapPeaHandler::exportData(const regina::Packet& data,
                 "to SnapPea format."));
         return false;
     }
-    if (! tri.saveSnapPea(
-            static_cast<const char*>(QFile::encodeName(fileName)))) {
+    try {
+        tri.saveSnapPea(static_cast<const char*>(QFile::encodeName(filename)));
+        return true;
+    } catch (const regina::FileError&) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."),
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
+            "to the file <tt>%1</tt>.</qt>").arg(filename.toHtmlEscaped()));
         return false;
     }
-    return true;
 }
 

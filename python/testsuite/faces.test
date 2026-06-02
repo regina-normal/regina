@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2025, Ben Burton
+# Copyright (c) 2015-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides tests for the face query routines.
@@ -55,6 +55,58 @@ def test(t):
                 print('faces(): Wrong face index')
             i = i + 1
     print()
+    if standardDim(t.dimension) and not t.isEmpty():
+        print('Component 0:')
+        c = t.component(0)
+        print(c.__class__)
+        print([c.countFaces(d) for d in range(dim+1)])
+        for d in range(dim):
+            print(c.faces(d))
+            i = 0
+            for f in c.faces(d):
+                if i > c.countFaces(d):
+                    print('faces(): Too many faces')
+                    break
+                if f.__class__.dimension != dim:
+                    print('faces(): Wrong component dimension')
+                if f.__class__.subdimension != d:
+                    print('faces(): Wrong face dimension')
+                g = c.face(d, i)
+                if g != f:
+                    print('faces() / face() mismatch')
+                i = i + 1
+            if i != c.countFaces(d):
+                print('faces(): Wrong number of faces')
+        print()
+    if t.countBoundaryComponents() > 0:
+        print('Boundary Component 0:')
+        b = t.boundaryComponent(0)
+        print(b.__class__)
+        if standardDim(dim):
+            subdimRange = range(dim)
+        else:
+            subdimRange = [dim - 2, dim - 1] # for countFaces()
+        print([b.countFaces(d) for d in subdimRange])
+        if not standardDim(dim):
+            subdimRange = [dim - 1] # for face() / faces()
+        for d in subdimRange:
+            print(b.faces(d))
+            i = 0
+            for f in b.faces(d):
+                if i > b.countFaces(d):
+                    print('faces(): Too many faces')
+                    break
+                if f.__class__.dimension != dim:
+                    print('faces(): Wrong component dimension')
+                if f.__class__.subdimension != d:
+                    print('faces(): Wrong face dimension')
+                g = b.face(d, i)
+                if g != f:
+                    print('faces() / face() mismatch')
+                i = i + 1
+            if i != b.countFaces(d):
+                print('faces(): Wrong number of faces')
+        print()
 
 test(Example2.simplicialSphere())
 test(PacketOfTriangulation2(Example2.simplicialSphere()))
@@ -67,4 +119,16 @@ test(PacketOfTriangulation4(Example4.simplicialSphere()))
 
 test(Example5.simplicialSphere())
 test(PacketOfTriangulation5(Example5.simplicialSphere()))
+
+test(Example2.twistedBallBundle())
+test(PacketOfTriangulation2(Example2.twistedBallBundle()))
+
+test(Example3.twistedBallBundle())
+test(PacketOfTriangulation3(Example3.twistedBallBundle()))
+
+test(Example4.twistedBallBundle())
+test(PacketOfTriangulation4(Example4.twistedBallBundle()))
+
+test(Example5.twistedBallBundle())
+test(PacketOfTriangulation5(Example5.twistedBallBundle()))
 

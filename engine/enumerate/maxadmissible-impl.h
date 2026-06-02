@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,9 +45,16 @@
 #include <algorithm>
 #include <list>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
-template <ReginaBitmask BitmaskType, typename RayIterator>
+template <ReginaBitmask BitmaskType, std::input_iterator RayIterator>
+requires
+    IndexedContainer<std::iter_value_t<RayIterator>> &&
+    requires(RayIterator it, size_t index) {
+        { (*it)[index] == 0 } -> std::convertible_to<bool>;
+    }
 std::vector<BitmaskType> MaxAdmissible::enumerate(
         RayIterator beginExtremalRays, RayIterator endExtremalRays,
         const ValidityConstraints& constraints) {

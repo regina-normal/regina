@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,8 +40,8 @@ using regina::LayeredLensSpace;
 void addLayeredLensSpace(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredLensSpace)
 
-    auto c = pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
-            (m, "LayeredLensSpace", rdoc_scope)
+    auto c = pybind11::class_<LayeredLensSpace, regina::StandardSubcomplex<3>>
+            (m, "LayeredLensSpace", rdoc::__class)
         .def(pybind11::init<const LayeredLensSpace&>(), rdoc::__copy)
         .def("swap", &LayeredLensSpace::swap, rdoc::swap)
         .def("p", &LayeredLensSpace::p, rdoc::p)
@@ -55,9 +55,8 @@ void addLayeredLensSpace(pybind11::module_& m) {
         .def_static("recognise", &LayeredLensSpace::recognise, rdoc::recognise)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<LayeredLensSpace>(m, rdoc::global_swap);
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<LayeredLensSpace, rdoc>(m);
 
     RDOC_SCOPE_END
 }

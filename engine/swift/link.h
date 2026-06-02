@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Swift User Interface
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,8 @@
 #include <sstream>
 #include "link/link.h"
 #include "swift/packet.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -242,6 +244,13 @@ struct SharedLink {
             }
         }
 };
+
+// Helper functions to work around the fact that Swift seems to struggle with
+// some templated C++ functions:
+
+inline std::string neoSig(const Link& link) {
+    return link.neoSig();
+}
 
 }
 

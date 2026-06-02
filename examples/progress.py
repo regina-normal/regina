@@ -14,9 +14,9 @@ import time
 # Create an 18-tetrahedron triangulation of a knot complement with real
 # boundary faces (not an ideal vertex).  The knot is L106003 from the
 # knot/link census.  We used Regina to truncate the ideal vertex, and
-# then copied the isomorphism signature so that we can reconstruct the
-# triangulation here.
-sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
+# then copied the second-generation isomorphism signature so that we can
+# reconstruct the triangulation here.
+sig = 'sxsgYcsTyPgR9CWimg-EQLvrmlw3DWcsftQhb'
 tri = Triangulation3(sig)
 print(tri)
 

@@ -2,8 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  boolset.cpp
   base64.cpp
+  boolset.cpp
+  bytesequence.cpp
   i18nutils.cpp
   memstream.cpp
   osutils.cpp
@@ -25,10 +26,12 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    aggregator.h
     base64.h
     bitmanip.h
     bitmask.h
     boolset.h
+    bytesequence.h
     exception.h
     fixedarray.h
     flags.h

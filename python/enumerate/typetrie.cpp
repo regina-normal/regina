@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,19 +34,21 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/typetrie.h"
 
+using namespace pybind11::literals;
+
 using regina::TypeTrie;
 
 template <int nTypes>
 void addTypeTrieFor(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TypeTrie)
 
-    auto c = pybind11::class_<TypeTrie<nTypes>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<TypeTrie<nTypes>>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const TypeTrie<nTypes>&>(), rdoc::__copy)
         .def("swap", &TypeTrie<nTypes>::swap, rdoc::swap)
         .def("clear", &TypeTrie<nTypes>::clear, rdoc::clear)
         .def("insert", [](TypeTrie<nTypes>& t, pybind11::list arg) {
-            char* c = new char[arg.size() + 1];
+            uint8_t* c = new uint8_t[arg.size() + 1];
             size_t len = 0;
             try {
                 int type;
@@ -57,7 +59,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
                         throw regina::InvalidArgument(
                             "Element of type vector is out of range");
                     }
-                    c[len++] = static_cast<char>(type);
+                    c[len++] = static_cast<uint8_t>(type);
                 }
             } catch (pybind11::cast_error const&) {
                 delete[] c;
@@ -67,9 +69,9 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             c[len] = 0;
             t.insert(c, len);
             delete[] c;
-        }, pybind11::arg("entry"), rdoc::insert)
+        }, "entry"_a, rdoc::insert)
         .def("dominates", [](const TypeTrie<nTypes>& t, pybind11::list arg) {
-            char* c = new char[arg.size() + 1];
+            uint8_t* c = new uint8_t[arg.size() + 1];
             size_t len = 0;
             try {
                 int type;
@@ -80,7 +82,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
                         throw regina::InvalidArgument(
                             "Element of type vector is out of range");
                     }
-                    c[len++] = static_cast<char>(type);
+                    c[len++] = static_cast<uint8_t>(type);
                 }
             } catch (pybind11::cast_error const&) {
                 delete[] c;
@@ -91,12 +93,11 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
             bool ans = t.dominates(c, len);
             delete[] c;
             return ans;
-        }, pybind11::arg("vec"), rdoc::dominates)
+        }, "vec"_a, rdoc::dominates)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<TypeTrie<nTypes>>(m, rdoc::global_swap);
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<TypeTrie<nTypes>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

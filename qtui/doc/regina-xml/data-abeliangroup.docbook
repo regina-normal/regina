@@ -64,7 +64,6 @@ abeliangroup ::= (#PCDATA)</synopsis>
     The following elements contain <sgmltag>abeliangroup</sgmltag>:
     <simplelist type="inline">
      <member>&xml-H1;</member>
-     <member>&xml-H1Bdry;</member>
      <member>&xml-H1Rel;</member>
      <member>&xml-H2;</member>
     </simplelist>.

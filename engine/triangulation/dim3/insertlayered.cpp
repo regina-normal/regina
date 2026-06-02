@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -77,8 +77,8 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     return newTet;
 }
 
-bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
-        BoundaryComponent<3>* bc) {
+void Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
+        BoundaryComponent<3>* boundary) {
     // Check that the cuts arguments are valid.
     int maxCuts;
     if (cuts2 == cuts0 + cuts1)
@@ -88,23 +88,26 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
     else if (cuts0 == cuts1 + cuts2)
         maxCuts = 0;
     else
-        return false;
+        throw InvalidArgument(
+            "The largest integer argument must be the sum of the other two");
 
     if (std::gcd(cuts0, cuts1) != 1)
-        return false;
+        throw InvalidArgument(
+            "The three integer arguments must be pairwise coprime");
 
     // Deduce the boundary component if one was not given.
-    if (! bc) {
+    if (! boundary) {
         if (countBoundaryComponents() != 1)
-            return false;
-        bc = boundaryComponents_.front();
+            throw InvalidArgument("You may only omit the boundary argument "
+                "if this triangulation has exactly one boundary component");
+        boundary = boundaryComponents_.front();
     }
 
     // Check that the boundary component is indeed a 2-triangle torus.
-    if (bc->countTriangles() != 2)
-        return false;
-    if (bc->eulerChar() != 0 || ! bc->isOrientable())
-        return false;
+    if (boundary->countTriangles() != 2 || boundary->eulerChar() != 0 ||
+            ! boundary->isOrientable())
+        throw InvalidArgument(
+            "The boundary component to fill must be a two-triangle torus");
 
     // Identify the two boundary triangles and their relationships to the
     // three boundary edges.
@@ -115,22 +118,23 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
     Tetrahedron<3>* t[2];
     Perm<4> v[2];
 
-    Edge<3>* e = bc->edge(0);
+    Edge<3>* e = boundary->edge(0);
     const EdgeEmbedding<3>& emb0 = e->front();
     const EdgeEmbedding<3>& emb1 = e->back();
 
     t[0] = emb0.simplex();
     t[1] = emb1.simplex();
-    // emb0.vertices(): 0,1 -> bc->edge(0); 2 -> other bc vertex.
-    // emb1.vertices(): 0,1 -> bc->edge(0); 3 -> other bc vertex.
-    if (t[0]->edge(emb0.vertices()[0], emb0.vertices()[2]) == bc->edge(1)) {
-        // emb0.vertices(): 0,2 -> bc->edge(1), 1,2 -> bc->edge(2).
-        // emb1.vertices(): 1,3 -> bc->edge(1), 0,3 -> bc->edge(2).
+    // emb0.vertices(): 0,1 -> boundary->edge(0); 2 -> other boundary vertex.
+    // emb1.vertices(): 0,1 -> boundary->edge(0); 3 -> other boundary vertex.
+    if (t[0]->edge(emb0.vertices()[0], emb0.vertices()[2]) ==
+            boundary->edge(1)) {
+        // emb0.vertices(): 0,2 -> boundary->edge(1), 1,2 -> boundary->edge(2).
+        // emb1.vertices(): 1,3 -> boundary->edge(1), 0,3 -> boundary->edge(2).
         v[0] = emb0.vertices() * Perm<4>(2, 1, 0, 3);
         v[1] = emb1.vertices() * Perm<4>(3, 0, 1, 2);
     } else {
-        // emb0.vertices(): 1,2 -> bc->edge(1), 0,2 -> bc->edge(2).
-        // emb1.vertices(): 0,3 -> bc->edge(1), 1,3 -> bc->edge(2).
+        // emb0.vertices(): 1,2 -> boundary->edge(1), 0,2 -> boundary->edge(2).
+        // emb1.vertices(): 0,3 -> boundary->edge(1), 1,3 -> boundary->edge(2).
         v[0] = emb0.vertices() * Perm<4>(2, 0, 1, 3);
         v[1] = emb1.vertices() * Perm<4>(3, 1, 0, 2);
     }
@@ -142,17 +146,17 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             if (cuts1 <= cuts2) {
                 filling = insertLayeredSolidTorus(cuts1, cuts2);
                 if (cuts0 <= 2) {
-                    // filling:12,03 -> bc->edge(2)
-                    // filling:02,13 -> bc->edge(0)
-                    // filling:01    -> bc->edge(1)
+                    // filling:12,03 -> boundary->edge(2)
+                    // filling:02,13 -> boundary->edge(0)
+                    // filling:01    -> boundary->edge(1)
                     filling->join(3, t[0],
                         Perm<4>(v[0][2], v[0][0], v[0][1], v[0][3]));
                     filling->join(2, t[1],
                         Perm<4>(v[1][0], v[1][2], v[1][3], v[1][1]));
                 } else {
-                    // filling:12,03 -> bc->edge(1)
-                    // filling:02,13 -> bc->edge(2)
-                    // filling:01    -> bc->edge(0)
+                    // filling:12,03 -> boundary->edge(1)
+                    // filling:02,13 -> boundary->edge(2)
+                    // filling:01    -> boundary->edge(0)
                     filling->join(3, t[0],
                         Perm<4>(v[0][1], v[0][2], v[0][0], v[0][3]));
                     filling->join(2, t[1],
@@ -161,17 +165,17 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             } else {
                 filling = insertLayeredSolidTorus(cuts2, cuts1);
                 if (cuts0 <= 2) {
-                    // filling:12,03 -> bc->edge(1)
-                    // filling:02,13 -> bc->edge(0)
-                    // filling:01    -> bc->edge(2)
+                    // filling:12,03 -> boundary->edge(1)
+                    // filling:02,13 -> boundary->edge(0)
+                    // filling:01    -> boundary->edge(2)
                     filling->join(3, t[0],
                         Perm<4>(v[0][1], v[0][0], v[0][2], v[0][3]));
                     filling->join(2, t[1],
                         Perm<4>(v[1][0], v[1][1], v[1][3], v[1][2]));
                 } else {
-                    // filling:12,03 -> bc->edge(2)
-                    // filling:02,13 -> bc->edge(1)
-                    // filling:01    -> bc->edge(0)
+                    // filling:12,03 -> boundary->edge(2)
+                    // filling:02,13 -> boundary->edge(1)
+                    // filling:01    -> boundary->edge(0)
                     filling->join(3, t[0],
                         Perm<4>(v[0][2], v[0][1], v[0][0], v[0][3]));
                     filling->join(2, t[1],
@@ -183,17 +187,17 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             if (cuts0 <= cuts2) {
                 filling = insertLayeredSolidTorus(cuts0, cuts2);
                 if (cuts1 <= 2) {
-                    // filling:12,03 -> bc->edge(2)
-                    // filling:02,13 -> bc->edge(1)
-                    // filling:01    -> bc->edge(0)
+                    // filling:12,03 -> boundary->edge(2)
+                    // filling:02,13 -> boundary->edge(1)
+                    // filling:01    -> boundary->edge(0)
                     filling->join(3, t[0],
                         Perm<4>(v[0][2], v[0][1], v[0][0], v[0][3]));
                     filling->join(2, t[1],
                         Perm<4>(v[1][1], v[1][2], v[1][3], v[1][0]));
                 } else {
-                    // filling:12,03 -> bc->edge(0)
-                    // filling:02,13 -> bc->edge(2)
-                    // filling:01    -> bc->edge(1)
+                    // filling:12,03 -> boundary->edge(0)
+                    // filling:02,13 -> boundary->edge(2)
+                    // filling:01    -> boundary->edge(1)
                     filling->join(3, t[0],
                         Perm<4>(v[0][0], v[0][2], v[0][1], v[0][3]));
                     filling->join(2, t[1],
@@ -202,17 +206,17 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             } else {
                 filling = insertLayeredSolidTorus(cuts2, cuts0);
                 if (cuts1 <= 2) {
-                    // filling:12,03 -> bc->edge(0)
-                    // filling:02,13 -> bc->edge(1)
-                    // filling:01    -> bc->edge(2)
+                    // filling:12,03 -> boundary->edge(0)
+                    // filling:02,13 -> boundary->edge(1)
+                    // filling:01    -> boundary->edge(2)
                     filling->join(3, t[0],
                         Perm<4>(v[0][0], v[0][1], v[0][2], v[0][3]));
                     filling->join(2, t[1],
                         Perm<4>(v[1][1], v[1][0], v[1][3], v[1][2]));
                 } else {
-                    // filling:12,03 -> bc->edge(2)
-                    // filling:02,13 -> bc->edge(0)
-                    // filling:01    -> bc->edge(1)
+                    // filling:12,03 -> boundary->edge(2)
+                    // filling:02,13 -> boundary->edge(0)
+                    // filling:01    -> boundary->edge(1)
                     filling->join(3, t[0],
                         Perm<4>(v[0][2], v[0][0], v[0][1], v[0][3]));
                     filling->join(2, t[1],
@@ -224,17 +228,17 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             if (cuts0 <= cuts1) {
                 filling = insertLayeredSolidTorus(cuts0, cuts1);
                 if (cuts2 <= 2) {
-                    // filling:12,03 -> bc->edge(1)
-                    // filling:02,13 -> bc->edge(2)
-                    // filling:01    -> bc->edge(0)
+                    // filling:12,03 -> boundary->edge(1)
+                    // filling:02,13 -> boundary->edge(2)
+                    // filling:01    -> boundary->edge(0)
                     filling->join(3, t[0],
                         Perm<4>(v[0][1], v[0][2], v[0][0], v[0][3]));
                     filling->join(2, t[1],
                         Perm<4>(v[1][2], v[1][1], v[1][3], v[1][0]));
                 } else {
-                    // filling:12,03 -> bc->edge(0)
-                    // filling:02,13 -> bc->edge(1)
-                    // filling:01    -> bc->edge(2)
+                    // filling:12,03 -> boundary->edge(0)
+                    // filling:02,13 -> boundary->edge(1)
+                    // filling:01    -> boundary->edge(2)
                     filling->join(3, t[0],
                         Perm<4>(v[0][0], v[0][1], v[0][2], v[0][3]));
                     filling->join(2, t[1],
@@ -243,17 +247,17 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
             } else {
                 filling = insertLayeredSolidTorus(cuts1, cuts0);
                 if (cuts2 <= 2) {
-                    // filling:12,03 -> bc->edge(0)
-                    // filling:02,13 -> bc->edge(2)
-                    // filling:01    -> bc->edge(1)
+                    // filling:12,03 -> boundary->edge(0)
+                    // filling:02,13 -> boundary->edge(2)
+                    // filling:01    -> boundary->edge(1)
                     filling->join(3, t[0],
                         Perm<4>(v[0][0], v[0][2], v[0][1], v[0][3]));
                     filling->join(2, t[1],
                         Perm<4>(v[1][2], v[1][0], v[1][3], v[1][1]));
                 } else {
-                    // filling:12,03 -> bc->edge(1)
-                    // filling:02,13 -> bc->edge(0)
-                    // filling:01    -> bc->edge(2)
+                    // filling:12,03 -> boundary->edge(1)
+                    // filling:02,13 -> boundary->edge(0)
+                    // filling:01    -> boundary->edge(2)
                     filling->join(3, t[0],
                         Perm<4>(v[0][1], v[0][0], v[0][2], v[0][3]));
                     filling->join(2, t[1],
@@ -264,41 +268,44 @@ bool Triangulation<3>::fillTorus(size_t cuts0, size_t cuts1, size_t cuts2,
     }
 
     simplify();
-    return true;
 }
 
-bool Triangulation<3>::fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
+void Triangulation<3>::fillTorus(Edge<3>* edge0, Edge<3>* edge1, Edge<3>* edge2,
         size_t cuts0, size_t cuts1, size_t cuts2) {
-    if (e0 == e1 || e0 == e2 || e1 == e2)
-        return false;
+    if (edge0 == edge1 || edge0 == edge2 || edge1 == edge2)
+        throw InvalidArgument("The three given edges must be distinct");
 
-    BoundaryComponent<3>* bc = e0->boundaryComponent();
-    if ((! bc) || bc != e1->boundaryComponent() ||
-            bc != e2->boundaryComponent())
-        return false;
+    BoundaryComponent<3>* boundary = edge0->boundaryComponent();
+    if ((! boundary) || boundary != edge1->boundaryComponent() ||
+            boundary != edge2->boundaryComponent())
+        throw InvalidArgument("The three given edges must all belong to "
+            "a common boundary component");
 
-    if (bc->countEdges() != 3)
-        return false;
+    if (boundary->countEdges() != 3)
+        throw InvalidArgument(
+            "The boundary component to fill must have precisely three edges");
 
-    // e0, e1 and e2 are now known to be the three distinct edges of bc.
-    if (e0 == bc->edge(0)) {
-        if (e1 == bc->edge(1))
-            return fillTorus(cuts0, cuts1, cuts2, bc);
+    // edge0, edge1 and edge2 are now known to be the three distinct edges
+    // of boundary.
+    if (edge0 == boundary->edge(0)) {
+        if (edge1 == boundary->edge(1))
+            return fillTorus(cuts0, cuts1, cuts2, boundary);
         else
-            return fillTorus(cuts0, cuts2, cuts1, bc);
-    } else if (e0 == bc->edge(1)) {
-        if (e1 == bc->edge(0))
-            return fillTorus(cuts1, cuts0, cuts2, bc);
+            return fillTorus(cuts0, cuts2, cuts1, boundary);
+    } else if (edge0 == boundary->edge(1)) {
+        if (edge1 == boundary->edge(0))
+            return fillTorus(cuts1, cuts0, cuts2, boundary);
         else
-            return fillTorus(cuts2, cuts0, cuts1, bc);
-    } else if (e0 == bc->edge(2)) {
-        if (e1 == bc->edge(0))
-            return fillTorus(cuts1, cuts2, cuts0, bc);
+            return fillTorus(cuts2, cuts0, cuts1, boundary);
+    } else if (edge0 == boundary->edge(2)) {
+        if (edge1 == boundary->edge(0))
+            return fillTorus(cuts1, cuts2, cuts0, boundary);
         else
-            return fillTorus(cuts2, cuts1, cuts0, bc);
+            return fillTorus(cuts2, cuts1, cuts0, boundary);
     }
 
-    return false;
+    // We should never be able to reach this point.
+    throw ImpossibleScenario("Impossible boundary edge combination");
 }
 
 Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(

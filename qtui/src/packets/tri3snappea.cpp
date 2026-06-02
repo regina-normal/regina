@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -208,8 +208,6 @@ Tri3SnapPeaUI::Tri3SnapPeaUI(regina::PacketOf<Triangulation<3>>* packet,
     // Finish off.
 
     connect(btnToSnapPea, SIGNAL(clicked()), this, SLOT(toSnapPea()));
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
 }
 
 Tri3SnapPeaUI::~Tri3SnapPeaUI() {

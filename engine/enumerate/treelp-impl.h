@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2025, Ben Burton                                   *
+ *  Copyright (c) 2011-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -63,6 +63,8 @@
 #include "triangulation/dim3.h"
 #include "utilities/bitmask.h"
 #include <cstring>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -135,9 +137,9 @@ void LPMatrix<IntType>::writeTextLong(std::ostream& out) const {
 }
 
 template <LPConstraint Constraint>
-LPInitialTableaux<Constraint>::LPInitialTableaux(
-        const Triangulation<3>& tri, NormalEncoding enc, bool enumeration) :
-        tri_(&tri), system_(enc) {
+LPInitialTableaux<Constraint>::LPInitialTableaux(const Triangulation<3>& tri,
+        NormalEncoding encoding, bool enumeration) :
+        tri_(&tri), system_(encoding) {
     size_t r, c;
 
     // Fetch the original (unadjusted) matrix of matching equations.
@@ -299,12 +301,10 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
         // from the last column to the first.
 
         // Track which rows have been processed so far.
-        bool* used = new bool[rank_];
-        std::fill(used, used + rank_, false);
+        FixedArray<bool> used(rank_, false);
 
         // Also track which tetrahedra have been used so far.
-        bool* touched = new bool[n];
-        std::fill(touched, touched + n, false);
+        FixedArray<bool> touched(n, false);
         size_t nTouched = 0;
 
         // Off we go, one row at a time.
@@ -417,9 +417,6 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
             }
             ++nTouched;
         }
-
-        delete[] touched;
-        delete[] used;
     }
 
     // If we have extra variables for additional constraints or
@@ -995,14 +992,9 @@ void LPData<Constraint, IntType>::writeTextLong(std::ostream& out) const {
 
 template <LPConstraint Constraint, ReginaInteger IntType>
 template <IntegerVector Ray>
-Ray LPData<Constraint, IntType>::extractSolution(const char* type)
-        const {
-    static_assert(
-        FaithfulAssignment<IntType, typename Ray::value_type>::value,
-        "LPData::extractSolution() requires a template parameter Ray "
-        "whose elements can faithfully store integers of the template "
-        "parameter IntType.");
-
+requires (std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
+    typename Ray::value_type>)
+Ray LPData<Constraint, IntType>::extractSolution(const uint8_t* type) const {
     // Fetch details on how to undo the column permutation.
     const size_t* columnPerm = origTableaux_->columnPerm();
 
@@ -1233,7 +1225,8 @@ void LPData<Constraint, IntType>::findInitialBasis() {
             } else {
                 // We are converting an arbitrary precision integer into a
                 // bounded-range integer.  Assume that the programmer has
-                // taken responsibility for range checking.
+                // taken responsibility for range checking in advance, since
+                // they explicitly chose to use a fixed-precision integer type.
                 rowOps_.entry(r, c) = ops.entry(r, c).
                     unsafeValue<typename IntType::Native>();
             }
@@ -1265,8 +1258,8 @@ void LPData<Constraint, IntType>::makeFeasible() {
     for (size_t r = 0; r < rank_; ++r)
         currBasis.set(basis_[r], true);
     Bitmask oldBasis(currBasis);
-    unsigned long pow2 = 1;
-    unsigned long nPivots = 0;
+    size_t pow2 = 1;
+    size_t nPivots = 0;
 
     while (true) {
 #ifdef REGINA_COUNT_PIVOTS
@@ -1349,7 +1342,7 @@ template <LPConstraint Constraint, ReginaInteger IntType>
 void LPData<Constraint, IntType>::makeFeasibleAntiCycling() {
     ssize_t outCol;
 #ifdef REGINA_COUNT_PIVOTS
-    unsigned long nPivots = 0;
+    size_t Pivots = 0;
 #endif
     while (true) {
 #ifdef REGINA_COUNT_PIVOTS

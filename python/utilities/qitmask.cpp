@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,13 +37,13 @@
 using regina::Qitmask1;
 using regina::Qitmask2;
 
-template <typename Q>
+template <regina::ReginaQitmask Q>
 void addQitmaskOpt(pybind11::module_& m, const char* name) {
     // Q could be an instance of either Qitmask1 or Qitmask2, but since the
     // Python docs are essentially the same we will just use Qitmask1 here.
     RDOC_SCOPE_BEGIN(Qitmask1)
 
-    auto c = pybind11::class_<Q>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Q>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Q&>(), rdoc::__copy)
         .def("reset", &Q::reset, rdoc::reset)
@@ -69,9 +69,9 @@ void addQitmask(pybind11::module_& m) {
     addQitmaskOpt<Qitmask1<uint64_t>>(m, "Qitmask64");
     #ifdef INT128_AVAILABLE
     addQitmaskOpt<Qitmask1<regina::UInt128>>(m, "Qitmask128");
-    addQitmaskOpt<Qitmask2<regina::UInt128, regina::UInt128>>(m, "Qitmask256");
+    addQitmaskOpt<Qitmask2<regina::UInt128>>(m, "Qitmask256");
     #else
-    addQitmaskOpt<Qitmask2<uint64_t, uint64_t>>(m, "Qitmask128");
+    addQitmaskOpt<Qitmask2<uint64_t>>(m, "Qitmask128");
     #endif
 }
 

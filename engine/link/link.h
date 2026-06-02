@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,6 +32,10 @@
  *  \brief Deals with classical and virtual knots and links.
  */
 
+// Put this before the header guard, since there is a very precise order in
+// which the different parts of link.h and linksig.h need to be included.
+#include "link/linksig.h"
+
 #ifndef __REGINA_LINK_H
 #ifndef __DOXYGEN
 #define __REGINA_LINK_H
@@ -39,7 +43,9 @@
 
 #include <array>
 #include <functional>
+#include <iterator>
 #include <optional>
+#include <ranges>
 #include <vector>
 #include "regina-core.h"
 #include "algebra/grouppresentation.h"
@@ -53,13 +59,13 @@
 #include "triangulation/dim3.h"
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/exception.h"
-#include "utilities/fixedarray.h"
-#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
 #include "utilities/topologylock.h"
 
 // Note: there are more includes after the main class definitions.
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -376,6 +382,14 @@ class StrandRef {
         void jump();
 
         /**
+         * Converts this into a null reference.
+         *
+         * The pointer returned by crossing() will be \c null,
+         * and the integer returned by strand() will be 0.
+         */
+        void reset();
+
+        /**
          * Tests whether this is a non-null reference.
          *
          * \return \c true if this is not a null reference (i.e., crossing()
@@ -564,6 +578,41 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
         StrandRef prev(int strand) const;
 
         /**
+         * Returns the chord index of this crossing in a knot diagram.
+         *
+         * The _chord index_ examines all of the other crossings that are
+         * passed when traversing the knot between the upper and lower
+         * strands of this crossing, not counting this crossing itself.
+         * For each other crossing that we pass:
+         *
+         * - we add `+1` each time we pass a positive crossing on the
+         *   upper strand, or a negative crossing on the lower strand;
+         * - we add `-1` each time we pass a positive crossing on the
+         *   lower strand, or a negative crossing on the upper strand.
+         *
+         * We then take the absolute value of the resulting sum (which means
+         * we get the same result regardless of whether we walked from the
+         * upper strand to the lower strand of this crossing, or from the
+         * lower strand to the upper strand).
+         *
+         * The chord index is only interesting for virtual knots.  In a
+         * classical knot diagram, every crossing will have chord index zero.
+         * Note also that the _parity_ of a crossing (in the sense used by
+         * Link::oddWrithe()) is precisely the parity of its chord index.
+         *
+         * \pre The link containing this crossing has exactly one component
+         * (i.e., it is a knot).
+         *
+         * \exception FailedPrecondition The link containing this crossing was
+         * found to have multiple components.  This is not explicitly tested,
+         * but it will be noticed if the upper and lower strands of this
+         * crossing belong to different link components.
+         *
+         * \return the chord index of this crossing.
+         */
+        size_t chordIndex() const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -690,7 +739,7 @@ class Link :
                  crossings, then it is represented in this array by a
                  null reference. */
 
-        mutable ssize_t virtualGenus_;
+        mutable ssize_t virtualGenus_ { -1 };
             /**< The virtual genus of the link diagram, or -1 if this has not
                  yet been computed. */
         mutable std::optional<Polynomial<Integer>> alexander_;
@@ -908,7 +957,8 @@ class Link :
          * At present, Regina understands the following types of strings
          * (and attempts to parse them in the following order):
          *
-         * - knot/link signatures, as used by fromSig();
+         * - knot/link signatures (both first and second generation), as used
+         *   by fromSig();
          * - oriented Gauss codes, as used by fromOrientedGauss();
          * - signed Gauss codes, as used by fromSignedGauss();
          * - classical Gauss codes, as used by fromGauss();
@@ -992,12 +1042,12 @@ class Link :
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Crossing* c : link.crossings()) { ... }
@@ -1048,15 +1098,15 @@ class Link :
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  Each element of the list will be
-         * a starting strand for some component; more precisely, iterating
-         * through this list is equivalent to calling `component(0)`,
-         * `component(1)`, ..., `component(countComponents()-1)`
-         * in turn.  As an example, your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Each element of the list will be a starting strand
+         * for some component; more precisely, iterating through this list is
+         * equivalent to calling `component(0)`, `component(1)`, ...,
+         * `component(countComponents()-1)` in turn.  As an example, your code
+         * might look like:
          *
          * \code{.cpp}
          * for (const StrandRef& c : link.components()) { ... }
@@ -1376,7 +1426,7 @@ class Link :
          * `auto` to collect the return value from this routine.  (For Python
          * users, the array will be converted into a Python list.)
          *
-         * \return A pair containing (i) the array as described above; and
+         * \return a pair containing (i) the array as described above; and
          * (ii) the total number of non-trivial diagram components (so again,
          * ignoring zero-crossing components).  Note that this latter number
          * may be different from countDiagramComponents(), which counts _all_
@@ -2486,7 +2536,7 @@ class Link :
          *
          * \param crossing identifies the crossing to be removed.  See
          * r1(Crossing*) for details on exactly how this will be interpreted.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR1(Crossing* crossing) const;
@@ -2511,7 +2561,7 @@ class Link :
          * or 1 if the twist should be introduced on the right of the arc.
          * \param sign the sign of the new crossing that will be
          * introduced as part of the twist; this must be +1 or -1.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR1(StrandRef arc, int side, int sign) const;
@@ -2531,7 +2581,7 @@ class Link :
          * \param arc identifies one of the arcs of the bigon about which the
          * move will be performed.  See r2(StrandRef) for details on exactly
          * how this will be interpreted.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2(StrandRef arc) const;
@@ -2551,7 +2601,7 @@ class Link :
          * \param crossing identifies the crossing at the beginning of the
          * "upper" arc that features in this move.  See r2(Crossing*) for
          * details on exactly how this will be interpreted.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2(Crossing* crossing) const;
@@ -2589,7 +2639,7 @@ class Link :
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a lowerArc.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2(StrandRef upperArc, int upperSide,
@@ -2629,7 +2679,7 @@ class Link :
          * of \a lowerArc (when walking along \a lowerArc in the forward
          * direction), or 1 if the new overlap should take place on the right
          * of \a lowerArc.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2Virtual(StrandRef upperArc, int upperSide,
@@ -2662,7 +2712,7 @@ class Link :
          * \param firstStrand 0 if the first portion of the arc should be
          * pushed under the second, or 1 if the first portion should be pushed
          * over the second.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR2Virtual(StrandRef arc, int firstSide,
@@ -2687,7 +2737,7 @@ class Link :
          * the left of the arc (when walking along the arc in the forward
          * direction), or 1 if the third crossing is located on the right of
          * the arc.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR3(StrandRef arc, int side) const;
@@ -2711,265 +2761,10 @@ class Link :
          * the left of the uppermost arc (when walking along the arc in the
          * forward direction), or 1 if the third crossing is located on the
          * right of the uppermost arc.
-         * \return The new link diagram obtained by performing the requested
+         * \return the new link diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Link> withR3(Crossing* crossing, int side) const;
-
-        /**
-         * Deprecated routine that tests for and optionally performs a type I
-         * Reidemeister move to remove a crossing.
-         *
-         * For more detail on type I moves and when they can be performed,
-         * see r1(Crossing*).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR1().  If you wish to both check and perform the move,
-         * call r1() without the two additional boolean arguments.
-         *
-         * \warning A side-effect of this move is that, because one crossing
-         * is being removed, the other crossings in the link may be reindexed.
-         * However, no crossings other than the one involved in this move
-         * will be destroyed.
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this link.
-         *
-         * \param crossing identifies the crossing to be removed.  See
-         * r1(crossing*) for details on exactly how this will be interpreted.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r1(Crossing* crossing,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type I
-         * Reidemeister move to add a new crossing.
-         *
-         * For more detail on type I moves and when they can be performed,
-         * see r1(StrandRef, int, int).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR1().  If you wish to both check and perform the move,
-         * call r1() without the two additional boolean arguments.
-         *
-         * \pre The given strand reference is either a null reference,
-         * or else refers to some strand of some crossing in this link.
-         *
-         * \param arc identifies the arc of the link in which the new twist
-         * will be introduced.  See r1(StrandRef, int, int) for details on
-         * exactly how this will be interpreted.
-         * \param side 0 if the twist should be introduced on the left
-         * of the arc (when walking along the arc in the forward direction),
-         * or 1 if the twist should be introduced on the right of the arc.
-         * \param sign the sign of the new crossing that will be
-         * introduced as part of the twist; this must be +1 or -1.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r1(StrandRef arc, int side, int sign,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type II
-         * Reidemeister move to remove two crossings.
-         *
-         * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR2().  If you wish to both check and perform the move,
-         * call r2() without the two additional boolean arguments.
-         *
-         * \warning A side-effect of this move is that, because two crossings
-         * are being removed, the other crossings in the link may be reindexed.
-         * However, no crossings other than the two involved in this move
-         * will be destroyed.
-         *
-         * \pre The given strand reference is either a null reference,
-         * or else refers to some strand of some crossing in this link.
-         *
-         * \param arc identifies one of the arcs of the bigon about which the
-         * move will be performed.  See r2(StrandRef) for details on exactly
-         * how this will be interpreted.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r2(StrandRef arc,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type II
-         * Reidemeister move to remove two crossings.
-         *
-         * For more detail on type II moves and when they can be performed,
-         * see r2(Crossing*).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR2().  If you wish to both check and perform the move,
-         * call r2() without the two additional boolean arguments.
-         *
-         * \warning A side-effect of this move is that, because two crossings
-         * are being removed, the other crossings in the link may be reindexed.
-         * However, no crossings other than the two involved in this move
-         * will be destroyed.
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this link.
-         *
-         * \param crossing identifies the crossing at the beginning of
-         * the "upper" arc that features in this move.  See r2(Crossing*)
-         * for details on exactly how this will be interpreted.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r2(Crossing* crossing,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a classical
-         * type II Reidemeister move to add two new crossings by pushing two
-         * different strands over one another.
-         *
-         * For more detail on classical type II moves and when they can be
-         * performed, see r2(StrandRef, int, StrandRef, int).  This deprecated
-         * routine will not perform virtual type II moves; for that you should
-         * use the new routine r2Virtual() instead.
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR2().  If you wish to both check and perform the move,
-         * call r2() without the two additional boolean arguments.
-         *
-         * \pre Each of the given strand references is either a null reference,
-         * or else refers to some strand of some crossing in this link.
-         *
-         * \warning The check for this move is expensive (linear time).
-         *
-         * \param upperArc identifies which arc of the link would be passed
-         * over another in this move.  See r2(StrandRef, int, StrandRef, int)
-         * for details on exactly how this will be interpreted.
-         * \param upperSide 0 if the new overlap should take place on the left
-         * of \a upperArc (when walking along \a upperArc in the forward
-         * direction), or 1 if the new overlap should take place on the right
-         * of \a upperArc.
-         * \param lowerArc identifies which arc of the link would be passed
-         * beneath another in this move.  See r2(StrandRef, int, StrandRef, int)
-         * for details on exactly how this will be interpreted.
-         * \param lowerSide 0 if the new overlap should take place on the left
-         * of \a lowerArc (when walking along \a lowerArc in the forward
-         * direction), or 1 if the new overlap should take place on the right
-         * of \a lowerArc.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r2(StrandRef upperArc, int upperSide,
-            StrandRef lowerArc, int lowerSide,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type III
-         * Reidemeister move.
-         *
-         * For more detail on type III moves and when they can be performed,
-         * see r3(StrandRef, int).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR3().  If you wish to both check and perform the move,
-         * call r3() without the two additional boolean arguments.
-         *
-         * \pre The given strand reference is either a null reference,
-         * or else refers to some strand of some crossing in this link.
-         *
-         * \param arc identifies one of the arcs of the triangle about which
-         * the move would be performed.  See r3(StrandRef, int) for details on
-         * exactly how this will be interpreted.
-         * \param side 0 if the third crossing of the triangle is located to
-         * the left of the arc (when walking along the arc in the forward
-         * direction), or 1 if the third crossing is located on the right of
-         * the arc.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r3(StrandRef arc, int side,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type III
-         * Reidemeister move.
-         *
-         * For more detail on type III moves and when they can be performed,
-         * see r3(Crossing*, int).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR3().  If you wish to both check and perform the move,
-         * call r3() without the two additional boolean arguments.
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this link.
-         *
-         * \param crossing identifies the crossing at the beginning of the
-         * "uppermost" arc that features in this move.  See r3(Crossing*, int)
-         * for details on exactly how this will be interpreted.
-         * \param side 0 if the third crossing of the triangle is located to
-         * the left of the uppermost arc (when walking along the arc in the
-         * forward direction), or 1 if the third crossing is located on the
-         * right of the uppermost arc.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r3(Crossing* crossing, int side,
-            bool ignored, bool perform = true);
 
         /**
          * Tests whether this classical link has a pass move that will reduce
@@ -3232,12 +3027,12 @@ class Link :
          *   Either (a) the first argument must be a link (the precise type
          *   is discussed below), representing the link diagram that has been
          *   found; or else (b) the first two arguments must be of types
-         *   const std::string& followed by a link, representing both the
-         *   link diagram and its signature (as returned by sig()).
-         *   The second form is offered in order to avoid unnecessarily
-         *   recomputation within the \a action function.
-         *   If there are any additional arguments supplied in the list \a args,
-         *   then these will be passed as subsequent arguments to \a action.
+         *   `const ByteSequence&` followed by a link, representing both the
+         *   link diagram and its second-generation signature in binary form,
+         *   as returned by `neoSig<LinkSigBinary>()`.  This second form may
+         *   help avoid unnecessarily recomputation within the \a action
+         *   function.  If there are additional arguments supplied in the list
+         *   \a args, these will be passed as subsequent arguments to \a action.
          *
          * - The link argument will be passed as an rvalue; a typical action
          *   could (for example) take it by const reference and query it,
@@ -3305,13 +3100,14 @@ class Link :
          *
          * \apinotfinal
          *
-         * \python This function is available in Python, and the
-         * \a action argument may be a pure Python function.  However, its
-         * form is more restricted: the arguments \a tracker and \a args are
-         * removed, so you simply call it as rewrite(height, threads, action).
-         * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Link&&) representing the signature and
-         * the link diagram, as described in option (b) above.
+         * \python This function is available in Python, and the \a action
+         * argument may be a pure Python function.  However, its form is more
+         * restricted: the arguments \a tracker and \a args are removed,
+         * so you simply call it as `rewrite(height, threads, action)`.
+         * Moreover, \a action must take exactly two arguments `(bytes, Link&&)`
+         * representing the signature and the link diagram, as described in
+         * option (b) above; the signature will be passed as a Python `bytes`
+         * object.
          *
          * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
@@ -3331,7 +3127,7 @@ class Link :
         template <typename Action, typename... Args>
         requires
             TerminatingCallback<Action, Link&&, Args...> ||
-            TerminatingCallback<Action, const std::string&, Link&&, Args...>
+            TerminatingCallback<Action, const ByteSequence&, Link&&, Args...>
         bool rewrite(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -3364,11 +3160,11 @@ class Link :
          *
          * \python This function is available in Python, and the \a action
          * argument may be a pure Python function.  However, its form is more
-         * restricted: the arguments \a tracker and \a args are removed, so you
-         * simply call it as rewriteVirtual(height, threads, action).
-         * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Link&&) representing the signature and
-         * the link diagram, as described in option (b) above.
+         * restricted: the arguments \a tracker and \a args are removed,
+         * so you simply call it as `rewriteVirtual(height, threads, action)`.
+         * Moreover, \a action must take exactly two arguments `(bytes, Link&&)`
+         * representing the signature and the link diagram, as described in
+         * option (b) in the rewrite() documentation.
          *
          * \param height the maximum number of _additional_ crossings to
          * allow beyond the number of crossings originally present in this
@@ -3388,7 +3184,7 @@ class Link :
         template <typename Action, typename... Args>
         requires
             TerminatingCallback<Action, Link&&, Args...> ||
-            TerminatingCallback<Action, const std::string&, Link&&, Args...>
+            TerminatingCallback<Action, const ByteSequence&, Link&&, Args...>
         bool rewriteVirtual(int height, int threads,
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
@@ -3768,25 +3564,75 @@ class Link :
         Link whiteheadDouble(bool positive = true) const;
 
         /**
-         * Returns \a k cables of this link, all parallel to each
-         * other using the given framing.
+         * Returns the given number of cables of this link, all parallel to
+         * each other using the given framing.
          *
          * This routine creates a new link by:
          *
          * - treating each component of this link as a ribbon, using the
          *   given framing;
          *
-         * - creating \a k parallel copies of the original link,
+         * - creating \a cables parallel copies of the original link,
          *   following each other side-by-side along these ribbons.
          *
          * This link will not be modified.
          *
-         * \param k the number of parallel copies to create.
+         * \param cables the number of parallel copies to create.
          * This must be non-negative.
          * \param framing the framing under which these copies will be parallel.
-         * \return \a k parallel copies of this link.
+         * \return \a cables parallel copies of this link.
          */
-        Link parallel(int k, Framing framing = Framing::Seifert) const;
+        Link parallel(int cables, Framing framing = Framing::Seifert) const;
+
+        /**
+         * Returns the parity projection of this knot.
+         *
+         * This is an operation on virtual knots, which removes all crossings
+         * whose chord index fails a given parity condition.  The parity
+         * condition is determined by the argument \a modBase:
+         *
+         * - If `modBase = 0`, then we remove all crossings with non-zero
+         *   chord index.
+         *
+         * - If `modBase > 0`, then we remove all crossings whose chord index
+         *   is not a multiple of \a modBase.
+         *
+         * A common setting (and the default here) is `modBase = 2`, where
+         * we remove all odd crossings and keep all even crossings.  Here we
+         * use _odd_ and _even_ in the same sense as oddWrithe(): a crossing
+         * \a c is _odd_ if, when traversing the knot, we pass through an odd
+         * number of crossings between the over-strand and the under-strand
+         * of \a c.
+         *
+         * By _removing_ a crossing \a c, we mean the same operation as calling
+         * `makeVirtual(c)`: the incoming and outgoing upper strands of \a c
+         * will be merged into one, and the incoming and outgoing lower strands
+         * of \a c will be merged into one.  It is possible that _all_ of the
+         * crossings in the diagram will be removed, in which case the result
+         * will be a 0-crossing unknot.
+         *
+         * Parity projection cannot work with multiple-component links.
+         * If this link has more than one component, then this routine will
+         * throw an exception.
+         *
+         * Parity projection is only interesting for virtual knots.  In a
+         * classical knot diagram, chord indices are always zero, and so the
+         * parity projection will always return an identical copy of the
+         * original knot diagram.
+         *
+         * This knot diagram will not be modified.  Instead, this routine will
+         * return a new diagram with the relevant crossings removed.
+         *
+         * \pre This link has at most one component (i.e., it is either a knot
+         * or the empty link).
+         *
+         * \exception FailedPrecondition This link has multiple components.
+         *
+         * \param modBase the modular base that determines the exact parity
+         * condition to test, as described above.
+         * \return the resulting parity projection of this knot.
+         */
+        Link parityProjection(size_t modBase = 2) const;
 
         /**
          * Returns the Alexander polynomial of this classical knot.
@@ -3819,20 +3665,28 @@ class Link :
          */
         const Polynomial<Integer>& alexander() const;
         /**
-         * Is the Alexander polynomial of this knot already known?
-         * See alexander() for further details.
+         * Is the Alexander polynomial of this knot already known (or trivial
+         * to determine)?  See alexander() for further details.
          *
          * If this property is already known, future calls to alexander() will
          * be very fast (simply returning the precalculated value).
          *
-         * At present, Regina only computes Alexander polynomials for classical
-         * knots.  If this link is empty, has multiple components, or uses a
-         * virtual diagram, then this routine is still safe to call, and will
-         * simply return \c false.
+         * Note that alexander() requires a classical knot as a precondition.
+         * Therefore, if this link diagram is virtual, empty, or has multiple
+         * components, then knowsAlexander() will simply return `false`.
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make Alexander polynomials trivial to compute;
+         * however, it is provided for compatibility with other `knows...()`
+         * routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate, _and_ the preconditions for alexander() are
+         * satisfied.
          */
-        bool knowsAlexander() const;
+        bool knowsAlexander(bool cachedOnly = false) const;
 
         /**
          * Returns the Kauffman bracket polynomial of this link diagram.
@@ -3932,15 +3786,19 @@ class Link :
         [[deprecated]] const Laurent<Integer>& bracket(
             Algorithm alg, ProgressTracker* tracker) const;
         /**
-         * Is the Kauffman bracket polynomial of this link diagram
-         * already known?  See bracket() for further details.
+         * Is the Kauffman bracket polynomial of this link diagram already
+         * known (or trivial to determine)?  See bracket() for further details.
          *
          * If this property is already known, future calls to bracket() will
          * be very fast (simply returning the precalculated value).
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate.
          */
-        bool knowsBracket() const;
+        bool knowsBracket(bool cachedOnly = false) const;
 
         /**
          * Returns the Jones polynomial of this link, but with all
@@ -4059,15 +3917,19 @@ class Link :
         [[deprecated]] const Laurent<Integer>& jones(
             Algorithm alg, ProgressTracker* tracker) const;
         /**
-         * Is the Jones polynomial of this link already known?
-         * See jones() for further details.
+         * Is the Jones polynomial of this link already known (or trivial to
+         * determine)?  See jones() for further details.
          *
          * If this property is already known, future calls to jones() will be
          * very fast (simply returning the precalculated value).
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate.
          */
-        bool knowsJones() const;
+        bool knowsJones(bool cachedOnly = false) const;
 
         /**
          * Returns the HOMFLY-PT polynomial of this classical link, as a
@@ -4280,20 +4142,29 @@ class Link :
         const Laurent2<Integer>& homfly(Algorithm alg = Algorithm::Default,
             ProgressTracker* tracker = nullptr) const;
         /**
-         * Is the HOMFLY-PT polynomial of this link already known?
-         * See homflyAZ() and homflyLM() for further details.
+         * Is the HOMFLY-PT polynomial of this link already known (or trivial
+         * to determine)?  See homflyAZ() and homflyLM() for further details.
          *
          * If this property is already known, future calls to homfly(),
          * homflyAZ() and homflyLM() will all be very fast (simply returning
          * the precalculated values).
          *
-         * At present, Regina only computes HOMFLY-PT polynomials for classical
-         * links.  If this is a virtual (not classical) link diagram, then
-         * this routine is still safe to call, and will simply return \c false.
+         * Note that homflyAZ() and homflyLM() require a classical link diagram
+         * as a precondition.  Therefore, if this link diagram is virtual (not
+         * classical), then knowsHomfly() will simply return `false`.
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make HOMFLY-PT polynomials trivial to compute;
+         * however, it is provided for compatibility with other `knows...()`
+         * routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate, _and_ the preconditions for homflyAZ() and
+         * homflyLM() are satisfied.
          */
-        bool knowsHomfly() const;
+        bool knowsHomfly(bool cachedOnly = false) const;
 
         /**
          * Converts between the (\a alpha, \a z) and (\a l, \a m)
@@ -4376,15 +4247,23 @@ class Link :
         const Arrow& arrow(Algorithm alg = Algorithm::Default,
             int threads = 1, ProgressTracker* tracker = nullptr) const;
         /**
-         * Is the normalised arrow polynomial of this link already known?
-         * See arrow() for further details.
+         * Is the normalised arrow polynomial of this link already known (or
+         * trivial to determine)?  See arrow() for further details.
          *
          * If this property is already known, future calls to arrow() will be
          * very fast (simply returning the precalculated value).
          *
-         * \return \c true if and only if this property is already known.
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make arrow polynomials trivial to compute;
+         * however, it is provided for compatibility with other `knows...()`
+         * routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate.
          */
-        bool knowsArrow() const;
+        bool knowsArrow(bool cachedOnly = false) const;
 
         /**
          * Returns the affine index polynomial of this knot.  This polynomial
@@ -5716,8 +5595,15 @@ class Link :
         /**
          * Constructs the _signature_ for this knot or link diagram.
          *
-         * A _signature_ is a compact text representation of a link diagram
-         * that uniquely determines the diagram up to any combination of:
+         * Most users will not need to use this routine, which is extremely
+         * customisable; instead just call knotSig() for a first-generation
+         * signature (if you need backward compatibility), or neoSig() for a
+         * second-generation signature (if you want better performance).
+         * Read on for the full details.
+         *
+         * A _signature_ is a compact representation of a link diagram,
+         * typically (but not necessarily) in a readable text form, that
+         * uniquely determines the diagram up to any combination of:
          *
          * - relabelling;
          *
@@ -5729,42 +5615,92 @@ class Link :
          * - (optionally) rotating the entire diagram, which preserves the sign
          *   of every crossing but switches the upper and lower strands.
          *
-         * Signatures are now supported for all link diagrams with fewer than
-         * 64 link components.  Specifically:
+         * Signatures are supported for all link diagrams with fewer than 64
+         * link components.
          *
-         * - Regina 7.3 and earlier only offered signatures for knots.
-         *   As of Regina 7.4, signatures are now supported for arbitrary
-         *   link diagrams (but see the next point), and for knots the new
-         *   signatures are identical to the old.
+         * Regina supports _first-generation_ and _second-generation_
+         * signatures:
          *
-         * - The implementation uses bitmasks, and a side-effect of this is
-         *   that it can only support fewer than 64 link components.  However,
-         *   since the running time is exponential in the number of components
-         *   (if we allow reversal, which is the default) then it would be
-         *   completely infeasible to use this routine in practice with _more_
-         *   components than this.  If there are 64 or more link components
-         *   then this routine will throw an exception.
+         * - First-generation signatures are the old knot/link signatures from
+         *   Regina ≤ 7.x, and are _not_ recommended for use in new code.
+         *   They encode a knot/link diagram as a printable ASCII string.
+         *   You can compute the first-generation signature by calling
+         *   `knotSig()`.  (Despite the legacy name, `knotSig()` does also
+         *   support multiple-component links.)
          *
-         * The signature is constructed entirely of printable characters,
-         * and has length proportional to `n log n`, where \a n
-         * is the number of crossings.
+         * - Second-generation signatures are significantly shorter, and support
+         *   both printable encodings (as an ASCII string) and binary encodings
+         *   (as a raw byte sequence, which is even shorter but unprintable).
+         *   These are better to use in new code, but be aware that they are
+         *   only supported in Regina ≥ 8.0.  You can compute the
+         *   second-generation signature in string form by calling `neoSig()`,
+         *   or in binary form by calling `neoSig<LinkSigBinary>()`.
+         *
+         * - If you are not sure, just use the second-generation signature by
+         *   calling `neoSig()`.
+         *
+         * - This routine `sig()` is a generic routine that allows you to
+         *   compute _either_ a first-generation or second-generation signature
+         *   by passing an appropriate template argument: `sig<1>()` or
+         *  `sig<2>()`.
+         *
+         * Signatures can also use different _encodings_.  The role of an
+         * encoding is to convert the combinatorial link data into its final
+         * signature form (e.g., a printable string, or a byte sequence); see
+         * the LinkSigEncoding concept for full details.  Regina offers the
+         * following encodings:
+         *
+         * - The encoding LinkSigPrintable encodes the data as a `std::string`
+         *   consisting entirely of printable characters in the 7-bit ASCII
+         *   range.  This is the default encoding for both first-generation and
+         *   second-generation signatures.
+         *
+         * - The encoding LinkSigBinary encodes the data in binary, as a
+         *   ByteSequence.  This is only available for second-generation
+         *   signatures.  This binary encoding is typically shorter than the
+         *   printable string encoding, and is useful if memory usage needs to
+         *   be kept to a minimum.
+         *
+         * - Most users should only ever need the default encoding.  To use
+         *   a non-default encoding, you should pass the encoding class as a
+         *   template argument to the relevant signature function (e.g., to
+         *   neoSig(), or to sig()).
          *
          * The routine fromSig() can be used to recover a link diagram from
-         * its signature.  The resulting diagram might not be identical to
-         * the original, but it will be related by zero or more applications
-         * of relabelling, and (according to the arguments) reflection of the
+         * its signature (it supports both first-generation and
+         * second-generation signatures, and supports both string and binary
+         * encodings).  The resulting diagram might not be identical to the
+         * original, but it will be related by zero or more applications of
+         * relabelling, and (according to the arguments) reflection of the
          * diagram, rotation of the diagram, and/or reversal of individual
          * link components.
          *
-         * The running time is quadratic in the number of crossings and (if we
-         * allow reversal, which is the default) exponential in the number of
-         * link components.  For this reason, signatures should not be used
-         * for links with a large number of components.
+         * The size of a signature is proportional to `n log n`, where \a n
+         * is the number of crossings in the link diagram.
          *
-         * This routine runs in quadratic time.
+         * The running time to compute a signature is quadratic in the number
+         * of crossings and (if we allow reversal, which is the default)
+         * exponential in the number of link components.  For this reason,
+         * signatures should not be used for links with a large number of
+         * components.
          *
          * \exception NotImplemented This link diagram has 64 or more link
          * components.
+         *
+         * \python Python does not support C++ templates.  Instead, you should
+         * pass the template arguments at runtime, using the argument order
+         * `sig(generation, allowReflection, allowReversal, allowRotation,
+         * encoding)`.  So, for example, to generate a string-based
+         * second-generation signature, you can call `sig(2)`, or to disallow
+         * reversal, `sig(2, allowReversal = False)`.  For a binary signature,
+         * you can call `sig(2, encoding = LinkSigBinary)`.
+         * When generating binary signatures (via `LinkSigBinary`), the return
+         * value will be a Python `bytes` object (not a ByteSequence).
+         *
+         * \tparam generation either 1 or 2, indicating whether to generate a
+         * first-generation or second-generation signature.
+         * \tparam Encoding indicates the encoding to use, as discussed in
+         * detail above.
          *
          * \param allowReflection \c true if reflecting the entire link diagram
          * should preserve the signature, or \c false if the signature should
@@ -5778,22 +5714,86 @@ class Link :
          * should preserve the signature, or \c false if the signature should
          * distinguish between a diagram and its rotation (again, unless there
          * is a symmetry).
-         * \return the signature for this link diagram.
+         * \return the signature for this link diagram.  This will be of type
+         * `std::string` for string-based encodings, or ByteSequence for
+         * binary encodings.
          */
-        std::string sig(bool allowReflection = true, bool allowReversal = true,
-            bool allowRotation = true) const;
+        template <int generation,
+            LinkSigEncoding<generation> Encoding = LinkSigPrintable>
+        requires (generation == 1 || generation == 2)
+        typename Encoding::Signature sig(bool allowReflection = true,
+            bool allowReversal = true, bool allowRotation = true) const;
 
         /**
-         * Alias for sig(), which constructs the signature for this
-         * knot or link diagram.
+         * Constructs the second-generation signature for this knot or link
+         * diagram.  This is identical to calling `sig<2, Encoding>()`.
          *
-         * This alias knotSig() has been kept to reflect the fact that, in
-         * older versions of Regina, these signatures were only available for
-         * single-component knots; moreover the old name "knot signatures" can
-         * still be found in the literature.  While this routine is not
-         * deprecated, it is recommended to use sig() in new code.
+         * Second-generation signatures were introduced in Regina 8.0.
+         * They are significantly shorter than the first-generation signatures
+         * from Regina ≤ 7.x, and they support both printable and binary
+         * encodings.  It is strongly recommended to use second-generation
+         * signatures in new code.
          *
-         * See sig() for further details.
+         * See sig() for further details on knot/link signatures in general.
+         *
+         * \exception NotImplemented This link diagram has 64 or more link
+         * components.
+         *
+         * \python You can pass the optional template argument for the
+         * encoding as an additional runtime argument:
+         * `neoSig(allowReflection, allowReversal, allowRotation, encoding)`.
+         * So, for example, to use a binary encoding you can call
+         * `neoSig(encoding = LinkSigBinary)`.  When generating binary
+         * signatures (via `LinkSigBinary`), the return value will be a Python
+         * `bytes` object (not a ByteSequence).
+         *
+         * \tparam Encoding indicates how the combinatorial link data should be
+         * encoded in signature form.  The default \a LinkSigPrintable encodes
+         * the combinatorial data as a printable ASCII `std::string`, and
+         * should be suitable for most users.  If you need to conserve memory,
+         * you may wish to use \a LinkSigBinary instead; this packs the data
+         * into a ByteSequence, which is typically smaller but unprintable.
+         *
+         * \param allowReflection \c true if reflecting the entire link diagram
+         * should preserve the signature, or \c false if the signature should
+         * distinguish between a diagram and its reflection (unless of course
+         * there is a symmetry).
+         * \param allowReversal \c true if reversing some or all link components
+         * should preserve the signature, or \c false if the signature should
+         * distinguish between different orientations (again, unless of course
+         * there are symmetries).
+         * \param allowRotation \c true if rotating the entire link diagram
+         * should preserve the signature, or \c false if the signature should
+         * distinguish between a diagram and its rotation (again, unless there
+         * is a symmetry).
+         * \return the second-generation signature for this link diagram.
+         * This will be of type `std::string` for a string-based encoding
+         * (the default), or ByteSequence for a binary encoding.
+         */
+        template <LinkSigEncoding<2> Encoding = LinkSigPrintable>
+        typename Encoding::Signature neoSig(bool allowReflection = true,
+            bool allowReversal = true, bool allowRotation = true) const;
+
+        /**
+         * Constructs the first-generation signature for this knot or link
+         * diagram.  This is identical to calling `sig<1>()`.
+         *
+         * First-generation signatures were used in Regina ≤ 7.x.  The name
+         * knotSig() reflects the original implementation in Regina 5.1, which
+         * was for knots only; however, first-generation signatures do also
+         * support multiple-component links (this was introduced in Regina 7.4).
+         *
+         * For new code, it is strongly recommended to use second-generation
+         * signatures, as returned by neoSig().  Second-generation signatures
+         * are significantly shorter, and support both printable and binary
+         * encodings.
+         *
+         * See sig() for further details on knot/link signatures in general.
+         *
+         * Note that, unlike the other link signature functions, knotSig() does
+         * not take a template parameter for the encoding.  This is because
+         * first-generation signatures only support the encoding
+         * LinkSigPrintable.
          *
          * \exception NotImplemented This link diagram has 64 or more link
          * components.
@@ -5810,7 +5810,7 @@ class Link :
          * should preserve the signature, or \c false if the signature should
          * distinguish between a diagram and its rotation (again, unless there
          * is a symmetry).
-         * \return the signature for this link diagram.
+         * \return the first-generation signature for this link diagram.
          */
         std::string knotSig(bool allowReflection = true,
             bool allowReversal = true, bool allowRotation = true) const;
@@ -5933,6 +5933,7 @@ class Link :
          * \return the reconstructed link.
          */
         template <typename... Args>
+        requires (SignedCppInteger<Args> && ...)
         static Link fromData(std::initializer_list<int> crossingSigns,
             std::initializer_list<Args>... components);
 
@@ -5946,32 +5947,33 @@ class Link :
          * amongst other things).
          *
          * For the purposes of this routine, we number the crossings
-         * 1, 2, ..., \a n.  The information that you must pass to this
-         * routine is the following:
+         * 1, 2, ..., \a n.  The information that you pass to this routine is
+         * encoded in two sequences:
          *
-         * - The first iterator range (\a beginSigns, \a endSigns)
-         *   encodes the signs of crossings 1, ..., \a n in order.
-         *   Each iterator in this range must dereference to either +1 or -1.
+         * - The first sequence, defined by the iterator range
+         *   (\a beginSigns, \a endSigns), encodes the signs of crossings
+         *   `1,...,n` in order.  Each element of this sequence must be ±1.
          *
-         * - The second iterator range (\a beginComponents, \a endComponents)
-         *   identifies the individual components of the link.
-         *   Each iterator in this range must dereference to a container
-         *   that has a size() function and supports range-based \c for loops
-         *   (so standard C++ container classes such as std::vector<int> and
-         *   std::list<int> are fine).
+         * - The second sequence, defined by the iterator range
+         *   (\a beginComponents, \a endComponents), encodes the individual
+         *   components of the link.  This is actually a sequence of sequences:
+         *   each link component is defined by an "inner" sequence of integers,
+         *   listing the crossings that you visit in order when traversing
+         *   the component.  A positive integer \a i indicates that you pass
+         *   over crossing \a i, and a negative integer -\a i indicates that
+         *   you pass under crossing \a i.
          *
-         * - The container for each component must be filled with integers,
-         *   which identify the crossings you visit in order when traversing
-         *   the component.  A positive entry \a i indicates that you pass
-         *   over crossing \a i, and a negative entry -\a i indicates that you
-         *   pass under crossing \a i.
+         * - To encode a component with no crossings, your inner sequence may
+         *   be empty, or may contain the single integer 0 (either is fine).
          *
-         * - To encode a component with no crossings, you may use either an
-         *   empty container or a container containing the single integer 0.
+         * This routine does not insist on any specific types for the
+         * sequences, as long as all sequences support iteration (this
+         * includes the outer sequences for signs and components, as well as
+         * the inner sequences of crossings for each individual component).
          *
          * Be aware that, once the link has been constructed, the crossings
-         * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
-         * (since every Link object numbers its crossings starting from 0).
+         * `1,...,n` will have been reindexed as `0,...,n-1` (since every Link
+         * object numbers its crossings starting from 0).
          *
          * As an example, Python users can construct the left-hand trefoil and
          * the Hopf link as follows:
@@ -5984,40 +5986,58 @@ class Link :
          * \exception InvalidArgument A link could not be reconstructed from
          * the given data.
          *
-         * \python The signs should be passed as a single Python list of
-         * integers (not an iterator pair).  Likewise, the components should be
-         * passed as a Python list of lists of integers (not an iterator pair).
-         * In the case of a knot (which has only one component), you are
-         * welcome to replace the list of lists `[[...]]` with a
-         * single list `[...]`; however, be aware that a single empty list `[ ]`
-         * will be interpreted as an empty link (not a zero-crossing unknot).
+         * \python The sequence of signs should be passed as a single Python
+         * list of integers (not an iterator pair).  Likewise, the sequence of
+         * components should be passed as a Python list of lists of integers
+         * (not an iterator pair).  In the case of a knot (which has only one
+         * component), you are welcome to replace the list of lists `[[...]]`
+         * with a single list `[...]`; however, be aware that a single empty
+         * list `[ ]` will be interpreted as an empty link (not a zero-crossing
+         * unknot).
          *
-         * \param beginSigns the beginning of the list of crossing signs.
+         * \param beginSigns the beginning of the sequence of crossing signs.
          * \param endSigns a past-the-end iterator indicating the end of
-         * the list of crossing signs.
-         * \param beginComponents the beginning of the list of containers
-         * describing each link component.
+         * the sequence of crossing signs.
+         * \param beginComponents the beginning of the sequence of link
+         * components.
          * \param endComponents a past-the-end iterator indicating the
-         * end of the list of link components.
+         * end of the sequence of link components.
          * \return the reconstructed link.
          */
-        template <typename SignIterator, typename ComponentIterator>
+        template <std::input_iterator SignIterator,
+            std::input_iterator ComponentIterator>
+        requires
+            SignedCppInteger<std::iter_value_t<SignIterator>> &&
+            Iterable<std::iter_value_t<ComponentIterator>> &&
+            requires(ComponentIterator it) {
+                // We use + here to decay the inner sequence element to a plain
+                // value type.  In C++23, we can replace +(...) with auto(...).
+                { +(*(it->begin())) } -> SignedCppInteger;
+            }
         static Link fromData(SignIterator beginSigns, SignIterator endSigns,
             ComponentIterator beginComponents, ComponentIterator endComponents);
 
         /**
-         * Recovers a classical or virtual link diagram from its knot/link
-         * signature.  See sig() for more information on these signatures.
+         * Recovers a classical or virtual link diagram from a string-based
+         * knot/link signature.  This may be either a first-generation
+         * signature (computed via `knotSig()`), or a second-generation
+         * signature (computed via `neoSig()`).
          *
-         * Calling sig() followed by fromSig() is not guaranteed to produce
-         * an _identical_ link diagram to the original, but it is guaranteed
-         * to produce one that is related by zero or more applications of
-         * relabelling, and (according to the arguments that were passed
-         * to sig()) reflection of the diagram, rotation of the diagram,
-         * and/or reversal of individual link components.
+         * See sig() for further details on knot/link signatures in general.
+         *
+         * There is also a variant of fromSig() that takes a byte sequence,
+         * and which can work with binary second-generation signatures.
+         *
+         * Computing a signature and then calling fromSig() on the result is
+         * not guaranteed to produce an _identical_ link diagram to the
+         * original, but it _is_ guaranteed to produce one that is related by
+         * zero or more applications of relabelling, and (according to the
+         * arguments that were passed to the signature function) reflection of
+         * the diagram, rotation of the diagram, and/or reversal of individual
+         * link components.
          *
          * \exception InvalidArgument The given string was not a valid
-         * knot/link signature.
+         * string-based knot/link signature.
          *
          * \param sig the signature of the link diagram to construct.
          * Note that signatures are case-sensitive.
@@ -6026,25 +6046,131 @@ class Link :
         static Link fromSig(const std::string& sig);
 
         /**
-         * Alias for fromSig(), to recover a classical or virtual link diagram
-         * from its knot/link signature.
+         * Recovers a classical or virtual link diagram from a binary
+         * second-generation knot/link signature.  This signature would
+         * typically have been computed via `neoSig<LinkSigBinary>()`.
          *
-         * This alias fromKnotSig() has been kept to reflect the fact that, in
-         * older versions of Regina, these signatures were only available for
-         * single-component knots; moreover the old name "knot signatures" can
-         * still be found in the literature.  While this routine is not
-         * deprecated, it is recommended to use fromSig() in new code.
+         * See sig() for further details on knot/link signatures in general.
+         *
+         * There is also a variant of fromSig() that takes a string, and which
+         * can work with both first-generation and string-based
+         * second-generation signatures.
+         *
+         * Computing a signature and then calling fromSig() on the result is
+         * not guaranteed to produce an _identical_ link diagram to the
+         * original, but it _is_ guaranteed to produce one that is related by
+         * zero or more applications of relabelling, and (according to the
+         * arguments that were passed to the signature function) reflection of
+         * the diagram, rotation of the diagram, and/or reversal of individual
+         * link components.
+         *
+         * \python You should pass the signature as a Python `bytes` object.
+         *
+         * \exception InvalidArgument The given byte sequence was not a valid
+         * binary second-generation knot/link signature.
+         *
+         * \param sig the signature of the link diagram to construct.
+         * \return the reconstructed link diagram.
+         */
+        static Link fromSig(const ByteSequence& sig);
+
+        /**
+         * Deprecated alias for fromSig(), to recover a classical or virtual
+         * link diagram from a string-based knot/link signature.
+         *
+         * \deprecated You should call this as fromSig() instead.
          *
          * See fromSig() for further details.
          *
          * \exception InvalidArgument The given string was not a valid
-         * knot/link signature.
+         * string-based knot/link signature.
          *
          * \param sig the signature of the link diagram to construct.
          * Note that signatures are case-sensitive.
          * \return the reconstructed link diagram.
          */
-        static Link fromKnotSig(const std::string& sig);
+        [[deprecated]] static Link fromKnotSig(const std::string& sig);
+
+        /**
+         * Identifies whether the given string-based knot/link signature is
+         * first-generation or second-generation.
+         *
+         * This routine aims to be fast, and does not verify the entire
+         * signature; instead it reads just enough of the initial characters
+         * to make its decision.  What this means is:
+         *
+         * - If the given signature _is_ a first-generation or
+         *   second-generation signature, this routine guarantees to return
+         *   1 or 2 respectively.
+         *
+         * - Otherwise, there are no guarantees: this output _could_ return 0
+         *   (indicating that it identified \a sig as being neither of these),
+         *   or it could still return 1 or 2 (indicating that, whilst invalid,
+         *   \a sig nevertheless has a prefix that _looks_ like a
+         *   first-generation or second-generation signature).
+         *
+         * As a special case, for the empty link and zero-crossing unlinks,
+         * the first-generation and second-generation signatures are identical
+         * (`_` for the empty link, or `aa…a` for a zero-crossing unlink).
+         * In these scenarios, sigGeneration() will return 2.
+         *
+         * If you need to verify the _validity_ of a signature, this is not
+         * the correct routine to use - instead you should test whether
+         * `fromSig(sig)` throws an exception.
+         *
+         * \param sig a string-based knot/link signature of some generation.
+         * \return 1 or 2 if \a sig is a first-generation or second-generation
+         * signature respectively, or 0 if \a sig was explicitly discovered to
+         * be neither of these.  As described above, if \s sig is _not_ a
+         * knot/link signature of any generation, this routine could return
+         * any of the values 0, 1 or 2.
+         */
+        static int sigGeneration(const std::string& sig);
+
+        /**
+         * Deduces the number of crossings in a connected link diagram from
+         * its string-based knot/link signature.  This may be either a
+         * first-generation signature (computed via `knotSig()`),
+         * or a second-generation signature (computed via `neoSig()`).
+         *
+         * See knotSig() and neoSig() for general information on
+         * first-generation and second-generation isomorphism signatures.
+         *
+         * An important warning regarding connectivity and components:
+         *
+         * - If the given signature describes a _connected_ link diagram, this
+         *   routine will return the total number of crossings in that diagram.
+         *   This is the intended use case for this routine.
+         *
+         * - If the signature describes a _disconnected_ link diagram, this
+         *   routine will only return the number of crossings in the first
+         *   connected diagram component.  If you need the total size of a
+         *   disconnected link diagram, you will need to reconstruct the full
+         *   diagram by calling fromSig() instead.
+         *
+         * - If the signature describes the empty link, this routine
+         *   will return zero.
+         *
+         * This routine is very fast, since it only examines the first few
+         * characters of the given signature (in which the size of the first
+         * diagram component is encoded).  However, a side-effect of this is
+         * that it is possible to pass an _invalid_ signature and still
+         * receive a positive result.  If you need to test whether a signature
+         * is valid or not, you must call fromSig() instead, which will examine
+         * the entire signature in full.
+         *
+         * \exception InvalidArgument The given string was not a valid
+         * string-based knot/link signature.  As described above, invalid
+         * signatures are not always detected; this exception will only be
+         * thrown if the error is so severe that the diagram component size
+         * cannot be deduced from the first few characters.
+         *
+         * \param sig a signature of some link diagram.  Note that signatures
+         * are case-sensitive.
+         * \return the size of the first connected diagram component, or 0 if
+         * the given signature describes the empty link.
+         */
+        static size_t sigComponentSize(const std::string& sig);
 
         /**
          * Reconstructs a classical or virtual link from its given tight
@@ -6150,11 +6276,6 @@ class Link :
          * sequence of integers.  This sequence is given by passing a
          * pair of begin/end iterators.
          *
-         * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces a native C++ integer.
-         * (The specific native C++ integer type being used will be deduced
-         * from the type \a Iterator.)
-         *
          * \warning In general, the classical Gauss code does not contain
          * enough information to uniquely reconstruct a classical knot.
          * For prime knots, both a knot and its reflection can be described by
@@ -6177,7 +6298,8 @@ class Link :
          * sequence of integers for a classical Gauss code.
          * \return the reconstructed knot.
          */
-        template <typename Iterator>
+        template <std::random_access_iterator Iterator>
+        requires SignedCppInteger<std::iter_value_t<Iterator>>
         static Link fromGauss(Iterator begin, Iterator end);
 
         /**
@@ -6272,8 +6394,8 @@ class Link :
          * sequence of tokens for an "oriented" Gauss code.
          * \return the reconstructed knot.
          */
-        template <RandomAccessIteratorFor<std::string> iterator>
-        static Link fromOrientedGauss(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<std::string> Iterator>
+        static Link fromOrientedGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new classical or virtual knot from a "signed" variant
@@ -6371,8 +6493,8 @@ class Link :
          * sequence of tokens for a "signed" Gauss code.
          * \return the reconstructed knot.
          */
-        template <RandomAccessIteratorFor<std::string> iterator>
-        static Link fromSignedGauss(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<std::string> Iterator>
+        static Link fromSignedGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new classical or virtual link from Bob Jenkins' format,
@@ -6459,11 +6581,6 @@ class Link :
          * sequence of integers.  This sequence is given by passing a
          * pair of begin/end iterators.
          *
-         * \pre \a Iterator is a forward iterator type, and
-         * dereferencing such an iterator produces a native C++ integer.
-         * (The specific native C++ integer type being used will be deduced
-         * from the type \a Iterator.)
-         *
          * \exception InvalidArgument The given sequence was not a valid
          * encoding of a classical or virtual link in Jenkins' format.
          *
@@ -6476,7 +6593,8 @@ class Link :
          * sequence of integers that describes a link.
          * \return the reconstructed link.
          */
-        template <typename Iterator>
+        template <std::input_iterator Iterator>
+        requires SignedCppInteger<std::iter_value_t<Iterator>>
         static Link fromJenkins(Iterator begin, Iterator end);
 
         /**
@@ -6555,11 +6673,6 @@ class Link :
          * Dowker-Thistlethwaite notation, but for this you will need to use
          * the string-based variant of fromDT().
          *
-         * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces a native C++ integer.
-         * (The specific native C++ integer type being used will be deduced
-         * from the type \a Iterator.)
-         *
          * \warning In general, Dowker-Thistlethwaite notation does not contain
          * enough information to uniquely reconstruct a classical knot.
          * For prime knots, both a knot and its reflection can be described by
@@ -6582,7 +6695,8 @@ class Link :
          * for a classical knot.
          * \return the reconstructed knot.
          */
-        template <typename Iterator>
+        template <std::random_access_iterator Iterator>
+        requires SignedCppInteger<std::iter_value_t<Iterator>>
         static Link fromDT(Iterator begin, Iterator end);
 
         /**
@@ -6692,14 +6806,11 @@ class Link :
          * sequence of 4-tuples of integers.  This sequence is given by
          * passing a pair of begin/end iterators.
          *
-         * \pre \a Iterator is a random access iterator type.
-         *
-         * \pre If \a it is such an iterator, then `(*it)[0]`,
-         * `(*it)[1]`, `(*it)[2]` and `(*it)[3]`
-         * will give the elements of the corresponding 4-tuple, which
-         * can then be treated as native C++ integers.  (The specific native
-         * C++ integer type being used will be deduced from the type
-         * \a Iterator.)
+         * For each individual 4-tuple \a t, the elements of \a t will be
+         * accessed via the subscript operator; that is, `t[0], ..., t[3]`.
+         * This means you have many choices for your tuple type: valid examples
+         * include `std::array<long, 4>`, `std::vector<int>`, Regina's own
+         * `FixedArray<long>`, or a C-style array `int[4]`.
          *
          * \warning If the link contains any components that sit completely
          * above all other link components (in other words, link components
@@ -6723,7 +6834,12 @@ class Link :
          * sequence of 4-tuples for a planar diagram code.
          * \return the reconstructed link.
          */
-        template <typename Iterator>
+        template <std::random_access_iterator Iterator>
+        requires requires(Iterator it, int index) {
+            // We use + here to decay the tuple element to a plain value type.
+            // In C++23, we can replace +(*it)[index] with auto((*it)[index]).
+            { +(*it)[index] } -> CppInteger;
+        }
         static Link fromPD(Iterator begin, Iterator end);
 
         /**
@@ -6888,6 +7004,49 @@ class Link :
         std::vector<StrandRef>::iterator componentIterator(const StrandRef& s);
 
         /**
+         * Internal to fromSig().
+         *
+         * Reads and constructs a single connected diagram component from
+         * a first-generation knot/link signature (via the given decoder),
+         * and appends the resulting crossings and components to this link.
+         *
+         * It is assumed that the size of the component and the character
+         * width of an arbitrary crossing index have already been read from
+         * the decoder (these are passed as arguments to this routine).
+         *
+         * This routine will throw an InvalidArgument if it encounters any
+         * errors, since that is what fromSig() is expected to throw.
+         * Note that the decoder itself might throw an InvalidInput exception;
+         * however, fromSig() will take responsibility for converting this.
+         */
+        template <CharIterator Iterator>
+        requires std::bidirectional_iterator<Iterator>
+        void fillDiagramComponentFromSig1(size_t size, int intWidth,
+            Base64Decoder<Iterator>& decoder);
+
+        /**
+         * Internal to fromSig().
+         *
+         * Reads and constructs a single connected diagram component from
+         * a second-generation knot/link signature (via the given decoder),
+         * and appends the resulting crossings and components to this link.
+         *
+         * It is assumed that the size of the component and the character
+         * width of an arbitrary crossing index have already been read from
+         * the decoder (the size is passed as an argument to this routine,
+         * and the character width is not needed and can be safely ignored).
+         *
+         * This routine will throw an InvalidArgument if it encounters any
+         * errors, since that is what fromSig() is expected to throw.
+         * Note that the decoder itself might throw an InvalidInput exception;
+         * however, fromSig() will take responsibility for converting this.
+         */
+        template <CharIterator Iterator>
+        requires std::bidirectional_iterator<Iterator>
+        void fillDiagramComponentFromSig2(size_t size,
+            Base64BitDecoder<Iterator>& decoder);
+
+        /**
          * Used with fromEnhancedGauss() to indicate which kind of Gauss code
          * we are reconstructing a knot from.
          */
@@ -6903,8 +7062,8 @@ class Link :
          * share much of the same source code.
          */
         template <GaussEnhancement type_,
-            RandomAccessIteratorFor<std::string> iterator>
-        static Link fromEnhancedGauss(iterator begin, iterator end);
+            RandomAccessIteratorFor<std::string> Iterator>
+        static Link fromEnhancedGauss(Iterator begin, Iterator end);
         /**
          * Internal to fromOrientedGauss().
          *
@@ -6968,6 +7127,7 @@ class Link :
          * routine.
          */
         template <typename... Args>
+        requires (SignedCppInteger<Args> && ...)
         void addComponents(size_t strandsRemaining,
             std::initializer_list<int> component,
             std::initializer_list<Args>... otherComponents);
@@ -7406,7 +7566,6 @@ class Link :
     friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
-    friend class XMLWriter<Link>;
 };
 
 /**
@@ -7434,6 +7593,44 @@ void swap(Link& lhs, Link& rhs);
 #include "link/modellinkgraph.h"
 
 namespace regina {
+
+#ifndef __APIDOCS
+namespace detail {
+    template <>
+    struct RetriangulateParams<Link> {
+        using Signature = ByteSequence;
+
+        static Signature sig(const Link& link) {
+            // Choose a sig encoding that uses less memory.
+            return link.sig<2, LinkSigBinary>();
+        }
+
+        static Signature rigidSig(const Link& link) {
+            // Do not allow reflection, reversal and/or rotation.
+            return link.sig<2, LinkSigBinary>(false, false, false);
+        }
+
+        static constexpr const char* progressStage = "Exploring diagrams";
+
+        enum class PropagationOptions {
+            /**
+             * Indicates that only classical Reidemeister moves should be
+             * allowed.
+             */
+            ClassicalOnly,
+            /**
+             * Indicates that both classical and virtual Reidemeister moves
+             * should be allowed.
+             */
+            ClassicalAndVirtual
+        };
+
+        template <TerminatingCallback<Link&&, const Signature&> Action>
+        static void propagateFrom(const Signature& sig, size_t maxSize,
+                PropagationOptions options, Action&& candidateAction);
+    };
+} // namespace detail
+#endif // __APIDOCS
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
@@ -7526,6 +7723,11 @@ inline void StrandRef::jump() {
     strand_ ^= 1;
 }
 
+inline void StrandRef::reset() {
+    crossing_ = nullptr;
+    strand_ = 0;
+}
+
 inline StrandRef::operator bool() const {
     return (crossing_ != nullptr);
 }
@@ -7577,10 +7779,10 @@ inline Crossing::Crossing(int sign) : sign_(sign) {
 
 // Inline functions for Link
 
-inline Link::Link() : virtualGenus_(-1) {
+inline Link::Link() {
 }
 
-inline Link::Link(size_t unknots) : virtualGenus_(-1) {
+inline Link::Link(size_t unknots) {
     components_.resize(unknots);
     std::fill(components_.begin(), components_.end(), StrandRef());
 }
@@ -7605,7 +7807,7 @@ inline Crossing* Link::crossing(size_t index) const {
 }
 
 inline auto Link::crossings() const {
-    return ListView(crossings_);
+    return std::views::all(crossings_);
 }
 
 inline StrandRef Link::component(size_t index) const {
@@ -7613,7 +7815,7 @@ inline StrandRef Link::component(size_t index) const {
 }
 
 inline auto Link::components() const {
-    return ListView(components_);
+    return std::views::all(components_);
 }
 
 inline StrandRef Link::strand(ssize_t id) const {
@@ -7691,24 +7893,36 @@ inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
     return homflyAZ(alg, tracker);
 }
 
-inline bool Link::knowsAlexander() const {
-    return alexander_.has_value();
+inline bool Link::knowsAlexander(bool) const {
+    // Handle preconditions in a way that puts the most expensive tests last.
+    return alexander_.has_value() && components_.size() == 1 && isClassical();
 }
-inline bool Link::knowsBracket() const {
+inline bool Link::knowsBracket(bool cachedOnly) const {
+    if (bracket_.has_value())
+        return true;
+    if (cachedOnly)
+        return false;
+
     // If we know the arrow polynomial, then the Kauffman bracket and
     // Jones polynomial are trivial to deduce.
-    return bracket_.has_value() || arrow_.has_value();
+    return arrow_.has_value();
 }
-inline bool Link::knowsJones() const {
+inline bool Link::knowsJones(bool cachedOnly) const {
+    if (jones_.has_value())
+        return true;
+    if (cachedOnly)
+        return false;
+
     // If we know the arrow polynomial, then the Kauffman bracket and
     // Jones polynomial are trivial to deduce.
-    return jones_.has_value() || arrow_.has_value();
+    return arrow_.has_value();
 }
-inline bool Link::knowsHomfly() const {
+inline bool Link::knowsHomfly(bool) const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
-    return homflyAZ_.has_value();
+    // Handle preconditions in a way that puts the most expensive tests last.
+    return homflyAZ_.has_value() && isClassical();
 }
-inline bool Link::knowsArrow() const {
+inline bool Link::knowsArrow(bool) const {
     return arrow_.has_value();
 }
 
@@ -7886,36 +8100,6 @@ inline std::optional<Link> Link::withR3(Crossing* crossing, int side) const {
     return ans;
 }
 
-inline bool Link::r1(Crossing* crossing, bool, bool perform) {
-    return internalR1(crossing, true, perform);
-}
-
-inline bool Link::r1(StrandRef arc, int side, int sign, bool, bool perform) {
-    return internalR1(arc, side, sign, true, perform);
-}
-
-inline bool Link::r2(StrandRef arc, bool, bool perform) {
-    return internalR2(arc, true, perform);
-}
-
-inline bool Link::r2(Crossing* crossing, bool, bool perform) {
-    return internalR2(StrandRef(crossing, 1), true, perform);
-}
-
-inline bool Link::r2(StrandRef upperArc, int upperSide,
-        StrandRef lowerArc, int lowerSide, bool, bool perform) {
-    return internalR2General(upperArc, upperSide, lowerArc, lowerSide,
-        true /* classical only */, perform);
-}
-
-inline bool Link::r3(StrandRef arc, int side, bool, bool perform) {
-    return internalR3(arc, side, true, perform);
-}
-
-inline bool Link::r3(Crossing* crossing, int side, bool, bool perform) {
-    return internalR3(crossing, side, true, perform);
-}
-
 inline bool Link::internalR3(Crossing* crossing, int side, bool check,
         bool perform) {
     StrandRef s(crossing, 1);
@@ -7983,7 +8167,7 @@ inline bool Link::intelligentSimplify() {
 template <typename Action, typename... Args>
 requires
     TerminatingCallback<Action, Link&&, Args...> ||
-    TerminatingCallback<Action, const std::string&, Link&&, Args...>
+    TerminatingCallback<Action, const ByteSequence&, Link&&, Args...>
 inline bool Link::rewrite(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
@@ -7993,11 +8177,11 @@ inline bool Link::rewrite(int height, int threads,
             "rewrite() requires fewer than 64 link components");
     }
 
-    // The template option std::true_type means allow classical moves only.
     if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
         // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
-            detail::RetriangulateDefault, std::true_type>(
+                detail::RetriangulateDefault,
+                detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
@@ -8005,9 +8189,10 @@ inline bool Link::rewrite(int height, int threads,
     } else {
         // Action takes both a signature and a link.
         return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, std::true_type>(
+                detail::RetriangulateDefault,
+                detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Link&& obj) {
+            [&](const ByteSequence& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }
@@ -8016,7 +8201,7 @@ inline bool Link::rewrite(int height, int threads,
 template <typename Action, typename... Args>
 requires
     TerminatingCallback<Action, Link&&, Args...> ||
-    TerminatingCallback<Action, const std::string&, Link&&, Args...>
+    TerminatingCallback<Action, const ByteSequence&, Link&&, Args...>
 inline bool Link::rewriteVirtual(int height, int threads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     if (components_.size() >= 64) {
@@ -8026,12 +8211,11 @@ inline bool Link::rewriteVirtual(int height, int threads,
             "rewriteVirtual() requires fewer than 64 link components");
     }
 
-    // The template option std::false_type means allow both classical and
-    // virtual moves.
     if constexpr (TerminatingCallback<Action, Link&&, Args...>) {
         // Action takes just a link.
         return detail::retriangulateInternal<Link, false,
-            detail::RetriangulateDefault, std::false_type>(
+                detail::RetriangulateDefault,
+                detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, false /* rigid */, height, threads, tracker,
             [&](Link&& obj) {
                 return action(std::move(obj), std::forward<Args>(args)...);
@@ -8039,9 +8223,10 @@ inline bool Link::rewriteVirtual(int height, int threads,
     } else {
         // Action takes both a signature and a link.
         return detail::retriangulateInternal<Link, true,
-            detail::RetriangulateDefault, std::false_type>(
+                detail::RetriangulateDefault,
+                detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, false /* rigid */, height, threads, tracker,
-            [&](const std::string& sig, Link&& obj) {
+            [&](const ByteSequence& sig, Link&& obj) {
                 return action(sig, std::move(obj), std::forward<Args>(args)...);
             });
     }
@@ -8056,13 +8241,13 @@ inline bool Link::simplifyExhaustive(int height, int threads,
             "simplifyExhaustive() requires fewer than 64 link components");
     }
 
-    // The template option std::true_type means allow classical moves only,
-    // and std::false_type means allow both classical and virtual moves.
     if (isClassical())
-        return detail::simplifyExhaustiveInternal<Link, std::true_type>(
+        return detail::simplifyExhaustiveInternal<Link,
+                detail::PropagationOptions<Link>::ClassicalOnly>(
             *this, height, threads, tracker);
     else
-        return detail::simplifyExhaustiveInternal<Link, std::false_type>(
+        return detail::simplifyExhaustiveInternal<Link,
+                detail::PropagationOptions<Link>::ClassicalAndVirtual>(
             *this, height, threads, tracker);
 }
 
@@ -8071,23 +8256,29 @@ inline void Link::join(const StrandRef& s, const StrandRef& t) {
     t.crossing_->prev_[t.strand_] = s;
 }
 
+template <LinkSigEncoding<2> Encoding>
+inline typename Encoding::Signature Link::neoSig(bool allowReflection,
+        bool allowReversal, bool allowRotation) const {
+    return sig<2, Encoding>(allowReflection, allowReversal, allowRotation);
+}
+
 inline std::string Link::knotSig(bool allowReflection, bool allowReversal,
         bool allowRotation) const {
-    return sig(allowReflection, allowReversal, allowRotation);
+    return sig<1>(allowReflection, allowReversal, allowRotation);
 }
 
 inline Link Link::fromKnotSig(const std::string& sig) {
     return Link::fromSig(sig);
 }
 
-template <RandomAccessIteratorFor<std::string> iterator>
-inline Link Link::fromOrientedGauss(iterator begin, iterator end) {
-    return fromEnhancedGauss<GaussEnhancement::Oriented, iterator>(begin, end);
+template <RandomAccessIteratorFor<std::string> Iterator>
+inline Link Link::fromOrientedGauss(Iterator begin, Iterator end) {
+    return fromEnhancedGauss<GaussEnhancement::Oriented, Iterator>(begin, end);
 }
 
-template <RandomAccessIteratorFor<std::string> iterator>
-inline Link Link::fromSignedGauss(iterator begin, iterator end) {
-    return fromEnhancedGauss<GaussEnhancement::Signed, iterator>(begin, end);
+template <RandomAccessIteratorFor<std::string> Iterator>
+inline Link Link::fromSignedGauss(Iterator begin, Iterator end) {
+    return fromEnhancedGauss<GaussEnhancement::Signed, Iterator>(begin, end);
 }
 
 inline std::string Link::dumpConstruction() const {

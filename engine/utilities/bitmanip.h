@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,8 @@
 #include <bit>
 #include <compare>
 #include "concepts/core.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -88,6 +90,8 @@ class BitManipulatorByType {
                 return 0;
             return t | ((((t & -t) / (x & -x)) >> 1) - 1);
         }
+
+        BitManipulatorByType() = delete;
 };
 
 // Specialisations for individual types.
@@ -108,6 +112,8 @@ class BitManipulatorByType<unsigned char> {
                 return 0;
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(x) + 1));
         }
+
+        BitManipulatorByType() = delete;
 };
 
 template <>
@@ -123,6 +129,8 @@ class BitManipulatorByType<unsigned int> {
                 return 0;
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(x) + 1));
         }
+
+        BitManipulatorByType() = delete;
 };
 
 template <>
@@ -138,6 +146,8 @@ class BitManipulatorByType<unsigned long> {
                 return 0;
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctzl(x) + 1));
         }
+
+        BitManipulatorByType() = delete;
 };
 
 template <>
@@ -153,6 +163,8 @@ class BitManipulatorByType<unsigned long long> {
                 return 0;
             return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctzll(x) + 1));
         }
+
+        BitManipulatorByType() = delete;
 };
 #endif // __GNUC__
 #endif // __DOXYGEN__
@@ -181,7 +193,7 @@ class BitManipulatorByType<unsigned long long> {
  * \ingroup utilities
  */
 template <UnsignedCppInteger T>
-requires (std::popcount(sizeof(T)) == 1)
+requires (std::has_single_bit(sizeof(T)))
 class BitManipulator : public regina::detail::BitManipulatorByType<T> {
     public:
         /**
@@ -195,7 +207,20 @@ class BitManipulator : public regina::detail::BitManipulatorByType<T> {
          * \return the number of bits that are set.
          */
         inline static constexpr int bits(T x) {
+            // As I read the standard, std::popcount() should be defined for
+            // all C++ standard integer  types _and_ extended integer types
+            // (in particular, we should be fine to use this with 128-bit
+            // integers also).  However, in practice we find that gcc 14 does
+            // not support std::popcount(__uint128).  Therefore for now
+            // we will still treat 128-bit integers separately.
+            //
+            // TODO: Have some way to test at compile time whether
+            // std::popcount() is available for 128-bit integers.
             if constexpr (sizeof(T) > sizeof(unsigned long long)) {
+                // We assume this is the 128-bit case described above,
+                // and in particular we assume that std::popcount() _is_
+                // available for integers of half the size.
+                static_assert(sizeof(T) <= sizeof(unsigned long long) * 2);
                 using HalfSize = typename IntOfSize<sizeof(T) / 2>::utype;
                 return std::popcount(static_cast<HalfSize>(x)) +
                     std::popcount(static_cast<HalfSize>(x >> (4 * sizeof(T))));
@@ -298,7 +323,7 @@ class BitManipulator : public regina::detail::BitManipulatorByType<T> {
          *
          * \param x the first integer to examine.
          * \param y the second integer to examine.
-         * \return A three-way comparison result, indicating whether the bits
+         * \return a three-way comparison result, indicating whether the bits
          * of \a x are equal to, a strict subset of, a strict superset of,
          * or incomparable to the bits of \a y.  These outcomes are indicated
          * by the return values `equivalent`, `less`, `greater`, and
@@ -314,6 +339,8 @@ class BitManipulator : public regina::detail::BitManipulatorByType<T> {
             else
                 return std::partial_ordering::unordered;
         }
+
+        BitManipulator() = delete;
 };
 
 } // namespace regina

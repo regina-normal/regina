@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,8 +40,8 @@ using regina::SnapPeaCensusTri;
 void addSnapPeaCensusTri(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnapPeaCensusTri)
 
-    auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
-            (m, "SnapPeaCensusTri", rdoc_scope)
+    auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardSubcomplex<3>>
+            (m, "SnapPeaCensusTri", rdoc::__class)
         .def(pybind11::init<const SnapPeaCensusTri&>(), rdoc::__copy)
         .def("swap", &SnapPeaCensusTri::swap, rdoc::swap)
         .def("section", &SnapPeaCensusTri::section, rdoc::section)
@@ -54,9 +54,8 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
         .def_readonly_static("SEC_7_NOR", &SnapPeaCensusTri::SEC_7_NOR)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<SnapPeaCensusTri>(m, rdoc::global_swap);
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<SnapPeaCensusTri, rdoc>(m);
 
     RDOC_SCOPE_END
 }

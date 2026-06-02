@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -28,20 +28,22 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file maths/primes.h
+ *  \brief Support for finding primes and factorising integers.
+ */
+
 #ifndef __REGINA_PRIMES_H
 #ifndef __DOXYGEN
 #define __REGINA_PRIMES_H
 #endif
-
-/*! \file maths/primes.h
- *  \brief Support for finding primes and factorising integers.
- */
 
 #include "regina-core.h"
 #include "maths/integer.h"
 #include <thread>
 #include <vector>
 #include <mutex>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 

@@ -106,7 +106,16 @@ index 5219c0ff8..101de3b20 100644
  PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
  
  /* https://stackoverflow.com/questions/46798456/handling-gccs-noexcept-type-warning
-@@ -363,6 +371,16 @@ protected:
+@@ -315,6 +323,8 @@ protected:
+             constexpr auto pos_only_pos = constexpr_first<is_pos_only, Extra...>();
+             static_assert(!(has_kw_only_args && has_pos_only_args) || pos_only_pos < kw_only_pos,
+                           "py::pos_only must come before py::kw_only");
++            static_assert(constexpr_sum(std::convertible_to<Extra, const char*>...) <= 1,
++                          "At most one docstring should be provided");
+         }
+ 
+         /* Generate a readable signature describing the function's arguments and return
+@@ -363,6 +373,16 @@ protected:
          std::vector<char *> strings;
      };
  
@@ -123,7 +132,7 @@ index 5219c0ff8..101de3b20 100644
      /// Register a function call with Python (generic non-templated code goes here)
      void initialize_generic(unique_function_record &&unique_rec,
                              const char *text,
-@@ -464,15 +482,33 @@ protected:
+@@ -464,15 +484,33 @@ protected:
                  if (!t) {
                      pybind11_fail("Internal error while parsing type signature (1)");
                  }
@@ -162,7 +171,7 @@ index 5219c0ff8..101de3b20 100644
                  } else {
                      signature += detail::quote_cpp_type_name(detail::clean_type_id(t->name()));
                  }
-@@ -1021,6 +1057,16 @@ protected:
+@@ -1021,6 +1059,16 @@ protected:
          } catch (abi::__forced_unwind &) {
              throw;
  #endif
@@ -179,7 +188,7 @@ index 5219c0ff8..101de3b20 100644
          } catch (...) {
              try_translate_exceptions();
              return nullptr;
-@@ -2726,13 +2772,13 @@ void print(Args &&...args) {
+@@ -2726,13 +2774,13 @@ void print(Args &&...args) {
  
  inline void
  error_already_set::m_fetched_error_deleter(detail::error_fetch_and_normalize *raw_ptr) {
@@ -195,7 +204,7 @@ index 5219c0ff8..101de3b20 100644
      error_scope scope;
      return m_fetched_error->error_string().c_str();
  }
-@@ -2862,7 +2908,7 @@ function get_override(const T *this_ptr, const char *name) {
+@@ -2862,7 +2910,7 @@ function get_override(const T *this_ptr, const char *name) {
  
  #define PYBIND11_OVERRIDE_IMPL(ret_type, cname, name, ...)                                        \
      do {                                                                                          \

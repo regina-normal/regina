@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,7 @@
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 #include "utilities/sequence.h"
 #include <gmpxx.h>
 #include <map>
@@ -92,11 +93,11 @@ namespace {
             using TVResult = typename TuraevViroDetails<exact>::TVResult;
 
         private:
-            TVResult* bracket_;
+            FixedArray<TVResult> bracket_;
                 /**< The cached brackets [0], [1], ..., [r-1] . */
-            TVResult* fact_;
+            FixedArray<TVResult> fact_;
                 /**< The cached values [0]!, [1]!, ..., [r-1]! . */
-            TVResult* inv_;
+            FixedArray<TVResult> inv_;
                 /**< The cached inverses of the values stored in fact[]. */
 
         public:
@@ -106,15 +107,6 @@ namespace {
              * Requires r ≥ 3.
              */
             BracketFactorial(unsigned long r, unsigned long whichRoot);
-
-            /**
-             * Clean up memory.
-             */
-            ~BracketFactorial() {
-                delete[] bracket_;
-                delete[] fact_;
-                delete[] inv_;
-            }
 
             /**
              * Returns the single value [index] (with no factorial symbol).
@@ -144,9 +136,7 @@ namespace {
     template <>
     BracketFactorial<true>::BracketFactorial(
             unsigned long r, unsigned long whichRoot) :
-            bracket_(new TVResult[r]),
-            fact_(new TVResult[r]),
-            inv_(new TVResult[r]) {
+            bracket_(r), fact_(r), inv_(r) {
         bool halfField = (r % 2 != 0 && whichRoot % 2 == 0);
         bracket_[0].init(halfField ? r : 2 * r);
         bracket_[0][0] = 1;
@@ -183,9 +173,7 @@ namespace {
     template <>
     BracketFactorial<false>::BracketFactorial(
             unsigned long r, unsigned long whichRoot) :
-            bracket_(new TVResult[r]),
-            fact_(new TVResult[r]),
-            inv_(new TVResult[r]) {
+            bracket_(r), fact_(r), inv_(r) {
         TVResult angle = (std::numbers::pi_v<TVResult> * whichRoot) / r;
         bracket_[0] = bracket_[1] = fact_[0] = fact_[1] =
             inv_[0] = inv_[1] = 1.0;
@@ -452,12 +440,12 @@ namespace {
 
         // We first sort the edges by degree.
         size_t i, j;
-        auto* sortedEdges = new size_t[nEdges];
-        auto* edgePos = new size_t[nEdges];
+        FixedArray<size_t> sortedEdges(nEdges);
+        FixedArray<size_t> edgePos(nEdges);
 
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
-        std::sort(sortedEdges, sortedEdges + nEdges,
+        std::sort(sortedEdges.begin(), sortedEdges.end(),
             [&tri](size_t a, size_t b) {
                 return (tri.edge(a)->degree() > tri.edge(b)->degree());
             });
@@ -478,8 +466,8 @@ namespace {
                 tmp[emb.tetrahedron()->
                     triangle(emb.vertices()[2])->index()] = i;
         }
-        auto* triDone = new size_t[nTriangles];
-        auto* triDoneStart = new size_t[nEdges + 1];
+        FixedArray<size_t> triDone(nTriangles);
+        FixedArray<size_t> triDoneStart(nEdges + 1);
         triDoneStart[0] = 0;
         for (i = 0; i < nEdges; ++i) {
             triDoneStart[i + 1] = triDoneStart[i];
@@ -493,8 +481,8 @@ namespace {
         for (i = 0; i < nEdges; ++i)
             for (auto& emb : *tri.edge(sortedEdges[i]))
                 tmp[emb.tetrahedron()->index()] = i;
-        auto* tetDone = new size_t[nTet];
-        auto* tetDoneStart = new size_t[nEdges + 1];
+        FixedArray<size_t> tetDone(nTet);
+        FixedArray<size_t> tetDoneStart(nEdges + 1);
         tetDoneStart[0] = 0;
         for (i = 0; i < nEdges; ++i) {
             tetDoneStart[i + 1] = tetDoneStart[i];
@@ -505,13 +493,13 @@ namespace {
         delete[] tmp;
 
         // Caches for partially computed weights of colourings:
-        auto* edgeCache = new TVType[nEdges + 1];
+        FixedArray<TVType> edgeCache(nEdges + 1);
         init.initOne(edgeCache[0]);
 
-        auto* triangleCache = new TVType[nEdges + 1];
+        FixedArray<TVType> triangleCache(nEdges + 1);
         init.initOne(triangleCache[0]);
 
-        auto* tetCache = new TVType[nEdges + 1];
+        FixedArray<TVType> tetCache(nEdges + 1);
         init.initOne(tetCache[0]);
 
         // Run through all admissible colourings.
@@ -519,9 +507,8 @@ namespace {
         init.initZero(ans);
 
         // Now hunt for colourings.
-        auto* colour = new unsigned long[nEdges];
+        FixedArray<unsigned long> colour(nEdges, 0);
 
-        std::fill(colour, colour + nEdges, 0);
         ssize_t curr = 0;
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
@@ -637,18 +624,6 @@ namespace {
                 colour[sortedEdges[curr]]++;
         }
 
-        delete[] colour;
-        delete[] sortedEdges;
-        delete[] edgePos;
-        delete[] triDone;
-        delete[] triDoneStart;
-        delete[] tetDone;
-        delete[] tetDoneStart;
-
-        delete[] edgeCache;
-        delete[] triangleCache;
-        delete[] tetCache;
-
         if (tracker) {
             delete[] coeff;
             if (tracker->isCancelled())
@@ -680,12 +655,12 @@ namespace {
         // of the search tree and the low-degree edges towards the leaves.
 
         // We first sort the edges by degree.
-        auto* sortedEdges = new size_t[nEdges];
-        auto* edgePos = new size_t[nEdges];
+        FixedArray<size_t> sortedEdges(nEdges);
+        FixedArray<size_t> edgePos(nEdges);
 
         for (size_t i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
-        std::sort(sortedEdges, sortedEdges + nEdges,
+        std::sort(sortedEdges.begin(), sortedEdges.end(),
             [&tri](size_t a, size_t b) {
                 return (tri.edge(a)->degree() > tri.edge(b)->degree());
             });
@@ -697,9 +672,8 @@ namespace {
         init.initZero(ans);
 
         // Now hunt for colourings.
-        auto* colour = new unsigned long[nEdges];
+        FixedArray<unsigned long> colour(nEdges, 0);
 
-        std::fill(colour, colour + nEdges, 0);
         ssize_t curr = 0;
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         bool admissible;
@@ -801,10 +775,6 @@ namespace {
                 colour[sortedEdges[curr]]++;
         }
 
-        delete[] colour;
-        delete[] sortedEdges;
-        delete[] edgePos;
-
         if (tracker) {
             delete[] coeff;
             if (tracker->isCancelled())
@@ -857,7 +827,7 @@ namespace {
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as
         // opposed to seenDegree[i] = tri.edge(i)->degree()).
         // This is simply to make such a condition easier to test.
-        auto* seenDegree = new LightweightSequence<int>[nBags];
+        FixedArray<LightweightSequence<int>> seenDegree(nBags);
 
         for (bag = d.first(); bag; bag = bag->next()) {
             size_t index = bag->index();
@@ -907,22 +877,15 @@ namespace {
         using SolnSet = std::map<LightweightSequence<int>, TVType>;
         using SolnIterator = typename SolnSet::iterator;
 
-        auto* partial = new SolnSet*[nBags];
-        std::fill(partial, partial + nBags, nullptr);
+        FixedArray<SolnSet*> partial(nBags, nullptr);
 
-        std::pair<SolnIterator, bool> existingSoln;
         size_t tetEdge[6];
         int colour[6];
-        int level;
-        bool ok;
 
-        auto* overlap = new size_t[nEdges];
-        size_t nOverlap;
-        SolnIterator *leftIndexed, *rightIndexed;
-        size_t nLeft, nRight;
-        SolnIterator *subit, *subit2;
-        std::pair<SolnIterator*, SolnIterator*> subrange, subrange2;
-        double increment, percent;
+        FixedArray<size_t> overlap(nEdges);
+        std::pair<
+            typename FixedArray<SolnIterator>::iterator,
+            typename FixedArray<SolnIterator>::iterator> subrange, subrange2;
 
         // For each new tetrahedron that appears in a forget bag, we
         // colour its edges in the order 5,4,3,2,1,0.
@@ -1007,8 +970,8 @@ namespace {
 
                 partial[index] = new SolnSet;
 
-                increment = 100.0 / partial[child->index()]->size();
-                percent = 0;
+                double increment = 100.0 / partial[child->index()]->size();
+                double percent = 0;
 
                 for (const auto& soln : *partial[child->index()]) {
                     if (tracker) {
@@ -1020,7 +983,7 @@ namespace {
                         colour[i] = (choiceType[i] < 0 ?
                             soln.first[tetEdge[i]] : -1);
 
-                    level = 5;
+                    int level = 5;
                     while (level < 6) {
                         if (level < 0) {
                             // We have an admissible partial colouring.
@@ -1049,7 +1012,7 @@ namespace {
                             // Finally, insert the solution into the
                             // lookup table, aggregating with existing
                             // solutions if need be.
-                            existingSoln = partial[index]->try_emplace(
+                            auto existingSoln = partial[index]->try_emplace(
                                 std::move(seq), std::move(val));
                             if (! existingSoln.second)
                                 existingSoln.first->second += val;
@@ -1075,7 +1038,7 @@ namespace {
                             }
                         }
 
-                        ok = true;
+                        bool ok = true;
                         if (level == 3 && ! init.isAdmissible(
                                 colour[3], colour[4], colour[5]))
                             ok = false;
@@ -1121,76 +1084,81 @@ namespace {
                 child = bag->children();
                 sibling = child->sibling();
 
-                nOverlap = 0;
+                size_t nOverlap = 0;
                 for (size_t i = 0; i < nEdges; ++i)
                     if (seenDegree[child->index()][i] != 0 &&
                             seenDegree[sibling->index()][i] != 0)
                     overlap[nOverlap++] = i;
 
-                // The final template argument (which expands to size_t*)
-                // should be deducible, but gcc bug #79501 prevents us from
-                // declaring the appropriate deduction guide.
-                LightweightSequence<int>::SubsequenceCompareFirst<
-                    decltype(overlap)> compare(overlap, overlap + nOverlap);
+                auto cmp = [overlap, nOverlap](SolnIterator a, SolnIterator b) {
+                    for (size_t i = 0; i < nOverlap; ++i)
+                        if (auto c = a->first[overlap[i]] <=>
+                                b->first[overlap[i]]; c != 0)
+                            return c;
+                    return std::strong_ordering::equal;
+                };
 
                 if (tracker && tracker->isCancelled())
                     break;
 
-                nLeft = 0;
-                leftIndexed = new SolnIterator[partial[child->index()]->size()];
+                size_t nLeft = 0;
+                FixedArray<SolnIterator> leftIndexed(
+                    partial[child->index()]->size());
                 for (auto it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
                     leftIndexed[nLeft++] = it;
-                std::sort(leftIndexed, leftIndexed + nLeft, compare);
+                std::sort(leftIndexed.begin(), leftIndexed.begin() + nLeft,
+                    [&cmp](auto a, auto b) { return cmp(a, b) < 0; });
 
                 if (tracker && tracker->isCancelled())
                     break;
 
-                nRight = 0;
-                rightIndexed = new SolnIterator[
-                    partial[sibling->index()]->size()];
+                size_t nRight = 0;
+                FixedArray<SolnIterator> rightIndexed(
+                    partial[sibling->index()]->size());
                 for (auto it = partial[sibling->index()]->begin();
                         it != partial[sibling->index()]->end(); ++it)
                     rightIndexed[nRight++] = it;
-                std::sort(rightIndexed, rightIndexed + nRight, compare);
+                std::sort(rightIndexed.begin(), rightIndexed.begin() + nRight,
+                    [&cmp](auto a, auto b) { return cmp(a, b) < 0; });
 
-                subrange.second = leftIndexed;
-                subrange2.second = rightIndexed;
+                subrange.second = leftIndexed.begin();
+                subrange2.second = rightIndexed.begin();
 
-                while (subrange.second != leftIndexed + nLeft &&
-                        subrange2.second != rightIndexed + nRight) {
+                while (subrange.second != leftIndexed.begin() + nLeft &&
+                        subrange2.second != rightIndexed.begin() + nRight) {
                     if (tracker) {
-                        percent = 100.0 * (
-                            (subrange.second - leftIndexed) +
-                            (subrange2.second - rightIndexed)) /
+                        double percent = 100.0 * (
+                            (subrange.second - leftIndexed.begin()) +
+                            (subrange2.second - rightIndexed.begin())) /
                             (nLeft + nRight);
                         if (! tracker->setPercent(percent))
                             break;
                     }
 
                     subrange.first = subrange.second;
-                    while (subrange.second != leftIndexed + nLeft &&
-                            compare.equal(*subrange.first, *subrange.second))
+                    while (subrange.second != leftIndexed.begin() + nLeft &&
+                            cmp(*subrange.first, *subrange.second) == 0)
                         ++subrange.second;
 
                     subrange2.first = subrange2.second;
-                    while (subrange2.first != rightIndexed + nRight &&
-                            compare.less(*subrange2.first, *subrange.first))
+                    while (subrange2.first != rightIndexed.begin() + nRight &&
+                            cmp(*subrange2.first, *subrange.first) < 0)
                         ++subrange2.first;
 
-                    if (subrange2.first == rightIndexed + nRight)
+                    if (subrange2.first == rightIndexed.begin() + nRight)
                         break;
-                    if (compare.less(*subrange.first, *subrange2.first))
+                    if (cmp(*subrange.first, *subrange2.first) < 0)
                         continue;
 
                     subrange2.second = subrange2.first;
-                    while (subrange2.second != rightIndexed + nRight &&
-                            compare.equal(*subrange2.first, *subrange2.second))
+                    while (subrange2.second != rightIndexed.begin() + nRight &&
+                            cmp(*subrange2.first, *subrange2.second) == 0)
                         ++subrange2.second;
 
-                    for (subit = subrange.first;
+                    for (auto subit = subrange.first;
                             subit != subrange.second; ++subit)
-                        for (subit2 = subrange2.first;
+                        for (auto subit2 = subrange2.first;
                                 subit2 != subrange2.second; ++subit2) {
                             // We have two compatible solutions.
                             // Combine them and store the corresponding
@@ -1206,15 +1174,12 @@ namespace {
                                 else
                                     seq[i] = ((*subit2)->first)[i];
 
-                            existingSoln = partial[index]->try_emplace(
+                            auto existingSoln = partial[index]->try_emplace(
                                 std::move(seq), std::move(val));
                             if (! existingSoln.second)
                                 existingSoln.first->second += val;
                         }
                 }
-
-                delete[] leftIndexed;
-                delete[] rightIndexed;
 
                 delete partial[child->index()];
                 partial[child->index()] = nullptr;
@@ -1235,15 +1200,11 @@ namespace {
         // cleanup could be significant.
         // If we made it to the end, then the cleanup is O(1).
 
-        delete[] seenDegree;
-        delete[] overlap;
-
         if (tracker && tracker->isCancelled()) {
             // We don't know which elements of partial[] have been
             // deallocated, so check them all.
             for (size_t i = 0; i < nBags; ++i)
                 delete partial[i];
-            delete[] partial;
 
             return TuraevViroDetails<exact>::zero();
         }
@@ -1256,7 +1217,6 @@ namespace {
         TVType ans = partial[nBags - 1]->begin()->second;
 
         delete partial[nBags - 1];
-        delete[] partial;
 
         for (size_t i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
@@ -1405,7 +1365,7 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
     if (it != prop_.turaevViroCache_.end()) {
         if (tracker)
             tracker->setFinished();
-        return (*it).second;
+        return it->second;
     }
 #endif
 

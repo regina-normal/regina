@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,8 @@
 #include "regina-core.h"
 #include "maths/binom.h"
 #include "maths/perm.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 namespace detail {
@@ -429,9 +431,9 @@ class FaceNumberingTables<4, 3> {
  * you can access these routines as Face<dim, subdim>::ordering(),
  * Face<dim, subdim>::faceNumber(), and so on.
  *
- * An advantage of referring to FaceNumbering<dim, subdim> directly (as
- * opposed to Face<dim, subdim>) is that its header is lightweight: it does not
- * pull in the large and complex headers required by Face<dim, subdim>.
+ * An advantage of referring to `FaceNumbering<dim, subdim>` directly (as
+ * opposed to `Face<dim, subdim>`) is that its header is lightweight: it does
+ * not pull in the large and complex headers required by `Face<dim, subdim>`.
  *
  * This class is specialised (and optimised) in Regina's
  * \ref stddim "standard dimensions".

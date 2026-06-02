@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -58,7 +58,7 @@ void Script::swap(Script& other) {
 const std::string& Script::variableName(size_t index) const {
     auto it = variables_.begin();
     advance(it, index);
-    return (*it).first;
+    return it->first;
 }
 
 std::shared_ptr<Packet> Script::variableValue(size_t index) const {

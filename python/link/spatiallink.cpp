@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,7 +32,10 @@
 #include <pybind11/stl.h>
 #include "link/spatiallink.h"
 #include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../docstrings/link/spatiallink.h"
+
+using namespace pybind11::literals;
 
 using pybind11::overload_cast;
 using regina::SpatialLink;
@@ -41,17 +44,17 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(SpatialLink)
 
     auto l = pybind11::class_<SpatialLink, std::shared_ptr<SpatialLink>>(
-            m, "SpatialLink", rdoc_scope)
+            m, "SpatialLink", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const SpatialLink&>(), rdoc::__copy)
         .def(pybind11::init([](
                 const std::vector<std::vector<std::array<double, 3>>>& nodes) {
             return new SpatialLink(nodes.begin(), nodes.end());
-        }), pybind11::arg("components"), rdoc::__init)
+        }), "components"_a, rdoc::__init)
         .def(pybind11::init([](
                 const std::vector<std::vector<SpatialLink::Node>>& nodes) {
             return new SpatialLink(nodes.begin(), nodes.end());
-        }), pybind11::arg("components"), rdoc::__init)
+        }), "components"_a, rdoc::__init)
         .def("size", &SpatialLink::size, rdoc::size)
         .def("isEmpty", &SpatialLink::isEmpty, rdoc::isEmpty)
         .def("countComponents", &SpatialLink::countComponents,
@@ -63,6 +66,10 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("componentSize", &SpatialLink::componentSize, rdoc::componentSize)
         .def("node", &SpatialLink::node,
             pybind11::return_value_policy::reference_internal, rdoc::node)
+        .def("nodes", [](const SpatialLink& link) {
+            return pybind11::make_iterator(link.beginNodes(), link.endNodes());
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps list alive
+            rdoc::nodes)
         .def("range", &SpatialLink::range, rdoc::range)
         .def("radius", &SpatialLink::radius, rdoc::radius)
         .def("setRadius", &SpatialLink::setRadius, rdoc::setRadius)
@@ -73,7 +80,7 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
         .def("scale", &SpatialLink::scale, rdoc::scale)
         .def("translate", &SpatialLink::translate, rdoc::translate)
         .def("reflect", &SpatialLink::reflect,
-            pybind11::arg("axis") = 2, rdoc::reflect)
+            "axis"_a = 2, rdoc::reflect)
         .def("refine", overload_cast<>(&SpatialLink::refine),
             rdoc::refine)
         .def("refine", overload_cast<int>(&SpatialLink::refine),
@@ -81,18 +88,17 @@ void addSpatialLink(pybind11::module_& m, pybind11::module_& internal) {
         .def_static("fromKnotPlot", &SpatialLink::fromKnotPlot,
             rdoc::fromKnotPlot)
     ;
-    regina::python::add_output(l);
+    regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
+    regina::python::add_global_swap<SpatialLink, rdoc>(m);
 
-    regina::python::addListView<decltype(SpatialLink().components())>(internal,
+    regina::python::addStdView<decltype(SpatialLink().components())>(internal,
         "SpatialLink_components");
 
     auto wrap = regina::python::add_packet_wrapper<SpatialLink>(m,
         "PacketOfSpatialLink");
     regina::python::add_packet_constructor<>(wrap, rdoc::__default);
-
-    regina::python::add_global_swap<SpatialLink>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

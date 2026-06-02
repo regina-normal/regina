@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,8 +38,11 @@
 #endif
 
 #include <algorithm>
+#include <random>
 #include <vector>
 #include "concepts/iterator.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -91,7 +94,9 @@ class MarkedElement {
          *
          * \return the index at which this object is stored.
          */
-        inline size_t markedIndex() const;
+        inline size_t markedIndex() const {
+            return marking_;
+        }
 
     template <typename T>
     friend class MarkedVector;
@@ -99,23 +104,23 @@ class MarkedElement {
 };
 
 /**
- * A vector of objects with fast, space-efficient reverse lookup of
+ * A vector of pointers with fast, space-efficient reverse lookup of array
+ * indices.
+ *
+ * This class derives from `std::vector<T*>`, and so provides fast forward
+ * lookups from array indices to objects of type \a T.  What MarkedVector
+ * provides in addition to this is fast reverse lookups from objects back to
  * array indices.
  *
- * This class derives from std::vector, and so provides fast forward
- * lookups from array indices to objects.  What MarkedVector provides
- * in addition to this is fast reverse lookups from objects back to
- * array indices.
- *
- * The way this class is able to provide fast constant-time reverse
- * lookups without consuming a great deal of space is by storing array indices
- * inside the objects themselves.  As a result, there are two
- * significant constraints:
+ * The way this class is able to provide fast constant-time reverse lookups
+ * without consuming a great deal of space is by storing array indices
+ * inside the objects themselves.  As a result, there are two significant
+ * constraints:
  *
  * - This class can only store objects derived from MarkedElement
  *   (which provides space for storing the array indices and handles
- *   their access control).  In particular, it cannot store native types
- *   such as \c int or predefined types such as \c std::string.
+ *   their access control).  In particular, type \a T cannot be a native type
+ *   such as `int`, or a standard C++ class such as `std::string`.
  *
  * - An object can only belong to one MarkedVector at a time.  Any
  *   attempt to insert an object into more than one MarkedVector at the
@@ -126,15 +131,16 @@ class MarkedElement {
  * \a const_iterator, \a begin, \a end, \a size, \a empty, \a front,
  * \a back, operator [], \a reserve, and \a clear (this subset may grow over
  * time if required).  In addition, any const method of std::vector can
- * be accessed through an explicit cast to const std::vector&.  To
+ * be accessed through an explicit cast to `const std::vector&`.  To
  * perform a reverse lookup (find the index at which an array is stored),
  * simply call the object's inherited method MarkedElement::markedIndex().
  *
  * Note that, like its parent std::vector, this class performs no memory
- * management.  In particular, elements (which are pointers to real objects)
- * are not destroyed when they are removed from a vector or when the vector
- * is eventually destroyed.  This class does, however, provide a convenience
- * method clear_destructive() to assist other code with its memory cleanup.
+ * management.  In particular, elements (which are pointers to objects of
+ * type \a T) are not destroyed when they are removed from a vector or when
+ * the vector is eventually destroyed.  This class does, however, provide a
+ * convenience method clear_destructive() to assist other code with its
+ * memory cleanup.
  *
  * Since an object can only belong to one MarkedVector at a time, this
  * class does not offer a copy constructor or copy assignment.  Instead it
@@ -146,7 +152,10 @@ class MarkedElement {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \pre The type \a T is a class derived from MarkedElement.
+ * \tparam T the class for which this vector stores pointers.  Type \a T must
+ * be derived from MarkedElement; however, in order to simplify forward
+ * declarations and header dependencies, we do not enforce this through
+ * constraints.
  *
  * \nopython
  *
@@ -280,16 +289,12 @@ class MarkedVector : private std::vector<T*> {
          * The thread safety of this routine is dependent on the thread safety
          * of your uniform random bit generator \a gen.
          *
-         * \tparam URBG A type which, once any references are removed, must
-         * adhere to the C++ \a UniformRandomBitGenerator concept.
-         *
          * \param gen the source of randomness to use (e.g., one of the
          * many options provided in the C++ standard \c random header).
          */
-        template <typename URBG>
-        void shuffle(URBG&& gen) {
-            std::shuffle(std::vector<T*>::begin(), std::vector<T*>::end(),
-                std::forward<URBG>(gen));
+        template <std::uniform_random_bit_generator URBG>
+        void shuffle(URBG& gen) {
+            std::shuffle(std::vector<T*>::begin(), std::vector<T*>::end(), gen);
 
             size_t i = 0;
             for (auto obj : *this)
@@ -299,8 +304,8 @@ class MarkedVector : private std::vector<T*> {
         /**
          * Empties this vector and refills it with the given range of items.
          *
-         * Calling this routine is equivalent to calling clear() followed by
-         * push_back() for each item in the range from \a begin to \a end.
+         * Calling this routine is equivalent to calling `clear()` followed by
+         * `push_back()` for each item in the range from \a begin to \a end.
          * Its implementation, however, is a little more efficient.
          *
          * The algorithm only makes a single pass through the given
@@ -311,9 +316,9 @@ class MarkedVector : private std::vector<T*> {
          * \param end an iterator that points past the end of the range of
          * items with which to refill this vector.
          */
-        template <InputIteratorFor<T*> iterator>
-        void refill(iterator begin, iterator end) {
-            iterator it = begin;
+        template <InputIteratorFor<T*> Iterator>
+        void refill(Iterator begin, Iterator end) {
+            Iterator it = begin;
             auto local = std::vector<T*>::begin();
             while (it != end && local != std::vector<T*>::end())
                 *local++ = *it++;
@@ -359,15 +364,6 @@ class MarkedVector : private std::vector<T*> {
  *
  * \ingroup utilities
  */
-template <typename T>
-void swap(MarkedVector<T>& a, MarkedVector<T>& b) noexcept;
-
-// Inline functions for MarkedElement
-
-inline size_t MarkedElement::markedIndex() const {
-    return marking_;
-}
-
 template <typename T>
 inline void swap(MarkedVector<T>& a, MarkedVector<T>& b) noexcept {
     a.swap(b);

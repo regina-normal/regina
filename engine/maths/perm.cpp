@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,7 +32,7 @@
 
 namespace regina {
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 void Perm<n>::precompute() {
     std::scoped_lock lock(precomputeMutex);
     if (invLower_)
@@ -79,7 +79,7 @@ void Perm<n>::precompute() {
     }
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 void Perm<n>::lexInc() {
     // The algorithm for lexicographical "next permutation": find the *last*
     // point in the sequence of images where successive images increase:
@@ -120,7 +120,7 @@ void Perm<n>::lexInc() {
         }
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 Perm<n>& Perm<n>::operator ++() {
     // We implement a lexicographic "next permutation" algorithm as above;
     // however, we want to increment according to Sn index, not orderedSn index.

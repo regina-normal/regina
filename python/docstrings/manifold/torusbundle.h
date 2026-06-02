@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TorusBundle
-static const char *TorusBundle =
+struct TorusBundle {
+
+// Docstring regina::python::doc::TorusBundle::__class
+static constexpr const char __class[] =
 R"doc(Represents a torus bundle over the circle. This is expressed as the
 product of the torus and the interval, with the two torus boundaries
 identified according to some specified monodromy.
@@ -29,8 +31,8 @@ identify the torus boundaries so that, in additive terms:
     [b]       [q]
 ```
 
-All optional Manifold routines except for construct() are implemented
-for this class.
+The optional Manifold<3> routines homology() and isHyperbolic() are
+implemented, but the optional routine construct() is not.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
@@ -38,18 +40,16 @@ as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
 manifold classes.)doc";
 
-namespace TorusBundle_ {
+// Docstring regina::python::doc::TorusBundle::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given torus bundle.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given torus bundle.)doc";
-
-// Docstring regina::python::doc::TorusBundle_::__default
-static const char *__default =
+// Docstring regina::python::doc::TorusBundle::__default
+static constexpr const char __default[] =
 R"doc(Creates a new trivial torus bundle over the circle. In other words,
 this routine creates a torus bundle with the identity monodromy.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::TorusBundle::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same torus bundle.
 
@@ -65,8 +65,8 @@ Returns:
     ``True`` if and only if this and the given object contain
     identical presentations of the same torus bundle.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::__init
-static const char *__init =
+// Docstring regina::python::doc::TorusBundle::__init
+static constexpr const char __init[] =
 R"doc(Creates a new torus bundle over the circle using the given monodromy.
 
 Precondition:
@@ -79,8 +79,8 @@ Parameter ``monodromy``:
     describes precisely how the upper and lower torus boundaries are
     identified. See the class notes for details.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::TorusBundle::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new torus bundle over the circle using the given monodromy.
 The four elements of the monodromy matrix are passed separately. They
 combine to give the full monodromy matrix *M* as follows:
@@ -110,8 +110,8 @@ Parameter ``mon10``:
 Parameter ``mon11``:
     the (1,1) element of the monodromy matrix.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::TorusBundle::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given torus bundles.
 
 This global routine simply calls TorusBundle::swap(); it is provided
@@ -123,22 +123,22 @@ Parameter ``a``:
 Parameter ``b``:
     the second torus bundle whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::monodromy
-static const char *monodromy =
+// Docstring regina::python::doc::TorusBundle::monodromy
+static constexpr const char monodromy[] =
 R"doc(Returns the monodromy describing how the upper and lower torus
 boundaries are identified. See the class notes for details.
 
 Returns:
     the monodromy for this torus bundle.)doc";
 
-// Docstring regina::python::doc::TorusBundle_::swap
-static const char *swap =
+// Docstring regina::python::doc::TorusBundle::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given torus bundle.
 
 Parameter ``other``:
     the torus bundle whose contents should be swapped with this.)doc";
 
-}
+}; // struct TorusBundle
 
 } // namespace regina::python::doc
 

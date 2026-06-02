@@ -6,8 +6,9 @@ SET ( FILES
   example2.cpp
   example3.cpp
   example4.cpp
-  facetpairing3.cpp
+  facetpairing.cpp
   facepair.cpp
+  isosig.cpp
   )
 
 # Prepend folder name
@@ -15,19 +16,19 @@ FOREACH ( SOURCE_FILE ${FILES} )
   SET ( SOURCES ${SOURCES} triangulation/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
 
-ADD_SUBDIRECTORY(alias)
 ADD_SUBDIRECTORY(detail)
 ADD_SUBDIRECTORY(dim2)
 ADD_SUBDIRECTORY(dim3)
 ADD_SUBDIRECTORY(dim4)
 ADD_SUBDIRECTORY(explicit)
-ADD_SUBDIRECTORY(generic)
 
 # Set the variable in the parent directory
 SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    boundarycomponent.h
+    component.h
     cut.h
     dim2.h
     dim3.h
@@ -36,6 +37,7 @@ if (${REGINA_INSTALL_DEV})
     example2.h
     example3.h
     example4.h
+    face.h
     forward.h
     facenumbering.h
     facepair.h
@@ -43,9 +45,13 @@ if (${REGINA_INSTALL_DEV})
     facetpairing3.h
     facetspec.h
     generic.h
-    graph.h
+    hidim.h
+    isomorphism.h
+    isosig.h
     isosigencoding.h
     isosigtype.h
     pachner.h
+    simplex.h
+    triangulation.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

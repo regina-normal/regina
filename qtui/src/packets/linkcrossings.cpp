@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,11 +38,11 @@
 // UI includes:
 #include "linkcrossings.h"
 #include "linkmovedialog.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 
 #include <thread>
 #include <QAction>
@@ -517,8 +517,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     connect(actDiagramComponents, SIGNAL(triggered()), this,
         SLOT(diagramComponents()));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &LinkCrossingsUI::updatePreferences);
 
     // Tidy up.
 

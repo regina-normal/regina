@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,19 +42,20 @@
 #define __REGINA_ALGEBRA_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/triangulation.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina::detail {
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k > 0 && k < (standardDim(dim) ? dim : dim - 1))
 AbelianGroup TriangulationBase<dim>::homology() const {
-    if (isEmpty())
-        return AbelianGroup();
-
     if constexpr (k == 1) {
-        if (H1_.has_value())
-            return *H1_;
+        if (homology_[0].has_value())
+            return *homology_[0];
+        if (isEmpty())
+            return *(homology_[0] = AbelianGroup());
 
         // Calculate a maximal forest in the dual 1-skeleton.
         ensureSkeleton();
@@ -114,51 +115,63 @@ AbelianGroup TriangulationBase<dim>::homology() const {
         delete[] genIndex;
 
         // Build the group from the presentation matrix and tidy up.
-        return H1_.emplace(std::move(pres));
-    } else if constexpr (k == dim - 1 && dim == 3) {
-        // In dimension 3 we have both H1 and H1Rel, and so we can compute
-        // H2 from those.
+        return homology_[0].emplace(std::move(pres));
+    } else if constexpr (k <= maxHomologyCache_) {
+        // Here we handle the cases where k > 1 and homology is cached.
         if (! isValid())
             throw FailedPrecondition("Computing kth homology for k >= 2 "
                 "requires a valid triangulation");
 
-        const auto* tri = static_cast<const Triangulation<dim>*>(this);
-        if (tri->prop_.H2_.has_value())
-            return *tri->prop_.H2_;
-
+        if (homology_[k - 1].has_value())
+            return *homology_[k - 1];
         if (isEmpty())
-            return *(tri->prop_.H2_ = AbelianGroup());
+            return *(homology_[k - 1] = AbelianGroup());
 
-        const AbelianGroup& h1Rel = tri->homologyRel();
+        if constexpr (dim == 3) {
+            // Here we are computing H2 in dimension 3.
+            static_assert(k == 2);
 
-        // We know the only summands of H2 will be Z and Z_2.
-        AbelianGroup ans;
-        if (isOrientable()) {
-            // Same as H1Rel without the torsion elements.
-            ans.addRank(h1Rel.rank());
+            // Since we have access to both H1 and H1Rel, we can compute
+            // H2 from those.
+
+            if (! homology_[0].has_value()) {
+                // Compute H1, which has the effect of caching it.
+                homology();
+                if (! homology_[0].has_value())
+                    throw ImpossibleScenario("H1 computed but not cached");
+            }
+            const AbelianGroup& h1Rel =
+                static_cast<const Triangulation<dim>*>(this)->homologyRel();
+
+            // We know the only summands of H2 will be Z and Z_2.
+            AbelianGroup ans;
+            if (isOrientable()) {
+                // Same as H1Rel without the torsion elements.
+                ans.addRank(h1Rel.rank());
+            } else {
+                // Non-orientable!
+                // Z_2 rank = # closed cmpts - # closed orientable cmpts
+                for (auto c : components())
+                    if (c->isClosed() && ! c->isOrientable())
+                        ans.addTorsion(2);
+
+                ans.addRank(h1Rel.rank() + h1Rel.torsionRank(2)
+                    - homology_[0]->torsionRank(2)
+                    - ans.countInvariantFactors());
+            }
+            return *(homology_[1] = std::move(ans));
         } else {
-            // Non-orientable!
-            // Z_2 rank = # closed cmpts - # closed orientable cmpts
-            for (auto c : components())
-                if (c->isClosed() && ! c->isOrientable())
-                    ans.addTorsion(2);
-
-            if (H1_.has_value())
-                ans.addRank(h1Rel.rank() + h1Rel.torsionRank(2)
-                    - H1_->torsionRank(2) - ans.countInvariantFactors());
-            else
-                ans.addRank(h1Rel.rank() + h1Rel.torsionRank(2)
-                    - homology().torsionRank(2) - ans.countInvariantFactors());
+            // In dimensions > 3 we compute H2 using the dual chain complex.
+            return *(homology_[k - 1] =
+                AbelianGroup(dualBoundaryMap<k>(), dualBoundaryMap<k + 1>()));
         }
-        return *(tri->prop_.H2_ = std::move(ans));
     } else {
-        // Here we handle the remaining cases:
-        //   2 <= k <= 3 in dimension 4;
-        //   2 <= k <= (dim-2) in higher dimensions.
-
+        // Here we handle the cases where k > 1 and homology is not cached.
         if (! isValid())
             throw FailedPrecondition("Computing kth homology for k >= 2 "
                 "requires a valid triangulation");
+        if (isEmpty())
+            return AbelianGroup();
 
         // At this point we know that the triangulation is valid and non-empty.
         // Compute the homology using the dual chain complex.
@@ -170,6 +183,10 @@ template <int dim> requires (supportedDim(dim))
 const GroupPresentation& TriangulationBase<dim>::group() const {
     if (fundGroup_.has_value())
         return *fundGroup_;
+
+    if (countComponents() > 1)
+        throw FailedPrecondition("Computing fundamental group requires "
+            "the triangulation to have ≤ 1 component");
 
     GroupPresentation ans;
 

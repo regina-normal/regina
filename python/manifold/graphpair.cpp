@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,12 +42,12 @@ using regina::SFSpace;
 void addGraphPair(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GraphPair)
 
-    auto c = pybind11::class_<GraphPair, regina::Manifold>(m, "GraphPair",
-            rdoc_scope)
+    auto c = pybind11::class_<GraphPair, regina::Manifold<3>>(m, "GraphPair",
+            rdoc::__class)
         .def(pybind11::init<const SFSpace&, const SFSpace&,
             long, long, long, long>(), rdoc::__init)
         .def(pybind11::init<const SFSpace&, const SFSpace&, const Matrix2&>(),
-            rdoc::__init_3)
+            rdoc::__init_2)
         .def(pybind11::init<const GraphPair&>(), rdoc::__copy)
         .def("sfs", &GraphPair::sfs,
             pybind11::return_value_policy::reference_internal, rdoc::sfs)
@@ -58,10 +58,9 @@ void addGraphPair(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     // Do not bind comparison operators, since these are already inherited
-    // from Manifold and we do not want to hide those more general versions.
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<GraphPair>(m, rdoc::global_swap);
+    // via Manifold<3> and we do not want to hide those more general versions.
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<GraphPair, rdoc>(m);
 
     RDOC_SCOPE_END
 }

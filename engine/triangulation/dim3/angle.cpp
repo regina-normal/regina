@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,12 +35,13 @@
 
 namespace regina {
 
-bool Triangulation<3>::knowsStrictAngleStructure() const {
+bool Triangulation<3>::knowsStrictAngleStructure(bool cachedOnly) const {
     if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
         return true; // already known: a solution exists
-
     if (std::get<bool>(strictAngleStructure_))
         return true; // already known: no solution exists
+    if (cachedOnly)
+        return false;
 
     // There are some simple cases for which we can deduce the answer
     // automatically.

@@ -32,7 +32,7 @@
 		<key>Timing.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>18</integer>
+			<integer>19</integer>
 		</dict>
 		<key>Utils - CensusLookup.xcscheme</key>
 		<dict>
@@ -81,7 +81,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>17</integer>
+			<integer>18</integer>
 		</dict>
 		<key>Utils - SigCensus.xcscheme</key>
 		<dict>
@@ -89,6 +89,13 @@
 			<false/>
 			<key>orderHint</key>
 			<integer>15</integer>
+		</dict>
+		<key>Utils - SigConvert.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>16</integer>
 		</dict>
 		<key>Utils - TriCensus.xcscheme</key>
 		<dict>
@@ -102,7 +109,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>17</integer>
 		</dict>
 		<key>iOS debug.xcscheme_^#shared#^_</key>
 		<dict>
@@ -152,6 +159,11 @@
 			<true/>
 		</dict>
 		<key>052FA1491806103000FAE4DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0545A0262FB2F5FF008D3ADB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

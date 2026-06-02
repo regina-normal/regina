@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,8 @@
 #include "core/output.h"
 #include "maths/matrix2.h"
 #include "triangulation/dim3.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -148,7 +150,7 @@ class TxICore : public Output<TxICore> {
          * identified, edges 0-2 and 2-0 of each triangle are identified and
          * edges 0-1 and 1-0 of each triangle are identified.
          *
-         * <pre>
+         * ```
          *           *--->>--*
          *           |0  2 / |
          *   First   |    / 1|  Second
@@ -156,7 +158,7 @@ class TxICore : public Output<TxICore> {
          *           |1 /    |
          *           | / 2  0|
          *           *--->>--*
-         * </pre>
+         * ```
          *
          * This routine returns a permutation that maps these integers
          * 0,1,2 to real tetrahedron vertices.  Let \a t be the
@@ -194,11 +196,11 @@ class TxICore : public Output<TxICore> {
          * and \a edge02 relate to the α and β curves on the given boundary.
          * Specifically:
          *
-         * <pre>
+         * ```
          *     [ α ]                  [ edge01 ]
          *     [   ]  =  bdryReln() * [        ] .
          *     [ β ]                  [ edge02 ]
-         * </pre>
+         * ```
          *
          * It is guaranteed that this matrix has determinant +1 or -1.
          *
@@ -217,20 +219,20 @@ class TxICore : public Output<TxICore> {
          * and that the lower β is parallel to \a y.\a a_u + \a z.\a b_u.
          * Then the matrix returned will be
          *
-         * <pre>
+         * ```
          *     [ w  x ]
          *     [      ] .
          *     [ y  z ]
-         * </pre>
+         * ```
          *
          * In other words, if \a a_l and \a b_l are the lower α and β curves
          * respectively, we have
          *
-         * <pre>
+         * ```
          *     [ a_l ]                      [ a_u ]
          *     [     ]  =  parallelReln() * [     ] .
          *     [ b_l ]                      [ b_u ]
-         * </pre>
+         * ```
          *
          * \return the relationship between the upper and lower boundary curves.
          */
