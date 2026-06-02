@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,26 +29,11 @@
  **************************************************************************/
 
 /*! \file triangulation/generic.h
- *  \brief Includes all headers for working with higher-dimensional
- *  triangulations.  This includes headers for the main class
- *  Triangulation<\a dim>, as well as the face classes Face<\a dim,\a subdim>,
- *  the component classes Component<\a dim> and BoundaryComponent<\a dim>, and
- *  the isomorphism class Isomorphism<\a dim>, for all dimensions \a dim ≥ 5.
+ *  \brief Deprecated header that includes everything for working with
+ *  higher-dimensional triangulations.
+ *  \deprecated Use triangulation/hidim.h instead.
  */
 
-#ifndef __REGINA_GENERIC_H
-#ifndef __DOXYGEN
-#define __REGINA_GENERIC_H
-#endif
-
-#include "triangulation/generic/boundarycomponent.h"
-#include "triangulation/generic/component.h"
-#include "triangulation/generic/face.h"
-#include "triangulation/generic/isomorphism.h"
-#include "triangulation/generic/simplex.h"
-#include "triangulation/generic/triangulation.h"
-
-ENSURE_ESSENTIAL_REGINA_HEADERS
-
-#endif
+#warning "The header triangulation/generic.h is deprecated; use triangulation/hidim.h instead."
+#include "triangulation/hidim.h"
 

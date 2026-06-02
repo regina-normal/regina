@@ -11,14 +11,29 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SnapshotWriteError
-constexpr const char *SnapshotWriteError =
+struct SnapshotWriteError {
+
+// Docstring regina::python::doc::SnapshotWriteError::__class
+static constexpr const char __class[] =
 R"doc(An exception thrown when someone tries to modify the read-only deep
 copy taken by a snapshot. See the Snapshot class notes for more
 information.)doc";
 
-// Docstring regina::python::doc::Snapshottable
-constexpr const char *Snapshottable =
+// Docstring regina::python::doc::SnapshotWriteError::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
+
+// Docstring regina::python::doc::SnapshotWriteError::__default
+static constexpr const char __default[] = R"doc(Creates a new exception.)doc";
+
+// Docstring regina::python::doc::SnapshotWriteError::what
+static constexpr const char what[] = R"doc(Returns a human-readable description of the error that occurred.)doc";
+
+}; // struct SnapshotWriteError
+
+struct Snapshottable {
+
+// Docstring regina::python::doc::Snapshottable::__class
+static constexpr const char __class[] =
 R"doc(A base class for images of type *T* that can be snapshotted at a
 particular moment in time.
 
@@ -55,23 +70,8 @@ Python:
     Not present, but the routine isReadOnlySnapshot() will be provided
     directly through each corresponding subclass *T*.)doc";
 
-namespace SnapshotWriteError_ {
-
-// Docstring regina::python::doc::SnapshotWriteError_::__copy
-constexpr const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
-
-// Docstring regina::python::doc::SnapshotWriteError_::__default
-constexpr const char *__default = R"doc(Creates a new exception.)doc";
-
-// Docstring regina::python::doc::SnapshotWriteError_::what
-constexpr const char *what = R"doc(Returns a human-readable description of the error that occurred.)doc";
-
-}
-
-namespace Snapshottable_ {
-
-// Docstring regina::python::doc::Snapshottable_::isReadOnlySnapshot
-constexpr const char *isReadOnlySnapshot =
+// Docstring regina::python::doc::Snapshottable::isReadOnlySnapshot
+static constexpr const char isReadOnlySnapshot[] =
 R"doc(Determines if this object is a read-only deep copy that was created by
 a snapshot.
 
@@ -92,7 +92,7 @@ Returns:
     ``True`` if and only if this object is a deep copy that was taken
     by a Snapshot object of some original type *T* image.)doc";
 
-}
+}; // struct Snapshottable
 
 } // namespace regina::python::doc
 

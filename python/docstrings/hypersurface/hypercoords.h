@@ -11,8 +11,33 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::HyperCoords
-static const char *HyperCoords =
+struct HyperCoords {
+
+// Docstring regina::python::doc::HyperCoords::Edge
+static constexpr const char Edge[] =
+R"doc(Represents edge weight coordinates for normal hypersurfaces.
+
+This coordinate system is for display only: Regina can view
+hypersurfaces in this coordinate system, but it cannot use it to
+enumerate or create hypersurfaces.)doc";
+
+// Docstring regina::python::doc::HyperCoords::Prism
+static constexpr const char Prism[] =
+R"doc(Represents prism coordinates for normal hypersurfaces.
+
+Regina can both enumerate and view hypersurfaces in this coordinate
+system.)doc";
+
+// Docstring regina::python::doc::HyperCoords::Standard
+static constexpr const char Standard[] =
+R"doc(Represents standard tetrahedron-prism coordinates for normal
+hypersurfaces.
+
+Regina can both enumerate and view hypersurfaces in this coordinate
+system.)doc";
+
+// Docstring regina::python::doc::HyperCoords::__class
+static constexpr const char __class[] =
 R"doc(Represents different coordinate systems that can be used for
 enumerating and/or displaying normal hypersurfaces within 4-manifold
 triangulations.
@@ -21,8 +46,27 @@ IDs 0-9999 are reserved for future use by Regina. If you are extending
 Regina to include your own coordinate system, you should choose an ID
 ≥ 10000.)doc";
 
-// Docstring regina::python::doc::HyperEncoding
-static const char *HyperEncoding =
+}; // struct HyperCoords
+
+struct HyperEncoding {
+
+// Docstring regina::python::doc::HyperEncoding::__add
+static constexpr const char __add[] =
+R"doc(Returns an encoding that could hold the sum of hypersurfaces that use
+this and the given encoding.
+
+More precisely, the encoding that is returned is the "simplest"
+possible encoding that is capable of holding the sum of two normal
+hypersurfaces that use this and the given encoding respectively.
+
+Parameter ``rhs``:
+    the encoding to combine with this.
+
+Returns:
+    the "sum" of this and the given encoding, as defined above.)doc";
+
+// Docstring regina::python::doc::HyperEncoding::__class
+static constexpr const char __class[] =
 R"doc(Indicates precisely how a normal hypersurface within a 4-manifold
 triangulation is encoded by an integer vector.
 
@@ -47,65 +91,11 @@ These objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.)doc";
 
-// Docstring regina::python::doc::HyperInfo
-static const char *HyperInfo =
-R"doc(A class used to query general information about different normal
-hypersurface coordinate systems.
+// Docstring regina::python::doc::HyperEncoding::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given encoding.)doc";
 
-This class has become much simpler and more stripped-down since Regina
-7.0. Much of the functionality that was available in this class in
-Regina 6.0.1 and earlier can now be accessed through the new
-HyperEncoding class.)doc";
-
-namespace HyperCoords_ {
-
-// Docstring regina::python::doc::HyperCoords_::Edge
-static const char *Edge =
-R"doc(Represents edge weight coordinates for normal hypersurfaces.
-
-This coordinate system is for display only: Regina can view
-hypersurfaces in this coordinate system, but it cannot use it to
-enumerate or create hypersurfaces.)doc";
-
-// Docstring regina::python::doc::HyperCoords_::Prism
-static const char *Prism =
-R"doc(Represents prism coordinates for normal hypersurfaces.
-
-Regina can both enumerate and view hypersurfaces in this coordinate
-system.)doc";
-
-// Docstring regina::python::doc::HyperCoords_::Standard
-static const char *Standard =
-R"doc(Represents standard tetrahedron-prism coordinates for normal
-hypersurfaces.
-
-Regina can both enumerate and view hypersurfaces in this coordinate
-system.)doc";
-
-}
-
-namespace HyperEncoding_ {
-
-// Docstring regina::python::doc::HyperEncoding_::__add
-static const char *__add =
-R"doc(Returns an encoding that could hold the sum of hypersurfaces that use
-this and the given encoding.
-
-More precisely, the encoding that is returned is the "simplest"
-possible encoding that is capable of holding the sum of two normal
-hypersurfaces that use this and the given encoding respectively.
-
-Parameter ``rhs``:
-    the encoding to combine with this.
-
-Returns:
-    the "sum" of this and the given encoding, as defined above.)doc";
-
-// Docstring regina::python::doc::HyperEncoding_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given encoding.)doc";
-
-// Docstring regina::python::doc::HyperEncoding_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::HyperEncoding::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given encoding are identical.
 
 Parameter ``other``:
@@ -114,8 +104,8 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if both encodings are identical.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::__init
-static const char *__init =
+// Docstring regina::python::doc::HyperEncoding::__init
+static constexpr const char __init[] =
 R"doc(Returns an encoding that precisely describes the given normal
 hypersurface coordinate system. This is the encoding that you would
 use with a "pen and paper" enumeration of hypersurfaces in the given
@@ -135,15 +125,15 @@ invalid, and valid() will return ``False``.
 Parameter ``coords``:
     one of Regina's normal hypersurface coordinate systems.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::block
-static const char *block =
+// Docstring regina::python::doc::HyperEncoding::block
+static constexpr const char block[] =
 R"doc(Returns the number of coordinates stored for each pentachoron.
 
 Returns:
     the number of coordinates per pentachoron.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::couldBeNonCompact
-static const char *couldBeNonCompact =
+// Docstring regina::python::doc::HyperEncoding::couldBeNonCompact
+static constexpr const char couldBeNonCompact[] =
 R"doc(Returns whether it is possible for a normal hypersurface using this
 encoding to be non-compact. Here "non-compact" refers to a surface
 with infinitely many normal pieces. See
@@ -162,8 +152,8 @@ Returns:
     ``True`` if it is possible that the hypersurface might be non-
     compact.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::couldBeVertexLink
-static const char *couldBeVertexLink =
+// Docstring regina::python::doc::HyperEncoding::couldBeVertexLink
+static constexpr const char couldBeVertexLink[] =
 R"doc(Returns whether it is possible for a normal hypersurface using this
 encoding to include one or more vertex linking components.
 
@@ -180,16 +170,16 @@ Returns:
     ``True`` if it is possible that the hypersurface might contain one
     or more vertex linking components.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::empty
-static const char *empty =
+// Docstring regina::python::doc::HyperEncoding::empty
+static constexpr const char empty[] =
 R"doc(Returns an encoding that is suitable for representing the empty
 hypersurface, whose normal coordinates are all zero.
 
 Returns:
     a suitable encoding for the empty hypersurface.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::fromIntValue
-static const char *fromIntValue =
+// Docstring regina::python::doc::HyperEncoding::fromIntValue
+static constexpr const char fromIntValue[] =
 R"doc(Reconstructs an encoding from an integer value.
 
 This is a partner routine to intValue(): for any encoding *enc*, the
@@ -205,8 +195,8 @@ Parameter ``value``:
 Returns:
     the corresponding encoding.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::intValue
-static const char *intValue =
+// Docstring regina::python::doc::HyperEncoding::intValue
+static constexpr const char intValue[] =
 R"doc(Exports this encoding as an integer.
 
 The exact value of the integer is meant to be opaque, in the sense
@@ -223,16 +213,16 @@ It is guaranteed that 0 will never be the integer value of a
 Returns:
     an integer that represents this encoding.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::storesTetrahedra
-static const char *storesTetrahedra =
+// Docstring regina::python::doc::HyperEncoding::storesTetrahedra
+static constexpr const char storesTetrahedra[] =
 R"doc(Returns whether this encoding explicitly stores tetrahedron
 coordinates.
 
 Returns:
     ``True`` if tetrahedron coordinates are stored.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::valid
-static const char *valid =
+// Docstring regina::python::doc::HyperEncoding::valid
+static constexpr const char valid[] =
 R"doc(Returns whether this describes a vector encoding of normal
 hypersurfaces.
 
@@ -243,8 +233,8 @@ for enumeration; or (2) another invalid encoding.
 Returns:
     ``True`` if and only if this is a valid encoding.)doc";
 
-// Docstring regina::python::doc::HyperEncoding_::withTetrahedra
-static const char *withTetrahedra =
+// Docstring regina::python::doc::HyperEncoding::withTetrahedra
+static constexpr const char withTetrahedra[] =
 R"doc(Returns an extension of this encoding that explicitly stores
 tetrahedron coordinates.
 
@@ -259,12 +249,22 @@ result will be identical to this.
 Returns:
     an extension of this encoding that stores tetrahedron coordinates.)doc";
 
-}
+}; // struct HyperEncoding
 
-namespace HyperInfo_ {
+struct HyperInfo {
 
-// Docstring regina::python::doc::HyperInfo_::name
-static const char *name =
+// Docstring regina::python::doc::HyperInfo::__class
+static constexpr const char __class[] =
+R"doc(A class used to query general information about different normal
+hypersurface coordinate systems.
+
+This class has become much simpler and more stripped-down since Regina
+7.0. Much of the functionality that was available in this class in
+Regina 6.0.1 and earlier can now be accessed through the new
+HyperEncoding class.)doc";
+
+// Docstring regina::python::doc::HyperInfo::name
+static constexpr const char name[] =
 R"doc(Returns the human-readable name of the given coordinate system.
 
 The first letter of the returned string will be upper-case, and all
@@ -280,7 +280,7 @@ Parameter ``coordSystem``:
 Returns:
     the name of the given coordinate system.)doc";
 
-}
+}; // struct HyperInfo
 
 } // namespace regina::python::doc
 

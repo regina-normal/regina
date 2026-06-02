@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -2767,261 +2767,6 @@ class Link :
         std::optional<Link> withR3(Crossing* crossing, int side) const;
 
         /**
-         * Deprecated routine that tests for and optionally performs a type I
-         * Reidemeister move to remove a crossing.
-         *
-         * For more detail on type I moves and when they can be performed,
-         * see r1(Crossing*).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR1().  If you wish to both check and perform the move,
-         * call r1() without the two additional boolean arguments.
-         *
-         * \warning A side-effect of this move is that, because one crossing
-         * is being removed, the other crossings in the link may be reindexed.
-         * However, no crossings other than the one involved in this move
-         * will be destroyed.
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this link.
-         *
-         * \param crossing identifies the crossing to be removed.  See
-         * r1(crossing*) for details on exactly how this will be interpreted.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r1(Crossing* crossing,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type I
-         * Reidemeister move to add a new crossing.
-         *
-         * For more detail on type I moves and when they can be performed,
-         * see r1(StrandRef, int, int).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR1().  If you wish to both check and perform the move,
-         * call r1() without the two additional boolean arguments.
-         *
-         * \pre The given strand reference is either a null reference,
-         * or else refers to some strand of some crossing in this link.
-         *
-         * \param arc identifies the arc of the link in which the new twist
-         * will be introduced.  See r1(StrandRef, int, int) for details on
-         * exactly how this will be interpreted.
-         * \param side 0 if the twist should be introduced on the left
-         * of the arc (when walking along the arc in the forward direction),
-         * or 1 if the twist should be introduced on the right of the arc.
-         * \param sign the sign of the new crossing that will be
-         * introduced as part of the twist; this must be +1 or -1.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r1(StrandRef arc, int side, int sign,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type II
-         * Reidemeister move to remove two crossings.
-         *
-         * For more detail on type II moves and when they can be performed,
-         * see r2(StrandRef).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR2().  If you wish to both check and perform the move,
-         * call r2() without the two additional boolean arguments.
-         *
-         * \warning A side-effect of this move is that, because two crossings
-         * are being removed, the other crossings in the link may be reindexed.
-         * However, no crossings other than the two involved in this move
-         * will be destroyed.
-         *
-         * \pre The given strand reference is either a null reference,
-         * or else refers to some strand of some crossing in this link.
-         *
-         * \param arc identifies one of the arcs of the bigon about which the
-         * move will be performed.  See r2(StrandRef) for details on exactly
-         * how this will be interpreted.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r2(StrandRef arc,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type II
-         * Reidemeister move to remove two crossings.
-         *
-         * For more detail on type II moves and when they can be performed,
-         * see r2(Crossing*).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR2().  If you wish to both check and perform the move,
-         * call r2() without the two additional boolean arguments.
-         *
-         * \warning A side-effect of this move is that, because two crossings
-         * are being removed, the other crossings in the link may be reindexed.
-         * However, no crossings other than the two involved in this move
-         * will be destroyed.
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this link.
-         *
-         * \param crossing identifies the crossing at the beginning of
-         * the "upper" arc that features in this move.  See r2(Crossing*)
-         * for details on exactly how this will be interpreted.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r2(Crossing* crossing,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a classical
-         * type II Reidemeister move to add two new crossings by pushing two
-         * different strands over one another.
-         *
-         * For more detail on classical type II moves and when they can be
-         * performed, see r2(StrandRef, int, StrandRef, int).  This deprecated
-         * routine will not perform virtual type II moves; for that you should
-         * use the new routine r2Virtual() instead.
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR2().  If you wish to both check and perform the move,
-         * call r2() without the two additional boolean arguments.
-         *
-         * \pre Each of the given strand references is either a null reference,
-         * or else refers to some strand of some crossing in this link.
-         *
-         * \warning The check for this move is expensive (linear time).
-         *
-         * \param upperArc identifies which arc of the link would be passed
-         * over another in this move.  See r2(StrandRef, int, StrandRef, int)
-         * for details on exactly how this will be interpreted.
-         * \param upperSide 0 if the new overlap should take place on the left
-         * of \a upperArc (when walking along \a upperArc in the forward
-         * direction), or 1 if the new overlap should take place on the right
-         * of \a upperArc.
-         * \param lowerArc identifies which arc of the link would be passed
-         * beneath another in this move.  See r2(StrandRef, int, StrandRef, int)
-         * for details on exactly how this will be interpreted.
-         * \param lowerSide 0 if the new overlap should take place on the left
-         * of \a lowerArc (when walking along \a lowerArc in the forward
-         * direction), or 1 if the new overlap should take place on the right
-         * of \a lowerArc.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r2(StrandRef upperArc, int upperSide,
-            StrandRef lowerArc, int lowerSide,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type III
-         * Reidemeister move.
-         *
-         * For more detail on type III moves and when they can be performed,
-         * see r3(StrandRef, int).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR3().  If you wish to both check and perform the move,
-         * call r3() without the two additional boolean arguments.
-         *
-         * \pre The given strand reference is either a null reference,
-         * or else refers to some strand of some crossing in this link.
-         *
-         * \param arc identifies one of the arcs of the triangle about which
-         * the move would be performed.  See r3(StrandRef, int) for details on
-         * exactly how this will be interpreted.
-         * \param side 0 if the third crossing of the triangle is located to
-         * the left of the arc (when walking along the arc in the forward
-         * direction), or 1 if the third crossing is located on the right of
-         * the arc.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r3(StrandRef arc, int side,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type III
-         * Reidemeister move.
-         *
-         * For more detail on type III moves and when they can be performed,
-         * see r3(Crossing*, int).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR3().  If you wish to both check and perform the move,
-         * call r3() without the two additional boolean arguments.
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this link.
-         *
-         * \param crossing identifies the crossing at the beginning of the
-         * "uppermost" arc that features in this move.  See r3(Crossing*, int)
-         * for details on exactly how this will be interpreted.
-         * \param side 0 if the third crossing of the triangle is located to
-         * the left of the uppermost arc (when walking along the arc in the
-         * forward direction), or 1 if the third crossing is located on the
-         * right of the uppermost arc.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r3(Crossing* crossing, int side,
-            bool ignored, bool perform = true);
-
-        /**
          * Tests whether this classical link has a pass move that will reduce
          * the number of crossings.
          *
@@ -3819,25 +3564,25 @@ class Link :
         Link whiteheadDouble(bool positive = true) const;
 
         /**
-         * Returns \a k cables of this link, all parallel to each
-         * other using the given framing.
+         * Returns the given number of cables of this link, all parallel to
+         * each other using the given framing.
          *
          * This routine creates a new link by:
          *
          * - treating each component of this link as a ribbon, using the
          *   given framing;
          *
-         * - creating \a k parallel copies of the original link,
+         * - creating \a cables parallel copies of the original link,
          *   following each other side-by-side along these ribbons.
          *
          * This link will not be modified.
          *
-         * \param k the number of parallel copies to create.
+         * \param cables the number of parallel copies to create.
          * This must be non-negative.
          * \param framing the framing under which these copies will be parallel.
-         * \return \a k parallel copies of this link.
+         * \return \a cables parallel copies of this link.
          */
-        Link parallel(int k, Framing framing = Framing::Seifert) const;
+        Link parallel(int cables, Framing framing = Framing::Seifert) const;
 
         /**
          * Returns the parity projection of this knot.
@@ -6344,6 +6089,87 @@ class Link :
         [[deprecated]] static Link fromKnotSig(const std::string& sig);
 
         /**
+         * Identifies whether the given string-based knot/link signature is
+         * first-generation or second-generation.
+         *
+         * This routine aims to be fast, and does not verify the entire
+         * signature; instead it reads just enough of the initial characters
+         * to make its decision.  What this means is:
+         *
+         * - If the given signature _is_ a first-generation or
+         *   second-generation signature, this routine guarantees to return
+         *   1 or 2 respectively.
+         *
+         * - Otherwise, there are no guarantees: this output _could_ return 0
+         *   (indicating that it identified \a sig as being neither of these),
+         *   or it could still return 1 or 2 (indicating that, whilst invalid,
+         *   \a sig nevertheless has a prefix that _looks_ like a
+         *   first-generation or second-generation signature).
+         *
+         * As a special case, for the empty link and zero-crossing unlinks,
+         * the first-generation and second-generation signatures are identical
+         * (`_` for the empty link, or `aa…a` for a zero-crossing unlink).
+         * In these scenarios, sigGeneration() will return 2.
+         *
+         * If you need to verify the _validity_ of a signature, this is not
+         * the correct routine to use - instead you should test whether
+         * `fromSig(sig)` throws an exception.
+         *
+         * \param sig a string-based knot/link signature of some generation.
+         * \return 1 or 2 if \a sig is a first-generation or second-generation
+         * signature respectively, or 0 if \a sig was explicitly discovered to
+         * be neither of these.  As described above, if \s sig is _not_ a
+         * knot/link signature of any generation, this routine could return
+         * any of the values 0, 1 or 2.
+         */
+        static int sigGeneration(const std::string& sig);
+
+        /**
+         * Deduces the number of crossings in a connected link diagram from
+         * its string-based knot/link signature.  This may be either a
+         * first-generation signature (computed via `knotSig()`),
+         * or a second-generation signature (computed via `neoSig()`).
+         *
+         * See knotSig() and neoSig() for general information on
+         * first-generation and second-generation isomorphism signatures.
+         *
+         * An important warning regarding connectivity and components:
+         *
+         * - If the given signature describes a _connected_ link diagram, this
+         *   routine will return the total number of crossings in that diagram.
+         *   This is the intended use case for this routine.
+         *
+         * - If the signature describes a _disconnected_ link diagram, this
+         *   routine will only return the number of crossings in the first
+         *   connected diagram component.  If you need the total size of a
+         *   disconnected link diagram, you will need to reconstruct the full
+         *   diagram by calling fromSig() instead.
+         *
+         * - If the signature describes the empty link, this routine
+         *   will return zero.
+         *
+         * This routine is very fast, since it only examines the first few
+         * characters of the given signature (in which the size of the first
+         * diagram component is encoded).  However, a side-effect of this is
+         * that it is possible to pass an _invalid_ signature and still
+         * receive a positive result.  If you need to test whether a signature
+         * is valid or not, you must call fromSig() instead, which will examine
+         * the entire signature in full.
+         *
+         * \exception InvalidArgument The given string was not a valid
+         * string-based knot/link signature.  As described above, invalid
+         * signatures are not always detected; this exception will only be
+         * thrown if the error is so severe that the diagram component size
+         * cannot be deduced from the first few characters.
+         *
+         * \param sig a signature of some link diagram.  Note that signatures
+         * are case-sensitive.
+         * \return the size of the first connected diagram component, or 0 if
+         * the given signature describes the empty link.
+         */
+        static size_t sigComponentSize(const std::string& sig);
+
+        /**
          * Reconstructs a classical or virtual link from its given tight
          * encoding.  See the page on \ref tight "tight encodings" for details.
          *
@@ -7050,6 +6876,49 @@ class Link :
          * routine will look for a zero-crossing component).
          */
         std::vector<StrandRef>::iterator componentIterator(const StrandRef& s);
+
+        /**
+         * Internal to fromSig().
+         *
+         * Reads and constructs a single connected diagram component from
+         * a first-generation knot/link signature (via the given decoder),
+         * and appends the resulting crossings and components to this link.
+         *
+         * It is assumed that the size of the component and the character
+         * width of an arbitrary crossing index have already been read from
+         * the decoder (these are passed as arguments to this routine).
+         *
+         * This routine will throw an InvalidArgument if it encounters any
+         * errors, since that is what fromSig() is expected to throw.
+         * Note that the decoder itself might throw an InvalidInput exception;
+         * however, fromSig() will take responsibility for converting this.
+         */
+        template <CharIterator Iterator>
+        requires std::bidirectional_iterator<Iterator>
+        void fillDiagramComponentFromSig1(size_t size, int intWidth,
+            Base64Decoder<Iterator>& decoder);
+
+        /**
+         * Internal to fromSig().
+         *
+         * Reads and constructs a single connected diagram component from
+         * a second-generation knot/link signature (via the given decoder),
+         * and appends the resulting crossings and components to this link.
+         *
+         * It is assumed that the size of the component and the character
+         * width of an arbitrary crossing index have already been read from
+         * the decoder (the size is passed as an argument to this routine,
+         * and the character width is not needed and can be safely ignored).
+         *
+         * This routine will throw an InvalidArgument if it encounters any
+         * errors, since that is what fromSig() is expected to throw.
+         * Note that the decoder itself might throw an InvalidInput exception;
+         * however, fromSig() will take responsibility for converting this.
+         */
+        template <CharIterator Iterator>
+        requires std::bidirectional_iterator<Iterator>
+        void fillDiagramComponentFromSig2(size_t size,
+            Base64BitDecoder<Iterator>& decoder);
 
         /**
          * Used with fromEnhancedGauss() to indicate which kind of Gauss code
@@ -8103,36 +7972,6 @@ inline std::optional<Link> Link::withR3(Crossing* crossing, int side) const {
     std::optional<Link> ans(std::in_place, *this);
     ans->internalR3(ans->translate(crossing), side, false, true);
     return ans;
-}
-
-inline bool Link::r1(Crossing* crossing, bool, bool perform) {
-    return internalR1(crossing, true, perform);
-}
-
-inline bool Link::r1(StrandRef arc, int side, int sign, bool, bool perform) {
-    return internalR1(arc, side, sign, true, perform);
-}
-
-inline bool Link::r2(StrandRef arc, bool, bool perform) {
-    return internalR2(arc, true, perform);
-}
-
-inline bool Link::r2(Crossing* crossing, bool, bool perform) {
-    return internalR2(StrandRef(crossing, 1), true, perform);
-}
-
-inline bool Link::r2(StrandRef upperArc, int upperSide,
-        StrandRef lowerArc, int lowerSide, bool, bool perform) {
-    return internalR2General(upperArc, upperSide, lowerArc, lowerSide,
-        true /* classical only */, perform);
-}
-
-inline bool Link::r3(StrandRef arc, int side, bool, bool perform) {
-    return internalR3(arc, side, true, perform);
-}
-
-inline bool Link::r3(Crossing* crossing, int side, bool, bool perform) {
-    return internalR3(crossing, side, true, perform);
 }
 
 inline bool Link::internalR3(Crossing* crossing, int side, bool check,

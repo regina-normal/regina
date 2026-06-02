@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -61,7 +61,7 @@ namespace {
 void addArrow(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Arrow)
 
-    auto c = pybind11::class_<Arrow>(m, "Arrow", rdoc_scope)
+    auto c = pybind11::class_<Arrow>(m, "Arrow", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Arrow&>(), rdoc::__copy)
         .def(pybind11::init([](pybind11::list arg) {
@@ -136,21 +136,20 @@ void addArrow(pybind11::module_& m) {
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_3)
-        .def(pybind11::self * Integer(), rdoc_global::__mul)
-        .def(Integer() * pybind11::self, rdoc_global::__mul_2)
-        .def(pybind11::self * Laurent<Integer>(), rdoc_global::__mul_3)
-        .def(Laurent<Integer>() * pybind11::self, rdoc_global::__mul_4)
-        .def(pybind11::self + pybind11::self, rdoc_global::__add)
-        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
-        .def(pybind11::self * pybind11::self, rdoc_global::__mul_5)
-        .def(- pybind11::self, rdoc_global::__sub)
+        .def(pybind11::self * Integer(), rdoc::__mul)
+        .def(Integer() * pybind11::self, rdoc::__mul_2)
+        .def(pybind11::self * Laurent<Integer>(), rdoc::__mul_3)
+        .def(Laurent<Integer>() * pybind11::self, rdoc::__mul_4)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_5)
+        .def(- pybind11::self, rdoc::__sub)
     ;
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-
-    regina::python::add_global_swap<Arrow>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Arrow, rdoc>(m);
 
     RDOC_SCOPE_END
 }

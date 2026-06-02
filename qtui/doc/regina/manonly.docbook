@@ -50,12 +50,14 @@
   <!ENTITY api "<acronym>API</acronym>">
   <!ENTITY bzip2 "bzip2">
   <!ENTITY cpp "C++">
+  <!ENTITY ge ">=">
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY gzip "gzip">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY katie "<application>Katie</application>">
   <!ENTITY kde "<acronym>KDE</acronym>">
   <!ENTITY ldquo "&#34;">
+  <!ENTITY le "<=">
   <!ENTITY linux "<application><acronym>GNU</acronym>/Linux</application>">
   <!ENTITY macosx "<application>macOS</application>">
   <!ENTITY mdash " - ">

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Swift User Interface
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,7 +44,7 @@ namespace regina {
 
 std::string svgUsingDot(const std::string& dotFile) {
     char* svg;
-    unsigned svgLen;
+    size_t svgLen;
 
     // Manually specify our plugins to avoid on-demand loading.
     GVC_t* gvc = gvContextPlugins(link_lt_preloaded_symbols, 0);

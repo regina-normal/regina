@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2025, Ben Burton
+# Copyright (c) 2015-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests throwing and catching Regina's exception types.
@@ -63,9 +63,9 @@ def throwLockViolation():
     t = Example3.poincare()
     t.simplex(0).lock()
     t.removeSimplex(t.simplex(1)) # should not throw
-    print(t.isoSig()) # should print
+    print(t.neoSig()) # should print
     t.removeSimplex(t.simplex(0)) # should throw
-    print(t.isoSig()) # should never reach
+    print(t.neoSig()) # should never reach
 
 def throwIntegerOverflow():
     print(Integer(2**15).safeValue()) # should print

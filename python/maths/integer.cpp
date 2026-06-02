@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/integer.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::python::doc::common::neq_value;
 
@@ -45,18 +47,17 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
 
     RDOC_SCOPE_BEGIN(IntegerBase)
 
-    auto c = pybind11::class_<Int>(m, className, rdoc_scope)
+    auto c = pybind11::class_<Int>(m, className, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<long>(), rdoc::__init)
         .def(pybind11::init<const Int&>(), rdoc::__copy)
         .def(pybind11::init<const AltInt&>(), rdoc::__init_2)
         .def(pybind11::init([](pybind11::int_ l){
             return new Int(pybind11::cast<std::string>(pybind11::str(l)));
-        }), rdoc::__init_4)
-        .def(pybind11::init<double>(), rdoc::__init_5)
+        }), rdoc::__init_3)
+        .def(pybind11::init<double>(), rdoc::__init_4)
         .def(pybind11::init<const char*, int>(),
-            pybind11::arg(), pybind11::arg("base") = 10,
-            rdoc::__init_6)
+            "value"_a, "base"_a = 10, rdoc::__init_5)
         .def("isNative", &Int::isNative, rdoc::isNative)
         .def("isZero", &Int::isZero, rdoc::isZero)
         .def("sign", &Int::sign, rdoc::sign)
@@ -68,7 +69,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def("longValue", &Int::template unsafeValue<long>,
             rdoc::longValue) // deprecated
         .def("stringValue", &Int::stringValue,
-            pybind11::arg("base") = 10,
+            "base"_a = 10,
             rdoc::stringValue)
         .def("str", &Int::str, rdoc::str)
         .def("pythonValue", [](const Int& i) {
@@ -103,10 +104,12 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         }, rdoc::__dec)
         .def(pybind11::self + pybind11::self, rdoc::__add)
         .def(pybind11::self + long(), rdoc::__add_2)
+        .def(long() + pybind11::self, rdoc::__add_3)
         .def(pybind11::self - pybind11::self, rdoc::__sub)
         .def(pybind11::self - long(), rdoc::__sub_2)
         .def(pybind11::self * pybind11::self, rdoc::__mul)
         .def(pybind11::self * long(), rdoc::__mul_2)
+        .def(long() * pybind11::self, rdoc::__mul_3)
         .def(pybind11::self / pybind11::self, rdoc::__div)
         .def(pybind11::self / long(), rdoc::__div_2)
         // overload_cast has trouble with templated vs non-templated overloads.
@@ -161,8 +164,6 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
             rdoc::randomCornerBinary)
         .def("makeLarge", &Int::makeLarge, rdoc::makeLarge)
         .def("tryReduce", &Int::tryReduce, rdoc::tryReduce)
-        .def(long() + pybind11::self, rdoc_global::__add)
-        .def(long() * pybind11::self, rdoc_global::__mul)
         .def_readonly_static("supportsInfinity", &Int::supportsInfinity)
         .def_readonly_static("zero", &Int::zero)
         .def_readonly_static("one", &Int::one)
@@ -177,10 +178,11 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
     regina::python::add_output_ostream(c, regina::python::ReprStyle::Slim);
+    regina::python::add_global_swap<Int, rdoc>(m);
 
-    m.def("tightEncoding", static_cast<std::string(&)(Int)>(
-        regina::tightEncoding), rdoc_global::tightEncoding);
-    regina::python::add_global_swap<Int>(m, rdoc::global_swap);
+    m.def("tightEncoding",
+        static_cast<std::string(&)(Int)>(regina::tightEncoding),
+        regina::python::doc::tightEncoding_ReginaInteger);
 
     RDOC_SCOPE_END
 

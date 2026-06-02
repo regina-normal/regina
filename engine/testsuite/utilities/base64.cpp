@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -111,8 +111,7 @@ TEST(Base64Test, invalidEncodings) {
 };
 
 TEST(Base64Test, sigEncoder) {
-    // For now, we just test the Base64Encoder static functions (and also
-    // PackedByteEncoder while we're at it).
+    // For now, we just test the Base64Encoder static functions.
     //
     // The full functionality of these encoder classes is implicitly tested
     // through the various isomorphism signature and knot/link signature tests.
@@ -122,14 +121,5 @@ TEST(Base64Test, sigEncoder) {
     EXPECT_EQ(regina::Base64Encoder::integerWidth(0x40), 2);
     EXPECT_EQ(regina::Base64Encoder::integerWidth(0xfff), 2);
     EXPECT_EQ(regina::Base64Encoder::integerWidth(0x1000), 3);
-
-    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0), 0);
-    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(1), 0);
-    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0x0f), 0);
-    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0x10), 1);
-    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0xff), 1);
-    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0x100), 2);
-    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0xffff), 2);
-    EXPECT_EQ(regina::PackedByteEncoder::integerWidth(0x10000), 3);
 };
 

@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::readSigList
-static const char *readSigList =
+inline constexpr const char readSigList[] =
 R"doc(Reads a list of signatures of triangulations or link diagrams from the
 given text file, and reconstructs the corresponding mathematical
 objects in a new packet tree. The file should contain one signature
@@ -50,7 +50,9 @@ Regarding errors:
   additional text packet that will be the last child of the container.
 
 * If an I/O error occurs while trying to read the given file, this
-  routine will return ``None``.
+  routine will throw an exception. This is a change in behaviour as of
+  Regina 8.0: older versions of Regina (≤ 7.x) returned ``None``
+  instead.
 
 In its simplest form, the text file can simply contain one signature
 per line and nothing else. However, more complex formats are allowed.
@@ -75,6 +77,9 @@ Python:
     (before the filename). This should be *dim* to specify the object
     type ``Triangulation<dim>``, or 0 to specify the object type Link.
     Currenty no other object type is supported in Python.
+
+Exception ``FileError``:
+    An error occurred whilst reading the given file.
 
 Parameter ``filename``:
     the name of the text file from which to read.

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,8 +33,8 @@
 #include "exportdialog.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "../packetchooser.h"
-#include "../packetfilter.h"
+#include "packetfilter.h"
+#include "choosers/packetchooser.h"
 
 #include <QDialogButtonBox>
 #include <QFrame>
@@ -74,7 +74,18 @@ ExportDialog::ExportDialog(QWidget* parent,
         hStrip->addStretch(1);
         layout->addLayout(hStrip);
 
-        connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotEncodingInfo()));
+        connect(btn, &QPushButton::clicked, this, [this]() {
+            ReginaSupport::info(this,
+                tr("<qt>I will encode any international symbols "
+                    "using the <b>%1</b> encoding.</qt>").arg(
+                    QString(ReginaPrefSet::global().fileImportExportCodec)),
+                tr("<qt>This is only relevant if you use letters or symbols "
+                    "that are not found on a typical English keyboard.<p>"
+                    "If you wish to use a different encoding, you can "
+                    "change this through Regina's settings.  If you are "
+                    "not sure what encoding to use, the default encoding "
+                    "<b>UTF-8</b> is safe.</qt>"));
+        });
     }
 
     layout->addStretch(1);
@@ -83,8 +94,9 @@ ExportDialog::ExportDialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox,SIGNAL(accepted()), this, SLOT(slotOk()));
-    connect(buttonBox,SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this,
+        &ExportDialog::okPressed);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 bool ExportDialog::validate() {
@@ -96,7 +108,7 @@ bool ExportDialog::validate() {
     return false;
 }
 
-void ExportDialog::slotOk() {
+void ExportDialog::okPressed() {
     // Get the selected packet.
     chosenPacket = chooser->selectedPacket();
     if (! chosenPacket) {
@@ -109,24 +121,10 @@ void ExportDialog::slotOk() {
         ReginaSupport::sorry(this,
             tr("Please select a different packet."),
             tr("<qt>The packet <i>%1</i> cannot "
-            "be exported to this file format.</qt>").
+                "be exported to this file format.</qt>").
             arg(QString(chosenPacket->humanLabel().c_str()).toHtmlEscaped()));
         return;
     }
 
     accept();
 }
-
-void ExportDialog::slotEncodingInfo() {
-    ReginaSupport::info(this,
-        tr("<qt>I will encode any international symbols "
-            "using the <b>%1</b> encoding.</qt>").arg(
-            QString(ReginaPrefSet::global().fileImportExportCodec)),
-        tr("<qt>This is only relevant if you use letters or symbols "
-            "that are not found on a typical English keyboard.<p>"
-            "If you wish to use a different encoding, you can "
-            "change this through Regina's settings.  If you are "
-            "not sure what encoding to use, the default encoding "
-            "<b>UTF-8</b> is safe.</qt>"));
-}
-

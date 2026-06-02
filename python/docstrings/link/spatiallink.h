@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SpatialLink
-static const char *SpatialLink =
+struct SpatialLink {
+
+// Docstring regina::python::doc::SpatialLink::__class
+static constexpr const char __class[] =
 R"doc(Represents a specific embedding of a directed knot or link in real
 3-dimensional space.
 
@@ -70,16 +72,14 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-namespace SpatialLink_ {
+// Docstring regina::python::doc::SpatialLink::__copy
+static constexpr const char __copy[] = R"doc(Constructs a new copy of the given link.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::__copy
-static const char *__copy = R"doc(Constructs a new copy of the given link.)doc";
+// Docstring regina::python::doc::SpatialLink::__default
+static constexpr const char __default[] = R"doc(Constructs an empty link. This will have zero components.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::__default
-static const char *__default = R"doc(Constructs an empty link. This will have zero components.)doc";
-
-// Docstring regina::python::doc::SpatialLink_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::SpatialLink::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this link is identical to the given link.
 
 Here "identical" means that both links follow exactly the same paths
@@ -99,8 +99,8 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if the two links are identical.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::__init
-static const char *__init =
+// Docstring regina::python::doc::SpatialLink::__init
+static constexpr const char __init[] =
 R"doc(Creates a new link whose components are given by sequences of points
 in 3-space.
 
@@ -153,15 +153,15 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the outer sequence
     of components.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::clearRadius
-static const char *clearRadius =
+// Docstring regina::python::doc::SpatialLink::clearRadius
+static constexpr const char clearRadius[] =
 R"doc(Removes any user-specified radius to use when rendering this link.
 
 Any subsequent calls to radius() will return a sensible default, as
 computed by defaultRadius().)doc";
 
-// Docstring regina::python::doc::SpatialLink_::component
-static const char *component =
+// Docstring regina::python::doc::SpatialLink::component
+static constexpr const char component[] =
 R"doc(Returns a reference to the component at the given index within this
 link.
 
@@ -172,8 +172,8 @@ Parameter ``index``:
 Returns:
     the component at the given index.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::componentSize
-static const char *componentSize =
+// Docstring regina::python::doc::SpatialLink::componentSize
+static constexpr const char componentSize[] =
 R"doc(Returns the number of nodes that are stored for the given component of
 this link.
 
@@ -186,8 +186,8 @@ Parameter ``componentIndex``:
 Returns:
     the number of nodes stored for the requested component.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::components
-static const char *components =
+// Docstring regina::python::doc::SpatialLink::components
+static constexpr const char components[] =
 R"doc(Returns an object that allows iteration through and random access to
 all components of this link.
 
@@ -216,39 +216,38 @@ only, and to call components() again each time you need it.
 Returns:
     access to the list of all components.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::countComponents
-static const char *countComponents =
+// Docstring regina::python::doc::SpatialLink::countComponents
+static constexpr const char countComponents[] =
 R"doc(Returns the number of components in this link.
 
 Returns:
     the number of components.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::defaultRadius
-static const char *defaultRadius =
+// Docstring regina::python::doc::SpatialLink::defaultRadius
+static constexpr const char defaultRadius[] =
 R"doc(Returns a sensible default radius to use when rendering the link.
 Specifically, this is the radius to use for the balls and cylinders
 used in the 3-D model.
 
-Currently this routine makes a "barely educated" decision: it looks
-only at the scale of the embedding, without studying the complexity of
-the knot or the closeness of the strands. Specifically, it chooses
-some fixed fraction of the minimum range amongst the *x*, *y* and *z*
-dimensions.
-
-Eventually this will be replaced with something intelligent that
-factors in how far apart the strands are, and will (as a result)
-guarantee that the renderings of no-adjacent strands will not collide.
+As of Regina 8.0, this routine chooses a radius by finding the closest
+non-adjacent pair of link nodes that are connected in the relative
+neighbourhood graph. Thanks to Kate Turner for this excellent
+suggestion. The current algorithm is best-case quadratic and worst-
+case cubic in the total number of nodes.
 
 This function is expensive to call the first time, but it caches its
 value and so subsesquent calls are essentially instantaneous (until
 the embedding of the link changes, at which point the cached value
 will be cleared).
 
+The choice of radius is subject to change in future versions of
+Regina.
+
 Returns:
     a sensible default radius to use for rendering.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::fromKnotPlot
-static const char *fromKnotPlot =
+// Docstring regina::python::doc::SpatialLink::fromKnotPlot
+static constexpr const char fromKnotPlot[] =
 R"doc(Creates a new link from a KnotPlot data file. Since KnotPlot files are
 in a binary format, this routine takes a _filename_ (not the file
 contents).
@@ -296,8 +295,8 @@ Parameter ``filename``:
 Returns:
     the reconstructed spatial link.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::SpatialLink::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given spatial links.
 
 This global routine simply calls SpatialLink::swap(); it is provided
@@ -316,8 +315,8 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the spatial link whose contents should be swapped with *lhs*.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::hasRadius
-static const char *hasRadius =
+// Docstring regina::python::doc::SpatialLink::hasRadius
+static constexpr const char hasRadius[] =
 R"doc(Indicates whether the user has set their own custom radius to use when
 rendering this link.
 
@@ -326,16 +325,16 @@ Returns:
     or ``False`` if the default radius should be used (as computed by
     defaultRadius()).)doc";
 
-// Docstring regina::python::doc::SpatialLink_::isEmpty
-static const char *isEmpty =
+// Docstring regina::python::doc::SpatialLink::isEmpty
+static constexpr const char isEmpty[] =
 R"doc(Determines whether this link is empty. An empty link is one with no
 components at all.
 
 Returns:
     ``True`` if and only if this link is empty.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::node
-static const char *node =
+// Docstring regina::python::doc::SpatialLink::node
+static constexpr const char node[] =
 R"doc(Returns a particular node belong to a particular component of this
 link.
 
@@ -351,8 +350,26 @@ Parameter ``nodeIndex``:
     indicates which node to return from the given component; this must
     be between 0 and ``componentSize(componentIndex) - 1`` inclusive.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::radius
-static const char *radius =
+// Docstring regina::python::doc::SpatialLink::nodes
+static constexpr const char nodes[] =
+R"doc(Returns a Python iterable object that iterates over all nodes in this
+link. For example:
+
+```
+link = SpatialLink(...)
+for n in link.nodes():
+    ...
+```
+
+The order of iteration will be: all of the nodes in the first
+component in order; then all of the nodes in the second component in
+order; and so on.
+
+Returns:
+    an iterator over all nodes in this link.)doc";
+
+// Docstring regina::python::doc::SpatialLink::radius
+static constexpr const char radius[] =
 R"doc(Returns the radius that should be used when rendering this link.
 Specifically, this is the radius to use for the balls and cylinders
 used in the 3-D model.
@@ -364,8 +381,8 @@ computed by defaultRadius()) will be returned.
 Returns:
     the radius to use when rendering this link.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::range
-static const char *range =
+// Docstring regina::python::doc::SpatialLink::range
+static constexpr const char range[] =
 R"doc(Returns the range of coordinates that this link occupies.
 
 Specifically, this routine returns a pair ``(min, max)``, where *min*
@@ -377,8 +394,8 @@ Returns:
     the range of coordinates. If this link contains no nodes at all
     then this routine will return ``((0,0,0), (0,0,0))``.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::refine
-static const char *refine =
+// Docstring regina::python::doc::SpatialLink::refine
+static constexpr const char refine[] =
 R"doc(Adds additional nodes to make the embedding appear smoother.
 
 Specifically, each adjacent pair of nodes will have one new node
@@ -400,8 +417,8 @@ implementation).
     very tight curvature pass very close to one another). The hope is
     to explicitly prevent this in a later implementation.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::refine_2
-static const char *refine_2 =
+// Docstring regina::python::doc::SpatialLink::refine_2
+static constexpr const char refine_2[] =
 R"doc(Adds a configurable number of additional nodes to make the embedding
 appear smoother.
 
@@ -429,8 +446,8 @@ Parameter ``sub``:
     the number of pieces that each original arc (i.e., line segment)
     should be subdivided into. This must be at least 2.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::reflect
-static const char *reflect =
+// Docstring regina::python::doc::SpatialLink::reflect
+static constexpr const char reflect[] =
 R"doc(Reflects the link in plane perpendicular to the given axis.
 
 Specifically:
@@ -447,8 +464,8 @@ Exception ``InvalidInput``:
 Parameter ``axis``:
     indicates the axis of reflection, as described above.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::scale
-static const char *scale =
+// Docstring regina::python::doc::SpatialLink::scale
+static constexpr const char scale[] =
 R"doc(Scales the entire link by the given factor.
 
 Specifically, all coordinates of all nodes will be multiplied by
@@ -459,8 +476,8 @@ The rendering radius, if this has been fixed, will be scaled also.
 Parameter ``factor``:
     the scaling factor; this must not be zero.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::setRadius
-static const char *setRadius =
+// Docstring regina::python::doc::SpatialLink::setRadius
+static constexpr const char setRadius[] =
 R"doc(Indicates that the given radius should be used when rendering this
 link.
 
@@ -470,8 +487,8 @@ Parameter ``useRadius``:
     the radius to use when rendering this link; this must be strictly
     positive.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::size
-static const char *size =
+// Docstring regina::python::doc::SpatialLink::size
+static constexpr const char size[] =
 R"doc(Returns the total number of nodes in this spatial link.
 
 .. warning::
@@ -481,8 +498,8 @@ R"doc(Returns the total number of nodes in this spatial link.
 Returns:
     the total number of nodes.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::swap
-static const char *swap =
+// Docstring regina::python::doc::SpatialLink::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given link.
 
 All crossings that belong to this link will be moved to *other*, and
@@ -498,8 +515,8 @@ This routine will behave correctly if *other* is in fact this link.
 Parameter ``other``:
     the link whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::SpatialLink_::translate
-static const char *translate =
+// Docstring regina::python::doc::SpatialLink::translate
+static constexpr const char translate[] =
 R"doc(Translates the entire link by the given vector.
 
 Specifically, the *x*, *y* and *z* coordinates of all nodes will be
@@ -510,7 +527,7 @@ Parameter ``vector``:
     holds the three constants that should be added to the *x*, *y* and
     *z* coordinates of every node.)doc";
 
-}
+}; // struct SpatialLink
 
 } // namespace regina::python::doc
 

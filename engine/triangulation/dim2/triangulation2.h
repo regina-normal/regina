@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,7 +43,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/markedvector.h"
 
 // NOTE: More #includes for faces, components and boundary components
@@ -72,6 +72,8 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \pyclassname{Triangulation2}
  *
  * \headerfile triangulation/dim2.h
  *
@@ -455,12 +457,8 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          */
         void clearAllProperties();
 
-        void calculateSkeleton();
-        void cloneSkeleton(const Triangulation& src);
-
-    friend class regina::Face<2, 2>;
-    friend class regina::detail::SimplexBase<2>;
-    friend class regina::detail::TriangulationBase<2>;
+    friend class Simplex<2>;
+    friend class detail::TriangulationBase<2>;
 };
 
 // Inline functions that need to be defined before *other* inline funtions
@@ -469,12 +467,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
 inline void Triangulation<2>::clearAllProperties() {
     clearBaseProperties();
 }
-
-} // namespace regina
-// Some more headers that are required for inline functions:
-#include "triangulation/dim2/triangle2.h"
-#include "triangulation/dim2/component2.h"
-namespace regina {
 
 // Inline functions for Triangulation<2>
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,7 +43,7 @@
 #endif
 
 #include <algorithm>
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 
@@ -303,6 +303,13 @@ IsoSigData<2, dim> IsoSigData<2, dim>::minimal(Component<dim>* component,
         }
     } while (type.next());
 
+    best.oriented_ = true;
+    for (auto g : best.adjGluing_)
+        if (! (g & 1)) {
+            best.oriented_ = false;
+            break;
+        }
+
     return best;
 }
 
@@ -375,32 +382,26 @@ std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
     enc.encodeSize(data.size());
 
     // Continue with a bit-by-bit encoding.
-    // We will need an unsigned type for the permutation index, since
-    // the encoder only reads/writes unsigned integer types.
-    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
-
-    int intWidth = bitsRequired(data.size() + 1);
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
-    static constexpr int lockWidth = dim + 2;
-
+    int intBits = bitsRequired(data.size() + 1);
     bool oriented = data.isOriented();
 
     // We begin by encoding the bits [11], which can never appear at the
     // beginning of a first-generation signature.  This will allow fromSig()
     // to determine which generation a given base64 signature is.
-    enc.encodeInt<unsigned>(2 /* encode two bits */, 3 /* the bits: 11 */);
+    enc.encodeInt<unsigned>(3 /* the bits: 11 */, 2 /* number of bits */);
 
     enc.encodeBit(oriented);
 
+    using UnsignedPermIndex = typename IsoSigData<2, dim>::UnsignedPermIndex;
     for (auto s : data.adjacentSimplices())
-        enc.encodeInt(intWidth, s);
-    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
+        enc.encodeInt(s, intBits);
+    enc.encodeBitmask(data.facetTypes(), data.countFacetBits());
     if (oriented) {
-        for (PermIndex g : data.adjacentGluings())
-            enc.encodeInt(permWidth - 1, g >> 1);
+        for (UnsignedPermIndex g : data.adjacentGluings())
+            enc.encodeInt(g >> 1, IsoSigData<2, dim>::permBits - 1);
     } else {
-        for (PermIndex g : data.adjacentGluings())
-            enc.encodeInt(permWidth, g);
+        for (UnsignedPermIndex g : data.adjacentGluings())
+            enc.encodeInt(g, IsoSigData<2, dim>::permBits);
     }
     if (data.hasLocks()) {
         // Write locks using a visually obvious suffix, as we do with
@@ -409,7 +410,7 @@ std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
         // _string prefix_ of the with-locks signature.
         enc.flushAndAppend(Base64Encoder::spare[1]);
         for (auto m : data.locks())
-            enc.encodeInt(lockWidth, m);
+            enc.encodeInt(m, IsoSigData<2, dim>::lockBits);
     }
 
     return std::move(enc).str();
@@ -429,23 +430,23 @@ size_t IsoSigPrintable::length(const IsoSigData<2, dim>& data) {
     }
 
     // From here on the encoding is bit-by-bit.
-    int intWidth = bitsRequired(data.size() + 1);
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
-    static constexpr int lockWidth = dim + 2;
+    int intBits = bitsRequired(data.size() + 1);
     bool oriented = data.isOriented();
 
     // The constant 8 below includes:
     // - 3 initial bits (11 marker, followed by oriented flag);
     // - an extra +5 since we need to round up when dividing by 6.
-    ans += ((8 + (intWidth * data.adjacentSimplices().size()) +
-        data.countFacetBits() + (oriented ? permWidth - 1 : permWidth) *
-        data.adjacentGluings().size()) / 6);
+    ans += ((8 +
+        (intBits * data.adjacentSimplices().size()) +
+        data.countFacetBits() +
+        (oriented ? IsoSigData<2, dim>::permBits - 1 :
+            IsoSigData<2, dim>::permBits) * data.adjacentGluings().size()) / 6);
 
     if (data.hasLocks()) {
         // The constant 11 below includes:
         // - 6 bits for the hard-coded "lock suffix" character;
         // - an extra +5 again to round up when dividing by 6.
-        ans += (lockWidth * data.locks().size() + 11) / 6;
+        ans += (IsoSigData<2, dim>::lockBits * data.locks().size() + 11) / 6;
     }
 
     return ans;
@@ -491,32 +492,26 @@ std::string IsoSigPrintableLockFree::encode(const IsoSigData<2, dim>& data) {
     enc.encodeSize(data.size());
 
     // Continue with a bit-by-bit encoding.
-    // We will need an unsigned type for the permutation index, since
-    // the encoder only reads/writes unsigned integer types.
-    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
-
-    int intWidth = bitsRequired(data.size() + 1);
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
-    static constexpr int lockWidth = dim + 2;
-
+    int intBits = bitsRequired(data.size() + 1);
     bool oriented = data.isOriented();
 
     // We begin by encoding the bits [11], which can never appear at the
     // beginning of a first-generation signature.  This will allow fromSig()
     // to determine which generation a given base64 signature is.
-    enc.encodeInt<unsigned>(2 /* encode two bits */, 3 /* the bits: 11 */);
+    enc.encodeInt<unsigned>(3 /* the bits: 11 */, 2 /* number of bits */);
 
     enc.encodeBit(oriented);
 
+    using UnsignedPermIndex = typename IsoSigData<2, dim>::UnsignedPermIndex;
     for (auto s : data.adjacentSimplices())
-        enc.encodeInt(intWidth, s);
-    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
+        enc.encodeInt(s, intBits);
+    enc.encodeBitmask(data.facetTypes(), data.countFacetBits());
     if (oriented) {
-        for (PermIndex g : data.adjacentGluings())
-            enc.encodeInt(permWidth - 1, g >> 1);
+        for (UnsignedPermIndex g : data.adjacentGluings())
+            enc.encodeInt(g >> 1, IsoSigData<2, dim>::permBits - 1);
     } else {
-        for (PermIndex g : data.adjacentGluings())
-            enc.encodeInt(permWidth, g);
+        for (UnsignedPermIndex g : data.adjacentGluings())
+            enc.encodeInt(g, IsoSigData<2, dim>::permBits);
     }
 
     return std::move(enc).str();
@@ -536,88 +531,94 @@ size_t IsoSigPrintableLockFree::length(const IsoSigData<2, dim>& data) {
     }
 
     // From here on the encoding is bit-by-bit.
-    int intWidth = bitsRequired(data.size() + 1);
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
+    int intBits = bitsRequired(data.size() + 1);
     bool oriented = data.isOriented();
 
     // The constant 8 below includes:
     // - 3 initial bits (11 marker, followed by oriented flag);
     // - an extra +5 since we need to round up when dividing by 6.
-    ans += ((8 + (intWidth * data.adjacentSimplices().size()) +
-        data.countFacetBits() + (oriented ? permWidth - 1 : permWidth) *
-        data.adjacentGluings().size()) / 6);
+    ans += ((8 +
+        (intBits * data.adjacentSimplices().size()) +
+        data.countFacetBits() +
+        (oriented ? IsoSigData<2, dim>::permBits - 1 :
+            IsoSigData<2, dim>::permBits) * data.adjacentGluings().size()) / 6);
 
     return ans;
 }
 
 template <int dim> requires (supportedDim(dim))
 ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
-    // We begin with a single byte b, where:
+    // We begin by encoding the integer n as follows:
+    // - if n < 128, we simply write n in the first byte;
+    // - if n ≥ 128, we set the highest-order bit of the first byte, use the
+    //   seven lower-order bits to encode the _number_ of bits b required for
+    //   any integer in the range [0..n], and then encode n using b bits
+    //   beginning at the second byte.
     //
-    // - the lower six bits of b encode the number of bits required to encode
-    //   any integer in the range [0..size] (note that this imposes the
-    //   restriction size < 2^64, but this is enormously more than enough for
-    //   any triangulation);
-    // - bit 6 is set if all gluings are orientation-preserving;
-    // - bit 7 is set if we need to encode locks.
+    // This impose the restriction that n < 2^128, but this is wildly more
+    // than enough for any triangulation.
     //
-    // The encoding of the real data begins at the second byte.
+    // Following this, we encode two flags:
+    // - whether all gluings are orientation-preserving;
+    // - whether we need to encode locks.
 
-    int intWidth = bitsRequired(data.size() + 1);
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
-    static constexpr int lockWidth = dim + 2;
-
-    // Get an unsigned type for the permutation index, since BitEncoder
-    // only writes unsigned integer types.
-    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
-
+    int intBits = bitsRequired(data.size() + 1);
     bool oriented = data.isOriented();
 
     BitEncoder enc;
-    enc.reserveBits(
-        8 + (intWidth * data.adjacentSimplices().size()) +
-        data.countFacetBits() +
-        (oriented ? (permWidth - 1) * data.adjacentGluings().size() :
-            permWidth * data.adjacentGluings().size()) +
-        lockWidth * data.locks().size());
+    enc.reserveBytes(length(data));
 
-    enc.encodeInt(6, static_cast<unsigned>(intWidth));
+    if (data.size() < 128) {
+        enc.encodeInt(data.size(), 8);
+    } else {
+        if (intBits > 127)
+            throw ImpossibleScenario("IsoSigBinary::encode(): "
+                "triangulation has ≥ 2^127 top-dimensional simplices");
+        enc.encodeInt(static_cast<unsigned>(intBits | 128), 8);
+        enc.encodeInt(data.size(), intBits);
+    }
+
     enc.encodeBit(oriented);
     enc.encodeBit(data.hasLocks());
 
-    enc.encodeInt(intWidth, data.size());
+    using UnsignedPermIndex = typename IsoSigData<2, dim>::UnsignedPermIndex;
     for (auto s : data.adjacentSimplices())
-        enc.encodeInt(intWidth, s);
-    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
+        enc.encodeInt(s, intBits);
+    enc.encodeBitmask(data.facetTypes(), data.countFacetBits());
     if (oriented) {
-        for (PermIndex g : data.adjacentGluings())
-            enc.encodeInt(permWidth - 1, g >> 1);
+        for (UnsignedPermIndex g : data.adjacentGluings())
+            enc.encodeInt(g >> 1, IsoSigData<2, dim>::permBits - 1);
     } else {
-        for (PermIndex g : data.adjacentGluings())
-            enc.encodeInt(permWidth, g);
+        for (UnsignedPermIndex g : data.adjacentGluings())
+            enc.encodeInt(g, IsoSigData<2, dim>::permBits);
     }
     for (auto m : data.locks())
-        enc.encodeInt(lockWidth, m);
+        enc.encodeInt(m, IsoSigData<2, dim>::lockBits);
 
     return std::move(enc).bytes();
 }
 
 template <int dim> requires (supportedDim(dim))
 size_t IsoSigBinary::length(const IsoSigData<2, dim>& data) {
-    int intWidth = bitsRequired(data.size() + 1);
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
-    static constexpr int lockWidth = dim + 2;
+    int intBits = bitsRequired(data.size() + 1);
     bool oriented = data.isOriented();
 
-    size_t bits = 8 + (intWidth * (data.adjacentSimplices().size() + 1)) +
-        data.countFacetBits();
-    if (oriented)
-        bits += (permWidth - 1) * data.adjacentGluings().size();
-    else
-        bits += permWidth * data.adjacentGluings().size();
-    bits += lockWidth * data.locks().size();
+    size_t prefixBits;
+    if (data.size() < 128) {
+        // The size is written to the first byte, and the integer
+        // bitwidth is not encoded separately.
+        prefixBits = 8;
+    } else {
+        // The integer bitwidth (and a marker) is written to the first byte,
+        // and the size is written separately beginning at the second byte.
+        prefixBits = 8 + intBits;
+    }
 
-    return (bits + 7) / 8;
+    return (prefixBits + 2 + intBits * data.adjacentSimplices().size() +
+        data.countFacetBits() +
+        (oriented ? IsoSigData<2, dim>::permBits - 1 :
+            IsoSigData<2, dim>::permBits) * data.adjacentGluings().size() +
+        IsoSigData<2, dim>::lockBits * data.locks().size() + 7) / 8;
 }
 
 template <int dim> requires (supportedDim(dim))
@@ -625,10 +626,6 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
     // Get the empty triangulation out of the way first.
     if (sig.empty())
         return IsoSigPrintable::encodeEmpty();
-
-    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
-    static constexpr int lockWidth = dim + 2;
 
     try {
         // Both IsoSigPrintable and IsoSigBinary encode exactly the same
@@ -638,27 +635,33 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
         Base64BitEncoder enc;
         while (! dec.noMoreBits()) {
             // Re-encode one component of the triangulation at a time.
-            unsigned intWidth = dec.template decodeInt<unsigned>(6);
-            if (intWidth == 0)
-                throw InvalidArgument("IsoSigBinary::asString(): "
-                    "invalid integer width for binary encoding");
+            size_t nSimp = dec.template decodeInt<size_t>(8);
+            int intBits;
+            if (nSimp & 128) {
+                intBits = static_cast<int>(nSimp ^ 128);
+                if (intBits == 0)
+                    throw InvalidArgument(
+                        "IsoSigBinary::asString(): invalid integer bitwidth");
+                nSimp = dec.template decodeInt<size_t>(intBits);
+            } else if (nSimp == 0) {
+                throw InvalidArgument(
+                    "IsoSigBinary::asString(): invalid component size");
+            } else {
+                intBits = bitsRequired(nSimp + 1);
+            }
+
             bool oriented = dec.decodeBit();
             bool hasLocks = dec.decodeBit();
 
-            size_t nSimp = dec.template decodeInt<size_t>(intWidth);
             enc.encodeSize(nSimp);
-            if (nSimp == 0)
-                throw InvalidArgument("IsoSigBinary::asString(): "
-                    "invalid component size for binary encoding");
-
-            enc.encodeInt<unsigned>(2 /* two bits */, 3 /* the bits: 11 */);
+            enc.encodeInt<unsigned>(3 /* the bits: 11 */, 2 /* two bits */);
             enc.encodeBit(oriented);
 
             size_t nBdry = 0;
             size_t nDest = 2 * (nSimp - 1);
             while (nDest < nSimp * (dim + 1)) {
-                size_t dest = dec.template decodeInt<size_t>(intWidth);
-                enc.encodeInt(intWidth, dest);
+                size_t dest = dec.template decodeInt<size_t>(intBits);
+                enc.encodeInt(dest, intBits);
                 if (dest == nSimp) {
                     ++nBdry;
                     ++nDest;
@@ -668,17 +671,22 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
             }
 
             size_t nFacets = (nDest + nBdry) / 2;
-            enc.encodeBitmask(nFacets, dec.decodeBitmask(nFacets));
+            enc.encodeBitmask(dec.decodeBitmask(nFacets), nFacets);
 
-            int w = (oriented ? permWidth - 1 : permWidth);
+            using UnsignedPermIndex =
+                typename IsoSigData<2, dim>::UnsignedPermIndex;
+            int w = (oriented ? IsoSigData<2, dim>::permBits - 1 :
+                IsoSigData<2, dim>::permBits);
             for (size_t i = 0; i < nFacets - nBdry + 1 - nSimp; ++i)
-                enc.encodeInt(w, dec.template decodeInt<PermIndex>(w));
+                enc.encodeInt(dec.template decodeInt<UnsignedPermIndex>(w), w);
 
             if (hasLocks) {
                 enc.flushAndAppend(Base64Encoder::spare[1]);
                 for (size_t i = 0; i < nSimp; ++i)
-                    enc.encodeInt(lockWidth, dec.template decodeInt<
-                        typename Simplex<dim>::LockMask>(lockWidth));
+                    enc.encodeInt(
+                        dec.template decodeInt<typename Simplex<dim>::LockMask>(
+                            IsoSigData<2, dim>::lockBits),
+                        IsoSigData<2, dim>::lockBits);
             }
 
             dec.flushByte();
@@ -979,10 +987,7 @@ requires std::bidirectional_iterator<Iterator>
 void TriangulationBase<dim>::fillComponentFromSig2(
         const FixedArray<Simplex<dim>*>& simplices,
         Base64BitDecoder<Iterator>& decoder) {
-    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
-    int intWidth = bitsRequired(simplices.size() + 1);
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
-    static constexpr int lockWidth = dim + 2;
+    int intBits = bitsRequired(simplices.size() + 1);
 
     if (decoder.template decodeInt<unsigned>(2) != 3)
         throw InvalidArgument("fromSig(): missing second-generation marker");
@@ -993,7 +998,7 @@ void TriangulationBase<dim>::fillComponentFromSig2(
     std::vector<size_t> adjSimplex;
     adjSimplex.reserve((simplices.size() * (dim + 1) + 1) / 2); // a lower bound
     while (nDest < simplices.size() * (dim + 1)) {
-        size_t dest = decoder.template decodeInt<size_t>(intWidth);
+        size_t dest = decoder.template decodeInt<size_t>(intBits);
         if (dest == simplices.size()) {
             ++nBdry;
             ++nDest;
@@ -1006,13 +1011,17 @@ void TriangulationBase<dim>::fillComponentFromSig2(
     size_t nFacets = (nDest + nBdry) / 2;
     Bitmask facetType = decoder.decodeBitmask(nFacets);
 
-    FixedArray<PermIndex> adjGluing(nFacets - nBdry + 1 - simplices.size());
+    using UnsignedPermIndex = typename IsoSigData<2, dim>::UnsignedPermIndex;
+    FixedArray<UnsignedPermIndex> adjGluing(
+        nFacets - nBdry + 1 - simplices.size());
     if (oriented) {
         for (auto& index : adjGluing)
-            index = decoder.template decodeInt<PermIndex>(permWidth-1) * 2 + 1;
+            index = decoder.template decodeInt<UnsignedPermIndex>(
+                IsoSigData<2, dim>::permBits - 1) * 2 + 1;
     } else {
         for (auto& index : adjGluing)
-            index = decoder.template decodeInt<PermIndex>(permWidth);
+            index = decoder.template decodeInt<UnsignedPermIndex>(
+                IsoSigData<2, dim>::permBits);
     }
 
     // This ends the gluings for this component!
@@ -1036,7 +1045,7 @@ void TriangulationBase<dim>::fillComponentFromSig2(
                 if (dest != simplices.size()) {
                     // A non-boundary facet, joined to a simplex we
                     // have already seen.
-                    PermIndex index = *gluingPos++;
+                    UnsignedPermIndex index = *gluingPos++;
                     if (index >= Perm<dim+1>::nPerms)
                         throw InvalidArgument(
                             "fromSig(): invalid gluing permutation");
@@ -1068,8 +1077,9 @@ void TriangulationBase<dim>::fillComponentFromSig2(
         // We will set lock masks directly instead of using lock() functions;
         // see the first-generation decoding procedure for further explanation.
         for (auto s : simplices)
-            s->locks_ = decoder.template decodeInt<
-                typename Simplex<dim>::LockMask>(lockWidth);
+            s->locks_ =
+                decoder.template decodeInt<typename Simplex<dim>::LockMask>(
+                IsoSigData<2, dim>::lockBits);
 
         verifyLockConsistency(simplices);
         decoder.flushChar();
@@ -1100,8 +1110,13 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
     try {
         // Read the size of the first component.
         std::pair<size_t, int> sizeAndWidth = dec.decodeSize();
-        if (sizeAndWidth.first == 0)
-            return ans; // empty triangulation
+        if (sizeAndWidth.first == 0) {
+            // This is the signature for the empty triangulation.
+            if (! dec.done())
+                throw InvalidArgument("fromSig(): "
+                    "unexpected additional characters");
+            return ans;
+        }
 
         // Look at the next character: this will tell us whether we have a
         // first-generation or second-generation signature.
@@ -1156,24 +1171,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
 }
 
 template <int dim> requires (supportedDim(dim))
-size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
-    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
-    try {
-        return dec.decodeSize().first;
-    } catch (const InvalidInput&) {
-        throw InvalidArgument("isoSigComponentSize(): invalid signature");
-    }
-}
-
-template <int dim> requires (supportedDim(dim))
 Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
-    static constexpr int permWidth = bitsRequired(Perm<dim + 1>::nPerms);
-    static constexpr int lockWidth = dim + 2;
-
-    // Get an unsigned type for the permutation index, since BitDecoder
-    // only reads into unsigned integer types.
-    using PermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
-
     BitDecoder dec(sig.begin(), sig.end());
 
     try {
@@ -1182,24 +1180,29 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
         while (! dec.noMoreBits()) {
             // Read one component at a time.
 
-            unsigned intWidth = dec.template decodeInt<unsigned>(6);
-            if (intWidth == 0)
-                throw InvalidArgument(
-                    "fromSig(): invalid integer width for binary encoding");
+            size_t nSimp = dec.template decodeInt<size_t>(8);
+            int intBits;
+            if (nSimp & 128) {
+                intBits = static_cast<int>(nSimp ^ 128);
+                if (intBits == 0)
+                    throw InvalidArgument(
+                        "fromSig(): invalid integer bitwidth");
+                nSimp = dec.template decodeInt<size_t>(intBits);
+            } else if (nSimp == 0) {
+                throw InvalidArgument("fromSig(): invalid component size");
+            } else {
+                intBits = bitsRequired(nSimp + 1);
+            }
+
             bool oriented = dec.decodeBit();
             bool hasLocks = dec.decodeBit();
-
-            size_t nSimp = dec.template decodeInt<size_t>(intWidth);
-            if (nSimp == 0)
-                throw InvalidArgument(
-                    "fromSig(): invalid component size for binary encoding");
 
             size_t nBdry = 0;
             size_t nDest = 2 * (nSimp - 1);
             std::vector<size_t> adjSimplex;
             adjSimplex.reserve((nSimp * (dim + 1) + 1) / 2); // a lower bound
             while (nDest < nSimp * (dim + 1)) {
-                size_t dest = dec.template decodeInt<size_t>(intWidth);
+                size_t dest = dec.template decodeInt<size_t>(intBits);
                 if (dest == nSimp) {
                     ++nBdry;
                     ++nDest;
@@ -1212,14 +1215,18 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
             size_t nFacets = (nDest + nBdry) / 2;
             Bitmask facetType = dec.decodeBitmask(nFacets);
 
-            FixedArray<PermIndex> adjGluing(nFacets - nBdry + 1 - nSimp);
+            using UnsignedPermIndex =
+                typename IsoSigData<2, dim>::UnsignedPermIndex;
+            FixedArray<UnsignedPermIndex> adjGluing(
+                nFacets - nBdry + 1 - nSimp);
             if (oriented) {
                 for (auto& index : adjGluing)
-                    index = dec.template decodeInt<PermIndex>(permWidth - 1)
-                        * 2 + 1;
+                    index = dec.template decodeInt<UnsignedPermIndex>(
+                        IsoSigData<2, dim>::permBits - 1) * 2 + 1;
             } else {
                 for (auto& index : adjGluing)
-                    index = dec.template decodeInt<PermIndex>(permWidth);
+                    index = dec.template decodeInt<UnsignedPermIndex>(
+                        IsoSigData<2, dim>::permBits);
             }
 
             // This ends the gluings for this component!
@@ -1247,7 +1254,7 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
                         if (dest != nSimp) {
                             // A non-boundary facet, joined to a simplex we
                             // have already seen.
-                            PermIndex index = *gluingPos++;
+                            UnsignedPermIndex index = *gluingPos++;
                             if (index >= Perm<dim+1>::nPerms)
                                 throw InvalidArgument(
                                     "fromSig(): invalid gluing permutation");
@@ -1273,8 +1280,9 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const ByteSequence& sig) {
                 // We set lock masks directly instead of using lock() functions;
                 // see the first-gen decoding procedure for further explanation.
                 for (auto s : simp)
-                    s->locks_ = dec.template decodeInt<
-                        typename Simplex<dim>::LockMask>(lockWidth);
+                    s->locks_ =
+                        dec.template decodeInt<typename Simplex<dim>::LockMask>(
+                        IsoSigData<2, dim>::lockBits);
 
                 verifyLockConsistency(simp);
             }

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,10 +35,12 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 #include "utilities/typeutils.h"
 #include "../helpers.h"
 #include "../docstrings/foreign/siglist.h"
+
+using namespace pybind11::literals;
 
 using pybind11::overload_cast;
 
@@ -58,17 +60,19 @@ void addForeignIsoSig(pybind11::module_& m) {
                     return regina::readSigList<regina::Triangulation<dim>>(
                         filename, colSigs, colLabels, ignoreLines);
                 });
+            } catch (const regina::ReginaException&) {
+                throw;
             } catch (const std::runtime_error&) {
                 throw regina::InvalidArgument(
                     "The given dimension is out of range.");
             }
         }
     },
-    pybind11::arg("dimension"),
-    pybind11::arg("filename"),
-    pybind11::arg("colSigs") = 0,
-    pybind11::arg("colLabels") = -1,
-    pybind11::arg("ignoreLines") = 0,
+    "dimension"_a,
+    "filename"_a,
+    "colSigs"_a = 0,
+    "colLabels"_a = -1,
+    "ignoreLines"_a = 0,
     rdoc::readSigList);
 
     RDOC_SCOPE_END

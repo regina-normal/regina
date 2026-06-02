@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -273,32 +273,83 @@ static void verifyLookup(const char* isoSig, const char* name) {
     EXPECT_EQ(hits.front().name(), name);
 }
 
-static void verifyLookup(const char* isoSig, const char* name1,
-        const char* name2) {
+static void verifyLookup(const char* isoSig,
+        std::initializer_list<std::string> names) {
     SCOPED_TRACE_CSTRING(isoSig);
 
     auto hits = Census::lookup(isoSig);
-    ASSERT_EQ(hits.size(), 2);
-    EXPECT_EQ(hits.front().name(), name1);
-    EXPECT_EQ(hits.back().name(), name2);
+    ASSERT_EQ(hits.size(), names.size());
+
+    auto a = hits.begin();
+    auto b = names.begin();
+    for ( ; a != hits.end(); ++a, ++b)
+        EXPECT_EQ(a->name(), *b);
 }
 
 TEST_F(CensusTest, lookup) {
-    // Make sure that the database library is working, and that
-    // we can access all censuses.
+    // Make sure that the database library is working, and that we can access
+    // all censuses.  We test database lookups using both first-generation and
+    // second-generation signatures.
 
     verifyLookupNone("");
     verifyLookupNone("abcdefg");
+    verifyLookupNone("bfoo");
+    // Closed orientable census:
+    verifyLookup("fFuC8hYTOTa",
+        "SFS [S2: (2,1) (3,1) (5,-4)] : #1");
     verifyLookup("fvPQcdecedekrsnrs",
-        "SFS [S2: (2,1) (3,1) (5,-4)] : #1"); // closed or
+        "SFS [S2: (2,1) (3,1) (5,-4)] : #1");
+    // Closed orientable & closed hyperbolic censuses:
+    verifyLookup("kFsYkeXlZ-pa2bpzGfLd",
+        { "Hyp_1.28448530 (Z_6) : #12", "1.2844853004683544 : m004(6, 1)" });
     verifyLookup("kLLvLQQkcdjgjijhihihsfrovojgng",
-        "Hyp_1.28448530 (Z_6) : #12",
-        "1.2844853004683544 : m004(6, 1)"); // closed or, closed hyp
-    verifyLookup("gvLQQcdefeffdwnplhe",
-        "T x I / [ 1,1 | 1,0 ] : #1"); // closed nor
-    verifyLookup("cPcbbbiht",
-        "m004 : #1", "L104001"); // cusped or, hyp knots & links
-    verifyLookup("bkaaid", "m000 : #1"); // cusped nor
-    verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt",
-        "L408001", "L410005"); // hyp knots & links, multiple times
+        { "Hyp_1.28448530 (Z_6) : #12", "1.2844853004683544 : m004(6, 1)" });
+    // Closed non-orientable census:
+    verifyLookup("gtJLT-bUykjdt", "T x I / [ 1,1 | 1,0 ] : #1");
+    verifyLookup("gvLQQcdefeffdwnplhe", "T x I / [ 1,1 | 1,0 ] : #1");
+    // Cusped orientable census, hyperbolic knots & links:
+    verifyLookup("cV6cqb", { "m004 : #1", "L104001" });
+    verifyLookup("cPcbbbiht", { "m004 : #1", "L104001" });
+    // Cusped non-orientable census:
+    verifyLookup("bJrc", "m000 : #1");
+    verifyLookup("bkaaid", "m000 : #1");
+    // Hyperbolic knots & links, multiple hits:
+    verifyLookup("k3WQS7WmZ7pbm6QZelNa", { "L408001", "L410005" });
+    verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt", { "L408001", "L410005" });
+    // Classical and virtual knots:
+    verifyLookup("eputWe", { "4ah_1", "v4_1", "4.108" });
+    verifyLookup("eabcdbadcvbZa", { "4ah_1", "v4_1", "4.108" });
+
+    // Ensure that our maxSize() optimisation does not cut out any hits.
+    // The following examples are of the largest size in each database.
+    verifyLookup("lxWISepmv9Foi2BqsJJeKa",
+        "Hyp_2.08566020 (Z_30) : #18");
+    verifyLookup("lLLLPLQPccdfegiijijkkhsmdghudpawk",
+        "Hyp_2.08566020 (Z_30) : #18");
+    verifyLookup("lZsZoev908-oaUHZnipsyZTa",
+        "SFS [RP2: (2,1) (3,1) (3,1)] : #44");
+    verifyLookup("lLLvLPQQcbcihihjkihjktsdddlmkfjjw",
+        "SFS [RP2: (2,1) (3,1) (3,1)] : #44");
+    verifyLookup("jxWYWZq7+FaS1memen", "o9_20087 : #23");
+    verifyLookup("jLvAAMQaefeghhhiineqsoaiihr", "o9_20087 : #23");
+    verifyLookup("jZWZUIWd-FaAO2jzfh2a", "n9_6707 : #37");
+    verifyLookup("jLLLwQQccefiigihhgouumtrnhi", "n9_6707 : #37");
+    verifyLookup(
+        "GpaqyGOW4irPHrcIYIAl7YAJtZZJZJRR777-xolbHkrv1wcxCreNvqmtO2dO5wrSfLLa",
+        "5.4664495824442309 : v2972(-4, 1)");
+    verifyLookup(
+        "GLAMzMLLLLvwwLwMwQwQQQcbcbdefghjknmsrvuvvBxBCAzCEFFFCEDEhhjhhhhqkaqbqkppvguvpakgqhqdtdfsk",
+        "5.4664495824442309 : v2972(-4, 1)");
+    verifyLookup(
+        "wxzqn3doxZgv2QXyuwL06-VUvMaajnNsrePu4nNDAOcc",
+        "L111314");
+    verifyLookup(
+        "wLvLLAPMvMMwPQPkcehfjijklpmqopttruuvuvviadcfvfamncargetcnndchh",
+        "L111314");
+    verifyLookup("gZmxZiAS", { "v6_452", "6.1176" });
+    verifyLookup("gababcdcdefeftMp8", { "v6_452", "6.1176" });
+    verifyLookup("qVzZziSzvp8rqmaKYXOsOvZ9y",
+        "16nh_0784279");
+    verifyLookup("qabcdbefcdghaijefklmhgnokjilpnopmRszvvbFMZHhc",
+        "16nh_0784279");
 }

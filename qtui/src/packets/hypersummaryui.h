@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,12 +82,6 @@ class HyperSummaryUI : public QObject, public PacketViewerTab {
         regina::Packet* getPacket() override;
         QWidget* getInterface() override;
         void refresh() override;
-
-    public slots:
-        /**
-         * Notify that preferences have changed.
-         */
-        void updatePreferences();
 };
 
 #endif

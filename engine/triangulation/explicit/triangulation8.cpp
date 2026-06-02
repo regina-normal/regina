@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 #include "triangulation/detail/moves-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
 #include "triangulation/detail/triangulation-impl.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 
 namespace regina {
 
@@ -55,7 +55,6 @@ template std::pair<std::string, Isomorphism<8>>
     IsoSigRidgeDegrees<8>>(bool) const;
 
 template Triangulation<8> TriangulationBase<8>::fromSig(const std::string&);
-template size_t TriangulationBase<8>::isoSigComponentSize(const std::string&);
 
 template AbelianGroup TriangulationBase<8>::homology<1>() const;
 template AbelianGroup TriangulationBase<8>::homology<2>() const;
@@ -103,7 +102,7 @@ template bool TriangulationBase<8>::internalPachner(Face<8, 4>*, bool, bool);
 template bool TriangulationBase<8>::internalPachner(Face<8, 5>*, bool, bool);
 template bool TriangulationBase<8>::internalPachner(Face<8, 6>*, bool, bool);
 template bool TriangulationBase<8>::internalPachner(Face<8, 7>*, bool, bool);
-template bool TriangulationBase<8>::internalPachner(Face<8, 8>*, bool, bool);
+template bool TriangulationBase<8>::internalPachner(Simplex<8>*, bool, bool);
 
 template bool TriangulationBase<8>::internal20(Face<8, 0>*, bool, bool);
 template bool TriangulationBase<8>::internal20(Face<8, 1>*, bool, bool);

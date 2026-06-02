@@ -6,11 +6,11 @@ Please give an isomorphism signature.
 Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)
   -t, --threads=<threads>     Number of parallel threads (default = 1)
-  -3, --dim3                  Input is a 3-manifold signature (default)
-  -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
   -l, --all                   Output larger triangulations/links also
-  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
                               second-generation signatures (--gen=2, default)
   -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
@@ -29,11 +29,11 @@ I could not interpret the given 3-manifold isomorphism signature.
 Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)
   -t, --threads=<threads>     Number of parallel threads (default = 1)
-  -3, --dim3                  Input is a 3-manifold signature (default)
-  -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
   -l, --all                   Output larger triangulations/links also
-  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
                               second-generation signatures (--gen=2, default)
   -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
@@ -45,18 +45,18 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate cPcbbbadu hLLMAkacdefeggjkaknkxn
+TEST: retriangulate cV6IAa hpySU+lmKiSSIa
 --------------------
 Too many arguments.
 
 Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)
   -t, --threads=<threads>     Number of parallel threads (default = 1)
-  -3, --dim3                  Input is a 3-manifold signature (default)
-  -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
   -l, --all                   Output larger triangulations/links also
-  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
                               second-generation signatures (--gen=2, default)
   -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
@@ -68,18 +68,18 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate -h -1 cPcbbbadu
+TEST: retriangulate -h -1 cV6IAa
 --------------------
 The height cannot be negative.
 
 Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)
   -t, --threads=<threads>     Number of parallel threads (default = 1)
-  -3, --dim3                  Input is a 3-manifold signature (default)
-  -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
   -l, --all                   Output larger triangulations/links also
-  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
                               second-generation signatures (--gen=2, default)
   -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
@@ -91,18 +91,18 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate -t 0 cPcbbbadu
+TEST: retriangulate -t 0 cV6IAa
 --------------------
 The number of threads must be positive.
 
 Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)
   -t, --threads=<threads>     Number of parallel threads (default = 1)
-  -3, --dim3                  Input is a 3-manifold signature (default)
-  -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
   -l, --all                   Output larger triangulations/links also
-  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
                               second-generation signatures (--gen=2, default)
   -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
@@ -114,18 +114,18 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate -4 -h 3 eLMQcbcddcddaaaa8a8a8a8a8a
+TEST: retriangulate -4 -h 3 elAAB-rMm2TB3UD
 --------------------
 In four dimensions the height must be even.
 
 Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)
   -t, --threads=<threads>     Number of parallel threads (default = 1)
-  -3, --dim3                  Input is a 3-manifold signature (default)
-  -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
   -l, --all                   Output larger triangulations/links also
-  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
                               second-generation signatures (--gen=2, default)
   -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
@@ -145,11 +145,11 @@ The options --classical and --virtual cannot be used together.
 Usage: retriangulate <isosig>
   -h, --height=<height>       Number of extra simplices/crossings (default = 1)
   -t, --threads=<threads>     Number of parallel threads (default = 1)
-  -3, --dim3                  Input is a 3-manifold signature (default)
-  -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot/link signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
   -l, --all                   Output larger triangulations/links also
-  -g, --gen=<gen_number>      Output first-generation signatures (--gen=1) or
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
                               second-generation signatures (--gen=2, default)
   -a, --anysig                Legacy alias for --gen=2 (default)
   -c, --classical             Never allow virtual type II moves (default for
@@ -161,7 +161,7 @@ Usage: retriangulate <isosig>
 --------------------
 Exit code: 1
 ============================================================
-TEST: retriangulate -g1 fLAMcbcbdeehhjqqs
+TEST: retriangulate -g1 fhrJC1iaWnb
 --------------------
 fLAMcbcbdeehhjqqs
 Found 1 triangulation(s).
@@ -175,14 +175,21 @@ Found 1 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -h 2 cPcbbbadu
+TEST: retriangulate -g1 cV6IAa
 --------------------
 cPcbbbadu
 Found 1 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -h 3 cPcbbbadu
+TEST: retriangulate -g1 -h 2 cV6IAa
+--------------------
+cPcbbbadu
+Found 1 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate -g1 -h 3 cV6IAa
 --------------------
 cPcbbbadu
 cPcbbbadh
@@ -190,7 +197,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -h 3 -t 2 cPcbbbadu
+TEST: retriangulate -g1 -h 3 -t 2 cV6IAa
 --------------------
 cPcbbbadu
 cPcbbbadh
@@ -198,7 +205,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 gLLMQacdefefjkaknrr
+TEST: retriangulate -g1 gxSBS-beHuTi
 --------------------
 gLLMQacdefefjkaknrr
 gLLAQaceefefjkuxxnn
@@ -206,7 +213,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -h 2 -t 2 hLLAAkbdceefggdonxdjxn
+TEST: retriangulate -g1 -h 2 -t 2 hpyS1+lmKi0Kdb
 --------------------
 hLLAAkbdceefggdonxdjxn
 hLALPkbcbefgfghxwnxark
@@ -214,7 +221,7 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -g1 -4 eLMQcbcddcddaaaa8a8a8a8a8a
+TEST: retriangulate -g1 -4 elAAB-rMm2TB3UD
 --------------------
 eLMQcbcddcddaaaa8a8a8a8a8a
 eLAQcbbbcdddOakbOaqbOaOaya
@@ -234,14 +241,14 @@ Smaller link: iabcdeafghcdebfghxveJhp
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate -k kabcdefghijbefgdcjahixfvbdwGd
+TEST: retriangulate -k k-paCvdwqLnschc
 --------------------
-k-paCvdgbefgdcjahi
-k-DaCnJhacdebjihfg
-k-1aCnJhacdejibhfg
-iFhWTJdacdebfgh
+k-paCvdwqLnschc
+k-DaCnJhidfjELb
+k-1aCnJhidLyCLb
+iFhWTJdYqrzh
 Link is non-minimal!
-Smaller link: iFhWTJdacdebfgh
+Smaller link: iFhWTJdYqrzh
 --------------------
 Exit code: 0
 ============================================================

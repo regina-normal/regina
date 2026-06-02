@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,10 +41,13 @@ XMLSpatialLinkReader::XMLSpatialLinkReader(XMLTreeResolver& res,
         XMLPacketReader(res, std::move(parent), anon, std::move(label),
             std::move(id)),
         link_(make_packet<SpatialLink>()) {
-    double radius;
-    if (valueOf(props.lookup("radius"), radius))
+    try {
+        double radius = parse<double>(props.lookup("radius"));
         if (radius > 0)
             link_->radius_ = radius;
+    } catch (const InvalidArgument&) {
+        // Just leave the radius unset.
+    }
 }
 
 std::shared_ptr<Packet> XMLSpatialLinkReader::packetToCommit() {

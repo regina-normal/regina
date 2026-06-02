@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2013-2025, Ben Burton
+# Copyright (c) 2013-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides tests for the PDF import and export filters.
@@ -42,6 +42,11 @@ print('Size:', pdf.size())
 pdf = Attachment(testpath + '/sample.pdf')
 print('Null:', pdf.isNull())
 print('Size:', pdf.size())
+
+try:
+    pdf = Attachment('/no/such/path')
+except FileError:
+    print('Caught exception')
 
 # TODO: Export and compare.
 

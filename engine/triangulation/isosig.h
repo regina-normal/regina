@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -205,7 +205,14 @@ concept IsoSigType =
  */
 template <int generation, int dim>
 requires ((generation == 1 || generation == 2) && supportedDim(dim))
-class IsoSigData;
+class IsoSigData {
+    // We give a generic implementation so that the generic class notes are
+    // picked up by the automatic docstring generation.  This in turn is
+    // needed for regina::python::doc::IsoDigData to satisfy the concept
+    // regina::python::ClassDocType.
+    static_assert(false,
+        "Only specialised implementations of IsoSigData may be used.");
+};
 
 /**
  * Holds the combinatorial data required to reconstruct a single non-empty
@@ -285,7 +292,7 @@ class IsoSigData;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \pyname{IsoSigData1}
+ * \pydocname{IsoSigData1}
  *
  * \apinotfinal
  *
@@ -615,7 +622,7 @@ class IsoSigData<1, dim> {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \pyname{IsoSigData2}
+ * \pydocname{IsoSigData2}
  *
  * \apinotfinal
  *
@@ -623,10 +630,40 @@ class IsoSigData<1, dim> {
  */
 template <int dim> requires (supportedDim(dim))
 class IsoSigData<2, dim> {
+    public:
+        /**
+         * An unsigned integer type that can hold the index of a gluing
+         * permutation in a <i>dim</i>-dimensional triangulation.  This is
+         * provided to help with bitwise encodings, which read/write
+         * permutations via unsigned integers.
+         */
+        using UnsignedPermIndex = MakeUnsigned<typename Perm<dim + 1>::Index>;
+
+        /**
+         * The number of bits needed to store the index of a gluing permutation
+         * in a <i>dim</i>-dimensional triangulation.  This is _not_ the
+         * bitwidth of `Perm<...>::Index`; instead it is the smallest number of
+         * bits required, given the maximum possible value of such an index.
+         */
+        static constexpr int permBits = bitsRequired(Perm<dim + 1>::nPerms);
+
+        /**
+         * The number of bits needed to store a lock mask, which encodes all
+         * simplex and/or facet locks for a single <i>dim</i>-dimensional
+         * simplex.  Again, this is the smallest number of bits required
+         * given the range of possible values.
+         */
+        static constexpr int lockBits = dim + 2;
+
     private:
         size_t size_;
             /**< The total number of top-dimensional simplices in this
                  triangulation component. */
+        bool oriented_;
+            /**< Indicates whether the labelling that this data set encodes is
+                 oriented.  We cache this when we build our relabelling within
+                 minimal(), since oriented_ takes linear time to compute, and
+                 encoding classes may need to query it multiple times. */
         Bitmask facetType_;
             /**< The facet types, as described above.  The bits that are set
                  correspond to facets of type B; however, the bits are stored
@@ -822,10 +859,7 @@ class IsoSigData<2, dim> {
          * \return `true` if and only if this labelling is oriented.
          */
         bool isOriented() const {
-            for (auto g : adjGluing_)
-                if (! (g & 1))
-                    return false;
-            return true;
+            return oriented_;
         }
 
         /**
@@ -856,6 +890,7 @@ class IsoSigData<2, dim> {
          */
         void swap(IsoSigData& other) noexcept {
             std::swap(size_, other.size_);
+            std::swap(oriented_, other.oriented_);
             facetType_.swap(other.facetType_);
             adjSimplex_.swap(other.adjSimplex_);
             adjGluing_.swap(other.adjGluing_);
@@ -901,6 +936,10 @@ class IsoSigData<2, dim> {
             //   changing the sort order for the list of facet types when
             //   working with triangulations with boundary.
             //
+            // This comparison does not look at oriented_ at all, since what
+            // matters is the relabellings that it compares, not the original
+            // labelling of the component(s).
+            //
             if (auto c = size_ <=> rhs.size_; c != 0)
                 return c;
             if (auto c = facetType_.numericalComp(rhs.facetType_); c != 0)
@@ -923,8 +962,9 @@ class IsoSigData<2, dim> {
          * Allocates space for a data set for the given triangulation component.
          *
          * The bitmask included in this data set will be initialised with all
-         * bits off.  All other arrays will be initialised to the correct sizes,
-         * but the individual array elements will be left uninitialised.
+         * bits off.  All other arrays will be initialised to the correct sizes;
+         * however, the individual array elements, as well as the data member
+         * oriented_, will all be left uninitialised.
          *
          * \param component the triangulation component that we intend to
          * encode.
@@ -1082,6 +1122,58 @@ class IsoSigPrintable {
          */
         template <int dim> requires (supportedDim(dim))
         static size_t length(const IsoSigData<2, dim>& data);
+
+        /**
+         * Identifies whether the given string-based isomorphism signature is
+         * first-generation or second-generation.
+         *
+         * This provides the real implementation of
+         * `Triangulation<dim>::sigGeneration()`; it is provided here because
+         * the same implementation can be used for every dimension \a dim.
+         *
+         * This routine does _not_ test the validity of a signature: if \a sig
+         * is invalid then the return value could be any of 0, 1 or 2.
+         *
+         * See `Triangulation<dim>::sigGeneration()` for further details.
+         *
+         * \param sig a string-based isomorphism signature of some generation.
+         * This may have been encoded by either IsoSigPrintable or
+         * IsoSigPrintableLockFree, and can be from a triangulation of any
+         * dimension.
+         * \return 1 or 2 if \a sig was identified as a first-generation or
+         * second-generation signature respectively, or 0 if \a sig was
+         * explicitly discovered to be neither of these.  Note that, if
+         * \s sig is _not_ a string-based isomorphism signature of any
+         * generation, this routine could return any of the values 0, 1 or 2.
+         */
+        static int generation(const std::string& sig);
+
+        /**
+         * Deduces the number of top-dimensional simplices in a connected
+         * triangulation from its string-based isomorphism signature.
+         *
+         * This provides the real implementation of
+         * `Triangulation<dim>::sigComponentSize()`; it is provided here because
+         * the same implementation can be used for every dimension \a dim.
+         *
+         * Note that this routine does _not_ always detect invalid signatures.
+         *
+         * See `Triangulation<dim>::sigComponentSize()` for further details.
+         *
+         * \exception InvalidArgument The given string was not a valid
+         * string-based isomorphism signature.  Invalid signatures are not
+         * always detected; this exception will only be thrown if the error is
+         * so severe that the component size cannot be deduced from the first
+         * few characters.
+         *
+         * \param sig an isomorphism signature of some triangulation.
+         * This may have been encoded by either IsoSigPrintable or
+         * IsoSigPrintableLockFree, may be any generation of isomorphism
+         * signature, and may be from a triangulation of any dimension.
+         * \return the size of the first connected component, or 0 if the
+         * given signature describes the empty triangulation.
+         */
+        static size_t componentSize(const std::string& sig);
 
         // Make this class non-constructible.
         IsoSigPrintable() = delete;
@@ -1282,9 +1374,9 @@ class IsoSigBinary {
         static size_t length(const IsoSigData<2, dim>& data);
 
         /**
-         * Re-encodes the given binary signature as a string-based signature
-         * (using the IsoSigPrintable encoding), which uses only printable
-         * characters from the 7-bit ASCII range.
+         * Re-encodes the given binary signature as a string-based
+         * second-generation signature (using the IsoSigPrintable encoding),
+         * which uses only printable characters from the 7-bit ASCII range.
          *
          * Calling `printable(sig)` is significantly more efficient than calling
          * `Triangulation<dim>::fromSig(sig).neoSig()` (with an appropriate

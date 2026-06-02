@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/vector.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 
 template <regina::ArbitraryPrecisionInteger T>
@@ -47,13 +49,13 @@ void addVectorOf(pybind11::module_& m, const char* className) {
 
     RDOC_SCOPE_BEGIN(Vector)
 
-    auto c = pybind11::class_<Vec>(m, className, rdoc_scope)
+    auto c = pybind11::class_<Vec>(m, className, rdoc::__class)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, const T&>(), rdoc::__init_2)
         .def(pybind11::init<const Vec&>(), rdoc::__copy)
         .def(pybind11::init([](const std::vector<T>& v) {
             return new Vec(v.begin(), v.end());
-        }), pybind11::arg("elements"), rdoc::__init_3)
+        }), "elements"_a, rdoc::__init_3)
         .def(pybind11::init<const regina::Vector<T_Alt>&>(), rdoc::__init_4)
         .def("size", &Vec::size, rdoc::size)
         .def("__len__", &Vec::size, rdoc::size)
@@ -87,8 +89,7 @@ void addVectorOf(pybind11::module_& m, const char* className) {
     regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<Vec>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Vec, rdoc>(m);
 
     RDOC_SCOPE_END
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -150,8 +150,11 @@ XMLElementReader* XMLPacketReader::startSubElement(
                 return new XMLElementReader();
             // Reset xmlTagType to the value of typeid, which is the integer
             // value of the corresponding PacketType constant.
-            if (! valueOf(prop->second, xmlTagType))
+            try {
+                xmlTagType = parse<int>(prop->second);
+            } catch (const InvalidArgument&) {
                 return new XMLElementReader();
+            }
             if (xmlTagType == static_cast<int>(PacketType::Triangulation2))
                 permIndex = true;
         } else if (xmlTagType == XML_V7_TRIANGULATION) {
@@ -161,8 +164,11 @@ XMLElementReader* XMLPacketReader::startSubElement(
             auto prop = subTagProps.find("dim");
             if (prop == subTagProps.end())
                 return new XMLElementReader();
-            if (! valueOf(prop->second, dim))
+            try {
+                dim = parse<int>(prop->second);
+            } catch (const InvalidArgument&) {
                 return new XMLElementReader();
+            }
             if (dim < 2 || dim > 15)
                 return new XMLElementReader();
 
@@ -184,10 +190,14 @@ XMLElementReader* XMLPacketReader::startSubElement(
             }
 
             // Fetch the number of top-dimensional simplices.
-            // Note: size is unsigned, so valueOf() ensures size >= 0.
             prop = subTagProps.find("size");
-            if (! (prop != subTagProps.end() && valueOf(prop->second, size)))
+            if (prop == subTagProps.end())
                 return new XMLElementReader();
+            try {
+                size = parse<size_t>(prop->second);
+            } catch (const InvalidArgument&) {
+                return new XMLElementReader();
+            }
 
             // Identify how permutations are stored.
             prop = subTagProps.find("perm");

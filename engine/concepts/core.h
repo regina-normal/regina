@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,9 +45,9 @@ namespace regina {
 
 class Bitmask;
 template <UnsignedCppInteger> class Bitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
+template <UnsignedCppInteger> class Bitmask2;
 template <UnsignedCppInteger> class Qitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Qitmask2;
+template <UnsignedCppInteger> class Qitmask2;
 
 /**
  * \defgroup concepts Concepts

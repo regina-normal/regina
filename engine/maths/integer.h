@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1812,6 +1812,8 @@ void tightEncode(std::ostream& out, IntegerBase<withInfinity> value);
  * IntegerBase::tightEncoding().  However, this global function is more
  * efficient if the integer argument is an rvalue reference (since the const
  * member function induces an extra deep copy).
+ *
+ * \pydocname{tightEncoding_ReginaInteger}
  *
  * \param value the integer to encode.
  * \return the resulting encoded string.
@@ -3947,7 +3949,7 @@ template <bool withInfinity>
 inline std::string IntegerBase<withInfinity>::tightEncoding() const {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, *this);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <bool withInfinity>
@@ -4036,7 +4038,7 @@ template <bool withInfinity>
 std::string tightEncoding(IntegerBase<withInfinity> value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, std::move(value));
-    return out.str();
+    return std::move(out).str();
 }
 
 // Inline functions for NativeInteger

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,9 +44,9 @@
 #include <string>
 #include "concepts/core.h"
 #include "concepts/iterator.h"
+#include "utilities/bitmask.h"
 #include "utilities/bytesequence.h"
 #include "utilities/exception.h"
-#include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -503,29 +503,29 @@ class Base64Encoder {
          * pair of iterators), each using a fixed number of base64 characters.
          *
          * Each integer in the sequence will be encoded using encodeInt().
-         * That is, each integer will be broken into \a nChars distinct
+         * That is, each integer will be broken into \a charsPerInt distinct
          * 6-bit blocks, which will be encoded in order from lowest to highest
          * significance.
          *
          * The inverse to this routine is Base64Decoder::decodeInts().
          *
          * \exception InvalidArgument Some integer in the sequence is negative,
-         * or requires more than `6 × nChars` bits.
+         * or requires more than `6 × charsPerInt` bits.
          *
          * \nopython
          *
          * \param begin an iterator pointing to the first integer to encode.
          * \param end a past-the-end iterator pointing beyond the last integer
          * to encode.
-         * \param nChars the number of base64 characters to use for each
+         * \param charsPerInt the number of base64 characters to use for each
          * integer; typically this would be obtained through an earlier call
          * to encodeSize().
          */
         template <std::input_iterator Iterator>
         requires CppInteger<std::iter_value_t<Iterator>>
-        void encodeInts(Iterator begin, Iterator end, int nChars) {
+        void encodeInts(Iterator begin, Iterator end, int charsPerInt) {
             for (auto it = begin; it != end; ++it)
-                encodeInt(*it, nChars);
+                encodeInt(*it, charsPerInt);
         }
 
         /**
@@ -533,28 +533,28 @@ class Base64Encoder {
          * input range), each using a fixed number of base64 characters.
          *
          * Each integer in the sequence will be encoded using encodeInt().
-         * That is, each integer will be broken into \a nChars distinct
+         * That is, each integer will be broken into \a charsPerInt distinct
          * 6-bit blocks, which will be encoded in order from lowest to highest
          * significance.
          *
          * The inverse to this routine is Base64Decoder::decodeInts().
          *
          * \exception InvalidArgument Some integer in the sequence is negative,
-         * or requires more than `6 × nChars` bits.
+         * or requires more than `6 × charsPerInt` bits.
          *
          * \python The argument \a sequence should be a Python list of
          * integers, each of which will be read as a native C++ `long`.
          *
          * \param sequence the sequence of integers to encode.
-         * \param nChars the number of base64 characters to use for each
+         * \param charsPerInt the number of base64 characters to use for each
          * integer; typically this would be obtained through an earlier call
          * to encodeSize().
          */
         template <std::ranges::input_range Range>
         requires CppInteger<std::ranges::range_value_t<Range>>
-        void encodeInts(Range&& sequence, int nChars) {
+        void encodeInts(Range&& sequence, int charsPerInt) {
             for (auto i : sequence)
-                encodeInt(i, nChars);
+                encodeInt(i, charsPerInt);
         }
 
         /**
@@ -568,15 +568,12 @@ class Base64Encoder {
          *
          * The inverse to this routine is Base64Decoder::decodeBitmask().
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \param count the number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this must be
-         * capable of holding at least \a count bits.
+         * capable of holding at least \a nBits bits.
+         * \param nBits the number of bits to encode.
          */
-        template <ReginaBitmask BitmaskType>
-        void encodeBitmask(size_t count, const BitmaskType& bits) {
-            if (count == 0)
+        void encodeBitmask(const Bitmask& bits, size_t nBits) {
+            if (nBits == 0)
                 return;
             size_t pos = 0;
             while (true) {
@@ -584,7 +581,7 @@ class Base64Encoder {
                 for (int j = 0; j < 6; ++j) {
                     if (bits.get(pos++))
                         packed |= (1 << j);
-                    if (pos == count) {
+                    if (pos == nBits) {
                         encodeSingle(packed);
                         return;
                     }
@@ -1000,11 +997,11 @@ class Base64Decoder {
          * each individual value uses a fixed number of base64 characters,
          * and returns these as native C++ integers via an output iterator.
          * Each integer to be decoded would typically have been encoded using
-         * Base64Encoder::encodeInt() or Base64Encoder::encodeInts(),
-         * using the same \a nChars argument.
+         * Base64Encoder::encodeInts() or Base64Encoder::encodeInt(),
+         * using the same \a charsPerInt argument.
          *
          * Specifically, it will be assumed that each integer has been broken
-         * into \a nChars 6-bit blocks, with each block encoded as a single
+         * into \a charsPerInt 6-bit blocks, with each block encoded as a single
          * base64 character, and with the blocks presented in order from
          * lowest to highest significance.
          *
@@ -1016,7 +1013,7 @@ class Base64Decoder {
          *
          * The inverse to this routine is Base64Encoder::encodeInts().
          *
-         * \exception InvalidInput There are fewer than `count × nChars`
+         * \exception InvalidInput There are fewer than `count × charsPerInt`
          * characters available in the encoded string, or a character was
          * encountered that was not a valid base64 character.
          *
@@ -1030,14 +1027,15 @@ class Base64Decoder {
          * It is assumed that this output iterator is able to accept \a count
          * values in this way.
          * \param count the number of integers to decode.
-         * \param nChars the number of base64 characters to read for each
+         * \param charsPerInt the number of base64 characters to read for each
          * integer.
          */
         template <OutputIterator DestIterator>
         requires CppInteger<std::iter_value_t<DestIterator>>
-        void decodeInts(DestIterator output, size_t count, int nChars) {
+        void decodeInts(DestIterator output, size_t count, int charsPerInt) {
             for (size_t i = 0; i < count; ++i)
-                *output++ = decodeInt<std::iter_value_t<DestIterator>>(nChars);
+                *output++ = decodeInt<std::iter_value_t<DestIterator>>(
+                    charsPerInt);
         }
 
         /**
@@ -1045,11 +1043,11 @@ class Base64Decoder {
          * each individual value uses a fixed number of base64 characters,
          * and returns these as an array of native C++ integers.
          * Each integer to be decoded would typically have been encoded using
-         * Base64Encoder::encodeInt() or Base64Encoder::encodeInts(),
-         * using the same \a nChars argument.
+         * Base64Encoder::encodeInts() or Base64Encoder::encodeInt(),
+         * using the same \a charsPerInt argument.
          *
          * Specifically, it will be assumed that each integer has been broken
-         * into \a nChars 6-bit blocks, with each block encoded as a single
+         * into \a charsPerInt 6-bit blocks, with each block encoded as a single
          * base64 character, and with the blocks presented in order from
          * lowest to highest significance.
          *
@@ -1060,7 +1058,7 @@ class Base64Decoder {
          *
          * The inverse to this routine is Base64Encoder::encodeInts().
          *
-         * \exception InvalidInput There are fewer than `count × nChars`
+         * \exception InvalidInput There are fewer than `count × charsPerInt`
          * characters available in the encoded string, or a character was
          * encountered that was not a valid base64 character.
          *
@@ -1068,22 +1066,22 @@ class Base64Decoder {
          * native C++ \c long.  This routine returns a Python list of integers.
          *
          * \param count the number of integers to decode.
-         * \param nChars the number of base64 characters to read for each
+         * \param charsPerInt the number of base64 characters to read for each
          * integer.
          * \return the sequence of integers that were decoded.
          */
         template <CppInteger IntType>
-        FixedArray<IntType> decodeInts(size_t count, int nChars) {
+        FixedArray<IntType> decodeInts(size_t count, int charsPerInt) {
             FixedArray<IntType> ans(count);
             for (auto it = ans.begin(); it != ans.end(); ++it)
-                *it = decodeInt<IntType>(nChars);
+                *it = decodeInt<IntType>(charsPerInt);
             return ans;
         }
 
         /**
          * Decodes a sequence of bits, and returns these in the form of a
          * bitmask.  The bits would typically have been encoded using
-         * Base64Encoder::encodeBitmask() with the same \a count argument.
+         * Base64Encoder::encodeBitmask() with the same \a nBits argument.
          *
          * Specifically, it will be assumed that the bits have been packed six
          * at a time into base64 characters, and that for each underlying 6-bit
@@ -1096,18 +1094,12 @@ class Base64Decoder {
          * the encoded string to hold the requested number of bits, and/or a
          * character was encountered that was not a valid base64 character.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \tparam BitmaskType the bitmask type to return; this must be
-         * capable of holding at least \a count bits.
-         *
-         * \param count the number of bits to decode.
+         * \param nBits the number of bits to decode.
          * \return a bitmask holding the bits that were decoded.
          */
-        template <ReginaBitmask BitmaskType = Bitmask>
-        BitmaskType decodeBitmask(size_t count) {
-            BitmaskType bits(count);
-            if (count == 0)
+        Bitmask decodeBitmask(size_t nBits) {
+            Bitmask bits(nBits);
+            if (nBits == 0)
                 return bits;
 
             size_t pos = 0;
@@ -1116,7 +1108,7 @@ class Base64Decoder {
                 for (int j = 0; j < 6; ++j) {
                     if (packed & (1 << j))
                         bits.set(pos, true);
-                    if (++pos == count)
+                    if (++pos == nBits)
                         return bits;
                 }
             }
@@ -1257,745 +1249,12 @@ using Base64SigDecoder [[deprecated]] = Base64Decoder<Iterator>;
 
 /**
  * A helper class for writing signatures that pack information as tightly as
- * possible into byte sequences, whilst respecting byte boundaries.
- *
- * This is not as efficient as BitEncoder, which writes data across byte
- * boundaries.  Its main advantage (if you need this) is that bytes() is a
- * regular const member function, which means that the encoder remains valid
- * after bytes() has been called (in particular, you can still encode more
- * data and/or extract the byte sequence again after bytes() has been called).
- *
- * To use this class: create a new PackedByteEncoder, call one or more of its
- * member functions to write values to the encoding, and then call bytes() to
- * extract the resulting byte sequence.
- *
- * Packed encoders are single-use objects: they cannot be copied, moved or
- * swapped.
- *
- * \ingroup utilities
- */
-class PackedByteEncoder {
-    public:
-        /**
-         * The type of the final encoding that this class produces.
-         */
-        using Encoding = ByteSequence;
-
-    private:
-        ByteSequence bytes_;
-            /**< The byte sequence that has been constructed thus far. */
-
-    public:
-        /**
-         * Creates a new encoder, with an empty byte sequence.
-         */
-        PackedByteEncoder() = default;
-
-        /**
-         * Returns the byte sequence that has been constructed thus far.
-         *
-         * \python This routine returns a Python `bytes` object.
-         *
-         * \return the current byte sequence.
-         */
-        const ByteSequence& bytes() const & {
-            return bytes_;
-        }
-
-        /**
-         * Moves the final encoded byte sequence out of this encoder.
-         *
-         * After calling this function, this encoder object will be unusable.
-         *
-         * \nopython Instead use the variant of bytes() that returns its byte
-         * sequence by constant reference.
-         *
-         * \return the final encoded byte sequence.
-         */
-        ByteSequence&& bytes() && {
-            return std::move(bytes_);
-        }
-
-        /**
-         * Returns the smallest number of bytes required to encode any integer
-         * between 0 and \a size inclusive.  As a special case, if any such
-         * integer can be encoded in _half_ a byte (i.e., we can happily pack
-         * two such integers into a single byte), then this routine will
-         * return zero.
-         *
-         * For example, `integerWidth(15) == 0`, `integerWidth(16) == 1`,
-         * `integerWidth(255) == 1`, and `integerWidth(256) == 2`.
-         *
-         * \return the number of bytes required, or zero if at most half a
-         * byte is required.
-         */
-        static constexpr int integerWidth(size_t size) {
-            if (size < 16)
-                return 0;
-            else {
-                int ans = 0;
-                do {
-                    size >>= 8;
-                    ++ans;
-                } while (size > 0);
-                return ans;
-            }
-        }
-
-        /**
-         * Encodes the given non-negative integer (typically representing the
-         * size of some object), without knowing in advance how many bytes
-         * will be required.
-         *
-         * A typical use case would be where \a size represents the number of
-         * top-dimensional simplices in a triangulation, or the number of
-         * crossings in a link diagram.
-         *
-         * This routine also computes (and returns) the smallest number of bytes
-         * required to encode any integer \a x between 0 and \a size inclusive.
-         * In other words, it returns the smallest \a b for which any such \a x
-         * can be encoded by calling `encodeInt(x, b)`.  As a special case, if
-         * any such \a x can be encoded in _half_ a byte (i.e., we can happily
-         * pack two such integers into a single byte), then \a b will be zero;
-         * this follows the same behaviour as integerWidth().  Typically such
-         * an \a x would be an _index_ into an object (e.g., a top-dimensional
-         * simplex number, or a crossing index).  Note that encodeSize() itself
-         * might write more than \a b bytes.
-         *
-         * The inverse to this routine is PackedByteDecoder::decodeSize().
-         *
-         * \param size the non-negative integer to encode.
-         * \return the number of bytes required to write any integer between
-         * 0 and \a size inclusive, or zero if at most half a byte is required.
-         */
-        int encodeSize(size_t size) {
-            // There is a theoretical upper limit on \a size: the return value
-            // b must fit into a native int.  Even if int is only 16-bit, this
-            // translates to size < 2^(8×2^15), which is not going to be a
-            // problem for any native IntType.
-
-            if (size < 0xff) {
-                // Keep it simple for small objects: either 1 nybble or 1 byte
-                // per integer, and we do not need to encode the integer width.
-                bytes_.push_back(size);
-                return (size < 0x10 ? 0 : 1);
-            } else {
-                // For large objects, start with a special marker followed by
-                // the integer width, and then encode size.
-                int width = integerWidth(size);
-                bytes_.push_back(0xff);
-                bytes_.push_back(width);
-
-                size_t val = size;
-                for (int i = 0; i < width; ++i) {
-                    bytes_.push_back(static_cast<uint8_t>(val));
-                    val >>= 8;
-                }
-
-                return width;
-            }
-        }
-
-        /**
-         * Encodes a sequence of non-negative native C++ integers (given by a
-         * pair of iterators), each using a fixed number of bytes.
-         *
-         * Each integer in the sequence will be broken into \a nBytes distinct
-         * bytes, which will be encoded in order from lowest to highest
-         * significance.  In the special case where \a nBytes is zero, this
-         * indicates that each integer can be encoded in _half_ a byte,
-         * and so each byte will hold two integers from the sequence.
-         *
-         * The inverse to this routine is PackedByteDecoder::decodeInts().
-         *
-         * \exception InvalidArgument Some integer in the sequence is negative,
-         * or requires more than the given number of bytes.
-         *
-         * \nopython
-         *
-         * \param begin an iterator pointing to the first integer to encode.
-         * \param end a past-the-end iterator pointing beyond the last integer
-         * to encode.
-         * \param nBytes the number of bytes to use for each integer, or zero
-         * if only half a byte is required; typically \a nBytes would be
-         * obtained through an earlier call to encodeSize().
-         */
-        template <std::input_iterator Iterator>
-        requires CppInteger<std::iter_value_t<Iterator>>
-        void encodeInts(Iterator begin, Iterator end, int nBytes) {
-            auto it = begin;
-            while (it != end) {
-                auto val = *it++;
-                if (val < 0)
-                    throw InvalidArgument("PackedByteEncoder::encodeInts(): "
-                        "integer argument cannot be negative");
-
-                if (nBytes == 0) {
-                    if (val > 0x0f)
-                        throw InvalidArgument("PackedByteEncoder::encodeInts(): "
-                            "integer argument out of range");
-                    if (it == end) {
-                        // That was the last integer in the sequence.
-                        // It gets a byte all on its own.
-                        bytes_.push_back(static_cast<uint8_t>(val));
-                    } else {
-                        // Pack val into the lower-order nybble, and then
-                        // fetch the next integer in the sequenc to pack into
-                        // the higher-order nybble.
-                        auto next = *it++;
-                        if (next < 0)
-                            throw InvalidArgument(
-                                "PackedByteEncoder::encodeInts(): "
-                                "integer argument cannot be negative");
-                        if (next > 0x0f)
-                            throw InvalidArgument(
-                                "PackedByteEncoder::encodeInts(): "
-                                "integer argument out of range");
-                        bytes_.push_back(static_cast<uint8_t>(next) << 4 |
-                            static_cast<uint8_t>(val));
-                    }
-                } else {
-                    if constexpr (sizeof(std::iter_value_t<Iterator>) == 1) {
-                        // We know that val will fit into a single byte.
-                        bytes_.push_back(static_cast<uint8_t>(val));
-                        for (int i = 1; i < nBytes; ++i)
-                            bytes_.push_back(0);
-                    } else {
-                        for (int i = 0; i < nBytes; ++i) {
-                            bytes_.push_back(static_cast<uint8_t>(val));
-                            val >>= 8;
-                        }
-                        if (val != 0)
-                            throw InvalidArgument(
-                                "PackedByteEncoder::encodeInts(): "
-                                "integer argument out of range");
-                    }
-                }
-            }
-        }
-
-        /**
-         * Encodes a sequence of non-negative native C++ integers (given by an
-         * input range), each using a fixed number of bytes.
-         *
-         * Each integer in the sequence will be broken into \a nBytes distinct
-         * bytes, which will be encoded in order from lowest to highest
-         * significance.  In the special case where \a nBytes is zero, this
-         * indicates that each integer can be encoded in _half_ a byte,
-         * and so each byte will hold two integers from the sequence.
-         *
-         * The inverse to this routine is PackedByteDecoder::decodeInts().
-         *
-         * \exception InvalidArgument Some integer in the sequence is negative,
-         * or requires more than the given number of bytes.
-         *
-         * \python The argument \a sequence should be a Python list of
-         * integers, each of which will be read as a native C++ `long`.
-         *
-         * \param sequence the sequence of integers to encode.
-         * \param nBytes the number of bytes to use for each integer, or zero
-         * if only half a byte is required; typically \a nBytes would be
-         * obtained through an earlier call to encodeSize().
-         */
-        template <std::ranges::input_range Range>
-        requires CppInteger<std::ranges::range_value_t<Range>>
-        void encodeInts(Range&& sequence, int nBytes) {
-            encodeInts(std::ranges::begin(sequence),
-                std::ranges::end(sequence), nBytes);
-        }
-
-        /**
-         * Encodes a sequence of bits.
-         *
-         * The bits will be packed into bytes, eight at a time.  Within each
-         * individual byte, the eight bits will be stored in order from lowest
-         * to highest significance.  (The last byte might of course hold
-         * fewer than eight bits.)
-         *
-         * The inverse to this routine is PackedByteDecoder::decodeBitmask().
-         *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \param count the number of bits to encode.
-         * \param bits a bitmask holding the bits to encode; this must be
-         * capable of holding at least \a count bits.
-         */
-        template <ReginaBitmask BitmaskType>
-        void encodeBitmask(size_t count, const BitmaskType& bits) {
-            if (count == 0)
-                return;
-            size_t pos = 0;
-            while (true) {
-                uint8_t packed = 0;
-                for (int j = 0; j < 8; ++j) {
-                    if (bits.get(pos++))
-                        packed |= (1 << j);
-                    if (pos == count) {
-                        bytes_.push_back(packed);
-                        return;
-                    }
-                }
-                bytes_.push_back(packed);
-            }
-        }
-
-        /**
-         * Encodes a sequence of trits (given by a pair of iterators).
-         * A _trit_ is either 0, 1 or 2.
-         *
-         * The trits will be packed into bytes, four at a time.  Within each
-         * individual byte, the four trits will use bits in order from lowest
-         * to highest significance.  (The last byte might of course hold fewer
-         * than four trits.)
-         *
-         * Each trit will be obtained by dereferencing an iterator, which
-         * (as noted above) must yield the value 0, 1 or 2.
-         *
-         * The inverse to this routine is PackedByteDecoder::decodeTrits(),
-         * though that function only decodes four trits at a time.
-         *
-         * \nopython
-         *
-         * \param beginTrits an iterator pointing to the first trit to encode.
-         * \param endTrits a past-the-end iterator pointing beyond the last
-         * trit to encode.
-         */
-        template <InputIteratorFor<uint8_t> Iterator>
-        void encodeTrits(Iterator beginTrits, Iterator endTrits) {
-            auto it = beginTrits;
-            while (it != endTrits) {
-                uint8_t packed = static_cast<uint8_t>(*it++);
-                if (it == endTrits) {
-                    bytes_.push_back(packed);
-                    return;
-                }
-                packed |= (static_cast<uint8_t>(*it++) << 2);
-                if (it == endTrits) {
-                    bytes_.push_back(packed);
-                    return;
-                }
-                packed |= (static_cast<uint8_t>(*it++) << 4);
-                if (it == endTrits) {
-                    bytes_.push_back(packed);
-                    return;
-                }
-                packed |= (static_cast<uint8_t>(*it++) << 6);
-                bytes_.push_back(packed);
-            }
-        }
-
-        /**
-         * Encodes a sequence of trits (given by an input range).
-         * A _trit_ is either 0, 1 or 2.
-         *
-         * The trits will be packed into bytes, four at a time.  Within each
-         * individual byte, the four trits will use bits in order from lowest
-         * to highest significance.  (The last byte might of course hold fewer
-         * than four trits.)
-         *
-         * The inverse to this routine is PackedByteDecoder::decodeTrits(),
-         * though that function only decodes four trits at a time.
-         *
-         * \python The argument \a trits should be a Python list.
-         *
-         * \param trits the sequence of trits to encode.  Each element of this
-         * sequence must be 0, 1 or 2.
-         */
-        template <std::ranges::input_range Range>
-        requires std::convertible_to<std::ranges::range_value_t<Range>, uint8_t>
-        void encodeTrits(Range&& trits) {
-            encodeTrits(std::ranges::begin(trits), std::ranges::end(trits));
-        }
-
-        /**
-         * Pre-allocates the given amount of space for the entire encoding.
-         *
-         * This calls `ByteSequence::reserve(capacity)`.  The intent is to
-         * avoid unnecessary reallocations as the encoding is constructed,
-         * and also to avoid allocating more memory than is required.
-         *
-         * It is harmless if \a capacity ends up being smaller or larger than
-         * the final byte length of the encoding; however, this routine will of
-         * course be more effective if \a capacity is accurate.
-         *
-         * \param capacity the expected byte length of the _entire_ encoding
-         * (not just the portion that is not yet encoded).
-         */
-        void reserve(size_t capacity) {
-            bytes_.reserve(capacity);
-        }
-
-        PackedByteEncoder(const PackedByteEncoder&) = delete;
-        PackedByteEncoder& operator = (const PackedByteEncoder&) = delete;
-};
-
-/**
- * A helper class for reading signatures that are encoded as packed byte
- * sequences.
- *
- * To use this class: create a new PackedByteDecoder by passing details of the
- * encoded byte sequence to its constructor, and then call its `decode...()`
- * member functions to read values sequentially from the encoding.
- *
- * This class will keep track of a current position in the encoded byte
- * sequence.  Each call to a `decode...()` member function will advance this
- * position accordingly (but never beyond the end of the sequence).
- *
- * Packed decoders are single-use objects: they cannot be copied, moved or
- * swapped.
- *
- * \python The type \a Iterator is an implementation detail, and is hidden
- * from Python users.  Just use the unadorned type name `PackedByteDecoder`.
- *
- * \ingroup utilities
- */
-template <CharIterator Iterator>
-requires std::bidirectional_iterator<Iterator>
-class PackedByteDecoder {
-    public:
-        /**
-         * The corresponding encoder class.
-         */
-        using Encoder = PackedByteEncoder;
-
-        /**
-         * The type of a typical encoding that this class would decode.
-         * This is the same type as `Encoder::Encoding`.
-         */
-        using Encoding = ByteSequence;
-
-    private:
-        Iterator next_;
-            /**< The current position in the encoded byte sequence. */
-        Iterator end_;
-            /**< The end of the encoded byte sequence (specifically, a
-                 past-the-end location, as is usual for an iterator range). */
-
-    public:
-        /**
-         * Creates a new decoder for the given encoded byte sequence.
-         *
-         * The byte sequence should be passed as an iterator range.
-         * This iterator range must remain valid for the entire lifespan
-         * of this decoder.
-         *
-         * \python Instead of an iterator range, this constructor takes a
-         * Python `bytes` object.  In Python (but not C++), the decoder will
-         * also keep a deep copy of the byte sequence, to ensure the lifespan
-         * requirements.
-         *
-         * \param beginEncoding an iterator pointing to the beginning of the
-         * encoded byte sequence.
-         * \param endEncoding a past-the-end iterator that marks the end of the
-         * encoded byte sequence.
-         */
-        PackedByteDecoder(Iterator beginEncoding, Iterator endEncoding) :
-                next_(beginEncoding), end_(endEncoding) {
-        }
-
-        /**
-         * Determines whether the current position has reached the end of the
-         * byte sequence.
-         *
-         * \return \c true if and only if the current position is the end of
-         * the byte sequence.
-         */
-        bool done() const {
-            return next_ == end_;
-        }
-
-        /**
-         * Returns the number of bytes remaining in the encoded byte sequence,
-         * counting from the current position onwards.
-         *
-         * The routine `done()` will return `true` if and only if `remaining()`
-         * returns zero.
-         *
-         * \return the number of bytes remaining.
-         */
-        size_t remaining() const
-                requires std::random_access_iterator<Iterator> {
-            return end_ - next_;
-        }
-
-        /**
-         * Returns the next byte in the encoded byte sequence.
-         *
-         * The byte will be treated as an unsigned integer (regardless of
-         * whether the native `char` type is signed or unsigned).
-         *
-         * \exception InvalidInput There are no more bytes remaining in the
-         * encoded byte sequence.
-         *
-         * \python The template argument \a IntType is taken to be a
-         * native C++ `long`.
-         *
-         * \return the corresponding integer, which will be between 0 and 255
-         * inclusive.
-         */
-        template <CppInteger IntType = uint8_t>
-        IntType next() {
-            if (next_ == end_) {
-                throw InvalidInput("PackedByteDecoder: "
-                    "unexpected end of encoded byte sequence");
-            } else {
-                // Cast the byte to uint8_t to enforce unsignedness.
-                return static_cast<uint8_t>(*next_++);
-            }
-        }
-
-        /**
-         * Decodes the next non-negative integer value (typically representing
-         * the size of some object), without knowing in advance how many bytes
-         * were used to encode it.  This integer value must have been encoded
-         * using PackedByteEncoder::encodeSize().
-         *
-         * A typical use case would be where \a size represents the number of
-         * top-dimensional simplices in a triangulation, or the number of
-         * crossings in a link diagram.
-         *
-         * This routine also returns the smallest integer \a b with the property
-         * that any integer \a x between 0 and \a size inclusive can be encoded
-         * using \a b bytes.  As a special case, if any such \a x can be
-         * encoded in _half_ a byte (i.e., we can pack two such integers into a
-         * single byte), then \a b will be zero; this follows the same
-         * behaviour as integerWidth().  This \a b is the same integer that was
-         * returned when \a size was encoded using encodeSize(), and typically
-         * you would pass \a b to subsequent calls to decodeInts().
-         *
-         * The inverse to this routine is PackedByteEncoder::encodeSize().
-         *
-         * \exception InvalidInput There are not enough bytes available in the
-         * encoded byte sequence.
-         *
-         * \return a pair (\a size, \a b), where \a size is the integer that
-         * was decoded, and \a b is the number of bytes described above.
-         */
-        std::pair<size_t, int> decodeSize() {
-            int first = next<int>();
-            if (first < 0xff) {
-                return { first, (first < 0x10 ? 0 : 1) };
-            } else {
-                int width = next<int>();
-
-                size_t n = 0;
-                for (int i = 0; i < width; ++i)
-                    n |= (next<size_t>() << (8 * i));
-
-                return { n, width };
-            }
-        }
-
-        /**
-         * Decodes a sequence of non-negative integer values, assuming that
-         * each individual value uses a fixed number of bytes, and returns
-         * these as native C++ integers via an output iterator.  The integers
-         * to be decoded would typically have been encoded using
-         * PackedByteEncoder::encodeInts(), using the same \a nBytes argument.
-         *
-         * Specifically, it will be assumed that each integer has been broken
-         * into \a nBytes bytes, in order from lowest to highest significance.
-         * In the special case where \a nBytes is zero, it will be assumed
-         * that each integer fits into half a byte, and that each byte to be
-         * decoded (except possibly the last) contains _two_ encoded integers.
-         *
-         * Each resulting integer will be assembled using the output iterator's
-         * `value_type`, via bitwise OR and bitwise shift lefts.  It is assumed
-         * that the programmer has chosen an output iterator whose `value_type`
-         * is at least \a nBytes bytes in size.
-         *
-         * The inverse to this routine is PackedByteEncoder::encodeInts().
-         *
-         * \exception InvalidInput Either there are not enough bytes remaining
-         * in the encoded byte sequence to hold \a count integers of the
-         * requested size, and/or this routine detects the special case where
-         * \a nBytes is zero, \a count is odd, and the final byte to be
-         * decoded has unexpect bits set in its higher-order nybble (since
-         * this nybble is not used and therefore should be zero).
-         *
-         * \nopython Instead you can use the variant of this routine that does
-         * not take an output iterator, but instead returns the sequence of
-         * integers that were decoded.
-         *
-         * \param output an iterator to use for output.  Each integer that
-         * is decoded will be passed to this iterator using the usual
-         * dereference-assign-increment pattern (`*output++ = value`).
-         * It is assumed that this output iterator is able to accept \a count
-         * values in this way.
-         * \param count the number of integers to decode.
-         * \param nBytes the number of bytes to read for each integer, or 0 if
-         * each integer uses only half a byte.
-         */
-        template <OutputIterator DestIterator>
-        requires CppInteger<std::iter_value_t<DestIterator>>
-        void decodeInts(DestIterator output, size_t count, int nBytes) {
-            using IntType = std::iter_value_t<DestIterator>;
-            if (nBytes == 0) {
-                size_t i = 0;
-                while (i < count) {
-                    uint8_t byte = next();
-                    *output++ = (byte & 0x0f);
-                    ++i;
-                    if (i == count) {
-                        if (byte & 0xf0)
-                            throw InvalidInput("PackedByteDecoder: "
-                                "byte contains extraneous non-zero bits");
-                    } else {
-                        *output++ = (byte >> 4);
-                        ++i;
-                    }
-                }
-            } else {
-                for (size_t i = 0; i < count; ++i) {
-                    IntType ans = 0;
-                    for (int i = 0; i < nBytes; ++i)
-                        ans |= (next<IntType>() << (8 * i));
-                    *output++ = ans;
-                }
-            }
-        }
-
-        /**
-         * Decodes a sequence of non-negative integer values, assuming that
-         * each individual value uses a fixed number of bytes, and returns
-         * these as an array of native C++ integers.  The integers to be
-         * decoded would typically have been encoded using
-         * PackedByteEncoder::encodeInts(), using the same \a nBytes argument.
-         *
-         * Specifically, it will be assumed that each integer has been broken
-         * into \a nBytes bytes, in order from lowest to highest significance.
-         * In the special case where \a nBytes is zero, it will be assumed
-         * that each integer fits into half a byte, and that each byte to be
-         * decoded (except possibly the last) contains _two_ encoded integers.
-         *
-         * Each resulting integer will be assembled using the integer type
-         * \a IntType, via bitwise OR and bitwise shift lefts.  It is assumed
-         * that the programmer has chosen an integer type of size at least
-         * \a nBytes bytes.
-         *
-         * The inverse to this routine is PackedByteEncoder::encodeInts().
-         *
-         * \exception InvalidInput Either there are not enough bytes remaining
-         * in the encoded byte sequence to hold \a count integers of the
-         * requested size, and/or this routine detects the special case where
-         * \a nBytes is zero, \a count is odd, and the final byte to be
-         * decoded has unexpect bits set in its higher-order nybble (since
-         * this nybble is not used and therefore should be zero).
-         *
-         * \python The template argument \a IntType is taken to be a
-         * native C++ \c long.  This routine returns a Python list of integers.
-         *
-         * \param count the number of integers to decode.
-         * \param nBytes the number of bytes to read for each integer, or 0 if
-         * each integer uses only half a byte.
-         * \return the sequence of integers that were decoded.
-         */
-        template <CppInteger IntType>
-        FixedArray<IntType> decodeInts(size_t count, int nBytes) {
-            FixedArray<IntType> ans(count);
-            decodeInts(ans.begin(), count, nBytes);
-            return ans;
-        }
-
-        /**
-         * Decodes a sequence of bits, and returns these in the form of a
-         * bitmask.  The bits would typically have been encoded using
-         * PackedByteEncoder::encodeBitmask() with the same \a count argument.
-         *
-         * Specifically, it will be assumed that the bits have been packed eight
-         * at a time into bytes, and that within each byte the bits are stored
-         * in order from lowest to highest significance.
-         *
-         * The inverse to this routine is PackedByteEncoder::encodeBitmask().
-         *
-         * \exception InvalidInput There are not enough bytes available in
-         * the encoded byte sequence to hold the requested number of bits.
-         *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \tparam BitmaskType the bitmask type to return; this must be
-         * capable of holding at least \a count bits.
-         *
-         * \param count the number of bits to decode.
-         * \return a bitmask holding the bits that were decoded.
-         */
-        template <ReginaBitmask BitmaskType = Bitmask>
-        BitmaskType decodeBitmask(size_t count) {
-            BitmaskType bits(count);
-            if (count == 0)
-                return bits;
-
-            size_t pos = 0;
-            while (true) {
-                uint8_t packed = next();
-                for (int j = 0; j < 8; ++j) {
-                    if (packed & (1 << j))
-                        bits.set(pos, true);
-                    if (++pos == count)
-                        return bits;
-                }
-            }
-        }
-
-        /**
-         * Decodes four trits from a single byte, and returns these using an
-         * output iterator.  A _trit_ is either 0, 1 or 2.
-         *
-         * The inverse to this routine is PackedByteEncoder::encodeTrits(); see
-         * that routine for details of the encoding.
-         *
-         * \exception InvalidInput There are no more bytes remaining in
-         * the encoded byte sequence.
-         *
-         * \nopython Instead you can use the variant of this routine that takes
-         * no arguments and returns a fixed-size array.
-         *
-         * \param result an output iterator pointing to the location where the
-         * resulting trits will be stored; it must be possible to write and
-         * advance this iterator at least four times.
-         */
-        template <std::output_iterator<uint8_t> DestIterator>
-        void decodeTrits(DestIterator result) {
-            uint8_t val = next();
-            *result++ = static_cast<uint8_t>(val & 3);
-            *result++ = static_cast<uint8_t>((val >> 2) & 3);
-            *result++ = static_cast<uint8_t>((val >> 4) & 3);
-            *result++ = static_cast<uint8_t>((val >> 6) & 3);
-        }
-
-        /**
-         * Decodes four trits from a single byte, and returns these as a
-         * fixed-size array.  A _trit_ is either 0, 1 or 2.
-         *
-         * The inverse to this routine is PackedByteEncoder::encodeTrits(); see
-         * that routine for details of the encoding.
-         *
-         * \exception InvalidInput There are no more bytes remaining in
-         * the encoded byte sequence.
-         *
-         * \return an array containing the four trits that were decoded.
-         */
-        std::array<uint8_t, 4> decodeTrits() {
-            uint8_t val = next();
-            return { static_cast<uint8_t>(val & 3),
-                     static_cast<uint8_t>((val >> 2) & 3),
-                     static_cast<uint8_t>((val >> 4) & 3),
-                     static_cast<uint8_t>((val >> 6) & 3) };
-        }
-
-        PackedByteDecoder(const PackedByteDecoder&) = delete;
-        PackedByteDecoder& operator = (const PackedByteDecoder&) = delete;
-};
-
-/**
- * A helper class for writing signatures that pack information as tightly as
  * possible into bits, with no regard for boundaries between bytes in the
  * final signature.
  *
- * This is more efficient than PackedByteEncoder, which will not write data
- * across byte boundaries.  Its main drawback is that bytes() is an rvalue
- * member function: you can only call it once (after you have encoded everything
- * that you need), and after this the encoder will be unusable.
+ * Note that, unlike Base64Encoder::str(), the "extraction" method bytes() is an
+ * rvalue member function: you can only call it once (after you have encoded
+ * everything that you need), and after this the encoder will be unusable.
  *
  * To use this class: create a new BitEncoder, call one or more of its
  * member functions to write values to the encoding, and then call bytes() to
@@ -2084,40 +1343,75 @@ class BitEncoder {
          * `unsigned long`.
          *
          * \exception InvalidArgument The given integer has some bit set
-         * beyond bits `0,...,(count-1)`.
+         * beyond bits `0,...,(nBits-1)`.
          *
-         * \param count the total number of bits to encode; this must be
-         * non-negative.
          * \param bits an integer holding the bits to encode; these will be
          * encoded in order from the least significant bit of the argument
          * \a bits.
+         * \param nBits the total number of bits to encode; this must be
+         * strictly positive.
          */
         template <UnsignedCppInteger IntType>
-        void encodeInt(int count, IntType bits) {
-            for (int i = 0; i < count; ++i)
-                encodeBit(bits & (IntType(1) << i));
-            if (count < sizeof(IntType) * 8) {
-                IntType mask = (IntType(1) << count) - 1;
+        void encodeInt(IntType bits, int nBits) {
+#if 0
+            IntType mask = 1;
+            for (int i = 0; i < nBits; ++i, mask <<= 1)
+                encodeBit(bits & mask);
+            if (nBits < sizeof(IntType) * 8) {
+                // Now mask == (1 << nBits).
+                mask -= 1;
                 if (bits != (bits & mask))
                     throw InvalidArgument("BitEncoder::encodeInt(): "
                         "integer argument out of range");
             }
+#else
+            if (nBits < sizeof(IntType) * 8 && (bits >> nBits))
+                throw InvalidArgument("BitEncoder::encodeInt(): "
+                    "integer argument out of range");
+
+            // Now we know there are no extraneous bits in our integer argument.
+            if (nQueued_ + nBits < 8) {
+                queued_ |= (bits << nQueued_);
+                nQueued_ += nBits;
+            } else {
+                bytes_.push_back(queued_ |
+                    static_cast<uint8_t>(bits << nQueued_));
+                int written = 8 - nQueued_;
+                while (written + 8 <= nBits) {
+                    bytes_.push_back(bits >> written);
+                    written += 8;
+                }
+                if (written == nBits) {
+                    // In the special case where written == 8 * sizeof(IntType),
+                    // bits >> written is undefined.  Just set things directly.
+                    nQueued_ = 0;
+                    queued_ = 0;
+                } else {
+                    queued_ = bits >> written;
+                    nQueued_ = nBits - written;
+                }
+            }
+#endif
         }
 
         /**
          * Encodes a sequence of bits, taken from the given bitmask.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \param count the total number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this bitmask must
-         * be capable of holding at least \a count bits.  The bits will be
+         * be capable of holding at least \a nBits bits.  The bits will be
          * encoded in order from bit 0 of the given bitmask.
+         * \param nBits the total number of bits to encode.
          */
-        template <ReginaBitmask BitmaskType>
-        void encodeBitmask(size_t count, const BitmaskType& bits) {
-            for (size_t i = 0; i < count; ++i)
-                encodeBit(bits.get(i));
+        void encodeBitmask(const Bitmask& bits, size_t nBits) {
+            for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
+                if (nBits >= Bitmask::bitsPerBlock) {
+                    encodeInt(*it, Bitmask::bitsPerBlock);
+                    nBits -= Bitmask::bitsPerBlock;
+                } else {
+                    encodeInt(*it, nBits);
+                    // No need to set nBits = 0; the loop will exit anyway.
+                }
+            }
         }
 
         /**
@@ -2317,49 +1611,99 @@ class BitDecoder {
          * \python The template argument \a IntType is taken to be
          * `unsigned long`.
          *
-         * \exception InvalidInput There are fewer than \a count bits available
+         * \exception InvalidInput There are fewer than \a nBits bits available
          * in the encoded sequence.
          *
          * \tparam IntType the unsigned integer type to return; this must be
-         * at least \a count bits in size.
+         * at least \a nBits bits in size.
          *
-         * \param count the number of bits to decode.
+         * \param nBits the number of bits to decode.
          * \param bits an integer holding the bits that were decoded.  The bits
          * will be stored in order from the least significant bit.
          */
         template <UnsignedCppInteger IntType>
-        IntType decodeInt(int count) {
+        IntType decodeInt(int nBits) {
+#if 0
             IntType ans = 0;
             int i = 0;
             IntType bit = 1;
-            for ( ; i < count; ++i, bit <<= 1)
+            for ( ; i < nBits; ++i, bit <<= 1)
                 if (decodeBit())
                     ans |= bit;
             return ans;
+#else
+            if (nBits < nQueued_) {
+                // Note: if nBits == 0 and IntType == uint8_t, then we are
+                // shifting by 8 bits here and the result is undefined.
+                IntType ans =
+                    (extracted_ >> (8 - nQueued_)) & ((1 << nBits) - 1);
+                nQueued_ -= nBits;
+                return ans;
+            } else if (nBits == nQueued_) {
+                // Again, if nBits == 0 and IntType == uint8_t, we are
+                // shifting by 8 bits and the result is undefined.
+                nQueued_ = 0;
+                return extracted_ >> (8 - nBits);
+            } else {
+                IntType ans;
+                int nRead;
+                if (nQueued_) {
+                    ans = extracted_ >> (8 - nQueued_);
+                    nRead = nQueued_;
+                } else {
+                    ans = 0;
+                    nRead = 0;
+                }
+                while (nRead + 8 <= nBits) {
+                    if (next_ == end_)
+                        throw InvalidInput("BitDecoder: "
+                            "unexpected end of encoded byte sequence");
+                    // We need *next_++ to be an unsigned type before we widen
+                    // it, since (for example) we want 0xFF -> 0x00..00FF and
+                    // not 0xFF -> 0xFF..FFFF.
+                    ans |= (static_cast<IntType>(static_cast<uint8_t>(*next_++))
+                        << nRead);
+                    nRead += 8;
+                }
+                // We have < 8 bits remaining to read.
+                if (nRead == nBits) {
+                    nQueued_ = 0;
+                } else {
+                    if (next_ == end_)
+                        throw InvalidInput("BitDecoder: "
+                            "unexpected end of encoded byte sequence");
+                    extracted_ = *next_++;
+                    ans |= (static_cast<IntType>(extracted_ &
+                        ((1 << (nBits - nRead)) - 1)) << nRead);
+                    nQueued_ = 8 - (nBits - nRead);
+                }
+                return ans;
+            }
+#endif
         }
 
         /**
          * Decodes a sequence of bits, and returns them in the form of a
          * bitmask.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \exception InvalidInput There are fewer than \a count bits available
+         * \exception InvalidInput There are fewer than \a nBits bits available
          * in the encoded sequence.
          *
-         * \tparam BitmaskType the bitmask type to return; this must be
-         * capable of holding at least \a count bits.
-         *
-         * \param count the number of bits to decode.
+         * \param nBits the number of bits to decode.
          * \return a bitmask holding the bits that were decoded.  The bits
          * will be stored in the bitmask in order from bit 0.
          */
-        template <ReginaBitmask BitmaskType = Bitmask>
-        BitmaskType decodeBitmask(size_t count) {
-            BitmaskType bits(count);
-            for (size_t i = 0; i < count; ++i)
-                if (decodeBit())
-                    bits.set(i, true);
+        Bitmask decodeBitmask(size_t nBits) {
+            Bitmask bits(nBits);
+            for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
+                if (nBits >= Bitmask::bitsPerBlock) {
+                    *it = decodeInt<Bitmask::Block>(Bitmask::bitsPerBlock);
+                    nBits -= Bitmask::bitsPerBlock;
+                } else {
+                    *it = decodeInt<Bitmask::Block>(nBits);
+                    // No need to set nBits = 0; the loop will exit anyway.
+                }
+            }
             return bits;
         }
 
@@ -2488,40 +1832,76 @@ class Base64BitEncoder : private Base64Encoder {
          * `unsigned long`.
          *
          * \exception InvalidArgument The given integer has some bit set
-         * beyond bits `0,...,(count-1)`.
+         * beyond bits `0,...,(nBits-1)`.
          *
-         * \param count the total number of bits to encode; this must be
-         * non-negative.
          * \param bits an integer holding the bits to encode; these will be
          * encoded in order from the least significant bit of the argument
          * \a bits.
+         * \param nBits the total number of bits to encode; this must be
+         * strictly positive.
          */
         template <UnsignedCppInteger IntType>
-        void encodeInt(int count, IntType bits) {
-            for (int i = 0; i < count; ++i)
-                encodeBit(bits & (IntType(1) << i));
-            if (count < sizeof(IntType) * 8) {
-                IntType mask = (IntType(1) << count) - 1;
+        void encodeInt(IntType bits, int nBits) {
+#if 0
+            IntType mask = 1;
+            for (int i = 0; i < nBits; ++i, mask <<= 1)
+                encodeBit(bits & mask);
+            if (nBits < sizeof(IntType) * 8) {
+                // Now mask == (1 << nBits).
+                mask -= 1;
                 if (bits != (bits & mask))
                     throw InvalidArgument("Base64BitEncoder::encodeInt(): "
                         "integer argument out of range");
             }
+#else
+            if (nBits < sizeof(IntType) * 8 && (bits >> nBits))
+                throw InvalidArgument("Base64BitEncoder::encodeInt(): "
+                    "integer argument out of range");
+
+            // Now we know there are no extraneous bits in our integer argument.
+            if (nQueued_ + nBits < 6) {
+                queued_ |= (bits << nQueued_);
+                nQueued_ += nBits;
+            } else {
+                Base64Encoder::encodeSingle(static_cast<uint8_t>(queued_ |
+                    ((bits << nQueued_) & 0x3F)));
+                int written = 6 - nQueued_;
+                while (written + 6 <= nBits) {
+                    Base64Encoder::encodeSingle(static_cast<uint8_t>(
+                        (bits >> written) & 0x3F));
+                    written += 6;
+                }
+                if (written == nBits) {
+                    // In the special case where written == 8 * sizeof(IntType),
+                    // bits >> written is undefined.  Just set things directly.
+                    nQueued_ = 0;
+                    queued_ = 0;
+                } else {
+                    queued_ = bits >> written;
+                    nQueued_ = nBits - written;
+                }
+            }
+#endif
         }
 
         /**
          * Encodes a sequence of bits, taken from the given bitmask.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \param count the total number of bits to encode.
          * \param bits a bitmask holding the bits to encode; this bitmask must
-         * be capable of holding at least \a count bits.  The bits will be
+         * be capable of holding at least \a nBits bits.  The bits will be
          * encoded in order from bit 0 of the given bitmask.
+         * \param nBits the total number of bits to encode.
          */
-        template <ReginaBitmask BitmaskType>
-        void encodeBitmask(size_t count, const BitmaskType& bits) {
-            for (size_t i = 0; i < count; ++i)
-                encodeBit(bits.get(i));
+        void encodeBitmask(const Bitmask& bits, size_t nBits) {
+            for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
+                if (nBits >= Bitmask::bitsPerBlock) {
+                    encodeInt(*it, Bitmask::bitsPerBlock);
+                    nBits -= Bitmask::bitsPerBlock;
+                } else {
+                    encodeInt(*it, nBits);
+                    // No need to set nBits = 0; the loop will exit anyway.
+                }
+            }
         }
 
         /**
@@ -2791,9 +2171,6 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
         bool decodeBit() {
             if (nQueued_) {
                 return extracted_ & (1 << (6 - nQueued_--));
-            } else if (Base64Decoder<Iterator>::done()) {
-                throw InvalidInput("Base64BitDecoder: "
-                    "unexpected end of encoded string");
             } else {
                 extracted_ =
                     Base64Decoder<Iterator>::template decodeSingle<uint8_t>();
@@ -2809,49 +2186,89 @@ class Base64BitDecoder : private Base64Decoder<Iterator> {
          * \python The template argument \a IntType is taken to be
          * `unsigned long`.
          *
-         * \exception InvalidInput There are fewer than \a count bits available
+         * \exception InvalidInput There are fewer than \a nBits bits available
          * in the encoded string.
          *
          * \tparam IntType the unsigned integer type to return; this must be
-         * at least \a count bits in size.
+         * at least \a nBits bits in size.
          *
-         * \param count the number of bits to decode.
+         * \param nBits the number of bits to decode.
          * \param bits an integer holding the bits that were decoded.  The bits
          * will be stored in order from the least significant bit.
          */
         template <UnsignedCppInteger IntType>
-        IntType decodeInt(int count) {
+        IntType decodeInt(int nBits) {
+#if 0
             IntType ans = 0;
-            size_t i = 0;
+            int i = 0;
             IntType bit = 1;
-            for ( ; i < count; ++i, bit <<= 1)
+            for ( ; i < nBits; ++i, bit <<= 1)
                 if (decodeBit())
                     ans |= bit;
             return ans;
+#else
+            if (nBits < nQueued_) {
+                IntType ans =
+                    (extracted_ >> (6 - nQueued_)) & ((1 << nBits) - 1);
+                nQueued_ -= nBits;
+                return ans;
+            } else if (nBits == nQueued_) {
+                nQueued_ = 0;
+                return extracted_ >> (6 - nBits);
+            } else {
+                IntType ans;
+                int nRead;
+                if (nQueued_) {
+                    ans = extracted_ >> (6 - nQueued_);
+                    nRead = nQueued_;
+                } else {
+                    ans = 0;
+                    nRead = 0;
+                }
+                // We are now at a byte boundary.
+                while (nRead + 6 <= nBits) {
+                    ans |= (static_cast<IntType>(
+                        Base64Decoder<Iterator>::template
+                        decodeSingle<uint8_t>()) << nRead);
+                    nRead += 6;
+                }
+                // We have < 6 bits remaining to read.
+                if (nRead == nBits) {
+                    nQueued_ = 0;
+                } else {
+                    extracted_ = Base64Decoder<Iterator>::template
+                        decodeSingle<uint8_t>();
+                    ans |= (static_cast<IntType>(extracted_ &
+                        ((1 << (nBits - nRead)) - 1)) << nRead);
+                    nQueued_ = 6 - (nBits - nRead);
+                }
+                return ans;
+            }
+#endif
         }
 
         /**
          * Decodes a sequence of bits, and returns them in the form of a
          * bitmask.
          *
-         * \python The template argument \a BitmaskType is taken to be Bitmask.
-         *
-         * \exception InvalidInput There are fewer than \a count bits available
+         * \exception InvalidInput There are fewer than \a nBits bits available
          * in the encoded sequence.
          *
-         * \tparam BitmaskType the bitmask type to return; this must be
-         * capable of holding at least \a count bits.
-         *
-         * \param count the number of bits to decode.
+         * \param nBits the number of bits to decode.
          * \return a bitmask holding the bits that were decoded.  The bits
          * will be stored in the bitmask in order from bit 0.
          */
-        template <ReginaBitmask BitmaskType = Bitmask>
-        BitmaskType decodeBitmask(size_t count) {
-            BitmaskType bits(count);
-            for (size_t i = 0; i < count; ++i)
-                if (decodeBit())
-                    bits.set(i, true);
+        Bitmask decodeBitmask(size_t nBits) {
+            Bitmask bits(nBits);
+            for (auto it = bits.beginBlocks(); it != bits.endBlocks(); ++it) {
+                if (nBits >= Bitmask::bitsPerBlock) {
+                    *it = decodeInt<Bitmask::Block>(Bitmask::bitsPerBlock);
+                    nBits -= Bitmask::bitsPerBlock;
+                } else {
+                    *it = decodeInt<Bitmask::Block>(nBits);
+                    // No need to set nBits = 0; the loop will exit anyway.
+                }
+            }
             return bits;
         }
 

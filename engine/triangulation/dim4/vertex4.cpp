@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,13 +34,15 @@
 
 namespace regina {
 
-Face<4, 0>::~Face() {
+template <>
+void Face<4, 0>::destroyLink() {
     // Deleting null is always safe.
-    delete link_;
+    delete link_.value;
 }
 
+template <>
 const Triangulation<3>& Face<4, 0>::buildLink() const {
-    if (! link_) {
+    if (! link_.value) {
         // Note: we need to insert tetrahedra in the correct order, as
         // specified in the buildLink() documentation.
 
@@ -95,11 +97,12 @@ const Triangulation<3>& Face<4, 0>::buildLink() const {
 
         // This is a construct-on-demand member; cast away constness to
         // set it here.
-        const_cast<Vertex<4>*>(this)->link_ = ans;
+        const_cast<Face<4, 0>*>(this)->link_.value = ans;
     }
-    return *link_;
+    return *link_.value;
 }
 
+template <>
 Isomorphism<4> Face<4, 0>::buildLinkInclusion() const {
     Isomorphism<4> inclusion(degree());
 

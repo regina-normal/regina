@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@
 #import "manifold/manifold.h"
 #import "packet/container.h"
 #import "snappea/snappeatriangulation.h"
-#import "subcomplex/standardtri.h"
+#import "subcomplex/standardsubcomplex.h"
 #import "triangulation/dim3.h"
 
 #define PROP_SPHERE 1
@@ -114,7 +114,7 @@
     {
         regina::Triangulation<3> simp(*self.packet);
         simp.simplify();
-        auto std = regina::StandardTriangulation::recognise(&simp);
+        auto std = regina::StandardSubcomplex<3>::recognise(&simp);
         if (std) {
             auto mfd = std->manifold();
             if (mfd) {
@@ -184,7 +184,7 @@
 
     // Display the results of a census lookup.
     if (self.packet->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        regina::CensusHits* hits = regina::Census::lookup(static_cast<regina::Triangulation<3>*>(self.packet)->isoSig());
+        regina::CensusHits* hits = regina::Census::lookup(*static_cast<regina::Triangulation<3>*>(self.packet));
         if (hits->count() == 0) {
             self.census.numberOfLines = 1;
             self.census.attributedText = [TextHelper dimString:@"Not found"];

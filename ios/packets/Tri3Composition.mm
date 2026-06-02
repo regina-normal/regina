@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,7 +55,7 @@
 #import "subcomplex/snappedball.h"
 #import "subcomplex/snappedtwosphere.h"
 #import "subcomplex/spiralsolidtorus.h"
-#import "subcomplex/standardtri.h"
+#import "subcomplex/standardsubcomplex.h"
 #import "subcomplex/txicore.h"
 #import "triangulation/dim3.h"
 
@@ -125,7 +125,7 @@
 
     self.isosig.text = @(self.packet->isoSig().c_str());
     
-    auto stdTri = regina::StandardTriangulation::recognise(self.packet);
+    auto stdTri = regina::StandardSubcomplex<3>::recognise(self.packet);
     if (stdTri)
         self.standard.text = @(stdTri->name().c_str());
     else

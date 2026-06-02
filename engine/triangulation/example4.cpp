@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -132,14 +132,18 @@ Triangulation<4> Example<4>::k3() {
     // This is (with much work by multiple authors) derived from Spreer's
     // 17-vertex standard K3 simplicial complex.
     // Rhuaidi Burke has managed to get this down to 60 pentachora thus far.
-    //Triangulation<4> ans = Triangulation<4>::fromSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
+    // The following manifold is oriented and has signature +16, not -16:
+    // if we prefer -16 then we will need to reflect before returning.
+    // return Triangulation<4>::fromSig("8hqOqWOyX4yzPrjrIHbskcJIklsdlRAAkZ666sJBCKZ8mmenveeKevfvfLmTT9uDDLL1199fgoowwEE2+UU+ghppxxFF-F4Z-ppj3836YH+OFEnhHMpJIrGrsqRJH7kdgClyMUE2XzDqfIzamI1EqIXdyOylKrDDjlCJ5C7Z84A00SqHLf-2cG2+uWE4abfI2gTtppsGXEqkisy7d");
 
-    // This triangulation is derived from a Kirby diagram of the standard K3 surface, 
-    // constructed and simplified by Rhuaidi Burke using Katie and the "Up-Down-Simplify" heuristic.
-    Triangulation<4> ans = Triangulation<4>::fromSig("2ALAMMvAwvPLQwvPwLQPMvPQQQQLQPAwwALQQAAQPPzQPPaaddceffggikqpmllsorsquxwuttvxxFyyzzAABBCCDDJKIIGGHHMKLLNNOOPPQQSSUUTTVVWWXZZZ0011TbgaiaiakaqaaaMbaawaUbjbabPa5ayaGauara3bmagaNaUbybNa2aRa2aibbawboaraPbJa2aKaya1aqbub2afbPaZaUbcayaGawaca-aLb+aoatbfaNabagajaya1axbybrbebubgaubFbtbfaFbFbFbqbzaoaPboa");
-    ans.orient();
-    ans.reflect(); // so sig = -16, not 16
-    return ans;
+    // This triangulation is derived from a Kirby diagram of the standard K3
+    // surface, constructed and simplified by Rhuaidi Burke using Katie and the
+    // "Up-Down-Simplify" heuristic.
+    //
+    // This triangulation is already oriented (and the signature below is a
+    // second-generation signature, which means it preserves the orientation).
+    // Moreover, it has the desired orientation (its signature is -16, not +16).
+    return Triangulation<4>::fromSig("2haiyyyGGO4ijjjzrrXHHr65rAQsAQIIAdRBZRZlldmSJJ7RmuuCCKKCDLT98efnnvvLLT11foowwEEMMUU+FuT9-A-qPBUDYUJfCo3iVzdaaggjxNfOXALneeaCmAZOPcO4aexBsxEmmGEEBs14ZmtbmdeaqbOQqqQmWdzhIkmqTQsWdTNdPcIkDa0r");
 }
 
 Triangulation<4> Example<4>::cappellShaneson() {

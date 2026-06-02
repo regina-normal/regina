@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::SnappedTwoSphere
-static const char *SnappedTwoSphere =
+struct SnappedTwoSphere {
+
+// Docstring regina::python::doc::SnappedTwoSphere::__class
+static constexpr const char __class[] =
 R"doc(Represents a 2-sphere made from two snapped 3-balls in a
 triangulation. This occurs when two snapped 3-balls are glued together
 at their equators (note that this gluing does not have to extend to
@@ -32,13 +34,11 @@ std::swap(), with no need for any specialised move operations or swap
 functions. However, the only way to create them (aside from copying or
 moving) is via the static member function recognise().)doc";
 
-namespace SnappedTwoSphere_ {
+// Docstring regina::python::doc::SnappedTwoSphere::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::SnappedTwoSphere_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::SnappedTwoSphere_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::SnappedTwoSphere::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same
 specific presentation of a snapped 2-sphere.
 
@@ -58,16 +58,16 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same specific presentation of a snapped 2-sphere.)doc";
 
-// Docstring regina::python::doc::SnappedTwoSphere_::recognise
-static const char *recognise =
+// Docstring regina::python::doc::SnappedTwoSphere::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the two given tetrahedra together form a snapped
 2-sphere.
 
 Even though SnappedTwoSphere is a two-dimensional class and so does
-not inherit from StandardTriangulation, this routine nevertheless
+not inherit from StandardSubcomplex<3>, this routine nevertheless
 returns by (smart) pointer for consistency with the
-StandardTriangulation recognition routines (which use pointers because
-of the polymorphic StandardTriangulation class hierarchy).
+StandardSubcomplex<3> recognition routines (which use pointers because
+of the polymorphic StandardSubcomplex class hierarchy).
 
 Precondition:
     The two given tetrahedra are distinct.
@@ -82,8 +82,8 @@ Returns:
     a structure containing details of the snapped 2-sphere, or
     ``None`` if the given tetrahedra do not form a snapped 2-sphere.)doc";
 
-// Docstring regina::python::doc::SnappedTwoSphere_::recognise_2
-static const char *recognise_2 =
+// Docstring regina::python::doc::SnappedTwoSphere::recognise_2
+static constexpr const char recognise_2[] =
 R"doc(Determines if the two given snapped 3-balls together form a snapped
 2-sphere.
 
@@ -92,10 +92,10 @@ returned will be clones of the original 3-balls, not the original
 3-balls themselves.
 
 Even though SnappedTwoSphere is a two-dimensional class and so does
-not inherit from StandardTriangulation, this routine nevertheless
+not inherit from StandardSubcomplex<3>, this routine nevertheless
 returns by (smart) pointer for consistency with the
-StandardTriangulation recognition routines (which use pointers because
-of the polymorphic StandardTriangulation class hierarchy).
+StandardSubcomplex<3> recognition routines (which use pointers because
+of the polymorphic StandardSubcomplex class hierarchy).
 
 Precondition:
     The two given snapped 3-balls use distinct tetrahedra.
@@ -111,8 +111,8 @@ Returns:
     ``None`` if the given snapped 3-balls do not form a snapped
     2-sphere.)doc";
 
-// Docstring regina::python::doc::SnappedTwoSphere_::snappedBall
-static const char *snappedBall =
+// Docstring regina::python::doc::SnappedTwoSphere::snappedBall
+static constexpr const char snappedBall[] =
 R"doc(Returns one of the two snapped 3-balls whose equators are joined.
 
 Parameter ``index``:
@@ -122,7 +122,7 @@ Parameter ``index``:
 Returns:
     the corresponding snapped 3-ball.)doc";
 
-}
+}; // struct SnappedTwoSphere
 
 } // namespace regina::python::doc
 

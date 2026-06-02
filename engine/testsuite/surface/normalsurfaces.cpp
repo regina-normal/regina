@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,7 +36,7 @@
 #include "triangulation/dim3.h"
 
 #include "testhelper.h"
-#include "testexhaustive.h"
+#include "triangulation/exhaustive-tri.h"
 
 using regina::Example;
 using regina::NormalAlg;
@@ -786,7 +786,7 @@ TEST(NormalSurfacesTest, fundDualVsCD) {
         Example<3>::lst(1, 4), "LST(1,4,5)",
         NormalAlg::HilbertDual, NormalAlg::HilbertCD);
     verifyFundAlgorithms<NormalCoords::Quad>(
-        Triangulation<3>::fromSig("dLQbccchhfo"), "m009",
+        Triangulation<3>::fromSig("dp1ha0a"), "m009",
         NormalAlg::HilbertDual, NormalAlg::HilbertCD);
 }
 

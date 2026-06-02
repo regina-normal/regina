@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2013-2025, Ben Burton
+# Copyright (c) 2013-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides tests for isomorphism signatures and knot/link signatures.
@@ -31,10 +31,17 @@
 
 # ---------- Testing IsoSigData ----------
 
-tri = Triangulation3.fromSig('cPcbbbiht') # figure eight knot complement
+tri = Triangulation3.fromSig('cV6cqb') # figure eight knot complement
 data = IsoSigData1_3(tri.component(0))
 data.fillFrom(tri.simplex(0), Perm4())
 print(data.facetTypes())
+print(data.adjacentSimplices())
+print(data.adjacentGluings())
+print(data.locks())
+print(IsoSigPrintable.encode(data))
+data = IsoSigData2_3.minimal(IsoSigRidgeDegrees3, tri.component(0), False)
+# Do not print data.facetTypes(), since the bitmask length depends on the
+# native integer size for the platform on which this test is run.
 print(data.adjacentSimplices())
 print(data.adjacentGluings())
 print(data.locks())
@@ -86,7 +93,7 @@ print()
 
 # ---------- Testing knot/link signatures ----------
 
-link = Link.fromSig('eabcdbadcvbZa') # figure eight knot
+link = Link.fromSig('eputWe') # figure eight knot
 data = LinkSigData(link, BoolSet(True, True), True, BoolSet(True, True))
 print(data.size())
 print([(s.crossing, s.strand, s.sign) for s in data.sequence()])
@@ -107,18 +114,9 @@ print()
 
 # ---------- Testing "raw" encoders/decoders ----------
 
-enc = PackedByteEncoder()
-tmp = enc.encodeSize(1000)
-print(enc.bytes())
-dec = PackedByteDecoder(enc.bytes())
-print(dec.done())
-print(dec.decodeSize())
-print(dec.done())
-print()
-
 enc = BitEncoder()
-enc.encodeInt(3, 0x0002)
-enc.encodeInt(14, 0x3576)
+enc.encodeInt(0x0002, 3)
+enc.encodeInt(0x3576, 14)
 print(enc.bytes())
 try:
 	enc.encodeBit(True)
@@ -135,8 +133,8 @@ except:
 print()
 
 enc = Base64BitEncoder()
-enc.encodeInt(3, 0x0002)
-enc.encodeInt(14, 0x3576)
+enc.encodeInt(0x0002, 3)
+enc.encodeInt(0x3576, 14)
 print(enc.str())
 try:
 	enc.encodeBit(True)

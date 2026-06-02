@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,16 +39,18 @@
 #endif
 
 #include <list>
+#include <vector>
 #include "regina-core.h"
-#include "concepts/core.h"
-#include "triangulation/facetpairing3.h"
-#include "utilities/boolset.h"
+#include "concepts/maths.h"
+#include "file/globaldirs.h"
+#include "triangulation/forward.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
 class CensusHit;
+class Link;
 
 /**
  * \defgroup census Census of Triangulations
@@ -56,21 +58,52 @@ class CensusHit;
  */
 
 /**
- * Stores the location and description of one of Regina's in-built census
- * databases.
+ * A type of mathematical object that can be looked up within Regina's
+ * in-built census databases.
+ *
+ * This concept refers to the underlying mathematical types that the databases
+ * encode (e.g., triangulation or link types), not the strings that are
+ * actually used to encode these object within the databases.
+ *
+ * Currently the only supported types here are Triangulation<3> and Link.
+ * This list may grow as more census data ships in future versions of Regina.
+ *
+ * This concept includes `SignatureEncodable<T>` as an explicit requirement.
+ * Although this requirement is redundant (since the full list of supported
+ * types is already hard-coded directly in this concept), it is kept as a
+ * reminder that census databases require signatures to use as lookup keys.
+ */
+template <typename T>
+concept CensusSearchable =
+    SignatureEncodable<T> &&
+    (std::same_as<T, Link> || std::same_as<T, Triangulation<3>>);
+
+/**
+ * Stores the location and other identifying information for one of Regina's
+ * in-built census databases.
  *
  * A census database stores a list of key-value pairs.  The keys are
- * isomorphism signatures of triangulations (as returned by
- * Triangulation<3>::isoSig(), for instance), and the values are
- * human-readable names (typically the names of the triangulations
- * and/or the names of the underlying manifolds).  An isomorphism
- * signature may appear multiple times (with different names)
- * within the same database.
+ * isomorphism signatures of triangulations or knot/link signatures (currently
+ * second-generation signatures as returned by `Triangulation<dim>::neoSig()`
+ * or `Link::neoSig()`, but see the notes below).  The values are
+ * human-readable names (typically the names of the triangulations, the links,
+ * and/or the underlying manifolds).  A key may appear multiple times
+ * (associated with different human-readable names) within the same database.
  *
- * The format used to store census databases is an internal implementation
- * detail that may change in future releases of Regina.  End users
- * should only search census databases using high-level routines such as
- * Census::lookup() and CensusDB::lookup().
+ * Ordinary users should not need to interact with CensusDB directly;
+ * instead you would typically use one of the high-level Census::lookup()
+ * routines, which searches all of Regina's in-built databases using the
+ * correct type of search key(s).  There are two reasons for this:
+ *
+ * - The _keys_ used for census databases are subject to change in future
+ *   versions of Regina.  Currently (as of Regina 8.0) these keys are
+ *   second-generation signatures.
+ *
+ * - The _format_ used to store census databases is an internal implementation
+ *   detail, also subject to change in future releases of Regina.  Even if you
+ *   are accessing a specific database via CensusDB, you should only search a
+ *   database using the high-level routine CensusDB::lookupKey() and not
+ *   attempt to open the database file directly.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -83,23 +116,41 @@ class CensusDB {
         std::string filename_;
             /**< The filename where the database is stored. */
         std::string desc_;
-            /**< A human-readable description of this database. */
+            /**< A detailed human-readable description of this database. */
+        std::string tag_;
+            /**< A short human-readable string that identifies this database,
+                 or the empty string if no such tag is necessary. */
+        size_t maxSize_;
+            /**< The maximum number of top-dimensional simplices and/or
+                 crossings for any entry in the database, or 0 if this is not
+                 known. */
 
     public:
         /**
-         * Creates a new reference to one of Regina's census databases.
+         * Creates a new reference to a census database.
          *
-         * This constructor will not run any checks (e.g., it will not
-         * verify that the database exists, or that it is stored in the correct
-         * format).  Note that even if the database does not exist, the
-         * lookup() routine will fail gracefully.
+         * The database should use the same format as Regina's in-built census
+         * databases (and this format depends upon your build configuration);
+         * however, it does not actually need to be one of those in-built
+         * databases, and it may be located anywhere on the filesystem.
+         *
+         * This constructor will not run any checks (e.g., it will not verify
+         * that the database exists, that it is stored in the correct format,
+         * or that the \a maxSize argument is correct).
          *
          * \param filename the filename where the database is stored.
          * \param desc a human-readable description of the database.
          * See the desc() routine for further information on how this
          * description might be used.
+         * \param tag a short human-readable string that identifies this
+         * database, or the empty string if no such tag is necessary.
+         * See tag() for further information on how tags are used.
+         * \param maxSize the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in the database, or 0 (the default) if this
+         * is not known.  This can be used to optimise database lookups.
          */
-        CensusDB(std::string filename, std::string desc);
+        CensusDB(std::string filename, std::string desc,
+            std::string tag = {}, size_t maxSize = 0);
 
         /**
          * Creates a new clone of the given database reference.
@@ -112,6 +163,47 @@ class CensusDB {
          * The reference that was passed will no longer be usable.
          */
         CensusDB(CensusDB&&) noexcept = default;
+
+        /**
+         * Returns a reference to one of Regina's in-built census databases,
+         * stored in the standard census database location on the filesystem.
+         *
+         * The database will be assumed to live in the directory
+         * `GlobalDirs::census()`.
+         *
+         * This variant of global() will not give the database an identifying
+         * tag.
+         *
+         * \param basename the base of the database filename, with no file
+         * extension and no directory information.
+         * \param desc a human-readable description for the database.
+         * \param maxSize the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in the database, or 0 (the default) if this
+         * is not known.  This can be used to optimise database lookups.
+         * \return the resulting database reference.
+         */
+        static CensusDB global(const char* basename, const char* desc,
+            size_t maxSize = 0);
+
+        /**
+         * Returns a reference to one of Regina's in-built census databases,
+         * stored in the standard census database location on the filesystem.
+         *
+         * The database will be assumed to live in the directory
+         * `GlobalDirs::census()`.
+         *
+         * \param basename the base of the database filename, with no file
+         * extension and no directory information.
+         * \param desc a human-readable description for the database.
+         * \param tag a short human-readable string that identifies this
+         * database; see tag() for further information on how tags are used.
+         * \param maxSize the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in the database, or 0 (the default) if this
+         * is not known.  This can be used to optimise database lookups.
+         * \return the resulting database reference.
+         */
+        static CensusDB global(const char* basename, const char* desc,
+            const char* tag, size_t maxSize = 0);
 
         /**
          * Returns the filename where this database is stored.
@@ -132,7 +224,38 @@ class CensusDB {
         const std::string& desc() const;
 
         /**
-         * Searches for the given isomorphism signature in this database.
+         * Returns a short human-readable string that identifies this database,
+         * or the empty string if no such tag has been deemed necessary.
+         *
+         * Tags may be used in scenarios where triangulations or link diagrams
+         * are likely to appear in multiple databases, and where the name of
+         * a triangulation or link may be confusing without knowledge of
+         * which database it came from.
+         *
+         * An example is Regina's virtual knot census versus Regina's classical
+         * knot census, which use the tags `virtual` and `classical`
+         * respectively.
+         *
+         * \return the database tag, or the empty string if there is no tag.
+         */
+        const std::string& tag() const;
+
+        /**
+         * Returns the maximum number of top-dimensional simplices and/or
+         * crossings for any entry in this database, or 0 if this information
+         * is not known.
+         *
+         * If this _is_ known, it can be used to optimise database lookups
+         * (in particular, to avoid lookups entirely when it is known that the
+         * key will not be found).
+         *
+         * \return the maximum number of top-dimensional simplices and/or
+         * crossings.
+         */
+        size_t maxSize() const;
+
+        /**
+         * Searches for the given key in this database.
          *
          * For each match that is found (if any), this routine will call
          * \a action (which must be a function or some other callable type).
@@ -140,14 +263,19 @@ class CensusDB {
          * passed as a prvalue (so the argument type for \a action could be
          * any of `CensusHit`, `const CensusHit&`, or `CensusHit&&`).
          * The return value of \a action will be ignored (typically \a action
-         * would return \c void).
+         * would return `void`).
          *
          * Note that the database will be opened and closed every time
          * this routine is called.
          *
-         * If the given isomorphism signature is empty then this routine will
-         * return \c true immediately (i.e., it will be treated as successful
-         * with no hits but it will not actually search the database).
+         * The argument \a key should be a <i>g</i>th-generation isomorphism
+         * signature or knot/link signature, where the generation \a g is
+         * passed as a template argument.  Only one value of \a g is allowed:
+         * the same generation of signature that the database uses internally
+         * for its keys.  This means that the way you call lookupKey() will
+         * change if/when the database key type changes; this is by design,
+         * since you will of course need to change what you pass as an argument
+         * also.
          *
          * If you are using this routine yourself, you will need to
          * include the extra header census/census-impl.h (which is _not_
@@ -155,22 +283,36 @@ class CensusDB {
          * end users can simply use the catch-all Census::lookup() routines
          * and will not need to call this more fine-grained routine.
          *
-         * \python This function is available in Python, and the
-         * \a action argument may be a pure Python function.
+         * \python This function is available in Python, and the \a action
+         * argument may be a pure Python function.  Since Python does not
+         * support C++ templates, the generation should be passed as an
+         * initial argument at runtime: `lookupKey(generation, sig, action)`.
+         * If \a generation does not match the one allowed value (i.e., the
+         * format used internally by the database), then this routine will
+         * throw an InvalidArgument exception.
          *
-         * \param isoSig the isomorphism signature to search for.
+         * \tparam generation the generation of isomorphism signature or
+         * knot/link signature that you are passing in the argument \a sig.
+         * Currently \a generation _must_ be 2, since Regina's databases
+         * currently use second-generation signatures as their keys.
+         *
+         * \exception FileError An error occurred at the database level (e.g.,
+         * the database could not be opened).
+         *
+         * \param sig the isomorphism signature or knot/link signature to
+         * search for; this must be of the same generation that is passed as a
+         * template parameter.
          * \param action a function (or other callable type) that will
          * be called for each match in the database.
-         * \return \c true if the lookup was correctly performed, or \c false
-         * if some error occurred (e.g., the database could not be opened).
-         * Note in particular that if there were no matches but no errors,
-         * then the return value will be \c true.
          */
-        template <VoidCallback<CensusHit&&> Action>
-        bool lookup(const std::string& isoSig, Action&& action) const;
+        template <int generation, VoidCallback<CensusHit&&> Action>
+        requires (generation == 2)
+        void lookupKey(const std::string& sig, Action&& action) const;
 
         /**
          * Sets this to be a clone of the given database reference.
+         *
+         * \return a reference to this object.
          */
         CensusDB& operator = (const CensusDB&) = default;
 
@@ -178,6 +320,8 @@ class CensusDB {
          * Moves the given database reference into this object.
          *
          * The reference that was passed will no longer be usable.
+         *
+         * \return a reference to this object.
          */
         CensusDB& operator = (CensusDB&&) noexcept = default;
 
@@ -192,9 +336,10 @@ class CensusDB {
         /**
          * Tests whether this and the given object represent the same database.
          *
-         * Two databases are considered the same if they have identical
-         * filenames (as returned by the filename() function).  The database
-         * descriptions are irrelevant here.
+         * Two databases are considered the same if and only if they have
+         * identical filenames (as returned by the filename() function).
+         * The database descriptions and tags are irrelevant here, as are the
+         * maximum size arguments passed to the class constructor.
          *
          * \param rhs the database to compare this against.
          * \return \c true if and only if this and the given object represent
@@ -217,8 +362,8 @@ class CensusDB {
 void swap(CensusDB& a, CensusDB& b) noexcept;
 
 /**
- * Stores a single "hit" indicating that some given triangulation has
- * been located in one of Regina's in-built census databases.
+ * Stores a single "hit" indicating that some given triangulation or link
+ * diagram has been located in one of Regina's in-built census databases.
  *
  * You cannot construct or modify instances of this class yourself,
  * other than through the standard copy/move/swap operations.
@@ -235,9 +380,10 @@ class CensusHit {
     private:
         std::string name_;
             /**< The human-readable name associated with the triangulation
-                 in the database. */
+                 or link diagram in the database. */
         const CensusDB* db_;
-            /**< The database in which the triangulation was found. */
+            /**< The database in which the triangulation or link diagram
+                 was found. */
 
     public:
         /**
@@ -268,16 +414,16 @@ class CensusHit {
          */
         void swap(CensusHit& other) noexcept;
         /**
-         * Returns the human-readable name associated with the
-         * triangulation in the database.  This typically contains the name of
-         * the triangulation and/or the name of the underlying manifold.
+         * Returns the human-readable name associated with the triangulation
+         * or link diagram in the database.  This would typically contain the
+         * name of the triangulation, the link, and/or the underlying manifold.
          *
          * \return the human-readable name for this hit.
          */
         const std::string& name() const;
         /**
          * Returns details of the census database in which the
-         * triangulation was found.
+         * triangulation or link diagram was found.
          *
          * \return the database for this hit.
          */
@@ -323,60 +469,142 @@ class CensusHit {
 void swap(CensusHit& a, CensusHit& b) noexcept;
 
 /**
- * A utility class used to search for triangulations across one or more
- * 3-manifold census databases.
+ * Holds references to all of Regina's in-built census databases for a
+ * particular type of topological object.
+ *
+ * Ordinary users should not need to interact with CensusCollection directly;
+ * instead you would typically use one of the high-level Census::lookup()
+ * routines, which searches all of Regina's in-built databases using the
+ * correct type of search key(s).
+ *
+ * This class is essentially a halfway point between the CensusDB (which
+ * manages a single database) and Census (which offers high-level lookup
+ * routines for end users).  See those two classes for further information.
+ *
+ * This class does not initialise its list of databases until the first time
+ * they are needed by a lookup routine.  This means that you can call
+ * GlobalDirs::setDirs() or GlobalDirs::deduceDirs() if you need to fix the
+ * database locations; however, you must do this _before_ the first census
+ * lookup.
+ *
+ * \warning This class is not thread-safe, since (as noted above) it performs
+ * global initialisation the first time that a 3-manifold lookup is performed,
+ * and also the first time that a link lookup is performed.  If you need thread
+ * safety, you can always call lookup() with an empty string when initialising
+ * your program, before spawning any other threads.
+ *
+ * \tparam ObjectType the type of object stored in this collection of databases.
+ * At present, this must be `Triangulation<3>` or `Link`.
+ *
+ * \python Python does not support C++ templates.  For triangulations, you
+ * should append the dimension as a suffix to the type name (e.g.,
+ * `CensusCollection3` for the object type `Triangulation<3>`); for links
+ * you should use the type name `CensusCollectionLink`.
+ *
+ * \ingroup census
+ */
+template <CensusSearchable ObjectType>
+class CensusCollection {
+    private:
+        inline static std::vector<CensusDB> databases_ {};
+            /**< The databases in this collection. */
+        inline static size_t maxSize_ { 0 };
+            /**< The maximum size (number of crossings, or number of
+                 top-dimensional simplices) of any object stored in any of
+                 these databases. */
+
+    public:
+        /**
+         * Searches for the given object within all of the databases in this
+         * collection.
+         *
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
+         *
+         * \param object the object that you wish to search for.
+         * \return a list of all database matches.
+         */
+        static std::list<CensusHit> lookup(const ObjectType& object);
+
+        /**
+         * Searches for the object with the given signature within all of the
+         * databases in this collection.
+         *
+         * The given signature may be either second-generation or
+         * first-generation; either will yield the same results.
+         *
+         * Calling lookup() on a signature will yield the same results as
+         * calling lookup() on the corresponding object (i.e., the
+         * triangulation or link diagram, but it offers different performance:
+         *
+         * - If the signature is of the _same_ generation as is used internally
+         *   by the census databases, then passing a signature directly will
+         *   avoid the overhead of computing it.
+         *
+         * - If the signature is of a _different_ generation from the one used
+         *   internally by the census databases, then passing a signature will
+         *   _add_ overhead (since it must reconstruct the object and then
+         *   compute the generation of signature that the databases need).
+         *
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
+         *
+         * \param sig the isomorphism signature or knot/link signature of the
+         * object that you wish to search for; this may be either
+         * first-generation or second-generation.
+         * \return a list of all database matches.
+         */
+        static std::list<CensusHit> lookup(const std::string& sig);
+
+        // Make this class non-constructible.
+        CensusCollection() = delete;
+
+    private:
+        /**
+         * Fills this database collection with the relevant in-built databases
+         * that are shipped with Regina.  This function must be specialised
+         * for each supported \a ObjectType.
+         */
+        static void init();
+};
+
+/**
+ * Searches for triangulations and link diagrams across Regina's in-built
+ * census databases.
  *
  * This class consists of static routines only.  The main entry point
  * (and typically the only way that you would use this class) is via the
- * various static lookup() routines.
+ * various static routines lookup() and lookupAs().
  *
- * \warning This class is not thread-safe, in that it performs some global
- * initialisation the first time one of the lookup() functions is called.
- * If you need thread-safety, you can always call lookup() with an empty
- * string when initialising your program, and ensure this has finished before
- * you allow any subsequent "normal" calls to lookup() from other threads.
+ * This class does not initialise the list of databases until the first time
+ * they are needed by a lookup routine; moreover, it initialises the 3-manifold
+ * databases independently from the link databases.  This means that you can
+ * call GlobalDirs::setDirs() or GlobalDirs::deduceDirs() if you need to fix
+ * the database locations; however, you must do this _before_ the first census
+ * lookup.
+ *
+ * \warning This class is not thread-safe, since (as noted above) it performs
+ * global initialisation the first time that a 3-manifold lookup is performed,
+ * and also the first time that a link lookup is performed.  If you need thread
+ * safety, you can always call lookup() with an empty string when initialising
+ * your program, before spawning any other threads.
  *
  * \ingroup census
  */
 class Census {
-    private:
-        static CensusDB* closedOr_;
-            /**< The census of closed orientable prime 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
-        static CensusDB* closedNor_;
-            /**< The census of closed non-orientable P²-irreducible 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
-        static CensusDB* closedHyp_;
-            /**< The census of closed hyperbolic 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
-        static CensusDB* cuspedHypOr_;
-            /**< The census of cusped hyperbolic orientable 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
-        static CensusDB* cuspedHypNor_;
-            /**< The census of cusped hyperbolic non-orientable 3-manifold
-                 triangulations that are shipped with Regina.
-                 This will only be initialised when lookup() is first called. */
-        static CensusDB* christy_;
-            /**< Joe Christy's collection of knot and link complements,
-                 which were shipped as a Regina sample file until version 5.96.
-                 This will only be initialised when lookup() is first called. */
-        static bool dbInit_;
-            /**< Have the census databases been initialised yet? */
-
     public:
         /**
-         * Searches for the given triangulation through all of Regina's
-         * in-built census databases.
+         * Searches for the given triangulation or link diagram within all of
+         * Regina's in-built census databases.
          *
-         * Internally, the census databases store isomorphism signatures
-         * as opposed to fully fleshed-out triangulations.  If you already
-         * have the isomorphism signature of the triangulation, then you
-         * can call the variant lookup(const std::string&) instead, which
-         * will be faster since it avoids some extra overhead.
+         * Internally, the databases store isomorphism signatures and knot/link
+         * signature (not fully fleshed-out triangulations and links).  If you
+         * already have a signature for your object then you can call the
+         * variant `lookupAs<ObjectType>(const std::string&)` instead, which
+         * (assuming your signature is of the right generation) will be faster
+         * since it avoids some extra overhead.
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
@@ -385,25 +613,60 @@ class Census {
          * matches at all, a list will still be returned; you can call
          * empty() on this list to test whether any matches were found.
          *
-         * This routine is fast: it first computes the isomorphism
-         * signature of the triangulation, and then performs a
-         * logarithmic-time lookup in each database (here "logarithmic"
-         * means logarithmic in the size of the database).
+         * This routine is fast: it first computes the relevant signature of
+         * the object, and then performs a logarithmic-time lookup in each
+         * relevant database (here "logarithmic" means logarithmic in the size
+         * of the database).
          *
-         * \param tri the triangulation that you wish to search for.
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
+         *
+         * \tparam ObjectType the type of object that you are searching for.
+         * At present, this must be `Triangulation<3>` or `Link`.
+         *
+         * \param object the triangulation or link diagram that you wish to
+         * search for.
          * \return a list of all database matches.
          */
-        static std::list<CensusHit> lookup(const Triangulation<3>& tri);
+        template <CensusSearchable ObjectType>
+        static std::list<CensusHit> lookup(const ObjectType& object);
         /**
-         * Searches for the given triangulation through all of Regina's
-         * in-built census databases.
+         * Searches for the triangulation or link diagram with the given
+         * signature within all of Regina's in-built census databases.
          *
-         * For this routine you specify the triangulation by giving its
-         * isomorphism signature, as returned by Triangulation<3>::isoSig().
-         * This is faster than the variant lookup(const Triangulation<3>&),
-         * since Regina's census databases store isomorphism signatures
-         * internally.  If you do not already know the isomorphism signature,
-         * it is fine to just call lookup(const Triangulation<3>&) instead.
+         * This routine assumes you know what kind of object you are searching
+         * for (i.e., whether it is a 3-manifold triangulation or a link
+         * diagram).  You specify the type of object through the template
+         * argument \a ObjectType, and you specify the object itself by passing
+         * its signature (either an isomorphism signature for a triangulation,
+         * or a knot/link signature for a link diagram).  The signature may be
+         * either second-generation (from `Triangulation<dim>::neoSig()` or
+         * `Link::neoSig()`), or first-generation (from
+         * `Triangulation<dim>::isoSig()` or `Link::knotSig()`); either
+         * generation of signature will yield the same results.
+         *
+         * Calling lookupAs() on a signature will yield the same results as
+         * calling lookup() on the corresponding triangulation or link diagram,
+         * but it offers different performance:
+         *
+         * - If the signature is of the _same_ generation as is used internally
+         *   by the census databases, then passing a signature to lookupAs()
+         *   will avoid some overhead (since the variant of lookup() that
+         *   takes a triangulation or link diagram must otherwise compute the
+         *   signature to use as a lookup key).
+         *
+         * - If the signature is of a _different_ generation from the one used
+         *   internally by the census databases, then lookupAs() will _add_
+         *   overhead (since it will need to reconstruct the triangulation
+         *   or link diagram and _then_ compute the generation of signature
+         *   that it needs to perform the internal database lookups).
+         *
+         * A general rule of thumb is this: if you already have a signature,
+         * you should call this string-based routine (regardless of which
+         * generation of signature you have), since reconstruction is
+         * reasonably fast.  If you do not already have a signature, just call
+         * the triangulation-based or link-based lookup().
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
@@ -412,39 +675,81 @@ class Census {
          * matches at all, a list will still be returned; you can call
          * empty() on this list to test whether any matches were found.
          *
-         * This routine is fast: it first computes the isomorphism
-         * signature of the triangulation, and then performs a
-         * logarithmic-time lookup in each database (here "logarithmic"
-         * means logarithmic in the size of the database).
+         * This routine is fast: it first recomputes the generation of
+         * signature that it needs (but only if the given signature is not
+         * already of the correct generation), and then it performs a
+         * logarithmic-time lookup in each database (where "logarithmic" means
+         * logarithmic in the size of the database).
          *
-         * \param isoSig the isomorphism signature of the triangulation
-         * that you wish to search for.
+         * \python Python does not support C++ templates.  Instead you should
+         * pass the object type at runtime, using the argument order
+         * `lookupAs(objectType, sig)`.  An example that uses the signature of
+         * the figure eight knot is `lookupAs(Link, "eputWe")`.
+         *
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
+         *
+         * \tparam ObjectType the type of object that you are searching for.
+         * At present, this must be `Triangulation<3>` or `Link`.
+         *
+         * \param sig the isomorphism signature or knot/link signature of the
+         * triangulation or link diagram that you wish to search for; this may
+         * be either first-generation or second-generation.
          * \return a list of all database matches.
          */
-        static std::list<CensusHit> lookup(const std::string& isoSig);
+        template <CensusSearchable ObjectType>
+        static std::list<CensusHit> lookupAs(const std::string& sig);
+        /**
+         * Searches for any triangulation or link diagram with the given
+         * signature within all of Regina's in-built census databases, without
+         * knowing in advance the original object type.
+         *
+         * This routine is similar to lookupAs(), except that you do not need
+         * to provide an object type in advance.  Instead it will search _all_
+         * databases, including triangulations _and_ link diagrams, and will
+         * return all hits that it finds.  It is possible (though unlikely)
+         * that the hits will include a mix of different types of object.
+         *
+         * As with lookupAs(), the given signature may be either
+         * second-generation (as returned by `Triangulation<dim>::neoSig()` or
+         * `Link::neoSig()`), or first-generation (as returned by
+         * `Triangulation<dim>::isoSig()` or `Link::knotSig()`).
+         *
+         * See lookupAs() for further information.
+         *
+         * \exception FileError An error occurred within one of the databases.
+         * Typically this would indicate that some database could not be opened
+         * (e.g., it might not be installed correctly on the system).
+         *
+         * \param sig an isomorphism signature or knot/link signature that you
+         * wish to search for; this may be either first-generation or
+         * second-generation.
+         * \return a list of all database matches.
+         */
+        static std::list<CensusHit> lookup(const std::string& sig);
 
         // Make this class non-constructible.
         Census() = delete;
-
-    private:
-        /**
-         * Constructs a CensusDB object for one of Regina's in-built
-         * census databases, stored in the standard census database
-         * location on the filesystem.
-         *
-         * \param filename the filename for the database, without directory
-         * information.  This routine will build the full pathname by joining
-         * the given filename with the standard census database directory.
-         * \param desc a human-readable description for the database.
-         * \return the new database specifier.
-         */
-        static CensusDB* standardDB(const char* filename, const char* desc);
 };
 
 // Inline functions for CensusDB:
 
-inline CensusDB::CensusDB(std::string filename, std::string desc) :
-        filename_(std::move(filename)), desc_(std::move(desc)) {
+inline CensusDB::CensusDB(std::string filename, std::string desc,
+        std::string tag, size_t maxSize) : filename_(std::move(filename)),
+        desc_(std::move(desc)), tag_(std::move(tag)), maxSize_(maxSize) {
+}
+
+inline CensusDB CensusDB::global(const char* basename, const char* desc,
+        size_t maxSize) {
+    return CensusDB(GlobalDirs::census() + "/" + basename + "." REGINA_DB_EXT,
+        desc, {} /* no tag */, maxSize);
+}
+
+inline CensusDB CensusDB::global(const char* basename, const char* desc,
+        const char* tag, size_t maxSize) {
+    return CensusDB(GlobalDirs::census() + "/" + basename + "." REGINA_DB_EXT,
+        desc, tag, maxSize);
 }
 
 inline const std::string& CensusDB::filename() const {
@@ -455,9 +760,18 @@ inline const std::string& CensusDB::desc() const {
     return desc_;
 }
 
+inline const std::string& CensusDB::tag() const {
+    return tag_;
+}
+
+inline size_t CensusDB::maxSize() const {
+    return maxSize_;
+}
+
 inline void CensusDB::swap(CensusDB& other) noexcept {
     filename_.swap(other.filename_);
     desc_.swap(other.desc_);
+    tag_.swap(other.tag_);
 }
 
 inline bool CensusDB::operator == (const CensusDB& rhs) const {
@@ -497,6 +811,18 @@ inline bool CensusHit::operator == (const CensusHit& rhs) const {
 
 inline void swap(CensusHit& a, CensusHit& b) noexcept {
     a.swap(b);
+}
+
+// Inline functions for Census:
+
+template <CensusSearchable ObjectType>
+inline std::list<CensusHit> Census::lookup(const ObjectType& object) {
+    return CensusCollection<ObjectType>::lookup(object);
+}
+
+template <CensusSearchable ObjectType>
+inline std::list<CensusHit> Census::lookupAs(const std::string& sig) {
+    return CensusCollection<ObjectType>::lookup(sig);
 }
 
 } // namespace regina

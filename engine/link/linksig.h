@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -392,7 +392,7 @@ inline void swap(LinkSigData& a, LinkSigData& b) noexcept {
  * functions directly.
  *
  * \python To use this encoding in Python, you can just call the relevant
- * signature function (e.g., `Link::isoSig()` or `Link::neoSig()`) with no
+ * signature function (e.g., `Link::knotSig()` or `Link::neoSig()`) with no
  * extra encoding argument, since this encoding is the default.
  *
  * \apinotfinal
@@ -557,9 +557,9 @@ class LinkSigBinary {
         static size_t length(const LinkSigData& data);
 
         /**
-         * Re-encodes the given binary signature as a string-based signature
-         * (using the LinkSigPrintable encoding), which uses only printable
-         * characters from the 7-bit ASCII range.
+         * Re-encodes the given binary signature as a string-based
+         * second-generation signature (using the LinkSigPrintable encoding),
+         * which uses only printable characters from the 7-bit ASCII range.
          *
          * Calling `printable(sig)` is significantly more efficient than calling
          * `Link::fromSig(sig).neoSig()`, and should give the same result.

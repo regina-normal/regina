@@ -1,13 +1,58 @@
 SEARCH: foo
 Hits: 0
 
+SEARCH: cV6cqb
+Hits: 2
+  Cusped hyperbolic census (orientable)  -  m004 : #1
+  Christy's collection of knot/link complements  -  L104001
+
 SEARCH: cPcbbbiht
 Hits: 2
   Cusped hyperbolic census (orientable)  -  m004 : #1
   Christy's collection of knot/link complements  -  L104001
 
+SEARCH: nhpkp7wn5L5-YBairvzHzOOQc
+Hits: 2
+  Christy's collection of knot/link complements  -  L111376
+  Christy's collection of knot/link complements  -  L111449
+
 SEARCH: nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng
 Hits: 2
   Christy's collection of knot/link complements  -  L111376
   Christy's collection of knot/link complements  -  L111449
+
+SEARCH: eputWe
+Hits: 3
+  Prime classical knots  -  4ah_1
+  Virtual knots  -  v4_1
+  Green's virtual knots  -  4.108
+
+SEARCH: eabcdbadcvbZa
+Hits: 3
+  Prime classical knots  -  4ah_1
+  Virtual knots  -  v4_1
+  Green's virtual knots  -  4.108
+
+SEARCH: <class 'regina.engine.Link'> eputWe
+Hits: 3
+  Prime classical knots  -  4ah_1
+  Virtual knots  -  v4_1
+  Green's virtual knots  -  4.108
+
+SEARCH: <class 'regina.engine.Triangulation3'> eputWe
+Hits: 0
+
+SEARCH: <class 'regina.engine.Triangulation4'> eputWe
+Caught exception
+
+SEARCH: <class 'regina.engine.Link'> cV6cqb
+Hits: 0
+
+SEARCH: <class 'regina.engine.Triangulation3'> cV6cqb
+Hits: 2
+  Cusped hyperbolic census (orientable)  -  m004 : #1
+  Christy's collection of knot/link complements  -  L104001
+
+SEARCH: <class 'regina.engine.Triangulation4'> cV6cqb
+Caught exception
 

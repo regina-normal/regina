@@ -275,8 +275,7 @@ True
       <literal>std::optional</literal>.
      </para></listitem>
      <listitem><para>
-      When returning polymorphic objects (such as
-      <literal>Packet</literal> or <literal>StandardTriangulation</literal>),
+      When returning polymorphic objects (such as <literal>Packet</literal>),
       you cannot avoid returning by pointer since the exact type is not known
       at compile time.  In such cases, &regina; now returns a smart pointer
       (typically <literal>std::shared_ptr</literal> for packets and
@@ -431,7 +430,7 @@ True
    Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
    <emphasis>Regina: Software for low-dimensional topology,</emphasis>
    <literal>http://regina-normal.github.io/</literal>,
-   1999&ndash;2025.
+   1999&ndash;2026.
   </para></blockquote>
   <para>
    A &bibtex; entry for this reference is included below.
@@ -442,7 +441,7 @@ True
     title = {Regina: Software for low-dimensional topology},
     howpublished = {{\tt http://\allowbreak regina-normal.\allowbreak
         github.\allowbreak io/}},
-    year = {1999--2025}
+    year = {1999--2026}
 }
 </programlisting>
  </sect1>

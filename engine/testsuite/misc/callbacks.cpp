@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,7 +48,6 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 
 #include "testhelper.h"
 

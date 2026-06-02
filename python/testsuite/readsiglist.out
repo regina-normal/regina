@@ -5,65 +5,113 @@ Errors:
 The following could not be interpreted as link signatures:
 
 junk
+-> eabcdbadcvbZa
+-> fabcadefbcedvfpd
+Errors:
+The following could not be interpreted as link signatures:
+
+junk
 
 Dimension: 2
--> cPbbde
--> bcad
+-> cVgc
+-> bZf
+Errors:
+The following could not be interpreted as 2-D triangulation signatures:
+
+junk
+-> cVgc
+-> bZf
 Errors:
 The following could not be interpreted as 2-D triangulation signatures:
 
 junk
 
 Dimension: 3
--> fvPQcdecedekrsnrs
--> cHabj
+-> fFuC8hYTOTa
+-> clv-e
+Errors:
+The following could not be interpreted as 3-D triangulation signatures:
+
+junk
+-> fFuC8hYTOTa
+-> clv-e
 Errors:
 The following could not be interpreted as 3-D triangulation signatures:
 
 junk
 
 Dimension: 4
--> cMkabbb+aAa3blb
--> eLMQcbcddcddaaaa8a8a8a8a8a
+-> cNQhbWYl
+-> elAAB-rMm2TB3UD
+Errors:
+The following could not be interpreted as 4-D triangulation signatures:
+
+junk
+-> cNQhbWYl
+-> elAAB-rMm2TB3UD
 Errors:
 The following could not be interpreted as 4-D triangulation signatures:
 
 junk
 
 Dimension: 5
--> cMQabbbb-caaaaaa-c
--> cHaaab-f
+-> cNQ+ycp4bp4d
+-> clvv9-ej
+Errors:
+The following could not be interpreted as 5-D triangulation signatures:
+
+junk
+-> cNQ+ycp4bp4d
+-> clvv9-ej
 Errors:
 The following could not be interpreted as 5-D triangulation signatures:
 
 junk
 
 Dimension: 6
--> cPQcbbbbbb+1a+1a+1a+1aaya+1a
--> bGaa+1a
+-> cVQ6htatatatataAd
+-> bZ-hTb
+Errors:
+The following could not be interpreted as 6-D triangulation signatures:
+
+junk
+-> cVQ6htatatatataAd
+-> bZ-hTb
 Errors:
 The following could not be interpreted as 6-D triangulation signatures:
 
 junk
 
 Dimension: 7
--> cMQkabbbbbb++gaaaaaaaaaaaaaaa++g
--> cHaaaab+1b
+-> cNQQ-yCb2jWob2jWob2j4Fc
+-> clvvv1--eXf
+Errors:
+The following could not be interpreted as 7-D triangulation signatures:
+
+junk
+-> cNQQ-yCb2jWob2jWob2j4Fc
+-> clvvv1--eXf
 Errors:
 The following could not be interpreted as 7-D triangulation signatures:
 
 junk
 
 Dimension: 8
--> cPQQbbbbbbbb++1a++1alQua++1a++1a++1a++1a++1a
--> bGaaa++1a
+-> cVQQ+hJlaJlaJlaJlaJlaJlaJlaM0c
+-> bZ--XKwa
+Errors:
+The following could not be interpreted as 8-D triangulation signatures:
+
+junk
+-> cVQQ+hJlaJlaJlaJlaJlaJlaJlaM0c
+-> bZ--XKwa
 Errors:
 The following could not be interpreted as 8-D triangulation signatures:
 
 junk
 
 Non-existent file:
-None
+Caught exception
 
 Bad dimension:
 Caught exception

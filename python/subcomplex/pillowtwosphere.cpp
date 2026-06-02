@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,8 @@ using regina::PillowTwoSphere;
 void addPillowTwoSphere(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PillowTwoSphere)
 
-    auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere", rdoc_scope)
+    auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere",
+            rdoc::__class)
         .def(pybind11::init<const PillowTwoSphere&>(), rdoc::__copy)
         .def("triangle", &PillowTwoSphere::triangle,
             pybind11::return_value_policy::reference, rdoc::triangle)

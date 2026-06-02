@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,9 +30,9 @@
 
 /*! \file triangulation/dim2.h
  *  \brief Includes all headers for working with 2-dimensional triangulations.
- *  This includes headers for the main class Triangulation<2>, as well as the
- *  face classes Face<2,\a subdim>, the component classes Component<2> and
- *  BoundaryComponent<2>, and the isomorphism class Isomorphism<2>.
+ *  This includes headers for the main class `Triangulation<2>`, as well as the
+ *  face classes `Face<2, subdim>`, the component classes `Component<2>` and
+ *  `BoundaryComponent<2>`, and the isomorphism class `Isomorphism<2>`.
  */
 
 #ifndef __REGINA_DIM2_H

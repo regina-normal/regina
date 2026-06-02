@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,7 +36,7 @@
 #define __HYPERCOODINATEUI_H
 
 #include "hypersurface/normalhypersurfaces.h"
-#include "triangulation/dim4.h" // To avoid generic Triangulation<4>.
+#include "triangulation/dim4.h"
 
 #include "../packettabui.h"
 #include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
@@ -169,11 +169,6 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
          * Provides auto-resizing of columns.
          */
         void columnResized(int section, int oldSize, int newSize);
-
-        /**
-         * Note that preferences have changed.
-         */
-        void updatePreferences();
 };
 
 inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces) :

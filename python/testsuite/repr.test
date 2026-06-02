@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2025, Ben Burton
+# Copyright (c) 2007-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the Python repr() output for some of Regina's classes.
@@ -318,7 +318,7 @@ dump(SFSAlt.altSet(sfsAnnulus));
 # subcomplex/
 # ----------------------------------------------------------------------
 
-dump(StandardTriangulation.recognise(Example3.figureEight()))
+dump(StandardSubcomplex3.recognise(Example3.figureEight()))
 
 dump(TxIDiagonalCore(6,1))
 dump(TxIParallelCore())
@@ -351,13 +351,13 @@ dump(s.region().block(0))
 dump(s.region().block(0).block())
 dump(s.region().block(0).block().annulus(0))
 
-dump(BlockedSFSLoop.recognise(Triangulation3('kLLLLPQkcddfjgihjijpkrkaspoadj')))
-dump(BlockedSFSPair.recognise(Triangulation3('hLAvQkbccefggglpksulwb')))
-dump(BlockedSFSTriple.recognise(Triangulation3('kLALALMkbccfefihijjlpkusuueotr')))
-dump(PluggedTorusBundle.recognise(Triangulation3('kLLvAPQkbdfehgjiijjdwuurwmmaxn')))
-dump(TrivialTri.recognise(Triangulation3('cPcbbbaai').component(0)))
-dump(LayeredLoop.recognise(Triangulation3('cPcbbbqxh').component(0)))
-dump(LayeredTorusBundle.recognise(Triangulation3('hvLPQkcedgffggnnkaaeiw')))
+dump(BlockedSFSLoop.recognise(Triangulation3('kFidXeV8Y-vbOCgn2Imb')))
+dump(BlockedSFSPair.recognise(Triangulation3('hVCJ2+FGGirSeb')))
+dump(BlockedSFSTriple.recognise(Triangulation3('kxcHQ6qmZToAKJY504Oc')))
+dump(PluggedTorusBundle.recognise(Triangulation3('kxmJm8WmZVDbQvtBmDue')))
+dump(TrivialTri.recognise(Triangulation3('cV6gza').component(0)))
+dump(LayeredLoop.recognise(Triangulation3('cV6Wfa').component(0)))
+dump(LayeredTorusBundle.recognise(Triangulation3('hx1M19FGAwnhBa')))
 dump(PlugTriSolidTorus.recognise(Example3.poincare().component(0)))
 dump(TrivialTri.recognise(Example3.rp2xs1().component(0)))
 
@@ -376,7 +376,7 @@ dump(y)
 y.extend()
 dump(y)
 
-t = Triangulation3('kLLLMAMkcegfhhhijjjhqhaqjshhrw')
+t = Triangulation3('kpKHUdVmZ3IAaaaareTc')
 l = LayeredChainPair.recognise(t.component(0))
 dump(l)
 dump(l.chain(0))
@@ -386,7 +386,7 @@ dump(SpiralSolidTorus.recognise(l.chain(0).top(), l.chain(0).topVertexRoles()))
 # census/
 # ----------------------------------------------------------------------
 
-h = Census.lookup('cPcbbbiht')[0]
+h = Census.lookup('cV6cqb')[0]
 dump(h)
 # Do not dump the CensusDB object, since the output is filesystem-dependent.
 # dump(h.db())
@@ -456,7 +456,6 @@ dump(Signature('abbc.ac'))
 # ----------------------------------------------------------------------
 
 dump(FileInfo.identify(testpath + '/file3.rga'))
-dump(FileInfo.identify(testpath + '/pdf.test'))
 
 # ----------------------------------------------------------------------
 # progress/

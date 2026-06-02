@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -203,8 +203,8 @@ Tri3HomologyFundUI::Tri3HomologyFundUI(
 
     master->addLayout(fundLayout, tr("Fundamental Group"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3HomologyFundUI::updatePreferences);
 }
 
 regina::Packet* Tri3HomologyFundUI::getPacket() {
@@ -382,8 +382,9 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(
 
     invArea->addStretch(1);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    // If the unicode flag changes, redraw everything.
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3TuraevViroUI::refresh);
 }
 
 regina::Packet* Tri3TuraevViroUI::getPacket() {
@@ -506,11 +507,6 @@ bool Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
         }
     invariants->addTopLevelItem(item);
     return true;
-}
-
-void Tri3TuraevViroUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    refresh();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -786,8 +782,8 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(
 
     refreshLabels();
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3CellularInfoUI::updatePreferences);
 }
 
 

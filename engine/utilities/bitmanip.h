@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -193,7 +193,7 @@ class BitManipulatorByType<unsigned long long> {
  * \ingroup utilities
  */
 template <UnsignedCppInteger T>
-requires (std::popcount(sizeof(T)) == 1)
+requires (std::has_single_bit(sizeof(T)))
 class BitManipulator : public regina::detail::BitManipulatorByType<T> {
     public:
         /**

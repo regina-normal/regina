@@ -11,8 +11,88 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TightEncodable
-static const char *TightEncodable =
+// Docstring regina::python::doc::tightDecoding
+inline constexpr const char tightDecoding[] =
+R"doc(Reconstructs an integer or boolean from its given tight encoding. See
+the page on tight encodings for details.
+
+The tight encoding should be given as a string. If this string
+contains leading whitespace or any trailing characters at all
+(including trailing whitespace), then it will be treated as an invalid
+encoding (i.e., this routine will throw an exception).
+
+This routine does recognise infinity in the case where *IntOrBoolType*
+is regina::LargeInteger.
+
+If *IntOrBoolType* is one of Regina's arbitrary precision integer
+types, then this routine is identical to calling
+IntOrBoolType::tightDecoding().
+
+Exception ``InvalidArgument``:
+    The given string is not a tight encoding of an integer/boolean of
+    type *IntOrBoolType*. This includes the case where the encoding
+    _is_ a valid integer encoding but the integer itself is outside
+    the allowed range for *IntOrBoolType*.
+
+Python:
+    Since Python does not support templates, the interface for this
+    routine is a little different. The global routine
+    regina::tightDecoding() will return a Python integer; since these
+    are arbitrary precision, the decoding will never encounter an out-
+    of-range exceptions as it might with a native C++ integer type. If
+    you are trying to reconstruct a boolean, then the integer you
+    receive will be either 1 or 0 to represent ``True`` or ``False``
+    respectively. If you are trying to reconstruct one of Regina's
+    arbitrary precision integer types, you should instead call
+    Integer::tightDecoding() or LargeInteger::tightDecoding(), which
+    will return a Regina integer instead of a Python integer.
+
+Template parameter ``IntOrBoolType``:
+    The type of integer or boolean to reconstruct.
+
+Parameter ``enc``:
+    the tight encoding for an integer or boolean.
+
+Returns:
+    the integer or boolean represented by the given tight encoding.)doc";
+
+// Docstring regina::python::doc::tightEncoding_CppInteger
+inline constexpr const char tightEncoding_CppInteger[] =
+R"doc(Returns the tight encoding of the given native C++ integer. See the
+page on tight encodings for details.
+
+Python:
+    Signed integers of any size are supported here. If *value* fits
+    within the bounds of a C++ ``long`` then Python will call this
+    routine as ``tightEncoding<long>(value)`` (which is reasonably
+    fast). Otherwise Python will fall back to using arbitrary-
+    precision integers and use ``Integer(value).tightEncoding()``,
+    which is slower but will give the correct result.
+
+Parameter ``value``:
+    the integer to encode.
+
+Returns:
+    the resulting encoded string.)doc";
+
+// Docstring regina::python::doc::tightEncoding_bool
+inline constexpr const char tightEncoding_bool[] =
+R"doc(Returns the tight encoding of the given boolean. See the page on tight
+encodings for details.
+
+The booleans ``True`` and ``False`` are guaranteed to have the same
+tight encodings as the integers 1 and 0 respectively.
+
+Parameter ``value``:
+    the boolean to encode.
+
+Returns:
+    the resulting encoded string.)doc";
+
+struct TightEncodable {
+
+// Docstring regina::python::doc::TightEncodable::__class
+static constexpr const char __class[] =
 R"doc(A base class that assists with support for tight encodings and
 corresponding decodings.
 
@@ -67,88 +147,8 @@ Python:
     Not present, but the routines tightEncoding(), tightDecoding() and
     hash() will be provided directly through the various subclasses.)doc";
 
-// Docstring regina::python::doc::tightDecoding
-static const char *tightDecoding =
-R"doc(Reconstructs an integer or boolean from its given tight encoding. See
-the page on tight encodings for details.
-
-The tight encoding should be given as a string. If this string
-contains leading whitespace or any trailing characters at all
-(including trailing whitespace), then it will be treated as an invalid
-encoding (i.e., this routine will throw an exception).
-
-This routine does recognise infinity in the case where *IntOrBoolType*
-is regina::LargeInteger.
-
-If *IntOrBoolType* is one of Regina's arbitrary precision integer
-types, then this routine is identical to calling
-IntOrBoolType::tightDecoding().
-
-Exception ``InvalidArgument``:
-    The given string is not a tight encoding of an integer/boolean of
-    type *IntOrBoolType*. This includes the case where the encoding
-    _is_ a valid integer encoding but the integer itself is outside
-    the allowed range for *IntOrBoolType*.
-
-Python:
-    Since Python does not support templates, the interface for this
-    routine is a little different. The global routine
-    regina::tightDecoding() will return a Python integer; since these
-    are arbitrary precision, the decoding will never encounter an out-
-    of-range exceptions as it might with a native C++ integer type. If
-    you are trying to reconstruct a boolean, then the integer you
-    receive will be either 1 or 0 to represent ``True`` or ``False``
-    respectively. If you are trying to reconstruct one of Regina's
-    arbitrary precision integer types, you should instead call
-    Integer::tightDecoding() or LargeInteger::tightDecoding(), which
-    will return a Regina integer instead of a Python integer.
-
-Template parameter ``IntOrBoolType``:
-    The type of integer or boolean to reconstruct.
-
-Parameter ``enc``:
-    the tight encoding for an integer or boolean.
-
-Returns:
-    the integer or boolean represented by the given tight encoding.)doc";
-
-// Docstring regina::python::doc::tightEncoding
-static const char *tightEncoding =
-R"doc(Returns the tight encoding of the given native C++ integer. See the
-page on tight encodings for details.
-
-Python:
-    Signed integers of any size are supported here. If *value* fits
-    within the bounds of a C++ ``long`` then Python will call this
-    routine as ``tightEncoding<long>(value)`` (which is reasonably
-    fast). Otherwise Python will fall back to using arbitrary-
-    precision integers and use ``Integer(value).tightEncoding()``,
-    which is slower but will give the correct result.
-
-Parameter ``value``:
-    the integer to encode.
-
-Returns:
-    the resulting encoded string.)doc";
-
-// Docstring regina::python::doc::tightEncoding_2
-static const char *tightEncoding_2 =
-R"doc(Returns the tight encoding of the given boolean. See the page on tight
-encodings for details.
-
-The booleans ``True`` and ``False`` are guaranteed to have the same
-tight encodings as the integers 1 and 0 respectively.
-
-Parameter ``value``:
-    the boolean to encode.
-
-Returns:
-    the resulting encoded string.)doc";
-
-namespace TightEncodable_ {
-
-// Docstring regina::python::doc::TightEncodable_::hash
-static const char *hash =
+// Docstring regina::python::doc::TightEncodable::hash
+static constexpr const char hash[] =
 R"doc(Hashes this object to a non-negative integer, allowing it to be used
 for keys in hash tables.
 
@@ -166,8 +166,8 @@ Python:
 Returns:
     the integer hash of this object.)doc";
 
-// Docstring regina::python::doc::TightEncodable_::tightDecoding
-static const char *tightDecoding =
+// Docstring regina::python::doc::TightEncodable::tightDecoding
+static constexpr const char tightDecoding[] =
 R"doc(Reconstructs an object of type *T* from its given tight encoding. See
 the page on tight encodings for details.
 
@@ -185,8 +185,8 @@ Parameter ``enc``:
 Returns:
     the object represented by the given tight encoding.)doc";
 
-// Docstring regina::python::doc::TightEncodable_::tightEncoding
-static const char *tightEncoding =
+// Docstring regina::python::doc::TightEncodable::tightEncoding
+static constexpr const char tightEncoding[] =
 R"doc(Returns the tight encoding of this object. See the page on tight
 encodings for details.
 
@@ -200,7 +200,7 @@ Exception ``FailedPrecondition``:
 Returns:
     the resulting encoded string.)doc";
 
-}
+}; // struct TightEncodable
 
 } // namespace regina::python::doc
 

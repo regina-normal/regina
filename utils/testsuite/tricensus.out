@@ -134,6 +134,21 @@ Usage: tricensus <output-file>
 --------------------
 Exit code: 1
 ============================================================
+TEST: tricensus -t1 -i @INVALIDFILE@
+--------------------
+Starting census generation...
+0:1 0:0 0:3 0:2
+Finished.
+Output file @INVALIDFILE@ could not be written.
+--------------------
+Exit code: 1
+============================================================
+TEST: tricensus -t1 -i -s @INVALIDFILE@
+--------------------
+Signature file @INVALIDFILE@ could not be written.
+--------------------
+Exit code: 1
+============================================================
 TEST: tricensus -t2 -i -s @TESTOUT@
 --------------------
 Starting census generation...
@@ -145,67 +160,67 @@ Total triangulations: 61
 Exit code: 0
 --------------------
 Output:
-cMcabbjdw
-cMcabbjds
-cMcabbjqw
-cMcabbjxr
-cMcabbjij
-cMcabbjik
-cMcabbjaj
-cMcabbjak
-cMcabbjqs
-cMcabbjmk
-cMcabbidt
-cMcabbidu
-cMcabbifs
-cMcabbifw
-cMcabbiqt
-cMcabbiqu
-cMcabbijk
-cMcabbijr
-cMcabbile
-cMcabbick
-cMcabbicj
-cMcabbiii
-cMcabbiai
-cMcabbgre
-cMcabbgdv
-cMcabbgds
-cMcabbgci
-cMcabbgqv
-cMcabbgqs
-cMcabbgqw
-cMcabbgje
-cMcabbgig
-cMcabbgij
-cMcabbgik
-cMcabbgag
-cMcabbgaj
-cPcbbbaaa
-cPcbbbaai
-cPcbbbali
-cPcbbbalm
-cPcbbbabb
-cPcbbbdht
-cPcbbbdhq
-cPcbbbabk
-cPcbbbcbd
-cPcbbbqxh
-cPcbbbiht
-cPcbbbihq
-cPcbbbade
-cPcbbbadh
-cPcbbbadu
-cPcbbbajk
-cPcbbbajs
-cPcbbbahh
-cPcbbbcbt
-cPcbbbchn
-cPcbbbcbq
-cPcbbbdei
-cPcbbbdxm
-cPcbbbcjt
-cPcbbbchw
+cN6OCb
+cN6Omb
+cN6iyb
+cN6iib
+cN6OWa
+cN6Okb
+cN6OXa
+cN6Obb
+cN6i0a
+cN6Oab
+cJ6etj
+cJ6etk
+cJ6eGi
+cJ6eGg
+cJ6ebj
+cJ6ebk
+cJ6e0j
+cJ6e0l
+cJ6edh
+cJ6eMl
+cJ6eMj
+cJ6ejh
+cJ6ehh
+cJ6gej
+cN6Iub
+cN6Imb
+cJ6gag
+cN6cqb
+cN6cyb
+cN6cib
+cJ6guj
+cN6I4a
+cN6Iab
+cN6IWa
+cN6I5a
+cN6IXa
+cV6Mza
+cV6gza
+cV6cIa
+cV6g5a
+cR6oaa
+cV6cGa
+cV6iab
+cR6eIe
+cR6gia
+cV6Wfa
+cV6cqb
+cV6cab
+cV6Ila
+cV6Ika
+cV6IAa
+cR6eIk
+cR6eIi
+cV6gaa
+cR6enh
+cR6ebf
+cR6ebh
+cV6I6a
+cV6O9a
+cR6eMk
+cR6ebl
 ============================================================
 TEST: tricensus -t2 -i -S @TESTOUT@
 --------------------
@@ -218,67 +233,67 @@ Total triangulations: 61
 Exit code: 0
 --------------------
 Output:
-cMcabbjdw $"#'-
-cMcabbjds $"#'-
-cMcabbjqw $#"1+
-cMcabbjxr $"#!)
-cMcabbjij $"#'7
-cMcabbjik $"#'7
-cMcabbjaj $"#!1
-cMcabbjak $"#!1
-cMcabbjqs $"#!0
-cMcabbjmk $"#'2
-cMcabbidt $"#(0
-cMcabbidu $"#(0
-cMcabbifs $"#(0
-cMcabbifw $"#(0
-cMcabbiqt $"#(0
-cMcabbiqu $"#(0
-cMcabbijk $"#!)
-cMcabbijr $"#!)
-cMcabbile $"#!)
-cMcabbick $"#(8
-cMcabbicj $"#(8
-cMcabbiii $"#(8
-cMcabbiai $"#!1
-cMcabbgre $"#"%
-cMcabbgdv $"#'-
-cMcabbgds $"#(0
-cMcabbgci $"#'2
-cMcabbgqv $"#"4
-cMcabbgqs $"#"4
-cMcabbgqw $"#"4
-cMcabbgje $"#'$
-cMcabbgig $"#'7
-cMcabbgij $"#'7
-cMcabbgik $"#'7
-cMcabbgag $"#!1
-cMcabbgaj $"#!1
-cPcbbbaaa $"#!!
-cPcbbbaai $"#!!
-cPcbbbali $"#!!
-cPcbbbalm $"#!!
-cPcbbbabb $"#12
-cPcbbbdht $"#')
-cPcbbbdhq $"#')
-cPcbbbabk $"#,+
-cPcbbbcbd $"#73
-cPcbbbqxh $"#!#
-cPcbbbiht $"#&"
-cPcbbbihq $"#"$
-cPcbbbade $"#!"
-cPcbbbadh $"#!"
-cPcbbbadu $"#!"
-cPcbbbajk $"#!"
-cPcbbbajs $"#!"
-cPcbbbahh $"#!"
-cPcbbbcbt $"#')
-cPcbbbchn $"#')
-cPcbbbcbq $"#')
-cPcbbbdei $"#&#
-cPcbbbdxm $"##&
-cPcbbbcjt $"#57
-cPcbbbchw $"#64
+cN6OCb $"#0-
+cN6Omb $"#0-
+cN6iyb $"#0-
+cN6iib $"#0-
+cN6OWa $#"*%
+cN6Okb $"#0-
+cN6OXa $"#03
+cN6Obb $"#03
+cN6i0a $"#0(
+cN6Oab $"#46
+cJ6etj $"#50
+cJ6etk $"#50
+cJ6eGi $"#46
+cJ6eGg $"#46
+cJ6ebj $"#45
+cJ6ebk $"#45
+cJ6e0j $"#40
+cJ6e0l $"#40
+cJ6edh $"#56
+cJ6eMl $"#55
+cJ6eMj $"#55
+cJ6ejh $"#4!
+cJ6ehh $"#4/
+cJ6gej $"#55
+cN6Iub $"#0-
+cN6Imb $"#50
+cJ6gag $"#46
+cN6cqb $"#0-
+cN6cyb $"#0-
+cN6cib $"#0-
+cJ6guj $"#40
+cN6I4a $"#56
+cN6Iab $"#56
+cN6IWa $"#56
+cN6I5a $"#-.
+cN6IXa $"#03
+cV6Mza $"#!(
+cV6gza $"#"'
+cV6cIa $"#2#
+cV6g5a $"#!(
+cR6oaa $"#!(
+cV6cGa $"#7&
+cV6iab $"#'0
+cR6eIe $"#2#
+cR6gia $"#0$
+cV6Wfa $"#!.
+cV6cqb $"#&'
+cV6cab $"#"-
+cV6Ila $"#/7
+cV6Ika $"#/7
+cV6IAa $"#&.
+cR6eIk $"#07
+cR6eIi $"#07
+cV6gaa $"#!'
+cR6enh $"#2#
+cR6ebf $#"*!
+cR6ebh $"#-8
+cV6I6a $"#7+
+cV6O9a $"##3
+cR6eMk $#"41
+cR6ebl $#"/$
 ============================================================
 TEST: tricensus -t2 -i -e @TESTOUT@
 --------------------
@@ -367,19 +382,19 @@ Total triangulations: 13
 Exit code: 0
 --------------------
 Output:
-cMabdd $"#.
-cMabcc $"#.
-cMabcd $"#.
-cbcbd $#":
-cbcbb $#":
-cPbbaa $"#"
-cPbbac $"#"
-cPbbbe $"#1
-cPbbde $"#(
-cHaba $"#)
-cHabb $"#6
-cHabe $"##
-cba $"#"
+cJMi $"#8
+cNgc $"#8
+cJwi $"#8
+ct7i $#"(
+ch9a $"#8
+cVwb $"#4
+cRMe $"#2
+cRwe $"#$
+cVgc $"#:
+cp9c $"#4
+cl9e $"#C
+cp9a $"#:
+cx1h $"#4
 ============================================================
 TEST: tricensus -2 -t2 -e @TESTOUT@
 --------------------
@@ -459,12 +474,12 @@ Total triangulations: 6
 Exit code: 0
 --------------------
 Output:
-cHaaj
-cHaab
-cHaba
-cHabd
-cHabh
-cHabj
+cxn-m
+cxn-o
+cpv-g
+cpv-i
+cpv-q
+clv-e
 ============================================================
 TEST: tricensus -t2 -B4 -s --allowinvalid @TESTOUT@
 --------------------
@@ -477,16 +492,16 @@ Total triangulations: 10
 Exit code: 0
 --------------------
 Output:
-cHaad
-cHaaj
-cHaap
-cHaab
-cHaba
-cHabd
-cHabb
-cHabh
-cHabj
-cHabm
+ctn-C
+cxn-m
+ctn-y
+cxn-o
+cpv-g
+cpv-i
+clv-q
+cpv-q
+clv-e
+cpv-c
 ============================================================
 TEST: tricensus -4 -t2 -B6 -s @TESTOUT@
 --------------------
@@ -499,14 +514,14 @@ Total triangulations: 8
 Exit code: 0
 --------------------
 Output:
-cGbaa0a
-cGbaaWb
-cGbaaca
-cHaabaa
-cHaab2b
-cHaab-a
-cHaab1b
-cHaab0b
+ct10-Kb
+ct10-ac
+cx10-2a
+cpv1-ya
+clv1-ab
+cpv1-ia
+clv1-8b
+cpv1-8a
 ============================================================
 TEST: tricensus -4 -t2 -B6 -s --allowinvalid @TESTOUT@
 --------------------
@@ -519,20 +534,20 @@ Total triangulations: 14
 Exit code: 0
 --------------------
 Output:
-cGbaa0a
-cGbaaWb
-cGbaa1a
-cGbaaca
-cGbaa5a
-cHaabaa
-cHaab2b
-cHaabJb
-cHaab-a
-cHaab+a
-cHaab4a
-cHaab1b
-cHaab0b
-cHaabAa
+ct10-Kb
+ct10-ac
+cx10-4a
+cx10-2a
+cx10-Ya
+cpv1-ya
+clv1-ab
+cpv1-Ga
+cpv1-ia
+clv1-qa
+cpv1-ga
+clv1-8b
+cpv1-8a
+cpv1-+a
 ============================================================
 TEST: tricensus -2 -t2 -s @TESTOUT@
 --------------------
@@ -548,19 +563,19 @@ Total triangulations: 13
 Exit code: 0
 --------------------
 Output:
-cMabdd
-cMabcc
-cMabcd
-cbcbd
-cbcbb
-cPbbaa
-cPbbac
-cPbbbe
-cPbbde
-cHaba
-cHabb
-cHabe
-cba
+cJMi
+cNgc
+cJwi
+ct7i
+ch9a
+cVwb
+cRMe
+cRwe
+cVgc
+cp9c
+cl9e
+cp9a
+cx1h
 ============================================================
 TEST: tricensus -2 -t2 -s --allowinvalid @TESTOUT@
 --------------------
@@ -576,19 +591,19 @@ Total triangulations: 13
 Exit code: 0
 --------------------
 Output:
-cMabdd
-cMabcc
-cMabcd
-cbcbd
-cbcbb
-cPbbaa
-cPbbac
-cPbbbe
-cPbbde
-cHaba
-cHabb
-cHabe
-cba
+cJMi
+cNgc
+cJwi
+ct7i
+ch9a
+cVwb
+cRMe
+cRwe
+cVgc
+cp9c
+cl9e
+cp9a
+cx1h
 ============================================================
 TEST: tricensus -t1 -i -s @TESTOUT@
 --------------------
@@ -600,11 +615,11 @@ Total triangulations: 5
 Exit code: 0
 --------------------
 Output:
-bkaajj
-bkaajn
-bkaaid
-bkaagb
-bkaagj
+bNjc
+bNjd
+bJrc
+bNha
+bNhc
 ============================================================
 TEST: tricensus -t1 -i -s --allowinvalid @TESTOUT@
 --------------------
@@ -616,11 +631,11 @@ Total triangulations: 5
 Exit code: 0
 --------------------
 Output:
-bkaajj
-bkaajn
-bkaaid
-bkaagb
-bkaagj
+bNjc
+bNjd
+bJrc
+bNha
+bNhc
 ============================================================
 TEST: tricensus -4 -t2 -i -s @TESTOUT@
 --------------------
@@ -634,29 +649,29 @@ Total triangulations: 23
 Exit code: 0
 --------------------
 Output:
-cAkaabb2aoa2aoa
-cAkaabb+aoaqbga
-cAkaabb+aoa+aoa
-cAkaabb+a+a+a+a
-cAkaabb+aKa+aKa
-cMkabbb-aaaaa-a
-cMkabbb2a-ataqb
-cMkabbb2a2bYbba
-cMkabbb2aHaua2a
-cMkabbb2aBaua2a
-cMkabbb2a4aaaca
-cMkabbb-aNaNaca
-cMkabbb+aaa0bPb
-cMkabbb2aaaaa2a
-cMkabbb+aAa3blb
-cMkabbb+aaaaa+a
-cPkbbbbaaaaaaaa
-cPkbbbb4aaaaa4a
-cPkbbbb+a1asaEb
-cPkbbbb+a+aAa+a
-cPkbbbb-a-a-aUa
-cPkbbbb3bSa3baa
-cPkbbbb+aDbDbaa
+chQ3aWga
+chQ3aWPa
+chQ3aXgh
+chQhbbhh
+chQhHb3j
+cJQhOmzKb
+cNQ3aamk
+cJQ3bdHJc
+cNQ3Gr8g
+cJQ3bbJVb
+cNQ3WWWg
+cJQ3Hmizd
+cNQ3aZzm
+cNQ3adZg
+cNQhbWYl
+cNQhbddh
+cVQhdddd
+cVQhZbZb
+cRQhIcUOb
+cRQhce-qa
+cVQhbbbi
+cRQxMbd4b
+cRQhcHcra
 ============================================================
 TEST: tricensus -4 -t2 -i -s --allowinvalid @TESTOUT@
 --------------------
@@ -670,29 +685,29 @@ Total triangulations: 23
 Exit code: 0
 --------------------
 Output:
-cAkaabb2aoa2aoa
-cAkaabb+aoaqbga
-cAkaabb+aoa+aoa
-cAkaabb+a+a+a+a
-cAkaabb+aKa+aKa
-cMkabbb-aaaaa-a
-cMkabbb2a-ataqb
-cMkabbb2a2bYbba
-cMkabbb2aHaua2a
-cMkabbb2aBaua2a
-cMkabbb2a4aaaca
-cMkabbb-aNaNaca
-cMkabbb+aaa0bPb
-cMkabbb2aaaaa2a
-cMkabbb+aAa3blb
-cMkabbb+aaaaa+a
-cPkbbbbaaaaaaaa
-cPkbbbb4aaaaa4a
-cPkbbbb+a1asaEb
-cPkbbbb+a+aAa+a
-cPkbbbb-a-a-aUa
-cPkbbbb3bSa3baa
-cPkbbbb+aDbDbaa
+chQ3aWga
+chQ3aWPa
+chQ3aXgh
+chQhbbhh
+chQhHb3j
+cJQhOmzKb
+cNQ3aamk
+cJQ3bdHJc
+cNQ3Gr8g
+cJQ3bbJVb
+cNQ3WWWg
+cJQ3Hmizd
+cNQ3aZzm
+cNQ3adZg
+cNQhbWYl
+cNQhbddh
+cVQhdddd
+cVQhZbZb
+cRQhIcUOb
+cRQhce-qa
+cVQhbbbi
+cRQxMbd4b
+cRQhcHcra
 ============================================================
 TEST: tricensus -2 -t4 -i -p
 --------------------
@@ -889,13 +904,13 @@ Total triangulations: 7
 Exit code: 0
 --------------------
 Output:
-eLbcbdaf
-eLbcbdec
-efPacdca
-efMacdcd
-efMacdce
-efMacdba
-efMacdbd
+ehICfb
+ehICfc
+exJ8Hc
+exJ8rc
+exJ8ra
+exC8Hc
+exC8Hb
 ============================================================
 TEST: tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-internal-4.pairs
 --------------------
@@ -908,11 +923,11 @@ Total triangulations: 5
 Exit code: 0
 --------------------
 Output:
-eLMcbdabb
-eLMcbddbc
-evQcddbbb
-evQcddbfc
-evQcddcfb
+ehAvK
+ehAvy
+exBhQ
+exBhj
+exBhH
 ============================================================
 TEST: tricensus -s -o -f -P @TESTOUT@ < @TESTDIR@/dim3-bdry2-3.pairs
 --------------------
@@ -925,14 +940,14 @@ Total triangulations: 8
 Exit code: 0
 --------------------
 Output:
-dHKcaccbpf
-dHKcaccbag
-dHKcaccjag
-dHHcaccbao
-dHHcaccjao
-dHHcaccnao
-dLIacccaao
-dLIacccaak
+dNDVfha
+dNDVfJc
+dN2Vftc
+dNDVjJc
+dN2VfJb
+dN2Vfdc
+d-v-mZa
+d-v-yMb
 ============================================================
 TEST: tricensus -s -o -f -P @TESTOUT@ < @TESTDIR@/dim3-internal-3.pairs
 --------------------
@@ -945,36 +960,36 @@ Total triangulations: 30
 Exit code: 0
 --------------------
 Output:
-dLQabccbcjb
-dLQabccbcgo
-dLQabccbckv
-dLQabccbjrb
-dLQabccbrwb
-dLQabccbcjn
-dLQabccbcjj
-dLQacbcbgbb
-dLQacbcbgbj
-dLQabccbcbv
-dLQabccbcsv
-dLQabccbcss
-dLQabccbcsw
-dLQabccbcon
-dLQabccbcor
-dLQbcccaacr
-dLQbcccaacv
-dLQbcccaigs
-dLQbcccaacj
-dLQbcccaicj
-dLQbcccaajr
-dLQbcccains
-dLQbcccaank
-dLQbcccaajj
-dLQbcccdmgv
-dLQbcccdugn
-dLQbcccdigf
-dLQbcccdigv
-dLQbccchhgb
-dLQbccchhrw
+dhZhGaa
+dN0h4ea
+dN0h4wa
+dN0hWwa
+dN0haxa
+dN0h4mc
+dN0h4md
+dhZhyaa
+dhZhyac
+dN0h4ab
+dN0h4kb
+dN0hWkb
+dN0h4ke
+dN0hWUa
+dN0h4If
+dp1NzMe
+dp1Nzga
+dp1hzmb
+dp1NzMc
+dp1hzMc
+dp1NzOc
+dp1hzSf
+dp1NzOe
+dp1NzQc
+dp1hjOc
+dp1hXYc
+dp1h5Mc
+dp1hjMc
+dp1haga
+dp1hawe
 ============================================================
 TEST: tricensus -4 -s -o -f -P @TESTOUT@ < @TESTDIR@/dim4-bdry2-2.pairs
 --------------------
@@ -987,9 +1002,9 @@ Total triangulations: 3
 Exit code: 0
 --------------------
 Output:
-cHIbbbaaaava
-cHkbbbaaaaaa
-cHkbbb-aaaaa
+cNs-gyya
+cVs-yyya
+cVs-iiia
 ============================================================
 TEST: tricensus -4 -s -o -f -P @TESTOUT@ < @TESTDIR@/dim4-internal-2.pairs
 --------------------
@@ -1002,9 +1017,9 @@ Total triangulations: 5
 Exit code: 0
 --------------------
 Output:
-cMkabbb2aHaua2a
-cMkabbb2a4aaaca
-cMkabbb2aaaaa2a
-cPkbbbbaaaaaaaa
-cPkbbbb-a-a-aUa
+cNQ3Gr8g
+cNQ3WWWg
+cNQ3adZg
+cVQhdddd
+cVQhbbbi
 ============================================================

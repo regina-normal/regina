@@ -1,0 +1,321 @@
+============================================================
+TEST: sigconvert
+--------------------
+Please give an isomorphism signature.
+
+Usage: sigconvert [ <isosig> ... | - ]
+  -k, --knot                  Input is a knot/link signature
+  -2, --dim2                  Input is a 2-D isomorphism signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
+  -d, --dim=<dimension>       Input is an isomorphism signature for the given
+                              dimension of triangulation (2 ≤ dimension ≤ 8)
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -v, --version               Show which version of Regina is being used
+      --help                  Show this help message
+--------------------
+Exit code: 1
+============================================================
+TEST: sigconvert foo
+--------------------
+ERROR: Invalid 3-dimensional isomorphism signature: foo
+--------------------
+Exit code: 2
+============================================================
+TEST: sigconvert -2 -3 cV6IAa
+--------------------
+You cannot pass more than one of --knot, --dim2, --dim3, --dim4, or --dim.
+
+Usage: sigconvert [ <isosig> ... | - ]
+  -k, --knot                  Input is a knot/link signature
+  -2, --dim2                  Input is a 2-D isomorphism signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
+  -d, --dim=<dimension>       Input is an isomorphism signature for the given
+                              dimension of triangulation (2 ≤ dimension ≤ 8)
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -v, --version               Show which version of Regina is being used
+      --help                  Show this help message
+--------------------
+Exit code: 1
+============================================================
+TEST: sigconvert -k -3 cV6IAa
+--------------------
+You cannot pass more than one of --knot, --dim2, --dim3, --dim4, or --dim.
+
+Usage: sigconvert [ <isosig> ... | - ]
+  -k, --knot                  Input is a knot/link signature
+  -2, --dim2                  Input is a 2-D isomorphism signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
+  -d, --dim=<dimension>       Input is an isomorphism signature for the given
+                              dimension of triangulation (2 ≤ dimension ≤ 8)
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -v, --version               Show which version of Regina is being used
+      --help                  Show this help message
+--------------------
+Exit code: 1
+============================================================
+TEST: sigconvert --dim=0 cV6IAa
+--------------------
+The dimension must be an integer between 2 and 8 inclusive.
+
+Usage: sigconvert [ <isosig> ... | - ]
+  -k, --knot                  Input is a knot/link signature
+  -2, --dim2                  Input is a 2-D isomorphism signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
+  -d, --dim=<dimension>       Input is an isomorphism signature for the given
+                              dimension of triangulation (2 ≤ dimension ≤ 8)
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -v, --version               Show which version of Regina is being used
+      --help                  Show this help message
+--------------------
+Exit code: 1
+============================================================
+TEST: sigconvert --dim=1 cV6IAa
+--------------------
+The dimension must be an integer between 2 and 8 inclusive.
+
+Usage: sigconvert [ <isosig> ... | - ]
+  -k, --knot                  Input is a knot/link signature
+  -2, --dim2                  Input is a 2-D isomorphism signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
+  -d, --dim=<dimension>       Input is an isomorphism signature for the given
+                              dimension of triangulation (2 ≤ dimension ≤ 8)
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -v, --version               Show which version of Regina is being used
+      --help                  Show this help message
+--------------------
+Exit code: 1
+============================================================
+TEST: sigconvert --dim=16 cV6IAa
+--------------------
+The dimension must be an integer between 2 and 8 inclusive.
+
+Usage: sigconvert [ <isosig> ... | - ]
+  -k, --knot                  Input is a knot/link signature
+  -2, --dim2                  Input is a 2-D isomorphism signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
+  -d, --dim=<dimension>       Input is an isomorphism signature for the given
+                              dimension of triangulation (2 ≤ dimension ≤ 8)
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -v, --version               Show which version of Regina is being used
+      --help                  Show this help message
+--------------------
+Exit code: 1
+============================================================
+TEST: sigconvert -k cV6IAa
+--------------------
+ERROR: Invalid knot/link signature: cV6IAa
+--------------------
+Exit code: 2
+============================================================
+TEST: sigconvert -2 cV6IAa
+--------------------
+ERROR: Invalid 2-dimensional isomorphism signature: cV6IAa
+--------------------
+Exit code: 2
+============================================================
+TEST: sigconvert -4 cV6IAa
+--------------------
+ERROR: Invalid 4-dimensional isomorphism signature: cV6IAa
+--------------------
+Exit code: 2
+============================================================
+TEST: sigconvert --dim=8 cV6IAa
+--------------------
+ERROR: Invalid 8-dimensional isomorphism signature: cV6IAa
+--------------------
+Exit code: 2
+============================================================
+TEST: sigconvert cV6IAa -
+--------------------
+A dash (-) indicates that you will supply signatures via standard input.
+However, you also appear to be supplying signatures on the command line.
+You may use either standard input or the command line, but not both.
+
+Usage: sigconvert [ <isosig> ... | - ]
+  -k, --knot                  Input is a knot/link signature
+  -2, --dim2                  Input is a 2-D isomorphism signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
+  -d, --dim=<dimension>       Input is an isomorphism signature for the given
+                              dimension of triangulation (2 ≤ dimension ≤ 8)
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -v, --version               Show which version of Regina is being used
+      --help                  Show this help message
+--------------------
+Exit code: 1
+============================================================
+TEST: sigconvert - cV6IAa
+--------------------
+A dash (-) indicates that you will supply signatures via standard input.
+However, you also appear to be supplying signatures on the command line.
+You may use either standard input or the command line, but not both.
+
+Usage: sigconvert [ <isosig> ... | - ]
+  -k, --knot                  Input is a knot/link signature
+  -2, --dim2                  Input is a 2-D isomorphism signature
+  -3, --dim3                  Input is a 3-D isomorphism signature (default)
+  -4, --dim4                  Input is a 4-D isomorphism signature
+  -d, --dim=<dimension>       Input is an isomorphism signature for the given
+                              dimension of triangulation (2 ≤ dimension ≤ 8)
+  -g, --gen=<generation>      Output first-generation signatures (--gen=1) or
+                              second-generation signatures (--gen=2, default)
+  -v, --version               Show which version of Regina is being used
+      --help                  Show this help message
+--------------------
+Exit code: 1
+============================================================
+TEST: sigconvert cV6IAa cPcbbbiht
+--------------------
+cV6IAa
+cV6cqb
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -g1 cV6IAa cPcbbbiht
+--------------------
+cPcbbbadu
+cPcbbbiht
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -k gVc1JwUJ gabcdgaecfgbfdeLwto
+--------------------
+gVc1JwUJ
+gVc1JwUJ
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -k -g1 gVc1JwUJ gabcdgaecfgbfdeLwto
+--------------------
+gabcdgaecfgbfdeLwto
+gabcdgaecfgbfdeLwto
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -2 cRMe cPbbac
+--------------------
+cRMe
+cRMe
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -2 -g1 cRMe cPbbac
+--------------------
+cPbbac
+cPbbac
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -4 cNQhbWYl cMkabbb+aAa3blb
+--------------------
+cNQhbWYl
+cNQhbWYl
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -4 -g1 cNQhbWYl cMkabbb+aAa3blb
+--------------------
+cMkabbb+aAa3blb
+cMkabbb+aAa3blb
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert --dim=8 bZ--XKwa bGaaa++1a
+--------------------
+bZ--XKwa
+bZ--XKwa
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert --dim=8 -g1 bZ--XKwa bGaaa++1a
+--------------------
+bGaaa++1a
+bGaaa++1a
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert a
+--------------------
+a
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -g1 a
+--------------------
+a
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -k a
+--------------------
+a
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -k -g1 a
+--------------------
+a
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -k aaa
+--------------------
+aaa
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -k -g1 aaa
+--------------------
+aaa
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -k _
+--------------------
+_
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert -k -g1 _
+--------------------
+_
+--------------------
+Exit code: 0
+============================================================
+TEST: sigconvert - < @TESTDIR@/sigs.txt
+--------------------
+epAA3aaGi
+ehrBRr4cl
+ehrBRrici
+ehrBRraal
+ehrBRraGg
+ehrBRraUj
+ehrBRraIf
+ehrBRraaj
+ehrBRraGe
+ehrBRraIi
+ehABVqwng
+ehABVqwmk
+elsBF4sWuc
+epsBFqKLl
+epsBFqKrf
+elsB34iPtc
+epAB3aaSi
+epABFaiwg
+epABFu4ke
+--------------------
+Exit code: 0
+============================================================

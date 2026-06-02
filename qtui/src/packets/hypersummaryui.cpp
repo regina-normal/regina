@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -151,8 +151,9 @@ HyperSummaryUI::HyperSummaryUI(
     // Add some space at the end.
     paneLayout->addStretch(1);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    // If the unicode flag changes, redraw everything.
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &HyperSummaryUI::refresh);
 }
 
 regina::Packet* HyperSummaryUI::getPacket() {
@@ -389,11 +390,5 @@ void HyperSummaryUI::refresh() {
         // does not support spun normal surfaces.
         totSpun->hide();
     }
-}
-
-void HyperSummaryUI::updatePreferences() {
-    // It's possible that the unicode flag has changed.
-    // Redraw everything.
-    refresh();
 }
 

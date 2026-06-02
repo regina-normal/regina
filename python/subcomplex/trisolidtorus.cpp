@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,8 +40,8 @@ using regina::TriSolidTorus;
 void addTriSolidTorus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TriSolidTorus)
 
-    auto c = pybind11::class_<TriSolidTorus, regina::StandardTriangulation>
-            (m, "TriSolidTorus", rdoc_scope)
+    auto c = pybind11::class_<TriSolidTorus, regina::StandardSubcomplex<3>>
+            (m, "TriSolidTorus", rdoc::__class)
         .def(pybind11::init<const TriSolidTorus&>(), rdoc::__copy)
         .def("swap", &TriSolidTorus::swap, rdoc::swap)
         .def("tetrahedron", &TriSolidTorus::tetrahedron,
@@ -57,8 +57,7 @@ void addTriSolidTorus(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);
-
-    regina::python::add_global_swap<TriSolidTorus>(m, rdoc::global_swap);
+    regina::python::add_global_swap<TriSolidTorus, rdoc>(m);
 
     RDOC_SCOPE_END
 }

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/cyclotomic.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Cyclotomic;
 using regina::Rational;
@@ -43,7 +45,7 @@ using regina::Rational;
 void addCyclotomic(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Cyclotomic)
 
-    auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic", rdoc_scope)
+    auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, int>(), rdoc::__init_2)
@@ -51,8 +53,7 @@ void addCyclotomic(pybind11::module_& m) {
         .def(pybind11::init<const Cyclotomic&>(), rdoc::__copy)
         .def(pybind11::init([](size_t field, const std::vector<Rational>& c) {
             return new Cyclotomic(field, c.begin(), c.end());
-        }), pybind11::arg("field"), pybind11::arg("coefficients"),
-            rdoc::__init_4)
+        }), "field"_a, "coefficients"_a, rdoc::__init_4)
         .def("init", &Cyclotomic::init, rdoc::init)
         .def("field", &Cyclotomic::field, rdoc::field)
         .def("degree", &Cyclotomic::degree, rdoc::degree)
@@ -66,7 +67,7 @@ void addCyclotomic(pybind11::module_& m) {
         }, rdoc::__array_2)
         .def("polynomial", &Cyclotomic::polynomial, rdoc::polynomial)
         .def("evaluate", &Cyclotomic::evaluate,
-            pybind11::arg("whichRoot") = 1, rdoc::evaluate)
+            "whichRoot"_a = 1, rdoc::evaluate)
         .def("swap", &Cyclotomic::swap, rdoc::swap)
         .def("negate", &Cyclotomic::negate, rdoc::negate)
         .def("invert", &Cyclotomic::invert, rdoc::invert)
@@ -77,14 +78,14 @@ void addCyclotomic(pybind11::module_& m) {
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
         .def(pybind11::self /= pybind11::self, rdoc::__idiv_2)
-        .def(pybind11::self * regina::Rational(), rdoc_global::__mul)
-        .def(regina::Rational() * pybind11::self, rdoc_global::__mul_2)
-        .def(pybind11::self / regina::Rational(), rdoc_global::__div)
-        .def(pybind11::self + pybind11::self, rdoc_global::__add)
-        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
-        .def(pybind11::self * pybind11::self, rdoc_global::__mul_3)
-        .def(pybind11::self / pybind11::self, rdoc_global::__div_2)
-        .def(- pybind11::self, rdoc_global::__sub)
+        .def(pybind11::self * regina::Rational(), rdoc::__mul)
+        .def(regina::Rational() * pybind11::self, rdoc::__mul_2)
+        .def(pybind11::self / regina::Rational(), rdoc::__div)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_3)
+        .def(pybind11::self / pybind11::self, rdoc::__div_2)
+        .def(- pybind11::self, rdoc::__sub)
         .def_static("cyclotomic", [](size_t n) {
             return new regina::Polynomial<regina::Rational>(
                 Cyclotomic::cyclotomic(n));
@@ -96,8 +97,7 @@ void addCyclotomic(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<Cyclotomic>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Cyclotomic, rdoc>(m);
 
     RDOC_SCOPE_END
 }

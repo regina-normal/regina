@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -251,13 +251,8 @@ bool FilterPropUI::notifyOptionsChanged() {
 
         // We do not catch exceptions in the string-to-integer conversion,
         // since our regex should have prevented any possible problems.
-#if QT_VERSION >= QT_VERSION_CHECK(5,15,0)
         for (const auto& ec : ecText.split(reECSeps, Qt::SkipEmptyParts))
             filter->addEulerChar(ec.toUtf8().constData());
-#else
-        for (const auto& ec : ecText.split(reECSeps, QString::SkipEmptyParts))
-            filter->addEulerChar(ec.toUtf8().constData());
-#endif
 
         // Refill the text box so that it looks nice.
         eulerList->setText(filterECList());
@@ -310,7 +305,7 @@ QString FilterPropUI::filterECList() {
         return QString();
 
     auto it = ecs.rbegin();
-    QString ans = (*it).stringValue().c_str();
+    QString ans = it->stringValue().c_str();
     for (++it; it != ecs.rend(); ++it) {
         ans.append(", ");
         ans.append(it->stringValue().c_str());

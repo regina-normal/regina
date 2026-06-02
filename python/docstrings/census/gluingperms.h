@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::GluingPerms
-constexpr const char *GluingPerms =
+struct GluingPerms {
+
+// Docstring regina::python::doc::GluingPerms::__class
+static constexpr const char __class[] =
 R"doc(Represents a specific set of gluing permutations to complement a
 particular pairwise matching of simplex facets. Given a pairwise
 matching of facets (as described by class FacetPairing<dim>), each
@@ -59,17 +61,15 @@ Template parameter ``dim``:
     the dimension of the underlying triangulation that is being
     modelled.)doc";
 
-namespace GluingPerms_ {
-
-// Docstring regina::python::doc::GluingPerms_::__copy
-constexpr const char *__copy =
+// Docstring regina::python::doc::GluingPerms::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given gluing permutation set.
 
 Parameter ``src``:
     the gluing permutations to copy.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::__eq
-constexpr const char *__eq =
+// Docstring regina::python::doc::GluingPerms::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given gluing permutation set are identical.
 
 To be identical, the two sets must use identical facet pairings and
@@ -81,8 +81,8 @@ Parameter ``other``:
 Returns:
     ``True`` if and only if this and the given set are identical.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::__init
-constexpr const char *__init =
+// Docstring regina::python::doc::GluingPerms::__init
+static constexpr const char __init[] =
 R"doc(Creates a new permutation set. All internal permutations will be
 marked as not yet chosen, and any attempt to query them before setting
 them to explicit values will result in undefined behaviour. The
@@ -104,32 +104,8 @@ Parameter ``pairing``:
     the specific pairing of simplex facets that this permutation set
     will complement.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::__init_2
-constexpr const char *__init_2 =
-R"doc(Creates a new permutation set. All internal permutations will be
-marked as not yet chosen, and any attempt to query them before setting
-them to explicit values will result in undefined behaviour. The
-corresponding permutation indices will be set to -1.
-
-This constructor moves the contents of the given facet pairing into
-this object. After it returns, *pairing* will no longer be usable.
-
-Precondition:
-    The given facet pairing is connected, i.e., it is possible to
-    reach any simplex from any other simplex via a series of matched
-    facet pairs.
-
-Precondition:
-    The given facet pairing is in canonical form as described by
-    FacetPairing::isCanonical(). Note that all facet pairings
-    constructed by FacetPairing::findAllPairings() are of this form.
-
-Parameter ``pairing``:
-    the specific pairing of simplex facets that this permutation set
-    will complement.)doc";
-
-// Docstring regina::python::doc::GluingPerms_::data
-constexpr const char *data =
+// Docstring regina::python::doc::GluingPerms::data
+static constexpr const char data[] =
 R"doc(Returns all internal data in a plain text format. This gluing
 permutation sert can be recreated from this text data by calling
 fromData().
@@ -147,8 +123,8 @@ This routine returns the same information that dumpData() writes.
 Returns:
     all of this object's internal data in plain text format.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::fromData
-constexpr const char *fromData =
+// Docstring regina::python::doc::GluingPerms::fromData
+static constexpr const char fromData[] =
 R"doc(Reads a new set of gluing permutations from the given string. This
 routine reads data in the format written by data().
 
@@ -167,8 +143,8 @@ Parameter ``data``:
 Returns:
     the reconstructed gluing permutation set.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::global_swap
-constexpr const char *global_swap =
+// Docstring regina::python::doc::GluingPerms::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given gluing permutation sets.
 
 This global routine simply calls GluingPerms<dim>::swap(); it is
@@ -181,8 +157,8 @@ Parameter ``a``:
 Parameter ``b``:
     the second matrix whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::gluingToIndex
-constexpr const char *gluingToIndex =
+// Docstring regina::python::doc::GluingPerms::gluingToIndex
+static constexpr const char gluingToIndex[] =
 R"doc(Returns the index into array Perm<dim>::Sn corresponding to the given
 gluing permutation from the given facet to its partner. This need not
 be the index into Perm<dim>::Sn that is currently stored for the given
@@ -212,8 +188,8 @@ Returns:
     the index into Perm<dim>::Sn corresponding to the given gluing
     permutation; this will be between 0 and ``dim!-1`` inclusive.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::gluingToIndex_2
-constexpr const char *gluingToIndex_2 =
+// Docstring regina::python::doc::GluingPerms::gluingToIndex_2
+static constexpr const char gluingToIndex_2[] =
 R"doc(Returns the index into array Perm<dim>::Sn corresponding to the given
 gluing permutation from the given facet to its partner. This need not
 be the index into Perm<dim>::Sn that is currently stored for the given
@@ -248,8 +224,8 @@ Returns:
     the index into Perm<dim>::Sn corresponding to the given gluing
     permutation; this will be between 0 and ``dim!-1`` inclusive.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::indexToGluing
-constexpr const char *indexToGluing =
+// Docstring regina::python::doc::GluingPerms::indexToGluing
+static constexpr const char indexToGluing[] =
 R"doc(Returns the gluing permutation from the given facet to its partner
 that corresponds to the given index into array Perm<dim>::Sn. This
 index into Perm<dim>::Sn need not be the index that is currently
@@ -278,8 +254,8 @@ Returns:
     the gluing permutation corresponding to the given index into
     Perm<dim>::Sn.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::indexToGluing_2
-constexpr const char *indexToGluing_2 =
+// Docstring regina::python::doc::GluingPerms::indexToGluing_2
+static constexpr const char indexToGluing_2[] =
 R"doc(Returns the gluing permutation from the given facet to its partner
 that corresponds to the given index into array Perm<dim>::Sn. This
 index into Perm<dim>::Sn need not be the index that is currently
@@ -313,16 +289,16 @@ Returns:
     the gluing permutation corresponding to the given index into
     Perm<dim>::Sn.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::pairing
-constexpr const char *pairing =
+// Docstring regina::python::doc::GluingPerms::pairing
+static constexpr const char pairing[] =
 R"doc(Returns the specific pairing of simplex facets that this set of gluing
 permutations complements.
 
 Returns:
     the corresponding simplex facet pairing.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::perm
-constexpr const char *perm =
+// Docstring regina::python::doc::GluingPerms::perm
+static constexpr const char perm[] =
 R"doc(Returns the gluing permutation associated with the given simplex
 facet.
 
@@ -344,8 +320,8 @@ Parameter ``source``:
 Returns:
     the associated gluing permutation.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::perm_2
-constexpr const char *perm_2 =
+// Docstring regina::python::doc::GluingPerms::perm_2
+static constexpr const char perm_2[] =
 R"doc(Returns the gluing permutation associated with the given simplex
 facet.
 
@@ -368,8 +344,8 @@ Parameter ``facet``:
 Returns:
     the associated gluing permutation.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::permIndex
-constexpr const char *permIndex =
+// Docstring regina::python::doc::GluingPerms::permIndex
+static constexpr const char permIndex[] =
 R"doc(Returns the index into array Perm<dim>::Sn describing how the the
 given facet is joined to its partner.
 
@@ -394,8 +370,8 @@ Parameter ``source``:
 Returns:
     a reference to the corresponding array index.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::permIndex_2
-constexpr const char *permIndex_2 =
+// Docstring regina::python::doc::GluingPerms::permIndex_2
+static constexpr const char permIndex_2[] =
 R"doc(Returns the index into array Perm<dim>::Sn describing how the the
 given facet is joined to its partner.
 
@@ -421,8 +397,8 @@ Parameter ``facet``:
 Returns:
     a reference to the corresponding array index.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::permIndex_3
-constexpr const char *permIndex_3 =
+// Docstring regina::python::doc::GluingPerms::permIndex_3
+static constexpr const char permIndex_3[] =
 R"doc(Offers write access to the index into array Perm<dim>::Sn describing
 how the the given facet is joined to its partner.
 
@@ -451,8 +427,8 @@ Parameter ``source``:
 Returns:
     a reference to the corresponding array index.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::permIndex_4
-constexpr const char *permIndex_4 =
+// Docstring regina::python::doc::GluingPerms::permIndex_4
+static constexpr const char permIndex_4[] =
 R"doc(Offers write access to the index into array Perm<dim>::Sn describing
 how the the given facet is joined to its partner.
 
@@ -482,8 +458,8 @@ Parameter ``facet``:
 Returns:
     a reference to the corresponding array index.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::setPermIndex
-constexpr const char *setPermIndex =
+// Docstring regina::python::doc::GluingPerms::setPermIndex
+static constexpr const char setPermIndex[] =
 R"doc(Python-only routine that sets the index into array Perm<dim>::Sn
 describing how the the given facet is joined to its partner.
 
@@ -506,8 +482,8 @@ Parameter ``source``:
 Parameter ``index``:
     the new value of the corresponding array index.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::setPermIndex_2
-constexpr const char *setPermIndex_2 =
+// Docstring regina::python::doc::GluingPerms::setPermIndex_2
+static constexpr const char setPermIndex_2[] =
 R"doc(Python-only routine that sets the index into array Perm<dim>::Sn
 describing how the the given facet is joined to its partner.
 
@@ -531,22 +507,22 @@ Parameter ``facet``:
 Parameter ``index``:
     the new value of the corresponding array index.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::size
-constexpr const char *size =
+// Docstring regina::python::doc::GluingPerms::size
+static constexpr const char size[] =
 R"doc(Returns the total number of simplices under consideration.
 
 Returns:
     the number of simplices under consideration.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::swap
-constexpr const char *swap =
+// Docstring regina::python::doc::GluingPerms::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given gluing permutation set.
 
 Parameter ``other``:
     the set whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::GluingPerms_::triangulate
-constexpr const char *triangulate =
+// Docstring regina::python::doc::GluingPerms::triangulate
+static constexpr const char triangulate[] =
 R"doc(Returns the triangulation modelled by this set of gluing permutations
 and the associated simplex facet pairing.
 
@@ -564,7 +540,7 @@ Precondition:
 Returns:
     the triangulation modelled by this structure.)doc";
 
-}
+}; // struct GluingPerms
 
 } // namespace regina::python::doc
 

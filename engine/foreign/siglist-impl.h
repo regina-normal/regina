@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,14 +51,14 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <SignatureReconstructible ObjectType>
+template <SignatureEncodable ObjectType>
 requires PacketHeldType<ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename, int colSigs,
         int colLabels, size_t ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
     if (! in)
-        return nullptr;
+        throw FileError("Could not open the given file");
 
     // Ignore the specified number of lines.
     std::string line;

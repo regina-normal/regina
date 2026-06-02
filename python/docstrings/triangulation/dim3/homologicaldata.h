@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::HomologicalData
-static const char *HomologicalData =
+struct HomologicalData {
+
+// Docstring regina::python::doc::HomologicalData::__class
+static constexpr const char __class[] =
 R"doc(A specialised class that computes a large amount of detailed
 homological information for a 3-manifold triangulation.
 
@@ -104,17 +106,15 @@ This class will eventually be removed in a future release of Regina.
 Author:
     Ryan Budney)doc";
 
-namespace HomologicalData_ {
-
-// Docstring regina::python::doc::HomologicalData_::__copy
-static const char *__copy =
+// Docstring regina::python::doc::HomologicalData::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given object.
 
 This constructor induces a deep copy of the given object; moreover,
 this is expensive since HomologicalData objects are _very_ large.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::__init
-static const char *__init =
+// Docstring regina::python::doc::HomologicalData::__init
+static constexpr const char __init[] =
 R"doc(Takes as input a triangulation.
 
 This class will maintain a fixed snapshot of the given triangulation
@@ -126,8 +126,8 @@ continue to use that for its own internal reference.
 Parameter ``input``:
     the triangulation to use.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::bdryHomology
-static const char *bdryHomology =
+// Docstring regina::python::doc::HomologicalData::bdryHomology
+static constexpr const char bdryHomology[] =
 R"doc(This routine gives access to the homology of the boundary of the
 manifold, computed with the regular CW-decomposition.
 
@@ -138,8 +138,8 @@ Returns:
     the q-th boundary homology group, in standard cellular homology
     coordinates)doc";
 
-// Docstring regina::python::doc::HomologicalData_::bdryHomologyMap
-static const char *bdryHomologyMap =
+// Docstring regina::python::doc::HomologicalData::bdryHomologyMap
+static constexpr const char bdryHomologyMap[] =
 R"doc(This routine gives access to the homomorphism from the homology of the
 boundary to the homology of the manifold.
 
@@ -150,8 +150,8 @@ Returns:
     the map from H_q of the boundary to H_q of the manifold, computed
     in standard coordinates.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::countBdryCells
-static const char *countBdryCells =
+// Docstring regina::python::doc::HomologicalData::countBdryCells
+static constexpr const char countBdryCells[] =
 R"doc(Returns the number of cells of the given dimension in the standard CW-
 decomposition of the boundary of the manifold. This is a subcomplex of
 the complex used in countStandardCells().
@@ -163,8 +163,8 @@ Returns:
     the number of cells of the given dimension in the standard CW-
     decomposition of the boundary.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::countDualCells
-static const char *countDualCells =
+// Docstring regina::python::doc::HomologicalData::countDualCells
+static constexpr const char countDualCells[] =
 R"doc(Returns the number of cells of the given dimension in the dual CW-
 decomposition of the manifold. This is typically much smaller than
 countStandardCells().
@@ -176,8 +176,8 @@ Returns:
     the number of cells of the given dimension in the dual CW-
     decomposition to the triangulation.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::countStandardCells
-static const char *countStandardCells =
+// Docstring regina::python::doc::HomologicalData::countStandardCells
+static constexpr const char countStandardCells[] =
 R"doc(Returns the number of cells of the given dimension in the standard
 genuine CW-decomposition of the manifold.
 
@@ -197,8 +197,8 @@ Returns:
     the number of cells of the given dimension in the standard CW-
     decomposition of the closed manifold.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::dualHomology
-static const char *dualHomology =
+// Docstring regina::python::doc::HomologicalData::dualHomology
+static constexpr const char dualHomology[] =
 R"doc(This routine gives access to the manifold's homology computed with the
 dual CW-decomposition.
 
@@ -215,8 +215,8 @@ Parameter ``q``:
 Returns:
     the q-th homology group, computed in the dual CW-decomposition.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::embeddabilityComment
-static const char *embeddabilityComment =
+// Docstring regina::python::doc::HomologicalData::embeddabilityComment
+static constexpr const char embeddabilityComment[] =
 R"doc(Returns a comment on whether the manifold might embed in a homology
 3-sphere or 4-sphere. Basically, this routine runs through all the
 Kawauchi-Kojima conditions, plus a few other `elementary' conditions.
@@ -251,8 +251,8 @@ Returns:
     where this manifold embeds, based solely on the manifold's
     homological data.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::eulerChar
-static const char *eulerChar =
+// Docstring regina::python::doc::HomologicalData::eulerChar
+static constexpr const char eulerChar[] =
 R"doc(The proper Euler characteristic of the manifold, computed from the
 dual CW-decomposition.
 
@@ -273,8 +273,8 @@ Returns:
     the Euler characteristic of the corresponding compact triangulated
     3-manifold.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::formIsHyperbolic
-static const char *formIsHyperbolic =
+// Docstring regina::python::doc::HomologicalData::formIsHyperbolic
+static constexpr const char formIsHyperbolic[] =
 R"doc(Returns true iff torsion linking form is `hyperbolic' in the linking-
 form sense of the word.
 
@@ -305,8 +305,8 @@ Exception ``UnsolvedCase``:
 Returns:
     ``True`` iff the torsion linking form is hyperbolic.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::formIsSplit
-static const char *formIsSplit =
+// Docstring regina::python::doc::HomologicalData::formIsSplit
+static constexpr const char formIsSplit[] =
 R"doc(Returns true iff the torsion linking form is split.
 
 Precondition:
@@ -328,8 +328,8 @@ Exception ``UnsolvedCase``:
 Returns:
     ``True`` iff the linking form is split.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::formSatKK
-static const char *formSatKK =
+// Docstring regina::python::doc::HomologicalData::formSatKK
+static constexpr const char formSatKK[] =
 R"doc(Returns true iff the torsion linking form satisfies the Kawauchi-
 Kojima 2-torsion condition. This condition states that on all elements
 *x* of order 2^k, 2^{k-1}form(x,x) = 0.
@@ -357,8 +357,8 @@ Returns:
     ``True`` iff the form satisfies the 2-torsion condition of
     Kawauchi-Kojima.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::HomologicalData::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given HomologicalData objects.
 
 This global routine simply calls HomologicalData::swap(); it is
@@ -378,8 +378,8 @@ Parameter ``a``:
 Parameter ``b``:
     the second object whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::h1CellAp
-static const char *h1CellAp =
+// Docstring regina::python::doc::HomologicalData::h1CellAp
+static constexpr const char h1CellAp[] =
 R"doc(Returns the isomorphism from dualHomology(1) to homology(1) given by a
 cellular approximation to the identity map on the manifold.
 
@@ -388,8 +388,8 @@ Returns:
     cellular approximation of the identity map from the first
     1-skeleton to the second.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::homology
-static const char *homology =
+// Docstring regina::python::doc::HomologicalData::homology
+static constexpr const char homology[] =
 R"doc(This routine gives access to the manifold's homology computed with the
 regular CW-decomposition.
 
@@ -408,8 +408,8 @@ Returns:
     the q-th homology group, computed in the standard CW-
     decomposition.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::swap
-static const char *swap =
+// Docstring regina::python::doc::HomologicalData::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given object.
 
 .. warning::
@@ -423,8 +423,8 @@ R"doc(Swaps the contents of this and the given object.
 Parameter ``other``:
     the object whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::torsionLegendreSymbolVector
-static const char *torsionLegendreSymbolVector =
+// Docstring regina::python::doc::HomologicalData::torsionLegendreSymbolVector
+static constexpr const char torsionLegendreSymbolVector[] =
 R"doc(Returns the odd p-torsion Legendre symbol vector. This is the last of
 the three Kawauchi-Kojima invariants.
 
@@ -451,8 +451,8 @@ Exception ``UnsolvedCase``:
 Returns:
     the Legendre symbol vector associated to the torsion linking form.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::torsionLegendreSymbolVectorString
-static const char *torsionLegendreSymbolVectorString =
+// Docstring regina::python::doc::HomologicalData::torsionLegendreSymbolVectorString
+static constexpr const char torsionLegendreSymbolVectorString[] =
 R"doc(Same as torsionLegendreSymbolVector() but returns as a human-readable
 string.
 
@@ -475,8 +475,8 @@ Exception ``UnsolvedCase``:
 Returns:
     the Legendre symbol vector in human-readable form.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::torsionRankVector
-static const char *torsionRankVector =
+// Docstring regina::python::doc::HomologicalData::torsionRankVector
+static constexpr const char torsionRankVector[] =
 R"doc(Returns the torsion form rank vector. This is the first of the three
 Kawauchi-Kojima complete invariants of the torsion linking form.
 
@@ -507,8 +507,8 @@ Exception ``UnsolvedCase``:
 Returns:
     the torsion form rank vector.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::torsionRankVectorString
-static const char *torsionRankVectorString =
+// Docstring regina::python::doc::HomologicalData::torsionRankVectorString
+static constexpr const char torsionRankVectorString[] =
 R"doc(Same as torsionRankVector() but returns as a human-readable string.
 
 Precondition:
@@ -531,8 +531,8 @@ Returns:
     human-readable prime power factorization of the order of the
     torsion subgroup of H1.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::torsionSigmaVector
-static const char *torsionSigmaVector =
+// Docstring regina::python::doc::HomologicalData::torsionSigmaVector
+static constexpr const char torsionSigmaVector[] =
 R"doc(Returns the 2-torsion sigma vector. This is the second of the three
 Kawauchi-Kojima invariants. It is orientation-sensitive.
 
@@ -559,8 +559,8 @@ Exception ``UnsolvedCase``:
 Returns:
     the Kawauchi-Kojima sigma-vector.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::torsionSigmaVectorString
-static const char *torsionSigmaVectorString =
+// Docstring regina::python::doc::HomologicalData::torsionSigmaVectorString
+static constexpr const char torsionSigmaVectorString[] =
 R"doc(Same as torsionSigmaVector() but returns as a human-readable string.
 This is an orientation-sensitive invariant.
 
@@ -583,8 +583,8 @@ Exception ``UnsolvedCase``:
 Returns:
     the Kawauchi-Kojima sigma-vector in human readable form.)doc";
 
-// Docstring regina::python::doc::HomologicalData_::triangulation
-static const char *triangulation =
+// Docstring regina::python::doc::HomologicalData::triangulation
+static constexpr const char triangulation[] =
 R"doc(Returns the triangulation that this object was initialised with.
 
 This will be a snapshot frozen in time of the triangulation that was
@@ -609,7 +609,7 @@ The rules for using the triangulation() reference are:
 Returns:
     a reference to the underlying triangulation.)doc";
 
-}
+}; // struct HomologicalData
 
 } // namespace regina::python::doc
 

@@ -25,27 +25,7 @@ from multiprocessing import cpu_count
 
 __version__ = "2.6.2.dev1.regina"
 
-INLINE_FILES = [
-    '../../engine/census/gluingperms.h',
-    '../../engine/core/output.h',
-    '../../engine/triangulation/example.h',
-    '../../engine/triangulation/isosigencoding.h',
-    '../../engine/triangulation/isosigtype.h',
-    '../../engine/utilities/flags.h',
-    '../../engine/utilities/listview.h',
-    '../../engine/utilities/snapshot.h',
-    '../../engine/utilities/tableview.h'
-]
-
-INLINE_DIRS = [
-    '../../engine/triangulation/alias',
-    '../../engine/triangulation/detail',
-    '../../engine/triangulation/generic'
-]
-
 RECURSE_LIST = [
-    CursorKind.TRANSLATION_UNIT,
-    CursorKind.NAMESPACE,
     CursorKind.CLASS_DECL,
     CursorKind.STRUCT_DECL,
     CursorKind.ENUM_DECL,
@@ -65,16 +45,13 @@ PRINT_LIST = [
     CursorKind.CONVERSION_FUNCTION,
     CursorKind.CXX_METHOD,
     CursorKind.CONSTRUCTOR,
-    CursorKind.FIELD_DECL
+    CursorKind.FIELD_DECL,
+    CursorKind.CONCEPT_DECL
 ]
 
 PRINT_BLACKLIST = [
     CursorKind.TYPE_ALIAS_DECL,
     CursorKind.TYPE_ALIAS_TEMPLATE_DECL
-]
-
-PREFIX_BLACKLIST = [
-    CursorKind.TRANSLATION_UNIT
 ]
 
 INLINE_DUPLICATES = [
@@ -102,6 +79,25 @@ MEMBER_BLACKLIST = [
     'operator='
 ]
 
+GLOBAL_OVERLOADS = [
+    'swap', '__add', '__bor', '__cmp', '__div', '__mul', '__sub'
+]
+
+TYPE_RANK = [
+    # Sorted in order of "mathematical complexity".
+    # The general idea is that, if we _can_ combine two different types in
+    # this list (e.g., through arithmetic operations), the resulting type will
+    # be the one with the larger index in this list.  Any type _not_ in this
+    # list is treated as being simpler than all of the others.
+    'IntegerBase', 'Rational', 'Cyclotomic', 'Polynomial',
+    'Laurent', 'Laurent2', 'Arrow'
+]
+def type_rank(name):
+    try:
+        return TYPE_RANK.index(name)
+    except:
+        return -1
+
 CPP_OPERATORS = {
     '<=>': 'cmp', '<=': 'le', '>=': 'ge', '==': 'eq', '!=': 'ne', '[]': 'array',
     '+=': 'iadd', '-=': 'isub', '*=': 'imul', '/=': 'idiv', '%=':
@@ -119,7 +115,6 @@ CPP_OPERATORS = OrderedDict(
 errors_detected = False
 docstring_width = int(70)
 
-inline = False
 printed = []
 
 class NoFilenamesError(ValueError):
@@ -138,6 +133,15 @@ def sanitize_name(name):
     name = ''.join([ch if ch.isalnum() else '_' for ch in name])
     # name = re.sub('_$', '', re.sub('_+', '_', name))
     return name
+
+
+def common_prefix_len(list1, list2):
+    i = min(len(list1), len(list2))
+    while i > 0:
+        if list1[:i] == list2[:i]:
+            return i
+        i = i - 1
+    return 0
 
 
 def process_comment(comment, preserveAmpersands):
@@ -253,16 +257,20 @@ def process_comment(comment, preserveAmpersands):
     s = re.sub(r'[\\@]verbatim\s?(.*?)\s?[\\@]endverbatim',
                r"```\n\1\n```\n", s, flags=re.DOTALL)
     s = re.sub(r'[\\@]warning\s?(.*?)\s?\n\n',
-               r'$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
+               r'\n\n$.. warning::\n\n\1\n\n', s, flags=re.DOTALL)
+    s = re.sub(r'[\\@]important\s?(.*?)\s?\n\n',
+               r'\n\n$.. important::\n\n\1\n\n', s, flags=re.DOTALL)
     s = re.sub(r'[\\@]note\s?(.*?)\s?\n\n',
-               r'$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
+               r'\n\n$.. note::\n\n\1\n\n', s, flags=re.DOTALL)
+    s = re.sub(r'[\\@]pyclassname{(\S+)}',
+               r'\n\n$Python:\n\nThis class is available to Python users under the name \1.\n\n', s, flags=re.DOTALL)
 
     # Regina-specific paragraphs that we can ignore in Python:
     s = re.sub(r'\\headers\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\headerfile\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\cpp\s(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\nocpp\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
-    s = re.sub(r'\\pyname{\S+}', r'', s, flags=re.DOTALL)
+    s = re.sub(r'\\pydocname{\S+}', r'', s, flags=re.DOTALL)
     s = re.sub(r'\\swift\s?(.*?)\s?\n\n', r'', s, flags=re.DOTALL)
 
     # Doxygen paragraphs that we will likewise ignore in Python:
@@ -485,7 +493,7 @@ def process_comment(comment, preserveAmpersands):
     return result.rstrip().lstrip('\n')
 
 
-def extract(filename, node, namespace, output):
+def extract(filename, node, parent_namespace, parent_types, output):
     if not (node.location.file is None or
             os.path.samefile(d(node.location.file.name), filename)):
         return 0
@@ -506,145 +514,204 @@ def extract(filename, node, namespace, output):
             node.spelling not in CLASS_BLACKLIST and \
             (not node.is_move_constructor())))
 
+    # Check for rvalue reference arguments, which would normally make a
+    # function non-bindable in Python.
+    if generateDocstring:
+        for c in node.get_children():
+            if c.type.kind == TypeKind.RVALUEREFERENCE:
+                generateDocstring = False
+                break
+
     if (not generateDocstring) and (node.kind not in PRINT_BLACKLIST) and \
             '\\python' in node.raw_comment:
         # This entity has Python-specific comments, so generate a docstring
-        # even though the node type is not in the print whitelist.
+        # even though we would otherwise have not done so.
         # print('Print override for node kind:', node.kind)
         generateDocstring = True
 
     name = sanitize_name(d(node.spelling))
     if node.raw_comment:
-        match = re.search(r'\\pyname{(\S+)}($|\s)', node.raw_comment)
+        match = re.search(r'\\pyclassname{(\S+)}($|\s)', node.raw_comment)
+        if match:
+            newName = match.group(1)
+            # print('Python class name:', name, '->', newName)
+            name = newName
+        match = re.search(r'\\pydocname{(\S+)}($|\s)', node.raw_comment)
         if match:
             newName = match.group(1)
             print('Name override:', name, '->', newName)
             name = newName
 
-    if node.kind in RECURSE_LIST and \
-            (node.access_specifier not in ACCESS_BLACKLIST and \
-                node.spelling not in CLASS_BLACKLIST and \
-                node.spelling not in NAMESPACE_BLACKLIST):
-        if not (node.kind == CursorKind.NAMESPACE and \
-                node.spelling in NAMESPACE_BLACKLIST):
-            sub_namespace = namespace
-            if node.kind not in PREFIX_BLACKLIST:
-                # Ignore the leading regina:: namespace, which everything has.
-                if not (node.kind == CursorKind.NAMESPACE and \
-                        node.spelling == 'regina' and namespace == ''):
-                    if len(namespace) > 0:
-                        sub_namespace += '::'
-                    sub_namespace += name
-                    # When delving into the class/struct/enum X, use the
-                    # namespace X_ for the members of X.
-                    if node.kind != CursorKind.NAMESPACE:
-                        sub_namespace += '_'
+    # Recurse into this node if we need to:
+    if node.kind == CursorKind.TRANSLATION_UNIT:
+        # Recurse transparently into translation units.
+        for i in node.get_children():
+            extract(filename, i, parent_namespace, parent_types, output)
+    elif node.kind == CursorKind.NAMESPACE:
+        if parent_types:
+            raise RuntimeError('Namespace found inside class-like type!')
+        if node.spelling not in NAMESPACE_BLACKLIST:
+            sub_namespace = parent_namespace
+            # Ignore the leading regina:: namespace, which everything has.
+            if not (node.spelling == 'regina' and parent_namespace == ''):
+                if len(parent_namespace) > 0:
+                    sub_namespace += '::'
+                sub_namespace += name
             for i in node.get_children():
-                extract(filename, i, sub_namespace, output)
-    if generateDocstring:
-        sub_namespace = namespace
-        if len(node.spelling) > 0:
-            # We are seeing functions with inline definitions and/or
-            # forward declarations appear multiple times in the output.
-            # Try to ensure that their docstrings are listed only once.
-            if node.canonical in printed:
+                extract(filename, i, sub_namespace, [], output)
+    elif node.kind in RECURSE_LIST:
+        if (node.spelling not in CLASS_BLACKLIST) and \
+                (node.access_specifier not in ACCESS_BLACKLIST):
+            for i in node.get_children():
+                extract(filename, i, parent_namespace, \
+                    parent_types + [ name ], output)
+
+    if generateDocstring and len(node.spelling) > 0:
+        # We are seeing functions with inline definitions and/or
+        # forward declarations appear multiple times in the output.
+        # Try to ensure that their docstrings are listed only once.
+        if node.canonical in printed:
+            return
+        if node.lexical_parent != node.semantic_parent and \
+                node != node.canonical:
+            if node.kind in INLINE_DUPLICATES:
+                # This is probably an inline class method implementation
+                # (which may show up in the global namespace, not the
+                # class namespace, if the implementation happens outside
+                # the class declaration).
                 return
-            if node.lexical_parent != node.semantic_parent and \
-                    node != node.canonical:
-                if node.kind in INLINE_DUPLICATES:
-                    # This is probably an inline class method implementation
-                    # (which may show up in the global namespace, not the
-                    # class namespace, if the implementation happens outside
-                    # the class declaration).
+        if (node.kind == CursorKind.CLASS_DECL or \
+                node.kind == CursorKind.CLASS_TEMPLATE) and \
+                not node.is_definition():
+            return
+
+        # Unfortunately templated constructors do not show up as
+        # constructors when we look at the corresponding CursorKind.
+        if node.kind == CursorKind.CONSTRUCTOR or \
+                (node.kind == CursorKind.FUNCTION_TEMPLATE and \
+                (node.spelling == node.semantic_parent.spelling or
+                node.spelling.startswith(node.semantic_parent.spelling + \
+                    '<'))):
+            if node.is_copy_constructor():
+                name = '__copy'
+            elif node.is_default_constructor():
+                name = '__default'
+            else:
+                name = '__init'
+
+        fullname = 'regina::'
+        if parent_namespace:
+            fullname = fullname + parent_namespace + '::'
+        fullname += '::'.join(parent_types + [ name ])
+
+        if node.raw_comment is None or node.raw_comment == '':
+            # print('    Undocumented:', fullname, '-- skipping')
+            return
+
+        if node.spelling == 'operator<<':
+            # We do not want docs for std::ostream output operators.
+            # For now we skip *all* left shift operators; this may need to
+            # become more nuanced at a later date.
+            # print('    Left shift:', fullname, '-- skipping')
+            return
+
+        # Class template specialisations are a strange case.
+        # Sometimes we want them in full (e.g., the old Face<dim, dim> from
+        # Regina 7.x); sometimes we do not want the class docs but we want its
+        # members (e.g., the triangulation alias classes), and sometimes we
+        # do not want it at all (e.g., the old ListView specialisations).
+        #
+        # For now:
+        #
+        # - Always take all the members, unless the class is marked
+        #   \nodocstrings.  This is handled by the recursion code above.
+        #
+        # - Print the class docs only if we are not already printing docs
+        #   for what appears to be the same class name in this same header.
+        #
+        if node.kind == CursorKind.CLASS_TEMPLATE_PARTIAL_SPECIALIZATION:
+            for i in output:
+                if i[0] == parent_namespace and i[1] == parent_types and \
+                        i[2] == name:
+                    print('Skipping partial specialisation:',
+                        node.displayname)
                     return
-            if (node.kind == CursorKind.CLASS_DECL or \
-                    node.kind == CursorKind.CLASS_TEMPLATE) and \
-                    not node.is_definition():
-                return
 
-            # Unfortunately templated constructors do not show up as
-            # constructors when we look at the corresponding CursorKind.
-            if node.kind == CursorKind.CONSTRUCTOR or \
-                    (node.kind == CursorKind.FUNCTION_TEMPLATE and \
-                    (node.spelling == node.semantic_parent.spelling or
-                    node.spelling.startswith(node.semantic_parent.spelling + \
-                        '<'))):
-                if node.is_copy_constructor():
-                    name = '__copy'
-                elif node.is_default_constructor():
-                    name = '__default'
-                else:
-                    name = '__init'
+        # Note: xmlEncodeSpecialChars() includes a &...; special character
+        # that needs to be left in this encoded form, since the raw encoding
+        # is illustrated in the API docs.
+        comment = d(node.raw_comment)
+        comment = process_comment(comment,
+            node.spelling == 'xmlEncodeSpecialChars')
 
-            fullname = 'regina::'
-            if namespace:
-                fullname = fullname + namespace + '::'
-            fullname += name
+        special = False
+        if node.kind in RECURSE_LIST:
+            # We will put the class notes as a static string __class inside
+            # the same type that holds the documentation for the class members.
+            output.append((parent_namespace, parent_types + [ name ], \
+                '__class', filename, comment))
+            special = True
+        elif node.kind == CursorKind.CONCEPT_DECL:
+            # We give concepts their own docstring classes, but we use
+            # __concept instead of __class to distinguish our concept helper
+            # classes from other helper classes.
+            comment += ('\n\n' + process_comment('$Concepts:\n\n' + name + ' is a C++ concept. Concepts work with the C++ compiler at build time: you cannot test in Python which concepts are satisfied by which types.  Instead, what this Python wrapper offers is the concept _documentation_ (which you are reading now).', False))
+            output.append((parent_namespace, parent_types + [ name ], \
+                '__concept', filename, comment))
+            special = True
+        elif parent_namespace == '' and parent_types == []:
+            # Some global functions are heavily overloaded, and so it will be
+            # helpful to place their docstrings inside the docstring classes
+            # for their argument types (as opposed to placing them all in the
+            # "main namespace" regina::python::doc).  This helps us avoid
+            # using the same variable names for several different docstrings.
+            if name in GLOBAL_OVERLOADS:
+                # Try and extract the argument types.
+                argTypes = []
+                for c in node.get_children():
+                    t = None
+                    if c.type.kind == TypeKind.LVALUEREFERENCE:
+                        t = c.type.get_pointee().spelling
+                    elif c.type.kind == TypeKind.ELABORATED:
+                        t = c.type.spelling
+                    if t:
+                        if t.startswith('const '):
+                            t = t[6:]
+                        if t.startswith('typename '):
+                            t = t[9:]
+                        if t.startswith('regina::'):
+                            t = t[8:]
+                        left = t.find('<')
+                        if left >= 0:
+                            right = t.find('>', left+1)
+                            if right >= 0:
+                                t = t[:left] + t[right+1:]
+                        argTypes.append(t)
 
-            if node.raw_comment is None or node.raw_comment == '':
-                # print('    Undocumented:', fullname, '-- skipping')
-                return
+                if argTypes:
+                    # Try to choose the "richest" argument type.  For example,
+                    # for (int + polynomial) we would choose polynomial.
+                    argTypes.sort(key=type_rank)
+                    useArgType = argTypes[-1]
+                    if '::' in useArgType:
+                        raise RuntimeError('Overload for global ' + \
+                            name + ': ' + useArgType + \
+                            ' is not a usable argument type.')
 
-            if node.spelling == 'operator<<':
-                # We do not want docs for std::ostream output operators.
-                # For now we skip *all* left shift operators; this may need to
-                # become more nuanced at a later date.
-                # print('    Left shift:', fullname, '-- skipping')
-                return
+                    if name == 'swap':
+                        # The argument type likely has its own member swap()
+                        # function.  Distinguish this from the global swap().
+                        name = 'global_swap'
 
-            # Class template specialisations are a strange case.
-            # Sometimes we want them in full (e.g., Face<dim, dim>);
-            # sometimes we do not want the class docs but we want its members
-            # (e.g., the triangulation alias classes), and sometimes we
-            # do not want it at all (e.g., the ListView specialisations).
-            #
-            # For now:
-            #
-            # - Always take all the members, unless the class is marked
-            #   \nodocstrings.  This is handled by the recursion code above.
-            #
-            # - Print the class docs only if we are not already printing docs
-            #   for what appears to be the same class name in this same header.
-            #
-            if node.kind == CursorKind.CLASS_TEMPLATE_PARTIAL_SPECIALIZATION:
-                for i in output:
-                    if i[0] == sub_namespace and i[1] == name:
-                        print('Skipping partial specialisation:',
-                            node.displayname)
-                        return
+                    output.append(('', [ useArgType ], name, \
+                        filename, comment))
+                    special = True
 
-            # Note: xmlEncodeSpecialChars() includes a &...; special character
-            # that needs to be left in this encoded form, since the raw encoding
-            # is illustrated in the API docs.
-            comment = d(node.raw_comment)
-            comment = process_comment(comment,
-                node.spelling == 'xmlEncodeSpecialChars')
+        if not special:
+            output.append((parent_namespace, parent_types, name, \
+                filename, comment))
 
-            special = False
-            if name == 'swap' and sub_namespace == '':
-                # There are *so* many global swap(T&, T&) functions that
-                # it will be helpful to name them according to the types
-                # that they swap.  Otherwise their dostrings will all be called
-                # regina::python::doc::swap, and there will be a risk of
-                # inadvertently confusing one for another.
-                children = [ c.type for c in node.get_children() \
-                    if c.type.kind == TypeKind.LVALUEREFERENCE ]
-                if len(children) == 2:
-                    swapType = children[0].get_pointee().spelling
-                    if swapType.startswith('regina::'):
-                        swapType = swapType[8:]
-                    pos = swapType.find('<')
-                    if pos >= 0:
-                        swapType = swapType[:pos]
-                    if swapType:
-                        output.append((swapType + '_', 'global_swap', \
-                            filename, comment))
-                        special = True
-
-            if not special:
-                output.append((sub_namespace, name, filename, comment))
-
-            printed.append(node.canonical)
+        printed.append(node.canonical)
 
 
 def _append_include_dir(args: list, include_dir: str, verbose: bool = True):
@@ -873,23 +940,14 @@ def extract_all(args):
     parameters, filenames = read_args(args)
     output = []
 
-    global errors_detected, inline
+    global errors_detected
     for filename in filenames:
-        inline = (filename in INLINE_FILES)
-        if not inline:
-            for d in INLINE_DIRS:
-                if filename.startswith(d + '/'):
-                    inline = True
-                    break
-        if inline:
-            print('Processing "%s" (inline) ..' % filename, file=sys.stderr)
-        else:
-            print('Processing "%s" ..' % filename, file=sys.stderr)
+        print('Processing "%s" ..' % filename, file=sys.stderr)
         try:
             index = cindex.Index(
                 cindex.conf.lib.clang_createIndex(False, True))
             tu = index.parse(filename, parameters)
-            extract(filename, tu.cursor, '', output)
+            extract(filename, tu.cursor, '', [], output)
         except BaseException:
             errors_detected = True
             raise
@@ -914,37 +972,53 @@ namespace regina::python::doc {
 
     name_ctr = 1
     name_prev = None
-    namespace_prev = None
-    for namespace, name, _, comment in list(sorted(comments, key=lambda x: (x[0], x[1], x[2]))):
-        if (namespace, name) == name_prev:
+    scope_namespace_prev = None
+    scope_types_prev = []
+    for scope_namespace, scope_types, name, _, comment in list(sorted(comments, key=lambda x: (x[0], x[1], x[2], x[3]))):
+        if (scope_namespace, scope_types, name) == name_prev:
             name_ctr += 1
             name = name + "_%i" % name_ctr
         else:
-            name_prev = (namespace, name)
+            name_prev = (scope_namespace, scope_types, name)
             name_ctr = 1
 
-        if namespace != namespace_prev:
-            if namespace_prev:
-                print('\n}', file=out_file)
-            if namespace:
-                print('\nnamespace %s {' % namespace, file=out_file)
-            namespace_prev = namespace
+        if scope_namespace == scope_namespace_prev:
+            keep = common_prefix_len(scope_types, scope_types_prev)
+            for t in scope_types_prev[keep:][::-1]:
+                print('\n}; // struct ' + t, file=out_file)
+            for t in scope_types[keep:]:
+                print('\nstruct %s {' % t, file=out_file)
+            scope_types_prev = scope_types
+        else:
+            for t in scope_types_prev[::-1]:
+                print('\n}; // struct ' + t, file=out_file)
+            if scope_namespace_prev:
+                print('\n} // namespace ' + scope_namespace_prev, file=out_file)
+            if scope_namespace:
+                print('\nnamespace %s {' % scope_namespace, file=out_file)
+            for t in scope_types:
+                print('\nstruct %s {' % t, file=out_file)
+            scope_types_prev = scope_types
+            scope_namespace_prev = scope_namespace
 
-        full_namespace = 'regina::python::doc'
-        if namespace:
-            full_namespace = full_namespace + '::' + namespace
-        print('\n// Docstring %s::%s' % (full_namespace, name), file=out_file)
-        if inline:
-            print('constexpr const char *%s =%sR"doc(%s)doc";' %
+        full_scope = 'regina::python::doc::'
+        if scope_namespace:
+            full_scope = full_scope + scope_namespace + '::'
+        full_scope += '::'.join(scope_types + [ name ])
+        print('\n// Docstring %s' % full_scope, file=out_file)
+        if scope_types:
+            print('static constexpr const char %s[] =%sR"doc(%s)doc";' %
                   (name, '\n' if '\n' in comment else ' ', comment), \
                   file=out_file)
         else:
-            print('static const char *%s =%sR"doc(%s)doc";' %
+            print('inline constexpr const char %s[] =%sR"doc(%s)doc";' %
                   (name, '\n' if '\n' in comment else ' ', comment), \
                   file=out_file)
 
-    if namespace_prev:
-        print('\n}', file=out_file)
+    for t in scope_types_prev[::-1]:
+        print('\n}; // struct ' + t, file=out_file)
+    if scope_namespace_prev:
+        print('\n} // namespace ' + scope_namespace_prev, file=out_file)
 
     print('''
 } // namespace regina::python::doc

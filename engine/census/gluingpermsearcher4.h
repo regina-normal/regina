@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,7 +46,7 @@
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/generic/isomorphism.h"
+#include "triangulation/isomorphism.h"
 #include "utilities/exception.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -81,6 +81,8 @@ namespace regina {
  *
  * This class is designed to manage the construction of a large census of
  * triangulations, and so it does not support copying, moving or swapping.
+ *
+ * \pyclassname{GluingPermSearcher4}
  *
  * \ingroup census
  */
@@ -1321,13 +1323,13 @@ inline void GluingPermSearcher<4>::dumpTaggedData(std::ostream& out) const {
 inline std::string GluingPermSearcher<4>::taggedData() const {
     std::ostringstream out;
     dumpTaggedData(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline std::string GluingPermSearcher<4>::data() const {
     std::ostringstream out;
     dumpData(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline char GluingPermSearcher<4>::dataTagInternal() const {

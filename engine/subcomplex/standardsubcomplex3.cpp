@@ -1,0 +1,102 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Computational Engine                                                  *
+ *                                                                        *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>. *
+ *                                                                        *
+ **************************************************************************/
+
+#include "subcomplex/augtrisolidtorus.h"
+#include "subcomplex/blockedsfs.h"
+#include "subcomplex/blockedsfsloop.h"
+#include "subcomplex/blockedsfspair.h"
+#include "subcomplex/blockedsfstriple.h"
+#include "subcomplex/layeredchainpair.h"
+#include "subcomplex/layeredlensspace.h"
+#include "subcomplex/layeredloop.h"
+#include "subcomplex/layeredtorusbundle.h"
+#include "subcomplex/pluggedtorusbundle.h"
+#include "subcomplex/plugtrisolidtorus.h"
+#include "subcomplex/snappeacensustri.h"
+#include "subcomplex/trivialtri.h"
+#include "triangulation/dim3.h"
+
+namespace regina {
+
+template <>
+std::unique_ptr<StandardSubcomplex<3>> StandardSubcomplex<3>::recognise(
+        Component<3>* comp) {
+    if (auto ans = TrivialTri::recognise(comp))
+        return ans;
+    if (auto ans = LayeredLensSpace::recognise(comp))
+        return ans;
+    if (auto ans = LayeredLoop::recognise(comp))
+        return ans;
+    if (auto ans = LayeredChainPair::recognise(comp))
+        return ans;
+    if (auto ans = AugTriSolidTorus::recognise(comp))
+        return ans;
+    if (auto ans = PlugTriSolidTorus::recognise(comp))
+        return ans;
+    if (auto ans = LayeredSolidTorus::recognise(comp))
+        return ans;
+    if (auto ans = SnapPeaCensusTri::recognise(comp))
+        return ans;
+
+    return nullptr;
+}
+
+template <>
+std::unique_ptr<StandardSubcomplex<3>> StandardSubcomplex<3>::recognise(
+        const Triangulation<3>& tri) {
+    if (tri.countComponents() != 1)
+        return nullptr;
+
+    // Do what we can through components.
+    if (auto ans = recognise(tri.component(0)))
+        return ans;
+
+    // Run tests that require entire triangulations.
+    if (auto ans = BlockedSFS::recognise(tri))
+        return ans;
+    if (auto ans = LayeredTorusBundle::recognise(tri))
+        return ans;
+
+    // Save non-geometric graph manifolds until last.
+    if (auto ans = BlockedSFSLoop::recognise(tri))
+        return ans;
+    if (auto ans = BlockedSFSPair::recognise(tri))
+        return ans;
+    if (auto ans = BlockedSFSTriple::recognise(tri))
+        return ans;
+    if (auto ans = PluggedTorusBundle::recognise(tri))
+        return ans;
+
+    // Nup.
+    return nullptr;
+}
+
+} // namespace regina
+

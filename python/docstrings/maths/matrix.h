@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Matrix
-static const char *Matrix =
+struct Matrix {
+
+// Docstring regina::python::doc::Matrix::__class
+static constexpr const char __class[] =
 R"doc(Represents a matrix of elements of the given type *T*.
 
 As of Regina 7.4, the extra boolean *ring* template parameter is gone;
@@ -32,10 +34,8 @@ Python:
     available using the Python names MatrixInt, MatrixBool and
     MatrixReal respectively.)doc";
 
-namespace Matrix_ {
-
-// Docstring regina::python::doc::Matrix_::__copy
-static const char *__copy =
+// Docstring regina::python::doc::Matrix::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new matrix that is a clone of the given matrix.
 
 This constructor induces a deep copy of *src*.
@@ -46,8 +46,8 @@ case this matrix will become uninitialised also).
 Parameter ``src``:
     the matrix to clone.)doc";
 
-// Docstring regina::python::doc::Matrix_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::Matrix::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given matrix are identical.
 
 Two matrices are identical if and only if (i) their dimensions are the
@@ -66,8 +66,8 @@ Returns:
     ``True`` if the matrices are equal as described above, or
     ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::Matrix_::__init
-static const char *__init =
+// Docstring regina::python::doc::Matrix::__init
+static constexpr const char __init[] =
 R"doc(Creates a new square matrix of the given size. Both the number of rows
 and the number of columns will be set to *size*.
 
@@ -87,8 +87,8 @@ Precondition:
 Parameter ``size``:
     the number of rows and columns in the new matrix.)doc";
 
-// Docstring regina::python::doc::Matrix_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::Matrix::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new matrix of the given size.
 
 All entries will be initialised using their default constructors. In
@@ -110,8 +110,8 @@ Parameter ``rows``:
 Parameter ``cols``:
     the number of columns in the new matrix.)doc";
 
-// Docstring regina::python::doc::Matrix_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Matrix::__init_3
+static constexpr const char __init_3[] =
 R"doc(Creates a new matrix containing the given hard-coded entries. This
 constructor can be used (for example) to create hard-coded examples
 directly in C++ code.
@@ -134,8 +134,8 @@ Python:
 Parameter ``data``:
     the rows of the matrix, each given as a list of elements.)doc";
 
-// Docstring regina::python::doc::Matrix_::__mul
-static const char *__mul =
+// Docstring regina::python::doc::Matrix::__mul
+static constexpr const char __mul[] =
 R"doc(Multiplies this by the given matrix, and returns the result. This
 matrix is not changed.
 
@@ -156,8 +156,8 @@ Parameter ``other``:
 Returns:
     the product matrix ``this * other``.)doc";
 
-// Docstring regina::python::doc::Matrix_::__mul_2
-static const char *__mul_2 =
+// Docstring regina::python::doc::Matrix::__mul_2
+static constexpr const char __mul_2[] =
 R"doc(Multiplies this matrix by the given vector, and returns the result.
 The given vector is treated as a column vector.
 
@@ -179,8 +179,8 @@ Returns:
     the product ``this * other``, which will be a vector whose length
     is the number of rows in this matrix.)doc";
 
-// Docstring regina::python::doc::Matrix_::addCol
-static const char *addCol =
+// Docstring regina::python::doc::Matrix::addCol
+static constexpr const char addCol[] =
 R"doc(Adds the given source column to the given destination column.
 
 .. warning::
@@ -200,8 +200,8 @@ Parameter ``source``:
 Parameter ``dest``:
     the column that will be added to.)doc";
 
-// Docstring regina::python::doc::Matrix_::addCol_2
-static const char *addCol_2 =
+// Docstring regina::python::doc::Matrix::addCol_2
+static constexpr const char addCol_2[] =
 R"doc(Adds the given number of copies of the given source column to the
 given destination column.
 
@@ -232,8 +232,8 @@ Parameter ``fromRow``:
     the starting point in the column from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::addColFrom
-static const char *addColFrom =
+// Docstring regina::python::doc::Matrix::addColFrom
+static constexpr const char addColFrom[] =
 R"doc(Adds a portion of the given source column to the given destination
 column.
 
@@ -258,8 +258,8 @@ Parameter ``fromRow``:
     the starting point in the column from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::addRow
-static const char *addRow =
+// Docstring regina::python::doc::Matrix::addRow
+static constexpr const char addRow[] =
 R"doc(Adds the given source row to the given destination row.
 
 Precondition:
@@ -279,8 +279,8 @@ Parameter ``source``:
 Parameter ``dest``:
     the row that will be added to.)doc";
 
-// Docstring regina::python::doc::Matrix_::addRow_2
-static const char *addRow_2 =
+// Docstring regina::python::doc::Matrix::addRow_2
+static constexpr const char addRow_2[] =
 R"doc(Adds the given number of copies of the given source row to the given
 destination row.
 
@@ -311,8 +311,8 @@ Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::addRowFrom
-static const char *addRowFrom =
+// Docstring regina::python::doc::Matrix::addRowFrom
+static constexpr const char addRowFrom[] =
 R"doc(Adds a portion of the given source row to the given destination row.
 
 This is similar to addRow(), except that the operation will only be
@@ -336,8 +336,8 @@ Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::columnEchelonForm
-static const char *columnEchelonForm =
+// Docstring regina::python::doc::Matrix::columnEchelonForm
+static constexpr const char columnEchelonForm[] =
 R"doc(Transforms this matrix into column echelon form. The transformation
 will perform only column operations.
 
@@ -364,15 +364,15 @@ Returns:
     the rank of this matrix, i.e., the number of non-zero columns
     remaining.)doc";
 
-// Docstring regina::python::doc::Matrix_::columns
-static const char *columns =
+// Docstring regina::python::doc::Matrix::columns
+static constexpr const char columns[] =
 R"doc(Returns the number of columns in this matrix.
 
 Returns:
     the number of columns.)doc";
 
-// Docstring regina::python::doc::Matrix_::combCols
-static const char *combCols =
+// Docstring regina::python::doc::Matrix::combCols
+static constexpr const char combCols[] =
 R"doc(Rewrites two columns as linear combinations of those two columns.
 
 Specifically, if *C1* and *C2* are the original values of columns
@@ -422,8 +422,8 @@ Parameter ``fromRow``:
     the starting point in the columns from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::combRows
-static const char *combRows =
+// Docstring regina::python::doc::Matrix::combRows
+static constexpr const char combRows[] =
 R"doc(Rewrites two rows as linear combinations of those two rows.
 
 Specifically, if *R1* and *R2* are the original values of rows *row1*
@@ -469,8 +469,8 @@ Parameter ``fromCol``:
     the starting point in the rows from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::det
-static const char *det =
+// Docstring regina::python::doc::Matrix::det
+static constexpr const char det[] =
 R"doc(Evaluates the determinant of the matrix.
 
 This algorithm has quartic complexity, and uses the dynamic
@@ -491,8 +491,8 @@ Exception ``FailedPrecondition``:
 Returns:
     the determinant of this matrix.)doc";
 
-// Docstring regina::python::doc::Matrix_::divColExact
-static const char *divColExact =
+// Docstring regina::python::doc::Matrix::divColExact
+static constexpr const char divColExact[] =
 R"doc(Divides all elements of the given column by the given integer. This
 can only be used when the given integer divides into all column
 elements exactly (with no remainder). For the Integer class, this may
@@ -516,8 +516,8 @@ Parameter ``col``:
 Parameter ``divBy``:
     the integer to divide each column element by.)doc";
 
-// Docstring regina::python::doc::Matrix_::divRowExact
-static const char *divRowExact =
+// Docstring regina::python::doc::Matrix::divRowExact
+static constexpr const char divRowExact[] =
 R"doc(Divides all elements of the given row by the given integer. This can
 only be used when the given integer divides into all row elements
 exactly (with no remainder). For the Integer class, this may be much
@@ -540,8 +540,8 @@ Parameter ``row``:
 Parameter ``divBy``:
     the integer to divide each row element by.)doc";
 
-// Docstring regina::python::doc::Matrix_::entry
-static const char *entry =
+// Docstring regina::python::doc::Matrix::entry
+static constexpr const char entry[] =
 R"doc(Returns a read-write reference to the entry at the given row and
 column. Rows and columns are numbered beginning at zero.
 
@@ -565,8 +565,8 @@ Parameter ``column``:
 Returns:
     a reference to the entry in the given row and column.)doc";
 
-// Docstring regina::python::doc::Matrix_::entry_2
-static const char *entry_2 =
+// Docstring regina::python::doc::Matrix::entry_2
+static constexpr const char entry_2[] =
 R"doc(Returns a read-only reference to the entry at the given row and
 column. Rows and columns are numbered beginning at zero.
 
@@ -581,15 +581,15 @@ Parameter ``column``:
 Returns:
     a reference to the entry in the given row and column.)doc";
 
-// Docstring regina::python::doc::Matrix_::fill
-static const char *fill =
+// Docstring regina::python::doc::Matrix::fill
+static constexpr const char fill[] =
 R"doc(Sets every entry in the matrix to the given value.
 
 Parameter ``value``:
     the value to assign to each entry.)doc";
 
-// Docstring regina::python::doc::Matrix_::gcdCol
-static const char *gcdCol =
+// Docstring regina::python::doc::Matrix::gcdCol
+static constexpr const char gcdCol[] =
 R"doc(Computes the greatest common divisor of all elements of the given
 column. The value returned is guaranteed to be non-negative.
 
@@ -602,8 +602,8 @@ Parameter ``col``:
 Returns:
     the greatest common divisor of all elements of this column.)doc";
 
-// Docstring regina::python::doc::Matrix_::gcdRow
-static const char *gcdRow =
+// Docstring regina::python::doc::Matrix::gcdRow
+static constexpr const char gcdRow[] =
 R"doc(Computes the greatest common divisor of all elements of the given row.
 The value returned is guaranteed to be non-negative.
 
@@ -616,8 +616,8 @@ Parameter ``row``:
 Returns:
     the greatest common divisor of all elements of this row.)doc";
 
-// Docstring regina::python::doc::Matrix_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::Matrix::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given matrices.
 
 This global routine simply calls Matrix<T>::swap(); it is provided so
@@ -629,8 +629,8 @@ Parameter ``a``:
 Parameter ``b``:
     the second matrix whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::Matrix_::identity
-static const char *identity =
+// Docstring regina::python::doc::Matrix::identity
+static constexpr const char identity[] =
 R"doc(Returns an identity matrix of the given size. The matrix returned will
 have *size* rows and *size* columns.
 
@@ -640,8 +640,8 @@ Parameter ``size``:
 Returns:
     an identity matrix of the given size.)doc";
 
-// Docstring regina::python::doc::Matrix_::initialise
-static const char *initialise =
+// Docstring regina::python::doc::Matrix::initialise
+static constexpr const char initialise[] =
 R"doc(Deprecated function that sets every entry in the matrix to the given
 value.
 
@@ -652,8 +652,8 @@ value.
 Parameter ``value``:
     the value to assign to each entry.)doc";
 
-// Docstring regina::python::doc::Matrix_::initialised
-static const char *initialised =
+// Docstring regina::python::doc::Matrix::initialised
+static constexpr const char initialised[] =
 R"doc(Determines whether this matrix is initialised or uninitialised.
 
 The only ways for a matrix to be _uninitialised_ are:
@@ -668,8 +668,8 @@ Returns:
     ``True`` if this matrix is initialised, or ``False`` if it is
     uninitialised.)doc";
 
-// Docstring regina::python::doc::Matrix_::isIdentity
-static const char *isIdentity =
+// Docstring regina::python::doc::Matrix::isIdentity
+static constexpr const char isIdentity[] =
 R"doc(Determines whether this matrix is a square identity matrix.
 
 If this matrix is square, isIdentity() will return ``True`` if and
@@ -682,21 +682,21 @@ If this matrix is not square, isIdentity() will always return
 Returns:
     ``True`` if and only if this is a square identity matrix.)doc";
 
-// Docstring regina::python::doc::Matrix_::isZero
-static const char *isZero =
+// Docstring regina::python::doc::Matrix::isZero
+static constexpr const char isZero[] =
 R"doc(Determines whether this is the zero matrix.
 
 Returns:
     ``True`` if and only if all entries in the matrix are zero.)doc";
 
-// Docstring regina::python::doc::Matrix_::makeIdentity
-static const char *makeIdentity =
+// Docstring regina::python::doc::Matrix::makeIdentity
+static constexpr const char makeIdentity[] =
 R"doc(Turns this matrix into an identity matrix. This matrix need not be
 square; after this routine it will have ``entry(r,c)`` equal to 1 if
 ``r == c`` and 0 otherwise.)doc";
 
-// Docstring regina::python::doc::Matrix_::multCol
-static const char *multCol =
+// Docstring regina::python::doc::Matrix::multCol
+static constexpr const char multCol[] =
 R"doc(Multiplies the given column by the given factor.
 
 Note that *factor* is passed by value in case it is an element of the
@@ -722,8 +722,8 @@ Parameter ``fromRow``:
     the starting point in the column from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::multRow
-static const char *multRow =
+// Docstring regina::python::doc::Matrix::multRow
+static constexpr const char multRow[] =
 R"doc(Multiplies the given row by the given factor.
 
 Note that *factor* is passed by value in case it is an element of the
@@ -749,8 +749,8 @@ Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::negateCol
-static const char *negateCol =
+// Docstring regina::python::doc::Matrix::negateCol
+static constexpr const char negateCol[] =
 R"doc(Negates all elements in the given column.
 
 Precondition:
@@ -759,8 +759,8 @@ Precondition:
 Parameter ``col``:
     the index of the column whose elements should be negated.)doc";
 
-// Docstring regina::python::doc::Matrix_::negateRow
-static const char *negateRow =
+// Docstring regina::python::doc::Matrix::negateRow
+static constexpr const char negateRow[] =
 R"doc(Negates all elements in the given row.
 
 Precondition:
@@ -769,8 +769,8 @@ Precondition:
 Parameter ``row``:
     the index of the row whose elements should be negated.)doc";
 
-// Docstring regina::python::doc::Matrix_::rank
-static const char *rank =
+// Docstring regina::python::doc::Matrix::rank
+static constexpr const char rank[] =
 R"doc(A non-destructive routine that returns the rank of this matrix whilst
 preserving the contents of the matrix.
 
@@ -791,8 +791,8 @@ Python:
 Returns:
     the rank of this matrix.)doc";
 
-// Docstring regina::python::doc::Matrix_::reduceCol
-static const char *reduceCol =
+// Docstring regina::python::doc::Matrix::reduceCol
+static constexpr const char reduceCol[] =
 R"doc(Reduces the given column by dividing all its elements by their
 greatest common divisor. It is guaranteed that, if the column is
 changed at all, it will be divided by a _positive_ integer.
@@ -803,8 +803,8 @@ Precondition:
 Parameter ``col``:
     the index of the column to reduce.)doc";
 
-// Docstring regina::python::doc::Matrix_::reduceRow
-static const char *reduceRow =
+// Docstring regina::python::doc::Matrix::reduceRow
+static constexpr const char reduceRow[] =
 R"doc(Reduces the given row by dividing all its elements by their greatest
 common divisor. It is guaranteed that, if the row is changed at all,
 it will be divided by a _positive_ integer.
@@ -815,8 +815,8 @@ Precondition:
 Parameter ``row``:
     the index of the row to reduce.)doc";
 
-// Docstring regina::python::doc::Matrix_::rowEchelonForm
-static const char *rowEchelonForm =
+// Docstring regina::python::doc::Matrix::rowEchelonForm
+static constexpr const char rowEchelonForm[] =
 R"doc(Transforms this matrix into row echelon form. The transformation will
 perform only row operations.
 
@@ -843,15 +843,15 @@ Returns:
     the rank of this matrix, i.e., the number of non-zero rows
     remaining.)doc";
 
-// Docstring regina::python::doc::Matrix_::rows
-static const char *rows =
+// Docstring regina::python::doc::Matrix::rows
+static constexpr const char rows[] =
 R"doc(Returns the number of rows in this matrix.
 
 Returns:
     the number of rows.)doc";
 
-// Docstring regina::python::doc::Matrix_::set
-static const char *set =
+// Docstring regina::python::doc::Matrix::set
+static constexpr const char set[] =
 R"doc(Python-only routine that sets the entry at the given row and column.
 Rows and columns are numbered beginning at zero.
 
@@ -874,15 +874,15 @@ Parameter ``column``:
 Parameter ``value``:
     the new entry to place in the given row and column.)doc";
 
-// Docstring regina::python::doc::Matrix_::swap
-static const char *swap =
+// Docstring regina::python::doc::Matrix::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given matrix.
 
 Parameter ``other``:
     the matrix whose contents are to be swapped with this.)doc";
 
-// Docstring regina::python::doc::Matrix_::swapCols
-static const char *swapCols =
+// Docstring regina::python::doc::Matrix::swapCols
+static constexpr const char swapCols[] =
 R"doc(Swaps the elements of the two given columns in the matrix.
 
 This operation is linear time (unlike swapping rows, which is constant
@@ -908,8 +908,8 @@ Parameter ``fromRow``:
     the starting point in each column from which the operation will be
     performed.)doc";
 
-// Docstring regina::python::doc::Matrix_::swapRows
-static const char *swapRows =
+// Docstring regina::python::doc::Matrix::swapRows
+static constexpr const char swapRows[] =
 R"doc(Swaps the elements of the two given rows in the matrix.
 
 This operation is constant time (unlike swapping columns, which is
@@ -929,14 +929,14 @@ Parameter ``first``:
 Parameter ``second``:
     the second row to swap.)doc";
 
-// Docstring regina::python::doc::Matrix_::transpose
-static const char *transpose =
+// Docstring regina::python::doc::Matrix::transpose
+static constexpr const char transpose[] =
 R"doc(Returns the transpose of this matrix. This matrix is not changed.
 
 Returns:
     the transpose.)doc";
 
-}
+}; // struct Matrix
 
 } // namespace regina::python::doc
 

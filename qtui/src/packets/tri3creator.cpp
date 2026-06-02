@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -115,7 +115,7 @@ namespace {
         R"((?:[^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+))*)"
         R"([^0-9\-]*$)");
     const QRegularExpression reSFSParamPair(R"((-?\d+)[^0-9\-]+(-?\d+))");
-    const QRegularExpression reIsoSig(R"(^([A-Za-z0-9+-]+)$)");
+    const QRegularExpression reIsoSig(R"(^([A-Za-z0-9.+-]+)$)");
     const QRegularExpression reDehydration(R"(^([A-Za-z]+)$)");
     const QRegularExpression reSignature(R"(^([\(\)\.,;:\|\-A-Za-z]+)$)");
 }
@@ -176,12 +176,18 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     hArea->setLayout(hLayout);
     expln = QObject::tr("<qt>The isomorphism signature "
         "from which the new triangulation will be created.  An example "
-        "isomorphism signature is <i>bkaagj</i>.<p>"
+        "isomorphism signature is <tt>bNhc</tt>.<p>"
         "Isomorphism signatures identify triangulations uniquely "
-        "up to combinatorial isomorphism.  They are "
-        "described in detail in <i>Simplification paths in the Pachner graphs "
-        "of closed orientable 3-manifold triangulations</i>, Burton, "
-        "preprint, <tt>arXiv:1110.6080</tt>, October 2011.</qt>");
+        "up to combinatorial isomorphism.  "
+        "You can view the isomorphism signature of a triangulation in the "
+        "<i>Composition</i> tab of the triangulation viewer, or in Python "
+        "by calling <tt>tri.neoSig()</tt>.<p>"
+        "Both first-generation signatures (from Regina ≤ 7.x) and "
+        "second-generation signatures (from Regina ≥ 8.0) are accepted here.<p>"
+        "First-generation isomorphism signatures are described in "
+        "detail in <i>Simplification paths in the Pachner graphs "
+        "of closed orientable 3-manifold triangulations</i>, "
+        "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>");
     label = new QLabel(QObject::tr("Isomorphism signature:"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
@@ -361,12 +367,12 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
     } else if (typeId == TRI_LAYERED_LENS_SPACE) {
         auto match = reLensParams.match(lensParams->text());
         if (! match.hasMatch()) {
-            ReginaSupport::sorry(parentWidget, 
+            ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>The lens space "
-                "parameters (<i>p</i>,<i>q</i>) "
-                "must be non-negative integers."),
+                    "parameters (<i>p</i>,<i>q</i>) "
+                    "must be non-negative integers."),
                 QObject::tr("<qt>Example parameters are "
-                "<i>8,3</i>.</qt>"));
+                    "<i>8,3</i>.</qt>"));
             return nullptr;
         }
 
@@ -376,16 +382,16 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         if (p <= q && ! (p == 0 && q == 1)) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The second lens space "
-                "parameter must be smaller than the first."),
+                    "parameter must be smaller than the first."),
                 QObject::tr("<qt>For instance, "
-                "the parameters <i>8,3</i> are valid whereas <i>3,8</i> "
-                "are not.</qt>"));
+                    "the parameters <i>8,3</i> are valid whereas <i>3,8</i> "
+                    "are not.</qt>"));
             return nullptr;
         }
         if (std::gcd(p, q) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The two lens space "
-                "parameters must be relatively prime."));
+                    "parameters must be relatively prime."));
             return nullptr;
         }
 
@@ -398,8 +404,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>The layered solid "
-                "torus parameters (<i>a</i>,<i>b</i>,<i>c</i>) "
-                "must be non-negative integers.</qt>"),
+                    "torus parameters (<i>a</i>,<i>b</i>,<i>c</i>) "
+                    "must be non-negative integers.</qt>"),
                 QObject::tr("<qt>Example parameters are <i>3,4,7</i>.</qt>"));
             return nullptr;
         }
@@ -416,24 +422,24 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             // All three parameters are zero.
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("At least one of the "
-                "layered solid torus parameters must be strictly "
-                "positive."));
+                    "layered solid torus parameters must be strictly "
+                    "positive."));
             return nullptr;
         }
         if (std::gcd(param[0], param[1]) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The layered "
-                "solid torus parameters must be relatively prime."));
+                    "solid torus parameters must be relatively prime."));
             return nullptr;
         }
 
         if (param[0] + param[1] != param[2]) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("Two of the layered "
-                "solid torus parameters must add to give the third."),
+                    "solid torus parameters must add to give the third."),
                 QObject::tr("<qt>For instance, the parameters "
-                "<i>3,4,7</i> are valid "
-                "whereas the parameters <i>3,4,5</i> are not.</qt>"));
+                    "<i>3,4,7</i> are valid "
+                    "whereas the parameters <i>3,4,5</i> are not.</qt>"));
             return nullptr;
         }
 
@@ -446,7 +452,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         if (handlebodyGenus->text().isEmpty()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("Please enter a genus for the handlebody.  "
-                "This should be a non-negative integer."));
+                    "This should be a non-negative integer."));
             return nullptr;
         }
         unsigned long genus = handlebodyGenus->text().toULong();
@@ -459,29 +465,30 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         if (! reSFSAllParams.match(sfsParams->text()).hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The Seifert fibred space parameters "
-                "are not valid."),
+                    "are not valid."),
                 QObject::tr("<qt>All 2<i>n</i> parameters "
-                "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
-                "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) ... "
-                "(<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>) "
-                "must be supplied.<p>"
-                "These <i>n</i> pairs of integers describe the <i>n</i> "
-                "exceptional fibres of the new Seifert fibred space.  "
-                "The two integers in each pair must be relatively prime, and "
-                "none of <i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
-                "<i>a<sub>n</sub></i> may be zero.<p>"
-                "Each pair of parameters (<i>a</i>,<i>b</i>) does not need "
-                "to be normalised, i.e., the parameters may be positive or "
-                "negative and <i>b</i> may lie outside the range "
-                "[0,<i>a</i>).  There is no "
-                "separate twisting parameter; each additional twist can be "
-                "incorporated into the existing parameters by replacing some "
-                "pair (<i>a</i>,<i>b</i>) with the pair "
-                "(<i>a</i>,<i>a</i>+<i>b</i>).  "
-                "Including pairs of the form (1,<i>k</i>) and even (1,0) is "
-                "acceptable.<p>"
-                "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
-                "representing the Poincar&eacute; homology sphere.</qt>"));
+                    "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
+                    "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) ... "
+                    "(<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>) "
+                    "must be supplied.<p>"
+                    "These <i>n</i> pairs of integers describe the <i>n</i> "
+                    "exceptional fibres of the new Seifert fibred space.  "
+                    "The two integers in each pair must be relatively prime, "
+                    "and none of <i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, "
+                    "..., <i>a<sub>n</sub></i> may be zero.<p>"
+                    "Each pair of parameters (<i>a</i>,<i>b</i>) does not need "
+                    "to be normalised, i.e., the parameters may be positive or "
+                    "negative and <i>b</i> may lie outside the range "
+                    "[0,<i>a</i>).  There is no "
+                    "separate twisting parameter; each additional twist can be "
+                    "incorporated into the existing parameters by replacing "
+                    "some pair (<i>a</i>,<i>b</i>) with the pair "
+                    "(<i>a</i>,<i>a</i>+<i>b</i>).  "
+                    "Including pairs of the form (1,<i>k</i>) and even (1,0) "
+                    "is acceptable.<p>"
+                    "An example set of parameters is "
+                    "<i>(2,-1) (3,4) (5,-4)</i>, "
+                    "representing the Poincar&eacute; homology sphere.</qt>"));
             return nullptr;
         }
 
@@ -499,8 +506,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             if (a == 0) {
                 ReginaSupport::sorry(parentWidget,
                     QObject::tr("<qt>None of the parameters "
-                    "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
-                    "<i>a<sub>n</sub></i> may be zero.</qt>"));
+                        "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
+                        "<i>a<sub>n</sub></i> may be zero.</qt>"));
                 return nullptr;
             }
 
@@ -510,9 +517,9 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             if (d != 1 && d != -1) {
                 ReginaSupport::sorry(parentWidget,
                     QObject::tr("<qt>The two parameters "
-                    "<i>a<sub>%1</sub> = %2</i> and "
-                    "<i>b<sub>%3</sub> = %4</i> must be "
-                    "relatively prime.</qt>").
+                        "<i>a<sub>%1</sub> = %2</i> and "
+                        "<i>b<sub>%3</sub> = %4</i> must be "
+                        "relatively prime.</qt>").
                     arg(whichPair).arg(a).arg(whichPair).arg(b));
                 return nullptr;
             }
@@ -533,14 +540,10 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The isomorphism signature is not valid."),
-                QObject::tr("<qt>An isomorphism "
-                "signature must be a sequence of symbols, which may include "
-                "letters, digits, plus and/or minus but nothing else.  "
-                "An example isomorphism signature is <i>bkaagj</i>.<p>"
-                "Isomorphism signatures are described in detail in "
-                "<i>Simplification paths in the Pachner graphs "
-                "of closed orientable 3-manifold triangulations</i>, "
-                "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
+                QObject::tr("<qt>An isomorphism signature must be a sequence "
+                    "of symbols, which may include letters, digits, plus "
+                    "and/or minus but nothing else.  An example isomorphism "
+                    "signature is <tt>bNhc</tt>.</qt>"));
             return nullptr;
         }
 
@@ -551,7 +554,14 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given "
                     "isomorphism signature."),
-                QObject::tr("<qt>Isomorphism signatures are described in "
+                QObject::tr("<qt>You can view the isomorphism signature of a "
+                    "triangulation in the <i>Composition</i> tab of the "
+                    "triangulation viewer, or in Python by calling "
+                    "<tt>tri.neoSig()</tt>.<p>"
+                    "Both first-generation signatures (from Regina ≤ 7.x) and "
+                    "second-generation signatures (from Regina ≥ 8.0) are "
+                    "accepted here.<p>"
+                    "First-generation isomorphism signatures are described in "
                     "detail in <i>Simplification paths in the Pachner graphs "
                     "of closed orientable 3-manifold triangulations</i>, "
                     "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
@@ -563,12 +573,12 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The dehydration string is not valid."),
                 QObject::tr("<qt>A dehydration "
-                "string must be a sequence of letters of the alphabet.  "
-                "An example dehydration string is <i>baaaade</i>.<p>"
-                "Dehydration strings are described in detail in "
-                "<i>A census of cusped hyperbolic 3-manifolds</i>, "
-                "Callahan, Hildebrand and Weeks, published in "
-                "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
+                    "string must be a sequence of letters of the alphabet.  "
+                    "An example dehydration string is <i>baaaade</i>.<p>"
+                    "Dehydration strings are described in detail in "
+                    "<i>A census of cusped hyperbolic 3-manifolds</i>, "
+                    "Callahan, Hildebrand and Weeks, published in "
+                    "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
             return nullptr;
         }
 
@@ -579,12 +589,12 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
-                "dehydration string."),
+                    "dehydration string."),
                 QObject::tr("<qt>Dehydration strings are described in "
-                "detail in "
-                "<i>A census of cusped hyperbolic 3-manifolds</i>, "
-                "Callahan, Hildebrand and Weeks, published in "
-                "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
+                    "detail in "
+                    "<i>A census of cusped hyperbolic 3-manifolds</i>, "
+                    "Callahan, Hildebrand and Weeks, published in "
+                    "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
             return nullptr;
         }
     } else if (typeId == TRI_SPLITTING_SURFACE) {
@@ -593,14 +603,15 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The splitting surface signature is not valid."),
                 QObject::tr("<qt>A splitting "
-                "surface signature must be a sequence of cycles.  "
-                "Cycles should consist of letters of the alphabet and "
-                "should be separated by brackets, periods or commas.  "
-                "An example splitting surface signature is "
-                "<i>(abb)(ac)(c)</i>.<p>"
-                "Splitting surface signatures are described in detail in "
-                "<i>Minimal triangulations and normal surfaces</i>, "
-                "Burton, PhD thesis, available from the Regina website.</qt>"));
+                    "surface signature must be a sequence of cycles.  "
+                    "Cycles should consist of letters of the alphabet and "
+                    "should be separated by brackets, periods or commas.  "
+                    "An example splitting surface signature is "
+                    "<i>(abb)(ac)(c)</i>.<p>"
+                    "Splitting surface signatures are described in detail in "
+                    "<i>Minimal triangulations and normal surfaces</i>, "
+                    "Burton, PhD thesis, available from the "
+                    "Regina website.</qt>"));
             return nullptr;
         }
 
@@ -611,11 +622,12 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
-                "splitting surface signature."),
+                    "splitting surface signature."),
                 QObject::tr("<qt>Splitting surface signatures are "
-                "described in detail in "
-                "<i>Minimal triangulations and normal surfaces</i>, "
-                "Burton, PhD thesis, available from the Regina website.</qt>"));
+                    "described in detail in "
+                    "<i>Minimal triangulations and normal surfaces</i>, "
+                    "Burton, PhD thesis, available from the "
+                    "Regina website.</qt>"));
             return nullptr;
         }
     } else if (typeId == TRI_EXAMPLE) {

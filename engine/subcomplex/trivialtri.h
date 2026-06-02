@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -48,19 +48,18 @@ namespace regina {
  * Represents one of a few particular hard-coded trivial triangulations
  * that do not belong to any of the other larger families.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardSubcomplex routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
  *
  * \ingroup subcomplex
  */
-class TrivialTri : public StandardTriangulation {
+class TrivialTri : public StandardSubcomplex<3> {
     public:
         /**
          * Represents the two-tetrahedron four-vertex triangulation of
@@ -146,7 +145,7 @@ class TrivialTri : public StandardTriangulation {
          * value for this and the given triangulation.
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
@@ -162,8 +161,8 @@ class TrivialTri : public StandardTriangulation {
          * trivial triangulations recognised by this class.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param comp the triangulation component to examine.
          * \return a structure representing the trivial triangulation, or
@@ -172,7 +171,7 @@ class TrivialTri : public StandardTriangulation {
          */
         static std::unique_ptr<TrivialTri> recognise(const Component<3>* comp);
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

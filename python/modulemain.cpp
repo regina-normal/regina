@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,150 +35,25 @@
 #endif
 
 #include "core/engine.h"
-#include "triangulation/generic.h" // for TriangleType
+#include "triangulation/triangulation.h" // for TriangleType
 
 #include "helpers.h"
 #include "docstrings/core/engine.h"
 #include "docstrings/core/regina-core.h"
 #include "docstrings/python/equality.h"
-#include "docstrings/triangulation/detail/face.h" // for TriangleType
+#include "docstrings/triangulation/face.h" // for TriangleType
 
 // Additional headers for timeExceptions():
 #include "maths/perm.h"
 #include <chrono>
 
-// Docstrings that are generated once but need to be reused across many
-// source files:
-namespace regina::python::doc::common {
-    // Note: docstrings should be wrapped at 70 characters per line;
-    // the hard maximum is 72.
-
-    const char* neq_value =
-R"doc(Determines whether this and the given object have different values.
-This operator ``x != y`` is generated automatically, as the negation
-of ``x == y``.
-
-This test compares the _contents_ of the two objects (i.e., it
-compares by value, not by reference). See the documentation for the
-corresponding equality test (i.e., the member function ``__eq__``)
-for full details on how objects of this type will be compared.)doc";
-
-    const char* eq_reference =
-R"doc(Determines whether this and the given Python wrapper refer to the same
-underlying object in Regina's calculation engine.
-
-Note that most of Regina's classes do **not** test equality in this
-way; instead they use value semantics (i.e., the == and != operators
-compare the *contents* of the two objects). This class is one of the
-few exceptions that uses reference semantics, as explained below.
-
-Regina's calculation engine is written in C++, not Python. It is
-therefore possible to have several different Python objects that are
-all thin wrappers around the same underlying C++ object (so changes to
-any one of these objects will be reflected in all of them). The
-operators == and != for this class will test for exactly this scenario.
-
-Essentially, these tests are similar in spirit to the Python test
-``x is y``, but instead of looking at the Python wrappers they look at
-the underlying C++ objects in the calculation engine.  In particular,
-as noted above, it is possible to have two different Python wrappers
-(so ``x is y`` is false) that refer to the same underlying C++ object
-(so ``x == y`` is true).)doc";
-
-    const char* neq_reference =
-R"doc(Determines whether this and the given Python wrapper refer to different
-underlying objects in Regina's calculation engine.
-
-Note that most of Regina's classes do **not** test equality in this
-way; instead they use value semantics (i.e., the == and != operators
-compare the *contents* of the two objects). This class is one of the
-few exceptions that uses reference semantics, as explained below.
-
-Regina's calculation engine is written in C++, not Python. It is
-therefore possible to have several different Python objects that are
-all thin wrappers around the same underlying C++ object (so changes to
-any one of these objects will be reflected in all of them). The
-operators == and != for this class will test for exactly this scenario.
-
-Essentially, these tests are similar in spirit to the Python test
-``x is y``, but instead of looking at the Python wrappers they look at
-the underlying C++ objects in the calculation engine.  In particular,
-as noted above, it is possible to have two different Python wrappers
-(so ``x is y`` is false) that refer to the same underlying C++ object
-(so ``x == y`` is true).)doc";
-
-    const char* eq_None =
-R"doc(Always returns ``False``, since an object of this type is never equal
-to ``None``.)doc";
-
-    const char* neq_None =
-R"doc(Always returns ``True``, since an object of this type is never equal
-to ``None``.)doc";
-
-    const char* eq_disabled =
-R"doc(Disabled for objects of this type.
-
-Objects of this type use value semantics, which means that the
-operators == and != should compare by value (i.e., they test whether
-two objects have the same contents). However, Regina does not
-currently implement such a test for objects of this type.)doc";
-
-    const char* eq_packet_disabled =
-R"doc(Disabled for packets of this type.
-
-The operators == and != compare packet contents by value (i.e., they
-test whether two packets have the same contents). However, Regina does
-not currently implement such a test for packets of this type.
-
-To test whether two Python objects refer to the same underlying packet,
-use Packet.samePacket() instead.)doc";
-
-    const char* eq_packet_invalid =
-R"doc(Disabled for packets of different types.
-
-The operators == and != compare packet contents by value, and therefore
-can only be used to compare two packets of the same type.
-
-To test whether two Python objects refer to the same underlying packet,
-use Packet.samePacket() instead.)doc";
-
-    const char* eq_none_static =
-R"doc(Disabled in Regina.
-
-Objects of this type cannot be created, and so cannot be compared.)doc";
-
-    const char* eq_none_abstract =
-R"doc(Disabled in Regina.
-
-This is an abstract base class, and so objects of this base class
-cannot be created directly. Instead its various subclasses are
-responsible for providing their own comparison operators == and !=.)doc";
-
-    const char* bool_enum_for_flags =
-R"doc(Determines whether this flag has a non-zero numerical value.
-
-A zero flag will have no effect when it is combined with other flags
-using bitwise OR or XOR.
-
-Returns:
-    ``True`` if this is a non-zero flag, or ``False`` if this is a
-    zero flag.)doc";
-
-    const char* todo =
-R"doc(The Python documentation for this class or function has not yet been
-extracted from the C++ source code. Please inform the Regina developers
-about this omission.)doc";
-}
-
 void addAlgebraClasses(pybind11::module_& m);
 void addAngleClasses(pybind11::module_& m);
 void addCensusClasses(pybind11::module_& m);
-void addDim2Classes(pybind11::module_& m, pybind11::module_& internal);
-void addDim4Classes(pybind11::module_& m, pybind11::module_& internal);
+void addConceptsClasses(pybind11::module_& m);
 void addEnumerateClasses(pybind11::module_& m);
 void addFileClasses(pybind11::module_& m);
 void addForeignClasses(pybind11::module_& m);
-void addGenericClasses(pybind11::module_& m, pybind11::module_& internal);
 void addHypersurfaceClasses(pybind11::module_& m);
 void addLinkClasses(pybind11::module_& m, pybind11::module_& internal);
 void addManifoldClasses(pybind11::module_& m);
@@ -199,7 +74,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nSoftware for low-dimensional topology" +
-            "\nCopyright (c) 1999-2025, The Regina development team";
+            "\nCopyright (c) 1999-2026, The Regina development team";
     }
 }
 
@@ -250,9 +125,9 @@ a new Python session.)doc");
     using EqualityType = regina::python::EqualityType;
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<EqualityType>(m, "EqualityType", "enum.Enum",
-        rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<EqualityType>(m, "EqualityType", rdoc_scope)
+    pybind11::enum_<EqualityType>(m, "EqualityType", rdoc::__class)
 #endif
         .value("ByValue", EqualityType::ByValue, rdoc::ByValue)
         .value("ByReference", EqualityType::ByReference, rdoc::ByReference)
@@ -344,9 +219,9 @@ Returns:
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::Algorithm>(m, "Algorithm", "enum.Enum",
-        rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::Algorithm>(m, "Algorithm", rdoc_scope)
+    pybind11::enum_<regina::Algorithm>(m, "Algorithm", rdoc::__class)
 #endif
         .value("Default", regina::Algorithm::Default, rdoc::Default)
         .value("Backtrack", regina::Algorithm::Backtrack, rdoc::Backtrack)
@@ -367,9 +242,9 @@ Returns:
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::Language>(m, "Language", "enum.Enum",
-        rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::Language>(m, "Language", rdoc_scope)
+    pybind11::enum_<regina::Language>(m, "Language", rdoc::__class)
 #endif
         .value("Cxx", regina::Language::Cxx, rdoc::Cxx)
         .value("Python", regina::Language::Python, rdoc::Python)
@@ -388,9 +263,9 @@ Returns:
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::TriangleType>(m, "TriangleType",
-        "enum.Enum", rdoc_scope)
+            "enum.Enum", rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::TriangleType>(m, "TriangleType", rdoc_scope)
+    pybind11::enum_<regina::TriangleType>(m, "TriangleType", rdoc::__class)
 #endif
         .value("Unknown", regina::TriangleType::Unknown, rdoc::Unknown)
         .value("Triangle", regina::TriangleType::Triangle, rdoc::Triangle)
@@ -407,6 +282,31 @@ Returns:
         ;
 
     RDOC_SCOPE_END
+
+    // An empty base class to use for all Python wrappers around C++ concepts.
+    pybind11::class_<regina::python::ConceptBase>(m, "Concept",
+R"doc(A common base class for all C++ concepts.
+
+Concepts are a C++ compile-time phenomenon, and they are not functional
+in Python (i.e., you cannot test which types satisfy which concepts).
+
+Nevertheless, they are made available here as empty classes with
+docstrings, which means you can access concept _documentation_ here
+in Python. Try ``help(Ring)`` for an example.)doc");
+
+    // An empty base class to use for all documentation-only classes.
+    pybind11::class_<regina::python::DocOnlyBase>(m, "Documentation",
+R"doc(A common base class for all documentation-only classes.
+
+A _documentation-only class_ gives a way for Python users to access
+C++ documentation that would otherwise not be attached to any concrete
+Python class.  For example, within Python, Triangulation is a
+documentation-only class that offers generic information about
+triangulations (as opposed to the concrete classes Triangulation2,
+Triangulation3, etc., which provide the real functionality in each
+dimension).
+
+Try ``help(Triangulation)`` to see what this documentation looks like.)doc");
 
     // Components from subdirectories, which appear in order of dependency:
     //
@@ -429,11 +329,8 @@ Returns:
     addProgressClasses(m);
     addAlgebraClasses(m);
     addPacketClasses(m);
-    addDim2Classes(m, internal);
-    addTriangulationClasses(m, internal);
     addLinkClasses(m, internal); // Needs to come _before_ dim4 classes
-    addDim4Classes(m, internal);
-    addGenericClasses(m, internal);
+    addTriangulationClasses(m, internal);
     addCensusClasses(m);
     addForeignClasses(m);
     addSplitClasses(m);
@@ -445,6 +342,7 @@ Returns:
     addHypersurfaceClasses(m);
     addTreewidthClasses(m);
     addEnumerateClasses(m);
+    addConceptsClasses(m);
 
     // This routine allows the user to import sage-related hacks, which
     // are not included by default in regina's python module.
