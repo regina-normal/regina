@@ -151,6 +151,7 @@ Face8_5 : class -> EqualityType.ByReference
 Face8_6 : class -> EqualityType.ByReference
 Face8_7 : class -> EqualityType.ByReference
 Face8_8 : alias -> Simplex8
+FaceClass : concept
 FaceEmbedding2_0 : class -> EqualityType.ByValue
 FaceEmbedding2_1 : class -> EqualityType.ByValue
 FaceEmbedding3_0 : class -> EqualityType.ByValue
@@ -186,6 +187,7 @@ FaceEmbedding8_4 : class -> EqualityType.ByValue
 FaceEmbedding8_5 : class -> EqualityType.ByValue
 FaceEmbedding8_6 : class -> EqualityType.ByValue
 FaceEmbedding8_7 : class -> EqualityType.ByValue
+FaceOrSimplexClass : concept
 FacePair : class -> EqualityType.ByValue
 FacetPairing2 : class -> EqualityType.ByValue
 FacetPairing3 : class -> EqualityType.ByValue
@@ -577,6 +579,7 @@ Simplex5 : class -> EqualityType.ByReference
 Simplex6 : class -> EqualityType.ByReference
 Simplex7 : class -> EqualityType.ByReference
 Simplex8 : class -> EqualityType.ByReference
+SimplexClass : concept
 SnapPeaCensusManifold : class -> EqualityType.ByValue
 SnapPeaCensusTri : class -> EqualityType.ByValue
 SnapPeaFatalError : exception
