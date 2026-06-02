@@ -179,11 +179,13 @@ using SafeTriangulation = typename detail::SafeTriangulationHelper<dim>::type;
 
 /**
  * Provides safe access to faces of the given dimension, where the template
- * arguments \a dim and \a subdim may be a little outside the supported range.
+ * arguments `(dim, subdim)` may be a little outside the supported range.
  *
- * For supported dimensions, `SafeFace<dim, subdim>` will simply resolve to
- * `Face<dim, subdim>`.  For dimensions that are _not_ supported, it will
- * resolve to regina::NoSuchType.
+ * The type `SafeFace<dim, subdim>` will resolve to:
+ *
+ * - `Face<dim, subdim>` if `0 ≤ subdim < dim`;
+ * - `Simplex<dim>` if `subdim == dim`;
+ * - regina::NoSuchType for other values of \a subdim.
  *
  * The point of this type alias is so that we can do arithmetic on dimensions
  * and avoid compile errors (e.g., when a type such as `Face<2, 3>` would
