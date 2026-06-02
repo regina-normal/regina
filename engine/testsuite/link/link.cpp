@@ -4715,8 +4715,8 @@ static void verifyBraid(
     // reversal).
     Link recon;
     ASSERT_NO_THROW({ recon = Link::fromBraid(word); });
-    EXPECT_EQ( recon.sig(false, false, false),
-            link.sig(false, false, false) );
+    EXPECT_EQ( recon.neoSig(false, false, false),
+            link.neoSig(false, false, false) );
 
     // Verify the "magic" string constructor.
     //TODO Need to add braid words to the "magic" constructor first.
