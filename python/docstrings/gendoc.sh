@@ -127,6 +127,7 @@ for dir in $dirs; do
         utilities/shortarray.h ) ;;
         utilities/topologylock.h ) ;;
         utilities/typeutils.h ) ;;
+        utilities/xzstr.h ) ;;
         utilities/zstr.h ) ;;
         * )
           "$PYTHON" ./mkdoc.py -std=c++20 \
