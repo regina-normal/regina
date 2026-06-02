@@ -659,43 +659,6 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Tangle::r1_2
-static constexpr const char r1_2[] =
-R"doc(Deprecated routine that tests for and optionally performs a type I
-Reidemeister move to remove a crossing.
-
-For more detail on type I moves and when they can be performed, see
-Link::r1(Crossing*).
-
-This routine will always _check_ whether the requested move is
-allowed. If it is, and if the argument *perform* is ``True``, this
-routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasR1(). If you wish to both check and perform the move, call r1()
-    without the two additional boolean arguments.
-
-Precondition:
-    The given crossing is either a null pointer, or else some crossing
-    in this tangle.
-
-Parameter ``crossing``:
-    identifies the crossing to be removed. See Link::r1(Crossing*) for
-    details on exactly how this will be interpreted.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
 // Docstring regina::python::doc::Tangle::r2
 static constexpr const char r2[] =
 R"doc(If possible, performs a type II Reidemeister move to remove two
@@ -751,82 +714,6 @@ Parameter ``crossing``:
 Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
-
-// Docstring regina::python::doc::Tangle::r2_3
-static constexpr const char r2_3[] =
-R"doc(Deprecated routine that tests for and optionally performs a type II
-Reidemeister move to remove two crossings.
-
-For more detail on type II moves and when they can be performed, see
-Link::r2(StrandRef).
-
-This routine will always _check_ whether the requested move is
-allowed. If it is, and if the argument *perform* is ``True``, this
-routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasR2(). If you wish to both check and perform the move, call r2()
-    without the two additional boolean arguments.
-
-Precondition:
-    The given strand reference is either a null reference, or else
-    refers to some strand of some crossing in this tangle.
-
-Parameter ``arc``:
-    identifies one of the arcs of the bigon about which the move will
-    be performed. See Link::r2(StrandRef) for details on exactly how
-    this will be interpretered.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
-// Docstring regina::python::doc::Tangle::r2_4
-static constexpr const char r2_4[] =
-R"doc(Deprecated routine that tests for and optionally performs a type II
-Reidemeister move to remove two crossings.
-
-For more detail on type II moves and when they can be performed, see
-Link::r2(Crossing*).
-
-This routine will always _check_ whether the requested move is
-allowed. If it is, and if the argument *perform* is ``True``, this
-routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasR2(). If you wish to both check and perform the move, call r2()
-    without the two additional boolean arguments.
-
-Precondition:
-    The given crossing is either a null pointer, or else some crossing
-    in this tangle.
-
-Parameter ``crossing``:
-    identifies the crossing at the beginning of the "upper" arc that
-    features in this move. See Link::r2(Crossing*) for details on
-    exactly how this will be interpreted.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
 
 // Docstring regina::python::doc::Tangle::simplifyToLocalMinimum
 static constexpr const char simplifyToLocalMinimum[] =

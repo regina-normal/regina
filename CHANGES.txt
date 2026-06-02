@@ -557,6 +557,7 @@ Version 8.0  [ TODO ]
               untested nowadays.
         Class Triangulation<3>:
             - New routines knowsHomologyRel() and knowsHomologyH2Z2().
+            - Routine layerOn() now preserves orientation (thanks to Alex He).
             - Routines hasCompressingDisc() and isHaken() now throw an
               UnsolvedCase exception if the underlying algorithms encounter an
               impossible memory requirement (typically due to some normal
@@ -579,7 +580,7 @@ Version 8.0  [ TODO ]
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.
             - Several properties (boundary homology, second homology,
-              existence of a splitting surface) are no longer save alongside
+              existence of a splitting surface) are no longer saved alongside
               triangulations in data files, since they are easy to reconstruct
               (in some cases, using other invariants that _are_ saved).
         Class TypeTrie:

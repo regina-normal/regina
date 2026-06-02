@@ -66,6 +66,21 @@ static void clearProperties(const Triangulation<dim>& tri) {
 }
 
 /**
+ * Gives access to the function pointer type for a standard local move function
+ * on a triangulation.
+ */
+template <int dim, int subdim>
+requires (regina::supportedDim(dim) && 0 <= subdim && subdim <= dim)
+struct MoveFunc {
+    using type = bool(Triangulation<dim>::*)(regina::Face<dim, subdim>*);
+};
+
+template <int dim> requires (regina::supportedDim(dim))
+struct MoveFunc<dim, dim> {
+    using type = bool(Triangulation<dim>::*)(regina::Simplex<dim>*);
+};
+
+/**
  * Implements several tests for triangulations in dimension \a dim.
  *
  * Test fixtures in each dimension should use TriangulationTest<dim>
@@ -1689,21 +1704,6 @@ class TriangulationTest : public testing::Test {
         }
 
         /**
-         * Gives access to the function pointer type for a standard local move
-         * function.
-         */
-        template <int subdim> requires (0 <= subdim && subdim <= dim)
-        struct MoveFunc {
-            using type = bool(Triangulation<dim>::*)(
-                regina::Face<dim, subdim>*);
-        };
-
-        template <>
-        struct MoveFunc<dim> {
-            using type = bool(Triangulation<dim>::*)(regina::Simplex<dim>*);
-        };
-
-        /**
          * Tests all potential local moves of the form tri.move(f), where f is
          * either a lower-dimensional face or a top-dimensional simplex of the
          * triangulation tri.  The argument *subdim* should be the dimension of
@@ -1739,7 +1739,7 @@ class TriangulationTest : public testing::Test {
          */
         template <int subdim> requires (0 <= subdim && subdim <= dim)
         static void verifyMove(const Triangulation<dim>& tri,
-                const char* name, typename MoveFunc<subdim>::type move,
+                const char* name, typename MoveFunc<dim, subdim>::type move,
                 int sizeChange,
                 std::optional<bool>(*preTest)(const Triangulation<dim>&,
                     size_t) = nullptr,
