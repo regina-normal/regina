@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Identify the type (binary/XML) and version of a data file             *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "file/fileinfo.h"
+#include "utilities/exception.h"
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -69,11 +70,13 @@ int main(int argc, char* argv[]) {
         if (argc != 2)
             std::cout << "[ " << argv[i] << " ]\n";
 
-        auto info = regina::FileInfo::identify(argv[i]);
-        if (info)
-            info->writeTextLong(std::cout);
-        else
-            std::cout << "Unknown file format or file could not be opened.\n";
+        try {
+            regina::FileInfo::identify(argv[i]).writeTextLong(std::cout);
+        } catch (const regina::FileError&) {
+            std::cout << "The file could not be read.\n";
+        } catch (const regina::InvalidInput&) {
+            std::cout << "Unknown file format.\n";
+        }
 
         if (argc != 2)
             std::cout << std::endl;

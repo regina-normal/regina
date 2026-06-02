@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Cusp
-static const char *Cusp =
+struct Cusp {
+
+// Docstring regina::python::doc::Cusp::__class
+static constexpr const char __class[] =
 R"doc(Used to return information about a single cusp of a SnapPea
 triangulation. See SnapPeaTriangulation::cusp() and
 SnapPeaTriangulation::cusps() for further details.
@@ -34,8 +36,81 @@ Cusp objects are small enough to pass by value and swap with
 std::swap(), with no need for any specialised move operations or swap
 functions.)doc";
 
-// Docstring regina::python::doc::SnapPeaFatalError
-static const char *SnapPeaFatalError =
+// Docstring regina::python::doc::Cusp::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given cusp information.)doc";
+
+// Docstring regina::python::doc::Cusp::__eq
+static constexpr const char __eq[] =
+R"doc(Determines whether this and the given object hold the same cusp
+information.
+
+Two Cusp objects are considered equal if they refer to the same vertex
+number of the underlying triangulation, and they have the same filling
+coefficients. Note that the vertex _pointers_ do not need to be the
+same (i.e., it is meaningful to compare cusps from different
+triangulations).
+
+Parameter ``other``:
+    the cusp information to compare with this.
+
+Returns:
+    ``True`` if and only this and the given object hold the same cusp
+    information.)doc";
+
+// Docstring regina::python::doc::Cusp::complete
+static constexpr const char complete[] =
+R"doc(Returns whether this cusp is complete.
+
+SnapPy:
+    In SnapPy, this field corresponds to querying
+    ``Manifold.cusp_info("is_complete")[cusp_number]``.
+
+Returns:
+    ``True`` if this cusp is complete, or ``False`` if it is filled.)doc";
+
+// Docstring regina::python::doc::Cusp::l
+static constexpr const char l[] =
+R"doc(Returns the second (longitude) filling coefficient on this cusp, or 0
+if this cusp is complete.
+
+SnapPy:
+    In SnapPy, this field corresponds to querying
+    ``Manifold.cusp_info("filling")[cusp_number][1]``.
+
+Returns:
+    the second filling coefficient.)doc";
+
+// Docstring regina::python::doc::Cusp::m
+static constexpr const char m[] =
+R"doc(Returns the first (meridian) filling coefficient on this cusp, or 0 if
+this cusp is complete.
+
+SnapPy:
+    In SnapPy, this field corresponds to querying
+    ``Manifold.cusp_info("filling")[cusp_number][0]``.
+
+Returns:
+    the first filling coefficient.)doc";
+
+// Docstring regina::python::doc::Cusp::vertex
+static constexpr const char vertex[] =
+R"doc(Returns the corresponding vertex of the Regina triangulation (i.e., of
+the Triangulation<3> structure that is inherited by
+SnapPeaTriangulation).
+
+Note that cusp and vertex indexing might not be in sync; that is,
+SnapPea's ``cusp(i)`` need not correspond to Regina's ``vertex(i)``.
+
+This routine can be used to detect if/when cusp numbering and vertex
+numbering fall out of sync, and to translate between them if/when this
+happens.)doc";
+
+}; // struct Cusp
+
+struct SnapPeaFatalError {
+
+// Docstring regina::python::doc::SnapPeaFatalError::__class
+static constexpr const char __class[] =
 R"doc(An exception that is thrown when the SnapPea kernel encounters a fatal
 error.
 
@@ -47,10 +122,32 @@ description so they can be created without allocating further
 resources).
 
 Details of the error can be accessed through the inherited member
-function what().)doc";
+function what().
 
-// Docstring regina::python::doc::SnapPeaMemoryFull
-static const char *SnapPeaMemoryFull =
+Python:
+    This uses Python's ``RuntimeError`` as its base class.)doc";
+
+// Docstring regina::python::doc::SnapPeaFatalError::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
+
+// Docstring regina::python::doc::SnapPeaFatalError::__init
+static constexpr const char __init[] =
+R"doc(Creates a new exception, indicating where in the SnapPea kernel the
+error occurred.
+
+Parameter ``fromFunction``:
+    the function from the SnapPea kernel in which the error occurred.
+
+Parameter ``fromFile``:
+    the source file from the SnapPea kernel in which the error
+    occurred.)doc";
+
+}; // struct SnapPeaFatalError
+
+struct SnapPeaMemoryFull {
+
+// Docstring regina::python::doc::SnapPeaMemoryFull::__class
+static constexpr const char __class[] =
 R"doc(An exception that is thrown when the SnapPea kernel finds that all
 available memory has been exhausted.
 
@@ -62,10 +159,30 @@ description so they can be created without allocating further
 resources).
 
 Details of the error can be accessed through the member function
-what().)doc";
+what().
 
-// Docstring regina::python::doc::SnapPeaTriangulation
-static const char *SnapPeaTriangulation =
+Python:
+    This uses Python's ``RuntimeError`` as its base class.)doc";
+
+// Docstring regina::python::doc::SnapPeaMemoryFull::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given exception.)doc";
+
+// Docstring regina::python::doc::SnapPeaMemoryFull::__default
+static constexpr const char __default[] = R"doc(Creates a new exception.)doc";
+
+// Docstring regina::python::doc::SnapPeaMemoryFull::what
+static constexpr const char what[] =
+R"doc(Returns a human-readable description of the error that occurred.
+
+Returns:
+    a description of the error.)doc";
+
+}; // struct SnapPeaMemoryFull
+
+struct SnapPeaTriangulation {
+
+// Docstring regina::python::doc::SnapPeaTriangulation::__class
+static constexpr const char __class[] =
 R"doc(Offers direct access to the SnapPea kernel from within Regina. An
 object of this class represents a 3-manifold triangulation, stored
 directly in the SnapPea kernel using SnapPea's internal format.
@@ -183,10 +300,10 @@ uses the SnapPea kernel could throw either of these exceptions.
 
 Regina uses the variant of the SnapPea kernel that is shipped with
 SnapPy (standard precision), as well as some additional code written
-explicitly for SnapPy. The header regina-config.h includes a macro
-SNAPPY_VERSION that gives the exact version of SnapPy that is bundled
-into Regina, and you can query this at runtime by calling Regina's
-function regina::versionSnapPy().
+explicitly for SnapPy. The header ``regina-config.h`` (included via
+``regina-core.h``) defines a macro ``SNAPPY_VERSION`` that gives the
+exact version of SnapPy that is bundled into Regina, and you can query
+this at runtime by calling Regina's function regina::versionSnapPy().
 
 Since Regina 7.0, SnapPeaTriangulation is no longer a "packet type"
 that can be inserted directly into the packet tree. Instead a
@@ -273,165 +390,8 @@ Exception ``SnapPeaMemoryFull``:
     The SnapPea kernel ran out of memory. This could be thrown by any
     member function that uses the SnapPea kernel.)doc";
 
-namespace Cusp_ {
-
-// Docstring regina::python::doc::Cusp_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given cusp information.)doc";
-
-// Docstring regina::python::doc::Cusp_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given object hold the same cusp
-information.
-
-Two Cusp objects are considered equal if they refer to the same vertex
-number of the underlying triangulation, and they have the same filling
-coefficients. Note that the vertex _pointers_ do not need to be the
-same (i.e., it is meaningful to compare cusps from different
-triangulations).
-
-Parameter ``other``:
-    the cusp information to compare with this.
-
-Returns:
-    ``True`` if and only this and the given object hold the same cusp
-    information.)doc";
-
-// Docstring regina::python::doc::Cusp_::complete
-static const char *complete =
-R"doc(Returns whether this cusp is complete.
-
-SnapPy:
-    In SnapPy, this field corresponds to querying
-    ``Manifold.cusp_info("is_complete")[cusp_number]``.
-
-Returns:
-    ``True`` if this cusp is complete, or ``False`` if it is filled.)doc";
-
-// Docstring regina::python::doc::Cusp_::l
-static const char *l =
-R"doc(Returns the second (longitude) filling coefficient on this cusp, or 0
-if this cusp is complete.
-
-SnapPy:
-    In SnapPy, this field corresponds to querying
-    ``Manifold.cusp_info("filling")[cusp_number][1]``.
-
-Returns:
-    the second filling coefficient.)doc";
-
-// Docstring regina::python::doc::Cusp_::m
-static const char *m =
-R"doc(Returns the first (meridian) filling coefficient on this cusp, or 0 if
-this cusp is complete.
-
-SnapPy:
-    In SnapPy, this field corresponds to querying
-    ``Manifold.cusp_info("filling")[cusp_number][0]``.
-
-Returns:
-    the first filling coefficient.)doc";
-
-// Docstring regina::python::doc::Cusp_::vertex
-static const char *vertex =
-R"doc(Returns the corresponding vertex of the Regina triangulation (i.e., of
-the Triangulation<3> structure that is inherited by
-SnapPeaTriangulation).
-
-Note that cusp and vertex indexing might not be in sync; that is,
-SnapPea's ``cusp(i)`` need not correspond to Regina's ``vertex(i)``.
-
-This routine can be used to detect if/when cusp numbering and vertex
-numbering fall out of sync, and to translate between them if/when this
-happens.)doc";
-
-}
-
-namespace SnapPeaFatalError_ {
-
-// Docstring regina::python::doc::SnapPeaFatalError_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
-
-// Docstring regina::python::doc::SnapPeaFatalError_::__init
-static const char *__init =
-R"doc(Creates a new exception, indicating where in the SnapPea kernel the
-error occurred.
-
-Parameter ``fromFunction``:
-    the function from the SnapPea kernel in which the error occurred.
-
-Parameter ``fromFile``:
-    the source file from the SnapPea kernel in which the error
-    occurred.)doc";
-
-}
-
-namespace SnapPeaMemoryFull_ {
-
-// Docstring regina::python::doc::SnapPeaMemoryFull_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given exception.)doc";
-
-// Docstring regina::python::doc::SnapPeaMemoryFull_::__default
-static const char *__default = R"doc(Creates a new exception.)doc";
-
-// Docstring regina::python::doc::SnapPeaMemoryFull_::what
-static const char *what =
-R"doc(Returns a human-readable description of the error that occurred.
-
-Returns:
-    a description of the error.)doc";
-
-}
-
-namespace SnapPeaTriangulation_ {
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::Cover
-static const char *Cover =
-R"doc(Indicates the different types of covers that can be produced by
-enumerateCovers().
-
-This enumeration corresponds to SnapPea's own CoveringType enum; it is
-declared again here because Regina code should not in general interact
-directly with the SnapPea kernel. Values may be freely converted
-between the two enumeration types by simple assignment and/or
-typecasting.
-
-.. warning::
-    This enumeration must always be kept in sync with SnapPea's own
-    CoveringType enumeration.)doc";
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumeration
-static const char *CoverEnumeration =
-R"doc(Indicates which types of covers should be enumerated when calling
-enumerateCovers().
-
-This enumeration corresponds to SnapPea's PermutationSubgroup enum,
-though the values here are named differently. The enumeration is
-declared again here because Regina code should not in general interact
-directly with the SnapPea kernel. Values may be freely converted
-between the two enumeration types by simple assignment and/or
-typecasting.
-
-.. warning::
-    This enumeration must always be kept in sync with SnapPea's
-    PermutationSubgroup enumeration.)doc";
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution
-static const char *Solution =
-R"doc(Describes the different types of solution that can be found when
-solving for a hyperbolic structure.
-
-This enumeration corresponds to SnapPea's own SolutionType enum; it is
-declared again here because Regina code should not in general interact
-directly with the SnapPea kernel. Values may be freely converted
-between the two enumeration types by simple assignment and/or
-typecasting.
-
-.. warning::
-    This enumeration must always be kept in sync with SnapPea's own
-    SolutionType enumeration.)doc";
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::__copy
-static const char *__copy =
+// Docstring regina::python::doc::SnapPeaTriangulation::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given SnapPea triangulation.
 
 If *src* is a null triangulation then this will be a null
@@ -440,11 +400,11 @@ triangulation also. See isNull() for further details.
 Parameter ``src``:
     the SnapPea triangulation to copy.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::__default
-static const char *__default = R"doc(Creates a null triangulation, with no internal SnapPea data at all.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation::__default
+static constexpr const char __default[] = R"doc(Creates a null triangulation, with no internal SnapPea data at all.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::SnapPeaTriangulation::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given SnapPea triangulation are, at
 some elementary level, the same.
 
@@ -478,8 +438,8 @@ Returns:
     ``True`` if and only this and the given triangulation are the
     same, according to the criteria described above.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::__init
-static const char *__init =
+// Docstring regina::python::doc::SnapPeaTriangulation::__init
+static constexpr const char __init[] =
 R"doc(Creates a new SnapPea triangulation from the contents of SnapPea data
 file. The argument may be the _name_ of a SnapPea file, or it may also
 be the _contents_ of a SnapPea file (so the file itself need not
@@ -526,8 +486,8 @@ Parameter ``filenameOrContents``:
     SnapPea data file (which need not actually exist on the
     filesystem).)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::SnapPeaTriangulation::__init_2
+static constexpr const char __init_2[] =
 R"doc(Converts the given Regina triangulation to a SnapPea triangulation.
 This copy will be independent (i.e., this triangulation will not be
 affected if *tri* is later changed or destroyed).
@@ -592,10 +552,10 @@ Parameter ``tri``:
 
 Parameter ``ignored``:
     a legacy parameter that is now ignored. (This argument was once
-    required if you wanted to pass a closed triangluation to SnapPea.))doc";
+    required if you wanted to pass a closed triangulation to SnapPea.))doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::SnapPeaTriangulation::__init_3
+static constexpr const char __init_3[] =
 R"doc(Creates a new ideal SnapPea triangulation representing the complement
 of the given link in the 3-sphere.
 
@@ -626,8 +586,8 @@ Exception ``InvalidArgument``:
 Parameter ``link``:
     the link whose complement we should build.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::canonise
-static const char *canonise =
+// Docstring regina::python::doc::SnapPeaTriangulation::canonise
+static constexpr const char canonise[] =
 R"doc(Constructs the canonical retriangulation of the canonical cell
 decomposition.
 
@@ -693,8 +653,8 @@ Exception ``UnsolvedCase``:
 Returns:
     the canonical triangulation of the canonical cell decomposition.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::canonize
-static const char *canonize =
+// Docstring regina::python::doc::SnapPeaTriangulation::canonize
+static constexpr const char canonize[] =
 R"doc(An alias for canonise(), which constructs the canonical
 retriangulation of the canonical cell decomposition. See canonise()
 for further details.
@@ -713,8 +673,8 @@ Exception ``UnsolvedCase``:
 Returns:
     the canonical triangulation of the canonical cell decomposition.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::countCompleteCusps
-static const char *countCompleteCusps =
+// Docstring regina::python::doc::SnapPeaTriangulation::countCompleteCusps
+static constexpr const char countCompleteCusps[] =
 R"doc(Returns the total number of complete cusps (that is, unfilled cusps).
 
 It is always true that ``countCompleteCusps() + countFilledCusps() ==
@@ -728,8 +688,8 @@ SnapPy:
 Returns:
     the total number of complete cusps.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::countCusps
-static const char *countCusps =
+// Docstring regina::python::doc::SnapPeaTriangulation::countCusps
+static constexpr const char countCusps[] =
 R"doc(Returns the total number of cusps (both filled and complete).
 
 This returns the same value as the inherited function
@@ -742,8 +702,8 @@ SnapPy:
 Returns:
     the total number of cusps.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::countFilledCusps
-static const char *countFilledCusps =
+// Docstring regina::python::doc::SnapPeaTriangulation::countFilledCusps
+static constexpr const char countFilledCusps[] =
 R"doc(Returns the total number of filled cusps.
 
 It is always true that ``countCompleteCusps() + countFilledCusps() ==
@@ -757,8 +717,8 @@ SnapPy:
 Returns:
     the total number of filled cusps.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::cusp
-static const char *cusp =
+// Docstring regina::python::doc::SnapPeaTriangulation::cusp
+static constexpr const char cusp[] =
 R"doc(Returns information about the given cusp of this manifold. This
 information includes the filling coefficients (if any), along with
 other combinatorial information.
@@ -790,8 +750,8 @@ Parameter ``whichCusp``:
 Returns:
     information about the given cusp.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::cusps
-static const char *cusps =
+// Docstring regina::python::doc::SnapPeaTriangulation::cusps
+static constexpr const char cusps[] =
 R"doc(Returns an object that allows iteration through and random access to
 information about all of the cusps of this manifold. This information
 includes the filling coefficients (if any), along with other
@@ -801,10 +761,10 @@ The object that is returned is lightweight, and can be happily copied
 by value. The C++ type of the object is subject to change, so C++
 users should use ``auto`` (just like this declaration does).
 
-The returned object is guaranteed to be an instance of ListView, which
-means it offers basic container-like functions and supports range-
-based ``for`` loops. The elements of the list will be read-only
-objects of type Cusp. For example, your code might look like:
+The returned object is guaranteed to be a lightweight view type from
+the ``std::ranges`` library, which means it supports range-based
+``for`` loops. The elements of the list will be read-only objects of
+type Cusp. For example, your code might look like:
 
 ```
 for (const Cusp& c : tri->cusps()) { ... }
@@ -824,8 +784,8 @@ information about a cusp, you can simply copy the Cusp object by value
 Returns:
     access to the list of all cusps of this manifold.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::disableKernelMessages
-static const char *disableKernelMessages =
+// Docstring regina::python::doc::SnapPeaTriangulation::disableKernelMessages
+static constexpr const char disableKernelMessages[] =
 R"doc(Specifies that the SnapPea kernel should not write diagnostic messages
 to standard output.
 
@@ -836,8 +796,8 @@ Note that diagnostic messages are already disabled by default.
 
 This routine (which interacts with static data) is thread-safe.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::enableKernelMessages
-static const char *enableKernelMessages =
+// Docstring regina::python::doc::SnapPeaTriangulation::enableKernelMessages
+static constexpr const char enableKernelMessages[] =
 R"doc(Configures whether or not the SnapPea kernel should write diagnostic
 messages to standard output.
 
@@ -849,8 +809,8 @@ Parameter ``enabled``:
     ``True`` if diagnostic messages should be enabled, or ``False``
     otherwise.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::enumerateCovers
-static const char *enumerateCovers =
+// Docstring regina::python::doc::SnapPeaTriangulation::enumerateCovers
+static constexpr const char enumerateCovers[] =
 R"doc(Enumerates connected *k*-sheeted covers of the underlying manifold.
 The number of sheets *k* is passed as the first argument to this
 function.
@@ -969,8 +929,8 @@ Parameter ``args``:
 Returns:
     the total number of covers found.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::fill
-static const char *fill =
+// Docstring regina::python::doc::SnapPeaTriangulation::fill
+static constexpr const char fill[] =
 R"doc(Assigns a Dehn filling to the given cusp. This routine will
 automatically ask SnapPea to update the hyperbolic structure according
 to the new filling coefficients.
@@ -982,10 +942,10 @@ wish to retriangulate to permanently fill the cusp, call filledAll()
 or filledPartial() instead.
 
 For orientable cusps only coprime filling coefficients are allowed,
-and for non-orientable cusps only (±1, 0) fillings are allowed.
+and for non-orientable cusps only ``(±1, 0)`` fillings are allowed.
 Although SnapPea can handle more general fillings, Regina will enforce
-these conditions; if they are not satisfied then it will do nothing
-and simply return ``False``.
+these conditions; if they are not satisfied then this routine will
+throw an exception instead.
 
 As a special case however, you may pass (0, 0) as the filling
 coefficients, in which case this routine will behave identically to
@@ -994,13 +954,26 @@ unfill().
 It is possible that, if the given integers are extremely large,
 SnapPea cannot convert the filling coefficients to its own internal
 floating-point representation. If this happens then this routine will
-again do nothing and simply return ``False``.
+throw an exception.
+
+Note that throwing exceptions on error is a change in behaviour as of
+Regina 8.0: older versions of Regina (≤ 7.x) returned ``False`` on
+error instead.
 
 .. warning::
     Be warned that cusp *i* might not correspond to vertex *i* of the
     triangulation. The Cusp::vertex() method (which is accessed
     through the cusp() routine) can help translate between SnapPea's
     cusp numbers and Regina's vertex numbers.
+
+Exception ``SnapPeaIsNull``:
+    This is a null SnapPea triangulation.
+
+Exception ``InvalidArgument``:
+    Either the filling coefficients fail their mathematical
+    requirements (coprime for orientable cusps, or ``(±1, 0)`` for
+    non-orientable cusps), or they are too large for SnapPea's
+    internal floating point representation.
 
 Parameter ``m``:
     the first (meridional) filling coefficient.
@@ -1016,8 +989,8 @@ Returns:
     ``True`` if and only if the filling coefficients were accepted
     (according to the conditions outlined above).)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::filledAll
-static const char *filledAll =
+// Docstring regina::python::doc::SnapPeaTriangulation::filledAll
+static constexpr const char filledAll[] =
 R"doc(Retriangulates to permanently fill all cusps. This uses the current
 Dehn filling coefficients on the cusps, as set by fill(). The result
 will be a closed triangulation, of type Triangulation<3> (not
@@ -1047,8 +1020,8 @@ Exception ``FailedPrecondition``:
 Returns:
     the filled triangulation.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::filledPartial
-static const char *filledPartial =
+// Docstring regina::python::doc::SnapPeaTriangulation::filledPartial
+static constexpr const char filledPartial[] =
 R"doc(Retriangulates to permanently fill the given cusp. This uses the
 current Dehn filling coefficients on the cusp, as set by fill(). The
 result will be another instance of SnapPeaTriangulation, with at least
@@ -1107,8 +1080,8 @@ Parameter ``whichCusp``:
 Returns:
     the filled triangulation.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::filledPartial_2
-static const char *filledPartial_2 =
+// Docstring regina::python::doc::SnapPeaTriangulation::filledPartial_2
+static constexpr const char filledPartial_2[] =
 R"doc(Retriangulates to permanently fill some but not all cusps. This uses
 the current Dehn filling coefficients on the cusps, as set by fill().
 The result will be another instance of SnapPeaTriangulation, with at
@@ -1152,8 +1125,8 @@ Exception ``FailedPrecondition``:
 Returns:
     the filled triangulation.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::fundamentalGroupFilled
-static const char *fundamentalGroupFilled =
+// Docstring regina::python::doc::SnapPeaTriangulation::fundamentalGroupFilled
+static constexpr const char fundamentalGroupFilled[] =
 R"doc(Returns the fundamental group of the manifold with respect to the
 current Dehn filling (if any). Any complete cusps (without fillings)
 will be treated as though they had been truncated.
@@ -1205,8 +1178,8 @@ Parameter ``tryHardToShortenRelators``:
 Returns:
     the fundamental group of the filled manifold.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::SnapPeaTriangulation::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given SnapPea triangulations.
 
 This global routine simply calls SnapPeaTriangulation::swap(); it is
@@ -1236,8 +1209,8 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the triangulation whose contents should be swapped with *lhs*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::gluingEquations
-static const char *gluingEquations =
+// Docstring regina::python::doc::SnapPeaTriangulation::gluingEquations
+static constexpr const char gluingEquations[] =
 R"doc(Returns a matrix describing Thurston's gluing equations. This will be
 with respect to the current Dehn filling (if any).
 
@@ -1281,8 +1254,8 @@ Returns:
     a matrix with (*number_of_rows* + *number_of_cusps*) rows and (3 *
     *number_of_tetrahedra*) columns as described above.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::gluingEquationsRect
-static const char *gluingEquationsRect =
+// Docstring regina::python::doc::SnapPeaTriangulation::gluingEquationsRect
+static constexpr const char gluingEquationsRect[] =
 R"doc(Returns a matrix describing Thurston's gluing equations in a
 streamlined form. This will be with respect to the current Dehn
 filling (if any).
@@ -1314,8 +1287,8 @@ Returns:
     a matrix with (*number_of_rows* + *number_of_cusps*) rows and (2 *
     *number_of_tetrahedra* + 1) columns as described above.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::homologyFilled
-static const char *homologyFilled =
+// Docstring regina::python::doc::SnapPeaTriangulation::homologyFilled
+static constexpr const char homologyFilled[] =
 R"doc(Returns the first homology group of the manifold with respect to the
 current Dehn filling (if any). Any complete cusps (without fillings)
 will be treated as though they had been truncated.
@@ -1363,8 +1336,8 @@ Exception ``SnapPeaUnsolvedCase``:
 Returns:
     the first homology group of the filled manifold.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::isNull
-static const char *isNull =
+// Docstring regina::python::doc::SnapPeaTriangulation::isNull
+static constexpr const char isNull[] =
 R"doc(Determines whether this triangulation contains valid SnapPea data.
 
 A null SnapPea triangulation can occur (for instance) when converting
@@ -1376,8 +1349,8 @@ Returns:
     ``True`` if this is a null triangulation, or ``False`` if this
     triangulation contains valid SnapPea data.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::kernelMessagesEnabled
-static const char *kernelMessagesEnabled =
+// Docstring regina::python::doc::SnapPeaTriangulation::kernelMessagesEnabled
+static constexpr const char kernelMessagesEnabled[] =
 R"doc(Returns whether or not the SnapPea kernel writes diagnostic messages
 to standard output.
 
@@ -1389,8 +1362,8 @@ This routine (which interacts with static data) is thread-safe.
 Returns:
     ``True`` if and only if diagonstic messages are enabled.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::minImaginaryShape
-static const char *minImaginaryShape =
+// Docstring regina::python::doc::SnapPeaTriangulation::minImaginaryShape
+static constexpr const char minImaginaryShape[] =
 R"doc(Returns the minimum imaginary part found amongst all tetrahedron
 shapes, with respect to the Dehn filled hyperbolic structure.
 
@@ -1409,8 +1382,8 @@ SnapPy:
 Returns:
     the minimum imaginary part amongst all tetrahedron shapes.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::name
-static const char *name =
+// Docstring regina::python::doc::SnapPeaTriangulation::name
+static constexpr const char name[] =
 R"doc(Returns SnapPea's internal name for this triangulation.
 
 This is the manifold name stored in the SnapPea kernel, which is
@@ -1426,11 +1399,11 @@ SnapPy:
 Returns:
     SnapPea's name for this triangulation.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::nullify
-static const char *nullify = R"doc(Sets this to be a null SnapPea triangulation.)doc";
+// Docstring regina::python::doc::SnapPeaTriangulation::nullify
+static constexpr const char nullify[] = R"doc(Sets this to be a null SnapPea triangulation.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::protoCanonise
-static const char *protoCanonise =
+// Docstring regina::python::doc::SnapPeaTriangulation::protoCanonise
+static constexpr const char protoCanonise[] =
 R"doc(Constructs the canonical cell decomposition, using an arbitrary
 retriangulation if this decomposition contains non-tetrahedron cells.
 
@@ -1482,8 +1455,8 @@ Exception ``UnsolvedCase``:
 Returns:
     a triangulation of the canonical cell decomposition.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::protoCanonize
-static const char *protoCanonize =
+// Docstring regina::python::doc::SnapPeaTriangulation::protoCanonize
+static constexpr const char protoCanonize[] =
 R"doc(An alias for protoCanonise(), which constructs the canonical cell
 decomposition using an arbitrary retriangulation if necessary. See
 protoCanonise() for further details.
@@ -1502,8 +1475,8 @@ Exception ``UnsolvedCase``:
 Returns:
     a triangulation of the canonical cell decomposition.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::randomise
-static const char *randomise =
+// Docstring regina::python::doc::SnapPeaTriangulation::randomise
+static constexpr const char randomise[] =
 R"doc(Asks SnapPea to randomly retriangulate this manifold, using local
 moves that preserve the topology. This can help when SnapPea is having
 difficulty finding a hyperbolic structure.
@@ -1519,8 +1492,8 @@ SnapPy:
     In SnapPy, this routine corresponds to calling
     ``Manifold.randomize()``.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::randomize
-static const char *randomize =
+// Docstring regina::python::doc::SnapPeaTriangulation::randomize
+static constexpr const char randomize[] =
 R"doc(An alias for randomise(), which asks SnapPea to randomly retriangulate
 this manifold. See randomise() for further details.
 
@@ -1528,8 +1501,8 @@ This alias is provided as "glue" between the British spelling used
 throughout Regina and the American spelling used throughout the
 SnapPea kernel.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::saveSnapPea
-static const char *saveSnapPea =
+// Docstring regina::python::doc::SnapPeaTriangulation::saveSnapPea
+static constexpr const char saveSnapPea[] =
 R"doc(Writes this triangulation to the given file using SnapPea's native
 file format.
 
@@ -1538,8 +1511,10 @@ kernel to produce the file contents. This means it will include not
 just the tetrahedron gluings, but also other SnapPea-specific
 information that Regina does not use (e.g., peripheral curves).
 
-If this is a null triangulation, then the file will not be written and
-this routine will return ``False``.
+If this is a null triangulation, or if an error occurs whilst writing
+the file, then this routine will throw an exception. This is a change
+in behaviour as of Regina 8.0: older versions of Regina (≤ 7.x)
+returned ``False`` instead.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -1547,14 +1522,17 @@ Internationalisation:
     unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
+Exception ``SnapPeaIsNull``:
+    This is a null SnapPea triangulation.
+
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
 Parameter ``filename``:
-    the name of the SnapPea file to which to write.
+    the name of the SnapPea file to which to write.)doc";
 
-Returns:
-    ``True`` if and only if the file was successfully written.)doc";
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::shape
-static const char *shape =
+// Docstring regina::python::doc::SnapPeaTriangulation::shape
+static constexpr const char shape[] =
 R"doc(Returns the shape of the given tetrahedron, with respect to the Dehn
 filled hyperbolic structure.
 
@@ -1581,8 +1559,8 @@ Parameter ``tet``:
 Returns:
     the shape of the given tetrahedron, in rectangular form.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::slopeEquations
-static const char *slopeEquations =
+// Docstring regina::python::doc::SnapPeaTriangulation::slopeEquations
+static constexpr const char slopeEquations[] =
 R"doc(Returns a matrix for computing boundary slopes of spun-normal surfaces
 at the cusps of the triangulation. This matrix includes a pair of rows
 for each cusp in the triangulation: one row for determining the
@@ -1638,8 +1616,8 @@ Returns:
     a matrix with (2 * *number_of_cusps*) rows and (3 *
     *number_of_tetrahedra*) columns as described above.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::snapPea
-static const char *snapPea =
+// Docstring regina::python::doc::SnapPeaTriangulation::snapPea
+static constexpr const char snapPea[] =
 R"doc(Returns a string containing the full contents of a SnapPea data file
 that describes this triangulation. In particular, this string can be
 used in a Python session to pass the triangulation directly to SnapPy
@@ -1661,8 +1639,8 @@ Returns:
     a string containing the contents of the corresponding SnapPea data
     file.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::solutionType
-static const char *solutionType =
+// Docstring regina::python::doc::SnapPeaTriangulation::solutionType
+static constexpr const char solutionType[] =
 R"doc(Returns the type of solution found when solving for a hyperbolic
 structure, with respect to the current Dehn filling (if any).
 
@@ -1673,8 +1651,8 @@ SnapPy:
 Returns:
     the solution type.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::swap
-static const char *swap =
+// Docstring regina::python::doc::SnapPeaTriangulation::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given SnapPea triangulation.
 
 All information contained in this triangulation, including both
@@ -1707,8 +1685,8 @@ Parameter ``other``:
     the SnapPea triangulation whose contents should be swapped with
     this.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::unfill
-static const char *unfill =
+// Docstring regina::python::doc::SnapPeaTriangulation::unfill
+static constexpr const char unfill[] =
 R"doc(Removes any filling on the given cusp. After removing the filling,
 this routine will automatically ask SnapPea to update the hyperbolic
 structure.
@@ -1716,18 +1694,25 @@ structure.
 If the given cusp is already complete, then this routine safely does
 nothing.
 
+As of Regina 8.0, this routine will throw an exception if this is a
+null SnapPea triagulation. This is a change in behaviour: older
+versions of Regina (≤ 7.x) would silently do nothing instead.
+
 .. warning::
     Be warned that cusp *i* might not correspond to vertex *i* of the
     triangulation. The Cusp::vertex() method (which is accessed
     through the cusp() routine) can help translate between SnapPea's
     cusp numbers and Regina's vertex numbers.
 
+Exception ``SnapPeaIsNull``:
+    This is a null SnapPea triangulation.
+
 Parameter ``whichCusp``:
     the index of the cusp to unfill according to SnapPea; this must be
     between 0 and countCusps()-1 inclusive.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::volume
-static const char *volume =
+// Docstring regina::python::doc::SnapPeaTriangulation::volume
+static constexpr const char volume[] =
 R"doc(Computes the volume of the current solution to the hyperbolic gluing
 equations. This will be with respect to the current Dehn filling (if
 any).
@@ -1742,8 +1727,8 @@ Exception ``SnapPeaIsNull``:
 Returns:
     the estimated volume of the underlying 3-manifold.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::volumeWithPrecision
-static const char *volumeWithPrecision =
+// Docstring regina::python::doc::SnapPeaTriangulation::volumeWithPrecision
+static constexpr const char volumeWithPrecision[] =
 R"doc(Computes the volume of the current solution to the hyperbolic gluing
 equations, and estimates the accuracy of the answer. This will be with
 respect to the current Dehn filling (if any).
@@ -1760,8 +1745,8 @@ Returns:
     underlying 3-manifold, and whose second element is an estimate of
     the number of decimal places of accuracy in this volume.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::volumeZero
-static const char *volumeZero =
+// Docstring regina::python::doc::SnapPeaTriangulation::volumeZero
+static constexpr const char volumeZero[] =
 R"doc(Determines whether the current solution to the gluing equations has
 volume approximately zero. This test is _not_ rigorous.
 
@@ -1774,73 +1759,102 @@ Returns:
     ``True`` if and only if the volume of the current solution is
     approximately zero according to the constraints outlined above.)doc";
 
-}
+struct Cover {
 
-namespace SnapPeaTriangulation_::CoverEnumeration_ {
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumeration_::All
-static const char *All =
-R"doc(Indicates that all covers should be enumerated. This corresponds to
-the SnapPea constant *permutation_subgroup_Sn*.)doc";
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::CoverEnumeration_::Cyclic
-static const char *Cyclic =
-R"doc(Indicates that only cyclic covers should be enumerated. This
-corresponds to the SnapPea constant *permutation_subgroup_Zn*.)doc";
-
-}
-
-namespace SnapPeaTriangulation_::Cover_ {
-
-// Docstring regina::python::doc::SnapPeaTriangulation_::Cover_::Cyclic
-static const char *Cyclic =
+// Docstring regina::python::doc::SnapPeaTriangulation::Cover::Cyclic
+static constexpr const char Cyclic[] =
 R"doc(Indicates a cyclic covering. This corresponds to the SnapPea constant
 *cyclic_cover*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Cover_::Irregular
-static const char *Irregular =
+// Docstring regina::python::doc::SnapPeaTriangulation::Cover::Irregular
+static constexpr const char Irregular[] =
 R"doc(Indicates a covering where there exist two lifts of a point in the
 base manifold with no covering transformation that takes one to the
 other. This corresponds to the SnapPea constant *irregular_cover*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Cover_::Regular
-static const char *Regular =
+// Docstring regina::python::doc::SnapPeaTriangulation::Cover::Regular
+static constexpr const char Regular[] =
 R"doc(Indicates a covering that is not cyclic, and where for any two lifts
 of a point in the base manfiold, there is a covering transformation
 taking one to the other. This corresponds to the SnapPea constant
 *regular_cover*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Cover_::Unknown
-static const char *Unknown =
+// Docstring regina::python::doc::SnapPeaTriangulation::Cover::Unknown
+static constexpr const char Unknown[] =
 R"doc(Indicates that SnapPea has not yet computed the covering type. This
 corresponds to the SnapPea constant *unknown_cover*.)doc";
 
-}
+// Docstring regina::python::doc::SnapPeaTriangulation::Cover::__class
+static constexpr const char __class[] =
+R"doc(Indicates the different types of covers that can be produced by
+enumerateCovers().
 
-namespace SnapPeaTriangulation_::Solution_ {
+This enumeration corresponds to SnapPea's own CoveringType enum; it is
+declared again here because Regina code should not in general interact
+directly with the SnapPea kernel. Values may be freely converted
+between the two enumeration types by simple assignment and/or
+typecasting.
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Degenerate
-static const char *Degenerate =
+.. warning::
+    This enumeration must always be kept in sync with SnapPea's own
+    CoveringType enumeration.)doc";
+
+}; // struct Cover
+
+struct CoverEnumeration {
+
+// Docstring regina::python::doc::SnapPeaTriangulation::CoverEnumeration::All
+static constexpr const char All[] =
+R"doc(Indicates that all covers should be enumerated. This corresponds to
+the SnapPea constant *permutation_subgroup_Sn*.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation::CoverEnumeration::Cyclic
+static constexpr const char Cyclic[] =
+R"doc(Indicates that only cyclic covers should be enumerated. This
+corresponds to the SnapPea constant *permutation_subgroup_Zn*.)doc";
+
+// Docstring regina::python::doc::SnapPeaTriangulation::CoverEnumeration::__class
+static constexpr const char __class[] =
+R"doc(Indicates which types of covers should be enumerated when calling
+enumerateCovers().
+
+This enumeration corresponds to SnapPea's PermutationSubgroup enum,
+though the values here are named differently. The enumeration is
+declared again here because Regina code should not in general interact
+directly with the SnapPea kernel. Values may be freely converted
+between the two enumeration types by simple assignment and/or
+typecasting.
+
+.. warning::
+    This enumeration must always be kept in sync with SnapPea's
+    PermutationSubgroup enumeration.)doc";
+
+}; // struct CoverEnumeration
+
+struct Solution {
+
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::Degenerate
+static constexpr const char Degenerate[] =
 R"doc(At least one tetrahedron has shape 0, 1 or infinity. This corresponds
 to the SnapPea constant *degenerate_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::External
-static const char *External =
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::External
+static constexpr const char External[] =
 R"doc(Tetrahedron shapes were inserted into the triangulation. This
 corresponds to the SnapPea constant *externally_computed*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Flat
-static const char *Flat =
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::Flat
+static constexpr const char Flat[] =
 R"doc(All tetrahedra are flat, but none have shape 0, 1 or infinity. This
 corresponds to the SnapPea constant *flat_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Geometric
-static const char *Geometric =
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::Geometric
+static constexpr const char Geometric[] =
 R"doc(All tetrahedra are positively oriented. This corresponds to the
 SnapPea constant *geometric_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::None
-static const char *None =
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::None
+static constexpr const char None[] =
 R"doc(The gluing equations could not be solved. This corresponds to the
 SnapPea constant *no_solution*.
 
@@ -1848,23 +1862,40 @@ Python:
     This constant is called ``Nil``, since ``None`` is a reserved word
     in Python.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Nongeometric
-static const char *Nongeometric =
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::Nongeometric
+static constexpr const char Nongeometric[] =
 R"doc(The overall volume is positive, but some tetrahedra are flat or
 negatively oriented. No tetrahedra have shape 0, 1 or infinity. This
 corresponds to the SnapPea constant *nongeometric_solution*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::NotAttempted
-static const char *NotAttempted =
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::NotAttempted
+static constexpr const char NotAttempted[] =
 R"doc(A solution has not been attempted. This corresponds to the SnapPea
 constant *not_attempted*.)doc";
 
-// Docstring regina::python::doc::SnapPeaTriangulation_::Solution_::Other
-static const char *Other =
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::Other
+static constexpr const char Other[] =
 R"doc(The volume is zero or negative, but the solution is neither flat nor
 degenerate. This corresponds to the SnapPea constant *other_solution*.)doc";
 
-}
+// Docstring regina::python::doc::SnapPeaTriangulation::Solution::__class
+static constexpr const char __class[] =
+R"doc(Describes the different types of solution that can be found when
+solving for a hyperbolic structure.
+
+This enumeration corresponds to SnapPea's own SolutionType enum; it is
+declared again here because Regina code should not in general interact
+directly with the SnapPea kernel. Values may be freely converted
+between the two enumeration types by simple assignment and/or
+typecasting.
+
+.. warning::
+    This enumeration must always be kept in sync with SnapPea's own
+    SolutionType enumeration.)doc";
+
+}; // struct Solution
+
+}; // struct SnapPeaTriangulation
 
 } // namespace regina::python::doc
 

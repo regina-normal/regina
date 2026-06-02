@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,15 +36,12 @@
 #define __TRI3SURFACES_H
 
 #include "census/census.h"
-#include "triangulation/forward.h"
+#include "triangulation/dim3.h"
 #include "../packettabui.h"
 
 class QAbstractButton;
 class QLabel;
-
-namespace regina {
-    class Packet;
-};
+template <regina::CensusSearchable ObjectType> class CensusWidget;
 
 /**
  * A triangulation page for viewing normal surface properties.
@@ -64,7 +61,6 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         regina::Triangulation<3>* tri_;
         regina::Packet* triAsPacket_;
         std::string name;
-        std::list<regina::CensusHit> hits;
 
         /**
          * Internal components
@@ -97,7 +93,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnHaken;
         QAbstractButton* btnStrict;
         QLabel* manifold;
-        QLabel* census;
+        CensusWidget<regina::Triangulation<3>>* census;
 
     public:
         /**
@@ -129,21 +125,10 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         void calculateStrict();
 
         /**
-         * Notify that preferences have changed.
-         */
-        void updatePreferences();
-
-        /**
          * Support clipboard actions.
          */
         void contextManifold(const QPoint& pos);
-        void contextCensus(const QPoint& pos);
         void copyManifold();
-        void copyCensus();
 };
-
-inline void Tri3SurfacesUI::updatePreferences() {
-    refresh();
-}
 
 #endif

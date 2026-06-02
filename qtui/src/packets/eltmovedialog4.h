@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@
 #include "triangulation/forward.h"
 #include "packet/packet.h"
 
-#include "reginaqt.h"
+#include "reginasupport.h"
 #include <QDialog>
 #include <vector>
 
@@ -131,8 +131,8 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         void updateApply();
 
     private:
-        template <typename ChooserClass>
-        void updateStates(ChooserClass* chooser, QRadioButton* button);
+        template <ObjectChooser C>
+        void updateStates(C* chooser, QRadioButton* button);
 };
 
 #endif

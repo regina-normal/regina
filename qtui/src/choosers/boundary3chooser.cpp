@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,8 +42,7 @@ using regina::BoundaryComponent;
 
 BoundaryComponent3Chooser::BoundaryComponent3Chooser(
         regina::PacketOf<regina::Triangulation<3>>* tri,
-        BoundaryComponentFilterFunc filter, QWidget* parent,
-        bool autoUpdate) :
+        Filter filter, QWidget* parent, bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -115,7 +114,7 @@ void BoundaryComponent3Chooser::fill() {
 
 BoundaryComponent3Dialog::BoundaryComponent3Dialog(QWidget* parent,
         regina::PacketOf<regina::Triangulation<3>>* tri,
-        BoundaryComponentFilterFunc filter,
+        BoundaryComponent3Chooser::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -134,13 +133,13 @@ BoundaryComponent3Dialog::BoundaryComponent3Dialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 regina::BoundaryComponent<3>* BoundaryComponent3Dialog::choose(QWidget* parent,
         regina::PacketOf<regina::Triangulation<3>>* tri,
-        BoundaryComponentFilterFunc filter,
+        BoundaryComponent3Chooser::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,6 +34,11 @@
  *  This header is _not_ included automatically by python/helpers.h.
  *  If you need it, you will need to include it yourself.
  */
+
+#ifndef __HELPERS_EXCEPTION_H
+#ifndef __DOXYGEN
+#define __HELPERS_EXCEPTION_H
+#endif
 
 #include <pybind11/pybind11.h>
 #if REGINA_PYBIND11_VERSION == 3
@@ -92,16 +97,17 @@ class ExceptionCache {
  * Adds Python bindings for one of Regina's C++ exception types.
  *
  * This routine will create a corresponding Python exception type (using
- * PyExc_RuntimeError as its base), and will register a translator between
- * the two.
+ * the given base class and the given docstring helper class), and will
+ * register a translator between the two.
  *
  * Conceptually, this does a similar job to `pybind11::register_exception()`;
  * however, it is also safe to use with subinterpreters (which, as of
  * pybind11 3.0.0rc3, `pybind11::register_exception()` is not).
  */
-template <typename ReginaExceptionType>
-void registerReginaException(pybind11::module_& m, const char* className,
-        const char* docstring) {
+template <std::derived_from<std::exception> ReginaExceptionType,
+    ClassDocType Docs>
+PyObject* registerReginaException(pybind11::module_& m, const char* className,
+        pybind11::handle base) {
 #if REGINA_PYBIND11_VERSION == 3
     // In pybind11 v3 (at least in 3.0.0rc3), the implementation of
     // register_exception() uses a global singleton Python exception object,
@@ -122,9 +128,10 @@ void registerReginaException(pybind11::module_& m, const char* className,
     // The following exception type should live for only as long as the module
     // is loaded, since it is the reference in m.__dict__ that keeps it alive
     // on the python side.  In our own cache we just keep a borrowed reference.
-    pybind11::exception<ReginaExceptionType> exc(m, className, docstring,
-        PyExc_RuntimeError);
-    cache.insert(exc.ptr());
+    pybind11::exception<ReginaExceptionType> exc(m, className, Docs::__class,
+        base);
+    PyObject* ptr = exc.ptr();
+    cache.insert(ptr);
 
     pybind11::register_exception_translator([](std::exception_ptr p) {
         if (!p) {
@@ -142,12 +149,16 @@ void registerReginaException(pybind11::module_& m, const char* className,
             }
         }
     });
+
+    return ptr;
 #elif REGINA_PYBIND11_VERSION == 2
     // pybind11 v2 does not support subinterpreters properly; however,
     // register_exception() does appear to work perfectly fine with the
     // subinterpreter hacks that we are using.
-    pybind11::register_exception<ReginaExceptionType>(m, className,
-        PyExc_RuntimeError).doc() = docstring;
+    auto& exc = pybind11::register_exception<ReginaExceptionType>(m, className,
+        base);
+    exc.doc() = Docs::__class;
+    return exc.ptr();
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -155,3 +166,4 @@ void registerReginaException(pybind11::module_& m, const char* className,
 
 } // namespace regina::python
 
+#endif

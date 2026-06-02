@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,22 +37,11 @@ namespace regina {
 
 std::weak_ordering AngleStructure::operator <=> (const AngleStructure& rhs)
         const {
-    if (triangulation_->size() != rhs.triangulation_->size())
-        return triangulation_->size() <=> rhs.triangulation_->size();
+    if (auto c = triangulation_->size() <=> rhs.triangulation_->size(); c != 0)
+        return c;
 
-#if defined(LEXCMP_FOUND)
     return std::lexicographical_compare_three_way(
         vector_.begin(), vector_.end(), rhs.vector_.begin(), rhs.vector_.end());
-#else
-    // The triangulations have the same size, and so both underlying vectors
-    // should have the same length.
-    auto i = vector_.begin();
-    auto j = rhs.vector_.begin();
-    for ( ; i != vector_.end(); ++i, ++j)
-        if (auto c = (*i <=> *j); c != 0)
-            return c;
-    return std::strong_ordering::equal;
-#endif
 }
 
 Rational AngleStructure::angle(size_t tetIndex, int edgePair) const {

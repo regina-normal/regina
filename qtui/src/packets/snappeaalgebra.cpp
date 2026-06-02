@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -113,8 +113,9 @@ SnapPeaAlgebraUI::SnapPeaAlgebraUI(
 
     master->addLayout(layout, tr("Unfilled manifold"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    // If the unicode flag changes, redraw everything.
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &SnapPeaAlgebraUI::refresh);
 }
 
 regina::Packet* SnapPeaAlgebraUI::getPacket() {
@@ -166,15 +167,12 @@ void SnapPeaAlgebraUI::refresh() {
         unfilledH1->setText(tri->homology().utf8().c_str());
     else
         unfilledH1->setText(tri->homology().str().c_str());
+    // Because our SnapPea triangulation is non-null, it should be connected
+    // (and so group() should not throw an exception).
     unfilledFundGroup->setGroup(tri->group());
 
     unfilledH1Title->show();
     unfilledH1->show();
     unfilledFundGroupTitle->show();
     unfilledFundGroup->show();
-}
-
-void SnapPeaAlgebraUI::updatePreferences() {
-    // If we've changed the unicode setting, then we may need some redrawing.
-    refresh();
 }

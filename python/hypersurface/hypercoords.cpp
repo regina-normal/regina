@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,9 +48,9 @@ void addHyperCoords(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<HyperCoords>(m, "HyperCoords", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<HyperCoords>(m, "HyperCoords", rdoc_scope)
+    pybind11::enum_<HyperCoords>(m, "HyperCoords", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -69,7 +69,7 @@ void addHyperCoords(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(HyperEncoding)
 
-    auto e = pybind11::class_<HyperEncoding>(m, "HyperEncoding", rdoc_scope)
+    auto e = pybind11::class_<HyperEncoding>(m, "HyperEncoding", rdoc::__class)
         .def(pybind11::init<HyperCoords>(), rdoc::__init)
         .def(pybind11::init<const HyperEncoding&>(), rdoc::__copy)
         .def("valid", &HyperEncoding::valid, rdoc::valid)
@@ -91,20 +91,20 @@ void addHyperCoords(pybind11::module_& m) {
             std::ostringstream out;
             out << "0x" << std::hex << std::setw(4) << std::setfill('0')
                 << e.intValue();
-            return out.str();
+            return std::move(out).str();
         })
         .def("__repr__", [](HyperEncoding e) {
             std::ostringstream out;
             out << "<regina.HyperEncoding: 0x" << std::hex << std::setw(4)
                 << std::setfill('0') << e.intValue() << '>';
-            return out.str();
+            return std::move(out).str();
         })
         ;
     regina::python::add_eq_operators(e, rdoc::__eq);
 
     RDOC_SCOPE_SWITCH(HyperInfo)
 
-    auto i = pybind11::class_<HyperInfo>(m, "HyperInfo", rdoc_scope)
+    auto i = pybind11::class_<HyperInfo>(m, "HyperInfo", rdoc::__class)
         .def_static("name", &HyperInfo::name, rdoc::name)
         ;
     regina::python::no_eq_static(i);

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,10 +37,10 @@
 
 namespace regina {
 
-std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
+std::weak_ordering operator <=> (const Manifold<3>& x, const Manifold<3>& y) {
     // Lens spaces go first.
-    const auto* lens1 = dynamic_cast<const LensSpace*>(this);
-    const auto* lens2 = dynamic_cast<const LensSpace*>(&rhs);
+    const auto* lens1 = dynamic_cast<const LensSpace*>(&x);
+    const auto* lens2 = dynamic_cast<const LensSpace*>(&y);
 
     if (lens1 && ! lens2)
         return std::weak_ordering::less;
@@ -50,8 +50,8 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
         return (*lens1 <=> *lens2);
 
     // Next go through Seifert fibred spaces.
-    const auto* sfs1 = dynamic_cast<const SFSpace*>(this);
-    const auto* sfs2 = dynamic_cast<const SFSpace*>(&rhs);
+    const auto* sfs1 = dynamic_cast<const SFSpace*>(&x);
+    const auto* sfs2 = dynamic_cast<const SFSpace*>(&y);
 
     if (sfs1 && ! sfs2)
         return std::weak_ordering::less;
@@ -61,8 +61,8 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
         return (*sfs1 <=> *sfs2);
 
     // Now for torus bundles.
-    const auto* bundle1 = dynamic_cast<const TorusBundle*>(this);
-    const auto* bundle2 = dynamic_cast<const TorusBundle*>(&rhs);
+    const auto* bundle1 = dynamic_cast<const TorusBundle*>(&x);
+    const auto* bundle2 = dynamic_cast<const TorusBundle*>(&y);
 
     if (bundle1 && ! bundle2)
         return std::weak_ordering::less;
@@ -71,12 +71,12 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
     if (bundle1 && bundle2) {
         // TODO: Just sort by name here, since bundle parameters will
         // probably need to be made canonical anyway.
-        return name() <=> rhs.name();
+        return x.name() <=> y.name();
     }
 
     // Finally graph manifolds (SFS pairs, triples and loops).
-    const auto* pair1 = dynamic_cast<const GraphPair*>(this);
-    const auto* pair2 = dynamic_cast<const GraphPair*>(&rhs);
+    const auto* pair1 = dynamic_cast<const GraphPair*>(&x);
+    const auto* pair2 = dynamic_cast<const GraphPair*>(&y);
     if (pair1 && ! pair2)
         return std::weak_ordering::less;
     if (pair2 && ! pair1)
@@ -84,8 +84,8 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
     if (pair1 && pair2)
         return (*pair1 <=> *pair2);
 
-    const auto* triple1 = dynamic_cast<const GraphTriple*>(this);
-    const auto* triple2 = dynamic_cast<const GraphTriple*>(&rhs);
+    const auto* triple1 = dynamic_cast<const GraphTriple*>(&x);
+    const auto* triple2 = dynamic_cast<const GraphTriple*>(&y);
     if (triple1 && ! triple2)
         return std::weak_ordering::less;
     if (triple2 && ! triple1)
@@ -93,8 +93,8 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
     if (triple1 && triple2)
         return (*triple1 <=> *triple2);
 
-    const auto* loop1 = dynamic_cast<const GraphLoop*>(this);
-    const auto* loop2 = dynamic_cast<const GraphLoop*>(&rhs);
+    const auto* loop1 = dynamic_cast<const GraphLoop*>(&x);
+    const auto* loop2 = dynamic_cast<const GraphLoop*>(&y);
     if (loop1 && ! loop2)
         return std::weak_ordering::less;
     if (loop2 && ! loop1)
@@ -103,7 +103,7 @@ std::weak_ordering Manifold::operator <=> (const Manifold& rhs) const {
         return (*loop1 <=> *loop2);
 
     // No idea.  Use the dictionary.
-    return name() <=> rhs.name();
+    return x.name() <=> y.name();
 }
 
 } // namespace regina

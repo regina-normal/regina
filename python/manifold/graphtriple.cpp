@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,8 +42,8 @@ using regina::SFSpace;
 void addGraphTriple(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GraphTriple)
 
-    auto c = pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple",
-            rdoc_scope)
+    auto c = pybind11::class_<GraphTriple, regina::Manifold<3>>(m,
+            "GraphTriple", rdoc::__class)
         .def(pybind11::init<const SFSpace&, const SFSpace&, const SFSpace&,
             const Matrix2&, const Matrix2&>(), rdoc::__init)
         .def(pybind11::init<const GraphTriple&>(), rdoc::__copy)
@@ -58,10 +58,9 @@ void addGraphTriple(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     // Do not bind comparison operators, since these are already inherited
-    // from Manifold and we do not want to hide those more general versions.
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<GraphTriple>(m, rdoc::global_swap);
+    // via Manifold<3> and we do not want to hide those more general versions.
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<GraphTriple, rdoc>(m);
 
     RDOC_SCOPE_END
 }

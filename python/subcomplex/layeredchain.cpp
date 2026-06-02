@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,8 +40,8 @@ using regina::LayeredChain;
 void addLayeredChain(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LayeredChain)
 
-    auto c = pybind11::class_<LayeredChain, regina::StandardTriangulation>
-            (m, "LayeredChain", rdoc_scope)
+    auto c = pybind11::class_<LayeredChain, regina::StandardSubcomplex<3>>
+            (m, "LayeredChain", rdoc::__class)
         .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>(),
             rdoc::__init)
         .def(pybind11::init<const LayeredChain&>(), rdoc::__copy)
@@ -62,9 +62,8 @@ void addLayeredChain(pybind11::module_& m) {
         .def("invert", &LayeredChain::invert, rdoc::invert)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<LayeredChain>(m, rdoc::global_swap);
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<LayeredChain, rdoc>(m);
 
     RDOC_SCOPE_END
 }

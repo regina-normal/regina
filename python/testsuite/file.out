@@ -3557,3 +3557,4 @@ for t in tri.children():
 		print('Unknown packet type')
 
 
+Caught exception

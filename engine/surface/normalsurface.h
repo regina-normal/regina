@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@
 
 #include <optional>
 #include <utility>
-#include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "maths/forward.h"
 #include "maths/perm.h"
@@ -51,6 +51,8 @@
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 #include "utilities/snapshot.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -425,12 +427,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the given encoding.
          * This will not be checked!
          *
-         * \python The supported types for the template parameter \a U are
+         * \python The supported element types for the given vector are
          * regina::Integer and regina::LargeInteger.  You may also, if you
          * prefer, pass \a vector as a Python list of integers.
-         *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal surface resides.
          * \param enc indicates precisely how the given vector encodes a normal
@@ -438,7 +437,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \param vector a vector containing the coordinates of the normal
          * surface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalSurface(const Triangulation<3>& triang, NormalEncoding enc,
             const Vector<U>& vector);
 
@@ -492,9 +491,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
-         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          * \param enc indicates precisely how the given vector encodes a normal
@@ -502,7 +498,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \param vector a vector containing the coordinates of the normal
          * surface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
             NormalEncoding enc, const Vector<U>& vector);
 
@@ -560,12 +556,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surface inside the given triangulation, using the encoding
          * `NormalEncoding(coords)`.  This will not be checked!
          *
-         * \python The supported types for the template parameter \a U are
+         * \python The supported element types for the given vector are
          * regina::Integer and regina::LargeInteger.  You may also, if you
          * prefer, pass \a vector as a Python list of integers.
-         *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal surface resides.
          * \param coords the coordinate system from which the vector
@@ -573,7 +566,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \param vector a vector containing the coordinates of the normal
          * surface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalSurface(const Triangulation<3>& triang, NormalCoords coords,
             const Vector<U>& vector);
 
@@ -635,9 +628,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
-         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal surface resides.
          * \param coords the coordinate system from which the vector
@@ -645,7 +635,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \param vector a vector containing the coordinates of the normal
          * surface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalSurface(const SnapshotRef<Triangulation<3>>& triang,
             NormalCoords coords, const Vector<U>& vector);
 
@@ -1241,7 +1231,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * A surface (or its positive rational multiple) could be the
          * normalised link of many edges.  The return value will be a pair
-         * (\a v, \a thin), where:
+         * `(v, thin)`, where:
          *
          * - \a v is a vector containing all such edges.  This will begin
          *   with the edges for which this surface is a thin link, followed by
@@ -1253,7 +1243,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this surface is the normalised
-         * link of any edge, then \a link will be 0 and \a v will be the
+         * link of any edge, then \a thin will be 0 and \a v will be the
          * empty vector.
          *
          * Note that the results of this routine are not cached.
@@ -1323,7 +1313,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * A surface (or its positive rational multiple) could be the
          * normalised link of many triangles.  The return value will be a pair
-         * (\a v, \a thin), where:
+         * `(v, thin)`, where:
          *
          * - \a v is a vector containing all such triangles.  This will begin
          *   with the triangles for which this surface is a thin link, followed
@@ -1336,7 +1326,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this surface is the normalised
-         * link of any triangle, then \a link will be 0 and \a v will be the
+         * link of any triangle, then \a thin will be 0 and \a v will be the
          * empty vector.
          *
          * Note that the results of this routine are not cached.
@@ -1681,7 +1671,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the surface to compare this surface with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * surface.  This is marked as a weak ordering (not a strong
          * ordering) to reflect the fact that (for example) surfaces in
          * different triangulations or using different encodings could be
@@ -2032,7 +2022,7 @@ void swap(NormalSurface& a, NormalSurface& b) noexcept;
 
 // Inline functions for NormalSurface
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         NormalEncoding enc, const Vector<U>& vector) :
         enc_(enc), vector_(vector), triangulation_(tri) {
@@ -2050,7 +2040,7 @@ inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         enc_ = reconstructTriangles(tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalSurface::NormalSurface(
         const SnapshotRef<Triangulation<3>>& tri,
         NormalEncoding enc, const Vector<U>& vector) :
@@ -2067,7 +2057,7 @@ inline NormalSurface::NormalSurface(
         enc_ = reconstructTriangles(*tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         NormalCoords coords, const Vector<U>& vector) :
         enc_(coords), vector_(vector), triangulation_(tri) {
@@ -2083,7 +2073,7 @@ inline NormalSurface::NormalSurface(const Triangulation<3>& tri,
         enc_ = reconstructTriangles(tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalSurface::NormalSurface(
         const SnapshotRef<Triangulation<3>>& tri,
         NormalCoords coords, const Vector<U>& vector) :

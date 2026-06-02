@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,8 @@
 #include "manifold/sfs.h"
 #include "maths/matrix2.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**
@@ -65,17 +67,17 @@ namespace regina {
  * the base orbifold of the second Seifert fibred space.  Then the curves
  * \a f0, \a o0, \a f1 and \a o1 are related as follows:
  *
- * <pre>
+ * ```
  *     [f1]       [f0]
  *     [  ] = M * [  ]
  *     [o1]       [o0]
- * </pre>
+ * ```
  *
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional Manifold routine homology() is implemented, but
- * the optional routine construct() is not.
+ * The optional Manifold<3> routines homology() and isHyperbolic() are
+ * implemented, but the optional routine construct() is not.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -89,7 +91,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class GraphPair : public Manifold {
+class GraphPair : public Manifold<3> {
     private:
         SFSpace sfs_[2];
             /**< The two bounded Seifert fibred spaces that are joined
@@ -106,11 +108,11 @@ class GraphPair : public Manifold {
          * The elements of the matching matrix combine to give the full
          * matrix \a M as follows:
          *
-         * <pre>
+         * ```
          *           [ mat00  mat01 ]
          *     M  =  [              ]
          *           [ mat10  mat11 ]
-         * </pre>
+         * ```
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
@@ -237,7 +239,7 @@ class GraphPair : public Manifold {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the other representation to compare this with.
-         * \return A result that indicates how this and the given graph
+         * \return a result that indicates how this and the given graph
          * manifold representation should be ordered with respect to each other.
          */
         std::strong_ordering operator <=> (const GraphPair& rhs) const;

@@ -11,8 +11,34 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::TableView
-constexpr const char *TableView =
+struct TableView {
+
+// Docstring regina::python::doc::TableView::__array
+static constexpr const char __array[] =
+R"doc(Returns the requested sub-array of a multi-dimensional array, or the
+requested element of a one-dimensional array.
+
+If this array is one-dimensional then this operator simply returns the
+(*index*)th element, as a const reference.
+
+If this array has more than one dimension then this operator returns a
+TableView of smaller dimension, by value, representing the slice of
+the overall table obtained when the first array index is set to the
+given value.
+
+Typically this operator would just be used to access an individual
+element using the syntax ``array[index_1][index_2]...[index_dim]``,
+where *dim* is the dimension of this array.
+
+Parameter ``index``:
+    indicates which element or sub-array to return; this must be
+    between 0 and (*dim1*-1) inclusive.
+
+Returns:
+    the (*index*)th sub-array.)doc";
+
+// Docstring regina::python::doc::TableView::__class
+static constexpr const char __class[] =
 R"doc(A lightweight object that can be used for random access to all
 elements of a given multi-dimensional table.
 
@@ -22,30 +48,27 @@ are non-const pointers then this means that the _pointers_ cannot be
 reassigned to point to different objects, but the objects they _point_
 to can still be modified.)
 
-This class is in a sense a multi-dimensional analogue to TableView
-(though it does also support one-dimensional tables).
+This class is in a sense a multi-dimensional analogue to standard C++
+views from the ``std::ranges`` library (though it does also support
+one-dimensional tables).
 
-Where this class differs from ListView is:
+Where this class differs from standard C++ views is:
 
-* TableView supports multi-dimensional tables, whereas ListView only
-  supports one-dimensional lists.
-
-* TableView offers a smaller set of member functions, whereas ListView
-  has a richer interface.
+* TableView supports multi-dimensional tables, whereas standard C++
+  views only supports one-dimensional lists.
 
 * TableView is (for now) only designed to work with fixed-size C-style
   arrays of the form ``Element[a][b]...[z]``, where the array
-  dimensions are compile-time constants. In contrast, ListView can
-  also work with rich C++ container classes and variable-sized C-style
-  arrays.
+  dimensions are compile-time constants. In contrast, standard C++
+  views can work with a variety of different container types.
 
-* While ListView has a purpose in C++ (to hide the "real" type used by
-  the underlying implementation), TableView is primary for the Python
-  bindings: its main benefit is to strictly enforce read-only access
-  (since Python loses all knowledge of constness, and sometimes allows
-  users to change things that they should not). Typically TableView
-  would be used to wrap global constant arrays (such as
-  regina::quadDefn, or regina::Edge<3>::edgeNumber).
+* While standard C++ views have a purpose in C++ (to hide the "real"
+  type used by the underlying implementation), TableView is primary
+  for the Python bindings: its main benefit is to strictly enforce
+  read-only access (since Python loses all knowledge of constness, and
+  sometimes allows users to change things that they should not).
+  Typically TableView would be used to wrap global constant arrays
+  (such as regina::quadDefn, or regina::Edge<3>::edgeNumber).
 
 TableView comes with deduction guides for tables of dimension ≤ 3.
 This means that you can simply create a TableView using the syntax
@@ -74,37 +97,11 @@ Template parameter ``dim``:
     the dimensions of the C-style array. There must always be at least
     one dimension supplied.)doc";
 
-namespace TableView_ {
+// Docstring regina::python::doc::TableView::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given table view.)doc";
 
-// Docstring regina::python::doc::TableView_::__array
-constexpr const char *__array =
-R"doc(Returns the requested sub-array of a multi-dimensional array, or the
-requested element of a one-dimensional array.
-
-If this array is one-dimensional then this operator simply returns the
-(*index*)th element, as a const reference.
-
-If this array has more than one dimension then this operator returns a
-TableView of smaller dimension, by value, representing the slice of
-the overall table obtained when the first array index is set to the
-given value.
-
-Typically this operator would just be used to access an individual
-element using the syntax ``array[index_1][index_2]...[index_dim]``,
-where *dim* is the dimension of this array.
-
-Parameter ``index``:
-    indicates which element or sub-array to return; this must be
-    between 0 and (*dim1*-1) inclusive.
-
-Returns:
-    the (*index*)th sub-array.)doc";
-
-// Docstring regina::python::doc::TableView_::__copy
-constexpr const char *__copy = R"doc(Creates a new copy of the given table view.)doc";
-
-// Docstring regina::python::doc::TableView_::__eq
-constexpr const char *__eq =
+// Docstring regina::python::doc::TableView::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given table view are accessing the
 same underlying C-style array.
 
@@ -120,8 +117,8 @@ Returns:
     ``True`` if and only if this and the given table use the same
     underlying C-style array.)doc";
 
-// Docstring regina::python::doc::TableView_::__iter__
-constexpr const char *__iter__ =
+// Docstring regina::python::doc::TableView::__iter__
+static constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all sub-arrays (for a multi-dimensional
 array), or all elements (for a one-dimensional array).
 
@@ -136,8 +133,8 @@ not run through the individual array elements; for this you will need
 Returns:
     an iterator over the subarrays or elements of this table.)doc";
 
-// Docstring regina::python::doc::TableView_::size
-constexpr const char *size =
+// Docstring regina::python::doc::TableView::size
+static constexpr const char size[] =
 R"doc(Returns the size of this array, across all of the array dimensions.
 
 This returns a sequence (*s_1*, *s_2*, ..., *s_dim*), where *dim* is
@@ -151,7 +148,7 @@ Python:
 Returns:
     the size of this array, across all of the array dimensions.)doc";
 
-}
+}; // struct TableView
 
 } // namespace regina::python::doc
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,11 +52,7 @@
 class QSettings;
 class QWidget;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 #include <QStringConverter> // for QStringConverter::Encoding
-#else
-class QTextCodec;
-#endif
 
 /**
  * A structure holding all Regina preferences.
@@ -87,11 +83,7 @@ class ReginaPrefSet : public QObject {
 
     public:
         // The type used to represent text encodings:
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
         using Codec = QStringConverter::Encoding;
-#else
-        using Codec = QTextCodec*;
-#endif
 
         // Some defaults that other classes may need to access:
         static const char* defaultGAPExec;
@@ -108,6 +100,9 @@ class ReginaPrefSet : public QObject {
             /**< Available methods for simplifying group presentations. */
         enum class HomflyStyle { AZ, LM };
             /**< Possible flavours of the HOMFLY-PT polynomial to display. */
+        enum class TriSigVariant { Gen1, Gen2, Gen2Oriented };
+            /**< Variants of isomorphism signature that can be displayed
+                 for triangulations. */
         enum class LinkCode { Gauss, DowkerThistlethwaite, KnotSig, Jenkins,
             PlanarDiagram };
             /**< Possible export codes that can be displayed for links. */
@@ -253,6 +248,9 @@ class ReginaPrefSet : public QObject {
         TriGraph triInitialGraphType;
             /**< Indicates which graph to initially display in a
                  (2,3,4)-manifold graph viewer. */
+        TriSigVariant triSigVariant;
+            /**< The variant of isomorphism signature to first display to
+                 the user when opening a new triangulation viewer. */
         unsigned triSurfacePropsThreshold;
             /**< The maximum number of tetrahedra for which surface-related
                  properties of 3-manifold triangulations will be automatically

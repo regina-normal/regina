@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::resUsage
-static const char *resUsage =
+inline constexpr const char resUsage[] =
 R"doc(Returns time and memory usage for the current process, for use on
 Linux systems. Information is gathered from the ``/proc`` filesystem;
 if this is run on a non-Linux system (or a Linux system where

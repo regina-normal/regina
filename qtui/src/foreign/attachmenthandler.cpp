@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "packet/attachment.h"
+#include "utilities/exception.h"
 
 #include "attachmenthandler.h"
 #include "reginamain.h"
@@ -41,18 +42,26 @@
 const AttachmentHandler AttachmentHandler::instance;
 
 std::shared_ptr<regina::Packet> AttachmentHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
-    std::shared_ptr<regina::Attachment> ans =
-        std::make_shared<regina::Attachment>(
-        static_cast<const char*>(QFile::encodeName(fileName)));
-    if (ans->isNull()) {
+        const QString& filename, ReginaMain* parentWidget) const {
+    std::shared_ptr<regina::Attachment> ans;
+    try {
+        ans = std::make_shared<regina::Attachment>(
+            static_cast<const char*>(QFile::encodeName(filename)));
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and non-empty.</qt>").arg(fileName.toHtmlEscaped()));
+            "is readable.</qt>").arg(filename.toHtmlEscaped()));
         return nullptr;
-    } else
-        ans->setLabel(ans->filename());
+    }
+    if (ans->isNull()) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("This file is empty."),
+            QObject::tr("<qt>The file <tt>%1</tt> contains no data.</qt>")
+                .arg(filename.toHtmlEscaped()));
+        return nullptr;
+    }
+    ans->setLabel(ans->filename());
     return ans;
 }
 

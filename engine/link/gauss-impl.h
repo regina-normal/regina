@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,13 +43,14 @@
 #include <algorithm>
 #include <cstdlib>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
-template <typename Iterator>
+template <std::random_access_iterator Iterator>
+requires SignedCppInteger<std::iter_value_t<Iterator>>
 Link Link::fromGauss(Iterator begin, Iterator end) {
-    using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
-    static_assert(SignedCppInteger<InputInt>, "fromGauss(): the iterator type "
-        "needs to refer to a native signed C++ integer type.");
+    using InputInt = std::iter_value_t<Iterator>;
 
     // Extract the number of crossings.
     size_t n = end - begin;
@@ -285,8 +286,8 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 }
 
 template <Link::GaussEnhancement type_,
-    RandomAccessIteratorFor<std::string> iterator>
-Link Link::fromEnhancedGauss(iterator begin, iterator end) {
+    RandomAccessIteratorFor<std::string> Iterator>
+Link Link::fromEnhancedGauss(Iterator begin, Iterator end) {
     // Extract the number of crossings.
     size_t n = end - begin;
     if (n % 2)

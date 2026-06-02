@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -193,7 +193,7 @@ TEST(TightEncodingTest, integer) {
     verifyInteger("-10000000000000000000000000000000000000000000");
 }
 
-template <typename T>
+template <regina::AnyInteger T>
 static void verifyInfinityUsing(const std::string& enc) {
     SCOPED_TRACE_TYPE(T);
 
@@ -262,9 +262,14 @@ TEST(TightEncodingTest, infinity) {
     verifyInfinityUsing<uint64_t>(enc);
     verifyInfinityUsing<long long>(enc);
     verifyInfinityUsing<unsigned long long>(enc);
+    #if 0
+    // 128-bit integers might not satisfy AnyInteger, and this test does not
+    // stress the 128-bit-specific code in any way that is significant.
+    // Comment it out for now.
     #ifdef INT128_AVAILABLE
     verifyInfinityUsing<regina::Int128>(enc);
     verifyInfinityUsing<regina::UInt128>(enc);
+    #endif
     #endif
     verifyInfinityUsing<Integer>(enc);
     verifyInfinityUsing<LargeInteger>(enc);

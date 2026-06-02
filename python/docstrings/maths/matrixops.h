@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::columnEchelonForm
-static const char *columnEchelonForm =
+inline constexpr const char columnEchelonForm[] =
 R"doc(Transforms a given matrix into column echelon form with respect to a
 collection of rows. The transformation will perform only column
 operations.
@@ -92,7 +92,7 @@ Author:
     Ryan Budney)doc";
 
 // Docstring regina::python::doc::metricalSmithNormalForm
-static const char *metricalSmithNormalForm =
+inline constexpr const char metricalSmithNormalForm[] =
 R"doc(An alternative Smith normal form algorithm that also returns change of
 basis matrices. This routine may be preferable for extremely large
 matrices. This is a variant of Hafner-McCurley and Havas-Holt-Rees's
@@ -146,7 +146,7 @@ Author:
     Ryan Budney)doc";
 
 // Docstring regina::python::doc::preImageOfLattice
-static const char *preImageOfLattice =
+inline constexpr const char preImageOfLattice[] =
 R"doc(Given a homomorphism from Z^n to Z^k and a sublattice of Z^k, compute
 the preimage of this sublattice under this homomorphism.
 
@@ -185,7 +185,7 @@ Author:
     Ryan Budney)doc";
 
 // Docstring regina::python::doc::rowBasis
-static const char *rowBasis =
+inline constexpr const char rowBasis[] =
 R"doc(Find a basis for the row space of the given matrix.
 
 This routine will rearrange the rows of the given matrix so that the
@@ -205,7 +205,7 @@ Returns:
     the rank of the given matrix.)doc";
 
 // Docstring regina::python::doc::rowBasisAndOrthComp
-static const char *rowBasisAndOrthComp =
+inline constexpr const char rowBasisAndOrthComp[] =
 R"doc(Finds a basis for the row space of the given matrix, as well as an
 "incremental" basis for its orthogonal complement.
 
@@ -254,7 +254,7 @@ Returns:
     the rank of the given matrix *input*.)doc";
 
 // Docstring regina::python::doc::smithNormalForm
-static const char *smithNormalForm =
+inline constexpr const char smithNormalForm[] =
 R"doc(Transforms the given integer matrix into Smith normal form. Note that
 the given matrix need not be square and need not be of full rank.
 
@@ -271,7 +271,7 @@ Parameter ``matrix``:
     the matrix to transform.)doc";
 
 // Docstring regina::python::doc::smithNormalForm_2
-static const char *smithNormalForm_2 =
+inline constexpr const char smithNormalForm_2[] =
 R"doc(A Smith normal form algorithm that also returns change of basis
 matrices.
 
@@ -326,7 +326,7 @@ Parameter ``colSpaceBasisInv``:
     used to return the inverse of *colSpaceBasis*.)doc";
 
 // Docstring regina::python::doc::torsionAutInverse
-static const char *torsionAutInverse =
+inline constexpr const char torsionAutInverse[] =
 R"doc(Given an automorphism of an abelian group, this procedure computes the
 inverse automorphism.
 

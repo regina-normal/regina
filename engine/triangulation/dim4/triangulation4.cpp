@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,7 +41,7 @@ namespace regina {
 
 Triangulation<4>::Triangulation(const std::string& description) {
     try {
-        *this = fromIsoSig(description);
+        *this = fromSig(description);
         return;
     } catch (const InvalidArgument&) {
     }
@@ -89,8 +89,6 @@ Triangulation<4>::Triangulation(const Triangulation& src, bool cloneProps,
     if (! cloneProps)
         return;
 
-    prop_ = src.prop_;
-
     // We do not need to copy any properties that are computed on demand with
     // the rest of the skeleton; however, at the time of writing there
     // are no such properties in the Triangulation<4> class anyway.
@@ -101,7 +99,6 @@ void Triangulation<4>::clearAllProperties() {
 
     if (! topologyLocked()) {
         vertexLinkSummary_ = -1; /* not yet computed */
-        prop_.H2_.reset();
     }
 }
 
@@ -120,9 +117,6 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
 
     // Properties stored directly:
     std::swap(vertexLinkSummary_, other.vertexLinkSummary_);
-
-    // Properties stored using std::... helper classes:
-    prop_.H2_.swap(other.prop_.H2_);
 }
 
 IntersectionForm Triangulation<4>::intersectionForm() const {

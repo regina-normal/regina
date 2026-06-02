@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,6 +45,8 @@
 #define __REGINA_PERM2_H
 #endif
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**
@@ -67,7 +69,7 @@ namespace regina {
  * This is consistent with the second-generation codes used in classes
  * Perm<4>,...,Perm<7>.
  *
- * You can iterate through all permutations using a range-based \c for loop
+ * You can iterate through all permutations using a range-based `for` loop
  * over \a Sn, and this will be extremely fast in both C++ and Python:
  *
  * \code{.cpp}
@@ -75,7 +77,7 @@ namespace regina {
  * \endcode
  *
  * This behaviour does not generalise to the large permutation classes Perm<n>
- * with \a n ≥ 8, which are not as tightly optimised: such range-based \c for
+ * with \a n ≥ 8, which are not as tightly optimised: such range-based `for`
  * loops are still supported for \a n ≥ 8 but will be significantly slower in
  * Python than in C++.  See the generic Perm class notes for further details.
  *
@@ -92,8 +94,7 @@ namespace regina {
  * \a a and \a b.  In particular, `Perm(0,1)` is _not_ the
  * identity permutation.
  *
- * \python Since Python does not support templates, this class is
- * made available under the name Perm2.
+ * \pyclassname{Perm2}
  *
  * \ingroup maths
  */
@@ -163,7 +164,7 @@ class Perm<2> {
          * between 0 and 1 inclusive.
          *
          * You can also iterate over all permutations in \a Sn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<2>::Sn) { ... }
@@ -701,7 +702,7 @@ class Perm<2> {
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
          *
-         * \return The result that indicates which permutation appears earlier
+         * \return the result that indicates which permutation appears earlier
          * in \a Sn.
          */
         constexpr std::strong_ordering operator <=> (const Perm&) const =
@@ -744,9 +745,6 @@ class Perm<2> {
          * The thread safety of this routine is of course dependent on
          * the thread safety of your uniform random bit generator \a gen.
          *
-         * \tparam URBG A type which, once any references are removed, must
-         * adhere to the C++ \a UniformRandomBitGenerator concept.
-         *
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
@@ -757,8 +755,8 @@ class Perm<2> {
          * elements, the resulting permutation must be the identity).
          * \return a random permutation.
          */
-        template <typename URBG>
-        static Perm rand(URBG&& gen, bool even = false);
+        template <std::uniform_random_bit_generator URBG>
+        static Perm rand(URBG& gen, bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -876,7 +874,7 @@ class Perm<2> {
          * name __hash__().  This allows permutations to be used as keys in
          * Python dictionaries and sets.
          *
-         * \return The integer hash of this permutation.
+         * \return the integer hash of this permutation.
          */
         constexpr size_t hash() const;
 
@@ -951,22 +949,19 @@ class Perm<2> {
 
         /**
          * Restricts a <i>k</i>-element permutation to an 2-element
-         * permutation, where \a k > 2.
+         * permutation, where `k > 2`.
          *
          * The resulting permutation will map 0,1 to their
          * respective images under \a p, and will ignore the "unused" images
-         * \a p[2],...,\a p[<i>k</i>-1].
+         * `p[2],...,p[k-1]`.
          *
          * \pre The given permutation maps 0,1 to 0,1 in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than 2.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * 2 elements.
          */
-        template <int k>
+        template <int k> requires (2 < k)
         static constexpr Perm<2> contract(Perm<k> p);
 
         /**
@@ -1024,8 +1019,8 @@ class Perm<2> {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <CharIterator iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        template <CharIterator Iterator>
+        static Perm tightDecode(Iterator start, Iterator limit,
             bool noTrailingData);
 
     friend class PermSn<2, PermOrder::Sign>;
@@ -1161,8 +1156,8 @@ inline Perm<2> Perm<2>::rand(bool even) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename URBG>
-inline Perm<2> Perm<2>::rand(URBG&& gen, bool even) {
+template <std::uniform_random_bit_generator URBG>
+inline Perm<2> Perm<2>::rand(URBG& gen, bool even) {
     if (even)
         return Perm<2>();
     else {
@@ -1210,8 +1205,8 @@ inline Perm<2> Perm<2>::tightDecode(std::istream& input) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <CharIterator iterator>
-Perm<2> Perm<2>::tightDecode(iterator start, iterator limit,
+template <CharIterator Iterator>
+Perm<2> Perm<2>::tightDecode(Iterator start, Iterator limit,
         bool noTrailingData) {
     if (start == limit)
         throw InvalidInput("The tight encoding is incomplete");

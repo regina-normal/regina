@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,6 +44,8 @@
 #include <iterator>
 #include <list>
 #include <vector>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 #ifndef __DOXYGEN
     // Optimisations:
@@ -173,7 +175,7 @@ class HilbertDual {
             VoidCallback<Ray&&> Action>
         static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
-            ProgressTracker* tracker = nullptr, unsigned initialRows = 0);
+            ProgressTracker* tracker = nullptr, size_t initialRows = 0);
 
         // Mark this class as non-constructible.
         HilbertDual() = delete;
@@ -254,8 +256,7 @@ class HilbertDual {
                  * \param row the row of the given matrix that stores
                  * the specific hyperplane in which we are interested.
                  */
-                inline void initNextHyp(const MatrixInt& subspace,
-                    unsigned row);
+                inline void initNextHyp(const MatrixInt& subspace, size_t row);
 
                 /**
                  * Sets this to the sum of the two given vectors.
@@ -423,7 +424,7 @@ class HilbertDual {
         template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
         static void intersectHyperplane(
             std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
-            const MatrixInt& subspace, unsigned row,
+            const MatrixInt& subspace, size_t row,
             const std::vector<BitmaskType>& constraintMasks);
 };
 
@@ -448,7 +449,7 @@ inline HilbertDual::VecSpec<IntegerType, BitmaskType>::VecSpec(
 
 template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::initNextHyp(
-        const MatrixInt& subspace, unsigned row) {
+        const MatrixInt& subspace, size_t row) {
     nextHyp_ = 0;
 
     IntegerType tmp;
@@ -522,7 +523,7 @@ inline bool HilbertDual::VecSpec<IntegerType, BitmaskType>::dominatedBy(
     // Begin with simple tests that give us a fast way of saying no.
     if (! (mask_ <= other.mask_))
         return false;
-    for (unsigned i = 0; i < Vector<IntegerType>::size(); ++i)
+    for (size_t i = 0; i < Vector<IntegerType>::size(); ++i)
         if ((*this)[i] > other[i])
             return false;
     return true;

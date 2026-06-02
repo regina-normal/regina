@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::basicTokenise
-static const char *basicTokenise =
+inline constexpr const char basicTokenise[] =
 R"doc(Decomposes the given string into tokens.
 
 This is an extremely simple tokeniser; tokens are defined to be
@@ -32,7 +32,7 @@ Returns:
     the resulting list of tokens.)doc";
 
 // Docstring regina::python::doc::startsWith
-static const char *startsWith =
+inline constexpr const char startsWith[] =
 R"doc(Determines whether the given C++ string begins with the given prefix.
 
 Parameter ``str``:
@@ -45,7 +45,7 @@ Returns:
     ``True`` if and only if *str* begins with *prefix*.)doc";
 
 // Docstring regina::python::doc::stringToToken
-static const char *stringToToken =
+inline constexpr const char stringToToken[] =
 R"doc(Returns a token derived from the given string. All whitespace
 characters in the given string will be replaced with an underscore.
 
@@ -56,7 +56,7 @@ Returns:
     the corresponding token.)doc";
 
 // Docstring regina::python::doc::stripWhitespace
-static const char *stripWhitespace =
+inline constexpr const char stripWhitespace[] =
 R"doc(Strips all whitespace from the beginning and end of the given C++
 string. The new stripped string is returned; the original string is
 not altered.
@@ -74,7 +74,7 @@ Returns:
     the resulting stripped string.)doc";
 
 // Docstring regina::python::doc::subscript
-static const char *subscript =
+inline constexpr const char subscript[] =
 R"doc(Converts the given native C++ integer into a unicode subscript string.
 
 The resulting string will be encoded using UTF-8.
@@ -89,7 +89,7 @@ Returns:
     the given integer as a subscript string.)doc";
 
 // Docstring regina::python::doc::subscript_2
-static const char *subscript_2 =
+inline constexpr const char subscript_2[] =
 R"doc(Converts the given Regina integer into a unicode subscript string.
 
 The resulting string will be encoded using UTF-8.
@@ -104,7 +104,7 @@ Returns:
     the given integer as a subscript string.)doc";
 
 // Docstring regina::python::doc::superscript
-static const char *superscript =
+inline constexpr const char superscript[] =
 R"doc(Converts the given native C++ integer into a unicode superscript
 string.
 
@@ -120,7 +120,7 @@ Returns:
     the given integer as a superscript string.)doc";
 
 // Docstring regina::python::doc::superscript_2
-static const char *superscript_2 =
+inline constexpr const char superscript_2[] =
 R"doc(Converts the given Regina integer into a unicode superscript string.
 
 The resulting string will be encoded using UTF-8.

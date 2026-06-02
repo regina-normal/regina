@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/laurent2.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Integer;
 using regina::Laurent2;
@@ -43,7 +45,7 @@ using regina::Laurent2;
 void addLaurent2(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Laurent2)
 
-    auto c = pybind11::class_<Laurent2<Integer>>(m, "Laurent2", rdoc_scope)
+    auto c = pybind11::class_<Laurent2<Integer>>(m, "Laurent2", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent2<Integer>&>(), rdoc::__copy)
         .def(pybind11::init([](long xExp, long yExp) { // deprecated
@@ -56,7 +58,7 @@ void addLaurent2(pybind11::module_& m) {
         .def(pybind11::init([](const std::vector<
                 std::tuple<long, long, Integer>>& coeffs) {
             return new Laurent2<Integer>(coeffs.begin(), coeffs.end());
-        }), pybind11::arg("coefficients"), rdoc::__init_3)
+        }), "coefficients"_a, rdoc::__init_3)
         .def("init", overload_cast<>(&Laurent2<Integer>::init), rdoc::init)
         .def("initExp", &Laurent2<Integer>::initExp, rdoc::initExp)
         .def("init", &Laurent2<Integer>::initExp, rdoc::init_2) // deprecated
@@ -68,10 +70,10 @@ void addLaurent2(pybind11::module_& m) {
         .def("invertY", &Laurent2<Integer>::invertY, rdoc::invertY)
         .def("str", overload_cast<const char*, const char*>(
             &Laurent2<Integer>::str, pybind11::const_),
-            pybind11::arg(), pybind11::arg("varY") = nullptr, rdoc::str)
+            "varX"_a, "varY"_a = nullptr, rdoc::str)
         .def("utf8", overload_cast<const char*, const char*>(
             &Laurent2<Integer>::utf8, pybind11::const_),
-            pybind11::arg(), pybind11::arg("varY") = nullptr, rdoc::utf8)
+            "varX"_a, "varY"_a = nullptr, rdoc::utf8)
         .def("__getitem__", [](const Laurent2<Integer>& p,
                 std::pair<long, long> exponents) {
             return p(exponents.first, exponents.second);
@@ -86,20 +88,19 @@ void addLaurent2(pybind11::module_& m) {
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
-        .def(pybind11::self * Integer(), rdoc_global::__mul)
-        .def(Integer() * pybind11::self, rdoc_global::__mul_2)
-        .def(pybind11::self / Integer(), rdoc_global::__div)
-        .def(pybind11::self + pybind11::self, rdoc_global::__add)
-        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
-        .def(pybind11::self * pybind11::self, rdoc_global::__mul_3)
-        .def(- pybind11::self, rdoc_global::__sub)
+        .def(pybind11::self * Integer(), rdoc::__mul)
+        .def(Integer() * pybind11::self, rdoc::__mul_2)
+        .def(pybind11::self / Integer(), rdoc::__div)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_3)
+        .def(- pybind11::self, rdoc::__sub)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-
-    regina::python::add_global_swap<Laurent2<Integer>>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Laurent2<Integer>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

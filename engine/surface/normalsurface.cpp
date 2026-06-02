@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -229,32 +229,23 @@ bool NormalSurface::operator == (const NormalSurface& other) const {
 std::weak_ordering NormalSurface::operator <=> (const NormalSurface& rhs)
         const {
     size_t nTet = triangulation_->size();
-    if (nTet != rhs.triangulation_->size())
-        return nTet <=> rhs.triangulation_->size();
+    if (auto c = nTet <=> rhs.triangulation_->size(); c != 0)
+        return c;
 
     bool checkAlmostNormal =
         (enc_.storesOctagons() || rhs.enc_.storesOctagons());
 
     for (size_t t = 0; t < nTet; ++t) {
-        for (int i = 0; i < 4; ++i) {
-            if (triangles(t, i) < rhs.triangles(t, i))
-                return std::weak_ordering::less;
-            if (triangles(t, i) > rhs.triangles(t, i))
-                return std::weak_ordering::greater;
-        }
-        for (int i = 0; i < 3; ++i) {
-            if (quads(t, i) < rhs.quads(t, i))
-                return std::weak_ordering::less;
-            if (quads(t, i) > rhs.quads(t, i))
-                return std::weak_ordering::greater;
-        }
+        for (int i = 0; i < 4; ++i)
+            if (auto c = triangles(t, i) <=> rhs.triangles(t, i); c != 0)
+                return c;
+        for (int i = 0; i < 3; ++i)
+            if (auto c = quads(t, i) <=> rhs.quads(t, i); c != 0)
+                return c;
         if (checkAlmostNormal)
-            for (int i = 0; i < 3; ++i) {
-                if (octs(t, i) < rhs.octs(t, i))
-                    return std::weak_ordering::less;
-                if (octs(t, i) > rhs.octs(t, i))
-                    return std::weak_ordering::greater;
-            }
+            for (int i = 0; i < 3; ++i)
+                if (auto c = octs(t, i) <=> rhs.octs(t, i); c != 0)
+                    return c;
     }
 
     // The surfaces are equal.

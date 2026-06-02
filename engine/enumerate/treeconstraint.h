@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2025, Ben Burton                                   *
+ *  Copyright (c) 2011-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,8 @@
 #include "surface/normalcoords.h"
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h" // for Triangulation<3>::size()
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -316,6 +318,8 @@ class LPConstraintAPI {
          * also supported by this specific constraint class.
          */
         static bool supported(NormalEncoding enc);
+
+        LPConstraintAPI() = delete;
 };
 #endif
 
@@ -391,6 +395,8 @@ class LPConstraintNone {
         static bool verify(const NormalSurface&);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
+
+        LPConstraintNone() = delete;
 };
 
 /**
@@ -451,6 +457,8 @@ class LPConstraintEulerPositive {
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
+
+        LPConstraintEulerPositive() = delete;
 };
 
 /**
@@ -498,6 +506,8 @@ class LPConstraintEulerZero {
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
+
+        LPConstraintEulerZero() = delete;
 };
 
 /**
@@ -560,6 +570,8 @@ class LPConstraintNonSpun {
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
+
+        LPConstraintNonSpun() = delete;
 };
 
 /**
@@ -689,7 +701,7 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          *
          * \param lp the tableaux in which to enforce the bans.
          */
-        template <LPConstraint Constraint, typename IntType>
+        template <LPConstraint Constraint, ReginaInteger IntType>
         void enforceBans(LPData<Constraint, IntType>& lp) const;
 
         /**
@@ -804,7 +816,7 @@ class BanNone : public ShortOutput<BanNone> {
         template <LPConstraint Constraint>
         BanNone(const LPInitialTableaux<Constraint>&) {}
 
-        template <LPConstraint Constraint, typename IntType>
+        template <LPConstraint Constraint, ReginaInteger IntType>
         void enforceBans(LPData<Constraint, IntType>&) const {}
 
         bool operator == (const BanNone&) const { return true; }
@@ -1092,7 +1104,7 @@ inline BanConstraintBase::~BanConstraintBase() {
     delete[] marked_;
 }
 
-template <LPConstraint Constraint, typename IntType>
+template <LPConstraint Constraint, ReginaInteger IntType>
 inline void BanConstraintBase::enforceBans(LPData<Constraint, IntType>& lp)
         const {
     for (size_t i = 0; i < lp.coordinateColumns(); ++i)

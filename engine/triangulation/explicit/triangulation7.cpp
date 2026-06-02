@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,19 +33,28 @@
 #include "triangulation/detail/moves-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
 #include "triangulation/detail/triangulation-impl.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 
-namespace regina::detail {
+namespace regina {
 
-template std::string TriangulationBase<7>::isoSigFrom
-    <IsoSigPrintable<7>>(size_t, const Perm<8>&, Isomorphism<7>*) const;
-template std::string TriangulationBase<7>::isoSig<
-    IsoSigClassic<7>, IsoSigPrintable<7>>() const;
+template std::string IsoSigBinary::asString<7>(const ByteSequence&);
+
+namespace detail {
+
+template std::string
+    TriangulationBase<7>::isoSig<IsoSigPrintable, IsoSigClassic<7>>() const;
 template std::pair<std::string, Isomorphism<7>>
-    TriangulationBase<7>::isoSigDetail<
-    IsoSigClassic<7>, IsoSigPrintable<7>>() const;
-template Triangulation<7> TriangulationBase<7>::fromIsoSig(const std::string&);
-template size_t TriangulationBase<7>::isoSigComponentSize(const std::string&);
+    TriangulationBase<7>::isoSigDetail<IsoSigPrintable, IsoSigClassic<7>>()
+    const;
+
+template std::string
+    TriangulationBase<7>::neoSig<IsoSigPrintable,
+    IsoSigRidgeDegrees<7>>(bool) const;
+template std::pair<std::string, Isomorphism<7>>
+    TriangulationBase<7>::neoSigDetail<IsoSigPrintable,
+    IsoSigRidgeDegrees<7>>(bool) const;
+
+template Triangulation<7> TriangulationBase<7>::fromSig(const std::string&);
 
 template AbelianGroup TriangulationBase<7>::homology<1>() const;
 template AbelianGroup TriangulationBase<7>::homology<2>() const;
@@ -88,7 +97,7 @@ template bool TriangulationBase<7>::internalPachner(Face<7, 3>*, bool, bool);
 template bool TriangulationBase<7>::internalPachner(Face<7, 4>*, bool, bool);
 template bool TriangulationBase<7>::internalPachner(Face<7, 5>*, bool, bool);
 template bool TriangulationBase<7>::internalPachner(Face<7, 6>*, bool, bool);
-template bool TriangulationBase<7>::internalPachner(Face<7, 7>*, bool, bool);
+template bool TriangulationBase<7>::internalPachner(Simplex<7>*, bool, bool);
 
 template bool TriangulationBase<7>::internal20(Face<7, 0>*, bool, bool);
 template bool TriangulationBase<7>::internal20(Face<7, 1>*, bool, bool);
@@ -105,4 +114,4 @@ template bool TriangulationBase<7>::makeIdeal();
 template std::string TriangulationBase<7>::source(Language) const;
 template void TriangulationBase<7>::writeDot(std::ostream&, bool) const;
 
-} // namespace regina::detail
+} } // namespace regina::detail

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,7 +43,7 @@ using regina::Tetrahedron;
 void addSatAnnulus(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SatAnnulus)
 
-    auto c = pybind11::class_<SatAnnulus>(m, "SatAnnulus", rdoc_scope)
+    auto c = pybind11::class_<SatAnnulus>(m, "SatAnnulus", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const SatAnnulus&>(), rdoc::__copy)
         .def(pybind11::init<Tetrahedron<3>*, Perm<4>,

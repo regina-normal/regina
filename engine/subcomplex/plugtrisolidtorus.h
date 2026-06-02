@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,8 @@
 #include "subcomplex/trisolidtorus.h"
 #include "subcomplex/layeredchain.h"
 #include "triangulation/forward.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -83,20 +85,20 @@ namespace regina {
  * interior triangle).  The gluings must also be made so that the resulting
  * triangulation component is orientable.
  *
- * Of the optional StandardTriangulation routines, manifold() is
+ * Of the optional StandardSubcomplex routines, manifold() is
  * implemented for most plugged triangular solid tori and
  * homology() is not implemented at all.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
  *
  * \ingroup subcomplex
  */
-class PlugTriSolidTorus : public StandardTriangulation {
+class PlugTriSolidTorus : public StandardSubcomplex<3> {
     public:
         static constexpr int CHAIN_NONE = 0;
             /**< Indicates an annulus on the triangular solid torus
@@ -217,7 +219,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * chains of the same length attached in the same (major/minor) manner.
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass is more specific than combinatorial isomorphism, since
@@ -235,8 +237,8 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * plugged triangular solid torus.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param comp the triangulation component to examine.
          * \return a structure containing details of the plugged triangular
@@ -245,7 +247,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          */
         static std::unique_ptr<PlugTriSolidTorus> recognise(Component<3>* comp);
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,32 +33,28 @@
 #include "../helpers.h"
 #include "../docstrings/split/sigisomorphism.h"
 
+using namespace pybind11::literals;
+
 using regina::SigPartialIsomorphism;
 
 void addSigIsomorphism(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SigPartialIsomorphism)
 
     auto c = pybind11::class_<SigPartialIsomorphism>(m, "SigPartialIsomorphism",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<int>(), rdoc::__init)
         .def(pybind11::init<const SigPartialIsomorphism&>(), rdoc::__copy)
         .def("swap", &SigPartialIsomorphism::swap, rdoc::swap)
         .def("makeCanonical", &SigPartialIsomorphism::makeCanonical,
-            pybind11::arg(), pybind11::arg("fromCycleGroup") = 0,
-            rdoc::makeCanonical)
+            "sig"_a, "fromCycleGroup"_a = 0, rdoc::makeCanonical)
         .def("compareWith", &SigPartialIsomorphism::compareWith,
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("fromCycleGroup") = 0,
-            rdoc::compareWith)
+            "sig"_a, "other"_a, "fromCycleGroup"_a = 0, rdoc::compareWith)
         .def("compareWithIdentity", &SigPartialIsomorphism::compareWithIdentity,
-            pybind11::arg(), pybind11::arg("fromCycleGroup") = 0,
-            rdoc::compareWithIdentity)
+            "sig"_a, "fromCycleGroup"_a = 0, rdoc::compareWithIdentity)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<SigPartialIsomorphism>(m,
-        rdoc::global_swap);
+    regina::python::add_global_swap<SigPartialIsomorphism, rdoc>(m);
 
     RDOC_SCOPE_END
 }

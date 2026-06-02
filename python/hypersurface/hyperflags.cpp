@@ -4,7 +4,7 @@
  *  Regina - A Hyper Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,7 +48,7 @@ void addHyperFlags(pybind11::module_& m) {
                 rdoc::Fundamental },
             { "Legacy", regina::HyperList::Legacy, rdoc::Legacy },
             { "Custom", regina::HyperList::Custom, rdoc::Custom }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 
@@ -72,7 +72,7 @@ void addHyperFlags(pybind11::module_& m) {
             { "HilbertDual", regina::HyperAlg::HilbertDual, rdoc::HilbertDual },
             { "Legacy", regina::HyperAlg::Legacy, rdoc::Legacy },
             { "Custom", regina::HyperAlg::Custom, rdoc::Custom }
-        }, rdoc_scope, rdoc_global::__bor_2);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 

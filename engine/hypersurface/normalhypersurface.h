@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@
 
 #include <optional>
 #include <utility>
-#include "regina-core.h"
+#include "concepts/core.h"
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
@@ -50,6 +50,8 @@
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 #include "utilities/snapshot.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -244,12 +246,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the given
          * encoding.  This will not be checked!
          *
-         * \python The supported types for the template parameter \a U are
+         * \python The supported element types for the given vector are
          * regina::Integer and regina::LargeInteger.  You may also, if you
          * prefer, pass \a vector as a Python list of integers.
-         *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal hypersurface
          * resides.
@@ -258,7 +257,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
             const Vector<U>& vector);
 
@@ -313,9 +312,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
-         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * \param enc indicates precisely how the given vector encodes a normal
@@ -323,7 +319,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
             HyperEncoding enc, const Vector<U>& vector);
 
@@ -381,12 +377,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface inside the given triangulation, using the encoding
          * `HyperEncoding(coords)`.  This will not be checked!
          *
-         * \python The supported types for the template parameter \a U are
+         * \python The supported element types for the given vector are
          * regina::Integer and regina::LargeInteger.  You may also, if you
          * prefer, pass \a vector as a Python list of integers.
-         *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
          *
          * \param triang the triangulation in which this normal hypersurface
          * resides.
@@ -395,7 +388,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
             const Vector<U>& vector);
 
@@ -458,9 +451,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \nopython Instead use the version that takes a "pure" triangulation.
          *
-         * \tparam U the type of object held by the given vector.  It must be
-         * possible to assign an object of type \a U to a regina::LargeInteger.
-         *
          * \param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * \param coords the coordinate system from which the vector
@@ -468,7 +458,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \param vector a vector containing the coordinates of the normal
          * hypersurface.
          */
-        template <typename U>
+        template <AssignableTo<LargeInteger&> U>
         NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
             HyperCoords coords, const Vector<U>& vector);
 
@@ -907,7 +897,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * A hypersurface (or its positive rational multiple) could be the
          * normalised link of many edges.  The return value will be a pair
-         * (\a v, \a thin), where:
+         * `(v, thin)`, where:
          *
          * - \a v is a vector containing all such edges.  This will begin with
          *   the edges for which this hypersurface is a thin link, followed by
@@ -919,7 +909,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   since it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this hypersurface is the
-         * normalised link of any edge, then \a link will be 0 and \a v will be
+         * normalised link of any edge, then \a thin will be 0 and \a v will be
          * the empty vector.
          *
          * Note that the results of this routine are not cached.
@@ -991,7 +981,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * A hypersurface (or its positive rational multiple) could be the
          * normalised link of many triangles.  The return value will be a pair
-         * (\a v, \a thin), where:
+         * `(v, thin)`, where:
          *
          * - \a v is a vector containing all such triangles.  This will begin
          *   with the triangles for which this hypersurface is a thin link,
@@ -1004,7 +994,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   since it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this hypersurface is the
-         * normalised link of any triangle, then \a link will be 0 and \a v
+         * normalised link of any triangle, then \a thin will be 0 and \a v
          * will be the empty vector.
          *
          * Note that the results of this routine are not cached.
@@ -1076,7 +1066,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * A hypersurface (or its positive rational multiple) could be the
          * normalised link of many tetrahedra.  The return value will be a
-         * pair (\a v, \a thin), where:
+         * pair `(v, thin)`, where:
          *
          * - \a v is a vector containing all such tetrahedra.  This will begin
          *   with the tetrahedra for which this hypersurface is a thin link,
@@ -1089,7 +1079,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *   since it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this hypersurface is the
-         * normalised link of any tetrahedron, then \a link will be 0 and \a v
+         * normalised link of any tetrahedron, then \a thin will be 0 and \a v
          * will be the empty vector.
          *
          * Note that the results of this routine are not cached.
@@ -1205,7 +1195,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the hypersurface to compare this hypersurface with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * hypersurface.  This is marked as a weak ordering (not a strong
          * ordering) to reflect the fact that (for example) hypersurfaces in
          * different triangulations or using different encodings could be
@@ -1362,7 +1352,7 @@ void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept;
 
 // Inline functions for NormalHypersurface
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         HyperEncoding enc, const Vector<U>& vector) :
         enc_(enc), vector_(vector), triangulation_(tri) {
@@ -1380,7 +1370,7 @@ inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalHypersurface::NormalHypersurface(
         const SnapshotRef<Triangulation<4>>& tri,
         HyperEncoding enc, const Vector<U>& vector) :
@@ -1397,7 +1387,7 @@ inline NormalHypersurface::NormalHypersurface(
         enc_ = reconstructTetrahedra(*tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         HyperCoords coords, const Vector<U>& vector) :
         enc_(coords), vector_(vector), triangulation_(tri) {
@@ -1413,7 +1403,7 @@ inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
         enc_ = reconstructTetrahedra(tri, vector_, enc_);
 }
 
-template <typename U>
+template <AssignableTo<LargeInteger&> U>
 inline NormalHypersurface::NormalHypersurface(
         const SnapshotRef<Triangulation<4>>& tri,
         HyperCoords coords, const Vector<U>& vector) :

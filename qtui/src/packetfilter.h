@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -108,7 +108,7 @@ class TwoTypeFilter : public PacketFilter {
  * A packet filter that only accepts packets of either a given type
  * or any of its subclasses.
  *
- * The acceptance test will be performed by calling dynamic_cast<T*>
+ * The acceptance test will be performed by calling `dynamic_cast<T*>`
  * upon each packet being questioned.
  *
  * \tparam T the base class that we are filtering for.  This does _not_ need

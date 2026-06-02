@@ -10,6 +10,7 @@ SET(man1_files
   regfiletype.1
   retriangulate.1
   sigcensus.1
+  sigconvert.1
   tricensus.1
   trisetcmp.1
   regina-engine-config.1

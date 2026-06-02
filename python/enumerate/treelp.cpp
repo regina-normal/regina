@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/treelp.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Integer;
 using regina::LPData;
@@ -59,11 +61,9 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
 
     using Tableaux = LPInitialTableaux<Constraint>;
 
-    auto c = pybind11::class_<Tableaux>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Tableaux>(m, name, rdoc::__class)
         .def(pybind11::init<const Triangulation<3>&, NormalEncoding, bool>(),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("enumeration") = true,
-            rdoc::__init)
+            "tri"_a, "encoding"_a, "enumeration"_a = true, rdoc::__init)
         .def(pybind11::init<const Tableaux&>(), rdoc::__copy)
         .def("swap", &Tableaux::swap, rdoc::swap)
         .def("tri", &Tableaux::tri,
@@ -89,12 +89,11 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
             &Tableaux::template fillInitialTableaux<Integer>,
             rdoc::fillInitialTableaux)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     // We need to think more about what a comparison between tableaux should
     // test.  In the meantime, don't make a decision we might regret later.
     regina::python::disable_eq_operators(c);
-
-    regina::python::add_global_swap<Tableaux>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Tableaux, rdoc>(m);
 
     RDOC_SCOPE_END
 }
@@ -105,7 +104,7 @@ void addLPData(pybind11::module_& m, const char* name) {
 
     using Data = LPData<Constraint, Integer>;
 
-    auto c = pybind11::class_<Data>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Data>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("swap", &Data::swap, rdoc::swap)
         .def("reserve", &Data::reserve, rdoc::reserve)
@@ -126,20 +125,19 @@ void addLPData(pybind11::module_& m, const char* name) {
             // expected length of the type vector, and so we cannot sanity-check
             // the size of t right now.  Probably we should add an access
             // function to LPData that lets us view the original tableaux.
-            char* types = new char[t.size()];
+            uint8_t* types = new uint8_t[t.size()];
             std::copy(t.begin(), t.end(), types);
             auto ans = d.template extractSolution<regina::VectorInt>(types);
             delete[] types;
             return ans;
         }, rdoc::extractSolution)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     // We need to think more about what a comparison between tableaux should
     // test.  Do we just compare basis indices?  Do we do a deep comparison of
     // all the internal data?  Let's not force a decision right now.
     regina::python::disable_eq_operators(c);
-
-    regina::python::add_global_swap<Data>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Data, rdoc>(m);
 
     RDOC_SCOPE_END
 }
@@ -149,9 +147,10 @@ void addTreeLP(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::LPConstraintType>(m, "LPConstraintType",
-        "enum.Enum", rdoc_scope)
+            "enum.Enum", rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::LPConstraintType>(m, "LPConstraintType", rdoc_scope)
+    pybind11::enum_<regina::LPConstraintType>(m, "LPConstraintType",
+            rdoc::__class)
 #endif
         .value("Zero", regina::LPConstraintType::Zero, rdoc::Zero)
         .value("Positive", regina::LPConstraintType::Positive, rdoc::Positive)
@@ -162,7 +161,7 @@ void addTreeLP(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(LPMatrix)
 
-    auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix", rdoc_scope)
+    auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init)
         .def("swap", &LPMatrix<Integer>::swap, rdoc::swap)
@@ -184,14 +183,13 @@ void addTreeLP(pybind11::module_& m) {
             rdoc::combRowAndNorm)
         .def("negateRow", &LPMatrix<Integer>::negateRow, rdoc::negateRow)
         ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<LPMatrix<Integer>>(m, rdoc::global_swap);
+    regina::python::add_global_swap<LPMatrix<Integer>, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(LPSystem)
 
-    auto s = pybind11::class_<LPSystem>(m, "LPSystem", rdoc_scope)
+    auto s = pybind11::class_<LPSystem>(m, "LPSystem", rdoc::__class)
         .def(pybind11::init<NormalEncoding>(), rdoc::__init)
         .def(pybind11::init<const LPSystem&>(), rdoc::__copy)
         .def("normal", &LPSystem::normal, rdoc::normal)
@@ -200,7 +198,7 @@ void addTreeLP(pybind11::module_& m) {
         .def("quad", &LPSystem::quad, rdoc::quad)
         .def("coords", &LPSystem::coords, rdoc::coords)
         ;
-    regina::python::add_output(s);
+    regina::python::add_output_rich(s);
     regina::python::add_eq_operators(s, rdoc::__eq);
 
     addLPInitialTableaux<LPConstraintNone>(m, "LPInitialTableaux");
@@ -214,6 +212,12 @@ void addTreeLP(pybind11::module_& m) {
     addLPData<LPConstraintEulerPositive>(m, "LPData_EulerPositive");
     addLPData<LPConstraintEulerZero>(m, "LPData_EulerZero");
     addLPData<LPConstraintNonSpun>(m, "LPData_NonSpun");
+
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_concept<rdoc::LPConstraint>(m, "LPConstraint");
+    regina::python::add_concept<rdoc::LPSubspace>(m, "LPSubspace");
+    regina::python::add_concept<rdoc::BanConstraint>(m, "BanConstraint");
 
     RDOC_SCOPE_END
 }

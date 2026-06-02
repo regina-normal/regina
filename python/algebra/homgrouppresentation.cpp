@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,7 +47,7 @@ void addHomGroupPresentation(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(HomGroupPresentation)
 
     auto c = pybind11::class_<HomGroupPresentation>(m, "HomGroupPresentation",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<GroupPresentation, GroupPresentation,
             std::vector<GroupExpression>>(), rdoc::__init)
         .def(pybind11::init<GroupPresentation, GroupPresentation,
@@ -91,10 +91,9 @@ void addHomGroupPresentation(pybind11::module_& m) {
             &HomGroupPresentation::markedAbelianisation,
             rdoc::markedAbelianisation)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<HomGroupPresentation>(m, rdoc::global_swap);
+    regina::python::add_global_swap<HomGroupPresentation, rdoc>(m);
 
     RDOC_SCOPE_END
 }

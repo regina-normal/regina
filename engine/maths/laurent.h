@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,8 @@
 #include "concepts/iterator.h"
 #include "core/output.h"
 #include <iostream>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -186,8 +188,8 @@ class Laurent :
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        Laurent(long minExp, iterator begin, iterator end);
+        template <RandomAccessIteratorFor<T> Iterator>
+        Laurent(long minExp, Iterator begin, Iterator end);
 
         /**
          * Creates a new polynomial from a hard-coded sequence of coefficients.
@@ -265,8 +267,8 @@ class Laurent :
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        void init(long minExp, iterator begin, iterator end);
+        template <RandomAccessIteratorFor<T> Iterator>
+        void init(long minExp, Iterator begin, Iterator end);
 
         /**
          * Returns the smallest exponent that appears in this polynomial
@@ -363,7 +365,7 @@ class Laurent :
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the polynomial to compare with this.
-         * \return The result of the comparison between this
+         * \return the result of the comparison between this
          * and the given polynomial.
          */
         std::strong_ordering operator <=> (const Laurent<T>& rhs) const;
@@ -939,8 +941,8 @@ inline Laurent<T>::Laurent(long exp) :
 }
 
 template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> iterator>
-inline Laurent<T>::Laurent(long minExp, iterator begin, iterator end) :
+template <RandomAccessIteratorFor<T> Iterator>
+inline Laurent<T>::Laurent(long minExp, Iterator begin, Iterator end) :
         coeff_(nullptr) {
     init(minExp, begin, end);
 }
@@ -1013,8 +1015,8 @@ inline void Laurent<T>::init(long exp) {
 }
 
 template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> iterator>
-void Laurent<T>::init(long minExp, iterator begin, iterator end) {
+template <RandomAccessIteratorFor<T> Iterator>
+void Laurent<T>::init(long minExp, Iterator begin, Iterator end) {
     delete[] coeff_;
 
     // Skip through any initial zero terms.
@@ -1139,22 +1141,13 @@ inline bool Laurent<T>::operator == (const Laurent<T>& rhs) const {
 
 template <CoefficientDomain T>
 std::strong_ordering Laurent<T>::operator <=> (const Laurent<T>& rhs) const {
-    if (minExp_ < rhs.minExp_)
-        return std::strong_ordering::less;
-    else if (minExp_ > rhs.minExp_)
-        return std::strong_ordering::greater;
-
-    if (maxExp_ < rhs.maxExp_)
-        return std::strong_ordering::less;
-    else if (maxExp_ > rhs.maxExp_)
-        return std::strong_ordering::greater;
-
+    if (auto c = minExp_ <=> rhs.minExp_; c != 0)
+        return c;
+    if (auto c = maxExp_ <=> rhs.maxExp_; c != 0)
+        return c;
     for (long i = minExp_; i <= maxExp_; ++i)
-        if ((*this)[i] < rhs[i])
-            return std::strong_ordering::less;
-        else if ((*this)[i] > rhs[i])
-            return std::strong_ordering::greater;
-
+        if (auto c = (*this)[i] <=> rhs[i]; c != 0)
+            return c;
     return std::strong_ordering::equal;
 }
 
@@ -1497,21 +1490,16 @@ void Laurent<T>::writeTextShort(std::ostream& out, bool utf8,
 
 template <CoefficientDomain T>
 inline std::string Laurent<T>::str(const char* variable) const {
-    // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same_v<typename OutputBase<Laurent<T>>::type,
-        Output<Laurent<T>, true>>,
-        "Laurent<T> is not identified as being inherited from Output<...>");
-
     std::ostringstream out;
     writeTextShort(out, false, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>
 inline std::string Laurent<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>

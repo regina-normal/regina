@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,15 +40,15 @@ using regina::TrieSet;
 
 #ifdef INT128_AVAILABLE
 using Bitmask128 = Bitmask1<regina::UInt128>;
-using Bitmask256 = Bitmask2<regina::UInt128, regina::UInt128>;
+using Bitmask256 = Bitmask2<regina::UInt128>;
 #else
-using Bitmask128 = Bitmask2<uint64_t, uint64_t>;
+using Bitmask128 = Bitmask2<uint64_t>;
 #endif
 
 void addTrieSet(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TrieSet)
 
-    auto c = pybind11::class_<TrieSet>(m, "TrieSet", rdoc_scope)
+    auto c = pybind11::class_<TrieSet>(m, "TrieSet", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const TrieSet&>(), rdoc::__copy)
         .def("swap", &TrieSet::swap, rdoc::swap)
@@ -98,9 +98,8 @@ void addTrieSet(pybind11::module_& m) {
         #endif
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<TrieSet>(m, rdoc::global_swap);
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<TrieSet, rdoc>(m);
 
     RDOC_SCOPE_END
 }

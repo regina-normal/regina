@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,29 +54,26 @@
  *
  * These chooser classes would be *much* better using templates, but
  * boundary components are not yet templatised.
- *
- * Note that we do *not* use Q_OBJECT with the chooser classes.
- * This is because many of the chooser classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * classes do not use slots or signals, I believe this is okay.
  */
 class BoundaryComponent4Chooser :
         public QComboBox, public regina::PacketListener {
     public:
+        using Choice = regina::BoundaryComponent<4>*;
+
         /**
          * A filter function, used to determine whether a given
          * boundary component should appear in the list.
          */
-        using FilterFunc = bool (*)(regina::BoundaryComponent<4>*);
+        using Filter = bool (*)(Choice);
 
     private:
         regina::Triangulation<4>* tri_;
             /**< The triangulation whose boundary components we are
                  choosing from. */
-        FilterFunc filter_;
+        Filter filter_;
             /**< A filter to restrict the available selections, or
                  \c null if no filter is necessary. */
-        std::vector<regina::BoundaryComponent<4>*> options_;
+        std::vector<Choice> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -97,7 +94,7 @@ class BoundaryComponent4Chooser :
          */
         BoundaryComponent4Chooser(
                 regina::PacketOf<regina::Triangulation<4>>* tri,
-                FilterFunc filter, QWidget* parent, bool autoUpdate = true);
+                Filter filter, QWidget* parent, bool autoUpdate = true);
 
         /**
          * Returns the currently selected boundary component.
@@ -146,11 +143,6 @@ class BoundaryComponent4Chooser :
 
 /**
  * A dialog used to select a single boundary component of a given triangulation.
- *
- * Note that we do *not* use Q_OBJECT with the chooser dialog classes.
- * This is because many of the chooser dialog classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * dialog classes do not use slots or signals, I believe this is okay.
  */
 class BoundaryComponent4Dialog : public QDialog {
     private:
@@ -165,14 +157,14 @@ class BoundaryComponent4Dialog : public QDialog {
          */
         BoundaryComponent4Dialog(QWidget* parent,
             regina::PacketOf<regina::Triangulation<4>>* tri,
-            BoundaryComponent4Chooser::FilterFunc filter,
+            BoundaryComponent4Chooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::BoundaryComponent<4>* choose(QWidget* parent,
             regina::PacketOf<regina::Triangulation<4>>* tri,
-            BoundaryComponent4Chooser::FilterFunc filter,
+            BoundaryComponent4Chooser::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);

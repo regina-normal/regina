@@ -42,13 +42,38 @@ Exit code: 0
 ============================================================
 TEST: regfiletype @INVALIDFILE@
 --------------------
-Unknown file format or file could not be opened.
+The file could not be read.
 --------------------
 Exit code: 0
 ============================================================
 TEST: regfiletype @BADFILE@
 --------------------
-Unknown file format or file could not be opened.
+Unknown file format.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @BADFILE@.gz
+--------------------
+Unknown file format.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @TESTDIR@/test.rga.bz2
+--------------------
+Unknown file format.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @TESTDIR@/test.rga.gz
+--------------------
+Regina data: Third-generation XML format (Regina 7.0+), compressed
+Engine 7.0
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @TESTDIR@/empty.rga
+--------------------
+Unknown file format.
 --------------------
 Exit code: 0
 ============================================================
@@ -76,10 +101,10 @@ Regina data: Third-generation XML format (Regina 7.0+)
 Engine 7.0
 
 [ @INVALIDFILE@ ]
-Unknown file format or file could not be opened.
+The file could not be read.
 
 [ @BADFILE@ ]
-Unknown file format or file could not be opened.
+Unknown file format.
 
 [ @TESTDIR@/b5.rga ]
 Regina data: Second-generation XML format (Regina 3.0-6.0.1), compressed

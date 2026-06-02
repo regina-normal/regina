@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,16 +59,6 @@ void Triangulation<4>::calculateSkeleton() {
         calculateEdgeLinks();
         // Sets:
         // - Edge<4>::link_, but only for edges with bad self-identifications
-
-    // Flesh out the details of each component.
-    for (auto v : vertices())
-        v->component()->vertices_.push_back(v);
-    for (auto e : edges())
-        e->component()->edges_.push_back(e);
-    for (auto t : triangles())
-        t->component()->triangles_.push_back(t);
-    for (auto t : tetrahedra())
-        t->component()->tetrahedra_.push_back(t);
 }
 
 void Triangulation<4>::calculateVertexLinks() {
@@ -79,14 +69,14 @@ void Triangulation<4>::calculateVertexLinks() {
     for (auto bc : boundaryComponents())
         if (bc->isReal())
             for (auto v : bc->vertices())
-                v->flags_ |= Vertex<4>::FLAG_REAL_BOUNDARY;
+                v->vertexFlags_.value |= Vertex<4>::FLAG_REAL_BOUNDARY;
 
     // Look at each vertex link and see what it says about this 4-manifold
     // triangulation.
     long foundIdeal = 0; // -1 if we ever find an invalid vertex
     long remaining = countVertices();
     for (Vertex<4>* vertex : vertices()) {
-        if (vertex->flags_ & Vertex<4>::FLAG_REAL_BOUNDARY) {
+        if (vertex->vertexFlags_.value & Vertex<4>::FLAG_REAL_BOUNDARY) {
             // This vertex belongs to one or more boundary tetrahedra.
             // If the link is not a 3-ball then this vertex is invalid.
             // In particular, if vertexLinkSummary_ >= 0 then all vertices
@@ -138,8 +128,8 @@ void Triangulation<4>::calculateVertexLinks() {
                                 foundIdeal < vertexLinkSummary_) &&
                             ! vertex->buildLink().isSphere())) {
                     // We have an ideal vertex.
-                    vertex->component()->ideal_ = true;
-                    vertex->flags_ |= Vertex<4>::FLAG_IDEAL;
+                    vertex->component()->ideal_.value = true;
+                    vertex->vertexFlags_.value |= Vertex<4>::FLAG_IDEAL;
                     if (foundIdeal >= 0)
                         ++foundIdeal;
                     vertex->boundaryComponent_ = new BoundaryComponent<4>();
@@ -166,9 +156,8 @@ void Triangulation<4>::calculateVertexLinks() {
         // cases separately under calculateEdgeLinks() below.
         if (! vertex->isValid()) {
             for (Vertex<3>* v : vertex->buildLink().vertices()) {
-                auto type = v->linkType();
-                if (type != Vertex<3>::Link::Sphere &&
-                        type != Vertex<3>::Link::Disc) {
+                // Is the link of v _not_ a sphere or disc?
+                if (v->isIdeal() || ! v->isValid()) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.
 
@@ -216,31 +205,7 @@ void Triangulation<4>::calculateEdgeLinks() {
 void Triangulation<4>::cloneSkeleton(const Triangulation& src) {
     TriangulationBase<4>::cloneSkeleton(src);
 
-    // Leave Vertex::link_ and Edge::link_ as built-on-demand for now.
-
     vertexLinkSummary_ = src.vertexLinkSummary_;
-    {
-        auto me = vertices().begin();
-        auto you = src.vertices().begin();
-        for ( ; me != vertices().end(); ++me, ++you)
-            (*me)->flags_ = (*you)->flags_;
-    }
-    {
-        auto me = components_.begin();
-        auto you = src.components_.begin();
-        for ( ; me != components_.end(); ++me, ++you) {
-            (*me)->ideal_ = (*you)->ideal_;
-
-            for (auto f : (*you)->vertices_)
-                (*me)->vertices_.push_back(vertex(f->index()));
-            for (auto f : (*you)->edges_)
-                (*me)->edges_.push_back(edge(f->index()));
-            for (auto f : (*you)->triangles_)
-                (*me)->triangles_.push_back(triangle(f->index()));
-            for (auto f : (*you)->tetrahedra_)
-                (*me)->tetrahedra_.push_back(tetrahedron(f->index()));
-        }
-    }
 }
 
 } // namespace regina

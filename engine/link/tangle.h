@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,8 +37,10 @@
 #define __REGINA_TANGLE_H
 #endif
 
+#include <ranges>
 #include "link/link.h"
-#include "utilities/listview.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -250,12 +252,12 @@ class Tangle : public Output<Tangle> {
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (Crossing* c : tangle.crossings()) { ... }
@@ -598,7 +600,7 @@ class Tangle : public Output<Tangle> {
          * \param crossing identifies the crossing to be removed.
          * See Link::r1(Crossing*) for details on exactly how this will
          * be interpreted.
-         * \return The new tangle diagram obtained by performing the requested
+         * \return the new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Tangle> withR1(Crossing* crossing) const;
@@ -622,7 +624,7 @@ class Tangle : public Output<Tangle> {
          * \param arc identifies one of the arcs of the bigon about
          * which the move will be performed.  See Link::r2(StrandRef)
          * for details on exactly how this will be interpretered.
-         * \return The new tangle diagram obtained by performing the requested
+         * \return the new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Tangle> withR2(StrandRef arc) const;
@@ -647,101 +649,10 @@ class Tangle : public Output<Tangle> {
          * the "upper" arc that features in this move.
          * See Link::r2(Crossing*) for details on exactly how this will be
          * interpreted.
-         * \return The new tangle diagram obtained by performing the requested
+         * \return the new tangle diagram obtained by performing the requested
          * move, or no value if the requested move cannot be performed.
          */
         std::optional<Tangle> withR2(Crossing* crossing) const;
-
-        /**
-         * Deprecated routine that tests for and optionally performs a type I
-         * Reidemeister move to remove a crossing.
-         *
-         * For more detail on type I moves and when they can be performed,
-         * see Link::r1(Crossing*).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR1().  If you wish to both check and perform the move,
-         * call r1() without the two additional boolean arguments.
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this tangle.
-         *
-         * \param crossing identifies the crossing to be removed.  See
-         * Link::r1(Crossing*) for details on exactly how this will be
-         * interpreted.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r1(Crossing* crossing,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type II
-         * Reidemeister move to remove two crossings.
-         *
-         * For more detail on type II moves and when they can be performed,
-         * see Link::r2(StrandRef).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR2().  If you wish to both check and perform the move,
-         * call r2() without the two additional boolean arguments.
-         *
-         * \pre The given strand reference is either a null reference,
-         * or else refers to some strand of some crossing in this tangle.
-         *
-         * \param arc identifies one of the arcs of the bigon about which the
-         * move will be performed.  See Link::r2(StrandRef) for details on
-         * exactly how this will be interpretered.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r2(StrandRef arc,
-            bool ignored, bool perform = true);
-        /**
-         * Deprecated routine that tests for and optionally performs a type II
-         * Reidemeister move to remove two crossings.
-         *
-         * For more detail on type II moves and when they can be performed,
-         * see Link::r2(Crossing*).
-         *
-         * This routine will always _check_ whether the requested move is
-         * allowed.  If it is, and if the argument \a perform is \c true,
-         * this routine will also _perform_ the move.
-         *
-         * \deprecated If you just wish to test whether such a move is possible,
-         * call hasR2().  If you wish to both check and perform the move,
-         * call r2() without the two additional boolean arguments.
-         *
-         * \pre The given crossing is either a null pointer, or else some
-         * crossing in this tangle.
-         *
-         * \param crossing identifies the crossing at the beginning of the
-         * "upper" arc that features in this move.  See Link::r2(Crossing*)
-         * for details on exactly how this will be interpreted.
-         * \param ignored an argument that is ignored.  In earlier versions of
-         * Regina this argument controlled whether we check if the move can be
-         * performed; however, now this check is done always.
-         * \param perform \c true if we should actually perform the move,
-         * assuming the move is allowed.
-         * \return \c true if and only if the requested move could be performed.
-         */
-        [[deprecated]] bool r2(Crossing* crossing,
-            bool ignored, bool perform = true);
 
         /**
          * Uses type I and II Reidemeister moves to reduce the tangle
@@ -1140,8 +1051,8 @@ class Tangle : public Output<Tangle> {
          * sequence of tokens for an oriented Gauss code.
          * \return the resulting tangle.
          */
-        template <RandomAccessIteratorFor<std::string> iterator>
-        static Tangle fromOrientedGauss(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<std::string> Iterator>
+        static Tangle fromOrientedGauss(Iterator begin, Iterator end);
 
         /*@}*/
 
@@ -1291,7 +1202,7 @@ inline Crossing* Tangle::crossing(size_t index) const {
 }
 
 inline auto Tangle::crossings() const {
-    return ListView(crossings_);
+    return std::views::all(crossings_);
 }
 
 inline StrandRef Tangle::begin(int string) const {
@@ -1362,18 +1273,6 @@ inline std::optional<Tangle> Tangle::withR2(Crossing* crossing) const {
     std::optional<Tangle> ans(std::in_place, *this);
     ans->internalR2(StrandRef(ans->translate(crossing), 1), false, true);
     return ans;
-}
-
-inline bool Tangle::r1(Crossing* crossing, bool, bool perform) {
-    return internalR1(crossing, true, perform);
-}
-
-inline bool Tangle::r2(StrandRef arc, bool, bool perform) {
-    return internalR2(arc, true, perform);
-}
-
-inline bool Tangle::r2(Crossing* crossing, bool, bool perform) {
-    return internalR2(StrandRef(crossing, 1), true, perform);
 }
 
 inline void swap(Tangle& lhs, Tangle& rhs) noexcept {

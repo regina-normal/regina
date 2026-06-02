@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,6 +41,8 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "subcomplex/snappedball.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -119,10 +121,10 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * 2-sphere.
          *
          * Even though SnappedTwoSphere is a two-dimensional class and so does
-         * not inherit from StandardTriangulation, this routine nevertheless
+         * not inherit from StandardSubcomplex<3>, this routine nevertheless
          * returns by (smart) pointer for consistency with the
-         * StandardTriangulation recognition routines (which use pointers
-         * because of the polymorphic StandardTriangulation class hierarchy).
+         * StandardSubcomplex<3> recognition routines (which use pointers
+         * because of the polymorphic StandardSubcomplex class hierarchy).
          *
          * \pre The two given tetrahedra are distinct.
          *
@@ -142,10 +144,10 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * original 3-balls, not the original 3-balls themselves.
          *
          * Even though SnappedTwoSphere is a two-dimensional class and so does
-         * not inherit from StandardTriangulation, this routine nevertheless
+         * not inherit from StandardSubcomplex<3>, this routine nevertheless
          * returns by (smart) pointer for consistency with the
-         * StandardTriangulation recognition routines (which use pointers
-         * because of the polymorphic StandardTriangulation class hierarchy).
+         * StandardSubcomplex<3> recognition routines (which use pointers
+         * because of the polymorphic StandardSubcomplex class hierarchy).
          *
          * \pre The two given snapped 3-balls use distinct tetrahedra.
          *

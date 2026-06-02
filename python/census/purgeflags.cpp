@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,7 @@ void addPurgeFlags(pybind11::module_& m) {
                 rdoc::NonMinimalHyp },
             { "P2Reducible", regina::CensusPurge::P2Reducible,
                 rdoc::P2Reducible }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 

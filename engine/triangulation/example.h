@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,8 @@
 #include "triangulation/forward.h"
 #include "triangulation/detail/example.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**
@@ -70,7 +72,7 @@ namespace regina {
  *
  * \tparam dim the dimension of the example triangulations to construct.
  *
- * \headerfile triangulation/generic.h
+ * \headerfile triangulation/triangulation.h
  *
  * \ingroup triangulation
  */

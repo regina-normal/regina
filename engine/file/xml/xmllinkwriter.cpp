@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,18 +49,16 @@ void XMLWriter<Link>::openPre() {
 
 template <>
 void XMLWriter<Link>::writeContent() {
-    out_ << "  <crossings size=\"" << data_.crossings_.size()
-        << "\">\n ";
-    for (const Crossing* c : data_.crossings_)
+    out_ << "  <crossings size=\"" << data_.size() << "\">\n ";
+    for (const Crossing* c : data_.crossings())
         out_ << ' ' << (c->sign() == 1 ? '+' : '-');
     out_ << "\n  </crossings>\n";
     out_ << "  <connections>\n";
-    for (const Crossing* c : data_.crossings_)
+    for (const Crossing* c : data_.crossings())
         out_ << "  " << c->next(1) << ' ' << c->next(0) << '\n';
     out_ << "  </connections>\n";
-    out_ << "  <components size=\"" << data_.components_.size()
-        << "\">\n ";
-    for (const StrandRef& s : data_.components_)
+    out_ << "  <components size=\"" << data_.countComponents() << "\">\n ";
+    for (const StrandRef& s : data_.components())
         out_ << ' ' << s;
     out_ << "\n  </components>\n";
 }

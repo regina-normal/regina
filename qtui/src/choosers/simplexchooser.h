@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,6 @@
 #include "triangulation/forward.h"
 
 #include "choosers/facename.h"
-
 #include <QBoxLayout>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -55,28 +54,25 @@
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
- *
- * Note that we do *not* use Q_OBJECT with the chooser classes.
- * This is because many of the chooser classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * classes do not use slots or signals, I believe this is okay.
  */
 template <int dim> requires (regina::supportedDim(dim))
 class SimplexChooser : public QComboBox, public regina::PacketListener {
     public:
+        using Choice = regina::Simplex<dim>*;
+
         /**
          * A filter function, used to determine whether a given simplex
          * should appear in the list.
          */
-        using FilterFunc = bool (*)(regina::Simplex<dim>*);
+        using Filter = bool (*)(Choice);
 
     private:
         regina::Triangulation<dim>* tri_;
             /**< The triangulation whose simplices we are choosing from. */
-        FilterFunc filter_;
+        Filter filter_;
             /**< A filter to restrict the available selections, or
                  \c null if no filter is necessary. */
-        std::vector<regina::Simplex<dim>*> options_;
+        std::vector<Choice> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -96,8 +92,7 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
          * will be offered.
          */
         SimplexChooser(regina::PacketOf<regina::Triangulation<dim>>* tri,
-                FilterFunc filter, QWidget* parent,
-                bool autoUpdate = true);
+                Filter filter, QWidget* parent, bool autoUpdate = true);
 
         /**
          * Returns the currently selected simplex.
@@ -146,11 +141,6 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
 
 /**
  * A dialog used to select a single simplex of a given triangulation.
- *
- * Note that we do *not* use Q_OBJECT with the chooser dialog classes.
- * This is because many of the chooser dialog classes are templatised, and
- * Q_OBJECT does not play well with template classes.  Since the chooser
- * dialog classes do not use slots or signals, I believe this is okay.
  */
 template <int dim> requires (regina::supportedDim(dim))
 class SimplexDialog : public QDialog {
@@ -166,14 +156,14 @@ class SimplexDialog : public QDialog {
          */
         SimplexDialog(QWidget* parent,
             regina::PacketOf<regina::Triangulation<dim>>* tri,
-            typename SimplexChooser<dim>::FilterFunc filter,
+            typename SimplexChooser<dim>::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::Simplex<dim>* choose(QWidget* parent,
             regina::PacketOf<regina::Triangulation<dim>>* tri,
-            typename SimplexChooser<dim>::FilterFunc filter,
+            typename SimplexChooser<dim>::Filter filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
@@ -207,8 +197,7 @@ inline void SimplexChooser<dim>::packetBeingDestroyed(regina::PacketShell) {
 template <int dim> requires (regina::supportedDim(dim))
 SimplexChooser<dim>::SimplexChooser(
         regina::PacketOf<regina::Triangulation<dim>>* tri,
-        FilterFunc filter, QWidget* parent,
-        bool autoUpdate) :
+        Filter filter, QWidget* parent, bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -261,7 +250,7 @@ void SimplexChooser<dim>::fill() {
 template <int dim> requires (regina::supportedDim(dim))
 SimplexDialog<dim>::SimplexDialog(QWidget* parent,
         regina::PacketOf<regina::Triangulation<dim>>* tri,
-        typename SimplexChooser<dim>::FilterFunc filter,
+        typename SimplexChooser<dim>::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -280,14 +269,14 @@ SimplexDialog<dim>::SimplexDialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 template <int dim> requires (regina::supportedDim(dim))
 regina::Simplex<dim>* SimplexDialog<dim>::choose(QWidget* parent,
         regina::PacketOf<regina::Triangulation<dim>>* tri,
-        typename SimplexChooser<dim>::FilterFunc filter,
+        typename SimplexChooser<dim>::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {

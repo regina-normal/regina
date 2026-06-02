@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,7 +48,6 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 
 #include "testhelper.h"
 
@@ -125,7 +124,7 @@ TEST(CallbacksTest, passByReference) {
 
         Arg d;
         regina::Example<3>::s2xs1().retriangulate(1, 1, nullptr,
-                [](const std::string&, const regina::Triangulation<3>&,
+                [](const regina::ByteSequence&, const regina::Triangulation<3>&,
                     Arg& arg) {
             arg.flag();
             return false;
@@ -143,7 +142,7 @@ TEST(CallbacksTest, passByReference) {
 
         Arg d;
         regina::Example<4>::rp4().retriangulate(2, 1, nullptr,
-                [](const std::string&, const regina::Triangulation<4>&,
+                [](const regina::ByteSequence&, const regina::Triangulation<4>&,
                     Arg& arg) {
             arg.flag();
             return false;
@@ -161,7 +160,7 @@ TEST(CallbacksTest, passByReference) {
 
         Arg d;
         regina::ExampleLink::trefoil().rewrite(2, 1, nullptr,
-                [](const std::string&, const regina::Link&, Arg& arg) {
+                [](const regina::ByteSequence&, const regina::Link&, Arg& arg) {
             arg.flag();
             return false;
         }, d);

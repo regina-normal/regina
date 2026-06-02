@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,9 +38,11 @@
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../helpers/flags.h"
+#include "../helpers/packet.h"
 #include "../docstrings/surface/normalsurfaces.h"
 
-using namespace regina::python;
+using namespace pybind11::literals;
+
 using regina::NormalSurfaces;
 using regina::ProgressTracker;
 using regina::SurfaceFilter;
@@ -62,7 +64,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             { "AllButName", regina::SurfaceExport::AllButName,
                 rdoc::AllButName },
             { "All", regina::SurfaceExport::All, rdoc::All }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 
@@ -80,22 +82,23 @@ void addNormalSurfaces(pybind11::module_& m) {
     m.attr("surfaceExportAll") = regina::SurfaceExport::All;
 
     m.def("makeMatchingEquations", regina::makeMatchingEquations,
-        rdoc::makeMatchingEquations);
+        rdoc::makeMatchingEquations3);
     m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints,
-        rdoc::makeEmbeddedConstraints);
+        rdoc::makeEmbeddedConstraints3);
 
     RDOC_SCOPE_SWITCH(NormalSurfaces)
 
     auto l = pybind11::class_<NormalSurfaces,
-            std::shared_ptr<NormalSurfaces>>(m, "NormalSurfaces", rdoc_scope)
+            std::shared_ptr<NormalSurfaces>>(m, "NormalSurfaces", rdoc::__class)
         .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
                 regina::Flags<regina::NormalList>,
                 regina::Flags<regina::NormalAlg>, ProgressTracker*>(),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("which") = regina::NormalList::Default,
-            pybind11::arg("algHints") = regina::NormalAlg::Default,
-            pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<GILScopedRelease>(),
+            "triangulation"_a,
+            "coords"_a,
+            "whichList"_a = regina::NormalList::Default,
+            "algHints"_a = regina::NormalAlg::Default,
+            "tracker"_a = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::__init)
         .def(pybind11::init<const NormalSurfaces&, regina::NormalTransform>(),
             rdoc::__init_2)
@@ -132,12 +135,10 @@ void addNormalSurfaces(pybind11::module_& m) {
             &NormalSurfaces::recreateMatchingEquations,
             rdoc::recreateMatchingEquations)
         .def("saveCSVStandard", &NormalSurfaces::saveCSVStandard,
-            pybind11::arg(),
-            pybind11::arg("additionalFields") = regina::SurfaceExport::All,
+            "filename"_a, "additionalFields"_a = regina::SurfaceExport::All,
             rdoc::saveCSVStandard)
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
-            pybind11::arg(),
-            pybind11::arg("additionalFields") = regina::SurfaceExport::All,
+            "filename"_a, "additionalFields"_a = regina::SurfaceExport::All,
             rdoc::saveCSVEdgeWeight)
         .def("vectors", [](const NormalSurfaces& list) {
             return pybind11::make_iterator(
@@ -145,27 +146,27 @@ void addNormalSurfaces(pybind11::module_& m) {
         }, pybind11::keep_alive<0, 1>(), // iterator keeps list alive
             rdoc::vectors)
     ;
-    regina::python::add_output(l);
+    regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
+    regina::python::add_global_swap<NormalSurfaces, rdoc>(m);
 
     auto wrap = regina::python::add_packet_wrapper<NormalSurfaces>(
         m, "PacketOfNormalSurfaces");
     regina::python::add_packet_constructor<const Triangulation<3>&,
             regina::NormalCoords, regina::Flags<regina::NormalList>,
             regina::Flags<regina::NormalAlg>, ProgressTracker*>(wrap,
-        pybind11::arg(), pybind11::arg(),
-        pybind11::arg("which") = regina::NormalList::Default,
-        pybind11::arg("algHints") = regina::NormalAlg::Default,
-        pybind11::arg("tracker") = nullptr,
-        pybind11::call_guard<GILScopedRelease>(),
+        "triangulation"_a,
+        "coords"_a,
+        "whichList"_a = regina::NormalList::Default,
+        "algHints"_a = regina::NormalAlg::Default,
+        "tracker"_a = nullptr,
+        pybind11::call_guard<regina::python::GILScopedRelease>(),
         rdoc::__init);
     regina::python::add_packet_constructor<const NormalSurfaces&,
         regina::NormalTransform>(wrap, rdoc::__init_2);
     regina::python::add_packet_constructor<const NormalSurfaces&,
         const SurfaceFilter&>(wrap, rdoc::__init_3);
-
-    regina::python::add_global_swap<NormalSurfaces>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

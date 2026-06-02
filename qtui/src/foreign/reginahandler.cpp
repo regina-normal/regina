@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "packet/packet.h"
+#include "utilities/exception.h"
 #include "reginahandler.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -38,18 +39,28 @@
 #include <QTextDocument>
 
 std::shared_ptr<regina::Packet> ReginaHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
-    std::shared_ptr<regina::Packet> ans = regina::open(
-        static_cast<const char*>(QFile::encodeName(fileName)));
-    if (! ans)
+        const QString& filename, ReginaMain* parentWidget) const {
+    try {
+        auto ans = regina::open(
+            static_cast<const char*>(QFile::encodeName(filename)));
+        if (ans->label().empty())
+            ans->setLabel("Imported data");
+        return ans;
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
-            QObject::tr("The import failed."),
-            QObject::tr("<qt>Please check that the file <tt>%1</tt> "
-            "is readable and in Regina format.</qt>").
-                arg(fileName.toHtmlEscaped()));
-    else if (ans->label().empty())
-        ans->setLabel("Imported data");
-    return ans;
+            QObject::tr("I could not read the selected file."),
+            QObject::tr("<qt>Please check that you have permissions to read "
+                "the file <tt>%1</tt>.</qt>").
+                arg(filename.toHtmlEscaped()));
+        return {};
+    } catch (const regina::InvalidInput&) {
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("I could not open the selected file."),
+            QObject::tr("<qt>The file <tt>%1</tt> does not appear to be a "
+                "Regina data file.</qt>").
+                arg(filename.toHtmlEscaped()));
+        return {};
+    }
 }
 
 PacketFilter* ReginaHandler::canExport() const {
@@ -57,15 +68,17 @@ PacketFilter* ReginaHandler::canExport() const {
 }
 
 bool ReginaHandler::exportData(const regina::Packet& data,
-        const QString& fileName, QWidget* parentWidget) const {
-    if (! data.save(QFile::encodeName(fileName), compressed_, format_)) {
+        const QString& filename, QWidget* parentWidget) const {
+    try {
+        data.save(QFile::encodeName(filename), compressed_, format_);
+        return true;
+    } catch (const regina::FileError&) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "
             "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
+            "to the file <tt>%1</tt>.</qt>").arg(filename.toHtmlEscaped()));
         return false;
     }
-    return true;
 }
 

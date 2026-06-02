@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>H1Bdry</refname>
-  <refpurpose>The first homology group of the boundary of a triangulation</refpurpose>
+  <refpurpose>No longer stored</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -29,10 +29,12 @@ H1Bdry ::= (&xml-abeliangroup;)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltrmver;8.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  &eltrmdetail;
   <para>
    An &xml-H1Bdry; element stores the first homology group of the
    boundary of a triangulation.  The group itself is described by the

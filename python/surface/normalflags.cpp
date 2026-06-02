@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,7 +55,7 @@ void addNormalFlags(pybind11::module_& m) {
             { "Fundamental", NormalList::Fundamental, rdoc::Fundamental },
             { "Legacy", NormalList::Legacy, rdoc::Legacy },
             { "Custom", NormalList::Custom, rdoc::Custom }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 
@@ -86,7 +86,7 @@ void addNormalFlags(pybind11::module_& m) {
                 rdoc::HilbertFullCone },
             { "Legacy", NormalAlg::Legacy, rdoc::Legacy },
             { "Custom", NormalAlg::Custom, rdoc::Custom }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 
@@ -108,9 +108,9 @@ void addNormalFlags(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<NormalTransform>(m, "NormalTransform", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<NormalTransform>(m, "NormalTransform", rdoc_scope)
+    pybind11::enum_<NormalTransform>(m, "NormalTransform", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif

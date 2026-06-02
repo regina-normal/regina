@@ -49,6 +49,11 @@ add_executable(basic_callback
   ../gui/pythonoutputstream.cpp)
 target_link_libraries(basic_callback ${ENGINE_LIBRARY} ${Python_LIBRARIES})
 
+# A test executable that include _all_ available docstring files, in order to
+# ensure that the same docstring constants are not redefined differently.
+add_executable(docstrings_all docstrings_all.cpp)
+target_link_libraries(docstrings_all ${ENGINE_LIBRARY} ${Python_LIBRARIES})
+
 IF (WIN32)
   ADD_TEST(python-test bash testall)
   ADD_TEST(python-basic bash testbasic)

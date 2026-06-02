@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,8 @@
 #include "triangulation/facetspec.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -675,7 +677,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
  *
  * \ingroup census
  */
-template <int dim> requires (supportedDim(dim))
+template <int dim>
 void swap(GluingPerms<dim>& a, GluingPerms<dim>& b) noexcept;
 
 // Inline functions for GluingPerms
@@ -809,7 +811,7 @@ inline bool GluingPerms<dim>::operator == (const GluingPerms& other) const {
         permIndices_ + (size() * (dim + 1)), other.permIndices_);
 }
 
-template <int dim> requires (supportedDim(dim))
+template <int dim>
 inline void swap(GluingPerms<dim>& a, GluingPerms<dim>& b) noexcept {
     a.swap(b);
 }

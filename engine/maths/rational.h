@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -28,17 +28,19 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file maths/rational.h
+ *  \brief Deals with artibrary precision rational numbers.
+ */
+
 #ifndef __REGINA_RATIONAL_H
 #ifndef __DOXYGEN
 #define __REGINA_RATIONAL_H
 #endif
 
-/*! \file maths/rational.h
- *  \brief Deals with artibrary precision rational numbers.
- */
-
 #include "regina-core.h"
 #include "maths/integer.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -365,7 +367,7 @@ class Rational {
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
          *
-         * \return The result of the numerical comparison between this
+         * \return the result of the numerical comparison between this
          * and the given rational.
          */
         std::strong_ordering operator <=> (const Rational&) const;

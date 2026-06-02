@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,6 +44,8 @@
 #ifndef __DOXYGEN
 #define __REGINA_PERM7_H
 #endif
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -85,7 +87,7 @@ namespace regina {
  * in converting back and forth between the second-generation codes
  * (which are used internally by Perm<7>).
  *
- * You can iterate through all permutations using a range-based \c for loop
+ * You can iterate through all permutations using a range-based `for` loop
  * over \a Sn, and this will be extremely fast in both C++ and Python:
  *
  * \code{.cpp}
@@ -93,14 +95,13 @@ namespace regina {
  * \endcode
  *
  * This behaviour does not generalise to the large permutation classes Perm<n>
- * with \a n ≥ 8, which are not as tightly optimised: such range-based \c for
+ * with \a n ≥ 8, which are not as tightly optimised: such range-based `for`
  * loops are still supported for \a n ≥ 8 but will be significantly slower in
  * Python than in C++.  See the generic Perm class notes for further details.
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
- * \python Since Python does not support templates, this class is
- * made available under the name Perm7.
+ * \pyclassname{Perm7}
  *
  * \ingroup maths
  */
@@ -191,7 +192,7 @@ class Perm<7> {
          * between 0 and 5039 inclusive.
          *
          * You can also iterate over all permutations in \a Sn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<7>::Sn) { ... }
@@ -239,7 +240,7 @@ class Perm<7> {
          * must be between 0 and 5039 inclusive.
          *
          * You can also iterate over all permutations in \a orderedSn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<7>::orderedSn) { ... }
@@ -935,7 +936,7 @@ class Perm<7> {
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
          *
-         * \return The result that indicates which permutation appears earlier
+         * \return the result that indicates which permutation appears earlier
          * in \a Sn.
          */
         constexpr std::strong_ordering operator <=> (const Perm&) const =
@@ -978,9 +979,6 @@ class Perm<7> {
          * The thread safety of this routine is of course dependent on
          * the thread safety of your uniform random bit generator \a gen.
          *
-         * \tparam URBG A type which, once any references are removed, must
-         * adhere to the C++ \a UniformRandomBitGenerator concept.
-         *
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
@@ -991,8 +989,8 @@ class Perm<7> {
          * returned with equal probability).
          * \return a random permutation.
          */
-        template <typename URBG>
-        static Perm rand(URBG&& gen, bool even = false);
+        template <std::uniform_random_bit_generator URBG>
+        static Perm rand(URBG& gen, bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -1110,7 +1108,7 @@ class Perm<7> {
          * name __hash__().  This allows permutations to be used as keys in
          * Python dictionaries and sets.
          *
-         * \return The integer hash of this permutation.
+         * \return the integer hash of this permutation.
          */
         constexpr size_t hash() const;
 
@@ -1185,40 +1183,34 @@ class Perm<7> {
 
         /**
          * Extends a <i>k</i>-element permutation to a 7-element permutation,
-         * where 2 ≤ \a k \< 7.
+         * where `2 ≤ k < 7`.
          *
-         * The resulting permutation will map 0,...,<i>k</i>-1 to their
+         * The resulting permutation will map `0,...,k-1` to their
          * respective images under \a p, and will map the "unused" elements
-         * <i>k</i>,...,6 to themselves.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be 2, 3, 4, 5 or 6.
+         * `k,...,6` to themselves.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation expressed as a permutation on
          * seven elements.
          */
-        template <int k>
+        template <int k> requires (2 <= k && k < 7)
         static constexpr Perm<7> extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to a 7-element
-         * permutation, where \a k > 7.
+         * permutation, where `k > 7`.
          *
-         * The resulting permutation will map 0,...,6 to their
+         * The resulting permutation will map `0,...,6` to their
          * respective images under \a p, and will ignore the "unused" images
-         * \a p[7],...,\a p[<i>k</i>-1].
+         * `p[7],...,p[k-1]`.
          *
-         * \pre The given permutation maps 0,...,6 to 0,...,6 in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than 7.
+         * \pre The given permutation maps `0,...,6` to `0,...,6` in some order.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * 7 elements.
          */
-        template <int k>
+        template <int k> requires (7 < k)
         static constexpr Perm<7> contract(Perm<k> p);
 
         /**
@@ -1806,11 +1798,9 @@ class Perm<7> {
         /**
          * Converts between an index into Perm<7>::Sn and an index into
          * Perm<7>::orderedSn.  This conversion works in either direction.
-         *
-         * \tparam Int a native integer type; this would typically be
-         * either \c int or \a Code2.
          */
-        template <typename Int>
+        template <CppInteger Int>
+        requires (sizeof(Int) >= sizeof(Code2))
         static constexpr Int convOrderedUnordered(Int index);
 
         /**
@@ -1839,8 +1829,8 @@ class Perm<7> {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <CharIterator iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        template <CharIterator Iterator>
+        static Perm tightDecode(Iterator start, Iterator limit,
             bool noTrailingData);
 
     friend class PermSn<7, PermOrder::Sign>;
@@ -1849,7 +1839,8 @@ class Perm<7> {
 
 // Inline functions for Perm<7>
 
-template <typename Int>
+template <CppInteger Int>
+requires (sizeof(Int) >= sizeof(Perm<7>::Code2))
 inline constexpr Int Perm<7>::convOrderedUnordered(Int index) {
     // S7 is almost the same as orderedS7, except that some pairs
     // S7[2i] <--> S7[2i+1] have been swapped to ensure that all
@@ -2177,8 +2168,8 @@ inline Perm<7> Perm<7>::rand(bool even) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <typename URBG>
-inline Perm<7> Perm<7>::rand(URBG&& gen, bool even) {
+template <std::uniform_random_bit_generator URBG>
+inline Perm<7> Perm<7>::rand(URBG& gen, bool even) {
     if (even) {
         std::uniform_int_distribution<short> d(0, 2519);
         return S7[2 * d(gen)];
@@ -2223,8 +2214,8 @@ inline Perm<7> Perm<7>::tightDecode(std::istream& input) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <CharIterator iterator>
-Perm<7> Perm<7>::tightDecode(iterator start, iterator limit,
+template <CharIterator Iterator>
+Perm<7> Perm<7>::tightDecode(Iterator start, Iterator limit,
         bool noTrailingData) {
     // All codes are >= 0 because we are using an unsigned data type.
     if (start == limit)

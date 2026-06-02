@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,8 +42,7 @@ using regina::Edge;
 
 EdgeIntChooser::EdgeIntChooser(regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
-        EdgeIntFilterFunc filter, QWidget* parent,
-        bool autoUpdate) :
+        Filter filter, QWidget* parent, bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter),
         argMin_(argMin), argMax_(argMax), argDesc_(argDesc) {
     setMinimumContentsLength(30);
@@ -118,7 +117,7 @@ void EdgeIntChooser::fill() {
 EdgeIntDialog::EdgeIntDialog(QWidget* parent,
         regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
-        EdgeIntFilterFunc filter,
+        EdgeIntChooser::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -137,14 +136,14 @@ EdgeIntDialog::EdgeIntDialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 std::pair<regina::Edge<3>*, int> EdgeIntDialog::choose(QWidget* parent,
         regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
-        EdgeIntFilterFunc filter,
+        EdgeIntChooser::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {

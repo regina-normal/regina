@@ -1,0 +1,135 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Python Interface                                                      *
+ *                                                                        *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>. *
+ *                                                                        *
+ **************************************************************************/
+
+#include <pybind11/pybind11.h>
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
+#include "../../helpers.h"
+#include "../facehelper.h"
+#include "../../docstrings/triangulation/facenumbering.h"
+#include "../../docstrings/triangulation/face.h"
+
+using regina::Vertex;
+using regina::VertexEmbedding;
+using regina::Face;
+using regina::FaceEmbedding;
+
+void addVertex4(pybind11::module_& m, pybind11::module_& internal) {
+    RDOC_SCOPE_BEGIN(FaceEmbedding)
+
+    auto e = pybind11::class_<FaceEmbedding<4, 0>>(m, "FaceEmbedding4_0",
+            rdoc::__class)
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>(),
+            rdoc::__init)
+        .def(pybind11::init<const VertexEmbedding<4>&>(), rdoc::__copy)
+        .def("simplex", &VertexEmbedding<4>::simplex,
+            pybind11::return_value_policy::reference, rdoc::simplex)
+        // So: clang can resolve pentachoron() but gcc cannot.
+        // We could fix this with a static_cast, but we will just bind to
+        // simplex() instead (which gcc _can_ resolve).
+        .def("pentachoron", &VertexEmbedding<4>::simplex,
+            pybind11::return_value_policy::reference, rdoc::simplex_dim4)
+        .def("face", &VertexEmbedding<4>::face, rdoc::face)
+        .def("vertex", &VertexEmbedding<4>::vertex, rdoc::vertex)
+        .def("vertices", &VertexEmbedding<4>::vertices, rdoc::vertices)
+    ;
+    regina::python::add_output_rich(e);
+    regina::python::add_eq_operators(e, rdoc::__eq);
+
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE(FaceNumbering)
+
+    auto c = pybind11::class_<Face<4, 0>>(m, "Face4_0", rdoc::Face::__class)
+        .def("index", &Vertex<4>::index, rdoc::index)
+        .def("embedding", &Vertex<4>::embedding, rdoc::embedding)
+        .def("embeddings", &Vertex<4>::embeddings, rdoc::embeddings)
+        .def("__iter__", [](const Vertex<4>& f) {
+            // By default, make_iterator uses reference_internal.
+            return pybind11::make_iterator<pybind11::return_value_policy::copy>(
+                f.begin(), f.end());
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rdoc::__iter__)
+        .def("front", &Vertex<4>::front, rdoc::front)
+        .def("back", &Vertex<4>::back, rdoc::back)
+        .def("triangulation", &Vertex<4>::triangulation, rdoc::triangulation)
+        .def("component", &Vertex<4>::component,
+            pybind11::return_value_policy::reference, rdoc::component)
+        .def("boundaryComponent", &Vertex<4>::boundaryComponent,
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
+        .def("degree", &Vertex<4>::degree, rdoc::degree)
+        .def("buildLink", [](const Vertex<4>& v) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<3>(v.buildLink());
+        }, rdoc::buildLink)
+        .def("buildLinkInclusion", &Vertex<4>::buildLinkInclusion,
+            rdoc::buildLinkInclusion)
+        .def("isLinkOrientable", &Vertex<4>::isLinkOrientable,
+            rdoc::isLinkOrientable)
+        .def("isValid", &Vertex<4>::isValid, rdoc::isValid)
+        .def("hasBadIdentification", &Vertex<4>::hasBadIdentification,
+            rdoc::hasBadIdentification)
+        .def("hasBadLink", &Vertex<4>::hasBadLink, rdoc::hasBadLink)
+        .def("isLinkClosed", &Vertex<4>::isLinkClosed, rdoc::isLinkClosed)
+        .def("isIdeal", &Vertex<4>::isIdeal, rdoc::isIdeal)
+        .def("isBoundary", &Vertex<4>::isBoundary, rdoc::isBoundary)
+        .def("isInternal", &Vertex<4>::isInternal, rdoc::isInternal)
+        .def("linkingSurface",
+            static_cast<regina::python::vertexLinkingSurface<4>>(
+                &Vertex<4>::linkingSurface),
+            rdoc::linkingSurface)
+        .def_static("ordering", &Vertex<4>::ordering, rbase::ordering)
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<5>>(&Vertex<4>::faceNumber),
+            rbase::faceNumber)
+        .def_static("containsVertex", &Vertex<4>::containsVertex,
+            rbase::containsVertex)
+        .def_readonly_static("nFaces", &Vertex<4>::nFaces)
+        .def_readonly_static("lexNumbering", &Vertex<4>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Vertex<4>::oppositeDim)
+        .def_readonly_static("dimension", &Vertex<4>::dimension)
+        .def_readonly_static("subdimension", &Vertex<4>::subdimension)
+        .def_readonly_static("hasNumberingTables",
+            &Vertex<4>::hasNumberingTables)
+    ;
+    regina::python::add_output_rich(c);
+    regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
+
+    regina::python::addStdView<
+        decltype(std::declval<Vertex<4>>().embeddings())>(internal,
+        "Face4_0_embeddings");
+
+    m.attr("VertexEmbedding4") = m.attr("FaceEmbedding4_0");
+    m.attr("Vertex4") = m.attr("Face4_0");
+}
+

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,11 +38,14 @@
 #define __REGINA_SPATIALLINK_H
 #endif
 
+#include <optional>
+#include <ranges>
 #include <vector>
 #include "concepts/iterator.h"
 #include "maths/3d.h"
 #include "packet/packet.h"
-#include "utilities/listview.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -104,6 +107,8 @@ namespace regina {
  */
 class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
     public:
+        class NodeIterator;
+
         /**
          * Represents a single point on the path that a link component takes
          * through three-dimensional space.
@@ -170,34 +175,37 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         SpatialLink(SpatialLink&&) noexcept = default;
 
         /**
-         * Creates a new link whose components are supplied by the given
-         * sequences of points in 3-space.
+         * Creates a new link whose components are given by sequences of
+         * points in 3-space.
          *
-         * Each element of the given sequence should represent a separate link
-         * component.  Each component should be given as a sequence of at least
-         * three nodes (i.e., points in 3-space).  These are the points that
-         * will be stored directly in the Component structure, which means that
-         * to form the actual geometry of the link component:
+         * The input is presented as a sequence of sequences:
          *
-         * - each node in the sequence is joined by a straight line segment
-         *   to the node that follows it (and likewise, the last node is
-         *   joined to the first);
+         * - Each element of the "outer" sequence (defined by the \a begin and
+         *   \a end iterator arguments to this routine) should be an "inner"
+         *   sequence representing a single link component.
          *
-         * - the orientation of the link component follows the path in order
-         *   from the first node to the last (and then cycling back to the
-         *   front of the sequence again).
+         * - Each "inner" sequence (i.e., each individual link component)
+         *   should be a sequence of nodes (i.e., points in 3-space).  These
+         *   are the points that will be stored directly in the Component
+         *   structure, which means that to form the actual geometry of the
+         *   link component:
          *
-         * Regarding types:
+         *   - each node in the sequence is joined by a straight line segment
+         *     to the node that follows it, and likewise, the last node is
+         *     joined to the first;
          *
-         * - The outermost sequence (representing components) is presented as
-         *   a pair of \a begin and \a end iterators, which are passed as
-         *   arguments to this routine.
+         *   - the orientation of the link component follows the path in order
+         *     from the first node to the last (and then cycling back to the
+         *     front of the sequence again).
          *
-         * - Each such iterator, when dereferenced, should give a container
-         *   of nodes.  These containers should have their own `begin()` and
-         *   `end()` functions for iteration, and _their_ elements (i.e., the
-         *   individual nodes) should be convertible to the type
-         *   `Vector3D<double>`.
+         * - In particular, each "inner" sequence must contain at least three
+         *   nodes (the minimum required for an embedded piecewise-linear cycle
+         *   in 3-space).
+         *
+         * This routine does not insist on any specific types for the sequences,
+         * as long as the outer and inner sequences all support iteration,
+         * and the elements of the inner sequences can be converted to the
+         * node type `Vector3D<double>`.
          *
          * For example, your code might look like:
          *
@@ -212,18 +220,13 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * takes either (i) a Python list of lists of triples of real numbers,
          * or (ii) a Python list of lists of Vector3D objects.
          *
-         * \param begin the beginning of the sequence of link components.
-         * \param end a past-the-end iterator indicating the end of the
+         * \param begin the beginning of the outer sequence of link components.
+         * \param end a past-the-end iterator indicating the end of the outer
          * sequence of components.
          */
-        template <std::input_iterator iterator>
-        requires
-            Iterable<typename std::iterator_traits<iterator>::value_type> &&
-            requires(iterator it) {
-                requires std::convertible_to<decltype(*it->begin()),
-                    Vector3D<double>>;
-            }
-        SpatialLink(iterator begin, iterator end);
+        template <std::input_iterator Iterator>
+        requires IterableFor<std::iter_value_t<Iterator>, Vector3D<double>>
+        SpatialLink(Iterator begin, Iterator end);
 
         /**
          * Creates a new link whose components are given by hard-coded
@@ -299,15 +302,15 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  Each element of the list will be
-         * a constant reference to some component; more precisely, iterating
-         * through this list is equivalent to calling `component(0)`,
-         * `component(1)`, ..., `component(countComponents()-1)`
-         * in turn.  As an example, your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Each element of the list will be a constant reference
+         * to some component; more precisely, iterating through this list is
+         * equivalent to calling `component(0)`, `component(1)`, ...,
+         * `component(countComponents()-1)` in turn.  As an example, your
+         * code might look like:
          *
          * \code{.cpp}
          * for (const SpatialLink::Component& c : link.components()) { ... }
@@ -349,6 +352,243 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * `componentSize(componentIndex) - 1` inclusive.
          */
         const Node& node(size_t componentIndex, size_t nodeIndex) const;
+
+        /**
+         * A C++ iterator that gives access to all of the nodes in this link,
+         * pointing to the first node.
+         *
+         * The order of iteration will be: all of the nodes in the first
+         * component in order; then all of the nodes in the second component
+         * in order; and so on.
+         *
+         * \nopython Use nodes() instead, which returns an iterable object
+         * for iterating over all nodes in this same order.
+         *
+         * \return an iterator pointing to the first node in this link.
+         */
+        NodeIterator beginNodes() const;
+
+        /**
+         * A C++ iterator that gives access to all of the nodes in this link,
+         * pointing beyond the last node.
+         *
+         * The order of iteration will be: all of the nodes in the first
+         * component in order; then all of the nodes in the second component
+         * in order; and so on.
+         *
+         * \nopython Use nodes() instead, which returns an iterable object
+         * for iterating over all nodes in this same order.
+         *
+         * \return an iterator pointing beyond the last node in this link.
+         */
+        NodeIterator endNodes() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterable object that iterates over all nodes in
+         * this link.  For example:
+         *
+         * \code{.py}
+         * link = SpatialLink(...)
+         * for n in link.nodes():
+         *     ...
+         * \endcode
+         *
+         * The order of iteration will be: all of the nodes in the first
+         * component in order; then all of the nodes in the second component
+         * in order; and so on.
+         *
+         * \nocpp For C++ users, SpatialLink provides beginNodes() and
+         * endNodes() instead, which together define an iterator range
+         * over these same nodes.
+         *
+         * \return an iterator over all nodes in this link.
+         */
+        auto nodes() const;
+#endif
+
+        /**
+         * A bidirectional iterator that runs through all nodes in this link.
+         *
+         * \nopython Instead SpatialLink::nodes() returns an object of a
+         * different (hidden) class that supports the Python iterable/iterator
+         * interface.
+         */
+        class NodeIterator {
+            private:
+                std::vector<Component>::const_iterator comp_;
+                    /**< The component holding the current node, or \a end_
+                         if this iterator is past-the-end. */
+                std::vector<Component>::const_iterator end_;
+                    /**< A copy of `components_.end()`. */
+                std::optional<Component::const_iterator> node_;
+                    /**< A pointer to the current node, or `std::nullopt`
+                         if there is no current component. */
+
+            public:
+                /**
+                 * Creates a new uninitialised iterator.
+                 */
+                NodeIterator() = default;
+
+                /**
+                 * Creates a copy of the given iterator.
+                 */
+                NodeIterator(const NodeIterator&) = default;
+
+                /**
+                 * Makes this a copy of the given iterator.
+                 *
+                 * \return a reference to this iterator.
+                 */
+                NodeIterator& operator = (const NodeIterator&) = default;
+
+                /**
+                 * Compares this with the given iterator for equality.
+                 *
+                 * \param rhs the iterator to compare this to.
+                 * \return `true` if the iterators point to the same node
+                 * within the same link component, or `false` if they do not.
+                 */
+                bool operator == (const NodeIterator& rhs) const {
+                    // No need to compare end_.
+                    return comp_ == rhs.comp_ && node_ == rhs.node_;
+                }
+
+                /**
+                 * Returns the node that this iterator is currently pointing to.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * \return the corresponding node.
+                 */
+                const Node& operator *() const {
+                    return **node_;
+                }
+
+                /**
+                 * Gives member access to the node that this iterator is
+                 * currently pointing to.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * \return member access to the corresponding node.
+                 */
+                const Node* operator ->() const {
+                    return node_->operator ->();
+                }
+
+                /**
+                 * The preincrement operator.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * \return a reference to this iterator after the increment.
+                 */
+                NodeIterator& operator ++() {
+                    // Since we are deferenceable, we have comp_ != end_, and
+                    // node_ is both non-null and dereferenceable.
+                    if (++*node_ == comp_->end()) {
+                        if (++comp_ == end_)
+                            node_.reset();
+                        else
+                            node_ = comp_->begin();
+                    }
+                    return *this;
+                }
+
+                /**
+                 * The postincrement operator.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
+                 * \return a copy of this iterator before the
+                 * increment took place.
+                 */
+                NodeIterator operator ++(int) {
+                    NodeIterator ans = *this;
+                    ++(*this);
+                    return ans;
+                }
+
+                /**
+                 * The predecrement operator.
+                 *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `SpatialLink::beginNodes()`).
+                 *
+                 * \return a reference to this iterator after the decrement.
+                 */
+                NodeIterator& operator --() {
+                    if (node_ && *node_ != comp_->begin()) {
+                        // We can go backwards in the same component.
+                        --*node_;
+                    } else {
+                        // We are either past-the-end, or at the beginning of
+                        // a real component (which is not the first, since
+                        // this iterator is decrementable).
+                        // Either way, we must step to the end of the previous
+                        // component (which is guaranteed to be non-empty).
+                        --comp_;
+                        --*(node_ = comp_->end());
+                    }
+                    return *this;
+                }
+
+                /**
+                 * The postdecrement operator.
+                 *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `SpatialLink::beginNodes()`).
+                 *
+                 * \return a copy of this iterator before the
+                 * decrement took place.
+                 */
+                NodeIterator operator --(int) {
+                    NodeIterator ans = *this;
+                    --(*this);
+                    return ans;
+                }
+
+                /**
+                 * Determines whether this and the given iterator represent
+                 * adjacent nodes in the same link component.
+                 *
+                 * If this and \a it represent the first and last nodes in the
+                 * same link component (in either order), then this routine
+                 * will return `true` (in other words, we treat each component
+                 * as a loop of nodes, not a path).
+                 *
+                 * If this and \a it represent the same node then this routine
+                 * will return `false`.  If either this or the given iterator
+                 * is past-the-end, again this routine will return `false`.
+                 *
+                 * \pre This and \a it are both iterators over the same link.
+                 *
+                 * \param it the iterator to compare with this.
+                 * \return `true` if and only if this and the given iterator
+                 * represent adjacent nodes in the same link component.
+                 */
+                bool adjacent(const NodeIterator& it) const {
+                    if (comp_ != it.comp_ || comp_ == end_)
+                        return false;
+                    // Both this and it represent dereferenceable nodes in the
+                    // same link component.
+                    return
+                        *node_ == std::next(*it.node_) ||
+                        *it.node_ == std::next(*node_) ||
+                        (*node_ == comp_->begin() &&
+                            std::next(*it.node_) == comp_->end()) ||
+                        (*it.node_ == comp_->begin() &&
+                            std::next(*node_) == comp_->end());
+                }
+
+            friend class SpatialLink;
+        };
 
         /**
          * Returns the radius that should be used when rendering this link.
@@ -397,21 +637,19 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
          * Specifically, this is the radius to use for the balls and cylinders
          * used in the 3-D model.
          *
-         * Currently this routine makes a "barely educated" decision: it looks
-         * only at the scale of the embedding, without studying the complexity
-         * of the knot or the closeness of the strands.  Specifically, it
-         * chooses some fixed fraction of the minimum range amongst the
-         * \a x, \a y and \a z dimensions.
-         *
-         * Eventually this will be replaced with something intelligent that
-         * factors in how far apart the strands are, and will (as a result)
-         * guarantee that the renderings of no-adjacent strands will not
-         * collide.
+         * As of Regina 8.0, this routine chooses a radius by finding the
+         * closest non-adjacent pair of link nodes that are connected in the
+         * relative neighbourhood graph.  Thanks to Kate Turner for this
+         * excellent suggestion.  The current algorithm is best-case quadratic
+         * and worst-case cubic in the total number of nodes.
          *
          * This function is expensive to call the first time, but it caches
          * its value and so subsesquent calls are essentially instantaneous
          * (until the embedding of the link changes, at which point the cached
          * value will be cleared).
+         *
+         * The choice of radius is subject to change in future versions of
+         * Regina.
          *
          * \return a sensible default radius to use for rendering.
          */
@@ -757,7 +995,6 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
         void computeDefaultRadius();
 
     friend class XMLSpatialLinkReader;
-    friend class XMLWriter<SpatialLink>;
 };
 
 /**
@@ -779,19 +1016,25 @@ class SpatialLink : public PacketData<SpatialLink>, public Output<SpatialLink> {
  */
 void swap(SpatialLink& lhs, SpatialLink& rhs);
 
+#ifndef __APIDOCS
+} namespace std {
+    template <>
+    struct iterator_traits<regina::SpatialLink::NodeIterator> {
+        using value_type = regina::SpatialLink::Node;
+        using iterator_category = std::bidirectional_iterator_tag;
+        using difference_type = typename std::vector<
+            regina::SpatialLink::Node>::difference_type;
+        using pointer = const value_type*;
+        using reference = const value_type&;
+    };
+} namespace regina {
+#endif
+
 // Inline functions for SpatialLink
 
-template <std::input_iterator iterator>
-requires
-    Iterable<typename std::iterator_traits<iterator>::value_type> &&
-    requires(iterator it) {
-        requires std::convertible_to<decltype(*it->begin()), Vector3D<double>>;
-    }
-SpatialLink::SpatialLink(iterator begin, iterator end) {
-    static_assert(std::is_convertible_v<decltype(*(begin->begin())), Node>,
-        "The SpatialLink iterator constructor requires each inner list element "
-        "to be convertible to a SpatialLink::Node (i.e., Vector3D<double>).");
-
+template <std::input_iterator Iterator>
+requires IterableFor<std::iter_value_t<Iterator>, Vector3D<double>>
+SpatialLink::SpatialLink(Iterator begin, Iterator end) {
     while (begin != end) {
         auto& comp = components_.emplace_back();
         for (const auto& node : *begin)
@@ -821,7 +1064,7 @@ inline const SpatialLink::Component& SpatialLink::component(size_t index)
 }
 
 inline auto SpatialLink::components() const {
-    return ListView(components_);
+    return std::views::all(components_);
 }
 
 inline size_t SpatialLink::componentSize(size_t componentIndex) const {
@@ -831,6 +1074,21 @@ inline size_t SpatialLink::componentSize(size_t componentIndex) const {
 inline const SpatialLink::Node& SpatialLink::node(size_t componentIndex,
         size_t nodeIndex) const {
     return components_[componentIndex][nodeIndex];
+}
+
+inline SpatialLink::NodeIterator SpatialLink::beginNodes() const {
+    SpatialLink::NodeIterator it;
+    it.comp_ = components_.begin();
+    it.end_ = components_.end();
+    if (it.comp_ != it.end_)
+        it.node_ = it.comp_->begin();
+    return it;
+}
+
+inline SpatialLink::NodeIterator SpatialLink::endNodes() const {
+    SpatialLink::NodeIterator it;
+    it.comp_ = it.end_ = components_.end();
+    return it;
 }
 
 inline double SpatialLink::radius() const {

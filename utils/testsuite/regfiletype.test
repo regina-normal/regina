@@ -3,7 +3,7 @@
 # Regina - Software for low-dimensional topology
 # Command-Line Utilities Test Suite
 #
-# Copyright (c) 2016-2025, Ben Burton
+# Copyright (c) 2016-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This program is free software; you can redistribute it and/or
@@ -34,5 +34,9 @@ regfiletype @TESTDIR@/8-or.rga
 regfiletype @TESTDIR@/b5.rga
 regfiletype @INVALIDFILE@
 regfiletype @BADFILE@
+regfiletype @BADFILE@.gz
+regfiletype @TESTDIR@/test.rga.bz2
+regfiletype @TESTDIR@/test.rga.gz
+regfiletype @TESTDIR@/empty.rga
 regfiletype @TESTDIR@/test-v2.rga @TESTDIR@/b5.rga
 regfiletype @TESTDIR@/test-v2.rga @TESTDIR@/test.rga @INVALIDFILE@ @BADFILE@ @TESTDIR@/b5.rga @TESTDIR@/8-or.rga

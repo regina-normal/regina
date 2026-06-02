@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,8 +68,8 @@ Tri4UI::Tri4UI(regina::PacketOf<regina::Triangulation<4>>* packet,
     addTab(algebra, QObject::tr("&Algebra"));
     addTab(new Tri4CompositionUI(packet, this), QObject::tr("&Composition"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri4UI::updatePreferences);
 }
 
 const std::vector<QAction*>& Tri4UI::getPacketTypeActions() {

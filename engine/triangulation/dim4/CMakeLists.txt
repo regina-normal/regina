@@ -2,9 +2,9 @@
 SET ( FILES
   edge4.cpp
   hypersurfaces.cpp
+  moves.cpp
   retriangulate.cpp
   simplify.cpp
-  simplifyglobal.cpp
   skeleton.cpp
   subdivide.cpp
   triangulation4.cpp
@@ -21,12 +21,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    component4.h
-    edge4.h
-    pentachoron4.h
-    tetrahedron4.h
-    triangle4.h
     triangulation4.h
-    vertex4.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation/dim4" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

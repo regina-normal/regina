@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,8 +39,8 @@ using regina::LensSpace;
 void addLensSpace(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LensSpace)
 
-    auto c = pybind11::class_<LensSpace, regina::Manifold>(m, "LensSpace",
-            rdoc_scope)
+    auto c = pybind11::class_<LensSpace, regina::Manifold<3>>(m, "LensSpace",
+            rdoc::__class)
         .def(pybind11::init<unsigned long, unsigned long>(), rdoc::__init)
         .def(pybind11::init<const LensSpace&>(), rdoc::__copy)
         .def("swap", &LensSpace::swap, rdoc::swap)
@@ -49,10 +49,9 @@ void addLensSpace(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     // Do not bind comparison operators, since these are already inherited
-    // from Manifold and we do not want to hide those more general versions.
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<LensSpace>(m, rdoc::global_swap);
+    // via Manifold<3> and we do not want to hide those more general versions.
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<LensSpace, rdoc>(m);
 
     RDOC_SCOPE_END
 }

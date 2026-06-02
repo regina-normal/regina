@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,12 +38,15 @@
 #define __REGINA_TREEDECOMPOSITION_H
 #endif
 
+#include <concepts>
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/matrix.h"
 #include "triangulation/forward.h"
 #include "utilities/exception.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -898,22 +901,22 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * The graph is specified by an adjacency matrix, expressed
          * using Regina's own matrix type.
          *
-         * Each entry \a graph[i][j] will be treated as a boolean, indicating
+         * Each entry `graph[i][j]` will be treated as a boolean, indicating
          * whether the graph contains an arc from node \a i to node \a j.
          *
          * \exception InvalidArgument The adjacency matrix does not have
          * the same number of rows as columns.
          *
-         * \python The argument \a graph must be of type \c MatrixBool
+         * \python The argument \a graph must be of type `MatrixBool`
          * (which is the Python type corresponding to the C++ class
-         * Matrix<bool>).
+         * `Matrix<bool>`).
          *
          * \param graph the adjacency matrix of the graph.
          * \param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
-        template <typename T>
+        template <std::convertible_to<bool> T>
         TreeDecomposition(const Matrix<T>& graph,
             TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
@@ -922,23 +925,17 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * The graph may be directed or undirected.
          *
          * The graph is specified by an adjacency matrix, given as a
-         * vector of rows:
-         *
-         * - The number of elements in each row should be equal to the
-         *   number of rows (i.e., the adjacency matrix should be square).
-         *
-         * - The individual elements of each row \a r should be accessible
-         *   using a range-based \c for loop over \a r.
-         *
-         * - Each entry in row \a i, column \a j will be treated as a boolean,
-         *   indicating whether the graph contains an arc from node \a i to
-         *   node \a j.
+         * vector of rows.  Each entry in each row will be treated as a
+         * boolean, where the entry in row \a i, column \a j indicates
+         * whether the graph contains an arc from node \a i to node \a j.
          *
          * An example of a suitable type for the adjacency matrix could be
-         * std::vector<std::vector<bool>>.
+         * `std::vector<std::vector<bool>>`.
          *
-         * \exception InvalidArgument The adjacency matrix does not have
-         * the same number of rows as columns.
+         * \pre The adjacency matrix is square.  That is, the number of elements
+         * in each row equals the total number of rows.
+         *
+         * \exception InvalidArgument The adjacency matrix is not square.
          *
          * \python The adjacency matrix should be given as a list of
          * lists.
@@ -948,7 +945,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
-        template <typename Row>
+        template <IterableFor<bool> Row>
         TreeDecomposition(const std::vector<Row>& graph,
             TreeDecompositionAlg alg = TreeDecompositionAlg::Upper);
 
@@ -1299,23 +1296,33 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for common types.
          *
+         * \exception NoSolution The cost type \a T is only partially ordered
+         * (not totally ordered), and this routine encountered two costs that
+         * were incomparable.  For example, this could happen if \a T is a
+         * floating-point type and one of the costs is `NaN`.
+         *
          * \python The \a costSame and \a costReverse arrays,
          * as well as \a costRoot if it is given, should be passed as
          * Python lists of real numbers.
          *
          * \tparam T the type being used to estimate costs.
-         * It must be possible to assign 0 to a variable of type \a T
-         * using both constructors and the assignment operator.
+         * As of Regina 8.0, zero plays no special role here (i.e., costs can
+         * be positive or negative, and indeed costs do not need to be real
+         * numbers at all); it is only the ordering on \a T that matters.
+         * Although \a T does not need to be totally ordered, all of the costs
+         * that are passed must be comparable to each other; otherwise this
+         * routine might throw an exception.
          *
-         * \param costSame An array of size() elements giving an
+         * \param costSame an array of size() elements giving an
          * estimated cost of preserving each child-parent connection;
-         * \param costReverse An array of size() elements giving an
+         * \param costReverse an array of size() elements giving an
          * estimated cost of reversing each child-parent connection;
-         * \param costRoot An array of size() elements giving an
+         * \param costRoot an array of size() elements giving an
          * additional estimated cost for each bag being the new root.
          * This array may be \c null.
          */
         template <typename T>
+        requires std::regular<T> && std::three_way_comparable<T>
         void reroot(const T* costSame, const T* costReverse,
             const T* costRoot = nullptr);
 
@@ -1684,7 +1691,7 @@ inline TreeDecomposition::TreeDecomposition(TreeDecomposition&& src) noexcept :
     src.root_ = nullptr;
 }
 
-template <typename T>
+template <std::convertible_to<bool> T>
 TreeDecomposition::TreeDecomposition(const Matrix<T>& graph,
         TreeDecompositionAlg alg) : width_(0), root_(nullptr) {
     if (graph.rows() != graph.columns())
@@ -1699,7 +1706,7 @@ TreeDecomposition::TreeDecomposition(const Matrix<T>& graph,
     construct(g, alg);
 }
 
-template <typename Row>
+template <IterableFor<bool> Row>
 TreeDecomposition::TreeDecomposition(const std::vector<Row>& graph,
         TreeDecompositionAlg alg) : width_(0), root_(nullptr) {
     size_t order = graph.size();

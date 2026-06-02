@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file reginasupport.h
- *  \brief Miscellaneous support routines for Regina.
+ *  \brief Miscellaneous GUI-related support routines and concepts for Regina.
  */
 
 #ifndef __REGINASUPPORT_H
@@ -40,6 +40,22 @@
 #include <QString> 
 
 class QWidget;
+
+/**
+ * A drop-down box that allows the user to select an object of an arbitrary type
+ * (specifically, of type `T::Choice`).  Examples are simplex choosers and
+ * face choosers in triangulations, or crossing choosers in links.
+ *
+ * The function `refresh()` should return `true` if and only if the chooser is
+ * non-empty after the refresh (i.e., at least one option is present).
+ */
+template <typename T>
+concept ObjectChooser = requires(T x) {
+    typename T::Choice;
+    { x.selected() } -> std::same_as<typename T::Choice>;
+    x.select(std::declval<typename T::Choice>());
+    { x.refresh() } -> std::same_as<bool>;
+};
 
 /**
  * A class with miscellaneous support routines for Regina.

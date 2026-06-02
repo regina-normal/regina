@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,8 +40,10 @@
 #include <optional>
 #include "regina-core.h"
 #include "maths/perm.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim3.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -76,18 +78,18 @@ namespace regina {
  * Note that all three tetrahedra in the triangular solid torus must be
  * distinct.
  *
- * All optional StandardTriangulation routines are implemented for this class.
+ * All optional StandardSubcomplex routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
  *
  * \ingroup subcomplex
  */
-class TriSolidTorus : public StandardTriangulation {
+class TriSolidTorus : public StandardSubcomplex<3> {
     private:
         Tetrahedron<3>* tet_[3];
             /**< The tetrahedra that make up this solid torus. */
@@ -249,7 +251,7 @@ class TriSolidTorus : public StandardTriangulation {
          * Determines whether this and the given object represent the same
          * specific presentation of a triangular solid torus.
          *
-         * Unlike the parameterised subclasses of StandardTriangulation,
+         * Unlike the parameterised subclasses of StandardSubcomplex<3>,
          * this TriSolidTorus subclass represents a fixed structure, and
          * so its comparisons test not for the _structure_ but the precise
          * _location_ of this structure within the enclosing triangulation.
@@ -280,8 +282,8 @@ class TriSolidTorus : public StandardTriangulation {
          * or with faces of other tetrahedra.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param tet the tetrahedron to examine.
          * \param useVertexRoles a permutation describing the role each
@@ -296,7 +298,7 @@ class TriSolidTorus : public StandardTriangulation {
         static std::unique_ptr<TriSolidTorus> recognise(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

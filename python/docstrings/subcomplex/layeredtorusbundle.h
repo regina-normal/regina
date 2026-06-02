@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::LayeredTorusBundle
-static const char *LayeredTorusBundle =
+struct LayeredTorusBundle {
+
+// Docstring regina::python::doc::LayeredTorusBundle::__class
+static constexpr const char __class[] =
 R"doc(Describes a layered torus bundle. This is a triangulation of a torus
 bundle over the circle formed as follows.
 
@@ -33,24 +35,22 @@ the monodromy for this torus bundle over the circle can be calculated.
 The manifold() routine returns details of the corresponding
 3-manifold.
 
-All optional StandardTriangulation routines are implemented for this
+All optional StandardSubcomplex routines are implemented for this
 class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
 as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
-StandardTriangulation subclasses. Note that the only way to create
-these objects (aside from copying or moving) is via the static member
+StandardSubcomplex subclasses. Note that the only way to create these
+objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
-namespace LayeredTorusBundle_ {
+// Docstring regina::python::doc::LayeredTorusBundle::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::LayeredTorusBundle_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::LayeredTorusBundle_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::LayeredTorusBundle::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of layered torus bundle.
 
@@ -63,10 +63,10 @@ layering relation becomes its inverse matrix), the resulting layered
 torus bundle will generally _not_ compare as equal.
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass is more
+specific than combinatorial isomorphism, since this test does not
 recognise inversion and also does not recognise symmetries within the
 ``T × I`` core).
 
@@ -77,8 +77,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of layered torus bundle.)doc";
 
-// Docstring regina::python::doc::LayeredTorusBundle_::core
-static const char *core =
+// Docstring regina::python::doc::LayeredTorusBundle::core
+static constexpr const char core[] =
 R"doc(Returns the ``T × I`` triangulation at the core of this layered torus
 bundle. This is the product ``T × I`` whose boundaries are joined
 (possibly via some layering of tetrahedra).
@@ -93,8 +93,8 @@ triangulation to this triangulation, see the routine coreIso().
 Returns:
     the core ``T × I`` triangulation.)doc";
 
-// Docstring regina::python::doc::LayeredTorusBundle_::coreIso
-static const char *coreIso =
+// Docstring regina::python::doc::LayeredTorusBundle::coreIso
+static constexpr const char coreIso[] =
 R"doc(Returns the isomorphism describing how the core ``T × I`` appears as a
 subcomplex of this layered torus bundle.
 
@@ -111,8 +111,8 @@ Returns:
     the isomorphism from the core ``T × I`` to this layered torus
     bundle.)doc";
 
-// Docstring regina::python::doc::LayeredTorusBundle_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::LayeredTorusBundle::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls LayeredTorusBundle::swap(); it is
@@ -125,8 +125,8 @@ Parameter ``a``:
 Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::LayeredTorusBundle_::layeringReln
-static const char *layeringReln =
+// Docstring regina::python::doc::LayeredTorusBundle::layeringReln
+static constexpr const char layeringReln[] =
 R"doc(Returns a 2-by-2 matrix describing how the layering of tetrahedra
 relates curves on the two torus boundaries of the core ``T × I``.
 
@@ -185,13 +185,13 @@ Returns:
     the relationship through the layering between the upper and lower
     boundary curves of the core ``T × I``.)doc";
 
-// Docstring regina::python::doc::LayeredTorusBundle_::recognise
-static const char *recognise =
+// Docstring regina::python::doc::LayeredTorusBundle::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a layered torus bundle.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tri``:
     the triangulation to examine.
@@ -200,14 +200,14 @@ Returns:
     a structure containing details of the layered torus bundle, or
     ``None`` if the given triangulation is not a layered torus bundle.)doc";
 
-// Docstring regina::python::doc::LayeredTorusBundle_::swap
-static const char *swap =
+// Docstring regina::python::doc::LayeredTorusBundle::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct LayeredTorusBundle
 
 } // namespace regina::python::doc
 
