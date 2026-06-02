@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,7 +42,11 @@
 #include <concepts> // Don't include this first - see QTBUG-83160
 #include "regina-core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
+
+template <typename, bool> struct Output;
 
 /**
  * A type that can be written to an output stream.
@@ -81,6 +85,22 @@ concept Stringifiable =
     };
 
 /**
+ * A class or struct type that supports Regina's rich string output interface,
+ * via member functions `str()`, `detail()`, and `utf8()`.
+ *
+ * Such types often (but are not required to) derive from `Output<...>`.
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept RichStringifiable =
+    requires(const T x) {
+        { x.str() } -> std::same_as<std::string>;
+        { x.detail() } -> std::same_as<std::string>;
+        { x.utf8() } -> std::same_as<std::string>;
+    };
+
+/**
  * A type that supports string conversion via `std::to_string()`.
  *
  * For example, the standard C++ native integer types support string conversion
@@ -95,15 +115,20 @@ concept StandardStringifiable =
     };
 
 /**
- * A type that has member functions for tight encoding and decoding.
+ * A type that has member functions for tight encoding and decoding (both via
+ * strings and via input/output streams) and also hashing.
  *
  * \ingroup concepts
  */
 template <typename T>
 concept InherentlyTightEncodable =
-    requires(const T x, std::ostream& out, std::istream& in) {
-        { x.tightEncode(out) };
+    requires(const T x, const std::string s,
+            std::ostream& out, std::istream& in) {
+        x.tightEncode(out);
         { T::tightDecode(in) } -> std::same_as<T>;
+        { x.tightEncoding() } -> std::same_as<std::string>;
+        { T::tightDecoding(s) } -> std::same_as<T>;
+        { x.hash() } -> std::same_as<size_t>;
     };
 
 } // namespace regina

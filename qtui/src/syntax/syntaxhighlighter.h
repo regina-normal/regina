@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
@@ -61,7 +61,6 @@ namespace regina::syntax {
  */
 class SyntaxHighlighter : public QSyntaxHighlighter
 {
-    Q_OBJECT
 public:
     explicit SyntaxHighlighter(QObject *parent = nullptr);
     explicit SyntaxHighlighter(QTextDocument *document);

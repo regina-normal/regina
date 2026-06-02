@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2021-2025, Ben Burton                                   *
+ *  Copyright (c) 2021-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -295,9 +295,9 @@ namespace {
         return ans;
 #endif
         // Option 2: Binary search.
-        return std::lower_bound(regina::detail::permClassRep,
-            regina::detail::permClassRep + PermClass<n>::count, index) -
-            regina::detail::permClassRep;
+        return std::lower_bound(regina::detail::permClassRep.begin(),
+            regina::detail::permClassRep.begin() + PermClass<n>::count, index) -
+            regina::detail::permClassRep.begin();
     }
 
     /**

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Convert old-style binary data files to new-style XML                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "packet/packet.h"
+#include "utilities/exception.h"
 #include <cstdlib>
 #include <cstring>
 
@@ -125,29 +126,32 @@ int main(int argc, char* argv[]) {
             "Only uncompressed XML can be written to standard output.");
 
     // Read the old file.
-    std::shared_ptr<regina::Packet> tree = regina::open(oldFile.c_str());
-    if (! tree) {
+    std::shared_ptr<regina::Packet> tree;
+    try {
+        tree = regina::open(oldFile.c_str());
+    } catch (const regina::FileError&) {
         std::cerr << "File " << oldFile << " could not be read.\n";
+        return 1;
+    } catch (const regina::InvalidInput&) {
+        std::cerr << "File " << oldFile
+            << " does not appear to be a Regina data file.\n";
         return 1;
     }
 
     // Write the new file.
-    bool result;
     if (newFile.empty()) {
         // Standard output
         if (typeOpt == 'u') {
             tree->writeXMLFile(std::cout, version);
-            result = true;
-        } else
-            result = false;
-        newFile = "<stdout>"; // (for error messages)
-    } else {
+        } else {
+            std::cerr << "File <stdout> could not be written.\n";
+            return 1;
+        }
+    } else try {
         // Real output file.
         // Use compressed / uncompressed XML
-        result = tree->save(newFile.c_str(), typeOpt == 'x', version);
-    }
-
-    if (! result) {
+        tree->save(newFile.c_str(), typeOpt == 'x', version);
+    } catch (const regina::FileError&) {
         std::cerr << "File " << newFile << " could not be written.\n";
         return 1;
     }

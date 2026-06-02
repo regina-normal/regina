@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,9 +45,9 @@ void XMLWriter<NormalHypersurfaces>::openPre() {
             << static_cast<int>(PacketType::NormalHypersurfaces) << '"';
     } else {
         out_ << R"(<hypersurfaces tri=")" << triID_
-            << R"(" type=")" << data_.which_.baseValue()
-            << R"(" algorithm=")" << data_.algorithm_.baseValue()
-            << R"(" coords=")" << static_cast<int>(data_.coords_) << '"';
+            << R"(" type=")" << data_.which().baseValue()
+            << R"(" algorithm=")" << data_.algorithm().baseValue()
+            << R"(" coords=")" << static_cast<int>(data_.coords()) << '"';
     }
 }
 
@@ -58,18 +58,18 @@ void XMLWriter<NormalHypersurfaces>::writeContent() {
     if (format_ == FileFormat::XmlGen2) {
         // Write the enumeration parameters.
         out_ << "  <params "
-            "type=\"" << data_.which_.baseValue() << "\" "
-            "algorithm=\"" << data_.algorithm_.baseValue() << "\" "
-            "flavourid=\"" << static_cast<int>(data_.coords_) << "\"\n";
+            "type=\"" << data_.which().baseValue() << "\" "
+            "algorithm=\"" << data_.algorithm().baseValue() << "\" "
+            "flavourid=\"" << static_cast<int>(data_.coords()) << "\"\n";
         out_ << "\tflavour=\""
             << regina::xml::xmlEncodeSpecialChars(HyperInfo::name(
-                data_.coords_))
+                data_.coords()))
             << "\"/>\n";
     }
 
     // Write the individual hypersurfaces.
-    for (const auto& s : data_.surfaces_)
-        s.writeXMLData(out_, format_, std::addressof(data_));
+    for (auto it = data_.begin(); it != data_.end(); ++it)
+        it->writeXMLData(out_, format_, std::addressof(data_));
 }
 
 template <>

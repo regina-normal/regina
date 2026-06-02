@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
 #include "foreign/dehydration.h"
 #include "packet/container.h"
 #include "packet/text.h"
+#include "utilities/exception.h"
 
 #include "dehydrationhandler.h"
 #include "reginamain.h"
@@ -43,7 +44,7 @@
 const DehydrationHandler DehydrationHandler::instance;
 
 std::shared_ptr<regina::Packet> DehydrationHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
+        const QString& filename, ReginaMain* parentWidget) const {
     QString explnSuffix = QObject::tr("<p>The file should be a plain text "
         "file containing one dehydration string per line.  "
         "Dehydration strings are described in detail in "
@@ -51,14 +52,16 @@ std::shared_ptr<regina::Packet> DehydrationHandler::importData(
         "Callahan, Hildebrand and Weeks, published in "
         "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>");
 
-    std::shared_ptr<regina::Packet> ans = regina::readDehydrationList(
-        static_cast<const char*>(QFile::encodeName(fileName)));
-    if (! ans) {
+    std::shared_ptr<regina::Packet> ans;
+    try {
+        ans = regina::readDehydrationList(
+            static_cast<const char*>(QFile::encodeName(filename)));
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
-                .arg(fileName.toHtmlEscaped()));
+                .arg(filename.toHtmlEscaped()));
         return nullptr;
     }
 

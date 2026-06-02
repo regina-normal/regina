@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -107,17 +107,14 @@ namespace {
 
 std::shared_ptr<Packet> open(const char* filename) {
     std::ifstream file(filename, std::ios_base::in | std::ios_base::binary);
-    // We don't test whether the file was opened, since open(std::istream&)
-    // tests this for us as the first thing it does.
+    if (! file)
+        throw FileError("Could not open the given file");
     return regina::open(file);
 }
 
 std::shared_ptr<Packet> open(std::istream& s) {
-    // Note: open(const char*) relies on us testing here whether s was
-    // successfully opened.  If anyone removes this test, then they
-    // should add a corresponding test to open(const char*) instead.
     if (! s)
-        return nullptr;
+        throw FileError("The given input stream has an error");
 
     // We declare buf outside the try-catch block because it is dynamically
     // allocated, and so we need to deallocate it if an exception is caught.
@@ -153,10 +150,11 @@ std::shared_ptr<Packet> open(std::istream& s) {
                         buf[chunkRead] = static_cast<char>(c);
                     }
                 } catch (const zstr::Exception& e) {
-                    std::cerr << "ERROR: Could not read stream: "
-                        << e.what() << std::endl;
+                    // TODO: Should we distinguish decompression vs read errors?
+                    std::cerr << "ERROR: " << e.what() << std::endl;
                     delete[] buf;
-                    return nullptr;
+                    throw InvalidInput(
+                        "An error occurred during file decompression");
                 }
                 if (chunkRead == 0)
                     break;
@@ -262,11 +260,13 @@ std::shared_ptr<Packet> open(std::istream& s) {
             // child packet that we return and delete the old parent container.
             return p->firstChild();
         } else
-            return nullptr;
+            throw InvalidInput(
+                "The file does not contain any usable Regina data");
     } catch (const zstr::Exception& e) {
-        std::cerr << "ERROR: Could not open: " << e.what() << std::endl;
+        // TODO: Should we distinguish decompression vs read errors?
+        std::cerr << "ERROR: " << e.what() << std::endl;
         delete[] buf;
-        return nullptr;
+        throw InvalidInput("An error occurred during file decompression");
     }
 }
 

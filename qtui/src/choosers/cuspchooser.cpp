@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,8 +41,7 @@
 using regina::Cusp;
 
 CuspChooser::CuspChooser(regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-        CuspFilterFunc filter, QWidget* parent,
-        bool autoUpdate) :
+        Filter filter, QWidget* parent, bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
@@ -105,7 +104,7 @@ bool CuspChooser::filterComplete(const Cusp& c) {
 
 CuspDialog::CuspDialog(QWidget* parent,
         regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-        CuspFilterFunc filter,
+        CuspChooser::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -124,13 +123,13 @@ CuspDialog::CuspDialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 int CuspDialog::choose(QWidget* parent,
         regina::PacketOf<regina::SnapPeaTriangulation>* tri,
-        CuspFilterFunc filter,
+        CuspChooser::Filter filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {

@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Example
-constexpr const char *Example =
+struct Example {
+
+// Docstring regina::python::doc::Example::__class
+static constexpr const char __class[] =
 R"doc(This class offers static routines for constructing a variety of sample
 *dim*-dimensional triangulations. These triangulations may be useful
 for testing new code, or for simply getting a feel for how Regina
@@ -40,6 +42,8 @@ Python:
 
 Template parameter ``dim``:
     the dimension of the example triangulations to construct.)doc";
+
+}; // struct Example
 
 } // namespace regina::python::doc
 

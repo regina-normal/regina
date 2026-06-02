@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,10 +46,13 @@
 #include <concepts> // Don't include this first - see QTBUG-83160
 
 #include "regina-core.h"
+#include "concepts/io.h"
 #include "core/output.h"
 #include "file/fileformat.h"
 #include "packet/packettype.h"
 #include "utilities/base64.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -58,13 +61,101 @@ class PacketListener;
 template <bool> class PacketChildren;
 template <bool> class PacketDescendants;
 template <bool> class SubtreeIterator;
-template <typename Held> class PacketData;
-template <typename Held> class XMLWriter;
+template <typename> class PacketData;
+template <typename> class PacketOf;
+// There are more forward declarations after we define packet-related concepts.
 
 /**
  * \defgroup packet Basic Packet Types
  * Packet administration and some basic packet types.
  */
+
+namespace detail {
+    /**
+     * A compile-time boolean constant indicating whether the type \a T is
+     * equal to one of Regina's wrapped packet types.
+     *
+     * Subclasses are _not_ considered here: this is true if and only if
+     * `T` is a class of the form `PacketOf<...>`.
+     *
+     * \ingroup detail
+     */
+    template <typename T>
+    constexpr bool is_wrapped_packet_v = false;
+
+    #ifndef __DOXYGEN
+    // Hide specialisations from doxygen.
+    template <typename T>
+    constexpr bool is_wrapped_packet_v<PacketOf<T>> = true;
+    #endif
+}
+
+/**
+ * A class that is equal to or derived from one of Regina's packet types.
+ *
+ * This concept does _not_ include the virtual base class Packet.
+ * It does, however, include SurfaceFilter (which represents a single packet
+ * type in Regina, but which itself is a virtual base class for different
+ * kinds of filters).
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept PacketClass =
+    std::derived_from<T, Packet> &&
+    requires {
+        { T::typeID } -> std::same_as<const PacketType&>;
+    };
+
+/**
+ * A class that is equal to one of Regina's wrapped packet types.
+ *
+ * Subclasses are _not_ considered here: we requires `T` to be precisely a
+ * class of the form `PacketOf<...>`.
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept WrappedPacket = detail::is_wrapped_packet_v<T>;
+
+/**
+ * A packet class that stores text (possibly alongside other data).
+ *
+ * Examples of this concept include Text and Script.
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept TextPacket =
+    PacketClass<T> &&
+    requires(T x, const std::string s) {
+        { x.text() } -> std::same_as<const std::string&>;
+        x.setText(s);
+    };
+
+/**
+ * A data type (typically mathematical) that can be held within one of Regina's
+ * wrapped packets.  Specifically, such a type \a T can be held in the wrapped
+ * packet type `PacketOf<T>`.
+ *
+ * Examples of such types \a T include `Triangulation<dim>`, Link, and
+ * NormalSurfaces.
+ *
+ * See the Packet class notes for an overview of how wrapped packets work, as
+ * well as instructions on how to create a new wrapped packet type.
+ *
+ * \ingroup packet
+ */
+template <typename T>
+concept PacketHeldType =
+    std::copyable<T> &&
+    std::derived_from<T, Output<T>> &&
+    std::derived_from<T, PacketData<T>> &&
+    requires {
+        { packetTypeHolds<T> } -> std::same_as<const PacketType&>;
+    };
+
+template <PacketHeldType Held> class XMLWriter;
 
 /**
  * Defines various constants and virtual functions for a subclass of Packet.
@@ -176,24 +267,25 @@ template <typename Held> class XMLWriter;
  *
  * To create a new wrapped packet type that holds an object of type \a Held:
  *
- * - Add a new type constant \a T to the PacketType enum;
+ * - Ensure that \a Held is copyable, assignable, and implements rich output
+ *   via the base class `Output<Held>`;
  *
- * - Add a specialisation of the template constant packetTypeHolds<Held>,
- *   which should take the value \a T;
+ * - Add a new case to the PacketType enum, and add a specialisation of the
+ *   constant `packetTypeHolds<Held>` which takes this as its value;
  *
  * - Add corresponding cases to the routines in PacketInfo;
  *
- * - Add PacketData<Held> as a new base class for \a Held (this is very
+ * - Add `PacketData<Held>` as a new base class for \a Held (this is very
  *   lightweight, just adding a single enum variable);
  *
- * - Add specialisations that implement the routines in XMLWriter<Held>, to
+ * - Add specialisations that implement the routines in `XMLWriter<Held>`, to
  *   support writing to file;
  *
- * - Add an appropriate case to XMLPacketReader::startSubElement(), to
+ * - Add an appropriate case to `XMLPacketReader::startSubElement()`, to
  *   support reading from file;
  *
  * - For every routine in \a Held that edits the packet contents, declare a
- *   Held::PacketChangeSpan on the stack while the modification takes place.
+ *   `Held::PacketChangeSpan` on the stack while the modification takes place.
  *   This is again lightweight (if an object does not belong to a packet
  *   then the cost is just two integer comparisions), and it will ensure that
  *   if the object _does_ belong to a packet then listeners are notified.
@@ -980,7 +1072,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * returned by begin() will always point to this packet itself.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using range-based \c for loops:
+         * an entire packet subtree using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> subtree = ...;
@@ -989,7 +1081,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * iterator.
          *
          * See also descendants() for iterating through just the strict
@@ -1011,7 +1103,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * packets in the subtree rooted at this packet.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using range-based \c for loops.
+         * an entire packet subtree using range-based `for` loops.
          *
          * See the begin() documentation for further details.
          *
@@ -1033,7 +1125,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * returned by begin() will always point to this packet itself.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using range-based \c for loops:
+         * an entire packet subtree using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> subtree = ...;
@@ -1042,7 +1134,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * iterator.
          *
          * See also descendants() for iterating through just the strict
@@ -1064,7 +1156,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * in the subtree rooted at this packet.
          *
          * In C++, these begin() and end() routines allow you to iterate through
-         * an entire packet subtree using range-based \c for loops.
+         * an entire packet subtree using range-based `for` loops.
          *
          * See the begin() documentation for further details.
          *
@@ -1108,7 +1200,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * \nocpp For C++ users, Packet provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over a packet
-         * subtree in the usual C++ way using a range-based \c for loop.
+         * subtree in the usual C++ way using a range-based `for` loop.
          *
          * \return an iterator over the subtree rooted at this packet.
          */
@@ -1127,7 +1219,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * before its own descendants.
          *
          * This routine allows you to iterate through all strict descendants
-         * of a given packet using range-based \c for loops:
+         * of a given packet using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> parent = ...;
@@ -1149,7 +1241,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * object.
          *
          * See also begin() and end() for iterating through the entire
@@ -1173,7 +1265,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * before its own descendants.
          *
          * This routine allows you to iterate through all strict descendants
-         * of a given packet using range-based \c for loops:
+         * of a given packet using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> parent = ...;
@@ -1187,7 +1279,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * object.
          *
          * See also begin() and end() for iterating through the entire
@@ -1204,7 +1296,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * immediate children of this packet.
          *
          * This routine allows you to iterate through the immediate children
-         * of a given packet using range-based \c for loops:
+         * of a given packet using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<Packet> parent = ...;
@@ -1226,7 +1318,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * object.
          *
          * See begin() and end(), as well as descendants(), for iterating
@@ -1242,7 +1334,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * immediate children of this packet.
          *
          * This routine allows you to iterate through the immediate children
-         * of a given packet using range-based \c for loops:
+         * of a given packet using range-based `for` loops:
          *
          * \code{.cpp}
          * std::shared_ptr<const Packet> parent = ...;
@@ -1256,7 +1348,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          *
          * Since Regina 7.0, the return type is templated in order to support
          * both const and non-const iteration.  It is recommended that you
-         * just use \c auto if you need to store a local copy of the returned
+         * just use `auto` if you need to store a local copy of the returned
          * object.
          *
          * See begin() and end(), as well as descendants(), for iterating
@@ -1440,12 +1532,18 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Typically this will be called from the root of the packet
          * tree, which will save the entire packet tree to file.
          *
+         * This routine will throw an exception if an error occurs whilst
+         * writing the file.  This is a change of behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
          * \pre The given packet does not depend on its parent.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_,
          * and simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The _contents_ of the file will be written using UTF-8.
+         *
+         * \exception FileError An error occurred whilst writing the file.
          *
          * \param filename the pathname of the file to write to.
          * \param compressed \c true if the XML data should be compressed,
@@ -1454,9 +1552,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * You should use the default (FileFormat::Current) unless you need
          * your file to be readable by older versions of Regina.  This must
          * not be FileFormat::BinaryGen1, which is no longer supported.
-         * \return \c true if and only if the file was successfully written.
          */
-        bool save(const char* filename, bool compressed = true,
+        void save(const char* filename, bool compressed = true,
             FileFormat format = FileFormat::Current) const;
 
         /**
@@ -1469,6 +1566,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree, which will write the entire packet tree to the given
          * output stream.
          *
+         * This routine will throw an exception if an error occurs whilst
+         * writing the data.  This is a change of behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
          * \pre The given stream is open for writing.
          * \pre The given packet does not depend on its parent.
          *
@@ -1477,6 +1578,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * XML data file directly to an open Python file, you can still use
          * writeXMLFile() for this.
          *
+         * \exception FileError An error occurred whilst writing the data.
+         *
          * \param s the output stream to which to write.
          * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
@@ -1484,9 +1587,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * You should use the default (FileFormat::Current) unless you need
          * your file to be readable by older versions of Regina.  This must
          * not be FileFormat::BinaryGen1, which is no longer supported.
-         * \return \c true if and only if the data was successfully written.
          */
-        bool save(std::ostream& s, bool compressed = true,
+        void save(std::ostream& s, bool compressed = true,
             FileFormat format = FileFormat::Current) const;
 
         /**
@@ -1502,8 +1604,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Typically this will be called from the root of the packet tree,
          * which will write the entire packet tree to the output stream.
          *
-         * \python The argument \a out should be an open Python file
-         * object.
+         * \python The first argument should be an open Python file object
+         * (not a C++ output stream).
          *
          * \param out the output stream to which the XML data file should
          * be written.
@@ -1742,6 +1844,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * When writing to the FileFormat::XmlGen2 format, this will be ignored.
          */
         template <typename... Args>
+        requires (Writeable<Args> && ...)
         void writeXMLHeader(std::ostream& out, const char* element,
             FileFormat format, bool anon, PacketRefs& refs,
             bool newline, std::pair<const char*, Args>... attr) const;
@@ -2003,43 +2106,27 @@ class Packet : public std::enable_shared_from_this<Packet>,
 };
 
 /**
- * A class that is equal to or derived from one of Regina's packet types.
- *
- * This concept does _not_ include the virtual base class Packet.
- * It does, however, include SurfaceFilter (which represents a single packet
- * type in Regina, but which itself is a virtual base class for different
- * kinds of filters).
- *
- * \ingroup packet
- */
-template <typename T>
-concept PacketClass =
-    std::derived_from<T, Packet> &&
-    requires {
-        { T::typeID } -> std::same_as<const PacketType&>;
-    };
-
-/**
  * Internal constants that support wrapped packets.
  *
  * These constants indicate whether an object of type \a Held is in fact part
  * of the inherited interface for a derived class of Held, which is typically
- * the wrapped packet type PacketOf<Held>.  These constants are used as a
+ * the wrapped packet type `PacketOf<Held>`.  These constants are used as a
  * lightweight (and significantly less rich) replacement for polymorphism,
  * virtual functions and dynamic casts.
  *
  * These constants only know about two types of relationships:
  *
- * - an object of type \a Held being part of a larger PacketOf<Held>
+ * - an object of type \a Held being part of a larger `PacketOf`<Held>`
  *   (indicated by the constant PacketHeldBy::Packet);
  *
- * - an object of type Triangulation<3> being part of a larger
+ * - an object of type `Triangulation<3>` being part of a larger
  *   SnapPeaTriangulation (indicated by the constant PacketHeldBy::SnapPea).
  *
- * Of course, a Triangulation<3> could belong to a SnapPeaTriangulation which is
- * then held by a PacketOf<SnapPeaTriangulation>.  In this case the inherited
- * PacketData<Triangulation<3>> will store PacketHeldBy::SnapPea, and the
- * inherited PacketData<SnapPeaTriangulation> will store PacketHeldBy::Packet.
+ * Of course, a `Triangulation<3>` could belong to a SnapPeaTriangulation which
+ * is then held by a `PacketOf<SnapPeaTriangulation>`.  In this case the
+ * inherited `PacketData<Triangulation<3>>` will store PacketHeldBy::SnapPea,
+ * and the inherited `PacketData<SnapPeaTriangulation>` will store
+ * PacketHeldBy::Packet.
  *
  * \nopython
  */
@@ -2098,9 +2185,17 @@ enum class PacketHeldBy {
  * will have a name of the form PacketOfHeld.  For example, the C++ class
  * Link is wrapped by the Python class \c PacketOfLink, and the C++ class
  * Triangulation<3> is wrapped by the Python class \c PacketOfTriangulation3.
+ *
+ * \tparam Held the mathematical object type being held by this type of packet.
+ * This type must adhere to all the requirements of the concept PacketHeldType.
  */
 template <typename Held>
 class PacketOf : public Packet, public Held {
+    // We cannot enforce constraints on Held, since the type PacketOf<Held>
+    // is resolved within PacketData<Held>, which is a parent class of Held.
+    // Nevertheless, we can assert them here.
+    static_assert(PacketHeldType<Held>);
+
     REGINA_PACKET(packetTypeHolds<Held>, PacketInfo::name(typeID))
 
     public:
@@ -2225,10 +2320,21 @@ class PacketOf : public Packet, public Held {
         // We do not implement member or global swaps, since these can be
         // happily inherited via the Held base class.
 
+        // This class inherits from Output<...> via both Packet and Held.
+        // We resolve the ambiguity in PacketOf<...> by choosing the output
+        // routines from Held; moreover, we tell the output routines from
+        // Packet to outsource their work to Held also.
+
+        using Output<Held>::str;
+        using Output<Held>::utf8;
+        using Output<Held>::detail;
+
         void writeTextShort(std::ostream& out) const override {
+            // Tell Output<Packet> to use Held's ASCII-only output routines.
             Held::writeTextShort(out);
         }
         void writeTextLong(std::ostream& out) const override {
+            // Tell Output<Packet> to use Held's ASCII-only output routines.
             Held::writeTextLong(out);
         }
 
@@ -2243,15 +2349,15 @@ class PacketOf : public Packet, public Held {
  * A lightweight helper class that allows an object of type \a Held to connect
  * with the wrapped packet class that contains it.
  *
- * For every wrapped packet type of the form PacketOf<Held>, the corresponding
- * class \a Held must derive from PacketData<Held>.  See the Packet class
+ * For every wrapped packet type of the form `PacketOf<Held>`, the corresponding
+ * class \a Held must derive from `PacketData<Held>`.  See the Packet class
  * notes for more information about packets, and for what else must be
  * implemented for each wrapped packet type.
  *
  * This base class is extremely lightweight: the only data that it contains
  * is a single PacketHeldBy enumeration value.  All of the class constructors
  * set this value to PacketHeldBy::None; it is the responsibility of subclasses
- * (e.g., PacketOf<Held>) to change this where necessary.
+ * (e.g., `PacketOf<Held>`) to change this where necessary.
  *
  * \python Not present, but the routines anonID() and packet() will be
  * provided directly through the various subclasses.
@@ -2261,8 +2367,8 @@ class PacketData {
     protected:
         PacketHeldBy heldBy_ { PacketHeldBy::None };
             /**< Indicates whether this \a Held object is in fact the
-                 inherited data for a PacketOf<Held>.  As a special case,
-                 this field is also used to indicate when a Triangulation<3>
+                 inherited data for a `PacketOf<Held>`.  As a special case,
+                 this field is also used to indicate when a `Triangulation<3>`
                  is in fact the inherited data for a SnapPeaTriangulation.
                  See the PacketHeldBy enumeration for more details on
                  the different values that this data member can take. */
@@ -2514,10 +2620,8 @@ class PacketData {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
-    static_assert(std::is_class_v<Held>,
-        "The template argument to make_packet() must be a plain class type.");
     return std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
 }
 
@@ -2548,11 +2652,9 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
         const std::string& label) {
-    static_assert(std::is_class_v<Held>,
-        "The template argument to make_packet() must be a plain class type.");
     auto ans = std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
     ans->setLabel(label);
     return ans;
@@ -2586,7 +2688,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
  *
  * \ingroup packet
  */
-template <typename Held, typename... Args>
+template <PacketHeldType Held, typename... Args>
 std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
     return std::make_shared<PacketOf<Held>>(
         std::in_place, std::forward<Args>(args)...);
@@ -2612,7 +2714,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 std::shared_ptr<PacketOf<Held>> make_packet() {
     return std::make_shared<PacketOf<Held>>();
 }
@@ -2621,16 +2723,16 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  * Casts a reference from Packet to \a Held, assuming that the given
  * packet is actually a PacketOf<Held>.
  *
- * This is analogous to static_cast<Held&>().  It is provided
+ * This is analogous to `static_cast<Held&>()`.  It is provided
  * because we cannot perform a direct static cast between Packet and \a Held
  * (since the two classes do not have a one-way inheritance relationship).
  *
  * \pre The given reference refers to an object of type PacketOf<Held>.
  *
- * \warning If you try to use static_packet_cast<Triangulation<3>> on a
- * reference to a PacketOf<SnapPeaTriangulation>, this will _not_ work,
- * since PacketOf<SnapPeaTriangulation> is _not_ a subclass of
- * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
+ * \warning If you try to use `static_packet_cast<Triangulation<3>>` on a
+ * reference to a `PacketOf<SnapPeaTriangulation>`, this will _not_ work,
+ * since `PacketOf<SnapPeaTriangulation>` is _not_ a subclass of
+ * `PacketOf<Triangulation<3>>`.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
  * \nopython Casting is unnecessary in Python.
@@ -2640,7 +2742,7 @@ std::shared_ptr<PacketOf<Held>> make_packet() {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 Held& static_packet_cast(Packet& p) {
     return static_cast<PacketOf<Held>&>(p);
 }
@@ -2649,16 +2751,16 @@ Held& static_packet_cast(Packet& p) {
  * Casts a const reference from Packet to \a Held, assuming that the given
  * packet is actually a PacketOf<Held>.
  *
- * This is analogous to static_cast<const Held&>().  It is provided
+ * This is analogous to `static_cast<const Held&>()`.  It is provided
  * because we cannot perform a direct static cast between Packet and \a Held
  * (since the two classes do not have a one-way inheritance relationship).
  *
  * \pre The given reference refers to an object of type PacketOf<Held>.
  *
- * \warning If you try to use static_packet_cast<Triangulation<3>> on a
- * reference to a PacketOf<SnapPeaTriangulation>, this will _not_ work,
- * since PacketOf<SnapPeaTriangulation> is _not_ a subclass of
- * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
+ * \warning If you try to use `static_packet_cast<Triangulation<3>>` on a
+ * reference to a `PacketOf<SnapPeaTriangulation>`, this will _not_ work,
+ * since `PacketOf<SnapPeaTriangulation>` is _not_ a subclass of
+ * `PacketOf<Triangulation<3>>`.  The behaviour in this scenario is undefined.
  * You should use regina::static_triangulation3_cast() instead.
  *
  * \nopython Casting is unnecessary in Python.
@@ -2668,7 +2770,7 @@ Held& static_packet_cast(Packet& p) {
  *
  * \ingroup packet
  */
-template <typename Held>
+template <PacketHeldType Held>
 const Held& static_packet_cast(const Packet& p) {
     return static_cast<const PacketOf<Held>&>(p);
 }
@@ -2678,10 +2780,19 @@ const Held& static_packet_cast(const Packet& p) {
  * This uses Regina's native XML file format; it does not matter whether
  * the XML file is compressed or uncompressed.
  *
- * If the file could not be opened or the top-level packet in the tree
- * could not be read, this routine will return \c null.  If some packet deeper
- * within the tree could not be read then that particular packet (and
- * its descendants, if any) will simply be ignored.
+ * If the file could not be opened, or if the top-level packet in the tree
+ * could not be parsed (i.e., the file does not appear to contain any usable
+ * Regina data), then this routine will throw an exception.  Multiple exception
+ * types are possible: remember that you can just catch the base class
+ * ReginaException if you wish to catch them all together.  This exception
+ * throwing is a change in behaviour as of Regina 8.0: older versions of
+ * Regina (≤ 7.x) would return \c null instead.
+ *
+ * If some packet deeper within the tree could not be read, that particular
+ * packet (and its descendants, if any) will simply be ignored.  This allows
+ * older versions of Regina to read files created by newer versions of Regina,
+ * by simply ignoring any features from the newer version that the older
+ * version does not understand.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file _name_, and simply
@@ -2694,8 +2805,15 @@ const Held& static_packet_cast(const Packet& p) {
  * Python's own built-in open() function.  You can access Regina's open()
  * function by calling `regina.open()`.
  *
+ * \exception FileError The file could not be read.
+ *
+ * \exception InvalidInput The file does not appear to contain any usable
+ * Regina data.
+ *
  * \param filename the pathname of the file to read from.
- * \return the packet tree read from file, or \c null on error.
+ * \return the packet tree read from file.  As of Regina 8.0, if this routine
+ * returns at all (as opposed to throwing an exception), then the pointer it
+ * returns will not be `null`.
  *
  * \ingroup packet
  */
@@ -2707,17 +2825,33 @@ std::shared_ptr<Packet> open(const char* filename);
  * This uses Regina's native XML file format; it does not matter whether
  * the XML file is compressed or uncompressed.
  *
- * If the stream could not be read or if the top-level packet in the tree
- * could not be read, then this routine will return \c null.  If some packet
- * deeper within the tree could not be read then that particular packet (and
- * its descendants, if any) will simply be ignored.
+ * If the stream could not be read, or if the top-level packet in the tree
+ * could not be parsed (i.e., the stream does not appear to contain any usable
+ * Regina data), then this routine will throw an exception.  Multiple exception
+ * types are possible: remember that you can just catch the base class
+ * ReginaException if you wish to catch them all together.  This exception
+ * throwing is a change in behaviour as of Regina 8.0: older versions of
+ * Regina (≤ 7.x) would return \c null instead.
+ *
+ * If some packet deeper within the tree could not be read, that particular
+ * packet (and its descendants, if any) will simply be ignored.  This allows
+ * older versions of Regina to read files created by newer versions of Regina,
+ * by simply ignoring any features from the newer version that the older
+ * version does not understand.
  *
  * \pre The given stream is open for reading.
  *
  * \nopython Instead you can use the variant of open() that takes a filename.
  *
+ * \exception FileError The stream could not be read.
+ *
+ * \exception InvalidInput The file does not appear to contain any usable
+ * Regina data.
+ *
  * \param in the input stream to read from.
- * \return the packet tree read from file, or \c null on error.
+ * \return the packet tree read from file.  As of Regina 8.0, if this routine
+ * returns at all (as opposed to throwing an exception), then the pointer it
+ * returns will not be `null`.
  *
  * \ingroup packet
  */
@@ -2870,11 +3004,11 @@ class ChildIterator {
 } namespace std {
     template <bool const_>
     struct iterator_traits<regina::ChildIterator<const_>> {
-        using value_type = typename regina::ChildIterator<const_>::packet_type;
+        using value_type = regina::Packet;
         using iterator_category = std::forward_iterator_tag;
         using difference_type = ptrdiff_t;
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = typename regina::ChildIterator<const_>::packet_type*;
+        using reference = typename regina::ChildIterator<const_>::packet_type&;
     };
 } namespace regina {
 #endif
@@ -2992,7 +3126,7 @@ class SubtreeIterator {
          * subtree, or (ii) the PacketDescendant object returned by
          * Packet::descendants().  In particular, this allows you to iterate
          * through a packet subtree (including or excluding the subtree root
-         * respectively) using a range-based \c for loop.
+         * respectively) using a range-based `for` loop.
          *
          * \return an iterator over all members of the relevant packet subtree.
          */
@@ -3078,12 +3212,11 @@ class SubtreeIterator {
 } namespace std {
     template <bool const_>
     struct iterator_traits<regina::SubtreeIterator<const_>> {
-        using value_type =
-            typename regina::SubtreeIterator<const_>::packet_type;
+        using value_type = regina::Packet;
         using iterator_category = std::forward_iterator_tag;
         using difference_type = ptrdiff_t;
-        using pointer = value_type*;
-        using reference = value_type&;
+        using pointer = typename regina::SubtreeIterator<const_>::packet_type*;
+        using reference = typename regina::SubtreeIterator<const_>::packet_type&;
     };
 } namespace regina {
 #endif
@@ -3093,7 +3226,7 @@ class SubtreeIterator {
  * given packet.
  *
  * The purpose of this class is to support iteration through all children of a
- * packet \a p using range-based \c for loops:
+ * packet \a p using range-based `for` loops:
  *
  * \code{.cpp}
  * std::shared_ptr<Packet> parent = ...;
@@ -3208,7 +3341,7 @@ class PacketChildren {
          * \nocpp For C++ users, PacketChildren provides the usual
          * begin() and end() functions instead.  In particular, this
          * allows you to iterate through all immediate child packets
-         * in the usual way using a range-based \c for loop.
+         * in the usual way using a range-based `for` loop.
          *
          * \return an iterator over all immediate child packets.
          */
@@ -3230,7 +3363,7 @@ class PacketChildren {
  * given packet.
  *
  * The purpose of this class is to support iteration through all strict
- * descendants of a packet \a p using range-based \c for loops:
+ * descendants of a packet \a p using range-based `for` loops:
  *
  * \code{.cpp}
  * std::shared_ptr<Packet> parent = ...;
@@ -3342,7 +3475,7 @@ class PacketDescendants {
          * \nocpp For C++ users, PacketDescendants provides the usual
          * begin() and end() functions instead.  In particular, this
          * allows you to iterate through all strict descendant packets
-         * in the usual way using a range-based \c for loop.
+         * in the usual way using a range-based `for` loop.
          *
          * \return an iterator over all strict descendant packets.
          */
@@ -4234,6 +4367,7 @@ inline std::shared_ptr<const Packet> Packet::nextTreePacket(PacketType t)
 }
 
 template <typename... Args>
+requires (Writeable<Args> && ...)
 void Packet::writeXMLHeader(std::ostream& out, const char* element,
         FileFormat format, bool anon, PacketRefs& refs, bool newline,
         std::pair<const char*, Args>... args) const {

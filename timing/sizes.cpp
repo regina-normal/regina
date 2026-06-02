@@ -47,7 +47,7 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 #include "triangulation/dim3/homologicaldata.h"
 
 #define SHOW_SIZE(T) std::cout << #T << ": " \
@@ -121,6 +121,35 @@ int main() {
     SHOW_SIZE(Triangulation<3>);
     SHOW_SIZE(Triangulation<4>);
     SHOW_SIZE(Triangulation<5>);
+    std::cout << std::endl;
+
+    std::cout << "Triangulation Support:" << std::endl;
+    SHOW_SIZE(Component<2>);
+    SHOW_SIZE(Component<3>);
+    SHOW_SIZE(Component<4>);
+    SHOW_SIZE(Component<5>);
+    SHOW_SIZE(BoundaryComponent<2>);
+    SHOW_SIZE(BoundaryComponent<3>);
+    SHOW_SIZE(BoundaryComponent<4>);
+    SHOW_SIZE(BoundaryComponent<5>);
+    SHOW_SIZE(Simplex<2>);
+    SHOW_SIZE(Simplex<3>);
+    SHOW_SIZE(Simplex<4>);
+    SHOW_SIZE(Simplex<5>);
+    SHOW_SIZE(Vertex<2>);
+    SHOW_SIZE(Vertex<3>);
+    SHOW_SIZE(Vertex<4>);
+    SHOW_SIZE(Vertex<5>);
+    SHOW_SIZE(Edge<2>);
+    SHOW_SIZE(Edge<3>);
+    SHOW_SIZE(Edge<4>);
+    SHOW_SIZE(Edge<5>);
+    SHOW_SIZE(Triangle<3>);
+    SHOW_SIZE(Triangle<4>);
+    SHOW_SIZE(Triangle<5>);
+    SHOW_SIZE(Tetrahedron<4>);
+    SHOW_SIZE(Tetrahedron<5>);
+    SHOW_SIZE(Pentachoron<5>);
     std::cout << std::endl;
 
     std::cout << "Surfaces and Structures:" << std::endl;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -227,8 +227,8 @@ void EltMoveDialog2::packetWasRenamed(regina::Packet&) {
     name->setText(tri_->humanLabel().c_str());
 }
 
-template <typename ChooserClass>
-void EltMoveDialog2::updateStates(ChooserClass* chooser, QRadioButton* button) {
+template <ObjectChooser C>
+void EltMoveDialog2::updateStates(C* chooser, QRadioButton* button) {
     if (chooser->refresh()) {
         button->setEnabled(true);
         chooser->setEnabled(true);

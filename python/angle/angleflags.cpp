@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,7 +43,7 @@ void addAngleFlags(pybind11::module_& m) {
             { "DD", regina::AngleAlg::DD, rdoc::DD },
             { "Legacy", regina::AngleAlg::Legacy, rdoc::Legacy },
             { "Custom", regina::AngleAlg::Custom, rdoc::Custom }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH_MAIN
 

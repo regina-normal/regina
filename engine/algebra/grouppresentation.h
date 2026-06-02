@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,6 +53,8 @@
 #include "maths/matrix.h"
 
 // There are more includes at the end of this file.
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -115,7 +117,7 @@ struct GroupExpressionTerm {
      * \python This spaceship operator `x <=> y` is not available, but the
      * other comparison operators that it generates _are_ available.
      *
-     * \return The result of the lexicographical comparison between this
+     * \return the result of the lexicographical comparison between this
      * and the given term.
      */
     std::strong_ordering operator <=> (const GroupExpressionTerm&) const =
@@ -243,12 +245,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * interpreted as a group expression, or else \a nGens was positive
          * and the given string contains an out-of-range generator.
          *
-         * \param input the input string that is to be interpreted.
+         * \param word the input string that is to be interpreted as a word.
          * \param nGens the number of generators in the group presentation.
          * If this is 0 (the default), then this argument will be ignored and
          * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const char* input, size_t nGens = 0);
+        GroupExpression(const char* word, size_t nGens = 0);
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
@@ -273,12 +275,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * interpreted as a group expression, or else \a nGens was positive
          * and the given string contains an out-of-range generator.
          *
-         * \param input the input string that is to be interpreted.
+         * \param word the input string that is to be interpreted as a word.
          * \param nGens the number of generators in the group presentation.
          * If this is 0 (the default), then this argument will be ignored and
          * this constructor will not check whether generators are within range.
          */
-        GroupExpression(const std::string &input, size_t nGens = 0);
+        GroupExpression(const std::string& word, size_t nGens = 0);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -1875,8 +1877,8 @@ inline GroupExpression::GroupExpression(size_t generator, long exponent) {
     terms_.emplace_back(generator, exponent);
 }
 
-inline GroupExpression::GroupExpression(const std::string &input,
-        size_t nGens) : GroupExpression(input.c_str(), nGens) {
+inline GroupExpression::GroupExpression(const std::string& word, size_t nGens) :
+        GroupExpression(word.c_str(), nGens) {
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {
@@ -1907,8 +1909,8 @@ inline bool GroupExpression::isTrivial() const {
 inline size_t GroupExpression::wordLength() const {
     size_t retval(0);
     std::list<GroupExpressionTerm>::const_iterator it;
-    for (it = terms_.begin(); it!=terms_.end(); it++)
-        retval += labs((*it).exponent);
+    for (it = terms_.begin(); it != terms_.end(); it++)
+        retval += labs(it->exponent);
     return retval;
 }
 
@@ -1952,13 +1954,13 @@ inline void GroupExpression::erase() {
 inline std::string GroupExpression::str(bool alphaGen) const {
     std::ostringstream out;
     writeTextShort(out, false, alphaGen);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline std::string GroupExpression::utf8(bool alphaGen) const {
     std::ostringstream out;
     writeTextShort(out, true, alphaGen);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {

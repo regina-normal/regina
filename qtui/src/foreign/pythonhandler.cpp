@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,9 +41,6 @@
 #include <QFile>
 #include <QTextDocument>
 #include <QTextStream>
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-#include <QTextCodec>
-#endif
 
 namespace {
     const QString scriptMarker("Regina Script:");
@@ -54,22 +51,18 @@ namespace {
 const PythonHandler PythonHandler::instance;
 
 std::shared_ptr<regina::Packet> PythonHandler::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
-    QFile f(fileName);
+        const QString& filename, ReginaMain* parentWidget) const {
+    QFile f(filename);
     if (! f.open(QIODevice::ReadOnly)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The import failed."), 
             QObject::tr("<qt>I could not read from the file <tt>%1</tt>.</qt>").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
         return nullptr;
     }
     QTextStream in(&f);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     in.setEncoding(ReginaPrefSet::importExportCodec());
-#else
-    in.setCodec(ReginaPrefSet::importExportCodec());
-#endif
 
     std::shared_ptr<regina::Script> ans = std::make_shared<regina::Script>();
     ans->setLabel(QObject::tr("Imported Script").toUtf8().constData());
@@ -135,37 +128,27 @@ PacketFilter* PythonHandler::canExport() const {
 }
 
 bool PythonHandler::exportData(const regina::Packet& data,
-        const QString& fileName, QWidget* parentWidget) const {
+        const QString& filename, QWidget* parentWidget) const {
     auto& script = static_cast<const regina::Script&>(data);
 
-    QFile f(fileName);
+    QFile f(filename);
     if (! f.open(QIODevice::WriteOnly)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>I could not write to the file <tt>%1</tt>.</qt>").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
         return false;
     }
     QTextStream out(&f);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     out.setEncoding(ReginaPrefSet::importExportCodec());
-#else
-    out.setCodec(ReginaPrefSet::importExportCodec());
-#endif
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';
     out << QString(script.label().c_str());
-#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
     Qt::endl(out);
     out << "###";
     Qt::endl(out);
-#else
-    endl(out);
-    out << "###";
-    endl(out);
-#endif
 
     // Output the value of each variable.
     unsigned long i;
@@ -174,23 +157,13 @@ bool PythonHandler::exportData(const regina::Packet& data,
         out << "### " << varMarker
             << QString(script.variableName(i).c_str())
             << ": " << (value ? QString(value->label().c_str()) : "");
-#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
         Qt::endl(out);
-#else
-        endl(out);
-#endif
     }
 
     out << "###";
-#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
     Qt::endl(out);
     out << "### " << endMetadataMarker;
     Qt::endl(out);
-#else
-    endl(out);
-    out << "### " << endMetadataMarker;
-    endl(out);
-#endif
     out << script.text().c_str();
 
     // All done!

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -143,8 +143,8 @@ Tri4HomologyFundUI::Tri4HomologyFundUI(
 
     master->addLayout(fundLayout, tr("Fundamental Group"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri4HomologyFundUI::updatePreferences);
 }
 
 regina::Packet* Tri4HomologyFundUI::getPacket() {
@@ -211,7 +211,11 @@ void Tri4HomologyFundUI::refresh() {
 }
 
 void Tri4HomologyFundUI::fundGroupSimplified() {
-    tri->setGroupPresentation(fgGroup->group());
+    // If we got this far, we should be connected.  However, double-check this
+    // now because it would be bad for setGroupPresentation() to throw an
+    // exception.
+    if (tri->isConnected())
+        tri->setGroupPresentation(fgGroup->group());
 }
 
 void Tri4HomologyFundUI::refreshLabels() {

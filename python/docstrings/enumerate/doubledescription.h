@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::DoubleDescription
-static const char *DoubleDescription =
+struct DoubleDescription {
+
+// Docstring regina::python::doc::DoubleDescription::__class
+static constexpr const char __class[] =
 R"doc(Implements a modified double description method for polytope vertex
 enumeration. For details of the underlying algorithm, see "Optimizing
 the double description method for normal surface enumeration",
@@ -21,10 +23,8 @@ Benjamin A. Burton, Math. Comp. 79 (2010), 453-484.
 All routines of interest within this class are static; no object of
 this class should ever be created.)doc";
 
-namespace DoubleDescription_ {
-
-// Docstring regina::python::doc::DoubleDescription_::enumerate
-static const char *enumerate =
+// Docstring regina::python::doc::DoubleDescription::enumerate
+static constexpr const char enumerate[] =
 R"doc(Determines the extremal rays of the intersection of the
 *n*-dimensional non-negative orthant with the given linear subspace.
 The resulting rays will be of the class *Ray*, and will be passed into
@@ -104,7 +104,7 @@ Parameter ``initialRows``:
     in the precise order in which they appear. The remaining rows will
     be sorted using the PosOrder class before they are processed.)doc";
 
-}
+}; // struct DoubleDescription
 
 } // namespace regina::python::doc
 

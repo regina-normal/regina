@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -129,7 +129,7 @@ class PacketCreator {
  * The interface will contain no non-generic interface components, and
  * new packets will be created using the default constructor.
  */
-template <typename T>
+template <regina::PacketClass T>
 class BasicPacketCreator : public PacketCreator {
     public:
         /**

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -28,14 +28,14 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file maths/polynomial.h
+ *  \brief Implements single variable polynomials over arbitrary rings.
+ */
+
 #ifndef __REGINA_POLYNOMIAL_H
 #ifndef __DOXYGEN
 #define __REGINA_POLYNOMIAL_H
 #endif
-
-/*! \file maths/polynomial.h
- *  \brief Implements single variable polynomials over arbitrary rings.
- */
 
 #include "regina-core.h"
 #include "utilities/stringutils.h"
@@ -43,6 +43,8 @@
 #include "core/output.h"
 #include <iostream>
 #include <iterator>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -168,8 +170,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        Polynomial(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<T> Iterator>
+        Polynomial(Iterator begin, Iterator end);
 
         /**
          * Creates a new polynomial from a hard-coded sequence of coefficients.
@@ -239,8 +241,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of coefficients.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        void init(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<T> Iterator>
+        void init(Iterator begin, Iterator end);
 
         /**
          * Returns the degree of this polynomial.
@@ -930,8 +932,8 @@ inline Polynomial<T>::Polynomial(size_t degree) :
 }
 
 template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> iterator>
-inline Polynomial<T>::Polynomial(iterator begin, iterator end) :
+template <RandomAccessIteratorFor<T> Iterator>
+inline Polynomial<T>::Polynomial(Iterator begin, Iterator end) :
         coeff_(nullptr) {
     init(begin, end);
 }
@@ -993,8 +995,8 @@ inline void Polynomial<T>::init(size_t degree) {
 }
 
 template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> iterator>
-void Polynomial<T>::init(iterator begin, iterator end) {
+template <RandomAccessIteratorFor<T> Iterator>
+void Polynomial<T>::init(Iterator begin, Iterator end) {
     delete[] coeff_;
 
     if (begin == end) {
@@ -1319,8 +1321,8 @@ std::pair<Polynomial<T>, Polynomial<T>> Polynomial<T>::divisionAlg(
     //
     // We initialise the remainer to be a copy of this.
 
-    std::pair<Polynomial<T>, Polynomial<T>> ans(
-        degree_ - divisor.degree_, *this);
+    std::pair<Polynomial<T>, Polynomial<T>> ans({}, *this);
+    ans.first.initExp(degree_ - divisor.degree_);
 
     for (size_t i = degree_; i >= divisor.degree_; --i) {
         ans.first.coeff_[i - divisor.degree_] = ans.second.coeff_[i];
@@ -1481,21 +1483,16 @@ void Polynomial<T>::writeTextShort(std::ostream& out, bool utf8,
 
 template <CoefficientDomain T>
 inline std::string Polynomial<T>::str(const char* variable) const {
-    // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same_v<typename OutputBase<Polynomial<T>>::type,
-        Output<Polynomial<T>, true>>,
-        "Polynomial<T> is not identified as being inherited from Output<...>");
-
     std::ostringstream out;
     writeTextShort(out, false, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>
 inline std::string Polynomial<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>

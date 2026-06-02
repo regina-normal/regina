@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,71 +37,79 @@ static_assert(regina::bitsRequired(33) == 6);
 static_assert(regina::nextPowerOfTwo(32) == 32);
 static_assert(regina::nextPowerOfTwo(33) == 64);
 
-static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, regina::NativeInteger<4>>::value);
-static_assert(! regina::FaithfulAssignment<
-    regina::NativeInteger<8>, regina::NativeInteger<4>>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, regina::NativeInteger<8>>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, regina::Integer>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, regina::LargeInteger>::value);
-static_assert(! regina::FaithfulAssignment<
-    regina::Integer, regina::NativeInteger<4>>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::Integer, regina::Integer>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::Integer, regina::LargeInteger>::value);
-static_assert(! regina::FaithfulAssignment<
-    regina::LargeInteger, regina::NativeInteger<4>>::value);
-static_assert(! regina::FaithfulAssignment<
-    regina::LargeInteger, regina::Integer>::value);
-static_assert(regina::FaithfulAssignment<
-    regina::LargeInteger, regina::LargeInteger>::value);
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<4>, regina::NativeInteger<4>>,
+    regina::NativeInteger<4>>);
+#if 0
+// Native integers are not constructible/assignable from native integers of
+// different sizes.  Therefore NativeInteger<4> and NativeInteger<8> have no
+// common type.
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<8>, regina::NativeInteger<4>>,
+    regina::NativeInteger<8>>);
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<4>, regina::NativeInteger<8>>,
+    regina::NativeInteger<8>>);
+#endif
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<4>, regina::Integer>, regina::Integer>);
+static_assert(std::same_as<std::common_type_t<
+    regina::NativeInteger<4>, regina::LargeInteger>, regina::LargeInteger>);
+static_assert(std::same_as<std::common_type_t<
+    regina::Integer, regina::NativeInteger<4>>, regina::Integer>);
+static_assert(std::same_as<std::common_type_t<
+    regina::Integer, regina::Integer>, regina::Integer>);
+static_assert(std::same_as<std::common_type_t<
+    regina::Integer, regina::LargeInteger>, regina::LargeInteger>);
+static_assert(std::same_as<std::common_type_t<
+    regina::LargeInteger, regina::NativeInteger<4>>, regina::LargeInteger>);
+static_assert(std::same_as<std::common_type_t<
+    regina::LargeInteger, regina::Integer>, regina::LargeInteger>);
+static_assert(std::same_as<std::common_type_t<
+    regina::LargeInteger, regina::LargeInteger>, regina::LargeInteger>);
 
-static_assert(! regina::is_cpp_integer_v<bool>);
-static_assert(! regina::is_unsigned_cpp_integer_v<bool>);
-static_assert(! regina::is_signed_cpp_integer_v<bool>);
+static_assert(! regina::CppInteger<bool>);
+static_assert(! regina::UnsignedCppInteger<bool>);
+static_assert(! regina::SignedCppInteger<bool>);
 
-static_assert(regina::is_cpp_integer_v<unsigned char>);
-static_assert(regina::is_unsigned_cpp_integer_v<unsigned char>);
-static_assert(! regina::is_signed_cpp_integer_v<unsigned char>);
+static_assert(regina::CppInteger<unsigned char>);
+static_assert(regina::UnsignedCppInteger<unsigned char>);
+static_assert(! regina::SignedCppInteger<unsigned char>);
 
-static_assert(regina::is_cpp_integer_v<signed char>);
-static_assert(! regina::is_unsigned_cpp_integer_v<signed char>);
-static_assert(regina::is_signed_cpp_integer_v<signed char>);
+static_assert(regina::CppInteger<signed char>);
+static_assert(! regina::UnsignedCppInteger<signed char>);
+static_assert(regina::SignedCppInteger<signed char>);
 
-static_assert(regina::is_cpp_integer_v<unsigned>);
-static_assert(regina::is_unsigned_cpp_integer_v<unsigned>);
-static_assert(! regina::is_signed_cpp_integer_v<unsigned>);
+static_assert(regina::CppInteger<unsigned>);
+static_assert(regina::UnsignedCppInteger<unsigned>);
+static_assert(! regina::SignedCppInteger<unsigned>);
 
-static_assert(regina::is_cpp_integer_v<int>);
-static_assert(! regina::is_unsigned_cpp_integer_v<int>);
-static_assert(regina::is_signed_cpp_integer_v<int>);
+static_assert(regina::CppInteger<int>);
+static_assert(! regina::UnsignedCppInteger<int>);
+static_assert(regina::SignedCppInteger<int>);
 
-static_assert(regina::is_cpp_integer_v<unsigned long long>);
-static_assert(regina::is_unsigned_cpp_integer_v<unsigned long long>);
-static_assert(! regina::is_signed_cpp_integer_v<unsigned long long>);
+static_assert(regina::CppInteger<unsigned long long>);
+static_assert(regina::UnsignedCppInteger<unsigned long long>);
+static_assert(! regina::SignedCppInteger<unsigned long long>);
 
-static_assert(regina::is_cpp_integer_v<long long>);
-static_assert(! regina::is_unsigned_cpp_integer_v<long long>);
-static_assert(regina::is_signed_cpp_integer_v<long long>);
+static_assert(regina::CppInteger<long long>);
+static_assert(! regina::UnsignedCppInteger<long long>);
+static_assert(regina::SignedCppInteger<long long>);
 
-static_assert(regina::is_cpp_integer_v<size_t>);
-static_assert(regina::is_unsigned_cpp_integer_v<size_t>);
-static_assert(! regina::is_signed_cpp_integer_v<size_t>);
+static_assert(regina::CppInteger<size_t>);
+static_assert(regina::UnsignedCppInteger<size_t>);
+static_assert(! regina::SignedCppInteger<size_t>);
 
-static_assert(regina::is_cpp_integer_v<ssize_t>);
-static_assert(! regina::is_unsigned_cpp_integer_v<ssize_t>);
-static_assert(regina::is_signed_cpp_integer_v<ssize_t>);
+static_assert(regina::CppInteger<ssize_t>);
+static_assert(! regina::UnsignedCppInteger<ssize_t>);
+static_assert(regina::SignedCppInteger<ssize_t>);
 
 #if defined(INT128_AVAILABLE)
-static_assert(regina::is_cpp_integer_v<regina::UInt128>);
-static_assert(regina::is_unsigned_cpp_integer_v<regina::UInt128>);
-static_assert(! regina::is_signed_cpp_integer_v<regina::UInt128>);
+static_assert(regina::CppInteger<regina::UInt128>);
+static_assert(regina::UnsignedCppInteger<regina::UInt128>);
+static_assert(! regina::SignedCppInteger<regina::UInt128>);
 
-static_assert(regina::is_cpp_integer_v<regina::Int128>);
-static_assert(! regina::is_unsigned_cpp_integer_v<regina::Int128>);
-static_assert(regina::is_signed_cpp_integer_v<regina::Int128>);
+static_assert(regina::CppInteger<regina::Int128>);
+static_assert(! regina::UnsignedCppInteger<regina::Int128>);
+static_assert(regina::SignedCppInteger<regina::Int128>);
 #endif

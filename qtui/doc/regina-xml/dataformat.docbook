@@ -71,7 +71,6 @@
  &data-fundgroup;
  &data-group;
  &data-H1;
- &data-H1Bdry;
  &data-H1Rel;
  &data-H2;
  &data-haken;
@@ -92,7 +91,6 @@
  &data-spanstrict;
  &data-spantaut;
  &data-spatiallink;
- &data-splitsfce;
  &data-struct;
  &data-surface;
  &data-surfaces;
@@ -136,6 +134,7 @@
  &data-filter-combination;
  &data-filter-properties;
  &data-flags;
+ &data-H1Bdry;
  &data-line;
  &data-op;
  &data-orbl-filter;
@@ -163,6 +162,7 @@
  &data-simplices;
  &data-snappea;
  &data-solidtorus;
+ &data-splitsfce;
  &data-tet;
  &data-tetrahedra;
  &data-text;

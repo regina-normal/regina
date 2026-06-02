@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -93,10 +93,16 @@ static_assert(std::input_iterator<regina::TableView<char, 2, 3>::iterator>);
 
 static_assert(std::is_same_v<
     typename std::iterator_traits<regina::ChildIterator<true>>::value_type,
-    const regina::Packet>);
+    regina::Packet>);
 static_assert(std::is_same_v<
     std::iter_value_t<regina::ChildIterator<true>>,
-    const regina::Packet>);
+    regina::Packet>);
+static_assert(std::is_same_v<
+    typename std::iterator_traits<regina::ChildIterator<true>>::pointer,
+    const regina::Packet*>);
+static_assert(std::is_same_v<
+    typename std::iterator_traits<regina::ChildIterator<true>>::reference,
+    const regina::Packet&>);
 
 static_assert(std::is_same_v<
     typename std::iterator_traits<regina::ChildIterator<false>>::value_type,
@@ -104,4 +110,10 @@ static_assert(std::is_same_v<
 static_assert(std::is_same_v<
     std::iter_value_t<regina::ChildIterator<false>>,
     regina::Packet>);
+static_assert(std::is_same_v<
+    typename std::iterator_traits<regina::ChildIterator<false>>::pointer,
+    regina::Packet*>);
+static_assert(std::is_same_v<
+    typename std::iterator_traits<regina::ChildIterator<false>>::reference,
+    regina::Packet&>);
 

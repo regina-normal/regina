@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,14 +38,25 @@ using regina::RandomEngine;
 void addRandUtils(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(RandomEngine)
 
-    auto c = pybind11::class_<RandomEngine>(m, "RandomEngine", rdoc_scope)
+    auto c = pybind11::class_<RandomEngine>(m, "RandomEngine", rdoc::__class)
         .def_static("rand", &RandomEngine::rand<long>, rdoc::rand)
         .def_static("reseedWithHardware", &RandomEngine::reseedWithHardware,
             rdoc::reseedWithHardware)
         .def_static("reseedWithDefault", &RandomEngine::reseedWithDefault,
             rdoc::reseedWithDefault)
     ;
-    regina::python::no_eq_static(c);
+
+    // So... RandomEngine is constructible in C++, but static-only in Python.
+    // We cannot call regina::python::no_eq_static(c), since RandomEngine does
+    // not satisfy the C++ non-constructible constraint.  Instead we won't do
+    // anything about ==/!= operators at all.  This shouldn't matter, since the
+    // class is non-constructible in Python and so Python users have no way to
+    // access such operators anyway.
+    //
+    // We should, however, let the users know what the situation is by
+    // providing an appropriate RandomEngine.equalityType.
+    //
+    c.attr("equalityType") = regina::python::EqualityType::NeverInstantiated;
 
     RDOC_SCOPE_END
 }

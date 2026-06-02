@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,15 +38,17 @@
 #endif
 
 #include <array>
+#include <ranges>
 #include <vector>
 #include "concepts/core.h"
 #include "core/output.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
 #include "utilities/flags.h"
-#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -477,7 +479,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *   So, for a non-planar graph, the only guarantee we have at each
          *   node is that `0 ≤ monogons() ≤ loops() ≤ 2`.
          *
-         * \return The number of incident loops, which will be between 0 and 2
+         * \return the number of incident loops, which will be between 0 and 2
          * inclusive.
          */
         int loops() const;
@@ -498,7 +500,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *   So, for a non-planar graph, the only guarantee we have at each
          *   node is that `0 ≤ monogons() ≤ loops() ≤ 2`.
          *
-         * \return The number of incident 1-gons, which will be between 0 and 2
+         * \return the number of incident 1-gons, which will be between 0 and 2
          * inclusive.
          */
         int monogons() const;
@@ -513,7 +515,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * form two loops, each bounding its own 1-gon (which models a
          * 1-crossing unknot component of a link diagram).
          *
-         * \return The number of incident embedded bigons, which will be
+         * \return the number of incident embedded bigons, which will be
          * between 0 and 4 inclusive.
          */
         int bigons() const;
@@ -527,7 +529,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * would imply that the underlying graph contains a loop bounding a
          * 1-gon (which models a trivial twist in a link diagram).
          *
-         * \return The number of incident embedded triangles, which will be
+         * \return the number of incident embedded triangles, which will be
          * between 0 and 4 inclusive.
          */
         int triangles() const;
@@ -578,11 +580,6 @@ class ModelLinkGraphNode : public MarkedElement,
  * Currently this class does not support circular graph components (which,
  * in a link diagram, would correspond to zero-crossing unknot components
  * of the link).
- *
- * For Boost users: if you wish to study the underlying graph of an existing
- * link, you do not need to create a ModelLinkGraph - instead you can include
- * link/graph.h and then use Link directly as a directed graph type with the
- * Boost Graph Library.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -737,12 +734,12 @@ class ModelLinkGraph :
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  Note that the elements of the view will be pointers,
+         * so your code might look like:
          *
          * \code{.cpp}
          * for (ModelLinkGraphNode* n : graph.nodes()) { ... }
@@ -2015,13 +2012,12 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
+         * so C++ users should use `auto` (just like this declaration does).
          *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * range-based \c for loops.  The elements of the list will be
-         * read-only objects of type ModelLinkGraphArc, and so your code might
-         * look like:
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  The elements of the list will be read-only objects of
+         * type ModelLinkGraphArc, and so your code might look like:
          *
          * \code{.cpp}
          * for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }
@@ -2337,7 +2333,7 @@ inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
 }
 
 inline auto ModelLinkGraph::nodes() const {
-    return ListView(nodes_);
+    return std::views::all(nodes_);
 }
 
 inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)
@@ -2428,7 +2424,7 @@ inline const ModelLinkGraphArc& ModelLinkGraphCells::arc(size_t cell,
 }
 
 inline auto ModelLinkGraphCells::arcs(size_t cell) const {
-    return ListView(arcs_.begin() + start_[cell],
+    return std::ranges::subrange(arcs_.begin() + start_[cell],
         arcs_.begin() + start_[cell + 1]);
 }
 

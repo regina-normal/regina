@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,9 @@
 
 #include "regina-core.h"
 #include "maths/perm.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -76,17 +78,17 @@ namespace regina {
  * layered chain containing only one tetrahedron will be considered as a
  * standalone tetrahedron that forms a 3-ball (and not a solid torus).
  *
- * All optional StandardTriangulation routines are implemented for this class.
+ * All optional StandardSubcomplex routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.
  *
  * \ingroup subcomplex
  */
-class LayeredChain : public StandardTriangulation {
+class LayeredChain : public StandardSubcomplex<3> {
     private:
         Tetrahedron<3>* bottom_;
             /**< The bottom tetrahedron of this layered chain. */
@@ -260,7 +262,7 @@ class LayeredChain : public StandardTriangulation {
          * tetrahedra).
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass means they describe isomorphic structures).
@@ -271,7 +273,7 @@ class LayeredChain : public StandardTriangulation {
          */
         bool operator == (const LayeredChain& other) const;
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

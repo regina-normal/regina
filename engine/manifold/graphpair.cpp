@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,12 +37,9 @@
 namespace regina {
 
 std::strong_ordering GraphPair::operator <=> (const GraphPair& rhs) const {
-    for (int i = 0; i < 2; ++i) {
-        auto cmp = sfs_[i] <=> rhs.sfs_[i];
-        if (cmp != std::strong_ordering::equal)
-            return cmp;
-    }
-
+    for (int i = 0; i < 2; ++i)
+        if (auto c = sfs_[i] <=> rhs.sfs_[i]; c != 0)
+            return c;
     return simplerThreeWay(matchingReln_, rhs.matchingReln_);
 }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,7 +31,10 @@
 #include <pybind11/pybind11.h>
 #include "packet/script.h"
 #include "../helpers.h"
+#include "../docstrings/packet/packet.h" // for Packet::append
 #include "../docstrings/packet/script.h"
+
+using namespace pybind11::literals;
 
 using pybind11::overload_cast;
 using regina::Script;
@@ -40,7 +43,7 @@ void addScript(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Script)
 
     auto c = pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
-            m, "Script", rdoc_scope)
+            m, "Script", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Script&>(), rdoc::__copy)
         .def("swap", &Script::swap, rdoc::swap)
@@ -49,7 +52,7 @@ void addScript(pybind11::module_& m) {
         // We define Packet::append() again, since otherwise this is
         // hidden by the binding for Script::append().
         .def("append", &regina::Packet::append,
-            regina::python::doc::common::Packet_append)
+            regina::python::doc::Packet::append)
         .def("append", &Script::append, rdoc::append)
         .def("countVariables", &Script::countVariables, rdoc::countVariables)
         .def("variableName", &Script::variableName, rdoc::variableName)
@@ -64,22 +67,19 @@ void addScript(pybind11::module_& m) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             s.setVariableValue(index, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr,
-            rdoc::setVariableValue)
+        }, "index"_a, "value"_a = nullptr, rdoc::setVariableValue)
         .def("addVariable", [](Script& s, const std::string& name,
                 std::shared_ptr<regina::Packet> value) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             return s.addVariable(name, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr,
-            rdoc::addVariable)
+        }, "name"_a, "value"_a = nullptr, rdoc::addVariable)
         .def("addVariableName", [](Script& s, const std::string& name,
                 std::shared_ptr<regina::Packet> value) {
             // We need to reimplement this, since Regina's function
             // takes a weak_ptr, not a shared_ptr.
             return s.addVariableName(name, value);
-        }, pybind11::arg(), pybind11::arg("value") = nullptr,
-            rdoc::addVariableName)
+        }, "name"_a, "value"_a = nullptr, rdoc::addVariableName)
         .def("removeVariable",
             overload_cast<const std::string&>(&Script::removeVariable),
             rdoc::removeVariable)
@@ -93,10 +93,9 @@ void addScript(pybind11::module_& m) {
         .def("unlistenVariables", &Script::unlistenVariables,
             rdoc::unlistenVariables)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::packet_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<Script>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Script, rdoc>(m);
 
     RDOC_SCOPE_END
 }

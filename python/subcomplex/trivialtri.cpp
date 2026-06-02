@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,8 +40,8 @@ using regina::TrivialTri;
 void addTrivialTri(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(TrivialTri)
 
-    auto c = pybind11::class_<TrivialTri, regina::StandardTriangulation>(
-            m, "TrivialTri", rdoc_scope)
+    auto c = pybind11::class_<TrivialTri, regina::StandardSubcomplex<3>>(
+            m, "TrivialTri", rdoc::__class)
         .def(pybind11::init<const TrivialTri&>(), rdoc::__copy)
         .def("swap", &TrivialTri::swap, rdoc::swap)
         .def("type", &TrivialTri::type, rdoc::type)
@@ -55,9 +55,8 @@ void addTrivialTri(pybind11::module_& m) {
         .def_readonly_static("N3_2", &TrivialTri::N3_2)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<TrivialTri>(m, rdoc::global_swap);
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<TrivialTri, rdoc>(m);
 
     RDOC_SCOPE_END
 }

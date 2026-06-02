@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,6 +45,8 @@
 #include "maths/vector.h"
 #include <iterator>
 #include <vector>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -215,9 +217,9 @@ class DoubleDescription {
                  * the sequence is \a k then the <i>i</i>th hyperplane to
                  * intersect must be described by row \a k of \a subspace.
                  */
-                template <InputIteratorFor<long> iterator>
+                template <InputIteratorFor<long> Iterator>
                 RaySpec(size_t axis, const MatrixInt& subspace,
-                        iterator hypOrder) :
+                        Iterator hypOrder) :
                         Vector<IntegerType>(subspace.rows()),
                         facets_(subspace.columns()) {
                     for (size_t i = 0; i < subspace.columns(); ++i)

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "maths/rational.h"
+#include "utilities/intutils.h"
 
 #include "testhelper.h"
 
@@ -108,7 +109,7 @@ TEST(RationalTest, undefined) {
     verifyUndefined({ regina::LargeInteger::zero, regina::LargeInteger::zero });
 }
 
-template <typename T>
+template <regina::AnyInteger T>
 static void verifyInteger(T&& val) {
     Rational r(val);
     SCOPED_TRACE_REGINA(r);
@@ -117,7 +118,7 @@ static void verifyInteger(T&& val) {
     if constexpr (regina::ReginaInteger<T>)
         valStr = val.str();
     else
-        valStr = std::to_string(val);
+        valStr = regina::toString(val);
 
     EXPECT_EQ(r.numerator(), val);
     EXPECT_EQ(r.denominator(), 1);

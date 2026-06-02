@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,17 +43,17 @@
 #include <utility>
 #include "concepts/iterator.h"
 #include "core/output.h"
+#include "triangulation/forward.h"
 #include "utilities/exception.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
 class Link;
 class ModelLinkGraph;
-template <int dim> requires (supportedDim(dim)) class FacetPairing;
 template <int dim> requires (supportedDim(dim)) struct FacetSpec;
-template <int dim> requires (supportedDim(dim)) class Isomorphism;
-template <int dim> requires (supportedDim(dim)) class Triangulation;
-template <int n> class Perm;
+template <int n> requires (2 <= n && n <= maxPermDegree()) class Perm;
 
 /**
  * A cut that separates a triangulation, facet pairing or link diagram into
@@ -164,8 +164,8 @@ class Cut : public ShortOutput<Cut> {
          * \param end a past-the-end iterator indicating the end of the
          * 0-1 sequence of sides.
          */
-        template <RandomAccessIteratorFor<int> iterator>
-        Cut(iterator begin, iterator end);
+        template <RandomAccessIteratorFor<int> Iterator>
+        Cut(Iterator begin, Iterator end);
 
         /**
          * Destroys this cut.
@@ -549,8 +549,8 @@ inline Cut::Cut(Cut&& src) noexcept : size_(src.size_), side_(src.side_) {
     src.side_ = nullptr;
 }
 
-template <RandomAccessIteratorFor<int> iterator>
-Cut::Cut(iterator begin, iterator end) : size_(end - begin) {
+template <RandomAccessIteratorFor<int> Iterator>
+Cut::Cut(Iterator begin, Iterator end) : size_(end - begin) {
     side_ = new int[size_];
 
     int* out = side_;

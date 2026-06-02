@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -444,7 +444,7 @@ void Tangle::changeAll() {
 std::string Tangle::brief() const {
     std::ostringstream out;
     brief(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Tangle::brief(std::ostream& out) const {

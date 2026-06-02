@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,7 +62,7 @@ Triangulation<3> Link::longComplement(StrandRef breakOpen, bool simplify)
 }
 
 Triangulation<3> Link::internalComplement(StrandRef breakOpen) const {
-    // This implementation produces an oriented triangluation.
+    // This implementation produces an oriented triangulation.
     // The orientation follows a right-hand rule, where the thumb points
     // from vertices 0 to 1, and the fingers point from vertice 2 to 3.
     //

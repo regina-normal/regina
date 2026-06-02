@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,9 +36,11 @@
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
+#include "../helpers/packet.h"
 #include "../docstrings/hypersurface/normalhypersurfaces.h"
 
-using namespace regina::python;
+using namespace pybind11::literals;
+
 using regina::HyperCoords;
 using regina::NormalHypersurface;
 using regina::NormalHypersurfaces;
@@ -48,22 +50,25 @@ using regina::Triangulation;
 void addNormalHypersurfaces(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
-    m.def("makeMatchingEquations", regina::makeMatchingEquations);
-    m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints);
+    m.def("makeMatchingEquations", regina::makeMatchingEquations,
+        rdoc::makeMatchingEquations4);
+    m.def("makeEmbeddedConstraints", regina::makeEmbeddedConstraints,
+        rdoc::makeEmbeddedConstraints4);
 
     RDOC_SCOPE_SWITCH(NormalHypersurfaces)
 
     auto l = pybind11::class_<NormalHypersurfaces,
             std::shared_ptr<NormalHypersurfaces>>(m, "NormalHypersurfaces",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const Triangulation<4>&, HyperCoords,
                 regina::Flags<regina::HyperList>,
                 regina::Flags<regina::HyperAlg>, ProgressTracker*>(),
-            pybind11::arg(), pybind11::arg(),
-            pybind11::arg("which") = regina::HyperList::Default,
-            pybind11::arg("algHints") = regina::HyperAlg::Default,
-            pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<GILScopedRelease>(),
+            "triangulation"_a,
+            "coords"_a,
+            "whichList"_a = regina::HyperList::Default,
+            "algHints"_a = regina::HyperAlg::Default,
+            "tracker"_a = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::__init)
         .def(pybind11::init<const NormalHypersurfaces&>(), rdoc::__copy)
         .def("swap", &NormalHypersurfaces::swap, rdoc::swap)
@@ -100,23 +105,23 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         }, pybind11::keep_alive<0, 1>(), // iterator keeps list alive
             rdoc::vectors)
     ;
-    regina::python::add_output(l);
+    regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
+    regina::python::add_global_swap<NormalHypersurfaces, rdoc>(m);
 
     auto wrap = regina::python::add_packet_wrapper<NormalHypersurfaces>(
         m, "PacketOfNormalHypersurfaces");
     regina::python::add_packet_constructor<const Triangulation<4>&, HyperCoords,
             regina::Flags<regina::HyperList>, regina::Flags<regina::HyperAlg>,
             ProgressTracker*>(wrap,
-        pybind11::arg(), pybind11::arg(),
-        pybind11::arg("which") = regina::HyperList::Default,
-        pybind11::arg("algHints") = regina::HyperAlg::Default,
-        pybind11::arg("tracker") = nullptr,
-        pybind11::call_guard<GILScopedRelease>(),
+        "triangulation"_a,
+        "coords"_a,
+        "whichList"_a = regina::HyperList::Default,
+        "algHints"_a = regina::HyperAlg::Default,
+        "tracker"_a = nullptr,
+        pybind11::call_guard<regina::python::GILScopedRelease>(),
         rdoc::__init);
-
-    regina::python::add_global_swap<NormalHypersurfaces>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

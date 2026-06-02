@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,9 @@
 #endif
 
 #include "regina-core.h"
-#include "manifold.h"
+#include "manifold/manifold.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -47,7 +49,7 @@ namespace regina {
  * Only 2-sphere bundles, twisted 2-sphere bundles and projective plane
  * bundles are considered.
  *
- * All optional Manifold routines are implemented for this class.
+ * All optional Manifold<3> routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
@@ -56,7 +58,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class SimpleSurfaceBundle : public Manifold {
+class SimpleSurfaceBundle : public Manifold<3> {
     public:
         /**
          * Represents the orientable 2-sphere bundle over the circle.

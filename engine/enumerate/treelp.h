@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2025, Ben Burton                                   *
+ *  Copyright (c) 2011-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,6 +48,8 @@
 #include "utilities/fixedarray.h"
 #include <algorithm>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 /**
  * Define REGINA_VERIFY_LPDATA to check invariants as the algorithm runs.
  * This checking is slow and can increase the running time significantly.
@@ -60,7 +62,7 @@ class AngleStructure;
 class BanConstraintBase;
 class BanNone;
 class NormalSurface;
-namespace detail { template <int, typename> class LPCol; }
+namespace detail { template <size_t, SignedCppInteger> class LPCol; }
 
 /**
  * Indicates whether a linear constraint describes an equality or an inequality.
@@ -105,10 +107,10 @@ concept LPConstraint =
         requires SignedCppInteger<typename T::Coefficient>;
         { T::octAdjustment } -> std::same_as<const typename T::Coefficient&>;
 
-        { T::addRows(
+        T::addRows(
             (detail::LPCol<T::constraints.size(),
                 typename T::Coefficient>*)(nullptr),
-            tri, (const size_t*)(nullptr)) };
+            tri, (const size_t*)(nullptr));
         { T::verify(surface) } -> std::same_as<bool>;
         { T::verify(structure) } -> std::same_as<bool>;
         { T::supported(enc) } -> std::same_as<bool>;
@@ -598,7 +600,7 @@ namespace detail {
  *
  * \ingroup detail
  */
-template <int nConstraints, typename Coefficient>
+template <size_t nConstraints, SignedCppInteger Coefficient>
 struct LPCol {
     int nPlus;
         /**< The total number of +1 entries in this column. */
@@ -642,12 +644,9 @@ struct LPCol {
     /**
      * Moves the contents of the given column into this new column.
      *
-     * This move operation is not marked \c noexcept, since this depends
-     * upon the underlying \a Coefficient type.
-     *
      * After this operation, the given column will no longer be usable.
      */
-    LPCol(LPCol&&) = default;
+    LPCol(LPCol&&) noexcept = default;
 
     /**
      * Sets this to be a copy of the given column.
@@ -659,14 +658,11 @@ struct LPCol {
     /**
      * Moves the contents of the given column into this column.
      *
-     * This move operation is not marked \c noexcept, since this depends
-     * upon the underlying \a Coefficient type.
-     *
      * After this operation, the given column will no longer be usable.
      *
      * \return a reference to this column.
      */
-    LPCol& operator = (LPCol&&) = default;
+    LPCol& operator = (LPCol&&) noexcept = default;
 
     /**
      * Adds the given entry in the given row to this column.
@@ -1018,7 +1014,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * consult its documentation to see if this is a possibility.
          *
          * \param tri the underlying 3-manifold triangulation.
-         * \param enc the normal surface vector encoding that we are using
+         * \param encoding the normal surface vector encoding that we are using
          * for our enumeration task.  This may be any valid NormalEncoding
          * object, including the special angle structure encoding.
          * \param enumeration \c true if we should optimise the tableaux
@@ -1027,7 +1023,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * (such as searching for a non-trivial normal disc or sphere, or
          * a strict angle structure).
          */
-        LPInitialTableaux(const Triangulation<3>& tri, NormalEncoding enc,
+        LPInitialTableaux(const Triangulation<3>& tri, NormalEncoding encoding,
             bool enumeration = true);
 
         /**
@@ -1430,9 +1426,6 @@ inline void swap(LPInitialTableaux<Constraint>& a,
  * octagon type declared at any given time (which is consistent with the
  * constraints of almost normal surface theory).
  *
- * All tableaux elements are of the integer class \a IntType, which is
- * supplied as a template argument.
- *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  However, due to the unusual create-reserve-initialise
  * procedure, it does not support copying (either by copy construction or
@@ -1454,6 +1447,21 @@ inline void swap(LPInitialTableaux<Constraint>& a,
  * You are encouraged to look through the Regina namespace to see which
  * constraint classes are supported under Python.  In all cases, the IntType
  * parameter is taken to be regina::Integer.
+ *
+ * \tparam Constraint a specification of any extra linear constraints that
+ * should be enforced, or LPConstraintNone if there are none.  See the notes
+ * above for details.
+ *
+ * \tparam IntType the integer type to use throughout this class, including
+ * for all tableaux elements as well as the matrix of row operations that we
+ * apply to the original starting tableaux.  The only place this integer type
+ * is _not_ used is for intermediate calculations when finding an initial basis
+ * using Gauss-Jordan elimination (which always uses arbitrary-precision
+ * integers).  If you are using a fixed-precision integer type here (such as
+ * NativeInteger), be aware that there will be no testing for overflow: it is
+ * your responsibility to prove in advance that overflow will never occur as
+ * you operate on the tableaux via routines such as constraintZero(),
+ * constraintPositive(), and constraintOct().
  *
  * \apinotfinal
  *
@@ -1793,14 +1801,14 @@ class LPData : public Output<LPData<Constraint, IntType>> {
         /**
          * Extracts the values of the individual variables from the
          * current basis, with some modifications (as described below).
-         * The values of the variables will be returned in vector form.
+         * The values of the variables will be returned in vector form,
+         * using type \a Ray.
          *
          * The modifications are as follows:
          *
-         * - We extract variables that correspond to the original
-         *   matching equations obtained from the underlying
-         *   triangulation, _not_ the current tableaux and _not_ even
-         *   the original starting tableaux stored in origTableaux_.
+         * - We extract variables that correspond to the original matching
+         *   equations obtained from the underlying triangulation, _not_ the
+         *   current tableaux and _not_ even the original starting tableaux.
          *   In other words, when we fill the resulting vector, we undo the
          *   column permutation described by LPInitialTableaux::columnPerm(),
          *   and we undo any changes of variable that were caused by
@@ -1820,13 +1828,15 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * additional columns arising from the LPConstraint template parameter
          * are exempt from this requirement.
          *
-         * \pre The precision of integers in \a Ray is at least as
-         * large as the precision of \a IntType (as used by LPData).
-         *
          * \python The type vector should be passed as a Python list of
          * integers (for example, in the enumeration of normal surfaces, there
          * would be one integer per tetrahedron, each equal to 0, 1, 2 or 3).
          * The template parameter \a Ray is taken to be Vector<Integer>.
+         *
+         * \tparam Ray the vector type to use to return the extracted values.
+         * The `std::common_type_t` constraint on \a Ray ensures that no
+         * information will be lost (e.g., through overflow) when converting
+         * integers to the element type for \a Ray.
          *
          * \param type the type vector corresponding to the current state of
          * this tableaux, indicating which variables were previously fixed as
@@ -1842,7 +1852,10 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * This vector will have length origTableaux_->coordinateColumns().
          */
         template <IntegerVector Ray>
-        Ray extractSolution(const char* type) const;
+        requires (std::same_as<
+            std::common_type_t<IntType, typename Ray::value_type>,
+            typename Ray::value_type>)
+        Ray extractSolution(const uint8_t* type) const;
 
         /**
          * Writes a short text representation of this object to the

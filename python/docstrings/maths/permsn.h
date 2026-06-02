@@ -11,8 +11,29 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::PermSn
-static const char *PermSn =
+struct PermSn {
+
+// Docstring regina::python::doc::PermSn::__array
+static constexpr const char __array[] =
+R"doc(Returns the permutation at the given index in *Sn*, according to the
+chosen ordering.
+
+See the PermSn class notes for further details on how array-like
+indexing works for permutations of *n* objects. In particular, note
+that which permutation corresponds to which index will depend upon the
+template parameter *order*.
+
+For *n* ≤ 7, this operator is very fast constant time. However, for
+*n* ≥ 8 the current implementation is quadratic in *n*.
+
+Parameter ``index``:
+    an index between 0 and ``n!-1`` inclusive.
+
+Returns:
+    the corresponding permutation.)doc";
+
+// Docstring regina::python::doc::PermSn::__class
+static constexpr const char __class[] =
 R"doc(A lightweight array-like object that supports fast lookup and
 iteration for permutations on *n* objects.
 
@@ -51,12 +72,12 @@ Regarding indices and iteration:
 
 Regarding time complexity:
 
-* For *n* ≤ 7, iteration steps and index-based lookup are both
+* For ``n ≤ 7``, iteration steps and index-based lookup are both
   extremely fast constant time. Iterators are random-access (and
   satisfy all of the expected time complexity constraints that come
   with this).
 
-* For *n* ≥ 8, the time for a single iteration step is in linear in
+* For ``n ≥ 8``, the time for a single iteration step is in linear in
   *n*, and index-based lookup is currently _quadratic_ in *n*.
   Iterators are merely forward iterators, not random access.
 
@@ -70,8 +91,7 @@ Python:
     PermSn3_Sign, or PermSn5_Lex).
 
 Template parameter ``n``:
-    the number of objects being permuted. This must be between 2 and
-    16 inclusive.
+    the number of objects being permuted.
 
 Template parameter ``order``:
     the way in which this class orders permutations for the purposes
@@ -81,29 +101,8 @@ Template parameter ``codeType``:
     the constant ``Perm<n>::codeType``. You should allow the compiler
     to deduce this and not attempt to set it yourself.)doc";
 
-namespace PermSn_ {
-
-// Docstring regina::python::doc::PermSn_::__array
-static const char *__array =
-R"doc(Returns the permutation at the given index in *Sn*, according to the
-chosen ordering.
-
-See the PermSn class notes for further details on how array-like
-indexing works for permutations of *n* objects. In particular, note
-that which permutation corresponds to which index will depend upon the
-template parameter *order*.
-
-For *n* ≤ 7, this operator is very fast constant time. However, for
-*n* ≥ 8 the current implementation is quadratic in *n*.
-
-Parameter ``index``:
-    an index between 0 and ``n!-1`` inclusive.
-
-Returns:
-    the corresponding permutation.)doc";
-
-// Docstring regina::python::doc::PermSn_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::PermSn::__eq
+static constexpr const char __eq[] =
 R"doc(A trivial equality test that always returns ``True``.
 
 Since PermSn contains no data of its own, any two PermSn objects of
@@ -113,8 +112,8 @@ describe the same sequence of permutations in the same order.
 Returns:
     ``True``, always.)doc";
 
-// Docstring regina::python::doc::PermSn_::__iter__
-static const char *__iter__ =
+// Docstring regina::python::doc::PermSn::__iter__
+static constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over all permutations of *n* objects.
 
 See the PermSn class notes for further details on how iteration works.
@@ -122,8 +121,22 @@ See the PermSn class notes for further details on how iteration works.
 Returns:
     an iterator over all permutations of *n* objects.)doc";
 
-// Docstring regina::python::doc::PermSn_::iterator
-static const char *iterator =
+// Docstring regina::python::doc::PermSn::size
+static constexpr const char size[] =
+R"doc(Returns the total number of permutations of *n* objects. This is of
+course just ``n!``.
+
+Python:
+    This is also used to implement the Python special method
+    __len__().
+
+Returns:
+    the total number of permutations.)doc";
+
+struct iterator {
+
+// Docstring regina::python::doc::PermSn::iterator::__class
+static constexpr const char __class[] =
 R"doc(An iterator over all permutations of *n* objects.
 
 See the PermSn class notes for further details on how iteration works.
@@ -163,32 +176,16 @@ it changes according to both *n* and your programming language:
   ``Perm4.Sn``, which internally uses ``PermSn4_Sign.__iter__()`` and
   ``PermSn4_Sign.iterator.__next__()``.)doc";
 
-// Docstring regina::python::doc::PermSn_::size
-static const char *size =
-R"doc(Returns the total number of permutations of *n* objects. This is of
-course just ``n!``.
-
-Python:
-    This is also used to implement the Python special method
-    __len__().
-
-Returns:
-    the total number of permutations.)doc";
-
-}
-
-namespace PermSn_::iterator_ {
-
-// Docstring regina::python::doc::PermSn_::iterator_::__default
-static const char *__default =
+// Docstring regina::python::doc::PermSn::iterator::__default
+static constexpr const char __default[] =
 R"doc(Creates a begin iterator.
 
 This iterator will point to the identity permutation. So, for example,
 if you are iterating over ``Perm<n>::Sn``, then this iterator will be
 equal to ``Perm<n>::Sn.begin()``.)doc";
 
-// Docstring regina::python::doc::PermSn_::iterator_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::PermSn::iterator::__eq
+static constexpr const char __eq[] =
 R"doc(Compares this with the given iterator for equality.
 
 To be considered equal, two iterators must both be dereferencable and
@@ -197,8 +194,8 @@ pointing to the same permutation, or must both be past-the-end.
 Returns:
     ``True`` if and only if the two iterators are equal.)doc";
 
-// Docstring regina::python::doc::PermSn_::iterator_::__init
-static const char *__init =
+// Docstring regina::python::doc::PermSn::iterator::__init
+static constexpr const char __init[] =
 R"doc(Creates either a begin or end iterator.
 
 If no arguments are given or if *valid* is ``True``, then this
@@ -214,8 +211,8 @@ Parameter ``valid``:
     ``True`` if this should be a begin iterator, or ``False`` if this
     should be an end iterator.)doc";
 
-// Docstring regina::python::doc::PermSn_::iterator_::__next__
-static const char *__next__ =
+// Docstring regina::python::doc::PermSn::iterator::__next__
+static constexpr const char __next__[] =
 R"doc(Returns the current permutation and increments this iterator.
 
 Exception ``StopIteration``:
@@ -225,12 +222,34 @@ Returns:
     the permutation that this iterator is pointing to, before the
     increment takes place.)doc";
 
-}
+}; // struct iterator
+
+}; // struct PermSn
 
 namespace detail {
 
-// Docstring regina::python::doc::detail::PermSubSn
-static const char *PermSubSn =
+struct PermSubSn {
+
+// Docstring regina::python::doc::detail::PermSubSn::__array
+static constexpr const char __array[] =
+R"doc(Returns the permutation at the given index.
+
+This is a permutation on *m* objects being returned as the larger type
+``Perm<n>``, and so the unused elements ``m,m+1,...,n-1`` will all be
+mapped to themselves.
+
+This operator is identical to calling the static member function at().
+It is provided for convenience so that permutations can be accessed
+using array-like syntax.
+
+Parameter ``index``:
+    an index between 0 and ``m!-1`` inclusive.
+
+Returns:
+    the corresponding permutation of *m* objects.)doc";
+
+// Docstring regina::python::doc::detail::PermSubSn::__class
+static constexpr const char __class[] =
 R"doc(A lightweight array-like object that indexes smaller permutations
 within larger permutation groups; that is, it embeds the group *S_m*
 inside *S_n* for some ``n > m``.
@@ -270,10 +289,9 @@ this type are essentially identical.
     ``Perm<n>::extend(Perm<m>::Sn[i])``.
 
 Python:
-    This class does not live inside an inner ``detail`` namespace,
-    though as an internal class it is subject to change or removal
-    without notice (see the warning above). Moreover, Python does not
-    support templates, and so the name of this class is constructed by
+    As an internal class, this is subject to change or removal without
+    notice (see the warning above). Moreover, Python does not support
+    templates, and so the name of this class is constructed by
     appending *n*, *m* and *order* as suffixes (e.g.,
     PermSubSn4_3_Sign, or PermSubSn5_3_Lex). The only template
     parameters that are bound in Python are those that are used in
@@ -282,41 +300,18 @@ Python:
 
 Template parameter ``n``:
     indicates the return type: permutations of *m* objects will be
-    returned as the larger type ``Perm<n>``. It is required that ``2 ≤
-    n ≤ 5``.
+    returned as the larger type ``Perm<n>``.
 
 Template parameter ``m``:
     the number of objects being permuted in the group *S_m* that we
-    are enumerating. It is required that ``1 ≤ m < n``.
+    are enumerating.
 
 Template parameter ``order``:
     the way in which this class orders permutations for the purposes
     of indexing.)doc";
 
-}
-
-namespace detail::PermSubSn_ {
-
-// Docstring regina::python::doc::detail::PermSubSn_::__array
-static const char *__array =
-R"doc(Returns the permutation at the given index.
-
-This is a permutation on *m* objects being returned as the larger type
-``Perm<n>``, and so the unused elements ``m,m+1,...,n-1`` will all be
-mapped to themselves.
-
-This operator is identical to calling the static member function at().
-It is provided for convenience so that permutations can be accessed
-using array-like syntax.
-
-Parameter ``index``:
-    an index between 0 and ``m!-1`` inclusive.
-
-Returns:
-    the corresponding permutation of *m* objects.)doc";
-
-// Docstring regina::python::doc::detail::PermSubSn_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::detail::PermSubSn::__eq
+static constexpr const char __eq[] =
 R"doc(A trivial equality test that always returns ``True``.
 
 Since PermSubSn contains no data of its own, any two PermSubSn objects
@@ -326,8 +321,8 @@ always describe the same sequence of permutations in the same order.
 Returns:
     ``True``, always.)doc";
 
-// Docstring regina::python::doc::detail::PermSubSn_::at
-static const char *at =
+// Docstring regina::python::doc::detail::PermSubSn::at
+static constexpr const char at[] =
 R"doc(Returns the permutation at the given index.
 
 This is a permutation on *m* objects being returned as the larger type
@@ -340,8 +335,8 @@ Parameter ``index``:
 Returns:
     the corresponding permutation of *m* objects.)doc";
 
-// Docstring regina::python::doc::detail::PermSubSn_::size
-static const char *size =
+// Docstring regina::python::doc::detail::PermSubSn::size
+static constexpr const char size[] =
 R"doc(Returns the total number of permutations on *m* objects. This of
 course is just ``m!``.
 
@@ -352,7 +347,9 @@ Python:
 Returns:
     the total number of permutations.)doc";
 
-}
+}; // struct PermSubSn
+
+} // namespace detail
 
 } // namespace regina::python::doc
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -99,7 +99,7 @@ bool GroupExpression::simplify(bool cyclic) {
     bool changed = false;
     for (auto next = terms_.begin(); next != terms_.end(); ) {
         // Take a look at merging next forwards.
-        if ((*next).exponent == 0) {
+        if (next->exponent == 0) {
             // Zero exponent.
             // Delete this term and step back to the previous term in
             // case we can now merge the previous and next terms.
@@ -219,11 +219,12 @@ void GroupExpression::substitute(const std::vector<GroupExpression>& expansions,
 //       Free products with amalgamation. Currently simplify()
 //       isn't smart enough for this.
 std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
-    std::ostringstream out;
+    // Get the trivial case out of the way first.
+    if (nGenerators_ == 0)
+        return "0";
 
     // Run through cases.
-    if (nGenerators_ == 0)
-        { out << 0; return out.str(); }
+    std::ostringstream out;
 
     // Let's record the abelianisation.
     AbelianGroup ab =  abelianisation();
@@ -231,13 +232,13 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
     // abelian test
     if (identifyAbelian()) {
         ab.writeTextShort(out, moreUtf8);
-        return out.str();
+        return std::move(out).str();
     }
 
     // not (clearly) abelian.  Check if free.
     if (relations_.empty()) {
         out << "Free(" << nGenerators_ << ")";
-        return out.str();
+        return std::move(out).str();
     }
 
     // Check if its an extension over Z.
@@ -267,7 +268,7 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
                     out<<" \u21A6 "; // mapsto symbol in unicode
                     AUT->evaluate(i).writeTextShort(out, moreUtf8, numGen<27);
                 }
-                return out.str();
+                return std::move(out).str();
             } // domain not recognised, but it is an extension
             // TODO: put in something here for this case.
         }
@@ -289,7 +290,7 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
                 out << facStr;
         }
         out << " )";
-        return out.str();
+        return std::move(out).str();
     }
 
     // TODO: let's put in the undergraduate test for finiteness, that every
@@ -527,7 +528,7 @@ std::string GroupPresentation::WordSubstitutionData::substitutionString(
     reducer.reserve( word_length );
     // splay word
     for (auto it = word.terms().begin(); it!=word.terms().end(); it++) {
-        for (long i=0; i<std::abs((*it).exponent); i++)
+        for (long i=0; i<std::abs(it->exponent); i++)
             reducer.emplace_back(it->generator, (it->exponent>0) ? 1 : -1);
     }
     // done splaying, produce inv_reducer
@@ -575,8 +576,8 @@ void GroupExpression::cycleLeft() {
     }
 }
 
-GroupExpression::GroupExpression(const char* input, size_t nGens) {
-    // interpret input as GroupExpression as one of forms a^7b^-2,
+GroupExpression::GroupExpression(const char* word, size_t nGens) {
+    // interpret word as GroupExpression as one of forms a^7b^-2,
     // a^7B^2, aaaaaaaBB, g0^7g1^-2.
 
     enum class WordStatus {
@@ -588,10 +589,10 @@ GroupExpression::GroupExpression(const char* input, size_t nGens) {
         ExpNum  /**< reading numbers after `^` or `^-` */
     };
 
-    // a loop that goes through the entries of input.
+    // a loop that goes through the entries of word.
     WordStatus ws = WordStatus::Null;
     GroupExpressionTerm buildTerm;
-    for (const char* i = input; *i; ++i) {
+    for (const char* i = word; *i; ++i) {
         // read *i, see what to do next.
         // case 1: it is a letter a..z or A..Z
         if ( ( *i >= 'a' && *i <= 'z' ) || ( *i >= 'A' && *i <= 'Z' ) ) {
@@ -751,7 +752,7 @@ bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
             std::set<WordSubstitutionData> sub_list; // highest score is *first*
             dehnAlgorithmSubMetric( word, r, sub_list );
             if (! sub_list.empty())
-                if ( (*sub_list.begin()).score > 0 ) {
+                if ( sub_list.begin()->score > 0 ) {
                     applySubstitution( word, r, *sub_list.begin() );
                     if (word.isTrivial())
                         return true;
@@ -846,7 +847,7 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
                     std::set<WordSubstitutionData> sub_list;
                     dehnAlgorithmSubMetric( *tit, *it, sub_list ); // take first valid sub
                     if (sub_list.size() != 0)
-                        if ( (*sub_list.begin()).score > 0 ) {
+                        if ( sub_list.begin()->score > 0 ) {
                             applySubstitution( *tit, *it, *sub_list.begin() );
                             we_value_iteration = true;
                             didSomething = true;
@@ -2096,7 +2097,7 @@ void GroupExpression::writeXMLData(std::ostream& out) const {
 std::string GroupExpression::tex() const {
     std::ostringstream out;
     writeTeX(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void GroupExpression::writeTeX(std::ostream& out) const {
@@ -2143,7 +2144,7 @@ void GroupExpression::writeTextShort(std::ostream& out, bool utf8,
 std::string GroupPresentation::tex() const {
     std::ostringstream out;
     writeTeX(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void GroupPresentation::writeTeX(std::ostream& out) const {
@@ -2198,7 +2199,7 @@ void GroupPresentation::writeTextLong(std::ostream& out) const {
 std::string GroupPresentation::compact() const {
     std::ostringstream out;
     writeTextCompact(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void GroupPresentation::writeTextCompact(std::ostream& out) const {
@@ -2336,7 +2337,7 @@ std::string GroupPresentation::gap(const std::string& groupVariable) const {
         }
     }
     out << "]; end,[]);";
-    return out.str();
+    return std::move(out).str();
 }
 
 } // namespace regina

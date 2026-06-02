@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,6 +38,20 @@
 #endif
 
 #include "regina-config.h"
+
+/**
+ * A macro that ensures that we have included Regina's essential headers.
+ *
+ * To use it, simply place `ENSURE_ESSENTIAL_REGINA_HEADERS` somewhere
+ * after the list of includes in your source file.
+ *
+ * - If `regina-core.h` has been included (directly or indirectly), then this
+ *   silently expands to the empty string.
+ *
+ * - If `regina-core.h` has not been inclued, then this will generate a
+ *   compile error.
+ */
+#define ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -95,7 +109,7 @@ constexpr bool standardDim(int dim) {
 }
 
 /**
- * Indicates that largest dimension of triangulation that Regina can work with.
+ * Indicates the largest dimension of triangulation that Regina can work with.
  *
  * If Regina was built with the \c REGINA_HIGHDIM option, then this will be 15;
  * otherwise it will be 8 (the default for ordinary builds).
@@ -113,6 +127,22 @@ constexpr int maxDim() {
 #else
     return 8;
 #endif
+}
+
+/**
+ * Indicates the largest degree of permutation that Regina natively supports.
+ *
+ * This is the largest integer \a n for which the class `Perm<n>` is available.
+ *
+ * At present this is hard-coded to 16, which is the largest \a n for which a
+ * permutation image pack can fit into an unsigned 64-bit integer.
+ *
+ * \return Regina's largest supported degree of permutation.
+ *
+ * \ingroup engine
+ */
+constexpr int maxPermDegree() {
+    return 16;
 }
 
 #ifdef __DOXYGEN
@@ -375,7 +405,7 @@ inline constexpr Unprotected unprotected;
  *
  * This type is declared but never defined.
  *
- * For an example of its use, see TriangulationTraits (where it acts as a
+ * For an example of its use, see SafeTriangulation (where it acts as a
  * placeholder for non-existent classes that would otherwise cause a compile
  * error).
  *

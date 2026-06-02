@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
@@ -230,38 +230,53 @@ void FormatPrivate::load(xmlTextReaderPtr reader)
         style.selectedBackgroundColor = readColour(ref);
     }
 
-    bool b;
     ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"italic"));
     if (!ref.empty()) {
-        regina::valueOf(ref, b);
-        style.hasItalic = true;
-        style.italic = b;
+        try {
+            style.italic = parse<bool>(ref);
+            style.hasItalic = true;
+        } catch (const InvalidArgument&) {
+            // Leave the italic settings at their default values.
+        }
     }
 
     ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"bold"));
     if (!ref.empty()) {
-        regina::valueOf(ref, b);
-        style.hasBold = true;
-        style.bold = b;
+        try {
+            style.bold = parse<bool>(ref);
+            style.hasBold = true;
+        } catch (const InvalidArgument&) {
+            // Leave the bold settings at their default values.
+        }
     }
 
     ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"underline"));
     if (!ref.empty()) {
-        regina::valueOf(ref, b);
-        style.hasUnderline = true;
-        style.underline = b;
+        try {
+            style.underline = parse<bool>(ref);
+            style.hasUnderline = true;
+        } catch (const InvalidArgument&) {
+            // Leave the underline settings at their default values.
+        }
     }
 
     ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"strikeOut"));
     if (!ref.empty()) {
-        regina::valueOf(ref, b);
-        style.hasStrikeThrough = true;
-        style.strikeThrough = b;
+        try {
+            style.strikeThrough = parse<bool>(ref);
+            style.hasStrikeThrough = true;
+        } catch (const InvalidArgument&) {
+            // Leave the strikethrough settings at their default values.
+        }
     }
 
     ref = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"spellChecking"));
     if (!ref.empty()) {
-        regina::valueOf(ref, spellCheck);
+        try {
+            spellCheck = parse<bool>(ref);
+        } catch (const InvalidArgument&) {
+            // Leave the spellcheck setting at its default value.
+        }
     }
 }
 

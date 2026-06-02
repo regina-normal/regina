@@ -13,25 +13,26 @@
 import sys
 
 if len(sys.argv) != 2:
-    print "Usage: " + sys.argv[0] + " <filename>"
+    print("Usage: " + sys.argv[0] + " <filename>")
     sys.exit(1)
 
-tree = regina.open(sys.argv[1])
-if not tree:
-    print "E: Could not open file " + sys.argv[1] + "."
-    print
-    print "Usage: " + sys.argv[0] + " <filename>"
+try:
+    tree = regina.open(sys.argv[1])
+except:
+    print("E: Could not open file " + sys.argv[1] + ".")
+    print()
+    print("Usage: " + sys.argv[0] + " <filename>")
     sys.exit(1)
 
 def encode(i):
     if i < 0:
-        print 'ERROR: Negative integer:', i
+        print('ERROR: Negative integer:', i)
         sys.exit(1)
     if i < 26:
         return chr(ord('a') + i)
     if i < 52:
         return chr(ord('A') + i - 26)
-    print 'ERROR: Integer out of range:', i
+    print('ERROR: Integer out of range:', i)
     sys.exit(1)
 
 def grouprep(g):
@@ -43,9 +44,9 @@ def grouprep(g):
 def process(tri):
     dehydration = tri.dehydrate()
     if dehydration == '':
-        print 'ERROR: No dehydration'
+        print('ERROR: No dehydration')
         sys.exit(1)
-    print dehydration + ' ' + grouprep(tri.homology())
+    print(dehydration + ' ' + grouprep(tri.homology()))
     sys.stdout.flush()
 
 p = tree

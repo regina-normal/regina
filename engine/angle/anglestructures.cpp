@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,7 @@
 #include "progress/progresstracker.h"
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 #include "utilities/xmlutils.h"
 #include <thread>
 
@@ -196,27 +197,29 @@ void AngleStructures::calculateSpanStrict() const {
     }
 
     // We run into trouble if there's a 0 or pi angle that never changes.
-    auto* fixedAngles = new Rational[nTets * 3];
+    // Here, fixedAngles[i] == (-1, +1) for fixed angle (0, pi) respectively.
+    FixedArray<int> fixedAngles(nTets * 3);
     size_t nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.
     auto it = structures_.begin();
     const AngleStructure& first = *it;
 
-    Rational angle;
     for (size_t tet = 0; tet < nTets; tet++)
         for (int edges = 0; edges < 3; edges++) {
-            angle = first.angle(tet, edges);
-            if (angle == Rational::zero || angle == Rational::one) {
-                fixedAngles[3 * tet + edges] = angle;
-                nFixed++;
+            Rational angle = first.angle(tet, edges);
+            if (angle == Rational::zero) {
+                fixedAngles[3 * tet + edges] = -1;
+                ++nFixed;
+            } else if (angle == Rational::one) {
+                fixedAngles[3 * tet + edges] = 1;
+                ++nFixed;
             } else
-                fixedAngles[3 * tet + edges] = Rational::undefined;
+                fixedAngles[3 * tet + edges] = 0;
         }
 
     if (nFixed == 0) {
         doesSpanStrict_ = true;
-        delete[] fixedAngles;
         return;
     }
 
@@ -226,24 +229,26 @@ void AngleStructures::calculateSpanStrict() const {
         const AngleStructure& s = *it;
         for (size_t tet = 0; tet < nTets; tet++)
             for (int edges = 0; edges < 3; edges++) {
-                if (fixedAngles[3 * tet + edges] == Rational::undefined)
+                if (fixedAngles[3 * tet + edges] == 0)
                     continue;
-                if (s.angle(tet, edges) != fixedAngles[3 * tet + edges]) {
-                    // Here's a bad angle that finally changed.
-                    fixedAngles[3 * tet + edges] = Rational::undefined;
-                    nFixed--;
-                    if (nFixed == 0) {
-                        doesSpanStrict_ = true;
-                        delete[] fixedAngles;
-                        return;
-                    }
+                if (fixedAngles[3 * tet + edges] < 0 &&
+                        s.angle(tet, edges) == Rational::zero)
+                    continue;
+                if (fixedAngles[3 * tet + edges] > 0 &&
+                        s.angle(tet, edges) == Rational::one)
+                    continue;
+                // Here's a bad angle that finally changed.
+                fixedAngles[3 * tet + edges] = 0;
+                --nFixed;
+                if (nFixed == 0) {
+                    doesSpanStrict_ = true;
+                    return;
                 }
             }
     }
 
     // Some of the bad angles never changed.
     doesSpanStrict_ = false;
-    delete[] fixedAngles;
 }
 
 void AngleStructures::calculateSpanTaut() const {

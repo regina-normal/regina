@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <iterator>
+#include <random>
 #include <string>
 #include "regina-core.h"
 #include "concepts/iterator.h"
@@ -54,6 +55,8 @@
 #include "utilities/exception.h"
 #include "utilities/intutils.h"
 #include "utilities/randutils.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -191,7 +194,7 @@ namespace regina {
 namespace detail {
     /**
      * Stores the total number of conjugacy classes of permutations on
-     * \a n elements, for all \a n ≤ 16.
+     * \a n elements, for all `n ≤ maxPermDegree()`.
      *
      * See OEIS, sequence A000041.
      *
@@ -200,16 +203,16 @@ namespace detail {
      *
      * \ingroup detail
      */
-    constexpr int countPermClasses[17] = {
+    constexpr std::array<int, maxPermDegree() + 1> countPermClasses {
         1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176, 231
     };
 
     /**
      * Stores the S_n indices of all minimal representatives of conjugacy
-     * classes of permutations on \a n elements, for all \a n ≤ 16.
+     * classes of permutations on \a n elements, for all `n ≤ maxPermDegree()`.
      *
      * Specifically, for each fixed \a n, the permutations obtained via
-     * `Perm<n>::Sn[permClassRep[i]]` for 0 ≤ \a i < `countPermClasses[i]`
+     * `Perm<n>::Sn[permClassRep[i]]` for `0 ≤ i < countPermClasses[i]`
      * will be precisely the same permutations, and seen in the same order,
      * as you would obtain by beginning with a default-constructed
      * PermClass<n> \a c, repeatedly incrementing \a c until it is
@@ -217,7 +220,8 @@ namespace detail {
      *
      * \ingroup detail
      */
-    constexpr int64_t permClassRep[countPermClasses[16]] = {
+    constexpr std::array<int64_t, countPermClasses[maxPermDegree()]>
+            permClassRep {
         0, 1, 2, 6, 9, 27, 32, 127, 128, 146, 153, 746, 753, 849, 872, 5166,
         5169, 5187, 5192, 5792, 5888, 5913, 41067, 41072, 41168, 41193, 45506,
         45513, 46113, 46232, 368047, 368048, 368066, 368073, 368673, 368769,
@@ -269,63 +273,63 @@ namespace detail {
  * Perm objects are small enough to pass by value and swap with std::swap(),
  * with no need to use references, specialised move operations or custom
  * swap functions.  The trade-off is that, for this to be possible, the
- * Perm template class can only work with \a n ≤ 16.
+ * Perm template class can only work with `n ≤ maxPermDegree()`, which is
+ * currently hard-coded as `n ≤ 16`.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the entire permutation.
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  These codes are constructed as follows:
  *
- * - For 8 ≤ \a n ≤ 16, the code is an _image pack_: essentially a
+ * - For `8 ≤ n`, the code is an _image pack_: essentially a
  *   packed array that holds the images of 0,...,<i>n</i>-1 in a single native
  *   integer type.  More precisely, this is an unsigned integer of type
  *   \a ImagePack, whose lowest \a imageBits bits represent the image of 0,
  *   whose next lowest \a imageBits bits represent the image of 1, and so on.
  *   This scheme is consistent with the old first-generation codes for
- *   \a n = 4,...,7, which are still supported but no longer used internally.
+ *   `n = 4,...,7`, which are still supported but no longer used internally.
  *
- * - For \a n ≤ 7, the code is an index into a hard-coded list of
- *   all possible permutations; more precisely, an index into the symmetric
- *   group Perm<n>::Sn.  The ordering of Perm<n>::Sn is "almost lexicographic",
- *   in that we swap some pairs of indices (2<i>k</i>, 2<i>k</i>+1) to ensure
+ * - For `n ≤ 7`, the code is an index into a hard-coded list of all possible
+ *   permutations; more precisely, an index into the symmetric group
+ *   `Perm<n>::Sn`.  The ordering of `Perm<n>::Sn` is "almost lexicographic",
+ *   in that we swap some pairs of indices `(2k, 2k+1)` to ensure
  *   that the even permutations are precisely those with even indices.
  *
- * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
+ * For `n = 2,...,5` (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
- * and also offers some extra functionality.  For \a n = 6,7, this template
+ * and also offers some extra functionality.  For `n = 6,7`, this template
  * is again specialised and highly optimised, and it offers some extra
- * functionality but not as much as Perm<5> and below.  For \a n ≥ 8,
+ * functionality but not as much as Perm<5> and below.  For `n ≥ 8`,
  * this template is generic and most operations require more time (in
  * particular, there are no harded-coded lookup tables).
  *
- * You can iterate through all permutations using a range-based \c for loop
+ * You can iterate through all permutations using a range-based `for` loop
  * over `Perm<n>::Sn`:
  *
  * \code{.cpp}
  * for (auto p : Perm<n>::Sn) { ... }
  * \endcode
  *
- * For the optimised permutation classes \a n ≤ 7, this iteration will be
+ * For the optimised permutation classes `n ≤ 7`, this iteration will be
  * extremely fast in both C++ and Python.  For the larger permutation classes
- * \a n ≥ 8, this will still be reasonably fast in C++ (since it uses the
+ * `n ≥ 8`, this will still be reasonably fast in C++ (since it uses the
  * increment operator internally), but it will be slower in Python (since it
  * reconstructs `Sn[i]` for each integer \a i).  If you are in Python and you
- * need to iterate over all permutations for \a n ≥ 8, you may wish to
+ * need to iterate over all permutations for `n ≥ 8`, you may wish to
  * implement a loop using `Perm<n>.inc()`.
  *
- * \python Python does not support templates.  For each
- * \a n = 2,...,16, this class is available in Python under the
- * corresponding name Perm2, Perm3, ..., Perm16.
+ * \python Python does not support templates.  Instead, you should append
+ * the integer \a n to the class name.  For example, the C++ class `Perm<4>`
+ * is available in Python under the name `Perm4`.
  *
  * \tparam n the number of objects being permuted.
- * This must be between 2 and 16 inclusive.
  *
  * \ingroup maths
  */
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 class Perm {
-    static_assert(n >= 8 && n <= 16,
-        "The generic Perm<n> template is only available for 8 <= n <= 16.");
+    static_assert(n >= 8, "The generic implementation of Perm<n> "
+        "should not be used for n <= 7.");
 
     public:
         /**
@@ -463,7 +467,7 @@ class Perm {
          * between 0 and `n!-1` inclusive.
          *
          * You can also iterate over all permutations in \a Sn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<n>::Sn) { ... }
@@ -496,7 +500,7 @@ class Perm {
          * between 0 and `n!-1` inclusive.
          *
          * You can also iterate over all permutations in \a orderedSn using a
-         * range-based \c for loop:
+         * range-based `for` loop:
          *
          * \code{.cpp}
          * for (auto p : Perm<n>::orderedSn) { ... }
@@ -1063,7 +1067,7 @@ class Perm {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the permutation to compare this with.
-         * \return The result that indicates which permutation appears earlier
+         * \return the result that indicates which permutation appears earlier
          * in \a Sn.
          */
         constexpr std::strong_ordering operator <=> (const Perm& rhs) const;
@@ -1127,9 +1131,6 @@ class Perm {
          * The thread safety of this routine is of course dependent on
          * the thread safety of your uniform random bit generator \a gen.
          *
-         * \tparam URBG A type which, once any references are removed, must
-         * adhere to the C++ \a UniformRandomBitGenerator concept.
-         *
          * \nopython Python users are still able to use the non-thread-safe
          * variant without the \a gen argument.
          *
@@ -1140,8 +1141,8 @@ class Perm {
          * returned with equal probability).
          * \return a random permutation.
          */
-        template <typename URBG>
-        static Perm rand(URBG&& gen, bool even = false);
+        template <std::uniform_random_bit_generator URBG>
+        static Perm rand(URBG& gen, bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -1172,9 +1173,9 @@ class Perm {
          *
          * For all permutation classes Perm<n>, the tight encoding is based on
          * the index into the full permutation group \a S_n.  For smaller
-         * permutation classes (\a n ≤ 7), such encodings are very fast to
+         * permutation classes (`n ≤ 7`), such encodings are very fast to
          * work with since the \a S_n index is used as the internal permutation
-         * code.  For larger permutation classes however (8 ≤ \a n ≤ 16),
+         * code.  For larger permutation classes however (`8 ≤ n`),
          * the \a S_n index requires some non-trivial work to compute.
          *
          * \nopython Use tightEncoding() instead, which returns a string.
@@ -1190,9 +1191,9 @@ class Perm {
          *
          * For all permutation classes Perm<n>, the tight encoding is based on
          * the index into the full permutation group \a S_n.  For smaller
-         * permutation classes (\a n ≤ 7), such encodings are very fast to
+         * permutation classes (`n ≤ 7`), such encodings are very fast to
          * work with since the \a S_n index is used as the internal permutation
-         * code.  For larger permutation classes however (8 ≤ \a n ≤ 16),
+         * code.  For larger permutation classes however (`8 ≤ n`),
          * the \a S_n index requires some non-trivial work to compute.
          *
          * \return the resulting encoded string.
@@ -1209,8 +1210,8 @@ class Perm {
          * an invalid encoding (i.e., this routine will throw an exception).
          *
          * Tight encodings are fast to work with for small permutation classes
-         * (\a n ≤ 7), but slower for larger permutation classes
-         * (8 ≤ \a n ≤ 16).  See tightEncoding() for further details.
+         * (`n ≤ 7`), but slower for larger permutation classes (`8 ≤ n`).
+         * See tightEncoding() for further details.
          *
          * \exception InvalidArgument The given string is not a tight encoding
          * of an <i>n</i>-element permutation.
@@ -1233,8 +1234,8 @@ class Perm {
          * whitespace.
          *
          * Tight encodings are fast to work with for small permutation classes
-         * (\a n ≤ 7), but slower for larger permutation classes
-         * (8 ≤ \a n ≤ 16).  See tightEncoding() for further details.
+         * (`n ≤ 7`), but slower for larger permutation classes (`8 ≤ n`).
+         * See tightEncoding() for further details.
          *
          * \exception InvalidInput The given input stream does not begin with
          * a tight encoding of an <i>n</i>-element permutation.
@@ -1264,7 +1265,7 @@ class Perm {
          * name __hash__().  This allows permutations to be used as keys in
          * Python dictionaries and sets.
          *
-         * \return The integer hash of this permutation.
+         * \return the integer hash of this permutation.
          */
         constexpr size_t hash() const;
 
@@ -1286,41 +1287,35 @@ class Perm {
 
         /**
          * Extends a <i>k</i>-element permutation to an <i>n</i>-element
-         * permutation, where 2 ≤ \a k \< \a n.
+         * permutation, where `2 ≤ k < n`.
          *
-         * The resulting permutation will map 0,...,<i>k</i>-1 to their
-         * respective images under \a p, and will map the "unused" elements
-         * <i>k</i>,...,<i>n</i>-1 to themselves.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be at least 2, and strictly less than \a n.
+         * The resulting permutation will map `0,...,k-1` to their respective
+         * images under \a p, and will map the "unused" elements `k,...,n-1`
+         * to themselves.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation expressed as a permutation on
          * \a n elements.
          */
-        template <int k>
+        template <int k> requires (2 <= k && k < n)
         static constexpr Perm extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to an <i>n</i>-element
-         * permutation, where \a k > \a n.
+         * permutation, where `k > n`.
          *
-         * The resulting permutation will map 0,...,<i>n</i>-1 to their
-         * respective images under \a p, and will ignore the "unused" images
-         * \a p[\a n],...,\a p[<i>k</i>-1].
+         * The resulting permutation will map `0,...,n-1` to their respective
+         * images under \a p, and will ignore the "unused" images
+         * `p[n],...,p[k-1]`.
          *
-         * \pre The given permutation maps 0,...,<i>n</i>-1 to 0,...,<i>n</i>-1
+         * \pre The given permutation maps `0,...,n-1` to `0,...,n-1`
          * in some order.
-         *
-         * \tparam k the number of elements for the input permutation;
-         * this must be strictly greater than \a n.
          *
          * \param p a permutation on \a k elements.
          * \return the same permutation restricted to a permutation on
          * \a n elements.
          */
-        template <int k>
+        template <int k> requires (n < k)
         static constexpr Perm contract(Perm<k> p);
 
         /**
@@ -1430,8 +1425,8 @@ class Perm {
          * allowed to be additional unread data.
          * \return the permutation represented by the given tight encoding.
          */
-        template <CharIterator iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        template <CharIterator Iterator>
+        static Perm tightDecode(Iterator start, Iterator limit,
             bool noTrailingData);
 
     friend class PermSn<n, PermOrder::Sign>;
@@ -1440,15 +1435,13 @@ class Perm {
 
 /**
  * Writes a string representation of the given permutation to the given
- * output stream.  The format will be the same as is used by
- * Perm::str().
+ * output stream.  The format will be the same as is used by Perm::str().
  *
  * \param out the output stream to which to write.
  * \param p the permutation to write.
  * \return a reference to \a out.
  *
  * \tparam n the number of objects being permuted.
- * This must be between 2 and 16 inclusive.
  *
  * \ingroup maths
  */
@@ -1486,16 +1479,15 @@ template <> class Perm<7>;
  * end users is that you should be economical about copying PermClass objects,
  * and work with them in-place where possible.
  *
- * \python Python does not support templates.  For each
- * \a n = 2,...,16, this class is available in Python under the
- * corresponding name PermClass2, PermClass3, ..., PermClass16.
+ * \python Python does not support templates.  Instead, you should append
+ * the integer \a n to the class name.  For example, the C++ class
+ * `PermClass<4>` is available in Python under the name `PermClass4`.
  *
  * \tparam n the number of objects being permuted.
- * This must be between 2 and 16 inclusive.
  *
  * \ingroup maths
  */
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 class PermClass {
     public:
         /**
@@ -1686,8 +1678,7 @@ class PermClass {
  * \param c the conjugacy class to write.
  * \return a reference to \a out.
  *
- * \tparam n the number of objects being permuted.  This must be between
- * 2 and 16 inclusive.
+ * \tparam n the number of objects being permuted.
  *
  * \ingroup maths
  */
@@ -1698,24 +1689,29 @@ inline std::ostream& operator << (std::ostream& out, const PermClass<n>& c) {
 
 // Static variables for Perm
 
-template <int n> std::mutex Perm<n>::precomputeMutex;
-template <int n> typename Perm<n>::ImagePack* Perm<n>::invLower_ = nullptr;
-template <int n> typename Perm<n>::ImagePack* Perm<n>::invUpper_ = nullptr;
+template <int n> requires (2 <= n && n <= maxPermDegree())
+std::mutex Perm<n>::precomputeMutex;
+
+template <int n> requires (2 <= n && n <= maxPermDegree())
+typename Perm<n>::ImagePack* Perm<n>::invLower_ = nullptr;
+
+template <int n> requires (2 <= n && n <= maxPermDegree())
+typename Perm<n>::ImagePack* Perm<n>::invUpper_ = nullptr;
 
 // Inline functions for Perm
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline consteval typename Perm<n>::Code Perm<n>::idCodePartial(int k) {
     return (k == 0 ? 0 :
         (static_cast<Code>(k) << (Perm<n>::imageBits * k)) |
             idCodePartial(k - 1));
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n>::Perm() : code_(idCode_) {
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n>::Perm(int a, int b) : code_(idCode_) {
     code_ &= ~(imageMask << (imageBits * a));
     code_ &= ~(imageMask << (imageBits * b));
@@ -1723,33 +1719,33 @@ inline constexpr Perm<n>::Perm(int a, int b) : code_(idCode_) {
     code_ |= (static_cast<Code>(b) << (imageBits * a));
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n>::Perm(const std::array<int, n>& image) : code_(0) {
     int bits = 0;
     for (int i = 0; i < n; ++i, bits += imageBits)
         code_ |= (static_cast<Code>(image[i]) << bits);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n>::Perm(Code code) : code_(code) {
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr typename Perm<n>::Code Perm<n>::permCode() const {
     return code_;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr void Perm<n>::setPermCode(Code code) {
     code_ = code;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n> Perm<n>::fromPermCode(Code code) {
     return Perm<n>(code);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     int bits = 0;
@@ -1758,6 +1754,7 @@ constexpr bool Perm<n>::isPermCode(Code code) {
     if constexpr (n < 16) {
         return (mask + 1 == ((unsigned)1 << n) && (code >> bits) == 0);
     } else {
+        static_assert(n == 16);
         // We should not increment mask, since this could overflow on
         // some platforms (since unsigned might be only 16 bits long).
         // Also: code has no "spare bits" beyond the 16 * 4 bits that we use,
@@ -1766,22 +1763,22 @@ constexpr bool Perm<n>::isPermCode(Code code) {
     }
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr typename Perm<n>::ImagePack Perm<n>::imagePack() const {
     return permCode();
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n> Perm<n>::fromImagePack(ImagePack pack) {
     return fromPermCode(pack);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr bool Perm<n>::isImagePack(ImagePack pack) {
     return isPermCode(pack);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n> Perm<n>::operator * (const Perm& q) const {
     Code c = 0;
     int bits = 0;
@@ -1791,7 +1788,7 @@ inline constexpr Perm<n> Perm<n>::operator * (const Perm& q) const {
     return Perm<n>(c);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline Perm<n> Perm<n>::cachedComp(const Perm& q) const {
     Code c = 0;
     int bits = 0;
@@ -1801,7 +1798,7 @@ inline Perm<n> Perm<n>::cachedComp(const Perm& q) const {
     return Perm<n>(c);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline Perm<n> Perm<n>::cachedComp(const Perm& q, const Perm& r) const {
     Code c = 0;
     int bits = 0;
@@ -1811,7 +1808,7 @@ inline Perm<n> Perm<n>::cachedComp(const Perm& q, const Perm& r) const {
     return Perm<n>(c);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n> Perm<n>::conjugate(const Perm<n>& q) const {
     Code c = 0;
     for (int bits = 0; bits < imageBits * n; bits += imageBits) {
@@ -1822,7 +1819,7 @@ inline constexpr Perm<n> Perm<n>::conjugate(const Perm<n>& q) const {
     return Perm<n>(c);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline Perm<n> Perm<n>::cachedConjugate(const Perm<n>& q) const {
     Code c = 0;
     for (int bits = 0; bits < imageBits * n; bits += imageBits) {
@@ -1833,7 +1830,7 @@ inline Perm<n> Perm<n>::cachedConjugate(const Perm<n>& q) const {
     return Perm<n>(c);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n> Perm<n>::inverse() const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
@@ -1841,13 +1838,13 @@ inline constexpr Perm<n> Perm<n>::inverse() const {
     return Perm<n>(c);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline Perm<n> Perm<n>::cachedInverse() const {
     return invLower_[code_ & lowerMask] |
         invUpper_[(code_ & upperMask) >> upperShift];
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr Perm<n> Perm<n>::pow(long exp) const {
     // Get the trivial cases out of the way first.
     if (exp == 0)
@@ -1894,12 +1891,12 @@ constexpr Perm<n> Perm<n>::pow(long exp) const {
     return Perm<n>(c);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline Perm<n> Perm<n>::cachedPow(long exp) const {
     return pow(exp);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr int Perm<n>::order() const {
     // Work out the order by using the cycle structure.
     int ans = 1;
@@ -1928,12 +1925,12 @@ constexpr int Perm<n>::order() const {
     return ans;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline int Perm<n>::cachedOrder() const {
     return order();
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n> Perm<n>::reverse() const {
     Code c = 0;
     int bits = imageBits * (n - 1);
@@ -1942,7 +1939,7 @@ inline constexpr Perm<n> Perm<n>::reverse() const {
     return Perm<n>(c);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr int Perm<n>::sign() const {
 #if 0
     // This algorithm is quadratic in n.  Surely we can do better?
@@ -1957,7 +1954,7 @@ constexpr int Perm<n>::sign() const {
     // The algorithm commented out above is quadratic with low overhead;
     // this one is linear with a little more overhead.  Testing on my
     // build machine suggests this linear algorithm is indeed faster for
-    // the cases we care about (8 <= n <= 16).
+    // the cases we care about (8 <= n).
     bool evenPerm = true;
 
     // Use a bitmask to track which indices we've seen, since we want to
@@ -1986,12 +1983,12 @@ constexpr int Perm<n>::sign() const {
     return (evenPerm ? 1 : -1);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr int Perm<n>::operator[](int source) const {
     return (code_ >> (imageBits * source)) & imageMask;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr int Perm<n>::pre(int image) const {
     int bits = 0;
     for (int i = 0; i < n; ++i, bits += imageBits)
@@ -2001,7 +1998,7 @@ inline constexpr int Perm<n>::pre(int image) const {
     return -1;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr int Perm<n>::compareWith(const Perm& other) const {
     Code mask = imageMask;
     for (int i = 0; i < n; ++i) {
@@ -2014,12 +2011,12 @@ constexpr int Perm<n>::compareWith(const Perm& other) const {
     return 0;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr bool Perm<n>::isIdentity() const {
     return (code_ == idCode_);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline Perm<n> Perm<n>::operator ++(int) {
     // Note: this cannot be constexpr, since it calls the (non-constexpr)
     // preincrement operator.
@@ -2028,7 +2025,7 @@ inline Perm<n> Perm<n>::operator ++(int) {
     return ans;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr std::strong_ordering Perm<n>::operator <=> (const Perm& rhs) const {
     if (code_ == rhs.code_)
         return std::strong_ordering::equal;
@@ -2050,7 +2047,7 @@ constexpr std::strong_ordering Perm<n>::operator <=> (const Perm& rhs) const {
     }
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr Perm<n> Perm<n>::rot(int i) {
     Code code = 0;
     Code src = 0;
@@ -2066,7 +2063,7 @@ constexpr Perm<n> Perm<n>::rot(int i) {
     return Perm<n>(code);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr typename Perm<n>::Index Perm<n>::orderedSnIndex() const {
     Index ans = 0;
     uint16_t seen = 0; // bitmask
@@ -2087,7 +2084,7 @@ constexpr typename Perm<n>::Index Perm<n>::orderedSnIndex() const {
     return ans;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr typename Perm<n>::Index Perm<n>::SnIndex() const {
     Index ans = 0;
     bool even = true;
@@ -2115,7 +2112,7 @@ constexpr typename Perm<n>::Index Perm<n>::SnIndex() const {
     return (even == (ans % 2 == 0) ? ans : (ans ^ 1));
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 Perm<n> Perm<n>::rand(bool even) {
     RandomEngine engine;
     return rand(engine.engine(), even);
@@ -2124,9 +2121,9 @@ Perm<n> Perm<n>::rand(bool even) {
 #ifndef __DOXYGEN
 // Doxygen does not match this to the documented declaration.  I think the
 // issue is that the return type "looks" different due to the explicit <T>.
-template <int n>
-template <typename URBG>
-Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
+template <int n> requires (2 <= n && n <= maxPermDegree())
+template <std::uniform_random_bit_generator URBG>
+Perm<n> Perm<n>::rand(URBG& gen, bool even) {
     // Note: This generic implementation of Perm covers 8 <= n <= 16.
     // The corresponding index types require 16, 32 or 64 bits.
     //
@@ -2150,7 +2147,7 @@ Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
 }
 #endif // __DOXYGEN
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 std::string Perm<n>::str() const {
     char ans[n + 1];
     int bits = 0;
@@ -2161,7 +2158,7 @@ std::string Perm<n>::str() const {
     return ans;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 std::string Perm<n>::trunc(int len) const {
     char ans[n + 1];
     int bits = 0;
@@ -2175,10 +2172,9 @@ std::string Perm<n>::trunc(int len) const {
 // Doxygen gets confused with templated static member functions, and
 // thinks these are new non-static functions instead.
 #ifndef __DOXYGEN
-template <int n>
-template <int k>
+template <int n> requires (2 <= n && n <= maxPermDegree())
+template <int k> requires (2 <= k && k < n)
 constexpr Perm<n> Perm<n>::extend(Perm<k> p) {
-    static_assert(k < n, "Perm<n>::extend<k> requires k < n.");
     static_assert(n > 7, "The generic implementation of Perm<n>::extend() "
         "should not be used for n <= 7.");
 
@@ -2197,10 +2193,9 @@ constexpr Perm<n> Perm<n>::extend(Perm<k> p) {
     return Perm<n>(c);
 }
 
-template <int n>
-template <int k>
+template <int n> requires (2 <= n && n <= maxPermDegree())
+template <int k> requires (n < k)
 constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
-    static_assert(n < k, "Perm<n>::contract<k> requires n < k.");
     static_assert(n > 7, "The generic implementation of Perm<n>::contract() "
         "should not be used for n <= 7.");
 
@@ -2218,7 +2213,7 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
 }
 #endif // __DOXYGEN
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr void Perm<n>::clear(unsigned from) {
     static_assert(n > 7, "The generic implementation of Perm<n>::clear() "
         "should not be used for n <= 7.");
@@ -2230,7 +2225,7 @@ inline constexpr void Perm<n>::clear(unsigned from) {
     }
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 void Perm<n>::tightEncode(std::ostream& out) const {
     // Write the Sn index in base 94, least significant digit first.
     Index idx = SnIndex();
@@ -2240,7 +2235,7 @@ void Perm<n>::tightEncode(std::ostream& out) const {
     }
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 std::string Perm<n>::tightEncoding() const {
     // Write the Sn index in base 94, least significant digit first.
     char ans[tightChars_ + 1];
@@ -2256,9 +2251,9 @@ std::string Perm<n>::tightEncoding() const {
 // Doxygen gets confused with templated static member functions, and
 // thinks this is a new non-static function instead.
 #ifndef __DOXYGEN
-template <int n>
-template <CharIterator iterator>
-Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
+template <int n> requires (2 <= n && n <= maxPermDegree())
+template <CharIterator Iterator>
+Perm<n> Perm<n>::tightDecode(Iterator start, Iterator limit,
         bool noTrailingData) {
     // Ensure that our calculations will not overflow, even when reading
     // an *invalid* encoding.  Here we note that:
@@ -2294,13 +2289,13 @@ Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
 }
 #endif
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline Perm<n> Perm<n>::tightDecode(std::istream& input) {
     return tightDecode(std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
     try {
         return tightDecode(enc.begin(), enc.end(), true);
@@ -2310,12 +2305,12 @@ inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
     }
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr size_t Perm<n>::hash() const {
     return static_cast<size_t>(code_);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 constexpr bool Perm<n>::isConjugacyMinimal() const {
     int prevCycle = 0;
     int currCycle = 0;
@@ -2337,14 +2332,14 @@ constexpr bool Perm<n>::isConjugacyMinimal() const {
     return true;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr void Perm<n>::swapImages(int a, int b) {
     Code diff = ((code_ >> (a * imageBits)) ^ (code_ >> (b * imageBits)))
         & imageMask;
     code_ = code_ ^ (diff << (a * imageBits)) ^ (diff << (b * imageBits));
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 template <int len>
 inline Perm<n>::Slice<len>::Slice() {
     for (int i = 0; i < len; ++i)
@@ -2353,7 +2348,7 @@ inline Perm<n>::Slice<len>::Slice() {
     std::fill(used + len, used + n, false);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 template <int len>
 bool Perm<n>::Slice<len>::lexInc() {
     int pos = len - 1;
@@ -2384,7 +2379,7 @@ bool Perm<n>::Slice<len>::lexInc() {
     return true;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 template <int len>
 inline typename Perm<n>::ImagePack Perm<n>::Slice<len>::pack() const {
     ImagePack ans = 0;
@@ -2396,51 +2391,51 @@ inline typename Perm<n>::ImagePack Perm<n>::Slice<len>::pack() const {
 
 // Inline functions for PermClass
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr PermClass<n>::PermClass() : nCycles_(n) {
     std::fill(cycle_, cycle_ + n, 1);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr PermClass<n>::PermClass(const PermClass& src) :
         nCycles_(src.nCycles_) {
     std::copy(src.cycle_, src.cycle_ + n, cycle_);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr PermClass<n>& PermClass<n>::operator = (const PermClass& src) {
     nCycles_ = src.nCycles_;
     std::copy(src.cycle_, src.cycle_ + n, cycle_);
     return *this;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr bool PermClass<n>::operator == (const PermClass& other) const {
     return nCycles_ == other.nCycles_ &&
         std::equal(cycle_, cycle_ + n, other.cycle_);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr bool PermClass<n>::isIdentity() const {
     return nCycles_ == n;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr int PermClass<n>::cycle(int which) const {
     return cycle_[which];
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr int PermClass<n>::countCycles() const {
     return nCycles_;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr PermClass<n>::operator bool() const {
     return nCycles_;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr Perm<n> PermClass<n>::rep() const {
     std::array<int, n> img;
     int pos = 0;
@@ -2453,7 +2448,7 @@ inline constexpr Perm<n> PermClass<n>::rep() const {
     return Perm<n>(img);
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr std::string PermClass<n>::str() const {
     if (nCycles_) {
         char ans[n + 1];
@@ -2469,7 +2464,7 @@ inline constexpr std::string PermClass<n>::str() const {
     }
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr PermClass<n>& PermClass<n>::operator ++() {
     if (nCycles_ <= 1) {
         // End of the line.
@@ -2495,7 +2490,7 @@ inline constexpr PermClass<n>& PermClass<n>::operator ++() {
     return *this;
 }
 
-template <int n>
+template <int n> requires (2 <= n && n <= maxPermDegree())
 inline constexpr PermClass<n> PermClass<n>::operator ++(int) {
     PermClass<n> ans = *this;
     ++(*this);
@@ -2535,7 +2530,7 @@ namespace regina {
 // We hide them from doxygen since specialisations can confuse it.
 #ifndef __DOXYGEN
 
-template <int k>
+template <int k> requires (2 < k)
 inline constexpr Perm<2> Perm<2>::contract(Perm<k> p) {
     static_assert(k >= 8, "The generic implementation of Perm<2>::contract<k> "
         "requires k >= 8.");
@@ -2579,7 +2574,7 @@ inline constexpr Perm<3> Perm<3>::extend(Perm<2> p) {
         p.permCode() == 0 ? code012 : code102));
 }
 
-template <int k>
+template <int k> requires (3 < k)
 inline constexpr Perm<3> Perm<3>::contract(Perm<k> p) {
     static_assert(k >= 5, "The generic implementation of Perm<3>::contract<k> "
         "requires k >= 5.");
@@ -2609,11 +2604,8 @@ inline constexpr Perm<4> Perm<4>::extend(Perm<3> p) {
     return detail::PermSubSn<4, 3>::at(p.SnIndex());
 }
 
-template <int k>
+template <int k> requires (4 < k)
 inline constexpr Perm<4> Perm<4>::contract(Perm<k> p) {
-    static_assert(k >= 5, "The generic implementation of Perm<4>::contract<k> "
-        "requires k >= 5.");
-
     return Perm<4>(p[0], p[1], p[2], p[3]);
 }
 
@@ -2639,10 +2631,8 @@ inline constexpr Perm<5> Perm<5>::extend(Perm<4> p) {
     return detail::PermSubSn<5, 4>::at(p.SnIndex());
 }
 
-template <int k>
+template <int k> requires (5 < k)
 constexpr Perm<5> Perm<5>::contract(Perm<k> p) {
-    static_assert(k > 5, "Perm<5>::contract<k> requires k > 5.");
-
     return Perm<5>(p[0], p[1], p[2], p[3], p[4]);
 }
 
@@ -2689,10 +2679,8 @@ inline constexpr Perm<6> Perm<6>::extend(Perm<5> p) {
         p6 * Perm<6>(static_cast<Code2>(153 /* 123450 */));
 }
 
-template <int k>
+template <int k> requires (6 < k)
 constexpr Perm<6> Perm<6>::contract(Perm<k> p) {
-    static_assert(k > 6, "Perm<6>::contract<k> requires k > 6.");
-
     return Perm<6>(p[0], p[1], p[2], p[3], p[4], p[5]);
 }
 
@@ -2729,10 +2717,10 @@ inline constexpr Perm<7> Perm<7>::extend(Perm<2> p) {
     return Perm<7>(static_cast<Code2>(p.permCode() == 0 ? 0 : 721));
 }
 
-template <int k>
+template <int k> requires (2 <= k && k < 7)
 inline constexpr Perm<7> Perm<7>::extend(Perm<k> p) {
-    static_assert(2 < k && k < 7,
-        "The generic implementation of Perm<7>::extend<k> requires 2 < k < 7.");
+    static_assert(2 < k,
+        "The generic implementation of Perm<7>::extend<k> requires 2 < k.");
 
     Perm<7> p7(static_cast<Code2>(p.SnIndex()));
     // Now p7 acts on {(7-k),...,6} in the way that p acts on {0,...,(k-1)}.
@@ -2742,10 +2730,8 @@ inline constexpr Perm<7> Perm<7>::extend(Perm<k> p) {
     return rot(k) * p7 * rot(7 - k);
 }
 
-template <int k>
+template <int k> requires (7 < k)
 constexpr Perm<7> Perm<7>::contract(Perm<k> p) {
-    static_assert(k > 7, "Perm<7>::contract<k> requires k > 7.");
-
     return Perm<7>(p[0], p[1], p[2], p[3], p[4], p[5], p[6]);
 }
 

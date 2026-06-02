@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,8 +41,8 @@ using regina::BlockedSFSTriple;
 void addBlockedSFSTriple(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BlockedSFSTriple)
 
-    auto c = pybind11::class_<BlockedSFSTriple, regina::StandardTriangulation>
-            (m, "BlockedSFSTriple", rdoc_scope)
+    auto c = pybind11::class_<BlockedSFSTriple, regina::StandardSubcomplex<3>>
+            (m, "BlockedSFSTriple", rdoc::__class)
         .def(pybind11::init<const BlockedSFSTriple&>(), rdoc::__copy)
         .def("swap", &BlockedSFSTriple::swap, rdoc::swap)
         .def("end", &BlockedSFSTriple::end,
@@ -54,10 +54,9 @@ void addBlockedSFSTriple(pybind11::module_& m) {
             rdoc::matchingReln)
         .def_static("recognise", &BlockedSFSTriple::recognise, rdoc::recognise)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<BlockedSFSTriple>(m, rdoc::global_swap);
+    regina::python::add_global_swap<BlockedSFSTriple, rdoc>(m);
 
     RDOC_SCOPE_END
 }

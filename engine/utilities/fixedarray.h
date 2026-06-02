@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,10 @@
 
 #include <algorithm>
 #include <concepts>
-#include "regina-core.h"
+#include <cstddef>
+#include "concepts/iterator.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -151,6 +154,19 @@ class FixedArray {
                 requires std::copyable<T> :
                 data_(new T[src.size_]), size_(src.size_) {
             std::copy(src.data_, src.data_ + src.size_, data_);
+        }
+
+        /**
+         * Makes a new deep copy of the sequence bounded by the given iterators.
+         *
+         * \param begin an iterator pointing to the beginning of the sequence
+         * to copy.
+         * \param end an iterator pointing past the end of the sequence to copy.
+         */
+        template <RandomAccessIteratorFor<T> Iterator>
+        FixedArray(Iterator begin, Iterator end) : size_(end - begin) {
+            data_ = new T[size_];
+            std::copy(begin, end, data_);
         }
 
         /**

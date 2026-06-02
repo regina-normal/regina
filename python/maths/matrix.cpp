@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,49 +34,17 @@
 #include "../helpers.h"
 #include "../docstrings/maths/matrix.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 
-namespace {
-    struct MatrixBoolInfo {
-        using Matrix = regina::Matrix<bool>;
-        static constexpr bool ring = false;
-        static constexpr bool integer = false;
-        using Value = bool;
-        using Ref = bool; // this class never passes bool args by reference
-        static constexpr const char* castError =
-            "Matrix element not convertible to a boolean";
-    };
-
-    struct MatrixIntInfo {
-        using Matrix = regina::MatrixInt;
-        static constexpr bool ring = true;
-        static constexpr bool integer = true;
-        using Value = regina::Integer;
-        using Ref = const regina::Integer&;
-        static constexpr const char* castError =
-            "Matrix element not convertible to Integer";
-    };
-
-    struct MatrixRealInfo {
-        using Matrix = regina::Matrix<double>;
-        static constexpr bool ring = true;
-        static constexpr bool integer = false;
-        using Value = double;
-        using Ref = double; // this class never passes real args by reference
-        static constexpr const char* castError =
-            "Matrix element not convertible to a floating-point number";
-    };
-}
-
-template <typename Info>
-void addMatrixInfo(pybind11::module_& m, const char* className) {
-    using Matrix = typename Info::Matrix;
-    using Value = typename Info::Value;
-    using Ref = typename Info::Ref;
+template <typename Element>
+void addMatrixOf(pybind11::module_& m, const char* className) {
+    using Matrix = regina::Matrix<Element>;
 
     RDOC_SCOPE_BEGIN(Matrix)
 
-    auto c = pybind11::class_<Matrix>(m, className, rdoc_scope)
+    auto c = pybind11::class_<Matrix>(m, className, rdoc::__class)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
         .def(pybind11::init<const Matrix&>(), rdoc::__copy)
@@ -111,10 +79,11 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
                 }
                 for (size_t j = 0; j < cols; ++j) {
                     try {
-                        m->entry(i, j) = row[j].cast<Value>();
+                        m->entry(i, j) = row[j].cast<Element>();
                     } catch (const pybind11::cast_error&) {
                         delete m;
-                        throw regina::InvalidArgument(Info::castError);
+                        throw regina::InvalidArgument("The given elements "
+                            "cannot be converted to the matrix element type");
                     }
                 }
             }
@@ -127,8 +96,8 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
         .def("rows", &Matrix::rows, rdoc::rows)
         .def("columns", &Matrix::columns, rdoc::columns)
         .def("initialised", &Matrix::initialised, rdoc::initialised)
-        .def("set", [](Matrix& m, size_t row, size_t col, Ref value) {
-            m.entry(row, col) = value;
+        .def("set", [](Matrix& m, size_t row, size_t col, const Element& e) {
+            m.entry(row, col) = e;
         }, rdoc::set)
         // Give the read-only entry() the same docstring as the read-write
         // set(), so users know they are allowed to call set().
@@ -137,10 +106,9 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
         .def("transpose", &Matrix::transpose, rdoc::transpose)
         .def("swapRows", &Matrix::swapRows, rdoc::swapRows)
         .def("swapCols", &Matrix::swapCols,
-            pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0,
-            rdoc::swapCols)
+            "first"_a, "second"_a, "fromRow"_a = 0, rdoc::swapCols)
     ;
-    if constexpr (Info::ring) {
+    if constexpr (regina::Ring<Element>) {
         c
             .def("isIdentity", &Matrix::isIdentity, rdoc::isIdentity)
             .def("isZero", &Matrix::isZero, rdoc::isZero)
@@ -150,31 +118,29 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
                 rdoc::addRow)
             .def("addRowFrom", &Matrix::addRowFrom, rdoc::addRowFrom)
             .def("addRow",
-                overload_cast<size_t, size_t, Value, size_t>(&Matrix::addRow),
-                pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg("fromCol") = 0, rdoc::addRow_2)
+                overload_cast<size_t, size_t, Element, size_t>(&Matrix::addRow),
+                "source"_a, "dest"_a, "copies"_a, "fromCol"_a = 0,
+                rdoc::addRow_2)
             .def("addCol", overload_cast<size_t, size_t>(&Matrix::addCol),
                 rdoc::addCol)
             .def("addColFrom", &Matrix::addColFrom, rdoc::addColFrom)
             .def("addCol",
-                overload_cast<size_t, size_t, Value, size_t>(&Matrix::addCol),
-                pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg("fromRow") = 0, rdoc::addCol_2)
+                overload_cast<size_t, size_t, Element, size_t>(&Matrix::addCol),
+                "source"_a, "dest"_a, "copies"_a, "fromRow"_a = 0,
+                rdoc::addCol_2)
             .def("multRow", &Matrix::multRow,
-                pybind11::arg(), pybind11::arg(), pybind11::arg("fromCol") = 0,
-                rdoc::multRow)
+                "row"_a, "factor"_a, "fromCol"_a = 0, rdoc::multRow)
             .def("multCol", &Matrix::multCol,
-                pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0,
-                rdoc::multCol)
+                "column"_a, "factor"_a, "fromRow"_a = 0, rdoc::multCol)
             .def("combRows", &Matrix::combRows,
-                pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg("fromCol") = 0,
+                "row1"_a, "row2"_a,
+                "coeff11"_a, "coeff12"_a, "coeff21"_a, "coeff22"_a,
+                "fromCol"_a = 0,
                 rdoc::combRows)
             .def("combCols", &Matrix::combCols,
-                pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg(), pybind11::arg(), pybind11::arg(),
-                    pybind11::arg("fromRow") = 0,
+                "col1"_a, "col2"_a,
+                "coeff11"_a, "coeff12"_a, "coeff21"_a, "coeff22"_a,
+                "fromRow"_a = 0,
                 rdoc::combCols)
             .def("det", &Matrix::det, rdoc::det)
             .def("__mul__", [](const Matrix& m1, const Matrix& m2){
@@ -182,7 +148,7 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
             }, rdoc::__mul)
         ;
     }
-    if constexpr (Info::integer) {
+    if constexpr (regina::ReginaInteger<Element>) {
         c
             .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
             .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
@@ -206,17 +172,16 @@ void addMatrixInfo(pybind11::module_& m, const char* className) {
             }, rdoc::__mul_2)
         ;
     }
-    regina::python::add_output(c);
+    regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<Matrix>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Matrix, rdoc>(m);
 
     RDOC_SCOPE_END
 }
 
 void addMatrix(pybind11::module_& m) {
-    addMatrixInfo<MatrixBoolInfo>(m, "MatrixBool");
-    addMatrixInfo<MatrixIntInfo>(m, "MatrixInt");
-    addMatrixInfo<MatrixRealInfo>(m, "MatrixReal");
+    addMatrixOf<bool>(m, "MatrixBool");
+    addMatrixOf<regina::Integer>(m, "MatrixInt");
+    addMatrixOf<double>(m, "MatrixReal");
 }
 

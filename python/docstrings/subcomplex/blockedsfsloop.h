@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::BlockedSFSLoop
-static const char *BlockedSFSLoop =
+struct BlockedSFSLoop {
+
+// Docstring regina::python::doc::BlockedSFSLoop::__class
+static constexpr const char __class[] =
 R"doc(Represents a blocked Seifert fibred space with two boundary tori that
 are joined together. This is a particular type of triangulation of a
 graph manifold, formed from a single saturated region whose two torus
@@ -58,8 +60,8 @@ enough information to uniquely identify the triangulation, since this
 essentially requires 2-dimensional assemblings of saturated blocks.
 For full details, writeTextLong() may be used instead.
 
-The optional StandardTriangulation routine manifold() is implemented
-for this class, but homology() is not.
+The optional StandardSubcomplex routine manifold() is implemented for
+this class, but homology() is not.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -67,18 +69,16 @@ possible, even when passing or returning objects by value. Note,
 however, that the only way to create objects of this class (aside from
 copying or moving) is via the static member function recognise().)doc";
 
-namespace BlockedSFSLoop_ {
-
-// Docstring regina::python::doc::BlockedSFSLoop_::__copy
-static const char *__copy =
+// Docstring regina::python::doc::BlockedSFSLoop::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given structure. This will induce a deep
 copy of *src*.
 
 Parameter ``src``:
     the structure to copy.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::BlockedSFSLoop::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given structure represent the same
 type of self-identified blocked Seifert fibred space.
 
@@ -88,10 +88,10 @@ saturated region (as returned by the SatRegion comparison operators),
 with the two torus boundaries joined using the same 2-by-2 matrix.
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass is
-more specific than combinatorial isomorphism, since this test does not
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass is more
+specific than combinatorial isomorphism, since this test does not
 account for the many symmetries in a blocked Seifert fibred space).
 
 Parameter ``other``:
@@ -101,8 +101,8 @@ Returns:
     ``True`` if and only if this and the given structure represent the
     same type of self-identified blocked Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::BlockedSFSLoop::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls BlockedSFSLoop::swap(); it is
@@ -114,8 +114,8 @@ Parameter ``a``:
 Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::matchingReln
-static const char *matchingReln =
+// Docstring regina::python::doc::BlockedSFSLoop::matchingReln
+static constexpr const char matchingReln[] =
 R"doc(Returns the matrix describing how the two torus boundaries of the
 saturated region are joined. Note that if a layering is placed between
 the two boundary tori, then any changes to the boundary relationships
@@ -127,14 +127,14 @@ is presented.
 Returns:
     the matrix describing how the boundaries of the region are joined.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::recognise
-static const char *recognise =
+// Docstring regina::python::doc::BlockedSFSLoop::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation is a blocked Seifert fibred
 space with identified boundaries, as described by this class.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tri``:
     the triangulation to examine.
@@ -144,22 +144,22 @@ Returns:
     Seifert fibred space, or ``None`` if the given triangulation is
     not of this form.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::region
-static const char *region =
+// Docstring regina::python::doc::BlockedSFSLoop::region
+static constexpr const char region[] =
 R"doc(Returns details of the saturated region from which this triangulation
 is formed. See the class notes above for further information.
 
 Returns:
     details of the saturated region.)doc";
 
-// Docstring regina::python::doc::BlockedSFSLoop_::swap
-static const char *swap =
+// Docstring regina::python::doc::BlockedSFSLoop::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-}
+}; // struct BlockedSFSLoop
 
 } // namespace regina::python::doc
 

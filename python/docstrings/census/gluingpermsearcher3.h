@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::ClosedPrimeMinSearcher
-static const char *ClosedPrimeMinSearcher =
+struct ClosedPrimeMinSearcher {
+
+// Docstring regina::python::doc::ClosedPrimeMinSearcher::__class
+static constexpr const char __class[] =
 R"doc(A gluing permutation search class that offers a specialised search
 algorithm for when (i) only closed prime minimal P2-irreducible
 triangulations are required, and (ii) the given face pairing has order
@@ -32,8 +34,47 @@ This class is designed to manage the construction of a large census of
 triangulations, and so it does not support copying, moving or
 swapping.)doc";
 
-// Docstring regina::python::doc::CompactSearcher
-static const char *CompactSearcher =
+// Docstring regina::python::doc::ClosedPrimeMinSearcher::__init
+static constexpr const char __init[] =
+R"doc(Creates a new search manager for use when (i) only closed prime
+minimal P2-irreducible triangulations are required, and (ii) the given
+face pairing has order at least three. Note that other unwanted
+triangulations may still be produced (e.g., non-prime or non-minimal
+triangulations), but there will be far fewer of these than when using
+the GluingPermSearcher<3> class directly.
+
+For details on how a search manager is used, see the
+GluingPermSearcher<3> documentation. Note in particular that this
+class will be automatically used by
+GluingPermSearcher<3>::findAllPerms() if possible, so there is often
+no need for an end user to instantiate this class directly.
+
+All constructor arguments are the same as for the
+GluingPermSearcher<3> constructor, though some arguments (such as
+*finiteOnly* and *purge*) are not needed here since they are already
+implied by the specialised search context.
+
+Precondition:
+    The given face pairing is connected, i.e., it is possible to reach
+    any tetrahedron from any other tetrahedron via a series of matched
+    face pairs.
+
+Precondition:
+    The given face pairing is in canonical form as described by
+    FacetPairing<3>::isCanonical(). Note that all face pairings
+    constructed by FacetPairing<3>::findAllPairings() are of this
+    form.
+
+Precondition:
+    The given face pairing has no boundary faces and has at least
+    three tetrahedra.)doc";
+
+}; // struct ClosedPrimeMinSearcher
+
+struct CompactSearcher {
+
+// Docstring regina::python::doc::CompactSearcher::__class
+static constexpr const char __class[] =
 R"doc(A gluing permutation search class that offers a specialised search
 algorithm for when only compact (finite) 3-manifold triangulations are
 required. The only constraints placed upon a triangulation are that
@@ -59,8 +100,39 @@ This class is designed to manage the construction of a large census of
 triangulations, and so it does not support copying, moving or
 swapping.)doc";
 
-// Docstring regina::python::doc::EulerSearcher
-static const char *EulerSearcher =
+// Docstring regina::python::doc::CompactSearcher::__init
+static constexpr const char __init[] =
+R"doc(Creates a new search manager for use when only compact 3-manifold
+triangulations are required.
+
+For details on how a search manager is used, see the
+GluingPermSearcher<3> documentation. Note in particular that this
+class will be automatically used by
+GluingPermSearcher<3>::findAllPerms() if possible, so there is often
+no need for an end user to instantiate this class directly.
+
+All constructor arguments are the same as for the
+GluingPermSearcher<3> constructor, though some arguments (such as
+*finiteOnly*) are not needed here since they are already implied by
+the specialised search context.
+
+Precondition:
+    The given face pairing is connected, i.e., it is possible to reach
+    any tetrahedron from any other tetrahedron via a series of matched
+    face pairs.
+
+Precondition:
+    The given face pairing is in canonical form as described by
+    FacetPairing<3>::isCanonical(). Note that all face pairings
+    constructed by FacetPairing<3>::findAllPairings() are of this
+    form.)doc";
+
+}; // struct CompactSearcher
+
+struct EulerSearcher {
+
+// Docstring regina::python::doc::EulerSearcher::__class
+static constexpr const char __class[] =
 R"doc(A gluing permutation search class that offers a specialised search
 algorithm for when all vertex links must all have a given fixed Euler
 characteristic. Examples might be Euler characteristic 2 (for closed
@@ -95,123 +167,8 @@ This class is designed to manage the construction of a large census of
 triangulations, and so it does not support copying, moving or
 swapping.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher
-static const char *GluingPermSearcher =
-R"doc(A utility class for searching through all possible gluing permutation
-sets that correspond to a given tetrahedron face pairing. Subclasses
-of GluingPermSearcher<3> correspond to specialised (and heavily
-optimised) search algorithms that may be used in sufficiently
-constrained scenarios. The main class GluingPermSearcher<3> offers a
-default (but slower) search algorithm that may be used in more general
-contexts.
-
-The simplest way of performing a search through all possible gluing
-permutations is by calling the static method findAllPerms(). This will
-examine the search parameters and ensure that the best possible
-algorithm is used. For finer control over the program flow, the static
-method bestSearcher() can be used to create a search manager of the
-most suitable class and then runSearch() can be called on this object
-directly. For absolute control, a specific algorithm can be forced by
-explicitly constructing an object of the corresponding class (and
-again calling runSearch() on that object directly).
-
-This class is designed to manage the construction of a large census of
-triangulations, and so it does not support copying, moving or
-swapping.)doc";
-
-// Docstring regina::python::doc::HyperbolicMinSearcher
-static const char *HyperbolicMinSearcher =
-R"doc(A gluing permutation search class that offers a specialised search
-algorithm for when only minimal ideal triangulations of cusped finite-
-volume hyperbolic 3-manifolds are required. Here every vertex link
-will be a torus or Klein bottle.
-
-Note that this searches for _any_ triangulations of such hyperbolic
-manifolds, not just _geometric_ triangulations.
-
-Note that additional unwanted triangulations (e.g., non-hyperbolic or
-non-minimal triangulations) may still be produced by this search.
-However, significantly fewer unwanted triangulations will be produced
-when using this class instead of GluingPermSearcher<3>.
-
-This class is designed to manage the construction of a large census of
-triangulations, and so it does not support copying, moving or
-swapping.)doc";
-
-namespace ClosedPrimeMinSearcher_ {
-
-// Docstring regina::python::doc::ClosedPrimeMinSearcher_::__init
-static const char *__init =
-R"doc(Creates a new search manager for use when (i) only closed prime
-minimal P2-irreducible triangulations are required, and (ii) the given
-face pairing has order at least three. Note that other unwanted
-triangulations may still be produced (e.g., non-prime or non-minimal
-triangulations), but there will be far fewer of these than when using
-the GluingPermSearcher<3> class directly.
-
-For details on how a search manager is used, see the
-GluingPermSearcher<3> documentation. Note in particular that this
-class will be automatically used by
-GluingPermSearcher<3>::findAllPerms() if possible, so there is often
-no need for an end user to instantiate this class directly.
-
-All constructor arguments are the same as for the
-GluingPermSearcher<3> constructor, though some arguments (such as
-*finiteOnly* and *purge*) are not needed here since they are already
-implied by the specialised search context.
-
-Precondition:
-    The given face pairing is connected, i.e., it is possible to reach
-    any tetrahedron from any other tetrahedron via a series of matched
-    face pairs.
-
-Precondition:
-    The given face pairing is in canonical form as described by
-    FacetPairing<3>::isCanonical(). Note that all face pairings
-    constructed by FacetPairing<3>::findAllPairings() are of this
-    form.
-
-Precondition:
-    The given face pairing has no boundary faces and has at least
-    three tetrahedra.)doc";
-
-}
-
-namespace CompactSearcher_ {
-
-// Docstring regina::python::doc::CompactSearcher_::__init
-static const char *__init =
-R"doc(Creates a new search manager for use when only compact 3-manifold
-triangulations are required.
-
-For details on how a search manager is used, see the
-GluingPermSearcher<3> documentation. Note in particular that this
-class will be automatically used by
-GluingPermSearcher<3>::findAllPerms() if possible, so there is often
-no need for an end user to instantiate this class directly.
-
-All constructor arguments are the same as for the
-GluingPermSearcher<3> constructor, though some arguments (such as
-*finiteOnly*) are not needed here since they are already implied by
-the specialised search context.
-
-Precondition:
-    The given face pairing is connected, i.e., it is possible to reach
-    any tetrahedron from any other tetrahedron via a series of matched
-    face pairs.
-
-Precondition:
-    The given face pairing is in canonical form as described by
-    FacetPairing<3>::isCanonical(). Note that all face pairings
-    constructed by FacetPairing<3>::findAllPairings() are of this
-    form.)doc";
-
-}
-
-namespace EulerSearcher_ {
-
-// Docstring regina::python::doc::EulerSearcher_::__init
-static const char *__init =
+// Docstring regina::python::doc::EulerSearcher::__init
+static constexpr const char __init[] =
 R"doc(Creates a new search manager that restricts Euler characteristic on
 the vertex links, as described in the class overview.
 
@@ -246,12 +203,40 @@ Parameter ``useEuler``:
     that would be obtained if the puncture in the vertex link were
     filled.)doc";
 
-}
+}; // struct EulerSearcher
 
-namespace GluingPermSearcher_ {
+struct GluingPermSearcher3 {
 
-// Docstring regina::python::doc::GluingPermSearcher_::__init
-static const char *__init =
+// Docstring regina::python::doc::GluingPermSearcher3::__class
+static constexpr const char __class[] =
+R"doc(A utility class for searching through all possible gluing permutation
+sets that correspond to a given tetrahedron face pairing. Subclasses
+of GluingPermSearcher<3> correspond to specialised (and heavily
+optimised) search algorithms that may be used in sufficiently
+constrained scenarios. The main class GluingPermSearcher<3> offers a
+default (but slower) search algorithm that may be used in more general
+contexts.
+
+The simplest way of performing a search through all possible gluing
+permutations is by calling the static method findAllPerms(). This will
+examine the search parameters and ensure that the best possible
+algorithm is used. For finer control over the program flow, the static
+method bestSearcher() can be used to create a search manager of the
+most suitable class and then runSearch() can be called on this object
+directly. For absolute control, a specific algorithm can be forced by
+explicitly constructing an object of the corresponding class (and
+again calling runSearch() on that object directly).
+
+This class is designed to manage the construction of a large census of
+triangulations, and so it does not support copying, moving or
+swapping.
+
+Python:
+    This class is available to Python users under the name
+    GluingPermSearcher3.)doc";
+
+// Docstring regina::python::doc::GluingPermSearcher3::__init
+static constexpr const char __init[] =
 R"doc(Initialises a new search for gluing permutation sets. The search is
 started by calling runSearch(). Note that the static method
 findAllPerms() handles both construction and searching, and is the
@@ -327,8 +312,8 @@ Parameter ``purge``:
     avoided, but enough are avoided that the performance increase is
     noticeable.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher_::bestSearcher
-static const char *bestSearcher =
+// Docstring regina::python::doc::GluingPermSearcher3::bestSearcher
+static constexpr const char bestSearcher[] =
 R"doc(Constructs a search manager of the best possible class for the given
 search parameters. Different subclasses of GluingPermSearcher<3>
 provide optimised search algorithms for different types of search.
@@ -355,8 +340,8 @@ Precondition:
 Returns:
     the new search manager.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher_::data
-static const char *data =
+// Docstring regina::python::doc::GluingPermSearcher3::data
+static constexpr const char data[] =
 R"doc(Returns all internal data in a plain text format. This object can be
 recreated from this text data by calling the input stream constructor
 for the appropriate class.
@@ -389,8 +374,8 @@ Python:
 Returns:
     all of this object's internal data in plain text format.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher_::findAllPerms
-static const char *findAllPerms =
+// Docstring regina::python::doc::GluingPermSearcher3::findAllPerms
+static constexpr const char findAllPerms[] =
 R"doc(The main entry routine for running a search for all gluing permutation
 sets that complement a given face pairing.
 
@@ -420,8 +405,8 @@ Python:
     beyond the initial gluing permutation set (and therefore the
     additional *args* list is omitted here).)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher_::fromTaggedData
-static const char *fromTaggedData =
+// Docstring regina::python::doc::GluingPermSearcher3::fromTaggedData
+static constexpr const char fromTaggedData[] =
 R"doc(Creates a new search manager based on tagged data stored in the given
 string. This may be a new search or a partially completed search.
 
@@ -447,8 +432,8 @@ Returns:
     the new search manager, or ``None`` if the data in the given
     string was invalid or incorrectly formatted.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher_::isComplete
-static const char *isComplete =
+// Docstring regina::python::doc::GluingPermSearcher3::isComplete
+static constexpr const char isComplete[] =
 R"doc(Determines whether this search manager holds a complete gluing
 permutation set or just a partially completed search state.
 
@@ -459,8 +444,8 @@ Returns:
     ``True`` if a complete gluing permutation set is held, or
     ``False`` otherwise.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher_::partialSearch
-static const char *partialSearch =
+// Docstring regina::python::doc::GluingPermSearcher3::partialSearch
+static constexpr const char partialSearch[] =
 R"doc(Runs a partial search for all possible gluing permutations that
 satisfy the search criteria, branching only to the given depth and no
 further.
@@ -508,8 +493,8 @@ Parameter ``args``:
     any additional arguments that should be passed to *action*,
     following the initial permutation set argument.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher_::runSearch
-static const char *runSearch =
+// Docstring regina::python::doc::GluingPermSearcher3::runSearch
+static constexpr const char runSearch[] =
 R"doc(Generates all possible gluing permutation sets that satisfy the
 current search criteria. The search criteria are specified in the
 class constructor, or through the static method findAllPerms().
@@ -551,8 +536,8 @@ Parameter ``args``:
     any additional arguments that should be passed to *action*,
     following the initial permutation set argument.)doc";
 
-// Docstring regina::python::doc::GluingPermSearcher_::taggedData
-static const char *taggedData =
+// Docstring regina::python::doc::GluingPermSearcher3::taggedData
+static constexpr const char taggedData[] =
 R"doc(Returns all internal data in a plain text format, along with a marker
 to signify which precise class the data belongs to. This routine can
 be used with fromTaggedData() to transport objects from place to place
@@ -574,12 +559,31 @@ writes information pertaining to this base class.
 Returns:
     all of this object's internal data in plain text format.)doc";
 
-}
+}; // struct GluingPermSearcher3
 
-namespace HyperbolicMinSearcher_ {
+struct HyperbolicMinSearcher {
 
-// Docstring regina::python::doc::HyperbolicMinSearcher_::__init
-static const char *__init =
+// Docstring regina::python::doc::HyperbolicMinSearcher::__class
+static constexpr const char __class[] =
+R"doc(A gluing permutation search class that offers a specialised search
+algorithm for when only minimal ideal triangulations of cusped finite-
+volume hyperbolic 3-manifolds are required. Here every vertex link
+will be a torus or Klein bottle.
+
+Note that this searches for _any_ triangulations of such hyperbolic
+manifolds, not just _geometric_ triangulations.
+
+Note that additional unwanted triangulations (e.g., non-hyperbolic or
+non-minimal triangulations) may still be produced by this search.
+However, significantly fewer unwanted triangulations will be produced
+when using this class instead of GluingPermSearcher<3>.
+
+This class is designed to manage the construction of a large census of
+triangulations, and so it does not support copying, moving or
+swapping.)doc";
+
+// Docstring regina::python::doc::HyperbolicMinSearcher::__init
+static constexpr const char __init[] =
 R"doc(Creates a new search manager for use when only minimal ideal
 triangulations of cusped finite-volume hyperbolic 3-manifolds are
 required. Here every vertex link will be a torus or Klein bottle. Note
@@ -609,7 +613,7 @@ Precondition:
 Precondition:
     The given face pairing has no boundary faces.)doc";
 
-}
+}; // struct HyperbolicMinSearcher
 
 } // namespace regina::python::doc
 

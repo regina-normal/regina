@@ -71,4 +71,4 @@ def simpToReg(simp):
                     ans.tetrahedron(neighbours[j][f]), gluings[j][f])
     return ans
 
-print simpToReg(cell).isoSig()
+print simpToReg(cell).neoSig()

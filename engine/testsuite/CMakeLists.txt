@@ -3,7 +3,6 @@ INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/engine/testsuite/gtest")
 
 SET ( SOURCES
   main.cpp
-  testexhaustive.cpp
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files
@@ -13,10 +12,6 @@ ADD_SUBDIRECTORY("compile-time")
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")
-ADD_SUBDIRECTORY("dim2")
-ADD_SUBDIRECTORY("dim3")
-ADD_SUBDIRECTORY("dim4")
-ADD_SUBDIRECTORY("generic")
 ADD_SUBDIRECTORY("link")
 ADD_SUBDIRECTORY("manifold")
 ADD_SUBDIRECTORY("maths")
@@ -24,6 +19,7 @@ ADD_SUBDIRECTORY("misc")
 ADD_SUBDIRECTORY("snappea")
 ADD_SUBDIRECTORY("subcomplex")
 ADD_SUBDIRECTORY("surface")
+ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
 
 ADD_EXECUTABLE(regina-testsuite ${SOURCES})

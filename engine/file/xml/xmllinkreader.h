@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,6 +40,8 @@
 #include "regina-core.h"
 #include "file/xml/xmlpacketreader.h"
 #include "utilities/stringutils.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -180,8 +182,11 @@ inline XMLLinkCrossingsReader::XMLLinkCrossingsReader(Link* link) :
 
 inline void XMLLinkCrossingsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
-    if (! valueOf(props.lookup("size"), size_))
+    try {
+        size_ = parse<size_t>(props.lookup("size"));
+    } catch (const InvalidArgument&) {
         link_ = nullptr;
+    }
 }
 
 inline bool XMLLinkCrossingsReader::broken() const {
@@ -206,8 +211,11 @@ inline XMLLinkComponentsReader::XMLLinkComponentsReader(Link* link) :
 
 inline void XMLLinkComponentsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
-    if (! valueOf(props.lookup("size"), size_))
+    try {
+        size_ = parse<size_t>(props.lookup("size"));
+    } catch (const InvalidArgument&) {
         link_ = nullptr;
+    }
 }
 
 inline bool XMLLinkComponentsReader::broken() const {

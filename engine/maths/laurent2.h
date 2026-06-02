@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,6 +44,8 @@
 #include <iostream>
 #include <iterator>
 #include <map>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -194,13 +196,13 @@ class Laurent2 :
          * \param end a past-the-end iterator indicating the end of the set of
          * coefficients.
          */
-        template <std::input_iterator iterator>
-        requires requires(iterator it) {
+        template <std::input_iterator Iterator>
+        requires requires(Iterator it) {
             { std::get<0>(*it) } -> std::convertible_to<long>;
             { std::get<1>(*it) } -> std::convertible_to<long>;
             { std::get<2>(*it) } -> std::convertible_to<T>;
         }
-        Laurent2(iterator begin, iterator end);
+        Laurent2(Iterator begin, Iterator end);
 
         /**
          * Creates a new polynomial from a hard-coded collection of
@@ -337,7 +339,7 @@ class Laurent2 :
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the polynomial to compare with this.
-         * \return The result of the comparison between this
+         * \return the result of the comparison between this
          * and the given polynomial.
          */
         std::strong_ordering operator <=> (const Laurent2<T>& rhs) const;
@@ -830,13 +832,13 @@ inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
 }
 
 template <CoefficientDomain T>
-template <std::input_iterator iterator>
-requires requires(iterator it) {
+template <std::input_iterator Iterator>
+requires requires(Iterator it) {
     { std::get<0>(*it) } -> std::convertible_to<long>;
     { std::get<1>(*it) } -> std::convertible_to<long>;
     { std::get<2>(*it) } -> std::convertible_to<T>;
 }
-inline Laurent2<T>::Laurent2(iterator begin, iterator end) {
+inline Laurent2<T>::Laurent2(Iterator begin, Iterator end) {
     for (auto it = begin; it != end; ++it) {
         if (std::get<2>(*it) == 0)
             continue;
@@ -1125,14 +1127,9 @@ void Laurent2<T>::writeTextShort(std::ostream& out, bool utf8,
 template <CoefficientDomain T>
 inline std::string Laurent2<T>::str(const char* varX, const char* varY)
         const {
-    // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same_v<typename OutputBase<Laurent2<T>>::type,
-        Output<Laurent2<T>, true>>,
-        "Laurent2<T> is not identified as being inherited from Output<...>");
-
     std::ostringstream out;
     writeTextShort(out, false, varX, varY);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>
@@ -1140,7 +1137,7 @@ inline std::string Laurent2<T>::utf8(const char* varX, const char* varY)
         const {
     std::ostringstream out;
     writeTextShort(out, true, varX, varY);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>

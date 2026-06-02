@@ -3,9 +3,9 @@
 # Files to compile
 SET ( FILES
   dehydration.cpp
-  isosig.cpp
   orb.cpp
   pyforeign.cpp
+  siglist.cpp
   )
 
 # Prepend folder name

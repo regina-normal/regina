@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,9 @@
 #endif
 
 #include "regina-core.h"
-#include "manifold.h"
+#include "manifold/manifold.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -70,7 +72,7 @@ namespace regina {
  * Furthermore, the section and index parameters of a SnapPeaCensusTri
  * are identical to those of its corresponding SnapPeaCensusManifold.
  *
- * All of the optional Manifold routines are implemented for this class.
+ * All of the optional Manifold<3> routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
@@ -79,7 +81,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class SnapPeaCensusManifold : public Manifold {
+class SnapPeaCensusManifold : public Manifold<3> {
     public:
         static constexpr char SEC_5 = 'm';
             /**< Represents the collection of manifolds formed from five or

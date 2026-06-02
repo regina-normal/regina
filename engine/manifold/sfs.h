@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,9 @@
 #include <list>
 #include <optional>
 #include "regina-core.h"
-#include "manifold.h"
+#include "manifold/manifold.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -123,7 +125,7 @@ struct SFSFibre {
      * \python This spaceship operator `x <=> y` is not available, but the
      * other comparison operators that it generates _are_ available.
      *
-     * \return The result of the comparison between this and the given fibre.
+     * \return the result of the comparison between this and the given fibre.
      */
     constexpr std::strong_ordering operator <=> (const SFSFibre&) const =
         default;
@@ -173,11 +175,11 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * `beta + b.alpha`), or if there are no exceptional fibres then
  * it is presented as a single (1,b) fibre.
  *
- * The Manifold routines homology() and construct() are only
- * implemented in some cases.  The homology() routine is
- * implemented if and only if the base orbifold has no punctures.
- * The construct() routine is implemented if and only if the Seifert fibred
- * space is orientable.
+ * The optional Manifold<3> routine isHyperbolic() is implemented always for
+ * this class.  The optional routines homology() and construct() are only
+ * implemented in some cases: homology() is implemented if and only if the
+ * base orbifold has no punctures, and construct() is implemented if and only
+ * if the Seifert fibred space is orientable.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -198,7 +200,7 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  *
  * \ingroup manifold
  */
-class SFSpace : public Manifold {
+class SFSpace : public Manifold<3> {
     public:
         /**
          * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3, \c n4
@@ -426,14 +428,14 @@ class SFSpace : public Manifold {
          * given base orbifold and no exceptional fibres.
          *
          * \pre If there are no punctures or reflector boundary components,
-         * then \a useClass is one of the six classes \c o1, \c o2, \c n1,
+         * then \a baseClass is one of the six classes \c o1, \c o2, \c n1,
          * \c n2, \c n3 or \c n4.  Likewise, if there are punctures and/or
-         * reflector boundary components, then \a useClass is one of the
+         * reflector boundary components, then \a baseClass is one of the
          * five classes \c bo1, \c bo2, \c bn1, \c bn2 or \c bn3.
          * \pre If there are any twisted punctures or reflector boundary
-         * components, then \a useClass is either \c bo2 or \c bn3.
+         * components, then \a baseClass is either \c bo2 or \c bn3.
          *
-         * \param useClass indicates whether the base orbifold is closed
+         * \param baseClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
          * paths in the 3-manifold.  See the SFSpace class notes and the
          * Class enumeration notes for details.
@@ -456,7 +458,7 @@ class SFSpace : public Manifold {
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
-        SFSpace(Class useClass, size_t genus,
+        SFSpace(Class baseClass, size_t genus,
             size_t punctures = 0, size_t puncturesTwisted = 0,
             size_t reflectors = 0, size_t reflectorsTwisted = 0);
         /**
@@ -877,7 +879,7 @@ class SFSpace : public Manifold {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the other representation to compare this with.
-         * \return A result that indicates how this and the given Seifert
+         * \return a result that indicates how this and the given Seifert
          * fibred space representation should be ordered with respect to
          * each other.
          */
@@ -981,10 +983,10 @@ inline SFSpace::SFSpace() : class_(Class::o1), genus_(0),
         nFibres_(0), b_(0) {
 }
 
-inline SFSpace::SFSpace(SFSpace::Class useClass, size_t genus,
+inline SFSpace::SFSpace(SFSpace::Class baseClass, size_t genus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted) :
-        class_(useClass), genus_(genus),
+        class_(baseClass), genus_(genus),
         punctures_(punctures), puncturesTwisted_(puncturesTwisted),
         reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
         nFibres_(0), b_(0) {

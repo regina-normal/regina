@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -60,7 +60,7 @@ class CSVSurfaceHandler : public PacketExporter {
          */
         PacketFilter* canExport() const override;
         bool exportData(const regina::Packet& data,
-            const QString& fileName, QWidget* parentWidget) const override;
+            const QString& filename, QWidget* parentWidget) const override;
         QString defaultExtension(const regina::Packet& data) const override;
 
     private:

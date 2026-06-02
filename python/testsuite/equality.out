@@ -1,9 +1,9 @@
-EqualityType.BY_VALUE
-EqualityType.BY_REFERENCE
-EqualityType.BY_VALUE
-EqualityType.NEVER_INSTANTIATED
-EqualityType.DISABLED
-EqualityType.DISABLED
+EqualityType.ByValue
+EqualityType.ByReference
+EqualityType.ByValue
+EqualityType.NeverInstantiated
+EqualityType.Disabled
+EqualityType.Disabled
 
 Integer : ==, not !=
 Integer : not ==, !=
@@ -110,3 +110,7 @@ Different Packets : throws on ==, throws on !=, different packets
 Different Packets : throws on ==, throws on !=, throws on samePacket()
 Different Packets : throws on ==, throws on !=, throws on samePacket()
 HomologicalData : throws on ==, throws on !=
+True
+False
+EqualityType.ByValue
+EqualityType.ByValue

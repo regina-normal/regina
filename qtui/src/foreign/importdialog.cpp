@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,8 +33,8 @@
 #include "importdialog.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "../packetchooser.h"
-#include "../packetfilter.h"
+#include "packetfilter.h"
+#include "choosers/packetchooser.h"
 
 #include <QDialogButtonBox>
 #include <QFrame>
@@ -93,7 +93,18 @@ ImportDialog::ImportDialog(QWidget* parent,
         hStrip->addStretch(1);
         layout->addLayout(hStrip);
 
-        connect(btn, SIGNAL(clicked(bool)), this, SLOT(slotEncodingInfo()));
+        connect(btn, &QPushButton::clicked, this, [this]() {
+            ReginaSupport::info(this,
+                tr("<qt>I will assume that any international symbols "
+                    "are encoding using the <b>%1</b> encoding.</qt>").arg(
+                    QString(ReginaPrefSet::global().fileImportExportCodec)),
+                tr("<qt>This is only relevant if you use letters or symbols "
+                    "that are not found on a typical English keyboard.<p>"
+                    "If you wish to use a different encoding, you can "
+                    "change this through Regina's settings.  If you are "
+                    "not sure what encoding to use, the default encoding "
+                    "<b>UTF-8</b> is safe.</qt>"));
+        });
     }
 
     layout->addStretch(1);
@@ -102,8 +113,9 @@ ImportDialog::ImportDialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this,
+        &ImportDialog::okPressed);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 bool ImportDialog::validate() {
@@ -112,15 +124,15 @@ bool ImportDialog::validate() {
     ReginaSupport::sorry(this,
         tr("I could not finish the import."),
         tr("<qt>There is no suitable location in this packet tree "
-        "for the imported data.<p>"
-        "Some packets have constraints on their location in the tree; "
-        "for instance, normal surface or angle structure lists must "
-        "be placed beneath the corresponding triangulation.  "
-        "See the users' handbook for further information.</qt>"));
+            "for the imported data.<p>"
+            "Some packets have constraints on their location in the tree; "
+            "for instance, normal surface or angle structure lists must "
+            "be placed beneath the corresponding triangulation.  "
+            "See the users' handbook for further information.</qt>"));
     return false;
 }
 
-void ImportDialog::slotOk() {
+void ImportDialog::okPressed() {
     // Get the parent packet.
     std::shared_ptr<regina::Packet> parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
@@ -132,9 +144,9 @@ void ImportDialog::slotOk() {
     if (filter && ! filter->accept(*parentPacket)) {
         ReginaSupport::info(this,
             tr("Please select a different location in the tree "
-            "for the import."),
+                "for the import."),
             tr("<qt>The packet <i>%1</i> cannot act as a parent for "
-            "this imported data.</qt>").
+                "this imported data.</qt>").
             arg(QString(parentPacket->humanLabel().c_str()).toHtmlEscaped()));
         return;
     }
@@ -153,18 +165,5 @@ void ImportDialog::slotOk() {
     parentPacket->append(newTree);
 
     accept();
-}
-
-void ImportDialog::slotEncodingInfo() {
-    ReginaSupport::info(this,
-        tr("<qt>I will assume that any international symbols "
-            "are encoding using the <b>%1</b> encoding.</qt>").arg(
-            QString(ReginaPrefSet::global().fileImportExportCodec)),
-        tr("<qt>This is only relevant if you use letters or symbols "
-            "that are not found on a typical English keyboard.<p>"
-            "If you wish to use a different encoding, you can "
-            "change this through Regina's settings.  If you are "
-            "not sure what encoding to use, the default encoding "
-            "<b>UTF-8</b> is safe.</qt>"));
 }
 

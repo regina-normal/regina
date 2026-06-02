@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,13 +36,15 @@
 #include "../helpers.h"
 #include "../docstrings/maths/perm3.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Perm;
 
 void addPerm3(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(Perm)
+    RDOC_SCOPE_BEGIN(Perm3)
 
-    auto c = pybind11::class_<Perm<3>>(m, "Perm3", rdoc_scope)
+    auto c = pybind11::class_<Perm<3>>(m, "Perm3", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<int, int>(), rdoc::__init)
         .def(pybind11::init<int, int, int>(), rdoc::__init_2)
@@ -82,7 +84,7 @@ void addPerm3(pybind11::module_& m) {
         }, rdoc::__inc)
         .def_static("rot", &Perm<3>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<3>(&)(bool)>(Perm<3>::rand),
-            pybind11::arg("even") = false, rdoc::rand)
+            "even"_a = false, rdoc::rand)
         .def("trunc", &Perm<3>::trunc, rdoc::trunc)
         .def("trunc2", &Perm<3>::trunc2, rdoc::trunc2)
         .def("clear", &Perm<3>::clear, rdoc::clear)

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -533,12 +533,12 @@ void SFSpace::complementAllFibres() {
     while (it != fibres_.end()) {
         // INV: it points to the next block to be reversed.
         auto it2 = it;
-        for (it2++; it2 != fibres_.end() && (*it2).alpha == (*it).alpha; it2++)
+        for (++it2; it2 != fibres_.end() && it2->alpha == it->alpha; ++it2)
             ;
 
         // Now it2 points to the first element of the following block.
         auto next = it2;
-        it2--;
+        --it2;
 
         // Now it2 points to the last element of this block.
         // Reverse this block by swapping elements at each end and
@@ -548,10 +548,10 @@ void SFSpace::complementAllFibres() {
             (*it) = (*it2);
             (*it2) = tmpFibre;
 
-            it++;
+            ++it;
             if (it == it2)
                 break;
-            it2--;
+            --it2;
         }
 
         // Move on to the next block.
@@ -648,62 +648,38 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
         rhs.genus_ * 2 : rhs.genus_);
 
     // Too many punctures is worse than anything.
-    if (punctures_ + puncturesTwisted_ < rhs.punctures_ + rhs.puncturesTwisted_)
-        return std::strong_ordering::less;
-    if (punctures_ + puncturesTwisted_ > rhs.punctures_ + rhs.puncturesTwisted_)
-        return std::strong_ordering::greater;
+    if (auto c = punctures_ + puncturesTwisted_ <=>
+            rhs.punctures_ + rhs.puncturesTwisted_; c != 0)
+        return c;
 
     // After this, order by a combination of genus and reflectors to
     // group closed spaces with approximately the same complexity.
-    if (adjGenus1 + reflectors_ + reflectorsTwisted_ <
-            adjGenus2 + rhs.reflectors_ + rhs.reflectorsTwisted_)
-        return std::strong_ordering::less;
-    if (adjGenus1 + reflectors_ + reflectorsTwisted_ >
-            adjGenus2 + rhs.reflectors_ + rhs.reflectorsTwisted_)
-        return std::strong_ordering::greater;
+    if (auto c = adjGenus1 + reflectors_ + reflectorsTwisted_ <=>
+            adjGenus2 + rhs.reflectors_ + rhs.reflectorsTwisted_; c != 0)
+        return c;
 
     // Within this genus + reflectors combination, reflectors are worse.
-    if (reflectors_ + reflectorsTwisted_ <
-            rhs.reflectors_ + rhs.reflectorsTwisted_)
-        return std::strong_ordering::less;
-    if (reflectors_ + reflectorsTwisted_ >
-            rhs.reflectors_ + rhs.reflectorsTwisted_)
-        return std::strong_ordering::greater;
+    if (auto c = reflectors_ + reflectorsTwisted_ <=>
+            rhs.reflectors_ + rhs.reflectorsTwisted_; c != 0)
+        return c;
 
     // If we reach this point, we must have adjGenus1 == adjGenus2.
     // Down to more mundane comparisons.
 
     // Comparing class will catch orientability also (placing orientable
     // before non-orientable).
-    if (class_ < rhs.class_)
-        return std::strong_ordering::less;
-    if (class_ > rhs.class_)
-        return std::strong_ordering::greater;
-
-    if (reflectorsTwisted_ < rhs.reflectorsTwisted_)
-        return std::strong_ordering::less;
-    if (reflectorsTwisted_ > rhs.reflectorsTwisted_)
-        return std::strong_ordering::greater;
-
-    if (puncturesTwisted_ < rhs.puncturesTwisted_)
-        return std::strong_ordering::less;
-    if (puncturesTwisted_ > rhs.puncturesTwisted_)
-        return std::strong_ordering::greater;
-
-    if (nFibres_ < rhs.nFibres_)
-        return std::strong_ordering::less;
-    if (nFibres_ > rhs.nFibres_)
-        return std::strong_ordering::greater;
-
-    if (fibres_ < rhs.fibres_)
-        return std::strong_ordering::less;
-    if (rhs.fibres_ < fibres_)
-        return std::strong_ordering::greater;
-
-    if (b_ < rhs.b_)
-        return std::strong_ordering::less;
-    if (b_ > rhs.b_)
-        return std::strong_ordering::greater;
+    if (auto c = class_ <=> rhs.class_; c != 0)
+        return c;
+    if (auto c = reflectorsTwisted_ <=> rhs.reflectorsTwisted_; c != 0)
+        return c;
+    if (auto c = puncturesTwisted_ <=> rhs.puncturesTwisted_; c != 0)
+        return c;
+    if (auto c = nFibres_ <=> rhs.nFibres_; c != 0)
+        return c;
+    if (auto c = fibres_ <=> rhs.fibres_; c != 0)
+        return c;
+    if (auto c = b_ <=> rhs.b_; c != 0)
+        return c;
 
     // Exactly the same!
     return std::strong_ordering::equal;

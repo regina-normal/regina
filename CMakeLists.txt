@@ -16,7 +16,7 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 INCLUDE( ReginaMacros )
 
 # Version
-SET (PACKAGE_VERSION 7.4.1)
+SET (PACKAGE_VERSION 8.0)
 SET (SNAPPY_VERSION 3.0.3)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
@@ -262,21 +262,6 @@ CHECK_CXX_SOURCE_COMPILES("
   int main() { return 0; }"
   NUMERIC_64_LL_FOUND)
 
-# Test for the C++20 function std::lexicographical_compare_three_way, which
-# is missing from some older versions of clang's libc++.
-# It's not clear to me whether there is a C++20 feature test that could replace
-# this; however, the only setting I've seen where this function is missing
-# (debian buster with libc++-13) is also missing std::string::operator <=>,
-# which is detected via __cpp_lib_three_way_comparison.  Anyway, let's just
-# keep the explicit test for now.
-CHECK_CXX_SOURCE_COMPILES("
-  #include <algorithm>
-  int x[3] = { 1, 2, 3 }, y[3] = { 1, 2, 3 };
-  int main() {
-    std::lexicographical_compare_three_way(x, x + 3, y, y + 3); return 0;
-  }"
-  LEXCMP_FOUND)
-
 # Dependencies used by all components of Regina
 
 # Note that pkg-config is optional, but it does help us find some libraries
@@ -288,8 +273,16 @@ FIND_PACKAGE(ZLIB)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 MACRO_LOG_FEATURE(ZLIB_FOUND
   "zlib"
-  "Essential: compression support"
+  "Essential: gzip compression support"
   "http://www.gzip.org/zlib/"
+  TRUE)
+
+FIND_PACKAGE(LibLZMA)
+# We only use the liblzma headers deeper in the build tree.
+MACRO_LOG_FEATURE(LIBLZMA_FOUND
+  "liblzma"
+  "Essential: xz compression support"
+  "https://tukaani.org/xz/"
   TRUE)
 
 FIND_PACKAGE(LibXml2)

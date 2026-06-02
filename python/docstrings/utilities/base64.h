@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::base64Decode
-static const char *base64Decode =
+inline constexpr const char base64Decode[] =
 R"doc(Decodes the given sequence of base64 characters, and writes the
 resulting raw bytes into a preallocated output buffer.
 
@@ -64,7 +64,7 @@ Author:
     details.)doc";
 
 // Docstring regina::python::doc::base64Decode_2
-static const char *base64Decode_2 =
+inline constexpr const char base64Decode_2[] =
 R"doc(Decodes the given sequence of base64 characters, and passes back a
 newly allocated array containing the results. The *out* pointer will
 be set to this new array, and *outlen* will be set to the number of
@@ -119,7 +119,7 @@ Author:
     details.)doc";
 
 // Docstring regina::python::doc::base64Encode
-static const char *base64Encode =
+inline constexpr const char base64Encode[] =
 R"doc(Encodes the given sequence of raw bytes in base64, and writes the
 results into a preallocated output buffer.
 
@@ -160,7 +160,7 @@ Author:
     details.)doc";
 
 // Docstring regina::python::doc::base64Encode_2
-static const char *base64Encode_2 =
+inline constexpr const char base64Encode_2[] =
 R"doc(Encodes the given sequence of raw bytes in base64, and passes back a
 newly allocated array containing the results. The *out* pointer will
 be set to this new array, which will be null-terminated. This array
@@ -198,7 +198,7 @@ Author:
     details.)doc";
 
 // Docstring regina::python::doc::base64Length
-static const char *base64Length =
+inline constexpr const char base64Length[] =
 R"doc(Returns the number of base64 characters required to encode the given
 number of bytes. This is the number of characters used (excluding the
 null terminator) by the routine base64Encode(const char*, size_t,
@@ -211,7 +211,7 @@ Returns:
     the corresponding number of base64 printable output characters.)doc";
 
 // Docstring regina::python::doc::isBase64
-static const char *isBase64 =
+inline constexpr const char isBase64[] =
 R"doc(Determines whether the given character is a base64 printable character
 as used by the base64 routines in Regina. The base64 printable
 characters are the letters (both upper-case and lower-case), digits,

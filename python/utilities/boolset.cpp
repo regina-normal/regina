@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@ using regina::BoolSet;
 void addBoolSet(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BoolSet)
 
-    auto c = pybind11::class_<BoolSet>(m, "BoolSet", rdoc_scope)
+    auto c = pybind11::class_<BoolSet>(m, "BoolSet", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<bool>(), rdoc::__init)
         .def(pybind11::init<const BoolSet&>(), rdoc::__copy)
@@ -62,12 +62,16 @@ void addBoolSet(pybind11::module_& m) {
         .def(pybind11::self ^ pybind11::self, rdoc::__bxor)
         .def(~ pybind11::self, rdoc::__bnot)
         .def("byteCode", &BoolSet::byteCode, rdoc::byteCode)
-        .def("setByteCode", &BoolSet::setByteCode, rdoc::setByteCode)
         .def_static("fromByteCode", &BoolSet::fromByteCode, rdoc::fromByteCode)
+        .def("setByteCode", [](BoolSet& b, BoolSet::ByteCode code) {
+            b = BoolSet::fromByteCode(code);
+        }, rdoc::setByteCode) // deprecated
         .def("stringCode", &BoolSet::stringCode, rdoc::stringCode)
-        .def("setStringCode", &BoolSet::setStringCode, rdoc::setStringCode)
         .def_static("fromStringCode", &BoolSet::fromStringCode,
             rdoc::fromStringCode)
+        .def("setStringCode", [](BoolSet& b, const std::string& code) {
+            b = BoolSet::fromStringCode(code);
+        }, rdoc::setStringCode) // deprecated
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c, rdoc::__eq);

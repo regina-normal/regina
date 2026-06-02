@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,8 @@
 #include "maths/rational.h"
 #include "maths/vector.h"
 #include "packet/container.h"
+#include "packet/script.h"
+#include "packet/text.h"
 #include "surface/surfacefilter.h"
 
 using regina::Integer;
@@ -63,6 +65,38 @@ namespace {
     template <typename T>
     class SubVector : public Vector<T> {};
 }
+
+static_assert(regina::AssignableTo<const char*, std::string&>);
+static_assert(! regina::AssignableTo<std::string&, char*&>);
+static_assert(regina::AssignableTo<double, int&>);
+static_assert(regina::AssignableTo<int, Integer&>);
+static_assert(regina::AssignableTo<int, LargeInteger&>);
+static_assert(! regina::AssignableTo<Integer, int&>);
+static_assert(! regina::AssignableTo<LargeInteger, int&>);
+static_assert(regina::AssignableTo<Integer, Integer&>);
+static_assert(regina::AssignableTo<LargeInteger, LargeInteger&>);
+static_assert(regina::AssignableTo<Integer, LargeInteger&>);
+static_assert(regina::AssignableTo<LargeInteger, Integer&>);
+static_assert(regina::AssignableTo<NativeInteger<4>, Integer&>);
+static_assert(regina::AssignableTo<NativeInteger<4>, LargeInteger&>);
+static_assert(! regina::AssignableTo<Integer, NativeInteger<4>&>);
+static_assert(! regina::AssignableTo<LargeInteger, NativeInteger<4>&>);
+static_assert(! regina::AssignableTo<NativeInteger<2>, NativeInteger<4>&>);
+static_assert(regina::AssignableTo<int16_t, NativeInteger<4>&>);
+static_assert(regina::AssignableTo<int32_t, NativeInteger<4>&>);
+static_assert(regina::AssignableTo<int64_t, NativeInteger<4>&>);
+static_assert(regina::AssignableTo<int16_t, Integer&>);
+static_assert(regina::AssignableTo<int16_t, LargeInteger&>);
+static_assert(! regina::AssignableTo<NativeInteger<4>, int16_t&>);
+static_assert(! regina::AssignableTo<NativeInteger<4>, int32_t&>);
+static_assert(! regina::AssignableTo<NativeInteger<4>, int64_t&>);
+static_assert(! regina::AssignableTo<Integer, int16_t&>);
+static_assert(! regina::AssignableTo<LargeInteger, int16_t&>);
+
+static_assert(regina::SameModCVRef<const int&, int>);
+static_assert(regina::SameModCVRef<int, const int&>);
+static_assert(! std::same_as<const int&, int>);
+static_assert(! std::same_as<int, const int&>);
 
 static_assert(CppInteger<char>);
 static_assert(StandardCppInteger<char>);
@@ -287,6 +321,22 @@ static_assert(regina::Writeable<long double>);
 static_assert(regina::Writeable<int*>);
 static_assert(regina::Writeable<regina::Arrow>);
 
+static_assert(regina::Stringifiable<regina::Arrow>);
+static_assert(regina::Stringifiable<regina::Link>);
+// Note: PacketOf<Link> derives from Output<Packet> and also Output<Link>.
+static_assert(regina::Stringifiable<regina::PacketOf<regina::Link>>);
+static_assert(regina::Stringifiable<regina::Integer>);
+static_assert(! regina::Stringifiable<bool>);
+static_assert(! regina::Stringifiable<std::pair<int, int>>);
+
+static_assert(regina::RichStringifiable<regina::Arrow>);
+static_assert(regina::RichStringifiable<regina::Link>);
+// Note: PacketOf<Link> derives from Output<Packet> and also Output<Link>.
+static_assert(regina::RichStringifiable<regina::PacketOf<regina::Link>>);
+static_assert(! regina::RichStringifiable<regina::Integer>);
+static_assert(! regina::RichStringifiable<bool>);
+static_assert(! regina::RichStringifiable<std::pair<int, int>>);
+
 static_assert(regina::InherentlyTightEncodable<Integer>);
 static_assert(regina::InherentlyTightEncodable<LargeInteger>);
 static_assert(regina::InherentlyTightEncodable<Vector<Integer>>);
@@ -294,12 +344,35 @@ static_assert(! regina::InherentlyTightEncodable<int>);
 // NativeInteger does not yet support tight encodings.
 static_assert(! regina::InherentlyTightEncodable<NativeInteger<8>>);
 
+static_assert(! regina::PacketClass<int>);
+static_assert(! regina::PacketClass<regina::Arrow>);
 static_assert(regina::PacketClass<regina::Container>);
 static_assert(regina::PacketClass<regina::PacketOf<regina::Link>>);
 static_assert(! regina::PacketClass<regina::Link>);
 static_assert(! regina::PacketClass<regina::Packet>);
 static_assert(regina::PacketClass<regina::SurfaceFilter>);
 static_assert(regina::PacketClass<regina::SurfaceFilterCombination>);
+
+static_assert(! regina::WrappedPacket<int>);
+static_assert(! regina::WrappedPacket<regina::Arrow>);
+static_assert(! regina::WrappedPacket<regina::Text>);
+static_assert(! regina::WrappedPacket<regina::Script>);
+static_assert(! regina::WrappedPacket<regina::Container>);
+static_assert(! regina::WrappedPacket<regina::Link>);
+static_assert(regina::WrappedPacket<regina::PacketOf<regina::Link>>);
+
+static_assert(! regina::TextPacket<int>);
+static_assert(! regina::TextPacket<regina::Arrow>);
+static_assert(regina::TextPacket<regina::Text>);
+static_assert(regina::TextPacket<regina::Script>);
+static_assert(! regina::TextPacket<regina::Container>);
+static_assert(! regina::TextPacket<regina::Link>);
+
+static_assert(! regina::PacketHeldType<int>);
+static_assert(! regina::PacketHeldType<regina::Arrow>);
+static_assert(regina::PacketHeldType<regina::Link>);
+static_assert(! regina::PacketHeldType<regina::PacketOf<regina::Link>>);
+static_assert(! regina::PacketHeldType<regina::Container>);
 
 static_assert(regina::InputIteratorFor<std::vector<int>::iterator, int>);
 static_assert(regina::InputIteratorFor<std::vector<int>::const_iterator, int>);
@@ -313,3 +386,6 @@ static_assert(regina::PacketIterator<regina::ChildIterator<true>>);
 static_assert(regina::PacketIterator<regina::ChildIterator<false>>);
 static_assert(regina::PacketIterator<regina::SubtreeIterator<true>>);
 static_assert(regina::PacketIterator<regina::SubtreeIterator<false>>);
+
+static_assert(regina::OutputIterator<std::vector<int>::iterator>);
+static_assert(! regina::OutputIterator<std::vector<int>::const_iterator>);

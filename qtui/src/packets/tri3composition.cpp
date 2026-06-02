@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,16 +49,18 @@
 #include "subcomplex/snappedball.h"
 #include "subcomplex/snappedtwosphere.h"
 #include "subcomplex/spiralsolidtorus.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "subcomplex/txicore.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
 #include "tri3composition.h"
-#include "../packetchooser.h"
-#include "../packeteditiface.h"
-#include "../packetfilter.h"
+#include "elidedlabel.h"
+#include "packeteditiface.h"
+#include "packetfilter.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
+#include "choosers/trisigchooser.h"
 
 #include <memory>
 #include <QApplication>
@@ -105,6 +107,7 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
 
     standardTri->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
+    // Contextless connections are ok: senders will be destroyed with [this].
     connect(standardTri, &QPushButton::customContextMenuRequested,
         [this](const QPoint& p) {
             contextStandardTri(p, standardTri);
@@ -117,19 +120,26 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
     line = new QHBoxLayout();
     msg = tr("<qt>Displays the isomorphism signature of the triangulation.<p>"
         "This is a piece of text that identifies the triangulation uniquely "
-        "up to combinatorial isomorphism.  Isomorphism signatures "
-        "are described in detail in "
+        "up to combinatorial isomorphism.<p>"
+        "Using the drop-down box to the right, you can switch between "
+        "<i>first-generation</i> signatures (used in Regina ≤ 7.x), "
+        "and <i>second-generation</i> signatures (introduced in Regina 8.0). "
+        "Second-generation signatures are shorter and faster, and are "
+        "recommended for use in new projects.<p>"
+        "First-generation isomorphism signatures are described in detail in "
         "<i>Simplification paths in the Pachner graphs "
         "of closed orientable 3-manifold triangulations</i>, Burton, "
         "preprint, <tt>arXiv:1110.6080</tt>, October 2011.</qt>");
     label = new QLabel(tr("<qt><b>Isomorphism signature:</b></qt>"), ui);
     label->setWhatsThis(msg);
     line->addWidget(label);
-    isoSig = new QLabel(ui);
-    isoSig->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
-    isoSig->setWordWrap(false);
+    isoSig = new ElidedLabel(ui);
     isoSig->setWhatsThis(msg);
     line->addWidget(isoSig, 1);
+    isoSigVariant = new TriSigChooser(ui);
+    isoSigVariant->setWhatsThis(msg);
+    connect(isoSigVariant, SIGNAL(activated(int)), this, SLOT(updateIsoSig()));
+    line->addWidget(isoSigVariant);
     /*
     auto* copy = new QPushButton(ReginaSupport::themeIcon("edit-copy"), {}, ui);
     copy->setFlat(true);
@@ -143,6 +153,7 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
 
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
+    // Contextless connections are ok: senders will be destroyed with [this].
     connect(isoSig, &QPushButton::customContextMenuRequested,
         [this](const QPoint& p) {
             contextIsoSig(p, isoSig);
@@ -249,31 +260,20 @@ QWidget* Tri3CompositionUI::getInterface() {
 }
 
 void Tri3CompositionUI::refresh() {
+    updateIsoSig();
     updateIsoPanel();
 
     details->clear();
     lastComponent = nullptr;
 
-    // Show the isomorphism signature.
-    isoSig->setText(tri_->isoSig().c_str());
-    /*
-    // If the signature is very long then add an ellipsis to the end.
-    // Update: don't do this, since we would like clipboard copy to
-    // capture the entire signature, not something with ... at the end.
-    isoSig->setText(QFontMetrics(isoSig->font()).elidedText(
-        tri_->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
-    */
-
     // Try to identify the triangulation.
-    standard = regina::StandardTriangulation::recognise(*tri_);
+    standard = regina::StandardSubcomplex<3>::recognise(*tri_);
     if (standard) {
         standardTri->setText(standard->name().c_str());
-        standardTri->setStyleSheet(
-            "QLabel { color : black ; }");
+        standardTri->setEnabled(true);
     } else {
         standardTri->setText(tr("Not recognised"));
-        standardTri->setStyleSheet(
-            "QLabel { color : darkgrey ; }");
+        standardTri->setEnabled(false);
     }
 
     // Look for complete closed triangulations.
@@ -312,6 +312,35 @@ void Tri3CompositionUI::packetBeingDestroyed(regina::PacketShell) {
     isoTest->setCurrentIndex(0); // (i.e., None)
     compare_ = nullptr; // The packet destructor will handle the unlisten.
     updateIsoPanel();
+}
+
+void Tri3CompositionUI::updateIsoSig() {
+    // Show the isomorphism signature.
+    switch (isoSigVariant->selected()) {
+        case ReginaPrefSet::TriSigVariant::Gen1:
+            sig_ = tri_->isoSig();
+            break;
+        case ReginaPrefSet::TriSigVariant::Gen2Oriented:
+            if (! tri_->isOrientable()) {
+                isoSig->setText(tr("Non-orientable triangulation"));
+                sig_.clear();
+            } else if (! tri_->isOriented()) {
+                isoSig->setText(tr("Unoriented triangulation"));
+                sig_.clear();
+            } else {
+                sig_ = tri_->neoSig(true);
+            }
+            break;
+        default: // Gen2
+            sig_ = tri_->neoSig();
+            break;
+    }
+    if (sig_.empty()) {
+        isoSig->setEnabled(false);
+    } else {
+        isoSig->setText(sig_.c_str());
+        isoSig->setEnabled(true);
+    }
 }
 
 void Tri3CompositionUI::updateIsoPanel() {
@@ -1041,7 +1070,7 @@ void Tri3CompositionUI::contextStandardTri(const QPoint& pos,
         QWidget* fromWidget) {
     if (! standard.get())
         return;
-    
+
     QMenu m(tr("Context menu"), fromWidget);
     QAction a("Copy triangulation", fromWidget);
     connect(&a, SIGNAL(triggered()), this, SLOT(copyStandardTri()));
@@ -1051,6 +1080,9 @@ void Tri3CompositionUI::contextStandardTri(const QPoint& pos,
 
 void Tri3CompositionUI::contextIsoSig(const QPoint& pos,
         QWidget* fromWidget) {
+    if (sig_.empty())
+        return;
+
     QMenu m(tr("Context menu"), fromWidget);
     QAction a("Copy isomorphism signature", fromWidget);
     connect(&a, SIGNAL(triggered()), this, SLOT(copyIsoSig()));
@@ -1061,7 +1093,7 @@ void Tri3CompositionUI::contextIsoSig(const QPoint& pos,
 void Tri3CompositionUI::contextComposition(const QPoint& pos) {
     if (details->selectedItems().empty())
         return;
-    
+
     QMenu m(tr("Context menu"), details);
     QAction a("Copy line", details);
     connect(&a, SIGNAL(triggered()), this, SLOT(copyCompositionLine()));
@@ -1074,7 +1106,8 @@ void Tri3CompositionUI::copyStandardTri() {
 }
 
 void Tri3CompositionUI::copyIsoSig() {
-    QApplication::clipboard()->setText(isoSig->text());
+    if (! sig_.empty())
+        QApplication::clipboard()->setText(sig_.c_str());
 }
 
 void Tri3CompositionUI::copyCompositionLine() {

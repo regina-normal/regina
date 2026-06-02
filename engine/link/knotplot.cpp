@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,6 +32,7 @@
 #include <bit> // for std::endian
 #include <cctype>
 #include <cstring>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include "link/spatiallink.h"

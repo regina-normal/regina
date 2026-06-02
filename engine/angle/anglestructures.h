@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,8 @@
 #include "angle/anglestructure.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -340,7 +342,7 @@ class AngleStructures :
          * structures.
          *
          * These begin() and end() functions allow you to iterate through all
-         * angle structures in this list using a range-based \c for loop:
+         * angle structures in this list using a range-based `for` loop:
          *
          * \code{.cpp}
          * AngleStructures list(...);
@@ -350,7 +352,7 @@ class AngleStructures :
          * The type that is returned will be a lightweight iterator type,
          * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
          * The precise C++ type of the iterator is subject to change, so
-         * C++ users should use \c auto (just like this declaration does).
+         * C++ users should use `auto` (just like this declaration does).
          *
          * \nopython For Python users, AngleStructures implements the Python
          * iterable interface.  You can iterate over the angle structures in
@@ -365,7 +367,7 @@ class AngleStructures :
          * structures.
          *
          * These begin() and end() functions allow you to iterate through all
-         * angle structures in this list using a range-based \c for loop.
+         * angle structures in this list using a range-based `for` loop.
          * See the begin() documentation for further details.
          *
          * \nopython For Python users, AngleStructures implements the Python
@@ -392,7 +394,7 @@ class AngleStructures :
          * \nocpp For C++ users, AngleStructures provides the usual begin()
          * and end() functions instead.  In particular, you can iterate over
          * the angle structures in this list in the usual way using a
-         * range-based \c for loop.
+         * range-based `for` loop.
          *
          * \return an iterator over the angle structures in this list.
          */
@@ -410,6 +412,32 @@ class AngleStructures :
          */
         bool spansStrict() const;
         /**
+         * Is it already known (or trivial to determine) whether some convex
+         * combination of the angle structures in this list forms a strict
+         * angle structure?  See AngleStructure::isStrict() for details on
+         * strict angle structures.
+         *
+         * If this property is already known, future calls to spansStrict()
+         * will be very fast (simply returning the precalculated value).
+         * Otherwise spansStrict() could be more expensive: although its
+         * running time is a small polynomial in the size of this list, the
+         * size of this list could be exponential in the number of tetrahedra.
+         *
+         * \warning This routine does not actually tell you _whether_ this
+         * angle structure list spans a strict angle structure; it merely
+         * tells you whether the answer has already been computed.
+         *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make this property trivial to compute; however,
+         * it is provided for compatibility with other `knows...()` routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to compute.
+         */
+        bool knowsSpansStrict(bool cachedOnly = false) const;
+        /**
          * Determines whether any angle structure in this list is a
          * taut structure.  Because taut structures always appear as
          * vertices of the angle structure solution space, this routine
@@ -421,6 +449,31 @@ class AngleStructures :
          * \return \c true if and only if a taut structure can be produced.
          */
         bool spansTaut() const;
+        /**
+         * Is it already known (or trivial to determine) whether some angle
+         * structure in this list is a taut structure?  See
+         * AngleStructure::isTaut() for details on taut structures.
+         *
+         * If this property is already known, future calls to spansTaut()
+         * will be very fast (simply returning the precalculated value).
+         * Otherwise spansTaut() could be more expensive: although its
+         * running time is a small polynomial in the size of this list, the
+         * size of this list could be exponential in the number of tetrahedra.
+         *
+         * \warning This routine does not actually tell you _whether_ some
+         * angle structure in this list is a taut structure; it merely
+         * tells you whether the answer has already been computed.
+         *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make this property trivial to compute; however,
+         * it is provided for compatibility with other `knows...()` routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to compute.
+         */
+        bool knowsSpansTaut(bool cachedOnly = false) const;
 
         /**
          * Determines whether this and the given list contain the same
@@ -535,7 +588,6 @@ class AngleStructures :
 
     friend class regina::XMLAngleStructuresReader;
     friend class regina::XMLLegacyAngleStructuresReader;
-    friend class regina::XMLWriter<AngleStructures>;
 };
 
 /**
@@ -653,10 +705,18 @@ inline bool AngleStructures::spansStrict() const {
     return *doesSpanStrict_;
 }
 
+inline bool AngleStructures::knowsSpansStrict(bool) const {
+    return doesSpanStrict_.has_value();
+}
+
 inline bool AngleStructures::spansTaut() const {
     if (! doesSpanTaut_.has_value())
         calculateSpanTaut();
     return *doesSpanTaut_;
+}
+
+inline bool AngleStructures::knowsSpansTaut(bool) const {
+    return doesSpanTaut_.has_value();
 }
 
 template <StrictWeakOrder<const AngleStructure&> Comparison>

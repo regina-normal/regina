@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,7 +37,7 @@ using regina::TxICore;
 using regina::TxIDiagonalCore;
 using regina::TxIParallelCore;
 
-template <typename Core>
+template <std::derived_from<TxICore> Core>
 static void testCopyMove(const Core& core) {
     SCOPED_TRACE("core = " + core.name());
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -28,16 +28,16 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 #include "triangulation/detail/boundarycomponent-impl.h"
 
-namespace regina::detail {
+namespace regina {
 
 // Don't cascade instantiations all the way down through the dimensions...
-extern template BoundaryComponentBase<5>::~BoundaryComponentBase();
+extern template BoundaryComponent<5>::~BoundaryComponent();
 
-template BoundaryComponentBase<6>::~BoundaryComponentBase();
+template BoundaryComponent<6>::~BoundaryComponent();
 
-template Triangulation<5>* BoundaryComponentBase<6>::buildRealBoundary() const;
+template Triangulation<5>* BoundaryComponent<6>::buildRealBoundary() const;
 
-} // namespace regina::detail
+} // namespace regina

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -85,7 +85,7 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    const QRegularExpression reIsoSig("^([A-Za-z0-9+-]+)$");
+    const QRegularExpression reIsoSig("^([A-Za-z0-9.+-]+)$");
 }
 
 Tri2Creator::Tri2Creator(ReginaMain*) {
@@ -143,15 +143,14 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
     hArea->setLayout(hLayout);
     expln = QObject::tr("<qt>The isomorphism signature "
         "from which the new triangulation will be created.  An example "
-        "isomorphism signature is <i>cPbbde</i>.<p>"
+        "isomorphism signature is <tt>cVgc</tt>.<p>"
         "Isomorphism signatures identify triangulations uniquely "
         "up to combinatorial isomorphism.  "
-        "3-dimensional isomorphism signatures are described in "
-        "detail in <i>Simplification paths in the Pachner graphs "
-        "of closed orientable 3-manifold triangulations</i>, "
-        "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
-        "2-dimensional isomorphism signatures (as used here) follow an "
-        "analogous scheme.</qt>");
+        "You can view the isomorphism signature of a triangulation in Python "
+        "by calling <tt>tri.neoSig()</tt>.<p>"
+        "Both first-generation signatures (from Regina ≤ 7.x) and "
+        "second-generation signatures (from Regina ≥ 8.0) are "
+        "accepted here.</qt>");
     label = new QLabel(QObject::tr("Isomorphism signature:"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
@@ -289,34 +288,26 @@ std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
         if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The isomorphism signature is not valid."),
-                QObject::tr("<qt>An isomorphism "
-                "signature must be a sequence of symbols, which may include "
-                "letters, digits, plus and/or minus but nothing else.  "
-                "An example isomorphism signature is <i>cPbbde</i>.<p>"
-                "3-dimensional isomorphism signatures are described in "
-                "detail in <i>Simplification paths in the Pachner graphs "
-                "of closed orientable 3-manifold triangulations</i>, "
-                "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
-                "2-dimensional isomorphism signatures (as used here) follow an "
-                "analogous scheme.</qt>"));
-
+                QObject::tr("<qt>An isomorphism signature must be a sequence "
+                    "of symbols, which may include letters, digits, plus "
+                    "and/or minus but nothing else.  An example isomorphism "
+                    "signature is <tt>cVgc</tt>.</qt>"));
             return nullptr;
         }
 
         std::string sig = match.captured(1).toUtf8().constData();
         try {
-            return regina::make_packet(Triangulation<2>::fromIsoSig(sig), sig);
+            return regina::make_packet(Triangulation<2>::fromSig(sig), sig);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given "
-                "isomorphism signature."),
-                QObject::tr("<qt>3-dimensional isomorphism signatures are "
-                "described in detail in "
-                "<i>Simplification paths in the Pachner graphs "
-                "of closed orientable 3-manifold triangulations</i>, "
-                "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
-                "2-dimensional isomorphism signatures (as used here) follow an "
-                "analogous scheme.</qt>"));
+                    "isomorphism signature."),
+                QObject::tr("<qt>You can view the isomorphism signature of a "
+                    "triangulation in Python by calling "
+                    "<tt>tri.neoSig()</tt>.<p>"
+                    "Both first-generation signatures (from Regina ≤ 7.x) and "
+                    "second-generation signatures (from Regina ≥ 8.0) are "
+                    "accepted here.</qt>"));
             return nullptr;
         }
     } else if (typeId == TRI_EXAMPLE) {

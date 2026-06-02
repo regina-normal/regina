@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,7 +37,7 @@ void addBitManipulator(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BitManipulator)
 
     using BitManip = regina::BitManipulator<unsigned long>;
-    auto c = pybind11::class_<BitManip>(m, "BitManipulator", rdoc_scope)
+    auto c = pybind11::class_<BitManip>(m, "BitManipulator", rdoc::__class)
         .def_static("firstBit", &BitManip::firstBit, rdoc::firstBit)
         .def_static("lastBit", &BitManip::lastBit, rdoc::lastBit)
         .def_static("swapBits", &BitManip::swapBits, rdoc::swapBits)

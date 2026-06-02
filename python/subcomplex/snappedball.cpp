@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,8 +40,8 @@ using regina::SnappedBall;
 void addSnappedBall(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SnappedBall)
 
-    auto c = pybind11::class_<SnappedBall, regina::StandardTriangulation>
-            (m, "SnappedBall", rdoc_scope)
+    auto c = pybind11::class_<SnappedBall, regina::StandardSubcomplex<3>>
+            (m, "SnappedBall", rdoc::__class)
         .def(pybind11::init<const SnappedBall&>(), rdoc::__copy)
         .def("swap", &SnappedBall::swap, rdoc::swap)
         .def("tetrahedron", &SnappedBall::tetrahedron,
@@ -53,9 +53,8 @@ void addSnappedBall(pybind11::module_& m) {
         .def_static("recognise", &SnappedBall::recognise, rdoc::recognise)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
-    regina::python::add_output(c);
-
-    regina::python::add_global_swap<SnappedBall>(m, rdoc::global_swap);
+    regina::python::add_output_rich(c);
+    regina::python::add_global_swap<SnappedBall, rdoc>(m);
 
     RDOC_SCOPE_END
 }

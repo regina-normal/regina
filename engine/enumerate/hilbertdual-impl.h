@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,12 +50,14 @@
 #include "utilities/fixedarray.h"
 #include "utilities/intutils.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <ArbitraryPrecisionIntegerVector Ray, VoidCallback<Ray&&> Action>
 void HilbertDual::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
-        ProgressTracker* tracker, unsigned initialRows) {
+        ProgressTracker* tracker, size_t initialRows) {
     usingBitmaskFor(subspace.columns() /* dimension of the space */,
             [&action, &subspace, &constraints, tracker, initialRows]
             <ReginaBitmask BitmaskType>(size_t dim) {
@@ -69,7 +71,7 @@ void HilbertDual::enumerate(Action&& action,
         size_t nEqns = subspace.rows();
         if (nEqns == 0) {
             // No!  Just send back the unit vectors.
-            for (unsigned i = 0; i < dim; ++i) {
+            for (size_t i = 0; i < dim; ++i) {
                 Ray ans(dim);
                 ans[i] = IntegerType::one;
                 action(std::move(ans));
@@ -151,13 +153,13 @@ bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
             continue;
 
         if (listSign > 0) {
-            if ((**it).nextHyp() <= vec.nextHyp())
+            if ((*it)->nextHyp() <= vec.nextHyp())
                 return true;
         } else if (listSign < 0) {
-            if (vec.nextHyp() <= (**it).nextHyp())
+            if (vec.nextHyp() <= (*it)->nextHyp())
                 return true;
         } else {
-            if (vec.nextHyp() == (**it).nextHyp())
+            if (vec.nextHyp() == (*it)->nextHyp())
                 return true;
         }
     }
@@ -192,13 +194,13 @@ void HilbertDual::reduceBasis(
                 continue;
 
             if (listSign > 0) {
-                if ((**red).nextHyp() <= (**i).nextHyp())
+                if ((*red)->nextHyp() <= (*i)->nextHyp())
                     break;
             } else if (listSign < 0) {
-                if ((**i).nextHyp() <= (**red).nextHyp())
+                if ((*i)->nextHyp() <= (*red)->nextHyp())
                     break;
             } else {
-                if ((**i).nextHyp() == (**red).nextHyp())
+                if ((*i)->nextHyp() == (*red)->nextHyp())
                     break;
             }
         }
@@ -241,7 +243,7 @@ void HilbertDual::reduceBasis(
 template <ReginaInteger IntegerType, ReginaBitmask BitmaskType>
 void HilbertDual::intersectHyperplane(
         std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
-        const MatrixInt& subspace, unsigned row,
+        const MatrixInt& subspace, size_t row,
         const std::vector<BitmaskType>& constraintMasks) {
     // These must be linked lists because we need fast insertion and
     // deletion at arbitrary locations.
