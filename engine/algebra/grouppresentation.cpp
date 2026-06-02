@@ -357,17 +357,15 @@ MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
 }
 
 void GroupPresentation::dehnAlgorithmSubMetric(
-    const GroupExpression &this_word,
-    const GroupExpression &that_word,
-    std::set<WordSubstitutionData> &sub_list, int step )
-{
+        const GroupExpression &this_word, const GroupExpression &that_word,
+        std::set<WordSubstitutionData> &sub_list, int step) {
     size_t this_length = this_word.wordLength();
     size_t that_length = that_word.wordLength();
     // generic early exit strategy
-    if ( (this_length < 2) || (that_length==0) )
+    if ((this_length < 2) || (that_length==0))
         return;
     // early exit strategy based on step.
-    if ( (step==1) && ((step+1)*this_length < that_length) )
+    if ((step==1) && ((step+1)*this_length < that_length))
         return;
     // TODO: should check to whatever extent the above is of much use...
 
@@ -375,16 +373,12 @@ void GroupPresentation::dehnAlgorithmSubMetric(
     std::vector<GroupExpressionTerm> this_word_vec, reducer;
     this_word_vec.reserve( this_length );
     reducer.reserve( that_length );
-    for (const auto& t : this_word.terms()) {
+    for (const auto& t : this_word.terms())
         for (long i=0; i<std::abs(t.exponent); i++)
-            this_word_vec.emplace_back( t.generator,
-                                        (t.exponent>0) ? 1 : -1 );
-    }
-    for (const auto& t : that_word.terms()) {
+            this_word_vec.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
+    for (const auto& t : that_word.terms())
         for (long i=0; i<std::abs(t.exponent); i++)
-            reducer.emplace_back( t.generator,
-                                  (t.exponent>0) ? 1 : -1 );
-    }
+            reducer.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
     std::vector< GroupExpressionTerm > inv_reducer( that_length );
     for (size_t i=0; i<reducer.size(); i++)
         inv_reducer[that_length-(i+1)] = reducer[i].inverse();
@@ -462,14 +456,12 @@ void GroupPresentation::applySubstitution( GroupExpression& this_word,
     // start the splaying of terms
     for (const auto& t : this_word.terms()) {
         for (long i=0; i<std::abs(t.exponent); i++)
-            this_word_vec.emplace_back( t.generator,
-                                        (t.exponent>0) ? 1 : -1 );
+            this_word_vec.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
     }
     // and that_word
     for (const auto& t : that_word.terms()) {
         for (long i=0; i<std::abs(t.exponent); i++)
-            reducer.emplace_back( t.generator,
-                                  (t.exponent>0) ? 1 : -1 );
+            reducer.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
     }
     // done splaying, produce inv_reducer
     std::vector< GroupExpressionTerm > inv_reducer( that_length );
@@ -483,8 +475,8 @@ void GroupPresentation::applySubstitution( GroupExpression& this_word,
     // A=C^{-1}, thus we need to produce the word C^{-1}B. Put in C^{-1} first..
     for (size_t i=0; i<(that_length - sub_data.sub_length); i++)
         this_word.terms().push_back( sub_data.invertB ?
-                                        reducer[(that_length - sub_data.start_from + i) % that_length] :
-                                        inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
+            reducer[(that_length - sub_data.start_from + i) % that_length] :
+            inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
     // iterate through remainder of this_word_vec, starting from
     //     sub_data.start_sub_at + sub_length, ie fill in B
     for (size_t i=0; i<(this_length - sub_data.sub_length); i++)
@@ -2243,9 +2235,11 @@ void GroupPresentation::proliferateRelators(int depth) {
     std::list< GroupExpression > newRels;
     for (size_t i=0; i<relations_.size(); i++)
         for (size_t j=0; j<relations_.size(); j++) {
-            if (i==j) continue; // TODO: maybe accept novel self-substitutions?
+            if (i==j)
+                continue; // TODO: maybe accept novel self-substitutions?
             std::set<WordSubstitutionData> sub_list;
-            dehnAlgorithmSubMetric( relations_[i], relations_[j], sub_list, depth );
+            dehnAlgorithmSubMetric(relations_[i], relations_[j], sub_list,
+                depth);
             while (!sub_list.empty()) {
                 GroupExpression newRel( relations_[i] );
                 applySubstitution( newRel, relations_[j], *sub_list.begin() );
@@ -2258,10 +2252,10 @@ void GroupPresentation::proliferateRelators(int depth) {
         std::list< GroupExpression > tempRels;
         for (const auto& r : relations_)
             for (const auto& j : newRels) {
-                // attempt to tack r to j. To do this, we should perhaps
-                // keep a record of how j was created, as in where the two junction
-                // points are so as to ensure what we're adding spans at least one
-                // of the junctions.
+                // attempt to tack r to j. To do this, we should perhaps keep
+                // a record of how j was created, as in where the two junction
+                // points are so as to ensure what we're adding spans at least
+                // one of the junctions.
                 std::set<WordSubstitutionData> sub_list;
                 dehnAlgorithmSubMetric( j, r, sub_list, depth );
                 while (!sub_list.empty()) {
