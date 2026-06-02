@@ -50,6 +50,7 @@
 #endif
 
 #include <algorithm>
+#include <concepts>
 #include "regina-core.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -88,6 +89,52 @@ class NormalHypersurface;
 class NormalHypersurfaces;
 class NormalSurface;
 class NormalSurfaces;
+
+/**
+ * Represents one of Regina's `Face<dim, subdim>` classes.
+ *
+ * If a type adheres to this concept, the precise dimensions can be accessed
+ * via the class constants `T::dimension` and `T::subdimension`.
+ *
+ * \ingroup triangulation
+ */
+template <typename T>
+concept FaceClass =
+    requires {
+        { T::dimension } -> std::same_as<const int&>;
+        { T::subdimension } -> std::same_as<const int&>;
+        typename regina::Face<T::dimension, T::subdimension>;
+        requires std::same_as<T, Face<T::dimension, T::subdimension>>;
+    };
+
+/**
+ * Represents one of Regina's `Simplex<dim>` classes.
+ *
+ * If a type adheres to this concept, the precise dimension can be accessed
+ * via the class constant `T::dimension`.
+ *
+ * \ingroup triangulation
+ */
+template <typename T>
+concept SimplexClass =
+    requires {
+        { T::dimension } -> std::same_as<const int&>;
+        typename regina::Simplex<T::dimension>;
+        requires std::same_as<T, Simplex<T::dimension>>;
+    };
+
+/**
+ * Represents one of Regina's `Face<dim, subdim>` or `Simplex<dim>` classes.
+ *
+ * If a type adheres to this concept, the precise dimensions can be accessed
+ * via the class constants `T::dimension` and `T::subdimension`.  These can
+ * also be used to identify whether the type is a Face (where `subdim < dim`)
+ * or a Simplex (where `subdim == dim`).
+ *
+ * \ingroup triangulation
+ */
+template <typename T>
+concept FaceOrSimplexClass = FaceClass<T> || SimplexClass<T>;
 
 namespace detail {
     /**

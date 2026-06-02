@@ -77,7 +77,7 @@ void addSimplex(pybind11::module_& m, const char* name) {
             rdoc::triangulation)
         .def("component", &Simplex<dim>::component,
             pybind11::return_value_policy::reference, rdoc::component)
-        .def("face", &regina::python::face<dim, dim>,
+        .def("face", &regina::python::face<Simplex<dim>>,
             "subdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Simplex<dim>::vertex,
             pybind11::return_value_policy::reference, rdoc::vertex)
@@ -92,7 +92,7 @@ void addSimplex(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference, rdoc::tetrahedron)
         .def("pentachoron", &Simplex<dim>::pentachoron,
             pybind11::return_value_policy::reference, rdoc::pentachoron)
-        .def("faceMapping", &regina::python::faceMapping<dim, dim>,
+        .def("faceMapping", &regina::python::faceMapping<Simplex<dim>>,
             "subdim"_a, "face"_a, rdoc::faceMapping)
         .def("vertexMapping", &Simplex<dim>::vertexMapping,
             rdoc::vertexMapping)

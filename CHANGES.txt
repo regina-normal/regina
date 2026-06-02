@@ -716,6 +716,8 @@ Version 8.0  [ TODO ]
                 StandardCppInteger, SignedCppInteger, UnsignedCppInteger
                 (defined in utilities/intutils.h)
               + LinkSigEncoding (defined in link/linksig.h)
+              + FaceClass, FaceOrSimplexClass, SimplexClass (defined in
+                triangulation/forward.h)
               + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
         Header foreign/fromsiglist-impl.h:
             - Renamed to foreign/siglist-impl.h.  The old header has been

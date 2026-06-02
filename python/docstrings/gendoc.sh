@@ -114,7 +114,6 @@ for dir in $dirs; do
         subcomplex/standardtri.h ) ;;
         triangulation/dim?.h ) ;;
         triangulation/facetpairing3.h ) ;;
-        triangulation/forward.h ) ;;
         triangulation/generic.h ) ;;
         triangulation/graph.h ) ;;
         triangulation/hidim.h ) ;;
