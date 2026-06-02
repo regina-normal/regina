@@ -65,8 +65,9 @@ Tetrahedron<3>* Triangulation<3>::layerOn(Edge<3>* edge) {
     //                           \| |/
     //                   roles1[1]• •roles2[1]
     //
-    // If the triangulation is oriented, then the permutations roles1 and
-    // roles2 will both have sign +1, so we can ensure that the triangulation
+    // If the triangulation is oriented, then all tetrahedra have orientation
+    // +1, and so both the permutations roles1 and roles2 will have sign +1.
+    // This means we can ensure that the triangulation
     // remains oriented after layering if we attach the new tetrahedron as
     // shown below. In terms of the gluing permutations, this amounts to
     // letting (0,1,2,3) in the preimages for roles1 and roles2 match up with
