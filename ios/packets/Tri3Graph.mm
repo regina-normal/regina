@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,7 +36,7 @@
 #import "Tri3ViewController.h"
 #import "Tri3Graph.h"
 #import "treewidth/treedecomposition.h"
-#import "triangulation/facetpairing3.h"
+#import "triangulation/facetpairing.h"
 #import "triangulation/dim3.h"
 #import "gvc.h"
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -56,8 +56,9 @@ template <typename> class PacketOf;
  * read from the second line of the Orb / Casson file.  The first line
  * of the Orb / Casson file must simply be: `% orb`
  *
- * If the file could not be read or if the data was not in the correct
- * format, \c null will be returned.
+ * If the file cannot be read or if it is not in the correct format, this
+ * routine will throw an exception.  This is a change in behaviour as of
+ * Regina 8.0: older versions of Regina (≤ 7.x) returned `null` instead.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file _name_, and
@@ -69,6 +70,11 @@ template <typename> class PacketOf;
  * Orb / Casson file, or \c null on error.
  *
  * \author Ryan Budney, also with code from Damien Heard
+ *
+ * \exception FileError An error occurred whilst reading the given file.
+ *
+ * \exception InvalidInput The given file does not appear to be a valid
+ * Orb / Casson file.
  *
  * \ingroup foreign
  */

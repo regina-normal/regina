@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,6 +38,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/permgroup.h"
 
+using namespace pybind11::literals;
+
 using regina::NamedPermGroup;
 using regina::Perm;
 using regina::PermGroup;
@@ -48,7 +50,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
 
     RDOC_SCOPE_BEGIN(PermGroup)
 
-    auto c = pybind11::class_<Group>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Group>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Group&>(), rdoc::__copy)
         .def(pybind11::init<regina::NamedPermGroup>(), rdoc::__init)
@@ -56,7 +58,7 @@ void addPermGroup(pybind11::module_& m, const char* name) {
         .def(pybind11::init([](const Group& parent,
                 const std::function<bool(Perm<n>)>& test) {
             return new Group(parent, test);
-        }), pybind11::arg("parent"), pybind11::arg("test"),
+        }), "parent"_a, "test"_a,
             rdoc::__init_3)
         .def("size", &Group::size, rdoc::size)
         .def("__len__", &Group::size, rdoc::size)
@@ -70,19 +72,15 @@ void addPermGroup(pybind11::module_& m, const char* name) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
 
-    RDOC_SCOPE_INNER_BEGIN(iterator)
-
     using iterator = typename Group::iterator;
-    auto it = pybind11::class_<iterator>(c, "iterator", rdoc_inner_scope)
+    auto it = pybind11::class_<iterator>(c, "iterator", rdoc::iterator::__class)
         .def("__next__", [](iterator& it) {
             if (it)
                 return *it++;
             else
                 throw pybind11::stop_iteration();
-        }, rdoc_inner::__next__);
-    regina::python::add_eq_operators(it, rdoc_inner::__eq);
-
-    RDOC_SCOPE_INNER_END
+        }, rdoc::iterator::__next__);
+    regina::python::add_eq_operators(it, rdoc::iterator::__eq);
 
     c.attr("const_iterator") = c.attr("iterator");
 
@@ -94,9 +92,9 @@ void addPermGroup(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::NamedPermGroup>(m, "NamedPermGroup",
-            "enum.Enum", rdoc_scope)
+            "enum.Enum", rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::NamedPermGroup>(m, "NamedPermGroup", rdoc_scope)
+    pybind11::enum_<regina::NamedPermGroup>(m, "NamedPermGroup", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif

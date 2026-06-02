@@ -247,7 +247,7 @@ embeddings(...)
 
     Returns an object that allows iteration through and random access to
     all of the ways in which this face appears within a top-dimensional
-    simplex of the underlying triangluation.
+    simplex of the underlying triangulation.
 
     The object that is returned is lightweight, and can be happily copied
     by value. The C++ type of the object is subject to change, so C++
@@ -298,7 +298,7 @@ embeddings(...)
 
     Returns an object that allows iteration through and random access to
     all of the ways in which this face appears within a top-dimensional
-    simplex of the underlying triangluation.
+    simplex of the underlying triangulation.
 
     The object that is returned is lightweight, and can be happily copied
     by value. The C++ type of the object is subject to change, so C++
@@ -452,7 +452,7 @@ __init__(...)
     Parameter ``value``:
         the real number to be truncated.
 
-    7. __init__(self: regina.Integer, arg0: str, base: typing.SupportsInt = 10) -> None
+    7. __init__(self: regina.Integer, value: str, base: typing.SupportsInt = 10) -> None
 
     Initialises this integer to the given value which is represented as a
     string of digits in a given base.
@@ -545,7 +545,7 @@ __init__(...)
     Parameter ``value``:
         the real number to be truncated.
 
-    7. __init__(self: regina.LargeInteger, arg0: str, base: typing.SupportsInt = 10) -> None
+    7. __init__(self: regina.LargeInteger, value: str, base: typing.SupportsInt = 10) -> None
 
     Initialises this integer to the given value which is represented as a
     string of digits in a given base.

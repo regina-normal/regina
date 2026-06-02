@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -76,10 +76,6 @@ int main(int argc, char **argv) {
 #endif
 
     auto *app = new ReginaManager(argc, argv);
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-    // High DPI is enabled always in Qt6.
-    app->setAttribute(Qt::AA_UseHighDpiPixmaps);
-#endif
     QCoreApplication::setOrganizationName("Regina");
     QCoreApplication::setOrganizationDomain("regina-normal.github.io");
     QCoreApplication::setApplicationName("Regina");

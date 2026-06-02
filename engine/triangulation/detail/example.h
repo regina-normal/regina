@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -191,8 +191,7 @@ class ExampleBase {
          * \return a double cone over the given triangulation.
          */
         static Triangulation<dim> doubleCone(
-                const TriangulationTraits<dim>::Lower& base)
-            requires (dim > 2);
+            const SafeTriangulation<dim - 1>& base) requires (dim > 2);
 
         /**
          * Returns a single cone over the given (<i>dim-1</i>)-dimensional
@@ -216,8 +215,7 @@ class ExampleBase {
          * \return a single cone over the given triangulation.
          */
         static Triangulation<dim> singleCone(
-                const TriangulationTraits<dim>::Lower& base)
-            requires (dim > 2);
+            const SafeTriangulation<dim - 1>& base) requires (dim > 2);
 
         /*@}*/
 
@@ -381,8 +379,7 @@ Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
 
 template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::singleCone(
-        const TriangulationTraits<dim>::Lower& base)
-        requires (dim > 2) {
+        const SafeTriangulation<dim - 1>& base) requires (dim > 2) {
     Triangulation<dim> ans;
 
     size_t n = base.size();
@@ -424,8 +421,7 @@ Triangulation<dim> ExampleBase<dim>::singleCone(
 
 template <int dim> requires (supportedDim(dim))
 Triangulation<dim> ExampleBase<dim>::doubleCone(
-        const TriangulationTraits<dim>::Lower& base)
-        requires (dim > 2) {
+        const SafeTriangulation<dim - 1>& base) requires (dim > 2) {
     Triangulation<dim> ans;
 
     size_t n = base.size();

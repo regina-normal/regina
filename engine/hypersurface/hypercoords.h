@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -253,7 +253,7 @@ class HyperEncoding {
         /**
          * Returns the number of coordinates stored for each pentachoron.
          *
-         * \return The number of coordinates per pentachoron.
+         * \return the number of coordinates per pentachoron.
          */
         constexpr int block() const {
             return flags_ & SIZE_MASK;

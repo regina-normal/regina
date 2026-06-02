@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Compare two data files in search of isomorphic triangulations         *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,8 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
+#include "utilities/exception.h"
 #include "utilities/i18nutils.h"
 
 using regina::Packet;
@@ -226,19 +227,27 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "Two data files must be specified.");
 
     // Open the two data files.
-    std::shared_ptr<Packet> tree1 = regina::open(file1.c_str());
-    if (! tree1) {
+    std::shared_ptr<Packet> tree1, tree2;
+    try {
+        tree1 = regina::open(file1.c_str());
+    } catch (const regina::FileError&) {
         std::cerr << "File " << file1 << " could not be read.\n";
-        std::cerr << "Please check that it exists and that it is a "
-            "Regina data file.\n";
+        std::cerr << "Please check that you have permissions to read it.\n";
+        return 1;
+    } catch (const regina::InvalidInput&) {
+        std::cerr << "File " << file1 << " could not be opened.\n";
+        std::cerr << "It does not appear to be a Regina data file.\n";
         return 1;
     }
-
-    std::shared_ptr<Packet> tree2 = regina::open(file2.c_str());
-    if (! tree2) {
+    try {
+        tree2 = regina::open(file2.c_str());
+    } catch (const regina::FileError&) {
         std::cerr << "File " << file2 << " could not be read.\n";
-        std::cerr << "Please check that it exists and that it is a "
-            "Regina data file.\n";
+        std::cerr << "Please check that you have permissions to read it.\n";
+        return 1;
+    } catch (const regina::InvalidInput&) {
+        std::cerr << "File " << file2 << " could not be opened.\n";
+        std::cerr << "It does not appear to be a Regina data file.\n";
         return 1;
     }
 

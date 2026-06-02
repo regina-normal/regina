@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,7 +41,7 @@ void addIntersectionForm(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(IntersectionForm)
 
     auto c = pybind11::class_<IntersectionForm>(m, "IntersectionForm",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<MatrixInt>(), rdoc::__init)
         .def(pybind11::init<const IntersectionForm&>(), rdoc::__copy)
         .def("swap", &IntersectionForm::swap, rdoc::swap)
@@ -53,8 +53,7 @@ void addIntersectionForm(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<IntersectionForm>(m, rdoc::global_swap);
+    regina::python::add_global_swap<IntersectionForm, rdoc>(m);
 
     RDOC_SCOPE_END
 }

@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2025, Ben Burton
+# Copyright (c) 2015-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the use of pure Python functions as C++ callbacks.
@@ -33,9 +33,14 @@
 # Callback actions that we pass to retriangulate() or rewrite():
 ########################################################################
 
-def display(sig, tri):
+def displayTri(sig, tri):
     # A callback that uses both sig and tri arguments.
-    print('    ' + sig, tri.size())
+    print('    ' + IsoSigBinary.asString(sig, tri.dimension), tri.size())
+    return False
+
+def displayLink(sig, link):
+    # A callback that uses both sig and link arguments.
+    print('    ' + LinkSigBinary.asString(sig), link.size())
     return False
 
 sigs = None
@@ -88,9 +93,9 @@ def printBanner(name, test, height, threads):
 def testDisplay(obj, name, height, threads):
     printBanner(name, 'display', height, threads)
     if obj.__class__ == Link:
-        obj.rewrite(height, threads, display)
+        obj.rewrite(height, threads, displayLink)
     else:
-        obj.retriangulate(height, threads, display)
+        obj.retriangulate(height, threads, displayTri)
 
 def testStopAfter10(obj, name, height, threads):
     printBanner(name, 'stop after 10', height, threads)
@@ -111,8 +116,10 @@ def testCollect(obj, name, height, threads):
     sigs = []
     if obj.__class__ == Link:
         ans = obj.rewrite(height, threads, collect)
+        sigs = [ LinkSigBinary.asString(s) for s in sigs ]
     else:
         ans = obj.retriangulate(height, threads, collect)
+        sigs = [ IsoSigBinary.asString(s, obj.dimension) for s in sigs ]
     sigs.sort()
     for i in sigs:
         print('    ' + i)
@@ -269,7 +276,7 @@ print()
 # test that the routine seems to do the right thing.
 
 print('Enumerating covers:')
-c = [ (a[0].isoSig(), a[1]) for a in \
+c = [ (a[0].neoSig(), a[1]) for a in \
     ExampleSnapPea.whiteheadLink().enumerateCovers(3, \
     SnapPeaTriangulation.CoverEnumeration.All) ]
 c.sort()

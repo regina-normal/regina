@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -199,7 +199,7 @@ bool Triangulation<3>::simplifyInternal() {
                 Triangulation<3> tmp(*this, false, true);
                 try {
                     tmp.minimiseVertices();
-                } catch (LockViolation&) {
+                } catch (const LockViolation&) {
                     // Calling minimiseVertices() could cause a lock violation if
                     // there are locked boundary triangles.  In this case it could
                     // still have performed some moves, and it guarantees that the
@@ -408,8 +408,8 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
                 for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
                     if (edge->vertex(0) != edge->vertex(1) &&
-                            (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
-                             edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
+                            (edge->vertex(0)->isInternal() ||
+                             edge->vertex(1)->isInternal())) {
                         // There must be a pinch-edge move here.
                         // Note: this *increases* the number of tetrahedra.
                         // We return true anyway, since this matches the behaviour
@@ -481,8 +481,8 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
                     for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
                         if (edge->vertex(0) != edge->vertex(1) &&
-                                (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
-                                 edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
+                                (edge->vertex(0)->isInternal() ||
+                                 edge->vertex(1)->isInternal())) {
                             // Note: this *increases* the number of tetrahedra.
                             pinchEdge(edge);
                             changedNow = changed = true;

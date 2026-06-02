@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,7 +31,6 @@
 // Regina core includes:
 #include "treewidth/treedecomposition.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
@@ -129,8 +128,8 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     // Finish off.
     baseLayout->addWidget(stack);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &FacetGraphTab::updatePreferences);
 }
 
 void FacetGraphTab::updatePreferences() {

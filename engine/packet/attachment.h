@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -167,14 +167,21 @@ class Attachment : public Packet {
          * contents on the filesystem, the change will _not_ be reflected in
          * this attachment packet.
          *
-         * If the file could not be read or is empty, then no attachment will
-         * be stored.  You can test this by calling isNull().
+         * If the file is empty, then no attachment will be stored.  You can
+         * test this by calling isNull().
+         *
+         * If the file could not be read, then this routine will throw an
+         * exception.  This is a change in behaviour as of Regina 8.0: older
+         * versions of Regina (≤ 7.x) would just store no attachment in this
+         * scenario instead.
          *
          * The filename that is stored with this attachment (i.e., the string
          * that will be returned by filename()) will be the argument
          * \a pathname with any directory prefixes removed (i.e., just the
          * final filename component).  If an error occurs when attempting
          * to remove directory prefixes, the filename will be the empty string.
+         *
+         * \exception FileError An error occurred whilst reading the file.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
@@ -216,9 +223,10 @@ class Attachment : public Packet {
          * this must be strictly positive.
          * \param alloc describes if/how this packet should claim ownership
          * of the given block of data; see the notes above for details.
-         * \param filename the filename to associated with this attachment;
+         * \param filename the filename to associate with this attachment;
          * typically this would be a filename only, with no directory prefixes.
-         * See filename() for details on how this string will be used.
+         * The file does not need to exist, and this constructor will not try to
+         * open it.  See filename() for details on how this string will be used.
          */
         Attachment(char* data, size_t size, OwnershipPolicy alloc,
             std::string filename);
@@ -385,7 +393,8 @@ class Attachment : public Packet {
          * \param filename the new filename to associated with this attachment;
          * this will override the previously stored filename.  Typically
          * this would be a filename only, with no directory prefixes.
-         * See filename() for details on how this string will be used.
+         * The file does not need to exist, and this routine will not try to
+         * open it.  See filename() for details on how this string will be used.
          */
         void reset(char* data, size_t size, OwnershipPolicy alloc,
             std::string filename);
@@ -393,19 +402,26 @@ class Attachment : public Packet {
         /**
          * Saves the contents of this attachment to the given file.
          *
-         * If this packet does not currently hold a non-empty attachment
-         * (i.e., if isNull() returns \c true), then this routine will do
-         * nothing and simply return \c false.
+         * If this packet does not currently hold a non-empty attachment,
+         * or if an error occurs whilst writing to file, then this routine will
+         * throw an exception.  This is a change in behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
+         * \pre This packet holds a non-empty attachment; that is, isNull()
+         * returns `false`.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it unchanged to low-level C/C++ file I/O routines.
          *
+         * \exception FailedPrecondition This packet does not currently hold a
+         * non-empty attachment.
+         *
+         * \exception FileError An error occurred whilst writing to file.
+         *
          * \param pathname the full pathname of the file to write.
-         * \return \c true if the file was successfully written, or
-         * \c false otherwise.
          */
-        bool save(const char* pathname) const;
+        void save(const char* pathname) const;
 
         /**
          * Determines if this and the given attachment hold identical data.

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -975,7 +975,7 @@ class SnapPeaTriangulation :
          * \param tri the Regina triangulation to clone.
          * \param ignored a legacy parameter that is now ignored.
          * (This argument was once required if you wanted to pass a
-         * closed triangluation to SnapPea.)
+         * closed triangulation to SnapPea.)
          */
         SnapPeaTriangulation(const Triangulation<3>& tri, bool ignored = false);
 
@@ -1513,10 +1513,10 @@ class SnapPeaTriangulation :
          * fill the cusp, call filledAll() or filledPartial() instead.
          *
          * For orientable cusps only coprime filling coefficients are allowed,
-         * and for non-orientable cusps only (±1, 0) fillings are allowed.
+         * and for non-orientable cusps only `(±1, 0)` fillings are allowed.
          * Although SnapPea can handle more general fillings, Regina
          * will enforce these conditions; if they are not satisfied then
-         * it will do nothing and simply return \c false.
+         * this routine will throw an exception instead.
          *
          * As a special case however, you may pass (0, 0) as the filling
          * coefficients, in which case this routine will behave
@@ -1525,12 +1525,23 @@ class SnapPeaTriangulation :
          * It is possible that, if the given integers are extremely
          * large, SnapPea cannot convert the filling coefficients to its
          * own internal floating-point representation.  If this happens
-         * then this routine will again do nothing and simply return \c false.
+         * then this routine will throw an exception.
+         *
+         * Note that throwing exceptions on error is a change in behaviour as
+         * of Regina 8.0: older versions of Regina (≤ 7.x) returned `false` on
+         * error instead.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
+         *
+         * \exception InvalidArgument Either the filling coefficients fail
+         * their mathematical requirements (coprime for orientable cusps, or
+         * `(±1, 0)` for non-orientable cusps), or they are too large for
+         * SnapPea's internal floating point representation.
          *
          * \param m the first (meridional) filling coefficient.
          * \param l the second (longitudinal) filling coefficient.
@@ -1539,7 +1550,7 @@ class SnapPeaTriangulation :
          * \return \c true if and only if the filling coefficients were
          * accepted (according to the conditions outlined above).
          */
-        bool fill(int m, int l, unsigned whichCusp = 0);
+        void fill(int m, int l, unsigned whichCusp = 0);
 
         /**
          * Removes any filling on the given cusp.  After removing the filling,
@@ -1549,10 +1560,16 @@ class SnapPeaTriangulation :
          * If the given cusp is already complete, then this routine
          * safely does nothing.
          *
+         * As of Regina 8.0, this routine will throw an exception if this is a
+         * null SnapPea triagulation.  This is a change in behaviour: older
+         * versions of Regina (≤ 7.x) would silently do nothing instead.
+         *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
          *
          * \param whichCusp the index of the cusp to unfill according to
          * SnapPea; this must be between 0 and countCusps()-1 inclusive.
@@ -2252,18 +2269,23 @@ class SnapPeaTriangulation :
          * SnapPea-specific information that Regina does not use (e.g.,
          * peripheral curves).
          *
-         * If this is a null triangulation, then the file will not be
-         * written and this routine will return \c false.
+         * If this is a null triangulation, or if an error occurs whilst
+         * writing the file, then this routine will throw an exception.
+         * This is a change in behaviour as of Regina 8.0: older versions of
+         * Regina (≤ 7.x) returned `false` instead.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_, and
          * simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The _contents_ of the file will be written using UTF-8.
          *
+         * \exception SnapPeaIsNull This is a null SnapPea triangulation.
+         *
+         * \exception FileError An error occurred whilst writing the file.
+         *
          * \param filename the name of the SnapPea file to which to write.
-         * \return \c true if and only if the file was successfully written.
          */
-        bool saveSnapPea(const char* filename) const;
+        void saveSnapPea(const char* filename) const;
 
         /*@}*/
         /**

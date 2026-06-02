@@ -15,10 +15,10 @@ boundaryComponents(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
@@ -46,10 +46,10 @@ components(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (Component<dim>* c : tri.components()) { ... }
@@ -75,16 +75,17 @@ faces(...)
     for Python programmers.
 
     C++ users should not use this routine. The return type must be fixed
-    at compile time, and so it is a std::variant that can hold any of the
-    lightweight return types from the templated faces<subdim>() function.
-    This means that the return value will still need compile-time
-    knowledge of *subdim* to extract and use the appropriate face objects.
-    However, once you know *subdim* at compile time, you are much better
-    off using the (simpler and faster) routine faces<subdim>() instead.
+    at compile time, and so it is typically a ``std::variant`` that can
+    hold any of the lightweight view types returned from the templated
+    ``faces<subdim>()`` function. This means that the return value will
+    still need compile-time knowledge of *subdim* to extract and use the
+    appropriate face objects. However, once you know *subdim* at compile
+    time, you are much better off using the (simpler and faster) routine
+    ``faces<subdim>()`` instead.
 
     For Python users, this routine is much more useful: the return type
     can be chosen at runtime, and so this routine returns a single
-    lightweight object granting access to all of the *subdim*-faces of the
+    lightweight view granting access to all of the *subdim*-faces of the
     triangulation, which you can use immediately.
 
     Exception ``InvalidArgument``:
@@ -148,10 +149,10 @@ simplices(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (Simplex<dim>* s : tri.simplices()) { ... }
@@ -177,16 +178,17 @@ faces(...)
     for Python programmers.
 
     C++ users should not use this routine. The return type must be fixed
-    at compile time, and so it is a std::variant that can hold any of the
-    lightweight return types from the templated faces<subdim>() function.
-    This means that the return value will still need compile-time
-    knowledge of *subdim* to extract and use the appropriate face objects.
-    However, once you know *subdim* at compile time, you are much better
-    off using the (simpler and faster) routine faces<subdim>() instead.
+    at compile time, and so it is typically a ``std::variant`` that can
+    hold any of the lightweight view types returned from the templated
+    ``faces<subdim>()`` function. This means that the return value will
+    still need compile-time knowledge of *subdim* to extract and use the
+    appropriate face objects. However, once you know *subdim* at compile
+    time, you are much better off using the (simpler and faster) routine
+    ``faces<subdim>()`` instead.
 
     For Python users, this routine is much more useful: the return type
     can be chosen at runtime, and so this routine returns a single
-    lightweight object granting access to all of the *subdim*-faces of the
+    lightweight view granting access to all of the *subdim*-faces of the
     triangulation, which you can use immediately.
 
     Exception ``InvalidArgument``:
@@ -245,17 +247,17 @@ embeddings(...)
 
     Returns an object that allows iteration through and random access to
     all of the ways in which this face appears within a top-dimensional
-    simplex of the underlying triangluation.
+    simplex of the underlying triangulation.
 
     The object that is returned is lightweight, and can be happily copied
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. The elements of the list will be read-only
-    objects of type FaceEmbedding<dim, subdim>. For example, your code
-    might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. The elements of the list will be read-only objects of
+    type ``FaceEmbedding<dim, subdim>``. For example, your code might look
+    like:
 
     ```
     Face<dim, subdim>* face = ...;
@@ -296,17 +298,17 @@ embeddings(...)
 
     Returns an object that allows iteration through and random access to
     all of the ways in which this face appears within a top-dimensional
-    simplex of the underlying triangluation.
+    simplex of the underlying triangulation.
 
     The object that is returned is lightweight, and can be happily copied
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. The elements of the list will be read-only
-    objects of type FaceEmbedding<dim, subdim>. For example, your code
-    might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. The elements of the list will be read-only objects of
+    type ``FaceEmbedding<dim, subdim>``. For example, your code might look
+    like:
 
     ```
     Face<dim, subdim>* face = ...;
@@ -450,7 +452,7 @@ __init__(...)
     Parameter ``value``:
         the real number to be truncated.
 
-    7. __init__(self: regina.Integer, arg0: str, base: int = 10) -> None
+    7. __init__(self: regina.Integer, value: str, base: int = 10) -> None
 
     Initialises this integer to the given value which is represented as a
     string of digits in a given base.
@@ -543,7 +545,7 @@ __init__(...)
     Parameter ``value``:
         the real number to be truncated.
 
-    7. __init__(self: regina.LargeInteger, arg0: str, base: int = 10) -> None
+    7. __init__(self: regina.LargeInteger, value: str, base: int = 10) -> None
 
     Initialises this integer to the given value which is represented as a
     string of digits in a given base.

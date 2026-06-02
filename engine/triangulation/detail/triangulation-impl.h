@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,7 +45,7 @@
 #define __REGINA_TRIANGULATION_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -739,7 +739,7 @@ std::string TriangulationBase<dim>::source(Language language) const {
         case Language::Cxx:    ans << "});\n"; break;
         case Language::Python: ans << "])\n";  break;
     }
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))

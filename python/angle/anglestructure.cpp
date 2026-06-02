@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,7 +42,8 @@ using regina::AngleStructure;
 void addAngleStructure(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(AngleStructure)
 
-    auto c = pybind11::class_<AngleStructure>(m, "AngleStructure", rdoc_scope)
+    auto c = pybind11::class_<AngleStructure>(m, "AngleStructure",
+            rdoc::__class)
         .def(pybind11::init<const AngleStructure&>(), rdoc::__copy)
         .def(pybind11::init<const AngleStructure&,
             const regina::Triangulation<3>&>(), rdoc::__init)
@@ -84,8 +85,7 @@ void addAngleStructure(pybind11::module_& m) {
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
-
-    regina::python::add_global_swap<AngleStructure>(m, rdoc::global_swap);
+    regina::python::add_global_swap<AngleStructure, rdoc>(m);
 
     RDOC_SCOPE_END
 }

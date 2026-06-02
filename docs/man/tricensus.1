@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS" "1" "25 August 2025" "" "The Regina Handbook"
+.TH "TRICENSUS" "1" "13 May 2026" "" "The Regina Handbook"
 
 .SH NAME
 tricensus \- Form a census of triangulations
@@ -214,7 +214,9 @@ options.
 .TP
 \fB-s, --sigs\fR
 Instead of writing a full Regina data file, just output a list
-of isomorphism signatures.
+of isomorphism signatures.  As of Regina\~8.0, these will be
+\fBsecond-generation\fR signatures, as computed
+in code by Triangulation::neoSig()\&.
 
 The output file will be a plain text file.  Each line will be a
 short string of letters, digits and/or punctuation that uniquely
@@ -229,6 +231,12 @@ More importantly, the memory footprint of
 triangulations can be written to the output file and forgotten
 immediately, instead of being kept in memory to construct a final
 Regina data file.
+
+If you need the isomorphism signatures to be compatible with
+Regina\~<=\~7.x, you can convert the output into
+\fBfirst-generation\fR signatures by piping
+the file through the utility
+\fBsigconvert\fR\&.
 .TP
 \fB-S, --canonical\fR
 A variant of \fB--sigs\fR that outputs a list of
@@ -236,8 +244,9 @@ isomorphism signatures along with matching isomorphisms.
 
 The output file will be a plain text file.  Each line will
 contain two short strings, separated by a single space.
-The first string will be the same isomorphism signature that is
-output by \fB--sigs\fR\&.  The second string encodes an
+The first string will be the same second-generation
+isomorphism signature that is output by \fB--sigs\fR\&.
+The second string encodes an
 isomorphism \fIF\fR with the property that,
 if we reconstruct a triangulation from the isomorphism signature
 and apply the isomorphism \fIF\fR, then

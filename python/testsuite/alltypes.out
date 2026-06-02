@@ -4,17 +4,29 @@ AngleAlg : enum
 AngleAlgFlags : alias -> enum AngleAlg
 AngleStructure : class -> EqualityType.ByValue
 AngleStructures : class -> EqualityType.ByValue
+AnyInteger : concept
+ArbitraryPrecisionInteger : concept
+ArbitraryPrecisionIntegerVector : concept
+ArrayOf : concept
 Arrow : class -> EqualityType.ByValue
+AssignableTo : concept
 Attachment : class -> EqualityType.ByValue
 AugTriSolidTorus : class -> EqualityType.ByValue
 BagComparison : enum
 BanBoundary : class -> EqualityType.ByValue
+BanConstraint : concept
 BanEdge : class -> EqualityType.ByValue
 BanNone : class -> EqualityType.ByValue
 BanTorusBoundary : class -> EqualityType.ByValue
-Base64SigDecoder : class -> EqualityType.ByReference
-Base64SigEncoder : class -> EqualityType.ByReference
+Base64BitDecoder : class -> EqualityType.ByReference
+Base64BitEncoder : class -> EqualityType.ByReference
+Base64Decoder : class -> EqualityType.ByReference
+Base64Encoder : class -> EqualityType.ByReference
 Base64SigEncoding : class -> EqualityType.NeverInstantiated
+BidirectionalIterableFor : concept
+BidirectionalIteratorFor : concept
+BitDecoder : class -> EqualityType.ByReference
+BitEncoder : class -> EqualityType.ByReference
 BitManipulator : class -> EqualityType.NeverInstantiated
 Bitmask : class -> EqualityType.ByValue
 Bitmask128 : class -> EqualityType.ByValue
@@ -34,13 +46,19 @@ BoundaryComponent5 : class -> EqualityType.ByReference
 BoundaryComponent6 : class -> EqualityType.ByReference
 BoundaryComponent7 : class -> EqualityType.ByReference
 BoundaryComponent8 : class -> EqualityType.ByReference
+CanConstruct : concept
 Census : class -> EqualityType.NeverInstantiated
+CensusCollection3 : class -> EqualityType.NeverInstantiated
+CensusCollectionLink : class -> EqualityType.NeverInstantiated
 CensusDB : class -> EqualityType.ByValue
 CensusHit : class -> EqualityType.ByValue
 CensusPurge : enum
 CensusPurgeFlags : alias -> enum CensusPurge
+CensusSearchable : concept
+CharIterator : concept
 ChildIterator : class -> EqualityType.ByValue
 ClosedPrimeMinSearcher : class -> EqualityType.ByReference
+CoefficientDomain : concept
 CompactSearcher : class -> EqualityType.ByReference
 Component2 : class -> EqualityType.ByReference
 Component3 : class -> EqualityType.ByReference
@@ -49,7 +67,10 @@ Component5 : class -> EqualityType.ByReference
 Component6 : class -> EqualityType.ByReference
 Component7 : class -> EqualityType.ByReference
 Component8 : class -> EqualityType.ByReference
+Concept : concept
+ConstRefArrayOf : concept
 Container : class -> EqualityType.Disabled
+CppInteger : concept
 Crossing : class -> EqualityType.ByReference
 Cusp : class -> EqualityType.ByValue
 Cut : class -> EqualityType.ByValue
@@ -60,6 +81,8 @@ DiscSpec : class -> EqualityType.ByValue
 DiscSpecIterator : class -> EqualityType.ByValue
 DiscType : class -> EqualityType.ByValue
 DivisionByZero : exception
+Documentation : documentation
+Domain : concept
 DoubleDescription : class -> EqualityType.NeverInstantiated
 Edge2 : alias -> Face2_1
 Edge3 : alias -> Face3_1
@@ -179,6 +202,7 @@ FacetSpec6 : class -> EqualityType.ByValue
 FacetSpec7 : class -> EqualityType.ByValue
 FacetSpec8 : class -> EqualityType.ByValue
 FailedPrecondition : exception
+Field : concept
 FileError : exception
 FileFormat : enum
 FileInfo : class -> EqualityType.ByValue
@@ -190,6 +214,7 @@ Flags_HyperList : class -> EqualityType.ByValue
 Flags_NormalAlg : class -> EqualityType.ByValue
 Flags_NormalList : class -> EqualityType.ByValue
 Flags_SurfaceExport : class -> EqualityType.ByValue
+ForwardIteratorFor : concept
 Framing : enum
 GlobalDirs : class -> EqualityType.NeverInstantiated
 GluingPermSearcher2 : class -> EqualityType.ByReference
@@ -225,11 +250,19 @@ HyperList : enum
 HyperListFlags : alias -> enum HyperList
 HyperbolicMinSearcher : class -> EqualityType.ByReference
 ImpossibleScenario : exception
+IndexedContainer : concept
+InherentlyTightEncodable : concept
+InputIteratorFor : concept
 Integer : class -> EqualityType.ByValue
+IntegerComparable : concept
+IntegerCompatible : concept
 IntegerOverflow : exception
+IntegerVector : concept
+IntegralDomain : concept
 IntersectionForm : class -> EqualityType.ByValue
 InvalidArgument : exception
 InvalidInput : exception
+IsoSigBinary : class -> EqualityType.NeverInstantiated
 IsoSigClassic2 : class -> EqualityType.Disabled
 IsoSigClassic3 : class -> EqualityType.Disabled
 IsoSigClassic4 : class -> EqualityType.Disabled
@@ -237,6 +270,20 @@ IsoSigClassic5 : class -> EqualityType.Disabled
 IsoSigClassic6 : class -> EqualityType.Disabled
 IsoSigClassic7 : class -> EqualityType.Disabled
 IsoSigClassic8 : class -> EqualityType.Disabled
+IsoSigData1_2 : class -> EqualityType.ByValue
+IsoSigData1_3 : class -> EqualityType.ByValue
+IsoSigData1_4 : class -> EqualityType.ByValue
+IsoSigData1_5 : class -> EqualityType.ByValue
+IsoSigData1_6 : class -> EqualityType.ByValue
+IsoSigData1_7 : class -> EqualityType.ByValue
+IsoSigData1_8 : class -> EqualityType.ByValue
+IsoSigData2_2 : class -> EqualityType.ByValue
+IsoSigData2_3 : class -> EqualityType.ByValue
+IsoSigData2_4 : class -> EqualityType.ByValue
+IsoSigData2_5 : class -> EqualityType.ByValue
+IsoSigData2_6 : class -> EqualityType.ByValue
+IsoSigData2_7 : class -> EqualityType.ByValue
+IsoSigData2_8 : class -> EqualityType.ByValue
 IsoSigEdgeDegrees2 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees3 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees4 : class -> EqualityType.Disabled
@@ -244,20 +291,9 @@ IsoSigEdgeDegrees5 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees6 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees7 : class -> EqualityType.Disabled
 IsoSigEdgeDegrees8 : class -> EqualityType.Disabled
-IsoSigPrintable2 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable3 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable4 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable5 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable6 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable7 : class -> EqualityType.NeverInstantiated
-IsoSigPrintable8 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree2 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree3 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree4 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree5 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree6 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree7 : class -> EqualityType.NeverInstantiated
-IsoSigPrintableLockFree8 : class -> EqualityType.NeverInstantiated
+IsoSigEncoding : concept
+IsoSigPrintable : class -> EqualityType.NeverInstantiated
+IsoSigPrintableLockFree : class -> EqualityType.NeverInstantiated
 IsoSigRidgeDegrees2 : class -> EqualityType.Disabled
 IsoSigRidgeDegrees3 : alias -> IsoSigEdgeDegrees3
 IsoSigRidgeDegrees4 : class -> EqualityType.Disabled
@@ -265,6 +301,7 @@ IsoSigRidgeDegrees5 : class -> EqualityType.Disabled
 IsoSigRidgeDegrees6 : class -> EqualityType.Disabled
 IsoSigRidgeDegrees7 : class -> EqualityType.Disabled
 IsoSigRidgeDegrees8 : class -> EqualityType.Disabled
+IsoSigType : concept
 Isomorphism2 : class -> EqualityType.ByValue
 Isomorphism3 : class -> EqualityType.ByValue
 Isomorphism4 : class -> EqualityType.ByValue
@@ -272,6 +309,9 @@ Isomorphism5 : class -> EqualityType.ByValue
 Isomorphism6 : class -> EqualityType.ByValue
 Isomorphism7 : class -> EqualityType.ByValue
 Isomorphism8 : class -> EqualityType.ByValue
+Iterable : concept
+IterableFor : concept
+LPConstraint : concept
 LPConstraintEulerPositive : class -> EqualityType.NeverInstantiated
 LPConstraintEulerZero : class -> EqualityType.NeverInstantiated
 LPConstraintNonSpun : class -> EqualityType.NeverInstantiated
@@ -286,6 +326,7 @@ LPInitialTableaux_EulerPositive : class -> EqualityType.Disabled
 LPInitialTableaux_EulerZero : class -> EqualityType.Disabled
 LPInitialTableaux_NonSpun : class -> EqualityType.Disabled
 LPMatrix : class -> EqualityType.ByValue
+LPSubspace : concept
 LPSystem : class -> EqualityType.ByValue
 Language : enum
 LargeInteger : class -> EqualityType.ByValue
@@ -300,9 +341,16 @@ LayeredTorusBundle : class -> EqualityType.ByValue
 Layering : class -> EqualityType.ByValue
 LensSpace : class -> EqualityType.ByValue
 Link : class -> EqualityType.ByValue
+LinkSigBinary : class -> EqualityType.NeverInstantiated
+LinkSigData : class -> EqualityType.ByValue
+LinkSigEncoding : concept
+LinkSigPrintable : class -> EqualityType.NeverInstantiated
 Locale : class -> EqualityType.NeverInstantiated
 LockViolation : exception
-Manifold : class -> EqualityType.NeverInstantiated
+Manifold : alias -> Manifold3
+Manifold3 : class -> EqualityType.NeverInstantiated
+ManifoldOptions : documentation
+ManifoldOptions3 : class -> EqualityType.NeverInstantiated
 MarkedAbelianGroup : class -> EqualityType.ByValue
 Matrix2 : class -> EqualityType.ByValue
 Matrix3D : class -> EqualityType.ByValue
@@ -331,10 +379,14 @@ NormalSurfaces : class -> EqualityType.ByValue
 NormalTransform : enum
 NotImplemented : exception
 NumericalError : exception
+OutputIterator : concept
 Packet : class -> EqualityType.NeverInstantiated
 PacketChildren : class -> EqualityType.ByValue
+PacketClass : concept
 PacketDescendants : class -> EqualityType.ByValue
+PacketHeldType : concept
 PacketInfo : class -> EqualityType.NeverInstantiated
+PacketIterator : concept
 PacketListener : class -> EqualityType.ByReference
 PacketOfAngleStructures : class -> EqualityType.ByValue
 PacketOfLink : class -> EqualityType.ByValue
@@ -480,13 +532,23 @@ Qitmask16 : class -> EqualityType.ByValue
 Qitmask32 : class -> EqualityType.ByValue
 Qitmask64 : class -> EqualityType.ByValue
 Qitmask8 : class -> EqualityType.ByValue
+RandomAccessIterableFor : concept
+RandomAccessIteratorFor : concept
 RandomEngine : class -> EqualityType.NeverInstantiated
 Rational : class -> EqualityType.ByValue
+Readable : concept
+ReginaBitmask : concept
 ReginaException : exception
+ReginaInteger : concept
+ReginaQitmask : concept
+RichStringifiable : concept
+Ring : concept
+RingLike : concept
 Rotation3D : class -> EqualityType.ByValue
 SFSAlt : class -> EqualityType.ByValue
 SFSFibre : class -> EqualityType.ByValue
 SFSpace : class -> EqualityType.ByValue
+SameModCVRef : concept
 SatAnnulus : class -> EqualityType.ByValue
 SatBlock : class -> EqualityType.ByValue
 SatBlockModel : class -> EqualityType.ByValue
@@ -500,9 +562,13 @@ SatRegion : class -> EqualityType.ByValue
 SatTriPrism : class -> EqualityType.ByValue
 Script : class -> EqualityType.ByValue
 Segment3D : class -> EqualityType.ByValue
+SelfSentinelInputIterator : concept
 SigCensus : class -> EqualityType.NeverInstantiated
 SigPartialIsomorphism : class -> EqualityType.ByValue
 Signature : class -> EqualityType.ByValue
+SignatureEncodable : concept
+SignatureType : concept
+SignedCppInteger : concept
 SimpleSurfaceBundle : class -> EqualityType.ByValue
 Simplex2 : class -> EqualityType.ByReference
 Simplex3 : class -> EqualityType.ByReference
@@ -523,8 +589,17 @@ SnappedTwoSphere : class -> EqualityType.ByValue
 SnapshotWriteError : exception
 SpatialLink : class -> EqualityType.ByValue
 SpiralSolidTorus : class -> EqualityType.ByValue
-StandardTriangulation : class -> EqualityType.NeverInstantiated
+StandardCppInteger : concept
+StandardStringifiable : concept
+StandardSubcomplex3 : class -> EqualityType.NeverInstantiated
+StandardSubcomplex4 : class -> EqualityType.NeverInstantiated
+StandardSubcomplexOptions : documentation
+StandardSubcomplexOptions3 : class -> EqualityType.NeverInstantiated
+StandardSubcomplexOptions4 : class -> EqualityType.NeverInstantiated
+StandardTriangulation : alias -> StandardSubcomplex3
 StrandRef : class -> EqualityType.ByValue
+StrictWeakOrder : concept
+Stringifiable : concept
 SubtreeIterator : class -> EqualityType.ByValue
 SurfaceExport : enum
 SurfaceExportFields : alias -> enum SurfaceExport
@@ -534,6 +609,7 @@ SurfaceFilterProperties : class -> EqualityType.ByValue
 SurfaceFilterType : enum
 Tangle : class -> EqualityType.ByValue
 TautEnumeration : class -> EqualityType.ByReference
+TerminatingCallback : concept
 Tetrahedron3 : alias -> Simplex3
 Tetrahedron4 : alias -> Face4_3
 Tetrahedron5 : alias -> Face5_3
@@ -546,6 +622,7 @@ TetrahedronEmbedding6 : alias -> FaceEmbedding6_3
 TetrahedronEmbedding7 : alias -> FaceEmbedding7_3
 TetrahedronEmbedding8 : alias -> FaceEmbedding8_3
 Text : class -> EqualityType.ByValue
+TextPacket : concept
 TorusBundle : class -> EqualityType.ByValue
 TreeBag : class -> EqualityType.ByReference
 TreeDecomposition : class -> EqualityType.ByValue
@@ -614,6 +691,7 @@ TxIDiagonalCore : class -> EqualityType.ByValue
 TxIParallelCore : class -> EqualityType.ByValue
 TypeTrie4 : class -> EqualityType.ByValue
 TypeTrie7 : class -> EqualityType.ByValue
+UnsignedCppInteger : concept
 UnsolvedCase : exception
 ValidityConstraints : class -> EqualityType.ByValue
 Vector3D : class -> EqualityType.ByValue
@@ -633,6 +711,9 @@ VertexEmbedding5 : alias -> FaceEmbedding5_0
 VertexEmbedding6 : alias -> FaceEmbedding6_0
 VertexEmbedding7 : alias -> FaceEmbedding7_0
 VertexEmbedding8 : alias -> FaceEmbedding8_0
+VoidCallback : concept
+WrappedPacket : concept
+Writeable : concept
 base64Decode : function
 base64Encode : function
 base64Length : function

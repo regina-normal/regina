@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -769,12 +769,6 @@ void ReginaMain::setupActions() {
     act->setShortcuts(QKeySequence::WhatsThis);
     connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
     helpMenu->addAction(act);
-
-    // TODO: Tip of the day not implemented
-    //act = KStandardAction::tipOfDay(this, SLOT(helpTipOfDay()),
-    //    actionCollection());
-    //act->setWhatsThis(tr("View tips and hints on how to use Regina."));
-
 
     // --- Toolbars ---
 

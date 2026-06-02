@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,27 +51,23 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
         return nullptr;
 
     // Start with property checks to see if it has a chance of being
-    // in the SnapPea census at all.  The component must not be
-    // closed, every edge must be valid and every vertex link must be
-    // either a torus or a Klein bottle.  Note that this implies
-    // that there are no boundary triangles.
+    // in the SnapPea census at all.
 
     if (comp->isClosed())
         return nullptr;
-
-    size_t nVertices = comp->countVertices();
-    size_t nEdges = comp->countEdges();
-    for (size_t i = 0; i < nVertices; i++) {
-        auto link = comp->vertex(i)->linkType();
-        if (link != Vertex<3>::Link::Torus &&
-                link != Vertex<3>::Link::KleinBottle)
+    if (comp->hasBoundaryFacets())
+        return nullptr;
+    if (comp->countEdges() != comp->size()) // by Euler characteristic
+        return nullptr;
+    for (auto v : comp->vertices())
+        if (v->linkEulerChar() != 0)
             return nullptr;
-    }
-    for (size_t i = 0; i < nEdges; i++)
-        if (! comp->edge(i)->isValid())
+    for (auto e : comp->edges())
+        if (! e->isValid())
             return nullptr;
 
     // Now search for specific triangulations.
+    // We will assume all of the properties that we tested above.
 
     if (comp->size() == 1) {
         // At this point it must be m000, since there are no others
@@ -85,8 +81,6 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
         if (comp->isOrientable()) {
             // Orientable.  Looking for m003 or m004.
             if (comp->countVertices() != 1)
-                return nullptr;
-            if (comp->countEdges() != 2)
                 return nullptr;
             if (comp->edge(0)->degree() != 6 ||
                     comp->edge(1)->degree() != 6)
@@ -105,8 +99,6 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
             // Non-orientable.  Looking for m001 or m002.
             if (comp->countVertices() == 1) {
                 // Looking for m001.
-                if (comp->countEdges() != 2)
-                    return nullptr;
                 if (! ((comp->edge(0)->degree() == 4 &&
                         comp->edge(1)->degree() == 8) ||
                        (comp->edge(0)->degree() == 8 &&
@@ -121,8 +113,6 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
                     new SnapPeaCensusTri(SEC_5, 1));
             } else if (comp->countVertices() == 2) {
                 // Looking for m002.
-                if (comp->countEdges() != 2)
-                    return nullptr;
                 if (comp->edge(0)->degree() != 6 ||
                         comp->edge(1)->degree() != 6)
                     return nullptr;
@@ -143,12 +133,6 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
             // aren't terribly expensive anyway.
             if (comp->countVertices() != 2)
                 return nullptr;
-            if (comp->countEdges() != 4)
-                return nullptr;
-            if (comp->vertex(0)->linkType() != Vertex<3>::Link::Torus)
-                return nullptr;
-            if (comp->vertex(1)->linkType() != Vertex<3>::Link::Torus)
-                return nullptr;
             if (comp->vertex(0)->degree() != 8)
                 return nullptr;
             if (comp->vertex(1)->degree() != 8)
@@ -167,7 +151,7 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
     return nullptr;
 }
 
-std::unique_ptr<Manifold> SnapPeaCensusTri::manifold() const {
+std::unique_ptr<Manifold<3>> SnapPeaCensusTri::manifold() const {
     return std::make_unique<SnapPeaCensusManifold>(section_, index_);
 }
 

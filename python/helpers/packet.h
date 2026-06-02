@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,7 +32,13 @@
  *  \brief Assists with packets that wrap standalone C++ types.
  */
 
+#ifndef __HELPERS_PACKET_H
+#ifndef __DOXYGEN
+#define __HELPERS_PACKET_H
+#endif
+
 #include "packet/packet.h"
+#include "../docstrings/packet/packet.h"
 
 namespace regina::python {
 
@@ -66,9 +72,9 @@ template <PacketHeldType Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     auto c = pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
             std::shared_ptr<regina::PacketOf<Held>>>(m, className,
-            doc::common::PacketOf)
+            doc::PacketOf::__class)
         .def(pybind11::init<const Held&>(), // also takes PacketOf<Held>
-            doc::common::PacketOf_copy)
+            doc::PacketOf::__init)
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
     regina::python::add_output_rich(c);
@@ -76,19 +82,19 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
     m.def("make_packet", [](const Held& h) {
         // The C++ make_packet expects an rvalue reference.
         return regina::make_packet(Held(h));
-    }, doc::common::make_packet);
+    }, doc::make_packet);
     m.def("make_packet", [](const Held& h, const std::string& label) {
         // The C++ make_packet expects an rvalue reference.
         return regina::make_packet(Held(h), label);
-    }, doc::common::make_packet_2);
+    }, doc::make_packet_2);
 
     // Be kind to users who expect regina-style capitalisation.
     m.def("makePacket", [](const Held& h) {
         return regina::make_packet(Held(h)); // rvalue ref, as above
-    }, doc::common::make_packet);
+    }, doc::make_packet);
     m.def("makePacket", [](const Held& h, const std::string& label) {
         return regina::make_packet(Held(h), label); // rvalue ref, as above
-    }, doc::common::make_packet_2);
+    }, doc::make_packet_2);
 
     return c;
 }
@@ -138,10 +144,11 @@ void add_packet_data(Class& classWrapper) {
     using DataType = regina::PacketData<typename Class::type>;
     classWrapper
         .def("packet", pybind11::overload_cast<>(&DataType::packet),
-            doc::common::PacketData_packet)
-        .def("anonID", &DataType::anonID, doc::common::PacketData_anonID)
+            doc::PacketData::packet)
+        .def("anonID", &DataType::anonID, doc::PacketData::anonID)
         ;
 }
 
 } // namespace regina::python
 
+#endif

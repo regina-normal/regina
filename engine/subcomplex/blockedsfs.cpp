@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -243,7 +243,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
     return std::nullopt;
 }
 
-std::unique_ptr<Manifold> BlockedSFS::manifold() const {
+std::unique_ptr<Manifold<3>> BlockedSFS::manifold() const {
     try {
         SFSpace ans = region_.createSFS(false);
 
@@ -429,7 +429,7 @@ std::optional<std::string> BlockedSFS::findPluggedTori(bool thin, int id,
     if (p1 != 2 || q1 != -1)
         ans << " | " << p1 << ',' << q1;
     ans << ')';
-    return ans.str();
+    return std::move(ans).str();
 }
 
 } // namespace regina

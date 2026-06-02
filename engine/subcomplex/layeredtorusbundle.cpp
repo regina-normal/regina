@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -148,7 +148,7 @@ std::unique_ptr<LayeredTorusBundle> LayeredTorusBundle::hunt(
     return ans;
 }
 
-std::unique_ptr<Manifold> LayeredTorusBundle::manifold() const {
+std::unique_ptr<Manifold<3>> LayeredTorusBundle::manifold() const {
     // Note that this one-liner appears again in homology(), where
     // we use the underlying TorusBundle for homology calculations.
     return std::make_unique<TorusBundle>(core_->parallelReln() * reln_);

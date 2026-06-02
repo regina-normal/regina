@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2025, Ben Burton                                   *
+ *  Copyright (c) 2011-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1526,7 +1526,7 @@ template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
 inline std::string TreeTraversal<Constraint, Ban, IntType>::typeString() const {
     std::ostringstream out;
     dumpTypes(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>

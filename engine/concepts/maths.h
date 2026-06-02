@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,7 @@
 #endif
 
 #include <type_traits>
+#include <iostream>
 #include "concepts/core.h"
 #include "maths/forward.h"
 
@@ -75,16 +76,44 @@ concept IntegerVector =
     ReginaInteger<typename T::value_type>;
 
 /**
- * One of Regina's mathematical types that allows reconstruction from
- * signatures, up to combinatorial isomorphism.
+ * A type that can be used to hold signatures that identify mathematical
+ * objects uniquely up to combinatorial isomorphism.  Such signatures include
+ * isomorphism signatures of triangulations, and knot/link signatures.
+ *
+ * Important semantic requirements for this type are:
+ * - the operation `x += y` must concatenate \a y to the end of \a x;
+ * - the default constructor must create an empty signature;
+ * - the output operator should write printable characters (for example,
+ *   regina::ByteSequence writes its bytes in hexadecimal, not as raw bytes).
+ *
+ * Examples of such types include `std::string` and `regina::ByteSequence`.
+ */
+template <typename T>
+concept SignatureType =
+    std::regular<T> &&
+    std::totally_ordered<T> &&
+    requires(T x, const T y, std::ostream s) {
+        { y.size() } -> std::same_as<size_t>;
+        { x += y } -> std::same_as<T&>;
+        { s << y } -> std::same_as<std::ostream&>;
+    };
+
+/**
+ * One of Regina's mathematical types that allows generation of and
+ * reconstruction from string-based signatures, up to combinatorial isomorphism.
+ *
+ * In particular, second-generation signatures must be supported via
+ * `T::neoSig()`.
  *
  * Examples of such types include `Triangulation<dim>` and Link.
  */
 template <typename T>
-concept SigReconstructible =
-    requires(const T x, const std::string sig) {
-        { x.sig() } -> std::same_as<std::string>;
+concept SignatureEncodable =
+    requires(const T obj, const std::string sig) {
         { T::fromSig(sig) } -> std::same_as<T>;
+        { obj.neoSig() } -> std::same_as<std::string>;
+        { T::sigGeneration(sig) } -> std::same_as<int>;
+        { T::sigComponentSize(sig) } -> std::same_as<size_t>;
     };
 
 } // namespace regina

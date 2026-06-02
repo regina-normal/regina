@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -688,7 +688,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <bool rhsWithInfinity>
@@ -708,7 +708,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * It is assumed that the type \a IntType is \c long.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <CppInteger IntType>
@@ -726,7 +726,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * available to Python users.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <int bytes>
@@ -1407,7 +1407,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \pre This integer is not infinite.
          *
          * \param p the given odd prime.
-         * \return The Legendre symbol (0, 1 or -1) as described above.
+         * \return the Legendre symbol (0, 1 or -1) as described above.
          *
          * \author Ryan Budney
          */
@@ -1637,7 +1637,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * name __hash__().  This allows Regina's arbitrary-precision integers
          * to be used as keys in Python dictionaries and sets.
          *
-         * \return The hash of this arbitrary-precision integer.
+         * \return the hash of this arbitrary-precision integer.
          */
         size_t hash() const;
 
@@ -1812,6 +1812,8 @@ void tightEncode(std::ostream& out, IntegerBase<withInfinity> value);
  * IntegerBase::tightEncoding().  However, this global function is more
  * efficient if the integer argument is an rvalue reference (since the const
  * member function induces an extra deep copy).
+ *
+ * \pydocname{tightEncoding_ReginaInteger}
  *
  * \param value the integer to encode.
  * \return the resulting encoded string.
@@ -2014,7 +2016,7 @@ class NativeInteger {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         constexpr std::strong_ordering operator <=> (const NativeInteger& rhs)
@@ -2032,7 +2034,7 @@ class NativeInteger {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         constexpr std::strong_ordering operator <=> (Native rhs) const;
@@ -3947,7 +3949,7 @@ template <bool withInfinity>
 inline std::string IntegerBase<withInfinity>::tightEncoding() const {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, *this);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <bool withInfinity>
@@ -4036,7 +4038,7 @@ template <bool withInfinity>
 std::string tightEncoding(IntegerBase<withInfinity> value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, std::move(value));
-    return out.str();
+    return std::move(out).str();
 }
 
 // Inline functions for NativeInteger

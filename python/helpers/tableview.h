@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -34,6 +34,11 @@
  *  This header is _not_ included automatically by python/helpers.h.
  *  If you need it, you will need to include it yourself.
  */
+
+#ifndef __HELPERS_TABLEVIEW_H
+#ifndef __DOXYGEN
+#define __HELPERS_TABLEVIEW_H
+#endif
 
 #include "../helpers.h"
 #include <pybind11/stl.h>
@@ -121,7 +126,7 @@ void addTableView(pybind11::module_& internal) {
         tableViewElementName<Element> + "_" + std::to_string(dim1);
     auto c = pybind11::class_<T>(internal,
             (prefix + ... + ("_" + std::to_string(dim))).c_str(),
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const T&>(), rdoc::__copy)
         .def("size", &T::size, rdoc::size)
         .def("__len__", [](const T& view) {
@@ -266,3 +271,4 @@ regina::TableView<Element, dim1, dim2, dim3> wrapTableView(
 
 } // namespace regina::python
 
+#endif

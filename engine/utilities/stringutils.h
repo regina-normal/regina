@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,8 @@
 #include "regina-core.h"
 #include "concepts/core.h"
 #include "concepts/io.h"
+#include "utilities/boolset.h" // for deprecated valueOf()
+#include "utilities/exception.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -86,35 +88,34 @@ bool startsWith(const std::string& str, const std::string& prefix);
 std::string stripWhitespace(const std::string& str);
 
 /**
- * Converts the entire given string to a signed native integer of type \a T
- * and reports whether this conversion was successful.
+ * Converts the entire given string to a signed native integer of type \a T.
  *
  * If the integer encoded by the given string is out of range for type \a T,
- * then this routine will return \c false and the value of \a dest will be
- * left unchanged.
+ * then this routine will throw an exception.
  *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are found (including leading or trailing
- * whitespace), then again this routine will return \c false and the value of
- * \a dest will be left unchanged.
+ * whitespace), then again this routine will throw an exception.
  *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's parse() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
+ * \exception InvalidArgument The complete string was not successfully
+ * converted to the requested integer type.
+ *
  * \param str the string to convert.
- * \param dest the variable in which to store the resulting signed native
- * integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
+ * \return the resulting signed native integer.
  *
  * \ingroup utilities
  */
 template <SignedCppInteger T>
-bool valueOf(const std::string& str, T& dest) {
-    if (str.empty() || std::isspace(str.front()))
-        return false;
+T parse(const std::string& str) {
+    if (str.empty())
+        throw InvalidArgument("String is empty");
+    if (std::isspace(str.front()))
+        throw InvalidArgument("String has leading whitespace");
 
     if constexpr (sizeof(T) <= sizeof(long long)) {
         size_t pos = 0;
@@ -122,28 +123,25 @@ bool valueOf(const std::string& str, T& dest) {
             if constexpr (sizeof(T) <= sizeof(long)) {
                 long ans = std::stol(str, std::addressof(pos), 10);
                 if (pos != str.size())
-                    return false;
+                    throw InvalidArgument("String has trailing characters");
                 if constexpr (sizeof(T) < sizeof(long))
                     if (ans < std::numeric_limits<T>::min() ||
                             ans > std::numeric_limits<T>::max())
-                        return false;
-                dest = static_cast<T>(ans);
-                return true;
+                        throw InvalidArgument("Value out of range");
+                return static_cast<T>(ans);
             } else {
                 long long ans = std::stoll(str, std::addressof(pos), 10);
                 if (pos != str.size())
-                    return false;
+                    throw InvalidArgument("String has trailing characters");
                 if constexpr (sizeof(T) < sizeof(long long))
                     if (ans < std::numeric_limits<T>::min() ||
                             ans > std::numeric_limits<T>::max())
-                        return false;
-                dest = static_cast<T>(ans);
-                return true;
+                        throw InvalidArgument("Value out of range");
+                return static_cast<T>(ans);
             }
         } catch (const std::logic_error&) {
-            // Either the string was unconvertible, or the value was out of
-            // range.
-            return false;
+            throw InvalidArgument(
+                "String is unconvertible, or value out of range");
         }
     } else {
         // We avoid using std::istream extraction, since it looks like this
@@ -154,70 +152,70 @@ bool valueOf(const std::string& str, T& dest) {
         bool negative = (*pos == '-');
         if (negative) {
             if (++pos == str.end())
-                return false;
+                throw InvalidArgument("String is incomplete");
         }
 
         T ans = 0;
         while (pos != str.end()) {
             char c = *pos++;
             if (c < '0' || c > '9')
-                return false;
+                throw InvalidArgument("String contains invalid character");
             int digit = c - '0';
             // Note: for overflow testing we cannot rely on wraparound
             // arithmetic (as we do in the unsigned case), since this behaviour
             // is not mandated for signed types.
             if (negative) {
                 if (ans < std::numeric_limits<T>::min() / 10)
-                    return false; // overflow
+                    throw InvalidArgument("Value out of range"); // overflow
                 ans *= 10;
                 if (digit && ans < std::numeric_limits<T>::min() + digit)
-                    return false; // overflow
+                    throw InvalidArgument("Value out of range"); // overflow
                 ans -= digit;
             } else {
                 if (ans > std::numeric_limits<T>::max() / 10)
-                    return false; // overflow
+                    throw InvalidArgument("Value out of range"); // overflow
                 ans *= 10;
                 if (digit && ans > std::numeric_limits<T>::max() - digit)
-                    return false; // overflow
+                    throw InvalidArgument("Value out of range"); // overflow
                 ans += digit;
             }
         }
-        dest = ans;
-        return true;
+        return ans;
     }
 }
 
 /**
- * Converts the entire given string to an unsigned native integer of type \a T
- * and reports whether this conversion was successful.
+ * Converts the entire given string to an unsigned native integer of type \a T.
  *
  * If the integer encoded by the given string is out of range for type \a T,
- * then this routine will return \c false and the value of \a dest will be
- * left unchanged.  In particular, this will happen if \a str encodes a
- * negative number (since \a T is an unsigned type).
+ * then this routine will throw an exception.  In particular, this will happen
+ * if \a str encodes a negative number (since \a T is an unsigned type).
  *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are found (including leading or trailing
- * whitespace), then again this routine will return \c false and the value of
- * \a dest will be left unchanged.
+ * whitespace), then again this routine will throw an exception.
  *
- * \nopython None of Regina's valueOf() functions are wrapped in Python,
+ * \nopython None of Regina's parse() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
  * Instead, use Python's own native string-to-number mechanisms.
  *
+ * \exception InvalidArgument The complete string was not successfully
+ * converted to the requested integer type.
+ *
  * \param str the string to convert.
- * \param dest the variable in which to store the resulting unsigned native
- * integer.
- * \return \c true if the conversion was completely successful or \c false
- * otherwise.
+ * \return the resulting unsigned native integer.
  *
  * \ingroup utilities
  */
 template <UnsignedCppInteger T>
-bool valueOf(const std::string& str, T& dest) {
-    if (str.empty() || std::isspace(str.front()) || str.front() == '-')
-        return false;
+T parse(const std::string& str) {
+    if (str.empty())
+        throw InvalidArgument("String is empty");
+    if (std::isspace(str.front()))
+        throw InvalidArgument("String has leading whitespace");
+    if (str.front() == '-')
+        throw InvalidArgument("Value is negative");
 
     if constexpr (sizeof(T) <= sizeof(unsigned long long)) {
         size_t pos = 0;
@@ -225,27 +223,24 @@ bool valueOf(const std::string& str, T& dest) {
             if constexpr (sizeof(T) <= sizeof(unsigned long)) {
                 unsigned long ans = std::stoul(str, std::addressof(pos), 10);
                 if (pos != str.size())
-                    return false;
+                    throw InvalidArgument("String has trailing characters");
                 if constexpr (sizeof(T) < sizeof(unsigned long))
                     if (ans > std::numeric_limits<T>::max())
-                        return false;
-                dest = static_cast<T>(ans);
-                return true;
+                        throw InvalidArgument("Value out of range");
+                return static_cast<T>(ans);
             } else {
                 unsigned long long ans = std::stoull(str, std::addressof(pos),
                     10);
                 if (pos != str.size())
-                    return false;
+                    throw InvalidArgument("String has trailing characters");
                 if constexpr (sizeof(T) < sizeof(unsigned long long))
                     if (ans > std::numeric_limits<T>::max())
-                        return false;
-                dest = static_cast<T>(ans);
-                return true;
+                        throw InvalidArgument("Value out of range");
+                return static_cast<T>(ans);
             }
         } catch (const std::logic_error&) {
-            // Either the string was unconvertible, or the value was out of
-            // range.
-            return false;
+            throw InvalidArgument(
+                "String is unconvertible, or value out of range");
         }
     } else {
         // We avoid using std::istream extraction, since it looks like this
@@ -255,25 +250,141 @@ bool valueOf(const std::string& str, T& dest) {
         T ans = 0;
         for (char c : str) {
             if (c < '0' || c > '9')
-                return false;
+                throw InvalidArgument("String contains invalid character");
             if (ans == 0) {
                 ans = unsigned(c - '0');
             } else {
-                if (ans > std::numeric_limits<T>::max() / 10)
-                    return false; // this next digit must overflow
+                if (ans > std::numeric_limits<T>::max() / 10) {
+                    // This next digit must overflow.
+                    throw InvalidArgument("Value out of range");
+                }
                 ans = ans * 10 + unsigned(c - '0');
-                if (ans < 10)
-                    return false; // we overflowed and wrapped around
+                if (ans < 10) {
+                    // We overflowed and wrapped around.
+                    throw InvalidArgument("Value out of range");
+                }
             }
         }
-        dest = ans;
-        return true;
+        return ans;
     }
 }
 
 /**
- * Converts the entire given string to a double precision real number and
- * reports whether this conversion was successful.
+ * Converts the entire given string to a double precision real number.
+ *
+ * If the number encoded by the given string is out of range for a `double`,
+ * then this routine will throw an exception.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the real number that the string represents.
+ * If any unexpected characters are found (including leading or trailing
+ * whitespace), then again this routine will throw an exception.
+ *
+ * \nopython None of Regina's parse() functions are wrapped in Python,
+ * since these are tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
+ *
+ * \exception InvalidArgument The complete string was not successfully
+ * converted to a double precision real number.
+ *
+ * \param str the string to convert.
+ * \return the resulting real number.
+ *
+ * \ingroup utilities
+ */
+template <std::same_as<double> T>
+T parse(const std::string& str) {
+    if (str.empty())
+        throw InvalidArgument("String is empty");
+    if (std::isspace(str.front()))
+        throw InvalidArgument("String has leading whitespace");
+
+    size_t pos = 0;
+    try {
+        double ans = std::stod(str, std::addressof(pos));
+        if (pos != str.size())
+            throw InvalidArgument("String has trailing characters");
+        return ans;
+    } catch (const std::logic_error&) {
+        throw InvalidArgument("String is unconvertible, or value out of range");
+    }
+}
+
+/**
+ * Converts the entire given string to a boolean.
+ *
+ * If the given string begins with `T`, `t` or `1`,
+ * then the string will be successfully converted to \c true.
+ * If the given string begins with `F`, `f` or `0`,
+ * then the string will be successfully converted to \c false.
+ * Otherwise the conversion will be deemed unsuccessful, and this routine will
+ * throw an exception.
+ *
+ * \nopython None of Regina's parse() functions are wrapped in Python,
+ * since these are tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
+ *
+ * \exception InvalidArgument The complete string was not successfully
+ * converted to a boolean as described above.
+ *
+ * \param str the string to convert.
+ * \return the resulting boolean.
+ *
+ * \ingroup utilities
+ */
+template <std::same_as<bool> T>
+T parse(const std::string& str) {
+    if (str.empty())
+        throw InvalidArgument("String is empty");
+    else if (str[0] == 't' || str[0] == 'T' || str[0] == '1')
+        return true;
+    else if (str[0] == 'F' || str[0] == 'f' || str[0] == '0')
+        return false;
+    else
+        throw InvalidArgument("String is unconvertible");
+}
+
+/**
+ * Deprecated routine that converts the entire given string to a native
+ * integer of type \a T and reports whether this conversion was successful.
+ *
+ * If the integer encoded by the given string is out of range for type \a T,
+ * then this routine will return \c false and the value of \a dest will be
+ * left unchanged.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are found (including leading or trailing
+ * whitespace), then again this routine will return \c false and the value of
+ * \a dest will be left unchanged.
+ *
+ * \deprecated Instead use `dest = parse<T>(str)`, which performs the same
+ * conversion (but which returns by value, and throws an exception on error).
+ *
+ * \nopython None of Regina's valueOf() functions are wrapped in Python,
+ * since these are tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
+ *
+ * \param str the string to convert.
+ * \param dest the variable in which to store the resulting native integer.
+ * \return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ *
+ * \ingroup utilities
+ */
+template <CppInteger T>
+[[deprecated]] bool valueOf(const std::string& str, T& dest) {
+    try {
+        dest = parse<T>(str);
+        return true;
+    } catch (const InvalidArgument&) {
+        return false;
+    }
+}
+
+/**
+ * Deprecated routine that converts the entire given string to a double
+ * precision real number and reports whether this conversion was successful.
  *
  * If the number encoded by the given string is out of range for a \c double,
  * then this routine will return \c false and the value of \a dest will be
@@ -284,6 +395,9 @@ bool valueOf(const std::string& str, T& dest) {
  * If any unexpected characters are found (including leading or trailing
  * whitespace), then again this routine will return \c false, and the value of
  * \a dest will be left unchanged.
+ *
+ * \deprecated Instead use `dest = parse<double>(str)`, which performs the same
+ * conversion (but which returns by value, and throws an exception on error).
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
@@ -296,11 +410,18 @@ bool valueOf(const std::string& str, T& dest) {
  *
  * \ingroup utilities
  */
-bool valueOf(const std::string& str, double& dest);
+[[deprecated]] inline bool valueOf(const std::string& str, double& dest) {
+    try {
+        dest = parse<double>(str);
+        return true;
+    } catch (const InvalidArgument&) {
+        return false;
+    }
+}
 
 /**
- * Converts the entire given string to a boolean and reports whether
- * this conversion was successful.
+ * Deprecated routine that converts the entire given string to a boolean and
+ * reports whether this conversion was successful.
  *
  * If the given string begins with `T`, `t` or `1`,
  * then the string will be successfully converted to \c true.
@@ -308,6 +429,9 @@ bool valueOf(const std::string& str, double& dest);
  * then the string will be successfully converted to \c false.
  * Otherwise the conversion will be unsuccessful and the argument \a dest will
  * be left unchanged.
+ *
+ * \deprecated Instead use `dest = parse<bool>(str)`, which performs the same
+ * conversion (but which returns by value, and throws an exception on error).
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python,
  * since these are tailored to the many different native C++ numeric types.
@@ -320,7 +444,14 @@ bool valueOf(const std::string& str, double& dest);
  *
  * \ingroup utilities
  */
-bool valueOf(const std::string& str, bool& dest);
+[[deprecated]] inline bool valueOf(const std::string& str, bool& dest) {
+    try {
+        dest = parse<bool>(str);
+        return true;
+    } catch (const InvalidArgument&) {
+        return false;
+    }
+}
 
 /**
  * Deprecated routine that converts the entire given string to a set of
@@ -332,11 +463,12 @@ bool valueOf(const std::string& str, bool& dest);
  * unchanged and \c false will be returned.  Both upper-case and lower-case
  * codes (or a mix of the two) are accepted by this routine.
  *
- * \deprecated Use `dest.setStringCode(str)` instead.
+ * \deprecated Instead use BoolSet::fromStringCode(), which performs the same
+ * conversion (but which returns by value, and throws an exception on error).
  *
  * \nopython None of Regina's valueOf() functions are wrapped in Python.
- * For this variant, you can instead use BoolSet::setStringCode(), which
- * performs the same task.
+ * For this variant, you can instead use BoolSet::fromStringCode(), which
+ * performs the same conversion as noted above.
  *
  * \param str the string to convert.
  * \param dest the variable in which to store the resulting set of booleans.
@@ -344,7 +476,14 @@ bool valueOf(const std::string& str, bool& dest);
  *
  * \ingroup utilities
  */
-[[deprecated]] bool valueOf(const std::string& str, BoolSet& dest);
+[[deprecated]] inline bool valueOf(const std::string& str, BoolSet& dest) {
+    try {
+        dest = BoolSet::fromStringCode(str);
+        return true;
+    } catch (const InvalidArgument&) {
+        return false;
+    }
+}
 
 /**
  * Converts the given native C++ integer to a string, with explicit support

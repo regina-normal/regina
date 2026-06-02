@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -365,7 +365,7 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the polynomial to compare with this.
-         * \return The result of the comparison between this
+         * \return the result of the comparison between this
          * and the given polynomial.
          */
         std::strong_ordering operator <=> (const Arrow& rhs) const;

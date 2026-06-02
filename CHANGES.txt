@@ -16,6 +16,11 @@ Version 8.0  [ TODO ]
         - More use of constexpr throughout the calculation engine.
         - Classes designed for static use only (e.g., PacketInfo) now have
           their default constructors explicitly disabled.
+        - Added classical and virtual knot tables to the in-built census
+          databases.
+        - Regina now requires liblzma at build time (but not runtime).
+        - Substantially simplified the source code layout and class hierarchy
+          around triangulations and related classes.
     ENGINE:
         Class AbelianGroup:
             - The constructor that takes invariant factors as a container
@@ -26,11 +31,59 @@ Version 8.0  [ TODO ]
               but no longer needs to support rbegin() and rend()).
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
+        Class Attachment:
+            - The filename constructor now throws an exception on error,
+              instead of creating an empty attachment.
+            - The save() routine also throws an exception on error, and no
+              longer returns a boolean (which used to indicate success/failure).
+        Class Base64BitEncoder, Base64BitDecoder:
+            - New classes to support signatures that pack bits into base64
+              strings, without worrying about byte/character boundaries.
+        Class Base64Decoder, Base64SigDecoder:
+            - Base64SigDecoder has been renamed to Base64Decoder.  The old name
+              is now a deprecated type alias.
+            - New type aliases Encoder and Encoding.
+            - New routines remaining(), decodeBitmask(), and unreadBitDecoder().
+            - New static routine decode().
+            - Now requires its underlying character iterator type to be
+              bidirectional (not just a forward iterator).
+            - The constructor argument to strip whitespace (which defaults to
+              true) now ignores whitespace at _both_ ends of the string, not
+              just the start.  Moreover, calling done() with no arguments will
+              _not_ ignore final whitespace any more.  Together these changes
+              reproduce the same default behaviour as before (but more
+              efficiently).  However, beware: if you are passing custom
+              arguments regarding the stripping of whitespace then individually
+              these are changes in behaviour.  The variant of done() that
+              skips final whitespace is now deprecated.
+        Class Base64Encoder, Base64SigEncoder:
+            - Base64SigEncoder has been renamed to Base64Encoder.  The old name
+              is now a deprecated type alias.
+            - New routine encodeBitmask().
+            - New routine reserve().
+            - New static routine integerWidth().
+            - Added variants of encodeInts() and encodeTrits() that take an
+              input range instead of an iterator pair.
+            - New type alias Encoding.
         Class BitManipulatorByType<...>:
             - This is now an internal class in the namespace regina::detail.
               You should never need to refer to this class directly; instead
               you can access its functionality through the end-user class
               BitManipulator<...>.
+        Class Bitmask:
+            - This class now supports bitmasks of length zero.
+        Class Bitmask2:
+            - Now uses just one native C++ type, and therefore takes only one
+              template parameter.  The new class Bitmask2<T> is identical to
+              the old class Bitmask2<T, T>.
+        Class Bitmask, Bitmask1, Bitmask2:
+            - New three-way comparison function numericalComp(), which replaces
+              the old boolean lessThan().  The function lessThan() is kept but
+              deprecated.
+            - New type alias Block and class constant bitsPerBlock.
+        Class BitEncoder, BitDecoder:
+            - New classes to support signatures that use (unprintable) packed
+              sequences of bits, without regard for byte boundaries.
         Class BoolSet:
             - Regarding byte codes and string codes:
               + New type alias ByteCode.
@@ -38,19 +91,54 @@ Version 8.0  [ TODO ]
                 byte code is not valid.
               + New routine fromStringCode(), which likewise throws an exception
                 if the given string code is not valid.
+              + Routines setByteCode() and setStringCode() are now deprecated;
+                use fromByteCode() and fromStringCode() instead.
         Class BoundaryComponent<dim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class BoundaryComponentBase is gone.
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
+        Class ByteSequence:
+            - New class to support small-memory signature encodings.
         Class CallableArg<...>:
             - This is now deprecated, since its implementation is drifting
               increasingly further away from modern C++ standards.
+        Class Census, CensusCollection:
+            - Added support for knot/link databases.  This includes converting
+              Census::lookup(const Triangulation<3>&) into a template function
+              that can now take _either_ a triangulation or a link diagram, plus
+              a new template function Census::lookupAs<ObjectType>(signature).
+            - New class CensusCollection<ObjectType> to support census lookup
+              for a particular object type (3-manifold triangulation or link).
+            - The string-based Census::lookup() can now take either a
+              first-generation or second-generation signature.
+            - All lookup routines now throw an exception if they encounter a
+              database error.
+            - All of Regina's databases are now upgraded to use
+              second-generation instead of first-generation signatures.
+        Class CensusDB:
+            - Renamed lookup() to lookupKey<...>(), and made it throw an
+              exception on error instead of returning a boolean.  The template
+              argument indicates the generation of isomorphism signature that
+              the database uses for its keys, and is subject to change in future
+              versions of Regina.  The old lookup() is removed completely.
+            - The constructor now takes extra optional arguments: a short tag
+              identifying the database, and the maximum size of triangulation
+              or link in the database.  These arguments are accessible via the
+              new routines tag() and maxSize().
+            - New routine global() for accessing Regina's in-built databases.
         Class ChildIterator<const_>:
             - The type std::iterator_traits<ChildIterator<...>>::value_type
               is now just Packet (without any const qualifiers), regardless of
               whether the ChildIterator argument const_ is true or false.
         Class Component<dim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class ComponentBase is gone.
             - Added variants of countFaces(), faces() and face() that take the
               face dimension as a runtime argument (not a template parameter).
+            - New routines triangulation(), countFacets(), and hasLocks().
         Class Crossing:
             - New routine chordIndex().
         Class Cut:
@@ -65,16 +153,62 @@ Version 8.0  [ TODO ]
         Class DivisionByZero:
             - New exception class.
         Class Face<dim, subdim>, FaceNumbering<dim, subdim>, :
-            - Major overhaul of the many classes to support face numbering.
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class FaceBase is gone.
+            - Now requires subdim < dim.  Once again, Simplex<dim> is back to
+              being its own independent class.
+            - The routine isLinkClosed() is now available for all faces
+              where subdim < dim - 1 (not just vertices in dimension 3).
+            - New routine isInternal().
+            - Major overhaul of the many classes that support face numbering.
               The new structure is simpler thanks to new features of modern
               C++ standards, and several of the old helper classes in
               regina::detail are now gone.
             - New class constant hasNumberingTables to indicate whether lookup
               tables are used for face numbering queries.
+        Class Face<3, 0>:
+            - In Vertex<3>, the type Link (and its deprecated alias LinkType),
+              along with all the associated constants (Sphere, Disc, etc.) are
+              removed completely.  This is due to the move to a unified
+              Face<dim, subdim> implementation.  Likewise, the member function
+              linkType() has been removed, but you can easily access the same
+              information through other member functions (such as isIdeal(),
+              isStandard(), linkEulerChar(), isLinkOrientable(), etc.).
+        Class Face<3, 2>:
+            - In Triangle<3> many things were deprecated in Regina 7.4, in
+              favour of new entities that are available to triangles in all
+              dimensions.  These deprecated entities included the functions
+              type(), subtype(), isMobiusBand() and isCone(), the type Type,
+              and several enum constants (e.g., CONE).  These old deprecated
+              entities have now been removed completely as part of the move
+              to a unified Face<dim, subdim> implementation.
+        Class FaceEmbedding<dim, subdim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class FaceEmbeddingBase is gone.
+        Class FacetPairing<dim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class FacetPairingBase is gone.
+            - New routine hasDoubleEdge(); also, hasTripleEdge() is now
+              available in all dimensions.
+            - The deprecated version of FacetPairing<3>::followChain() that
+              takes an unsigned integer reference has been removed completely.
+              You should use the newer version (from Regina 7.1) that takes a
+              signed integer reference instead.
         Class FaithfulAssignment:
             - Deprecated, since this can be tested via std::common_type_t.
+        Class FileInfo:
+            - Routine identify() now returns a plain FileInfo (not a
+              std::optional<FileInfo>), and throws an exception on error
+              instead of returning std::nullopt or returning an "invalid"
+              FileInfo object.
+            - Routine isInvalid() is now deprecated and always returns false,
+              since identify() now never returns an invalid FileInfo object.
         Class FixedArray:
             - Now has a default constructor that creates an empty array.
+            - New constructor that takes an iterator range.
         Class Flags<T>:
             - Updated to support enumerations with any base C++ integer type,
               not just int.
@@ -91,6 +225,9 @@ Version 8.0  [ TODO ]
               UnsolvedCase exception if an integer overflow occurs when
               transferring information from an abelian group to a group
               expression.
+        Class HomGroupPresentation:
+            - Routine invert() now throws an exception if the homomorphism is
+              not a declared isomorphism.
         Class InfinityBase<...>:
             - Moved into the regina::detail namespace.  This class was never
               intended for end users.
@@ -128,11 +265,34 @@ Version 8.0  [ TODO ]
         Class IntegerOverflow:
             - New exception class.
         Class Isomorphism<dim>:
+            - New routine isEven().
             - The increment operators are now available in all dimensions
               (not just dimensions ≤ 6).
-        Class IsoSigEncodingAPI, IsoSigTypeAPI:
-            - New documentation-only classes that explain how encodings and
-              signature types for isomorphism signatures are expected to behave.
+        Class IsoSigBinary:
+            - New encoding class for second-generation isomorphism signatures
+              of triangulations.
+        Class IsoSigClassic<dim>, IsoSigDegrees<dim, subdim>,
+                IsoSigEdgeDegree<dim>, IsoSigRidgeDegree<dim>:
+            - These signature type classes now support both oriented and
+              unoriented signatures, and so their constructors now require an
+              extra boolean argument (oriented vs unoriented).
+        Class IsoSigData<generation, dim>:
+            - New data type to support isomorphism signatures of triangulations.
+        Class IsoSigPrintable, IsoSigPrintableLockFree:
+            - These encoding classes now support both first-generation and
+              second-generation isomorphism signatures.
+            - The data to encode for isomorphism signatures is now supplied to
+              encoding classes via the new type IsoSigData<generation, dim>.
+              The old behaviour (passing C-style arrays) is no longer supported.
+            - The routine emptySig() has been renamed to encodeEmpty().
+            - Encoding classes now have a new routine length().
+            - These are no longer template classes.  The argument supportLocks
+              is gone (instead the two classes are defined independently).
+              The dimension now appears as a template parameter for the
+              relevant class constants and static functions, and in most cases
+              it can be deduced automatically.
+            - New static routines IsoSigPrintable::generation() and
+              IsoSigPrintable::componentSize().
         Struct IsReginaArbitraryPrecisionInteger<T>, IsReginaInteger<T>:
             - Now deprecated, in favour of the new concepts
               ArbitraryPrecisionInteger<T> and ReginaInteger<T>.
@@ -148,15 +308,41 @@ Version 8.0  [ TODO ]
               directly in the Turaev-Viro code instead.
         Class Link:
             - New routine parityProjection().
+            - Knot/link signatures have been overhauled.  Regina-now supports:
+              + first-generation signatures, which are printable strings,
+                identical to the old signatures from Regina ≤ 7.x, and
+                accessible via the old routine knotSig();
+              + second-generation signatures, which can be in printable form
+                (as a std::string) or binary form (as a ByteSequence), are
+                significantly shorter than first-generation signatures, and are
+                accessible via the new routine neoSig().
+            - The routine sig() is still present, but it now takes a mandatory
+              template argument which allows it to compute any of the available
+              signature forms.
+            - The routine fromSig() can now reconstruct a link diagram from
+              either a first-generation or second-generation signature, and
+              now has variants that accept either a string or a byte sequence.
+            - The old routine fromKnotSig() is now deprecated, and simply calls
+              the string-based fromSig().
+            - For rewrite() and rewriteVirtual(), if you pass an action
+              argument that takes both a link and its signature, the signature
+              will now be passed as a second-generation signature using a binary
+              encoding (so as a byte sequence, not a string).
+            - New routines sigGeneration() and sigComponentSize().
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.
+            - Removed all deprecated Reidemeister move functions that took
+              (check, perform) arguments; instead use the new variants that
+              were introduced in Regina 7.4.
             - Removed the Boost Graph Library (BGL) interface for links
               (link/graph.h).  This is because Regina has not used Boost since
               December 2021, and so this code is essentially untested nowadays.
             - The iterator-based variant of fromData() now has simpler
               requirements on the component sequences (in particular, iteration
               no longer needs to be random access).
+        Class LinkSigData, LinkSigPrintable, LinkSigBinary:
+            - New types to support the generation of knot/link signatures.
         Class ListView<...>:
             - Deprecated and no longer used.  Wherever Regina used to return
               a ListView, it now returns a lightweight view from the new C++20
@@ -190,6 +376,26 @@ Version 8.0  [ TODO ]
               FixedArray internally, which is not copy-assignable).  If you
               need to copy a tableaux, the copy constructor remains available
               (and move assignment is still available also).
+        Class Manifold<dim>, ManifoldOptions<dim>:
+            - The old 3-dimensional Manifold class has been replaced by a new
+              class template Manifold<dim>.  Currently this new class is
+              available only in dimension 3, but the framework is set up now
+              to support other dimensions in future versions of Regina.
+            - The old name Manifold cannot be kept as a C++ type alias, since
+              the same name is now used for the new class template.  However,
+              in Python, Manifold is now a deprecated type alias for Manifold3.
+            - Optional features that subclasses may choose whether to implement
+              (such as isHyperbolic() and homology() in dimension 3) are now
+              described by the new base class ManifoldOptions<dim>.
+            - For 3-manifolds, isHyperbolic() is now optional (not mandatory)
+              for subclasses to implement, and should throw an exception if it
+              is not implemented for this particular 3-manifold.
+            - The comparision operator <=> is now a global function (not a
+              member function of Manifold), and is specific to 3-manifolds.
+        Class Matrix2:
+            - Routines inverse() and invert() now throw an exception if the
+              matrix does not have determinant ±1.  This also means that
+              invert() no longer returns a boolean to indicate success.
         Class MaxAggregator<T>:
             - Helper class for aggregating values using max with multiplicity.
         Class NativeInteger<bytes>:
@@ -218,10 +424,12 @@ Version 8.0  [ TODO ]
               arc count for some arc type on the boundary is so large that it
               cannot fit into a size_t.
         Class NormalSurfaces:
-            - Routines saveCSVEdgeWeight() and saveCSVStandard() now throw an
-              exception if the underlying algorithms encounter an impossible
+            - Routines saveCSVEdgeWeight() and saveCSVStandard() now throw
+              exceptions if the underlying algorithms encounter an impossible
               memory requirement (typically due to some normal coordinate
-              being too large to fit into a size_t).
+              being too large to fit into a size_t), or if an error occurs
+              whilst writing to file.  They no longer return booleans (which
+              were previously used to indicate file errors).
             - The "transformation constructor" could throw an exception when
               using the FilterDisjoint transformation in the presence of
               enormous normal coordinates (again because an impossible memory
@@ -233,6 +441,9 @@ Version 8.0  [ TODO ]
             - New exception class.
         Class OutputBase:
             - Removed completely.
+        Class Packet:
+            - The save() routines now throw exceptions on error, and no longer
+              return booleans (which used to indicate success or failure).
         Class PermClass<n>:
             - Everything in this class is now constexpr.
         Class Polynomial<T>:
@@ -242,16 +453,55 @@ Version 8.0  [ TODO ]
             - The python-only routines primeDecompInt() and
               primePowerDecompInt() are now just overloads for primeDecomp()
               and primePowerDecomp().  The old names are kept but deprecated.
+        Class Qitmask2:
+            - Now uses just one native C++ type, and therefore takes only one
+              template parameter.  The new class Qitmask2<T> is identical to
+              the old class Qitmask2<T, T>.
         Class RingTraits:
             - Provides new compile-time constants zeroInitialised and
               zeroDivisors.
         Class safe_tuple_element<...>:
             - This is now deprecated, since its only purpose is to support
               CallableArg (which is also deprecated).
+        Class Simplex<dim>:
+            - Now has a unified implementation across all dimensions.  There
+              are no more dimension-specific class specialisations or headers,
+              and the old base class SimplexBase is gone.
+            - Simplex is now an independent class template, not a
+              specialisation of Face.
+        Class SnapPeaTriangulation:
+            - Routines fill() and saveSnapPea() now throw exceptions on error,
+              and no longer return booleans (which used to indicate success
+              or failure).
+            - Routine unfill() now throws an exception when called on a null
+              SnapPea triangulation (previously it silently did nothing).
+        Class SpatialLink:
+            - New inner type NodeIterator, and new member functions
+              beginNodes() and endNodes().
+            - The default radius is now chosen more intelligently, by
+              identifying the closest non-adjacent pair of link nodes that are
+              connected in the relative neighbourhood graph.  Thanks to
+              Kate Turner for this suggestion.
+        Class StandardSubcomplex<dim>, StandardSubcomplexOptions<dim>,
+                StandardTriangulation:
+            - The old 3-dimensional StandardTriangulation class has been
+              replaced by a new class template StandardSubcomplex<dim>.
+              Currently this new class is available only in dimensions 3 and 4.
+            - The old name StandardTriangulation is now a deprecated alias for
+              StandardSubcomplex<3>.
+            - Optional features that subclasses may choose whether to implement
+              (such as manifold() and homology() in dimension 3) are now
+              described by the new base class StandardSubcomplexOptions<dim>.
+        Class StrandRef:
+            - New routine reset().
         Class SubtreeIterator<const_>:
             - The type std::iterator_traits<SubtreeIterator<...>>::value_type
               is now just Packet (without any const qualifiers), regardless of
               whether the SubtreeIterator argument const_ is true or false.
+        Class Tangle:
+            - Removed all deprecated Reidemeister move functions that took
+              (check, perform) arguments; instead use the new variants that
+              were introduced in Regina 7.4.
         Class TreeDecomposition:
             - In the version of reroot() that uses costs, the cost type T no
               no longer treats zero in a special manner; it is only the total
@@ -262,12 +512,52 @@ Version 8.0  [ TODO ]
               setGroupPresentation(), which now has ≤ 1 component as a new
               precondition.
             - New routines knowsHomology() and cachedGroup().
+            - Isomorphism signatures have been overhauled.  Regina-now supports:
+              + first-generation signatures, which are printable strings,
+                identical to the old signatures from Regina ≤ 7.x, and
+                accessible via the old routines isoSig() and isoSigDetail();
+              + second-generation signatures, which can be in printable form
+                (as a std::string) or binary form (as a ByteSequence), are
+                shorter and faster to compute than first-generation signatures,
+                support both oriented and unoriented variants, and are
+                accessible via the new routines neoSig() and neoSigDetail().
+            - The alias sig() that was recently introduced in Regina 7.4 is
+              still present, but it now takes a mandatory template argument
+              indicating whether to compute a first-generation or
+              second-generation signature.  To avoid confusion, you can simply
+              call isoSig() or neoSig() instead.
+            - The routine fromSig() can now reconstruct a triangulation from
+              either a first-generation or second-generation signature, and
+              now has variants that accept either a string or a byte sequence.
+            - The old routine fromIsoSig() is now deprecated, and simply calls
+              the string-based fromSig().
+            - The first-generation signature routines isoSig() and
+              isoSigDetail() now take their template arguments in the reverse
+              order (Encoding, Type).  The Python bindings for these routines
+              now take the encoding and type as optional runtime arguments
+              (not suffixes to the function names).
+            - Renamed isoSigComponentSize() to sigComponentSize(); the old name
+              is kept as a deprecated alias.  This routine now throws an
+              exception if the signature is found to be invalid, and explicitly
+              supports the empty triangulation.
+            - New routine sigGeneration().
+            - The interfaces for isomorphism signature types and encodings have
+              changed; see the changelog for IsoSigClassic / IsoSigDegrees and
+              IsoSigPrintable / IsoSigPrintableLockFree for details.
+            - For retriangulate() in dimensions 3/4, if you pass an action
+              argument that takes both a triangulation and its signature, the
+              signature will now be passed as a second-generation signature
+              using a binary encoding (so as a byte sequence, not a string).
+            - Removed all deprecated local move functions that took (check,
+              perform) arguments; instead use the new variants that were
+              introduced in Regina 7.4.
             - Removed the Boost Graph Library (BGL) interface for triangulations
               (triangulation/graph.h).  This is because Regina has not used
               Boost since December 2021, and so this code is essentially
               untested nowadays.
         Class Triangulation<3>:
             - New routines knowsHomologyRel() and knowsHomologyH2Z2().
+            - Routine layerOn() now preserves orientation (thanks to Alex He).
             - Routines hasCompressingDisc() and isHaken() now throw an
               UnsolvedCase exception if the underlying algorithms encounter an
               impossible memory requirement (typically due to some normal
@@ -283,16 +573,16 @@ Version 8.0  [ TODO ]
               The exception to this rule: irreducibility (a precondition of
               hasCompressingDisc()) is expensive to test, and so remains an
               untested precondition of knowsCompressingDisc() also.
+            - Routines fillTorus(), saveRecogniser(), saveRecognizer() and
+              saveSnapPea() now throw exceptions on error, and no longer return
+              booleans (which used to indicate success or failure).
             - All knows...() routines now take an optional boolean argument,
               indicating whether to consider trivial computations (the default),
               or to only check whether the value is already cached.
             - Several properties (boundary homology, second homology,
-              existence of a splitting surface) are no longer save alongside
+              existence of a splitting surface) are no longer saved alongside
               triangulations in data files, since they are easy to reconstruct
               (in some cases, using other invariants that _are_ saved).
-        Struct TriangulationTraits<dim>:
-            - New traits type to help with generic code for working with
-              triangulations of different dimensions.
         Class TypeTrie:
             - Now uses uint8_t instead of char for vector elements.  This
               affects the argument types for insert() and dominates().
@@ -312,6 +602,19 @@ Version 8.0  [ TODO ]
         Function maxPermDegree():
             - New constexpr function that returns the largest supported degree
               of permutation.
+        Function open():
+            - Both versions of this function now throw an exception if the
+              file is unreadable or if no usable Regina data could be found
+              (previously, open() indicated such errors by returning null).
+        Function parse():
+            - New templated functions that replace the old valueOf(), but
+              instead return by value and throw exceptions on error.  These
+              support 128-bit integers (if the platform does), include range
+              checking, and are strict with regards to unexpected characters
+              (including leading or trailing whitespace).
+        Function readDehydrationList(), readOrb(), readSigList():
+            - These functions now throw exceptions on error, instead of
+              returning null.
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a
               precondition that the given value is not infinity.
@@ -332,25 +635,28 @@ Version 8.0  [ TODO ]
             - New function to select an optimised bitmask type based on a
               number of bits that is not known until runtime.
         Function valueOf():
-            - The native C++ integer versions of valueOf() are now templated,
-              and now support 128-bit integers (if the platform supports them).
-            - All integer versions now return false if the integer encoded by
-              the string is out of range for the relevant integer type.
-            - All numeric versions of valueOf() (native integers and double)
-              have been tightened with respect to unexpected characters,
-              including leading and trailing whitespace:
-              + they always return false, as the documentation has always
-                promised (in the past, they succeeded in the presence of
-                leading whitespace);
-              + instead of performing the conversion "as best it can", the
-                documentation now states that the value stored in dest is
-                left unchanged.
-            - All versions of valueOf() now leave dest unchanged if there was
-              an error (as opposed to leaving dest undefined, as was the case
-              for integer versions, or setting dest to a fixed false/empty
-              value, as was the case for bool and BoolSet versions).
-            - The BoolSet version is now deprecated; use the identical
-              BoolSet::setStringCode() instead.
+            - All valueOf() functions are now deprecated.  For most types you
+              should use parse<...>() instead; these return by value and throw
+              exceptions on error.  For BoolSet, use BoolSet::fromStringCode().
+            - The valueOf() functions have changes as a result of the migration
+              to parse<...>():
+              + The native C++ integer versions of valueOf() are now templated,
+                and support 128-bit integers (if the platform supports them).
+              + All integer versions now return false if the integer encoded by
+                the string is out of range for the relevant integer type.
+              + All numeric versions of valueOf() (native integers and double)
+                have been tightened with respect to unexpected characters,
+                including leading and trailing whitespace:
+                * they always return false, as the documentation has always
+                  promised (in the past, they succeeded in the presence of
+                  leading whitespace);
+                * instead of performing the conversion "as best it can", the
+                  documentation now states that the value stored in dest is
+                  left unchanged.
+              + All versions of valueOf() now leave dest unchanged if there was
+                an error (as opposed to leaving dest undefined, as was the case
+                for integer versions, or setting dest to a fixed false/empty
+                value, as was the case for bool and BoolSet versions).
         Type alias DoubleLong:
             - A native C++ integer type that is twice the size of a long.
         Type alias Int128, UInt128:
@@ -360,6 +666,13 @@ Version 8.0  [ TODO ]
         Type alias MakeSigned<T>, MakeUnsigned<T>:
             - New alternatives to std::make_signed_t<T> and
               std::make_unsigned_t<T> that allow for 128-bit integers also.
+        Type alias SafeHypersurface<dim>, SafeHypersurfaces<dim>:
+            - New type aliases to support generic code: these provide access to
+              normal surface types in 3-D, and normal hypersurface types in 4-D.
+        Type alias SafeTriangulation<dim>, SafeFace<dim, subdim>,
+                SafeTetrahedron<dim>, SafePentachoron<dim>:
+            - New type aliases to supporte generic code: these types behave
+              cleanly when the arguments dim/subdim are a little out of range.
         Constant is_cpp_integer_v<T>, is_signed_cpp_integer_v<T>,
                 is_unsigned_cpp_integer_v<T>:
             - New compile-time constant is_signed_cpp_integer_v<T>, for
@@ -377,15 +690,10 @@ Version 8.0  [ TODO ]
               the new type aliases Int128 and UInt128.
         Concepts:
             - Many new concepts:
-              + AssignableTo, CanConstruct, CoefficientDomain,
-                ConcatenableSequence, Domain, Field, IntegralDomain,
-                ReginaBitmask, ReginaQitmask, Ring, RingLike, SameModCVRef,
-                StrictWeakOrder, TerminatingCallback, VoidCallback (defined in
-                concepts/core.h)
-              + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
-                IntegerComparable, IntegerCompatible, ReginaInteger,
-                StandardCppInteger, SignedCppInteger, UnsignedCppInteger
-                (defined in utilities/intutils.h)
+              + AssignableTo, CanConstruct, CoefficientDomain, Domain, Field,
+                IntegralDomain, ReginaBitmask, ReginaQitmask, Ring, RingLike,
+                SameModCVRef, StrictWeakOrder, TerminatingCallback, VoidCallback
+                (defined in concepts/core.h)
               + InherentlyTightEncodable, Readable, RichStringifiable,
                 StandardStringifiable, Stringifiable, Writable (defined in
                 concepts/io.h)
@@ -396,14 +704,46 @@ Version 8.0  [ TODO ]
                 RandomAccessIteratorFor, SelfSentinelInputIterator (defined in
                 concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector,
-                SigReconstructible (defined in concepts/maths.h)
+                SignatureEncodable, SignatureType (defined in concepts/maths.h)
               + PacketClass, PacketHeldType, TextPacket, WrappedPacket
                 (defined in concepts/packet.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
+              + CensusSearchable (defined in census/census.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
-              + IsoSigEncoding (defined in triangulation/isosigencoding.h)
-              + IsoSigType (defined in triangulation/isosigtype.h)
+              + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
+                IntegerComparable, IntegerCompatible, ReginaInteger,
+                StandardCppInteger, SignedCppInteger, UnsignedCppInteger
+                (defined in utilities/intutils.h)
+              + LinkSigEncoding (defined in link/linksig.h)
+              + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
+        Header foreign/fromsiglist-impl.h:
+            - Renamed to foreign/siglist-impl.h.  The old header has been
+              removed completely, since end users do not need to include it.
+        Header foreign/isosig.h:
+            - Renamed to foreign/siglist.h.  The old header is kept but
+              deprecated.
+        Header triangulation/facetpairing3.h:
+            - Merged into triangulation/facetpairing.h.  The old header is
+              kept but deprecated.
+        Header triangulation/generic.h:
+            - Renamed to triangulation/hidim.h, to make it clear that this is
+              meant to be the "everything you need" header for working in
+              higher dimensions.  The old header is kept but deprecated.
+        Header triangulation/generic/*.h:
+            - These headers are all gone - their contents have been merged into
+              other headers (except for triangulation/generic/isomorphism.h,
+              which is now just triangulation/isomorphism.h).  The old headers
+              are not deprecated; instead they have been removed entirely.
+            - End users were never meant to include these headers directly.
+              Instead you should include one of the "end user" headers
+              triangulation/dim2.h, triangulation/dim3.h, triangulation/dim4.h,
+              and/or triangulation/hidim.h.  Those "end user" headers will
+              automatically include all relevant material from its new
+              location(s).
+        Header triangulation/isosigencoding.h, triangulation/isosigtype.h:
+            - Merged into the new header triangulation/isosig.h.  The old
+              headers are kept but deprecated.
     FILE FORMAT:
         - When reading a second-generation XML file (from Regina 3.0-6.0.1),
           a misconstructed surface filter now results in the entire filter
@@ -414,6 +754,12 @@ Version 8.0  [ TODO ]
         - Regina's exception types now use the same class hierarchy in Python
           as they do in C++ (previously in Python they all derived directly
           from Python's RuntimeError).
+        - C++ concepts now have Python docstrings.  For example, you can type
+          'help(Ring)' in Python.  Since concepts are a C++ compile-time
+          phenomenon, they are not functional in Python (e.g., you cannot test
+          in Python which types satisfy which concepts).  Instead, concepts
+          appear to Python as empty classes with only their docstrings
+          (i.e., they are bound in Python purely for their documentation).
         - The bindings for tightEncoding() now accept integers of any size
           (using C++ long where possible, and regina::Integer otherwise).
         - The bindings for readSigList() can now work with triangulations of
@@ -433,7 +779,25 @@ Version 8.0  [ TODO ]
           the views themselves are no longer supported and will now throw an
           exception.  (Of course you can still test equality/inequality of the
           individual elements of these views.)
+    USER INTERFACE:
+        - Added a composition viewer for 2-D triangulations, which gives easy
+          access to isomorphism signatures from the user interface.
     UTILITIES:
+        katie:
+            - Now outputs second-generation isomorphism signatures (not
+              first-generation).
+        retriangulate:
+            - Now outputs second-generation signatures by default (for both
+              triangulations and knots/links).  You can revert to the old
+              behaviour (first-generation signatures) by passing --gen=1.
+            - The option --anysig is now an alias for --gen=2, and does nothing
+              (since second-generation signatures are now the default).
+        sigconvert:
+            - New utility to convert between different generations of
+              isomorphism signature or knot/link signature.
+        tricensus:
+            - The option --sigs now outputs second-generation isomorphism
+              signatures (not first-generation).
         trisetcmp:
             - Now finds matches (or non-matches) in any dimension, not just
               dimensions 3 and 4.
@@ -3547,7 +3911,7 @@ Version 7.0  [ 19 December, 2021 ]
               call summands(), which now formally guarantees 0-efficiency.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
-              a full triangluation.  This function is now also available
+              a full triangulation.  This function is now also available
               through Python, and can take a pure Python function as its
               action argument.  It no longer runs in the background (even if a
               progress tracker is passed), and it now throws an exception
@@ -3607,7 +3971,7 @@ Version 7.0  [ 19 December, 2021 ]
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
-              a full triangluation.  This function is now also available
+              a full triangulation.  This function is now also available
               through Python, and can take a pure Python function as its
               action argument.  It no longer runs in the background (even if a
               progress tracker is passed), and it now throws an exception

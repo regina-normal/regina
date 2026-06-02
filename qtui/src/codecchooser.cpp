@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,12 +32,8 @@
 #include "codecchooser.h"
 
 #include <algorithm>
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-#include <QTextCodec>
-#endif
 
 CodecChooser::CodecChooser() : QComboBox() {
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     addItem(QStringConverter::nameForEncoding(QStringConverter::Utf8));
     addItem(QStringConverter::nameForEncoding(QStringConverter::Utf16));
     addItem(QStringConverter::nameForEncoding(QStringConverter::Utf16BE));
@@ -49,20 +45,6 @@ CodecChooser::CodecChooser() : QComboBox() {
     addItem(QStringConverter::nameForEncoding(QStringConverter::System));
 
     setCurrentIndex(0); // UTF-8
-#else
-    QList<QByteArray> all = QTextCodec::availableCodecs();
-    std::sort(all.begin(), all.end());
-
-    int defaultIndex = -1;
-    for (int i = 0; i < all.size(); ++i) {
-        addItem(all[i] /* constructor uses fromAscii() */);
-        if (defaultIndex < 0 && all[i] == "UTF-8")
-            defaultIndex = i;
-    }
-
-    if (defaultIndex >= 0)
-        setCurrentIndex(defaultIndex);
-#endif
 }
 
 QByteArray CodecChooser::selectedCodecName() {

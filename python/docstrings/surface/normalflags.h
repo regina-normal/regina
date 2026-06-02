@@ -11,80 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::NormalAlg
-static const char *NormalAlg =
-R"doc(Represents options and variants of algorithms for enumerating various
-types of normal surfaces in 3-manifold triangulations. This
-enumeration type is used with normal surface enumeration routines,
-such as the NormalSurfaces class constructor.
+struct NormalAlg {
 
-These values can be combined using the bitwise OR operator (resulting
-in an object of type ``Flags<NormalAlg>``). In particular, if a
-hypersurface enumeration function takes an argument of type
-``Flags<NormalAlg>``, then you can pass a single NormalAlg constant,
-or a bitwise combination of such constants ``(flag1 | flag2)``, or
-empty braces ``{}`` to indicate no flags at all (which is equivalent
-to passing ``NormalAlg::Default``).)doc";
-
-// Docstring regina::python::doc::NormalList
-static const char *NormalList =
-R"doc(Represents different lists of normal surfaces that might be
-constructed for a given 3-manifold triangulation. This enumeration
-type is used with normal surface enumeration routines, such as the
-NormalSurfaces class constructor.
-
-The NormalList enumeration refers to the _contents_ of the list,
-whereas the NormalAlg enumeration refers to the _algorithm_ used to
-build it.
-
-These values can be combined using the bitwise OR operator (resulting
-in an object of type ``Flags<NormalList>``). In particular, if a
-hypersurface enumeration function takes an argument of type
-``Flags<NormalList>``, then you can pass a single NormalList constant,
-or a bitwise combination of such constants ``(flag1 | flag2)``, or
-empty braces ``{}`` to indicate no flags at all (which is equivalent
-to passing ``NormalList::Default``).)doc";
-
-// Docstring regina::python::doc::NormalTransform
-static const char *NormalTransform =
-R"doc(Represents different ways in which Regina can transform one normal
-surface list into another.
-
-Each type of transformation comes with its own preconditions on the
-original normal surface list and/or its underlying triangulation;
-these preconditions are documented alongside the individual
-enumeration values.)doc";
-
-// Docstring regina::python::doc::__bor
-static const char *__bor =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
-// Docstring regina::python::doc::__bor_2
-static const char *__bor_2 =
-R"doc(Returns the bitwise OR of the two given flags.
-
-Parameter ``lhs``:
-    the first flag to combine.
-
-Parameter ``rhs``:
-    the second flag to combine.
-
-Returns:
-    the combination of both flags.)doc";
-
-namespace NormalAlg_ {
-
-// Docstring regina::python::doc::NormalAlg_::Custom
-static const char *Custom =
+// Docstring regina::python::doc::NormalAlg::Custom
+static constexpr const char Custom[] =
 R"doc(Indicates that a normal surface list was built using a customised
 algorithm. In such cases, no further details on the algorithm are
 available.
@@ -92,14 +22,14 @@ available.
 If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::Default
-static const char *Default =
+// Docstring regina::python::doc::NormalAlg::Default
+static constexpr const char Default[] =
 R"doc(An empty flag, indicating to an enumeration routine that it should use
 its default behaviour. The numeric value of this flag is zero (i.e.,
 it has no effect when combined with other flags using bitwise OR).)doc";
 
-// Docstring regina::python::doc::NormalAlg_::HilbertCD
-static const char *HilbertCD =
+// Docstring regina::python::doc::NormalAlg::HilbertCD
+static constexpr const char HilbertCD[] =
 R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 a modified Contejean-Devie procedure should be used for enumerating a
 Hilbert basis.
@@ -117,8 +47,8 @@ Experiments, SIAM, 2014, pp. 112-124.
 This flag is incompatible with HilbertPrimal, HilbertDual and
 HilbertFullCone.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::HilbertDual
-static const char *HilbertDual =
+// Docstring regina::python::doc::NormalAlg::HilbertDual
+static constexpr const char HilbertDual[] =
 R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 the dual method should be used for enumerating a Hilbert basis.
 
@@ -137,8 +67,8 @@ Experiments, SIAM, 2014, pp. 112-124.
 This flag is incompatible with HilbertPrimal, HilbertCD and
 HilbertFullCone.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::HilbertFullCone
-static const char *HilbertFullCone =
+// Docstring regina::python::doc::NormalAlg::HilbertFullCone
+static constexpr const char HilbertFullCone[] =
 R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 a Hilbert basis for the full solution cone should be constructed, and
 additional combinatorial constraints (such as the quadrilateral
@@ -157,8 +87,8 @@ Experiments, SIAM, 2014, pp. 112-124.
 This flag is incompatible with HilbertPrimal, HilbertDual and
 HilbertCD.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::HilbertPrimal
-static const char *HilbertPrimal =
+// Docstring regina::python::doc::NormalAlg::HilbertPrimal
+static constexpr const char HilbertPrimal[] =
 R"doc(When enumerating fundamental normal surfaces, this flag indicates that
 the primal method should be used for enumerating a Hilbert basis.
 
@@ -175,8 +105,8 @@ Experiments, SIAM, 2014, pp. 112-124.
 This flag is incompatible with HilbertDual, HilbertCD and
 HilbertFullCone.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::Legacy
-static const char *Legacy =
+// Docstring regina::python::doc::NormalAlg::Legacy
+static constexpr const char Legacy[] =
 R"doc(Indicates that a normal surface list was enumerated using an older
 version of Regina (4.93 or earlier).
 
@@ -187,8 +117,8 @@ information is available.
 If this flag is passed to an enumeration algorithm, it will be
 ignored.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::VertexDD
-static const char *VertexDD =
+// Docstring regina::python::doc::NormalAlg::VertexDD
+static constexpr const char VertexDD[] =
 R"doc(When enumerating vertex normal surfaces, this flag indicates that a
 modified double description method should be used.
 
@@ -202,8 +132,8 @@ enumeration", Mathematics of Computation 79 (2010), pp. 453-484.
 
 This flag is incompatible with VertexTree.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::VertexStandardDirect
-static const char *VertexStandardDirect =
+// Docstring regina::python::doc::NormalAlg::VertexStandardDirect
+static constexpr const char VertexStandardDirect[] =
 R"doc(When enumerating in standard normal or almost normal coordinates, this
 flag indicates that the algorithm should work directly in that
 coordinate system, and should not go via the "reduced" (quadrilateral
@@ -215,8 +145,8 @@ VertexViaReduced for further information.
 
 This flag is incompatible with VertexViaReduced.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::VertexTree
-static const char *VertexTree =
+// Docstring regina::python::doc::NormalAlg::VertexTree
+static constexpr const char VertexTree[] =
 R"doc(When enumerating vertex normal surfaces, this flag indicates that the
 tree traversal algorithm should be used.
 
@@ -231,8 +161,8 @@ theory and 3-manifold topology", Algorithmica 65 (2013), pp. 772-801.
 
 This flag is incompatible with VertexDD.)doc";
 
-// Docstring regina::python::doc::NormalAlg_::VertexViaReduced
-static const char *VertexViaReduced =
+// Docstring regina::python::doc::NormalAlg::VertexViaReduced
+static constexpr const char VertexViaReduced[] =
 R"doc(When enumerating in standard normal or almost normal coordinates, this
 flag indicates that the algorithm should first enumerate in
 quadrilateral or quadrilateral-octagon coordinates, and then expand
@@ -250,39 +180,67 @@ theory", Algebr. Geom. Topol. 9 (2009), 2121-2174.
 
 This flag is incompatible with VertexStandardDirect.)doc";
 
-}
+// Docstring regina::python::doc::NormalAlg::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
 
-namespace NormalList_ {
+Parameter ``lhs``:
+    the first flag to combine.
 
-// Docstring regina::python::doc::NormalList_::Custom
-static const char *Custom =
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
+
+// Docstring regina::python::doc::NormalAlg::__class
+static constexpr const char __class[] =
+R"doc(Represents options and variants of algorithms for enumerating various
+types of normal surfaces in 3-manifold triangulations. This
+enumeration type is used with normal surface enumeration routines,
+such as the NormalSurfaces class constructor.
+
+These values can be combined using the bitwise OR operator (resulting
+in an object of type ``Flags<NormalAlg>``). In particular, if a
+hypersurface enumeration function takes an argument of type
+``Flags<NormalAlg>``, then you can pass a single NormalAlg constant,
+or a bitwise combination of such constants ``(flag1 | flag2)``, or
+empty braces ``{}`` to indicate no flags at all (which is equivalent
+to passing ``NormalAlg::Default``).)doc";
+
+}; // struct NormalAlg
+
+struct NormalList {
+
+// Docstring regina::python::doc::NormalList::Custom
+static constexpr const char Custom[] =
 R"doc(Indicates some other type of list, typically hand-crafted by the user
 or built by some customised algorithm.
 
 If this flag is passed to an enumeration routine, it will be ignored.)doc";
 
-// Docstring regina::python::doc::NormalList_::Default
-static const char *Default =
+// Docstring regina::python::doc::NormalList::Default
+static constexpr const char Default[] =
 R"doc(An empty flag, indicating to an enumeration routine that it should use
 its default behaviour. The numeric value of this flag is zero (i.e.,
 it has no effect when combined with other flags using bitwise OR).)doc";
 
-// Docstring regina::python::doc::NormalList_::EmbeddedOnly
-static const char *EmbeddedOnly =
+// Docstring regina::python::doc::NormalList::EmbeddedOnly
+static constexpr const char EmbeddedOnly[] =
 R"doc(Indicates that this list is restricted to properly embedded surfaces
 only.
 
 This flag is incompatible with ImmersedSingular.)doc";
 
-// Docstring regina::python::doc::NormalList_::Fundamental
-static const char *Fundamental =
+// Docstring regina::python::doc::NormalList::Fundamental
+static constexpr const char Fundamental[] =
 R"doc(Indicates a list of all fundamental normal surfaces, with respect to
 the particular normal coordinate system used by the list.
 
 This flag is incompatible with Vertex.)doc";
 
-// Docstring regina::python::doc::NormalList_::ImmersedSingular
-static const char *ImmersedSingular =
+// Docstring regina::python::doc::NormalList::ImmersedSingular
+static constexpr const char ImmersedSingular[] =
 R"doc(Indicates that the scope of this list includes not just properly
 embedded surfaces, but also immersed and/or branched surfaces.
 
@@ -293,8 +251,8 @@ enforced).
 
 This flag is incompatible with EmbeddedOnly.)doc";
 
-// Docstring regina::python::doc::NormalList_::Legacy
-static const char *Legacy =
+// Docstring regina::python::doc::NormalList::Legacy
+static constexpr const char Legacy[] =
 R"doc(Indicates a list that was constructed using an old version of Regina
 (4.93 or earlier).
 
@@ -306,19 +264,51 @@ ImmersedSingular flags.
 
 If this flag is passed to an enumeration routine, it will be ignored.)doc";
 
-// Docstring regina::python::doc::NormalList_::Vertex
-static const char *Vertex =
+// Docstring regina::python::doc::NormalList::Vertex
+static constexpr const char Vertex[] =
 R"doc(Indicates a list of all vertex normal surfaces, with respect to the
 particular normal coordinate system used by the list.
 
 This flag is incompatible with Fundamental.)doc";
 
-}
+// Docstring regina::python::doc::NormalList::__bor
+static constexpr const char __bor[] =
+R"doc(Returns the bitwise OR of the two given flags.
 
-namespace NormalTransform_ {
+Parameter ``lhs``:
+    the first flag to combine.
 
-// Docstring regina::python::doc::NormalTransform_::ConvertReducedToStandard
-static const char *ConvertReducedToStandard =
+Parameter ``rhs``:
+    the second flag to combine.
+
+Returns:
+    the combination of both flags.)doc";
+
+// Docstring regina::python::doc::NormalList::__class
+static constexpr const char __class[] =
+R"doc(Represents different lists of normal surfaces that might be
+constructed for a given 3-manifold triangulation. This enumeration
+type is used with normal surface enumeration routines, such as the
+NormalSurfaces class constructor.
+
+The NormalList enumeration refers to the _contents_ of the list,
+whereas the NormalAlg enumeration refers to the _algorithm_ used to
+build it.
+
+These values can be combined using the bitwise OR operator (resulting
+in an object of type ``Flags<NormalList>``). In particular, if a
+hypersurface enumeration function takes an argument of type
+``Flags<NormalList>``, then you can pass a single NormalList constant,
+or a bitwise combination of such constants ``(flag1 | flag2)``, or
+empty braces ``{}`` to indicate no flags at all (which is equivalent
+to passing ``NormalList::Default``).)doc";
+
+}; // struct NormalList
+
+struct NormalTransform {
+
+// Docstring regina::python::doc::NormalTransform::ConvertReducedToStandard
+static constexpr const char ConvertReducedToStandard[] =
 R"doc(Converts the set of all embedded vertex normal surfaces in
 quadrilateral or quadrilateral-octagon coordinates to the set of all
 embedded vertex normal surfaces in standard normal or standard almost
@@ -362,8 +352,8 @@ The preconditions for using this transformation:
 Assuming the preconditions are met, this transformation should always
 succeed.)doc";
 
-// Docstring regina::python::doc::NormalTransform_::ConvertStandardToReduced
-static const char *ConvertStandardToReduced =
+// Docstring regina::python::doc::NormalTransform::ConvertStandardToReduced
+static constexpr const char ConvertStandardToReduced[] =
 R"doc(Converts the set of all embedded vertex normal surfaces in standard
 normal or standard almost normal coordinates to the set of all
 embedded vertex normal surfaces in quadrilateral or quadrilateral-
@@ -392,8 +382,8 @@ The preconditions for using this transformation:
 Assuming the preconditions are met, this transformation should always
 succeed.)doc";
 
-// Docstring regina::python::doc::NormalTransform_::FilterCompatible
-static const char *FilterCompatible =
+// Docstring regina::python::doc::NormalTransform::FilterCompatible
+static constexpr const char FilterCompatible[] =
 R"doc(Selects only the surfaces in the input list that have at least one
 locally compatible partner. That is, a surface *S* from the input list
 will be included in the output list if and only if there is some other
@@ -416,8 +406,8 @@ The preconditions for using this transformation:
 Assuming the preconditions are met, this transformation should always
 succeed.)doc";
 
-// Docstring regina::python::doc::NormalTransform_::FilterDisjoint
-static const char *FilterDisjoint =
+// Docstring regina::python::doc::NormalTransform::FilterDisjoint
+static constexpr const char FilterDisjoint[] =
 R"doc(Selects only the surfaces in the input list that have at least one
 disjoint partner. That is, a surface *S* from the input list will be
 included in the output list if and only if there is some other surface
@@ -450,8 +440,8 @@ impossible memory requirement, due to some normal surface having
 enormous normal coordinates. See NormalSurface::disjoint() for further
 discussion.)doc";
 
-// Docstring regina::python::doc::NormalTransform_::FilterIncompressible
-static const char *FilterIncompressible =
+// Docstring regina::python::doc::NormalTransform::FilterIncompressible
+static constexpr const char FilterIncompressible[] =
 R"doc(Selects only the surfaces in the input list that "might" represent
 two-sided incompressible surfaces.
 
@@ -503,7 +493,17 @@ succeed.
     future versions of Regina, since additional tests may be added to
     improve the power of this filtering.)doc";
 
-}
+// Docstring regina::python::doc::NormalTransform::__class
+static constexpr const char __class[] =
+R"doc(Represents different ways in which Regina can transform one normal
+surface list into another.
+
+Each type of transformation comes with its own preconditions on the
+original normal surface list and/or its underlying triangulation;
+these preconditions are documented alongside the individual
+enumeration values.)doc";
+
+}; // struct NormalTransform
 
 } // namespace regina::python::doc
 

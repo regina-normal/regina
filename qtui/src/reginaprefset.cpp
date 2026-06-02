@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,9 +49,6 @@
 #include <QDesktopServices>
 #include <QSettings>
 #include <QUrl>
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-#include <QTextCodec>
-#endif
 
 namespace {
     const QString INACTIVE("## INACTIVE ##");
@@ -112,6 +109,7 @@ ReginaPrefSet::ReginaPrefSet() :
         triGAPExec(defaultGAPExec),
         triGraphvizLabels(true),
         triInitialGraphType(TriGraph::DualGraph),
+        triSigVariant(TriSigVariant::Gen2),
         triSurfacePropsThreshold(6),
         warnOnNonEmbedded(true) {
 }
@@ -124,11 +122,7 @@ QFont ReginaPrefSet::fixedWidthFont() {
     ans.setFamily("monospace");
 #endif
     ans.setFixedPitch(true);
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 7, 0))
     ans.setStyleHint(QFont::Monospace);
-#else
-    ans.setStyleHint(QFont::TypeWriter);
-#endif
     return ans;
 }
 
@@ -352,6 +346,14 @@ void ReginaPrefSet::readInternal() {
     triDim4CreationType = settings.value("Dim4CreationTypeV2", 0).toInt();
     triGraphvizLabels = settings.value("GraphvizLabels", true).toBool();
 
+    str = settings.value("SigVariant").toString();
+    if (str == "1")
+        triSigVariant = ReginaPrefSet::TriSigVariant::Gen1;
+    else if (str == "2o")
+        triSigVariant = ReginaPrefSet::TriSigVariant::Gen2Oriented;
+    else // "2"
+        triSigVariant = ReginaPrefSet::TriSigVariant::Gen2; /* default */
+
     str = settings.value("InitialGraphType").toString();
     if (str == "Tree")
         triInitialGraphType = ReginaPrefSet::TriGraph::TreeDecomposition;
@@ -519,6 +521,14 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("Dim3CreationTypeV2", triDim3CreationType);
     settings.setValue("Dim4CreationTypeV2", triDim4CreationType);
     settings.setValue("GraphvizLabels", triGraphvizLabels);
+    switch (triSigVariant) {
+        case ReginaPrefSet::TriSigVariant::Gen1:
+            settings.setValue("SigVariant", "1"); break;
+        case ReginaPrefSet::TriSigVariant::Gen2Oriented:
+            settings.setValue("SigVariant", "2o"); break;
+        default: // Gen2
+            settings.setValue("SigVariant", "2"); break;
+    }
     switch (triInitialGraphType) {
         case ReginaPrefSet::TriGraph::TreeDecomposition:
             settings.setValue("InitialGraphType", "Tree"); break;
@@ -554,17 +564,10 @@ void ReginaPrefSet::saveInternal() const {
 }
 
 ReginaPrefSet::Codec ReginaPrefSet::importExportCodec() {
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     auto enc = QStringConverter::encodingForName(global().fileImportExportCodec);
     if (! enc)
         enc = QStringConverter::Utf8;
     return *enc;
-#else
-    QTextCodec* ans = QTextCodec::codecForName(global().fileImportExportCodec);
-    if (! ans)
-        ans = QTextCodec::codecForName("UTF-8");
-    return ans;
-#endif
 }
 
 int ReginaPrefSet::threads() {

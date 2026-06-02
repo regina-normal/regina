@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,9 +62,6 @@
 #include <QTextStream>
 #include <QVBoxLayout>
 #include <QWhatsThis>
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-#include <QTextCodec>
-#endif
 
 class GUICompleter : public regina::python::PrefixCompleter {
     public:
@@ -126,8 +123,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     input->setFocus();
 
     completer = nullptr;
-    connect(input, SIGNAL(completionRequested(int, int)),
-        this, SLOT(processCompletion(int, int)),Qt::QueuedConnection);
+    connect(input, &CommandEdit::completionRequested,
+        this, &PythonConsole::processCompletion, Qt::QueuedConnection);
 
     inputAreaLayout->addWidget(input, 1);
     layout->addLayout(inputAreaLayout);
@@ -152,7 +149,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setToolTip(tr("Save session history"));
     act->setWhatsThis(tr("Save the entire history of this Python session "
         "into a text file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(saveLog()));
+    connect(act, &QAction::triggered, this, &PythonConsole::saveLog);
     menuConsole->addAction(act);
 
     menuConsole->addSeparator();
@@ -163,7 +160,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setShortcuts(QKeySequence::Close);
     act->setToolTip(tr("Close Python console"));
     act->setWhatsThis(tr("Close this Python console."));
-    connect(act, SIGNAL(triggered()), this, SLOT(close()));
+    connect(act, &QAction::triggered, this, &PythonConsole::close);
     menuConsole->addAction(act);
 
     actCut = new QAction(this);
@@ -176,7 +173,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "Cut selected text from the input area to the clipboard.  "
         "The input area is the small box at the bottom of the window "
         "where you can type your next command."));
-    connect(actCut, SIGNAL(triggered()), this, SLOT(cut()));
+    connect(actCut, &QAction::triggered, this, &PythonConsole::cut);
     actCut->setEnabled(false);
     menuEdit->addAction(actCut);
 
@@ -191,14 +188,14 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "You may select text in either the session log (the main "
         "part of the window) or the input area (the small box at the "
         "bottom of the window)."));
-    connect(actCopy, SIGNAL(triggered()), this, SLOT(copy()));
+    connect(actCopy, &QAction::triggered, this, &PythonConsole::copy);
     actCopy->setEnabled(false);
     menuEdit->addAction(actCopy);
 
-    connect(input, SIGNAL(selectionChanged()), this,
-        SLOT(inputSelectionChanged()));
-    connect(session, SIGNAL(selectionChanged()), this,
-        SLOT(sessionSelectionChanged()));
+    connect(input, &CommandEdit::selectionChanged, this,
+        &PythonConsole::inputSelectionChanged);
+    connect(session, &QTextEdit::selectionChanged, this,
+        &PythonConsole::sessionSelectionChanged);
 
     actPaste = new QAction(this);
     actPaste->setText(tr("&Paste"));
@@ -210,10 +207,10 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "Paste text from the clipboard into the input area.  "
         "The input area is the small box at the bottom of the window "
         "where you can type your next command."));
-    connect(actPaste, SIGNAL(triggered()), this, SLOT(paste()));
+    connect(actPaste, &QAction::triggered, this, &PythonConsole::paste);
     actPaste->setEnabled(false);
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()), this,
-        SLOT(clipboardChanged()));
+    connect(QApplication::clipboard(), &QClipboard::dataChanged, this,
+        &PythonConsole::clipboardChanged);
     menuEdit->addAction(actPaste);
 
     act = new QAction(this);
@@ -225,7 +222,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "Select all text in the session log.  "
         "The session log is the main part of the window, where you see "
         "the full history of commands and their results."));
-    connect(act, SIGNAL(triggered()), this, SLOT(selectAll()));
+    connect(act, &QAction::triggered, this, &PythonConsole::selectAll);
     menuEdit->addAction(act);
 
     act = new QAction(this);
@@ -235,7 +232,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setToolTip(tr("Read Python scripting overview"));
     act->setWhatsThis(tr("Open the <i>Python Scripting</i> section of the "
         "users' handbook."));
-    connect(act, SIGNAL(triggered()), this, SLOT(scriptingOverview()) );
+    connect(act, &QAction::triggered, this, &PythonConsole::scriptingOverview);
     menuHelp->addAction(act);
 
     act = new QAction(this);
@@ -244,7 +241,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setToolTip(tr("Read detailed Python scripting reference"));
     act->setWhatsThis(tr("Open the detailed reference of classes, methods "
         "and routines that Regina makes available to Python scripts."));
-    connect(act, SIGNAL(triggered()), this, SLOT(pythonReference()));
+    connect(act, &QAction::triggered, this, &PythonConsole::pythonReference);
     menuHelp->addAction(act);
 
     menuHelp->addSeparator();
@@ -252,7 +249,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act = new QAction(this);
     act->setText(tr("What's &This?"));
     act->setIcon(ReginaSupport::themeIcon("help-contextual"));
-    connect(act, SIGNAL(triggered()), this, SLOT(contextHelpActivated()));
+    connect(act, &QAction::triggered, this, &PythonConsole::contextHelp);
     menuHelp->addAction(act);
 
     menuConsole->setTitle(tr("&Console"));
@@ -270,8 +267,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     if (manager)
         manager->registerConsole(this);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &PythonConsole::updatePreferences);
 
     output = new PythonConsole::OutputStream(this);
     error = new PythonConsole::ErrorStream(this);
@@ -442,30 +439,22 @@ void PythonConsole::runScript(regina::Script* script) {
 }
 
 void PythonConsole::saveLog() {
-    QString fileName =
+    QString filename =
         QFileDialog::getSaveFileName(this, tr("Save Session Transcript"),
         QString(), tr(FILTER_ALL));
-    if (! fileName.isEmpty()) {
-        QFile f(fileName);
+    if (! filename.isEmpty()) {
+        QFile f(filename);
         if (! f.open(QIODevice::WriteOnly))
             ReginaSupport::warn(this,
                 tr("I could not save the session transcript."),
                 tr("<qt>An error occurred whilst "
                 "attempting to write to the file <tt>%1</tt>.</qt>").
-                arg(fileName.toHtmlEscaped()));
+                arg(filename.toHtmlEscaped()));
         else {
             QTextStream out(&f);
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
             out.setEncoding(QStringConverter::Utf8);
-#else
-            out.setCodec(QTextCodec::codecForName("UTF-8"));
-#endif
             out << session->toPlainText();
-#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
             Qt::endl(out);
-#else
-            endl(out);
-#endif
         }
     }
 }
@@ -478,7 +467,7 @@ void PythonConsole::pythonReference() {
     PythonManager::openPythonReference(this);
 }
 
-void PythonConsole::contextHelpActivated() {
+void PythonConsole::contextHelp() {
     QWhatsThis::enterWhatsThisMode();
 }
 
@@ -615,20 +604,7 @@ void PythonConsole::processCompletion(int start, int end) {
         completer = new QCompleter(comp.completions(), this);
         completer->setCaseSensitivity(Qt::CaseInsensitive);
         completer->setWidget(input);
-
-        // Disconnect activated signals from the new completer.
-        // We call our own instead, since the default action is to completely
-        // replace the text.
-        disconnect(completer, nullptr, input, nullptr);
-        connect(completer, SIGNAL(activated(const QString&)),
-            input, SLOT(complete(QString)));
-        connect(completer, SIGNAL(highlighted(const QString&)),
-            input, SLOT(complete(QString)));
-
-        // Tell the completer to give suggestions "now", normal operation is to
-        // wait until the user types something, but here the user has already
-        // typed.
-        completer->complete();
+        input->offerCompletion(completer);
     } else {
         // No completions, an error occured.
         // Note that if a valid word is completed (like "from") the whole word

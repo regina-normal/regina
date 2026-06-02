@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,13 +37,15 @@
 #include "../helpers.h"
 #include "../docstrings/subcomplex/satblock.h"
 
+using namespace pybind11::literals;
+
 using regina::SatBlock;
 using regina::SatBlockModel;
 
 void addSatBlock(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(SatBlock)
 
-    auto c = pybind11::class_<SatBlock>(m, "SatBlock", rdoc_scope)
+    auto c = pybind11::class_<SatBlock>(m, "SatBlock", rdoc::__class)
         .def("countAnnuli", &SatBlock::countAnnuli, rdoc::countAnnuli)
         .def("annulus", &SatBlock::annulus,
             pybind11::return_value_policy::reference_internal, rdoc::annulus)
@@ -63,7 +65,7 @@ void addSatBlock(pybind11::module_& m) {
         .def("nextBoundaryAnnulus", &SatBlock::nextBoundaryAnnulus,
             pybind11::return_value_policy::reference, rdoc::nextBoundaryAnnulus)
         .def("abbr", &SatBlock::abbr,
-            pybind11::arg("tex") = false, rdoc::abbr)
+            "tex"_a = false, rdoc::abbr)
         // We cannot bind the comparison operators in the normal way:
         // see https://github.com/pybind/pybind11/issues/1487 for details.
         .def("__lt__", [](const SatBlock& lhs, const SatBlock& rhs) {
@@ -85,7 +87,7 @@ void addSatBlock(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(SatBlockModel)
 
-    auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel", rdoc_scope)
+    auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel", rdoc::__class)
         .def(pybind11::init<const SatBlockModel&>(), rdoc::__copy)
         .def("swap", &SatBlockModel::swap, rdoc::swap)
         .def("triangulation", &SatBlockModel::triangulation,
@@ -94,8 +96,7 @@ void addSatBlock(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(d);
     regina::python::add_eq_operators(d, rdoc::__eq);
-
-    regina::python::add_global_swap<SatBlockModel>(m, rdoc::global_swap);
+    regina::python::add_global_swap<SatBlockModel, rdoc>(m);
 
     RDOC_SCOPE_END
 }

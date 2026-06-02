@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2025, Ben Burton                                   *
+ *  Copyright (c) 2011-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,8 +37,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 #include "utilities/typeutils.h"
 #include <unordered_map>
 
@@ -149,11 +148,6 @@ namespace {
             registerType(typeid(FacetPairing<i>),
                 std::string("regina.FacetPairing") +
                     regina::detail::Strings<i>::dim);
-            // We see FacetPairingBase show up in some swap() functions.
-            registerType(
-                typeid(regina::detail::FacetPairingBase<i>),
-                std::string("regina.FacetPairing") +
-                    regina::detail::Strings<i>::dim);
 
             if constexpr (i == 2) {
                 registerType(typeid(Triangle<2>), "regina.Triangle2");
@@ -219,7 +213,7 @@ namespace {
                         vertices())),
                     "<internal>.View[regina.Vertex4]");
             } else {
-                registerType(typeid(Face<i, i>),
+                registerType(typeid(Simplex<i>),
                     std::string("regina.Simplex") +
                         regina::detail::Strings<i>::dim);
                 registerType(
@@ -373,9 +367,6 @@ namespace {
             "<internal>.View[regina.ModelLinkGraphNode]");
         registerType(typeid(decltype(ModelLinkGraph().cells().arcs(0))),
             "<internal>.View[regina.ModelLinkGraphArc]");
-
-        // Enums that live within individual face classes:
-        registerType(typeid(Vertex<3>::Link), "regina.Vertex3.Link");
 
         registerType(typeid(PacketOf<Link>),
             "regina.PacketOfLink");

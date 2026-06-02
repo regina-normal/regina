@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,15 +35,13 @@
 #ifndef __LINKCODES_H
 #define __LINKCODES_H
 
+#include "census/census.h"
+#include "link/link.h"
 #include "packettabui.h"
 
 class QTextEdit;
 class QComboBox;
-
-namespace regina {
-    class Link;
-    class Packet;
-};
+template <regina::CensusSearchable ObjectType> class CensusWidget;
 
 /**
  * A packet viewer tab for viewing text-based codes for a link.
@@ -56,6 +54,7 @@ class LinkCodesUI : public QObject, public PacketViewerTab {
          * The link itself
          */
         regina::PacketOf<regina::Link>* link;
+        CensusWidget<regina::Link>* census;
 
         /**
          * Internal components
@@ -86,11 +85,6 @@ class LinkCodesUI : public QObject, public PacketViewerTab {
          * Change which code is displayed.
          */
         void typeChanged(int index);
-
-        /**
-         * Notify that preferences have changed.
-         */
-        void updatePreferences();
 };
 
 inline PacketEditIface* LinkCodesUI::getEditIface() {

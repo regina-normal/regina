@@ -1,36 +1,36 @@
 Poincare homology sphere -> display, height = 1, threads = 1
-    fvPQcdecedekrsnrs 5
-    gvLQQcdfefefjwawtbi 6
+    fFuC8hYTOTa 5
+    gxRSS-bgoOah 6
 Poincare homology sphere -> display, height = 1, threads = 2
-    fvPQcdecedekrsnrs 5
-    gvLQQcdfefefjwawtbi 6
+    fFuC8hYTOTa 5
+    gxRSS-bgoOah 6
 Poincare homology sphere -> stop after 10, height = 1, threads = 1
     search ran to completion, count: 2
 Poincare homology sphere -> stop after 10, height = 1, threads = 2
     search ran to completion, count: 2
 Poincare homology sphere -> collect, height = 1, threads = 1
-    fvPQcdecedekrsnrs
-    gvLQQcdfefefjwawtbi
+    fFuC8hYTOTa
+    gxRSS-bgoOah
 Poincare homology sphere -> collect, height = 1, threads = 2
-    fvPQcdecedekrsnrs
-    gvLQQcdfefefjwawtbi
+    fFuC8hYTOTa
+    gxRSS-bgoOah
 Poincare homology sphere vs Poincare homology sphere -> isomorphisms, stop after 5
     search terminated early, count: 5
 Poincare homology sphere vs Poincare homology sphere -> subcomplexes, stop after 5
     search terminated early, count: 5
 
 Weeks manifold -> display, height = 0, threads = 1
-    jvLPLQQefghghifiigaxxhdingk 9
+    jNkRq7q8+FaKa2ANri 9
 Weeks manifold -> display, height = 0, threads = 2
-    jvLPLQQefghghifiigaxxhdingk 9
+    jNkRq7q8+FaKa2ANri 9
 Weeks manifold -> stop after 10, height = 1, threads = 1
     search terminated early, count: 10
 Weeks manifold -> stop after 10, height = 1, threads = 2
     search terminated early, count: 10
 Weeks manifold -> collect, height = 0, threads = 1
-    jvLPLQQefghghifiigaxxhdingk
+    jNkRq7q8+FaKa2ANri
 Weeks manifold -> collect, height = 0, threads = 2
-    jvLPLQQefghghifiigaxxhdingk
+    jNkRq7q8+FaKa2ANri
 Weeks manifold vs Weeks manifold -> isomorphisms, display
 0 -> 0 (0123)
 1 -> 1 (0123)
@@ -59,33 +59,33 @@ Weeks manifold vs Weeks manifold -> subcomplexes, stop after 5
     search ran to completion, count: 1
 
 Cappell-Shaneson knot complement -> display, height = 0, threads = 1
-    cMkabbb+aAa3blb 2
+    cNQhbWYl 2
 Cappell-Shaneson knot complement -> display, height = 0, threads = 2
-    cMkabbb+aAa3blb 2
+    cNQhbWYl 2
 Cappell-Shaneson knot complement -> stop after 10, height = 2, threads = 1
     search ran to completion, count: 9
 Cappell-Shaneson knot complement -> stop after 10, height = 2, threads = 2
     search ran to completion, count: 9
 Cappell-Shaneson knot complement -> collect, height = 2, threads = 1
-    cMkabbb+aAa3blb
-    eLMQcbbccdddaaaa+axbcbvaGa
-    eLMQcbbccdddaaaa1aHbCbvaYa
-    eLMQcbbccdddaaaa1aHbKavapb
-    eLMQcbbccdddaaaaHbka2avawa
-    eLMQcbbcddddaaaa+aJa2aGava
-    eLMQcbbdccddaaaa1bHbibvafb
-    eLMQcbccddddMaobyayaPbKava
-    eLMQcbccddddObJbxbtb5albva
+    cNQhbWYl
+    eprAB-bdJe024e
+    eprAB-bdJe0w8c
+    eprAB-bdZe+g2l
+    eprAB-bddu62bh
+    eprBB-bddeY2rc
+    epsBB-HsmZaZwm
+    epsBB-rJeZGY2j
+    epzsB-bdde73gb
 Cappell-Shaneson knot complement -> collect, height = 2, threads = 2
-    cMkabbb+aAa3blb
-    eLMQcbbccdddaaaa+axbcbvaGa
-    eLMQcbbccdddaaaa1aHbCbvaYa
-    eLMQcbbccdddaaaa1aHbKavapb
-    eLMQcbbccdddaaaaHbka2avawa
-    eLMQcbbcddddaaaa+aJa2aGava
-    eLMQcbbdccddaaaa1bHbibvafb
-    eLMQcbccddddMaobyayaPbKava
-    eLMQcbccddddObJbxbtb5albva
+    cNQhbWYl
+    eprAB-bdJe024e
+    eprAB-bdJe0w8c
+    eprAB-bdZe+g2l
+    eprAB-bddu62bh
+    eprBB-bddeY2rc
+    epsBB-HsmZaZwm
+    epsBB-rJeZGY2j
+    epzsB-bdde73gb
 Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> isomorphisms, display
 0 -> 0 (01234)
 1 -> 1 (01234)
@@ -121,32 +121,32 @@ LST(1,2,3) vs L(8,3) -> subcomplexes, stop after 5
     search ran to completion, count: 4
 
 Trefoil -> display, height = 0, threads = 1
-    dabcabcv- 3
+    dh9K 3
 Trefoil -> display, height = 0, threads = 2
-    dabcabcv- 3
+    dh9K 3
 
 Figure eight knot -> stop after 10, height = 1, threads = 1
     search ran to completion, count: 8
 Figure eight knot -> stop after 10, height = 1, threads = 2
     search ran to completion, count: 8
 Figure eight knot -> collect, height = 1, threads = 1
-    eabcdbadcvbZa
-    faabcdbedcePkBg
-    faabcdbedcePkNj
-    faabcdbedcevfBg
-    faabcdbedcevfNj
-    faabcdecbedPkpd
-    faabcdecbedvfpd
-    fabcadebcedtg5m
+    eputWe
+    f3WkJio
+    f9W6afo
+    f9q9afo
+    fDXEImr
+    fDXUHmr
+    fDrPHmr
+    fDrzImr
 Figure eight knot -> collect, height = 1, threads = 2
-    eabcdbadcvbZa
-    faabcdbedcePkBg
-    faabcdbedcePkNj
-    faabcdbedcevfBg
-    faabcdbedcevfNj
-    faabcdecbedPkpd
-    faabcdecbedvfpd
-    fabcadebcedtg5m
+    eputWe
+    f3WkJio
+    f9W6afo
+    f9q9afo
+    fDXEImr
+    fDXUHmr
+    fDrPHmr
+    fDrzImr
 
 Monster unknot -> stop after 10, height = 1, threads = 1
     search terminated early, count: 10
@@ -506,10 +506,10 @@ Saturated region:
 
 
 Enumerating covers:
-  mLvALvQQQceegjlkjiljklhhahhaaaghahg Cover.Irregular
-  mLvALvQQQceegjlkjiljklhhahhaaaghahg Cover.Irregular
-  mLvwMMMPQbegfijhkkklllhaahbabhhahbg Cover.Cyclic
-  mLvwMMMPQbegfijhkkklllhaahbabhhahbg Cover.Cyclic
-  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb Cover.Cyclic
-  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb Cover.Cyclic
+  m3mD1eXuXD--daMDMvKtUto Cover.Cyclic
+  m3mD1eXuXD--daMDMvKtUto Cover.Cyclic
+  mNgJo7sDxD-TUauDurebrev Cover.Cyclic
+  mNgJo7sDxD-TUauDurebrev Cover.Cyclic
+  mNmQU70Dxv-RDaU5MjIDNDh Cover.Irregular
+  mNmQU70Dxv-RDaU5MjIDNDh Cover.Irregular
 

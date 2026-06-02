@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,8 @@
 #include "../helpers.h"
 #include "../docstrings/packet/attachment.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Attachment;
 
@@ -40,7 +42,7 @@ void addAttachment(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Attachment)
 
     auto c = pybind11::class_<Attachment, regina::Packet,
-            std::shared_ptr<Attachment>>(m, "Attachment", rdoc_scope)
+            std::shared_ptr<Attachment>>(m, "Attachment", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const char*>(), rdoc::__init)
         .def(pybind11::init([](pybind11::bytes data, std::string filename) {
@@ -61,7 +63,7 @@ void addAttachment(pybind11::module_& m) {
 
             return new Attachment(in, inlen,
                 Attachment::OwnershipPolicy::DeepCopy, filename);
-        }), pybind11::arg("data"), pybind11::arg("filename"), rdoc::__init_2)
+        }), "data"_a, "filename"_a, rdoc::__init_2)
         .def(pybind11::init<const Attachment&>(), rdoc::__copy)
         .def("swap", &Attachment::swap, rdoc::swap)
         .def("isNull", &Attachment::isNull, rdoc::isNull)
@@ -87,14 +89,13 @@ void addAttachment(pybind11::module_& m) {
             }
 
             a.reset(in, inlen, Attachment::OwnershipPolicy::DeepCopy, filename);
-        }, pybind11::arg("data"), pybind11::arg("filename"), rdoc::reset_2)
+        }, "data"_a, "filename"_a, rdoc::reset_2)
         .def("save", &Attachment::save, rdoc::save)
         .def_readonly_static("typeID", &Attachment::typeID)
     ;
     regina::python::add_output_rich(c);
     regina::python::packet_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<Attachment>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Attachment, rdoc>(m);
 
     RDOC_SCOPE_END
 }

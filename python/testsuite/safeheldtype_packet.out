@@ -2,7 +2,7 @@
 -----------------------------------------------------------
 Basic:
 
-fvPQcdecedekrsnrs
+fFuC8hYTOTa
 Text of length 11
 Hello World
 
@@ -12,14 +12,14 @@ Basic container tests:
 1
 a
 Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
-baa
-baa
-baabaa
+b-F
+b-F
+b-Fb-F
 
 -----------------------------------------------------------
 Erasing container:
 
-baabaa
+b-Fb-F
 
 -----------------------------------------------------------
 Nested tests:
@@ -29,7 +29,7 @@ Text set
 3
 4
 True
-fvPQcdecedekrsnrs
+fFuC8hYTOTa
 True
 2
 Closed orientable 3-D triangulation, f = ( 1 6 10 5 )

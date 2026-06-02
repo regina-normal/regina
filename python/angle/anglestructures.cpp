@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,7 +37,8 @@
 #include "../helpers/packet.h"
 #include "../docstrings/angle/anglestructures.h"
 
-using namespace regina::python;
+using namespace pybind11::literals;
+
 using regina::AngleStructures;
 using regina::ProgressTracker;
 using regina::Triangulation;
@@ -51,14 +52,15 @@ void addAngleStructures(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(AngleStructures)
 
     auto l = pybind11::class_<AngleStructures,
-            std::shared_ptr<AngleStructures>>(m, "AngleStructures", rdoc_scope)
+            std::shared_ptr<AngleStructures>>(m, "AngleStructures",
+            rdoc::__class)
         .def(pybind11::init<const Triangulation<3>&, bool,
                 regina::Flags<regina::AngleAlg>, ProgressTracker*>(),
-            pybind11::arg(),
-            pybind11::arg("tautOnly") = false,
-            pybind11::arg("algHints") = regina::AngleAlg::Default,
-            pybind11::arg("tracker") = nullptr,
-            pybind11::call_guard<GILScopedRelease>(),
+            "triangulation"_a,
+            "tautOnly"_a = false,
+            "algHints"_a = regina::AngleAlg::Default,
+            "tracker"_a = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::__init)
         .def(pybind11::init<const AngleStructures&>(), rdoc::__copy)
         .def("swap", &AngleStructures::swap, rdoc::swap)
@@ -80,10 +82,10 @@ void addAngleStructures(pybind11::module_& m) {
             rdoc::__iter__)
         .def("spansStrict", &AngleStructures::spansStrict, rdoc::spansStrict)
         .def("knowsSpansStrict", &AngleStructures::knowsSpansStrict,
-            pybind11::arg("cachedOnly") = false, rdoc::knowsSpansStrict)
+            "cachedOnly"_a = false, rdoc::knowsSpansStrict)
         .def("spansTaut", &AngleStructures::spansTaut, rdoc::spansTaut)
         .def("knowsSpansTaut", &AngleStructures::knowsSpansTaut,
-            pybind11::arg("cachedOnly") = false, rdoc::knowsSpansTaut)
+            "cachedOnly"_a = false, rdoc::knowsSpansTaut)
         .def("sort", &AngleStructures::sort<const std::function<
             bool(const regina::AngleStructure&,
                 const regina::AngleStructure&)>&>,
@@ -92,19 +94,18 @@ void addAngleStructures(pybind11::module_& m) {
     regina::python::add_output_rich(l);
     regina::python::packet_eq_operators(l, rdoc::__eq);
     regina::python::add_packet_data(l);
+    regina::python::add_global_swap<AngleStructures, rdoc>(m);
 
     auto wrap = regina::python::add_packet_wrapper<AngleStructures>(
         m, "PacketOfAngleStructures");
     regina::python::add_packet_constructor<const Triangulation<3>&, bool,
             regina::Flags<regina::AngleAlg>, ProgressTracker*>(wrap,
-        pybind11::arg(),
-        pybind11::arg("tautOnly") = false,
-        pybind11::arg("algHints") = regina::AngleAlg::Default,
-        pybind11::arg("tracker") = nullptr,
-        pybind11::call_guard<GILScopedRelease>(),
+        "triangulation"_a,
+        "tautOnly"_a = false,
+        "algHints"_a = regina::AngleAlg::Default,
+        "tracker"_a = nullptr,
+        pybind11::call_guard<regina::python::GILScopedRelease>(),
         rdoc::__init);
-
-    regina::python::add_global_swap<AngleStructures>(m, rdoc::global_swap);
 
     RDOC_SCOPE_END
 }

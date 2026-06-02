@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,8 @@
 #include "../helpers/flags.h"
 #include "../docstrings/link/modellinkgraph.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::ModelLinkGraphNode;
 using regina::ModelLinkGraphArc;
@@ -50,12 +52,12 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
             { "NoTwists", regina::GraphConstraint::NoTwists, rdoc::NoTwists },
             { "SingleTraversal", regina::GraphConstraint::SingleTraversal,
                 rdoc::SingleTraversal }
-        }, rdoc_scope, rdoc_global::__bor);
+        }, rdoc::__class, rdoc::__bor);
 
     RDOC_SCOPE_SWITCH(ModelLinkGraphArc)
 
     auto a = pybind11::class_<ModelLinkGraphArc>(m, "ModelLinkGraphArc",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<ModelLinkGraphNode*, int>(), rdoc::__init)
         .def(pybind11::init<const ModelLinkGraphArc&>(), rdoc::__copy)
@@ -80,7 +82,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(ModelLinkGraphNode)
 
     auto n = pybind11::class_<ModelLinkGraphNode>(m, "ModelLinkGraphNode",
-            rdoc_scope)
+            rdoc::__class)
         .def("index", &ModelLinkGraphNode::index, rdoc::index)
         .def("arc", &ModelLinkGraphNode::arc, rdoc::arc)
         .def("adj", &ModelLinkGraphNode::adj, rdoc::adj)
@@ -94,7 +96,8 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
 
     RDOC_SCOPE_SWITCH(ModelLinkGraph)
 
-    auto g = pybind11::class_<ModelLinkGraph>(m, "ModelLinkGraph", rdoc_scope)
+    auto g = pybind11::class_<ModelLinkGraph>(m, "ModelLinkGraph",
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const regina::Link&>(), rdoc::__init)
         .def(pybind11::init<const std::string&>(), rdoc::__init_2)
@@ -129,8 +132,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
             &ModelLinkGraph::flype, pybind11::const_), rdoc::flype_2)
         .def("plantri", &ModelLinkGraph::plantri, rdoc::plantri)
         .def("canonicalPlantri", &ModelLinkGraph::canonicalPlantri,
-            pybind11::arg("allowReflection") = true,
-            pybind11::arg("tight") = false,
+            "allowReflection"_a = true, "tight"_a = false,
             rdoc::canonicalPlantri)
         .def("extendedPlantri", &ModelLinkGraph::extendedPlantri,
             rdoc::extendedPlantri)
@@ -142,26 +144,23 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
             rdoc::generateAnyLink)
         .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
             const std::function<void(regina::Link&&)>&>,
-            pybind11::arg("action"), rdoc::generateMinimalLinks)
+            "action"_a, rdoc::generateMinimalLinks)
         .def("generateAllLinks", &ModelLinkGraph::generateAllLinks<
             const std::function<void(regina::Link&&)>&>,
-            pybind11::arg("action"), rdoc::generateAllLinks)
+            "action"_a, rdoc::generateAllLinks)
         .def("canonical", &ModelLinkGraph::canonical,
-            pybind11::arg("allowReflection") = true,
-            rdoc::canonical)
+            "allowReflection"_a = true, rdoc::canonical)
         .def_static("generateAllEmbeddings",
             &ModelLinkGraph::generateAllEmbeddings<
                 const std::function<void(regina::ModelLinkGraph&&)>&>,
-            pybind11::arg("pairing"), pybind11::arg("allowReflection"),
-            pybind11::arg("constraints"), pybind11::arg("action"),
+            "pairing"_a, "allowReflection"_a, "constraints"_a, "action"_a,
             rdoc::generateAllEmbeddings)
         .def("randomise", &ModelLinkGraph::randomise, rdoc::randomise)
     ;
     regina::python::add_output_rich(g);
     regina::python::add_tight_encoding(g);
     regina::python::add_eq_operators(g, rdoc::__eq);
-
-    regina::python::add_global_swap<ModelLinkGraph>(m, rdoc::global_swap);
+    regina::python::add_global_swap<ModelLinkGraph, rdoc>(m);
 
     regina::python::addStdView<decltype(ModelLinkGraph().nodes())>(internal,
         "ModelLinkGraph_nodes");
@@ -169,7 +168,7 @@ void addModelLinkGraph(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_SWITCH(ModelLinkGraphCells)
 
     auto c = pybind11::class_<ModelLinkGraphCells>(m, "ModelLinkGraphCells",
-            rdoc_scope)
+            rdoc::__class)
         .def("countCells", &ModelLinkGraphCells::countCells, rdoc::countCells)
         .def("countEdges", &ModelLinkGraphCells::countEdges, rdoc::countEdges)
         .def("countArcs", &ModelLinkGraphCells::countArcs, rdoc::countArcs)

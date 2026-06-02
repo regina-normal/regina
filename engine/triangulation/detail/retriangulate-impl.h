@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -222,38 +222,39 @@ class RetriangulateThreadSync<false> {
  * Therefore, this backtracing code is disabled at the source code level
  * and not available at all through the API. To turn it on, you will
  * need to edit this source file and change the type alias
- * Retriangulator::SigSet from RetriangulateSigGraph<false> to
- * RetriangulateSigGraph<true>.
+ * Retriangulator::SigSet from RetriangulateSigGraph<..., false> to
+ * RetriangulateSigGraph<..., true>.
  *
  * \tparam backtrace \c true if and only if backtracing is enabled.
  */
-template <bool backtrace>
+template <SignatureType Signature, bool backtrace>
 class RetriangulateSigGraph;
 
 /**
  * This keeps a map whose keys are all signatures seen so far,
  * and whose corresponding values are the signatures from which they
  * were derived.  Seed signatures (the starting points of the search)
- * have associated values of the empty string.
+ * have associated values of the empty signature.
  */
-template <>
-class RetriangulateSigGraph<true> : private std::map<std::string, std::string> {
+template <SignatureType Signature>
+class RetriangulateSigGraph<Signature, true> :
+        private std::map<Signature, Signature> {
     public:
-        using std::map<std::string, std::string>::iterator;
+        using iterator = std::map<Signature, Signature>::iterator;
 
-        auto insertStart(const std::string& sig) {
-            return insert(std::make_pair(sig, std::string()));
+        auto insertStart(const Signature& sig) {
+            return std::map<Signature, Signature>::emplace(sig, Signature());
         }
 
-        auto insertDerived(const std::string& sig, const std::string& from) {
-            return insert(std::make_pair(sig, from));
+        auto insertDerived(const Signature& sig, const Signature& from) {
+            return std::map<Signature, Signature>::emplace(sig, from);
         }
 
-        static const std::string& sigAt(iterator it) {
+        static const Signature& sigAt(iterator it) {
             return it->first;
         }
 
-        void backtrace(const std::string& sig) const {
+        void backtrace(const Signature& sig) const {
             std::cerr << sig;
             for (auto it = find(sig); ! it->second.empty();
                     it = find(it->second)) {
@@ -263,24 +264,24 @@ class RetriangulateSigGraph<true> : private std::map<std::string, std::string> {
         }
 };
 
-template <>
-class RetriangulateSigGraph<false> : private std::set<std::string> {
+template <SignatureType Signature>
+class RetriangulateSigGraph<Signature, false> : private std::set<Signature> {
     public:
-        using std::set<std::string>::iterator;
+        using iterator = std::set<Signature>::iterator;
 
-        auto insertStart(const std::string& sig) {
-            return insert(sig);
+        auto insertStart(const Signature& sig) {
+            return std::set<Signature>::emplace(sig);
         }
 
-        auto insertDerived(const std::string& sig, const std::string&) {
-            return insert(sig);
+        auto insertDerived(const Signature& sig, const Signature&) {
+            return std::set<Signature>::emplace(sig);
         }
 
-        static const std::string& sigAt(iterator it) {
+        static const Signature& sigAt(iterator it) {
             return *it;
         }
 
-        void backtrace(const std::string& sig) const {
+        void backtrace(const Signature&) const {
         }
 };
 
@@ -307,8 +308,9 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
 
     private:
         // To switch on backtracing, just change the following type alias to
-        // RetriangulateSigGraph<true>.
-        using SigSet = RetriangulateSigGraph<false>;
+        // RetriangulateSigGraph<..., true>.
+        using SigSet = RetriangulateSigGraph<
+            typename RetriangulateParams<Object>::Signature, false>;
 
         const bool rigid_;
         const size_t maxSize_;
@@ -316,9 +318,10 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         ProgressTrackerOpen* tracker_;
 
         SigSet sigs_;
-        std::priority_queue<SigSet::iterator,
-            std::vector<SigSet::iterator>,
-            std::function<bool(SigSet::iterator, SigSet::iterator)>>
+        std::priority_queue<typename SigSet::iterator,
+            std::vector<typename SigSet::iterator>,
+            std::function<bool(
+                typename SigSet::iterator, typename SigSet::iterator)>>
             process_;
 
     public:
@@ -331,12 +334,12 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
             // where "size" measures number of top-dimensional simplices
             // for triangulations or number of crossings for link diagrams.
             //
-            // Here we use the string length, which is fast to compute,
+            // Here we use the signature length, which is fast to compute,
             // and which should have the same effect for knots (i.e.,
             // single-component links) and also for triangulations
             // with the same number of boundary facets (which is
             // preserved under Pachner moves).
-            return SigSet::sigAt(a).length() > SigSet::sigAt(b).length();
+            return SigSet::sigAt(a).size() > SigSet::sigAt(b).size();
         }
 
     public:
@@ -374,7 +377,8 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
          * which a single move (e.g., a Pachner or Reidemeister move)
          * produced \a alt.
          */
-        bool candidate(Object&& alt, const std::string& derivedFrom);
+        bool candidate(Object&& alt,
+            const typename RetriangulateParams<Object>::Signature& derivedFrom);
 };
 
 template <Retriangulable Object, bool threading, bool withSig, int flags,
@@ -384,7 +388,7 @@ inline bool Retriangulator<Object, threading, withSig, flags, options_>::seed(
     // We have to pass a *copy* of obj to action_, since action_ is
     // allowed to change the object that is passed to it.
     // This is inefficient, but at least it only happens once.
-    const std::string sig = (rigid_ ?
+    const typename RetriangulateParams<Object>::Signature sig = (rigid_ ?
         RetriangulateParams<Object>::rigidSig(obj) :
         RetriangulateParams<Object>::sig(obj));
     {
@@ -412,7 +416,7 @@ template <Retriangulable Object, bool threading, bool withSig, int flags,
     PropagationOptions<Object> options_>
 void Retriangulator<Object, threading, withSig, flags, options_>::processQueue(
         ProgressTrackerOpen* tracker) {
-    SigSet::iterator next;
+    using Signature = typename RetriangulateParams<Object>::Signature;
 
     typename RetriangulateThreadSync<threading>::Lock lock(*this);
 
@@ -424,7 +428,7 @@ void Retriangulator<Object, threading, withSig, flags, options_>::processQueue(
             if (tracker && tracker->isCancelled())
                 break;
 
-            next = process_.top();
+            auto next = process_.top();
             process_.pop();
 
             // We can do our expensive propagation outside the mutex,
@@ -433,7 +437,7 @@ void Retriangulator<Object, threading, withSig, flags, options_>::processQueue(
             lock.unlock();
             RetriangulateParams<Object>::propagateFrom(
                 SigSet::sigAt(next), maxSize_, options_,
-                [this](Object&& alt, const std::string& derivedFrom) {
+                [this](Object&& alt, const Signature& derivedFrom) {
                     return candidate(std::move(alt), derivedFrom);
                 });
             lock.lock();
@@ -449,8 +453,9 @@ void Retriangulator<Object, threading, withSig, flags, options_>::processQueue(
 template <Retriangulable Object, bool threading, bool withSig, int flags,
     PropagationOptions<Object> options_>
 bool Retriangulator<Object, threading, withSig, flags, options_>::candidate(
-        Object&& alt, const std::string& derivedFrom) {
-    const std::string sig = (rigid_ ?
+        Object&& alt,
+        const typename RetriangulateParams<Object>::Signature& derivedFrom) {
+    typename RetriangulateParams<Object>::Signature sig = (rigid_ ?
         RetriangulateParams<Object>::rigidSig(alt) :
         RetriangulateParams<Object>::sig(alt));
 
@@ -522,7 +527,7 @@ bool enumerateDetail(const Object& obj, bool rigid, int height, int nThreads,
         if constexpr (withSig) {
             // There is only one empty link diagram and/or triangulation, so
             // we can ignore the value of rigid_ here.
-            result = action(obj.sig(), Object(obj));
+            result = action(RetriangulateParams<Object>::sig(obj), Object(obj));
         } else {
             result = action(Object(obj));
         }

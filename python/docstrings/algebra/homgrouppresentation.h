@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::HomGroupPresentation
-static const char *HomGroupPresentation =
+struct HomGroupPresentation {
+
+// Docstring regina::python::doc::HomGroupPresentation::__class
+static constexpr const char __class[] =
 R"doc(Represents a homomorphism between groups which are described via
 finite presentations.
 
@@ -41,13 +43,11 @@ possible, even when passing or returning objects by value.
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
-namespace HomGroupPresentation_ {
+// Docstring regina::python::doc::HomGroupPresentation::__copy
+static constexpr const char __copy[] = R"doc(Creates a clone of the given homomorphism.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::__copy
-static const char *__copy = R"doc(Creates a clone of the given homomorphism.)doc";
-
-// Docstring regina::python::doc::HomGroupPresentation_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::HomGroupPresentation::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given homomorphism have identical
 presentations.
 
@@ -73,8 +73,8 @@ Returns:
     ``True`` if and only if this and the given homomorphisms have
     identical presentations.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::__init
-static const char *__init =
+// Docstring regina::python::doc::HomGroupPresentation::__init
+static constexpr const char __init[] =
 R"doc(Creates a new homomorphism from the given data.
 
 Parameter ``domain``:
@@ -88,8 +88,8 @@ Parameter ``map``:
     the domain, and where this homomorphism sends the *i*th generator
     of the domain to the element ``map[i]`` of the codomain.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::HomGroupPresentation::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a declared isomorphism from the given data. Here you must
 provide both a map from the domain to codomain, and the inverse map
 from the codomain to domain.
@@ -113,8 +113,8 @@ Parameter ``inv``:
     the codomain, and where the inverse homomorphism sends the *i*th
     generator of the codomain to the element ``inv[i]`` of the domain.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::HomGroupPresentation::__init_3
+static constexpr const char __init_3[] =
 R"doc(Creates a new identity homomorphism for the given group.
 
 This will be a declared isomorphism (see the HomGroupPresentation
@@ -123,8 +123,8 @@ class notes for details).
 Parameter ``groupForIdentity``:
     both the domain and codomain of the new identity homomorphism.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::__mul
-static const char *__mul =
+// Docstring regina::python::doc::HomGroupPresentation::__mul
+static constexpr const char __mul[] =
 R"doc(Composes this homomorphism with the given homomorphism.
 
 Evaluating the composition on some group element *x* is the same as
@@ -145,44 +145,22 @@ Parameter ``rhs``:
 Returns:
     the composition of both homomorphisms.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::__mul_2
-static const char *__mul_2 =
-R"doc(Composes this homomorphism with the given homomorphism.
-
-Evaluating the composition on some group element *x* is the same as
-evaluating ``this(rhs(x))``. In other words, in this composition,
-*rhs* is evaluated first and then the output of that is evaluated by
-this homomorphism.
-
-If both of the given homomorphisms are declared isomorphisms, then the
-return value will be a declared isomoprhism also.
-
-Precondition:
-    the codomain of *rhs* must be the same as the domain of this
-    homomorphism.
-
-Parameter ``rhs``:
-    the homomorphism to compose this with.
-
-Returns:
-    the composition of both homomorphisms.)doc";
-
-// Docstring regina::python::doc::HomGroupPresentation_::codomain
-static const char *codomain =
+// Docstring regina::python::doc::HomGroupPresentation::codomain
+static constexpr const char codomain[] =
 R"doc(The codomain of the map.
 
 Returns:
     a reference to the codomain.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::domain
-static const char *domain =
+// Docstring regina::python::doc::HomGroupPresentation::domain
+static constexpr const char domain[] =
 R"doc(The domain of the map.
 
 Returns:
     a reference to the domain.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::evaluate
-static const char *evaluate =
+// Docstring regina::python::doc::HomGroupPresentation::evaluate
+static constexpr const char evaluate[] =
 R"doc(Evaluate the homomorphism at an element of the domain.
 
 Parameter ``arg``:
@@ -191,8 +169,8 @@ Parameter ``arg``:
 Returns:
     the image of this element in the codomain.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::evaluate_2
-static const char *evaluate_2 =
+// Docstring regina::python::doc::HomGroupPresentation::evaluate_2
+static constexpr const char evaluate_2[] =
 R"doc(Evaluate the homomorphism at a generator of the domain.
 
 Parameter ``i``:
@@ -201,8 +179,8 @@ Parameter ``i``:
 Returns:
     the image of the *i*th generator in the codomain.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::HomGroupPresentation::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given homomorphisms.
 
 This global routine simply calls HomGroupPresentation::swap(); it is
@@ -215,8 +193,8 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the homomorphism whose contents should be swapped with *lhs*.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::intelligentNielsen
-static const char *intelligentNielsen =
+// Docstring regina::python::doc::HomGroupPresentation::intelligentNielsen
+static constexpr const char intelligentNielsen[] =
 R"doc(Deprecated alias for nielsen(), which simplifies the domain and
 codomain using only Nielsen moves, keeping track of the resulting map
 in the progress.
@@ -229,8 +207,8 @@ Returns:
     ``True`` if and only if either presentation and/or the map was
     changed.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::intelligentSimplify
-static const char *intelligentSimplify =
+// Docstring regina::python::doc::HomGroupPresentation::intelligentSimplify
+static constexpr const char intelligentSimplify[] =
 R"doc(Deprecated alias for simplify(), which simultaneously simplifies the
 presentation of the domain, the presentation of the codomain, and the
 description of the map.
@@ -243,8 +221,8 @@ Returns:
     ``True`` if and only if either presentation and/or the map was
     changed.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::invEvaluate
-static const char *invEvaluate =
+// Docstring regina::python::doc::HomGroupPresentation::invEvaluate
+static constexpr const char invEvaluate[] =
 R"doc(Evaluate the isomorphisms's inverse at an element of the codomain.
 
 Precondition:
@@ -257,8 +235,8 @@ Parameter ``arg``:
 Returns:
     the image of this element in the domain.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::invEvaluate_2
-static const char *invEvaluate_2 =
+// Docstring regina::python::doc::HomGroupPresentation::invEvaluate_2
+static constexpr const char invEvaluate_2[] =
 R"doc(Evaluate the isomorphism at a generator of the codomain.
 
 Precondition:
@@ -271,8 +249,8 @@ Parameter ``i``:
 Returns:
     the image of this generator in the domain.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::invert
-static const char *invert =
+// Docstring regina::python::doc::HomGroupPresentation::invert
+static constexpr const char invert[] =
 R"doc(Inverts the homomorphism.
 
 This is only possible if the homomorphism is in fact a declared
@@ -280,17 +258,18 @@ isomorphism (which means that the inverse map is already stored
 internally). See the HomGroupPresentation class notes for further
 details on declared isomorphisms.
 
-If this is not a declared isomorphism then this routine will do
-nothing and simply return ``False``.
+If this is not a declared isomorphism, this routine will throw an
+exception. This is a change of behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` instead.
 
 This operation is (very) fast constant time.
 
-Returns:
-    ``True`` if and only if the inversion operation was successful
-    (i.e., if this is a declared isomorphism).)doc";
+Exception ``NoSolution``:
+    This homomorphism is not a declared isomorphism (and so the
+    inversion operation could not be completed).)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::knowsInverse
-static const char *knowsInverse =
+// Docstring regina::python::doc::HomGroupPresentation::knowsInverse
+static constexpr const char knowsInverse[] =
 R"doc(Returns whether or not this is a declared isomorphism.
 
 A _declared isomorphism_ is a isomorphism for which the user has
@@ -301,16 +280,16 @@ Returns:
     ``True`` if and only if this is a declared isomorphism, i.e, the
     inverse map was explicitly provided.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::markedAbelianisation
-static const char *markedAbelianisation =
+// Docstring regina::python::doc::HomGroupPresentation::markedAbelianisation
+static constexpr const char markedAbelianisation[] =
 R"doc(Computes the induced map on the abelianizations of the domain and
 codomain.
 
 Returns:
     the induced map on the abelianizations.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::nielsen
-static const char *nielsen =
+// Docstring regina::python::doc::HomGroupPresentation::nielsen
+static constexpr const char nielsen[] =
 R"doc(Simplifies the domain and codomain using only Nielsen moves, keeping
 track of the resulting map in the progress.
 
@@ -318,8 +297,8 @@ Returns:
     ``True`` if and only if either presentation and/or the map was
     changed.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::simplify
-static const char *simplify =
+// Docstring regina::python::doc::HomGroupPresentation::simplify
+static constexpr const char simplify[] =
 R"doc(Simultaneously simplifies the presentation of the domain, the
 presentation of the codomain, and the description of the map.
 
@@ -330,8 +309,8 @@ Returns:
     ``True`` if and only if either presentation and/or the map was
     changed.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::smallCancellation
-static const char *smallCancellation =
+// Docstring regina::python::doc::HomGroupPresentation::smallCancellation
+static constexpr const char smallCancellation[] =
 R"doc(Simplifies the domain and codomain using only small cancellation
 theory.
 
@@ -339,15 +318,15 @@ Returns:
     ``True`` if and only if either presentation and/or the map was
     changed.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::swap
-static const char *swap =
+// Docstring regina::python::doc::HomGroupPresentation::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given homomorphism.
 
 Parameter ``other``:
     the homomorphism whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::verify
-static const char *verify =
+// Docstring regina::python::doc::HomGroupPresentation::verify
+static constexpr const char verify[] =
 R"doc(Verifies the map is a valid homomorphism. Specifically, this routine
 runs through all the relators in the domain, evaluates the
 homomorphism on the relators and checks that they simplify to 1 in the
@@ -366,8 +345,8 @@ Returns:
     ``True`` if Regina is able to verify that this is a homomorphism,
     or ``False`` if the result is inconclusive.)doc";
 
-// Docstring regina::python::doc::HomGroupPresentation_::verifyIsomorphism
-static const char *verifyIsomorphism =
+// Docstring regina::python::doc::HomGroupPresentation::verifyIsomorphism
+static constexpr const char verifyIsomorphism[] =
 R"doc(Attempts to verify that a declared isomorphism is, indeed, an
 isomorphism.
 
@@ -397,7 +376,7 @@ Returns:
     ``True`` if it is verified that this is an isomorphism, or
     ``False`` if the result is inconclusive.)doc";
 
-}
+}; // struct HomGroupPresentation
 
 } // namespace regina::python::doc
 

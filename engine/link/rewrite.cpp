@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,8 +33,8 @@
 
 namespace regina::detail {
 
-template <TerminatingCallback<Link&&, const std::string&> Action>
-void RetriangulateParams<Link>::propagateFrom(const std::string& sig,
+template <TerminatingCallback<Link&&, const ByteSequence&> Action>
+void RetriangulateParams<Link>::propagateFrom(const ByteSequence& sig,
         size_t maxSize, regina::detail::PropagationOptions<Link> options,
         Action&& candidateAction) {
     using Options = regina::detail::PropagationOptions<Link>;

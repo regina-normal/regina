@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,7 +29,6 @@
  **************************************************************************/
 
 #include "triangulation/dim3.h"
-#include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/retriangulate-impl.h"
 
@@ -37,12 +36,12 @@
 namespace regina {
 
 namespace detail {
-    template <TerminatingCallback<Triangulation<3>&&, const std::string&>
+    template <TerminatingCallback<Triangulation<3>&&, const ByteSequence&>
         Action>
     void RetriangulateParams<Triangulation<3>>::propagateFrom(
-            const std::string& sig, size_t maxSize,
+            const ByteSequence& sig, size_t maxSize,
             NoPropagationOptions, Action&& candidateAction) {
-        Triangulation<3> t = Triangulation<3>::fromIsoSig(sig);
+        Triangulation<3> t = Triangulation<3>::fromSig(sig);
         size_t i;
         for (i = 0; i < t.countEdges(); ++i)
             if (auto alt = t.withPachner(t.edge(i)))

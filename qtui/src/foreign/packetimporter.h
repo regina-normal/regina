@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,7 +72,7 @@ class PacketImporter {
          * imported tree.
          */
         virtual std::shared_ptr<regina::Packet> importData(
-            const QString& fileName, ReginaMain* parentWidget) const = 0;
+            const QString& filename, ReginaMain* parentWidget) const = 0;
 
         /**
          * Should the GUI inform the user that their preferred codec

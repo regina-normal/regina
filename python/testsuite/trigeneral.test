@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2025, Ben Burton
+# Copyright (c) 2007-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides more thorough tests for different types of triangulation.
@@ -126,7 +126,7 @@ def vitalStats(tri, name):
 		print("Dehydration:", tri.dehydrate())
 	except NotImplemented:
 		print("Dehydration: (none)")
-	print("Isomorphism signature:", tri.isoSig())
+	print("Isomorphism signature:", tri.neoSig())
 	print("Result of splitIntoComponents:", len(tri.triangulateComponents()))
 	
 	if tri.detail() != old:

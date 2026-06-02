@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,7 +45,7 @@
 #include <sstream>
 #include <thread>
 #include <vector>
-#include "triangulation/generic/facetpairing.h"
+#include "triangulation/facetpairing.h"
 #include "maths/perm.h"
 #include "utilities/exception.h"
 #include "utilities/fixedarray.h"
@@ -54,10 +54,10 @@
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
-namespace regina::detail {
+namespace regina {
 
 template <int dim> requires (supportedDim(dim))
-FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
+FacetPairing<dim>::FacetPairing(const Triangulation<dim>& tri) :
         size_(tri.size()),
         pairs_(new FacetSpec<dim>[tri.size() * (dim + 1)]) {
     size_t p, index;
@@ -79,8 +79,7 @@ FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
 }
 
 template <int dim> requires (supportedDim(dim))
-FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
-        size_(0), pairs_(nullptr) {
+FacetPairing<dim>::FacetPairing(std::istream& in) : size_(0), pairs_(nullptr) {
     // Skip initial whitespace to find the facet pairing.
     std::string line;
     while (true) {
@@ -103,7 +102,7 @@ FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
 }
 
 template <int dim> requires (supportedDim(dim))
-bool FacetPairingBase<dim>::isClosed() const {
+bool FacetPairing<dim>::isClosed() const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f)
         if (isUnmatched(f))
             return false;
@@ -111,14 +110,13 @@ bool FacetPairingBase<dim>::isClosed() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-bool FacetPairingBase<dim>::operator == (const FacetPairingBase<dim>& other)
-        const {
+bool FacetPairing<dim>::operator == (const FacetPairing<dim>& other) const {
     return size_ == other.size_ &&
         std::equal(pairs_, pairs_ + (size_ * (dim + 1)), other.pairs_);
 }
 
 template <int dim> requires (supportedDim(dim))
-bool FacetPairingBase<dim>::isConnected() const {
+bool FacetPairing<dim>::isConnected() const {
     if (size_ <= 1)
         return true;
 
@@ -155,7 +153,7 @@ bool FacetPairingBase<dim>::isConnected() const {
 
 template <int dim> requires (supportedDim(dim))
 template <int k> requires (k >= 2 && k <= dim + 1)
-bool FacetPairingBase<dim>::hasMultiEdge() const {
+bool FacetPairing<dim>::hasMultiEdge() const {
     // Let n be the size of this facet pairing (i.e., the number of nodes).
     // The running time must be at least O(n*dim), which is the number of
     // edges in the underlying graph.  We want to engineer this test so that
@@ -187,7 +185,7 @@ bool FacetPairingBase<dim>::hasMultiEdge() const {
 }
 
 template <int dim> requires (supportedDim(dim))
-bool FacetPairingBase<dim>::hasMultiEdge(int k) const {
+bool FacetPairing<dim>::hasMultiEdge(int k) const {
     if (k < 2 || k > dim + 1)
         throw InvalidArgument("hasMultiEdge(): unsupported multiplicity k");
 
@@ -197,7 +195,7 @@ bool FacetPairingBase<dim>::hasMultiEdge(int k) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
+void FacetPairing<dim>::writeTextShort(std::ostream& out) const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
         if (f.facet == 0 && f.simp > 0)
             out << " | ";
@@ -212,14 +210,14 @@ void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
 }
 
 template <int dim> requires (supportedDim(dim))
-std::string FacetPairingBase<dim>::dotHeader(const char* graphName) {
+std::string FacetPairing<dim>::dotHeader(const char* graphName) {
     std::ostringstream ans;
     writeDotHeader(ans, graphName);
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))
-void FacetPairingBase<dim>::writeDotHeader(
+void FacetPairing<dim>::writeDotHeader(
         std::ostream& out, const char* graphName) {
     static const char defaultGraphName[] = "G";
 
@@ -232,15 +230,15 @@ void FacetPairingBase<dim>::writeDotHeader(
 }
 
 template <int dim> requires (supportedDim(dim))
-std::string FacetPairingBase<dim>::dot(
+std::string FacetPairing<dim>::dot(
         const char* prefix, bool subgraph, bool labels) const {
     std::ostringstream ans;
     writeDot(ans, prefix, subgraph, labels);
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))
-void FacetPairingBase<dim>::writeDot(std::ostream& out,
+void FacetPairing<dim>::writeDot(std::ostream& out,
         const char* prefix, bool subgraph, bool labels) const {
     static const char defaultPrefix[] = "g";
 
@@ -278,7 +276,7 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
 }
 
 template <int dim> requires (supportedDim(dim))
-std::string FacetPairingBase<dim>::textRep() const {
+std::string FacetPairing<dim>::textRep() const {
     std::ostringstream ans;
 
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
@@ -287,11 +285,11 @@ std::string FacetPairingBase<dim>::textRep() const {
         ans << dest(f).simp << ' ' << dest(f).facet;
     }
 
-    return ans.str();
+    return std::move(ans).str();
 }
 
 template <int dim> requires (supportedDim(dim))
-FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
+FacetPairing<dim> FacetPairing<dim>::fromTextRep(const std::string& rep) {
     std::vector<std::string> tokens = basicTokenise(rep);
 
     if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
@@ -303,17 +301,14 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     // Read the raw values.
     // Check the range of each value while we're at it.
     for (size_t i = 0; i < nSimp * (dim + 1); ++i) {
-        size_t val;
-
-        if (! valueOf(tokens[2 * i], val))
-            throw InvalidArgument(
-                "fromTextRep(): contains non-integer simplex");
+        // The calls to parse() here will throw an InvalidArgument on error
+        // (which is what we want).
+        size_t val = parse<size_t>(tokens[2 * i]);
         if (val > nSimp)
             throw InvalidArgument("fromTextRep(): simplex out of range");
         ans.pairs_[i].simp = val;
 
-        if (! valueOf(tokens[2 * i + 1], val))
-            throw InvalidArgument("fromTextRep(): contains non-integer facet");
+        val = parse<size_t>(tokens[2 * i + 1]);
         if (val > dim)
             throw InvalidArgument("fromTextRep(): facet out of range");
         ans.pairs_[i].facet = static_cast<int>(val);
@@ -335,8 +330,7 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
 }
 
 template <int dim> requires (supportedDim(dim))
-std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
-        const {
+std::optional<Cut> FacetPairing<dim>::divideConnected(size_t minSide) const {
     std::optional<Cut> ans;
     size_t bestWeight = 0 /* Unnecessary, but silences warnings */;
 
@@ -365,7 +359,7 @@ requires
     VoidCallback<Action, const FacetPairing<dim>&, Args...> ||
     VoidCallback<Action, const FacetPairing<dim>&,
         typename FacetPairing<dim>::IsoList, Args...>
-void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
+void FacetPairing<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Action&& action, Args&&... args) {
     static constexpr bool withIsoList =
         ! VoidCallback<Action, const FacetPairing<dim>&, Args...>;
@@ -613,6 +607,6 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
     return;
 }
 
-} // namespace regina::detail
+} // namespace regina
 
 #endif

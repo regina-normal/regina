@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -137,10 +137,10 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * 2-sphere.
          *
          * Even though PillowTwoSphere is a two-dimensional class and so does
-         * not inherit from StandardTriangulation, this routine nevertheless
+         * not inherit from StandardSubcomplex<3>, this routine nevertheless
          * returns by (smart) pointer for consistency with the
-         * StandardTriangulation recognition routines (which use pointers
-         * because of the polymorphic StandardTriangulation class hierarchy).
+         * StandardSubcomplex<3> recognition routines (which use pointers
+         * because of the polymorphic StandardSubcomplex class hierarchy).
          *
          * \pre The two given triangles are distinct.
          *

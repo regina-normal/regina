@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,7 +47,8 @@
  *
  * - the text is always elided to the right;
  * - the text is always centred vertically, and left-aligned horizontally;
- * - the size hint is always precisely the size of the full text.
+ * - the size hint is always precisely the size of the full text;
+ * - rich text is not supported at all.
  *
  * More functionality will be added if/when this becomes necessary.
  */

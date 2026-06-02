@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,9 +45,9 @@ namespace regina {
 
 class Bitmask;
 template <UnsignedCppInteger> class Bitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
+template <UnsignedCppInteger> class Bitmask2;
 template <UnsignedCppInteger> class Qitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Qitmask2;
+template <UnsignedCppInteger> class Qitmask2;
 
 /**
  * \defgroup concepts Concepts
@@ -192,24 +192,6 @@ template <typename T>
 concept ReginaQitmask =
     requires(T x) { { Qitmask1(x) } -> std::same_as<T>; } ||
     requires(T x) { { Qitmask2(x) } -> std::same_as<T>; };
-
-/**
- * A type that holds some ordered sequence of data, and that supports
- * concatenation.  An example of this is `std::string`.
- *
- * Important semantic requirements for this type are:
- *
- * - the operation `x += y` must concatenate \a y to the end of \a x;
- *
- * - the default constructor must create the empty sequence.
- *
- * \ingroup concepts
- */
-template <typename T>
-concept ConcatenableSequence =
-    std::regular<T> &&
-    std::totally_ordered<T> &&
-    requires(T x, const T y) { { x += y } -> std::same_as<T&>; };
 
 /**
  * A callable type that acts as a strict weak order on the given argument type.

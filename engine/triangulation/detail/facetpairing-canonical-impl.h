@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,23 +45,23 @@
 #define __REGINA_FACETPAIRING_CANONICAL_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/facetpairing.h"
-#include "triangulation/generic/isomorphism.h"
+#include "triangulation/facetpairing.h"
+#include "triangulation/isomorphism.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
-namespace regina::detail {
+namespace regina {
 
 /**
  * Gives a unified way to initialise and update the isomorphisms(s) that
- * are returned by FacetPairingBase::canonicalInternal().
+ * are returned by FacetPairing::canonicalInternal().
  */
 template <int dim, bool allIsos> requires (supportedDim(dim))
 struct CanonicalInternalReturn;
 
 template <int dim> requires (supportedDim(dim))
 struct CanonicalInternalReturn<dim, true> {
-    typename FacetPairingBase<dim>::IsoList result;
+    typename FacetPairing<dim>::IsoList result;
 
     CanonicalInternalReturn(size_t size) {
     }
@@ -92,7 +92,7 @@ struct CanonicalInternalReturn<dim, false> {
 };
 
 template <int dim> requires (supportedDim(dim))
-bool FacetPairingBase<dim>::isCanonical() const {
+bool FacetPairing<dim>::isCanonical() const {
     // Check the preconditions for isCanonicalInternal().
     for (size_t simp = 0; simp < size_; ++simp) {
         for (int facet = 0; facet < dim; ++facet)
@@ -117,8 +117,8 @@ bool FacetPairingBase<dim>::isCanonical() const {
 template <int dim> requires (supportedDim(dim))
 template <bool allIsos>
 std::pair<FacetPairing<dim>,
-        typename FacetPairingBase<dim>::template CanonicalIsos<allIsos>>
-        FacetPairingBase<dim>::canonicalInternal() const {
+        typename FacetPairing<dim>::template CanonicalIsos<allIsos>>
+        FacetPairing<dim>::canonicalInternal() const {
     const auto& me = static_cast<const FacetPairing<dim>&>(*this);
 
     if (size_ == 0) {
@@ -419,8 +419,8 @@ endPermSearch:
 }
 
 template <int dim> requires (supportedDim(dim))
-bool FacetPairingBase<dim>::isCanonicalInternal(
-        typename FacetPairingBase<dim>::IsoList* list) const {
+bool FacetPairing<dim>::isCanonicalInternal(
+        typename FacetPairing<dim>::IsoList* list) const {
     // Create the automorphisms one simplex at a time, selecting the
     // preimage of 0 first, then the preimage of 1 and so on.
 
@@ -700,6 +700,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     return true;
 }
 
-} // namespace regina::detail
+} // namespace regina
 
 #endif

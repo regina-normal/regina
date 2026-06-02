@@ -128,7 +128,7 @@ Exit code: 1
 TEST: trisetcmp @TESTDIR@/tiny.rga @INVALIDFILE@
 --------------------
 File @INVALIDFILE@ could not be read.
-Please check that it exists and that it is a Regina data file.
+Please check that you have permissions to read it.
 --------------------
 Exit code: 1
 ============================================================
@@ -136,15 +136,15 @@ TEST: trisetcmp @TESTDIR@/tiny.rga @BADFILE@
 --------------------
 XML Error: Document is empty
 
-File @BADFILE@ could not be read.
-Please check that it exists and that it is a Regina data file.
+File @BADFILE@ could not be opened.
+It does not appear to be a Regina data file.
 --------------------
 Exit code: 1
 ============================================================
 TEST: trisetcmp @INVALIDFILE@ @TESTDIR@/tiny.rga
 --------------------
 File @INVALIDFILE@ could not be read.
-Please check that it exists and that it is a Regina data file.
+Please check that you have permissions to read it.
 --------------------
 Exit code: 1
 ============================================================
@@ -152,8 +152,8 @@ TEST: trisetcmp @BADFILE@ @TESTDIR@/tiny.rga
 --------------------
 XML Error: Document is empty
 
-File @BADFILE@ could not be read.
-Please check that it exists and that it is a Regina data file.
+File @BADFILE@ could not be opened.
+It does not appear to be a Regina data file.
 --------------------
 Exit code: 1
 ============================================================

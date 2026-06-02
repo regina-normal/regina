@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -542,7 +542,10 @@ bool Triangulation<3>::internalOpenBook(Triangle<3>* f, bool check,
 
         if (nBdry != 2)
             return false;
-        if (tet->vertex(vertices[fVertex])->linkType() != Vertex<3>::Link::Disc)
+
+        // Since two edges are boundary, we know all three vertices lie on
+        // boundary facets.  Therefore they are valid iff their links are discs.
+        if (! tet->vertex(vertices[fVertex])->isValid())
             return false;
         if (! f->edge(fVertex)->isValid())
             return false;
@@ -588,11 +591,15 @@ bool Triangulation<3>::internalCloseBook(Edge<3>* e, bool check,
     }
 
     if (check) {
-        if (t0->vertex(p0[2]) == t1->vertex(p1[3]))
+        // Examine the vertices opposite e in each boundary triangle.
+        Vertex<3>* v0 = t0->vertex(p0[2]);
+        Vertex<3>* v1 = t1->vertex(p1[3]);
+        if (v0 == v1)
             return false;
-        if (t0->vertex(p0[2])->linkType() != Vertex<3>::Link::Disc ||
-               t1->vertex(p1[3])->linkType() != Vertex<3>::Link::Disc)
+        if (! (v0->isValid() && v1->isValid()))
             return false;
+        // Since v0 and v1 are both valid and lie on a boundary edge,
+        // their links must be discs.
     }
 
     if (! perform)
@@ -640,9 +647,9 @@ bool Triangulation<3>::internalCollapseEdge(Edge<3>* e, bool check,
         if (e->vertex(0)->isBoundary() && e->vertex(1)->isBoundary()) {
             if (! e->isBoundary())
                 return false;
-            if (e->vertex(0)->linkType() != Vertex<3>::Link::Disc)
-                return false;
-            if (e->vertex(1)->linkType() != Vertex<3>::Link::Disc)
+            // Since e is boundary, it belongs to one or more boundary facets.
+            // Therefore its endpoints are valid iff their links are discs.
+            if (! (e->vertex(0)->isValid() && e->vertex(1)->isValid()))
                 return false;
         }
 
@@ -875,15 +882,15 @@ bool Triangulation<3>::internalCollapseEdge(Edge<3>* e, bool check,
     return true;
 }
 
-void Triangulation<3>::pinchEdge(Edge<3>* e) {
-    if (e->isBoundary())
+void Triangulation<3>::pinchEdge(Edge<3>* edge) {
+    if (edge->isBoundary())
         throw InvalidArgument("pinchEdge() requires an internal edge");
 
     // Find a triangular face containing e (this will be the face that
     // connects e->front() with e->back()).
     // Our plan is to insert two tetrahedra in its place.
-    Tetrahedron<3>* open = e->front().tetrahedron();
-    Perm<4> vertices = e->front().vertices();
+    Tetrahedron<3>* open = edge->front().tetrahedron();
+    Perm<4> vertices = edge->front().vertices();
     bool locked = open->isFacetLocked(vertices[3]);
 
     // The following ChangeAndClearSpan is essential, since we use

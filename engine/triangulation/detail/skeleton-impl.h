@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,7 +45,7 @@
 #define __REGINA_SKELETON_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/typeutils.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -180,6 +180,8 @@ void TriangulationBase<dim>::calculateFaces() {
                 // A new face!
                 f = new Face<dim, dim-1>(s->component_);
                 std::get<dim - 1>(faces_).push_back(f);
+                if constexpr (standardDim(dim))
+                    std::get<dim - 1>(s->component_->faces_).push_back(f);
                 auto map = Face<dim, dim-1>::ordering(facet);
 
                 adj = s->adjacentSimplex(facet);
@@ -236,6 +238,8 @@ void TriangulationBase<dim>::calculateFaces() {
 
                 f = new Face<dim, dim-2>(s->component_);
                 std::get<dim - 2>(faces_).push_back(f);
+                if constexpr (standardDim(dim))
+                    std::get<dim - 2>(s->component_->faces_).push_back(f);
                 auto map = Face<dim, dim-2>::ordering(start);
                 if (map.sign() != s->orientation_)
                     map = map * Perm<dim + 1>(dim - 1, dim);
@@ -329,6 +333,8 @@ void TriangulationBase<dim>::calculateFaces() {
 
                 f = new Face<dim, subdim>(s->component_);
                 std::get<subdim>(faces_).push_back(f);
+                if constexpr (standardDim(dim))
+                    std::get<subdim>(s->component_->faces_).push_back(f);
                 auto map = Face<dim, subdim>::ordering(start);
                 if (map.sign() != s->orientation_)
                     map = map * Perm<dim + 1>(dim - 1, dim);
@@ -664,14 +670,18 @@ void TriangulationBase<dim>::cloneFaces(const FaceList& srcFaces) {
             me->embeddings_.push_back(FaceEmbedding<dim, subdim>(
                 simplices_[emb.simplex()->index()], emb.vertices()));
 
-        if constexpr (Face<dim, subdim>::allowsNonOrientableLinks)
-            me->linkOrientable_ = you->linkOrientable_;
-        if constexpr (Face<dim, subdim>::allowsInvalidFaces) {
-            if constexpr (standardDim(dim))
-                me->whyInvalid_ = you->whyInvalid_;
-            else
-                me->valid_ = you->valid_;
-        }
+        // Some of the following properties are only available for some
+        // (dim, subdim) combinations; however, the implicit assignment
+        // operator for EnableIf<...> will do the right thing regardless.
+        me->linkOrientable_ = you->linkOrientable_;
+        me->whyInvalid_ = you->whyInvalid_;
+        me->valid_ = you->valid_;
+        me->linkEulerChar_ = you->linkEulerChar_;
+        me->vertexFlags_ = you->vertexFlags_;
+        me->triangleType_ = you->triangleType_;
+        me->triangleSubtype_ = you->triangleSubtype_;
+
+        // Leave link_ as built-on-demand for now.
     }
 }
 
@@ -704,6 +714,10 @@ void TriangulationBase<dim>::cloneSkeleton(const TriangulationBase<dim>& src) {
         me->valid_ = you->valid_;
         me->boundaryFacets_ = you->boundaryFacets_;
         me->orientable_ = you->orientable_;
+        if constexpr (standardDim(dim) && dim > 2)
+            me->ideal_ = you->ideal_;
+
+        // We will clone the face lists later, once we have cloned the faces.
     }
 
     // Faces (uses components, boundary components):
@@ -720,6 +734,17 @@ void TriangulationBase<dim>::cloneSkeleton(const TriangulationBase<dim>& src) {
                 (cloneBoundaryFaces(*me, kFaces), ...);
             }, (*you)->faces_);
         }
+    }
+
+    // Face lists in components:
+    if constexpr (standardDim(dim)) {
+        auto me = components_.begin();
+        auto you = src.components_.begin();
+        for ( ; me != components_.end(); ++me, ++you)
+            for_constexpr<0, dim>([this, me, you](auto subdim) {
+                for (auto f : std::get<subdim>((*you)->faces_))
+                    std::get<subdim>((*me)->faces_).push_back(clonedFace(f));
+            });
     }
 
     // Simplices (uses faces, components):

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -447,7 +447,7 @@ class AbelianGroup :
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the group to compare this with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * group.
          */
         std::strong_ordering operator <=> (const AbelianGroup& rhs) const;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1321,8 +1321,8 @@ std::pair<Polynomial<T>, Polynomial<T>> Polynomial<T>::divisionAlg(
     //
     // We initialise the remainer to be a copy of this.
 
-    std::pair<Polynomial<T>, Polynomial<T>> ans(
-        degree_ - divisor.degree_, *this);
+    std::pair<Polynomial<T>, Polynomial<T>> ans({}, *this);
+    ans.first.initExp(degree_ - divisor.degree_);
 
     for (size_t i = degree_; i >= divisor.degree_; --i) {
         ans.first.coeff_[i - divisor.degree_] = ans.second.coeff_[i];
@@ -1485,14 +1485,14 @@ template <CoefficientDomain T>
 inline std::string Polynomial<T>::str(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, false, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>
 inline std::string Polynomial<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>

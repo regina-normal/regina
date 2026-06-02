@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Triangulation
-static const char *Triangulation =
+struct Triangulation3 {
+
+// Docstring regina::python::doc::Triangulation3::__class
+static constexpr const char __class[] =
 R"doc(Represents a 3-dimensional triangulation, typically of a 3-manifold.
 
 This is a specialisation of the generic Triangulation class template;
@@ -26,12 +28,14 @@ functionality, including many functions specific to 3-manifolds.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.)doc";
+possible, even when passing or returning objects by value.
 
-namespace Triangulation_ {
+Python:
+    This class is available to Python users under the name
+    Triangulation3.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__copy
-static const char *__copy =
+// Docstring regina::python::doc::Triangulation3::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given triangulation.
 
 This will also clone any computed properties (such as homology,
@@ -48,14 +52,14 @@ can use the two-argument copy constructor instead.
 Parameter ``src``:
     the triangulation to copy.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__default
-static const char *__default =
+// Docstring regina::python::doc::Triangulation3::__default
+static constexpr const char __default[] =
 R"doc(Default constructor.
 
 Creates an empty triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__init
-static const char *__init =
+// Docstring regina::python::doc::Triangulation3::__init
+static constexpr const char __init[] =
 R"doc(Creates a new copy of the given triangulation, with the option of
 whether or not to clone its computed properties and/or locks also.
 
@@ -88,8 +92,8 @@ Parameter ``cloneLocks``:
     from the given triangulation, or ``False`` if the new
     triangulation should have no locks at all.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::Triangulation3::__init_2
+static constexpr const char __init_2[] =
 R"doc(Deprecated constructor that creates a new ideal triangulation
 representing the complement of the given link diagram.
 
@@ -109,15 +113,15 @@ Parameter ``simplify``:
     simplification process will preserve the orientations of the
     tetrahedra.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Triangulation3::__init_3
+static constexpr const char __init_3[] =
 R"doc("Magic" constructor that tries to find some way to interpret the given
 string as a triangulation.
 
 At present, Regina understands the following types of strings (and
 attempts to parse them in the following order):
 
-* isomorphism signatures (see fromIsoSig());
+* isomorphism signatures (see fromSig());
 
 * dehydration strings (see rehydrate());
 
@@ -139,8 +143,8 @@ Exception ``InvalidArgument``:
 Parameter ``description``:
     a string that describes a 3-manifold triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__init_4
-static const char *__init_4 =
+// Docstring regina::python::doc::Triangulation3::__init_4
+static constexpr const char __init_4[] =
 R"doc(Python-only constructor that copies the given SnapPy manifold.
 
 Although the argument *m* would typically be a ``SnapPy.Manifold``, it
@@ -160,8 +164,8 @@ the contents of a SnapPy/SnapPea data file.
 Parameter ``m``:
     a SnapPy object of type snappy.Manifold.)doc";
 
-// Docstring regina::python::doc::Triangulation_::allCalculatedTuraevViro
-static const char *allCalculatedTuraevViro =
+// Docstring regina::python::doc::Triangulation3::allCalculatedTuraevViro
+static constexpr const char allCalculatedTuraevViro[] =
 R"doc(Returns the cache of all Turaev-Viro state sum invariants that have
 been calculated for this 3-manifold. This cache is updated every time
 turaevViro() is called, and is emptied whenever the triangulation is
@@ -195,8 +199,8 @@ Returns:
 See also:
     turaevViro)doc";
 
-// Docstring regina::python::doc::Triangulation_::closeBook
-static const char *closeBook =
+// Docstring regina::python::doc::Triangulation3::closeBook
+static constexpr const char closeBook[] =
 R"doc(If possible, performs a book closing move about the given edge. This
 involves taking a boundary edge of the triangulation and folding
 together the two boundary triangles on either side. The resulting
@@ -229,60 +233,23 @@ If this triangulation is currently oriented, then this operation will
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 See openBook() for an inverse to this move.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::closeBook_2
-static const char *closeBook_2 =
-R"doc(Deprecated routine that tests for and optionally performs a book
-closing move about the given edge of this triangulation.
-
-For more details on book closing moves and when they can be performed,
-see the variant of closeBook() without the extra boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasCloseBook(). If you wish to both check and perform the move,
-    call closeBook() without the two extra boolean arguments.
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``e``:
-    the edge about which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::collapseEdge
-static const char *collapseEdge =
+// Docstring regina::python::doc::Triangulation3::collapseEdge
+static constexpr const char collapseEdge[] =
 R"doc(If possible, performs an edge collapse move upon the given edge. This
 involves collapsing the edge to a point, merging its two endpoints
 together, and flattening all of the tetrahedra that contain it. The
@@ -305,7 +272,7 @@ things, we need to build a union-find structure to implement the
 test).
 
 If you are trying to reduce the number of vertices without changing
-the topology, and if *e* is an edge connecting an internal vertex with
+the topology, and if the given edge connects an internal vertex with
 some different vertex, then either collapseEdge() or pinchEdge() may
 be more appropriate for your situation (though you may find it easier
 just to call minimiseVertices() instead).
@@ -316,67 +283,28 @@ just to call minimiseVertices() instead).
 
 * The disadvantages of collapseEdge() are that it cannot always be
   performed, and its validity tests are expensive; pinchEdge() on the
-  other hand can always be used for edges *e* of the type described
-  above.
+  other hand can always be used on edges of the type described above.
 
 If this triangulation is currently oriented, then this operation will
 preserve the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.
 
 Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::collapseEdge_2
-static const char *collapseEdge_2 =
-R"doc(Deprecated routine that tests for and optionally performs an edge
-collapse move upon the given edge of this triangulation.
-
-For more details on edge collapse moves and when they can be
-performed, as well as the difference between edge collapse and edge
-pinch moves, see the variant of collapseEdge() without the extra
-boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
-locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasCollapseEdge(). If you wish to both check and perform the move,
-    call collapseEdge() without the two extra boolean arguments.
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``e``:
-    the edge to collapse.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::connectedSumWith
-static const char *connectedSumWith =
+// Docstring regina::python::doc::Triangulation3::connectedSumWith
+static constexpr const char connectedSumWith[] =
 R"doc(Forms the connected sum of this triangulation with the given
 triangulation. This triangulation will be altered directly.
 
@@ -410,14 +338,14 @@ It is allowed to pass this triangulation as *other*.
 Parameter ``other``:
     the triangulation to sum with this.)doc";
 
-// Docstring regina::python::doc::Triangulation_::countBoundaryTriangles
-static const char *countBoundaryTriangles =
+// Docstring regina::python::doc::Triangulation3::countBoundaryTriangles
+static constexpr const char countBoundaryTriangles[] =
 R"doc(A dimension-specific alias for countBoundaryFacets().
 
 See countBoundaryFacets() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::dehydrate
-static const char *dehydrate =
+// Docstring regina::python::doc::Triangulation3::dehydrate
+static constexpr const char dehydrate[] =
 R"doc(Dehydrates this triangulation into an alphabetical string.
 
 A _dehydration string_ is a compact text representation of a
@@ -458,8 +386,8 @@ Returns:
     a dehydrated representation of this triangulation (or an
     isomorphic variant of this triangulation).)doc";
 
-// Docstring regina::python::doc::Triangulation_::eulerCharManifold
-static const char *eulerCharManifold =
+// Docstring regina::python::doc::Triangulation3::eulerCharManifold
+static constexpr const char eulerCharManifold[] =
 R"doc(Returns the Euler characteristic of the corresponding compact
 3-manifold.
 
@@ -484,29 +412,34 @@ routine and eulerCharTri() give identical results.
 Returns:
     the Euler characteristic of the corresponding compact manifold.)doc";
 
-// Docstring regina::python::doc::Triangulation_::fillTorus
-static const char *fillTorus =
+// Docstring regina::python::doc::Triangulation3::fillTorus
+static constexpr const char fillTorus[] =
 R"doc(Fills a two-triangle torus boundary component by attaching a solid
 torus along a given curve.
 
-The boundary component to be filled should be passed as the argument
-*bc*; if the triangulation has exactly one boundary component then you
-may omit *bc* (i.e., pass ``None``), and the (unique) boundary
-component will be inferred.
+The given boundary component will be filled with a solid torus whose
+meridional curve cuts the three edges ``boundary->edge(0)``,
+``boundary->edge(1)`` and ``boundary->edge(2)`` a total of *cuts0*,
+*cuts1* and *cuts2* times respectively.
 
-If the boundary component cannot be inferred, and/or if the selected
-boundary component is not a two-triangle torus, then this routine will
-do nothing and return ``False``.
+If the triangulation has exactly one boundary component then you may
+omit the *boundary* argument (i.e., you may pass the default value of
+``None``), in which case the (unique) boundary component will be
+inferred. If you try to do this but there is not exactly one boundary
+component then this routine will throw an exception.
 
-Otherwise the given boundary component will be filled with a solid
-torus whose meridional curve cuts the edges ``bc->edge(0)``,
-``bc->edge(1)`` and ``bc->edge(2)`` a total of *cuts0*, *cuts1* and
-*cuts2* times respectively.
+For the filling to be performed successfully:
 
-For the filling to be performed successfully, the integers *cuts0*,
-*cuts1* and *cuts2* must be coprime, and two of them must add to give
-the third. Otherwise, as above, this routine will do nothing and
-return ``False``.
+* the boundary component to fill must be a two-triangle torus;
+
+* the integers *cuts0*, *cuts1* and *cuts2* must be coprime;
+
+* the largest of these integers must be the sum of the other two.
+
+If any of these conditions is not met, then this routine will again
+throw an exception. This exception throwing is a change in behaviour
+as of Regina 8.0: older versions of Regina (≤ 7.x) returned ``False``
+to indicate failure instead.
 
 The triangulation will be simplified before returning.
 
@@ -515,19 +448,24 @@ edges instead of a boundary component. You should use the other
 version if you know how the filling curve cuts each boundary edge but
 you do not know how these edges are indexed in the boundary component.
 
+Exception ``InvalidArgument``:
+    Either the boundary component could not be inferred, it is not a
+    two-triangle torus, the three given integers are not coprime,
+    and/or the largest integer is not the sum of the other two.
+
 Parameter ``cuts0``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge ``bc->edge(0)``.
+    torus should cut the edge ``boundary->edge(0)``.
 
 Parameter ``cuts1``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge ``bc->edge(1)``.
+    torus should cut the edge ``boundary->edge(1)``.
 
 Parameter ``cuts2``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge ``bc->edge(2)``.
+    torus should cut the edge ``boundary->edge(2)``.
 
-Parameter ``bc``:
+Parameter ``boundary``:
     the boundary component to fill. If the triangulation has precisely
     one boundary component then this may be ``None``.
 
@@ -536,102 +474,76 @@ Returns:
     ``False`` if one of the required conditions as described above is
     not satisfied.)doc";
 
-// Docstring regina::python::doc::Triangulation_::fillTorus_2
-static const char *fillTorus_2 =
+// Docstring regina::python::doc::Triangulation3::fillTorus_2
+static constexpr const char fillTorus_2[] =
 R"doc(Fills a two-triangle torus boundary component by attaching a solid
 torus along a given curve.
 
 The three edges of the boundary component should be passed as the
-arguments *e0*, *e1* and *e2*. The boundary component will then be
-filled with a solid torus whose meridional curve cuts these three
-edges *cuts0*, *cuts1* and *cuts2* times respectively.
+arguments *edge0*, *edge1* and *edge2*. The boundary component will
+then be filled with a solid torus whose meridional curve cuts these
+three edges *cuts0*, *cuts1* and *cuts2* times respectively.
 
-For the filling to be performed successfully, the three given edges
-must belong to the same boundary component, and this boundary
-component must be a two-triangle torus. Moreover, the integers
-*cuts0*, *cuts1* and *cuts2* must be coprime, and two of them must add
-to give the third. If any of these conditions are not met, then this
-routine will do nothing and return ``False``.
+For the filling to be performed successfully:
+
+* the three given edges must be distinct and must belong to the same
+  boundary component;
+
+* this boundary component must be a two-triangle torus;
+
+* the integers *cuts0*, *cuts1* and *cuts2* must be coprime;
+
+* the largest of these integers must be the sum of the other two.
+
+If any of these conditions is not met, then this routine will throw an
+exception. This is a change in behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` to indicate failure
+instead.
 
 The triangulation will be simplified before returning.
 
 There are two versions of fillTorus(); the other takes a boundary
-component, and sets *e0*, *e1* and *e2* to its three edges according
-to Regina's own edge numbering. This version of fillTorus() should be
-used when you know how the filling curve cuts each boundary edge but
-you do not know how these edges are indexed in the corresponding
-boundary component.
+component, and sets *edge0*, *edge1* and *edge2* to its three edges
+according to Regina's own edge numbering. This version of fillTorus()
+should be used when you know how the filling curve cuts each boundary
+edge but you do not know how these edges are indexed in the
+corresponding boundary component.
 
-Parameter ``e0``:
+Exception ``InvalidArgument``:
+    Either the three given edges are not distinct, they do not belong
+    to a common boundary component, their common boundary component is
+    not a two-triangle torus, the three given integers are not
+    coprime, and/or the largest integer is not the sum of the other
+    two.
+
+Parameter ``edge0``:
     one of the three edges of the boundary component to fill.
 
-Parameter ``e1``:
+Parameter ``edge1``:
     the second of the three edges of the boundary component to fill.
 
-Parameter ``e2``:
+Parameter ``edge2``:
     the second of the three edges of the boundary component to fill.
 
 Parameter ``cuts0``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge *e0*.
+    torus should cut the edge *edge0*.
 
 Parameter ``cuts1``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge *e1*.
+    torus should cut the edge *edge1*.
 
 Parameter ``cuts2``:
     the number of times that the meridional curve of the new solid
-    torus should cut the edge *e2*.
+    torus should cut the edge *edge2*.
 
 Returns:
     ``True`` if the boundary component was filled successfully, or
     ``False`` if one of the required conditions as described above is
     not satisfied.)doc";
 
-// Docstring regina::python::doc::Triangulation_::fourFourMove
-static const char *fourFourMove =
-R"doc(Deprecated routine that tests for and optionally performs a 4-4 move
-about the given edge of this triangulation.
-
-For more details on 4-4 moves and when they can be performed, see
-move44().
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
-locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has44(). If you wish to both check and perform the move, call
-    move44().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``e``:
-    the edge about which to perform the move.
-
-Parameter ``axis``:
-    indicates which axis of the enclosing octahedron the four new
-    tetrahedra should meet along; this must be 0 or 1. See move44()
-    for details on exactly what this means.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::fromSnapPea
-static const char *fromSnapPea =
+// Docstring regina::python::doc::Triangulation3::fromSnapPea
+static constexpr const char fromSnapPea[] =
 R"doc(Extracts the tetrahedron gluings from the contents of a SnapPea data
 file. The argument may be the _name_ of a SnapPea file, or it may also
 be the _contents_ of a SnapPea file (so the file itself need not
@@ -693,8 +605,8 @@ Returns:
     a native Regina triangulation extracted from the given SnapPea
     data.)doc";
 
-// Docstring regina::python::doc::Triangulation_::generalAngleStructure
-static const char *generalAngleStructure =
+// Docstring regina::python::doc::Triangulation3::generalAngleStructure
+static constexpr const char generalAngleStructure[] =
 R"doc(Returns a generalised angle structure on this triangulation, if one
 exists. A _generalised_ angle structure must satisfy the same matching
 equations as all angle structures do, but there is no constraint on
@@ -747,8 +659,8 @@ Returns:
     a generalised angle structure on this triangulation, if one
     exists.)doc";
 
-// Docstring regina::python::doc::Triangulation_::has02
-static const char *has02 =
+// Docstring regina::python::doc::Triangulation3::has02
+static constexpr const char has02[] =
 R"doc(Determines whether it is possible to perform a 0-2 move about the two
 specified triangles of this triangulation, without violating any facet
 locks.
@@ -760,21 +672,21 @@ move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
 Precondition:
     The given embeddings refer to edges of this triangulation.
 
-Parameter ``e0``:
+Parameter ``emb0``:
     an embedding of the common edge *e* of the two candidate triangles
     about which to perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     indicates one of the candidate triangles about which to perform
-    the move, with respect to the edge embedding *e0*; this must be 2
-    or 3.
+    the move, with respect to the edge embedding *emb0*; this must be
+    2 or 3.
 
-Parameter ``e1``:
+Parameter ``emb1``:
     another embedding of the edge *e*.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     indicates the other candidate triangle about which to perform the
-    move, with respect to the edge embedding *e1*; this must be 2 or
+    move, with respect to the edge embedding *emb1*; this must be 2 or
     3.
 
 Returns:
@@ -783,8 +695,8 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::has02_2
-static const char *has02_2 =
+// Docstring regina::python::doc::Triangulation3::has02_2
+static constexpr const char has02_2[] =
 R"doc(Determines whether it is possible to perform a 0-2 move about the two
 specified triangles of this triangulation, without violating any facet
 locks.
@@ -796,15 +708,15 @@ move02(Edge<3>*, size_t, size_t).
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the common edge of the two candidate triangles about which to
     perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     the number assigned to one of two candidate triangles about which
     to perform the move.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the number assigned to the other candidate triangle about which to
     perform the move.
 
@@ -814,8 +726,8 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::has02_3
-static const char *has02_3 =
+// Docstring regina::python::doc::Triangulation3::has02_3
+static constexpr const char has02_3[] =
 R"doc(Determines whether it is possible to perform a 0-2 move about the two
 given triangles of this triangulation, without violating any facet
 locks.
@@ -827,20 +739,20 @@ move02(Triangle<3>*, int, Triangle<3>*, int).
 Precondition:
     The given triangles are both triangles of this triangulation.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     one of the two candidate triangles about which to perform the
     move.
 
-Parameter ``e0``:
-    the edge at which *t0* meets the other triangle *t1*; this must be
-    0, 1 or 2.
+Parameter ``edge0``:
+    the edge at which *tri0* meets the other triangle *tri1*; this
+    must be 0, 1 or 2.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the other candidate triangle about which to perform the move.
 
-Parameter ``e1``:
-    the edge at which *t1* meets the other triangle *t0*; this must be
-    0, 1 or 2.
+Parameter ``edge1``:
+    the edge at which *tri1* meets the other triangle *tri0*; this
+    must be 0, 1 or 2.
 
 Returns:
     ``True`` if and only if the requested move can be performed.
@@ -848,8 +760,8 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::has21
-static const char *has21 =
+// Docstring regina::python::doc::Triangulation3::has21
+static constexpr const char has21[] =
 R"doc(Determines whether it is possible to perform a 2-1 move at the given
 end of the given edge of this triangulation, without violating any
 simplex and/or facet locks.
@@ -860,7 +772,7 @@ move21().
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge about which to perform the move.
 
 Parameter ``edgeEnd``:
@@ -871,8 +783,8 @@ Parameter ``edgeEnd``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::has44
-static const char *has44 =
+// Docstring regina::python::doc::Triangulation3::has44
+static constexpr const char has44[] =
 R"doc(Determines whether it is possible to perform a 4-4 move about the
 given edge of this triangulation, without violating any simplex and/or
 facet locks.
@@ -883,7 +795,7 @@ move44().
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge about which to perform the move.
 
 Parameter ``axis``:
@@ -894,14 +806,14 @@ Parameter ``axis``:
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasBoundaryTriangles
-static const char *hasBoundaryTriangles =
+// Docstring regina::python::doc::Triangulation3::hasBoundaryTriangles
+static constexpr const char hasBoundaryTriangles[] =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasCloseBook
-static const char *hasCloseBook =
+// Docstring regina::python::doc::Triangulation3::hasCloseBook
+static constexpr const char hasCloseBook[] =
 R"doc(Determines whether it is possible to perform a book closing move about
 the given edge of this triangulation, without violating any facet
 locks.
@@ -912,14 +824,14 @@ see closeBook().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge about which to perform the move.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasCollapseEdge
-static const char *hasCollapseEdge =
+// Docstring regina::python::doc::Triangulation3::hasCollapseEdge
+static constexpr const char hasCollapseEdge[] =
 R"doc(Determines whether it is possible to collapse the given edge of this
 triangulation, without violating any simplex and/or facet locks.
 
@@ -929,14 +841,14 @@ see collapseEdge().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the candidate edge to collapse.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasCompressingDisc
-static const char *hasCompressingDisc =
+// Docstring regina::python::doc::Triangulation3::hasCompressingDisc
+static constexpr const char hasCompressingDisc[] =
 R"doc(Searches for a compressing disc within the underlying 3-manifold.
 
 Let *M* be the underlying 3-manifold and let *B* be its boundary. By a
@@ -1003,8 +915,8 @@ Returns:
     ``True`` if the underlying 3-manifold contains a compressing disc,
     or ``False`` if it does not.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasGeneralAngleStructure
-static const char *hasGeneralAngleStructure =
+// Docstring regina::python::doc::Triangulation3::hasGeneralAngleStructure
+static constexpr const char hasGeneralAngleStructure[] =
 R"doc(Determines whether this triangulation supports a generalised angle
 structure. A _generalised_ angle structure must satisfy the same
 matching equations as all angle structures do, but there is no
@@ -1049,8 +961,8 @@ Returns:
     ``True`` if and only if a generalised angle structure exists on
     this triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasMinimalBoundary
-static const char *hasMinimalBoundary =
+// Docstring regina::python::doc::Triangulation3::hasMinimalBoundary
+static constexpr const char hasMinimalBoundary[] =
 R"doc(Determines whether the boundary of this triangulation contains the
 smallest possible number of triangles.
 
@@ -1072,8 +984,8 @@ Returns:
     ``True`` if and only if the boundary contains the smallest
     possible number of triangles.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasMinimalVertices
-static const char *hasMinimalVertices =
+// Docstring regina::python::doc::Triangulation3::hasMinimalVertices
+static constexpr const char hasMinimalVertices[] =
 R"doc(Determines whether this triangulation contains the smallest possible
 number of vertices for the 3-manifold that it represents.
 
@@ -1097,8 +1009,8 @@ Returns:
     ``True`` if and only if this triangulation contains the smallest
     possible number of vertices.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasNegativeIdealBoundaryComponents
-static const char *hasNegativeIdealBoundaryComponents =
+// Docstring regina::python::doc::Triangulation3::hasNegativeIdealBoundaryComponents
+static constexpr const char hasNegativeIdealBoundaryComponents[] =
 R"doc(Determines if this triangulation contains any ideal boundary
 components with negative Euler characteristic.
 
@@ -1106,8 +1018,8 @@ Returns:
     ``True`` if and only if there is at least one such boundary
     component.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasOpenBook
-static const char *hasOpenBook =
+// Docstring regina::python::doc::Triangulation3::hasOpenBook
+static constexpr const char hasOpenBook[] =
 R"doc(Determines whether it is possible to perform a book opening move about
 the given triangle of this triangulation, without violating any facet
 locks.
@@ -1118,14 +1030,14 @@ see openBook().
 Precondition:
     The given triangle is a triangle of this triangulation.
 
-Parameter ``t``:
+Parameter ``triangle``:
     the candidate triangle about which to perform the move.
 
 Returns:
     ``True`` if and only if the requested move can be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasSimpleCompressingDisc
-static const char *hasSimpleCompressingDisc =
+// Docstring regina::python::doc::Triangulation3::hasSimpleCompressingDisc
+static constexpr const char hasSimpleCompressingDisc[] =
 R"doc(Searches for a "simple" compressing disc inside this triangulation.
 
 Let *M* be the underlying 3-manifold and let *B* be its boundary. By a
@@ -1174,8 +1086,8 @@ Returns:
     still be a compressing disc (just not one with a simple
     combinatorial structure).)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasSplittingSurface
-static const char *hasSplittingSurface =
+// Docstring regina::python::doc::Triangulation3::hasSplittingSurface
+static constexpr const char hasSplittingSurface[] =
 R"doc(Determines whether this triangulation has a normal splitting surface.
 See NormalSurface::isSplitting() for details regarding normal
 splitting surfaces.
@@ -1191,8 +1103,8 @@ Returns:
     ``True`` if and only if this triangulation has a normal splitting
     surface.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasStrictAngleStructure
-static const char *hasStrictAngleStructure =
+// Docstring regina::python::doc::Triangulation3::hasStrictAngleStructure
+static constexpr const char hasStrictAngleStructure[] =
 R"doc(Determines whether this triangulation supports a strict angle
 structure. Recall that a _strict_ angle structure is one in which
 every angle is strictly between 0 and π.
@@ -1221,8 +1133,8 @@ Returns:
     ``True`` if and only if a strict angle structure exists on this
     triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasTwoSphereBoundaryComponents
-static const char *hasTwoSphereBoundaryComponents =
+// Docstring regina::python::doc::Triangulation3::hasTwoSphereBoundaryComponents
+static constexpr const char hasTwoSphereBoundaryComponents[] =
 R"doc(Determines if this triangulation contains any two-sphere boundary
 components.
 
@@ -1230,8 +1142,8 @@ Returns:
     ``True`` if and only if there is at least one two-sphere boundary
     component.)doc";
 
-// Docstring regina::python::doc::Triangulation_::homologyBdry
-static const char *homologyBdry =
+// Docstring regina::python::doc::Triangulation3::homologyBdry
+static constexpr const char homologyBdry[] =
 R"doc(Returns the first homology group of the boundary for this
 triangulation. Note that ideal vertices are considered part of the
 boundary.
@@ -1254,8 +1166,8 @@ Exception ``FailedPrecondition``:
 Returns:
     the first homology group of the boundary.)doc";
 
-// Docstring regina::python::doc::Triangulation_::homologyH2Z2
-static const char *homologyH2Z2 =
+// Docstring regina::python::doc::Triangulation3::homologyH2Z2
+static constexpr const char homologyH2Z2[] =
 R"doc(Returns the second homology group with coefficients in ``Z_2`` for
 this triangulation. If this triangulation contains any ideal vertices,
 the homology group will be calculated as if each such vertex had been
@@ -1278,8 +1190,8 @@ Returns:
     the number of ``Z_2`` terms in the second homology group with
     coefficients in ``Z_2``.)doc";
 
-// Docstring regina::python::doc::Triangulation_::homologyRel
-static const char *homologyRel =
+// Docstring regina::python::doc::Triangulation3::homologyRel
+static constexpr const char homologyRel[] =
 R"doc(Returns the relative first homology group with respect to the boundary
 for this triangulation. Note that ideal vertices are considered part
 of the boundary.
@@ -1299,8 +1211,8 @@ Exception ``FailedPrecondition``:
 Returns:
     the relative first homology group with respect to the boundary.)doc";
 
-// Docstring regina::python::doc::Triangulation_::idealToFinite
-static const char *idealToFinite =
+// Docstring regina::python::doc::Triangulation3::idealToFinite
+static constexpr const char idealToFinite[] =
 R"doc(Alias for truncateIdeal(), which truncates all ideal or invalid
 vertices to convert these into real boundary components.
 
@@ -1320,8 +1232,8 @@ Exception ``LockViolation``:
 Returns:
     ``True`` if and only if the triangulation was changed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::improveTreewidth
-static const char *improveTreewidth =
+// Docstring regina::python::doc::Triangulation3::improveTreewidth
+static constexpr const char improveTreewidth[] =
 R"doc(Attempts to retriangulate this to have a smaller width tree
 decomposition. Regina does not compute treewidth precisely (and
 indeed, this is an NP-hard problem); instead what it tries to minimise
@@ -1436,8 +1348,8 @@ Returns:
     ``True`` if and only if this triangulation was successfully
     changed to give a smaller-width greedy tree decomposition.)doc";
 
-// Docstring regina::python::doc::Triangulation_::inAnyPacket
-static const char *inAnyPacket =
+// Docstring regina::python::doc::Triangulation3::inAnyPacket
+static constexpr const char inAnyPacket[] =
 R"doc(Returns the packet that holds this data, even if it is held indirectly
 via a SnapPea triangulation.
 
@@ -1458,8 +1370,8 @@ Returns:
     ``None`` if this data is not held by either a 3-dimensional
     triangulation packet or a SnapPea triangulation packet.)doc";
 
-// Docstring regina::python::doc::Triangulation_::inAnyPacket_2
-static const char *inAnyPacket_2 =
+// Docstring regina::python::doc::Triangulation3::inAnyPacket_2
+static constexpr const char inAnyPacket_2[] =
 R"doc(Returns the packet that holds this data, even if it is held indirectly
 via a SnapPea triangulation.
 
@@ -1480,8 +1392,8 @@ Returns:
     ``None`` if this data is not held by either a 3-dimensional
     triangulation packet or a SnapPea triangulation packet.)doc";
 
-// Docstring regina::python::doc::Triangulation_::insertLayeredSolidTorus
-static const char *insertLayeredSolidTorus =
+// Docstring regina::python::doc::Triangulation3::insertLayeredSolidTorus
+static constexpr const char insertLayeredSolidTorus[] =
 R"doc(Inserts a new layered solid torus into the triangulation. The
 meridinal disc of the layered solid torus will intersect the three
 edges of the boundary torus in *cuts0*, *cuts1* and (*cuts0* +
@@ -1520,8 +1432,8 @@ Returns:
 See also:
     LayeredSolidTorus)doc";
 
-// Docstring regina::python::doc::Triangulation_::intelligentSimplify
-static const char *intelligentSimplify =
+// Docstring regina::python::doc::Triangulation3::intelligentSimplify
+static constexpr const char intelligentSimplify[] =
 R"doc(Deprecated alias for simplify(), which attempts to simplify this
 triangulation as intelligently as possible using fast and greedy
 heuristics.
@@ -1534,8 +1446,8 @@ Returns:
     ``True`` if and only if the triangulation was successfully
     simplified. Otherwise this triangulation will not be changed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isBall
-static const char *isBall =
+// Docstring regina::python::doc::Triangulation3::isBall
+static constexpr const char isBall[] =
 R"doc(Determines whether this is a triangulation of a 3-dimensional ball.
 
 This routine is based on isSphere(), which in turn combines
@@ -1553,8 +1465,8 @@ Returns:
     ``True`` if and only if this is a triangulation of a 3-dimensional
     ball.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isClosed
-static const char *isClosed =
+// Docstring regina::python::doc::Triangulation3::isClosed
+static constexpr const char isClosed[] =
 R"doc(Determines if this triangulation is closed. This is the case if and
 only if it has no boundary. Note that ideal triangulations are not
 closed.
@@ -1562,8 +1474,8 @@ closed.
 Returns:
     ``True`` if and only if this triangulation is closed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isHaken
-static const char *isHaken =
+// Docstring regina::python::doc::Triangulation3::isHaken
+static constexpr const char isHaken[] =
 R"doc(Determines whether the underlying 3-manifold (which must be closed and
 orientable) is Haken. In other words, this routine determines whether
 the underlying 3-manifold contains an embedded closed two-sided
@@ -1596,8 +1508,8 @@ Returns:
     ``True`` if and only if the underlying 3-manifold is irreducible
     and Haken.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isIdeal
-static const char *isIdeal =
+// Docstring regina::python::doc::Triangulation3::isIdeal
+static constexpr const char isIdeal[] =
 R"doc(Determines if this triangulation is ideal. This is the case if and
 only if one of the vertex links is closed and not a 2-sphere. Note
 that the triangulation is not required to be valid.
@@ -1605,8 +1517,8 @@ that the triangulation is not required to be valid.
 Returns:
     ``True`` if and only if this triangulation is ideal.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isIrreducible
-static const char *isIrreducible =
+// Docstring regina::python::doc::Triangulation3::isIrreducible
+static constexpr const char isIrreducible[] =
 R"doc(Determines whether the underlying 3-manifold (which must be closed) is
 irreducible. In other words, this routine determines whether every
 embedded sphere in the underlying 3-manifold bounds a ball.
@@ -1630,8 +1542,8 @@ Exception ``FailedPrecondition``:
 Returns:
     ``True`` if and only if the underlying 3-manifold is irreducible.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isOneEfficient
-static const char *isOneEfficient =
+// Docstring regina::python::doc::Triangulation3::isOneEfficient
+static constexpr const char isOneEfficient[] =
 R"doc(Determines if this triangulation is 1-efficient.
 
 For now, 1-efficiency testing is _only_ available for ideal
@@ -1657,8 +1569,8 @@ Exception ``FailedPrecondition``:
 Returns:
     ``True`` if and only if this triangulation is 1-efficient.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isOrdered
-static const char *isOrdered =
+// Docstring regina::python::doc::Triangulation3::isOrdered
+static constexpr const char isOrdered[] =
 R"doc(Determines if this triangulation is ordered; that is, if tetrahedron
 vertices are labelled so that all gluing permutations are order-
 preserving on the tetrahedron faces. Equivalently, this tests whether
@@ -1676,8 +1588,8 @@ Returns:
 Author:
     Matthias Goerner)doc";
 
-// Docstring regina::python::doc::Triangulation_::isSnapPea
-static const char *isSnapPea =
+// Docstring regina::python::doc::Triangulation3::isSnapPea
+static constexpr const char isSnapPea[] =
 R"doc(Returns the SnapPea triangulation that holds this data, if there is
 one.
 
@@ -1692,8 +1604,8 @@ Returns:
     the SnapPea triangulation that holds this data, or ``None`` if
     this data is not part of a SnapPea triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isSnapPea_2
-static const char *isSnapPea_2 =
+// Docstring regina::python::doc::Triangulation3::isSnapPea_2
+static constexpr const char isSnapPea_2[] =
 R"doc(Returns the SnapPea triangulation that holds this data, if there is
 one.
 
@@ -1708,8 +1620,8 @@ Returns:
     the SnapPea triangulation that holds this data, or ``None`` if
     this data is not part of a SnapPea triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isSolidTorus
-static const char *isSolidTorus =
+// Docstring regina::python::doc::Triangulation3::isSolidTorus
+static constexpr const char isSolidTorus[] =
 R"doc(Determines whether this is a triangulation of the solid torus; that
 is, the unknot complement. This routine can be used on a triangulation
 with real boundary triangles, or on an ideal triangulation (in which
@@ -1727,8 +1639,8 @@ Returns:
     ``True`` if and only if this is either a real (compact) or ideal
     (non-compact) triangulation of the solid torus.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isSphere
-static const char *isSphere =
+// Docstring regina::python::doc::Triangulation3::isSphere
+static constexpr const char isSphere[] =
 R"doc(Determines whether this is a triangulation of a 3-sphere.
 
 This routine relies upon a combination of Rubinstein's 3-sphere
@@ -1745,8 +1657,8 @@ decomposition algorithm.
 Returns:
     ``True`` if and only if this is a 3-sphere triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isStandard
-static const char *isStandard =
+// Docstring regina::python::doc::Triangulation3::isStandard
+static constexpr const char isStandard[] =
 R"doc(Determines if this triangulation is standard. This is the case if and
 only if every vertex is standard. See Vertex<3>::isStandard() for
 further details.
@@ -1754,8 +1666,8 @@ further details.
 Returns:
     ``True`` if and only if this triangulation is standard.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isTxI
-static const char *isTxI =
+// Docstring regina::python::doc::Triangulation3::isTxI
+static constexpr const char isTxI[] =
 R"doc(Determines whether or not the underlying 3-manifold is the product of
 a torus with an interval.
 
@@ -1777,8 +1689,8 @@ Returns:
     ideal or a combination) of the product of the torus with an
     interval.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isZeroEfficient
-static const char *isZeroEfficient =
+// Docstring regina::python::doc::Triangulation3::isZeroEfficient
+static constexpr const char isZeroEfficient[] =
 R"doc(Determines if this triangulation is 0-efficient. A triangulation is
 _0-efficient_ if its only normal spheres and discs are vertex linking,
 and if it has no 2-sphere boundary components.
@@ -1786,8 +1698,8 @@ and if it has no 2-sphere boundary components.
 Returns:
     ``True`` if and only if this triangulation is 0-efficient.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsBall
-static const char *knowsBall =
+// Docstring regina::python::doc::Triangulation3::knowsBall
+static constexpr const char knowsBall[] =
 R"doc(Is it already known (or trivial to determine) whether or not this is a
 triangulation of a 3-dimensional ball? See isBall() for further
 details.
@@ -1817,8 +1729,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsCompressingDisc
-static const char *knowsCompressingDisc =
+// Docstring regina::python::doc::Triangulation3::knowsCompressingDisc
+static constexpr const char knowsCompressingDisc[] =
 R"doc(Is it already known (or trivial to determine) whether or not the
 underlying 3-manifold contains a compressing disc? See
 hasCompressingDisc() for further details.
@@ -1860,8 +1772,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate, _and_ this triangulation is valid and non-ideal.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsHaken
-static const char *knowsHaken =
+// Docstring regina::python::doc::Triangulation3::knowsHaken
+static constexpr const char knowsHaken[] =
 R"doc(Is it already known (or trivial to determine) whether or not the
 underlying 3-manifold is Haken? See isHaken() for further details.
 
@@ -1890,8 +1802,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate, _and_ the preconditions for isHaken() are satisfied.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsHandlebody
-static const char *knowsHandlebody =
+// Docstring regina::python::doc::Triangulation3::knowsHandlebody
+static constexpr const char knowsHandlebody[] =
 R"doc(Is it already known (or trivial to determine) whether or not this is a
 triangulation of an orientable handlebody? See recogniseHandlebody()
 for further details.
@@ -1926,8 +1838,8 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsHomologyH2Z2
-static const char *knowsHomologyH2Z2 =
+// Docstring regina::python::doc::Triangulation3::knowsHomologyH2Z2
+static constexpr const char knowsHomologyH2Z2[] =
 R"doc(Is the second homology group with coefficients in ``Z_2`` already
 known (or trivial to determine)? See homologyH2Z2() for further
 details.
@@ -1952,8 +1864,8 @@ Returns:
     to calculate, _and_ the preconditions for homologyH2Z2() are
     satisfied.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsHomologyRel
-static const char *knowsHomologyRel =
+// Docstring regina::python::doc::Triangulation3::knowsHomologyRel
+static constexpr const char knowsHomologyRel[] =
 R"doc(Is the relative first homology group with respect to the boundary
 already known (or trivial to determine)? See homologyRel() for further
 details.
@@ -1978,8 +1890,8 @@ Returns:
     to calculate, _and_ the preconditions for homologyRel() are
     satisfied.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsIrreducible
-static const char *knowsIrreducible =
+// Docstring regina::python::doc::Triangulation3::knowsIrreducible
+static constexpr const char knowsIrreducible[] =
 R"doc(Is it already known (or trivial to determine) whether or not the
 underlying 3-manifold is irreducible? See isIrreducible() for further
 details.
@@ -2011,8 +1923,8 @@ Returns:
     to calculate, _and_ the preconditions for isIrreducible() are
     satisfied.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsOneEfficient
-static const char *knowsOneEfficient =
+// Docstring regina::python::doc::Triangulation3::knowsOneEfficient
+static constexpr const char knowsOneEfficient[] =
 R"doc(Is it already known (or trivial to determine) whether or not this
 triangulation is 1-efficient? See isOneEfficient() for further
 details.
@@ -2041,8 +1953,8 @@ Returns:
     to calculate, _and_ the preconditions for isOneEfficient() are
     satisfied.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsSolidTorus
-static const char *knowsSolidTorus =
+// Docstring regina::python::doc::Triangulation3::knowsSolidTorus
+static constexpr const char knowsSolidTorus[] =
 R"doc(Is it already known (or trivial to determine) whether or not this is a
 triangulation of a solid torus (that is, the unknot complement)? See
 isSolidTorus() for further details.
@@ -2073,8 +1985,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsSphere
-static const char *knowsSphere =
+// Docstring regina::python::doc::Triangulation3::knowsSphere
+static constexpr const char knowsSphere[] =
 R"doc(Is it already known (or trivial to determine) whether or not this is a
 triangulation of a 3-sphere? See isSphere() for further details.
 
@@ -2103,8 +2015,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsStrictAngleStructure
-static const char *knowsStrictAngleStructure =
+// Docstring regina::python::doc::Triangulation3::knowsStrictAngleStructure
+static constexpr const char knowsStrictAngleStructure[] =
 R"doc(Is it already known (or trivial to determine) whether or not this
 triangulation supports a strict angle structure? See
 hasStrictAngleStructure() for further details.
@@ -2128,8 +2040,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsTxI
-static const char *knowsTxI =
+// Docstring regina::python::doc::Triangulation3::knowsTxI
+static constexpr const char knowsTxI[] =
 R"doc(Is it already known (or trivial to determine) whether or not this is a
 triangulation of a the product of a torus with an interval? See
 isTxI() for further details.
@@ -2160,8 +2072,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
 
-// Docstring regina::python::doc::Triangulation_::knowsZeroEfficient
-static const char *knowsZeroEfficient =
+// Docstring regina::python::doc::Triangulation3::knowsZeroEfficient
+static constexpr const char knowsZeroEfficient[] =
 R"doc(Is it already known (or trivial to determine) whether or not this
 triangulation is 0-efficient? See isZeroEfficient() for further
 details.
@@ -2186,8 +2098,8 @@ Parameter ``cachedOnly``:
 Returns:
     ``True`` if and only if this property is already known.)doc";
 
-// Docstring regina::python::doc::Triangulation_::layerOn
-static const char *layerOn =
+// Docstring regina::python::doc::Triangulation3::layerOn
+static constexpr const char layerOn[] =
 R"doc(Performs a layering upon the given boundary edge of the triangulation.
 See the Layering class notes for further details on what a layering
 entails.
@@ -2195,6 +2107,10 @@ entails.
 The new tetrahedron will be returned, and the new boundary edge that
 it creates will be edge 5 (i.e., the edge joining vertices 2 and 3) of
 this tetrahedron.
+
+If the triangulation (or more generally, the component of the
+triangulation that contains the given edge) is currently oriented,
+then the layering will preserve this orientation.
 
 Precondition:
     The given edge is a boundary edge of this triangulation, and the
@@ -2218,8 +2134,8 @@ Parameter ``edge``:
 Returns:
     the new tetrahedron provided by the layering.)doc";
 
-// Docstring regina::python::doc::Triangulation_::linkingSurface
-static const char *linkingSurface =
+// Docstring regina::python::doc::Triangulation3::linkingSurface
+static constexpr const char linkingSurface[] =
 R"doc(Returns the link of the given face as a normal surface.
 
 Constructing the link of a face begins with building the frontier of a
@@ -2241,8 +2157,8 @@ Returns:
     surface, and *thin* is ``True`` if and only if this link is thin
     (i.e., no additional normalisation steps were required).)doc";
 
-// Docstring regina::python::doc::Triangulation_::longitude
-static const char *longitude =
+// Docstring regina::python::doc::Triangulation3::longitude
+static constexpr const char longitude[] =
 R"doc(Modifies a triangulated knot complement so that the algebraic
 longitude follows a single boundary edge, and returns this edge.
 
@@ -2283,7 +2199,7 @@ Precondition:
     boundary component is formed from two triangles.
 
 .. warning::
-    This routine may modify the triangluation, as explained above,
+    This routine may modify the triangulation, as explained above,
     which will have the side-effect of invalidating any existing
     Vertex, Edge or Triangle references.
 
@@ -2312,8 +2228,8 @@ Returns:
     the boundary edge representing the algebraic longitude of the knot
     (after this triangulation has been modified if necessary).)doc";
 
-// Docstring regina::python::doc::Triangulation_::longitudeCuts
-static const char *longitudeCuts =
+// Docstring regina::python::doc::Triangulation3::longitudeCuts
+static constexpr const char longitudeCuts[] =
 R"doc(Identifies the algebraic longitude as a curve on the boundary of a
 triangulated knot complement.
 
@@ -2363,8 +2279,8 @@ Returns:
     indicates the (absolute) number of times that the longitude
     intersects the edge ``bc->edge(k)``.)doc";
 
-// Docstring regina::python::doc::Triangulation_::maximalForestInBoundary
-static const char *maximalForestInBoundary =
+// Docstring regina::python::doc::Triangulation3::maximalForestInBoundary
+static constexpr const char maximalForestInBoundary[] =
 R"doc(Produces a maximal forest in the 1-skeleton of the triangulation
 boundary.
 
@@ -2374,8 +2290,8 @@ triangulation has changed.
 Returns:
     a set containing the edges of the maximal forest.)doc";
 
-// Docstring regina::python::doc::Triangulation_::maximalForestInSkeleton
-static const char *maximalForestInSkeleton =
+// Docstring regina::python::doc::Triangulation3::maximalForestInSkeleton
+static constexpr const char maximalForestInSkeleton[] =
 R"doc(Produces a maximal forest in the triangulation's 1-skeleton. It can be
 specified whether or not different boundary components may be joined
 by the maximal forest.
@@ -2395,8 +2311,8 @@ Parameter ``canJoinBoundaries``:
 Returns:
     a set containing the edges of the maximal forest.)doc";
 
-// Docstring regina::python::doc::Triangulation_::meridian
-static const char *meridian =
+// Docstring regina::python::doc::Triangulation3::meridian
+static constexpr const char meridian[] =
 R"doc(Modifies a triangulated knot complement so that the meridian follows a
 single boundary edge, and returns this edge.
 
@@ -2439,7 +2355,7 @@ Precondition:
     boundary component is formed from two triangles.
 
 .. warning::
-    This routine may modify the triangluation, as explained above,
+    This routine may modify the triangulation, as explained above,
     which will have the side-effect of invalidating any existing
     Vertex, Edge or Triangle references.
 
@@ -2468,8 +2384,8 @@ Returns:
     the boundary edge representing the meridian (after this
     triangulation has been modified if necessary).)doc";
 
-// Docstring regina::python::doc::Triangulation_::meridianLongitude
-static const char *meridianLongitude =
+// Docstring regina::python::doc::Triangulation3::meridianLongitude
+static constexpr const char meridianLongitude[] =
 R"doc(Modifies a triangulated knot complement so that the meridian and
 algebraic longitude each follow a single boundary edge, and returns
 these two edges.
@@ -2514,7 +2430,7 @@ Precondition:
     boundary component is formed from two triangles.
 
 .. warning::
-    This routine may modify the triangluation, as explained above,
+    This routine may modify the triangulation, as explained above,
     which will have the side-effect of invalidating any existing
     Vertex, Edge or Triangle references.
 
@@ -2545,8 +2461,8 @@ Returns:
     longitude of the knot complement (after this triangulation has
     been modified if necessary).)doc";
 
-// Docstring regina::python::doc::Triangulation_::minimiseBoundary
-static const char *minimiseBoundary =
+// Docstring regina::python::doc::Triangulation3::minimiseBoundary
+static constexpr const char minimiseBoundary[] =
 R"doc(Ensures that the boundary contains the smallest possible number of
 triangles, potentially adding tetrahedra to do this.
 
@@ -2605,8 +2521,8 @@ Returns:
     ``True`` if the triangulation was changed, or ``False`` if every
     boundary component was already minimal to begin with.)doc";
 
-// Docstring regina::python::doc::Triangulation_::minimiseVertices
-static const char *minimiseVertices =
+// Docstring regina::python::doc::Triangulation3::minimiseVertices
+static constexpr const char minimiseVertices[] =
 R"doc(Ensures that this triangulation contains the smallest possible number
 of vertices for the 3-manifold that it represents, potentially adding
 tetrahedra to do this.
@@ -2669,8 +2585,8 @@ Returns:
     ``True`` if the triangulation was changed, or ``False`` if the
     number of vertices was already minimal to begin with.)doc";
 
-// Docstring regina::python::doc::Triangulation_::minimizeBoundary
-static const char *minimizeBoundary =
+// Docstring regina::python::doc::Triangulation3::minimizeBoundary
+static constexpr const char minimizeBoundary[] =
 R"doc(A deprecated synonym for minimiseBoundary(). This ensures that the
 boundary contains the smallest possible number of triangles,
 potentially adding tetrahedra to do this.
@@ -2701,8 +2617,8 @@ Returns:
     ``True`` if the triangulation was changed, or ``False`` if every
     boundary component was already minimal to begin with.)doc";
 
-// Docstring regina::python::doc::Triangulation_::minimizeVertices
-static const char *minimizeVertices =
+// Docstring regina::python::doc::Triangulation3::minimizeVertices
+static constexpr const char minimizeVertices[] =
 R"doc(A deprecated synonym for minimiseVertices(). This ensures that the
 triangulation contains the smallest possible number of vertices,
 potentially adding tetrahedra to do this.
@@ -2733,8 +2649,8 @@ Returns:
     ``True`` if the triangulation was changed, or ``False`` if the
     number of vertices was already minimal to begin with.)doc";
 
-// Docstring regina::python::doc::Triangulation_::move02
-static const char *move02 =
+// Docstring regina::python::doc::Triangulation3::move02
+static constexpr const char move02[] =
 R"doc(If possible, performs a 0-2 move about the two specified triangles.
 This involves fattening these two triangles (which should share a
 common edge, and which need not be distinct) into a new pair of
@@ -2743,10 +2659,10 @@ inverse to the 2-0 edge move.
 
 The different variants of move02() allow the two triangles and their
 common edge to be specified in different ways. For this variant, the
-common edge is referenced by both the embedding objects *e0* and *e1*,
-and the the two triangles are
-``e0.tetrahedron()->triangle(e0.vertices()[t0])`` and
-``e1.tetrahedron()->triangle(e1.vertices()[t1])``.
+common edge is referenced by both the embedding objects *emb0* and
+*emb1*, and the the two triangles are
+``emb0.tetrahedron()->triangle(emb0.vertices()[tri0])`` and
+``emb1.tetrahedron()->triangle(emb1.vertices()[tri1])``.
 
 This triangulation will be changed directly.
 
@@ -2757,11 +2673,11 @@ Note that simplex locks are never a concern for this type of move.
 
 To be able to perform this move, we require that:
 
-* *e0* and *e1* are both embeddings of the same edge *e*;
+* *emb0* and *emb1* are both embeddings of the same edge *e*;
 
 * this common edge *e* is valid;
 
-* *t0* and *t1* are both either 2 or 3 (which means that the two
+* *tri0* and *tri1* are both either 2 or 3 (which means that the two
   triangles listed above do indeed contain *e*).
 
 A note regarding facet locks: since this move pries open a _pair_ of
@@ -2775,27 +2691,27 @@ label the new tetrahedra in a way that preserves the orientation.
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
 old skeletal objects can no longer be used. However, the arguments
-*e0* and *e1* _can_ still be used since a FaceEmbedding can happily
-outlive the face that it refers to; see the FaceEmbedding class notes
-for further details.
+*emb0* and *emb1* _can_ still be used since a FaceEmbedding can
+happily outlive the face that it refers to; see the FaceEmbedding
+class notes for further details.
 
 Precondition:
     The edge *e* is an edge of this triangulation.
 
-Parameter ``e0``:
+Parameter ``emb0``:
     an embedding of the common edge *e* of the two triangles about
     which to perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     indicates one of the triangles about which to perform the move,
-    with respect to the edge embedding *e0*; this must be 2 or 3.
+    with respect to the edge embedding *emb0*; this must be 2 or 3.
 
-Parameter ``e1``:
+Parameter ``emb1``:
     another embedding of the edge *e*.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     indicates the other triangle about which to perform the move, with
-    respect to the edge embedding *e1*; this must be 2 or 3.
+    respect to the edge embedding *emb1*; this must be 2 or 3.
 
 Returns:
     ``True`` if and only if the requested move was able to be
@@ -2804,8 +2720,8 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::move02_2
-static const char *move02_2 =
+// Docstring regina::python::doc::Triangulation3::move02_2
+static constexpr const char move02_2[] =
 R"doc(If possible, performs a 0-2 move about the two specified triangles.
 This involves fattening these two triangles (which should share a
 common edge, and which need not be distinct) into a new pair of
@@ -2814,9 +2730,9 @@ inverse to the 2-0 edge move.
 
 The different variants of move02() allow the two triangles and their
 common edge to be specified in different ways. For this variant, the
-common edge is given as the argument *e*, and the two triangles are
-the triangles incident to *e* that are numbered *t0* and *t1* (see
-below for how this numbering scheme works).
+common edge is given as the argument *edge*, and the two triangles are
+the triangles incident to *edge* that are numbered *tri0* and *tri1*
+(see below for how this numbering scheme works).
 
 This triangulation will be changed directly.
 
@@ -2827,23 +2743,25 @@ Note that simplex locks are never a concern for this type of move.
 
 To be able to perform this move, we require that:
 
-* the given edge *e* is valid;
+* the given edge is valid;
 
-* the numbers *t0* and *t1* are both less than or equal to
-  ``e->degree()``, and strictly less than ``e->degree()`` if *e* is
-  non-boundary (as required by our numbering scheme for triangles).
+* the numbers *tri0* and *tri1* are both less than or equal to
+  ``edge->degree()``, and strictly less than ``edge->degree()`` if
+  *edge* is non-boundary (as required by our numbering scheme for
+  triangles).
 
-Our numbering scheme for triangles incident to *e* works as follows:
+Our numbering scheme for triangles incident to the given edge works as
+follows:
 
-* For each *i* in the range ``0 ≤ i < e->degree()``, we assign the
+* For each *i* in the range ``0 ≤ i < edge->degree()``, we assign the
   number *i* to the triangle
   ``emb.tetrahedron()->triangle(emb.vertices()[3])``, where *emb*
-  denotes ``e->embedding(i)``.
+  denotes ``edge->embedding(i)``.
 
-* If *e* is a boundary edge, then we additionally assign the number
-  ``e->degree()`` to the boundary triangle
+* If *edge* is a boundary edge, then we additionally assign the number
+  ``edge->degree()`` to the boundary triangle
   ``emb.tetrahedron()->triangle(emb.vertices()[2])``, where this time
-  *emb* denotes ``e->back()``.
+  *emb* denotes ``edge->back()``.
 
 A note regarding facet locks: since this move pries open a _pair_ of
 adjacent triangles and not just a single triangle, a lock on either of
@@ -2858,20 +2776,21 @@ call ``move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int)``.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the common edge of the two triangles about which to perform the
     move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     the number assigned to one of two triangles about which to perform
     the move, as described above.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the number assigned to the other triangle about which to perform
     the move, as described above.
 
@@ -2882,8 +2801,8 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::move02_3
-static const char *move02_3 =
+// Docstring regina::python::doc::Triangulation3::move02_3
+static constexpr const char move02_3[] =
 R"doc(If possible, performs a 0-2 move about the two specified triangles.
 This involves fattening these two triangles (which should share a
 common edge, and which need not be distinct) into a new pair of
@@ -2892,8 +2811,8 @@ inverse to the 2-0 edge move.
 
 The different variants of move02() allow the two triangles and their
 common edge to be specified in different ways. For this variant, the
-two triangles are given as the arguments *t0* and *t1*, and their
-common edge is ``t0->edge(e0)`` and ``t1->edge(e1)``.
+two triangles are given as the arguments *tri0* and *tri1*, and their
+common edge is ``tri0->edge(edge0)`` and ``tri1->edge(edge1)``.
 
 This triangulation will be changed directly.
 
@@ -2904,8 +2823,8 @@ Note that simplex locks are never a concern for this type of move.
 
 To be able to perform this move, we require that:
 
-* the edges ``t0->edge(e0)`` and ``t1->edge(e1)`` are the same edge of
-  this triangulation;
+* the edges ``tri0->edge(edge0)`` and ``tri1->edge(edge1)`` are the
+  same edge of this triangulation;
 
 * moreover, that common edge is valid.
 
@@ -2922,25 +2841,25 @@ call ``move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int)``.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the arguments *t0* and *t1*) can no
+old skeletal objects (such as the arguments *tri0* and *tri1*) can no
 longer be used.
 
 Precondition:
     The given triangles are both triangles of this triangulation.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     one of the two triangles about which to perform the move.
 
-Parameter ``e0``:
-    the edge at which *t0* meets the other triangle *t1*; this must be
-    0, 1 or 2.
+Parameter ``edge0``:
+    the edge at which *tri0* meets the other triangle *tri1*; this
+    must be 0, 1 or 2.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the other triangle about which to perform the move.
 
-Parameter ``e1``:
-    the edge at which *t1* meets the other triangle *t0*; this must be
-    0, 1 or 2.
+Parameter ``edge1``:
+    the edge at which *tri1* meets the other triangle *tri0*; this
+    must be 0, 1 or 2.
 
 Returns:
     ``True`` if and only if the requested move was able to be
@@ -2949,8 +2868,8 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::move21
-static const char *move21 =
+// Docstring regina::python::doc::Triangulation3::move21
+static constexpr const char move21[] =
 R"doc(If possible, performs a 2-1 move at the given end of the given edge of
 this triangulation. This involves taking the given degree one edge and
 effectively merging the (unique) tetrahedron that contains it with an
@@ -2963,13 +2882,13 @@ the manifold (as discussed below), _and_ it will not violate any
 simplex and/or facet locks. See Simplex<3>::lock() and
 Simplex<3>::lockFacet() for further details on locks.
 
-In order for this move to make sense and to not to change the
-topology, we require that:
+Let *e* denote the given edge. In order for this move to make sense
+and to not to change the topology, we require that:
 
-* the given edge *e* is valid and non-boundary;
+* the edge *e* is valid and non-boundary;
 
-* the given edge *e* has degree one, whereupon we let *t* denote the
-  unique tetrahedron containing *e*;
+* the edge *e* has degree one, whereupon we let *t* denote the unique
+  tetrahedron containing *e*;
 
 * the two faces of *t* that do _not_ contain *e* are not joined to
   each other;
@@ -2997,12 +2916,13 @@ label the new tetrahedra in a way that preserves the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``edgeEnd``:
@@ -3015,8 +2935,8 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::move44
-static const char *move44 =
+// Docstring regina::python::doc::Triangulation3::move44
+static constexpr const char move44[] =
 R"doc(If possible, performs a 4-4 move about the given edge of this
 triangulation. This involves replacing the four tetrahedra joined
 along the given degree four edge with four new tetrahedra joined along
@@ -3051,12 +2971,13 @@ label the new tetrahedra in a way that preserves the orientation.
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``axis``:
@@ -3072,32 +2993,32 @@ Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::newTetrahedra
-static const char *newTetrahedra =
+// Docstring regina::python::doc::Triangulation3::newTetrahedra
+static constexpr const char newTetrahedra[] =
 R"doc(A dimension-specific alias for newSimplices().
 
 See newSimplices() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::newTetrahedra_2
-static const char *newTetrahedra_2 =
+// Docstring regina::python::doc::Triangulation3::newTetrahedra_2
+static constexpr const char newTetrahedra_2[] =
 R"doc(A dimension-specific alias for newSimplices().
 
 See newSimplices() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::newTetrahedron
-static const char *newTetrahedron =
+// Docstring regina::python::doc::Triangulation3::newTetrahedron
+static constexpr const char newTetrahedron[] =
 R"doc(A dimension-specific alias for newSimplex().
 
 See newSimplex() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::newTetrahedron_2
-static const char *newTetrahedron_2 =
+// Docstring regina::python::doc::Triangulation3::newTetrahedron_2
+static constexpr const char newTetrahedron_2[] =
 R"doc(A dimension-specific alias for newSimplex().
 
 See newSimplex() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::niceTreeDecomposition
-static const char *niceTreeDecomposition =
+// Docstring regina::python::doc::Triangulation3::niceTreeDecomposition
+static constexpr const char niceTreeDecomposition[] =
 R"doc(Returns a nice tree decomposition of the face pairing graph of this
 triangulation. This can (for example) be used in implementing
 algorithms that are fixed-parameter tractable in the treewidth of the
@@ -3120,8 +3041,8 @@ Returns:
     a nice tree decomposition of the face pairing graph of this
     triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::nonTrivialSphereOrDisc
-static const char *nonTrivialSphereOrDisc =
+// Docstring regina::python::doc::Triangulation3::nonTrivialSphereOrDisc
+static constexpr const char nonTrivialSphereOrDisc[] =
 R"doc(Searches for a non-vertex-linking normal sphere or disc within this
 triangulation. If such a surface exists within this triangulation,
 this routine is guaranteed to find one.
@@ -3130,8 +3051,8 @@ Returns:
     a non-vertex-linking normal sphere or disc, or ``None`` if none
     exists.)doc";
 
-// Docstring regina::python::doc::Triangulation_::octagonalAlmostNormalSphere
-static const char *octagonalAlmostNormalSphere =
+// Docstring regina::python::doc::Triangulation3::octagonalAlmostNormalSphere
+static constexpr const char octagonalAlmostNormalSphere[] =
 R"doc(Searches for an octagonal almost normal 2-sphere within this
 triangulation. If such a surface exists, this routine is guaranteed to
 find one.
@@ -3144,8 +3065,8 @@ Precondition:
 Returns:
     an octagonal almost normal 2-sphere, or ``None`` if none exists.)doc";
 
-// Docstring regina::python::doc::Triangulation_::openBook
-static const char *openBook =
+// Docstring regina::python::doc::Triangulation3::openBook
+static constexpr const char openBook[] =
 R"doc(If possible, performs a book opening move about the given triangle.
 This involves taking a triangle that meets the boundary along
 precisely two edges, and ungluing it to create two new boundary
@@ -3182,60 +3103,23 @@ If this triangulation is currently oriented, then this operation will
 
 Note that after performing this move, all skeletal objects (faces,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *t*) can no longer be used.
+old skeletal objects (such as the argument *triangle*) can no longer
+be used.
 
 See closeBook() for an inverse to this move.
 
 Precondition:
     The given triangle is a triangle of this triangulation.
 
-Parameter ``t``:
+Parameter ``triangle``:
     the triangle about which to perform the move.
 
 Returns:
     ``True`` if and only if the requested move was able to be
     performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::openBook_2
-static const char *openBook_2 =
-R"doc(Deprecated routine that tests for and optionally performs a book
-opening move about the given triangle of this triangulation.
-
-For more details on book opening moves and when they can be performed,
-see the variant of openBook() without the extra boolean arguments.
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    hasOpenBook(). If you wish to both check and perform the move,
-    call openBook() without the two extra boolean arguments.
-
-Precondition:
-    The given triangle is a triangle of this triangulation.
-
-Parameter ``t``:
-    the triangle about which to perform the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::order
-static const char *order =
+// Docstring regina::python::doc::Triangulation3::order
+static constexpr const char order[] =
 R"doc(Relabels tetrahedron vertices in this triangulation to give an ordered
 triangulation, if possible.
 
@@ -3279,8 +3163,8 @@ Exception ``FailedPrecondition``:
 Author:
     Matthias Goerner)doc";
 
-// Docstring regina::python::doc::Triangulation_::pinchEdge
-static const char *pinchEdge =
+// Docstring regina::python::doc::Triangulation3::pinchEdge
+static constexpr const char pinchEdge[] =
 R"doc(Pinches an internal edge to a point. Topologically, this collapses the
 edge to a point with no further side-effects, and it increases the
 number of tetrahedra by two.
@@ -3299,16 +3183,16 @@ further constraints. Two particularly useful settings are:
   move effectively drills out the edge, leaving an ideal torus or
   Klein bottle boundary component.
 
-We do not allow *e* to lie entirely on the triangulation boundary,
-because the implementation actually collapses an internal curve
-_parallel_ to *e*, not the edge *e* itself (and so if *e* is a
-boundary edge then the topological effect would not be as intended).
-We do allow *e* to be an internal edge with both endpoints on the
-boundary, but note that in this case the resulting topological
+We do not allow the given edge *e* to lie entirely on the
+triangulation boundary, because the implementation actually collapses
+an internal curve _parallel_ to *e*, not the edge *e* itself (and so
+if *e* is a boundary edge then the topological effect would not be as
+intended). We do allow *e* to be an internal edge with both endpoints
+on the boundary, but note that in this case the resulting topological
 operation would render the triangulation invalid.
 
 If you are trying to reduce the number of vertices without changing
-the topology, and if *e* is an edge connecting an internal vertex with
+the topology, and if the given edge connects an internal vertex with
 some different vertex, then either collapseEdge() or pinchEdge() may
 be more appropriate for your situation (though you may find it easier
 just to call minimiseVertices() instead).
@@ -3319,8 +3203,7 @@ just to call minimiseVertices() instead).
 
 * The disadvantages of collapseEdge() are that it cannot always be
   performed, and its validity tests are expensive; pinchEdge() on the
-  other hand can always be used for edges *e* of the type described
-  above.
+  other hand can always be used on edges of the type described above.
 
 This operation works by prying open a triangle *t* and inserting a
 two-tetrahedron gadget *g* within the resulting triangular pillow. In
@@ -3334,21 +3217,22 @@ preserve the orientation.
 
 Note that after performing this move, all skeletal objects (triangles,
 components, etc.) will be reconstructed, which means any pointers to
-old skeletal objects (such as the argument *e*) can no longer be used.
+old skeletal objects (such as the argument *edge*) can no longer be
+used.
 
 Precondition:
     The given edge is an internal edge of this triangulation (that is,
-    *e* does not lie entirely within the boundary).
+    the given edge does not lie entirely within the boundary).
 
 Exception ``InvalidArgument``:
     The given edge lies entirely within the boundary of the
     triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.)doc";
 
-// Docstring regina::python::doc::Triangulation_::puncture
-static const char *puncture =
+// Docstring regina::python::doc::Triangulation3::puncture
+static constexpr const char puncture[] =
 R"doc(Punctures this manifold by thickening the given triangle into a
 triangular pillow and then removing a 3-ball from its interior. If no
 triangle is specified (i.e., the triangle pointer is ``None``), then
@@ -3391,8 +3275,8 @@ Parameter ``location``:
     may be ``None`` (the default), in which case facet 0 of
     tetrahedron 0 will be used.)doc";
 
-// Docstring regina::python::doc::Triangulation_::puncture_2
-static const char *puncture_2 =
+// Docstring regina::python::doc::Triangulation3::puncture_2
+static constexpr const char puncture_2[] =
 R"doc(Deprecated routine that punctures this manifold by removing a 3-ball
 from the interior of the given tetrahedron.
 
@@ -3417,12 +3301,8 @@ Parameter ``tet``:
     the tetrahedron indicating where the puncture will be taken. This
     may be ``None``, in which case tetrahedron 0 will be used.)doc";
 
-// Make it build. This will be overwritten by gendocs.sh
-static const char *simplifyUpDown =
-R"doc()doc";
-
-// Docstring regina::python::doc::Triangulation_::recogniseHandlebody
-static const char *recogniseHandlebody =
+// Docstring regina::python::doc::Triangulation3::recogniseHandlebody
+static constexpr const char recogniseHandlebody[] =
 R"doc(Determines whether this is a triangulation of an orientable
 handlebody, and if so, which genus. Specifically, this routine returns
 the genus if this is indeed a handlebody, and returns -1 otherwise.
@@ -3445,8 +3325,8 @@ Returns:
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::recogniser
-static const char *recogniser =
+// Docstring regina::python::doc::Triangulation3::recogniser
+static constexpr const char recogniser[] =
 R"doc(Returns a string that expresses this triangulation in Matveev's
 3-manifold recogniser format.
 
@@ -3460,8 +3340,8 @@ Exception ``NotImplemented``:
 Returns:
     a string containing the 3-manifold recogniser data.)doc";
 
-// Docstring regina::python::doc::Triangulation_::recognizer
-static const char *recognizer =
+// Docstring regina::python::doc::Triangulation3::recognizer
+static constexpr const char recognizer[] =
 R"doc(A synonym for recogniser(). This returns a string that expresses this
 triangulation in Matveev's 3-manifold recogniser format.
 
@@ -3475,8 +3355,8 @@ Exception ``NotImplemented``:
 Returns:
     a string containing the 3-manifold recogniser data.)doc";
 
-// Docstring regina::python::doc::Triangulation_::rehydrate
-static const char *rehydrate =
+// Docstring regina::python::doc::Triangulation3::rehydrate
+static constexpr const char rehydrate[] =
 R"doc(Rehydrates the given alphabetical string into a 3-dimensional
 triangulation.
 
@@ -3501,8 +3381,8 @@ Parameter ``dehydration``:
 Returns:
     the rehydrated triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::removeAllTetrahedra
-static const char *removeAllTetrahedra =
+// Docstring regina::python::doc::Triangulation3::removeAllTetrahedra
+static constexpr const char removeAllTetrahedra[] =
 R"doc(A dimension-specific alias for removeAllSimplices().
 
 See removeAllSimplices() for further information.
@@ -3513,8 +3393,8 @@ Exception ``LockViolation``:
     See Simplex<3>::lock() and Simplex<3>::lockFacet() for further
     details on how such locks work and what their implications are.)doc";
 
-// Docstring regina::python::doc::Triangulation_::removeTetrahedron
-static const char *removeTetrahedron =
+// Docstring regina::python::doc::Triangulation3::removeTetrahedron
+static constexpr const char removeTetrahedron[] =
 R"doc(A dimension-specific alias for removeSimplex().
 
 See removeSimplex() for further information.
@@ -3528,8 +3408,8 @@ Exception ``LockViolation``:
 Parameter ``tet``:
     the tetrahedron to remove.)doc";
 
-// Docstring regina::python::doc::Triangulation_::removeTetrahedronAt
-static const char *removeTetrahedronAt =
+// Docstring regina::python::doc::Triangulation3::removeTetrahedronAt
+static constexpr const char removeTetrahedronAt[] =
 R"doc(A dimension-specific alias for removeSimplexAt().
 
 See removeSimplexAt() for further information.
@@ -3544,8 +3424,8 @@ Parameter ``index``:
     specifies which tetrahedron to remove; this must be between 0 and
     size()-1 inclusive.)doc";
 
-// Docstring regina::python::doc::Triangulation_::reorderTetrahedraBFS
-static const char *reorderTetrahedraBFS =
+// Docstring regina::python::doc::Triangulation3::reorderTetrahedraBFS
+static constexpr const char reorderTetrahedraBFS[] =
 R"doc(Deprecated alias for reorderBFS(), which reorders the tetrahedra of
 this triangulation using a breadth-first search.
 
@@ -3558,8 +3438,8 @@ Parameter ``reverse``:
     ``True`` if the new tetrahedron numbers should be assigned in
     reverse order, as described above.)doc";
 
-// Docstring regina::python::doc::Triangulation_::retriangulate
-static const char *retriangulate =
+// Docstring regina::python::doc::Triangulation3::retriangulate
+static constexpr const char retriangulate[] =
 R"doc(Explores all triangulations that can be reached from this via Pachner
 moves, without exceeding a given number of additional tetrahedra.
 
@@ -3575,16 +3455,15 @@ other callable type).
 
 * *action* must take the following initial argument(s). Either (a) the
   first argument must be a triangulation (the precise type is
-  discussed below), representing the triangluation that has been
-  found; or else (b) the first two arguments must be of types const
-  std::string& followed by a triangulation, representing both the
-  triangulation and _an_ isomorphism signature. The second form is
-  offered in order to avoid unnecessary recomputation within the
-  *action* function; however, note that the signature might not be of
-  the IsoSigClassic type (i.e., it might not match the output from the
-  default version of isoSig()). If there are any additional arguments
-  supplied in the list *args*, then these will be passed as subsequent
-  arguments to *action*.
+  discussed below), representing the triangulation that has been
+  found; or else (b) the first two arguments must be of types ``const
+  ByteSequence&`` followed by a triangulation, representing both the
+  triangulation and its second-generation isomorphism signature. The
+  signature will be a byte sequence as returned by
+  ``neoSig<IsoSigBinary>()``; this second form may help avoid
+  unnecessary recomputation within the *action* function. If there are
+  any additional arguments supplied in the list *args*, then these
+  will be passed as subsequent arguments to *action*.
 
 * The triangulation argument will be passed as an rvalue; a typical
   action could (for example) take it by const reference and query it,
@@ -3662,10 +3541,11 @@ Python:
     This function is available in Python, and the *action* argument
     may be a pure Python function. However, its form is more
     restricted: the arguments *tracker* and *args* are removed, so you
-    call it as retriangulate(height, threads, action). Moreover,
-    *action* must take exactly two arguments (const std::string&,
-    Triangulation<3>&&) representing a signature and the
-    triangulation, as described in option (b) above.
+    call it as ``retriangulate(height, threads, action)``. Moreover,
+    *action* must take exactly two arguments ``(bytes,
+    Triangulation<3>&&)`` representing a signature and the
+    triangulation, as described in option (b) above; the signature
+    will be passed as a Python ``bytes`` object.
 
 Parameter ``height``:
     the maximum number of _additional_ tetrahedra to allow beyond the
@@ -3693,15 +3573,17 @@ Returns:
     terminating the search early), or ``False`` if the search ran to
     completion.)doc";
 
-// Docstring regina::python::doc::Triangulation_::saveRecogniser
-static const char *saveRecogniser =
+// Docstring regina::python::doc::Triangulation3::saveRecogniser
+static constexpr const char saveRecogniser[] =
 R"doc(Writes this triangulation to the given file in Matveev's 3-manifold
 recogniser format.
 
 Recogniser exports are currently not available for triangulations that
 are invalid or contain boundary triangles. If either of these
-conditions is true then the file will not be written, and this routine
-will return ``False``.
+conditions is true, or if an error occurs whilst writing the file,
+then this routine will throw an exception. This is a change of
+behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) returned
+``False`` instead.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -3709,20 +3591,26 @@ Internationalisation:
     unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
+Exception ``NotImplemented``:
+    The triangulation is invalid and/or contains boundary triangles.
+
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
 Parameter ``filename``:
-    the name of the Recogniser file to which to write.
+    the name of the Recogniser file to which to write.)doc";
 
-Returns:
-    ``True`` if and only if the file was successfully written.)doc";
-
-// Docstring regina::python::doc::Triangulation_::saveRecognizer
-static const char *saveRecognizer =
+// Docstring regina::python::doc::Triangulation3::saveRecognizer
+static constexpr const char saveRecognizer[] =
 R"doc(A synonym for saveRecogniser(). This writes this triangulation to the
 given file in Matveev's 3-manifold recogniser format.
 
-Precondition:
-    This triangulation is not invalid, and does not contain any
-    boundary triangles.
+Recogniser exports are currently not available for triangulations that
+are invalid or contain boundary triangles. If either of these
+conditions is true, or if an error occurs whilst writing the file,
+then this routine will throw an exception. This is a change of
+behaviour as of Regina 8.0: older versions of Regina (≤ 7.x) returned
+``False`` instead.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -3730,14 +3618,17 @@ Internationalisation:
     unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
+Exception ``NotImplemented``:
+    The triangulation is invalid and/or contains boundary triangles.
+
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
 Parameter ``filename``:
-    the name of the Recogniser file to which to write.
+    the name of the Recogniser file to which to write.)doc";
 
-Returns:
-    ``True`` if and only if the file was successfully written.)doc";
-
-// Docstring regina::python::doc::Triangulation_::saveSnapPea
-static const char *saveSnapPea =
+// Docstring regina::python::doc::Triangulation3::saveSnapPea
+static constexpr const char saveSnapPea[] =
 R"doc(Writes this triangulation to the given file using SnapPea's native
 file format.
 
@@ -3760,8 +3651,10 @@ Regarding what gets stored in the SnapPea data file:
   function is not virtual).
 
 SnapPea cannot represent triangulations that are empty, invalid, or
-contain boundary triangles. If any of these conditions is true then
-the file will not be written and this routine will return ``False``.
+contain boundary triangles. If any of these conditions is true, or if
+an error occurs whilst writing the file, then this routine will throw
+an exception. This is a change of behaviour as of Regina 8.0: older
+versions of Regina (≤ 7.x) returned ``False`` instead.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -3769,14 +3662,18 @@ Internationalisation:
     unchanged to low-level C/C++ file I/O routines. The _contents_ of
     the file will be written using UTF-8.
 
+Exception ``NotImplemented``:
+    The triangulation is invalid, empty, and/or contains boundary
+    triangles.
+
+Exception ``FileError``:
+    An error occurred whilst writing the file.
+
 Parameter ``filename``:
-    the name of the SnapPea file to which to write.
+    the name of the SnapPea file to which to write.)doc";
 
-Returns:
-    ``True`` if and only if the file was successfully written.)doc";
-
-// Docstring regina::python::doc::Triangulation_::simplify
-static const char *simplify =
+// Docstring regina::python::doc::Triangulation3::simplify
+static constexpr const char simplify[] =
 R"doc(Attempts to simplify this triangulation as intelligently as possible
 using fast and greedy heuristics. This routine will attempt to reduce
 the number of tetrahedra, the number of vertices and the number of
@@ -3816,8 +3713,8 @@ Returns:
     ``True`` if and only if the triangulation was successfully
     simplified. Otherwise this triangulation will not be changed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::simplifyExhaustive
-static const char *simplifyExhaustive =
+// Docstring regina::python::doc::Triangulation3::simplifyExhaustive
+static constexpr const char simplifyExhaustive[] =
 R"doc(Attempts to simplify this triangulation using a slow but exhaustive
 search through the Pachner graph. This routine is more powerful but
 much slower than simplify().
@@ -3915,8 +3812,8 @@ Returns:
     ``True`` if and only if the triangulation was successfully
     simplified to fewer tetrahedra.)doc";
 
-// Docstring regina::python::doc::Triangulation_::simplifyToLocalMinimum
-static const char *simplifyToLocalMinimum =
+// Docstring regina::python::doc::Triangulation3::simplifyToLocalMinimum
+static constexpr const char simplifyToLocalMinimum[] =
 R"doc(Uses all known simplification moves to reduce the triangulation
 monotonically to some local minimum number of tetrahedra.
 
@@ -3959,8 +3856,71 @@ Returns:
     ``True`` if and only if it determines that it is capable of
     performing such a change.)doc";
 
-// Docstring regina::python::doc::Triangulation_::snapPea
-static const char *snapPea =
+// Docstring regina::python::doc::Triangulation3::simplifyUpDown
+static constexpr const char simplifyUpDown[] =
+R"doc(Attempts to simplify this triangulation by making increasingly long
+sequences of random 2-3 moves, and then simplifying back down.
+
+This is a well-climbing heuristic that can be used when ``simplify()``
+fails. It is partly inspired by techniques used in both the
+``Triangulation<4>::simplifyUpDown()`` routine (which predates this
+routine), as well as SnapPea's ``randomize_triangulation()`` routine.
+
+If this triangulation is currently oriented, then this operation will
+preserve the orientation.
+
+If any tetrahedra and/or triangles are locked, these locks will be
+respected: that is, this routine will avoid any moves that would
+violate these locks (and in particular, no LockViolation exceptions
+should be thrown). Of course, however, having locks may make the
+simplification less effective in reducing the number of tetrahedra.
+
+This routine might take a little time for larger triangulations and/or
+larger values of ``max23``, so you can pass a progress tracker to this
+routine. This routine will notify the tracker each time it starts a
+new stage of the procedure, where each stage consists of a sequence of
+consecutive random 2-3 moves followed by an attempted simplification.
+At each stage, the value of the tracker's objective will be set to the
+size of the triangulation reached at the end of the previous completed
+stage.
+
+.. warning::
+    The specific behaviour of this routine is likely to change between
+    releases.
+
+Python:
+    The global interpreter lock will be released while this function
+    runs, so you can run it as a background computation without
+    blocking the main Python thread.
+
+Parameter ``max23``:
+    the maximum number of consecutive random 2-3 moves to perform in a
+    single "up" sequence. Note that this routine will usually attempt
+    several "up" sequences of differing lengths, and in particular may
+    eventually pass through triangulations with more than ``size() +
+    max23`` tetrahedra. If this is -1, then a sensible default will be
+    chosen.
+
+Parameter ``alwaysModify``:
+    ``True`` if this triangulation should always be modified after
+    this operation, even if the final endpoint has _more_ tetrahedra
+    than the triangulation began with, or ``False`` if this
+    triangulation should only be modified if this operation succeeded
+    in strictly reducing the total number of tetrahedra.
+
+Parameter ``tracker``:
+    a progress tracker through which progress will be reported, or
+    ``None`` if no progress reporting is required.
+
+Returns:
+    ``True`` if and only if the number of tetrahedra was strictly
+    reduced.
+
+Author:
+    Alex He)doc";
+
+// Docstring regina::python::doc::Triangulation3::snapPea
+static constexpr const char snapPea[] =
 R"doc(Returns a string containing the full contents of a SnapPea data file
 that describes this triangulation. In particular, this string can be
 used in a Python session to pass the triangulation directly to SnapPy
@@ -4000,8 +3960,8 @@ Returns:
     a string containing the contents of the corresponding SnapPea data
     file.)doc";
 
-// Docstring regina::python::doc::Triangulation_::strictAngleStructure
-static const char *strictAngleStructure =
+// Docstring regina::python::doc::Triangulation3::strictAngleStructure
+static constexpr const char strictAngleStructure[] =
 R"doc(Returns a strict angle structure on this triangulation, if one exists.
 Recall that a _strict_ angle structure is one in which every angle is
 strictly between 0 and π. If a strict angle structure does exist, then
@@ -4043,8 +4003,8 @@ Exception ``NoSolution``:
 Returns:
     a strict angle structure on this triangulation, if one exists.)doc";
 
-// Docstring regina::python::doc::Triangulation_::summands
-static const char *summands =
+// Docstring regina::python::doc::Triangulation3::summands
+static constexpr const char summands[] =
 R"doc(Computes the connected sum decomposition of this triangulation.
 
 The prime summands will be returned as a vector of triangulations;
@@ -4127,8 +4087,8 @@ Exception ``UnsolvedCase``:
 Returns:
     a list of triangulations of prime summands.)doc";
 
-// Docstring regina::python::doc::Triangulation_::swap
-static const char *swap =
+// Docstring regina::python::doc::Triangulation3::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given triangulation.
 
 All tetrahedra that belong to this triangulation will be moved to
@@ -4151,8 +4111,8 @@ triangulation.
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::Triangulation_::truncate
-static const char *truncate =
+// Docstring regina::python::doc::Triangulation3::truncate
+static constexpr const char truncate[] =
 R"doc(Truncates the given vertex.
 
 If the vertex is internal (its link is a sphere), then this will
@@ -4198,8 +4158,8 @@ Parameter ``lockBoundary``:
     ``True`` if and only if this routine should lock all boundary
     facets along the truncation surface.)doc";
 
-// Docstring regina::python::doc::Triangulation_::truncateIdeal
-static const char *truncateIdeal =
+// Docstring regina::python::doc::Triangulation3::truncateIdeal
+static constexpr const char truncateIdeal[] =
 R"doc(Truncates all ideal or invalid vertices, converting these into real
 boundary components made from unglued faces of tetrahedra.
 
@@ -4237,8 +4197,8 @@ Exception ``LockViolation``:
 Returns:
     ``True`` if and only if the triangulation was changed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::turaevViro
-static const char *turaevViro =
+// Docstring regina::python::doc::Triangulation3::turaevViro
+static constexpr const char turaevViro[] =
 R"doc(Computes the given Turaev-Viro state sum invariant of this 3-manifold
 using exact arithmetic.
 
@@ -4338,8 +4298,8 @@ Returns:
 See also:
     allCalculatedTuraevViro)doc";
 
-// Docstring regina::python::doc::Triangulation_::turaevViroApprox
-static const char *turaevViroApprox =
+// Docstring regina::python::doc::Triangulation3::turaevViroApprox
+static constexpr const char turaevViroApprox[] =
 R"doc(Computes the given Turaev-Viro state sum invariant of this 3-manifold
 using a fast but inexact floating-point approximation.
 
@@ -4403,50 +4363,8 @@ Returns:
 See also:
     allCalculatedTuraevViro)doc";
 
-// Docstring regina::python::doc::Triangulation_::twoOneMove
-static const char *twoOneMove =
-R"doc(Deprecated routine that tests for and optionally performs a 2-1 move
-at the given end of the given edge of this triangulation.
-
-For more details on 2-1 moves and when they can be performed, see
-move21().
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any simplex and/or facet locks (see
-Simplex<3>::lock() and Simplex<3>::lockFacet() for further details on
-locks). If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has21(). If you wish to both check and perform the move, call
-    move21().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``e``:
-    the edge about which to perform the move.
-
-Parameter ``edgeEnd``:
-    indicates at which end of the edge *e* the move does _not_ involve
-    the adjacent tetrahedron; this should be 0 or 1. See move21() for
-    details on exactly what this means.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.)doc";
-
-// Docstring regina::python::doc::Triangulation_::with02
-static const char *with02 =
+// Docstring regina::python::doc::Triangulation3::with02
+static constexpr const char with02[] =
 R"doc(If possible, returns the triangulation obtained by performing a 0-2
 move about the two specified triangles of this triangulation. If such
 a move is not allowed, or if such a move would violate any facet
@@ -4461,30 +4379,30 @@ move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
 Precondition:
     The given embeddings refer to edges of this triangulation.
 
-Parameter ``e0``:
+Parameter ``emb0``:
     an embedding of the common edge *e* of the two triangles about
     which to perform the move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     indicates one of the triangles about which to perform the move,
-    with respect to the edge embedding *e0*; this must be 2 or 3.
+    with respect to the edge embedding *emb0*; this must be 2 or 3.
 
-Parameter ``e1``:
+Parameter ``emb1``:
     another embedding of the edge *e*.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     indicates the other triangle about which to perform the move, with
-    respect to the edge embedding *e1*; this must be 2 or 3.
+    respect to the edge embedding *emb1*; this must be 2 or 3.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.
 
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::with02_2
-static const char *with02_2 =
+// Docstring regina::python::doc::Triangulation3::with02_2
+static constexpr const char with02_2[] =
 R"doc(If possible, returns the triangulation obtained by performing a 0-2
 move about the two specified triangles of this triangulation. If such
 a move is not allowed, or if such a move would violate any facet
@@ -4499,27 +4417,27 @@ move02(Edge<3>*, size_t, size_t).
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the common edge of the two triangles about which to perform the
     move.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     the number assigned to one of two triangles about which to perform
     the move.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the number assigned to the other triangle about which to perform
     the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.
 
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::with02_3
-static const char *with02_3 =
+// Docstring regina::python::doc::Triangulation3::with02_3
+static constexpr const char with02_3[] =
 R"doc(If possible, returns the triangulation obtained by performing a 0-2
 move about the two given triangles of this triangulation. If such a
 move is not allowed, or if such a move would violate any facet locks,
@@ -4534,29 +4452,29 @@ move02(Triangle<3>*, int, Triangle<3>*, int).
 Precondition:
     The given triangles are both triangles of this triangulation.
 
-Parameter ``t0``:
+Parameter ``tri0``:
     one of the two triangles about which to perform the move.
 
-Parameter ``e0``:
-    the edge at which *t0* meets the other triangle *t1*; this must be
-    0, 1 or 2.
+Parameter ``edge0``:
+    the edge at which *tri0* meets the other triangle *tri1*; this
+    must be 0, 1 or 2.
 
-Parameter ``t1``:
+Parameter ``tri1``:
     the other triangle about which to perform the move.
 
-Parameter ``e1``:
-    the edge at which *t1* meets the other triangle *t0*; this must be
-    0, 1 or 2.
+Parameter ``edge1``:
+    the edge at which *tri1* meets the other triangle *tri0*; this
+    must be 0, 1 or 2.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.
 
 Author:
     Alex He)doc";
 
-// Docstring regina::python::doc::Triangulation_::with21
-static const char *with21 =
+// Docstring regina::python::doc::Triangulation3::with21
+static constexpr const char with21[] =
 R"doc(If possible, returns the triangulation obtained by performing a 2-1
 move at the given end of the given edge of this triangulation. If such
 a move is not allowed, or if such a move would violate any simplex
@@ -4570,7 +4488,7 @@ move21().
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``edgeEnd``:
@@ -4579,11 +4497,11 @@ Parameter ``edgeEnd``:
     details on exactly what this means.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::with44
-static const char *with44 =
+// Docstring regina::python::doc::Triangulation3::with44
+static constexpr const char with44[] =
 R"doc(If possible, returns the triangulation obtained by performing a 4-4
 move about the given edge of this triangulation. If such a move is not
 allowed, or if such a move would violate any simplex and/or facet
@@ -4597,7 +4515,7 @@ move44().
 Precondition:
     The given edge is a edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Parameter ``axis``:
@@ -4606,11 +4524,11 @@ Parameter ``axis``:
     for details on exactly what this means.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::withCloseBook
-static const char *withCloseBook =
+// Docstring regina::python::doc::Triangulation3::withCloseBook
+static constexpr const char withCloseBook[] =
 R"doc(If possible, returns the triangulation obtained by performing a book
 closing move about the given edge of this triangulation. If such a
 move is not allowed, or if such a move would violate any facet locks,
@@ -4624,15 +4542,15 @@ see closeBook().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge about which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::withCollapseEdge
-static const char *withCollapseEdge =
+// Docstring regina::python::doc::Triangulation3::withCollapseEdge
+static constexpr const char withCollapseEdge[] =
 R"doc(If possible, returns the triangulation obtained by collapsing the
 given edge of this triangulation. If such a move is not allowed, or if
 such a move would violate any simplex and/or facet locks, then this
@@ -4646,15 +4564,15 @@ see collapseEdge().
 Precondition:
     The given edge is an edge of this triangulation.
 
-Parameter ``e``:
+Parameter ``edge``:
     the edge to collapse.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::withOpenBook
-static const char *withOpenBook =
+// Docstring regina::python::doc::Triangulation3::withOpenBook
+static constexpr const char withOpenBook[] =
 R"doc(If possible, returns the triangulation obtained by performing a book
 opening move about the given triangle of this triangulation. If such a
 move is not allowed, or if such a move would violate any facet locks,
@@ -4668,173 +4586,14 @@ see openBook().
 Precondition:
     The given triangle is a triangle of this triangulation.
 
-Parameter ``t``:
+Parameter ``triangle``:
     the triangle about which to perform the move.
 
 Returns:
-    The new triangulation obtained by performing the requested move,
+    the new triangulation obtained by performing the requested move,
     or no value if the requested move cannot be performed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::zeroTwoMove
-static const char *zeroTwoMove =
-R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
-about the two specified triangles of this triangulation.
-
-For more detail on 0-2 moves and when they can be performed, and for
-full details on what the arguments to this function mean, see
-move02(EdgeEmbedding<3>, int, EdgeEmbedding<3>, int).
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has02(). If you wish to both check and perform the move, call
-    move02().
-
-Precondition:
-    The two given edge embeddings both refer to the same edge, which
-    must be an edge of this triangulation.
-
-Parameter ``e0``:
-    an embedding of the common edge *e* of the two triangles about
-    which to perform the move.
-
-Parameter ``t0``:
-    indicates one of the triangles about which to perform the move,
-    with respect to the edge embedding *e0*; this must be 2 or 3.
-
-Parameter ``e1``:
-    another embedding of the edge *e*.
-
-Parameter ``t1``:
-    indicates the other triangle about which to perform the move, with
-    respect to the edge embedding *e1*; this must be 2 or 3.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.
-
-Author:
-    Alex He)doc";
-
-// Docstring regina::python::doc::Triangulation_::zeroTwoMove_2
-static const char *zeroTwoMove_2 =
-R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
-about the two specified triangles of this triangulation.
-
-For more detail on 0-2 moves and when they can be performed, and for
-full details on what the arguments to this function mean, see
-move02(Edge<3>*, size_t, size_t).
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has02(). If you wish to both check and perform the move, call
-    move02().
-
-Precondition:
-    The given edge is an edge of this triangulation.
-
-Parameter ``e``:
-    the common edge of the two triangles about which to perform the
-    move.
-
-Parameter ``t0``:
-    the number assigned to one of two triangles about which to perform
-    the move.
-
-Parameter ``t1``:
-    the number assigned to the other triangle about which to perform
-    the move.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.
-
-Author:
-    Alex He)doc";
-
-// Docstring regina::python::doc::Triangulation_::zeroTwoMove_3
-static const char *zeroTwoMove_3 =
-R"doc(Deprecated routine that tests for and optionally performs a 0-2 move
-about the two given triangles of this triangulation.
-
-For more detail on 0-2 moves and when they can be performed, and for
-full details on what the arguments to this function mean, see
-move02(Triangle<3>*, int, Triangle<3>*, int).
-
-This routine will always _check_ whether the requested move is legal
-and will not violate any facet locks (see Simplex<3>::lockFacet() for
-further details on facet locks). Note that this type of move can never
-violate a simplex lock, and so there is no need to check for those at
-all. If the move _is_ allowed, and if the argument *perform* is
-``True``, this routine will also _perform_ the move.
-
-.. deprecated::
-    If you just wish to test whether such a move is possible, call
-    has02(). If you wish to both check and perform the move, call
-    move02().
-
-Precondition:
-    The given triangles are both triangles of this triangulation.
-
-Parameter ``t0``:
-    one of the two triangles about which to perform the move.
-
-Parameter ``e0``:
-    the edge at which *t0* meets the other triangle *t1*; this must be
-    0, 1 or 2.
-
-Parameter ``t1``:
-    the other triangle about which to perform the move.
-
-Parameter ``e1``:
-    the edge at which *t1* meets the other triangle *t0*; this must be
-    0, 1 or 2.
-
-Parameter ``ignored``:
-    an argument that is ignored. In earlier versions of Regina this
-    argument controlled whether we check if the move can be performed;
-    however, now this check is done always.
-
-Parameter ``perform``:
-    ``True`` if we should actually perform the move, assuming the move
-    is allowed.
-
-Returns:
-    ``True`` if and only if the requested move could be performed.
-
-Author:
-    Alex He)doc";
-
-}
+}; // struct Triangulation3
 
 } // namespace regina::python::doc
 

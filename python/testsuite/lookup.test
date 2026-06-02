@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2025, Ben Burton
+# Copyright (c) 2007-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the census database lookup routines.
@@ -37,6 +37,30 @@ def search(sig):
 		print('  ' + h.db().desc() + '  -  ' + h.name())
 	print()
 
+def searchAs(objectType, sig):
+	print('SEARCH:', objectType, sig)
+	try:
+		hits = Census.lookupAs(objectType, sig)
+		print('Hits:', len(hits))
+		for h in hits:
+			print('  ' + h.db().desc() + '  -  ' + h.name())
+	except InvalidArgument:
+		print('Caught exception')
+	print()
+
 search('foo')
-search('cPcbbbiht')
-search('nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng')
+search('cV6cqb') # 2nd-gen triangulation
+search('cPcbbbiht') # 1st-gen triangulation
+search('nhpkp7wn5L5-YBairvzHzOOQc') # 2nd-gen triangulation
+search('nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng') # 1st-gen triangulation
+search('eputWe') # 2nd-gen knot
+search('eabcdbadcvbZa') # 1st-gen knot
+
+searchAs(Link, 'eputWe')
+searchAs(Triangulation3, 'eputWe')
+searchAs(Triangulation4, 'eputWe')
+
+searchAs(Link, 'cV6cqb')
+searchAs(Triangulation3, 'cV6cqb')
+searchAs(Triangulation4, 'cV6cqb')
+

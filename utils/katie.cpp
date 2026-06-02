@@ -4,7 +4,7 @@
  *  Builds a triangulation of a 3- or 4-manifold                          *
  *  from a decorated link diagram                                         *
  *                                                                        *
- *  Copyright (c) 2021-2025, Rhuaidi Antonio Burke                        *
+ *  Copyright (c) 2021-2026, Rhuaidi Antonio Burke                        *
  *  For further details contact Rhuaidi Burke (r.antonio.burke@gmail.com).*
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -862,7 +862,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 int main(int argc, char* argv[]) {
     
     int dimFlag = 4; // Default to build a 4-manifold.
-    bool outputGraph = false; // Default to ouptut an isomorphism signature.
+    bool outputGraph = false; // Default to output an isomorphism signature.
     // bool realBdry = false; // Default to build closed/ideal triangulation.
     
     // Check for standard arguments:
@@ -1740,7 +1740,7 @@ int main(int argc, char* argv[]) {
             
             std::clog << "\r " << std::endl;
             std::clog << "\rHere is the isomorphism signature:\n" << std::flush;
-            std::cout << fourTri.isoSig() << "\n";
+            std::cout << fourTri.neoSig() << "\n";
         }
         else {
             std::clog << "\rHere is the edge list of the coloured graph:\n" << std::flush;
@@ -1767,7 +1767,7 @@ int main(int argc, char* argv[]) {
             
             std::clog << "\r " << std::endl;
             std::clog << "\rHere is the isomorphism signature:\n" << std::flush;
-            std::cout << threeTri.isoSig() << "\n";
+            std::cout << threeTri.neoSig() << "\n";
         }
         else {
             std::clog << "\rHere is the edge list of the coloured graph:\n" << std::flush;

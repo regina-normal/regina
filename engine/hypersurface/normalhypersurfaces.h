@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -672,12 +672,18 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                 /**
                  * The preincrement operator.
                  *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
                  * \return a reference to this iterator after the increment.
                  */
                 VectorIterator& operator ++();
 
                 /**
                  * The postincrement operator.
+                 *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
                  *
                  * \return a copy of this iterator before the
                  * increment took place.
@@ -687,12 +693,18 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                 /**
                  * The predecrement operator.
                  *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `NormalHypersurfaces::beginVectors()`).
+                 *
                  * \return a reference to this iterator after the decrement.
                  */
                 VectorIterator& operator --();
 
                 /**
                  * The postdecrement operator.
+                 *
+                 * \pre This iterator is decrementable (in particular, it is
+                 * not the same as `NormalHypersurfaces::beginVectors()`).
                  *
                  * \return a copy of this iterator before the
                  * decrement took place.
@@ -923,6 +935,8 @@ void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
  * can only happen in certain coordinate systems, and for all such coordinate
  * systems this is explicitly described in the HyperCoords enum documentation.
  *
+ * \pydocname{makeMatchingEquations4}
+ *
  * \exception UnsolvedCase The matching equations could not be created for the
  * given triangulation in the given coordinate system, due to an error that was
  * "genuinely" unforseeable.  Again this can only happen in certain coordinate
@@ -948,6 +962,8 @@ MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
  * hypersurfaces in the given coordinate system (i.e., when the default flag
  * HyperList::EmbeddedOnly is used).  They will not be used when the enumeration
  * allows for immersed and/or singular hypersurfaces.
+ *
+ * \pydocname{makeEmbeddedConstraints4}
  *
  * \param triangulation the triangulation upon which these validity constraints
  * will be based.

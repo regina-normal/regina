@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/polynomial.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Polynomial;
 
@@ -43,7 +45,7 @@ template <regina::CoefficientDomain T>
 void addPolynomialOver(pybind11::module_& m, const char* className) {
     RDOC_SCOPE_BEGIN(Polynomial)
 
-    auto c = pybind11::class_<Polynomial<T>>(m, className, rdoc_scope)
+    auto c = pybind11::class_<Polynomial<T>>(m, className, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Polynomial<T>&>(), rdoc::__copy)
         .def(pybind11::init([](size_t exp) { // deprecated
@@ -53,7 +55,7 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         }), rdoc::__init)
         .def(pybind11::init([](const std::vector<T>& coeffs) {
             return new Polynomial<T>(coeffs.begin(), coeffs.end());
-        }), pybind11::arg("coefficients"), rdoc::__init_2)
+        }), "coefficients"_a, rdoc::__init_2)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Polynomial<T>::*)()>(
@@ -62,7 +64,7 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         .def("init", &Polynomial<T>::initExp, rdoc::init_2) // deprecated
         .def("init", [](Polynomial<T>& p, const std::vector<T>& c) {
             p.init(c.begin(), c.end());
-        }, pybind11::arg("coefficients"), rdoc::init_3)
+        }, "coefficients"_a, rdoc::init_3)
         .def("degree", &Polynomial<T>::degree, rdoc::degree)
         .def("isZero", &Polynomial<T>::isZero, rdoc::isZero)
         .def("isMonic", &Polynomial<T>::isMonic, rdoc::isMonic)
@@ -90,14 +92,14 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
         .def(pybind11::self /= pybind11::self, rdoc::__idiv_2)
-        .def(pybind11::self * T(), rdoc_global::__mul)
-        .def(T() * pybind11::self, rdoc_global::__mul_2)
-        .def(pybind11::self / T(), rdoc_global::__div)
-        .def(pybind11::self + pybind11::self, rdoc_global::__add)
-        .def(pybind11::self - pybind11::self, rdoc_global::__sub_2)
-        .def(pybind11::self * pybind11::self, rdoc_global::__mul_3)
-        .def(pybind11::self / pybind11::self, rdoc_global::__div_2)
-        .def(- pybind11::self, rdoc_global::__sub)
+        .def(pybind11::self * T(), rdoc::__mul)
+        .def(T() * pybind11::self, rdoc::__mul_2)
+        .def(pybind11::self / T(), rdoc::__div)
+        .def(pybind11::self + pybind11::self, rdoc::__add)
+        .def(pybind11::self - pybind11::self, rdoc::__sub_2)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_3)
+        .def(pybind11::self / pybind11::self, rdoc::__div_2)
+        .def(- pybind11::self, rdoc::__sub)
         .def("divisionAlg", overload_cast<const Polynomial<T>&>(
             &Polynomial<T>::divisionAlg, pybind11::const_),
             rdoc::divisionAlg)
@@ -108,8 +110,7 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
     }
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<Polynomial<T>>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Polynomial<T>, rdoc>(m);
 
     RDOC_SCOPE_END
 }

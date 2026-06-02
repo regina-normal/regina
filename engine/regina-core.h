@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -405,7 +405,7 @@ inline constexpr Unprotected unprotected;
  *
  * This type is declared but never defined.
  *
- * For an example of its use, see TriangulationTraits (where it acts as a
+ * For an example of its use, see SafeTriangulation (where it acts as a
  * placeholder for non-existent classes that would otherwise cause a compile
  * error).
  *

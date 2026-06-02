@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,7 +50,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) :
 
 Triangulation<3>::Triangulation(const std::string& description) {
     try {
-        *this = fromIsoSig(description);
+        *this = fromSig(description);
         return;
     } catch (const InvalidArgument&) {
     }
@@ -161,7 +161,7 @@ long Triangulation<3>::eulerCharManifold() const {
     // and truncate those unwanted bits also.
     if (! valid_) {
         for (Vertex<3>* v : vertices())
-            if (v->linkType() == Vertex<3>::Link::Invalid)
+            if (! v->isValid())
                 ans += v->linkEulerChar() - 1;
         for (Edge<3>* e : edges())
             if (! e->isValid())
@@ -223,7 +223,7 @@ Triangulation<3>::Triangulation(const Triangulation<3>& src, bool cloneProps,
 std::string Triangulation<3>::snapPea() const {
     std::ostringstream out;
     snapPea(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Triangulation<3>::snapPea(std::ostream& out) const {
@@ -286,30 +286,30 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
     }
 }
 
-bool Triangulation<3>::saveSnapPea(const char* filename) const {
+void Triangulation<3>::saveSnapPea(const char* filename) const {
     // Sanity checks.
     // Although snapPea() will also check these conditions, we need to
     // check them now so if we fail then we do so before the file is opened.
     if ((! isValid()) || hasBoundaryTriangles() || simplices_.empty())
-        return false;
+        throw NotImplemented("SnapPea exports are only available "
+            "for valid, non-empty triangulations with no boundary triangles");
 
     std::ofstream out(filename);
     if (!out)
-        return false;
+        throw FileError("Could not write to the given file");
     snapPea(out);
-    return true;
 }
 
 std::string Triangulation<3>::recogniser() const {
     std::ostringstream out;
     recogniser(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 std::string Triangulation<3>::recognizer() const {
     std::ostringstream out;
     recogniser(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Triangulation<3>::recogniser(std::ostream& out) const {
@@ -354,19 +354,19 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
     out << "end" << std::endl;
 }
 
-bool Triangulation<3>::saveRecogniser(const char* filename) const {
+void Triangulation<3>::saveRecogniser(const char* filename) const {
     // Sanity checks.
     // Although recogniser() will also check these conditions, we need to
     // check them now so if we fail then we do so before the file is opened.
     if ((! isValid()) || hasBoundaryTriangles())
-        return false;
+        throw NotImplemented("Recogniser exports are only available "
+            "for valid triangulations with no boundary triangles");
 
     // Write to file or stdout as appropriate.
     std::ofstream out(filename);
     if (! out)
-        return false;
+        throw FileError("Could not write to the given file");
     recogniser(out);
-    return true;
 }
 
 SnapPeaTriangulation* Triangulation<3>::isSnapPea() {

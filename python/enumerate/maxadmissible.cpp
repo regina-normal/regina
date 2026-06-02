@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,19 +35,20 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/maxadmissible.h"
 
+using namespace pybind11::literals;
+
 using regina::MaxAdmissible;
 using regina::VectorInt;
 
 void addMaxAdmissible(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(MaxAdmissible)
 
-    auto c = pybind11::class_<MaxAdmissible>(m, "MaxAdmissible", rdoc_scope)
+    auto c = pybind11::class_<MaxAdmissible>(m, "MaxAdmissible", rdoc::__class)
         .def_static("enumerate", [](const std::vector<VectorInt>& rays,
                 const regina::ValidityConstraints& c) {
             return MaxAdmissible::enumerate<regina::Bitmask>(
                 rays.begin(), rays.end(), c);
-        }, pybind11::arg("extremalRays"), pybind11::arg("constraints"),
-            rdoc::enumerate)
+        }, "extremalRays"_a, "constraints"_a, rdoc::enumerate)
     ;
     regina::python::no_eq_static(c);
 

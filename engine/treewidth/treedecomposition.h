@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1313,11 +1313,11 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * that are passed must be comparable to each other; otherwise this
          * routine might throw an exception.
          *
-         * \param costSame An array of size() elements giving an
+         * \param costSame an array of size() elements giving an
          * estimated cost of preserving each child-parent connection;
-         * \param costReverse An array of size() elements giving an
+         * \param costReverse an array of size() elements giving an
          * estimated cost of reversing each child-parent connection;
-         * \param costRoot An array of size() elements giving an
+         * \param costRoot an array of size() elements giving an
          * additional estimated cost for each bag being the new root.
          * This array may be \c null.
          */

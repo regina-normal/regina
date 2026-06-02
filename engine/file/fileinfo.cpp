@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,32 +33,29 @@
 #include <fstream>
 #include <iostream>
 #include "file/fileinfo.h"
+#include "utilities/exception.h"
 #include "utilities/zstr.h"
 
 namespace regina {
-
-#define STARTS_FALSE 0
-#define STARTS_TRUE 1
-#define STARTS_COULD_NOT_OPEN 2
 
 namespace {
     /**
      * Does the given file begin with the given set of characters?
      *
-     * Returns STARTS_FALSE, STARTS_TRUE or STARTS_COULD_NOT_OPEN.
+     * This throws a FileError if the given file cannot be read.
      */
-    int fileStartsWith(const char* file, const char* prefix) {
+    bool fileStartsWith(const char* file, const char* prefix) {
         FILE* f = fopen(file, "rb");
         if (! f)
-            return STARTS_COULD_NOT_OPEN;
+            throw FileError("Could not open the given file");
 
-        int ans = STARTS_FALSE;
+        bool ans = false;
         size_t len = strlen(prefix);
         char* buf = new char[len];
 
         if (fread(buf, sizeof(char), len, f) == len)
             if (strncmp(buf, prefix, len) == 0)
-                ans = STARTS_TRUE;
+                ans = true;
 
         delete[] buf;
         fclose(f);
@@ -66,19 +63,15 @@ namespace {
     }
 }
 
-std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
+FileInfo FileInfo::identify(std::string idPathname) {
     // Check for an XML file.
-    int starts = fileStartsWith(idPathname.c_str(), "<?xml");
-    if (starts == STARTS_COULD_NOT_OPEN)
-        return std::nullopt;
-
     bool compressed = false;
-    if (starts != STARTS_TRUE) {
+    if (! fileStartsWith(idPathname.c_str(), "<?xml")) {
         // Try for compressed XML.
         std::ifstream file(idPathname.c_str(),
             std::ios_base::in | std::ios_base::binary);
         if (! file)
-            return std::nullopt;
+            throw FileError("Could not open the given file");
         try {
             zstr::istream in(file);
 
@@ -87,9 +80,9 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
             if ((! in.eof()) && (s == "<?xml"))
                 compressed = true;
             else
-                return std::nullopt;
+                throw InvalidInput("The given file does not appear to be XML");
         } catch (const zstr::Exception& e) {
-            return std::nullopt;
+            throw InvalidInput("An error occurred during file decompression");
         }
     }
 
@@ -98,16 +91,13 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     ans.pathname_ = std::move(idPathname);
     ans.format_ = FileFormat::Current;
 
-    // Note: we cannot use the idPathname argument from here on, since we moved its data out.
-    // We must use ans.pathname_ instead.
-
-    // Make it an invalid file until we know otherwise.
-    ans.invalid_ = true;
+    // Note: we cannot use the idPathname argument from here on, since we moved
+    // its data out.  We must use ans.pathname_ instead.
 
     std::ifstream file(ans.pathname_.c_str(),
         std::ios_base::in | std::ios_base::binary);
     if (! file)
-        return ans;
+        throw FileError("Could not open the given file");
 
     try {
         zstr::istream in(file); // Can handle compressed or uncompressed.
@@ -116,10 +106,10 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
 
         // Start by slurping in the opening "<?xml".
         if (in.eof())
-            return ans;
+            throw InvalidInput("Missing XML file prefix");
         in >> s;
         if (s != "<?xml")
-            return ans;
+            throw InvalidInput("Invalid XML file prefix");
 
         // Hunt for the matching "...?>".
         // Try skipping through several strings in case there are extra
@@ -128,7 +118,7 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
         int i;
         for (i = 0; ; i++) {
             if (in.eof())
-                return ans;
+                throw InvalidInput("Incomplete XML file prefix");
             in >> s;
             if (s.length() >= 2 &&
                     s[s.length() - 2] == '?' &&
@@ -140,40 +130,37 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
             // spec supports only version, encoding and standalone arguments
             // at present.
             if (i >= 10)
-                return ans;
+                throw InvalidInput("Overlong XML file prefix");
         }
 
         // The next thing we see should be the <reginadata ...> element.
         if (in.eof())
-            return ans;
+            throw InvalidInput("Missing root Regina XML element");
         in >> s;
         if (s == "<regina")
             ans.format_ = FileFormat::XmlGen3;
         else if (s == "<reginadata")
             ans.format_ = FileFormat::XmlGen2;
         else
-            return ans;
+            throw InvalidInput("Invalid root Regina XML element");
 
         // Next should be the engine version.
         if (in.eof())
-            return ans;
+            throw InvalidInput("Missing engine version");
         in >> s;
-        if (s.length() < 8)
-            return ans;
-        if (s.substr(0, 8).compare("engine=\"") != 0)
-            return ans;
+        if (s.length() < 8 || s.substr(0, 8).compare("engine=\"") != 0)
+            throw InvalidInput("Invalid engine version");
 
         // We've found the engine attribute; extract its value.
         std::string::size_type pos = s.find('"', 8);
         if (pos == std::string::npos)
-            return ans;
+            throw InvalidInput("Malformed engine version");
         ans.engine_ = s.substr(8, pos - 8);
     } catch (const zstr::Exception& e) {
-        return ans;
+        throw InvalidInput("An error occurred during file decompression");
     }
 
     // That's as far as we need to go; we've extracted everything we want.
-    ans.invalid_ = false;
     return ans;
 }
 
@@ -188,12 +175,7 @@ void FileInfo::writeTextLong(std::ostream& out) const {
     out << "Regina data: " << formatDescription();
     if (compressed_)
         out << ", compressed";
-    out << '\n';
-
-    if (invalid_)
-        out << "File contains invalid metadata.\n";
-    else
-        out << "Engine " << engine_ << '\n';
+    out << "\nEngine " << engine_ << '\n';
 }
 
 } // namespace regina

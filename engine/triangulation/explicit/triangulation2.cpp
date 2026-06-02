@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,17 +35,26 @@
 #include "triangulation/detail/triangulation-impl.h"
 #include "triangulation/dim2.h"
 
-namespace regina::detail {
+namespace regina {
 
-template std::string TriangulationBase<2>::isoSigFrom
-    <IsoSigPrintable<2>>(size_t, const Perm<3>&, Isomorphism<2>*) const;
-template std::string TriangulationBase<2>::isoSig<
-    IsoSigClassic<2>, IsoSigPrintable<2>>() const;
+template std::string IsoSigBinary::asString<2>(const ByteSequence&);
+
+namespace detail {
+
+template std::string
+    TriangulationBase<2>::isoSig<IsoSigPrintable, IsoSigClassic<2>>() const;
 template std::pair<std::string, Isomorphism<2>>
-    TriangulationBase<2>::isoSigDetail<
-    IsoSigClassic<2>, IsoSigPrintable<2>>() const;
-template Triangulation<2> TriangulationBase<2>::fromIsoSig(const std::string&);
-template size_t TriangulationBase<2>::isoSigComponentSize(const std::string&);
+    TriangulationBase<2>::isoSigDetail<IsoSigPrintable, IsoSigClassic<2>>()
+    const;
+
+template std::string
+    TriangulationBase<2>::neoSig<IsoSigPrintable,
+    IsoSigRidgeDegrees<2>>(bool) const;
+template std::pair<std::string, Isomorphism<2>>
+    TriangulationBase<2>::neoSigDetail<IsoSigPrintable,
+    IsoSigRidgeDegrees<2>>(bool) const;
+
+template Triangulation<2> TriangulationBase<2>::fromSig(const std::string&);
 
 template AbelianGroup TriangulationBase<2>::homology<1>() const;
 
@@ -65,7 +74,7 @@ template void TriangulationBase<2>::swapBaseData(TriangulationBase<2>&);
 
 template bool TriangulationBase<2>::internalPachner(Face<2, 0>*, bool, bool);
 template bool TriangulationBase<2>::internalPachner(Face<2, 1>*, bool, bool);
-template bool TriangulationBase<2>::internalPachner(Face<2, 2>*, bool, bool);
+template bool TriangulationBase<2>::internalPachner(Simplex<2>*, bool, bool);
 
 template bool TriangulationBase<2>::internal20(Face<2, 0>*, bool, bool);
 
@@ -84,4 +93,4 @@ template bool TriangulationBase<2>::makeIdeal();
 template std::string TriangulationBase<2>::source(Language) const;
 template void TriangulationBase<2>::writeDot(std::ostream&, bool) const;
 
-} // namespace regina::detail
+} } // namespace regina::detail

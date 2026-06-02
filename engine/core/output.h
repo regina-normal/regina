@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -238,17 +238,17 @@ struct Output<T, true> {
     inline std::string str() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out, false);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string utf8() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out, true);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string detail() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextLong(out);
-        return out.str();
+        return std::move(out).str();
     }
 };
 
@@ -257,17 +257,17 @@ struct Output<T, false> {
     inline std::string str() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string utf8() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextShort(out);
-        return out.str();
+        return std::move(out).str();
     }
     inline std::string detail() const {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextLong(out);
-        return out.str();
+        return std::move(out).str();
     }
 };
 

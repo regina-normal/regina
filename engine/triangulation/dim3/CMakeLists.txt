@@ -32,12 +32,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    component3.h
-    edge3.h
     homologicaldata.h
-    tetrahedron3.h
-    triangle3.h
     triangulation3.h
-    vertex3.h
     DESTINATION "${PKGINCLUDEDIR}/triangulation/dim3" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

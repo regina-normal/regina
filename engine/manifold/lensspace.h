@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,7 @@
 #endif
 
 #include "regina-core.h"
-#include "manifold.h"
+#include "manifold/manifold.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -54,7 +54,7 @@ namespace regina {
  * take a generator \a g of `H_1` and evaluate the torsion linking form on it,
  * then `<g,g> = [± r² q/p]` in Q/Z where \a r is an integer.
  *
- * All optional Manifold routines are implemented for this class.
+ * All optional Manifold<3> routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
@@ -63,7 +63,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class LensSpace : public Manifold {
+class LensSpace : public Manifold<3> {
     private:
         unsigned long p_;
             /**< The first parameter of the lens space. */
@@ -143,7 +143,7 @@ class LensSpace : public Manifold {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the other representation to compare this with.
-         * \return A result that indicates how this and the given lens space
+         * \return a result that indicates how this and the given lens space
          * representation should be ordered with respect to each other.
          */
         std::strong_ordering operator <=> (const LensSpace& rhs) const;

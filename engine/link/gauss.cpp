@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -143,9 +143,11 @@ bool Link::parseOrientedGaussTerm(const std::string& s,
     else
         return false;
 
-    if (! valueOf(s.substr(2), crossing))
+    try {
+        crossing = parse<size_t>(s.substr(2));
+    } catch (const InvalidArgument&) {
         return false;
-
+    }
     return (crossing > 0 && crossing <= nCross);
 }
 
@@ -169,16 +171,18 @@ bool Link::parseSignedGaussTerm(const std::string& s,
     else
         return false;
 
-    if (! valueOf(s.substr(1, len - 2), crossing))
+    try {
+        crossing = parse<size_t>(s.substr(1, len - 2));
+    } catch (const InvalidArgument&) {
         return false;
-
+    }
     return (crossing > 0 && crossing <= nCross);
 }
 
 std::string Link::gauss() const {
     std::ostringstream out;
     gauss(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::gauss(std::ostream& out) const {
@@ -231,7 +235,7 @@ std::vector<int> Link::gaussData() const {
 std::string Link::orientedGauss() const {
     std::ostringstream out;
     orientedGauss(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::orientedGauss(std::ostream& out) const {
@@ -314,7 +318,7 @@ std::vector<std::string> Link::orientedGaussData() const {
 std::string Tangle::orientedGauss() const {
     std::ostringstream out;
     orientedGauss(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Tangle::orientedGauss(std::ostream& out) const {
@@ -350,7 +354,7 @@ Tangle Tangle::fromOrientedGauss(const std::string& s) {
 std::string Link::signedGauss() const {
     std::ostringstream out;
     signedGauss(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void Link::signedGauss(std::ostream& out) const {

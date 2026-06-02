@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/treeconstraint.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 
 using regina::Integer;
@@ -53,11 +55,11 @@ using regina::LPConstraintEulerPositive;
 using regina::LPConstraintEulerZero;
 using regina::LPConstraintNonSpun;
 
-template <regina::LPConstraint Constraint>
-void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
+template <regina::LPConstraint Constraint, regina::python::ClassDocType Docs>
+void addLPConstraint(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(LPConstraintAPI)
 
-    auto c = pybind11::class_<Constraint>(m, name, doc)
+    auto c = pybind11::class_<Constraint>(m, name, Docs::__class)
         .def_readonly_static("constraints", &Constraint::constraints)
         .def_readonly_static("octAdjustment", &Constraint::octAdjustment)
         .def_static("addRows", [](const Triangulation<3>& tri,
@@ -82,7 +84,7 @@ void addLPConstraint(pybind11::module_& m, const char* name, const char* doc) {
                     ans[i].push_back(col[j].extra[i]);
             }
             return ans;
-        }, pybind11::arg("tri"), pybind11::arg("columnPerm"), rdoc::addRows)
+        }, "tri"_a, "columnPerm"_a, rdoc::addRows)
         .def_static("verify", overload_cast<const regina::NormalSurface&>(
             &Constraint::verify), rdoc::verify)
         .def_static("verify", overload_cast<const regina::AngleStructure&>(
@@ -140,29 +142,30 @@ void addTreeConstraint(pybind11::module_& m) {
     // the class-specific doc namespaces are unavailable.
     RDOC_SCOPE_BEGIN_MAIN
 
-    addLPConstraint<LPConstraintNone>(m, "LPConstraintNone",
-        rdoc::LPConstraintNone);
-    addLPConstraint<LPConstraintEulerPositive>(m, "LPConstraintEulerPositive",
-        rdoc::LPConstraintEulerPositive);
-    addLPConstraint<LPConstraintEulerZero>(m, "LPConstraintEulerZero",
-        rdoc::LPConstraintEulerZero);
-    addLPConstraint<LPConstraintNonSpun>(m, "LPConstraintNonSpun",
-        rdoc::LPConstraintNonSpun);
+    addLPConstraint<LPConstraintNone, rdoc::LPConstraintNone>(
+        m, "LPConstraintNone");
+    addLPConstraint<LPConstraintEulerPositive, rdoc::LPConstraintEulerPositive>(
+        m, "LPConstraintEulerPositive");
+    addLPConstraint<LPConstraintEulerZero, rdoc::LPConstraintEulerZero>(
+        m, "LPConstraintEulerZero");
+    addLPConstraint<LPConstraintNonSpun, rdoc::LPConstraintNonSpun>(
+        m, "LPConstraintNonSpun");
 
     // BanNone does not have its own constructor documentation, since it
     // behaves identically to the base class constructor.
-    addBanConstraint<BanNone>(m, "BanNone", rdoc::BanNone,
-        rdoc::BanConstraintBase_::__init);
+    addBanConstraint<BanNone>(m, "BanNone", rdoc::BanNone::__class,
+        rdoc::BanConstraintBase::__init);
 
     RDOC_SCOPE_SWITCH(BanBoundary)
-    addBanConstraint<BanBoundary>(m, "BanBoundary", rdoc_scope, rdoc::__init);
+    addBanConstraint<BanBoundary>(m, "BanBoundary", rdoc::__class,
+        rdoc::__init);
 
     RDOC_SCOPE_SWITCH(BanEdge)
-    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge", rdoc_scope,
+    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge", rdoc::__class,
         rdoc::__init);
 
     RDOC_SCOPE_SWITCH(BanTorusBoundary)
-    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary", rdoc_scope,
+    addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary", rdoc::__class,
         rdoc::__init);
 
     RDOC_SCOPE_END

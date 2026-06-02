@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::readOrb
-static const char *readOrb =
+inline constexpr const char readOrb[] =
 R"doc(Reads a triangulation from the given Orb / Casson file. A new
 triangulation packet will be returned.
 
@@ -20,8 +20,10 @@ The packet label of the new triangulation will be the manifold name
 read from the second line of the Orb / Casson file. The first line of
 the Orb / Casson file must simply be: ``% orb``
 
-If the file could not be read or if the data was not in the correct
-format, ``None`` will be returned.
+If the file cannot be read or if it is not in the correct format, this
+routine will throw an exception. This is a change in behaviour as of
+Regina 8.0: older versions of Regina (≤ 7.x) returned ``None``
+instead.
 
 Internationalisation:
     This routine makes no assumptions about the character encoding
@@ -37,7 +39,13 @@ Returns:
     Casson file, or ``None`` on error.
 
 Author:
-    Ryan Budney, also with code from Damien Heard)doc";
+    Ryan Budney, also with code from Damien Heard
+
+Exception ``FileError``:
+    An error occurred whilst reading the given file.
+
+Exception ``InvalidInput``:
+    The given file does not appear to be a valid Orb / Casson file.)doc";
 
 } // namespace regina::python::doc
 

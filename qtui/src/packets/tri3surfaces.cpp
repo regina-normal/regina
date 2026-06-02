@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,10 +29,9 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "census/census.h"
 #include "manifold/handlebody.h"
 #include "snappea/snappeatriangulation.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -40,6 +39,7 @@
 #include "patiencedialog.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "packets/censuswidget.h"
 
 #include <QApplication>
 #include <QClipboard>
@@ -52,11 +52,6 @@
 
 #define HAKEN_AUTO_CALC_ADJUSTMENT 2
 #define STRICT_AUTO_CALC_THRESHOLD 50
-
-// Currently the largest isosig in the census tables starts with 'G'.
-// This represents 32 tetrahedra.
-// We will be more conservative here.
-#define MAX_CENSUS_TRIANGULATION_SIZE 50
 
 using regina::Packet;
 
@@ -300,26 +295,20 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
     manifold->setWhatsThis(msg);
     layout->addLayout(mfdArea);
 
-    QBoxLayout* censusArea = new QHBoxLayout();
-    census = new QLabel();
-    census->setAlignment(Qt::AlignCenter);
-    census->setWordWrap(true);
-    censusArea->addWidget(census, 1);
-    msg = tr("<qt>Indicates whether this triangulation appears in any of "
-        "Regina's in-built census databases.  If so, the name of the "
-        "triangulation and/or the underlying 3-manifold will be shown.</qt>");
-    census->setWhatsThis(msg);
-    layout->addLayout(censusArea);
+    census = new CensusWidget<regina::Triangulation<3>>(tri_, ui);
+    census->setWhatsThis(tr("<qt>Indicates whether this triangulation "
+        "appears in any of Regina's in-built census databases.  "
+        "If so, the name of the triangulation and/or the underlying "
+        "3-manifold will be shown.</qt>"));
+    layout->addWidget(census);
 
     layout->addStretch(2);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    // If the automatic calculation threshold changes, we should refresh.
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri3SurfacesUI::refresh);
 
     manifold->setContextMenuPolicy(Qt::CustomContextMenu);
-    census->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(census, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(contextCensus(const QPoint&)));
     connect(manifold, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextManifold(const QPoint&)));
 }
@@ -342,11 +331,15 @@ void Tri3SurfacesUI::refresh() {
     name.clear();
 
     // Begin with the combinatorial recognition.
-    auto std = regina::StandardTriangulation::recognise(*tri_);
+    auto std = regina::StandardSubcomplex<3>::recognise(*tri_);
     if (std) {
         auto mfd = std->manifold();
         if (mfd) {
-            isHyp = mfd->isHyperbolic();
+            try {
+                isHyp = mfd->isHyperbolic();
+            } catch (const regina::NotImplemented&) {
+                // No change to what we currently know regarding isHyp.
+            }
             name = mfd->name();
 
             // If we have the 3-sphere, 3-ball or solid torus, then
@@ -670,30 +663,7 @@ void Tri3SurfacesUI::refresh() {
             "Not recognised</qt>"));
     }
 
-    if (tri_->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        hits = regina::Census::lookup(tri_->isoSig());
-        if (hits.empty()) {
-            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
-        } else if (hits.size() == 1) {
-            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
-                .arg(QString(hits.front().name().c_str()).toHtmlEscaped()));
-        } else {
-            QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
-                .arg(hits.size());
-            for (const auto& hit : hits) {
-                ans += "<br>";
-                ans += QString(hit.name().c_str()).toHtmlEscaped();
-            }
-            ans += "</qt>";
-            census->setText(ans);
-        }
-    } else {
-        hits.clear();
-
-        // The triangulation is too large to be found in the census.
-        // Avoid the overhead of calling isoSig().
-        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
-    }
+    census->refresh();
 }
 
 void Tri3SurfacesUI::calculateZeroEff() {
@@ -826,33 +796,7 @@ void Tri3SurfacesUI::contextManifold(const QPoint& pos) {
     m.exec(manifold->mapToGlobal(pos));
 }
 
-void Tri3SurfacesUI::contextCensus(const QPoint& pos) {
-    if (hits.empty())
-        return;
-
-    QMenu m(tr("Context menu"), census);
-    QAction a("Copy census", census);
-    connect(&a, SIGNAL(triggered()), this, SLOT(copyCensus()));
-    m.addAction(&a);
-    m.exec(census->mapToGlobal(pos));
-}
-
 void Tri3SurfacesUI::copyManifold() {
     QApplication::clipboard()->setText(name.c_str());
-}
-
-void Tri3SurfacesUI::copyCensus() {
-    QString ans;
-
-    if (hits.size() == 1) {
-        ans = hits.front().name().c_str();
-    } else {
-        for (const auto& hit : hits) {
-            ans += hit.name().c_str();
-            ans += "\n";
-        }
-    }
-
-    QApplication::clipboard()->setText(ans);
 }
 

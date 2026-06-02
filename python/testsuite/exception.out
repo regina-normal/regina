@@ -9,7 +9,7 @@ Caught FileError
 Caught NoSolution
 0.5
 Caught UnsolvedCase
-efHkadcdrsn.aaaq
+eNJIJ-rwl.aaac
 Caught LockViolation
 32768
 Caught IntegerOverflow
@@ -31,7 +31,7 @@ Caught FileError as RuntimeError
 Caught NoSolution as RuntimeError
 0.5
 Caught UnsolvedCase as RuntimeError
-efHkadcdrsn.aaaq
+eNJIJ-rwl.aaac
 Caught LockViolation as RuntimeError
 32768
 Caught IntegerOverflow as RuntimeError
@@ -53,7 +53,7 @@ Caught FileError as ReginaException
 Caught NoSolution as ReginaException
 0.5
 Caught UnsolvedCase as ReginaException
-efHkadcdrsn.aaaq
+eNJIJ-rwl.aaac
 Caught LockViolation as ReginaException
 32768
 Caught IntegerOverflow as ReginaException

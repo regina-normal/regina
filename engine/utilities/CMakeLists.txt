@@ -2,8 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  boolset.cpp
   base64.cpp
+  boolset.cpp
+  bytesequence.cpp
   i18nutils.cpp
   memstream.cpp
   osutils.cpp
@@ -30,6 +31,7 @@ if (${REGINA_INSTALL_DEV})
     bitmanip.h
     bitmask.h
     boolset.h
+    bytesequence.h
     exception.h
     fixedarray.h
     flags.h

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,12 +37,13 @@
 #include "link/link.h"
 #include "treewidth/treedecomposition-impl.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 #include "../docstrings/treewidth/treedecomposition.h"
+
+using namespace pybind11::literals;
 
 using pybind11::overload_cast;
 using regina::TreeBag;
@@ -53,10 +54,10 @@ void addTreeDecomposition(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::TreeDecompositionAlg>(m,
-            "TreeDecompositionAlg", "enum.Enum", rdoc_scope)
+            "TreeDecompositionAlg", "enum.Enum", rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
     pybind11::enum_<regina::TreeDecompositionAlg>(m, "TreeDecompositionAlg",
-            rdoc_scope)
+            rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -78,9 +79,9 @@ void addTreeDecomposition(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::BagComparison>(m, "BagComparison",
-            "enum.Enum", rdoc_scope)
+            "enum.Enum", rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::BagComparison>(m, "BagComparison", rdoc_scope)
+    pybind11::enum_<regina::BagComparison>(m, "BagComparison", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -103,9 +104,9 @@ void addTreeDecomposition(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::NiceType>(m, "NiceType", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::NiceType>(m, "NiceType", rdoc_scope)
+    pybind11::enum_<regina::NiceType>(m, "NiceType", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -123,7 +124,7 @@ void addTreeDecomposition(pybind11::module_& m) {
     m.attr("NICE_JOIN") = regina::NiceType::Join;
     RDOC_SCOPE_SWITCH(TreeBag)
 
-    auto tb = pybind11::class_<TreeBag>(m, "TreeBag", rdoc_scope)
+    auto tb = pybind11::class_<TreeBag>(m, "TreeBag", rdoc::__class)
         .def("size", &TreeBag::size, rdoc::size)
         .def("element", &TreeBag::element, rdoc::element)
         .def("contains", &TreeBag::contains, rdoc::contains)
@@ -151,7 +152,7 @@ void addTreeDecomposition(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(TreeDecomposition)
 
     auto td = pybind11::class_<TreeDecomposition>(m, "TreeDecomposition",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<const regina::TreeDecomposition&>(), rdoc::__copy)
         .def(pybind11::init<const regina::Triangulation<2>&>(), rdoc::__init)
         .def(pybind11::init<const regina::Triangulation<2>&,
@@ -250,7 +251,7 @@ void addTreeDecomposition(pybind11::module_& m) {
             t.reroot(costSame.data(), costReverse.data(), costRoot.data());
         }, rdoc::reroot_2)
         .def("dot", &TreeDecomposition::dot,
-            pybind11::arg("dark") = false, rdoc::dot)
+            "dark"_a = false, rdoc::dot)
         .def("pace", &TreeDecomposition::pace, rdoc::pace)
         .def_static("fromPACE",
             overload_cast<const std::string&>(&TreeDecomposition::fromPACE),
@@ -258,8 +259,7 @@ void addTreeDecomposition(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(td);
     regina::python::add_eq_operators(td, rdoc::__eq);
-
-    regina::python::add_global_swap<TreeDecomposition>(m, rdoc::global_swap);
+    regina::python::add_global_swap<TreeDecomposition, rdoc>(m);
 
     RDOC_SCOPE_END
 }

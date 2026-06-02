@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -66,14 +66,14 @@ class SFSpace;
  * details).  Note that the following diagram is viewed from _inside_
  * the block.
  *
- * <pre>
+ * ```
  *               -+---+---+---+---+---+---+-
  *                |0 /|0 /|0 /|0 /|0 /|0 /|
  *            ... | / | / | / | / | / | / | ...
  *                |/ 1|/ 1|/ 1|/ 1|/ 1|/ 1|
  *               -+---+---+---+---+---+---+-
  * Annulus #  ...  n-2 n-1  0   1   2   3   ...
- * </pre>
+ * ```
  *
  * The ring of boundary annuli may optionally be twisted, so that together
  * the annuli form a long Mobius band.  In this case, for the purposes of
@@ -441,7 +441,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the saturated block to compare this with.
-         * \return A result that indicates how this and the given block
+         * \return a result that indicates how this and the given block
          * should be ordered with respect to each other.
          */
         std::weak_ordering operator <=> (const SatBlock& rhs) const;

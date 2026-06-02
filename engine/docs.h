@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,7 +37,7 @@
  *  <center><b>
  *  Regina<br>
  *  Software for low-dimensional topology<br>
- *  Copyright &copy; 1999&ndash;2025, The Regina development team
+ *  Copyright &copy; 1999&ndash;2026, The Regina development team
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related
@@ -63,7 +63,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for low-dimensional topology",
- *  http://regina-normal.github.io/ , 1999-2025.
+ *  http://regina-normal.github.io/ , 1999-2026.
  *
  *  <h3>Authors</h3>
  *
@@ -286,7 +286,7 @@ namespace regina {
  *    is reason why a class or function cannot or should not be wrapped.
  *    If a class or function is not available in Python then you will
  *    see a bold <b>Python:</b> note indicating this.  See for instance
- *    the class MarkedVector, or the function valueOf().
+ *    the class MarkedVector, or the various `parse<...>()` functions.
  *
  *  - Most of Regina's classes and functions use the same interface
  *    in both C++ and Python, but occasionally there are differences

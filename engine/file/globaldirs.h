@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -94,10 +94,10 @@ class GlobalDirs {
         static std::string pythonModule();
 
         /**
-         * Returns the directory containing the large machine-encoded
-         * census data files.  These data files are not human-browsable:
-         * instead they are built for fast performance and small size.
-         * Users can access them by calling Census::lookup().
+         * Returns the directory containing the large machine-encoded census
+         * data files.  These data files are not human-browsable: instead they
+         * are built for fast performance and small size.  Users can access
+         * them by calling Census::lookup() or Census::lookupAs().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
          * `/usr/local/share/regina/data/census`.
@@ -204,7 +204,7 @@ class GlobalDirs {
          * python module, or the empty string if the module has been
          * installed in python's standard site-packages directory;
          * this will be returned by pythonModule().
-         * \param censusDir The directory containing the large
+         * \param censusDir the directory containing the large
          * machine-encoded census data files; this will be returned
          * by census().
          */
