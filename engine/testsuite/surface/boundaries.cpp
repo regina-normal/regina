@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Alex He                                      *
+ *  Copyright (c) 1999-2026, Alex He                                      *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,7 +42,9 @@ using regina::Triangulation;
 
 static void compareBoundaryCounts(
         NormalSurfaces surfs, std::vector<size_t> expect ) {
-    surfs.sort( []( NormalSurface a, NormalSurface b ){ return a < b; } );
+    surfs.sort([](const NormalSurface& a, const NormalSurface& b){
+        return a < b;
+    });
     for (size_t i = 0; i < surfs.size(); ++i) {
         SCOPED_TRACE_NUMERIC(i);
         EXPECT_EQ( expect[i], surfs.surface(i).countBoundaries() );
@@ -55,11 +57,9 @@ TEST(BoundariesTest, countBoundaries) {
 
         // The expected boundary-counts for this example have been checked by
         // hand.
-        Triangulation<3> solidTorus = Triangulation<3>::fromIsoSig(
-                "bGaj" );
-        compareBoundaryCounts(
-            NormalSurfaces( solidTorus, NormalCoords::Quad ),
-            { 1, 1, 2 } );
+        auto solidTorus = Triangulation<3>::fromSig("b3Na");
+        compareBoundaryCounts({ solidTorus, NormalCoords::Quad },
+            { 1, 2, 1 } );
     }
 
     {
@@ -74,11 +74,9 @@ TEST(BoundariesTest, countBoundaries) {
         // independently calculated from the GCD of the normal arcs on the
         // boundary. The expected boundary-counts have been manually checked
         // to coincide with these GCDs.
-        Triangulation<3> extraVertex = Triangulation<3>::fromIsoSig(
-                "eLHkccddpvvo" );
-        compareBoundaryCounts(
-            NormalSurfaces( extraVertex, NormalCoords::Standard ),
-            { 1, 1, 1, 1, 2, 1, 0, 1, 1, 2, 1, 2, 1, 2, 1, 1 } );
+        auto extraVertex = Triangulation<3>::fromSig("eNAA8hteh");
+        compareBoundaryCounts({ extraVertex, NormalCoords::Standard },
+            { 1, 2, 0, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } );
     }
 
     {
@@ -89,10 +87,8 @@ TEST(BoundariesTest, countBoundaries) {
         // The expected boundary-counts haven't been checked manually, but this
         // test at least ensures that countBoundaries() returns consistent
         // (presumably correct) answers even if the implementation is modified.
-        Triangulation<3> handle2 = Triangulation<3>::fromIsoSig(
-                "eHbKabdel" );
-        compareBoundaryCounts(
-            NormalSurfaces( handle2, NormalCoords::Quad ),
-            { 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1 } );
+        auto handle2 = Triangulation<3>::fromSig("epKKJ81Le");
+        compareBoundaryCounts({ handle2, NormalCoords::Quad },
+            { 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1 } );
     }
 }

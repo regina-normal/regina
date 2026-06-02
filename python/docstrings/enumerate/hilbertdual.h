@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::HilbertDual
-static const char *HilbertDual =
+struct HilbertDual {
+
+// Docstring regina::python::doc::HilbertDual::__class
+static constexpr const char __class[] =
 R"doc(Implements a modified dual algorithm for enumerating Hilbert bases.
 This is based on the dual algorithm as described in "Normaliz:
 Algorithms for affine monoids and rational cones", Winfried Bruns and
@@ -23,10 +25,8 @@ constraints from normal surface theory).
 All routines of interest within this class are static; no object of
 this class should ever be created.)doc";
 
-namespace HilbertDual_ {
-
-// Docstring regina::python::doc::HilbertDual_::enumerate
-static const char *enumerate =
+// Docstring regina::python::doc::HilbertDual::enumerate
+static constexpr const char enumerate[] =
 R"doc(Determines the Hilbert basis that generates all integer points in the
 intersection of the *n*-dimensional non-negative orthant with the
 given linear subspace. The resulting basis elements will be of the
@@ -107,7 +107,7 @@ Parameter ``initialRows``:
     in the precise order in which they appear. The remaining rows will
     be sorted using the PosOrder class before they are processed.)doc";
 
-}
+}; // struct HilbertDual
 
 } // namespace regina::python::doc
 

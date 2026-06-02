@@ -15,8 +15,9 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     dehydration.h
-    fromsiglist-impl.h
     isosig.h
     orb.h
+    siglist.h
+    siglist-impl.h
     DESTINATION "${PKGINCLUDEDIR}/foreign" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

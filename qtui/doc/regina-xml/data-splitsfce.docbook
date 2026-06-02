@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>splitsfce</refname>
-  <refpurpose>Does a triangulation have a splitting surface?</refpurpose>
+  <refpurpose>No longer stored</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,10 +40,12 @@ splitsfce ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltrmver;8.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  &eltrmdetail;
   <para>
    A &xml-splitsfce; element stores whether or not the parent
    triangulation has a splitting surface.

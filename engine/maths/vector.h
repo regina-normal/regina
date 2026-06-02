@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,6 +49,8 @@
 #include "maths/integer.h"
 #include "utilities/intutils.h"
 #include "utilities/tightencoding.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -173,8 +175,8 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \param end a past-the-end iterator indicating the end of the
          * sequence of elements.
          */
-        template <RandomAccessIteratorFor<T> iterator>
-        inline Vector(iterator begin, iterator end) :
+        template <RandomAccessIteratorFor<T> Iterator>
+        inline Vector(Iterator begin, Iterator end) :
                 elts_(new T[end - begin]), end_(elts_ + (end - begin)) {
             std::copy(begin, end, elts_);
         }
@@ -212,13 +214,9 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * \python Using this constructor, Python allows you to construct a
          * Vector<Integer> from a Vector<LargeInteger> or vice versa.
          *
-         * \tparam U the type of object held by the given vector \a src.
-         * It must be possible to _assign_ an object of type \a U to an object
-         * of type \a T.
-         *
          * \param src the vector to clone.
          */
-        template <typename U>
+        template <AssignableTo<T&> U>
         inline explicit Vector(const Vector<U>& src) :
                 elts_(new T[src.size()]), end_(elts_ + src.size()) {
             std::copy(src.begin(), src.end(), elts_);
@@ -358,7 +356,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          *
          * \nocpp For C++ users, Vector provides the usual begin() and end()
          * functions instead.  In particular, you can iterate over the elements
-         * of this list in the usual way using a range-based \c for loop.
+         * of this list in the usual way using a range-based `for` loop.
          *
          * \return an iterator over the elements of this vector.
          */

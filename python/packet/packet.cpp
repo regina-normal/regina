@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/packet/packet.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::ChildIterator;
 using regina::Packet;
@@ -46,22 +48,10 @@ using regina::PacketShell;
 using regina::PacketType;
 using regina::SubtreeIterator;
 
-// Docstrings that are generated once but need to be reused across many
-// source files:
-namespace regina::python::doc::common {
-    const char* Packet_append = regina::python::doc::Packet_::append;
-    const char* PacketData_anonID = regina::python::doc::PacketData_::anonID;
-    const char* PacketData_packet = regina::python::doc::PacketData_::packet;
-    const char* PacketOf = regina::python::doc::PacketOf;
-    const char* PacketOf_copy = regina::python::doc::PacketOf_::__init;
-    const char* make_packet = regina::python::doc::make_packet;
-    const char* make_packet_2 = regina::python::doc::make_packet_2;
-}
-
 namespace {
     // Support for iterables and iterators:
-    template <regina::PacketIterator iterator>
-    std::shared_ptr<Packet> next(iterator& it) {
+    template <regina::PacketIterator Iterator>
+    std::shared_ptr<Packet> next(Iterator& it) {
         if (it)
             return (*it++).shared_from_this();
         else
@@ -129,7 +119,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(PacketChildren)
 
     auto c1 = pybind11::class_<PacketChildren<false>>(m, "PacketChildren",
-            rdoc_scope)
+            rdoc::__class)
         .def("__iter__", [](const PacketChildren<false>& c) {
             return c.begin();
         }, rdoc::__iter__)
@@ -139,7 +129,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(PacketDescendants)
 
     auto c2 = pybind11::class_<PacketDescendants<false>>(m, "PacketDescendants",
-            rdoc_scope)
+            rdoc::__class)
         .def("__iter__", [](const PacketDescendants<false>& d) {
             return d.begin();
         }, rdoc::__iter__)
@@ -149,7 +139,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ChildIterator)
 
     auto c3 = pybind11::class_<ChildIterator<false>>(m, "ChildIterator",
-            rdoc_scope)
+            rdoc::__class)
         .def("__next__", next<ChildIterator<false>>, rdoc::__next__)
         ;
     regina::python::add_eq_operators(c3, rdoc::__eq);
@@ -157,7 +147,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(SubtreeIterator)
 
     auto c4 = pybind11::class_<SubtreeIterator<false>>(m, "SubtreeIterator",
-            rdoc_scope)
+            rdoc::__class)
         .def("__iter__", [](pybind11::object const& it) {
             return it;
         }, rdoc::__iter__)
@@ -168,7 +158,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(Packet)
 
     auto c = pybind11::class_<Packet, std::shared_ptr<Packet>>(m, "Packet",
-            rdoc_scope)
+            rdoc::__class)
         .def("type", &Packet::type, rdoc::type)
         .def("typeName", &Packet::typeName, rdoc::typeName)
         .def("label", &Packet::label, rdoc::label)
@@ -211,15 +201,15 @@ void addPacket(pybind11::module_& m) {
             rdoc::insertChildAfter)
         .def("makeOrphan", &Packet::makeOrphan, rdoc::makeOrphan)
         .def("reparent", &Packet::reparent,
-            pybind11::arg(), pybind11::arg("first") = false, rdoc::reparent)
+            "newParent"_a, "first"_a = false, rdoc::reparent)
         .def("transferChildren", &Packet::transferChildren,
             rdoc::transferChildren)
         .def("swapWithNextSibling", &Packet::swapWithNextSibling,
             rdoc::swapWithNextSibling)
         .def("moveUp", &Packet::moveUp,
-            pybind11::arg("steps") = 1, rdoc::moveUp)
+            "steps"_a = 1, rdoc::moveUp)
         .def("moveDown", &Packet::moveDown,
-            pybind11::arg("steps") = 1, rdoc::moveDown)
+            "steps"_a = 1, rdoc::moveDown)
         .def("moveToFirst", &Packet::moveToFirst, rdoc::moveToFirst)
         .def("moveToLast", &Packet::moveToLast, rdoc::moveToLast)
         .def("sortChildren", &Packet::sortChildren, rdoc::sortChildren)
@@ -244,27 +234,23 @@ void addPacket(pybind11::module_& m) {
             overload_cast<const std::string&>(&Packet::findPacketLabel),
             rdoc::findPacketLabel)
         .def("cloneAsSibling", &Packet::cloneAsSibling,
-            pybind11::arg("cloneDescendants") = false,
-            pybind11::arg("end") = true,
-            rdoc::cloneAsSibling)
+            "cloneDescendants"_a = false, "end"_a = true, rdoc::cloneAsSibling)
         .def("save",
             overload_cast<const char*, bool, regina::FileFormat>(
                 &Packet::save, pybind11::const_),
-            pybind11::arg(),
-            pybind11::arg("compressed") = true,
-            pybind11::arg("format") = regina::FileFormat::Current,
+            "filename"_a, "compressed"_a = true,
+            "format"_a = regina::FileFormat::Current,
             rdoc::save)
         .def("writeXMLFile", [](const Packet& p, pybind11::object file,
                 regina::FileFormat format) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
             p.writeXMLFile(std::cout, format);
-        }, pybind11::arg(),
-            pybind11::arg("format") = regina::FileFormat::Current,
-            rdoc::writeXMLFile)
+        }, "file"_a, "format"_a = regina::FileFormat::Current,
+             rdoc::writeXMLFile)
         .def("internalID", &Packet::internalID, rdoc::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {
             return (s == p);
-        }, pybind11::is_operator(), regina::python::doc::PacketShell_::__eq_2)
+        }, pybind11::is_operator(), regina::python::doc::PacketShell::__eq_2)
         .def("__ne__", [](const Packet* p, PacketShell s) {
             return (s != p);
         }, pybind11::is_operator(), regina::python::doc::common::neq_value)
@@ -282,7 +268,7 @@ void addPacket(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(PacketShell)
 
-    auto s = pybind11::class_<PacketShell>(m, "PacketShell", rdoc_scope)
+    auto s = pybind11::class_<PacketShell>(m, "PacketShell", rdoc::__class)
         .def(pybind11::init<const Packet*>(), rdoc::__init)
         .def(pybind11::init<const PacketShell&>(), rdoc::__copy)
         .def("label", &PacketShell::label, rdoc::label)
@@ -312,7 +298,7 @@ void addPacket(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(PacketListener)
 
     auto l = pybind11::class_<PacketListener, PyPacketListener>(
-            m, "PacketListener", rdoc_scope)
+            m, "PacketListener", rdoc::__class)
         .def(pybind11::init<>(), // necessary for pure python subclasses
             "Default base class constructor that does nothing.")
         .def("isListening", &PacketListener::isListening, rdoc::isListening)
@@ -347,6 +333,14 @@ void addPacket(pybind11::module_& m) {
             &PacketListener::childWasRenamed), rdoc::childWasRenamed)
         ;
     regina::python::add_eq_operators(l);
+
+    RDOC_SCOPE_SWITCH_MAIN
+
+    using regina::python::add_concept;
+    add_concept<rdoc::PacketClass>(m, "PacketClass");
+    add_concept<rdoc::WrappedPacket>(m, "WrappedPacket");
+    add_concept<rdoc::TextPacket>(m, "TextPacket");
+    add_concept<rdoc::PacketHeldType>(m, "PacketHeldType");
 
     RDOC_SCOPE_END
 }

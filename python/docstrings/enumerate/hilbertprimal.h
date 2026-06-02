@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::HilbertPrimal
-static const char *HilbertPrimal =
+struct HilbertPrimal {
+
+// Docstring regina::python::doc::HilbertPrimal::__class
+static constexpr const char __class[] =
 R"doc(Implements a modified primal algorithm for enumerating Hilbert bases.
 This incorporates the primal algorithm described in "Normaliz:
 Algorithms for affine monoids and rational cones", Winfried Bruns and
@@ -30,29 +32,27 @@ for the entire space.
 All routines of interest within this class are static; no object of
 this class should ever be created.)doc";
 
-namespace HilbertPrimal_ {
-
-// Docstring regina::python::doc::HilbertPrimal_::enumerate
-static const char *enumerate =
+// Docstring regina::python::doc::HilbertPrimal::enumerate
+static constexpr const char enumerate[] =
 R"doc(Determines the Hilbert basis that generates all integer points in the
 intersection of the *n*-dimensional non-negative orthant with some
-linear subspace. The resulting basis elements will be of the class
+linear subspace. The resulting basis vectors will be of the class
 *Ray*, and will be passed into the given action function one at a
 time.
 
 The intersection of the non-negative orthant with this linear subspace
 is a pointed polyhedral cone with apex at the origin, and this routine
 requires the extremal rays of this cone to be provided as input. The
-extremal rays can be computed using DoubleDescription::enumerate() in
-general cases, though sometimes (such as with normal surface theory)
-more efficient methods are available.
+extremal rays can be computed using ``DoubleDescription::enumerate()``
+in general cases, though sometimes (such as with normal surface
+theory) more efficient methods are available.
 
 This routine computes the Hilbert basis of all integer points in this
 cone. The resulting list of basis vectors will contain no duplicates
 or redundancies.
 
 The parameter *constraints* may contain a set of validity constraints,
-in which case this routine will only return _valid_ basis elements.
+in which case this routine will only return _valid_ basis vectors.
 Each validity constraint is of the form "at most one of these
 coordinates may be non-zero"; see the ValidityConstraints class for
 details. These contraints have the important property that, although
@@ -65,9 +65,9 @@ via ProgressTracker::newStage() before this routine is called, and
 that ProgressTracker::setFinished() will be called after this routine
 returns.
 
-For each of the resulting basis elements, this routine will call
+For each of the resulting basis vectors, this routine will call
 *action* (which must be a function or some other callable type). This
-action must take exactly one argument: the basis element stored using
+action must take exactly one argument: the basis vector stored using
 type *Ray*. The argument will be passed as an rvalue; a typical
 *action* would take it as an rvalue reference (``Ray&&``) and move its
 contents into some other more permanent storage. The return value of
@@ -77,17 +77,6 @@ Precondition:
     If *constraints* is passed, then the given list of extremal rays
     contains _only_ those extremal rays that satisfy all of the given
     constraints.
-
-Precondition:
-    The template argument RayIterator is a forward iterator type, and
-    when dereferenced has the interface of a constant vector of
-    Regina's arbitrary-precision integers (i.e., the elements of the
-    vector must be of type Integer or LargeInteger). For example, it
-    might dereference to a (const Vector<Integer>&), or a (const
-    std::vector<LargeInteger>&). The vector interface required is
-    minimal (just a bracket operator and a size() function), and in
-    particular both std::vector and regina::Vector will suffice for
-    this.
 
 .. warning::
     If a progress tracker is passed, be aware that the present
@@ -106,7 +95,7 @@ Python:
 
     * ``enumerate(rays, constraints, tracker)``, where the *action*
       argument is missing, and instead the function returns a Python
-      list containing all Hilbert basis elements.
+      list containing all Hilbert basis vectors.
 
     In both versions, the extremal rays must be passed as either:
 
@@ -121,16 +110,26 @@ Python:
     The global interpreter lock will be released while this function
     runs, so you can use it with Python-based multithreading.
 
+Template parameter ``Ray``:
+    the type to use for the basis vectors that are returned as output.
+
+Template parameter ``RayIterator``:
+    the iterator type used to supply the list of extremal rays given
+    as input. Each extremal ray should be a vector of arbitrary-
+    precision integers; however, the vector interface required of
+    these extremal rays is minimal, and in particular both
+    ``std::vector`` and ``regina::Vector`` are suitable.
+
 Parameter ``action``:
     a function (or other callable type) that will be called for each
-    basis element. This function must take a single argument, which
+    basis vector. This function must take a single argument, which
     will be passed as an rvalue of type Ray.
 
-Parameter ``raysBegin``:
+Parameter ``beginExtremalRays``:
     an iterator pointing to the beginning of the list of extremal
     rays.
 
-Parameter ``raysEnd``:
+Parameter ``endExtremalRays``:
     an iterator pointing past the end of the list of extremal rays.
 
 Parameter ``constraints``:
@@ -141,7 +140,7 @@ Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``None`` if no progress reporting is required.)doc";
 
-}
+}; // struct HilbertPrimal
 
 } // namespace regina::python::doc
 

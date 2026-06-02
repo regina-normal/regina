@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,7 +41,9 @@
 #include "regina-core.h"
 #include "maths/matrix2.h"
 #include "subcomplex/satregion.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -63,14 +65,14 @@ class SatRegion;
  * tunnels show where the region boundaries are joined (possibly via
  * layerings).
  *
- * <pre>
+ * ```
  *     /----------------\   /------------------\   /----------------\
  *     |                |   |                  |   |                |
  *     |  End region 0   ---   Central region   ---   End region 1  |
  *     |                 ---                    ---                 |
  *     |                |   |                  |   |                |
  *     \----------------/   \------------------/   \----------------/
- * </pre>
+ * ```
  *
  * Each of the end regions must have precisely one boundary component
  * formed from just one saturated annulus.  The central region may have
@@ -94,11 +96,11 @@ class SatRegion;
  * the fibres of each region and \a o and \a o0 represent the base orbifolds.
  * Then the boundaries are joined according to the following relation:
  *
- * <pre>
+ * ```
  *     [f0]       [f ]
  *     [  ] = M * [  ]
  *     [o0]       [o ]
- * </pre>
+ * ```
  *
  * Likewise, let \a M' be the matrix describing how the central region
  * and the second end region (marked in the diagram as end region 1) are
@@ -108,11 +110,11 @@ class SatRegion;
  * \a o and \a o1 represent the base orbifolds.  Then the boundaries are
  * joined according to the relation:
  *
- * <pre>
+ * ```
  *     [f1]        [f']
  *     [  ] = M' * [  ]
  *     [o1]        [o']
- * </pre>
+ * ```
  *
  * If a layering is present between two regions, then the corresponding
  * boundary curves are not identified directly.  In this case, the relevant
@@ -124,7 +126,7 @@ class SatRegion;
  * since this essentially requires 2-dimensional assemblings of
  * saturated blocks.  For full details, writeTextLong() may be used instead.
  *
- * The optional StandardTriangulation routine manifold() is
+ * The optional StandardSubcomplex routine manifold() is
  * implemented for this class, but homology() is not.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
@@ -135,7 +137,7 @@ class SatRegion;
  *
  * \ingroup subcomplex
  */
-class BlockedSFSTriple : public StandardTriangulation {
+class BlockedSFSTriple : public StandardSubcomplex<3> {
     private:
         SatRegion end_[2];
             /**< The two end regions, i.e., the saturated regions with
@@ -249,7 +251,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          * torus boundaries joined using the same pair of 2-by-2 matrices.
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass is more specific than combinatorial isomorphism, since
@@ -263,7 +265,7 @@ class BlockedSFSTriple : public StandardTriangulation {
          */
         bool operator == (const BlockedSFSTriple& other) const;
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -274,8 +276,8 @@ class BlockedSFSTriple : public StandardTriangulation {
          * above.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param tri the triangulation to examine.
          * \return a structure containing details of the blocked triple, or

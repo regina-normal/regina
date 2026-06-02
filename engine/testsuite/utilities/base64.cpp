@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
 #include <cstring>
 #include <string>
 #include "utilities/base64.h"
+#include "utilities/sigutils.h"
 
 #include "testhelper.h"
 
@@ -107,5 +108,18 @@ TEST(Base64Test, invalidEncodings) {
     verifyInvalid("abde fghi", 4);
     verifyInvalid("abde\nfghi", 4);
     verifyInvalid("abde\tfghi", 4);
+};
+
+TEST(Base64Test, sigEncoder) {
+    // For now, we just test the Base64Encoder static functions.
+    //
+    // The full functionality of these encoder classes is implicitly tested
+    // through the various isomorphism signature and knot/link signature tests.
+
+    EXPECT_EQ(regina::Base64Encoder::integerWidth(0), 1);
+    EXPECT_EQ(regina::Base64Encoder::integerWidth(0x3f), 1);
+    EXPECT_EQ(regina::Base64Encoder::integerWidth(0x40), 2);
+    EXPECT_EQ(regina::Base64Encoder::integerWidth(0xfff), 2);
+    EXPECT_EQ(regina::Base64Encoder::integerWidth(0x1000), 3);
 };
 

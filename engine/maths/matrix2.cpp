@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,6 +30,7 @@
 
 #include <iostream>
 #include "maths/matrix2.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -40,7 +41,7 @@ Matrix2 Matrix2::inverse() const {
     else if (det == -1)
         return Matrix2(-data_[1][1], data_[0][1], data_[1][0], -data_[0][0]);
     else
-        return Matrix2();
+        throw NoSolution();
 }
 
 Matrix2& Matrix2::operator *= (const Matrix2& other) {
@@ -61,7 +62,7 @@ Matrix2& Matrix2::operator *= (const Matrix2& other) {
     return *this;
 }
 
-bool Matrix2::invert() {
+void Matrix2::invert() {
     long det = data_[0][0] * data_[1][1] - data_[0][1] * data_[1][0];
     if (det == 1) {
         long tmp = data_[0][0];
@@ -69,14 +70,12 @@ bool Matrix2::invert() {
         data_[1][1] = tmp;
         data_[0][1] = -data_[0][1];
         data_[1][0] = -data_[1][0];
-        return true;
     } else if (det == -1) {
         long tmp = data_[0][0];
         data_[0][0] = -data_[1][1];
         data_[1][1] = -tmp;
-        return true;
     } else
-        return false;
+        throw NoSolution();
 }
 
 std::strong_ordering simplerThreeWay(const Matrix2& m1, const Matrix2& m2) {

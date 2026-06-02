@@ -62,6 +62,13 @@
   </provides>
 
   <releases>
+    <release version="8.0" date="2025-11-30">
+      <description>
+        <p>
+          TODO: Describe.
+        </p>
+      </description>
+    </release>
     <release version="7.4.1" date="2025-11-30">
       <description>
         <p>

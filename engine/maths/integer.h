@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,6 +50,8 @@
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 // Regina assumes in many places that a byte contains exactly 8 bits.
 // I believe this mandated for POSIX systems.  I'm not sure if anyone has ever
 // tried to build regina on a platform where this assumption fails, but the
@@ -61,6 +63,7 @@ static_assert(CHAR_BIT == 8, "Regina works under the assumption that a byte "
 namespace regina {
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 class NativeInteger;
 
 #ifdef __DOCSTRINGS
@@ -485,9 +488,13 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * C++ does, and so this function is not so important.  Python users
          * can simply call safeValue(), unsafeValue(), or pythonValue() instead.
          *
+         * \tparam bytes the exact number of bytes in the native C++ integer
+         * type to return.
+         *
          * \return the value of this integer.
          */
         template <int bytes>
+        requires (supportsNativeIntegerSize(bytes))
         [[deprecated]] typename IntOfSize<bytes>::type nativeValue() const;
         /**
          * Returns the value of this integer as a string in the given
@@ -681,7 +688,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <bool rhsWithInfinity>
@@ -701,7 +708,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * It is assumed that the type \a IntType is \c long.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <CppInteger IntType>
@@ -719,7 +726,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * available to Python users.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         template <int bytes>
@@ -1400,7 +1407,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \pre This integer is not infinite.
          *
          * \param p the given odd prime.
-         * \return The Legendre symbol (0, 1 or -1) as described above.
+         * \return the Legendre symbol (0, 1 or -1) as described above.
          *
          * \author Ryan Budney
          */
@@ -1630,7 +1637,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * name __hash__().  This allows Regina's arbitrary-precision integers
          * to be used as keys in Python dictionaries and sets.
          *
-         * \return The hash of this arbitrary-precision integer.
+         * \return the hash of this arbitrary-precision integer.
          */
         size_t hash() const;
 
@@ -1694,6 +1701,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
     friend class IntegerBase<! withInfinity>; // For conversions.
 
     template <int bytes>
+    requires (supportsNativeIntegerSize(bytes))
     friend class NativeInteger; // For conversions.
 
     template <bool withInfinity_>
@@ -1805,6 +1813,8 @@ void tightEncode(std::ostream& out, IntegerBase<withInfinity> value);
  * efficient if the integer argument is an rvalue reference (since the const
  * member function induces an extra deep copy).
  *
+ * \pydocname{tightEncoding_ReginaInteger}
+ *
  * \param value the integer to encode.
  * \return the resulting encoded string.
  *
@@ -1815,6 +1825,7 @@ std::string tightEncoding(IntegerBase<withInfinity> value);
 
 #ifndef __DOXYGEN
 // Don't confuse doxygen with specialisations.
+
 template <bool withInfinity>
 struct RingTraits<IntegerBase<withInfinity>> {
     inline static const IntegerBase<withInfinity> zero;
@@ -1824,6 +1835,17 @@ struct RingTraits<IntegerBase<withInfinity>> {
     static constexpr bool zeroDivisors = false;
     static constexpr bool inverses = false;
 };
+
+// We need to specify the common type to use when working with both Integer and
+// LargeInteger, since conversions exist in both directions.
+
+} // namespace regina
+template <bool inf1, bool inf2>
+struct std::common_type<regina::IntegerBase<inf1>, regina::IntegerBase<inf2>> {
+    using type = regina::IntegerBase<inf1 || inf2>;
+};
+namespace regina {
+
 #endif // __DOXYGEN
 
 /**
@@ -1851,8 +1873,8 @@ struct RingTraits<IntegerBase<withInfinity>> {
  * It implements the C++ Swappable requirement via its own member and global
  * swap() functions, for consistency with the Integer and LargeInteger classes.
  *
- * \pre The system must support integers of the given size; in particular,
- * there must be an appropriate specialisation IntOfSize<bytes>.
+ * \tparam bytes the exact number of bytes in the native C++ integer type
+ * that is being wrapped.
  *
  * \nopython The purpose of NativeInteger is to be a highly optimised
  * drop-in replacement for Integer as a C++ template parameter.
@@ -1862,6 +1884,7 @@ struct RingTraits<IntegerBase<withInfinity>> {
  * \ingroup maths
  */
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 class NativeInteger {
     public:
         using Native = typename IntOfSize<bytes>::type;
@@ -1993,7 +2016,7 @@ class NativeInteger {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         constexpr std::strong_ordering operator <=> (const NativeInteger& rhs)
@@ -2011,7 +2034,7 @@ class NativeInteger {
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the integer with which this will be compared.
-         * \return The result of the numerical comparison between this and
+         * \return the result of the numerical comparison between this and
          * the given integer.
          */
         constexpr std::strong_ordering operator <=> (Native rhs) const;
@@ -2521,15 +2544,15 @@ namespace detail {
  * \ingroup detail
  */
 template <SignedCppInteger IntType>
-inline regina::make_unsigned_cpp_t<IntType> negateToUnsignedType(IntType x) {
+inline MakeUnsigned<IntType> negateToUnsignedType(IntType x) {
     // C++20 mandates a two's complement representation.
     if (x == std::numeric_limits<IntType>::min()) {
         // Negating x would be a signed overflow, which the C++ standard
         // says is undefined behaviour.  However, casting x directly as the
         // unsigned type will do the right thing.
-        return static_cast<regina::make_unsigned_cpp_t<IntType>>(x);
+        return static_cast<MakeUnsigned<IntType>>(x);
     } else {
-        return static_cast<regina::make_unsigned_cpp_t<IntType>>(-x);
+        return static_cast<MakeUnsigned<IntType>>(-x);
     }
 }
 
@@ -2547,16 +2570,15 @@ inline regina::make_unsigned_cpp_t<IntType> negateToUnsignedType(IntType x) {
  * \ingroup detail
  */
 template <SignedCppInteger IntType>
-inline regina::make_unsigned_cpp_t<IntType> differenceAsUnsigned(
-        IntType x, IntType y) {
+inline MakeUnsigned<IntType> differenceAsUnsigned(IntType x, IntType y) {
     // C++20 mandates a two's complement representation.
     // The C++ standard says both unsigned overflow and casting to unsigned
     // types always do the right thing (arithmetic modulo 2^bits), whereas
     // signed overflow is undefined.
     // So: we can just do everything in the unsigned type.  All errors will be
     // modulo 2^bits, and we know that the answer is in the range [0, 2^bits).
-    return static_cast<regina::make_unsigned_cpp_t<IntType>>(x) -
-        static_cast<regina::make_unsigned_cpp_t<IntType>>(y);
+    return static_cast<MakeUnsigned<IntType>>(x) -
+        static_cast<MakeUnsigned<IntType>>(y);
 }
 
 } // namespace detail
@@ -2580,14 +2602,14 @@ template <CppInteger IntType>
 inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
         small_(value), large_(nullptr) {
     if constexpr (sizeof(IntType) == sizeof(long) &&
-            regina::is_unsigned_cpp_integer_v<IntType>) {
+            UnsignedCppInteger<IntType>) {
         // Detect overflow.
         if (small_ < 0) {
             large_ = new __mpz_struct[1];
             mpz_init_set_ui(large_, value);
         }
     } else if constexpr (sizeof(IntType) > sizeof(long)) {
-        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+        if constexpr (SignedCppInteger<IntType>) {
             // Detect overflow.
             if (small_ != value) {
                 large_ = new __mpz_struct[1];
@@ -2745,7 +2767,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
         // We have a GMP integer.
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             // Optimise for small native types.
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 if (mpz_sgn(large_) >= 0 &&
                         mpz_cmp_ui(large_, limits::max()) <= 0)
                     return static_cast<IntType>(mpz_get_ui(large_));
@@ -2763,7 +2785,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
             if (sign == 0)
                 return 0;
 
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 if (sign < 0)
                     throw IntegerOverflow();
 
@@ -2818,7 +2840,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
         }
     } else {
         // We have a native long integer.
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (small_ < 0)
                 throw IntegerOverflow();
 
@@ -2860,7 +2882,7 @@ IntType IntegerBase<withInfinity>::unsafeValue() const {
         // We have a GMP integer.
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             // Optimise for small native types.
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>)
+            if constexpr (UnsignedCppInteger<IntType>)
                 return static_cast<IntType>(mpz_get_ui(large_));
             else
                 return static_cast<IntType>(mpz_get_si(large_));
@@ -2877,7 +2899,7 @@ IntType IntegerBase<withInfinity>::unsafeValue() const {
             IntType absVal = *static_cast<IntType*>(result);
             free(result);
 
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 return absVal;
             } else {
                 if (absVal >= 0) {
@@ -2910,6 +2932,7 @@ inline long IntegerBase<withInfinity>::longValue() const {
 
 template <bool withInfinity>
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline typename IntOfSize<bytes>::type IntegerBase<withInfinity>::nativeValue()
         const {
     return unsafeValue<typename IntOfSize<bytes>::type>();
@@ -3000,7 +3023,7 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 
     // Test for overflow, if we need to.
     if constexpr (sizeof(IntType) == sizeof(long) &&
-            regina::is_unsigned_cpp_integer_v<IntType>) {
+            UnsignedCppInteger<IntType>) {
         if (small_ < 0) {
             if (large_)
                 mpz_set_ui(large_, value);
@@ -3014,7 +3037,7 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
                 clearLarge();
         }
     } else if constexpr (sizeof(IntType) > sizeof(long)) {
-        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+        if constexpr (SignedCppInteger<IntType>) {
             if (small_ != value) {
                 if (! large_) {
                     large_ = new __mpz_struct[1];
@@ -3121,7 +3144,7 @@ inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
 
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
-            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            if constexpr (SignedCppInteger<IntType>) {
                 return (mpz_cmp_si(large_, rhs) == 0);
             } else {
                 return (mpz_cmp_ui(large_, rhs) == 0);
@@ -3131,7 +3154,7 @@ inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
             return *this == IntegerBase(rhs);
         }
     } else {
-        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+        if constexpr (SignedCppInteger<IntType>) {
             return (small_ == rhs);
         } else {
             // Be careful: small_ is signed, but rhs is unsigned.
@@ -3189,7 +3212,7 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
 
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
-            if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            if constexpr (SignedCppInteger<IntType>) {
                 return (mpz_cmp_si(large_, rhs) <=> 0);
             } else {
                 return (mpz_cmp_ui(large_, rhs) <=> 0);
@@ -3199,7 +3222,7 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
             return *this <=> IntegerBase(rhs);
         }
     } else {
-        if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+        if constexpr (SignedCppInteger<IntType>) {
             // Both small_ and rhs are signed.
             return (small_ <=> rhs);
         } else {
@@ -3442,7 +3465,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         // Note: both signed and unsigned integer _conversion_ are guaranteed
         // to be correct modulo 2^bits (as of C++20); however, signed integer
         // _arithmetic_ has undefined overflow behaviour.  Be careful.
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (other <= detail::differenceAsUnsigned(LONG_MAX, small_)) {
                 // A consequence: 0 ≤ other ≤ ULONG_MAX.
                 // If sizeof(IntType) < sizeof(long) then I understand the
@@ -3478,7 +3501,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
 
     // And now we're down to large integer arithmetic (large != null).
     if constexpr (sizeof(IntType) <= sizeof(long)) {
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             mpz_add_ui(large_, large_, other);
         } else if (other >= 0) {
             mpz_add_ui(large_, large_, other);
@@ -3527,7 +3550,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         // Note: both signed and unsigned integer _conversion_ are guaranteed
         // to be correct modulo 2^bits (as of C++20); however, signed integer
         // _arithmetic_ has undefined overflow behaviour.  Be careful.
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (other <= detail::differenceAsUnsigned(small_, LONG_MIN)) {
                 // A consequence: 0 ≤ other ≤ ULONG_MAX.
                 // If sizeof(IntType) < sizeof(long) then I understand the
@@ -3563,7 +3586,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
 
     // And now we're down to large integer arithmetic (large != null).
     if constexpr (sizeof(IntType) <= sizeof(long)) {
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             mpz_sub_ui(large_, large_, other);
         } else if (other >= 0) {
             mpz_sub_ui(large_, large_, other);
@@ -3591,21 +3614,21 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
             if (other == 0) {
                 clearLarge();
                 small_ = 0;
-            } else if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+            } else if constexpr (SignedCppInteger<IntType>) {
                 mpz_mul_si(large_, large_, other);
             } else {
                 mpz_mul_ui(large_, large_, other);
             }
         } else {
-            using Wide = IntOfSize<2 * sizeof(long)>::type;
-            // Note: even if other is unsigned, casting it to Wide will do the
-            // cast correctly, and the multiplication should not overflow.
-            Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
+            // Note: even if other is unsigned, casting it to DoubleLong will do
+            // the cast correctly, and the multiplication should not overflow.
+            DoubleLong ans = static_cast<DoubleLong>(small_) *
+                static_cast<DoubleLong>(other);
             if (ans > LONG_MAX || ans < LONG_MIN) {
                 // Overflow.
                 large_ = new __mpz_struct[1];
                 mpz_init_set_si(large_, small_);
-                if constexpr (regina::is_signed_cpp_integer_v<IntType>) {
+                if constexpr (SignedCppInteger<IntType>) {
                     mpz_mul_si(large_, large_, other);
                 } else {
                     mpz_mul_ui(large_, large_, other);
@@ -3644,7 +3667,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
 
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 mpz_tdiv_q_ui(large_, large_, other);
             } else if (other >= 0) {
                 mpz_tdiv_q_ui(large_, large_, other);
@@ -3658,7 +3681,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
             return (*this) /= IntegerBase(other);
         }
     } else {
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             // We can do this all in native arithmetic.
             if constexpr (sizeof(IntType) < sizeof(long))
                 small_ /= static_cast<long>(other);
@@ -3694,7 +3717,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
         IntType other) {
     // Preconditions: this is finite; other ≠ 0; (this / other) is an integer.
     if constexpr (sizeof(IntType) <= sizeof(long)) {
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if (large_) {
                 mpz_divexact_ui(large_, large_, other);
             } else {
@@ -3754,7 +3777,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
     // Now we have this != infinity, other != 0.
     if (large_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
-            if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+            if constexpr (UnsignedCppInteger<IntType>) {
                 mpz_tdiv_r_ui(large_, large_, other);
             } else if (other >= 0) {
                 mpz_tdiv_r_ui(large_, large_, other);
@@ -3772,7 +3795,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
     } else {
         // We can do this all in native arithmetic.
         // Note: some compilers crash on LONG_MIN % -1.
-        if constexpr (regina::is_unsigned_cpp_integer_v<IntType>) {
+        if constexpr (UnsignedCppInteger<IntType>) {
             if constexpr (sizeof(IntType) < sizeof(long))
                 small_ %= static_cast<long>(other);
             else if (other <= static_cast<unsigned long>(LONG_MAX))
@@ -3926,7 +3949,7 @@ template <bool withInfinity>
 inline std::string IntegerBase<withInfinity>::tightEncoding() const {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, *this);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <bool withInfinity>
@@ -4015,26 +4038,30 @@ template <bool withInfinity>
 std::string tightEncoding(IntegerBase<withInfinity> value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, std::move(value));
-    return out.str();
+    return std::move(out).str();
 }
 
 // Inline functions for NativeInteger
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>::NativeInteger() : data_(0) {
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>::NativeInteger(Native value) : data_(
         value) {
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>::NativeInteger(
         const NativeInteger<bytes>& value) : data_(value.data_) {
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 template <bool withInfinity>
 inline NativeInteger<bytes>::NativeInteger(
         const IntegerBase<withInfinity>& value) :
@@ -4042,22 +4069,26 @@ inline NativeInteger<bytes>::NativeInteger(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr bool NativeInteger<bytes>::isZero() const {
     return (data_ == 0);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr int NativeInteger<bytes>::sign() const {
     return (data_ > 0 ? 1 : data_ < 0 ? -1 : 0);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr typename NativeInteger<bytes>::Native NativeInteger<bytes>::
         nativeValue() const {
     return data_;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline std::string NativeInteger<bytes>::str() const {
     if constexpr (StandardStringifiable<Native>) {
         return std::to_string(data_);
@@ -4067,6 +4098,7 @@ inline std::string NativeInteger<bytes>::str() const {
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
         const NativeInteger<bytes>& value) {
     data_ = value.data_;
@@ -4074,6 +4106,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
         Native value) {
     data_ = value;
@@ -4081,93 +4114,109 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator =(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr void NativeInteger<bytes>::swap(NativeInteger<bytes>& other)
         noexcept {
     std::swap(data_, other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr bool NativeInteger<bytes>::operator ==(
         const NativeInteger<bytes>& rhs) const {
     return (data_ == rhs.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr bool NativeInteger<bytes>::operator ==(Native rhs) const {
     return (data_ == rhs);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr std::strong_ordering NativeInteger<bytes>::operator <=> (
         const NativeInteger& rhs) const {
     return data_ <=> rhs.data_;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr std::strong_ordering NativeInteger<bytes>::operator <=> (
         Native rhs) const {
     return data_ <=> rhs;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator ++() {
     ++data_;
     return *this;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator ++(int) {
     return NativeInteger<bytes>(data_++);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator --() {
     --data_;
     return *this;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator --(int) {
     return NativeInteger<bytes>(data_--);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator +(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ + other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator +(
         Native other) const {
     return NativeInteger<bytes>(data_ + other);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ - other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -(
         Native other) const {
     return NativeInteger<bytes>(data_ - other);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator *(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ * other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator *(
         Native other) const {
     return NativeInteger<bytes>(data_ * other);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
         const NativeInteger<bytes>& other) const {
     if (other.data_ == 0)
@@ -4176,6 +4225,7 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
         Native other) const {
     if (other == 0)
@@ -4184,18 +4234,21 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator /(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::divExact(
         const NativeInteger<bytes>& other) const {
     return NativeInteger<bytes>(data_ / other.data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::divExact(
         Native other) const {
     return NativeInteger<bytes>(data_ / other);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
         const NativeInteger<bytes>& other) const {
     if (other.data_ == 0)
@@ -4204,6 +4257,7 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
         Native other) const {
     if (other == 0)
@@ -4212,6 +4266,7 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator %(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
         NativeInteger<bytes>::divisionAlg(const NativeInteger& divisor) const {
     if (divisor == 0)
@@ -4238,11 +4293,13 @@ inline constexpr std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::operator -() const {
     return NativeInteger<bytes>(- data_);
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
         const NativeInteger<bytes>& other) {
     data_ += other.data_;
@@ -4250,6 +4307,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
         Native other) {
     data_ += other;
@@ -4257,6 +4315,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator += (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
         const NativeInteger<bytes>& other) {
     data_ -= other.data_;
@@ -4264,6 +4323,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
         Native other) {
     data_ -= other;
@@ -4271,6 +4331,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
         const NativeInteger<bytes>& other) {
     data_ *= other.data_;
@@ -4278,6 +4339,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
         Native other) {
     data_ *= other;
@@ -4285,6 +4347,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
         const NativeInteger<bytes>& other) {
     if (other.data_ == 0)
@@ -4294,6 +4357,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
         Native other) {
     if (other == 0)
@@ -4303,6 +4367,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
         const NativeInteger<bytes>& other) {
     data_ /= other.data_;
@@ -4310,6 +4375,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
         Native other) {
     data_ /= other;
@@ -4317,6 +4383,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         const NativeInteger<bytes>& other) {
     if (other.data_ == 0)
@@ -4326,6 +4393,7 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         Native other) {
     if (other == 0)
@@ -4335,11 +4403,13 @@ inline constexpr NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr void NativeInteger<bytes>::negate() {
     data_ = - data_;
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 constexpr void NativeInteger<bytes>::gcdWith(const NativeInteger<bytes>& other)
         {
     Native a = data_;
@@ -4400,6 +4470,7 @@ constexpr void NativeInteger<bytes>::gcdWith(const NativeInteger<bytes>& other)
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr NativeInteger<bytes> NativeInteger<bytes>::gcd(
         const NativeInteger<bytes>& other) const {
     NativeInteger<bytes> ans(data_);
@@ -4408,6 +4479,7 @@ inline constexpr NativeInteger<bytes> NativeInteger<bytes>::gcd(
 }
 
 template <int bytes>
+requires (supportsNativeIntegerSize(bytes))
 inline constexpr void NativeInteger<bytes>::tryReduce() {
 }
 

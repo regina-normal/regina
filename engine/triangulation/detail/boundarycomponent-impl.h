@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,14 +50,16 @@
 #define __REGINA_BOUNDARYCOMPONENT_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/boundarycomponent.h"
+#include "triangulation/boundarycomponent.h"
 #include "utilities/fixedarray.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina::detail {
 
 /**
  * An internal iterator class to support
- * BoundaryComponentBase::reorderAndRelabelFaces().
+ * BoundaryComponent::reorderAndRelabelFaces().
  *
  * This is an iterator that runs through the <i>subdim</i>-faces of
  * a boundary component in order and (when dereferenced) converts
@@ -107,8 +109,10 @@ class BoundaryFaceReorderIterator {
         }
 };
 
+} // namespace regina::detail
+
 #ifndef __APIDOCS
-} namespace std {
+namespace std {
     template <int dim, int subdim>
     requires (dim > 2 && subdim >= 0 && subdim < dim)
     struct iterator_traits<regina::detail::BoundaryFaceReorderIterator<
@@ -119,18 +123,19 @@ class BoundaryFaceReorderIterator {
         using pointer = value_type*;
         using reference = value_type&;
     };
-} namespace regina::detail {
+}
 #endif
 
+namespace regina {
+
 template <int dim> requires (supportedDim(dim))
-BoundaryComponentBase<dim>::~BoundaryComponentBase() {
+BoundaryComponent<dim>::~BoundaryComponent() {
     if constexpr (canBuild)
         delete boundary_.value;
 }
 
 template <int dim> requires (supportedDim(dim))
-TriangulationTraits<dim>::Lower* BoundaryComponentBase<dim>::buildRealBoundary()
-        const
+SafeTriangulation<dim - 1>* BoundaryComponent<dim>::buildRealBoundary() const
         requires (dim > 2) {
     // From the precondition, there is a positive number of (dim-1)-faces.
     const auto& allFacets = std::get<tupleIndex(dim-1)>(faces_);
@@ -237,8 +242,8 @@ TriangulationTraits<dim>::Lower* BoundaryComponentBase<dim>::buildRealBoundary()
 
 template <int dim> requires (supportedDim(dim))
 template <int subdim> requires (dim > 2 && subdim >= 0 && subdim < dim)
-void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
-        TriangulationTraits<dim>::Lower* tri,
+void BoundaryComponent<dim>::reorderAndRelabelFaces(
+        SafeTriangulation<dim - 1>* tri,
         const std::vector<Face<dim, subdim>*>& reference) const {
     if constexpr (subdim == dim - 1) {
         // The (dim-1) faces are already in perfect correspondence.
@@ -287,13 +292,13 @@ void BoundaryComponentBase<dim>::reorderAndRelabelFaces(
                 outer->template faceMapping<subdim>(emb.face())));
         }
 
+        using It = detail::BoundaryFaceReorderIterator<dim, subdim>;
         tri->template reorderFaces<subdim>(
-            BoundaryFaceReorderIterator<dim, subdim>(reference.begin(), map),
-            BoundaryFaceReorderIterator<dim, subdim>(reference.end(), map));
+            It(reference.begin(), map), It(reference.end(), map));
     }
 }
 
-} // namespace regina::detail
+} // namespace regina
 
 #endif
 

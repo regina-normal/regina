@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,8 @@
 
 #include "utilities/intutils.h"
 #include "utilities/tightencoding.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina::detail {
 
@@ -227,9 +229,9 @@ void tightEncodeInteger(std::ostream& out, IntType value) {
     out << '}';
 }
 
-template <typename IntType, CharIterator iterator>
+template <typename IntType, CharIterator Iterator>
 requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
-IntType tightDecodeInteger(iterator start, iterator limit,
+IntType tightDecodeInteger(Iterator start, Iterator limit,
         bool noTrailingData) {
     IntType result;
     bool overflow = false;

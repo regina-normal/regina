@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::GraphPair
-static const char *GraphPair =
+struct GraphPair {
+
+// Docstring regina::python::doc::GraphPair::__class
+static constexpr const char __class[] =
 R"doc(Represents a closed graph manifold formed by joining two bounded
 Seifert fibred spaces along a common torus.
 
@@ -41,8 +43,8 @@ orbifold of the second Seifert fibred space. Then the curves *f0*,
 See the page on notation for Seifert fibred spaces for details on some
 of the terminology used above.
 
-The optional Manifold routine homology() is implemented, but the
-optional routine construct() is not.
+The optional Manifold<3> routines homology() and isHyperbolic() are
+implemented, but the optional routine construct() is not.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -50,10 +52,8 @@ possible, even when passing or returning objects by value. Note,
 however, that GraphPair still requires a non-trivial (but constant
 sized) amount of data to be copied even in a move operation.)doc";
 
-namespace GraphPair_ {
-
-// Docstring regina::python::doc::GraphPair_::__cmp
-static const char *__cmp =
+// Docstring regina::python::doc::GraphPair::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares representations of two graph manifolds according to an
 aesthetic ordering.
 
@@ -78,14 +78,14 @@ Parameter ``rhs``:
     the other representation to compare this with.
 
 Returns:
-    A result that indicates how this and the given graph manifold
+    a result that indicates how this and the given graph manifold
     representation should be ordered with respect to each other.)doc";
 
-// Docstring regina::python::doc::GraphPair_::__copy
-static const char *__copy = R"doc(Creates a clone of the given graph manifold.)doc";
+// Docstring regina::python::doc::GraphPair::__copy
+static constexpr const char __copy[] = R"doc(Creates a clone of the given graph manifold.)doc";
 
-// Docstring regina::python::doc::GraphPair_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::GraphPair::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object contain precisely the
 same presentations of the same graph manifold.
 
@@ -103,8 +103,8 @@ Returns:
     ``True`` if and only if this and the given object contain
     identical presentations of the same graph manifold.)doc";
 
-// Docstring regina::python::doc::GraphPair_::__init
-static const char *__init =
+// Docstring regina::python::doc::GraphPair::__init
+static constexpr const char __init[] =
 R"doc(Creates a new graph manifold as a pair of joined Seifert fibred
 spaces. The two bounded Seifert fibred spaces and the four elements of
 the 2-by-2 matching matrix are all passed separately. The elements of
@@ -142,43 +142,8 @@ Parameter ``mat10``:
 Parameter ``mat11``:
     the (1,1) element of the matching matrix.)doc";
 
-// Docstring regina::python::doc::GraphPair_::__init_2
-static const char *__init_2 =
-R"doc(Creates a new graph manifold from a pair of bounded Seifert fibred
-spaces, which are moved instead of copied.
-
-Other than its use of move semantics, this behaves identically to the
-other constructor that takes the Seifert fibred spaces by const
-reference. See that constructor for further details.
-
-Precondition:
-    The given matching matrix has determinant +1 or -1.
-
-Exception ``InvalidArgument``:
-    One of the given Seifert fibred spaces does not have precisely one
-    torus boundary, corresponding to a single untwisted puncture in
-    its base orbifold.
-
-Parameter ``sfs0``:
-    the first Seifert fibred space.
-
-Parameter ``sfs1``:
-    the second Seifert fibred space.
-
-Parameter ``mat00``:
-    the (0,0) element of the matching matrix.
-
-Parameter ``mat01``:
-    the (0,1) element of the matching matrix.
-
-Parameter ``mat10``:
-    the (1,0) element of the matching matrix.
-
-Parameter ``mat11``:
-    the (1,1) element of the matching matrix.)doc";
-
-// Docstring regina::python::doc::GraphPair_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::GraphPair::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new graph manifold as a pair of joined Seifert fibred
 spaces. The two bounded Seifert fibred spaces and the entire 2-by-2
 matching matrix are each passed separately.
@@ -200,34 +165,8 @@ Parameter ``sfs1``:
 Parameter ``matchingReln``:
     the 2-by-2 matching matrix.)doc";
 
-// Docstring regina::python::doc::GraphPair_::__init_4
-static const char *__init_4 =
-R"doc(Creates a new graph manifold from a pair of bounded Seifert fibred
-spaces, which are moved instead of copied.
-
-Other than its use of move semantics, this behaves identically to the
-other constructor that takes the Seifert fibred spaces by const
-reference. See that constructor for further details.
-
-Precondition:
-    The given matching matrix has determinant +1 or -1.
-
-Exception ``InvalidArgument``:
-    One of the given Seifert fibred spaces does not have precisely one
-    torus boundary, corresponding to a single untwisted puncture in
-    its base orbifold.
-
-Parameter ``sfs0``:
-    the first Seifert fibred space.
-
-Parameter ``sfs1``:
-    the second Seifert fibred space.
-
-Parameter ``matchingReln``:
-    the 2-by-2 matching matrix.)doc";
-
-// Docstring regina::python::doc::GraphPair_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::GraphPair::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given graph manifolds.
 
 This global routine simply calls GraphPair::swap(); it is provided so
@@ -239,8 +178,8 @@ Parameter ``a``:
 Parameter ``b``:
     the second graph manifold whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::GraphPair_::matchingReln
-static const char *matchingReln =
+// Docstring regina::python::doc::GraphPair::matchingReln
+static constexpr const char matchingReln[] =
 R"doc(Returns a reference to the 2-by-2 matrix describing how the two
 Seifert fibred spaces are joined together. See the class notes for
 details on precisely how this matrix is represented.
@@ -248,8 +187,8 @@ details on precisely how this matrix is represented.
 Returns:
     a reference to the matching matrix.)doc";
 
-// Docstring regina::python::doc::GraphPair_::sfs
-static const char *sfs =
+// Docstring regina::python::doc::GraphPair::sfs
+static constexpr const char sfs[] =
 R"doc(Returns a reference to one of the two bounded Seifert fibred spaces
 that are joined together.
 
@@ -260,14 +199,14 @@ Parameter ``which``:
 Returns:
     a reference to the requested Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::GraphPair_::swap
-static const char *swap =
+// Docstring regina::python::doc::GraphPair::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given graph manifold.
 
 Parameter ``other``:
     the graph manifold whose contents should be swapped with this.)doc";
 
-}
+}; // struct GraphPair
 
 } // namespace regina::python::doc
 

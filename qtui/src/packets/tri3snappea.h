@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -89,18 +89,9 @@ class Tri3SnapPeaUI : public QObject, public PacketViewerTab {
 
     public slots:
         /**
-         * Update properties.
-         */
-        void updatePreferences();
-
-        /**
          * Convert this to a full SnapPea triangulation.
          */
         void toSnapPea();
 };
-
-inline void Tri3SnapPeaUI::updatePreferences() {
-    refresh();
-}
 
 #endif

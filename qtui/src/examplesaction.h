@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -76,7 +76,7 @@ class ExamplesAction : public QMenu {
          *
          * The filename should be relative to the Regina examples directory.
          */
-        void addUrl(const QString& fileName, const QString& description);
+        void addUrl(const QString& filename, const QString& description);
 
         /**
          * Fill this action with Regina's standard example files.

@@ -1,0 +1,152 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2013-2026, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides tests for isomorphism signatures and knot/link signatures.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# ---------- Testing IsoSigData ----------
+
+tri = Triangulation3.fromSig('cV6cqb') # figure eight knot complement
+data = IsoSigData1_3(tri.component(0))
+data.fillFrom(tri.simplex(0), Perm4())
+print(data.facetTypes())
+print(data.adjacentSimplices())
+print(data.adjacentGluings())
+print(data.locks())
+print(IsoSigPrintable.encode(data))
+data = IsoSigData2_3.minimal(IsoSigRidgeDegrees3, tri.component(0), False)
+# Do not print data.facetTypes(), since the bitmask length depends on the
+# native integer size for the platform on which this test is run.
+print(data.adjacentSimplices())
+print(data.adjacentGluings())
+print(data.locks())
+print(IsoSigPrintable.encode(data))
+print()
+
+# ---------- Testing isomorphism signatures of triangulations ----------
+
+# Here we choose a case where IsoSigClassic vs IsoSigEdgeDegrees give
+# different canonical labellings.
+tri = Example3.smallClosedOrblHyperbolic()
+tri.simplex(0).lock()
+print(tri.sig(1))
+print(tri.isoSig())
+print(tri.isoSig(IsoSigPrintableLockFree))
+print(tri.isoSig(IsoSigPrintable, IsoSigClassic3))
+print(tri.isoSig(IsoSigPrintable, IsoSigEdgeDegrees3))
+print(tri.sig(2))
+print(tri.neoSig())
+print(tri.neoSig(encoding = IsoSigPrintableLockFree))
+print(tri.neoSig(encoding = IsoSigPrintable, type = IsoSigClassic3))
+print(tri.neoSig(encoding = IsoSigPrintable, type = IsoSigEdgeDegrees3))
+print(tri.neoSig(encoding = IsoSigBinary))
+print(IsoSigBinary.asString(tri.neoSig(encoding = IsoSigBinary), 3))
+recon = Triangulation3.fromSig(tri.isoSig())
+print(recon.isIsomorphicTo(tri)); print(recon.source(Language.Cxx))
+recon = Triangulation3.fromSig(tri.neoSig())
+print(recon.isIsomorphicTo(tri)); print(recon.source(Language.Cxx))
+recon = Triangulation3.fromSig(tri.neoSig(encoding = IsoSigBinary))
+print(recon.isIsomorphicTo(tri)); print(recon.source(Language.Cxx))
+print()
+
+# ---------- Testing oriented vs non-oriented signatures ----------
+
+tri = Example3.lens(3, 1)
+try:
+	print(tri.neoSig(True))
+except:
+	print('Caught exception')
+
+tri.orient()
+alt = Triangulation3(tri)
+alt.reflect()
+print(tri.neoSig())
+print(alt.neoSig())
+print(tri.neoSig(True))
+print(alt.neoSig(True))
+print()
+
+# ---------- Testing knot/link signatures ----------
+
+link = Link.fromSig('eputWe') # figure eight knot
+data = LinkSigData(link, BoolSet(True, True), True, BoolSet(True, True))
+print(data.size())
+print([(s.crossing, s.strand, s.sign) for s in data.sequence()])
+print(LinkSigPrintable.encode(1, data))
+print(LinkSigPrintable.encode(2, data))
+print(LinkSigBinary.encode(2, data))
+print(link.knotSig())
+print(link.neoSig())
+print(link.neoSig(encoding = LinkSigBinary))
+print(link.sig(1, encoding = LinkSigPrintable))
+print(link.sig(2, encoding = LinkSigPrintable))
+print(link.sig(2, encoding = LinkSigBinary))
+print(LinkSigBinary.asString(link.neoSig(encoding = LinkSigBinary)))
+print(Link.fromSig(link.knotSig()))
+print(Link.fromSig(link.neoSig()))
+print(Link.fromSig(link.neoSig(encoding = LinkSigBinary)))
+print()
+
+# ---------- Testing "raw" encoders/decoders ----------
+
+enc = BitEncoder()
+enc.encodeInt(0x0002, 3)
+enc.encodeInt(0x3576, 14)
+print(enc.bytes())
+try:
+	enc.encodeBit(True)
+except:
+	print('Caught exception')
+
+try:
+	enc = BitEncoder()
+	enc.encodeBits(3, 0x0002)
+	enc.encodeBits(14, 0x4576)
+except:
+	print('Caught exception')
+
+print()
+
+enc = Base64BitEncoder()
+enc.encodeInt(0x0002, 3)
+enc.encodeInt(0x3576, 14)
+print(enc.str())
+try:
+	enc.encodeBit(True)
+except:
+	print('Caught exception')
+
+try:
+	enc = Base64BitEncoder()
+	enc.encodeBits(3, 0x0002)
+	enc.encodeBits(14, 0x4576)
+except:
+	print('Caught exception')
+
+print()
+

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,8 @@
 #endif
 
 #include <queue>
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina::detail {
 
@@ -490,11 +492,9 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
             return false;
 
         // Check that both triangulations have the same f-vector.
-        if (! std::apply([&other](auto&&... kFaces) {
-                    return ((kFaces.size() == std::get<
-                        subdimOf<decltype(kFaces)>()>(other.faces_).size())
-                        && ...);
-                }, faces_)) {
+        if (! forall_constexpr<0, dim>([this, &other](auto subdim) {
+            return countFaces<subdim>() == other.template countFaces<subdim>();
+        })) {
             return false;
         }
 

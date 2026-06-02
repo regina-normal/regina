@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,30 +32,39 @@
  *  \brief Assists with safely wrapping heavily overloaded functions.
  */
 
-#include <cstddef> // for nullptr_t
+#ifndef __HELPERS_GLOBALS_H
+#ifndef __DOXYGEN
+#define __HELPERS_GLOBALS_H
+#endif
+
+#include "../helpers/concepts.h"
 
 namespace regina {
 
-// Declare a dummy swap function, so that regina::swap always resolves.
-// This avoids a compile error in scenarios where we are including this header
-// but not calling add_global_swap(), and where there is in fact no variant of
-// regina::swap() currently visible.
+// Declare (but do not implement) a dummy swap function, so that regina::swap
+// always resolves.  This avoids a compile error in scenarios where we are
+// including this header but not calling add_global_swap(), and where there is
+// in fact no variant of regina::swap() currently visible.
 //
 void swap(std::nullptr_t, std::nullptr_t) noexcept;
 
 namespace python {
 
 /**
- * Adds a Python binding for the overloaded global regina::swap function
- * for objects of type T, using the given docstring.
+ * Adds a Python binding for the global function `regina::swap(T&, T&)`,
+ * using the docstring stored in `Docs::global_swap`.
  *
- * This routine exists purely for safety: it uses static_cast (not C-style
- * casts) to resolve the overload, so that there is no risk of accidentally
- * binding the wrong variant of regina::swap().
+ * This macro adds safety by using a `static_cast` (not a C-style cast) to
+ * resolve the overloaded `regina::swap`, so that there is no risk of
+ * accidentally binding the wrong swap function.
  */
-template <typename T>
-inline void add_global_swap(pybind11::module_& m, const char* doc) {
-    m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap), doc);
+template <typename T, ClassDocType Docs>
+requires requires(T x, T y) { regina::swap(x, y); }
+inline void add_global_swap(pybind11::module_& m) {
+    m.def("swap", static_cast<void(&)(T&, T&)>(regina::swap),
+        Docs::global_swap);
 }
 
 } } // namespace regina::python
+
+#endif

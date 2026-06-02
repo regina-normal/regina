@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,6 +40,8 @@
 #include "../helpers.h"
 #include "../docstrings/maths/perm.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::Perm;
 using regina::PermClass;
@@ -50,7 +52,7 @@ template <int n>
 void addPerm(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(Perm)
 
-    auto c = pybind11::class_<Perm<n>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<Perm<n>>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<int, int>(), rdoc::__init)
         .def(pybind11::init<const Perm<n>&>(), rdoc::__copy)
@@ -92,7 +94,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         }, rdoc::__inc)
         .def_static("rot", &Perm<n>::rot, rdoc::rot)
         .def_static("rand", static_cast<Perm<n>(&)(bool)>(Perm<n>::rand),
-            pybind11::arg("even") = false, rdoc::rand)
+            "even"_a = false, rdoc::rand)
         .def("trunc", &Perm<n>::trunc, rdoc::trunc)
         .def("clear", &Perm<n>::clear, rdoc::clear)
         .def("SnIndex", &Perm<n>::SnIndex, rdoc::SnIndex)
@@ -129,7 +131,7 @@ template <int n>
 void addPermClass(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(PermClass)
 
-    auto c = pybind11::class_<PermClass<n>>(m, name, rdoc_scope)
+    auto c = pybind11::class_<PermClass<n>>(m, name, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const PermClass<n>&>(), rdoc::__copy)
         .def("isIdentity", &PermClass<n>::isIdentity, rdoc::isIdentity)
@@ -158,9 +160,9 @@ void addPerm(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::PermCodeType>(m, "PermCodeType", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::PermCodeType>(m, "PermCodeType", rdoc_scope)
+    pybind11::enum_<regina::PermCodeType>(m, "PermCodeType", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif
@@ -179,9 +181,9 @@ void addPerm(pybind11::module_& m) {
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::PermOrder>(m, "PermOrder", "enum.Enum",
-            rdoc_scope)
+            rdoc::__class)
 #elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<regina::PermOrder>(m, "PermOrder", rdoc_scope)
+    pybind11::enum_<regina::PermOrder>(m, "PermOrder", rdoc::__class)
 #else
     #error "Unsupported pybind11 version"
 #endif

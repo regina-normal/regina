@@ -1,7 +1,7 @@
 Help on instancemethod in module regina.engine:
 
 boundaryComponents(...)
-    boundaryComponents(self: regina.Triangulation6) -> <internal>.ListView[regina.BoundaryComponent6]
+    boundaryComponents(self: regina.Triangulation6) -> <internal>.View[regina.BoundaryComponent6]
 
     Returns an object that allows iteration through and random access to
     all boundary components of this triangulation.
@@ -15,10 +15,10 @@ boundaryComponents(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
@@ -37,7 +37,7 @@ boundaryComponents(...)
 Help on instancemethod in module regina.engine:
 
 components(...)
-    components(self: regina.Triangulation6) -> <internal>.ListView[regina.Component6]
+    components(self: regina.Triangulation6) -> <internal>.View[regina.Component6]
 
     Returns an object that allows iteration through and random access to
     all components of this triangulation.
@@ -46,10 +46,10 @@ components(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (Component<dim>* c : tri.components()) { ... }
@@ -68,24 +68,25 @@ components(...)
 Help on instancemethod in module regina.engine:
 
 faces(...)
-    faces(self: regina.Triangulation6, arg0: typing.SupportsInt) -> <internal>.ListView[regina.Vertex6] | <internal>.ListView[regina.Edge6] | <internal>.ListView[regina.Triangle6] | <internal>.ListView[regina.Tetrahedron6] | <internal>.ListView[regina.Pentachoron6] | <internal>.ListView[regina.Face6_5]
+    faces(self: regina.Triangulation6, arg0: typing.SupportsInt) -> <internal>.View[regina.Vertex6] | <internal>.View[regina.Edge6] | <internal>.View[regina.Triangle6] | <internal>.View[regina.Tetrahedron6] | <internal>.View[regina.Pentachoron6] | <internal>.View[regina.Face6_5]
 
     Returns an object that allows iteration through and random access to
     all *subdim*-faces of this triangulation, in a way that is optimised
     for Python programmers.
 
     C++ users should not use this routine. The return type must be fixed
-    at compile time, and so it is a std::variant that can hold any of the
-    lightweight return types from the templated faces<subdim>() function.
-    This means that the return value will still need compile-time
-    knowledge of *subdim* to extract and use the appropriate face objects.
-    However, once you know *subdim* at compile time, you are much better
-    off using the (simpler and faster) routine faces<subdim>() instead.
+    at compile time, and so it is typically a ``std::variant`` that can
+    hold any of the lightweight view types returned from the templated
+    ``faces<subdim>()`` function. This means that the return value will
+    still need compile-time knowledge of *subdim* to extract and use the
+    appropriate face objects. However, once you know *subdim* at compile
+    time, you are much better off using the (simpler and faster) routine
+    ``faces<subdim>()`` instead.
 
     For Python users, this routine is much more useful: the return type
-    can be chosen at runtime, and so this routine returns a Python list of
-    Face<dim, subdim> objects (holding all the *subdim*-faces of the
-    triangulation), which you can use immediately.
+    can be chosen at runtime, and so this routine returns a single
+    lightweight view granting access to all of the *subdim*-faces of the
+    triangulation, which you can use immediately.
 
     Exception ``InvalidArgument``:
         The face dimension *subdim* is outside the supported range (i.e.,
@@ -106,21 +107,21 @@ face(...)
     that is optimised for Python programmers.
 
     For C++ users, this routine is not very useful: since precise types
-    must be know at compile time, this routine returns a std::variant *v*
-    that could store a pointer to any class Face<dim, ...>. This means you
-    cannot access the face directly: you will still need some kind of
-    compile-time knowledge of *subdim* before you can extract and use an
-    appropriate Face<dim, subdim> object from *v*. However, once you know
-    *subdim* at compile time, you are better off using the (simpler and
-    faster) routine face<subdim>() instead.
+    must be know at compile time, this routine returns a ``std::variant``
+    *v* that could store a pointer to any class ``Face<dim, ...>``. This
+    means you cannot access the face directly: you will still need some
+    kind of compile-time knowledge of *subdim* before you can extract and
+    use an appropriate ``Face<dim, subdim>`` object from *v*. However,
+    once you know *subdim* at compile time, you are better off using the
+    (simpler and faster) routine ``face<subdim>()`` instead.
 
     For Python users, this routine is much more useful: the return type
     can be chosen at runtime, and so this routine simply returns a
-    Face<dim, subdim> object of the appropriate face dimension that you
-    can use immediately.
+    ``Face<dim, subdim>`` object of the appropriate face dimension that
+    you can use immediately.
 
     The specific return type for C++ programmers will be
-    std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
+    ``std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>``.
 
     Exception ``InvalidArgument``:
         The face dimension *subdim* is outside the supported range (i.e.,
@@ -131,7 +132,7 @@ face(...)
 
     Parameter ``index``:
         the index of the desired face, ranging from 0 to
-        countFaces<subdim>()-1 inclusive.
+        ``countFaces<subdim>()-1`` inclusive.
 
     Returns:
         the requested face.
@@ -139,7 +140,7 @@ face(...)
 Help on instancemethod in module regina.engine:
 
 simplices(...)
-    simplices(self: regina.Triangulation6) -> <internal>.ListView[regina.Simplex6]
+    simplices(self: regina.Triangulation6) -> <internal>.View[regina.Simplex6]
 
     Returns an object that allows iteration through and random access to
     all top-dimensional simplices in this triangulation.
@@ -148,10 +149,10 @@ simplices(...)
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. Note that the elements of the list will be
-    pointers, so your code might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. Note that the elements of the view will be pointers, so
+    your code might look like:
 
     ```
     for (Simplex<dim>* s : tri.simplices()) { ... }
@@ -170,24 +171,25 @@ simplices(...)
 Help on instancemethod in module regina.engine:
 
 faces(...)
-    faces(self: regina.Triangulation4, arg0: typing.SupportsInt) -> <internal>.ListView[regina.Vertex4] | <internal>.ListView[regina.Edge4] | <internal>.ListView[regina.Triangle4] | <internal>.ListView[regina.Tetrahedron4]
+    faces(self: regina.Triangulation4, arg0: typing.SupportsInt) -> <internal>.View[regina.Vertex4] | <internal>.View[regina.Edge4] | <internal>.View[regina.Triangle4] | <internal>.View[regina.Tetrahedron4]
 
     Returns an object that allows iteration through and random access to
     all *subdim*-faces of this triangulation, in a way that is optimised
     for Python programmers.
 
     C++ users should not use this routine. The return type must be fixed
-    at compile time, and so it is a std::variant that can hold any of the
-    lightweight return types from the templated faces<subdim>() function.
-    This means that the return value will still need compile-time
-    knowledge of *subdim* to extract and use the appropriate face objects.
-    However, once you know *subdim* at compile time, you are much better
-    off using the (simpler and faster) routine faces<subdim>() instead.
+    at compile time, and so it is typically a ``std::variant`` that can
+    hold any of the lightweight view types returned from the templated
+    ``faces<subdim>()`` function. This means that the return value will
+    still need compile-time knowledge of *subdim* to extract and use the
+    appropriate face objects. However, once you know *subdim* at compile
+    time, you are much better off using the (simpler and faster) routine
+    ``faces<subdim>()`` instead.
 
     For Python users, this routine is much more useful: the return type
-    can be chosen at runtime, and so this routine returns a Python list of
-    Face<dim, subdim> objects (holding all the *subdim*-faces of the
-    triangulation), which you can use immediately.
+    can be chosen at runtime, and so this routine returns a single
+    lightweight view granting access to all of the *subdim*-faces of the
+    triangulation, which you can use immediately.
 
     Exception ``InvalidArgument``:
         The face dimension *subdim* is outside the supported range (i.e.,
@@ -208,21 +210,21 @@ face(...)
     that is optimised for Python programmers.
 
     For C++ users, this routine is not very useful: since precise types
-    must be know at compile time, this routine returns a std::variant *v*
-    that could store a pointer to any class Face<dim, ...>. This means you
-    cannot access the face directly: you will still need some kind of
-    compile-time knowledge of *subdim* before you can extract and use an
-    appropriate Face<dim, subdim> object from *v*. However, once you know
-    *subdim* at compile time, you are better off using the (simpler and
-    faster) routine face<subdim>() instead.
+    must be know at compile time, this routine returns a ``std::variant``
+    *v* that could store a pointer to any class ``Face<dim, ...>``. This
+    means you cannot access the face directly: you will still need some
+    kind of compile-time knowledge of *subdim* before you can extract and
+    use an appropriate ``Face<dim, subdim>`` object from *v*. However,
+    once you know *subdim* at compile time, you are better off using the
+    (simpler and faster) routine ``face<subdim>()`` instead.
 
     For Python users, this routine is much more useful: the return type
     can be chosen at runtime, and so this routine simply returns a
-    Face<dim, subdim> object of the appropriate face dimension that you
-    can use immediately.
+    ``Face<dim, subdim>`` object of the appropriate face dimension that
+    you can use immediately.
 
     The specific return type for C++ programmers will be
-    std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>.
+    ``std::variant<Face<dim, 0>*, ..., Face<dim, dim-1>*>``.
 
     Exception ``InvalidArgument``:
         The face dimension *subdim* is outside the supported range (i.e.,
@@ -233,7 +235,7 @@ face(...)
 
     Parameter ``index``:
         the index of the desired face, ranging from 0 to
-        countFaces<subdim>()-1 inclusive.
+        ``countFaces<subdim>()-1`` inclusive.
 
     Returns:
         the requested face.
@@ -241,21 +243,21 @@ face(...)
 Help on instancemethod in module regina.engine:
 
 embeddings(...)
-    embeddings(self: regina.Vertex6) -> <internal>.ListView[regina.VertexEmbedding6]
+    embeddings(self: regina.Vertex6) -> <internal>.View[regina.VertexEmbedding6]
 
     Returns an object that allows iteration through and random access to
     all of the ways in which this face appears within a top-dimensional
-    simplex of the underlying triangluation.
+    simplex of the underlying triangulation.
 
     The object that is returned is lightweight, and can be happily copied
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. The elements of the list will be read-only
-    objects of type FaceEmbedding<dim, subdim>. For example, your code
-    might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. The elements of the list will be read-only objects of
+    type ``FaceEmbedding<dim, subdim>``. For example, your code might look
+    like:
 
     ```
     Face<dim, subdim>* face = ...;
@@ -292,21 +294,21 @@ embeddings(...)
 Help on instancemethod in module regina.engine:
 
 embeddings(...)
-    embeddings(self: regina.Vertex3) -> <internal>.ListView[regina.VertexEmbedding3]
+    embeddings(self: regina.Vertex3) -> <internal>.View[regina.VertexEmbedding3]
 
     Returns an object that allows iteration through and random access to
     all of the ways in which this face appears within a top-dimensional
-    simplex of the underlying triangluation.
+    simplex of the underlying triangulation.
 
     The object that is returned is lightweight, and can be happily copied
     by value. The C++ type of the object is subject to change, so C++
     users should use ``auto`` (just like this declaration does).
 
-    The returned object is guaranteed to be an instance of ListView, which
-    means it offers basic container-like functions and supports range-
-    based ``for`` loops. The elements of the list will be read-only
-    objects of type FaceEmbedding<dim, subdim>. For example, your code
-    might look like:
+    The returned object is guaranteed to be a lightweight view type from
+    the ``std::ranges`` library, which means it supports range-based
+    ``for`` loops. The elements of the list will be read-only objects of
+    type ``FaceEmbedding<dim, subdim>``. For example, your code might look
+    like:
 
     ```
     Face<dim, subdim>* face = ...;
@@ -450,7 +452,7 @@ __init__(...)
     Parameter ``value``:
         the real number to be truncated.
 
-    7. __init__(self: regina.Integer, arg0: str, base: typing.SupportsInt = 10) -> None
+    7. __init__(self: regina.Integer, value: str, base: typing.SupportsInt = 10) -> None
 
     Initialises this integer to the given value which is represented as a
     string of digits in a given base.
@@ -543,7 +545,7 @@ __init__(...)
     Parameter ``value``:
         the real number to be truncated.
 
-    7. __init__(self: regina.LargeInteger, arg0: str, base: typing.SupportsInt = 10) -> None
+    7. __init__(self: regina.LargeInteger, value: str, base: typing.SupportsInt = 10) -> None
 
     Initialises this integer to the given value which is represented as a
     string of digits in a given base.
@@ -581,75 +583,29 @@ __init__(...)
     Parameter ``base``:
         the base in which *value* is given.
 
-Help on ListView_Triangulation3_vertices in module regina.engine.internal object:
+Help on View_Triangulation3_vertices in module regina.engine.internal object:
 
-class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
- |  A lightweight object that can be used for iteration and random access
- |  to all elements of a given list.
+class View_Triangulation3_vertices(pybind11_builtins.pybind11_object)
+ |  A lightweight view object that can be used for iteration and random
+ |  access to all elements of a container.
  |
- |  This access is read-only, in the sense that both the list itself and
- |  the list elements are read-only. (Of course, if the list elements are
- |  non-const pointers then this means that the _pointers_ cannot be
- |  reassigned to point to different objects, but the objects they _point_
- |  to can still be modified.)
+ |  This access is read-only, in the sense that both the container and its
+ |  elements are read-only. (Of course, if the elements are C++ pointers,
+ |  such as faces of triangulations or crossings in links, then this means
+ |  that although the _pointers_ cannot be reassigned to point to different
+ |  objects, the objects they _point_ to can still be modified.)
  |
- |  Typically a ListView would be returned from a class member function to
- |  grant the user some basic read-only access to a much richer private
- |  data structure, in a way that allows the internal data structure to
- |  change at some later date without affecting the public API.
+ |  These view objects are small enough to pass by value, with no need for
+ |  any specialised move operations or swap functions.
  |
- |  The ListView class supports several different ways of representing a
- |  list:
- |
- |  * If your list is stored using a container class (e.g., std::vector or
- |    regina::MarkedVector), then you can create a ListView directly from
- |    the container using the syntax ``ListView(container)``. This uses
- |    the generic ListView<Container> class template. There is no need to
- |    explicitly specify the ListView template arguments.
- |
- |  * If your list is stored using a C-style array whose size is not known
- |    at compile-time, you can create a ListView using either the syntax
- |    ``ListView(array, size)`` or ``ListView(begin, end)``. Here *array*
- |    is a pointer to the beginning of the array, and *begin* and *end*
- |    behave as an iterator pair (so ``begin == array`` and ``end == array
- |    + size``). This syntax uses the specialised ListView<Element*> class
- |    template. Again, there is no need to explicitly specify the ListView
- |    template arguments.
- |
- |  * If your list is stored using a C-style array whose size is fixed at
- |    compile-time (i.e., the type is ``Element[n]`` for some constant
- |    *n*), you can create a ListView using the syntax
- |    ``ListView(array)``. Once again, there is no need to explicitly
- |    specify the ListView template arguments.
- |
- |  End users should always store ListView objects using ``auto``, not by
- |  explicitly writing out the full ListView type. One reason for this is
- |  that, now that Regina has moved to C++20, the ListView class will most
- |  likely be removed completely (in favour of the new C++20 ranges
- |  library).
- |
- |  ListView objects are small enough to pass by value and swap with
- |  std::swap(), with no need for any specialised move operations or swap
- |  functions.
- |
- |  Python:
- |      The ListView classes are deliberately difficult to access: they
- |      live within their own private Python namespaces, and are all give
- |      the same class name (*ListView*). You would typically only
- |      interact with a ListView when it is returned from a function
- |      (e.g., ``Link.crossings()``), and in most cases you would simply
- |      iterate over this resulting ListView without ever knowing its
- |      exact type.
- |
- |  Template parameter ``Container``:
- |      the internal type of the list that this object grants access to.
- |      This type must support at least the same operations as this class
- |      itself, except for the copy semantics. In particular, both
- |      std::vector and regina::MarkedVector types (as well as many other
- |      standard container types) are suitable.
+ |  These view classes are deliberately difficult to access, and they live
+ |  within an internal Python namespace.  You would typically only interact
+ |  with a view when it is returned from a function (e.g.,
+ |  ``Link.crossings()``), and in most cases you would simply iterate over
+ |  this resulting view without ever knowing its exact type.
  |
  |  Method resolution order:
- |      ListView_Triangulation3_vertices
+ |      View_Triangulation3_vertices
  |      pybind11_builtins.pybind11_object
  |      builtins.object
  |
@@ -659,57 +615,47 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |      __eq__(*args, **kwargs)
  |      Overloaded function.
  |
- |      1. __eq__(self: <internal>.ListView[regina.Vertex3], arg0: <internal>.ListView[regina.Vertex3]) -> bool
+ |      1. __eq__(self: <internal>.View[regina.Vertex3], arg0: <internal>.View[regina.Vertex3]) -> None
  |
- |      Determines whether this and the given list view are accessing the same
- |      underlying container.
+ |      Disabled for objects of this type.
  |
- |      Here the containers are compared by _reference_ (i.e., they must be
- |      the same container object at the same location in memory; it is not
- |      enough to be two containers with identical contents).
+ |      Objects of this type use value semantics, which means that the
+ |      operators == and != should compare by value (i.e., they test whether
+ |      two objects have the same contents). However, Regina does not
+ |      currently implement such a test for objects of this type.
  |
- |      Returns:
- |          ``True`` if and only if this and the given list use the same
- |          underlying container.
- |
- |      2. __eq__(self: <internal>.ListView[regina.Vertex3], arg0: None) -> bool
+ |      2. __eq__(self: <internal>.View[regina.Vertex3], arg0: None) -> bool
  |
  |      Always returns ``False``, since an object of this type is never equal
  |      to ``None``.
  |
  |  __getitem__(...)
- |      __getitem__(self: <internal>.ListView[regina.Vertex3], arg0: typing.SupportsInt) -> regina.Vertex3
+ |      __getitem__(self: <internal>.View[regina.Vertex3], arg0: typing.SupportsInt) -> regina.Vertex3
  |
- |      Returns the requested element of this list.
+ |      Returns the requested element of this view.
  |
  |      Parameter ``index``:
  |          indicates which element to return; this must be between 0 and
- |          size()-1 inclusive.
+ |          ``size()-1`` inclusive.
  |
  |      Returns:
- |          the (*index*)th element in this list.
+ |          the (*index*)th element in this view.
  |
- |  __init__(...)
- |      __init__(self: regina.internal.ListView_Triangulation3_vertices, arg0: <internal>.ListView[regina.Vertex3]) -> None
- |
- |      Creates a new copy of the given list view.
+ |  __init__(self, /, *args, **kwargs)
+ |      Initialize self.  See help(type(self)) for accurate signature.
  |
  |  __iter__(...)
- |      __iter__(self: <internal>.ListView[regina.Vertex3]) -> collections.abc.Iterator[regina.Vertex3]
+ |      __iter__(self: <internal>.View[regina.Vertex3]) -> collections.abc.Iterator[regina.Vertex3]
  |
- |      Returns a Python iterator over the elements of this list.
+ |      Returns a Python iterator over the elements of this view.
  |
  |      Returns:
- |          an iterator over the elements of this list.
+ |          an iterator over the elements of this view.
  |
  |  __len__(...)
- |      __len__(self: <internal>.ListView[regina.Vertex3]) -> int
+ |      __len__(self: <internal>.View[regina.Vertex3]) -> int
  |
- |      Returns the number of elements in this list.
- |
- |      Python:
- |          This is also used to implement the Python special method
- |          __len__().
+ |      Returns the number of elements in this view.
  |
  |      Returns:
  |          the number of elements.
@@ -718,66 +664,60 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |      __ne__(*args, **kwargs)
  |      Overloaded function.
  |
- |      1. __ne__(self: <internal>.ListView[regina.Vertex3], arg0: <internal>.ListView[regina.Vertex3]) -> bool
+ |      1. __ne__(self: <internal>.View[regina.Vertex3], arg0: <internal>.View[regina.Vertex3]) -> None
  |
- |      Determines whether this and the given object have different values.
- |      This operator ``x != y`` is generated automatically, as the negation
- |      of ``x == y``.
+ |      Disabled for objects of this type.
  |
- |      This test compares the _contents_ of the two objects (i.e., it
- |      compares by value, not by reference). See the documentation for the
- |      corresponding equality test (i.e., the member function ``__eq__``)
- |      for full details on how objects of this type will be compared.
+ |      Objects of this type use value semantics, which means that the
+ |      operators == and != should compare by value (i.e., they test whether
+ |      two objects have the same contents). However, Regina does not
+ |      currently implement such a test for objects of this type.
  |
- |      2. __ne__(self: <internal>.ListView[regina.Vertex3], arg0: None) -> bool
+ |      2. __ne__(self: <internal>.View[regina.Vertex3], arg0: None) -> bool
  |
  |      Always returns ``True``, since an object of this type is never equal
  |      to ``None``.
  |
  |  __repr__(...)
- |      __repr__(self: <internal>.ListView[regina.Vertex3]) -> str
+ |      __repr__(self: <internal>.View[regina.Vertex3]) -> str
  |
  |  __str__(...)
- |      __str__(self: <internal>.ListView[regina.Vertex3]) -> str
+ |      __str__(self: <internal>.View[regina.Vertex3]) -> str
  |
  |  back(...)
- |      back(self: <internal>.ListView[regina.Vertex3]) -> regina.Vertex3
+ |      back(self: <internal>.View[regina.Vertex3]) -> regina.Vertex3
  |
- |      Returns the last element of this list.
+ |      Returns the last element of this view.
  |
  |      Precondition:
- |          This list is not empty.
+ |          This view is not empty.
  |
  |      Returns:
- |          the last element in this list.
+ |          the last element in this view.
  |
  |  empty(...)
- |      empty(self: <internal>.ListView[regina.Vertex3]) -> bool
+ |      empty(self: <internal>.View[regina.Vertex3]) -> bool
  |
- |      Determines if this list is empty.
+ |      Determines if this view is empty.
  |
  |      Returns:
- |          ``True`` if and only if this list is empty.
+ |          ``True`` if and only if this view is empty.
  |
  |  front(...)
- |      front(self: <internal>.ListView[regina.Vertex3]) -> regina.Vertex3
+ |      front(self: <internal>.View[regina.Vertex3]) -> regina.Vertex3
  |
- |      Returns the first element of this list.
+ |      Returns the first element of this view.
  |
  |      Precondition:
- |          This list is not empty.
+ |          This view is not empty.
  |
  |      Returns:
- |          the first element in this list.
+ |          the first element in this view.
  |
  |  size(...)
- |      size(self: <internal>.ListView[regina.Vertex3]) -> int
+ |      size(self: <internal>.View[regina.Vertex3]) -> int
  |
- |      Returns the number of elements in this list.
- |
- |      Python:
- |          This is also used to implement the Python special method
- |          __len__().
+ |      Returns the number of elements in this view.
  |
  |      Returns:
  |          the number of elements.
@@ -787,9 +727,10 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |
  |  __hash__ = None
  |
- |  equalityType = <EqualityType.BY_VALUE: 1>
- |      The objects are compared by value. This means that the underlying C++
- |      operators == and != for the class *C* are used.
+ |  equalityType = <EqualityType.Disabled: 4>
+ |      Objects of the class *C* cannot be compared by value (because the
+ |      comparison operators are not implemented), and they should not be
+ |      compared by reference (because they are passed around by value).
  |
  |
  |  ----------------------------------------------------------------------
@@ -797,4 +738,82 @@ class ListView_Triangulation3_vertices(pybind11_builtins.pybind11_object)
  |
  |  __new__(*args, **kwargs) from pybind11_builtins.pybind11_type
  |      Create and return a new object.  See help(type) for accurate signature.
+
+Help on class DivisionByZero in module regina.engine:
+
+class DivisionByZero(NumericalError)
+ |  An exception thrown when Regina encounters an attempted division by
+ |  zero.
+ |
+ |  Note that, unlike most of Regina's exception classes, the constructor
+ |  for DivisionByZero takes no arguments - you do not need to (and indeed
+ |  cannot) supply a text description.
+ |
+ |  Method resolution order:
+ |      DivisionByZero
+ |      NumericalError
+ |      ReginaException
+ |      builtins.RuntimeError
+ |      builtins.Exception
+ |      builtins.BaseException
+ |      builtins.object
+ |
+ |  Data descriptors inherited from ReginaException:
+ |
+ |  __weakref__
+ |      list of weak references to the object
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from builtins.RuntimeError:
+ |
+ |  __init__(self, /, *args, **kwargs)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |
+ |  ----------------------------------------------------------------------
+ |  Static methods inherited from builtins.RuntimeError:
+ |
+ |  __new__(*args, **kwargs) class method of builtins.RuntimeError
+ |      Create and return a new object.  See help(type) for accurate signature.
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from builtins.BaseException:
+ |
+ |  __getattribute__(self, name, /)
+ |      Return getattr(self, name).
+ |
+ |  __reduce__(self, /)
+ |      Helper for pickle.
+ |
+ |  __repr__(self, /)
+ |      Return repr(self).
+ |
+ |  __setstate__(self, object, /)
+ |
+ |  __str__(self, /)
+ |      Return str(self).
+ |
+ |  add_note(self, object, /)
+ |      Exception.add_note(note) --
+ |      add a note to the exception
+ |
+ |  with_traceback(self, object, /)
+ |      Exception.with_traceback(tb) --
+ |      set self.__traceback__ to tb and return self.
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from builtins.BaseException:
+ |
+ |  __cause__
+ |      exception cause
+ |
+ |  __context__
+ |      exception context
+ |
+ |  __dict__
+ |
+ |  __suppress_context__
+ |
+ |  __traceback__
+ |
+ |  args
 

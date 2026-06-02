@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,35 +32,10 @@
  *  \brief Assists with Python docstrings that are generated from the C++ docs.
  */
 
-// Docstrings that are generated once but used across many source files:
-namespace regina::python::doc::common {
-    extern const char* Packet_append;
-    extern const char* PacketData_anonID;
-    extern const char* PacketData_packet;
-    extern const char* PacketOf;
-    extern const char* PacketOf_copy;
-    extern const char* make_packet;
-    extern const char* make_packet_2;
-
-    extern const char* TightEncodable_encoding;
-    extern const char* TightEncodable_decoding;
-    extern const char* TightEncodable_hash;
-
-    extern const char* neq_value;
-    extern const char* eq_reference;
-    extern const char* neq_reference;
-    extern const char* eq_None;
-    extern const char* neq_None;
-    extern const char* eq_disabled;
-    extern const char* eq_packet_disabled;
-    extern const char* eq_packet_invalid;
-    extern const char* eq_none_static;
-    extern const char* eq_none_abstract;
-
-    extern const char* bool_enum_for_flags;
-
-    extern const char* todo;
-}
+#ifndef __HELPERS_DOCSTRINGS_H
+#ifndef __DOXYGEN
+#define __HELPERS_DOCSTRINGS_H
+#endif
 
 /**
  * To access docstrings, python binding code should be structured as:
@@ -73,26 +48,15 @@ namespace regina::python::doc::common {
  * ...
  * RDOC_SCOPE_END
  *
- * Each begin/switch will set the namespace alias rdoc, either to
- * regina::python::doc if you are using ..._MAIN, or to
- * regina::python::doc::s_ if you are using ..._SCOPE(s).
+ * Each begin/switch will set the alias rdoc to either the namespace
+ * regina::python::doc if you are using ..._MAIN, or to the struct
+ * regina::python::doc::s if you are using ..._SCOPE(s).
  *
  * You can then access each individual docstring as rdoc::name.
  *
- * If you are within a ..._SCOPE(s) block and s is the name of a
- * class/struct/etc., then rdoc refers to the namespace containing the
- * _members_ of s (which uses a trailing underscore, as noted above),
- * and rdoc_scope is an alias for the docstring for s itself (which has
- * no trailing underscore).
- *
- * If you have an inner class/enum/etc. that is declared within some outer
- * class/struct, then you can use RDOC_SCOPE_INNER_BEGIN(s) or
- * RDOC_SCOPE_INNER_SWITCH(s), with a matching RDOC_SCOPE_INNER_END.
- * This must be placed inside the outer BEGIN ... END block: it will preserve
- * the outer \a rdoc namespace and \a rdoc_scope string declarations, and will
- * declare a new namespace alias \a rdoc_inner and string \a rdoc_inner_scope
- * for working with \a s.  Such inner scopes can (at present) only be nested
- * one level deep.
+ * If you are within a ..._SCOPE(s) block and \a s is the name of a
+ * class/struct/etc., then `rdoc::member` refers to the docstring for
+ * `s::member`, and `rdoc::__class` refers to the docstring for \a s itself.
  *
  * If you are within a ..._SCOPE(c) block for some class c and you also wish to
  * access docstrings for one or more of its base classes b1,b2,..., then you
@@ -114,30 +78,63 @@ namespace regina::python::doc::common {
  * can be searched (and ideally _fixed_) before each formal Regina release.
  */
 #define RDOC_SCOPE_BEGIN(scope)  { \
-    const char* rdoc_scope = regina::python::doc::scope; \
-    namespace rdoc = regina::python::doc::scope ## _; \
-    namespace rdoc_global = regina::python::doc;
+    using rdoc = regina::python::doc::scope;
 #define RDOC_SCOPE_BEGIN_MAIN    { \
     namespace rdoc = regina::python::doc;
 #define RDOC_SCOPE_SWITCH(scope) } RDOC_SCOPE_BEGIN(scope)
 #define RDOC_SCOPE_SWITCH_MAIN   } RDOC_SCOPE_BEGIN_MAIN
 #define RDOC_SCOPE_END           }
 
-#define RDOC_SCOPE_INNER_BEGIN(scope)  { \
-    const char* rdoc_inner_scope = rdoc::scope; \
-    namespace rdoc_inner = rdoc::scope ## _;
-#define RDOC_SCOPE_INNER_SWITCH(scope) } RDOC_SCOPE_INNER_BEGIN(scope)
-#define RDOC_SCOPE_INNER_END           }
-
 #define RDOC_SCOPE_BASE(base) \
-    namespace rbase = regina::python::doc::base ##_;
+    using rbase = regina::python::doc::base;
 #define RDOC_SCOPE_BASE_2(base, base2) \
-    namespace rbase = regina::python::doc::base ##_; \
-    namespace rbase2 = regina::python::doc::base2 ##_;
-#define RDOC_SCOPE_BASE_3(base, base2, base3) \
-    namespace rbase = regina::python::doc::base ##_; \
-    namespace rbase2 = regina::python::doc::base2 ##_; \
-    namespace rbase3 = regina::python::doc::base3 ##_;
+    using rbase = regina::python::doc::base; \
+    using rbase2 = regina::python::doc::base2;
 
 #define RDOC_TODO regina::python::doc::common::todo
 
+namespace regina::python {
+
+/**
+ * A common base class to use for all documentation-only classes.
+ */
+struct DocOnlyBase {
+};
+
+/**
+ * An empty C++ class that we can wrap in order to create a documentation-only
+ * class in Python.
+ *
+ * These C++ types need to be unique for each Python documentation-only class.
+ * Therefore we supply the docstring helper class (containing the actual
+ * documentation that we wish to offer through Python) as a template argument.
+ */
+template <ClassDocType Docs>
+struct DocOnlyClass : DocOnlyBase {
+};
+
+/**
+ * Adds a empty documentation-only class.
+ *
+ * This provides a way to import C++ class notes into Python that would
+ * otherwise not be attached to any Python class.
+ *
+ * The Python class will be empty, except for the docstring.
+ */
+template <ClassDocType Docs>
+void add_doc_only_class(pybind11::module_& m, const char* name) {
+    pybind11::class_<DocOnlyClass<Docs>, DocOnlyBase>(m, name, Docs::__class);
+}
+
+namespace doc::common {
+    // Note: docstrings should be wrapped at 70 characters per line;
+    // the hard maximum is 72.
+
+    inline constexpr const char todo[] =
+R"doc(The Python documentation for this class or function has not yet been
+extracted from the C++ source code. Please inform the Regina developers
+about this omission.)doc";
+
+} } // namespace regina::python::doc::common
+
+#endif

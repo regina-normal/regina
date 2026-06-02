@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -110,14 +110,77 @@ std::pair<SpatialLink::Node, SpatialLink::Node> SpatialLink::range() const {
 }
 
 void SpatialLink::computeDefaultRadius() {
-    if (isEmpty())
+    if (isEmpty()) {
         defaultRadius_ = 1.0; /* The actual value is irrelevant. */
+        return;
+    }
 
-    auto r = range();
+    // We have at least one component, which must be non-empty.
+    //
+    // The current algorithm uses the _relative neighbourhood graph_ (RNG)
+    // (thanks to Kate Turner for talking me through this).
+    // The RNG connects two nodes X,Y iff their lune does not contain any
+    // _other_ nodes (the lune is the intersection of the ball centred at X
+    // passing through Y with the ball centred at Y passing through X).
+    //
+    // We expect adjacent nodes in the link to be connected in the RNG.
+    // What we do here is find the closest pair of _non-adjacent_ nodes X,Y
+    // that are connected in the RNG, and choose the rendering radius
+    // dist(X,Y) / 4 (which means the rendered link should fill roughly
+    // half of the space between X and Y).
+    //
+    // TODO: The algorithm can almost certainly be improved.  Currently the
+    // running time is best-case quadratic (since we examine all pairs X,Y),
+    // worst-case cubic (due to the test for an empty lune), and extremely
+    // parallelisable (though we are not parallelising it here).
 
-    auto min = std::min(std::min(r.second.x - r.first.x,
-        r.second.y - r.first.y), r.second.z - r.first.z);
-    defaultRadius_ = min / 20;
+    defaultRadius_ = -1;
+
+    for (auto a = beginNodes(); a != endNodes(); ++a) {
+        for (auto b = std::next(a); b != endNodes(); ++b) {
+            // In most cases, the first value of b in this loop will be
+            // adjacent to a; however, this will not be true if a is the last
+            // node in its component.  At any rate, this is a minor
+            // inefficiency: we will only consider O(n) adjacent pairs,
+            // which is negligible for a best-case O(n^2) algorithm.
+            if (a.adjacent(b))
+                continue;
+
+            auto dist = a->distance(*b);
+            if (defaultRadius_ >= 0 && dist >= defaultRadius_)
+                continue;
+
+            // If the lune is empty, then this will become our new closest
+            // non-adjacent pair of nodes connected in the RNG.
+            bool emptyLune = true;
+            for (auto c = beginNodes(); c != endNodes(); ++c) {
+                if (c == a || c == b)
+                    continue;
+                if (a->distance(*c) < dist && b->distance(*c) < dist) {
+                    emptyLune = false;
+                    break;
+                }
+            }
+            if (emptyLune)
+                defaultRadius_ = dist;
+        }
+    }
+
+    if (defaultRadius_ < 0) {
+        // There were no non-adjacent pairs connected in the RNG at all.
+        // Fall back to a simple heuristic based on the size of the
+        // bounding box.
+        std::cerr << "WARNING: no usable non-adjacent nodes, using "
+            "bounding box to compute radius" << std::endl;
+        auto r = range();
+        auto min = std::min(std::min(r.second.x - r.first.x,
+            r.second.y - r.first.y), r.second.z - r.first.z);
+        defaultRadius_ = min / 20;
+    } else {
+        // We identified the closest pair of non-adjacent nodes connected in
+        // the RNG; now we use dist / 4, as discussed above.
+        defaultRadius_ /= 4;
+    }
 }
 
 void SpatialLink::writeTextShort(std::ostream& out) const {

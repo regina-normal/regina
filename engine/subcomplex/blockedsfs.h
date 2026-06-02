@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,9 @@
 
 #include "regina-core.h"
 #include "subcomplex/satregion.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -59,7 +61,7 @@ class SatRegion;
  * since this essentially requires a 2-dimensional assembling of
  * saturated blocks.  For full detail, writeTextLong() may be used instead.
  *
- * The optional StandardTriangulation routine manifold() is
+ * The optional StandardSubcomplex routine manifold() is
  * implemented for this class, but homology() is not.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
@@ -70,7 +72,7 @@ class SatRegion;
  *
  * \ingroup subcomplex
  */
-class BlockedSFS : public StandardTriangulation {
+class BlockedSFS : public StandardSubcomplex<3> {
     private:
         SatRegion region_;
             /**< The single saturated region that describes this entire
@@ -137,7 +139,7 @@ class BlockedSFS : public StandardTriangulation {
          * comparison operators).
          *
          * This test follows the general rule for most subclasses of
-         * StandardTriangulation (excluding fixed structures such as
+         * StandardSubcomplex (excluding fixed structures such as
          * SnappedBall and TriSolidTorus): two objects compare as equal if and
          * only if they have the same combinatorial parameters (which for this
          * subclass is more specific than combinatorial isomorphism, since
@@ -162,7 +164,7 @@ class BlockedSFS : public StandardTriangulation {
          */
         std::optional<std::string> isPluggedIBundle() const;
 
-        std::unique_ptr<Manifold> manifold() const override;
+        std::unique_ptr<Manifold<3>> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -172,8 +174,8 @@ class BlockedSFS : public StandardTriangulation {
          * fibred space.
          *
          * This function returns by (smart) pointer for consistency with
-         * StandardTriangulation::recognise(), which makes use of the
-         * polymorphic nature of the StandardTriangulation class hierarchy.
+         * StandardSubcomplex<3>::recognise(), which makes use of the
+         * polymorphic nature of the StandardSubcomplex class hierarchy.
          *
          * \param tri the triangulation to examine.
          * \return a structure containing details of the blocked Seifert

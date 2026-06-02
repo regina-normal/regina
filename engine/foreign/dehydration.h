@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,6 +40,8 @@
 #include "regina-core.h"
 #include <memory>
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 class Container;
@@ -63,8 +65,9 @@ class Container;
  * additional text packet that will be the last child of the returned
  * container.
  *
- * If an I/O error occurred while trying to read the given file, 0 will be
- * returned.
+ * If an I/O error occurs while trying to read the given file, this routine
+ * will throw an exception.  This is a change in behaviour as of Regina 8.0:
+ * older versions of Regina (≤ 7.x) returned `null` instead.
  *
  * In its simplest form, the text file can simply contain one
  * dehydration string per line and nothing else.  However, more complex
@@ -78,6 +81,8 @@ class Container;
  * \ref i18n "character encoding" used in the given file _name_, and
  * simply passes it through unchanged to low-level C/C++ file I/O routines.
  * It assumes however that the _contents_ of the file are in UTF-8.
+ *
+ * \exception FileError An error occurred whilst reading the given file.
  *
  * \param filename the name of the text file from which to read.
  * \param colDehydrations the column of the text file containing the

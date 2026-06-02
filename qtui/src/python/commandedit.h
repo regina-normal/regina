@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -83,11 +83,6 @@ class CommandEdit : public QLineEdit {
                  The arguments indicate the range of selected text, or
                  if nothing is selected, the cursor position. */
 
-    private slots:
-        void complete(QString);
-            /**< Override from QT to work completions on words in the
-             *   middle of a QLineEdit. */
-
     public:
         /**
          * Constructor.
@@ -112,12 +107,26 @@ class CommandEdit : public QLineEdit {
          */
         void setCompletionSurrounds(QString start, QString end);
 
+        /**
+         * Offer completions to the user immediately, and act upon their
+         * selection (if any).
+         */
+        void offerCompletion(QCompleter* completer);
+
     protected:
         /**
          * QLineEdit overrides.
          */
         bool event(QEvent* event) override;
         void keyPressEvent(QKeyEvent* event) override;
+
+    private:
+        /**
+         * A replacement for the usual QLineEdit completion mechanism.
+         * The QLineEdit mechanism completely replaces the text, but we just
+         * want to replace a portion of it.
+         */
+        void completePortion(const QString&);
 };
 
 inline unsigned CommandEdit::getSpacesPerTab() {

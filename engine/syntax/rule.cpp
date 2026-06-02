@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
@@ -96,12 +96,31 @@ bool Rule::load(xmlTextReaderPtr reader)
     m_attribute = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"attribute"));
     if (regina::xml::xmlString(xmlTextReaderName(reader)) != "IncludeRules") // IncludeRules uses this with a different semantic
         m_context.parse(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"context")));
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"firstNonSpace")), m_firstNonSpace);
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"lookAhead")), m_lookAhead);
-    if (! regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"column")), m_column))
-        m_column = -1;
 
-    auto result = doLoad(reader);
+    try {
+        m_firstNonSpace = parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"firstNonSpace")));
+    } catch (const InvalidArgument&) {
+        // Leave m_firstNonSpace as its default value.
+    }
+
+    try {
+        m_lookAhead = parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"lookAhead")));
+    } catch (const InvalidArgument&) {
+        // Leave m_lookAhead as its default value.
+    }
+
+    try {
+        m_column = parse<int>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"column")));
+    } catch (const InvalidArgument&) {
+        m_column = -1;
+    }
+
+    bool result;
+    try {
+        result = doLoad(reader);
+    } catch (const InvalidArgument&) {
+        result = false;
+    }
 
     if (m_lookAhead && m_context.isStay())
         result = false;
@@ -278,7 +297,9 @@ bool IncludeRules::doLoad(xmlTextReaderPtr reader)
         m_contextName = s;
     }
 
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"includeAttrib")), m_includeAttribute);
+    // Any exception thrown by parse() will propagate back to the caller.
+    // Note that m_includeAttribute does not have a default value.
+    m_includeAttribute = parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"includeAttrib")));
 
     return !m_contextName.empty() || !m_defName.empty();
 }
@@ -290,10 +311,13 @@ bool KeywordListRule::doLoad(xmlTextReaderPtr reader)
 
     auto attr = xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive");
     if (attr) {
-        bool cs;
-        regina::valueOf(regina::xml::xmlString(attr), cs);
-        m_caseSensitivityOverride = ! cs;
-        m_hasCaseSensitivityOverride = true;
+        try {
+            m_caseSensitivityOverride = ! parse<bool>(
+                regina::xml::xmlString(attr));
+            m_hasCaseSensitivityOverride = true;
+        } catch (const InvalidArgument&) {
+            m_hasCaseSensitivityOverride = false;
+        }
     } else {
         m_hasCaseSensitivityOverride = false;
     }
@@ -336,8 +360,10 @@ bool RegExpr::doLoad(xmlTextReaderPtr reader)
 {
     m_pattern = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String"));
 
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"minimal")), m_minimal);
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), m_caseInsensitive);
+    // Any exception thrown by parse() will propagate back to the caller.
+    // Note that m_minimal and m_caseInsensitive do not have default values.
+    m_minimal = parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"minimal")));
+    m_caseInsensitive = parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")));
 
     return !m_pattern.empty(); // m_regex.isValid() would be better, but parses the regex and thus is way too expensive
 }
@@ -346,9 +372,9 @@ bool StringDetect::doLoad(xmlTextReaderPtr reader)
 {
     m_string = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"String"));
 
-    bool cs;
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")), cs);
-    m_caseSensitivity = ! cs;
+    // Any exception thrown by parse() will propagate back to the caller.
+    // Note that m_caseSensitivity does not have a default value.
+    m_caseSensitivity = ! parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"insensitive")));
 
     return !m_string.empty();
 }

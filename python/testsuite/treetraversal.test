@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2025, Ben Burton
+# Copyright (c) 2007-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides tests for the linear programm tree traversal algorithms.
@@ -153,7 +153,11 @@ else:
 
 print()
 
-t = Triangulation3.fromIsoSig('gHLLOcbcdeffafwfss') # Solid torus # RP^3
+# For the next example we use a first-generation isosig.  Switching to a
+# second-generation isosig would change the way in which the LPs run (due to
+# the resulting relabelling), and would therefore require changing the
+# expected output for this test.
+t = Triangulation3.fromSig('gHLLOcbcdeffafwfss') # Solid torus # RP^3
 print(t.nonTrivialSphereOrDisc())
 tab = LPInitialTableaux(t, NormalCoords.Standard)
 sys = tab.system()

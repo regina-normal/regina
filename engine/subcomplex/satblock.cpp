@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -98,7 +98,7 @@ std::tuple<const SatBlock*, size_t, bool, bool>
 std::string SatBlock::abbr(bool tex) const {
     std::ostringstream s;
     writeAbbr(s, tex);
-    return s.str();
+    return std::move(s).str();
 }
 
 } // namespace regina

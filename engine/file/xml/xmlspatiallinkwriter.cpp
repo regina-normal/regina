@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -58,7 +58,7 @@ void XMLWriter<SpatialLink>::writeContent() {
     // Temporarily enable hexfloat format, which should be lossless.
     auto oldFlags = out_.flags();
     out_ << std::hexfloat;
-    for (const auto& c : data_.components_) {
+    for (const auto& c : data_.components()) {
         out_ << "  <component>\n";
         for (const auto& node : c) {
             out_ << "  <node> " << node.x << ' ' << node.y << ' ' << node.z

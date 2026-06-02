@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2013-2025, Ben Burton
+# Copyright (c) 2013-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides tests for the Orb import filter.
@@ -37,7 +37,12 @@ else:
 
 def testOrb(filename):
     print('Orb file:', filename)
-    print(readOrb(testpath + '/' + filename).detail())
+    try:
+        print(readOrb(testpath + '/' + filename).detail())
+    except FileError:
+        print('File error')
+    except InvalidInput:
+        print('Invalid Orb / Cassson file')
     print()
 
 testOrb('cube.orb')
@@ -45,3 +50,5 @@ testOrb('dodec.orb')
 testOrb('knotted-Y.orb')
 testOrb('italian.orb')
 testOrb('theta_in_solid_torus.orb')
+testOrb('sample.pdf')
+testOrb('no_such_file.orb')

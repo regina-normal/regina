@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,12 +37,15 @@
 #define __REGINA_ABELIANGROUP_H
 #endif
 
+#include <iterator>
 #include <set>
 #include <vector>
 #include "regina-core.h"
 #include "concepts/core.h"
 #include "maths/integer.h"
 #include "maths/matrix.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -55,8 +58,8 @@ namespace regina {
  * Represents a finitely generated abelian group.
  *
  * The torsion elements of the group are stored in terms of their
- * invariant factors.  For instance, Z_2+Z_3 will appear as
- * Z_6, and Z_2+Z_2+Z_3 will appear as Z_2+Z_6.
+ * invariant factors.  For instance, `Z_2 + Z_3` will appear as
+ * `Z_6`, and `Z_2 + Z_2 + Z_3` will appear as `Z_2 + Z_6`.
  *
  * In general the factors will appear as Z_<i>d0</i>+...+Z_<i>dn</i>,
  * where the invariant factors \a di are all greater than 1 and satisfy
@@ -112,44 +115,75 @@ class AbelianGroup :
         /**
          * Creates a new group with the given rank and invariant factors.
          *
+         * The invariant factors should be given as a sequence `d0, d1, ...`,
+         * as described in the class notes, where each invariant factor is
+         * greater than 1 and divides the invariant factor after it.
+         *
          * \exception InvalidArgument The invariant factors were not all
          * greater than 1, and/or they did not satisfy the divisibily
          * requirement (where each invariant factor must divide the one
          * after it).
          *
-         * \nopython Instead, use the constructor that takes the invariant
-         * factors as a Python list.
+         * \nopython Instead use the constructor that takes the invariant
+         * factors as a python list (which need not be constant).
          *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).
-         * \param invFac the list of invariant factors \a d0, \a d1, ...,
-         * as described in the class notes, where each invariant factor
-         * is greater than 1 and divides the invariant factor after it.
+         * \param invFac the list of invariant factors, as described above.
          */
         template <AnyInteger T>
         AbelianGroup(size_t rank, std::initializer_list<T> invFac);
         /**
          * Creates a new group with the given rank and invariant factors.
          *
+         * The invariant factors should be given as a sequence `d0, d1, ...`,
+         * as described in the class notes, where each invariant factor is
+         * greater than 1 and divides the invariant factor after it.
+         *
          * \exception InvalidArgument The invariant factors were not all
          * greater than 1, and/or they did not satisfy the divisibily
          * requirement (where each invariant factor must divide the one
          * after it).
          *
-         * \tparam Container a container or view that supports reverse
-         * iteration via rbegin(), rend(), that has an empty() function,
-         * and whose elements may be of a native C++ integer type or one of
-         * Regina's own integer types.  A suitable example might be
-         * std::vector<int>.
+         * \python Instead of using a pair of iterators, you should pass the
+         * invariant factors as a Python list.
          *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).
-         * \param invFac the list of invariant factors \a d0, \a d1, ...,
-         * as described in the class notes, where each invariant factor
-         * is greater than 1 and divides the invariant factor after it.
+         * \param beginInvFac an interator pointing to the beginning of the
+         * list of invariant factors, as described above.
+         * \param endInvFac an iterator pointing past the end of the list of
+         * invariant factors.
          */
-        template <typename Container>
-        AbelianGroup(size_t rank, const Container& invFac);
+        template <BidirectionalIteratorFor<Integer> Iterator>
+        AbelianGroup(size_t rank, Iterator beginInvFac, Iterator endInvFac);
+        /**
+         * Deprecated constructor that creates a new group with the given rank
+         * and invariant factors.
+         *
+         * The invariant factors should be given as a sequence `d0, d1, ...`,
+         * as described in the class notes, where each invariant factor is
+         * greater than 1 and divides the invariant factor after it.
+         *
+         * \deprecated This has been replaced by an iterator-based
+         * constructor.  Instead of using this constructor, you should
+         * now use `AbelianGroup(rank, invFac.begin(), invFac.end())`.
+         *
+         * \exception InvalidArgument The invariant factors were not all
+         * greater than 1, and/or they did not satisfy the divisibily
+         * requirement (where each invariant factor must divide the one
+         * after it).
+         *
+         * \nopython Instead use the constructor that takes the invariant
+         * factors as a python list.
+         *
+         * \param rank the rank of the new group (i.e., the number of
+         * copies of \a Z).
+         * \param invFac a container or view holding the list of invariant
+         * factors, as described above.
+         */
+        template <BidirectionalIterableFor<Integer> Container>
+        [[deprecated]] AbelianGroup(size_t rank, const Container& invFac);
         /**
          * Creates the abelian group defined by the given presentation matrix.
          *
@@ -413,7 +447,7 @@ class AbelianGroup :
          * other comparison operators that it generates _are_ available.
          *
          * \param rhs the group to compare this with.
-         * \return The result of the comparison between this and the given
+         * \return the result of the comparison between this and the given
          * group.
          */
         std::strong_ordering operator <=> (const AbelianGroup& rhs) const;
@@ -544,24 +578,46 @@ inline AbelianGroup::AbelianGroup(size_t rank,
     }
 }
 
-template <typename Container>
-inline AbelianGroup::AbelianGroup(size_t rank, const Container& invFac) :
-        rank_(rank) {
-    if (! invFac.empty()) {
-        auto it = invFac.rbegin();
-        while (true) {
-            if (*it <= 1)
-                throw InvalidArgument(
-                    "Each invariant factor must be strictly greater than 1");
-            revInvFactors_.push_back(*it);
-            auto prev = it++;
-            if (it == invFac.rend())
+template <BidirectionalIteratorFor<Integer> Iterator>
+inline AbelianGroup::AbelianGroup(size_t rank,
+        Iterator beginInvFac, Iterator endInvFac) : rank_(rank) {
+    using IntType = std::remove_cvref_t<decltype(*beginInvFac)>;
+
+    if (beginInvFac == endInvFac)
+        return;
+
+    --endInvFac;
+    while (true) {
+        if (*endInvFac <= 1)
+            throw InvalidArgument(
+                "Each invariant factor must be strictly greater than 1");
+        revInvFactors_.push_back(*endInvFac);
+
+        // Test divisibility using the input type IntType if we can, since this
+        // may be faster than doing it in the arbitrary-precision Integer class.
+        if constexpr (AnyInteger<IntType>) {
+            if (endInvFac == beginInvFac)
                 return;
-            if ((*prev) % (*it) != 0)
+
+            auto prev = endInvFac--;
+            if ((*prev) % (*endInvFac) != 0)
+                throw InvalidArgument(
+                    "Each invariant factor must divide the next");
+        } else {
+            if (endInvFac == beginInvFac)
+                return;
+
+            --endInvFac;
+            if (revInvFactors_.back() % (*endInvFac) != 0)
                 throw InvalidArgument(
                     "Each invariant factor must divide the next");
         }
     }
+}
+
+template <BidirectionalIterableFor<Integer> Container>
+inline AbelianGroup::AbelianGroup(size_t rank, const Container& invFac) :
+        AbelianGroup(rank, invFac.begin(), invFac.end()) {
 }
 
 inline void AbelianGroup::swap(AbelianGroup& other) noexcept {
@@ -613,12 +669,9 @@ inline bool AbelianGroup::operator == (const AbelianGroup& rhs) const {
 
 inline std::strong_ordering AbelianGroup::operator <=> (const AbelianGroup& rhs)
         const {
-    if (rank_ < rhs.rank_)
-        return std::strong_ordering::less;
-    else if (rank_ > rhs.rank_)
-        return std::strong_ordering::greater;
-    else
-        return revInvFactors_ <=> rhs.revInvFactors_;
+    if (auto c = rank_ <=> rhs.rank_; c != 0)
+        return c;
+    return revInvFactors_ <=> rhs.revInvFactors_;
 }
 
 inline void AbelianGroup::tightEncode(std::ostream& out) const {

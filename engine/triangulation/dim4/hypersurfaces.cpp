@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,6 +30,7 @@
 
 #include "hypersurface/normalhypersurface.h"
 #include "triangulation/dim4.h"
+#include "utilities/fixedarray.h"
 #include <stack>
 
 namespace regina {
@@ -37,10 +38,6 @@ namespace regina {
 template <int subdim> requires (subdim >= 0 && subdim < 4)
 std::pair<NormalHypersurface, bool> Triangulation<4>::linkingSurface(
         const Face<4, subdim>& face) const {
-    static_assert(0 <= subdim && subdim < 4,
-        "Triangulation<4>::linkingSurface() requires a face of dimension "
-        "0, 1, 2 or 3.");
-
     Vector<LargeInteger> coords(15 * size());
     bool thin = true;
 
@@ -66,17 +63,11 @@ std::pair<NormalHypersurface, bool> Triangulation<4>::linkingSurface(
         // We track the subcomplex with an array of booleans for each facial
         // dimension, indicating which of the faces is currently included.
 
-        bool* use0 = new bool[countVertices()];
-        bool* use1 = new bool[countEdges()];
-        bool* use2 = new bool[countTriangles()];
-        bool* use3 = new bool[countTetrahedra()];
-        bool* use4 = new bool[size()];
-
-        std::fill(use0, use0 + countVertices(), false);
-        std::fill(use1, use1 + countEdges(), false);
-        std::fill(use2, use2 + countTriangles(), false);
-        std::fill(use3, use3 + countTetrahedra(), false);
-        std::fill(use4, use4 + size(), false);
+        FixedArray<bool> use0(countVertices(), false);
+        FixedArray<bool> use1(countEdges(), false);
+        FixedArray<bool> use2(countTriangles(), false);
+        FixedArray<bool> use3(countTetrahedra(), false);
+        FixedArray<bool> use4(size(), false);
 
         if constexpr (subdim == 1) {
             use1[face.index()] = true;
@@ -325,12 +316,6 @@ std::pair<NormalHypersurface, bool> Triangulation<4>::linkingSurface(
 donePent:
             ++pentIndex;
         }
-
-        delete[] use0;
-        delete[] use1;
-        delete[] use2;
-        delete[] use3;
-        delete[] use4;
     }
 
     return { NormalHypersurface(*this, HyperCoords::Standard,

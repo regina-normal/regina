@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,7 +30,7 @@
 
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 
 static_assert(regina::standardDim(4));
 static_assert(! regina::standardDim(5));
@@ -38,8 +38,8 @@ static_assert(! regina::standardDim(5));
 static_assert(std::is_swappable_v<regina::Triangulation<3>>);
 
 // Number of base64 characters required to hold (dim+1)!
-static_assert(regina::IsoSigPrintable<3>::charsPerPerm == 1);
-static_assert(regina::IsoSigPrintable<4>::charsPerPerm == 2);
+static_assert(regina::IsoSigPrintable::charsPerPerm<3> == 1);
+static_assert(regina::IsoSigPrintable::charsPerPerm<4> == 2);
 #ifdef REGINA_HIGHDIM
-static_assert(regina::IsoSigPrintable<15>::charsPerPerm == 8);
+static_assert(regina::IsoSigPrintable::charsPerPerm<15> == 8);
 #endif

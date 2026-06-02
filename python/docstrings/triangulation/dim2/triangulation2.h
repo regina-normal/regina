@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Triangulation
-static const char *Triangulation =
+struct Triangulation2 {
+
+// Docstring regina::python::doc::Triangulation2::__class
+static constexpr const char __class[] =
 R"doc(Represents a 2-manifold triangulation.
 
 This is a specialisation of the generic Triangulation class template;
@@ -26,12 +28,14 @@ functionality, including many functions specific to 2-manifolds.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.)doc";
+possible, even when passing or returning objects by value.
 
-namespace Triangulation_ {
+Python:
+    This class is available to Python users under the name
+    Triangulation2.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__copy
-static const char *__copy =
+// Docstring regina::python::doc::Triangulation2::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given triangulation.
 
 This will also clone any computed properties (such as homology,
@@ -48,14 +52,14 @@ can use the two-argument copy constructor instead.
 Parameter ``src``:
     the triangulation to copy.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__default
-static const char *__default =
+// Docstring regina::python::doc::Triangulation2::__default
+static constexpr const char __default[] =
 R"doc(Default constructor.
 
 Creates an empty triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__init
-static const char *__init =
+// Docstring regina::python::doc::Triangulation2::__init
+static constexpr const char __init[] =
 R"doc(Creates a new copy of the given triangulation, with the option of
 whether or not to clone its computed properties and/or locks also.
 
@@ -88,15 +92,15 @@ Parameter ``cloneLocks``:
     from the given triangulation, or ``False`` if the new
     triangulation should have no locks at all.)doc";
 
-// Docstring regina::python::doc::Triangulation_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::Triangulation2::__init_2
+static constexpr const char __init_2[] =
 R"doc("Magic" constructor that tries to find some way to interpret the given
 string as a triangulation.
 
 At present, Regina understands the following types of strings (and
 attempts to parse them in the following order):
 
-* isomorphism signatures (see fromIsoSig()).
+* isomorphism signatures (see fromSig()).
 
 This list may grow in future versions of Regina.
 
@@ -107,14 +111,14 @@ Exception ``InvalidArgument``:
 Parameter ``description``:
     a string that describes a 2-manifold triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::countBoundaryEdges
-static const char *countBoundaryEdges =
+// Docstring regina::python::doc::Triangulation2::countBoundaryEdges
+static constexpr const char countBoundaryEdges[] =
 R"doc(A dimension-specific alias for countBoundaryFacets().
 
 See countBoundaryFacets() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::eulerChar
-static const char *eulerChar =
+// Docstring regina::python::doc::Triangulation2::eulerChar
+static constexpr const char eulerChar[] =
 R"doc(Returns the Euler characteristic of this triangulation. This will be
 evaluated as ``V-E+F``.
 
@@ -123,14 +127,14 @@ This returns the same result as eulerCharTri().
 Returns:
     the Euler characteristic of this triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::hasBoundaryEdges
-static const char *hasBoundaryEdges =
+// Docstring regina::python::doc::Triangulation2::hasBoundaryEdges
+static constexpr const char hasBoundaryEdges[] =
 R"doc(A dimension-specific alias for hasBoundaryFacets().
 
 See hasBoundaryFacets() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isBall
-static const char *isBall =
+// Docstring regina::python::doc::Triangulation2::isBall
+static constexpr const char isBall[] =
 R"doc(Determines whether this is a triangulation of a 2-ball.
 
 Unlike the 3-dimensional version of this routine, isBall() for
@@ -139,16 +143,16 @@ Unlike the 3-dimensional version of this routine, isBall() for
 Returns:
     ``True`` if and only if this is a 2-ball triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isClosed
-static const char *isClosed =
+// Docstring regina::python::doc::Triangulation2::isClosed
+static constexpr const char isClosed[] =
 R"doc(Determines if this triangulation is closed. This is the case if and
 only if it has no boundary components.
 
 Returns:
     ``True`` if and only if this triangulation is closed.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isIdeal
-static const char *isIdeal =
+// Docstring regina::python::doc::Triangulation2::isIdeal
+static constexpr const char isIdeal[] =
 R"doc(Always returns ``False``.
 
 This routine determines if this triangulation is ideal (has a non-
@@ -163,8 +167,8 @@ triangulations, and to assist with writing dimension-agnostic code.
 Returns:
     ``False``.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isMinimal
-static const char *isMinimal =
+// Docstring regina::python::doc::Triangulation2::isMinimal
+static constexpr const char isMinimal[] =
 R"doc(Determines whether this is a minimal triangulation of the underlying
 2-manifold; that is, it uses the fewest possible triangles.
 
@@ -185,8 +189,8 @@ underlying manifold.
 Returns:
     ``True`` if and only if this is a minimal triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::isSphere
-static const char *isSphere =
+// Docstring regina::python::doc::Triangulation2::isSphere
+static constexpr const char isSphere[] =
 R"doc(Determines whether this is a triangulation of a 2-sphere.
 
 Unlike the 3-dimensional version of this routine, isSphere() for
@@ -195,32 +199,32 @@ Unlike the 3-dimensional version of this routine, isSphere() for
 Returns:
     ``True`` if and only if this is a 2-sphere triangulation.)doc";
 
-// Docstring regina::python::doc::Triangulation_::newTriangle
-static const char *newTriangle =
+// Docstring regina::python::doc::Triangulation2::newTriangle
+static constexpr const char newTriangle[] =
 R"doc(A dimension-specific alias for newSimplex().
 
 See newSimplex() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::newTriangle_2
-static const char *newTriangle_2 =
+// Docstring regina::python::doc::Triangulation2::newTriangle_2
+static constexpr const char newTriangle_2[] =
 R"doc(A dimension-specific alias for newSimplex().
 
 See newSimplex() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::newTriangles
-static const char *newTriangles =
+// Docstring regina::python::doc::Triangulation2::newTriangles
+static constexpr const char newTriangles[] =
 R"doc(A dimension-specific alias for newSimplices().
 
 See newSimplices() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::newTriangles_2
-static const char *newTriangles_2 =
+// Docstring regina::python::doc::Triangulation2::newTriangles_2
+static constexpr const char newTriangles_2[] =
 R"doc(A dimension-specific alias for newSimplices().
 
 See newSimplices() for further information.)doc";
 
-// Docstring regina::python::doc::Triangulation_::removeAllTriangles
-static const char *removeAllTriangles =
+// Docstring regina::python::doc::Triangulation2::removeAllTriangles
+static constexpr const char removeAllTriangles[] =
 R"doc(A dimension-specific alias for removeAllSimplices().
 
 See removeAllSimplices() for further information.
@@ -231,8 +235,8 @@ Exception ``LockViolation``:
     See Simplex<2>::lock() and Simplex<2>::lockFacet() for further
     details on how such locks work and what their implications are.)doc";
 
-// Docstring regina::python::doc::Triangulation_::removeTriangle
-static const char *removeTriangle =
+// Docstring regina::python::doc::Triangulation2::removeTriangle
+static constexpr const char removeTriangle[] =
 R"doc(A dimension-specific alias for removeSimplex().
 
 See removeSimplex() for further information.
@@ -246,8 +250,8 @@ Exception ``LockViolation``:
 Parameter ``tri``:
     the triangle to remove.)doc";
 
-// Docstring regina::python::doc::Triangulation_::removeTriangleAt
-static const char *removeTriangleAt =
+// Docstring regina::python::doc::Triangulation2::removeTriangleAt
+static constexpr const char removeTriangleAt[] =
 R"doc(A dimension-specific alias for removeSimplexAt().
 
 See removeSimplexAt() for further information.
@@ -262,8 +266,8 @@ Parameter ``index``:
     specifies which triangle to remove; this must be between 0 and
     size()-1 inclusive.)doc";
 
-// Docstring regina::python::doc::Triangulation_::swap
-static const char *swap =
+// Docstring regina::python::doc::Triangulation2::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given triangulation.
 
 All triangles that belong to this triangulation will be moved to
@@ -286,7 +290,7 @@ triangulation.
 Parameter ``other``:
     the triangulation whose contents should be swapped with this.)doc";
 
-}
+}; // struct Triangulation2
 
 } // namespace regina::python::doc
 

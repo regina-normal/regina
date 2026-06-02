@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,7 @@
 namespace regina {
 
 template <int n, bool cached>
+requires (2 <= n && n <= maxPermDegree())
 typename PermGroup<n, cached>::iterator&
         PermGroup<n, cached>::iterator::operator ++() {
     int k = 1;
@@ -138,6 +139,7 @@ template PermGroup<16, true>::iterator&
     PermGroup<16, true>::iterator::operator ++();
 
 template <int n, bool cached>
+requires (2 <= n && n <= maxPermDegree())
 PermGroup<n, cached>::PermGroup(NamedPermGroup group) {
     // Remember: all permutations not explicitly set here will be
     // initialised to the identity.
@@ -222,6 +224,7 @@ template PermGroup<15, true>::PermGroup(NamedPermGroup);
 template PermGroup<16, true>::PermGroup(NamedPermGroup);
 
 template <int n, bool cached>
+requires (2 <= n && n <= maxPermDegree())
 PermGroup<n, cached>::PermGroup(int k) {
     // Remember: all permutations not explicitly set here will be
     // initialised to the identity.
@@ -272,6 +275,7 @@ template PermGroup<15, true>::PermGroup(int);
 template PermGroup<16, true>::PermGroup(int);
 
 template <int n, bool cached>
+requires (2 <= n && n <= maxPermDegree())
 bool PermGroup<n, cached>::contains(Perm<n> p) const {
     for (int i = n - 1; i > 0; --i) {
         // INV: p fixes all elements > i, and if p is in the group then it has
@@ -332,6 +336,7 @@ template bool PermGroup<15, true>::contains(Perm<15>) const;
 template bool PermGroup<16, true>::contains(Perm<16>) const;
 
 template <int n, bool cached>
+requires (2 <= n && n <= maxPermDegree())
 bool PermGroup<n, cached>::operator == (const PermGroup& other) const {
     // A quick pre-check on count_[], which should be identical.
     if (! std::equal(count_, count_ + n, other.count_))
@@ -424,6 +429,7 @@ template bool PermGroup<16, true>::operator == (const PermGroup<16, true>&)
     const;
 
 template <int n, bool cached>
+requires (2 <= n && n <= maxPermDegree())
 void PermGroup<n, cached>::writeTextLong(std::ostream& out) const {
     // We repeat the code for writeTextShort() because we would like to
     // hang on to the computed group size for a bit longer.
@@ -481,6 +487,7 @@ template void PermGroup<15, true>::writeTextLong(std::ostream&) const;
 template void PermGroup<16, true>::writeTextLong(std::ostream&) const;
 
 template <int n, bool cached>
+requires (2 <= n && n <= maxPermDegree())
 PermGroup<n, cached> PermGroup<n, cached>::centraliser(
         const PermClass<n>& conj) {
     // Begin with the trivial group.

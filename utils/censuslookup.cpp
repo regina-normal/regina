@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Look up an isomorphism signature in Regina's census databases         *
  *                                                                        *
- *  Copyright (c) 2014-2025, Ben Burton                                   *
+ *  Copyright (c) 2014-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,14 +32,14 @@
 #include <iostream>
 #include "census/census.h"
 #include "file/globaldirs.h"
-#include "triangulation/dim3.h"
+#include "utilities/exception.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:" << std::endl;
-    std::cerr << "    " << progName << " <isosig> ..." << std::endl;
+    std::cerr << "    " << progName << " <sig> ..." << std::endl;
     std::cerr << "    " << progName
         << " [ -v, --version | -?, --help ]" << std::endl;
     std::cerr << std::endl;
@@ -52,7 +52,8 @@ void usage(const char* progName, const std::string& error = std::string()) {
 int main(int argc, char* argv[]) {
     // Parse the command line.
     if (argc < 2)
-        usage(argv[0], "Please specify one or more isomorphism signatures.");
+        usage(argv[0], "Please specify one or more isomorphism signatures "
+            "or knot/link signatures.");
 
     // Check for standard arguments:
     for (int i = 1; i < argc; ++i) {
@@ -72,18 +73,25 @@ int main(int argc, char* argv[]) {
     regina::GlobalDirs::deduceDirs(argv[0]);
 
     // Search for each signature.
-    for (int i = 1; i < argc; ++i) {
-        auto hits = regina::Census::lookup(argv[i]);
+    try {
+        for (int i = 1; i < argc; ++i) {
+            auto hits = regina::Census::lookup(argv[i]);
 
-        size_t n = hits.size();
-        std::cout << argv[i] << ": " << n
-            << (n == 1 ? " hit" : " hits") << std::endl;
+            size_t n = hits.size();
+            std::cout << argv[i] << ": " << n
+                << (n == 1 ? " hit" : " hits") << std::endl;
 
-        for (const auto& hit : hits)
-            std::cout << "    " << hit.name() << " -- "
-                << hit.db().desc() << std::endl;
+            for (const auto& hit : hits)
+                std::cout << "    " << hit.name() << " -- "
+                    << hit.db().desc() << std::endl;
 
-        std::cout << std::endl;
+            std::cout << std::endl;
+        }
+    } catch (const regina::FileError&) {
+        std::cerr << "ERROR: An error occurred whilst accessing Regina's "
+            "census databases.\n\n";
+        std::cerr << "Please check that Regina has been installed correctly.\n";
+        return 1;
     }
 
     return 0;

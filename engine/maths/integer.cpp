@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,44 +39,6 @@
 
 // We instantiate both variants of the IntegerBase template at the bottom
 // of this file.
-
-// The implementations in this file currently require a native integer
-// that is twice the size of a long.  The C++ standard does not mandate this,
-// but also I am not aware of a platform on which this fails.
-static_assert(
-    ! std::is_void<typename regina::IntOfSize<2 * sizeof(long)>::type>(),
-    "Regina requires a native integer type that is twice the size of a long. The developers are not currently aware of any cases where this fails, so if you see this error then _please_ write and let us know.");
-
-/**
- * Old macros for testing signed integer overflow, given in order from
- * fastest to slowest (by experimentation).  All are based on section
- * 2-21 from Hacker's Delight by Warren.
- *
- * These tests are all abandoned now because the 128-bit cast solution is
- * significantly faster than any of these.
- *
- * Note that a slicker test (such as checking whether answer / y == x) is
- * not possible, because compiler optimisations are too clever nowadays
- * and strip out the very tests we are trying to perform
- * (e.g., whether (x * y) / y == x).
- *
- * - Ben, 19/08/2013.
- *
-#define LONG_OVERFLOW(x, y) \
-        (((x) > 0 && ( \
-            ((y) > 0 && (y) > LONG_MAX / (x)) || \
-             (y) < 0 && (y) < LONG_MIN / (x))) || \
-         ((x) < 0 && ( \
-            ((y) > 0 && (x) < LONG_MIN / (y)) || \
-            ((y) < 0 && (x) < LONG_MAX / (y)))))
-#define LONG_OVERFLOW(x, y) \
-        (((x) > 0 && (y) > 0 && (y) > LONG_MAX / (x)) || \
-         ((x) > 0 && (y) < 0 && (y) < LONG_MIN / (x)) || \
-         ((x) < 0 && (y) > 0 && (x) < LONG_MIN / (y)) || \
-         ((x) < 0 && (y) < 0 && (x) < LONG_MAX / (y)))
-#define LONG_OVERFLOW(x, y) \
-        ((y) && labs(x) > (((~((x) ^ (y))) >> (sizeof(long)*8-1)) / labs(y)))
- */
 
 namespace regina {
 
@@ -230,12 +192,8 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         mpz_init(large_);
         mpz_mul_si(large_, other.large_, small_);
     } else {
-        // Hum. We are assuming that Wide is not void, i.e., there is
-        // a native integer type that is twice the size of a long.
-        // Currently this is enforced through a static_assert at the
-        // top of this file.
-        using Wide = typename IntOfSize<2 * sizeof(long)>::type;
-        Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other.small_);
+        DoubleLong ans = static_cast<DoubleLong>(small_) *
+            static_cast<DoubleLong>(other.small_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
             large_ = new __mpz_struct[1];

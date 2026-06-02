@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,8 @@
 
 #include "regina-core.h"
 #include "triangulation/forward.h"
+
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -458,7 +460,7 @@ class PacketInfo {
                 case PacketType::Link:
                     return "Link";
                 case PacketType::SpatialLink:
-                    return "Spatial Link";
+                    return "Spatial link";
                 case PacketType::Triangulation2:
                     return "2-D triangulation";
                 case PacketType::Triangulation3:
@@ -493,6 +495,8 @@ class PacketInfo {
                     return "Unknown";
             }
         }
+
+        PacketInfo() = delete;
 };
 
 /**
@@ -500,13 +504,13 @@ class PacketInfo {
  *
  * This variable is only meaningful when \a Held is not itself a packet type,
  * but instead is a standalone type that can (if desired) be wrapped in a
- * packet of type PacketOf<Held>.  Examples of such types include Link and
- * Triangulation<dim>.
+ * packet of type `PacketOf<Held>`.  Examples of such types include Link and
+ * `Triangulation<dim>`.
  *
  * In all other cases, this variable will be PacketType::None.
  *
  * In particular, if \a Held is a full packet type itself (such as Container,
- * Script, or PacketOf<...>), then this variable will be PacketType::None.
+ * Script, or `PacketOf<...>`), then this variable will be PacketType::None.
  *
  * \nopython
  *

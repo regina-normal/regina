@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -121,7 +121,7 @@ R2DownArg::R2DownArg(regina::Crossing* c) : crossing(c) {
     displayCrossing[0] = c->index();
     displayCrossing[1] = c->next(1).crossing()->index();
 
-    std::sort(displayCrossing, displayCrossing + 2);
+    std::sort(displayCrossing.begin(), displayCrossing.end());
 }
 
 QString R2DownArg::display() const {
@@ -143,7 +143,7 @@ R3Arg::R3Arg(regina::Crossing* c, int useSide) : crossing(c), side(useSide) {
     displayCrossing[1] = c2->index();
     displayCrossing[2] = c3->index();
 
-    std::sort(displayCrossing, displayCrossing + 3);
+    std::sort(displayCrossing.begin(), displayCrossing.end());
 }
 
 QString R3Arg::display() const {

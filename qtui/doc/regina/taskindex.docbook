@@ -1106,6 +1106,8 @@
 
  <indexentry>
   <primaryie>isomorphism signatures</primaryie>
+  <secondaryie><link linkend="man-sigconvert">converting between
+   first-generation and second-generation</link></secondaryie>
   <secondaryie><link linkend="tri-composition-isosig">copying
    to the clipboard</link></secondaryie>
   <secondaryie><link linkend="import-isosiglist">importing
@@ -1157,6 +1159,8 @@
 
  <indexentry>
   <primaryie>knot/link signatures</primaryie>
+  <secondaryie><link linkend="man-sigconvert">converting between
+   first-generation and second-generation</link></secondaryie>
   <secondaryie><link linkend="link-new-knotsig">described</link></secondaryie>
   <secondaryie><link linkend="link-new-code">reconstructing link diagrams
    from signatures</link></secondaryie>
@@ -1292,13 +1296,15 @@
    polynomial</link></secondaryie>
   <secondaryie><link linkend="link-polynomials">Kauffman
    bracket</link></secondaryie>
+  <secondaryie><link linkend="man-sigconvert">knot/link signature,
+   converting between generations</link></secondaryie>
   <secondaryie><link linkend="link-new-code">knot/link signature,
    recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">knot/link signature,
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-graphs-nice">nice tree
    decompositions</link></secondaryie>
-  <secondaryie><link linkend="link-odd-writhe">odd writhe</link></secondaryie>
+  <secondaryie><link linkend="link-virtual-properties">odd writhe</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
   <secondaryie><link linkend="link-new-cables">parallel cables,
    building</link></secondaryie>
@@ -1314,14 +1320,14 @@
   <secondaryie><link linkend="link-new-cables">Seifert
    framing</link></secondaryie>
   <secondaryie><link linkend="link-selfframe">self framing</link></secondaryie>
-  <secondaryie><link linkend="link-odd-writhe">self-linking
+  <secondaryie><link linkend="link-virtual-properties">self-linking
    number</link></secondaryie>
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
   <secondaryie><link linkend="link-treewidth">treewidth,
    improving</link></secondaryie>
-  <secondaryie><link linkend="link-virtual-genus">virtual
+  <secondaryie><link linkend="link-virtual-properties">virtual
    genus</link></secondaryie>
   <secondaryie><link linkend="links">virtual versus
    classical</link></secondaryie>
@@ -1494,7 +1500,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-odd-writhe">odd writhe</link></primaryie>
+  <primaryie><link linkend="link-virtual-properties">odd writhe</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1837,7 +1843,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-odd-writhe">self-linking
+  <primaryie><link linkend="link-virtual-properties">self-linking
    number</link></primaryie>
  </indexentry>
 
@@ -1866,6 +1872,16 @@
   <primaryie>sigma vector</primaryie>
   <secondaryie><link linkend="tri-algebra-cellular">invariant of
    torsion linking form</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>signatures, isomorphism</primaryie>
+  <seeie>See: isomorphism signatures</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>signatures, knot/link</primaryie>
+  <seeie>See: knot/link signatures</seeie>
  </indexentry>
 
  <indexentry>
@@ -2270,6 +2286,8 @@
    form</link></secondaryie>
   <secondaryie><link linkend="tri-composition-isomorphism">isomorphism
    and subcomplex testing</link></secondaryie>
+  <secondaryie><link linkend="man-sigconvert">isomorphism signature,
+   converting between generations</link></secondaryie>
   <secondaryie><link linkend="tri-new-isosig">isomorphism signature,
    recreating from</link></secondaryie>
   <secondaryie><link linkend="tri-locks">locks, simplex and
@@ -2431,7 +2449,7 @@
  <indexentry>
   <primaryie>virtual links</primaryie>
   <secondaryie><link linkend="links">overview</link></secondaryie>
-  <secondaryie><link linkend="link-virtual-genus">virtual
+  <secondaryie><link linkend="link-virtual-properties">virtual
    genus</link></secondaryie>
  </indexentry>
 

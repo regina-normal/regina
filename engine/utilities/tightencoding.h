@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,6 +44,8 @@
 #include "concepts/iterator.h"
 #include "utilities/exception.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 template <bool>
@@ -54,9 +56,9 @@ namespace detail {
     requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
     void tightEncodeInteger(std::ostream&, IntType);
 
-    template <typename IntType, CharIterator iterator>
+    template <typename IntType, CharIterator Iterator>
     requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
-    IntType tightDecodeInteger(iterator, iterator, bool);
+    IntType tightDecodeInteger(Iterator, Iterator, bool);
 }
 
 /*! \page tight Tight encodings of data
@@ -208,7 +210,7 @@ struct TightEncodable {
     std::string tightEncoding() const {
         std::ostringstream out;
         static_cast<const T*>(this)->tightEncode(out);
-        return out.str();
+        return std::move(out).str();
     }
 
     /**
@@ -253,7 +255,7 @@ struct TightEncodable {
      * name __hash__().  This allows objects of this type to be used as
      * keys in Python dictionaries and sets.
      *
-     * \return The integer hash of this object.
+     * \return the integer hash of this object.
      */
     size_t hash() const {
         return std::hash<std::string>{}(tightEncoding());
@@ -303,6 +305,8 @@ void tightEncode(std::ostream& out, IntType value) {
  * `Integer(value).tightEncoding()`, which is slower but will give the
  * correct result.
  *
+ * \pydocname{tightEncoding_CppInteger}
+ *
  * \param value the integer to encode.
  * \return the resulting encoded string.
  *
@@ -312,7 +316,7 @@ template <CppInteger IntType>
 std::string tightEncoding(IntType value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, value);
-    return out.str();
+    return std::move(out).str();
 }
 
 /**
@@ -337,6 +341,8 @@ void tightEncode(std::ostream& out, bool value);
  *
  * The booleans \c true and \c false are guaranteed to have the same
  * tight encodings as the integers 1 and 0 respectively.
+ *
+ * \pydocname{tightEncoding_bool}
  *
  * \param value the boolean to encode.
  * \return the resulting encoded string.
@@ -517,9 +523,9 @@ namespace detail {
      *
      * \ingroup detail
      */
-    template <typename IntType, CharIterator iterator>
+    template <typename IntType, CharIterator Iterator>
     requires CppInteger<IntType> || ArbitraryPrecisionInteger<IntType>
-    IntType tightDecodeInteger(iterator start, iterator limit,
+    IntType tightDecodeInteger(Iterator start, Iterator limit,
         bool noTrailingData);
 
     /**

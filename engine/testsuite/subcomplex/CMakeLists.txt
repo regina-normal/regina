@@ -1,6 +1,6 @@
 # Files to compile
 SET ( FILES
-  standardtriangulation.cpp
+  standardsubcomplex.cpp
   txicore.cpp
   )
 

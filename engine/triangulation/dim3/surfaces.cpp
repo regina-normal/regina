@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,6 +32,7 @@
 #include "packet/container.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 #include <stack>
 
 namespace regina {
@@ -224,6 +225,9 @@ bool Triangulation<3>::isOneEfficient() const {
     // Check the preconditions before examining the cached value, since it's
     // possible the 1-efficiency value was cached from a newer calculation
     // engine that supports 1-efficiency testing in more settings.
+    //
+    // Note: validity and Euler characteristic are enough to ensure our
+    // preconditions on the vertex links.
     if (! isValid()) {
         throw FailedPrecondition(
             "1-efficiency testing requires a valid triangulation");
@@ -233,14 +237,12 @@ bool Triangulation<3>::isOneEfficient() const {
         throw FailedPrecondition(
             "1-efficiency testing requires an ideal triangulation");
     }
-    for (auto v : vertices()) {
-        if (v->linkType() != Vertex<3>::Link::Torus &&
-                v->linkType() != Vertex<3>::Link::KleinBottle)
+    for (auto v : vertices())
+        if (v->linkEulerChar() != 0) {
             throw FailedPrecondition(
                 "1-efficiency testing requires a triangulation whose "
                 "vertex links are all tori and/or Klein bottles");
-    }
-
+        }
     if (prop_.oneEfficient_.has_value())
         return *prop_.oneEfficient_;
 
@@ -308,7 +310,7 @@ bool Triangulation<3>::hasSplittingSurface() const {
         Disjoint = 1,
         Intersecting = 2
     };
-    auto* state = new EdgeState[countEdges()];
+    FixedArray<EdgeState> state(countEdges());
 
     // We also keep track of each edge e that is not yet assumed disjoint but
     // that is a candidate for this assumption.
@@ -323,7 +325,7 @@ bool Triangulation<3>::hasSplittingSurface() const {
 
     for (int i = 0; i < 3; i++){
         candidate_disjoint.clear();
-        std::fill(state, state + countEdges(), EdgeState::Unknown);
+        std::fill(state.begin(), state.end(), EdgeState::Unknown);
 
         // Outset
         candidate_disjoint.push_back(tri->edge(i));
@@ -378,23 +380,17 @@ bool Triangulation<3>::hasSplittingSurface() const {
             // We partitioned the edges into disjoint and intersecting,
             // with two opposite disjoint edges per tetrahedron.
             // Thus there is a splitting surface.
-            delete[] state;
             return *(prop_.splittingSurface_ = true);
         }
     } // End search for splitting surfaces along each edge of tri.
 
     // We found no splitting surfaces; there is none.
-    delete[] state;
     return *(prop_.splittingSurface_ = false);
 }
 
 template <int subdim> requires (subdim >= 0 && subdim < 3)
 std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface(
         const Face<3, subdim>& face) const {
-    static_assert(0 <= subdim && subdim < 3,
-        "Triangulation<3>::linkingSurface() requires a face of dimension "
-        "0, 1 or 2.");
-
     Vector<LargeInteger> coords(7 * size());
     bool thin = true;
 
@@ -418,15 +414,10 @@ std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface(
         // We track the subcomplex with an array of booleans for each facial
         // dimension, indicating which of the faces is currently included.
 
-        bool* use0 = new bool[countVertices()];
-        bool* use1 = new bool[countEdges()];
-        bool* use2 = new bool[countTriangles()];
-        bool* use3 = new bool[size()];
-
-        std::fill(use0, use0 + countVertices(), false);
-        std::fill(use1, use1 + countEdges(), false);
-        std::fill(use2, use2 + countTriangles(), false);
-        std::fill(use3, use3 + size(), false);
+        FixedArray<bool> use0(countVertices(), false);
+        FixedArray<bool> use1(countEdges(), false);
+        FixedArray<bool> use2(countTriangles(), false);
+        FixedArray<bool> use3(size(), false);
 
         if constexpr (subdim == 1) {
             use1[face.index()] = true;
@@ -592,11 +583,6 @@ std::pair<NormalSurface, bool> Triangulation<3>::linkingSurface(
 doneTet:
             ++tetIndex;
         }
-
-        delete[] use0;
-        delete[] use1;
-        delete[] use2;
-        delete[] use3;
     }
 
     return { NormalSurface(*this, NormalCoords::Standard, std::move(coords)),

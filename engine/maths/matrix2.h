@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -28,6 +28,10 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file maths/matrix2.h
+ *  \brief Deals with 2x2 integer matrices.
+ */
+
 #ifndef __REGINA_MATRIX2_H
 #ifndef __DOXYGEN
 #define __REGINA_MATRIX2_H
@@ -38,9 +42,7 @@
 #include "regina-core.h"
 #include "maths/ring.h"
 
-/*! \file maths/matrix2.h
- *  \brief Deals with 2x2 integer matrices.
- */
+ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
@@ -170,11 +172,15 @@ class Matrix2 {
          */
         Matrix2 transpose() const;
         /**
-         * Calculates the inverse of this matrix.
-         * This matrix is not changed.
+         * Returns the inverse of this matrix.  This matrix will not be changed.
          *
-         * This routine only works for integer matrices whose determinant is
-         * either +1 or -1.
+         * This routine only works for integer matrices whose determinant is +1.
+         * Otherwise the inverse (if it even exists) cannot be an integer
+         * matrix, and so this routine will throw an exception.
+         * This is a change of behaviour as of Regina 8.0: older versions of
+         * Regina (≤ 7.x) returned the zero matrix to indicate failure instead.
+         *
+         * \exception NoSolution This matrix does not have determinant ±1.
          *
          * \return the inverse of this matrix.  If this matrix does not
          * have determinant +1 or -1, the zero matrix will be returned
@@ -215,20 +221,21 @@ class Matrix2 {
          */
         Matrix2& operator *= (long scalar);
         /**
-         * Negates this matrix.
-         * This matrix is changed to reflect the result.
+         * Negates this matrix.  This matrix is changed to reflect the result.
          */
         void negate();
         /**
-         * Inverts this matrix.
+         * Inverts this matrix.  This matrix is changed to reflect the result.
          *
-         * This routine only works for integer matrices whose determinant is
-         * either +1 or -1.  Otherwise this matrix is left unchanged.
+         * This routine only works for integer matrices whose determinant is +1.
+         * Otherwise the inverse (if it even exists) cannot be an integer
+         * matrix, and so this routine will throw an exception.
+         * This is a change of behaviour as of Regina 8.0: older versions of
+         * Regina (≤ 7.x) returned `false` to indicate failure instead.
          *
-         * \return \c true if this matrix was successfully inverted
-         * (i.e., its determinant was +1 or -1), or \c false otherwise.
+         * \exception NoSolution This matrix does not have determinant ±1.
          */
-        bool invert();
+        void invert();
 
         /**
          * Determines if this is equal to the given matrix.

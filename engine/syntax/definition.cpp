@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
@@ -284,14 +284,17 @@ bool DefinitionData::loadLanguage(xmlTextReaderPtr reader)
     author = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"author"));
     license = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"license"));
 
-    // Since valueOf() does not have defaults, we must explicitly test validity.
-    int ver;
-    if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"version")), ver))
-        version = ver;
+    try {
+        version = parse<int>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"version")));
+    } catch (const InvalidArgument&) {
+        // Leave version as its default value.
+    }
 
-    bool cs;
-    if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"casesensitive")), cs))
-        caseSensitive = cs;
+    try {
+        caseSensitive = parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"casesensitive")));
+    } catch (const InvalidArgument&) {
+        // Leave caseSensitive as its default value.
+    }
 
     return true;
 }
@@ -401,15 +404,17 @@ void DefinitionData::loadGeneral(xmlTextReaderPtr reader)
     // reference counter to count XML child elements, to not return too early
     int elementRefCounter = 1;
 
-    bool cs;
     while (true) {
         switch (xmlTextReaderNodeType(reader)) {
             case 1 /* start element */:
                 ++elementRefCounter;
 
                 if (regina::xml::xmlString(xmlTextReaderName(reader)) == "keywords") {
-                    if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"casesensitive")), cs))
-                        caseSensitive = cs;
+                    try {
+                        caseSensitive = parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"casesensitive")));
+                    } catch (const InvalidArgument&) {
+                        // Leave caseSensitive as its default value.
+                    }
                     delimiters += regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"additionalDeliminator"));
                     std::sort(delimiters.begin(), delimiters.end());
                     auto it = std::unique(delimiters.begin(), delimiters.end());

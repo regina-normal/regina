@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,6 +44,8 @@
 #include <string>
 #include "regina-core.h"
 
+ENSURE_ESSENTIAL_REGINA_HEADERS
+
 namespace regina {
 
 /**
@@ -57,6 +59,8 @@ namespace regina {
  *
  * Details of the error can be accessed through the inherited member
  * function what().
+ *
+ * \python This uses Python's `RuntimeError` as its base class.
  *
  * \ingroup utilities
  */
@@ -174,7 +178,8 @@ class NotImplemented : public ReginaException {
 };
 
 /**
- * An exception thrown when trying to access data from the filesystem.
+ * An exception thrown when trying to read or write data to/from the
+ * filesystem.
  *
  * This could occur, for instance, when trying to read data from the
  * Regina or SnapPea census databases.

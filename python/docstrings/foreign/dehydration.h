@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::readDehydrationList
-static const char *readDehydrationList =
+inline constexpr const char readDehydrationList[] =
 R"doc(Reads a list of dehydrated triangulations from the given text file.
 The file should contain one dehydration string per line. These strings
 will be rehydrated as described in Triangulation<3>::rehydrate().
@@ -26,8 +26,10 @@ If any dehydrations strings are invalid, these will be recorded in an
 additional text packet that will be the last child of the returned
 container.
 
-If an I/O error occurred while trying to read the given file, 0 will
-be returned.
+If an I/O error occurs while trying to read the given file, this
+routine will throw an exception. This is a change in behaviour as of
+Regina 8.0: older versions of Regina (≤ 7.x) returned ``None``
+instead.
 
 In its simplest form, the text file can simply contain one dehydration
 string per line and nothing else. However, more complex formats are
@@ -42,6 +44,9 @@ Internationalisation:
     used in the given file _name_, and simply passes it through
     unchanged to low-level C/C++ file I/O routines. It assumes however
     that the _contents_ of the file are in UTF-8.
+
+Exception ``FileError``:
+    An error occurred whilst reading the given file.
 
 Parameter ``filename``:
     the name of the text file from which to read.

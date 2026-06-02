@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::HilbertCD
-static const char *HilbertCD =
+struct HilbertCD {
+
+// Docstring regina::python::doc::HilbertCD::__class
+static constexpr const char __class[] =
 R"doc(Implements a modified Contejean-Devie algorithm for enumerating
 Hilbert bases. This is based on the stack-based algorithm described in
 "An efficient incremental algorithm for solving systems of linear
@@ -29,10 +31,8 @@ this class should ever be created.
     constraints. Consider using the much faster HilbertPrimal or
     HilbertDual instead.)doc";
 
-namespace HilbertCD_ {
-
-// Docstring regina::python::doc::HilbertCD_::enumerate
-static const char *enumerate =
+// Docstring regina::python::doc::HilbertCD::enumerate
+static constexpr const char enumerate[] =
 R"doc(Determines the Hilbert basis that generates all integer points in the
 intersection of the *n*-dimensional non-negative orthant with some
 linear subspace. The resulting basis elements will be of the class
@@ -100,7 +100,7 @@ Parameter ``constraints``:
     a set of validity constraints as described above, or
     ValidityConstraints::none if none should be imposed.)doc";
 
-}
+}; // struct HilbertCD
 
 } // namespace regina::python::doc
 

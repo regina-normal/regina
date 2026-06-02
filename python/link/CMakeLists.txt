@@ -4,6 +4,7 @@
 SET ( FILES
   examplelink.cpp
   link.cpp
+  linksig.cpp
   modellinkgraph.cpp
   pylink.cpp
   spatiallink.cpp

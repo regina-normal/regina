@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/enumerate/doubledescription.h"
 
+using namespace pybind11::literals;
+
 using regina::python::GILCallbackManager;
 using regina::DoubleDescription;
 using regina::VectorInt;
@@ -43,7 +45,7 @@ void addDoubleDescription(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(DoubleDescription)
 
     auto c = pybind11::class_<DoubleDescription>(m, "DoubleDescription",
-            rdoc_scope)
+            rdoc::__class)
         .def_static("enumerate", [](
                 const std::function<void(VectorInt&&)>& action,
                 const regina::MatrixInt& s,
@@ -54,10 +56,8 @@ void addDoubleDescription(pybind11::module_& m) {
                 GILCallbackManager<false>::ScopedAcquire acquire(manager);
                 action(std::move(v));
             }, s, c, p, r);
-        },
-            pybind11::arg("action"), pybind11::arg("subspace"),
-            pybind11::arg("constraints"), pybind11::arg("tracker") = nullptr,
-            pybind11::arg("initialRows") = 0,
+        }, "action"_a, "subspace"_a, "constraints"_a, "tracker"_a = nullptr,
+            "initialRows"_a = 0,
             rdoc::enumerate)
         .def_static("enumerate", [](const regina::MatrixInt& s,
                 const regina::ValidityConstraints& c,
@@ -67,9 +67,8 @@ void addDoubleDescription(pybind11::module_& m) {
                 ans.push_back(std::move(v));
             }, s, c, p, r);
             return ans;
-        }, pybind11::arg("subspace"), pybind11::arg("constraints"),
-            pybind11::arg("tracker") = nullptr,
-            pybind11::arg("initialRows") = 0,
+        }, "subspace"_a, "constraints"_a, "tracker"_a = nullptr,
+            "initialRows"_a = 0,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
             rdoc::enumerate)
     ;
