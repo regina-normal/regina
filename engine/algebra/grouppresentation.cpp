@@ -356,17 +356,18 @@ MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
         std::move(N));
 }
 
-void GroupPresentation::dehnAlgorithmSubMetric(
+std::set<GroupPresentation::WordSubstitutionData>
+        GroupPresentation::dehnAlgorithmSubMetric(
         const GroupExpression &this_word, const GroupExpression &that_word,
-        std::set<WordSubstitutionData> &sub_list, int step) {
+        int step) {
     size_t this_length = this_word.wordLength();
     size_t that_length = that_word.wordLength();
     // generic early exit strategy
     if ((this_length < 2) || (that_length==0))
-        return;
+        return {};
     // early exit strategy based on step.
     if ((step==1) && ((step+1)*this_length < that_length))
-        return;
+        return {};
     // TODO: should check to whatever extent the above is of much use...
 
     // this -> splayed to this_word, that_word -> reducer
@@ -384,6 +385,7 @@ void GroupPresentation::dehnAlgorithmSubMetric(
         inv_reducer[that_length-(i+1)] = reducer[i].inverse();
 
     // search for cyclic subwords of reducer in this_word_vec...
+    std::set<WordSubstitutionData> sub_list;
     for (size_t i=0; i<this_length; i++)
         for (size_t j=0; j<that_length; j++) {
             size_t comp_length = 0;
@@ -435,6 +437,8 @@ void GroupPresentation::dehnAlgorithmSubMetric(
                     sub_list.insert(subData);
             }
         }
+
+    return sub_list;
 }
 
 /**
@@ -741,8 +745,8 @@ bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
     while (continueSimplify) {
         continueSimplify = false;
         for (const auto& r : relations_) {
-            std::set<WordSubstitutionData> sub_list; // highest score is *first*
-            dehnAlgorithmSubMetric( word, r, sub_list );
+            // highest score is *first*
+            auto sub_list = dehnAlgorithmSubMetric( word, r );
             if (! sub_list.empty())
                 if ( sub_list.begin()->score > 0 ) {
                     applySubstitution( word, r, *sub_list.begin() );
@@ -836,9 +840,9 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
                 tit++;
                 while (tit != relations_.end()) {
                     // attempt to apply *it to *tit
-                    std::set<WordSubstitutionData> sub_list;
-                    dehnAlgorithmSubMetric( *tit, *it, sub_list ); // take first valid sub
-                    if (sub_list.size() != 0)
+                    auto sub_list = dehnAlgorithmSubMetric( *tit, *it );
+                    // take first valid sub
+                    if (! sub_list.empty())
                         if ( sub_list.begin()->score > 0 ) {
                             applySubstitution( *tit, *it, *sub_list.begin() );
                             we_value_iteration = true;
@@ -2237,8 +2241,7 @@ void GroupPresentation::proliferateRelators(int depth) {
         for (size_t j=0; j<relations_.size(); j++) {
             if (i==j)
                 continue; // TODO: maybe accept novel self-substitutions?
-            std::set<WordSubstitutionData> sub_list;
-            dehnAlgorithmSubMetric(relations_[i], relations_[j], sub_list,
+            auto sub_list = dehnAlgorithmSubMetric(relations_[i], relations_[j],
                 depth);
             while (!sub_list.empty()) {
                 GroupExpression newRel( relations_[i] );
@@ -2256,8 +2259,7 @@ void GroupPresentation::proliferateRelators(int depth) {
                 // a record of how j was created, as in where the two junction
                 // points are so as to ensure what we're adding spans at least
                 // one of the junctions.
-                std::set<WordSubstitutionData> sub_list;
-                dehnAlgorithmSubMetric( j, r, sub_list, depth );
+                auto sub_list = dehnAlgorithmSubMetric( j, r, depth );
                 while (!sub_list.empty()) {
                     // TODO: we might want to avoid some obviously repetitive
                     //       subs as noted above?

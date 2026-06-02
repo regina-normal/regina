@@ -1757,8 +1757,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *  This algorithm assumes that this_word and that_word are cyclically
          *  reduced words.  If you feed it non-cyclically reduced words it
          *  will give you suggestions although they will not be as strong
-         *  as if the words were cyclically reduced.  It also only adds
-         *  to sub_list, so in normal usage one would pass it an empty sub-list.
+         *  as if the words were cyclically reduced.
          *
          *  The argument \a step must be strictly positive.
          *  The default `step == 1` assumes you are looking for
@@ -1769,10 +1768,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          *  is used primarily when building relator tables for group
          *  recognition.
          */
-        static void dehnAlgorithmSubMetric(
-            const GroupExpression &this_word,
-            const GroupExpression &that_word,
-            std::set<WordSubstitutionData> &sub_list,
+        static std::set<WordSubstitutionData> dehnAlgorithmSubMetric(
+            const GroupExpression &this_word, const GroupExpression &that_word,
             int step = 1);
 
         /**
