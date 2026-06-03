@@ -733,6 +733,7 @@ isBase64 : function
 isTriangulation : function
 lcm : function
 makeAngleEquations : function
+makeBoundaryNullAngleEquations : function
 makeEmbeddedConstraints : function
 makeMatchingEquations : function
 makePacket : function
