@@ -29,6 +29,7 @@
  **************************************************************************/
 
 #include "packet/packet.h"
+#include "packet/container.h"
 
 #include "packettreeview.h"
 #include "reginamain.h"
@@ -47,6 +48,8 @@
 #include "reginafilter.h"
 
 #include <QFileDialog>
+#include <QFileInfo>
+#include <QStringList>
 
 void ReginaMain::importDehydration() {
     importFile(DehydrationHandler::instance, nullptr, tr(FILTER_ALL),
@@ -101,18 +104,50 @@ void ReginaMain::importOrb() {
 void ReginaMain::importFile(const PacketImporter& importer,
         PacketFilter* parentFilter, const QString& fileFilter,
         const QString& dialogTitle) {
-    QString file = QFileDialog::getOpenFileName(this,
+    QStringList files = QFileDialog::getOpenFileNames(this,
         dialogTitle, QString(), fileFilter);
-    if (file.isEmpty())
+    if (files.isEmpty())
         return;
-    std::shared_ptr<regina::Packet> newTree = importer.importData(file, this);
 
-    if (newTree) {
-        ImportDialog dlg(this, newTree, packetTree,
-            treeView->selectedPacket(), parentFilter,
-            importer.useImportEncoding(), dialogTitle);
-        if (dlg.validate() && dlg.exec() == QDialog::Accepted)
-            packetView(*newTree, true);
+    std::shared_ptr<regina::Packet> importRoot;
+
+    if (files.size() == 1) {
+        const QString& file = files.front();
+
+        importRoot = importer.importData(file, this);
+        if (! importRoot)
+            return;
+
+        QString defaultLabel = QFileInfo(file).completeBaseName();
+        if (! defaultLabel.isEmpty())
+            importRoot->setLabel(defaultLabel.toUtf8().constData());
+    } else {
+        auto container = std::make_shared<regina::Container>();
+        container->setLabel(tr("Imported data").toUtf8().constData());
+
+        for (const QString& file : files) {
+            std::shared_ptr<regina::Packet> child =
+                importer.importData(file, this);
+            if (! child)
+                continue;
+
+            QString childLabel = QFileInfo(file).completeBaseName();
+            if (! childLabel.isEmpty())
+                child->setLabel(childLabel.toUtf8().constData());
+
+            container->append(child);
+        }
+
+        if (! container->firstChild())
+            return;
+
+        importRoot = std::move(container);
     }
+
+    ImportDialog dlg(this, importRoot, packetTree,
+        treeView->selectedPacket(), parentFilter,
+        importer.useImportEncoding(), dialogTitle);
+    if (dlg.validate() && dlg.exec() == QDialog::Accepted)
+        packetView(*importRoot, true);
 }
 
