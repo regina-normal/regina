@@ -95,7 +95,7 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     // For each bag, work out the maximum cost of all links *below* that
     // bag if the root is located at or *above* that bag.
     // We do this using a leaves-to-root iteration over the tree.
-    FixedArray<MaxAggregator<T>> maxBelow(size_);
+    FixedArray<MaxCountAggregator<T>> maxBelow(size_);
     for (const TreeBag* b = first(); b; b = b->next()) {
         for (const TreeBag* c = b->children(); c; c = c->sibling()) {
             maxBelow[b->index()].aggregate(maxBelow[c->index()]);
@@ -106,7 +106,7 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     // Now, for each bag, work out the maximum cost of all links *above*
     // that bag if the root is located at or *below* that bag.
     // We do this using a root-to-leaves iteration over the tree.
-    FixedArray<MaxAggregator<T>> maxAbove(size_);
+    FixedArray<MaxCountAggregator<T>> maxAbove(size_);
     for (const TreeBag* b = firstPrefix(); b; b = b->nextPrefix()) {
         if (const TreeBag* c = b->parent()) {
             maxAbove[b->index()].reset(costReverse[b->index()]);
@@ -124,7 +124,7 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     // For each node, the final cost of rooting the tree at that node is
     // found by combining maxBelow, maxAbove, and costRoot.
     const TreeBag* bestBag = nullptr;
-    MaxAggregator<T> bestCost;
+    MaxCountAggregator<T> bestCost;
 
     for (const TreeBag* b = first(); b; b = b->next()) {
         // Combine all costs into maxBelow.

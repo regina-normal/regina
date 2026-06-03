@@ -33,10 +33,10 @@
 
 #include "testhelper.h"
 
-using regina::MaxAggregator;
+using regina::MaxCountAggregator;
 
-TEST(AggregatorTest, max) {
-    using Agg = MaxAggregator<float>;
+TEST(AggregatorTest, maxCount) {
+    using Agg = MaxCountAggregator<float>;
 
     Agg a;
     EXPECT_TRUE(a.empty());

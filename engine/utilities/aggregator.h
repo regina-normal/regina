@@ -64,7 +64,7 @@ namespace regina {
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  Its implementations of these rely upon type \a T; that is,
- * the efficiency of moving and swapping objects of type `MaxAggregator<T>`
+ * the efficiency of moving and swapping objects of type `MaxCountAggregator<T>`
  * depends upon the efficiency of moving and swapping objects of type \a T.
  *
  * \nopython
@@ -73,7 +73,7 @@ namespace regina {
  */
 template <typename T>
 requires std::regular<T> && std::three_way_comparable<T>
-class MaxAggregator {
+class MaxCountAggregator {
     public:
         /**
          * The result of a three-way comparison on type \a T.
@@ -97,11 +97,11 @@ class MaxAggregator {
          * Creates a new aggregator that has not yet encountered any
          * atomic values at all.
          */
-        constexpr MaxAggregator() = default;
+        constexpr MaxCountAggregator() = default;
         /**
          * Creates a new copy of the given aggregator.
          */
-        constexpr MaxAggregator(const MaxAggregator&) = default;
+        constexpr MaxCountAggregator(const MaxCountAggregator&) = default;
         /**
          * Moves the contents of the given aggregator into this new aggregator.
          *
@@ -111,7 +111,7 @@ class MaxAggregator {
          *
          * The aggregator that is passed will no longer be usable.
          */
-        constexpr MaxAggregator(MaxAggregator&&) = default;
+        constexpr MaxCountAggregator(MaxCountAggregator&&) = default;
 
         /**
          * Determines whether or not this aggregator has encountered any
@@ -159,7 +159,8 @@ class MaxAggregator {
          *
          * \return a reference to this aggregator.
          */
-        constexpr MaxAggregator& operator = (const MaxAggregator&) = default;
+        constexpr MaxCountAggregator& operator = (const MaxCountAggregator&) =
+            default;
         /**
          * Moves the contents of the given aggregator into this aggregator.
          *
@@ -169,7 +170,8 @@ class MaxAggregator {
          *
          * \return a reference to this aggregator.
          */
-        constexpr MaxAggregator& operator = (MaxAggregator&&) = default;
+        constexpr MaxCountAggregator& operator = (MaxCountAggregator&&) =
+            default;
 
         /**
          * Swaps the contents of this and the given aggregator.
@@ -181,7 +183,7 @@ class MaxAggregator {
          * \param other the aggregator whose contents are to be swapped with
          * this.
          */
-        constexpr void swap(MaxAggregator& other) noexcept
+        constexpr void swap(MaxCountAggregator& other) noexcept
                 requires std::swappable<T> {
             using std::swap;
             swap(max_, other.max_); // uses T's swap operation, if defined
@@ -199,7 +201,7 @@ class MaxAggregator {
          * \return \c true if and only if this and the given aggregator hold
          * equivalent values with the same multiplicity.
          */
-        bool operator == (const MaxAggregator& rhs) const {
+        bool operator == (const MaxCountAggregator& rhs) const {
             if (count_ == 0)
                 return rhs.count_ == 0; // max_ should be ignored in this case
             else
@@ -225,7 +227,7 @@ class MaxAggregator {
          * \return the result of the comparison between this and the given
          * aggregator.
          */
-        OrderType operator <=> (const MaxAggregator& rhs) const {
+        OrderType operator <=> (const MaxCountAggregator& rhs) const {
             if (count_ == 0) {
                 return rhs.count_ == 0 ? OrderType::equivalent :
                     OrderType::less;
@@ -301,7 +303,7 @@ class MaxAggregator {
          * \param other the aggregator whose results should be incorporated
          * into this.
          */
-        constexpr void aggregate(const MaxAggregator& other) {
+        constexpr void aggregate(const MaxCountAggregator& other) {
             if (other.count_ == 0) {
                 return;
             } else if (count_ == 0) {
@@ -322,8 +324,8 @@ class MaxAggregator {
 /**
  * Swaps the contents of the given aggregators.
  *
- * This global routine simply calls MaxAggregator<T>::swap(); it is provided
- * so that MaxAggregator<T> meets the C++ Swappable requirements.
+ * This global routine simply calls MaxCountAggregator<T>::swap(); it is
+ * provided so that MaxCountAggregator<T> meets the C++ Swappable requirements.
  *
  * This operation is not marked `noexcept`, since its throwing behaviour
  * depends upon the throwing behaviour of the swap operation for type \a T.
@@ -337,7 +339,7 @@ class MaxAggregator {
  */
 template <typename T>
 requires std::swappable<T>
-constexpr void swap(MaxAggregator<T>& a, MaxAggregator<T>& b) {
+constexpr void swap(MaxCountAggregator<T>& a, MaxCountAggregator<T>& b) {
     a.swap(b);
 }
 

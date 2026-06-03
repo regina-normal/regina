@@ -396,7 +396,7 @@ Version 8.0  [ TODO ]
             - Routines inverse() and invert() now throw an exception if the
               matrix does not have determinant ±1.  This also means that
               invert() no longer returns a boolean to indicate success.
-        Class MaxAggregator<T>:
+        Class MaxCountAggregator<T>:
             - Helper class for aggregating values using max with multiplicity.
         Class NativeInteger<bytes>:
             - The constructor that takes an Integer or LargeInteger is now
