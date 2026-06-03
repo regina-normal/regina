@@ -9,6 +9,7 @@ SET ( FILES
   subdivide.cpp
   triangulation4.cpp
   vertex4.cpp
+  layered4.cpp
   )
 
 # Prepend folder name

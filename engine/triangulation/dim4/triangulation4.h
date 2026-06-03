@@ -1425,6 +1425,197 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return \c true if and only if the triangulation was changed.
          */
         bool idealToFinite();
+    
+        /**
+         * Punctures this manifold by thickening the given tetrahedron into a
+         * tetrahedral pillow and then removing a 4-ball from its interior.
+         * If no tetrahedron is specified (i.e., the tetrahedron pointer is
+         * \c null), then the tetrahedron used will be facet 0 of
+         * pentachoron 0.
+         *
+         * The puncture will not meet the boundary of the pillow, and so
+         * nothing will go wrong if the given tetrahedron is boundary or has
+         * ideal vertices.  A side-effect of this, however, is that the
+         * resulting triangulation will contain additional vertices, and will
+         * almost certainly be far from minimal.  It is highly recommended
+         * that you run simplify() if you do not need to preserve
+         * the combinatorial structure of the new triangulation.
+         *
+         * The new sphere boundary will be formed from two tetrahedra;
+         * specifically, face 4 of the last and second-last pentachora
+         * of the triangulation.  The gluings surrounding these two boundary
+         * tetrahedra make the induced boundary triangulation the a
+         * two-tetrahedron 3-sphere.
+         *
+         * Pentachoron and/or facet locks will not prevent the puncture
+         * from taking place.  If the given tetrahedron was locked, then
+         * this lock will be moved to one of the two tetrahedra surrounding
+         * the tetrahedral pillow.  In particular, if the given tetrahedron
+         * is boundary, then the lock will be moved to the corresponding
+         * boundary tetrahedron.
+         *
+         * \pre This triangulation is non-empty, and if \c location is non-null
+         * then it is in fact a tetrahedron belonging to this triangulation.
+         *
+         * \exception InvalidArgument The given tetrahedron is non-null but
+         * not a tetrahedron of this triangulation, or the given tetrahedron
+         * is null but this triangulation is empty.
+         *
+         * \param location the tetrahedron indicating where the puncture
+         * should be taken.  This may be \c null, in which case facet 0 of
+         * pentachoron 0 will be used.
+         */
+        void puncture(Tetrahedron<4>* location = nullptr);
+
+        /**
+         * Forms the connected sum of this triangulation with the given
+         * triangulation.  This triangulation will be altered directly.
+         *
+         * If one or both triangulations contains multiple connected components,
+         * this routine will connect the components containing pentachoron 0
+         * of each triangulation, and will copy any additional
+         * components across with no modification.
+         *
+         * If either triangulation is empty, then the result will simply be a
+         * clone of the other triangulation.
+         *
+         * This and/or the given triangulation may be bounded or ideal, or
+         * even invalid; in all cases the connected sum will be formed by
+         * puncturing each triangulation and identifying the resulting
+         * two-tetrahedron 3-sphere boundary components.  Note, however, that
+         * the result might possibly contain additional internal vertices
+         * (even if the original triangulations do not).
+         *
+         * Pentachoron and/or facet locks will not prevent the connected sum
+         * from taking place.  The operation essentially involves prying open
+         * two tetrahedra (one from each triangulation) and joining the
+         * resulting 3-sphere boundary components; if some original
+         * tetrahedron \a t is locked then the lock will be pushed across to
+         * one of the two tetrahedra that results when \a t is pried open.
+         * In particular, if \a t is a boundary tetrahedron then the lock
+         * will be kept on the boundary (as expected).
+         *
+         * It is allowed to pass this triangulation as \a other.
+         *
+         * \param other the triangulation to sum with this.
+         */
+        void connectedSumWith(const Triangulation& other);
+
+        /**
+         * Performs a layering upon the given boundary triangle of the
+         * triangulation.
+         *
+         * This attaches a new pentachoron to the two boundary tetrahedra
+         * incident with the given triangle.  In the induced triangulation of
+         * the boundary 3-manifold, this has the effect of performing a 2-3
+         * Pachner move on the given triangle.
+         *
+         * The new pentachoron will be returned.  The two old boundary
+         * tetrahedra will be glued to facets 4 and 3 of the new
+         * pentachoron, respectively.
+         *
+         * \pre The given triangle is a triangle of this triangulation, lies
+         * on a real boundary component, and the two boundary tetrahedra on
+         * either side of it are distinct.
+         *
+         * \exception InvalidArgument The preconditions above do not hold;
+         * that is, either the given triangle is non-boundary, does not lie
+         * on real boundary, or the same boundary tetrahedron lies on both
+         * sides of it.
+         *
+         * \exception LockViolation At least one of the two boundary
+         * tetrahedra on either side of the given triangle is currently
+         * locked.  This exception will be thrown before any changes are
+         * made.  See Simplex<4>::lockFacet() for further details on how
+         * such locks work and what their implications are.
+         *
+         * \param triangle the boundary triangle upon which to layer.
+         * \return the new pentachoron provided by the layering.
+         */
+        Pentachoron<4>* layerOn(Triangle<4>* triangle);
+
+        /**
+         * Performs a layering upon the given boundary edge of the
+         * triangulation.
+         *
+         * This attaches a new pentachoron to the three boundary tetrahedra
+         * incident with the given edge.  In the induced triangulation of the
+         * boundary 3-manifold, this has the effect of performing a 3-2
+         * Pachner move on the given edge.
+         *
+         * Here the relevant degree is the degree of the edge inside the
+         * boundary 3-manifold: that is, the number of real boundary
+         * tetrahedra incident with the edge.  This is not necessarily the
+         * same as Edge<4>::degree(), which counts appearances of the edge in
+         * pentachora of the 4-dimensional triangulation.
+         *
+         * The new pentachoron will be returned.  The three old boundary
+         * tetrahedra will be glued to facets 2, 3 and 4 of the new
+         * pentachoron in cyclic order around the edge.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (faces, components, etc.) will be reconstructed, which means any
+         * pointers to old skeletal objects (such as the argument \a edge)
+         * can no longer be used.
+         *
+         * \pre The given edge is a non-null edge of this triangulation,
+         * lies on a real boundary component, and represents a legal 3-2
+         * Pachner move in the induced triangulation of this boundary
+         * component.  In particular, it must have boundary degree three, the
+         * three boundary tetrahedra around it must form a single cycle, and
+         * the corresponding move in the boundary must pass the usual Pachner
+         * legality tests.
+         *
+         * \exception InvalidArgument The preconditions above do not hold,
+         * including if the given edge is \c null.
+         *
+         * \exception LockViolation At least one of the three boundary
+         * tetrahedra incident with the given edge is currently locked.  This
+         * exception will be thrown before any changes are made.  See
+         * Simplex<4>::lockFacet() for further details on how such locks work
+         * and what their implications are.
+         *
+         * \param edge the boundary edge upon which to layer.
+         * \return the new pentachoron provided by the layering.
+         */
+        Pentachoron<4>* layerOn(Edge<4>* edge);
+
+        /**
+         * If possible, performs a 4-4 move about the given edge in the
+         * boundary triangulation.
+         *
+         * This is implemented as a composite move: first a boundary 2-3
+         * layering over one of the two possible axis triangles, and then a
+         * boundary 3-2 layering over the resulting degree-three boundary
+         * edge.  The argument \a axis selects which of the two axis triangles
+         * is used; it must be either 0 or 1.
+         *
+         * Here the relevant degree is the degree of the edge inside the
+         * boundary 3-manifold: that is, the number of real boundary
+         * tetrahedra incident with the edge.  This is not necessarily the
+         * same as Edge<4>::degree(), which counts appearances of the edge in
+         * pentachora of the 4-dimensional triangulation.
+         *
+         * This move will only be performed if the given edge lies on a real
+         * boundary component, has boundary degree four, and the four boundary
+         * tetrahedra around it form a single cycle.  It will also not be
+         * performed if either constituent layering would violate a facet
+         * lock.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (faces, components, etc.) will be reconstructed, which means any
+         * pointers to old skeletal objects (such as the argument \a edge)
+         * can no longer be used.
+         *
+         * \pre The given edge is an edge of this triangulation.
+         *
+         * \param edge the boundary edge about which to perform the move.
+         * \param axis one of the two possible axes for the move; this must
+         * be either 0 or 1.
+         * \return \c true if and only if the requested move was able to be
+         * performed.
+         */
+        bool layer44(Edge<4>* edge, int axis);
 
         /*@}*/
         /**

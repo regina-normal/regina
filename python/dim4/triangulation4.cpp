@@ -259,7 +259,14 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
         .def("eulerCharManifold", &Triangulation<4>::eulerCharManifold,
             rdoc::eulerCharManifold)
         .def("isValid", &Triangulation<4>::isValid, rbase::isValid)
+        .def("layer44", &Triangulation<4>::layer44, rdoc::layer44)
         .def("isIdeal", &Triangulation<4>::isIdeal, rdoc::isIdeal)
+        .def("layerOn", overload_cast<regina::Triangle<4>*>(
+            &Triangulation<4>::layerOn),
+            pybind11::return_value_policy::reference, rdoc::layerOn)
+        .def("layerOn", overload_cast<regina::Edge<4>*>(
+            &Triangulation<4>::layerOn),
+            pybind11::return_value_policy::reference, rdoc::layerOn_2)
         .def("hasBoundaryFacets", &Triangulation<4>::hasBoundaryFacets,
             rbase::hasBoundaryFacets)
         .def("hasBoundaryTetrahedra", &Triangulation<4>::hasBoundaryTetrahedra,
@@ -376,6 +383,10 @@ void addTriangulation4(pybind11::module_& m, pybind11::module_& internal) {
         .def("pachner",
             overload_cast<Face<4, 0>*>(&Triangulation<4>::pachner<0>),
             rbase::pachner)
+        .def("puncture", &Triangulation<4>::puncture, 
+            pybind11::arg("location") = nullptr, rdoc::puncture)
+        .def("connectedSumWith", &Triangulation<4>::connectedSumWith,
+            rdoc::connectedSumWith)
         .def("move20", &Triangulation<4>::move20<0>, rbase::move20)
         .def("move20", &Triangulation<4>::move20<1>, rbase::move20)
         .def("move20", &Triangulation<4>::move20<2>, rbase::move20)

@@ -513,4 +513,158 @@ bool Triangulation<4>::truncateIdeal() {
     return true;
 }
 
+namespace {
+    Perm<5> originalFacetToPrismBottom(int facet) {
+        switch (facet) {
+            case 1:
+                return Perm<5>(1, 0, 2, 3, 4);
+            case 2:
+                return Perm<5>(1, 2, 0, 3, 4);
+            case 3:
+                return Perm<5>(1, 2, 3, 0, 4);
+            case 4:
+                return Perm<5>(1, 2, 3, 4, 0);
+            default:
+                return Perm<5>();
+        }
+    }
+
+    Perm<5> prismBottomToAdjacentFacet(int facet, Perm<5> oldGluing) {
+        return oldGluing * originalFacetToPrismBottom(facet).inverse();
+    }
+
+    int verticalFacet(int prismSimplex, int omittedBaseVertex) {
+        if (prismSimplex < omittedBaseVertex)
+            return omittedBaseVertex + 1;
+        if (prismSimplex > omittedBaseVertex)
+            return omittedBaseVertex;
+        return -1;
+    }
+} // anonymous namespace
+
+void Triangulation<4>::puncture(Tetrahedron<4>* location) {
+    // If no tetrahedron is passed, then we avoid ever having to compute the
+    // skeleton (since the skeleton will be destroyed after this operation
+    // anyway). Therefore we keep the location of the puncture as a
+    // (pentachoron, facet) pair:
+    Pentachoron<4>* pent;
+    int facet;
+
+    if (location) {
+        if (std::addressof(location->triangulation()) != this)
+            throw InvalidArgument("puncture(): the given location is not "
+                "within this triangulation");
+        const auto& emb = location->front();
+        pent = emb.pentachoron();
+        facet = emb.tetrahedron();
+    } else {
+        if (simplices_.empty())
+            throw InvalidArgument("puncture(): the triangulation is empty");
+        // The default location:
+        pent = simplices_.front();
+        facet = 0;
+    }
+
+    // Is there a lock that we need to preserve?
+    bool lock = pent->isFacetLocked(facet);
+
+    // Note: we use the "raw" routines (joinRaw, newSimplexRaw, etc.),
+    // mainly since we want to manage facet locks manually. This means that
+    // the ChangeAndClearSpan here is vital.
+    ChangeAndClearSpan<> span(*this);
+
+    // We will attach a pair of tetrahedral prisms to the given facet of pent.
+    // We will join the triangular-prism walls of the two prisms together, and
+    // one tetrahedral end from each will join to form the new S^3 boundary.
+    Pentachoron<4>* prism[2][4];
+
+    // Create the new pentachora in an order that ensures that the two
+    // tetrahedra of the new S^3 boundary will appear as the second-last and
+    // last pentachora.
+    for (int j = 0; j < 4; ++j)
+        for (int i = 0; i < 2; ++i)
+            prism[i][j] = newSimplexRaw();
+
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 3; ++j)
+            prism[i][j]->joinRaw(j + 1, prism[i][j + 1], Perm<5>());
+
+    for (int r = 0; r < 4; ++r)
+        for (int j = 0; j < 4; ++j) {
+            int f = verticalFacet(j, r);
+            if (f >= 0)
+                prism[0][j]->joinRaw(f, prism[1][j], Perm<5>());
+        }
+
+    Pentachoron<4>* adj = pent->adjacentPentachoron(facet);
+    if (adj) {
+        Perm<5> gluing = pent->adjacentGluing(facet);
+        pent->unjoinRaw(facet);
+        prism[1][0]->joinRaw(0, adj,
+            prismBottomToAdjacentFacet(facet, gluing));
+    }
+
+    pent->joinRaw(facet, prism[0][0],
+        originalFacetToPrismBottom(facet));
+
+    // Move the tetrahedron lock, if there was one.
+    // If adj is non-null, its lock is already in place; we just need to
+    // fix pent (move the lock from pent:facet to the far side of the prism).
+    // If adj is null (so the tetrahedron is boundary), this same code will
+    // push the lock out to the new boundary tetrahedron as expected.
+    if (lock) {
+        pent->unlockFacetRaw(facet);
+        prism[1][0]->lockFacetRaw(0);
+    }
+}
+
+void Triangulation<4>::connectedSumWith(const Triangulation<4>& other) {
+    if (other.simplices_.empty())
+        return;
+    if (simplices_.empty()) {
+        insertTriangulation(other);
+        return;
+    }
+
+    // From here we can assume that each triangulation contains at least
+    // one pentachoron.
+
+    // Note: This PacketChangeSpan is essential, since we use "raw" routines
+    // (joinRaw, etc.) further down below - this is so we can manage facet
+    // locks manually. A basic PacketChangeSpan is enough: we do not need to
+    // take a snapshot or clear properties, since (a) that will be managed
+    // already by insertTriangulation() and puncture(), and (b) we will not
+    // compute any fresh properties that need clearing after that.
+    PacketChangeSpan span(*this);
+
+    // Insert the other triangulation *before* puncturing this, so that
+    // things work in the case where we sum a triangulation with itself.
+    size_t n = simplices_.size();
+    insertTriangulation(other);
+
+    // Make the puncture in this triangulation and record the resulting new
+    // boundary tetrahedra. Note: the default location for puncture() is
+    // pentachoron 0, facet 0, which means the puncture comes from the
+    // original (this) triangulation, not the inserted copy of other.
+    puncture();
+    Pentachoron<4>* bdryThis[2] = {
+        simplices_[simplices_.size() - 2],
+        simplices_[simplices_.size() - 1]
+    };
+
+    // Make the corresponding puncture in the inserted triangulation and
+    // record its new boundary tetrahedra. We use facet 0 of pentachoron n,
+    // which is the first pentachoron in the inserted copy of other.
+    puncture(simplices_[n]->tetrahedron(0));
+    Pentachoron<4>* bdryOther[2] = {
+        simplices_[simplices_.size() - 2],
+        simplices_[simplices_.size() - 1]
+    };
+
+    // Both punctures create the same two-tetrahedron triangulation of S^3.
+    // Glue corresponding boundary tetrahedra using the same boundary map.
+    bdryThis[0]->joinRaw(4, bdryOther[0], Perm<5>());
+    bdryThis[1]->joinRaw(4, bdryOther[1], Perm<5>());
+}
+
 } // namespace regina
