@@ -365,10 +365,10 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     size_t that_length = that_word.wordLength();
     // generic early exit strategy
     if ((this_length < 2) || (that_length==0))
-        return {};
+        return Agg().result();
     // early exit strategy based on step.
     if ((step==1) && ((step+1)*this_length < that_length))
-        return {};
+        return Agg().result();
     // TODO: should check to whatever extent the above is of much use...
 
     // this -> splayed to this_word, that_word -> reducer
