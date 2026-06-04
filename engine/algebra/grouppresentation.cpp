@@ -41,6 +41,7 @@
 #include "maths/numbertheory.h"
 #include "maths/matrixops.h"
 #include "utilities/exception.h"
+#include "utilities/fixedarray.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -371,18 +372,20 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     // TODO: should check to whatever extent the above is of much use...
 
     // this -> splayed to this_word, that_word -> reducer
-    std::vector<GroupExpressionTerm> this_word_vec, reducer;
-    this_word_vec.reserve( this_length );
-    reducer.reserve( that_length );
-    for (const auto& t : this_word.terms())
-        for (long i=0; i<std::abs(t.exponent); i++)
-            this_word_vec.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
-    for (const auto& t : that_word.terms())
-        for (long i=0; i<std::abs(t.exponent); i++)
-            reducer.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
-    std::vector< GroupExpressionTerm > inv_reducer( that_length );
-    for (size_t i=0; i<reducer.size(); i++)
-        inv_reducer[that_length-(i+1)] = reducer[i].inverse();
+    // terms are (g+1) for (generator g)^1, or -(g+1) for (generator g)^-1.
+    using SignedGenerator = std::make_signed_t<size_t>;
+    FixedArray<SignedGenerator> this_word_vec(this_length);
+    FixedArray<SignedGenerator> reducer(that_length);
+    {
+        auto it = this_word_vec.begin();
+        for (const auto& t : this_word.terms())
+            for (long i=0; i<std::abs(t.exponent); i++)
+                *it++ = (t.exponent>0 ? t.generator+1 : -(t.generator+1));
+        it = reducer.begin();
+        for (const auto& t : that_word.terms())
+            for (long i=0; i<std::abs(t.exponent); i++)
+                *it++ = (t.exponent>0 ? t.generator+1 : -(t.generator+1));
+    }
 
     // search for cyclic subwords of reducer in this_word_vec...
     Agg sub_list;
@@ -409,11 +412,11 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 p = (i == 0 ? this_length-1 : i-1); // i-1 with wraparound
                 q = i + comp_length;
                 if (q >= this_length) q -= this_length; // wraparound for q
-                while (this_word_vec[p].inverse() == this_word_vec[q] &&
+                while (this_word_vec[p] == -this_word_vec[q] &&
                         2*a+that_length <= this_length) {
                     ++a;
                     // --p, ++q with wraparound:
-                    p = (p == 0 ? this_length-1 : p-1);
+                    if (p == 0) p = this_length-1; else --p;
                     if (++q == this_length) q = 0;
                     ++subData.score;
                 }
@@ -426,13 +429,13 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             // and the corresponding search with the inverse of reducer.
             comp_length = 0;
             p = i;
-            q = j;
-            while (this_word_vec[p] == inv_reducer[q] &&
+            q = that_length - (j+1);
+            while (this_word_vec[p] == -reducer[q] &&
                     comp_length < that_length && comp_length < this_length) {
                 ++comp_length;
-                // ++p, ++q with wraparound:
+                // ++p, --q with wraparound:
                 if (++p == this_length) p = 0;
-                if (++q == that_length) q = 0;
+                if (q == 0) q = that_length-1; else --q;
             }
             subData.invertB=true;
             subData.sub_length=comp_length;
@@ -442,11 +445,11 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 p = (i == 0 ? this_length-1 : i-1); // i-1 with wraparound
                 q = i + comp_length;
                 if (q >= this_length) q -= this_length; // wraparound for q
-                while (this_word_vec[p].inverse ()== this_word_vec[q] &&
+                while (this_word_vec[p] == -this_word_vec[q] &&
                         2*a+that_length <= this_length) {
                     ++a;
                     // --p, ++q with wraparound:
-                    p = (p == 0 ? this_length-1 : p-1);
+                    if (p == 0) p = this_length-1; else --p;
                     if (++q == this_length) q = 0;
                     ++subData.score;
                 }
