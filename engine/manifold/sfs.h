@@ -39,6 +39,7 @@
 
 #include <list>
 #include <optional>
+#include <ranges>
 #include "regina-core.h"
 #include "manifold/manifold.h"
 
@@ -637,13 +638,39 @@ class SFSpace : public Manifold<3> {
          * See the SFSpace class notes for details.
          *
          * \warning This routine takes linear time (specifically,
-         * linear in the argument \a which).
+         * linear in the argument \a which).  If you need to iterate through
+         * all fibres, use fibres() instead.
          *
          * \param which determines which fibre to return; this must be between
          * 0 and getFibreCount()-1 inclusive.
          * \return the requested fibre.
          */
         SFSFibre fibre(unsigned long which) const;
+        /**
+         * Returns an object that allows iteration through (but _not_ random
+         * access to) all exceptional fibres.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use `auto` (just like this declaration does).
+         *
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  For example:
+         *
+         * \code{.cpp}
+         * for (const SFSFibre& f : sfs.fibres()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as this Seifert fibred space exists: even as fibres are added
+         * and/or removed, it will always reflect the fibres that are currently
+         * in the space.  Nevertheless, it is recommended to treat this object
+         * as temporary only, and to call fibres() again each time you need it.
+         *
+         * \return access to the list of all exceptional fibres.
+         */
+        auto fibres() const;
 
         /**
          * Returns the obstruction constant \a b for this Seifert fibred
@@ -1046,6 +1073,10 @@ inline unsigned long SFSpace::reflectors(bool twisted) const {
 
 inline unsigned long SFSpace::fibreCount() const {
     return nFibres_;
+}
+
+inline auto SFSpace::fibres() const {
+    return std::views::all(fibres_);
 }
 
 inline long SFSpace::obstruction() const {

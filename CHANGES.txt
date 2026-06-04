@@ -463,6 +463,8 @@ Version 8.0  [ TODO ]
         Class safe_tuple_element<...>:
             - This is now deprecated, since its only purpose is to support
               CallableArg (which is also deprecated).
+        Class SFSpace:
+            - New routine fibres().
         Class Simplex<dim>:
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
