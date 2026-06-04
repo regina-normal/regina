@@ -392,14 +392,16 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     for (size_t i=0; i<this_length; i++)
         for (size_t j=0; j<that_length; j++) {
             size_t comp_length = 0;
-            size_t p = i;
-            size_t q = j;
-            while (this_word_vec[p] == reducer[q] &&
+            auto p = this_word_vec.begin() + i;
+            auto q = reducer.begin() + j;
+            while (*p == *q &&
                     comp_length < that_length && comp_length < this_length) {
                 ++comp_length;
                 // ++p, ++q with wraparound:
-                if (++p == this_length) p = 0;
-                if (++q == that_length) q = 0;
+                if (++p == this_word_vec.end())
+                    p = this_word_vec.begin();
+                if (++q == reducer.end())
+                    q = reducer.begin();
             }
             WordSubstitutionData subData;
             subData.invertB=false;
@@ -409,15 +411,20 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             if (comp_length == that_length) {
                 subData.score = that_length;
                 size_t a=1;
-                p = (i == 0 ? this_length-1 : i-1); // i-1 with wraparound
-                q = i + comp_length;
-                if (q >= this_length) q -= this_length; // wraparound for q
-                while (this_word_vec[p] == -this_word_vec[q] &&
-                        2*a+that_length <= this_length) {
+                // (p, q) -> positions (i-1, i+comp_length), with wraparound
+                q = p;
+                if (i == 0)
+                    --(p = this_word_vec.end());
+                else
+                    p = this_word_vec.begin() + (i-1);
+                while (*p == -*q && 2*a+that_length <= this_length) {
                     ++a;
                     // --p, ++q with wraparound:
-                    if (p == 0) p = this_length-1; else --p;
-                    if (++q == this_length) q = 0;
+                    if (p == this_word_vec.begin())
+                        p = this_word_vec.end();
+                    --p;
+                    if (++q == this_word_vec.end())
+                        q = this_word_vec.begin();
                     ++subData.score;
                 }
                 sub_list += subData;
@@ -428,29 +435,37 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
             // and the corresponding search with the inverse of reducer.
             comp_length = 0;
-            p = i;
-            q = that_length - (j+1);
-            while (this_word_vec[p] == -reducer[q] &&
+            p = this_word_vec.begin() + i;
+            q = reducer.end() - (j+1);
+            while (*p == -*q &&
                     comp_length < that_length && comp_length < this_length) {
                 ++comp_length;
                 // ++p, --q with wraparound:
-                if (++p == this_length) p = 0;
-                if (q == 0) q = that_length-1; else --q;
+                if (++p == this_word_vec.end())
+                    p = this_word_vec.begin();
+                if (q == reducer.begin())
+                    q = reducer.end();
+                --q;
             }
             subData.invertB=true;
             subData.sub_length=comp_length;
             if (comp_length == that_length) {
                 subData.score = that_length;
                 size_t a=1;
-                p = (i == 0 ? this_length-1 : i-1); // i-1 with wraparound
-                q = i + comp_length;
-                if (q >= this_length) q -= this_length; // wraparound for q
-                while (this_word_vec[p] == -this_word_vec[q] &&
-                        2*a+that_length <= this_length) {
+                // (p, q) -> positions (i-1, i+comp_length), with wraparound
+                q = p;
+                if (i == 0)
+                    --(p = this_word_vec.end());
+                else
+                    p = this_word_vec.begin() + (i-1);
+                while (*p == -*q && 2*a+that_length <= this_length) {
                     ++a;
                     // --p, ++q with wraparound:
-                    if (p == 0) p = this_length-1; else --p;
-                    if (++q == this_length) q = 0;
+                    if (p == this_word_vec.begin())
+                        p = this_word_vec.end();
+                    --p;
+                    if (++q == this_word_vec.end())
+                        q = this_word_vec.begin();
                     ++subData.score;
                 }
                 sub_list += subData;
