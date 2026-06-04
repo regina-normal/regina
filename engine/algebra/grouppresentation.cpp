@@ -363,13 +363,13 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
         int step) {
     size_t this_length = this_word.wordLength();
     size_t that_length = that_word.wordLength();
+
     // generic early exit strategy
-    if ((this_length < 2) || (that_length==0))
+    if (this_length < 2 || that_length==0)
         return Agg().result();
     // early exit strategy based on step.
-    if ((step==1) && ((step+1)*this_length < that_length))
+    if (step==1 && 2*this_length < that_length)
         return Agg().result();
-    // TODO: should check to whatever extent the above is of much use...
 
     // this -> splayed to this_word, that_word -> reducer
     // terms are (g+1) for (generator g)^1, or -(g+1) for (generator g)^-1.
