@@ -467,6 +467,8 @@ Version 8.0  [ TODO ]
         Class SetAggregator<T>:
             - Helper class for aggregating values that uses sets to eliminate
               duplicates.
+        Class SFSpace:
+            - New routine fibres().
         Class Simplex<dim>:
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
