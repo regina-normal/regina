@@ -384,25 +384,25 @@ class SFSpace : public Manifold<3> {
     private:
         Class class_;
             /**< Indicates which of the classes above this space belongs to. */
-        unsigned long genus_;
+        size_t genus_;
             /**< The genus of the base orbifold.  For non-orientable
                  base orbifolds this is the non-orientable genus. */
-        unsigned long punctures_;
+        size_t punctures_;
             /**< The number of punctures in the base orbifold whose
                  boundaries are fibre-preserving.  This only counts
                  ordinary boundary components, not reflector boundary
                  components. */
-        unsigned long puncturesTwisted_;
+        size_t puncturesTwisted_;
             /**< The number of punctures in the base orbifold whose
                  boundaries are fibre-reversing.  This only counts
                  ordinary boundary components, not reflector boundary
                  components. */
-        unsigned long reflectors_;
+        size_t reflectors_;
             /**< The number of reflector boundary components in the
                  base orbifold whose boundaries are fibre-preserving.
                  These are in addition to the regular boundary components
                  described by \a punctures_. */
-        unsigned long reflectorsTwisted_;
+        size_t reflectorsTwisted_;
             /**< The number of reflector boundary components in the
                  base orbifold whose boundaries are fibre-reversing.
                  These are in addition to the regular boundary components
@@ -412,7 +412,7 @@ class SFSpace : public Manifold<3> {
             /**< The exceptional fibres.  This list will be sorted, and will
                  only contain fibres for which \a alpha and \a beta are
                  coprime and 0 ≤ \a beta < \a alpha > 1. */
-        unsigned long nFibres_;
+        size_t nFibres_;
             /**< The size of the \a fibres_ list, used to avoid calling
                  the linear time fibres_.size(). */
         long b_;
@@ -460,9 +460,9 @@ class SFSpace : public Manifold<3> {
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
-        SFSpace(Class baseClass, unsigned long genus,
-            unsigned long punctures = 0, unsigned long puncturesTwisted = 0,
-            unsigned long reflectors = 0, unsigned long reflectorsTwisted = 0);
+        SFSpace(Class baseClass, size_t genus,
+            size_t punctures = 0, size_t puncturesTwisted = 0,
+            size_t reflectors = 0, size_t reflectorsTwisted = 0);
         /**
          * Creates a new copy of the given Seifert fibred space.
          */
@@ -523,7 +523,7 @@ class SFSpace : public Manifold<3> {
          *
          * \return the genus of the base orbifold.
          */
-        unsigned long baseGenus() const;
+        size_t baseGenus() const;
         /**
          * Returns whether or not the base surface is orientable.
          * Reflector boundary components of the base orbifold are not
@@ -579,7 +579,7 @@ class SFSpace : public Manifold<3> {
          *
          * \return the total number of punctures.
          */
-        unsigned long punctures() const;
+        size_t punctures() const;
         /**
          * Returns the number of punctures of the given type in the base
          * orbifold.  In other words, this routine returns the number of
@@ -601,7 +601,7 @@ class SFSpace : public Manifold<3> {
          * torus boundaries).
          * \return the number of punctures of the given type.
          */
-        unsigned long punctures(bool twisted) const;
+        size_t punctures(bool twisted) const;
         /**
          * Returns the total number of reflector boundary components of the
          * base orbifold.  This includes both twisted and untwisted
@@ -609,7 +609,7 @@ class SFSpace : public Manifold<3> {
          *
          * \return the total number of reflector boundary components.
          */
-        unsigned long reflectors() const;
+        size_t reflectors() const;
         /**
          * Returns the number of reflector boundary components of the
          * given type in the base orbifold.  This either counts only twisted
@@ -620,7 +620,7 @@ class SFSpace : public Manifold<3> {
          * \c false if only untwisted reflector boundaries should be counted.
          * \return the number of reflector boundaries of the given type.
          */
-        unsigned long reflectors(bool twisted) const;
+        size_t reflectors(bool twisted) const;
 
         /**
          * Returns the number of exceptional fibres in this Seifert fibred
@@ -631,7 +631,7 @@ class SFSpace : public Manifold<3> {
          *
          * \return the number of exceptional fibres.
          */
-        unsigned long fibreCount() const;
+        size_t fibreCount() const;
         /**
          * Returns the requested exceptional fibre.  Fibres are stored
          * in sorted order by \a alpha (the index) and then by \a beta.
@@ -645,7 +645,7 @@ class SFSpace : public Manifold<3> {
          * 0 and getFibreCount()-1 inclusive.
          * \return the requested fibre.
          */
-        SFSFibre fibre(unsigned long which) const;
+        SFSFibre fibre(size_t which) const;
         /**
          * Returns an object that allows iteration through (but _not_ random
          * access to) all exceptional fibres.
@@ -744,7 +744,7 @@ class SFSpace : public Manifold<3> {
          * if the new punctures should be untwisted.
          * \param nPunctures the number of new punctures to insert.
          */
-        void addPuncture(bool twisted = false, unsigned long nPunctures = 1);
+        void addPuncture(bool twisted = false, size_t nPunctures = 1);
         /**
          * Adds one or more new reflector boundary components to the base
          * orbifold.  The new reflector boundaries may be twisted or
@@ -766,7 +766,7 @@ class SFSpace : public Manifold<3> {
          * \c false if the new reflector boundaries should be untwisted.
          * \param nReflectors the number of new reflector boundaries to add.
          */
-        void addReflector(bool twisted = false, unsigned long nReflectors = 1);
+        void addReflector(bool twisted = false, size_t nReflectors = 1);
 
         /**
          * Adds the given fibre to this Seifert fibred space.
@@ -945,7 +945,7 @@ class SFSpace : public Manifold<3> {
          * Writes a particular countable feature of the base orbifold to
          * the given output stream in either TeX or plain format.
          */
-        static void writeBaseExtraCount(std::ostream& out, unsigned long count,
+        static void writeBaseExtraCount(std::ostream& out, size_t count,
             const char* object, bool tex);
 
         /**
@@ -1011,9 +1011,9 @@ inline SFSpace::SFSpace() : class_(Class::o1), genus_(0),
         nFibres_(0), b_(0) {
 }
 
-inline SFSpace::SFSpace(SFSpace::Class baseClass, unsigned long genus,
-        unsigned long punctures, unsigned long puncturesTwisted,
-        unsigned long reflectors, unsigned long reflectorsTwisted) :
+inline SFSpace::SFSpace(SFSpace::Class baseClass, size_t genus,
+        size_t punctures, size_t puncturesTwisted,
+        size_t reflectors, size_t reflectorsTwisted) :
         class_(baseClass), genus_(genus),
         punctures_(punctures), puncturesTwisted_(puncturesTwisted),
         reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
@@ -1036,7 +1036,7 @@ inline SFSpace::Class SFSpace::baseClass() const {
     return class_;
 }
 
-inline unsigned long SFSpace::baseGenus() const {
+inline size_t SFSpace::baseGenus() const {
     return genus_;
 }
 
@@ -1055,23 +1055,23 @@ inline bool SFSpace::fibreNegating() const {
         class_ == Class::bo1 || class_ == Class::bn2);
 }
 
-inline unsigned long SFSpace::punctures() const {
+inline size_t SFSpace::punctures() const {
     return punctures_ + puncturesTwisted_;
 }
 
-inline unsigned long SFSpace::punctures(bool twisted) const {
+inline size_t SFSpace::punctures(bool twisted) const {
     return (twisted ? puncturesTwisted_ : punctures_);
 }
 
-inline unsigned long SFSpace::reflectors() const {
+inline size_t SFSpace::reflectors() const {
     return reflectors_ + reflectorsTwisted_;
 }
 
-inline unsigned long SFSpace::reflectors(bool twisted) const {
+inline size_t SFSpace::reflectors(bool twisted) const {
     return (twisted ? reflectorsTwisted_ : reflectors_);
 }
 
-inline unsigned long SFSpace::fibreCount() const {
+inline size_t SFSpace::fibreCount() const {
     return nFibres_;
 }
 
