@@ -389,10 +389,15 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     for (size_t i=0; i<this_length; i++)
         for (size_t j=0; j<that_length; j++) {
             size_t comp_length = 0;
-            while ( (this_word_vec[(i+comp_length) % this_length] ==
-                     reducer[(j+comp_length) % that_length]) &&
-                    (comp_length < that_length) && (comp_length < this_length) )
-                comp_length++;
+            size_t p = i;
+            size_t q = j;
+            while (this_word_vec[p] == reducer[q] &&
+                    comp_length < that_length && comp_length < this_length) {
+                ++comp_length;
+                // ++p, ++q with wraparound:
+                if (++p == this_length) p = 0;
+                if (++q == that_length) q = 0;
+            }
             WordSubstitutionData subData;
             subData.invertB=false;
             subData.sub_length=comp_length;
@@ -401,11 +406,16 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             if (comp_length == that_length) {
                 subData.score = that_length;
                 size_t a=1;
-                while ( (this_word_vec[( (i+this_length)-a )%this_length].inverse()==
-                         this_word_vec[( (i+comp_length)+(a-1) )%this_length]) &&
-                        (2*a+that_length <= this_length ) ) {
-                    a++;
-                    subData.score++;
+                p = (i == 0 ? this_length-1 : i-1); // i-1 with wraparound
+                q = i + comp_length;
+                if (q >= this_length) q -= this_length; // wraparound for q
+                while (this_word_vec[p].inverse() == this_word_vec[q] &&
+                        2*a+that_length <= this_length) {
+                    ++a;
+                    // --p, ++q with wraparound:
+                    p = (p == 0 ? this_length-1 : p-1);
+                    if (++q == this_length) q = 0;
+                    ++subData.score;
                 }
                 sub_list += subData;
             } else if ( comp_length > 0 ) {
@@ -415,20 +425,30 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
             // and the corresponding search with the inverse of reducer.
             comp_length = 0;
-            while ( (this_word_vec[(i+comp_length) % this_length] ==
-                     inv_reducer[(j+comp_length) % that_length]) &&
-                    (comp_length < that_length) && (comp_length < this_length) )
-                comp_length++;
+            p = i;
+            q = j;
+            while (this_word_vec[p] == inv_reducer[q] &&
+                    comp_length < that_length && comp_length < this_length) {
+                ++comp_length;
+                // ++p, ++q with wraparound:
+                if (++p == this_length) p = 0;
+                if (++q == that_length) q = 0;
+            }
             subData.invertB=true;
             subData.sub_length=comp_length;
             if (comp_length == that_length) {
                 subData.score = that_length;
                 size_t a=1;
-                while ( (this_word_vec[( (i+this_length)-a )%this_length].inverse()==
-                         this_word_vec[( (i+comp_length)+(a-1) )%this_length]) &&
-                        (2*a+that_length <= this_length ) ) {
-                    a++;
-                    subData.score++;
+                p = (i == 0 ? this_length-1 : i-1); // i-1 with wraparound
+                q = i + comp_length;
+                if (q >= this_length) q -= this_length; // wraparound for q
+                while (this_word_vec[p].inverse ()== this_word_vec[q] &&
+                        2*a+that_length <= this_length) {
+                    ++a;
+                    // --p, ++q with wraparound:
+                    p = (p == 0 ? this_length-1 : p-1);
+                    if (++q == this_length) q = 0;
+                    ++subData.score;
                 }
                 sub_list += subData;
             } else if ( comp_length > 0 ) {
