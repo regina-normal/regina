@@ -387,43 +387,14 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 *it++ = (t.exponent>0 ? t.generator+1 : -(t.generator+1));
     }
 
-    // Assuming we are able to cancel a entire *that_length* symbols from
-    // *this_word* over the range `[sub_begin, sub_end)` (which may cycle around
-    // the end of *this_word_vec*): how many additional cancellations can we
-    // make from either side of the excision site?  This is provided as a
-    // lambda because it is only computed on demand, but from multiple places
-    // in the code.
-    auto extra_cancellations = [&this_word_vec, this_length, that_length](
-            auto sub_begin, auto sub_end) {
-        size_t a=1;
-
-        if (sub_begin == this_word_vec.begin())
-            sub_begin = this_word_vec.end();
-        --sub_begin;
-
-        // Now (sub_begin, sub_end) point to the first pair of candidate
-        // symbols to cancel.
-        while (*sub_begin == -*sub_end && 2*a+that_length <= this_length) {
-            // We can cancel the *a*th extra pair of symbols.
-            // Move outwards to the next pair.
-            if (sub_begin == this_word_vec.begin())
-                sub_begin = this_word_vec.end();
-            --sub_begin;
-            if (++sub_end == this_word_vec.end())
-                sub_end = this_word_vec.begin();
-            ++a;
-        }
-        return a-1;
-    };
-
     // search for cyclic subwords of reducer in this_word_vec...
     Agg sub_list;
-    auto sub_begin = this_word_vec.begin();
-    for (size_t i=0; i<this_length; ++i, ++sub_begin) {
-        std::optional<size_t> extra_score;
+    auto start_sub = this_word_vec.begin();
+    for (size_t i=0; i<this_length; ++i, ++start_sub) {
+        ssize_t extra_score = -1; // -1 means not yet computed
         for (size_t j=0; j<that_length; j++) {
             size_t comp_length = 0;
-            auto p = sub_begin;
+            auto p = start_sub;
             auto q = reducer.begin() + j;
             while (*p == *q &&
                     comp_length < that_length && comp_length < this_length) {
@@ -441,10 +412,28 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             subData.start_from=j;
             if (comp_length == that_length) {
                 // The entire copy of that_word will vanish.
-                // Work out whether any further cancellation will be possible.
-                if (! extra_score)
-                    extra_score = extra_cancellations(sub_begin, p);
-                subData.score = that_length + *extra_score;
+                // Will the remaining pieces of this_word cancel further?
+                if (extra_score < 0) {
+                    size_t a=1;
+                    // Set (p, q) -> first pair of candidate symbols to cancel.
+                    q = p;
+                    p = start_sub;
+                    if (p == this_word_vec.begin())
+                        p = this_word_vec.end();
+                    --p;
+                    while (*p == -*q && 2*a+that_length <= this_length) {
+                        // We can cancel the *a*th extra pair of symbols.
+                        // Move (p, q) outwards to the next pair.
+                        if (p == this_word_vec.begin())
+                            p = this_word_vec.end();
+                        --p;
+                        if (++q == this_word_vec.end())
+                            q = this_word_vec.begin();
+                        ++a;
+                    }
+                    extra_score = a - 1;
+                }
+                subData.score = that_length + extra_score;
                 sub_list += subData;
             } else if ( comp_length > 0 ) {
                 subData.score = 2*comp_length - that_length;
@@ -453,7 +442,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
             // and the corresponding search with the inverse of reducer.
             comp_length = 0;
-            p = sub_begin;
+            p = start_sub;
             q = reducer.end() - (j+1);
             while (*p == -*q &&
                     comp_length < that_length && comp_length < this_length) {
@@ -469,10 +458,29 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             subData.sub_length=comp_length;
             if (comp_length == that_length) {
                 // The entire copy of that_word will vanish.
-                // Work out whether any further cancellation will be possible.
-                if (! extra_score)
-                    extra_score = extra_cancellations(sub_begin, p);
-                subData.score = that_length + *extra_score;
+                // Will the remaining pieces of this_word cancel further?
+                if (extra_score < 0) {
+                    // TODO: Duplicated code
+                    size_t a=1;
+                    // Set (p, q) -> first pair of candidate symbols to cancel.
+                    q = p;
+                    p = start_sub;
+                    if (p == this_word_vec.begin())
+                        p = this_word_vec.end();
+                    --p;
+                    while (*p == -*q && 2*a+that_length <= this_length) {
+                        // We can cancel the *a*th extra pair of symbols.
+                        // Move (p, q) outwards to the next pair.
+                        if (p == this_word_vec.begin())
+                            p = this_word_vec.end();
+                        --p;
+                        if (++q == this_word_vec.end())
+                            q = this_word_vec.begin();
+                        ++a;
+                    }
+                    extra_score = a - 1;
+                }
+                subData.score = that_length + extra_score;
                 sub_list += subData;
             } else if ( comp_length > 0 ) {
                 subData.score = 2*comp_length - that_length;
