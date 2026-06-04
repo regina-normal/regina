@@ -209,6 +209,7 @@ Version 8.0  [ TODO ]
         Class FixedArray:
             - Now has a default constructor that creates an empty array.
             - New constructor that takes an iterator range.
+            - New routines cycleForward() and cycleBackward().
         Class Flags<T>:
             - Updated to support enumerations with any base C++ integer type,
               not just int.

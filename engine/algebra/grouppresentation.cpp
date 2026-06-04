@@ -399,11 +399,8 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             while (*p == *q &&
                     comp_length < that_length && comp_length < this_length) {
                 ++comp_length;
-                // ++p, ++q with wraparound:
-                if (++p == this_word_vec.end())
-                    p = this_word_vec.begin();
-                if (++q == reducer.end())
-                    q = reducer.begin();
+                this_word_vec.cycleForward(p);
+                reducer.cycleForward(q);
             }
             WordSubstitutionData subData;
             subData.invertB=false;
@@ -418,17 +415,12 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     // Set (p, q) -> first pair of candidate symbols to cancel.
                     q = p;
                     p = start_sub;
-                    if (p == this_word_vec.begin())
-                        p = this_word_vec.end();
-                    --p;
+                    this_word_vec.cycleBackward(p);
                     while (*p == -*q && 2*a+that_length <= this_length) {
                         // We can cancel the *a*th extra pair of symbols.
                         // Move (p, q) outwards to the next pair.
-                        if (p == this_word_vec.begin())
-                            p = this_word_vec.end();
-                        --p;
-                        if (++q == this_word_vec.end())
-                            q = this_word_vec.begin();
+                        this_word_vec.cycleBackward(p);
+                        this_word_vec.cycleForward(q);
                         ++a;
                     }
                     extra_score = a - 1;
@@ -447,12 +439,8 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             while (*p == -*q &&
                     comp_length < that_length && comp_length < this_length) {
                 ++comp_length;
-                // ++p, --q with wraparound:
-                if (++p == this_word_vec.end())
-                    p = this_word_vec.begin();
-                if (q == reducer.begin())
-                    q = reducer.end();
-                --q;
+                this_word_vec.cycleForward(p);
+                reducer.cycleBackward(q);
             }
             subData.invertB=true;
             subData.sub_length=comp_length;
@@ -465,17 +453,12 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     // Set (p, q) -> first pair of candidate symbols to cancel.
                     q = p;
                     p = start_sub;
-                    if (p == this_word_vec.begin())
-                        p = this_word_vec.end();
-                    --p;
+                    this_word_vec.cycleBackward(p);
                     while (*p == -*q && 2*a+that_length <= this_length) {
                         // We can cancel the *a*th extra pair of symbols.
                         // Move (p, q) outwards to the next pair.
-                        if (p == this_word_vec.begin())
-                            p = this_word_vec.end();
-                        --p;
-                        if (++q == this_word_vec.end())
-                            q = this_word_vec.begin();
+                        this_word_vec.cycleBackward(p);
+                        this_word_vec.cycleForward(q);
                         ++a;
                     }
                     extra_score = a - 1;

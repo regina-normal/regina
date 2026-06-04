@@ -362,6 +362,76 @@ class FixedArray {
         }
 
         /**
+         * Cycles the given iterator forward through this array.
+         *
+         * In most cases it will simply be incremented; however, if it points
+         * to the last element of the array then it will wrap around and point
+         * to the first.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of this array.
+         *
+         * \param it the iterator to cycle forward.
+         */
+        void cycleForward(iterator& it) {
+            if (++it == data_ + size_)
+                it = data_;
+        }
+
+        /**
+         * Cycles the given iterator forward through this array.
+         *
+         * In most cases it will simply be incremented; however, if it points
+         * to the last element of the array then it will wrap around and point
+         * to the first.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of this array.
+         *
+         * \param it the iterator to cycle forward.
+         */
+        void cycleForward(const_iterator& it) {
+            if (++it == data_ + size_)
+                it = data_;
+        }
+
+        /**
+         * Cycles the given iterator backward through this array.
+         *
+         * In most cases it will simply be decremented; however, if it points
+         * to the first element of the array then it will wrap around and point
+         * to the last.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of this array.
+         *
+         * \param it the iterator to cycle backward.
+         */
+        void cycleBackward(iterator& it) {
+            if (it == data_)
+                it = data_ + size_;
+            --it;
+        }
+
+        /**
+         * Cycles the given iterator backward through this array.
+         *
+         * In most cases it will simply be decremented; however, if it points
+         * to the first element of the array then it will wrap around and point
+         * to the last.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of this array.
+         *
+         * \param it the iterator to cycle backward.
+         */
+        void cycleBackward(const_iterator& it) {
+            if (it == data_)
+                it = data_ + size_;
+            --it;
+        }
+
+        /**
          * Moves the contents of the given array into this array.
          *
          * It does not matter whether this and the given array are the same
