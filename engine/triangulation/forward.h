@@ -49,6 +49,7 @@
 #define __REGINA_TRIANGULATION_FORWARD_H
 #endif
 
+#include <algorithm>
 #include "regina-core.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS

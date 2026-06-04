@@ -644,8 +644,7 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // Double the genus if it's orientable, so that we can line up tori
     // with Klein bottles, etc.
     size_t adjGenus1 = (baseOrientable() ? genus_ * 2 : genus_);
-    size_t adjGenus2 = (rhs.baseOrientable() ?
-        rhs.genus_ * 2 : rhs.genus_);
+    size_t adjGenus2 = (rhs.baseOrientable() ? rhs.genus_ * 2 : rhs.genus_);
 
     // Too many punctures is worse than anything.
     if (auto c = punctures_ + puncturesTwisted_ <=>
