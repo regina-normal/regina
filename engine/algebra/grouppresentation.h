@@ -51,6 +51,7 @@
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
+#include "utilities/aggregator.h"
 
 // There are more includes at the end of this file.
 
@@ -1715,27 +1716,37 @@ class GroupPresentation : public Output<GroupPresentation> {
                 /**< The score, i.e., the decrease in the word letter count
                      provided this substitution is made. */
 
-            bool operator<( const WordSubstitutionData &other ) const {
-                if (score < other.score) return false;
-                if (score > other.score) return true;
-                if (sub_length < other.sub_length) return false;
-                if (sub_length > other.sub_length) return true;
-                if ( (invertB == true)  && (other.invertB == false) )
-                        return false;
-                if ( (invertB == false) && (other.invertB == true)  )
-                        return true;
-                if (start_from < other.start_from) return false;
-                if (start_from > other.start_from) return true;
-                if (start_sub_at < other.start_sub_at) return false;
-                if (start_sub_at > other.start_sub_at) return true;
-                return false;
+            bool operator == (const WordSubstitutionData& rhs) const = default;
+
+            std::strong_ordering operator <=> (const WordSubstitutionData& rhs)
+                    const {
+                // We order preferred substitutions earlier.  This means (for
+                // example) that scores and substitution length are sorted in
+                // _reverse_.
+                //
+                // Actually, we will sort all numerical fields in reverse, for
+                // consistency with earlier versions of Regina.
+                //
+                if (auto c = rhs.score <=> score; c != 0)
+                    return c;
+                if (auto c = rhs.sub_length <=> sub_length; c != 0)
+                    return c;
+                if (invertB && ! rhs.invertB)
+                    return std::strong_ordering::greater;
+                if (rhs.invertB && ! invertB)
+                    return std::strong_ordering::less;
+                if (auto c = rhs.start_from <=> start_from; c != 0)
+                    return c;
+                return rhs.start_sub_at <=> start_sub_at;
             }
+
             void writeTextShort(std::ostream& out) const {
                 out<<"Target position "<<start_sub_at<<
                     " length of substitution "<<sub_length<<(invertB ?
                      " inverse reducer position " : " reducer position ")
                     <<start_from<<" score "<<score;
             }
+
             /**
              * Gives a string that describes the substitution.
              */
@@ -1747,12 +1758,14 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          *  This is the core of the Dehn algorithm for hyperbolic groups.
          *  Given two words, this_word and that_word, this routine searches for
-         *  subwords of that_word (in the cyclic sense), and builds a table
-         *  of substitutions one can make from that_word into this_word.  The
-         *  table is refined so that one knows the "value" of each
-         *  substitution -- the extent to which the substitution would shorten
-         *  this_word.   This is to allow for intelligent choices of
-         *  substitutions by whichever algorithms call this one.
+         *  subwords of that_word (in the cyclic sense), and identifies
+         *  substitutions one can make from that_word into this_word.  The
+         *  substitutions will be aggregated according to the template
+         *  parameter \a Agg.  The substitutions are stored using
+         *  WordSubstitutionData, which provides metrics so that one knows
+         *  the extent to which the substitution would shorten this_word.
+         *  This is to allow for intelligent choices of substitutions by
+         *  whichever algorithms call this one.
          *
          *  This algorithm assumes that this_word and that_word are cyclically
          *  reduced words.  If you feed it non-cyclically reduced words it
@@ -1767,8 +1780,15 @@ class GroupPresentation : public Output<GroupPresentation> {
          *  will want to attempt a further substitution, etc.  `step>1`
          *  is used primarily when building relator tables for group
          *  recognition.
+         *
+         *  If no substitutions were found, this routine behaves in the same
+         *  manner as `Agg::result()` does when no values were supplied to the
+         *  aggregator.  That is: depending on the aggregator type, this routine
+         *  might return a special empty value, or it might throw a NoSolution
+         *  exception.
          */
-        static std::set<WordSubstitutionData> dehnAlgorithmSubMetric(
+        template <Aggregator<WordSubstitutionData> Agg>
+        static typename Agg::Result dehnAlgorithmSubMetric(
             const GroupExpression &this_word, const GroupExpression &that_word,
             int step = 1);
 

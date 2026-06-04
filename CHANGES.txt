@@ -396,8 +396,9 @@ Version 8.0  [ TODO ]
             - Routines inverse() and invert() now throw an exception if the
               matrix does not have determinant ±1.  This also means that
               invert() no longer returns a boolean to indicate success.
-        Class MaxCountAggregator<T>:
-            - Helper class for aggregating values using max with multiplicity.
+        Class MaxCountAggregator<T>, MinAggregator<T>:
+            - Helper classes for aggregating values using (i) maximum with
+              multiplicity, and (ii) minimum without multiplicity.
         Class NativeInteger<bytes>:
             - The constructor that takes an Integer or LargeInteger is now
               deprecated.  Instead, you should initialise this using either
@@ -463,6 +464,9 @@ Version 8.0  [ TODO ]
         Class safe_tuple_element<...>:
             - This is now deprecated, since its only purpose is to support
               CallableArg (which is also deprecated).
+        Class SetAggregator<T>:
+            - Helper class for aggregating values that uses sets to eliminate
+              duplicates.
         Class Simplex<dim>:
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
@@ -719,6 +723,7 @@ Version 8.0  [ TODO ]
               + FaceClass, FaceOrSimplexClass, SimplexClass (defined in
                 triangulation/forward.h)
               + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
+              + Aggregator (defined in utilities/aggregator.h)
         Header foreign/fromsiglist-impl.h:
             - Renamed to foreign/siglist-impl.h.  The old header has been
               removed completely, since end users do not need to include it.

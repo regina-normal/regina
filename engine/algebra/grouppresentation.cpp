@@ -356,8 +356,8 @@ MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
         std::move(N));
 }
 
-std::set<GroupPresentation::WordSubstitutionData>
-        GroupPresentation::dehnAlgorithmSubMetric(
+template <Aggregator<GroupPresentation::WordSubstitutionData> Agg>
+typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
         const GroupExpression &this_word, const GroupExpression &that_word,
         int step) {
     size_t this_length = this_word.wordLength();
@@ -385,7 +385,7 @@ std::set<GroupPresentation::WordSubstitutionData>
         inv_reducer[that_length-(i+1)] = reducer[i].inverse();
 
     // search for cyclic subwords of reducer in this_word_vec...
-    std::set<WordSubstitutionData> sub_list;
+    Agg sub_list;
     for (size_t i=0; i<this_length; i++)
         for (size_t j=0; j<that_length; j++) {
             size_t comp_length = 0;
@@ -407,11 +407,11 @@ std::set<GroupPresentation::WordSubstitutionData>
                     a++;
                     subData.score++;
                 }
-                sub_list.insert(subData);
+                sub_list += subData;
             } else if ( comp_length > 0 ) {
                 subData.score = 2*comp_length - that_length;
                 if ( subData.score > -step )
-                    sub_list.insert(subData);
+                    sub_list += subData;
             }
             // and the corresponding search with the inverse of reducer.
             comp_length = 0;
@@ -430,15 +430,15 @@ std::set<GroupPresentation::WordSubstitutionData>
                     a++;
                     subData.score++;
                 }
-                sub_list.insert(subData);
+                sub_list += subData;
             } else if ( comp_length > 0 ) {
                 subData.score = 2*comp_length - that_length;
                 if ( subData.score > -step )
-                    sub_list.insert(subData);
+                    sub_list += subData;
             }
         }
 
-    return sub_list;
+    return std::move(sub_list).result();
 }
 
 /**
@@ -745,16 +745,16 @@ bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
     while (continueSimplify) {
         continueSimplify = false;
         for (const auto& r : relations_) {
-            // highest score is *first*
-            auto sub_list = dehnAlgorithmSubMetric( word, r );
-            if (! sub_list.empty())
-                if ( sub_list.begin()->score > 0 ) {
-                    applySubstitution( word, r, *sub_list.begin() );
-                    if (word.isTrivial())
-                        return true;
-                    continueSimplify = true;
-                    retval = true;
-                }
+            auto sub =
+                dehnAlgorithmSubMetric<MinAggregator<WordSubstitutionData>>(
+                word, r );
+            if (sub && sub->score > 0) {
+                applySubstitution( word, r, *sub );
+                if (word.isTrivial())
+                    return true;
+                continueSimplify = true;
+                retval = true;
+            }
         }
     }
     return retval;
@@ -840,14 +840,13 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
                 tit++;
                 while (tit != relations_.end()) {
                     // attempt to apply *it to *tit
-                    auto sub_list = dehnAlgorithmSubMetric( *tit, *it );
-                    // take first valid sub
-                    if (! sub_list.empty())
-                        if ( sub_list.begin()->score > 0 ) {
-                            applySubstitution( *tit, *it, *sub_list.begin() );
-                            we_value_iteration = true;
-                            didSomething = true;
-                        }
+                    auto sub = dehnAlgorithmSubMetric<
+                        MinAggregator<WordSubstitutionData>>( *tit, *it );
+                    if (sub && sub->score > 0) {
+                        applySubstitution( *tit, *it, *sub );
+                        we_value_iteration = true;
+                        didSomething = true;
+                    }
                     tit++;
                 }
             } // end (3) - application of shorter to longer relators.
@@ -2241,8 +2240,9 @@ void GroupPresentation::proliferateRelators(int depth) {
         for (size_t j=0; j<relations_.size(); j++) {
             if (i==j)
                 continue; // TODO: maybe accept novel self-substitutions?
-            auto sub_list = dehnAlgorithmSubMetric(relations_[i], relations_[j],
-                depth);
+            auto sub_list =
+                dehnAlgorithmSubMetric<SetAggregator<WordSubstitutionData>>(
+                relations_[i], relations_[j], depth);
             while (!sub_list.empty()) {
                 GroupExpression newRel( relations_[i] );
                 applySubstitution( newRel, relations_[j], *sub_list.begin() );
@@ -2259,7 +2259,8 @@ void GroupPresentation::proliferateRelators(int depth) {
                 // a record of how j was created, as in where the two junction
                 // points are so as to ensure what we're adding spans at least
                 // one of the junctions.
-                auto sub_list = dehnAlgorithmSubMetric( j, r, depth );
+                auto sub_list = dehnAlgorithmSubMetric<
+                    SetAggregator<WordSubstitutionData>>( j, r, depth );
                 while (!sub_list.empty()) {
                     // TODO: we might want to avoid some obviously repetitive
                     //       subs as noted above?

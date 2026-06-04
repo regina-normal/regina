@@ -98,8 +98,8 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     FixedArray<MaxCountAggregator<T>> maxBelow(size_);
     for (const TreeBag* b = first(); b; b = b->next()) {
         for (const TreeBag* c = b->children(); c; c = c->sibling()) {
-            maxBelow[b->index()].aggregate(maxBelow[c->index()]);
-            maxBelow[b->index()].aggregate(costSame[c->index()]);
+            maxBelow[b->index()] += maxBelow[c->index()];
+            maxBelow[b->index()] += costSame[c->index()];
         }
     }
 
@@ -110,12 +110,12 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     for (const TreeBag* b = firstPrefix(); b; b = b->nextPrefix()) {
         if (const TreeBag* c = b->parent()) {
             maxAbove[b->index()].reset(costReverse[b->index()]);
-            maxAbove[b->index()].aggregate(maxAbove[c->index()]);
+            maxAbove[b->index()] += maxAbove[c->index()];
 
             for (c = b->parent()->children(); c; c = c->sibling()) {
                 if (c != b) {
-                    maxAbove[b->index()].aggregate(maxBelow[c->index()]);
-                    maxAbove[b->index()].aggregate(costSame[c->index()]);
+                    maxAbove[b->index()] += maxBelow[c->index()];
+                    maxAbove[b->index()] += costSame[c->index()];
                 }
             }
         }
@@ -128,9 +128,9 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
 
     for (const TreeBag* b = first(); b; b = b->next()) {
         // Combine all costs into maxBelow.
-        maxBelow[b->index()].aggregate(maxAbove[b->index()]);
+        maxBelow[b->index()] += maxAbove[b->index()];
         if (costRoot)
-            maxBelow[b->index()].aggregate(costRoot[b->index()]);
+            maxBelow[b->index()] += costRoot[b->index()];
 
 #if 0
         std::cerr << "Bag " << b->index() << ": "
