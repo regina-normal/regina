@@ -62,6 +62,7 @@ namespace regina {
 class AbelianGroup;
 class HomGroupPresentation;
 class MarkedAbelianGroup;
+template <std::default_initializable T> class FixedArray;
 
 /**
  * Represents a power of a generator in a group presentation.
@@ -1752,6 +1753,7 @@ class GroupPresentation : public Output<GroupPresentation> {
              */
             std::string substitutionString(const GroupExpression &word) const;
         };
+
         /**
          *  A routine internal to the small cancellation simplification
          *  algorithm.
@@ -1791,6 +1793,23 @@ class GroupPresentation : public Output<GroupPresentation> {
         static typename Agg::Result dehnAlgorithmSubMetric(
             const GroupExpression &this_word, const GroupExpression &that_word,
             int step = 1);
+
+        /**
+         * Expresses the given word as sequence of generators and/or their
+         * inverses, without using exponents other than ±1.
+         *
+         * In the returned sequence, generator \a g will be represented by
+         * the integer `g+1`, and its inverse will be represented by the
+         * integer `-(g+1)`.
+         *
+         * \param word the word to expand into individual generators and/or
+         * their inverses.
+         * \param the word length of \a word.  This must be the same as
+         * `word.wordLength()`; it is passed here to help avoid unnecessary
+         * length re-computations (each of which takes linear time).
+         */
+        static FixedArray<std::make_signed_t<size_t>> splay(
+            const GroupExpression& word, size_t length);
 
         /**
          *  A routine internal to the small cancellation simplification

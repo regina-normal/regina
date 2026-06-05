@@ -357,6 +357,27 @@ MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
         std::move(N));
 }
 
+FixedArray<std::make_signed_t<size_t>> GroupPresentation::splay(
+        const GroupExpression& word, size_t length) {
+    using SignedGenerator = std::make_signed_t<size_t>;
+    FixedArray<SignedGenerator> ans(length);
+
+    auto it = ans.begin();
+    for (const auto& t : word.terms())
+        if (t.exponent >= 0) {
+            SignedGenerator entry = t.generator + 1;
+            for (long i = 0; i < t.exponent; ++i)
+                *it++ = entry;
+        } else {
+            SignedGenerator entry =
+                -static_cast<SignedGenerator>(t.generator + 1);
+            for (long i = 0; i > t.exponent; --i)
+                *it++ = entry;
+        }
+
+    return ans;
+}
+
 template <Aggregator<GroupPresentation::WordSubstitutionData> Agg>
 typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
         const GroupExpression &this_word, const GroupExpression &that_word,
