@@ -373,7 +373,7 @@ class FixedArray {
          *
          * \param it the iterator to cycle forward.
          */
-        void cycleForward(iterator& it) {
+        void cycleForward(iterator& it) const {
             if (++it == data_ + size_)
                 it = data_;
         }
@@ -390,7 +390,7 @@ class FixedArray {
          *
          * \param it the iterator to cycle forward.
          */
-        void cycleForward(const_iterator& it) {
+        void cycleForward(const_iterator& it) const {
             if (++it == data_ + size_)
                 it = data_;
         }
@@ -407,7 +407,7 @@ class FixedArray {
          *
          * \param it the iterator to cycle backward.
          */
-        void cycleBackward(iterator& it) {
+        void cycleBackward(iterator& it) const {
             if (it == data_)
                 it = data_ + size_;
             --it;
@@ -425,7 +425,7 @@ class FixedArray {
          *
          * \param it the iterator to cycle backward.
          */
-        void cycleBackward(const_iterator& it) {
+        void cycleBackward(const_iterator& it) const {
             if (it == data_)
                 it = data_ + size_;
             --it;

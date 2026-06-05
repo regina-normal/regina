@@ -357,10 +357,10 @@ MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
         std::move(N));
 }
 
-FixedArray<std::make_signed_t<size_t>> GroupPresentation::splay(
+GroupPresentation::SplayedWord GroupPresentation::splay(
         const GroupExpression& word, size_t length) {
-    using SignedGenerator = std::make_signed_t<size_t>;
-    FixedArray<SignedGenerator> ans(length);
+    using SignedGenerator = SplayedWord::value_type;
+    SplayedWord ans(length);
 
     auto it = ans.begin();
     for (const auto& t : word.terms())
@@ -376,6 +376,26 @@ FixedArray<std::make_signed_t<size_t>> GroupPresentation::splay(
         }
 
     return ans;
+}
+
+size_t GroupPresentation::extraCancellation(const SplayedWord& word,
+        auto begin, auto end) {
+    size_t ans = 0;
+    while (true) {
+        if (begin == end)
+            return ans;
+
+        // Move outwards to the next candidate pair of symbols to cancel.
+        word.cycleBackward(begin);
+        if (begin == end)
+            return ans;
+
+        if (*begin != -*end)
+            return ans;
+        ++ans;
+
+        word.cycleForward(end);
+    }
 }
 
 template <Aggregator<GroupPresentation::WordSubstitutionData> Agg>
