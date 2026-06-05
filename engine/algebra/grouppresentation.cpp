@@ -465,20 +465,9 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                         sub.sub_length = match_len;
                         sub.invertB = invert;
 
-                        if (extraScore[sub.start_sub_at] < 0) {
-                            size_t a=1;
-                            auto p = matches_this_from;
-                            this_word_vec.cycleBackward(p);
-                            auto q = this_pos;
-                            while (*p == -*q && 2*a+that_length <= this_length) {
-                                // We can cancel the *a*th extra pair of symbols.
-                                // Move (p, q) outwards to the next pair.
-                                this_word_vec.cycleBackward(p);
-                                this_word_vec.cycleForward(q);
-                                ++a;
-                            }
-                            extraScore[sub.start_sub_at] = a - 1;
-                        }
+                        if (extraScore[sub.start_sub_at] < 0)
+                            extraScore[sub.start_sub_at] = extraCancellation(
+                                this_word_vec, matches_this_from, this_pos);
 
                         sub.score = that_length + extraScore[sub.start_sub_at];
                         sub_list += sub;
@@ -548,20 +537,10 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                         sub.invertB = invert;
 
                         if (match_len == that_length) {
-                            if (extraScore[sub.start_sub_at] < 0) {
-                                size_t a=1;
-                                auto p = matches_this_from;
-                                this_word_vec.cycleBackward(p);
-                                auto q = this_pos;
-                                while (*p == -*q && 2*a+that_length <= this_length) {
-                                    // We can cancel the *a*th extra pair of symbols.
-                                    // Move (p, q) outwards to the next pair.
-                                    this_word_vec.cycleBackward(p);
-                                    this_word_vec.cycleForward(q);
-                                    ++a;
-                                }
-                                extraScore[sub.start_sub_at] = a - 1;
-                            }
+                            if (extraScore[sub.start_sub_at] < 0)
+                                extraScore[sub.start_sub_at] =
+                                    extraCancellation(this_word_vec,
+                                    matches_this_from, this_pos);
                             sub.score = that_length +
                                 extraScore[sub.start_sub_at];
                             sub_list += sub;
