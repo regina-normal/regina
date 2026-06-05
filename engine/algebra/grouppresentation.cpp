@@ -404,14 +404,14 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
 
     for (bool invert : { false, true }) {
         // Consider laying out infinitely many copies of reducer end-to-end.
-        // There are *that_length* different ways of doing this, according to which
+        // There are *that_length* ways of doing this, according to which
         // element of *that_word* is aligned with the beginning of *this_word*.
         // The outermost loop here considers each of those alignments in turn.
         for (auto align = reducer.begin(); align != reducer.end(); ++align) {
             // We will walk through *this_word* from start to end, looking for
-            // all matches that end at the current position *pos* and do not wrap
-            // around the ends of *this_word*.  We will then continue our iteration
-            // further to capture any matches that _do_ wrap around.
+            // matches that end at the current position *pos* and do not wrap
+            // around the ends of *this_word*.  After this, we continue our
+            // iteration further to locate matches that _do_ wrap around.
 
             auto this_pos = this_word_vec.begin();
             auto that_pos = align;
@@ -419,7 +419,8 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             auto matches_that_from = that_pos;
             size_t match_len = 0;
             while (this_pos != this_word_vec.end()) {
-                bool matchedSymbol = (invert ? *this_pos == -*that_pos : *this_pos == *that_pos);
+                bool matchedSymbol = (invert ? *this_pos == -*that_pos :
+                    *this_pos == *that_pos);
                 if (matchedSymbol) {
                     // Any prior matches will extend through to this symbol.
                     ++this_pos;
@@ -429,18 +430,21 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                         reducer.cycleForward(that_pos);
                     ++match_len;
 
-                    WordSubstitutionData sub;
-                    sub.start_sub_at = matches_this_from - this_word_vec.begin();
-                    if (invert)
-                        sub.start_from = (reducer.end() - matches_that_from) - 1;
-                    else
-                        sub.start_from = matches_that_from - reducer.begin();
-                    sub.sub_length = match_len;
-                    sub.invertB = invert;
-                    sub.score = 2 * match_len - that_length;
-
                     if (match_len == that_length) {
-                        // We have matched the entire reducer word.
+                        // This match is maximal, because we have matched the
+                        // entire reducer word.
+                        WordSubstitutionData sub;
+                        sub.start_sub_at =
+                            matches_this_from - this_word_vec.begin();
+                        if (invert)
+                            sub.start_from =
+                                (reducer.end() - matches_that_from) - 1;
+                        else
+                            sub.start_from =
+                                matches_that_from - reducer.begin();
+                        sub.sub_length = match_len;
+                        sub.invertB = invert;
+
                         if (extraScore[sub.start_sub_at] < 0) {
                             size_t a=1;
                             auto p = matches_this_from;
@@ -455,11 +459,12 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                             }
                             extraScore[sub.start_sub_at] = a - 1;
                         }
-                        sub.score += extraScore[sub.start_sub_at];
+
+                        sub.score = that_length + extraScore[sub.start_sub_at];
                         sub_list += sub;
-                        sub.score -= extraScore[sub.start_sub_at];
-                        // We cannot use this starting point for any further
-                        // matches, since no match can be longer than *that_length*.
+
+                        // We cannot use this starting point again, since no
+                        // match can be longer than *that_length*.
                         ++matches_this_from;
                         if (invert)
                             reducer.cycleBackward(matches_that_from);
@@ -467,24 +472,28 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                             reducer.cycleForward(matches_that_from);
                         --match_len;
                     }
-                    for (auto start = matches_this_from; start != this_pos;
-                            ++start) {
-                        // Process the match over the range [start, this_pos).
-                        // This is only a partial match of the reducer word;
-                        // there will be some symbols leftover.
-                        if (sub.score <= -step)
-                            break;
-                        sub_list += sub;
-
-                        // Update the substitution details for the next iteration.
-                        ++sub.start_sub_at;
-                        if (++sub.start_from == that_length) sub.start_from = 0;
-                        --sub.sub_length;
-                        sub.score -= 2;
-                    }
                 } else {
-                    // This symbol does not match: any prior matches are no longer
-                    // usable.
+                    // This symbol does not match: if we are holding onto a
+                    // prior match, it must now be maximal.
+                    if (match_len) {
+                        // This symbol does not match, but we have a prior match
+                        // which is therefore maximal.
+                        WordSubstitutionData sub;
+                        sub.start_sub_at =
+                            matches_this_from - this_word_vec.begin();
+                        if (invert)
+                            sub.start_from =
+                                (reducer.end() - matches_that_from) - 1;
+                        else
+                            sub.start_from =
+                                matches_that_from - reducer.begin();
+                        sub.sub_length = match_len;
+                        sub.invertB = invert;
+                        sub.score = 2 * match_len - that_length;
+                        if (sub.score > -step)
+                            sub_list += sub;
+                    }
+
                     ++this_pos;
                     if (invert)
                         reducer.cycleBackward(that_pos);
@@ -497,53 +506,55 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
 
             if (match_len) {
-                // We reached the end of *this_word*, and there were some symbols
-                // that matched at the very end.  This means that we need to
-                // consider matches that wrap around past the end of *this_word*.
+                // We reached the end of *this_word*, and there were symbols
+                // that matched at the very end.  This means we must continue
+                // following those matches as they potentially wrap around
+                // past the end of *this_word*.
                 this_pos = this_word_vec.begin();
-                while (match_len < this_length) {
-                    bool matchedSymbol = (invert ? *this_pos == -*that_pos : *this_pos == *that_pos);
-                    if (! matchedSymbol)
-                        break;
-                    // Our matches extend through to this symbol.
-                    ++this_pos;
-                    if (invert)
-                        reducer.cycleBackward(that_pos);
-                    else
-                        reducer.cycleForward(that_pos);
-                    ++match_len;
+                while (true) {
+                    if (match_len == that_length || match_len == this_length) {
+                        // This match is maximal, because we have matched either
+                        // the entire reducer word or the entire target word.
+                        WordSubstitutionData sub;
+                        sub.start_sub_at =
+                            matches_this_from - this_word_vec.begin();
+                        if (invert)
+                            sub.start_from =
+                                (reducer.end() - matches_that_from) - 1;
+                        else
+                            sub.start_from =
+                                matches_that_from - reducer.begin();
+                        sub.sub_length = match_len;
+                        sub.invertB = invert;
 
-                    WordSubstitutionData sub;
-                    sub.start_sub_at = matches_this_from - this_word_vec.begin();
-                    if (invert)
-                        sub.start_from = (reducer.end() - matches_that_from) - 1;
-                    else
-                        sub.start_from = matches_that_from - reducer.begin();
-                    sub.sub_length = match_len;
-                    sub.invertB = invert;
-                    sub.score = 2 * match_len - that_length;
-
-                    if (match_len == that_length) {
-                        // We have matched the entire reducer word.
-                        if (extraScore[sub.start_sub_at] < 0) {
-                            size_t a=1;
-                            auto p = matches_this_from;
-                            this_word_vec.cycleBackward(p);
-                            auto q = this_pos;
-                            while (*p == -*q && 2*a+that_length <= this_length) {
-                                // We can cancel the *a*th extra pair of symbols.
-                                // Move (p, q) outwards to the next pair.
+                        if (match_len == that_length) {
+                            if (extraScore[sub.start_sub_at] < 0) {
+                                size_t a=1;
+                                auto p = matches_this_from;
                                 this_word_vec.cycleBackward(p);
-                                this_word_vec.cycleForward(q);
-                                ++a;
+                                auto q = this_pos;
+                                while (*p == -*q && 2*a+that_length <= this_length) {
+                                    // We can cancel the *a*th extra pair of symbols.
+                                    // Move (p, q) outwards to the next pair.
+                                    this_word_vec.cycleBackward(p);
+                                    this_word_vec.cycleForward(q);
+                                    ++a;
+                                }
+                                extraScore[sub.start_sub_at] = a - 1;
                             }
-                            extraScore[sub.start_sub_at] = a - 1;
+                            sub.score = that_length +
+                                extraScore[sub.start_sub_at];
+                            sub_list += sub;
+                        } else {
+                            // The match covers all of *this_word*, but not
+                            // all of *reducer*.
+                            sub.score = 2 * match_len - that_length;
+                            if (sub.score > -step)
+                                sub_list += sub;
                         }
-                        sub.score += extraScore[sub.start_sub_at];
-                        sub_list += sub;
-                        sub.score -= extraScore[sub.start_sub_at];
-                        // We cannot use this starting point for any further
-                        // matches, since no match can be longer than *that_length*.
+
+                        // We cannot use this starting point again, since no
+                        // match can be longer than *that_length*.
                         ++matches_this_from;
                         if (matches_this_from == this_word_vec.end())
                             break; // no more wraparound matches possible
@@ -553,20 +564,36 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                             reducer.cycleForward(matches_that_from);
                         --match_len;
                     }
-                    for (auto start = matches_this_from;
-                            start != this_word_vec.end(); ++start) {
-                        // Process the wraparound match over [start, this_pos).
-                        // This is only a partial match of the reducer word;
-                        // there will be some symbols leftover.
-                        if (sub.score <= -step)
-                            break;
-                        sub_list += sub;
 
-                        // Update the substitution details for the next iteration.
-                        ++sub.start_sub_at;
-                        if (++sub.start_from == that_length) sub.start_from = 0;
-                        --sub.sub_length;
-                        sub.score -= 2;
+                    bool matchedSymbol = (invert ? *this_pos == -*that_pos :
+                            *this_pos == *that_pos);
+                    if (matchedSymbol) {
+                        // Our matches extend through to this symbol.
+                        ++this_pos;
+                        if (invert)
+                            reducer.cycleBackward(that_pos);
+                        else
+                            reducer.cycleForward(that_pos);
+                        ++match_len;
+                    } else {
+                        // This symbol does not match: whatever prior match
+                        // we are now holding must be maximal, and we are
+                        // finished with our wraparound matches.
+                        WordSubstitutionData sub;
+                        sub.start_sub_at =
+                            matches_this_from - this_word_vec.begin();
+                        if (invert)
+                            sub.start_from =
+                                (reducer.end() - matches_that_from) - 1;
+                        else
+                            sub.start_from =
+                                matches_that_from - reducer.begin();
+                        sub.sub_length = match_len;
+                        sub.invertB = invert;
+                        sub.score = 2 * match_len - that_length;
+                        if (sub.score > -step)
+                            sub_list += sub;
+                        break;
                     }
                 }
             }
