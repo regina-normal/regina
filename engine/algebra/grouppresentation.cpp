@@ -357,10 +357,10 @@ MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
         std::move(N));
 }
 
-FixedArray<std::make_signed_t<size_t>> GroupPresentation::splay(
+GroupPresentation::SplayedWord GroupPresentation::splay(
         const GroupExpression& word, size_t length) {
-    using SignedGenerator = std::make_signed_t<size_t>;
-    FixedArray<SignedGenerator> ans(length);
+    using SignedGenerator = SplayedWord::value_type;
+    SplayedWord ans(length);
 
     auto it = ans.begin();
     for (const auto& t : word.terms())
@@ -376,6 +376,26 @@ FixedArray<std::make_signed_t<size_t>> GroupPresentation::splay(
         }
 
     return ans;
+}
+
+size_t GroupPresentation::extraCancellation(const SplayedWord& word,
+        auto begin, auto end) {
+    size_t ans = 0;
+    while (true) {
+        if (begin == end)
+            return ans;
+
+        // Move outwards to the next candidate pair of symbols to cancel.
+        word.cycleBackward(begin);
+        if (begin == end)
+            return ans;
+
+        if (*begin != -*end)
+            return ans;
+        ++ans;
+
+        word.cycleForward(end);
+    }
 }
 
 template <Aggregator<GroupPresentation::WordSubstitutionData> Agg>
@@ -431,21 +451,9 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             if (comp_length == that_length) {
                 // The entire copy of that_word will vanish.
                 // Will the remaining pieces of this_word cancel further?
-                if (extra_score < 0) {
-                    size_t a=1;
-                    // Set (p, q) -> first pair of candidate symbols to cancel.
-                    q = p;
-                    p = start_sub;
-                    this_word_vec.cycleBackward(p);
-                    while (*p == -*q && 2*a+that_length <= this_length) {
-                        // We can cancel the *a*th extra pair of symbols.
-                        // Move (p, q) outwards to the next pair.
-                        this_word_vec.cycleBackward(p);
-                        this_word_vec.cycleForward(q);
-                        ++a;
-                    }
-                    extra_score = a - 1;
-                }
+                if (extra_score < 0)
+                    extra_score = extraCancellation(this_word_vec,
+                        start_sub, p);
                 subData.score = that_length + extra_score;
                 sub_list += subData;
             } else if ( comp_length > 0 ) {
@@ -468,22 +476,9 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             if (comp_length == that_length) {
                 // The entire copy of that_word will vanish.
                 // Will the remaining pieces of this_word cancel further?
-                if (extra_score < 0) {
-                    // TODO: Duplicated code
-                    size_t a=1;
-                    // Set (p, q) -> first pair of candidate symbols to cancel.
-                    q = p;
-                    p = start_sub;
-                    this_word_vec.cycleBackward(p);
-                    while (*p == -*q && 2*a+that_length <= this_length) {
-                        // We can cancel the *a*th extra pair of symbols.
-                        // Move (p, q) outwards to the next pair.
-                        this_word_vec.cycleBackward(p);
-                        this_word_vec.cycleForward(q);
-                        ++a;
-                    }
-                    extra_score = a - 1;
-                }
+                if (extra_score < 0)
+                    extra_score = extraCancellation(this_word_vec,
+                        start_sub, p);
                 subData.score = that_length + extra_score;
                 sub_list += subData;
             } else if ( comp_length > 0 ) {

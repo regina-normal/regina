@@ -1795,12 +1795,17 @@ class GroupPresentation : public Output<GroupPresentation> {
             int step = 1);
 
         /**
+         * A word whose generators only use exponents ±1.
+         *
+         * This is just a sequence of signed integers, where generator \a g is
+         * represented by the integer `g+1`, and its inverse is represented by
+         * the integer `-(g+1)`.
+         */
+        using SplayedWord = FixedArray<std::make_signed_t<size_t>>;
+
+        /**
          * Expresses the given word as sequence of generators and/or their
          * inverses, without using exponents other than ±1.
-         *
-         * In the returned sequence, generator \a g will be represented by
-         * the integer `g+1`, and its inverse will be represented by the
-         * integer `-(g+1)`.
          *
          * \param word the word to expand into individual generators and/or
          * their inverses.
@@ -1808,8 +1813,23 @@ class GroupPresentation : public Output<GroupPresentation> {
          * `word.wordLength()`; it is passed here to help avoid unnecessary
          * length re-computations (each of which takes linear time).
          */
-        static FixedArray<std::make_signed_t<size_t>> splay(
-            const GroupExpression& word, size_t length);
+        static SplayedWord splay(const GroupExpression& word, size_t length);
+
+        /**
+         * If we cut out the range of symbols `[begin, end)` from the given
+         * word (possibly wrapping around past the end of the word), how
+         * many additional pairs of symbols will cancel as a result?
+         *
+         * If `begin == end`, it is assumed that the entirety of \a word is
+         * being cut out.
+         *
+         * The word should be given in the format returned by splay().
+         * The arguments \a begin and \a end should be iterators into \a word;
+         * they are marked as `auto` so that we do not need to drag
+         * `fixedarray.h` into this header.
+         */
+        static size_t extraCancellation(const SplayedWord& word,
+            auto begin, auto end);
 
         /**
          *  A routine internal to the small cancellation simplification
