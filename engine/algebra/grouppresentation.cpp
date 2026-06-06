@@ -420,6 +420,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     // search for cyclic subwords of reducer in this_word_vec...
     Agg sub_list;
 
+    // Cache results of extraCancellation(); -1 means not yet computed
     FixedArray<long> extraScore(this_length, -1);
 
     for (bool invert : { false, true }) {
@@ -565,7 +566,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     }
 
                     bool matchedSymbol = (invert ? *this_pos == -*that_pos :
-                            *this_pos == *that_pos);
+                        *this_pos == *that_pos);
                     if (matchedSymbol) {
                         // Our matches extend through to this symbol.
                         ++this_pos;
