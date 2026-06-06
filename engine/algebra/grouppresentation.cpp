@@ -545,6 +545,14 @@ void GroupPresentation::applySubstitution( GroupExpression& this_word,
     // hand it back.
     size_t this_length = this_word.wordLength();
     size_t that_length = that_word.wordLength();
+
+    #if 0
+    std::cout << "Sub: (" << sub_data.start_sub_at << '/' << this_length
+        << ")-(" << sub_data.start_from << '/' << that_length
+        << (sub_data.invertB ? ")^-1: " : "): ")
+        << sub_data.sub_length << " -> " << sub_data.score << std::endl;
+    #endif
+
     std::vector<GroupExpressionTerm> this_word_vec, reducer;
     // we'll splay-out *this and that_word so that it's easier to search
     // for commonalities.

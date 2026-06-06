@@ -1741,13 +1741,6 @@ class GroupPresentation : public Output<GroupPresentation> {
                 return rhs.start_sub_at <=> start_sub_at;
             }
 
-            void writeTextShort(std::ostream& out) const {
-                out<<"Target position "<<start_sub_at<<
-                    " length of substitution "<<sub_length<<(invertB ?
-                     " inverse reducer position " : " reducer position ")
-                    <<start_from<<" score "<<score;
-            }
-
             /**
              * Gives a string that describes the substitution.
              */
