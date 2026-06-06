@@ -414,19 +414,8 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
 
     // this -> splayed to this_word, that_word -> reducer
     // terms are (g+1) for (generator g)^1, or -(g+1) for (generator g)^-1.
-    using SignedGenerator = std::make_signed_t<size_t>;
-    FixedArray<SignedGenerator> this_word_vec(this_length);
-    FixedArray<SignedGenerator> reducer(that_length);
-    {
-        auto it = this_word_vec.begin();
-        for (const auto& t : this_word.terms())
-            for (long i=0; i<std::abs(t.exponent); i++)
-                *it++ = (t.exponent>0 ? t.generator+1 : -(t.generator+1));
-        it = reducer.begin();
-        for (const auto& t : that_word.terms())
-            for (long i=0; i<std::abs(t.exponent); i++)
-                *it++ = (t.exponent>0 ? t.generator+1 : -(t.generator+1));
-    }
+    auto this_word_vec = splay(this_word, this_length);
+    auto reducer = splay(that_word, that_length);
 
     // search for cyclic subwords of reducer in this_word_vec...
     Agg sub_list;
