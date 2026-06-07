@@ -44,6 +44,22 @@
 #include "utilities/fixedarray.h"
 #include "utilities/stringutils.h"
 
+/**
+ * Decide how to implement dehnAlgorithmSubMetric().  Options include:
+ *
+ * 1 - The old algorithm from Regina 7.x, which is worst-case cubic but
+ *     typically quadratic in practice since most match positions require very
+ *     little iteration before a mismatch occurs.
+ *
+ * 2 - A rewritten search that organises the iteration differently to be
+ *     worst-case quadratic, but which appears to have larger constants and
+ *     has been found to be slower in preliminary testing.
+ *
+ * TODO: Possibly the _real_ optimisations will come from caching calls to
+ * dehnAlgorithmSubMetric() and thereby calling it fewer times.
+ */
+#define DEHN_SUB_ALGORITHM 1
+
 namespace regina {
 
 std::ostream& operator << (std::ostream& out,
@@ -420,7 +436,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     // search for cyclic subwords of reducer in this_word_vec...
     Agg sub_list;
 
-#if 0
+#if DEHN_SUB_ALGORITHM == 1
     auto start_sub = this_word_vec.begin();
     for (size_t i=0; i<this_length; ++i, ++start_sub) {
         ssize_t extra_score = -1; // -1 means not yet computed
@@ -479,7 +495,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
         }
     }
-#else
+#elif DEHN_SUB_ALGORITHM == 2
     // Cache results of extraCancellation(); -1 means not yet computed
     FixedArray<long> extraScore(this_length, -1);
 
@@ -592,6 +608,8 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
         }
     }
+#else
+    #error Invalid value of DEHN_SUB_ALGORITHM
 #endif
 
     return std::move(sub_list).result();
