@@ -484,7 +484,10 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     // Cache results of extraCancellation(); -1 means not yet computed
     FixedArray<long> extraScore(this_length, -1);
 
+    WordSubstitutionData sub;
     for (bool invert : { false, true }) {
+        sub.invertB = invert;
+
         // Consider laying out infinitely many copies of reducer end-to-end.
         // There are *that_length* ways of doing this, according to which
         // element of *that_word* is aligned with the beginning of *this_word*.
@@ -499,25 +502,22 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             auto that_pos = align;
             auto matches_this_from = this_pos;
             auto matches_that_from = that_pos;
-            size_t match_len = 0;
+            sub.start_sub_at =
+                matches_this_from - this_word_vec.begin();
+            if (invert)
+                sub.start_from =
+                    (reducer.end() - matches_that_from) - 1;
+            else
+                sub.start_from =
+                    matches_that_from - reducer.begin();
+            sub.sub_length = 0;
             bool wraparound = false;
             while (true) {
-                if (match_len == that_length || match_len == this_length) {
+                if (sub.sub_length == that_length ||
+                        sub.sub_length == this_length) {
                     // The current match is maximal, because we have matched
                     // either the entire reducer word or the entire target word.
-                    WordSubstitutionData sub;
-                    sub.start_sub_at =
-                        matches_this_from - this_word_vec.begin();
-                    if (invert)
-                        sub.start_from =
-                            (reducer.end() - matches_that_from) - 1;
-                    else
-                        sub.start_from =
-                            matches_that_from - reducer.begin();
-                    sub.sub_length = match_len;
-                    sub.invertB = invert;
-
-                    if (match_len == that_length) {
+                    if (sub.sub_length == that_length) {
                         if (extraScore[sub.start_sub_at] < 0)
                             extraScore[sub.start_sub_at] = extraCancellation(
                                 this_word_vec, matches_this_from, this_pos);
@@ -526,7 +526,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     } else {
                         // The match covers all of *this_word*, but not
                         // all of *reducer*.
-                        sub.score = 2 * match_len - that_length;
+                        sub.score = 2 * sub.sub_length - that_length;
                         if (sub.score > -step)
                             sub_list += sub;
                     }
@@ -536,11 +536,19 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     ++matches_this_from;
                     if (wraparound && matches_this_from == this_word_vec.end())
                         break; // no more wraparound matches possible
-                    if (invert)
+                    ++sub.start_sub_at;
+                    if (invert) {
                         reducer.cycleBackward(matches_that_from);
-                    else
+                        if (sub.start_from == 0)
+                            sub.start_from = that_length - 1;
+                        else
+                            --sub.start_from;
+                    } else {
                         reducer.cycleForward(matches_that_from);
-                    --match_len;
+                        if (++sub.start_from == that_length)
+                            sub.start_from = 0;
+                    }
+                    --sub.sub_length;
                 }
 
                 bool matchedSymbol = (invert ? *this_pos == -*that_pos :
@@ -548,21 +556,10 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 if (! matchedSymbol) {
                     // If we are holding onto a prior match, it must now be
                     // maximal.
-                    if (match_len) {
+                    if (sub.sub_length) {
                         // This symbol does not match, but we have a prior match
                         // which is therefore maximal.
-                        WordSubstitutionData sub;
-                        sub.start_sub_at =
-                            matches_this_from - this_word_vec.begin();
-                        if (invert)
-                            sub.start_from =
-                                (reducer.end() - matches_that_from) - 1;
-                        else
-                            sub.start_from =
-                                matches_that_from - reducer.begin();
-                        sub.sub_length = match_len;
-                        sub.invertB = invert;
-                        sub.score = 2 * match_len - that_length;
+                        sub.score = 2 * sub.sub_length - that_length;
                         if (sub.score > -step)
                             sub_list += sub;
                     }
@@ -584,11 +581,18 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     reducer.cycleForward(that_pos);
 
                 if (matchedSymbol) {
-                    ++match_len;
+                    ++sub.sub_length;
                 } else {
-                    match_len = 0;
+                    sub.sub_length = 0;
                     matches_this_from = this_pos;
                     matches_that_from = that_pos;
+                    sub.start_sub_at =
+                        matches_this_from - this_word_vec.begin();
+                    if (invert)
+                        sub.start_from =
+                            (reducer.end() - matches_that_from) - 1;
+                    else
+                        sub.start_from = matches_that_from - reducer.begin();
                 }
             }
         }
