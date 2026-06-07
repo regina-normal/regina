@@ -420,6 +420,66 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     // search for cyclic subwords of reducer in this_word_vec...
     Agg sub_list;
 
+#if 0
+    auto start_sub = this_word_vec.begin();
+    for (size_t i=0; i<this_length; ++i, ++start_sub) {
+        ssize_t extra_score = -1; // -1 means not yet computed
+        for (size_t j=0; j<that_length; j++) {
+            size_t comp_length = 0;
+            auto p = start_sub;
+            auto q = reducer.begin() + j;
+            while (*p == *q &&
+                    comp_length < that_length && comp_length < this_length) {
+                ++comp_length;
+                this_word_vec.cycleForward(p);
+                reducer.cycleForward(q);
+            }
+            WordSubstitutionData subData;
+            subData.invertB=false;
+            subData.sub_length=comp_length;
+            subData.start_sub_at=i;
+            subData.start_from=j;
+            if (comp_length == that_length) {
+                // The entire copy of that_word will vanish.
+                // Will the remaining pieces of this_word cancel further?
+                if (extra_score < 0)
+                    extra_score = extraCancellation(this_word_vec,
+                        start_sub, p);
+                subData.score = that_length + extra_score;
+                sub_list += subData;
+            } else if ( comp_length > 0 ) {
+                subData.score = 2*comp_length - that_length;
+                if ( subData.score > -step )
+                    sub_list += subData;
+            }
+            // and the corresponding search with the inverse of reducer.
+            comp_length = 0;
+            p = start_sub;
+            q = reducer.end() - (j+1);
+            while (*p == -*q &&
+                    comp_length < that_length && comp_length < this_length) {
+                ++comp_length;
+                this_word_vec.cycleForward(p);
+                reducer.cycleBackward(q);
+            }
+            subData.invertB=true;
+            subData.sub_length=comp_length;
+            if (comp_length == that_length) {
+                // The entire copy of that_word will vanish.
+                // Will the remaining pieces of this_word cancel further?
+                if (extra_score < 0)
+                    extra_score = extraCancellation(this_word_vec,
+                        start_sub, p);
+                subData.score = that_length + extra_score;
+                sub_list += subData;
+            } else if ( comp_length > 0 ) {
+                subData.score = 2*comp_length - that_length;
+                if ( subData.score > -step )
+                    sub_list += subData;
+            }
+        }
+    }
+#else
     // Cache results of extraCancellation(); -1 means not yet computed
     FixedArray<long> extraScore(this_length, -1);
 
@@ -532,6 +592,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
         }
     }
+#endif
 
     return std::move(sub_list).result();
 }
