@@ -1695,25 +1695,25 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          *  A == a^5b^2abababa^4b^1  and  B == bababa^-1
          *    == aaaaabbabababaaaab
-         * start_sub_at == 6, start_from == 0, sub_length == 5 makes sense,
+         * target_pos == 6, reducer_pos == 0, length == 5 makes sense,
          *  this singles out the subword aaaaab[babab]abaaaab. Since it would
          *  reduce the length by four, the score is 4.
          *
          * Similarly, if    A == baba^4b^1a^5b^2aba == babaaaabaaaaabbaba
-         *   and    B == baba^-1ba start_sub_at == 14, start_from == 5,
-         *   sub_length == 5 makes sense, and is a cyclic variation
+         *   and    B == baba^-1ba target_pos == 14, reducer_pos == 5,
+         *   length == 5 makes sense, and is a cyclic variation
          *   on the above substitution, so the score is also 4.
          */
         struct WordSubstitutionData {
-            size_t start_sub_at;
+            size_t target_pos;
                 /**< Where in A do we start? */
-            size_t start_from;
+            size_t reducer_pos;
                 /**< Where in B do we start? */
-            size_t sub_length;
+            size_t length;
                 /**< The number of letters from B to use. */
-            bool invertB;
+            bool invert_reducer;
                 /**< Invert B before making the substitution? */
-            long int score;
+            long score;
                 /**< The score, i.e., the decrease in the word letter count
                      provided this substitution is made. */
 
@@ -1730,15 +1730,15 @@ class GroupPresentation : public Output<GroupPresentation> {
                 //
                 if (auto c = rhs.score <=> score; c != 0)
                     return c;
-                if (auto c = rhs.sub_length <=> sub_length; c != 0)
+                if (auto c = rhs.length <=> length; c != 0)
                     return c;
-                if (invertB && ! rhs.invertB)
+                if (invert_reducer && ! rhs.invert_reducer)
                     return std::strong_ordering::greater;
-                if (rhs.invertB && ! invertB)
+                if (rhs.invert_reducer && ! invert_reducer)
                     return std::strong_ordering::less;
-                if (auto c = rhs.start_from <=> start_from; c != 0)
+                if (auto c = rhs.reducer_pos <=> reducer_pos; c != 0)
                     return c;
-                return rhs.start_sub_at <=> start_sub_at;
+                return rhs.target_pos <=> target_pos;
             }
 
             /**

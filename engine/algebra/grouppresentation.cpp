@@ -418,62 +418,60 @@ template <Aggregator<GroupPresentation::WordSubstitutionData> Agg>
 typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
         const GroupExpression &this_word, const GroupExpression &that_word,
         int step) {
-    size_t this_length = this_word.wordLength();
-    size_t that_length = that_word.wordLength();
+    size_t target_len = this_word.wordLength();
+    size_t reducer_len = that_word.wordLength();
 
     // generic early exit strategy
-    if (this_length < 2 || that_length==0)
+    if (target_len < 2 || reducer_len==0)
         return Agg().result();
     // early exit strategy based on step.
-    if (step==1 && 2*this_length < that_length)
+    if (step==1 && 2*target_len < reducer_len)
         return Agg().result();
 
-    // this -> splayed to this_word, that_word -> reducer
-    // terms are (g+1) for (generator g)^1, or -(g+1) for (generator g)^-1.
-    auto this_word_vec = splay(this_word, this_length);
-    auto reducer = splay(that_word, that_length);
+    auto target_vec = splay(this_word, target_len);
+    auto reducer_vec = splay(that_word, reducer_len);
 
-    // search for cyclic subwords of reducer in this_word_vec...
+    // search for cyclic subwords of reducer_vec in target_vec...
     Agg sub_list;
 
 #if DEHN_SUB_ALGORITHM == 1
     WordSubstitutionData sub;
-    auto start_sub = this_word_vec.begin();
-    for (sub.start_sub_at=0; sub.start_sub_at<this_length;
-            ++sub.start_sub_at, ++start_sub) {
+    auto start_sub = target_vec.begin();
+    for (sub.target_pos=0; sub.target_pos<target_len;
+            ++sub.target_pos, ++start_sub) {
         ssize_t extra_score = -1; // -1 means not yet computed
-        for (sub.start_from=0; sub.start_from<that_length; sub.start_from++) {
+        for (sub.reducer_pos=0; sub.reducer_pos<reducer_len; sub.reducer_pos++) {
             for (bool invert : { false, true }) {
-                sub.invertB=invert;
-                sub.sub_length = 0;
+                sub.invert_reducer = invert;
+                sub.length = 0;
                 auto p = start_sub;
-                auto q = (invert ? reducer.end() - (sub.start_from+1) :
-                    reducer.begin() + sub.start_from);
+                auto q = (invert ? reducer_vec.end() - (sub.reducer_pos+1) :
+                    reducer_vec.begin() + sub.reducer_pos);
                 if (invert) {
-                    while (*p == -*q && sub.sub_length < that_length &&
-                            sub.sub_length < this_length) {
-                        ++sub.sub_length;
-                        this_word_vec.cycleForward(p);
-                        reducer.cycleBackward(q);
+                    while (*p == -*q && sub.length < reducer_len &&
+                            sub.length < target_len) {
+                        ++sub.length;
+                        target_vec.cycleForward(p);
+                        reducer_vec.cycleBackward(q);
                     }
                 } else {
-                    while (*p == *q && sub.sub_length < that_length &&
-                            sub.sub_length < this_length) {
-                        ++sub.sub_length;
-                        this_word_vec.cycleForward(p);
-                        reducer.cycleForward(q);
+                    while (*p == *q && sub.length < reducer_len &&
+                            sub.length < target_len) {
+                        ++sub.length;
+                        target_vec.cycleForward(p);
+                        reducer_vec.cycleForward(q);
                     }
                 }
-                if (sub.sub_length == that_length) {
+                if (sub.length == reducer_len) {
                     // The entire copy of that_word will vanish.
                     // Will the remaining pieces of this_word cancel further?
                     if (extra_score < 0)
-                        extra_score = extraCancellation(this_word_vec,
+                        extra_score = extraCancellation(target_vec,
                             start_sub, p);
-                    sub.score = that_length + extra_score;
+                    sub.score = reducer_len + extra_score;
                     sub_list += sub;
-                } else if (sub.sub_length > 0) {
-                    sub.score = 2*sub.sub_length - that_length;
+                } else if (sub.length > 0) {
+                    sub.score = 2*sub.length - reducer_len;
                     if ( sub.score > -step )
                         sub_list += sub;
                 }
@@ -482,73 +480,70 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     }
 #elif DEHN_SUB_ALGORITHM == 2
     // Cache results of extraCancellation(); -1 means not yet computed
-    FixedArray<long> extraScore(this_length, -1);
+    FixedArray<long> extraScore(target_len, -1);
 
     WordSubstitutionData sub;
     for (bool invert : { false, true }) {
-        sub.invertB = invert;
+        sub.invert_reducer = invert;
 
-        // Consider laying out infinitely many copies of reducer end-to-end.
-        // There are *that_length* ways of doing this, according to which
+        // Consider laying out infinitely many copies of reducer_vec end-to-end.
+        // There are *reducer_len* ways of doing this, according to which
         // element of *that_word* is aligned with the beginning of *this_word*.
         // The outermost loop here considers each of those alignments in turn.
-        for (auto align = reducer.begin(); align != reducer.end(); ++align) {
+        for (auto align = reducer_vec.begin(); align != reducer_vec.end();
+                ++align) {
             // We will walk through *this_word* from start to end, looking for
             // matches that end at the current position *pos* and do not wrap
             // around the ends of *this_word*.  After this, we continue our
             // iteration further to locate matches that _do_ wrap around.
 
-            auto this_pos = this_word_vec.begin();
+            auto this_pos = target_vec.begin();
             auto that_pos = align;
             auto matches_this_from = this_pos;
             auto matches_that_from = that_pos;
-            sub.start_sub_at =
-                matches_this_from - this_word_vec.begin();
+            sub.target_pos = matches_this_from - target_vec.begin();
             if (invert)
-                sub.start_from =
-                    (reducer.end() - matches_that_from) - 1;
+                sub.reducer_pos = (reducer_vec.end() - matches_that_from) - 1;
             else
-                sub.start_from =
-                    matches_that_from - reducer.begin();
-            sub.sub_length = 0;
+                sub.reducer_pos = matches_that_from - reducer_vec.begin();
+            sub.length = 0;
             bool wraparound = false;
             while (true) {
-                if (sub.sub_length == that_length ||
-                        sub.sub_length == this_length) {
+                if (sub.length == reducer_len || sub.length == target_len) {
                     // The current match is maximal, because we have matched
                     // either the entire reducer word or the entire target word.
-                    if (sub.sub_length == that_length) {
-                        if (extraScore[sub.start_sub_at] < 0)
-                            extraScore[sub.start_sub_at] = extraCancellation(
-                                this_word_vec, matches_this_from, this_pos);
-                        sub.score = that_length + extraScore[sub.start_sub_at];
+                    if (sub.length == reducer_len) {
+                        if (extraScore[sub.target_pos] < 0)
+                            extraScore[sub.target_pos] = extraCancellation(
+                                target_vec, matches_this_from, this_pos);
+                        sub.score = reducer_len + extraScore[sub.target_pos];
                         sub_list += sub;
                     } else {
                         // The match covers all of *this_word*, but not
-                        // all of *reducer*.
-                        sub.score = 2 * sub.sub_length - that_length;
+                        // all of *reducer_vec*.
+                        sub.score = 2 * sub.length - reducer_len;
                         if (sub.score > -step)
                             sub_list += sub;
                     }
 
                     // We cannot use this starting point again, since no
-                    // match can be longer than *that_length* or *this_length*.
+                    // match can be longer than *reducer_len* or *target_len*.
                     ++matches_this_from;
-                    if (wraparound && matches_this_from == this_word_vec.end())
+                    if (wraparound && matches_this_from == target_vec.end())
                         break; // no more wraparound matches possible
-                    ++sub.start_sub_at;
+                    ++sub.target_pos;
                     if (invert) {
-                        reducer.cycleBackward(matches_that_from);
-                        if (sub.start_from == 0)
-                            sub.start_from = that_length - 1;
+                        reducer_vec.cycleBackward(matches_that_from);
+                        if (sub.reducer_pos == 0)
+                            sub.reducer_pos = reducer_len - 1;
                         else
-                            --sub.start_from;
+                            --sub.reducer_pos;
                     } else {
-                        reducer.cycleForward(matches_that_from);
-                        if (++sub.start_from == that_length)
-                            sub.start_from = 0;
+                        reducer_vec.cycleForward(matches_that_from);
+                        if (++sub.reducer_pos == reducer_len)
+                            sub.reducer_pos = 0;
                     }
-                    --sub.sub_length;
+                    --sub.length;
                 }
 
                 bool matchedSymbol = (invert ? *this_pos == -*that_pos :
@@ -556,10 +551,10 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 if (! matchedSymbol) {
                     // If we are holding onto a prior match, it must now be
                     // maximal.
-                    if (sub.sub_length) {
+                    if (sub.length) {
                         // This symbol does not match, but we have a prior match
                         // which is therefore maximal.
-                        sub.score = 2 * sub.sub_length - that_length;
+                        sub.score = 2 * sub.length - reducer_len;
                         if (sub.score > -step)
                             sub_list += sub;
                     }
@@ -570,29 +565,28 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 }
 
                 ++this_pos;
-                if ((! wraparound) && this_pos == this_word_vec.end()) {
+                if ((! wraparound) && this_pos == target_vec.end()) {
                     // TODO: Is this even possible if wraparound is true?
                     wraparound = true;
-                    this_pos = this_word_vec.begin();
+                    this_pos = target_vec.begin();
                 }
                 if (invert)
-                    reducer.cycleBackward(that_pos);
+                    reducer_vec.cycleBackward(that_pos);
                 else
-                    reducer.cycleForward(that_pos);
+                    reducer_vec.cycleForward(that_pos);
 
                 if (matchedSymbol) {
-                    ++sub.sub_length;
+                    ++sub.length;
                 } else {
-                    sub.sub_length = 0;
+                    sub.length = 0;
                     matches_this_from = this_pos;
                     matches_that_from = that_pos;
-                    sub.start_sub_at =
-                        matches_this_from - this_word_vec.begin();
+                    sub.target_pos = matches_this_from - target_vec.begin();
                     if (invert)
-                        sub.start_from =
-                            (reducer.end() - matches_that_from) - 1;
+                        sub.reducer_pos =
+                            (reducer_vec.end() - matches_that_from) - 1;
                     else
-                        sub.start_from = matches_that_from - reducer.begin();
+                        sub.reducer_pos = matches_that_from - reducer_vec.begin();
                 }
             }
         }
@@ -613,51 +607,50 @@ void GroupPresentation::applySubstitution( GroupExpression& this_word,
 {
     // okay, so let's do a quick cut-and-replace, reduce the word and
     // hand it back.
-    size_t this_length = this_word.wordLength();
-    size_t that_length = that_word.wordLength();
+    size_t target_len = this_word.wordLength();
+    size_t reducer_len = that_word.wordLength();
 
     #if 0
-    std::cout << "Sub: (" << sub_data.start_sub_at << '/' << this_length
-        << ")-(" << sub_data.start_from << '/' << that_length
-        << (sub_data.invertB ? ")^-1: " : "): ")
-        << sub_data.sub_length << " -> " << sub_data.score << std::endl;
+    std::cout << "Sub: (" << sub_data.target_pos << '/' << target_len
+        << ")-(" << sub_data.reducer_pos << '/' << reducer_len
+        << (sub_data.invert_reducer ? ")^-1: " : "): ")
+        << sub_data.length << " -> " << sub_data.score << std::endl;
     #endif
 
-    std::vector<GroupExpressionTerm> this_word_vec, reducer;
+    std::vector<GroupExpressionTerm> target_vec, reducer_vec;
     // we'll splay-out *this and that_word so that it's easier to search
     // for commonalities.
-    this_word_vec.reserve( this_length );
-    reducer.reserve( that_length );
+    target_vec.reserve( target_len );
+    reducer_vec.reserve( reducer_len );
     // start the splaying of terms
     for (const auto& t : this_word.terms()) {
         for (long i=0; i<std::abs(t.exponent); i++)
-            this_word_vec.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
+            target_vec.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
     }
     // and that_word
     for (const auto& t : that_word.terms()) {
         for (long i=0; i<std::abs(t.exponent); i++)
-            reducer.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
+            reducer_vec.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
     }
     // done splaying, produce inv_reducer
-    std::vector< GroupExpressionTerm > inv_reducer( that_length );
-    for (size_t i=0; i<that_length; i++)
-        inv_reducer[that_length-(i+1)] = reducer[i].inverse();
+    std::vector< GroupExpressionTerm > inv_reducer( reducer_len );
+    for (size_t i=0; i<reducer_len; i++)
+        inv_reducer[reducer_len-(i+1)] = reducer_vec[i].inverse();
     // done with inv_reducer, erase terms
     this_word.terms().clear();
 
     // *this word is some conjugate of AB and the relator is some conjugate of AC.
     //  We are performing the substitution
     // A=C^{-1}, thus we need to produce the word C^{-1}B. Put in C^{-1} first..
-    for (size_t i=0; i<(that_length - sub_data.sub_length); i++)
-        this_word.terms().push_back( sub_data.invertB ?
-            reducer[(that_length - sub_data.start_from + i) % that_length] :
-            inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
-    // iterate through remainder of this_word_vec, starting from
-    //     sub_data.start_sub_at + sub_length, ie fill in B
-    for (size_t i=0; i<(this_length - sub_data.sub_length); i++)
+    for (size_t i=0; i<(reducer_len - sub_data.length); i++)
+        this_word.terms().push_back( sub_data.invert_reducer ?
+            reducer_vec[(reducer_len - sub_data.reducer_pos + i) % reducer_len] :
+            inv_reducer[(reducer_len - sub_data.reducer_pos + i) % reducer_len] );
+    // iterate through remainder of target_vec, starting from
+    //     sub_data.target_pos + sub_data.length, ie fill in B
+    for (size_t i=0; i<(target_len - sub_data.length); i++)
         this_word.terms().push_back(
-            this_word_vec[(sub_data.start_sub_at + sub_data.sub_length + i) %
-                          this_length] );
+            target_vec[(sub_data.target_pos + sub_data.length + i) % target_len] );
     // done
     this_word.simplify();
 }
@@ -691,28 +684,28 @@ std::string GroupPresentation::WordSubstitutionData::substitutionString(
     // cut the substitution data into bits, assemble what we're cutting
     //  out and what we're pasting in.
     size_t word_length = word.wordLength();
-    std::vector<GroupExpressionTerm> reducer;
-    reducer.reserve( word_length );
+    std::vector<GroupExpressionTerm> reducer_vec;
+    reducer_vec.reserve( word_length );
     // splay word
     for (auto it = word.terms().begin(); it!=word.terms().end(); it++) {
         for (long i=0; i<std::abs(it->exponent); i++)
-            reducer.emplace_back(it->generator, (it->exponent>0) ? 1 : -1);
+            reducer_vec.emplace_back(it->generator, (it->exponent>0) ? 1 : -1);
     }
     // done splaying, produce inv_reducer
     std::vector< GroupExpressionTerm > inv_reducer( word_length );
     for (size_t i=0; i<word_length; i++)
-        inv_reducer[word_length-(i+1)] = reducer[i].inverse();
+        inv_reducer[word_length-(i+1)] = reducer_vec[i].inverse();
     GroupExpression del_word, rep_word;
         // produce word to delete, and word to replace with.
 
-    for (size_t i=0; i<(word_length - sub_length); i++)
-        rep_word.addTermLast( invertB ?
-            reducer[(word_length - start_from + i) % word_length] :
-            inv_reducer[(word_length - start_from + i) % word_length] );
-    for (size_t i=0; i<sub_length; i++)
-        del_word.addTermLast( invertB ?
-            inv_reducer[(start_from + i) % word_length] :
-            reducer[(start_from + i) % word_length] );
+    for (size_t i=0; i<(word_length - length); i++)
+        rep_word.addTermLast( invert_reducer ?
+            reducer_vec[(word_length - reducer_pos + i) % word_length] :
+            inv_reducer[(word_length - reducer_pos + i) % word_length] );
+    for (size_t i=0; i<length; i++)
+        del_word.addTermLast( invert_reducer ?
+            inv_reducer[(reducer_pos + i) % word_length] :
+            reducer_vec[(reducer_pos + i) % word_length] );
     rep_word.simplify();
     del_word.simplify();
     retval = del_word.str()+" -> "+rep_word.str();
