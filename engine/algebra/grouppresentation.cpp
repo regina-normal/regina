@@ -55,6 +55,15 @@
  *     worst-case quadratic, but which appears to have larger constants and
  *     has been found to be slower in preliminary testing.
  *
+ * Algorithm 1 picks up many non-maximal substitutions; algorithm 2 picks up
+ * fewer (the only non-maximal matches it finds should be those that begin at
+ * the start of the target word, but which could have been extended by
+ * wrapping back past the beginning of the target).  This does not matter
+ * during group simplification (where only the best substitution matters),
+ * but it does change the behaviour (in a harmless way) when calling
+ * proliferateRelators().  For an example where these behaviours differ,
+ * see GroupPresentation(3, ['abaabb', 'aabc']).
+ *
  * TODO: Possibly the _real_ optimisations will come from caching calls to
  * dehnAlgorithmSubMetric() and thereby calling it fewer times.
  */
