@@ -449,9 +449,9 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     for (sub.target_pos = 0; sub.target_pos < target_len;
             ++sub.target_pos, ++start_sub) {
         ssize_t extra_score = -1; // -1 means not yet computed
-        for (sub.reducer_pos = 0; sub.reducer_pos < reducer_len;
-                ++sub.reducer_pos) {
-            for (bool invert : { false, true }) {
+        for (bool invert : { false, true }) {
+            for (sub.reducer_pos = 0; sub.reducer_pos < reducer_len;
+                    ++sub.reducer_pos) {
                 sub.invert_reducer = invert;
                 sub.length = 0;
                 auto p = start_sub;
