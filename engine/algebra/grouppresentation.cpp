@@ -482,9 +482,6 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     --match_len;
                 }
 
-                if ((! wraparound) && this_pos == this_word_vec.end())
-                    wraparound = true;
-
                 bool matchedSymbol = (invert ? *this_pos == -*that_pos :
                     *this_pos == *that_pos);
                 if (! matchedSymbol) {
@@ -515,6 +512,11 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 }
 
                 ++this_pos;
+                if ((! wraparound) && this_pos == this_word_vec.end()) {
+                    // TODO: Is this even possible if wraparound is true?
+                    wraparound = true;
+                    this_pos = this_word_vec.begin();
+                }
                 if (invert)
                     reducer.cycleBackward(that_pos);
                 else
