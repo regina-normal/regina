@@ -437,10 +437,11 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
 #if DEHN_SUB_ALGORITHM == 1
     WordSubstitutionData sub;
     auto start_sub = target_vec.begin();
-    for (sub.target_pos=0; sub.target_pos<target_len;
+    for (sub.target_pos = 0; sub.target_pos < target_len;
             ++sub.target_pos, ++start_sub) {
         ssize_t extra_score = -1; // -1 means not yet computed
-        for (sub.reducer_pos=0; sub.reducer_pos<reducer_len; sub.reducer_pos++) {
+        for (sub.reducer_pos = 0; sub.reducer_pos < reducer_len;
+                ++sub.reducer_pos) {
             for (bool invert : { false, true }) {
                 sub.invert_reducer = invert;
                 sub.length = 0;
@@ -471,7 +472,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     sub.score = reducer_len + extra_score;
                     sub_list += sub;
                 } else if (sub.length > 0) {
-                    sub.score = 2*sub.length - reducer_len;
+                    sub.score = 2 * sub.length - reducer_len;
                     if ( sub.score > -step )
                         sub_list += sub;
                 }
