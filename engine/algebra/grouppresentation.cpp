@@ -509,13 +509,11 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
 
             auto this_pos = target_vec.begin();
             auto that_pos = align;
-            auto matches_this_from = this_pos;
-            auto matches_that_from = that_pos;
-            sub.target_pos = matches_this_from - target_vec.begin();
+            sub.target_pos = 0;
             if (invert)
-                sub.reducer_pos = (reducer_vec.end() - matches_that_from) - 1;
+                sub.reducer_pos = (reducer_vec.end() - that_pos) - 1;
             else
-                sub.reducer_pos = matches_that_from - reducer_vec.begin();
+                sub.reducer_pos = that_pos - reducer_vec.begin();
             sub.length = 0;
             bool wraparound = false;
             while (true) {
@@ -525,7 +523,11 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     if (sub.length == reducer_len) {
                         if (extraScore[sub.target_pos] < 0)
                             extraScore[sub.target_pos] = extraCancellation(
-                                target_vec, matches_this_from, this_pos);
+                                target_vec,
+                                (sub.target_pos < sub.length ?
+                                    this_pos + target_len - sub.length :
+                                    this_pos - sub.length),
+                                this_pos);
                         sub.score = reducer_len + extraScore[sub.target_pos];
                         sub_list += sub;
                     } else {
@@ -538,18 +540,15 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
 
                     // We cannot use this starting point again, since no
                     // match can be longer than *reducer_len* or *target_len*.
-                    ++matches_this_from;
-                    if (wraparound && matches_this_from == target_vec.end())
-                        break; // no more wraparound matches possible
                     ++sub.target_pos;
+                    if (wraparound && sub.target_pos == target_len)
+                        break; // no more wraparound matches possible
                     if (invert) {
-                        reducer_vec.cycleBackward(matches_that_from);
                         if (sub.reducer_pos == 0)
                             sub.reducer_pos = reducer_len - 1;
                         else
                             --sub.reducer_pos;
                     } else {
-                        reducer_vec.cycleForward(matches_that_from);
                         if (++sub.reducer_pos == reducer_len)
                             sub.reducer_pos = 0;
                     }
@@ -589,14 +588,12 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                     ++sub.length;
                 } else {
                     sub.length = 0;
-                    matches_this_from = this_pos;
-                    matches_that_from = that_pos;
-                    sub.target_pos = matches_this_from - target_vec.begin();
+                    sub.target_pos = this_pos - target_vec.begin();
                     if (invert)
                         sub.reducer_pos =
-                            (reducer_vec.end() - matches_that_from) - 1;
+                            (reducer_vec.end() - that_pos) - 1;
                     else
-                        sub.reducer_pos = matches_that_from - reducer_vec.begin();
+                        sub.reducer_pos = that_pos - reducer_vec.begin();
                 }
             }
         }
