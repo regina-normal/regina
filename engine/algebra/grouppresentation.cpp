@@ -488,6 +488,117 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
         }
     }
+#elif DEHN_SUB_ALGORITHM == 2
+    size_t max_match = std::min(target_len, reducer_len);
+    long max_score = 2 * max_match - reducer_len;
+
+    /**
+     * Holds the length of the best match starting from the _previous_
+     * position in *target_vec* and each possible position in *reducer_vec*.
+     */
+    FixedArray<size_t> match_from(reducer_len, 0);
+    FixedArray<size_t> inv_match_from(reducer_len, 0);
+
+    WordSubstitutionData sub;
+    auto start_sub = target_vec.begin();
+    for (sub.target_pos = 0; sub.target_pos < target_len;
+            ++sub.target_pos, ++start_sub) {
+        ssize_t extra_score = -1; // -1 means not yet computed
+        for (bool invert : { false, true }) {
+            sub.invert_reducer = invert;
+            size_t prev = (invert ? inv_match_from.back() : match_from.back());
+            for (sub.reducer_pos = 0; sub.reducer_pos < reducer_len;
+                    ++sub.reducer_pos) {
+                sub.length = 0;
+                bool use;
+                if (prev == max_match) {
+                    // We can possibly extend the previous match, but only by
+                    // dropping its original first symbol (i.e., slide the match
+                    // window along the target word to start here instead).
+                    auto next_target_pos =
+                        (sub.target_pos + max_match <= target_len ?
+                        start_sub + max_match - 1 :
+                        start_sub + max_match - 1 - target_len);
+                    auto next_reducer_index =
+                        (sub.reducer_pos + max_match <= reducer_len ?
+                        sub.reducer_pos + max_match - 1 :
+                        sub.reducer_pos + max_match - 1 - reducer_len);
+                    bool extends = (invert ?
+                        *next_target_pos ==
+                            -reducer_vec[reducer_len - next_reducer_index - 1] :
+                        *next_target_pos == reducer_vec[next_reducer_index]);
+                    if (extends) {
+                        sub.length = max_match;
+                        if (sub.length == reducer_len) {
+                            if (extra_score < 0)
+                                extra_score = extraCancellation(
+                                    target_vec,
+                                    start_sub,
+                                    sub.target_pos + max_match >= target_len ?
+                                        start_sub + max_match - target_len :
+                                        start_sub + max_match);
+                            sub.score = reducer_len + extra_score;
+                        } else {
+                            sub.score = max_score;
+                        }
+                        use = true;
+                    } else {
+                        sub.length = max_match - 1;
+                        use = false;
+                    }
+                } else if (prev > 0) {
+                    // The previous match either failed to match the current
+                    // symbol (prev == 1), or else found a mismatch before
+                    // reaching max_length.  Either way, attempting to start a
+                    // match from here will give us something strictly worse.
+                    sub.length = prev - 1;
+                    use = false;
+                } else {
+                    // The previous symbol did not match, or we are at the
+                    // very beginning of the target word.  Try to find a fresh
+                    // match starting at this point.
+                    auto p = start_sub;
+                    auto q = (invert ? reducer_vec.end() - (sub.reducer_pos+1) :
+                        reducer_vec.begin() + sub.reducer_pos);
+                    if (invert) {
+                        while (*p == -*q && sub.length < max_match) {
+                            ++sub.length;
+                            target_vec.cycleForward(p);
+                            reducer_vec.cycleBackward(q);
+                        }
+                    } else {
+                        while (*p == *q && sub.length < max_match) {
+                            ++sub.length;
+                            target_vec.cycleForward(p);
+                            reducer_vec.cycleForward(q);
+                        }
+                    }
+                    if (sub.length == reducer_len) {
+                        // The entire copy of *reducer* will vanish.
+                        // Will the remaining pieces of *target* cancel further?
+                        if (extra_score < 0)
+                            extra_score = extraCancellation(target_vec,
+                                start_sub, p);
+                        sub.score = reducer_len + extra_score;
+                        use = true;
+                    } else if (sub.length > 0) {
+                        sub.score = 2 * sub.length - reducer_len;
+                        use = (sub.score > -step);
+                    }
+                }
+                if (use)
+                    sub_list += sub;
+
+                if (invert) {
+                    prev = inv_match_from[sub.reducer_pos];
+                    inv_match_from[sub.reducer_pos] = sub.length;
+                } else {
+                    prev = match_from[sub.reducer_pos];
+                    match_from[sub.reducer_pos] = sub.length;
+                }
+            }
+        }
+    }
 #elif DEHN_SUB_ALGORITHM == 3
     // Cache results of extraCancellation(); -1 means not yet computed
     FixedArray<long> extraScore(target_len, -1);
