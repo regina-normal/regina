@@ -403,6 +403,50 @@ GroupPresentation::SplayedWord GroupPresentation::splay(
     return ans;
 }
 
+GroupExpression GroupPresentation::desplay(
+        const GroupPresentation::SplayedWord& word) {
+    GroupExpression ans;
+
+    SplayedWord::value_type gen = -1;
+    long exp = 0;
+    for (auto g : word) {
+        if (g == gen + 1)
+            ++exp;
+        else if (g == -(gen + 1))
+            --exp;
+        else {
+            // Push the current term and start a new one.
+            if (exp) {
+                if (ans.terms().empty() || ans.terms().back().generator != gen)
+                    ans.terms().emplace_back(gen, exp);
+                else if (ans.terms().back().exponent == -exp)
+                    ans.terms().pop_back();
+                else
+                    ans.terms().back().exponent += exp;
+            }
+
+            if (g > 0) {
+                gen = g - 1;
+                exp = 1;
+            } else {
+                gen = -(g + 1);
+                exp = -1;
+            }
+        }
+    }
+    if (exp) {
+        if (ans.terms().empty() || ans.terms().back().generator != gen)
+            ans.terms().emplace_back(gen, exp);
+        else if (ans.terms().back().exponent == -exp)
+            ans.terms().pop_back();
+        else
+            ans.terms().back().exponent += exp;
+    }
+
+    // TODO: The old code did _not_ use cyclic simplification.  Should we?
+    return ans;
+}
+
 template <typename T>
 FixedArray<size_t> GroupPresentation::sortedIndices(const FixedArray<T>& data) {
     FixedArray<size_t> ans(data.size());
@@ -774,11 +818,6 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
 void GroupPresentation::applySubstitution(GroupExpression& target,
         const GroupExpression &reducer, const WordSubstitutionData &sub)
 {
-    // okay, so let's do a quick cut-and-replace, reduce the word and
-    // hand it back.
-    size_t target_len = target.wordLength();
-    size_t reducer_len = reducer.wordLength();
-
     #if 0
     std::cout << "Sub: (" << sub.target_pos << '/' << target_len
         << ")-(" << sub.reducer_pos << '/' << reducer_len
@@ -786,44 +825,27 @@ void GroupPresentation::applySubstitution(GroupExpression& target,
         << sub.length << " -> " << sub.score << std::endl;
     #endif
 
-    std::vector<GroupExpressionTerm> target_vec, reducer_vec;
-    // we'll splay-out *target* and *reducer* so that it's easier to search
-    // for commonalities.
-    target_vec.reserve( target_len );
-    reducer_vec.reserve( reducer_len );
-    // start the splaying of target
-    for (const auto& t : target.terms()) {
-        for (long i=0; i<std::abs(t.exponent); i++)
-            target_vec.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
-    }
-    // and reducer
-    for (const auto& t : reducer.terms()) {
-        for (long i=0; i<std::abs(t.exponent); i++)
-            reducer_vec.emplace_back( t.generator, (t.exponent>0) ? 1 : -1 );
-    }
-    // done splaying, produce inv_reducer
-    std::vector< GroupExpressionTerm > inv_reducer( reducer_len );
-    for (size_t i=0; i<reducer_len; i++)
-        inv_reducer[reducer_len-(i+1)] = reducer_vec[i].inverse();
-    // done with inv_reducer, erase terms
-    target.terms().clear();
+    size_t target_len = target.wordLength();
+    size_t reducer_len = reducer.wordLength();
 
-    // *this word is some conjugate of AB and the relator is some conjugate of AC.
-    //  We are performing the substitution
-    // A=C^{-1}, thus we need to produce the word C^{-1}B. Put in C^{-1} first..
-    for (size_t i=0; i<(reducer_len - sub.length); i++)
-        target.terms().push_back( sub.invert_reducer ?
+    auto target_vec = splay(target, target_len);
+    auto reducer_vec = splay(reducer, reducer_len);
+
+    SplayedWord ans(target_len + reducer_len - 2 * sub.length);
+
+    // *target* is some conjugate of AB and *reducer* is some conjugate of AC.
+    // We are performing the substitution A=C^{-1}, thus we need to produce the
+    // word C^{-1}B. Put in C^{-1} first, then B.
+    auto pos = ans.begin();
+    for (size_t i = 0; i < reducer_len - sub.length; ++i)
+        *pos++ = (sub.invert_reducer ?
             reducer_vec[(reducer_len - sub.reducer_pos + i) % reducer_len] :
-            inv_reducer[(reducer_len - sub.reducer_pos + i) % reducer_len] );
-    // iterate through remainder of target_vec, starting from
-    //     sub.target_pos + sub.length, ie fill in B
-    for (size_t i=0; i<(target_len - sub.length); i++)
-        target.terms().push_back(
-            target_vec[(sub.target_pos + sub.length + i) % target_len] );
-    // done
-    target.simplify();
-}
+            -reducer_vec[(reducer_len + sub.reducer_pos - i - 1) % reducer_len]);
+    for (size_t i = 0; i < target_len - sub.length; ++i)
+        *pos++ = target_vec[(sub.target_pos + sub.length + i) % target_len];
 
+    target = desplay(ans);
+}
 
 namespace { // anonymous namespace
     bool compare_length( const GroupExpression& first,
