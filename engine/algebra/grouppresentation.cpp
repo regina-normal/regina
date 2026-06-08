@@ -51,12 +51,12 @@
  *     typically quadratic in practice since most match positions require very
  *     little iteration before a mismatch occurs.
  *
- * 2 - A rewritten search that organises the iteration differently to be
- *     worst-case quadratic, but which appears to have larger constants and
- *     has been found to be slower in preliminary testing.
+ * 2,3 - Different variants of rewritten searches that organise the iteration
+ *     differently to be worst-case quadratic, but which both appear to have
+ *     larger constants and have been found to be slower in preliminary testing.
  *
- * Algorithm 1 picks up many non-maximal substitutions; algorithm 2 picks up
- * fewer (the only non-maximal matches it finds should be those that begin at
+ * Algorithm 1 picks up many non-maximal substitutions; algorithms 2,3 pick up
+ * fewer (the only non-maximal matches they find should be those that begin at
  * the start of the target word, but which could have been extended by
  * wrapping back past the beginning of the target).  This does not matter
  * during group simplification (where only the best substitution matters),
@@ -434,7 +434,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     if (target_len < 2 || reducer_len==0)
         return Agg().result();
     // early exit strategy based on step.
-    if (step==1 && 2*target_len < reducer_len)
+    if (2 * target_len + step <= reducer_len)
         return Agg().result();
 
     auto target_vec = splay(target, target_len);
@@ -488,7 +488,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
             }
         }
     }
-#elif DEHN_SUB_ALGORITHM == 2
+#elif DEHN_SUB_ALGORITHM == 3
     // Cache results of extraCancellation(); -1 means not yet computed
     FixedArray<long> extraScore(target_len, -1);
 
