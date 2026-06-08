@@ -47,9 +47,9 @@
 /**
  * Decide how to implement dehnAlgorithmSubMetric().  Options include:
  *
- * 1 - The old algorithm from Regina 7.x, which is worst-case cubic but
- *     typically quadratic in practice since most match positions require very
- *     little iteration before a mismatch occurs.
+ * 1 - A highly optimised variant of the old algorithm from Regina 7.x, which
+ *     is worst-case cubic but typically quadratic in practice since most match
+ *     positions require very little iteration before a mismatch occurs.
  *
  * 2,3 - Different variants of rewritten searches that organise the iteration
  *     differently to be worst-case quadratic, but which both appear to have
@@ -403,6 +403,17 @@ GroupPresentation::SplayedWord GroupPresentation::splay(
     return ans;
 }
 
+template <typename T>
+FixedArray<size_t> GroupPresentation::sortedIndices(const FixedArray<T>& data) {
+    FixedArray<size_t> ans(data.size());
+    for (size_t i = 0; i < data.size(); ++i)
+        ans[i] = i;
+    std::sort(ans.begin(), ans.end(), [&data](size_t a, size_t b) {
+        return std::abs(data[a]) < std::abs(data[b]);
+    });
+    return ans;
+}
+
 size_t GroupPresentation::extraCancellation(const SplayedWord& word,
         auto begin, auto end) {
     size_t ans = 0;
@@ -444,49 +455,90 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     Agg sub_list;
 
 #if DEHN_SUB_ALGORITHM == 1
-    WordSubstitutionData sub;
-    auto start_sub = target_vec.begin();
-    for (sub.target_pos = 0; sub.target_pos < target_len;
-            ++sub.target_pos, ++start_sub) {
-        ssize_t extra_score = -1; // -1 means not yet computed
-        for (bool invert : { false, true }) {
-            for (sub.reducer_pos = 0; sub.reducer_pos < reducer_len;
-                    ++sub.reducer_pos) {
-                sub.invert_reducer = invert;
+    // Cache results of extraCancellation(); -1 means not yet computed
+    FixedArray<long> extraScore(target_len, -1);
+
+    // Our aim is to only examine replacements whose start points in
+    // *target_vec* and *reducer_vec* refer to the same generator.
+    // We therefore begin by grouping together indices in *target_vec* and
+    // *reducer_vec* that refer to the same generator.
+    auto target_indices = sortedIndices(target_vec);
+    auto reducer_indices = sortedIndices(reducer_vec);
+
+    // Now do iterations through matching blocks of indices into *target_vec*
+    // and *reducer_vec*.
+    auto t = target_indices.begin();
+    auto r = reducer_indices.begin();
+    while (t != target_indices.end() && r != reducer_indices.end()) {
+        auto cmp = std::abs(target_vec[*t]) <=> std::abs(reducer_vec[*r]);
+        if (cmp < 0) {
+            ++t;
+            continue;
+        } else if (cmp > 0) {
+            ++r;
+            continue;
+        }
+
+        // t,r are the start points of matching blocks of indices that refer
+        // to some common generator.  Find the end points.
+        auto tEnd = t;
+        for (++tEnd; tEnd != target_indices.end() &&
+                std::abs(target_vec[*tEnd]) == std::abs(target_vec[*t]);
+                ++tEnd)
+            ;
+        auto rEnd = r;
+        for (++rEnd; rEnd != reducer_indices.end() &&
+                std::abs(reducer_vec[*rEnd]) == std::abs(reducer_vec[*r]);
+                ++rEnd)
+            ;
+
+        // The blocks [t, tEnd) and [r, rEnd) together identify all positions
+        // in target_vec and reducer_vec that refer to this common generator.
+        WordSubstitutionData sub;
+        for (auto tPos = t; tPos != tEnd; ++tPos) {
+            sub.target_pos = *tPos;
+            for (auto rPos = r; rPos != rEnd; ++rPos) {
+                auto p = target_vec.begin() + *tPos;
+                auto q = reducer_vec.begin() + *rPos;
                 sub.length = 0;
-                auto p = start_sub;
-                auto q = (invert ? reducer_vec.end() - (sub.reducer_pos+1) :
-                    reducer_vec.begin() + sub.reducer_pos);
-                if (invert) {
-                    while (*p == -*q && sub.length < reducer_len &&
-                            sub.length < target_len) {
-                        ++sub.length;
-                        target_vec.cycleForward(p);
-                        reducer_vec.cycleBackward(q);
-                    }
-                } else {
+                if (*p == *q) {
+                    sub.invert_reducer = false;
+                    sub.reducer_pos = *rPos;
                     while (*p == *q && sub.length < reducer_len &&
                             sub.length < target_len) {
                         ++sub.length;
                         target_vec.cycleForward(p);
                         reducer_vec.cycleForward(q);
                     }
+                } else {
+                    sub.invert_reducer = true;
+                    sub.reducer_pos = reducer_len - *rPos - 1;
+                    while (*p == -*q && sub.length < reducer_len &&
+                            sub.length < target_len) {
+                        ++sub.length;
+                        target_vec.cycleForward(p);
+                        reducer_vec.cycleBackward(q);
+                    }
                 }
                 if (sub.length == reducer_len) {
                     // The entire copy of *reducer* will vanish.
                     // Will the remaining pieces of *target* cancel further?
-                    if (extra_score < 0)
-                        extra_score = extraCancellation(target_vec,
-                            start_sub, p);
-                    sub.score = reducer_len + extra_score;
+                    if (extraScore[sub.target_pos] < 0)
+                        extraScore[sub.target_pos] = extraCancellation(
+                            target_vec, target_vec.begin() + sub.target_pos, p);
+                    sub.score = reducer_len + extraScore[sub.target_pos];
                     sub_list += sub;
                 } else if (sub.length > 0) {
                     sub.score = 2 * sub.length - reducer_len;
-                    if ( sub.score > -step )
+                    if (sub.score > -step)
                         sub_list += sub;
                 }
             }
         }
+
+        // Advance to the next blocks.
+        t = tEnd;
+        r = rEnd;
     }
 #elif DEHN_SUB_ALGORITHM == 2
     size_t max_match = std::min(target_len, reducer_len);

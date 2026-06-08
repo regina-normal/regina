@@ -1809,6 +1809,18 @@ class GroupPresentation : public Output<GroupPresentation> {
         static SplayedWord splay(const GroupExpression& word, size_t length);
 
         /**
+         * A routine internal to dehnAlgorithmSubMetric().  This routine
+         * assumes that \a data is a splayed word, as returned by splay().
+         * It returns a permutation of `0,...,data.size()-1`, with the
+         * property that if `i ≤ j` then `|data[i]| ≤ |data[j]|`.  In other
+         * words, it returns the indices into \a data sorted according to
+         * which generators the corresponding elements of \a data refer to,
+         * but ignoring whether or not generators are inverted.
+         */
+        template <typename T>
+        static FixedArray<size_t> sortedIndices(const FixedArray<T>& data);
+
+        /**
          * If we cut out the range of symbols `[begin, end)` from the given
          * word (possibly wrapping around past the end of the word), how
          * many additional pairs of symbols will cancel as a result?
