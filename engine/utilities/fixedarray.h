@@ -56,10 +56,10 @@ namespace regina {
  * offering safe and simple stack-based memory mangement and exception safety.
  *
  * Typically the size of the array would be passed to the constructor and remain
- * fixed from that point on.  After construction, the only way to change the
- * size of the array is to replace its entire contents with those of some other
- * FixedArray, via swap() or the move assignment operator (both of which are
- * very fast operations).
+ * fixed from that point on.  After construction, the only way to enlarge the
+ * array is to replace its entire contents with those of some other FixedArray,
+ * via swap() or the move assignment operator (both of which are very fast
+ * operations).
  *
  * This class is very similar in nature to LightweightSequence, but was born
  * from different needs.  It is possible that these two classes will be unified
@@ -429,6 +429,20 @@ class FixedArray {
             if (it == data_)
                 it = data_ + size_;
             --it;
+        }
+
+        /**
+         * Reduces the size of this array.
+         *
+         * This is a fast operation but wastes memory, in that it does not
+         * reallocate.
+         *
+         * \param newSize the new size of this array.  This must be less than
+         * or equal to `size()`; otherwise this will result in undefined
+         * behaviour (and potential buffer overruns).
+         */
+        void truncate(size_t newSize) {
+            size_ = newSize;
         }
 
         /**
