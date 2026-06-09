@@ -1370,6 +1370,10 @@ By "modulo conjugation", we mean: if *w* represents the input word,
 then this routine might (as part of the reduction process) transform
 *w* into a different group element of the form ``g w g^-1``.
 
+If you already have your input word in splayed form, it will be faster
+to call ``simplifyAndConjugate(SplayedExpression&)`` than calling this
+routine.
+
 In Regina 7.2 and earlier, this routine was called simplifyWord(). It
 was renamed to simplifyAndConjugate() in Regina 7.3 to make it clear
 to the user that conjugation might take place. Note that, even in
@@ -1381,6 +1385,26 @@ conjugate.
     You might want to consider running simplify(), possibly in concert
     with proliferateRelators(), before using this routine for any
     significant tasks.
+
+Parameter ``word``:
+    the word you would like to simplify (modulo conjugation). This
+    must be a word in the generators of this group.
+
+Returns:
+    ``True`` if and only if the input word was modified.)doc";
+
+// Docstring regina::python::doc::GroupPresentation::simplifyAndConjugate_2
+static constexpr const char simplifyAndConjugate_2[] =
+R"doc(Uses small cancellation theory to reduce the input word, modulo
+conjugation, using the current presentation of the group. The input
+word will be modified directly.
+
+Mathematically, this does the same thing as
+``simplifyAndConjugate(GroupExpression&)``. However, if your word is
+already in splayed form then it is faster to call this variant of
+simplifyAndConjugate() instead.
+
+See ``simplifyAndConjugate(GroupExpression&)`` for further details.
 
 Parameter ``word``:
     the word you would like to simplify (modulo conjugation). This

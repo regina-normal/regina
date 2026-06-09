@@ -1127,36 +1127,38 @@ GroupPresentation::GroupPresentation(size_t nGens,
     }
 }
 
-bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
+bool GroupPresentation::simplifyAndConjugate(SplayedExpression& word) const {
     bool retval = word.simplify(false);
     if (word.empty())
         return retval;
 
     // now recursively apply relators until no reduction is possible.
-    SplayedExpression splayed(word);
-    bool changed = false;
     bool continueSimplify = true;
     while (continueSimplify) {
         continueSimplify = false;
         for (const auto& r : relations_) {
             auto sub =
                 dehnAlgorithmSubMetric<MinAggregator<WordSubstitutionData>>(
-                splayed, r );
+                word, r);
             if (sub && sub->score > 0) {
-                applySubstitution(splayed, r, *sub );
-                if (splayed.empty()) {
-                    word.clear();
+                applySubstitution(word, r, *sub);
+                if (word.empty())
                     return true;
-                }
                 continueSimplify = true;
-                changed = true;
                 retval = true;
             }
         }
     }
-    if (changed)
-        word = splayed.desplay();
     return retval;
+}
+
+bool GroupPresentation::simplifyAndConjugate(GroupExpression& word) const {
+    SplayedExpression splayed(word);
+    if (simplifyAndConjugate(splayed)) {
+        word = splayed.desplay();
+        return true;
+    } else
+        return false;
 }
 
 // for now we iterate:
@@ -1638,21 +1640,21 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
 
 // This algorithm has to be at least moderately sophisticated to ensure it
 // recognises that < a, b, a^2, abaB > is abelian.
-bool GroupPresentation::identifyAbelian() const
-{
+bool GroupPresentation::identifyAbelian() const {
     // The idea will be to take all commutators of the generators, and see if
-    //  the relators can kill them.
+    // the relators can kill them.
     for (size_t i=0; i<nGenerators_; i++)
         for (size_t j=i+1; j<nGenerators_; j++) {
             // let's see if we can recursively apply the relations to
             // [gi,gj] in order to kill it.
-            GroupExpression COM; // commutator [gi,gj]
-            COM.addTermLast( i, 1 );
-            COM.addTermLast( j, 1 );
-            COM.addTermLast( i, -1 );
-            COM.addTermLast( j, -1 );
-            simplifyAndConjugate( COM );
-            if (!COM.empty()) return false;
+            SplayedExpression com(4);
+            com[0] = i + 1;
+            com[1] = j + 1;
+            com[2] = -com[0]; // beware, i is unsigned
+            com[3] = -com[1]; // likewise, j is unsigned
+            simplifyAndConjugate(com);
+            if (! com.empty())
+                return false;
         }
     return true;
 }

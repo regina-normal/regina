@@ -870,6 +870,20 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
          * \param wordLength the word length of \a word.
          */
         SplayedExpression(const GroupExpression& word, size_t wordLength);
+        /**
+         * Creates a new splayed expression from a hard-coded integer sequence.
+         *
+         * As an example, to create the group expression `g1^2 g3^-2 g6`,
+         * you would pass the sequence `{ 2, 2, -4, -4, 7 }`.
+         *
+         * \pre The given sequence does not contain any zero elements.
+         *
+         * \nopython
+         *
+         * \param sequence the integer sequence that represents this
+         * splayed expression, as described in the class notes.
+         */
+        SplayedExpression(std::initializer_list<Term> values);
 
         /**
          * Repacks this as a group expression.  This will combine adjacent
@@ -1506,6 +1520,10 @@ class GroupPresentation : public Output<GroupPresentation> {
          * then this routine might (as part of the reduction process) transform
          * \a w into a different group element of the form `g w g^-1`.
          *
+         * If you already have your input word in splayed form, it will be
+         * faster to call `simplifyAndConjugate(SplayedExpression&)` than
+         * calling this routine.
+         *
          * In Regina 7.2 and earlier, this routine was called simplifyWord().
          * It was renamed to simplifyAndConjugate() in Regina 7.3 to make it
          * clear to the user that conjugation might take place.  Note that,
@@ -1519,9 +1537,27 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \param word the word you would like to simplify (modulo conjugation).
          * This must be a word in the generators of this group.
-         * \return \c true if and only if the input word was modified.
+         * \return `true` if and only if the input word was modified.
          */
-        bool simplifyAndConjugate(GroupExpression &word) const;
+        bool simplifyAndConjugate(GroupExpression& word) const;
+
+        /**
+         * Uses small cancellation theory to reduce the input word,
+         * modulo conjugation, using the current presentation of the group.
+         * The input word will be modified directly.
+         *
+         * Mathematically, this does the same thing as
+         * `simplifyAndConjugate(GroupExpression&)`.  However, if your word is
+         * already in splayed form then it is faster to call this variant of
+         * simplifyAndConjugate() instead.
+         *
+         * See `simplifyAndConjugate(GroupExpression&)` for further details.
+         *
+         * \param word the word you would like to simplify (modulo conjugation).
+         * This must be a word in the generators of this group.
+         * \return `true` if and only if the input word was modified.
+         */
+        bool simplifyAndConjugate(SplayedExpression& word) const;
 
         /**
          * A routine to help escape local wells when simplifying
@@ -2490,6 +2526,10 @@ inline SplayedExpression::SplayedExpression(const GroupExpression& word) :
 }
 
 inline SplayedExpression::SplayedExpression(size_t size) : terms_(size) {
+}
+
+inline SplayedExpression::SplayedExpression(
+        std::initializer_list<Term> values) : terms_(values) {
 }
 
 inline SplayedExpression& SplayedExpression::operator = (

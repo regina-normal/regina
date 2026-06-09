@@ -229,6 +229,8 @@ Version 8.0  [ TODO ]
               expression.
             - In GroupExpression, renamed isTrivial() and erase() to empty()
               and clear() respectively.  The old names are kept but deprecated.
+            - Add a variant of GroupPresentation::simplifyAndConjugate() that
+              works with a splayed expression.
         Class HomGroupPresentation:
             - Routine invert() now throws an exception if the homomorphism is
               not a declared isomorphism.
