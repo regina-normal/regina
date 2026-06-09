@@ -1034,8 +1034,9 @@ Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
               effect of implementing all comparison operators, not just
               less-than (<) as before.
         Class GroupPresentation:
-            - Renamed intelligentSimplify() to simplify().  The old name is
-              kept as a deprecated alias.
+            - Renamed intelligentSimplify() and intelligentNielsen() to
+              simplify() and nielsen() respectively.  The old names are kept
+              as deprecated aliases.
         Class HomGroupPresentation:
             - Renamed intelligentSimplify() and intelligentNielsen() to
               simplify() and nielsen() respectively.  The old names are kept
