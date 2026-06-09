@@ -999,6 +999,9 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
                     // bottleneck here.  There should be ways to cache the
                     // results and call it fewer times - I suspect we are
                     // calling it for the same words over and over again.
+                    // Actually: we only need to cache calls that do _not_
+                    // result in a usable substitution, since every usable
+                    // substitution we _do_ find gets used and changes the words.
                     auto sub = dehnAlgorithmSubMetric<
                         MinAggregator<WordSubstitutionData>>(*target, *it);
                     if (sub && sub->score > 0) {
