@@ -968,6 +968,50 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
 #endif
 
         /**
+         * Returns a copy of the integer at the given index in the underlying
+         * sequence.  This array-like access is read-only.
+         *
+         * \param index the index of the integer to access.  This must be
+         * between 0 and `size()-1` inclusive.
+         * \return the requested integer in the underlying sequence.
+         */
+        Term operator [] (size_t index) const;
+
+        /**
+         * Cycles the given iterator forward through the underlying integer
+         * sequence.
+         *
+         * In most cases it will simply be incremented; however, if it points
+         * to the last element of the sequence then it will wrap around and
+         * point to the first.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of the underlying sequence.
+         *
+         * \nopython
+         *
+         * \param it the iterator to cycle forward.
+         */
+        void cycleForward(const_iterator& it) const;
+
+        /**
+         * Cycles the given iterator backward through the underlying integer
+         * sequence.
+         *
+         * In most cases it will simply be decremented; however, if it points
+         * to the first element of the sequence then it will wrap around and
+         * point to the last.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of the underlying sequence.
+         *
+         * \nopython
+         *
+         * \param it the iterator to cycle backward.
+         */
+        void cycleBackward(const_iterator& it) const;
+
+        /**
          * Returns the inverse of this expression.  The terms will be reversed,
          * and generators will be replaced with their inverses (and vice versa).
          *
@@ -1112,6 +1156,17 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
             bool alpha = false) const;
+
+    private:
+        /**
+         * Creates a new splayed expression whose underlying integer sequence
+         * has the given length, but is otherwise uninitialised.
+         *
+         * \param size the length of the integer sequence.
+         */
+        SplayedExpression(size_t size);
+
+    friend class GroupPresentation;
 };
 
 /**
@@ -2402,6 +2457,9 @@ inline SplayedExpression::SplayedExpression(const GroupExpression& word) :
         SplayedExpression(word, word.wordLength()) {
 }
 
+inline SplayedExpression::SplayedExpression(size_t size) : terms_(size) {
+}
+
 inline SplayedExpression& SplayedExpression::operator = (
         const SplayedExpression& rhs) {
     // We need to do some juggling here, since FixedArray does not allow
@@ -2434,6 +2492,19 @@ inline SplayedExpression::const_iterator SplayedExpression::begin() const {
 
 inline SplayedExpression::const_iterator SplayedExpression::end() const {
     return terms_.end();
+}
+
+inline SplayedExpression::Term SplayedExpression::operator [] (size_t index)
+        const {
+    return terms_[index];
+}
+
+inline void SplayedExpression::cycleForward(const_iterator& it) const {
+    terms_.cycleForward(it);
+}
+
+inline void SplayedExpression::cycleBackward(const_iterator& it) const {
+    terms_.cycleBackward(it);
 }
 
 inline SplayedExpression SplayedExpression::inverse() const {

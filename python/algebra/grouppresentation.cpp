@@ -147,6 +147,7 @@ void addGroupPresentation(pybind11::module_& m) {
             return pybind11::make_iterator(exp);
         }, pybind11::keep_alive<0, 1>(), // iterator keeps expression alive
             rdoc::__iter__)
+        .def("__getitem__", &SplayedExpression::operator[], rdoc::__array)
         .def("inverse", &SplayedExpression::inverse, rdoc::inverse)
         .def("invert", &SplayedExpression::invert, rdoc::invert)
         .def("simplify", &SplayedExpression::simplify,

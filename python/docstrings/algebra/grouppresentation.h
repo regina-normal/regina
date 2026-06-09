@@ -1433,6 +1433,18 @@ Parameter ``out``:
 
 struct SplayedExpression {
 
+// Docstring regina::python::doc::SplayedExpression::__array
+static constexpr const char __array[] =
+R"doc(Returns a copy of the integer at the given index in the underlying
+sequence. This array-like access is read-only.
+
+Parameter ``index``:
+    the index of the integer to access. This must be between 0 and
+    ``size()-1`` inclusive.
+
+Returns:
+    the requested integer in the underlying sequence.)doc";
+
 // Docstring regina::python::doc::SplayedExpression::__class
 static constexpr const char __class[] =
 R"doc(Represents a group expression expanded so that each term uses a single
