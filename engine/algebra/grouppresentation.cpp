@@ -33,6 +33,7 @@
 #include <map>
 #include <sstream>
 #include <algorithm>
+#include <deque>
 
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
@@ -67,6 +68,13 @@
  * dehnAlgorithmSubMetric() and thereby calling it fewer times.
  */
 #define DEHN_SUB_ALGORITHM 1
+
+namespace { // anonymous namespace
+    inline bool compare_length(const regina::SplayedExpression& a,
+            const regina::SplayedExpression& b) {
+        return a.size() < b.size();
+    }
+}
 
 namespace regina {
 
@@ -767,27 +775,6 @@ void GroupPresentation::applySubstitution(SplayedExpression& target,
     target.swap(ans);
 }
 
-namespace { // anonymous namespace
-    bool compare_length( const GroupExpression& first,
-             const GroupExpression& second )
-     {  return ( first.wordLength() < second.wordLength() ); }
-
-    /**
-     *  This routine takes a list of words, together with expVec. It's assumed
-     * expVec is initialized to be zero and as long as the number of generators
-     * in the group.  What this routine does is, for each generator of the
-     * group, it records the sum of the absolute value of the exponents of that
-     * generator in word.  For the i-th generator this number is recorded in
-     * expVec[i].
-     */
-    void build_exponent_vec( const std::list< GroupExpressionTerm > & word,
-                              std::vector<unsigned long> &expVec )
-    {
-     for ( const auto& t : word)
-         expVec[ t.generator ] += std::abs( t.exponent );
-    }
-}
-
 // gives a string that describes the substitution
 std::string GroupPresentation::WordSubstitutionData::substitutionString(
         const GroupExpression &word) const {
@@ -1229,87 +1216,76 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
     for (size_t i=0; i<nGenerators_; i++)
         substitutionTable[i].addTermFirst( i, 1 );
 
+    // Switch from working with "packed" group expressions to splayed relations.
+    std::deque<SplayedExpression> splayed;
+    for (const auto& r : relations_)
+        splayed.emplace_back(r, r.wordLength());
+
     bool we_value_iteration(true);
     while (we_value_iteration) {
         we_value_iteration = false;
         // cyclically reduce relators
-        for (GroupExpression& r : relations_)
-            r.simplify(true);
-        std::sort(relations_.begin(), relations_.end(), compare_length);// (1)
+        for (SplayedExpression& w : splayed)
+            w.simplify(true);
+        std::sort(splayed.begin(), splayed.end(), compare_length); // (1)
 
         // start (2) deletion of 0-length relators
-        while (! relations_.empty()) {
-            if (relations_.front().wordLength() == 0)
-                relations_.erase(relations_.begin());
-            else
-                break;
-        }
+        while ((! splayed.empty()) && splayed.front().empty())
+            splayed.pop_front();
 
         // start (3) - apply shorter relators to longer.
-        for (auto it = relations_.begin(); it != relations_.end(); it++) {
-            SplayedExpression relator(*it);
-            if (! relator.empty()) {
-                auto tit = it; // target of it manips.
-                for (++tit; tit != relations_.end(); ++tit) {
-                    SplayedExpression target(*tit);
-                    // attempt to apply *relator* to *target*
+        for (auto it = splayed.begin(); it != splayed.end(); ++it)
+            if (! it->empty()) {
+                auto target = it;
+                for (++target; target != splayed.end(); ++target) {
+                    // attempt to apply *it to *target
                     auto sub = dehnAlgorithmSubMetric<
-                        MinAggregator<WordSubstitutionData>>(target, relator);
+                        MinAggregator<WordSubstitutionData>>(*target, *it);
                     if (sub && sub->score > 0) {
-                        applySubstitution(target, relator, *sub);
-                        *tit = target.desplay();
+                        applySubstitution(*target, *it, *sub);
                         we_value_iteration = true;
                         didSomething = true;
                     }
                 }
-            }
-        } // end (3) - application of shorter to longer relators.
+            } // end (3) - application of shorter to longer relators.
 
         // (4) Build and sort a list (by length) of generator-killing relations.
-        std::sort(relations_.begin(), relations_.end(), compare_length);
-        for (const GroupExpression& r : relations_) {
+        std::sort(splayed.begin(), splayed.end(), compare_length);
+        for (const SplayedExpression& w : splayed) {
             bool word_length_3_trigger(false);
-            size_t WL = r.wordLength();
-            // build a table expressing # times each generator is used in r.
-            std::vector<unsigned long> genUsage( nGenerators_ );
-            build_exponent_vec( r.terms(), genUsage );
+            size_t WL = w.size(); // since w may change during substitution
+            // build a table expressing # times each generator is used in w.
+            FixedArray genUsage(nGenerators_, 0);
+            for (auto i : w)
+                ++genUsage[std::abs(i) - 1];
 
-            for (size_t i=0; i<genUsage.size(); i++)
-                if (genUsage[i] == 1) {
-                    // have we found a substitution for generator i ?
-                    if ( ( substitutionTable[i].countTerms() == 1 ) &&
-                            ( substitutionTable[i].generator(0) == i ) ) {
-                        // we have a valid substitution.  Replace all occurances
-                        // of generator genUsage[i] with the inverse of the
+            for (size_t g = 0; g < nGenerators_; ++g)
+                if (genUsage[g] == 1) {
+                    // have we found a substitution for generator g ?
+                    if ( ( substitutionTable[g].countTerms() == 1 ) &&
+                            ( substitutionTable[g].generator(0) == g ) ) {
+                        // we have a valid substitution.  Replace all
+                        // occurrences of generator g with the inverse of the
                         // remaining word
-                        bool inv(true);
-                        bool before_flag(true); // true if we have not yet
-                                                // encountered gen
-                        GroupExpression prefix, complement;
-                        for (const GroupExpressionTerm& t : r.terms()) {
-                            if ( t.generator == i ) {
-                                inv = (t.exponent != 1);
-                                before_flag=false;
-                            } else {
-                                if (before_flag)
-                                    prefix.addTermLast(t);
-                                else
-                                    complement.addTermLast(t);
-                            }
-                        }
-                        complement.addTermsLast(std::move(prefix));
-                        // WARNING: Cannot use prefix beyond here.
+                        auto it = std::find_if(w.begin(), w.end(),
+                            [g](auto i) { return std::abs(i) == g + 1; });
+                        bool inv = (*it < 0);
+                        SplayedExpression complement(w.size() - 1);
+                        std::copy(it + 1, w.end(), complement.terms_.begin());
+                        std::copy(w.begin(), it,
+                            complement.terms_.begin() + (w.end() - it - 1));
                         if (!inv)
                             complement.invert();
                         // sub gi --> complement, in both substitutionTable
-                        // and relations_
+                        // and splayed relations
+                        for (SplayedExpression& r : splayed)
+                            r.substitute( g, complement );
+                        GroupExpression sub = complement.desplay();
                         for (GroupExpression& e : substitutionTable)
-                            e.substitute( i, complement );
-                        for (GroupExpression& e : relations_)
-                            e.substitute( i, complement );
+                            e.substitute( g, sub );
                         we_value_iteration = true;
                         didSomething = true;
-                        if (WL>3)
+                        if (WL > 3)
                             word_length_3_trigger=true;
                         goto found_a_generator_killer;
                     }
@@ -1320,6 +1296,12 @@ found_a_generator_killer:
                 break;
         } // end (4)
     } // end of main_while_loop (6)
+
+    // Now switch from working with splayed relations back to our standard
+    // "packed" group expressions.
+    relations_.clear();
+    for (const auto& w : splayed)
+        relations_.push_back(w.desplay());
 
     nGenerators_ = 0;
     for (size_t i=0; i<substitutionTable.size(); i++)
