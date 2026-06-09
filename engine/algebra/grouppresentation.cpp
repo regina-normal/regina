@@ -1280,8 +1280,14 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
                             complement.invert();
                         // sub gi --> complement, in both substitutionTable
                         // and splayed relations
-                        for (SplayedExpression& r : splayed)
-                            r.substitute( g, complement );
+                        for (SplayedExpression& r : splayed) {
+                            if (std::addressof(r) == std::addressof(w)) {
+                                // We know this substitution will clear out r.
+                                r.terms_.truncate(0);
+                            } else {
+                                r.substitute(g, complement);
+                            }
+                        }
                         GroupExpression sub = complement.desplay();
                         for (GroupExpression& e : substitutionTable)
                             e.substitute( g, sub );
