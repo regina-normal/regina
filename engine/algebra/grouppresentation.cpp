@@ -423,6 +423,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     // *target* and *reducer* refer to the same generator.
     // We therefore begin by grouping together indices in *target* and
     // *reducer* that refer to the same generator.
+    // TODO: Possibly what we really want here is a trie.
     auto target_indices = sortedIndices(target);
     auto reducer_indices = sortedIndices(reducer);
 
@@ -994,7 +995,10 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
             if (! it->empty()) {
                 auto target = it;
                 for (++target; target != splayed.end(); ++target) {
-                    // attempt to apply *it to *target
+                    // TODO: The calls to dehnAlgorithmSubMetric() are our
+                    // bottleneck here.  There should be ways to cache the
+                    // results and call it fewer times - I suspect we are
+                    // calling it for the same words over and over again.
                     auto sub = dehnAlgorithmSubMetric<
                         MinAggregator<WordSubstitutionData>>(*target, *it);
                     if (sub && sub->score > 0) {
