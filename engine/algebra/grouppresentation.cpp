@@ -41,7 +41,6 @@
 #include "maths/numbertheory.h"
 #include "maths/matrixops.h"
 #include "utilities/exception.h"
-#include "utilities/fixedarray.h"
 #include "utilities/stringutils.h"
 
 /**
@@ -180,7 +179,7 @@ bool GroupExpression::simplify(bool cyclic) {
 }
 
 bool GroupExpression::substitute(size_t generator,
-        const GroupExpression& expansion, bool cyclic) {
+        const GroupExpression& replacement, bool cyclic) {
     bool changed = false;
     std::optional<GroupExpression> inverse;
     for (auto current = terms_.begin(); current != terms_.end(); ) {
@@ -191,10 +190,10 @@ bool GroupExpression::substitute(size_t generator,
             if (exponent != 0) {
                 const GroupExpression* use;
                 if (exponent > 0)
-                    use = std::addressof(expansion);
+                    use = std::addressof(replacement);
                 else {
                     if (! inverse)
-                        inverse = expansion.inverse();
+                        inverse = replacement.inverse();
                     use = std::addressof(*inverse);
                     exponent = -exponent;
                 }
@@ -216,19 +215,19 @@ bool GroupExpression::substitute(size_t generator,
     return changed;
 }
 
-void GroupExpression::substitute(const std::vector<GroupExpression>& expansions,
-        bool cyclic) {
+void GroupExpression::substitute(
+        const std::vector<GroupExpression>& replacements, bool cyclic) {
     std::list<GroupExpressionTerm> expanded;
 
     long i;
     for (const auto& t : terms_) {
         if (t.exponent > 0) {
-            const GroupExpression& use = expansions[t.generator];
+            const GroupExpression& use = replacements[t.generator];
             for (i = 0; i < t.exponent; ++i)
                 expanded.insert(expanded.end(),
                     use.terms_.begin(), use.terms_.end());
         } else if (t.exponent < 0) {
-            GroupExpression use = expansions[t.generator].inverse();
+            GroupExpression use = replacements[t.generator].inverse();
             for (i = 0; i > t.exponent; --i)
                 expanded.insert(expanded.end(),
                     use.terms_.begin(), use.terms_.end());
@@ -1067,6 +1066,136 @@ GroupExpression::GroupExpression(const char* word, size_t nGens) {
     // Since some people use the form "aaaaBBB", combine adjacent terms
     // where we can.
     simplify();
+}
+
+SplayedExpression::SplayedExpression(const GroupExpression& word,
+        size_t wordLength) : terms_(wordLength) {
+    auto it = terms_.begin();
+    for (const auto& t : word.terms())
+        if (t.exponent >= 0) {
+            Term entry = t.generator + 1;
+            for (long i = 0; i < t.exponent; ++i)
+                *it++ = entry;
+        } else {
+            Term entry = -static_cast<Term>(t.generator + 1);
+            for (long i = 0; i > t.exponent; --i)
+                *it++ = entry;
+        }
+}
+
+GroupExpression SplayedExpression::desplay() const {
+    GroupExpression ans;
+
+    Term gen = -1;
+    long exp = 0;
+    for (auto g : terms_) {
+        if (g == gen + 1)
+            ++exp;
+        else if (g == -(gen + 1))
+            --exp;
+        else {
+            // Push the current term and start a new one.
+            if (exp) {
+                if (ans.terms().empty() || ans.terms().back().generator != gen)
+                    ans.terms().emplace_back(gen, exp);
+                else if (ans.terms().back().exponent == -exp)
+                    ans.terms().pop_back();
+                else
+                    ans.terms().back().exponent += exp;
+            }
+
+            if (g > 0) {
+                gen = g - 1;
+                exp = 1;
+            } else {
+                gen = -(g + 1);
+                exp = -1;
+            }
+        }
+    }
+    if (exp) {
+        if (ans.terms().empty() || ans.terms().back().generator != gen)
+            ans.terms().emplace_back(gen, exp);
+        else if (ans.terms().back().exponent == -exp)
+            ans.terms().pop_back();
+        else
+            ans.terms().back().exponent += exp;
+    }
+
+    return ans;
+}
+
+bool SplayedExpression::simplify(bool cyclic) {
+    bool changed = false;
+
+    // Compress the word by cancelling adjacent inverse pairs (including
+    // follow-on cancellation where this is possible).
+    {
+        auto read = terms_.begin();
+        auto write = terms_.begin();
+
+        while (read != terms_.end()) {
+            if (write == terms_.begin() || *read != -*(write - 1)) {
+                // Append the new symbol.
+                if (read == write) {
+                    ++read;
+                    ++write;
+                } else
+                    *write++ = *read++;
+            } else {
+                // Cancel the new symbol with the previous symbol.
+                ++read;
+                --write;
+            }
+        }
+        if (read != write) {
+            terms_.truncate(write - terms_.begin());
+            changed = true;
+        }
+    }
+
+    if (cyclic && terms_.size() > 1) {
+        auto front = terms_.begin();
+        auto back = terms_.end() - 1;
+        while (front < back && *front == -*back) {
+            ++front;
+            --back;
+        }
+        if (front != terms_.begin()) {
+            std::move(front, back + 1, terms_.begin());
+            terms_.truncate(back - front + 1);
+            changed = true;
+        }
+    }
+
+    return changed;
+}
+
+bool SplayedExpression::substitute(size_t generator,
+        const SplayedExpression& replacement, bool cyclic) {
+    size_t count = std::count_if(terms_.begin(), terms_.end(),
+        [generator](auto i) { return std::abs(i) == generator + 1; });
+    if (count == 0)
+        return false;
+
+    FixedArray<Term> ans(terms_.size() + count * (replacement.size() - 1));
+    auto out = ans.begin();
+    for (auto i : terms_) {
+        if (i == generator + 1) {
+            for (auto j : replacement.terms_)
+                *out++ = j;
+        } else if (i == -(generator + 1)) {
+            auto rev = replacement.terms_.end();
+            while (rev != replacement.terms_.begin())
+                *out++ = -(*--rev);
+        } else {
+            *out++ = i;
+        }
+    }
+    terms_.swap(ans);
+
+    simplify(cyclic);
+    return true;
 }
 
 //             **********  GroupPresentation below **************
@@ -2462,20 +2591,20 @@ void GroupExpression::writeTeX(std::ostream& out) const {
     }
 }
 
-void GroupExpression::writeTextShort(std::ostream& out, bool utf8,
-        bool alphaGen) const {
+void GroupExpression::writeTextShort(std::ostream& out, bool utf8, bool alpha)
+        const {
     if (terms_.empty())
         out << '1';
     else {
         for (auto i = terms_.begin(); i!=terms_.end(); i++) {
             if (i != terms_.begin()) {
-                if (utf8 && ! alphaGen) {
+                if (utf8 && ! alpha) {
                     // Spaces get lost between g012 g456 ...
                     out << " \u00b7 "; // \cdot
                 } else
                     out << ' ';
             }
-            if (alphaGen)
+            if (alpha)
                 out << char('a' + i->generator);
             else
                 out << 'g' << i->generator;
@@ -2485,6 +2614,34 @@ void GroupExpression::writeTextShort(std::ostream& out, bool utf8,
                 else
                     out << '^' << i->exponent;
             }
+        }
+    }
+}
+
+void SplayedExpression::writeTextShort(std::ostream& out, bool utf8,
+        bool alpha) const {
+    if (terms_.empty())
+        out << '1';
+    else if (alpha) {
+        for (auto i = terms_.begin(); i != terms_.end(); ++i) {
+            if (*i > 0)
+                out << char('a' + (*i - 1));
+            else
+                out << char('A' - (*i + 1));
+        }
+    } else {
+        for (auto i = terms_.begin(); i != terms_.end(); ++i) {
+            if (i != terms_.begin()) {
+                if (utf8) {
+                    // Spaces get lost between g012 g456 ...
+                    out << " \u00b7 "; // \cdot
+                } else
+                    out << ' ';
+            }
+            if (*i > 0)
+                out << 'g' << (*i - 1);
+            else
+                out << 'g' << -(*i + 1) << (utf8 ? "\u207B\u00B9" : "^-1");
         }
     }
 }

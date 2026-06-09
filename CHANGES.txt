@@ -489,6 +489,8 @@ Version 8.0  [ TODO ]
               identifying the closest non-adjacent pair of link nodes that are
               connected in the relative neighbourhood graph.  Thanks to
               Kate Turner for this suggestion.
+        Class SplayedExpression:
+            - New class to support operations on group presentations.
         Class StandardSubcomplex<dim>, StandardSubcomplexOptions<dim>,
                 StandardTriangulation:
             - The old 3-dimensional StandardTriangulation class has been

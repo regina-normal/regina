@@ -33,21 +33,22 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
 // Docstring regina::python::doc::GroupExpression::__copy
-static constexpr const char __copy[] = R"doc(Creates a new expression that is a clone of the given expression.)doc";
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression::__default
 static constexpr const char __default[] = R"doc(Creates a new expression with no terms.)doc";
 
 // Docstring regina::python::doc::GroupExpression::__eq
 static constexpr const char __eq[] =
-R"doc(Equality operator. Checks to see whether or not these two words
-represent the same literal string.
+R"doc(Tests whether this and the given expression contain the same terms in
+the same order.
 
-Parameter ``comp``:
-    the expression to compare against this.
+Parameter ``other``:
+    the expression to compare with this.
 
 Returns:
-    ``True`` if this and the given string literal are identical.)doc";
+    ``True`` if and only if this and the given expression are
+    identical.)doc";
 
 // Docstring regina::python::doc::GroupExpression::__init
 static constexpr const char __init[] =
@@ -277,17 +278,19 @@ Returns:
     the inverse of this expression.)doc";
 
 // Docstring regina::python::doc::GroupExpression::invert
-static constexpr const char invert[] = R"doc(Inverts this expression. Does not allocate or deallocate anything.)doc";
+static constexpr const char invert[] =
+R"doc(Inverts this expression in-place. The terms will be reversed and the
+exponents negated.)doc";
 
 // Docstring regina::python::doc::GroupExpression::isTrivial
 static constexpr const char isTrivial[] =
-R"doc(Tests whether this is the trivial (unit) word.
+R"doc(Tests whether this is the empty (unit) word.
 
 No attempt is made to remove redundant terms (so the word ``g g^-1``
-will be treated as non-trivial).
+will be treated as non-empty).
 
 Returns:
-    ``True`` if and only if this is the trivial word.)doc";
+    ``True`` if and only if this is the empty word.)doc";
 
 // Docstring regina::python::doc::GroupExpression::power
 static constexpr const char power[] =
@@ -324,10 +327,10 @@ static constexpr const char str[] =
 R"doc(Returns a short text representation of this group expression, with a
 choice of either numbered generators or alphabetic generators.
 
-If *alphaGen* is ``False``, the text representation will be of the
-form ``g2^4 g13^-5 g4``. If *alphaGen* is ``True``, this routine will
-assume your word is in an alphabet of no more than 26 letters, and
-will format the word using lower-case ASCII, i.e., ``c^4 n^-5 e``.
+If *alpha* is ``False``, the text representation will be of the form
+``g2^4 g13^-5 g4``. If *alpha* is ``True``, this routine will assume
+your word is in an alphabet of no more than 26 letters, and will
+format the word using lower-case ASCII, i.e., ``c^4 n^-5 e``.
 
 Note that there is also a zero-argument version of str(), inherited
 through the ShortOutput base class. This zero-argument str() gives the
@@ -338,10 +341,10 @@ example, that ``a``, ``b`` and ``c`` correspond to ``g0``, ``g1`` and
 ``g2`` respectively.
 
 Precondition:
-    If *alphaGen* is ``True``, the number of generators in the
+    If *alpha* is ``True``, the number of generators in the
     corresponding group must be 26 or fewer.
 
-Parameter ``alphaGen``:
+Parameter ``alpha``:
     indicates whether to use numbered or alphabetic generators, as
     described above.
 
@@ -351,23 +354,25 @@ Returns:
 // Docstring regina::python::doc::GroupExpression::substitute
 static constexpr const char substitute[] =
 R"doc(Replaces every occurrence of the given generator with the given
-substitute expression. If the given generator was found, the
-expression will be simplified once the substitution is complete.
+replacement word. As expected, inverses of the given generator will be
+replaced with inverses of the given word. If the given generator or
+its inverse _was_ found, the expression will be simplified once the
+substitution is complete.
 
 Precondition:
-    The given expansion is not the same GroupExpression object as
-    this.
+    The argument *replacement* is not the same GroupExpression object
+    as this.
 
 Parameter ``generator``:
     the generator to be replaced.
 
-Parameter ``expansion``:
+Parameter ``replacement``:
     the substitute expression that will replace every occurrence of
     the given generator.
 
 Parameter ``cyclic``:
     ``True`` if and only if the expression may be assumed to be
-    cyclic; see simplify() for further details.
+    cyclic; this is only relevant during the simplification stage.
 
 Returns:
     ``True`` if and only if any substitutions were made.)doc";
@@ -378,22 +383,22 @@ R"doc(Replaces every generator in this expression with the corresponding
 substitute expression from the given map.
 
 Specifically, each generator *i* will be replaced with the expression
-``expansions[i]``.
+``replacements[i]``.
 
 The expression will be simplified once all substitutions are complete.
 
 Unlike the single-generator verison of substitute(), it is perfectly
-fine if this GroupExpression object appears in the *expansions* list,
-and/or if the same GroupExpression object appears several times in the
-given list.
+fine if this GroupExpression object appears in the *replacements*
+list, and/or if the same GroupExpression object appears several times
+in the given list.
 
 Precondition:
-    The length of *expansions* is at least *g*+1, where *g* is the
+    The length of *replacements* is at least *g*+1, where *g* is the
     largest generator that appears in this expression. In other words,
-    ``expansions[i]`` exists for every generator *i* that appears in
+    ``replacements[i]`` exists for every generator *i* that appears in
     this expression.
 
-Parameter ``expansions``:
+Parameter ``replacements``:
     the list of substitutes for all generators in this expression.
 
 Parameter ``cyclic``:
@@ -483,10 +488,10 @@ through the ShortOutput base class. This zero-argument utf8() gives
 the same output as ``utf8(false)``.
 
 Precondition:
-    If *alphaGen* is ``True``, the number of generators in the
+    If *alpha* is ``True``, the number of generators in the
     corresponding group must be 26 or fewer.
 
-Parameter ``alphaGen``:
+Parameter ``alpha``:
     indicates whether to use numbered or alphabetic generators, as
     described above.
 
@@ -1425,6 +1430,264 @@ Parameter ``out``:
     the output stream to which the XML should be written.)doc";
 
 }; // struct GroupPresentation
+
+struct SplayedExpression {
+
+// Docstring regina::python::doc::SplayedExpression::__class
+static constexpr const char __class[] =
+R"doc(Represents a group expression expanded so that each term uses a single
+generator or its inverse.
+
+The expansion is presented as a sequence of integers. If *g*
+represents generator *i* in a group presentation (``i ≥ 0``), then a
+SplayedExpression represents the generator *g* using the positive
+integer ``g+1``, and represents the inverse of *g* using the negative
+integer ``-(g+1)``. The integer 0 should never appear in a
+SplayedExpression at all.
+
+As an example, the group expression ``g1^2 g3^-2 g6`` would be appear
+in splayed form as the integer sequence ``2,2,-4,-4,7``.
+
+A SplayedExpression is typically longer than its corresponding
+GroupExpression. Its advantage is that some operations (e.g., word
+length, searching and surgery) become simpler in a splayed setting.
+
+Currently the API for SplayedExpression is fairly limited (just what
+is needed for internal group presentation algorithms); the available
+operations may expand in future releases of Regina.
+
+This class implements C++ move semantics and adheres to the C++
+Swappable requirement. It is designed to avoid deep copies wherever
+possible, even when passing or returning objects by value.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given splayed expression.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::__default
+static constexpr const char __default[] = R"doc(Creates a new splayed expression with no terms.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::__eq
+static constexpr const char __eq[] =
+R"doc(Tests whether this and the given splayed expression contain the same
+terms in the same order.
+
+Parameter ``other``:
+    the expression to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given expression are
+    identical.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::__init
+static constexpr const char __init[] =
+R"doc(Creates a new splayed expression that expands the given group
+expression.
+
+Parameter ``word``:
+    the group expression to expand.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::__init_2
+static constexpr const char __init_2[] =
+R"doc(Creates a new splayed expression that expands the given group
+expression, where the word length is known in advance.
+
+The reason for having this routine is that
+GroupExpression::wordLength() requires linear time to compute, and so
+if you already know it then you can pass it here to avoid an expensive
+re-computation.
+
+Precondition:
+    The argument *wordLength* is precisely ``word.wordLength()``.
+
+Parameter ``word``:
+    the group expression to expand.
+
+Parameter ``wordLength``:
+    the word length of *word*.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::__iter__
+static constexpr const char __iter__[] =
+R"doc(Returns a Python iterator over the elements of the underlying integer
+sequence.
+
+Returns:
+    an iterator over the elements of the underlying integer sequence.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::desplay
+static constexpr const char desplay[] =
+R"doc(Repacks this as a group expression. This will combine adjacent terms
+that use the same generator, and will apply any simplifications that
+arise. So, for example, the splayed integer sequence ``1 3 2 -2 -3 5
+5`` will be repacked as ``g0 g4^2``.
+
+The expression is not assumed to be cyclic (i.e., this routine will
+not attempt to cancel terms from the front and back of the word).
+
+Returns:
+    the repacked group expression.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::empty
+static constexpr const char empty[] =
+R"doc(Tests whether this is the empty word.
+
+No attempt is made to remove redundant terms (so the word ``g g^-1``
+will be treated as non-empty).
+
+Returns:
+    ``True`` if and only if this is the empty word.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::global_swap
+static constexpr const char global_swap[] =
+R"doc(Swaps the contents of the two given expressions.
+
+This global routine simply calls SplayedExpression::swap(); it is
+provided so that SplayedExpression meets the C++ Swappable
+requirements.
+
+Parameter ``lhs``:
+    the expression whose contents should be swapped with *rhs*.
+
+Parameter ``rhs``:
+    the expression whose contents should be swapped with *lhs*.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::inverse
+static constexpr const char inverse[] =
+R"doc(Returns the inverse of this expression. The terms will be reversed,
+and generators will be replaced with their inverses (and vice versa).
+
+Returns:
+    the inverse of this expression.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::invert
+static constexpr const char invert[] =
+R"doc(Inverts this expression in-place. The terms will be reversed, and
+generators will be replaced with their inverses (and vice versa).)doc";
+
+// Docstring regina::python::doc::SplayedExpression::simplify
+static constexpr const char simplify[] =
+R"doc(Simplifies this expression. Adjacent terms of the form ``g g^-1`` or
+``g^-1 g`` will be cancelled, and this will propagate as required if
+new cancellation opportunities open up as a result. It is _not_
+assumed that the underlying group is abelian.
+
+You may declare that the expression is cyclic, in which case terms
+from the front can also cancel with inverse terms from the back.
+
+Parameter ``cyclic``:
+    ``True`` if and only if the expression may be assumed to be
+    cyclic.
+
+Returns:
+    ``True`` if and only if this expression was changed.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::size
+static constexpr const char size[] =
+R"doc(Returns the length of this splayed expression. This is the number of
+individual terms (i.e., the length of the corresponding integer
+sequence), and it corresponds to GroupExpression::wordLength().
+
+No attempt is made to remove redundant terms (so the word ``g g^-1``
+will count as length two).
+
+Returns:
+    the length of this expression.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::str
+static constexpr const char str[] =
+R"doc(Returns a short text representation of this splayed expression, with a
+choice of either numbered generators or alphabetic generators.
+
+If *alpha* is ``False``, the text representation will be of the form
+``g2 g13^-1 g4``. If *alpha* is ``True``, this routine will assume
+your word comes from a group with at most 26 generators, and will
+format the word using lower-case ASCII for generators and upper-case
+ASCII for their inverses, i.e., ``cNe``.
+
+Note that there is also a zero-argument version of str(), inherited
+through the ShortOutput base class. This zero-argument str() gives the
+same output as ``str(false)``.
+
+In the output, generators will be numbered starting from 0 (i.e.,
+following the same numbering used by GroupExpression and
+GroupPresentation). This means, for example, that the output ``g2
+g13^-1 g4`` or ``cNe`` would come from the splayed integer sequence
+``3 -14 5``.
+
+Precondition:
+    If *alpha* is ``True``, the number of generators in the
+    corresponding group must be at most 26.
+
+Parameter ``alpha``:
+    indicates whether to use numbered or alphabetic generators, as
+    described above.
+
+Returns:
+    a short text representation of this splayed expression.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::substitute
+static constexpr const char substitute[] =
+R"doc(Replaces every occurrence of the given generator with the given
+replacement word. As expected, inverses of the given generator will be
+replaced with inverses of the given word. If the given generator or
+its inverse _was_ found, the expression will be simplified once the
+substitution is complete.
+
+Be aware that the argument *generator* is zero-based, not one-based
+(that is, we use the same generator numbering as GroupExpression and
+GroupPresentation). This means, for example, that calling
+``substitute(2, ...)`` will replace all occurrences of ±3 in the
+underlying integer sequence.
+
+Precondition:
+    The argument *replacement* is not the same SplayedExpression
+    object as this.
+
+Parameter ``generator``:
+    the generator to be replaced, numbered from 0 upwards.
+
+Parameter ``replacement``:
+    the substitute expression that will replace every occurrence of
+    the given generator.
+
+Parameter ``cyclic``:
+    ``True`` if and only if the expression may be assumed to be
+    cyclic; this is only relevant during the simplification stage.
+
+Returns:
+    ``True`` if and only if any substitutions were made.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::swap
+static constexpr const char swap[] =
+R"doc(Swaps the contents of this and the given splayed expression.
+
+Parameter ``other``:
+    the expression whose contents should be swapped with this.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::utf8
+static constexpr const char utf8[] =
+R"doc(Returns a short text representation of this splayed expression using
+unicode characters, with a choice of either numbered generators or
+alphabetic generators.
+
+This outputs a similar text representation to str(bool), except that
+exponents for inverses will be written using superscript characters
+encoded in UTF-8. See str(bool) for further details.
+
+Note that there is also a zero-argument version of utf8(), inherited
+through the ShortOutput base class. This zero-argument utf8() gives
+the same output as ``utf8(false)``.
+
+Precondition:
+    If *alpha* is ``True``, the number of generators in the
+    corresponding group must be at most 26.
+
+Parameter ``alpha``:
+    indicates whether to use numbered or alphabetic generators.
+
+Returns:
+    a short text representation of this splayed expression.)doc";
+
+}; // struct SplayedExpression
 
 } // namespace regina::python::doc
 

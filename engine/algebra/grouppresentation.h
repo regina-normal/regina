@@ -52,6 +52,7 @@
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
 #include "utilities/aggregator.h"
+#include "utilities/fixedarray.h"
 
 // There are more includes at the end of this file.
 
@@ -62,7 +63,6 @@ namespace regina {
 class AbelianGroup;
 class HomGroupPresentation;
 class MarkedAbelianGroup;
-template <std::default_initializable T> class FixedArray;
 
 /**
  * Represents a power of a generator in a group presentation.
@@ -213,7 +213,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          */
         GroupExpression(size_t generator, long exponent);
         /**
-         * Creates a new expression that is a clone of the given expression.
+         * Creates a new copy of the given expression.
          */
         GroupExpression(const GroupExpression&) = default;
         /**
@@ -285,7 +285,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         GroupExpression(const std::string& word, size_t nGens = 0);
 
         /**
-         * Makes this expression a clone of the given expression.
+         * Makes this expression a copy of the given expression.
          *
          * \return a reference to this expression.
          */
@@ -309,13 +309,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         void swap(GroupExpression& other) noexcept;
 
         /**
-         * Equality operator. Checks to see whether or not these two words
-         * represent the same literal string.
+         * Tests whether this and the given expression contain the same terms
+         * in the same order.
          *
-         * \param comp the expression to compare against this.
-         * \return \c true if this and the given string literal are identical.
+         * \param other the expression to compare with this.
+         * \return \c true if and only if this and the given expression are
+         * identical.
          */
-        bool operator == (const GroupExpression& comp) const;
+        bool operator == (const GroupExpression& other) const;
 
         /**
          * Returns the list of terms in this expression.
@@ -376,12 +377,12 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          */
         size_t wordLength() const;
         /**
-         * Tests whether this is the trivial (unit) word.
+         * Tests whether this is the empty (unit) word.
          *
-         * No attempt is made to remove redundant terms (so the word
-         * `g g^-1` will be treated as non-trivial).
+         * No attempt is made to remove redundant terms (so the word `g g^-1`
+         * will be treated as non-empty).
          *
-         * \return \c true if and only if this is the trivial word.
+         * \return \c true if and only if this is the empty word.
          */
         bool isTrivial() const;
 
@@ -524,7 +525,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         GroupExpression inverse() const;
 
         /**
-         * Inverts this expression.  Does not allocate or deallocate anything.
+         * Inverts this expression in-place.
+         * The terms will be reversed and the exponents negated.
          */
         void invert();
 
@@ -555,49 +557,50 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          */
         bool simplify(bool cyclic = false);
         /**
-         * Replaces every occurrence of the given generator with the
-         * given substitute expression.  If the given generator was found,
-         * the expression will be simplified once the substitution is
-         * complete.
+         * Replaces every occurrence of the given generator with the given
+         * replacement word.  As expected, inverses of the given generator
+         * will be replaced with inverses of the given word.  If the given
+         * generator or its inverse _was_ found, the expression will be
+         * simplified once the substitution is complete.
          *
-         * \pre The given expansion is not the same GroupExpression
+         * \pre The argument \a replacement is not the same GroupExpression
          * object as this.
          *
          * \param generator the generator to be replaced.
-         * \param expansion the substitute expression that will replace
+         * \param replacement the substitute expression that will replace
          * every occurrence of the given generator.
-         * \param cyclic \c true if and only if the expression may be
-         * assumed to be cyclic; see simplify() for further details.
+         * \param cyclic `true` if and only if the expression may be assumed to
+         * be cyclic; this is only relevant during the simplification stage.
          * \return \c true if and only if any substitutions were made.
          */
-        bool substitute(size_t generator,
-            const GroupExpression& expansion, bool cyclic = false);
+        bool substitute(size_t generator, const GroupExpression& replacement,
+            bool cyclic = false);
         /**
          * Replaces every generator in this expression with the
          * corresponding substitute expression from the given map.
          *
          * Specifically, each generator \a i will be replaced with the
-         * expression `expansions[i]`.
+         * expression `replacements[i]`.
          *
          * The expression will be simplified once all substitutions are
          * complete.
          *
          * Unlike the single-generator verison of substitute(), it is
          * perfectly fine if this GroupExpression object appears in the
-         * \a expansions list, and/or if the same GroupExpression object
+         * \a replacements list, and/or if the same GroupExpression object
          * appears several times in the given list.
          *
-         * \pre The length of \a expansions is at least <i>g</i>+1,
+         * \pre The length of \a replacements is at least <i>g</i>+1,
          * where \a g is the largest generator that appears in this expression.
-         * In other words, `expansions[i]` exists for every generator
+         * In other words, `replacements[i]` exists for every generator
          * \a i that appears in this expression.
          *
-         * \param expansions the list of substitutes for all generators in
+         * \param replacements the list of substitutes for all generators in
          * this expression.
          * \param cyclic \c true if and only if the expression may be
          * assumed to be cyclic; see simplify() for further details.
          */
-        void substitute(const std::vector<GroupExpression>& expansions,
+        void substitute(const std::vector<GroupExpression>& replacements,
             bool cyclic = false);
 
         /**
@@ -671,8 +674,8 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * Returns a short text representation of this group expression, with
          * a choice of either numbered generators or alphabetic generators.
          *
-         * If \a alphaGen is \c false, the text representation will be of
-         * the form `g2^4 g13^-5 g4`.  If \a alphaGen is \c true,
+         * If \a alpha is \c false, the text representation will be of
+         * the form `g2^4 g13^-5 g4`.  If \a alpha is \c true,
          * this routine will assume your word is in an alphabet of no more
          * than 26 letters, and will format the word using lower-case ASCII,
          * i.e., `c^4 n^-5 e`.
@@ -685,14 +688,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
          * respectively.
          *
-         * \pre If \a alphaGen is \c true, the number of generators in
+         * \pre If \a alpha is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * \param alphaGen indicates whether to use numbered or
+         * \param alpha indicates whether to use numbered or
          * alphabetic generators, as described above.
          * \return a short text representation of this group expression.
          */
-        std::string str(bool alphaGen) const;
+        std::string str(bool alpha) const;
 
         /**
          * Returns a short text representation of this group expression using
@@ -707,14 +710,14 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * through the ShortOutput base class.  This zero-argument utf8()
          * gives the same output as `utf8(false)`.
          *
-         * \pre If \a alphaGen is \c true, the number of generators in
+         * \pre If \a alpha is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * \param alphaGen indicates whether to use numbered or
+         * \param alpha indicates whether to use numbered or
          * alphabetic generators, as described above.
          * \return a short text representation of this group expression.
          */
-        std::string utf8(bool alphaGen) const;
+        std::string utf8(bool alpha) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -722,7 +725,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * alphabetic generators.
          *
          * The text representation will be of the form
-         * `g2^4 g13^-5 g4`. If the \a alphaGen flag is \c true, it
+         * `g2^4 g13^-5 g4`. If the \a alpha flag is \c true, it
          * will assume your word is in an alphabet of no more than 26 letters,
          * and will write the word using lower-case ASCII, i.e.,
          * `c^4 n^-5 e`.  If the \a utf8 flag is \c true, all exponents
@@ -732,7 +735,7 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * for example, that `a`, `b` and `c` correspond to `g0`, `g1` and `g2`
          * respectively.
          *
-         * \pre If \a alphaGen is \c true, the number of generators in
+         * \pre If \a alpha is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
          * \nopython Use str() or utf8() instead.
@@ -741,11 +744,11 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * \param utf8 \c true if exponents should be written using
          * unicode superscript characters, or \c false if they should be
          * written using a caret (^) symbol.
-         * \param alphaGen indicates whether to use numbered or
+         * \param alpha indicates whether to use numbered or
          * alphabetic generators, as described above.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            bool alphaGen = false) const;
+            bool alpha = false) const;
 };
 
 /**
@@ -760,6 +763,369 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
  * \ingroup algebra
  */
 void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept;
+
+/**
+ * Represents a group expression expanded so that each term uses a single
+ * generator or its inverse.
+ *
+ * The expansion is presented as a sequence of integers.  If \a g represents
+ * generator \a i in a group presentation (`i ≥ 0`), then a SplayedExpression
+ * represents the generator \a g using the positive integer `g+1`, and
+ * represents the inverse of \a g using the negative integer `-(g+1)`.
+ * The integer 0 should never appear in a SplayedExpression at all.
+ *
+ * As an example, the group expression `g1^2 g3^-2 g6` would be appear in
+ * splayed form as the integer sequence `2,2,-4,-4,7`.
+ *
+ * A SplayedExpression is typically longer than its corresponding
+ * GroupExpression.  Its advantage is that some operations (e.g., word length,
+ * searching and surgery) become simpler in a splayed setting.
+ *
+ * Currently the API for SplayedExpression is fairly limited (just what is
+ * needed for internal group presentation algorithms); the available operations
+ * may expand in future releases of Regina.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \ingroup algebra
+ */
+class SplayedExpression : public ShortOutput<SplayedExpression, true> {
+    public:
+        /**
+         * The signed integer type used for the integer sequence.
+         */
+        using Term = std::make_signed_t<size_t>;
+
+        /**
+         * An iterator over the elements of the underlying integer sequence.
+         * For SplayedExpression, iteration only allows const access and so
+         * the types \a iterator and \a const_iterator are identical.
+         */
+        using iterator = typename FixedArray<Term>::const_iterator;
+
+        /**
+         * An iterator over the elements of the underlying integer sequence.
+         * For SplayedExpression, iteration only allows const access and so
+         * the types \a iterator and \a const_iterator are identical.
+         */
+        using const_iterator = typename FixedArray<Term>::const_iterator;
+
+    private:
+        FixedArray<Term> terms_;
+            /**< The integer sequence describing this splayed expression. */
+
+    public:
+        /**
+         * Creates a new splayed expression with no terms.
+         */
+        SplayedExpression() = default;
+        /**
+         * Creates a new copy of the given splayed expression.
+         */
+        SplayedExpression(const SplayedExpression&) = default;
+        /**
+         * Moves the contents of the given splayed expression to this new
+         * expression.  This is a fast (constant time) operation.
+         *
+         * The expression that was passed will no longer be usable.
+         */
+        SplayedExpression(SplayedExpression&&) noexcept = default;
+        /**
+         * Creates a new splayed expression that expands the given group
+         * expression.
+         *
+         * \param word the group expression to expand.
+         */
+        SplayedExpression(const GroupExpression& word);
+        /**
+         * Creates a new splayed expression that expands the given group
+         * expression, where the word length is known in advance.
+         *
+         * The reason for having this routine is that
+         * GroupExpression::wordLength() requires linear time to compute,
+         * and so if you already know it then you can pass it here to avoid
+         * an expensive re-computation.
+         *
+         * \pre The argument \a wordLength is precisely `word.wordLength()`.
+         *
+         * \param word the group expression to expand.
+         * \param wordLength the word length of \a word.
+         */
+        SplayedExpression(const GroupExpression& word, size_t wordLength);
+
+        /**
+         * Repacks this as a group expression.  This will combine adjacent
+         * terms that use the same generator, and will apply any
+         * simplifications that arise.  So, for example, the splayed integer
+         * sequence `1 3 2 -2 -3 5 5` will be repacked as `g0 g4^2`.
+         *
+         * The expression is not assumed to be cyclic (i.e., this routine will
+         * not attempt to cancel terms from the front and back of the word).
+         *
+         * \return the repacked group expression.
+         */
+        GroupExpression desplay() const;
+
+        /**
+         * Makes this a copy of the given splayed expression.
+         *
+         * \param rhs the expression to copy.
+         * \return a reference to this expression.
+         */
+        SplayedExpression& operator = (const SplayedExpression& rhs);
+        /**
+         * Moves the contents of the given splayed expression to this
+         * expression.  This is a fast (constant time) operation.
+         *
+         * The expression that was passed will no longer be usable.
+         *
+         * \return a reference to this expression.
+         */
+        SplayedExpression& operator = (SplayedExpression&&) noexcept = default;
+
+        /**
+         * Swaps the contents of this and the given splayed expression.
+         *
+         * \param other the expression whose contents should be swapped with
+         * this.
+         */
+        void swap(SplayedExpression& other) noexcept;
+
+        /**
+         * Tests whether this and the given splayed expression contain the
+         * same terms in the same order.
+         *
+         * \param other the expression to compare with this.
+         * \return `true` if and only if this and the given expression are
+         * identical.
+         */
+        bool operator == (const SplayedExpression& other) const;
+
+        /**
+         * Returns the length of this splayed expression.  This is the number
+         * of individual terms (i.e., the length of the corresponding integer
+         * sequence), and it corresponds to GroupExpression::wordLength().
+         *
+         * No attempt is made to remove redundant terms (so the word
+         * `g g^-1` will count as length two).
+         *
+         * \return the length of this expression.
+         */
+        size_t size() const;
+
+        /**
+         * Tests whether this is the empty word.
+         *
+         * No attempt is made to remove redundant terms (so the word `g g^-1`
+         * will be treated as non-empty).
+         *
+         * \return `true` if and only if this is the empty word.
+         */
+        bool empty() const;
+
+        /**
+         * Returns a read-only C++ random access iterator pointing to the
+         * beginning of the underlying integer sequence.
+         *
+         * \nopython For Python users, SplayedExpression implements the Python
+         * iterable interface.  You can iterate over the terms in the
+         * underlying integer sequence in the same way that you would iterate
+         * over any native Python container.
+         *
+         * \return a read-only begin iterator.
+         */
+        const_iterator begin() const;
+
+        /**
+         * Returns a read-only C++ random access iterator pointing past the
+         * end of the underlying integer sequence.
+         *
+         * \nopython For Python users, SplayedExpression implements the Python
+         * iterable interface.  You can iterate over the terms in the
+         * underlying integer sequence in the same way that you would iterate
+         * over any native Python container.
+         *
+         * \return a read-only end iterator.
+         */
+        const_iterator end() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator over the elements of the underlying
+         * integer sequence.
+         *
+         * \nocpp For C++ users, SplayedExperssion provides the usual begin()
+         * and end() functions instead.  In particular, you can iterate over
+         * the elements of the underlying integer sequence in the usual way
+         * using a range-based `for` loop.
+         *
+         * \return an iterator over the elements of the underlying integer
+         * sequence.
+         */
+        auto __iter__() const;
+#endif
+
+        /**
+         * Returns the inverse of this expression.  The terms will be reversed,
+         * and generators will be replaced with their inverses (and vice versa).
+         *
+         * \return the inverse of this expression.
+         */
+        SplayedExpression inverse() const;
+
+        /**
+         * Inverts this expression in-place.  The terms will be reversed, and
+         * generators will be replaced with their inverses (and vice versa).
+         */
+        void invert();
+
+        /**
+         * Simplifies this expression.  Adjacent terms of the form `g g^-1` or
+         * `g^-1 g` will be cancelled, and this will propagate as required if
+         * new cancellation opportunities open up as a result.  It is _not_
+         * assumed that the underlying group is abelian.
+         *
+         * You may declare that the expression is cyclic, in which case terms
+         * from the front can also cancel with inverse terms from the back.
+         *
+         * \param cyclic `true` if and only if the expression may be
+         * assumed to be cyclic.
+         * \return `true` if and only if this expression was changed.
+         */
+        bool simplify(bool cyclic = false);
+
+        /**
+         * Replaces every occurrence of the given generator with the given
+         * replacement word.  As expected, inverses of the given generator
+         * will be replaced with inverses of the given word.  If the given
+         * generator or its inverse _was_ found, the expression will be
+         * simplified once the substitution is complete.
+         *
+         * Be aware that the argument \a generator is zero-based, not one-based
+         * (that is, we use the same generator numbering as GroupExpression
+         * and GroupPresentation).  This means, for example, that calling
+         * `substitute(2, ...)` will replace all occurrences of ±3 in the
+         * underlying integer sequence.
+         *
+         * \pre The argument \a replacement is not the same SplayedExpression
+         * object as this.
+         *
+         * \param generator the generator to be replaced, numbered from 0
+         * upwards.
+         * \param replacement the substitute expression that will replace every
+         * occurrence of the given generator.
+         * \param cyclic `true` if and only if the expression may be assumed to
+         * be cyclic; this is only relevant during the simplification stage.
+         * \return \c true if and only if any substitutions were made.
+         */
+        bool substitute(size_t generator, const SplayedExpression& replacement,
+            bool cyclic = false);
+
+        // Make sure the compiler can see the zero-argument string output
+        // routines, since we declare alternative versions of these below.
+        using ShortOutput<SplayedExpression, true>::str;
+        using ShortOutput<SplayedExpression, true>::utf8;
+
+        /**
+         * Returns a short text representation of this splayed expression, with
+         * a choice of either numbered generators or alphabetic generators.
+         *
+         * If \a alpha is `false`, the text representation will be of
+         * the form `g2 g13^-1 g4`.  If \a alpha is `true`, this routine
+         * will assume your word comes from a group with at most 26 generators,
+         * and will format the word using lower-case ASCII for generators and
+         * upper-case ASCII for their inverses, i.e., `cNe`.
+         *
+         * Note that there is also a zero-argument version of str(), inherited
+         * through the ShortOutput base class.  This zero-argument str()
+         * gives the same output as `str(false)`.
+         *
+         * In the output, generators will be numbered starting from 0
+         * (i.e., following the same numbering used by GroupExpression and
+         * GroupPresentation).  This means, for example, that the output
+         * `g2 g13^-1 g4` or `cNe` would come from the splayed integer
+         * sequence `3 -14 5`.
+         *
+         * \pre If \a alpha is `true`, the number of generators in
+         * the corresponding group must be at most 26.
+         *
+         * \param alpha indicates whether to use numbered or alphabetic
+         * generators, as described above.
+         * \return a short text representation of this splayed expression.
+         */
+        std::string str(bool alpha) const;
+
+        /**
+         * Returns a short text representation of this splayed expression using
+         * unicode characters, with a choice of either numbered generators or
+         * alphabetic generators.
+         *
+         * This outputs a similar text representation to str(bool), except
+         * that exponents for inverses will be written using superscript
+         * characters encoded in UTF-8.  See str(bool) for further details.
+         *
+         * Note that there is also a zero-argument version of utf8(), inherited
+         * through the ShortOutput base class.  This zero-argument utf8()
+         * gives the same output as `utf8(false)`.
+         *
+         * \pre If \a alpha is `true`, the number of generators in
+         * the corresponding group must be at most 26.
+         *
+         * \param alpha indicates whether to use numbered or alphabetic
+         * generators.
+         * \return a short text representation of this splayed expression.
+         */
+        std::string utf8(bool alpha) const;
+
+        /**
+         * Writes a short text representation of this object to the given
+         * output stream, using either numbered generators or alphabetic
+         * generators.
+         *
+         * If \a alpha is `false`, the text representation will be of
+         * the form `g2 g13^-1 g4`.  If \a alpha is `true`, this routine
+         * will assume your word comes from a group with at most 26 generators,
+         * and will format the word using lower-case ASCII for generators and
+         * upper-case ASCII for their inverses, i.e., `cNe`.  If \a utf8 is
+         * `true` and \a alpha is `false`, the exponents for inverses will
+         * be written using superscript characters encoded in UTF-8.
+         *
+         * In the output, generators will be numbered starting from 0
+         * (i.e., following the same numbering used by GroupExpression and
+         * GroupPresentation).  This means, for example, that the output
+         * `g2 g13^-1 g4` or `cNe` would come from the splayed integer
+         * sequence `3 -14 5`.
+         *
+         * \pre If \a alpha is `true`, the number of generators in
+         * the corresponding group must be at most 26.
+         *
+         * \nopython Use str() or utf8() instead.
+         *
+         * \param out the output stream to which to write.
+         * \param utf8 `true` if exponents for inverses should be written using
+         * unicode superscript characters, or `false` if they should be written
+         * in the ASCII form `^-1`.
+         * \param alpha indicates whether to use numbered or alphabetic
+         * generators, as described above.
+         */
+        void writeTextShort(std::ostream& out, bool utf8 = false,
+            bool alpha = false) const;
+};
+
+/**
+ * Swaps the contents of the two given expressions.
+ *
+ * This global routine simply calls SplayedExpression::swap(); it is provided
+ * so that SplayedExpression meets the C++ Swappable requirements.
+ *
+ * \param lhs the expression whose contents should be swapped with \a rhs.
+ * \param rhs the expression whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
+ */
+void swap(SplayedExpression& lhs, SplayedExpression& rhs) noexcept;
 
 /**
  * Represents a finite presentation of a group.
@@ -1948,8 +2314,8 @@ inline void GroupExpression::swap(GroupExpression& other) noexcept {
     terms_.swap(other.terms_);
 }
 
-inline bool GroupExpression::operator ==(const GroupExpression& comp) const {
-    return terms_ == comp.terms_;
+inline bool GroupExpression::operator == (const GroupExpression& other) const {
+    return terms_ == other.terms_;
 }
 
 inline std::list<GroupExpressionTerm>& GroupExpression::terms() {
@@ -2014,19 +2380,88 @@ inline void GroupExpression::erase() {
     terms_.clear();
 }
 
-inline std::string GroupExpression::str(bool alphaGen) const {
+inline std::string GroupExpression::str(bool alpha) const {
     std::ostringstream out;
-    writeTextShort(out, false, alphaGen);
+    writeTextShort(out, false, alpha);
     return std::move(out).str();
 }
 
-inline std::string GroupExpression::utf8(bool alphaGen) const {
+inline std::string GroupExpression::utf8(bool alpha) const {
     std::ostringstream out;
-    writeTextShort(out, true, alphaGen);
+    writeTextShort(out, true, alpha);
     return std::move(out).str();
 }
 
 inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {
+    lhs.swap(rhs);
+}
+
+// Inline functions for SplayedExpression
+
+inline SplayedExpression::SplayedExpression(const GroupExpression& word) :
+        SplayedExpression(word, word.wordLength()) {
+}
+
+inline SplayedExpression& SplayedExpression::operator = (
+        const SplayedExpression& rhs) {
+    // We need to do some juggling here, since FixedArray does not allow
+    // reallocation (and therefore does not support copy assignment).
+    FixedArray<Term> tmp(rhs.terms_);
+    terms_.swap(tmp);
+    return *this;
+}
+
+inline void SplayedExpression::swap(SplayedExpression& other) noexcept {
+    terms_.swap(other.terms_);
+}
+
+inline bool SplayedExpression::operator == (const SplayedExpression& other)
+        const {
+    return terms_ == other.terms_;
+}
+
+inline size_t SplayedExpression::size() const {
+    return terms_.size();
+}
+
+inline bool SplayedExpression::empty() const {
+    return terms_.empty();
+}
+
+inline SplayedExpression::const_iterator SplayedExpression::begin() const {
+    return terms_.begin();
+}
+
+inline SplayedExpression::const_iterator SplayedExpression::end() const {
+    return terms_.end();
+}
+
+inline SplayedExpression SplayedExpression::inverse() const {
+    // TODO: Make this a one-step implementation instead of two-step.
+    SplayedExpression ans(*this);
+    ans.invert();
+    return ans;
+}
+
+inline void SplayedExpression::invert() {
+    std::reverse(terms_.begin(), terms_.end());
+    for (auto& i : terms_)
+        i = -i;
+}
+
+inline std::string SplayedExpression::str(bool alpha) const {
+    std::ostringstream out;
+    writeTextShort(out, false, alpha);
+    return std::move(out).str();
+}
+
+inline std::string SplayedExpression::utf8(bool alpha) const {
+    std::ostringstream out;
+    writeTextShort(out, true, alpha);
+    return std::move(out).str();
+}
+
+inline void swap(SplayedExpression& lhs, SplayedExpression& rhs) noexcept {
     lhs.swap(rhs);
 }
 
