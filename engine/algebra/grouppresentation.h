@@ -934,6 +934,31 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
         bool operator == (const SplayedExpression& other) const;
 
         /**
+         * Compares two splayed expressions under a pseudo-lexicographical
+         * ordering.
+         *
+         * Here _pseudo-lexicographical_ means the following: expressions are
+         * first compared by length (with shorter expressions sorted first);
+         * then, as a tie-breaker, expressions with the same length are sorted
+         * lexicographically according to their underlying integer sequences.
+         *
+         * Be aware that, if we ever implement comparisons for GroupExpression,
+         * the ordering that they use will almost certainly _not_ be the same
+         * as the ordering used here for SplayedExpression.
+         *
+         * This operator generates all of the usual comparison operators,
+         * including `<`, `<=`, `>`, and `>=`.
+         *
+         * \python This spaceship operator `x <=> y` is not available, but the
+         * other comparison operators that it generates _are_ available.
+         *
+         * \param rhs the other experssion to compare this with.
+         * \return a result that indicates how this and the given expression
+         * are ordered with respect to each other.
+         */
+        std::strong_ordering operator <=> (const SplayedExpression& rhs) const;
+
+        /**
          * Returns the length of this splayed expression.  This is the number
          * of individual terms (i.e., the length of the corresponding integer
          * sequence), and it corresponds to GroupExpression::wordLength().
@@ -2548,6 +2573,14 @@ inline void SplayedExpression::swap(SplayedExpression& other) noexcept {
 inline bool SplayedExpression::operator == (const SplayedExpression& other)
         const {
     return terms_ == other.terms_;
+}
+
+inline std::strong_ordering SplayedExpression::operator <=> (
+        const SplayedExpression& rhs) const {
+    if (auto c = size() <=> rhs.size(); c != 0)
+        return c;
+    return std::lexicographical_compare_three_way(
+        begin(), end(), rhs.begin(), rhs.end());
 }
 
 inline size_t SplayedExpression::size() const {

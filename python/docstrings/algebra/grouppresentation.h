@@ -1527,6 +1527,34 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
+// Docstring regina::python::doc::SplayedExpression::__cmp
+static constexpr const char __cmp[] =
+R"doc(Compares two splayed expressions under a pseudo-lexicographical
+ordering.
+
+Here _pseudo-lexicographical_ means the following: expressions are
+first compared by length (with shorter expressions sorted first);
+then, as a tie-breaker, expressions with the same length are sorted
+lexicographically according to their underlying integer sequences.
+
+Be aware that, if we ever implement comparisons for GroupExpression,
+the ordering that they use will almost certainly _not_ be the same as
+the ordering used here for SplayedExpression.
+
+This operator generates all of the usual comparison operators,
+including ``<``, ``<=``, ``>``, and ``>=``.
+
+Python:
+    This spaceship operator ``x <=> y`` is not available, but the
+    other comparison operators that it generates _are_ available.
+
+Parameter ``rhs``:
+    the other experssion to compare this with.
+
+Returns:
+    a result that indicates how this and the given expression are
+    ordered with respect to each other.)doc";
+
 // Docstring regina::python::doc::SplayedExpression::__copy
 static constexpr const char __copy[] = R"doc(Creates a new copy of the given splayed expression.)doc";
 
