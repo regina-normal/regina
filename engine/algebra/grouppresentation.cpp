@@ -402,11 +402,18 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
     // generic early exit strategy
     if (target.size() < 2 || reducer.size()==0)
         return Agg().result();
-    // early exit strategy based on step.
-    if (2 * target.size() + step <= reducer.size())
-        return Agg().result();
 
     // search for cyclic subwords of *reducer* in *target*...
+    size_t max_match = std::min(target.size(), reducer.size());
+    size_t min_match = (reducer.size() < step ? 1 :
+        (reducer.size() - step) / 2 + 1);
+    // Note: min_match is the shortest possible non-empty match to ensure that
+    // score = 2 * match_length - reducer.size() > -step.
+
+    // early exit strategy based on step
+    if (min_match > max_match)
+        return Agg().result();
+
     Agg sub_list;
 
     // Cache results of extraCancellation(); -1 means not yet computed
@@ -456,8 +463,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 if (*p == *q) {
                     sub.invert_reducer = false;
                     sub.reducer_pos = *rPos;
-                    while (*p == *q && sub.length < reducer.size() &&
-                            sub.length < target.size()) {
+                    while (*p == *q && sub.length < max_match) {
                         ++sub.length;
                         target.cycleForward(p);
                         reducer.cycleForward(q);
@@ -465,8 +471,7 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                 } else {
                     sub.invert_reducer = true;
                     sub.reducer_pos = reducer.size() - *rPos - 1;
-                    while (*p == -*q && sub.length < reducer.size() &&
-                            sub.length < target.size()) {
+                    while (*p == -*q && sub.length < max_match) {
                         ++sub.length;
                         target.cycleForward(p);
                         reducer.cycleBackward(q);
@@ -480,10 +485,9 @@ typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
                             target, target.begin() + sub.target_pos, p);
                     sub.score = reducer.size() + extraScore[sub.target_pos];
                     sub_list += sub;
-                } else if (sub.length > 0) {
+                } else if (sub.length >= min_match) {
                     sub.score = 2 * sub.length - reducer.size();
-                    if (sub.score > -step)
-                        sub_list += sub;
+                    sub_list += sub;
                 }
             }
         }
