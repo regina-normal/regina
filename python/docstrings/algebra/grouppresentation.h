@@ -191,6 +191,11 @@ expression will be modified directly.
 Parameter ``word``:
     the word to multiply with this expression.)doc";
 
+// Docstring regina::python::doc::GroupExpression::clear
+static constexpr const char clear[] =
+R"doc(Erases all terms from this word. This effectively turns this word into
+the identity element.)doc";
+
 // Docstring regina::python::doc::GroupExpression::countTerms
 static constexpr const char countTerms[] =
 R"doc(Returns the number of terms in this expression.
@@ -217,10 +222,23 @@ All other terms shift one step to the left.
 If the word is of the form ``g_i1^j1 g_i2^j2 ... g_in^jn``, this
 converts it into the word ``g_i2^j2 ... g_in^jn g_i1^j1``.)doc";
 
+// Docstring regina::python::doc::GroupExpression::empty
+static constexpr const char empty[] =
+R"doc(Tests whether this is the empty (unit) word.
+
+No attempt is made to remove redundant terms (so the word ``g g^-1``
+will be treated as non-empty).
+
+Returns:
+    ``True`` if and only if this is the empty word.)doc";
+
 // Docstring regina::python::doc::GroupExpression::erase
 static constexpr const char erase[] =
-R"doc(Erases all terms from this this word. This effectively turns this word
-into the identity element.)doc";
+R"doc(Deprecated function that erases all terms from this word.
+
+.. deprecated::
+    This routine has been renamed to clear(), for consistency with the
+    standard C++ container interface. See clear() for further details.)doc";
 
 // Docstring regina::python::doc::GroupExpression::exponent
 static constexpr const char exponent[] =
@@ -284,10 +302,11 @@ exponents negated.)doc";
 
 // Docstring regina::python::doc::GroupExpression::isTrivial
 static constexpr const char isTrivial[] =
-R"doc(Tests whether this is the empty (unit) word.
+R"doc(Deprecated function that tests whether this is the empty (unit) word.
 
-No attempt is made to remove redundant terms (so the word ``g g^-1``
-will be treated as non-empty).
+.. deprecated::
+    This routine has been renamed to empty(), for consistency with the
+    standard C++ container interface. See empty() for further details.
 
 Returns:
     ``True`` if and only if this is the empty word.)doc";
