@@ -1435,15 +1435,27 @@ struct SplayedExpression {
 
 // Docstring regina::python::doc::SplayedExpression::__array
 static constexpr const char __array[] =
-R"doc(Returns a copy of the integer at the given index in the underlying
-sequence. This array-like access is read-only.
+R"doc(Returns a read-write reference to the integer at the given index in
+the underlying sequence.
 
 Parameter ``index``:
     the index of the integer to access. This must be between 0 and
     ``size()-1`` inclusive.
 
 Returns:
-    the requested integer in the underlying sequence.)doc";
+    a reference to the requested integer.)doc";
+
+// Docstring regina::python::doc::SplayedExpression::__array_2
+static constexpr const char __array_2[] =
+R"doc(Returns a read-only reference to the integer at the given index in the
+underlying sequence.
+
+Parameter ``index``:
+    the index of the integer to access. This must be between 0 and
+    ``size()-1`` inclusive.
+
+Returns:
+    a reference to the requested integer.)doc";
 
 // Docstring regina::python::doc::SplayedExpression::__class
 static constexpr const char __class[] =

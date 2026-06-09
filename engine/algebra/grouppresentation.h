@@ -799,16 +799,14 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
         using Term = std::make_signed_t<size_t>;
 
         /**
-         * An iterator over the elements of the underlying integer sequence.
-         * For SplayedExpression, iteration only allows const access and so
-         * the types \a iterator and \a const_iterator are identical.
+         * A read-write iterator over the elements of the underlying integer
+         * sequence.
          */
-        using iterator = typename FixedArray<Term>::const_iterator;
+        using iterator = typename FixedArray<Term>::iterator;
 
         /**
-         * An iterator over the elements of the underlying integer sequence.
-         * For SplayedExpression, iteration only allows const access and so
-         * the types \a iterator and \a const_iterator are identical.
+         * A read-only iterator over the elements of the underlying integer
+         * sequence.
          */
         using const_iterator = typename FixedArray<Term>::const_iterator;
 
@@ -926,6 +924,19 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
         bool empty() const;
 
         /**
+         * Returns a read-write C++ random access iterator pointing to the
+         * beginning of the underlying integer sequence.
+         *
+         * \nopython For Python users, SplayedExpression implements the Python
+         * iterable interface.  You can iterate over the terms in the
+         * underlying integer sequence in the same way that you would iterate
+         * over any native Python container.
+         *
+         * \return a read-write begin iterator.
+         */
+        iterator begin();
+
+        /**
          * Returns a read-only C++ random access iterator pointing to the
          * beginning of the underlying integer sequence.
          *
@@ -937,6 +948,19 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
          * \return a read-only begin iterator.
          */
         const_iterator begin() const;
+
+        /**
+         * Returns a read-write C++ random access iterator pointing past the
+         * end of the underlying integer sequence.
+         *
+         * \nopython For Python users, SplayedExpression implements the Python
+         * iterable interface.  You can iterate over the terms in the
+         * underlying integer sequence in the same way that you would iterate
+         * over any native Python container.
+         *
+         * \return a read-write end iterator.
+         */
+        iterator end();
 
         /**
          * Returns a read-only C++ random access iterator pointing past the
@@ -968,14 +992,24 @@ class SplayedExpression : public ShortOutput<SplayedExpression, true> {
 #endif
 
         /**
-         * Returns a copy of the integer at the given index in the underlying
-         * sequence.  This array-like access is read-only.
+         * Returns a read-write reference to the integer at the given index in
+         * the underlying sequence.
          *
          * \param index the index of the integer to access.  This must be
          * between 0 and `size()-1` inclusive.
-         * \return the requested integer in the underlying sequence.
+         * \return a reference to the requested integer.
          */
-        Term operator [] (size_t index) const;
+        Term& operator [] (size_t index);
+
+        /**
+         * Returns a read-only reference to the integer at the given index in
+         * the underlying sequence.
+         *
+         * \param index the index of the integer to access.  This must be
+         * between 0 and `size()-1` inclusive.
+         * \return a reference to the requested integer.
+         */
+        const Term& operator [] (size_t index) const;
 
         /**
          * Cycles the given iterator forward through the underlying integer
@@ -2458,16 +2492,28 @@ inline bool SplayedExpression::empty() const {
     return terms_.empty();
 }
 
+inline SplayedExpression::iterator SplayedExpression::begin() {
+    return terms_.begin();
+}
+
 inline SplayedExpression::const_iterator SplayedExpression::begin() const {
     return terms_.begin();
+}
+
+inline SplayedExpression::iterator SplayedExpression::end() {
+    return terms_.end();
 }
 
 inline SplayedExpression::const_iterator SplayedExpression::end() const {
     return terms_.end();
 }
 
-inline SplayedExpression::Term SplayedExpression::operator [] (size_t index)
-        const {
+inline SplayedExpression::Term& SplayedExpression::operator [] (size_t index) {
+    return terms_[index];
+}
+
+inline const SplayedExpression::Term& SplayedExpression::operator [] (
+        size_t index) const {
     return terms_[index];
 }
 
