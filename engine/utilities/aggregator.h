@@ -74,18 +74,16 @@ namespace regina {
  *
  * Regarding errors:
  *
- * - If the return value from `result()` can indicate when no values have yet
- *   been incorporated, then it should do so (see MinAggregator and
- *   SetAggregator for examples of this).  Otherwise your implementation
- *   of `result()` may throw a NoSolution exception in such scenarios, and you
- *   should document this in your aggregator class (an example here is
- *   MaxCountAggregator).  Generic code that works with any aggregator type
- *   should test `empty()` before calling `result()`.
+ * - The return value from `result()` should be able to indicate when no values
+ *   have yet been incorporated.  You should document in your aggregator class
+ *   how it does this (e.g., see MinAggregator, which returns \nullopt in such
+ *   scenarios).  Generic code that works with any aggregator type should use
+ *   `empty()` to determine whether or not any values have been incorporated.
  *
- * - Likewise, if you cannot aggregate some combinations of values, then the
- *   operator `+=` may throw a NoSolution exception, and again you should
- *   document this in your aggregator class.  An example of this is
- *   `MinAggregator<double>` (which cannot combine real numbers with `NaN`).
+ * - If you cannot aggregate some combinations of values, then the operator
+ *   `+=` may throw a NoSolution exception.  If this could happen, you should
+ *   document this in your aggregator class (e.g., see `MinAggregator<double>`,
+ *   which cannot combine real numbers with `NaN`).
  */
 template <typename T, typename Value>
 concept Aggregator =
@@ -136,20 +134,20 @@ class MinAggregator {
                  been supplied. */
 
         using OrderType = decltype(Value() <=> Value());
-            /**< The result of a three-way comparison on type \a T.  This
-                 would typically be one of the standard C++ ordering types,
-                 such as `std::strong_ordering`. */
+            /**< The result of a three-way comparison on \a Value.  This would
+                 typically be one of the standard C++ ordering types, such as
+                 `std::strong_ordering`. */
 
     public:
         /**
          * Creates a new aggregator that has not yet seen any values at all.
          */
-        MinAggregator() = default;
+        constexpr MinAggregator() = default;
         /**
          * Creates a new aggregator that holds the same result as the
          * given aggregator.
          */
-        MinAggregator(const MinAggregator&) = default;
+        constexpr MinAggregator(const MinAggregator&) = default;
         /**
          * Moves the contents of the given aggregator into this new aggregator.
          *
@@ -159,14 +157,14 @@ class MinAggregator {
          *
          * The aggregator that is passed will no longer be usable.
          */
-        MinAggregator(MinAggregator&&) = default;
+        constexpr MinAggregator(MinAggregator&&) = default;
         /**
          * Sets this aggregator's result to be the same as the given
          * aggregator's.
          *
          * \return a reference to this aggregator.
          */
-        MinAggregator& operator = (const MinAggregator&) = default;
+        constexpr MinAggregator& operator = (const MinAggregator&) = default;
         /**
          * Moves the contents of the given aggregator into this aggregator.
          *
@@ -176,7 +174,7 @@ class MinAggregator {
          *
          * \return a reference to this aggregator.
          */
-        MinAggregator& operator = (MinAggregator&&) = default;
+        constexpr MinAggregator& operator = (MinAggregator&&) = default;
 
         /**
          * Determines whether this aggregator has seen any values at all.
@@ -184,7 +182,7 @@ class MinAggregator {
          * \return \c true if and only if this aggregator has _not_ yet
          * seen any values.
          */
-        bool empty() const {
+        constexpr bool empty() const {
             return ! result_;
         }
 
@@ -199,7 +197,7 @@ class MinAggregator {
          * \return the smallest value seen so far, or \nullopt if no values
          * have been seen at all.
          */
-        const std::optional<Value>& result() const& {
+        constexpr const std::optional<Value>& result() const& {
             return result_;
         }
 
@@ -215,7 +213,7 @@ class MinAggregator {
          * \return the smallest value seen so far, or \nullopt if no values
          * have been seen at all.
          */
-        std::optional<Value>&& result() && {
+        constexpr std::optional<Value>&& result() && {
             return std::move(result_);
         }
 
@@ -229,7 +227,7 @@ class MinAggregator {
          * \param value the value to incorporate into this aggregator.
          * \return a reference to this aggregator.
          */
-        MinAggregator& operator += (const Value& value) {
+        constexpr MinAggregator& operator += (const Value& value) {
             if constexpr (std::is_same_v<OrderType, std::partial_ordering>) {
                 if (! result_)
                     result_ = value;
@@ -261,7 +259,7 @@ class MinAggregator {
          * \param value the value to incorporate into this aggregator.
          * \return a reference to this aggregator.
          */
-        MinAggregator& operator += (Value&& value) {
+        constexpr MinAggregator& operator += (Value&& value) {
             if constexpr (std::is_same_v<OrderType, std::partial_ordering>) {
                 if (! result_)
                     result_ = std::move(value);
@@ -293,7 +291,7 @@ class MinAggregator {
          * into this aggregator.
          * \return a reference to this aggregator.
          */
-        MinAggregator& operator += (const MinAggregator& other) {
+        constexpr MinAggregator& operator += (const MinAggregator& other) {
             if (other.result_)
                 return (*this) += other.result_;
             else
@@ -318,7 +316,7 @@ class MinAggregator {
          * into this aggregator.
          * \return a reference to this aggregator.
          */
-        MinAggregator& operator += (MinAggregator&& other) {
+        constexpr MinAggregator& operator += (MinAggregator&& other) {
             if (other.result_)
                 return (*this) += std::move(other.result_);
             else
@@ -332,7 +330,7 @@ class MinAggregator {
          * After calling this function, empty() will return `true` and
          * result() will return \nullopt.
          */
-        void reset() {
+        constexpr void reset() {
             result_.reset();
         }
 
@@ -345,7 +343,7 @@ class MinAggregator {
          *
          * \param value the value with which to initialise this aggregator.
          */
-        void reset(const Value& value) {
+        constexpr void reset(const Value& value) {
             result_ = value;
         }
 
@@ -359,7 +357,7 @@ class MinAggregator {
          *
          * \param value the value to move into the result of this aggregator.
          */
-        void reset(Value&& value) {
+        constexpr void reset(Value&& value) {
             result_ = std::move(value);
         }
 
@@ -372,7 +370,8 @@ class MinAggregator {
          * \param other the aggregator whose results are to be swapped with
          * this.
          */
-        void swap(MinAggregator& other) requires std::swappable<Value> {
+        constexpr void swap(MinAggregator& other)
+                requires std::swappable<Value> {
             result_.swap(other.result_);
         }
 };
@@ -609,60 +608,58 @@ class SetAggregator {
 };
 
 /**
- * A structure to help compute the maximum of many values of type \a T, taking
- * multiplicity into account.
+ * An aggregator that computes the maximum of all values seen, taking
+ * multiplicity into account.  Specifically, this aggregator maintains the
+ * the maximum value encountered so far, along with the number of values
+ * encountered so far that are equivalent to that maximum.
  *
- * We refer to individual values of type \a T as _atomic_ values.  This
- * structure maintains the maximum value encountered so far, along with the
- * number of atomic values encountered so far that are equivalent to that
- * maximum.
+ * Note that we do not require `Value::operator <=>` to be a total order
+ * (this allows us to work with floating-point types, for example, where `NaN`
+ * is incomparable with any other value).  However, aggregating incomparable
+ * values is an error, and may result in an exception being thrown.  It is the
+ * programmer's responsibility to ensure that all values that _are_ supplied
+ * are totally ordered.
  *
- * Note that we do not require `T::operator <=>` to be a total order (this
- * allows us to work with floating-point types, for example, where `NaN` is
- * incomparable with any other value).  However, aggregating incomparable
- * atomic values is an error, and may result in an exception being thrown.
- * See aggregate() for further details.
+ * The function `result()` does not throw exceptions; instead if no values
+ * have been supplied it will return a pair \a p whose associated count
+ * (`p.second`) is zero.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
- * requirement.  Its implementations of these rely upon type \a T; that is,
- * the efficiency of moving and swapping objects of type `MaxCountAggregator<T>`
- * depends upon the efficiency of moving and swapping objects of type \a T.
+ * requirement.  Its implementations of these are only as efficient as the
+ * move/swap operations for the type \a Value.
  *
  * \nopython
  *
  * \ingroup utilities
  */
-template <typename T>
-requires std::regular<T> && std::three_way_comparable<T>
+template <typename Value>
+requires std::regular<Value> && std::three_way_comparable<Value>
 class MaxCountAggregator {
     public:
-        using Result = T;
+        using Result = std::pair<Value, size_t>;
+            /**< A type that holds the maximum value seen so far, along with
+                 the number of values seen so far that are equivalent to it. */
 
-        /**
-         * The result of a three-way comparison on type \a T.
-         *
-         * This would typically be one of the standard C++ ordering types,
-         * such as `std::strong_ordering`.
-         */
-        using OrderType = decltype(T() <=> T());
+        using OrderType = decltype(Value() <=> Value());
+            /**< The result of a three-way comparison on \a Value.  This would
+                 typically be one of the standard C++ ordering types, such as
+                 `std::strong_ordering`. */
 
     private:
-        T max_;
-            /**< The maximum atomic value encountered so far.
-                 This is undefined if `count_ == 0. */
-        size_t count_ { 0 };
-            /**< The number of atomic values encountered so far that are
-                 equivalent to \a max_, or 0 if no atomic values have been
-                 encountered at all. */
+        std::pair<Value, size_t> result_ { {}, 0 };
+            /**< The maximum value encountered so far, and the number of
+                 values encountered so far that are equivalent to it.  If
+                 `result_.second == 0`, then `result_.first` will be
+                 undefined. */
 
     public:
         /**
-         * Creates a new aggregator that has not yet encountered any
-         * atomic values at all.
+         * Creates a new aggregator that has not yet seen any values at all.
          */
         constexpr MaxCountAggregator() = default;
         /**
-         * Creates a new copy of the given aggregator.
+         * Creates a new aggregator that holds the same results as the
+         * given aggregator.
          */
         constexpr MaxCountAggregator(const MaxCountAggregator&) = default;
         /**
@@ -670,55 +667,14 @@ class MaxCountAggregator {
          *
          * This constructor is not marked `noexcept`, since its throwing
          * behaviour depends upon the throwing behaviour of the move
-         * constructor for type \a T.
+         * constructor for type \a Value.
          *
          * The aggregator that is passed will no longer be usable.
          */
         constexpr MaxCountAggregator(MaxCountAggregator&&) = default;
-
         /**
-         * Determines whether or not this aggregator has encountered any
-         * atomic values at all.
-         *
-         * \return \c true if and only if this aggregator has _not_ yet
-         * encountered any atomic values.
-         */
-        constexpr bool empty() const {
-            return count_ == 0;
-        }
-
-        /**
-         * Returns the maximum atomic value that this aggregator has
-         * encountered so far.
-         *
-         * If no values have been encountered at all then this routine will
-         * throw an exception.
-         *
-         * \exception NoSolution No atomic values have yet been encountered.
-         *
-         * \return the maximum atomic value that has been encountered.
-         */
-        constexpr const T& result() const {
-            if (count_ == 0)
-                throw NoSolution();
-            return max_;
-        }
-
-        /**
-         * Returns the number of atomic values encountered so far that are
-         * equivalent to the current maximum.
-         *
-         * If no values have been encountered at all then this routine will
-         * return zero.
-         *
-         * \return the number of values equivalent to the current maximum.
-         */
-        constexpr size_t count() const {
-            return count_;
-        }
-
-        /**
-         * Sets this to be a copy of the given aggregator.
+         * Sets this aggregator's results to be the same as the given
+         * aggregator's.
          *
          * \return a reference to this aggregator.
          */
@@ -729,7 +685,7 @@ class MaxCountAggregator {
          *
          * This operator is not marked `noexcept`, since its throwing
          * behaviour depends upon the throwing behaviour of the move assignment
-         * operator for type \a T.
+         * operator for the type \a Value.
          *
          * \return a reference to this aggregator.
          */
@@ -737,152 +693,293 @@ class MaxCountAggregator {
             default;
 
         /**
-         * Swaps the contents of this and the given aggregator.
+         * Determines whether this aggregator has seen any values at all.
          *
-         * This operation is not marked `noexcept`, since its throwing behaviour
-         * depends upon the throwing behaviour of the swap operation for type
-         * \a T.
-         *
-         * \param other the aggregator whose contents are to be swapped with
-         * this.
+         * \return \c true if and only if this aggregator has _not_ yet
+         * seen any values.
          */
-        constexpr void swap(MaxCountAggregator& other) noexcept
-                requires std::swappable<T> {
-            using std::swap;
-            swap(max_, other.max_); // uses T's swap operation, if defined
-            swap(count_, other.count_);
+        constexpr bool empty() const {
+            return result_.second == 0;
         }
 
         /**
-         * Determines whether this and the given aggregator hold equivalent
-         * maximum values with the same multiplicity.
+         * Returns the maximum value that has been incorporated into this
+         * aggregator, along with a count indicating how many values have been
+         * incorporated that are equivalent to that maximum.  Here both
+         * "maximum" and "equivalent" are with respect to the ordering on the
+         * type \a Value.
          *
-         * Two aggregators that have not encountered any atomic values at all
-         * will be considered equal.
+         * If no values have been given at all then this routine will return
+         * a pair \a p whose associated count (`p.second)` is zero, but whose
+         * associated maximum (`p.first`) is undefined.
          *
-         * \param rhs the aggregator to compare with this.
-         * \return \c true if and only if this and the given aggregator hold
-         * equivalent values with the same multiplicity.
+         * \return the maximum value seen so far and the number of times that
+         * it has been seen, as described above.
          */
-        bool operator == (const MaxCountAggregator& rhs) const {
-            if (count_ == 0)
-                return rhs.count_ == 0; // max_ should be ignored in this case
-            else
-                return max_ == rhs.max_ && count_ == rhs.count_;
+        constexpr const std::pair<Value, size_t>& result() const& {
+            return result_;
         }
 
         /**
-         * Compares the results of this and the given aggregator.
+         * Returns the maximum value seen so far along with the associated
+         * count, moving the results out of this aggregator.
          *
-         * For aggregators \a x and \a y, `x < y` means that either \a x holds
-         * a smaller maximum value than \a y, or they hold equivalent values
-         * but \a x has encountered that value fewer times.
+         * After calling this move variant of result(), this aggregator will
+         * become unusable.
          *
-         * An aggregator that has not encountered any atomic values at all
-         * is considered smaller than any aggregator that has.
+         * See the `const` version of result() for further details.
          *
-         * If type \a T is partially ordered but not totally ordered, then if
-         * \a x and \a y hold incomparable maximum values, the aggregators
-         * themselves will be considered incomparable also (i.e., this
-         * comparison will return `std::partial_ordering::unordered`).
-         *
-         * \param rhs the aggregator to compare with this.
-         * \return the result of the comparison between this and the given
-         * aggregator.
+         * \return the maximum value seen so far and the number of times that
+         * it has been seen, as described above.
          */
-        OrderType operator <=> (const MaxCountAggregator& rhs) const {
-            if (count_ == 0) {
-                return rhs.count_ == 0 ? OrderType::equivalent :
-                    OrderType::less;
-            } else if (rhs.count_ == 0) {
-                return OrderType::greater;
-            } else {
-                // Both aggregators have seen at least one atomic value.
-                if (auto c = max_ <=> rhs.max_; c != 0)
-                    return c;
-                return count_ <=> rhs.count_;
-            }
+        constexpr std::pair<Value, size_t>&& result() && {
+            return std::move(result_);
         }
 
         /**
-         * Re-initialises this aggregator as having encountered no atomic
-         * values at all.
-         */
-        constexpr void reset() {
-            count_ = 0;
-        }
-
-        /**
-         * Re-initialises this aggregator as having encountered only the given
-         * atomic value, exactly once.
+         * Incorporates the given value into this aggregator.
          *
-         * This is equivalent to calling `reset()` and then `aggregate(value)`.
-         *
-         * \param value any single atomic value.
-         */
-        constexpr void reset(const T& value) {
-            max_ = value;
-            count_ = 1;
-        }
-
-        /**
-         * Aggregates the given atomic value into the overall results.
-         *
-         * \exception NoSolution Type \a T is only partially ordered,
+         * \exception NoSolution The type \a Value is only partially ordered,
          * not totally ordered, and the given value is incomparable with the
-         * current maximum.
+         * maximum value seen so far.
          *
-         * \param value any single atomic value.
+         * \param value the value to incorporate into this aggregator.
+         * \return a reference to this aggregator.
          */
-        constexpr MaxCountAggregator& operator += (const T& value) {
-            if (count_ == 0) {
-                max_ = value;
-                count_ = 1;
+        constexpr MaxCountAggregator& operator += (const Value& value) {
+            if (result_.second == 0) {
+                result_.first = value;
+                result_.second = 1;
             } else {
-                auto cmp = max_ <=> value;
+                auto cmp = result_.first <=> value;
                 if constexpr (std::is_same_v<OrderType, std::partial_ordering>)
                     if (cmp == OrderType::unordered)
                         throw NoSolution();
                 if (cmp == OrderType::less) {
-                    max_ = value;
-                    count_ = 1;
+                    result_.first = value;
+                    result_.second = 1;
                 } else if (cmp == OrderType::equivalent) {
-                    ++count_;
+                    ++result_.second;
                 }
             }
             return *this;
         }
 
         /**
-         * Aggregates the results of some other aggregator into the results of
-         * this aggregator.
+         * Incorporates the given value into this aggregator, moving the
+         * contents out of the given value if needed.
          *
-         * This is equivalent to aggregating every individual atomic value
-         * that has previously been encountered by \a other.
+         * After calling this move variant of `+=`, the object \a value that
+         * was passed may become unusable.
          *
-         * \exception NoSolution Type \a T is only partially ordered,
-         * not totally ordered, and the maximum values held by this and the
-         * given aggregator are incomparable.
+         * \exception NoSolution The type \a Value is only partially ordered,
+         * not totally ordered, and the given value is incomparable with the
+         * maximum value seen so far.
+         *
+         * \param value the value to incorporate into this aggregator.
+         * \return a reference to this aggregator.
+         */
+        constexpr MaxCountAggregator& operator += (Value&& value) {
+            if (result_.second == 0) {
+                result_.first = std::move(value);
+                result_.second = 1;
+            } else {
+                auto cmp = result_.first <=> value;
+                if constexpr (std::is_same_v<OrderType, std::partial_ordering>)
+                    if (cmp == OrderType::unordered)
+                        throw NoSolution();
+                if (cmp == OrderType::less) {
+                    result_.first = std::move(value);
+                    result_.second = 1;
+                } else if (cmp == OrderType::equivalent) {
+                    ++result_.second;
+                }
+            }
+            return *this;
+        }
+
+        /**
+         * Incorporates the results of some other aggregator into this
+         * aggregator.  The effect will be as though every value that had
+         * previously been incorporated into the given aggregator had been
+         * incoporated into this aggregator also.
+         *
+         * \exception NoSolution The type \a Value is only partially ordered,
+         * not totally ordered, and the maximum values seen so far by this and
+         * the given aggregator are incomparable.
          *
          * \param other the aggregator whose results should be incorporated
-         * into this.
+         * into this aggregator.
+         * \return a reference to this aggregator.
          */
         constexpr MaxCountAggregator& operator +=
                 (const MaxCountAggregator& other) {
-            if (other.count_ == 0) {
+            if (other.result_.second == 0) {
                 return *this;
-            } else if (count_ == 0) {
+            } else if (result_.second == 0) {
                 return *this = other;
             } else {
-                auto cmp = max_ <=> other.max_;
+                auto cmp = result_.first <=> other.result_.first;
                 if constexpr (std::is_same_v<OrderType, std::partial_ordering>)
                     if (cmp == OrderType::unordered)
                         throw NoSolution();
                 if (cmp == OrderType::less)
                     *this = other;
                 else if (cmp == OrderType::equivalent)
-                    count_ += other.count_;
+                    result_.second += other.result_.second;
                 return *this;
+            }
+        }
+
+        /**
+         * Incorporates the results of some other aggregator into this
+         * aggregator, moving the result out of the given aggregator if needed.
+         * The effect will be as though every value that had previously been
+         * incorporated into the given aggregator had been incoporated into
+         * this aggregator also.
+         *
+         * After calling this move variant of `+=`, the aggregator that was
+         * passed may become unusable.
+         *
+         * \exception NoSolution The type \a Value is only partially ordered,
+         * not totally ordered, and the maximum values seen so far by this and
+         * the given aggregator are incomparable.
+         *
+         * \param other the aggregator whose results should be incorporated
+         * into this aggregator.
+         * \return a reference to this aggregator.
+         */
+        constexpr MaxCountAggregator& operator += (MaxCountAggregator&& other) {
+            if (other.result_.second == 0) {
+                return *this;
+            } else if (result_.second == 0) {
+                return *this = std::move(other);
+            } else {
+                auto cmp = result_.first <=> other.result_.first;
+                if constexpr (std::is_same_v<OrderType, std::partial_ordering>)
+                    if (cmp == OrderType::unordered)
+                        throw NoSolution();
+                if (cmp == OrderType::less)
+                    *this = std::move(other);
+                else if (cmp == OrderType::equivalent)
+                    result_.second += other.result_.second;
+                return *this;
+            }
+        }
+
+        /**
+         * Re-initialises this aggregator as though it has seen no values at
+         * all.
+         *
+         * After calling this function, empty() will return `true` and
+         * `result().second` will be zero.
+         */
+        constexpr void reset() {
+            result_.second = 0;
+        }
+
+        /**
+         * Re-initialises this aggregator as though it has seen only the given
+         * value and no others.
+         *
+         * After calling this function, empty() will return `false` and
+         * result() will return the pair `(value, 1)`.
+         *
+         * \param value the value with which to initialise this aggregator.
+         */
+        constexpr void reset(const Value& value) {
+            result_.first = value;
+            result_.second = 1;
+        }
+
+        /**
+         * Re-initialises this aggregator as though it has seen only the given
+         * value, which will be moved into the stored result.
+         *
+         * After calling this function: empty() will return `false`,
+         * result() will return the pair `(value, 1)`, and the object \a value
+         * that was passed will become unusable.
+         *
+         * \param value the value to move into the result of this aggregator.
+         */
+        constexpr void reset(Value&& value) {
+            result_.first = std::move(value);
+            result_.second = 1;
+        }
+
+        /**
+         * Swaps the results held by this and the given aggregator.
+         *
+         * This operation is not marked `noexcept`, since its throwing behaviour
+         * depends upon the swap operation for the type \a Value.
+         *
+         * \param other the aggregator whose results are to be swapped with
+         * this.
+         */
+        constexpr void swap(MaxCountAggregator& other) noexcept
+                requires std::swappable<Value> {
+            result_.swap(other.result_);
+        }
+
+        /**
+         * Determines whether this and the given aggregator hold equivalent
+         * maximum values with the same multiplicity.
+         *
+         * This equality test is provided because you cannot compare
+         * `result() == rhs.result()`, since _that_ comparison would be
+         * undefined if both aggregators have not yet encountered any values
+         * at all.  That is, comparisons need to be made on the aggregators
+         * directly, not their results.
+         *
+         * Two aggregators that have not encountered any values at all will be
+         * considered equal.
+         *
+         * \param rhs the aggregator to compare with this.
+         * \return \c true if and only if this and the given aggregator hold
+         * equivalent values with the same multiplicity.
+         */
+        bool operator == (const MaxCountAggregator& rhs) const {
+            if (result_.second == 0)
+                return rhs.result_.second == 0; // ignore result_.first
+            else
+                return result_ == rhs.result_;
+        }
+
+        /**
+         * Compares the results of this and the given aggregator.
+         *
+         * This comparison is provided because you cannot compare
+         * `result() <=> rhs.result()`, since _that_ comparison would be
+         * undefined if one or both aggregators had not yet encountered any
+         * values at all.  That is, comparisons need to be made on the
+         * aggregators directly, not their results.
+         *
+         * For aggregators \a x and \a y, `x < y` means that either \a x holds
+         * a smaller maximum value than \a y, or they hold equivalent values
+         * but \a x has encountered that value fewer times.
+         *
+         * An aggregator that has not encountered any values at all is
+         * considered smaller than any aggregator that has.  Two aggregators
+         * that have not encountered any values at all will be considered equal.
+         *
+         * If the type \a Value is partially ordered but not totally ordered,
+         * then if \a x and \a y hold incomparable maximum values, the
+         * aggregators themselves will be considered incomparable also (i.e.,
+         * this comparison will return `std::partial_ordering::unordered`).
+         *
+         * \param rhs the aggregator to compare with this.
+         * \return the result of the comparison between this and the given
+         * aggregator.
+         */
+        OrderType operator <=> (const MaxCountAggregator& rhs) const {
+            if (result_.second == 0) {
+                return rhs.result_.second == 0 ? OrderType::equivalent :
+                    OrderType::less;
+            } else if (rhs.result_.second == 0) {
+                return OrderType::greater;
+            } else {
+                // Both aggregators have seen at least one atomic value.
+                return result_ <=> rhs.result_;
             }
         }
 };
@@ -890,11 +987,11 @@ class MaxCountAggregator {
 /**
  * Swaps the contents of the given aggregators.
  *
- * This global routine simply calls MaxCountAggregator<T>::swap(); it is
- * provided so that MaxCountAggregator<T> meets the C++ Swappable requirements.
+ * This global routine simply calls `A::swap()`; it is provided so that
+ * Regina's aggregator types meet the C++ Swappable requirements.
  *
  * This operation is not marked `noexcept`, since its throwing behaviour
- * depends upon the throwing behaviour of the swap operation for type \a T.
+ * depends upon the swap operation for the type \a Value.
  *
  * \nopython
  *
@@ -903,9 +1000,8 @@ class MaxCountAggregator {
  *
  * \ingroup utilities
  */
-template <typename T>
-requires std::swappable<T>
-constexpr void swap(MaxCountAggregator<T>& a, MaxCountAggregator<T>& b) {
+template <std::swappable Value, Aggregator<Value> A>
+constexpr void swap(A& a, A& b) {
     a.swap(b);
 }
 

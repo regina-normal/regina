@@ -40,35 +40,34 @@ TEST(AggregatorTest, maxCount) {
 
     Agg a;
     EXPECT_TRUE(a.empty());
-    EXPECT_THROW({ a.result(); }, regina::NoSolution);
-    EXPECT_EQ(a.count(), 0);
+    EXPECT_EQ(a.result().second, 0);
 
     a += -2.0;
     EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), -2.0);
-    EXPECT_EQ(a.count(), 1);
+    EXPECT_EQ(a.result().first, -2.0);
+    EXPECT_EQ(a.result().second, 1);
 
     a += -0.0;
     EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), 0.0);
-    EXPECT_EQ(a.count(), 1);
+    EXPECT_EQ(a.result().first, 0.0);
+    EXPECT_EQ(a.result().second, 1);
 
     a += +0.0; // equivalent but not equal to -0.0
     EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), 0.0);
-    EXPECT_EQ(a.count(), 2);
+    EXPECT_EQ(a.result().first, 0.0);
+    EXPECT_EQ(a.result().second, 2);
 
 #if defined(NAN)
     EXPECT_THROW({ a += NAN; }, regina::NoSolution);
     EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), 0.0);
-    EXPECT_EQ(a.count(), 2);
+    EXPECT_EQ(a.result().first, 0.0);
+    EXPECT_EQ(a.result().second, 2);
 #endif
 
     a += -1.0;
     EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), 0.0);
-    EXPECT_EQ(a.count(), 2);
+    EXPECT_EQ(a.result().first, 0.0);
+    EXPECT_EQ(a.result().second, 2);
 
     Agg b;
     EXPECT_NE(a, b);
@@ -84,25 +83,25 @@ TEST(AggregatorTest, maxCount) {
 
     b += a;
     EXPECT_FALSE(b.empty());
-    EXPECT_EQ(b.result(), 0.0);
-    EXPECT_EQ(b.count(), 5);
+    EXPECT_EQ(b.result().first, 0.0);
+    EXPECT_EQ(b.result().second, 5);
 
     b += 1.0;
     EXPECT_FALSE(b.empty());
-    EXPECT_EQ(b.result(), 1.0);
-    EXPECT_EQ(b.count(), 1);
+    EXPECT_EQ(b.result().first, 1.0);
+    EXPECT_EQ(b.result().second, 1);
 
     b += a;
     EXPECT_FALSE(b.empty());
-    EXPECT_EQ(b.result(), 1.0);
-    EXPECT_EQ(b.count(), 1);
+    EXPECT_EQ(b.result().first, 1.0);
+    EXPECT_EQ(b.result().second, 1);
 
 #if defined(NAN)
     Agg c;
     c += NAN;
     EXPECT_FALSE(c.empty());
-    EXPECT_TRUE(std::isnan(c.result()));
-    EXPECT_EQ(c.count(), 1);
+    EXPECT_TRUE(std::isnan(c.result().first));
+    EXPECT_EQ(c.result().second, 1);
 
     EXPECT_NE(c, b);
     EXPECT_FALSE(c < b);
