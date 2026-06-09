@@ -81,8 +81,10 @@ void addGroupPresentation(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal, rdoc::terms)
         .def("countTerms", &GroupExpression::countTerms, rdoc::countTerms)
         .def("wordLength", &GroupExpression::wordLength, rdoc::wordLength)
-        .def("isTrivial", &GroupExpression::isTrivial, rdoc::isTrivial)
-        .def("erase", &GroupExpression::erase, rdoc::erase)
+        .def("empty", &GroupExpression::empty, rdoc::empty)
+        .def("isTrivial", &GroupExpression::empty, rdoc::isTrivial) //deprecated
+        .def("clear", &GroupExpression::clear, rdoc::clear)
+        .def("erase", &GroupExpression::clear, rdoc::erase) // deprecated
         .def("term", overload_cast<size_t>(&GroupExpression::term),
             pybind11::return_value_policy::reference_internal, rdoc::term)
         .def("generator", &GroupExpression::generator, rdoc::generator)

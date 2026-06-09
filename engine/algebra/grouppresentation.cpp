@@ -1121,7 +1121,7 @@ GroupPresentation::GroupPresentation(size_t nGens,
         // that all generators are in range.  Check this now (which for
         // nGens == 0 simply means ensuring each relation is empty).
         for (const auto& r : relations_)
-            if (! r.isTrivial())
+            if (! r.empty())
                 throw InvalidArgument(
                     "Generator out of range in group presentation");
     }
@@ -1129,7 +1129,7 @@ GroupPresentation::GroupPresentation(size_t nGens,
 
 bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
     bool retval = word.simplify(false);
-    if (word.isTrivial())
+    if (word.empty())
         return retval;
 
     // now recursively apply relators until no reduction is possible.
@@ -1145,7 +1145,7 @@ bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
             if (sub && sub->score > 0) {
                 applySubstitution(splayed, r, *sub );
                 if (splayed.empty()) {
-                    word.erase();
+                    word.clear();
                     return true;
                 }
                 continueSimplify = true;
@@ -1652,7 +1652,7 @@ bool GroupPresentation::identifyAbelian() const
             COM.addTermLast( i, -1 );
             COM.addTermLast( j, -1 );
             simplifyAndConjugate( COM );
-            if (!COM.isTrivial()) return false;
+            if (!COM.empty()) return false;
         }
     return true;
 }

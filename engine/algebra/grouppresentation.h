@@ -382,15 +382,33 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * No attempt is made to remove redundant terms (so the word `g g^-1`
          * will be treated as non-empty).
          *
-         * \return \c true if and only if this is the empty word.
+         * \return `true` if and only if this is the empty word.
          */
-        bool isTrivial() const;
+        bool empty() const;
+        /**
+         * Deprecated function that tests whether this is the empty (unit) word.
+         *
+         * \deprecated This routine has been renamed to empty(), for
+         * consistency with the standard C++ container interface.  See empty()
+         * for further details.
+         *
+         * \return `true` if and only if this is the empty word.
+         */
+        [[deprecated]] bool isTrivial() const;
 
         /**
-         * Erases all terms from this this word.
+         * Erases all terms from this word.
          * This effectively turns this word into the identity element.
          */
-        void erase();
+        void clear();
+        /**
+         * Deprecated function that erases all terms from this word.
+         *
+         * \deprecated This routine has been renamed to clear(), for
+         * consistency with the standard C++ container interface.  See clear()
+         * for further details.
+         */
+        [[deprecated]] void erase();
 
         /**
          * Returns the term at the given index in this expression.
@@ -2392,6 +2410,10 @@ inline size_t GroupExpression::countTerms() const {
     return terms_.size();
 }
 
+inline bool GroupExpression::empty() const {
+    return terms_.empty();
+}
+
 inline bool GroupExpression::isTrivial() const {
     return terms_.empty();
 }
@@ -2435,6 +2457,10 @@ inline void GroupExpression::addTermsLast(GroupExpression word) {
 
 inline void GroupExpression::addTermsFirst(GroupExpression word) {
     terms_.splice(terms_.begin(), std::move(word.terms_));
+}
+
+inline void GroupExpression::clear() {
+    terms_.clear();
 }
 
 inline void GroupExpression::erase() {
