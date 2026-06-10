@@ -30,7 +30,9 @@
 
 #include "triangulation/forward.h"
 #include "../helpers.h"
+#include "../docstrings/triangulation/example.h"
 #include "../docstrings/triangulation/forward.h"
+#include "../docstrings/triangulation/triangulation.h"
 
 namespace pybind11 { class module_; }
 
@@ -55,5 +57,12 @@ void addTriangulationClasses(pybind11::module_& m,
     addCut(m);
     addFaceNumbering(m);
     addIsoSigEncodings(m);
+
+    RDOC_SCOPE_BEGIN_MAIN
+
+    regina::python::add_doc_only_class<rdoc::Example>(m, "Example");
+    regina::python::add_doc_only_class<rdoc::Triangulation>(m, "Triangulation");
+
+    RDOC_SCOPE_END
 }
 
