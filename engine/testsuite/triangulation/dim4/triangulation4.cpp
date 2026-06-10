@@ -793,13 +793,15 @@ TEST_F(Dim4Test, move20Vertex) {
     // On my machine (December 2024) they take around 45 seconds.
     #if 0
     // Exhaustive, with boundary facets:
-    runCensus([](const regina::FacetPairing<4>& p) {
-        return p.hasMultiEdge<4>() && ! p.isClosed();
-    }, TriangulationTest<4>::verify20Vertex, 3, true /* orientable only */);
+    runPartialCensus(TriangulationTest<4>::verify20Vertex,
+        [](const regina::FacetPairing<4>& p) {
+            return p.hasMultiEdge<4>() && ! p.isClosed();
+        }, 3);
     // Exhaustive, without boundary facets:
-    runCensus([](const regina::FacetPairing<4>& p) {
-        return p.hasMultiEdge<4>() && p.isClosed();
-    }, TriangulationTest<4>::verify20Vertex, 4, true /* orientable only */);
+    runPartialCensus(TriangulationTest<4>::verify20Vertex,
+        [](const regina::FacetPairing<4>& p) {
+            return p.hasMultiEdge<4>() && p.isClosed();
+        }, 4);
     #endif
 }
 
@@ -812,13 +814,15 @@ TEST_F(Dim4Test, move20Edge) {
     // On my machine (December 2024) they take around 3.5 minutes.
     #if 0
     // Exhaustive, with boundary facets:
-    runCensus([](const regina::FacetPairing<4>& p) {
-        return p.hasMultiEdge<3>() && ! p.isClosed();
-    }, TriangulationTest<4>::verify20Edge, 3, true /* orientable only */);
+    runPartialCensus(TriangulationTest<4>::verify20Edge,
+        [](const regina::FacetPairing<4>& p) {
+            return p.hasMultiEdge<3>() && ! p.isClosed();
+        }, 3);
     // Exhaustive, without boundary facets:
-    runCensus([](const regina::FacetPairing<4>& p) {
-        return p.hasMultiEdge<3>() && p.isClosed();
-    }, TriangulationTest<4>::verify20Edge, 4, true /* orientable only */);
+    runPartialCensus(TriangulationTest<4>::verify20Edge,
+        [](const regina::FacetPairing<4>& p) {
+            return p.hasMultiEdge<3>() && p.isClosed();
+        }, 4);
     #endif
 }
 
@@ -831,13 +835,15 @@ TEST_F(Dim4Test, move20Triangle) {
     // On my machine (December 2024) they take around 6 minutes.
     #if 0
     // Exhaustive, with boundary facets:
-    runCensus([](const regina::FacetPairing<4>& p) {
-        return p.hasMultiEdge<2>() && ! p.isClosed();
-    }, TriangulationTest<4>::verify20Triangle, 3, true /* orientable only */);
+    runPartialCensus(TriangulationTest<4>::verify20Triangle,
+        [](const regina::FacetPairing<4>& p) {
+            return p.hasMultiEdge<2>() && ! p.isClosed();
+        }, 3);
     // Exhaustive, without boundary facets:
-    runCensus([](const regina::FacetPairing<4>& p) {
-        return p.hasMultiEdge<2>() && p.isClosed();
-    }, TriangulationTest<4>::verify20Triangle, 4, true /* orientable only */);
+    runPartialCensus(TriangulationTest<4>::verify20Triangle,
+        [](const regina::FacetPairing<4>& p) {
+            return p.hasMultiEdge<2>() && p.isClosed();
+        }, 4);
     #endif
 }
 

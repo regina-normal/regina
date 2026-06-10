@@ -1634,7 +1634,6 @@
 		05E62A812FBFFD8D00AE1B84 /* boundarycomponent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E629BE2FBFFD8D00AE1B84 /* boundarycomponent3.cpp */; };
 		05E62A842FBFFD8D00AE1B84 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E629C52FBFFD8D00AE1B84 /* homologicaldata.cpp */; };
 		05E62A852FBFFD8D00AE1B84 /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A222FBFFD8D00AE1B84 /* isosig.cpp */; };
-		05E62A882FC0099900AE1B84 /* exhaustive-tri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */; };
 		05E62A932FC0932A00AE1B84 /* pyconcepts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A912FC0932A00AE1B84 /* pyconcepts.cpp */; };
 		05E62A962FC4323000AE1B84 /* packetchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62A952FC4323000AE1B84 /* packetchooser.cpp */; };
 		05E62A982FC462D300AE1B84 /* standardsubcomplex.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62A972FC462CA00AE1B84 /* standardsubcomplex.h */; };
@@ -4549,7 +4548,6 @@
 		05E62A232FBFFD8D00AE1B84 /* isosig-bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "isosig-bindings.h"; sourceTree = "<group>"; };
 		05E62A242FBFFD8D00AE1B84 /* pytriangulation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pytriangulation.cpp; sourceTree = "<group>"; };
 		05E62A862FC0099900AE1B84 /* exhaustive-tri.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "exhaustive-tri.h"; sourceTree = "<group>"; };
-		05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "exhaustive-tri.cpp"; sourceTree = "<group>"; };
 		05E62A892FC009B600AE1B84 /* exhaustive-link.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "exhaustive-link.h"; sourceTree = "<group>"; };
 		05E62A8A2FC092FA00AE1B84 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		05E62A8B2FC092FA00AE1B84 /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
@@ -8524,7 +8522,6 @@
 				05E629902FBFD04600AE1B84 /* dim3 */,
 				05E629962FBFD04600AE1B84 /* dim4 */,
 				05E629972FBFD04600AE1B84 /* CMakeLists.txt */,
-				05E62A872FC0099900AE1B84 /* exhaustive-tri.cpp */,
 				05E62A862FC0099900AE1B84 /* exhaustive-tri.h */,
 				05E629982FBFD04600AE1B84 /* facenumbering.cpp */,
 				05E629992FBFD04600AE1B84 /* facetpairingtest.h */,
@@ -10469,7 +10466,6 @@
 				056AED7D2A431AE200EAF4FA /* numbertheory.cpp in Sources */,
 				056AED902A431AE200EAF4FA /* markedabeliangroup.cpp in Sources */,
 				056AED752A431AE200EAF4FA /* snappea.cpp in Sources */,
-				05E62A882FC0099900AE1B84 /* exhaustive-tri.cpp in Sources */,
 				056AED802A431AE200EAF4FA /* polynomial.cpp in Sources */,
 				05329E512F25548A0048C8C6 /* boolset.cpp in Sources */,
 				056AED732A431AE200EAF4FA /* gtest-matchers.cc in Sources */,
