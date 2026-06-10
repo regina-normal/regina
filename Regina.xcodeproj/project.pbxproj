@@ -9077,6 +9077,9 @@
 					052909462AE5EA090028990D = {
 						CreatedOnToolsVersion = 15.0;
 					};
+					0545A0262FB2F5FF008D3ADB = {
+						ProvisioningStyle = Automatic;
+					};
 					05617ADC1D9DBFBE00B1E33B = {
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
@@ -9117,6 +9120,9 @@
 								enabled = 1;
 							};
 						};
+					};
+					057B0CB926A506B20017F5EA = {
+						ProvisioningStyle = Automatic;
 					};
 					058FC8671FE188A0006D04B4 = {
 						ProvisioningStyle = Automatic;
