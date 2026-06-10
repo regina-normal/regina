@@ -29,11 +29,14 @@
  **************************************************************************/
 
 #include <cmath>
+#include "maths/integer.h"
 #include "utilities/aggregator.h"
 
 #include "testhelper.h"
 
+using regina::Integer;
 using regina::MaxCountAggregator;
+using regina::SetAggregator;
 
 TEST(AggregatorTest, maxCount) {
     using Agg = MaxCountAggregator<float>;
@@ -111,5 +114,56 @@ TEST(AggregatorTest, maxCount) {
 
     EXPECT_THROW({ c += 1.0; }, regina::NoSolution);
 #endif
+}
+
+TEST(AggregatorTest, setCopyMove) {
+    // Here we test some of the move operations with SetAggregator.
+    // For this we use the Integer type, where Integer::rawData() gives us
+    // a mechanism to detect moves vs copies.
+    Integer one(1), two(2), three(3), four(4);
+    auto p1 = one.rawData();
+    auto p2 = two.rawData();
+    auto p3 = three.rawData();
+    EXPECT_NE(p1, nullptr);
+    EXPECT_NE(p2, nullptr);
+    EXPECT_NE(p3, nullptr);
+
+    SetAggregator<Integer> a;
+    a += one;
+    a += two;
+    EXPECT_EQ(a.result().size(), 2);
+    EXPECT_NE(a.result().begin()->rawData(), p1);
+
+    SetAggregator<Integer> b;
+    b += std::move(one);
+    b += std::move(two);
+    EXPECT_EQ(b.result().size(), 2);
+    EXPECT_EQ(b.result().begin()->rawData(), p1);
+
+    SetAggregator<Integer> c;
+    c += 2; // two has already been moved from
+    c += three;
+    c += b;
+    EXPECT_EQ(c.result().size(), 3);
+    EXPECT_NE(c.result().begin()->rawData(), p1);
+    EXPECT_NE(c.result().rbegin()->rawData(), p3);
+
+    SetAggregator<Integer> d;
+    d += 2; // two has already been moved from
+    d += std::move(three);
+    d += std::move(b);
+    EXPECT_EQ(d.result().size(), 3);
+    EXPECT_EQ(d.result().begin()->rawData(), p1);
+    EXPECT_EQ(d.result().rbegin()->rawData(), p3);
+
+    std::set<Integer> e = d.result();
+    EXPECT_EQ(e.size(), 3);
+    EXPECT_NE(e.begin()->rawData(), p1);
+    EXPECT_NE(e.rbegin()->rawData(), p3);
+
+    std::set<Integer> f = std::move(d).result();
+    EXPECT_EQ(f.size(), 3);
+    EXPECT_EQ(f.begin()->rawData(), p1);
+    EXPECT_EQ(f.rbegin()->rawData(), p3);
 }
 
