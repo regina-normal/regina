@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "RETRIANGULATE" "1" "13 May 2026" "" "The Regina Handbook"
+.TH "RETRIANGULATE" "1" "10 June 2026" "" "The Regina Handbook"
 
 .SH NAME
 retriangulate \- Exhaustively search through triangulations or knot/link diagrams using local moves
@@ -79,17 +79,20 @@ will not be output unless the option \fB--all\fR is passed.
 All triangulations or link diagrams, both input and output, are described
 using \fIsignatures\fR\&.  These are short text strings
 that identify a triangulation or link diagram uniquely up to
-combinatorial isomorphism (which includes relabellings of
-tetrahedra/pentachora/crossings, relabellings of the vertices of
-tetrahedra/pentachora vertices, and various rotation/reflection/reversal
-operations on link diagrams).
+combinatorial isomorphism (this includes relabellings of
+tetrahedra, pentachora or crossings; relabellings of individual
+tetrahedron or pentachoron vertices; plus various
+rotation/reflection/reversal operations on triangulations or link diagrams).
 .PP
 By default, the program will output
-\fIsecond-generation\fR signatures (which were introduced
+\fIsecond-generation\fR signatures (as introduced
 in Regina\~8.0); you can change this by passing
 \fB--gen=1\fR\&.
 Both second-generation and first-generation signatures are accepted as
 input, regardless of what type of output you request.
+For triangulations, all output signatures will be unoriented
+(which means that any specific orientation that might be encoded in your
+input triangulation will be forgotten).
 .PP
 To view signatures in Regina's graphical user interface, visit the
 Composition tab in the triangulation viewer,
@@ -251,17 +254,17 @@ The following 3-manifold triangulation is non-minimal, but it requires a bit
 of work to see this:
 
 .nf
-    example$ \fBretriangulate -h2 hLLAAkbdceefggdonxdjxn\fR
-    hLLAAkbdceefggdonxdjxn
-    hLALPkbcbefgfghxwnxark
+    example$ \fBretriangulate -h2 hpyS1+lmKi0Kdb\fR
+    hpyS1+lmKi0Kdb
+    hhrSU+fnewBNLa
     Found 2 triangulation(s).
-    example$ \fBretriangulate -h3 hLLAAkbdceefggdonxdjxn\fR
-    hLLAAkbdceefggdonxdjxn
-    hLALPkbcbefgfghxwnxark
-    hLLMMkbcdfefgglcghtchj
-    gLLPQcdcefffqsjpunw
+    example$ \fBretriangulate -h3 hpyS1+lmKi0Kdb\fR
+    hpyS1+lmKi0Kdb
+    hhrSU+fnewBNLa
+    hNI2T+FabR0Qsa
+    gxtJT7frusUe
     Triangulation is non-minimal!
-    Smaller triangulation: gLLPQcdcefffqsjpunw
+    Smaller triangulation: gxtJT7frusUe
     example$
 .fi
 .PP
@@ -269,11 +272,11 @@ Although the program stopped as soon as it found a smaller
 triangulation, this can be simplified even further:
 
 .nf
-    example$ \fBretriangulate gLLPQcdcefffqsjpunw\fR
-    gLLPQcdcefffqsjpunw
-    fLAMcbbcdeedhwhxn
+    example$ \fBretriangulate gxtJT7frusUe\fR
+    gxtJT7frusUe
+    fhrK80iePeb
     Triangulation is non-minimal!
-    Smaller triangulation: fLAMcbbcdeedhwhxn
+    Smaller triangulation: fhrK80iePeb
     example$
 .fi
 .PP
@@ -281,8 +284,8 @@ A little more probing shows this to be the cusped hyperbolic
 manifold m112:
 
 .nf
-    example$ \fBcensuslookup fLAMcbbcdeedhwhxn\fR
-    fLAMcbbcdeedhwhxn: 1 hit
+    example$ \fBcensuslookup fhrK80iePeb\fR
+    fhrK80iePeb: 1 hit
         m112 : #2 -- Cusped hyperbolic census (orientable)
     
     example$

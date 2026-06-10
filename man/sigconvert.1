@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "SIGCONVERT" "1" "13 May 2026" "" "The Regina Handbook"
+.TH "SIGCONVERT" "1" "10 June 2026" "" "The Regina Handbook"
 
 .SH NAME
 sigconvert \- Convert between generations of isomorphism signature or    knot/link signature
@@ -51,6 +51,13 @@ unless one of the other link or dimension options is passed
 \fB--dim4\fR, or \fB--dim=...\fR).
 Your input may include first-generation signatures, second-generation
 signatures, or a mix of both.
+.PP
+Note that, although second-generation signatures can optionally encode
+orientation, this tool will always output \fBunoriented\fR
+signatures (since first-generation signatures did not encode orientation
+at all).  A side-effect is that, if you need to "unorient" a
+second-generation signature, you can simply run it through this tool
+(as shown in the last example below).
 .PP
 There are two ways to provide the input signatures.
 The simplest way is to pass them as command-line arguments.
@@ -172,6 +179,35 @@ To convert these into second-generation signatures, you can instruct
     ehrBRr4cl
     ehrBRrici
     \&...
+    example$
+.fi
+.PP
+Our last example concerns orientation.  As discussed above,
+second-generation signatures can optionally encode orientation; however,
+\fBsigconvert\fR will always output unoriented signatures.
+The example below illustrates: (i)\~creating two lens spaces in
+Python with opposite orientations, (ii)\~computing their oriented
+signatures (bNjc and bNld),
+and then (iii)\~using \fBsigconvert\fR to
+"unorient" the signatures (whereupon the two signatures become
+identical).
+
+.nf
+    example$ \fBregina-python\fR
+    Regina 8.0
+    Software for low-dimensional topology
+    Copyright (c) 1999-2026, The Regina development team
+    >>> x = Example3.lens(4,1)
+    >>> y = Example3.lens(4,1)
+    >>> y.reflect()
+    >>> print(x.neoSig(True)) # True -> oriented signature
+    bNjc
+    >>> print(y.neoSig(True)) # True -> oriented signature
+    bNld
+    >>>
+    example$ \fBsigconvert bNjc bNld\fR
+    bNjc
+    bNjc
     example$
 .fi
 .SH "MACOS USERS"

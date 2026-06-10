@@ -654,8 +654,9 @@ ENDIF()
 
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(timing)
-ADD_SUBDIRECTORY(docs)
 ADD_SUBDIRECTORY(examples)
+ADD_SUBDIRECTORY(docs)
+ADD_SUBDIRECTORY(man)
 
 # Configure file
 CONFIGURE_FILE (
