@@ -4,7 +4,6 @@ AngleAlg : enum
 AngleAlgFlags : alias -> enum AngleAlg
 AngleStructure : class -> EqualityType.ByValue
 AngleStructures : class -> EqualityType.ByValue
-AnyInteger : concept
 ArbitraryPrecisionInteger : concept
 ArbitraryPrecisionIntegerVector : concept
 Arrow : class -> EqualityType.ByValue
@@ -63,7 +62,6 @@ Component7 : class -> EqualityType.ByReference
 Component8 : class -> EqualityType.ByReference
 Concept : concept
 Container : class -> EqualityType.Disabled
-CppInteger : concept
 Crossing : class -> EqualityType.ByReference
 Cusp : class -> EqualityType.ByValue
 Cut : class -> EqualityType.ByValue
@@ -243,8 +241,6 @@ HyperListFlags : alias -> enum HyperList
 HyperbolicMinSearcher : class -> EqualityType.ByReference
 ImpossibleScenario : exception
 Integer : class -> EqualityType.ByValue
-IntegerComparable : concept
-IntegerCompatible : concept
 IntegerOverflow : exception
 IntegerVector : concept
 IntegralDomain : concept
@@ -546,7 +542,6 @@ SigPartialIsomorphism : class -> EqualityType.ByValue
 Signature : class -> EqualityType.ByValue
 SignatureEncodable : concept
 SignatureType : concept
-SignedCppInteger : concept
 SimpleSurfaceBundle : class -> EqualityType.ByValue
 Simplex2 : class -> EqualityType.ByReference
 Simplex3 : class -> EqualityType.ByReference
@@ -568,7 +563,6 @@ SnapshotWriteError : exception
 SpatialLink : class -> EqualityType.ByValue
 SpiralSolidTorus : class -> EqualityType.ByValue
 SplayedExpression : class -> EqualityType.ByValue
-StandardCppInteger : concept
 StandardSubcomplex3 : class -> EqualityType.NeverInstantiated
 StandardSubcomplex4 : class -> EqualityType.NeverInstantiated
 StandardSubcomplexOptions : documentation
@@ -668,7 +662,6 @@ TxIDiagonalCore : class -> EqualityType.ByValue
 TxIParallelCore : class -> EqualityType.ByValue
 TypeTrie4 : class -> EqualityType.ByValue
 TypeTrie7 : class -> EqualityType.ByValue
-UnsignedCppInteger : concept
 UnsolvedCase : exception
 ValidityConstraints : class -> EqualityType.ByValue
 Vector3D : class -> EqualityType.ByValue

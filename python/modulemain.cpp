@@ -209,7 +209,7 @@ running times.
 
 Returns:
     A tuple giving the elapsed time for each operation, measured in
-    microseconds.  The size of this tuple, as well as the specific
+    microseconds. The size of this tuple, as well as the specific
     operations performed, are subject to change in future versions of
     Regina.)doc");
 
@@ -288,9 +288,15 @@ R"doc(A common base class for all C++ concepts.
 Concepts are a C++ compile-time phenomenon, and they are not functional
 in Python (i.e., you cannot test which types satisfy which concepts).
 
-Nevertheless, they are made available here as empty classes with
-docstrings, which means you can access concept _documentation_ here
-in Python. Try ``help(Ring)`` for an example.)doc");
+Nevertheless, some C++ concepts are made available here as empty
+classes with docstrings, so that you can access the concept
+_documentation_ here in Python. Try ``help(Ring)`` for an example.
+
+Only a selection of concepts are documented here in Python
+(specifically, those that will assist in understanding how to use
+Regina's Python API). You can always read the documentation for _all_
+of Regina's C++ concepts by browsing Regina's C++ API documentation at
+`https://regina-normal.github.io/engine-docs/index.html`.)doc");
 
     // An empty base class to use for all documentation-only classes.
     pybind11::class_<regina::python::DocOnlyBase>(m, "Documentation",
@@ -298,7 +304,7 @@ R"doc(A common base class for all documentation-only classes.
 
 A _documentation-only class_ gives a way for Python users to access
 C++ documentation that would otherwise not be attached to any concrete
-Python class.  For example, within Python, Triangulation is a
+Python class. For example, within Python, Triangulation is a
 documentation-only class that offers generic information about
 triangulations (as opposed to the concrete classes Triangulation2,
 Triangulation3, etc., which provide the real functionality in each
