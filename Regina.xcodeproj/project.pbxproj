@@ -2138,23 +2138,11 @@
 /* Begin PBXFileReference section */
 		050302ED284DAE060050903D /* QtSvgWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvgWidgets.framework; path = ../../Qt/current/macos/lib/QtSvgWidgets.framework; sourceTree = "<group>"; };
 		050302F0284E17D40050903D /* reginaqt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reginaqt.h; sourceTree = "<group>"; };
-		050313BF1812DB06007F0CBE /* TextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewController.h; sourceTree = "<group>"; };
-		050313C01812DB06007F0CBE /* TextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextViewController.mm; sourceTree = "<group>"; };
-		050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultPacketViewController.h; sourceTree = "<group>"; };
-		050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DefaultPacketViewController.mm; sourceTree = "<group>"; };
-		050313C51812DDF0007F0CBE /* PacketViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketViewer.h; sourceTree = "<group>"; };
-		0503DCD219B7D8950085F3CC /* regina-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-64.png"; sourceTree = "<group>"; };
-		0503DCD319B7D8950085F3CC /* regina-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "regina-doc-320.png"; sourceTree = "<group>"; };
-		0503DCD619B7E3AD0085F3CC /* DocumentListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentListController.h; sourceTree = "<group>"; };
-		0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DocumentListController.mm; sourceTree = "<group>"; };
-		0503DCD919B7E4F10085F3CC /* CensusListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CensusListController.h; sourceTree = "<group>"; };
-		0503DCDA19B7E4F10085F3CC /* CensusListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CensusListController.mm; sourceTree = "<group>"; };
 		05048A1F26B274650088C978 /* perm6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm6.h; sourceTree = "<group>"; };
 		05048A2026B274650088C978 /* perm6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm6.cpp; sourceTree = "<group>"; };
 		0504D3582DE59396003453CE /* arrow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = arrow.cpp; sourceTree = "<group>"; };
 		050613562F8DA057009CF16A /* isosig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosig.h; sourceTree = "<group>"; };
 		050613582F8DA075009CF16A /* isosig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = isosig.h; sourceTree = "<group>"; };
-		0506EC1C19F65B43003E455B /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		0507C5A31C54494E00D1C86C /* eltmovedialog4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog4.cpp; sourceTree = "<group>"; };
 		0507C5A41C54494E00D1C86C /* eltmovedialog4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eltmovedialog4.h; sourceTree = "<group>"; };
 		05098A6428EA891E005E4716 /* docstrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = docstrings.h; sourceTree = "<group>"; };
@@ -2333,14 +2321,6 @@
 		05098B6B290018C7005E4716 /* layeredchain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = layeredchain.h; sourceTree = "<group>"; };
 		05098B6D290019DF005E4716 /* example.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		05098B70290019DF005E4716 /* strings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = strings.h; sourceTree = "<group>"; };
-		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
-		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
-		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
-		050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaAlgebra.mm; sourceTree = "<group>"; };
-		050AFC5819DCB9B100835ED6 /* SnapPeaGluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaGluings.h; sourceTree = "<group>"; };
-		050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaGluings.mm; sourceTree = "<group>"; };
-		050AFC5D19DCC68B00835ED6 /* SurfacesCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesCompat.h; sourceTree = "<group>"; };
-		050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesCompat.mm; sourceTree = "<group>"; };
 		050C64651DA1019B00C9420F /* anglestructure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructure.cpp; sourceTree = "<group>"; };
 		050C64661DA1019B00C9420F /* anglestructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anglestructure.h; sourceTree = "<group>"; };
 		050C64671DA1019B00C9420F /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
@@ -2588,11 +2568,8 @@
 		051CBE822DE561370019D73D /* arrow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = arrow.cpp; sourceTree = "<group>"; };
 		051CBE852DE561480019D73D /* arrow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arrow.h; sourceTree = "<group>"; };
 		051CBE862DE561480019D73D /* arrow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = arrow.cpp; sourceTree = "<group>"; };
-		051CEA8B1F98969500971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Hypersurfaces.storyboard; sourceTree = "<group>"; };
-		051CEA951F98995D00971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Link.storyboard; sourceTree = "<group>"; };
 		052121BE2662F50A0041FD89 /* jenkins-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "jenkins-impl.h"; sourceTree = "<group>"; };
 		052121BF2662F50A0041FD89 /* pd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pd-impl.h"; sourceTree = "<group>"; };
-		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		05226DEC27422C81000A45D5 /* hilbertdual.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertdual.cpp; sourceTree = "<group>"; };
 		05226DED27422C81000A45D5 /* hilbertprimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertprimal.cpp; sourceTree = "<group>"; };
 		05226DEE27422C81000A45D5 /* doubledescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = doubledescription.cpp; sourceTree = "<group>"; };
@@ -2602,12 +2579,8 @@
 		052274BF2F73CE8D0054172A /* view.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = view.test; sourceTree = "<group>"; };
 		052274C02F73CEBD0054172A /* aggregator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aggregator.h; sourceTree = "<group>"; };
 		052274C12F73CF140054172A /* compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compat.h; sourceTree = "<group>"; };
-		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
-		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
-		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
-		052774161C55760B00140918 /* NewHypersurfacesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewHypersurfacesController.mm; sourceTree = "<group>"; };
 		052909472AE5EA090028990D /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		052909492AE5EA090028990D /* ReginaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReginaApp.swift; sourceTree = "<group>"; };
 		0529094B2AE5EA090028990D /* ReginaDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReginaDocument.swift; sourceTree = "<group>"; };
@@ -2811,16 +2784,6 @@
 		052F9E7F180600FB00FAE4DF /* xmlutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlutils.cpp; sourceTree = "<group>"; };
 		052F9E80180600FB00FAE4DF /* xmlutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlutils.h; sourceTree = "<group>"; };
 		052FA0C11806072900FAE4DF /* regina-testsuite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "regina-testsuite"; sourceTree = BUILT_PRODUCTS_DIR; };
-		052FA1311806102F00FAE4DF /* Regina-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Regina-Info.plist"; sourceTree = "<group>"; };
-		052FA1331806102F00FAE4DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		052FA1351806102F00FAE4DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		052FA1371806103000FAE4DF /* Regina-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Regina-Prefix.pch"; sourceTree = "<group>"; };
-		052FA1381806103000FAE4DF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		052FA1391806103000FAE4DF /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
-		052FA13C1806103000FAE4DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
-		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
-		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0530FEFF284595580069B227 /* tightencoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tightencoding.h; sourceTree = "<group>"; };
 		05318CA22A84F9F200E89B9D /* org.computop.Regina.desktop */ = {isa = PBXFileReference; lastKnownFileType = text; path = org.computop.Regina.desktop; sourceTree = "<group>"; };
 		05318CA32A84F9F200E89B9D /* org.computop.regina.metainfo.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = org.computop.regina.metainfo.xml; sourceTree = "<group>"; };
@@ -2922,8 +2885,6 @@
 		054208F11DF0DA390018AB24 /* simplesurfacebundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = simplesurfacebundle.cpp; sourceTree = "<group>"; };
 		054208F21DF0DA390018AB24 /* snappeacensusmfd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappeacensusmfd.cpp; sourceTree = "<group>"; };
 		054208F31DF0DA390018AB24 /* torusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = torusbundle.cpp; sourceTree = "<group>"; };
-		054209131DF0E7CE0018AB24 /* NSMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMatcher.h; sourceTree = "<group>"; };
-		054209151DF0E7E60018AB24 /* NSMatcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NSMatcher.mm; sourceTree = "<group>"; };
 		0542091E1DF28C990018AB24 /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
 		0542091F1DF28C990018AB24 /* contextswitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = contextswitch.h; sourceTree = "<group>"; };
 		054209201DF28C990018AB24 /* definitionref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = definitionref.h; sourceTree = "<group>"; };
@@ -2986,10 +2947,6 @@
 		0544BBA72B0D6AD500FF26CD /* LinkPolynomials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkPolynomials.swift; sourceTree = "<group>"; };
 		0544BBA82B0D6AD600FF26CD /* LinkCodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCodes.swift; sourceTree = "<group>"; };
 		0544BBAE2B102DC300FF26CD /* LinkCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCreator.swift; sourceTree = "<group>"; };
-		054535B719D8EA7100BED767 /* TextPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextPopover.h; sourceTree = "<group>"; };
-		054535B819D8EA7100BED767 /* TextPopover.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextPopover.mm; sourceTree = "<group>"; };
-		054535BA19D90C3A00BED767 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
-		054535BB19D90C3A00BED767 /* Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Skeleton.mm; sourceTree = "<group>"; };
 		0545A0112F9ADCE8008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
 		0545A0132F9CB9A6008D3ADB /* bytesequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bytesequence.h; sourceTree = "<group>"; };
 		0545A0142F9CD9A7008D3ADB /* bytesequence.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bytesequence.cpp; sourceTree = "<group>"; };
@@ -3088,10 +3045,6 @@
 		054DF95A28CABC8600EC3D81 /* retriangulate.test */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = retriangulate.test; sourceTree = "<group>"; };
 		054F7DF0278EA2970036B923 /* bool.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = bool.test; sourceTree = "<group>"; };
 		054F7DF1278EA2970036B923 /* bool.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = bool.out; sourceTree = "<group>"; };
-		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
-		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
-		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
-		054F7E2C180B99270090B1F3 /* regina.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = regina.css; sourceTree = "<group>"; };
 		055114C11DCC45FD00EC753C /* example2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example2.cpp; sourceTree = "<group>"; };
 		055114C21DCC45FD00EC753C /* example2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example2.h; sourceTree = "<group>"; };
 		055114C31DCC45FD00EC753C /* example4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example4.cpp; sourceTree = "<group>"; };
@@ -3114,21 +3067,11 @@
 		0553FBB92AF8643D00BE89A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0553FBBD2AF92A3700BE89A7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
-		05583A6019B8041F00076187 /* ReginaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaDocument.h; sourceTree = "<group>"; };
-		05583A6119B8041F00076187 /* ReginaDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaDocument.mm; sourceTree = "<group>"; };
 		055BC3E82653380600E5E34C /* sigutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigutils.h; sourceTree = "<group>"; };
 		055BC3EC265338FC00E5E34C /* pd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pd.cpp; sourceTree = "<group>"; };
 		055CD8F52A23605A0072F4B5 /* topologylock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = topologylock.h; sourceTree = "<group>"; };
 		055CF2B728C817E000CA9034 /* gil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gil.h; sourceTree = "<group>"; };
-		055D6C6519B6F10F0062F001 /* TempFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TempFile.h; sourceTree = "<group>"; };
-		055D6C6619B6F10F0062F001 /* TempFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TempFile.m; sourceTree = "<group>"; };
 		055DDCEE1808575300C973FB /* surfacefiltertype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
-		055FF38019BECF590057462A /* NewTri3Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTri3Controller.h; sourceTree = "<group>"; };
-		055FF38119BECF590057462A /* NewTri3Controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTri3Controller.mm; sourceTree = "<group>"; };
-		055FF38319BFB3C30057462A /* NewPacketPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketPageViewController.h; sourceTree = "<group>"; };
-		055FF38419BFB3C30057462A /* NewPacketPageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketPageViewController.mm; sourceTree = "<group>"; };
-		055FF38619C044FB0057462A /* NewTri2Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTri2Controller.h; sourceTree = "<group>"; };
-		055FF38719C044FB0057462A /* NewTri2Controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTri2Controller.mm; sourceTree = "<group>"; };
 		05617AD51D9D3C5400B1E33B /* regina-python.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = "regina-python.in"; sourceTree = "<group>"; };
 		05617ADD1D9DBFBE00B1E33B /* tricensus */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tricensus; sourceTree = BUILT_PRODUCTS_DIR; };
 		05617AE41D9DC02900B1E33B /* censuslookup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = censuslookup.cpp; sourceTree = "<group>"; };
@@ -3320,7 +3263,6 @@
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		05669D911DCB0E9A00C870C6 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
-		0566DC911F9893E60068ACAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Surfaces.storyboard; sourceTree = "<group>"; };
 		0567B4AC2581ABA20022EA5D /* libgmp.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmp.xcframework; path = ../../Library/Frameworks/libgmp.xcframework; sourceTree = "<group>"; };
 		0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmpxx.xcframework; path = ../../Library/Frameworks/libgmpxx.xcframework; sourceTree = "<group>"; };
 		0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libtokyocabinet.xcframework; path = ../../Library/Frameworks/libtokyocabinet.xcframework; sourceTree = "<group>"; };
@@ -3675,8 +3617,6 @@
 		057EDEF82582370B004F0068 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
 		057EDF1925823779004F0068 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
 		057EE01C2582416B004F0068 /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
-		057F317219B8935800D30520 /* Example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.h; sourceTree = "<group>"; };
-		057F317319B8935800D30520 /* Example.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Example.mm; sourceTree = "<group>"; };
 		057FDAF22EE56488000C706E /* stringutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stringutils.cpp; sourceTree = "<group>"; };
 		057FDAF42EE7ACC3000C706E /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		057FDAF52EE7ACC3000C706E /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
@@ -3698,14 +3638,6 @@
 		0583655F18DB8876008B08D9 /* end_namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = end_namespace.h; sourceTree = "<group>"; };
 		0583656018DB8876008B08D9 /* kernel_namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_namespace.h; sourceTree = "<group>"; };
 		0583656118DB8876008B08D9 /* real_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = real_type.h; sourceTree = "<group>"; };
-		058641EE19D77D820019E056 /* TextHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextHelper.h; sourceTree = "<group>"; };
-		058641EF19D77D820019E056 /* TextHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextHelper.mm; sourceTree = "<group>"; };
-		0586426919D92D550019E056 /* SurfacesMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesMatching.h; sourceTree = "<group>"; };
-		0586426A19D92D550019E056 /* SurfacesMatching.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesMatching.mm; sourceTree = "<group>"; };
-		0586426C19D982CF0019E056 /* SpreadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadHelper.h; sourceTree = "<group>"; };
-		0586426D19D982D00019E056 /* SpreadHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SpreadHelper.mm; sourceTree = "<group>"; };
-		0586426F19DA258E0019E056 /* SurfacesCoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesCoords.h; sourceTree = "<group>"; };
-		0586427019DA258E0019E056 /* SurfacesCoords.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesCoords.mm; sourceTree = "<group>"; };
 		05866B7C2E52AF4C00C74465 /* eltmovedialog2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eltmovedialog2.h; sourceTree = "<group>"; };
 		05866B7D2E52AF4C00C74465 /* eltmovedialog2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = eltmovedialog2.cpp; sourceTree = "<group>"; };
 		05866B802E52CB7900C74465 /* auxtoolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = auxtoolbar.h; sourceTree = "<group>"; };
@@ -3718,45 +3650,11 @@
 		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		0589B32E2E00432E007A8F64 /* basic_alltypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = basic_alltypes.cpp; sourceTree = "<group>"; };
-		0589FAC1181484860064CD57 /* Tri3Gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Gluings.h; sourceTree = "<group>"; };
-		0589FAC2181484860064CD57 /* Tri3Gluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Gluings.mm; sourceTree = "<group>"; };
-		0589FACA1814BECF0064CD57 /* PacketListenerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketListenerIOS.h; sourceTree = "<group>"; };
-		0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketListenerIOS.mm; sourceTree = "<group>"; };
 		058C305E1DCAF6F8006162D2 /* forward.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = forward.h; sourceTree = "<group>"; };
 		058E398C1DCBC67C00D463A4 /* generic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generic.h; sourceTree = "<group>"; };
 		058F804D29DA160A00110CF5 /* triangulation-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "triangulation-impl.h"; sourceTree = "<group>"; };
-		058FADA319D388920001B5B5 /* Tri2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri2ViewController.h; sourceTree = "<group>"; };
-		058FADA419D388920001B5B5 /* Tri2ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri2ViewController.mm; sourceTree = "<group>"; };
-		058FADA519D388920001B5B5 /* SurfacesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesViewController.h; sourceTree = "<group>"; };
-		058FADA619D388920001B5B5 /* SurfacesViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesViewController.mm; sourceTree = "<group>"; };
-		058FADA919D38BFC0001B5B5 /* SnapPeaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaViewController.h; sourceTree = "<group>"; };
-		058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaViewController.mm; sourceTree = "<group>"; };
-		058FADAC19D3C3640001B5B5 /* Tri2Gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri2Gluings.h; sourceTree = "<group>"; };
-		058FADAD19D3C3640001B5B5 /* Tri2Gluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri2Gluings.mm; sourceTree = "<group>"; };
-		058FADAF19D3C37D0001B5B5 /* Tri2Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri2Skeleton.h; sourceTree = "<group>"; };
-		058FADB019D3C37D0001B5B5 /* Tri2Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri2Skeleton.mm; sourceTree = "<group>"; };
-		058FADB219D506160001B5B5 /* Tri3Algebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Algebra.h; sourceTree = "<group>"; };
-		058FADB319D506160001B5B5 /* Tri3Algebra.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Algebra.mm; sourceTree = "<group>"; };
-		058FADB419D506160001B5B5 /* Tri3Composition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Composition.h; sourceTree = "<group>"; };
-		058FADB519D506160001B5B5 /* Tri3Composition.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Composition.mm; sourceTree = "<group>"; };
-		058FADB619D506160001B5B5 /* Tri3Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Skeleton.h; sourceTree = "<group>"; };
-		058FADB719D506160001B5B5 /* Tri3Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Skeleton.mm; sourceTree = "<group>"; };
-		058FADB819D506160001B5B5 /* Tri3SnapPea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3SnapPea.h; sourceTree = "<group>"; };
-		058FADB919D506160001B5B5 /* Tri3SnapPea.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3SnapPea.mm; sourceTree = "<group>"; };
-		058FADC119D508070001B5B5 /* SurfacesSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesSummary.h; sourceTree = "<group>"; };
-		058FADC219D508070001B5B5 /* SurfacesSummary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesSummary.mm; sourceTree = "<group>"; };
-		058FADC419D50C5D0001B5B5 /* Coordinates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Coordinates.h; sourceTree = "<group>"; };
-		058FADC519D50DA10001B5B5 /* Coordinates.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Coordinates.mm; sourceTree = "<group>"; };
 		058FC8651FE18826006D04B4 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
 		058FC8721FE188A0006D04B4 /* retriangulate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = retriangulate; sourceTree = BUILT_PRODUCTS_DIR; };
-		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
-		059101191813230A000A8D16 /* NewPacketMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketMenu.h; sourceTree = "<group>"; };
-		0591011A1813230A000A8D16 /* NewPacketMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketMenu.mm; sourceTree = "<group>"; };
-		0591011C181364BB000A8D16 /* NewSurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSurfacesController.h; sourceTree = "<group>"; };
-		0591011D181364BB000A8D16 /* NewSurfacesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewSurfacesController.mm; sourceTree = "<group>"; };
-		0591011F18141996000A8D16 /* NewPacketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketController.h; sourceTree = "<group>"; };
-		0591012018141996000A8D16 /* NewPacketController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketController.mm; sourceTree = "<group>"; };
 		0591E7CA1C4F750200793A9C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0591E7CD1C4F750200793A9C /* hypercoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercoords.h; sourceTree = "<group>"; };
 		0591E7CE1C4F750200793A9C /* links.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links.cpp; sourceTree = "<group>"; };
@@ -3810,31 +3708,8 @@
 		0591FB462E5C39EC0061D270 /* diaginit.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = diaginit.pdf; sourceTree = "<group>"; };
 		0591FB472E5C39EC0061D270 /* parallel.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = parallel.pdf; sourceTree = "<group>"; };
 		0591FB482E5C39EC0061D270 /* reflector.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = reflector.pdf; sourceTree = "<group>"; };
-		05937A9819CEC20900160F9A /* AngleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AngleViewController.h; sourceTree = "<group>"; };
-		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AngleViewController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		05937A9D19CECF4300160F9A /* MDSpreadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadView.h; sourceTree = "<group>"; };
-		05937A9E19CECF4300160F9A /* MDSpreadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadView.m; sourceTree = "<group>"; };
-		05937A9F19CECF4300160F9A /* MDSpreadViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCell.h; sourceTree = "<group>"; };
-		05937AA019CECF4300160F9A /* MDSpreadViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCell.m; sourceTree = "<group>"; };
-		05937AA119CECF4300160F9A /* MDSpreadViewCellBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCellBackground.h; sourceTree = "<group>"; };
-		05937AA219CECF4300160F9A /* MDSpreadViewCellBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCellBackground.m; sourceTree = "<group>"; };
-		05937AA319CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCellColumnHeaderBackground.h; sourceTree = "<group>"; };
-		05937AA419CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCellColumnHeaderBackground.m; sourceTree = "<group>"; };
-		05937AA519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCellCornerHeaderBackground.h; sourceTree = "<group>"; };
-		05937AA619CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCellCornerHeaderBackground.m; sourceTree = "<group>"; };
-		05937AA719CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCellRowHeaderBackground.h; sourceTree = "<group>"; };
-		05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewCellRowHeaderBackground.m; sourceTree = "<group>"; };
-		05937AA919CECF4300160F9A /* MDSpreadViewClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewClasses.h; sourceTree = "<group>"; };
-		05937AAA19CECF4300160F9A /* MDSpreadViewHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewHeaderCell.h; sourceTree = "<group>"; };
-		05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadViewHeaderCell.m; sourceTree = "<group>"; };
-		05937B2119CF819C00160F9A /* PacketTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTabBarController.h; sourceTree = "<group>"; };
-		05937B2219CF819C00160F9A /* PacketTabBarController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTabBarController.mm; sourceTree = "<group>"; };
 		05941EF7272A9E3500562586 /* elidedlabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = elidedlabel.cpp; sourceTree = "<group>"; };
 		05941EF8272A9E3500562586 /* elidedlabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elidedlabel.h; sourceTree = "<group>"; };
-		059474E51F98151700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SnapPea.storyboard; sourceTree = "<group>"; };
-		059474EF1F981E5700F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri2.storyboard; sourceTree = "<group>"; };
-		059474F21F981F0300F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri3.storyboard; sourceTree = "<group>"; };
-		059474F51F981F1800F04273 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Tri4.storyboard; sourceTree = "<group>"; };
 		059493042920B1C200940F0D /* permgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = permgroup.cpp; sourceTree = "<group>"; };
 		059493052920B1C300940F0D /* permgroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = permgroup.h; sourceTree = "<group>"; };
 		059493062920B1C300940F0D /* perm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = perm.cpp; sourceTree = "<group>"; };
@@ -3879,8 +3754,6 @@
 		059802DA26683C6D002D5D57 /* xmlsurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlsurfacereader.h; sourceTree = "<group>"; };
 		059802DB26683C6D002D5D57 /* xmlalgebrareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlalgebrareader.cpp; sourceTree = "<group>"; };
 		0598030A266EDDD5002D5D57 /* exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exception.h; sourceTree = "<group>"; };
-		0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonConsoleController.h; sourceTree = "<group>"; };
-		0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonConsoleController.mm; sourceTree = "<group>"; };
 		05998ECB19F9360200855238 /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05998ECC19F9360200855238 /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05998ECD19F9360200855238 /* closed-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census.rga"; sourceTree = "<group>"; };
@@ -4060,7 +3933,6 @@
 		05B4D2D3229F42D600B7B11C /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05B4D2D4229F42D600B7B11C /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		05B4D2D5229F42D700B7B11C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B7001725AC2304003BAF5C /* nmz_nauty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmz_nauty.h; sourceTree = "<group>"; };
 		05B7001825AC2304003BAF5C /* dynamic_bitset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dynamic_bitset.h; sourceTree = "<group>"; };
 		05B7001925AC2304003BAF5C /* options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
@@ -4070,10 +3942,6 @@
 		05B7001E25AC2305003BAF5C /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input.h; sourceTree = "<group>"; };
 		05B7001F25AC2305003BAF5C /* input_type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_type.h; sourceTree = "<group>"; };
 		05B7002025AC2305003BAF5C /* automorph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = automorph.h; sourceTree = "<group>"; };
-		05B7708219C92A5000E2E558 /* ScriptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptViewController.h; sourceTree = "<group>"; };
-		05B7708319C92A5000E2E558 /* ScriptViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScriptViewController.mm; sourceTree = "<group>"; };
-		05B7708519CA4FF100E2E558 /* FilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterViewController.h; sourceTree = "<group>"; };
-		05B7708619CA4FF100E2E558 /* FilterViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FilterViewController.mm; sourceTree = "<group>"; };
 		05B7FF8125AC22A9003BAF5C /* automorph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = automorph.cpp; sourceTree = "<group>"; };
 		05B7FF8225AC22A9003BAF5C /* options.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = options.cpp; sourceTree = "<group>"; };
 		05B7FF8325AC22A9003BAF5C /* collection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = collection.cpp; sourceTree = "<group>"; };
@@ -4099,38 +3967,8 @@
 		05BDA5772CB662ED006F4738 /* comparison.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = comparison.test; sourceTree = "<group>"; };
 		05BDA5822CB6648D006F4738 /* spatiallinkui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spatiallinkui.h; sourceTree = "<group>"; };
 		05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallinkui.cpp; sourceTree = "<group>"; };
-		05BEB0BF19CCE0B0006AB2C8 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Toast.h"; path = "Toast/UIView+Toast.h"; sourceTree = "<group>"; };
-		05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Toast.m"; path = "Toast/UIView+Toast.m"; sourceTree = "<group>"; };
 		05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
 		05BF6FD12DB0116A0093D7A2 /* alexander.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = alexander.cpp; sourceTree = "<group>"; };
-		05C0643D1C55921E006E6483 /* HyperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperViewController.h; sourceTree = "<group>"; };
-		05C0643E1C55921E006E6483 /* HyperViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperViewController.mm; sourceTree = "<group>"; };
-		05C064421C55925B006E6483 /* HyperCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperCompat.h; sourceTree = "<group>"; };
-		05C064431C55925B006E6483 /* HyperCoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperCoords.h; sourceTree = "<group>"; };
-		05C064441C55925B006E6483 /* HyperMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperMatching.h; sourceTree = "<group>"; };
-		05C064451C55925B006E6483 /* HyperSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperSummary.h; sourceTree = "<group>"; };
-		05C0644A1C55A2E4006E6483 /* HyperMatching.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperMatching.mm; sourceTree = "<group>"; };
-		05C0644D1C55A5BE006E6483 /* HyperCompat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperCompat.mm; sourceTree = "<group>"; };
-		05C064501C55C560006E6483 /* HyperCoords.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperCoords.mm; sourceTree = "<group>"; };
-		05C064531C55C80B006E6483 /* HyperSummary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperSummary.mm; sourceTree = "<group>"; };
-		05C064561C56B1E9006E6483 /* Tri4ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri4ViewController.h; sourceTree = "<group>"; };
-		05C064571C56B1E9006E6483 /* Tri4ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri4ViewController.mm; sourceTree = "<group>"; };
-		05C064581C56B1E9006E6483 /* Tri4Gluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri4Gluings.h; sourceTree = "<group>"; };
-		05C064591C56B1E9006E6483 /* Tri4Gluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri4Gluings.mm; sourceTree = "<group>"; };
-		05C064601C56BC4A006E6483 /* EltMoves4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMoves4.h; sourceTree = "<group>"; };
-		05C064611C56BC4A006E6483 /* EltMoves4.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMoves4.mm; sourceTree = "<group>"; };
-		05C064641C56C130006E6483 /* Tri4Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri4Graph.h; sourceTree = "<group>"; };
-		05C064651C56C130006E6483 /* Tri4Graph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri4Graph.mm; sourceTree = "<group>"; };
-		05C0646A1C56C9D0006E6483 /* Tri4Algebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri4Algebra.h; sourceTree = "<group>"; };
-		05C0646B1C56C9D0006E6483 /* Tri4Algebra.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri4Algebra.mm; sourceTree = "<group>"; };
-		05C0646F1C56E456006E6483 /* Tri4Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri4Skeleton.h; sourceTree = "<group>"; };
-		05C064701C56E456006E6483 /* Tri4Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri4Skeleton.mm; sourceTree = "<group>"; };
-		05C064741C585619006E6483 /* GenericTriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericTriangulationViewController.h; sourceTree = "<group>"; };
-		05C064751C585619006E6483 /* GenericTriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GenericTriangulationViewController.mm; sourceTree = "<group>"; };
-		05C0DB081F9969CE001773C3 /* LinkGraph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkGraph.mm; sourceTree = "<group>"; };
-		05C0DB091F9969D0001773C3 /* LinkViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkViewController.mm; sourceTree = "<group>"; };
-		05C0DB0A1F9969D2001773C3 /* LinkGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkGraph.h; sourceTree = "<group>"; };
-		05C0DB0B1F9969D2001773C3 /* LinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkViewController.h; sourceTree = "<group>"; };
 		05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "boundarycomponent-impl.h"; sourceTree = "<group>"; };
 		05C1BE971DCA7C77007C946B /* skeleton-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "skeleton-impl.h"; sourceTree = "<group>"; };
 		05C1BE9B1DCA7CA9007C946B /* boundary2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundary2.cpp; sourceTree = "<group>"; };
@@ -4250,22 +4088,8 @@
 		05CAE6A4274B94C9007C93F3 /* snappea.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = snappea.test; sourceTree = "<group>"; };
 		05CAE6A7274E1E6C007C93F3 /* exception.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = exception.test; sourceTree = "<group>"; };
 		05CAE6A8274E1E6C007C93F3 /* exception.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = exception.out; sourceTree = "<group>"; };
-		05CB9FEC1F9AD7C6002ECB18 /* LinkCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkCodes.h; sourceTree = "<group>"; };
-		05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkCodes.mm; sourceTree = "<group>"; };
-		05CB9FF11F9B8905002ECB18 /* LinkCrossings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkCrossings.mm; sourceTree = "<group>"; };
-		05CB9FF21F9B8907002ECB18 /* LinkCrossings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkCrossings.h; sourceTree = "<group>"; };
-		05CB9FF61F9E9FD8002ECB18 /* LinkMoves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkMoves.h; sourceTree = "<group>"; };
-		05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkMoves.mm; sourceTree = "<group>"; };
 		05CBE6EC273B6504009F0674 /* validityconstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = validityconstraints.h; sourceTree = "<group>"; };
 		05D046E62599F58A00FA2B3E /* plainCompleter.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = plainCompleter.py; path = regina/plainCompleter.py; sourceTree = "<group>"; };
-		05D0A10E1812F0BE005ED097 /* Tri3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3ViewController.h; sourceTree = "<group>"; };
-		05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3ViewController.mm; sourceTree = "<group>"; };
-		05D1172719EDF43F003BEC55 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
-		05D1172819EDF43F003BEC55 /* WelcomeViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WelcomeViewController.mm; sourceTree = "<group>"; };
-		05D1C16D19C6542700CF92F2 /* ReginaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaHelper.h; sourceTree = "<group>"; };
-		05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaHelper.mm; sourceTree = "<group>"; };
-		05D1C17019C7F95100CF92F2 /* EditableTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTableViewController.h; sourceTree = "<group>"; };
-		05D1C17119C7F95100CF92F2 /* EditableTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EditableTableViewController.mm; sourceTree = "<group>"; };
 		05D322BF1F9FE72000E5F9B8 /* linkui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkui.h; sourceTree = "<group>"; };
 		05D322C01F9FE72100E5F9B8 /* linkui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkui.cpp; sourceTree = "<group>"; };
 		05D322C51F9FED7500E5F9B8 /* linkcrossings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkcrossings.h; sourceTree = "<group>"; };
@@ -4278,8 +4102,6 @@
 		05D322D91FA1EC1400E5F9B8 /* linkcodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkcodes.cpp; sourceTree = "<group>"; };
 		05D322E01FA923ED00E5F9B8 /* linkmovedialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkmovedialog.h; sourceTree = "<group>"; };
 		05D322E11FA923F000E5F9B8 /* linkmovedialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkmovedialog.cpp; sourceTree = "<group>"; };
-		05D6CFA21A01D0A60039150F /* Tri3Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Graph.h; sourceTree = "<group>"; };
-		05D6CFA31A01D0A60039150F /* Tri3Graph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Graph.mm; sourceTree = "<group>"; };
 		05D81A8B1C66B0E500DDCE64 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05DA38892E01101E00BA5452 /* class.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = class.h; sourceTree = "<group>"; };
 		05DA388A2E01101E00BA5452 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
@@ -4633,8 +4455,6 @@
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
 		05E7DA3B2766D42600B01C09 /* repr.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.test; sourceTree = "<group>"; };
-		05EA195519F30A0100D37501 /* EltMoves3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMoves3.h; sourceTree = "<group>"; };
-		05EA195619F30A0100D37501 /* EltMoves3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMoves3.mm; sourceTree = "<group>"; };
 		05EDDA4727E3102A001743C1 /* chunk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = chunk.cpp; sourceTree = "<group>"; };
 		05EDDA4827E3102A001743C1 /* signed_dec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = signed_dec.cpp; sourceTree = "<group>"; };
 		05EDDA4927E3102A001743C1 /* signed_dec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = signed_dec.h; sourceTree = "<group>"; };
@@ -4681,25 +4501,7 @@
 		05F2033120A17C1E00FC74ED /* dt-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dt-impl.h"; sourceTree = "<group>"; };
 		05F2033220A17C1E00FC74ED /* dt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dt.cpp; sourceTree = "<group>"; };
 		05F2033620A17C6000FC74ED /* knot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = knot.cpp; sourceTree = "<group>"; };
-		05F232751F9AB2A000101A9E /* LinkPolynomials.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkPolynomials.mm; sourceTree = "<group>"; };
-		05F232771F9AB2A900101A9E /* LinkPolynomials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkPolynomials.h; sourceTree = "<group>"; };
-		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
-		05F23E0E19C08834005B53B5 /* snappea-doc-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-320.png"; sourceTree = "<group>"; };
-		05F23E1119C1305A005B53B5 /* NewAnglesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewAnglesController.h; sourceTree = "<group>"; };
-		05F23E1219C1305A005B53B5 /* NewAnglesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewAnglesController.mm; sourceTree = "<group>"; };
-		05F23E1419C13432005B53B5 /* NewFilterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewFilterController.h; sourceTree = "<group>"; };
-		05F23E1519C13432005B53B5 /* NewFilterController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewFilterController.mm; sourceTree = "<group>"; };
-		05F23E1719C1418A005B53B5 /* NewSnapPeaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSnapPeaController.h; sourceTree = "<group>"; };
-		05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewSnapPeaController.mm; sourceTree = "<group>"; };
 		05F3DABD2A5CE3B3007A2CE2 /* integer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = integer.cpp; sourceTree = "<group>"; };
-		05F6D3B51C52CB9B007307F0 /* NewTri4Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTri4Controller.h; sourceTree = "<group>"; };
-		05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTri4Controller.mm; sourceTree = "<group>"; };
-		05F9561119B53E7900377BEC /* Tri3Recognition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Recognition.h; sourceTree = "<group>"; };
-		05F9561219B53E7900377BEC /* Tri3Recognition.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Recognition.mm; sourceTree = "<group>"; };
-		05F96C111809F59600C99F96 /* PacketTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTreeController.h; sourceTree = "<group>"; };
-		05F96C121809F59600C99F96 /* PacketTreeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTreeController.mm; sourceTree = "<group>"; };
-		05F96C15180A153A00C99F96 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = MBProgressHUD/MBProgressHUD.h; sourceTree = "<group>"; };
-		05F96C16180A153A00C99F96 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = MBProgressHUD/MBProgressHUD.m; sourceTree = "<group>"; };
 		05FB46CA1DD92D2400BB00E5 /* abeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = abeliangroup.cpp; sourceTree = "<group>"; };
 		05FB46CB1DD92D2400BB00E5 /* grouppresentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = grouppresentation.cpp; sourceTree = "<group>"; };
 		05FB46CC1DD92D2400BB00E5 /* homgrouppresentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homgrouppresentation.cpp; sourceTree = "<group>"; };
@@ -4715,8 +4517,6 @@
 		05FBF8392E77C12900E346AA /* Reverse.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = Reverse.icon; sourceTree = "<group>"; };
 		05FBF83E2E77C51D00E346AA /* Classic.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = Classic.icon; sourceTree = "<group>"; };
 		05FBF8452E784F4200E346AA /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		05FC5CF81F98060D00F732E0 /* NewLinkController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewLinkController.mm; sourceTree = "<group>"; };
-		05FC5CF91F98061000F732E0 /* NewLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLinkController.h; sourceTree = "<group>"; };
 		05FCAE9B2F90E7F100AF810D /* linksig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = linksig.cpp; sourceTree = "<group>"; };
 		05FCAE9E2F90E89900AF810D /* linksig.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = linksig.cpp; sourceTree = "<group>"; };
 		05FE04F82DB7F6C8001432AC /* plantri.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = plantri.cpp; sourceTree = "<group>"; };
@@ -4725,10 +4525,6 @@
 		05FE05002DC39ECE001432AC /* group.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = group.cpp; sourceTree = "<group>"; };
 		05FEA07819C1890900A31924 /* examplesnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplesnappea.cpp; sourceTree = "<group>"; };
 		05FEA07919C1890900A31924 /* examplesnappea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = examplesnappea.h; sourceTree = "<group>"; };
-		05FEA07D19C2B96000A31924 /* PacketPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketPicker.h; sourceTree = "<group>"; };
-		05FEA07E19C2B96000A31924 /* PacketPicker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketPicker.mm; sourceTree = "<group>"; };
-		05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyntaxHighlighter.h; sourceTree = "<group>"; };
-		05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SyntaxHighlighter.mm; sourceTree = "<group>"; };
 		05FF74E31DCB12F700FC2CB4 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -4938,123 +4734,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		050313BE1812DAC0007F0CBE /* packets */ = {
-			isa = PBXGroup;
-			children = (
-				05937A9819CEC20900160F9A /* AngleViewController.h */,
-				05937A9919CEC20900160F9A /* AngleViewController.mm */,
-				058FADC419D50C5D0001B5B5 /* Coordinates.h */,
-				058FADC519D50DA10001B5B5 /* Coordinates.mm */,
-				050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */,
-				050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */,
-				05EA195519F30A0100D37501 /* EltMoves3.h */,
-				05EA195619F30A0100D37501 /* EltMoves3.mm */,
-				05C064601C56BC4A006E6483 /* EltMoves4.h */,
-				05C064611C56BC4A006E6483 /* EltMoves4.mm */,
-				05B7708519CA4FF100E2E558 /* FilterViewController.h */,
-				05B7708619CA4FF100E2E558 /* FilterViewController.mm */,
-				05C064741C585619006E6483 /* GenericTriangulationViewController.h */,
-				05C064751C585619006E6483 /* GenericTriangulationViewController.mm */,
-				05C064421C55925B006E6483 /* HyperCompat.h */,
-				05C0644D1C55A5BE006E6483 /* HyperCompat.mm */,
-				05C064431C55925B006E6483 /* HyperCoords.h */,
-				05C064501C55C560006E6483 /* HyperCoords.mm */,
-				05C064441C55925B006E6483 /* HyperMatching.h */,
-				05C0644A1C55A2E4006E6483 /* HyperMatching.mm */,
-				05C064451C55925B006E6483 /* HyperSummary.h */,
-				05C064531C55C80B006E6483 /* HyperSummary.mm */,
-				05C0643D1C55921E006E6483 /* HyperViewController.h */,
-				05C0643E1C55921E006E6483 /* HyperViewController.mm */,
-				05CB9FEC1F9AD7C6002ECB18 /* LinkCodes.h */,
-				05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */,
-				05CB9FF21F9B8907002ECB18 /* LinkCrossings.h */,
-				05CB9FF11F9B8905002ECB18 /* LinkCrossings.mm */,
-				05C0DB0A1F9969D2001773C3 /* LinkGraph.h */,
-				05C0DB081F9969CE001773C3 /* LinkGraph.mm */,
-				05CB9FF61F9E9FD8002ECB18 /* LinkMoves.h */,
-				05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */,
-				05F232771F9AB2A900101A9E /* LinkPolynomials.h */,
-				05F232751F9AB2A000101A9E /* LinkPolynomials.mm */,
-				05C0DB0B1F9969D2001773C3 /* LinkViewController.h */,
-				05C0DB091F9969D0001773C3 /* LinkViewController.mm */,
-				05F23E1119C1305A005B53B5 /* NewAnglesController.h */,
-				05F23E1219C1305A005B53B5 /* NewAnglesController.mm */,
-				05F23E1419C13432005B53B5 /* NewFilterController.h */,
-				05F23E1519C13432005B53B5 /* NewFilterController.mm */,
-				05FC5CF91F98061000F732E0 /* NewLinkController.h */,
-				05FC5CF81F98060D00F732E0 /* NewLinkController.mm */,
-				052774151C55760B00140918 /* NewHypersurfacesController.h */,
-				052774161C55760B00140918 /* NewHypersurfacesController.mm */,
-				05F23E1719C1418A005B53B5 /* NewSnapPeaController.h */,
-				05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */,
-				0591011C181364BB000A8D16 /* NewSurfacesController.h */,
-				0591011D181364BB000A8D16 /* NewSurfacesController.mm */,
-				055FF38619C044FB0057462A /* NewTri2Controller.h */,
-				055FF38719C044FB0057462A /* NewTri2Controller.mm */,
-				055FF38019BECF590057462A /* NewTri3Controller.h */,
-				055FF38119BECF590057462A /* NewTri3Controller.mm */,
-				05F6D3B51C52CB9B007307F0 /* NewTri4Controller.h */,
-				05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */,
-				05B7708219C92A5000E2E558 /* ScriptViewController.h */,
-				05B7708319C92A5000E2E558 /* ScriptViewController.mm */,
-				054535BA19D90C3A00BED767 /* Skeleton.h */,
-				054535BB19D90C3A00BED767 /* Skeleton.mm */,
-				058FADA919D38BFC0001B5B5 /* SnapPeaViewController.h */,
-				058FADAA19D38BFC0001B5B5 /* SnapPeaViewController.mm */,
-				050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */,
-				050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */,
-				050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */,
-				050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */,
-				050AFC5819DCB9B100835ED6 /* SnapPeaGluings.h */,
-				050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */,
-				058FADA519D388920001B5B5 /* SurfacesViewController.h */,
-				058FADA619D388920001B5B5 /* SurfacesViewController.mm */,
-				050AFC5D19DCC68B00835ED6 /* SurfacesCompat.h */,
-				050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */,
-				0586426F19DA258E0019E056 /* SurfacesCoords.h */,
-				0586427019DA258E0019E056 /* SurfacesCoords.mm */,
-				0586426919D92D550019E056 /* SurfacesMatching.h */,
-				0586426A19D92D550019E056 /* SurfacesMatching.mm */,
-				058FADC119D508070001B5B5 /* SurfacesSummary.h */,
-				058FADC219D508070001B5B5 /* SurfacesSummary.mm */,
-				050313BF1812DB06007F0CBE /* TextViewController.h */,
-				050313C01812DB06007F0CBE /* TextViewController.mm */,
-				058FADAC19D3C3640001B5B5 /* Tri2Gluings.h */,
-				058FADAD19D3C3640001B5B5 /* Tri2Gluings.mm */,
-				058FADAF19D3C37D0001B5B5 /* Tri2Skeleton.h */,
-				058FADB019D3C37D0001B5B5 /* Tri2Skeleton.mm */,
-				058FADA319D388920001B5B5 /* Tri2ViewController.h */,
-				058FADA419D388920001B5B5 /* Tri2ViewController.mm */,
-				058FADB219D506160001B5B5 /* Tri3Algebra.h */,
-				058FADB319D506160001B5B5 /* Tri3Algebra.mm */,
-				058FADB419D506160001B5B5 /* Tri3Composition.h */,
-				058FADB519D506160001B5B5 /* Tri3Composition.mm */,
-				0589FAC1181484860064CD57 /* Tri3Gluings.h */,
-				0589FAC2181484860064CD57 /* Tri3Gluings.mm */,
-				05D6CFA21A01D0A60039150F /* Tri3Graph.h */,
-				05D6CFA31A01D0A60039150F /* Tri3Graph.mm */,
-				05F9561119B53E7900377BEC /* Tri3Recognition.h */,
-				05F9561219B53E7900377BEC /* Tri3Recognition.mm */,
-				058FADB619D506160001B5B5 /* Tri3Skeleton.h */,
-				058FADB719D506160001B5B5 /* Tri3Skeleton.mm */,
-				058FADB819D506160001B5B5 /* Tri3SnapPea.h */,
-				058FADB919D506160001B5B5 /* Tri3SnapPea.mm */,
-				05D0A10E1812F0BE005ED097 /* Tri3ViewController.h */,
-				05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */,
-				05C0646A1C56C9D0006E6483 /* Tri4Algebra.h */,
-				05C0646B1C56C9D0006E6483 /* Tri4Algebra.mm */,
-				05C064581C56B1E9006E6483 /* Tri4Gluings.h */,
-				05C064591C56B1E9006E6483 /* Tri4Gluings.mm */,
-				05C064641C56C130006E6483 /* Tri4Graph.h */,
-				05C064651C56C130006E6483 /* Tri4Graph.mm */,
-				05C0646F1C56E456006E6483 /* Tri4Skeleton.h */,
-				05C064701C56E456006E6483 /* Tri4Skeleton.mm */,
-				05C064561C56B1E9006E6483 /* Tri4ViewController.h */,
-				05C064571C56B1E9006E6483 /* Tri4ViewController.mm */,
-			);
-			path = packets;
-			sourceTree = "<group>";
-		};
 		05098A6B28F24D98005E4716 /* docstrings */ = {
 			isa = PBXGroup;
 			children = (
@@ -6135,19 +5814,6 @@
 			path = Support;
 			sourceTree = "<group>";
 		};
-		05249E991DBB508E001FE29E /* python */ = {
-			isa = PBXGroup;
-			children = (
-				054209131DF0E7CE0018AB24 /* NSMatcher.h */,
-				054209151DF0E7E60018AB24 /* NSMatcher.mm */,
-				0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */,
-				0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */,
-				05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */,
-				05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */,
-			);
-			path = python;
-			sourceTree = "<group>";
-		};
 		052909482AE5EA090028990D /* swiftui */ = {
 			isa = PBXGroup;
 			children = (
@@ -6833,84 +6499,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		052FA12F1806102F00FAE4DF /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				059474E71F98181700F04273 /* Storyboards */,
-				052FA1381806103000FAE4DF /* AppDelegate.h */,
-				052FA1391806103000FAE4DF /* AppDelegate.mm */,
-				0503DCD919B7E4F10085F3CC /* CensusListController.h */,
-				0503DCDA19B7E4F10085F3CC /* CensusListController.mm */,
-				059101131812F349000A8D16 /* DetailViewController.h */,
-				059101141812F349000A8D16 /* DetailViewController.mm */,
-				0503DCD619B7E3AD0085F3CC /* DocumentListController.h */,
-				0503DCD719B7E3AD0085F3CC /* DocumentListController.mm */,
-				05D1C17019C7F95100CF92F2 /* EditableTableViewController.h */,
-				05D1C17119C7F95100CF92F2 /* EditableTableViewController.mm */,
-				057F317219B8935800D30520 /* Example.h */,
-				057F317319B8935800D30520 /* Example.mm */,
-				052FA13E1806103000FAE4DF /* MasterViewController.h */,
-				052FA13F1806103000FAE4DF /* MasterViewController.mm */,
-				0591011F18141996000A8D16 /* NewPacketController.h */,
-				0591012018141996000A8D16 /* NewPacketController.mm */,
-				059101191813230A000A8D16 /* NewPacketMenu.h */,
-				0591011A1813230A000A8D16 /* NewPacketMenu.mm */,
-				055FF38319BFB3C30057462A /* NewPacketPageViewController.h */,
-				055FF38419BFB3C30057462A /* NewPacketPageViewController.mm */,
-				0589FACA1814BECF0064CD57 /* PacketListenerIOS.h */,
-				0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */,
-				0523D888180B54850094DAAD /* PacketManagerIOS.h */,
-				0523D889180B54850094DAAD /* PacketManagerIOS.mm */,
-				05FEA07D19C2B96000A31924 /* PacketPicker.h */,
-				05FEA07E19C2B96000A31924 /* PacketPicker.mm */,
-				05937B2119CF819C00160F9A /* PacketTabBarController.h */,
-				05937B2219CF819C00160F9A /* PacketTabBarController.mm */,
-				05F96C111809F59600C99F96 /* PacketTreeController.h */,
-				05F96C121809F59600C99F96 /* PacketTreeController.mm */,
-				050313C51812DDF0007F0CBE /* PacketViewer.h */,
-				05583A6019B8041F00076187 /* ReginaDocument.h */,
-				05583A6119B8041F00076187 /* ReginaDocument.mm */,
-				05D1C16D19C6542700CF92F2 /* ReginaHelper.h */,
-				05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */,
-				0586426C19D982CF0019E056 /* SpreadHelper.h */,
-				0586426D19D982D00019E056 /* SpreadHelper.mm */,
-				055D6C6519B6F10F0062F001 /* TempFile.h */,
-				055D6C6619B6F10F0062F001 /* TempFile.m */,
-				058641EE19D77D820019E056 /* TextHelper.h */,
-				058641EF19D77D820019E056 /* TextHelper.mm */,
-				054535B719D8EA7100BED767 /* TextPopover.h */,
-				054535B819D8EA7100BED767 /* TextPopover.mm */,
-				054F7E27180B93770090B1F3 /* WelcomePopupController.h */,
-				054F7E28180B93770090B1F3 /* WelcomePopupController.m */,
-				05D1172719EDF43F003BEC55 /* WelcomeViewController.h */,
-				05D1172819EDF43F003BEC55 /* WelcomeViewController.mm */,
-				050313BE1812DAC0007F0CBE /* packets */,
-				05249E991DBB508E001FE29E /* python */,
-				052FA1441806103000FAE4DF /* Images.xcassets */,
-				052FA1301806102F00FAE4DF /* Supporting Files */,
-				054F7E2E180B99320090B1F3 /* HTML */,
-				05F96C14180A14E600C99F96 /* MBProgressHUD */,
-				05937A9B19CECF4300160F9A /* MDSpreadView */,
-				05BEB0C219CCE0BB006AB2C8 /* Toast */,
-			);
-			path = ios;
-			sourceTree = "<group>";
-		};
-		052FA1301806102F00FAE4DF /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				052FA1311806102F00FAE4DF /* Regina-Info.plist */,
-				0503DCD219B7D8950085F3CC /* regina-doc-64.png */,
-				0503DCD319B7D8950085F3CC /* regina-doc-320.png */,
-				05F23E0D19C08834005B53B5 /* snappea-doc-64.png */,
-				05F23E0E19C08834005B53B5 /* snappea-doc-320.png */,
-				052FA1321806102F00FAE4DF /* InfoPlist.strings */,
-				052FA1351806102F00FAE4DF /* main.m */,
-				052FA1371806103000FAE4DF /* Regina-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		053CAB261DA7108F00A92F98 /* spec */ = {
 			isa = PBXGroup;
 			children = (
@@ -7120,16 +6708,6 @@
 				052274BD2F7367730054172A /* view.h */,
 			);
 			path = helpers;
-			sourceTree = "<group>";
-		};
-		054F7E2E180B99320090B1F3 /* HTML */ = {
-			isa = PBXGroup;
-			children = (
-				054F7E2C180B99270090B1F3 /* regina.css */,
-				05B62165180B9D7300CCB90B /* title.png */,
-				054F7E2A180B96AC0090B1F3 /* welcome.html */,
-			);
-			name = HTML;
 			sourceTree = "<group>";
 		};
 		0553FBB22AF6808E00BE89A7 /* packets */ = {
@@ -7882,7 +7460,6 @@
 				0564A2151811D91C002CC2AE /* qtui */,
 				05617ADE1D9DBFBF00B1E33B /* utils */,
 				052909482AE5EA090028990D /* swiftui */,
-				052FA12F1806102F00FAE4DF /* ios */,
 				05685F641F970E2600085B44 /* admin */,
 				05E62B002FD9A7EA00AE1B84 /* apidocs */,
 				05A47F961809CB7500F86BFD /* examples */,
@@ -7998,53 +7575,6 @@
 				0591E8221C4F764800793A9C /* pyhypersurface.cpp */,
 			);
 			path = hypersurface;
-			sourceTree = "<group>";
-		};
-		05937A9B19CECF4300160F9A /* MDSpreadView */ = {
-			isa = PBXGroup;
-			children = (
-				05937A9C19CECF4300160F9A /* Classes */,
-			);
-			path = MDSpreadView;
-			sourceTree = "<group>";
-		};
-		05937A9C19CECF4300160F9A /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				05937A9D19CECF4300160F9A /* MDSpreadView.h */,
-				05937A9E19CECF4300160F9A /* MDSpreadView.m */,
-				05937A9F19CECF4300160F9A /* MDSpreadViewCell.h */,
-				05937AA019CECF4300160F9A /* MDSpreadViewCell.m */,
-				05937AA119CECF4300160F9A /* MDSpreadViewCellBackground.h */,
-				05937AA219CECF4300160F9A /* MDSpreadViewCellBackground.m */,
-				05937AA319CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.h */,
-				05937AA419CECF4300160F9A /* MDSpreadViewCellColumnHeaderBackground.m */,
-				05937AA519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.h */,
-				05937AA619CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m */,
-				05937AA719CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.h */,
-				05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */,
-				05937AA919CECF4300160F9A /* MDSpreadViewClasses.h */,
-				05937AAA19CECF4300160F9A /* MDSpreadViewHeaderCell.h */,
-				05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		059474E71F98181700F04273 /* Storyboards */ = {
-			isa = PBXGroup;
-			children = (
-				052FA13B1806103000FAE4DF /* Main.storyboard */,
-				051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */,
-				051CEA961F98995D00971F25 /* Link.storyboard */,
-				059474E41F98151600F04273 /* SnapPea.storyboard */,
-				0566DC921F9893E60068ACAD /* Surfaces.storyboard */,
-				059474F01F981E5700F04273 /* Tri2.storyboard */,
-				059474F31F981F0300F04273 /* Tri3.storyboard */,
-				059474F61F981F1800F04273 /* Tri4.storyboard */,
-				052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */,
-				0506EC1C19F65B43003E455B /* iPhone.storyboard */,
-			);
-			name = Storyboards;
 			sourceTree = "<group>";
 		};
 		059802BC26683C6D002D5D57 /* xml */ = {
@@ -8186,15 +7716,6 @@
 				05B4D2D3229F42D600B7B11C /* output.h */,
 			);
 			path = core;
-			sourceTree = "<group>";
-		};
-		05BEB0C219CCE0BB006AB2C8 /* Toast */ = {
-			isa = PBXGroup;
-			children = (
-				05BEB0BF19CCE0B0006AB2C8 /* UIView+Toast.h */,
-				05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */,
-			);
-			name = Toast;
 			sourceTree = "<group>";
 		};
 		05C1BE9A1DCA7C93007C946B /* explicit */ = {
@@ -8848,15 +8369,6 @@
 				05F09FF71DBF078800117BFC /* vertex4.cpp */,
 			);
 			path = dim4;
-			sourceTree = "<group>";
-		};
-		05F96C14180A14E600C99F96 /* MBProgressHUD */ = {
-			isa = PBXGroup;
-			children = (
-				05F96C15180A153A00C99F96 /* MBProgressHUD.h */,
-				05F96C16180A153A00C99F96 /* MBProgressHUD.m */,
-			);
-			name = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -11297,81 +10809,6 @@
 			targetProxy = 05EBB437259DB57100362FA5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				051CEA8B1F98969500971F25 /* Base */,
-			);
-			name = Hypersurfaces.storyboard;
-			sourceTree = "<group>";
-		};
-		051CEA961F98995D00971F25 /* Link.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				051CEA951F98995D00971F25 /* Base */,
-			);
-			name = Link.storyboard;
-			sourceTree = "<group>";
-		};
-		052FA1321806102F00FAE4DF /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				052FA1331806102F00FAE4DF /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		052FA13B1806103000FAE4DF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				052FA13C1806103000FAE4DF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		0566DC921F9893E60068ACAD /* Surfaces.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0566DC911F9893E60068ACAD /* Base */,
-			);
-			name = Surfaces.storyboard;
-			sourceTree = "<group>";
-		};
-		059474E41F98151600F04273 /* SnapPea.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				059474E51F98151700F04273 /* Base */,
-			);
-			name = SnapPea.storyboard;
-			sourceTree = "<group>";
-		};
-		059474F01F981E5700F04273 /* Tri2.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				059474EF1F981E5700F04273 /* Base */,
-			);
-			name = Tri2.storyboard;
-			sourceTree = "<group>";
-		};
-		059474F31F981F0300F04273 /* Tri3.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				059474F21F981F0300F04273 /* Base */,
-			);
-			name = Tri3.storyboard;
-			sourceTree = "<group>";
-		};
-		059474F61F981F1800F04273 /* Tri4.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				059474F51F981F1800F04273 /* Base */,
-			);
-			name = Tri4.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		050F5CE51B9BAAAB00C1F681 /* Debug */ = {
