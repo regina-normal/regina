@@ -25,7 +25,7 @@ function test {
 
 os=`uname -s`
 
-test "docs/engine/index.html" "API docs"
+test "apidocs/index.html" "API docs"
 test "engine/data/census/closed-or-census-11.@DB_EXT@" "Census data"
 test "python/regina/engine.@REGINA_PYTHON_EXTENSION@" "Python module"
 test "qtui/doc/regina/index.html" "User handbook"
@@ -35,7 +35,7 @@ if [ "$os" = Darwin ]; then
 else
   test "qtui/src/regina-gui@CMAKE_EXECUTABLE_SUFFIX@" "GUI"
 fi
-test "testsuite/regtestsuite@CMAKE_EXECUTABLE_SUFFIX@" "C++ test suite"
+test "engine/testsuite/regina-testsuite@CMAKE_EXECUTABLE_SUFFIX@" "C++ test suite"
 test "utils/regfiledump@CMAKE_EXECUTABLE_SUFFIX@" "Utilities"
 
 exit $retval

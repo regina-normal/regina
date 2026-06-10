@@ -138,7 +138,6 @@
 		0512E0A626DF356300DDB222 /* snapshot.h in Headers */ = {isa = PBXBuildFile; fileRef = 0512E0A226DF356300DDB222 /* snapshot.h */; };
 		05135AE028347BF600C4BFDC /* cut.h in Headers */ = {isa = PBXBuildFile; fileRef = 05135ADE28347BF600C4BFDC /* cut.h */; };
 		05135AE128347BF600C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADF28347BF600C4BFDC /* cut.cpp */; };
-		0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */ = {isa = PBXBuildFile; fileRef = 052F9C50180600FA00FAE4DF /* docs.conf.in */; };
 		05166B8A2C36140A0014CE97 /* 3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05166B892C36140A0014CE97 /* 3d.cpp */; };
 		051691B71C5AD5AC00DC69EC /* hypercompatui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A31C5AD59000DC69EC /* hypercompatui.cpp */; };
 		051691B81C5AD5AC00DC69EC /* hypercoordinateui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A51C5AD59000DC69EC /* hypercoordinateui.cpp */; };
@@ -1662,6 +1661,7 @@
 		05E62AF52FCB7D1B00AE1B84 /* facetpairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62AF42FCB7D1B00AE1B84 /* facetpairing.cpp */; };
 		05E62AF62FCB7D1B00AE1B84 /* facetpairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62AF42FCB7D1B00AE1B84 /* facetpairing.cpp */; };
 		05E62AF92FD1016E00AE1B84 /* aggregator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62AF82FD1016E00AE1B84 /* aggregator.cpp */; };
+		05E62B142FD9A95900AE1B84 /* docs.conf.in in Resources */ = {isa = PBXBuildFile; fileRef = 05E62AFE2FD9A7EA00AE1B84 /* docs.conf.in */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -1754,7 +1754,7 @@
 				"$(DERIVED_FILE_DIR)/engine-docs",
 			);
 			runOncePerArchitecture = 0;
-			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\n# Note: Our choice for @DOXYGEN_TOPICS@ assumes Doxygen >= 1.9.8.\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#g\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#g\" -e \"s#@PACKAGE_VERSION@#${MARKETING_VERSION}#g\" -e \"s#@DOXYGEN_TOPICS@#<a href='topics.html'>Topics</a>#\" > \"${conf}\"\n\nmkdir -p \"${output}\"\n/opt/local/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
+			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\n# Note: Our choice for @DOXYGEN_TOPICS@ assumes Doxygen >= 1.9.8.\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#g\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#g\" -e \"s#@PACKAGE_VERSION@#${MARKETING_VERSION}#g\" -e \"s#@DOXYGEN_TOPICS@#<a href='topics.html'>Topics</a>#\" > \"${conf}\"\n\nmkdir -p \"${output}\"\n/opt/local/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2635,9 +2635,6 @@
 		052F9C2C180600FA00FAE4DF /* checkdocs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = checkdocs; sourceTree = "<group>"; };
 		052F9C2D180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C4C180600FA00FAE4DF /* docs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = docs.h; sourceTree = "<group>"; };
-		052F9C4E180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052F9C4F180600FA00FAE4DF /* doc-footer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "doc-footer.html"; sourceTree = "<group>"; };
-		052F9C50180600FA00FAE4DF /* docs.conf.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = docs.conf.in; sourceTree = "<group>"; };
 		052F9C54180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C55180600FA00FAE4DF /* doubledescription-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "doubledescription-impl.h"; sourceTree = "<group>"; };
 		052F9C56180600FA00FAE4DF /* doubledescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = doubledescription.h; sourceTree = "<group>"; };
@@ -3990,7 +3987,7 @@
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F9A1809CB7600F86BFD /* closed-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census.rga"; sourceTree = "<group>"; };
 		05A47F9B1809CB7600F86BFD /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05A47F9C1809CB7600F86BFD /* gap-tests.rga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "gap-tests.rga"; sourceTree = "<group>"; };
+		05A47F9C1809CB7600F86BFD /* gap-tests.rga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = "gap-tests.rga"; sourceTree = "<group>"; };
 		05A47FA01809CB7600F86BFD /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05A6284F2AEA14820049739E /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hyperbolic.cpp; path = engine/census/hyperbolic.cpp; sourceTree = SOURCE_ROOT; };
@@ -4610,6 +4607,28 @@
 		05E62AF82FD1016E00AE1B84 /* aggregator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = aggregator.cpp; sourceTree = "<group>"; };
 		05E62AFA2FD98EC000AE1B84 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05E62AFB2FD98F2400AE1B84 /* group-simplify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "group-simplify.cpp"; sourceTree = "<group>"; };
+		05E62AFC2FD9A7EA00AE1B84 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05E62AFD2FD9A7EA00AE1B84 /* doc-footer.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "doc-footer.html"; sourceTree = "<group>"; };
+		05E62AFE2FD9A7EA00AE1B84 /* docs.conf.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = docs.conf.in; sourceTree = "<group>"; };
+		05E62AFF2FD9A7EA00AE1B84 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05E62B012FD9A7EA00AE1B84 /* censuslookup.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = censuslookup.1; sourceTree = "<group>"; };
+		05E62B022FD9A7EA00AE1B84 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05E62B032FD9A7EA00AE1B84 /* katie.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = katie.1; sourceTree = "<group>"; };
+		05E62B042FD9A7EA00AE1B84 /* Makefile.man */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.man; sourceTree = "<group>"; };
+		05E62B052FD9A7EA00AE1B84 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05E62B062FD9A7EA00AE1B84 /* regconcat.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = regconcat.1; sourceTree = "<group>"; };
+		05E62B072FD9A7EA00AE1B84 /* regconvert.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = regconvert.1; sourceTree = "<group>"; };
+		05E62B082FD9A7EA00AE1B84 /* regfiledump.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = regfiledump.1; sourceTree = "<group>"; };
+		05E62B092FD9A7EA00AE1B84 /* regfiletype.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = regfiletype.1; sourceTree = "<group>"; };
+		05E62B0A2FD9A7EA00AE1B84 /* regina-engine-config.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = "regina-engine-config.1"; sourceTree = "<group>"; };
+		05E62B0B2FD9A7EA00AE1B84 /* regina-gui.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = "regina-gui.1"; sourceTree = "<group>"; };
+		05E62B0C2FD9A7EA00AE1B84 /* regina-helper.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = "regina-helper.1"; sourceTree = "<group>"; };
+		05E62B0D2FD9A7EA00AE1B84 /* regina-python.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = "regina-python.1"; sourceTree = "<group>"; };
+		05E62B0E2FD9A7EA00AE1B84 /* retriangulate.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = retriangulate.1; sourceTree = "<group>"; };
+		05E62B0F2FD9A7EA00AE1B84 /* sigcensus.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = sigcensus.1; sourceTree = "<group>"; };
+		05E62B102FD9A7EA00AE1B84 /* sigconvert.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = sigconvert.1; sourceTree = "<group>"; };
+		05E62B112FD9A7EA00AE1B84 /* tricensus.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = tricensus.1; sourceTree = "<group>"; };
+		05E62B122FD9A7EA00AE1B84 /* trisetcmp.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = trisetcmp.1; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -6171,7 +6190,6 @@
 				05B4D2DB229F42E000B7B11C /* core */,
 				05E62ADD2FC7070F00AE1B84 /* data */,
 				052F9C4C180600FA00FAE4DF /* docs.h */,
-				052F9C4D180600FA00FAE4DF /* doxygen */,
 				052F9C53180600FA00FAE4DF /* enumerate */,
 				052F9C9B180600FA00FAE4DF /* file */,
 				052F9CA6180600FA00FAE4DF /* foreign */,
@@ -6257,16 +6275,6 @@
 				05CAE623274509ED007C93F3 /* purgeflags.h */,
 			);
 			path = census;
-			sourceTree = "<group>";
-		};
-		052F9C4D180600FA00FAE4DF /* doxygen */ = {
-			isa = PBXGroup;
-			children = (
-				052F9C4E180600FA00FAE4DF /* CMakeLists.txt */,
-				052F9C4F180600FA00FAE4DF /* doc-footer.html */,
-				052F9C50180600FA00FAE4DF /* docs.conf.in */,
-			);
-			path = doxygen;
 			sourceTree = "<group>";
 		};
 		052F9C53180600FA00FAE4DF /* enumerate */ = {
@@ -7877,9 +7885,11 @@
 				05617ADE1D9DBFBF00B1E33B /* utils */,
 				052909482AE5EA090028990D /* swiftui */,
 				052FA12F1806102F00FAE4DF /* ios */,
-				05A47F961809CB7500F86BFD /* examples */,
-				059D015A25B6A6E3004150F7 /* timing */,
 				05685F641F970E2600085B44 /* admin */,
+				05E62B002FD9A7EA00AE1B84 /* apidocs */,
+				05A47F961809CB7500F86BFD /* examples */,
+				05E62B132FD9A7EA00AE1B84 /* man */,
+				059D015A25B6A6E3004150F7 /* timing */,
 				05685F701F970F0500085B44 /* cmake */,
 				0577E71A1F970D2600CBDF15 /* misc */,
 				0575E65A1805F36D009E3FC4 /* Products */,
@@ -8744,6 +8754,42 @@
 				05E62ADA2FC7070F00AE1B84 /* snappea */,
 			);
 			path = data;
+			sourceTree = "<group>";
+		};
+		05E62B002FD9A7EA00AE1B84 /* apidocs */ = {
+			isa = PBXGroup;
+			children = (
+				05E62AFC2FD9A7EA00AE1B84 /* CMakeLists.txt */,
+				05E62AFD2FD9A7EA00AE1B84 /* doc-footer.html */,
+				05E62AFE2FD9A7EA00AE1B84 /* docs.conf.in */,
+				05E62AFF2FD9A7EA00AE1B84 /* README.txt */,
+			);
+			path = apidocs;
+			sourceTree = "<group>";
+		};
+		05E62B132FD9A7EA00AE1B84 /* man */ = {
+			isa = PBXGroup;
+			children = (
+				05E62B012FD9A7EA00AE1B84 /* censuslookup.1 */,
+				05E62B022FD9A7EA00AE1B84 /* CMakeLists.txt */,
+				05E62B032FD9A7EA00AE1B84 /* katie.1 */,
+				05E62B042FD9A7EA00AE1B84 /* Makefile.man */,
+				05E62B052FD9A7EA00AE1B84 /* README.txt */,
+				05E62B062FD9A7EA00AE1B84 /* regconcat.1 */,
+				05E62B072FD9A7EA00AE1B84 /* regconvert.1 */,
+				05E62B082FD9A7EA00AE1B84 /* regfiledump.1 */,
+				05E62B092FD9A7EA00AE1B84 /* regfiletype.1 */,
+				05E62B0A2FD9A7EA00AE1B84 /* regina-engine-config.1 */,
+				05E62B0B2FD9A7EA00AE1B84 /* regina-gui.1 */,
+				05E62B0C2FD9A7EA00AE1B84 /* regina-helper.1 */,
+				05E62B0D2FD9A7EA00AE1B84 /* regina-python.1 */,
+				05E62B0E2FD9A7EA00AE1B84 /* retriangulate.1 */,
+				05E62B0F2FD9A7EA00AE1B84 /* sigcensus.1 */,
+				05E62B102FD9A7EA00AE1B84 /* sigconvert.1 */,
+				05E62B112FD9A7EA00AE1B84 /* tricensus.1 */,
+				05E62B122FD9A7EA00AE1B84 /* trisetcmp.1 */,
+			);
+			path = man;
 			sourceTree = "<group>";
 		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {
@@ -9637,7 +9683,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */,
+				05E62B142FD9A95900AE1B84 /* docs.conf.in in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
 				05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */,
 				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
