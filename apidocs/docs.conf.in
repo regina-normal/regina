@@ -6,7 +6,7 @@
 
 PROJECT_NAME         = "Regina @PACKAGE_VERSION@ Calculation Engine"
 
-OUTPUT_DIRECTORY     = "@PROJECT_BINARY_DIR@/docs/engine"
+OUTPUT_DIRECTORY     = "@PROJECT_BINARY_DIR@/apidocs"
 
 # DISABLE_INDEX        = NO
 # GENERATE_TREEVIEW    = NO
@@ -99,7 +99,7 @@ ALPHABETICAL_INDEX   = YES
 
 GENERATE_HTML        = YES
 HTML_OUTPUT          = .
-HTML_FOOTER          = "@PROJECT_SOURCE_DIR@/engine/doxygen/doc-footer.html"
+HTML_FOOTER          = "@PROJECT_SOURCE_DIR@/apidocs/doc-footer.html"
 GENERATE_HTMLHELP    = NO
 
 # LaTeX related options:
