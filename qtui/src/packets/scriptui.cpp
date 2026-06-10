@@ -78,6 +78,11 @@ QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         nullptr /* filter */, PacketChooser::RootRole::Subtree,
         true /* allow "none" */, nullptr /* initial selection */, parent);
     e->setAutoUpdate(true);
+    // The following line avoids an awkward problem where the packet chooser
+    // (when visible but not in drop-down form) is translucent and shows both
+    // the old value and the current value (offset from one another), which
+    // makes for an ugly and hard-to-read clash of overlaid content.
+    e->setAutoFillBackground(true);
     return e;
 }
 
