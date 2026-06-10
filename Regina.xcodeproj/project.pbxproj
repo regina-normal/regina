@@ -1386,8 +1386,6 @@
 		05B0E18C259AAFCB000B62A3 /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; };
 		05B0E18D259AAFCB000B62A3 /* Python3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05B1EF181C54299C008E7B49 /* boundary4chooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B1EF141C542991008E7B49 /* boundary4chooser.cpp */; };
-		05B22D0F22D486200099008B /* pysage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0A22D485ED0099008B /* pysage.cpp */; };
-		05B22D1022D486200099008B /* registerIntFromPyIndex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0B22D485ED0099008B /* registerIntFromPyIndex.cpp */; };
 		05B22D1522D543E80099008B /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1322D543E70099008B /* pythoninterpreter.cpp */; };
 		05B22D1922D54C980099008B /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1722D54C970099008B /* pythonoutputstream.cpp */; };
 		05B2A0822DE66AA600D4B377 /* arrow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2A0812DE66AA600D4B377 /* arrow.cpp */; };
@@ -4050,9 +4048,6 @@
 		05B1EF141C542991008E7B49 /* boundary4chooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundary4chooser.cpp; sourceTree = "<group>"; };
 		05B1EF151C542991008E7B49 /* boundary4chooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundary4chooser.h; sourceTree = "<group>"; };
 		05B22D0722D485ED0099008B /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		05B22D0922D485ED0099008B /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05B22D0A22D485ED0099008B /* pysage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pysage.cpp; sourceTree = "<group>"; };
-		05B22D0B22D485ED0099008B /* registerIntFromPyIndex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = registerIntFromPyIndex.cpp; sourceTree = "<group>"; };
 		05B22D1322D543E70099008B /* pythoninterpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythoninterpreter.cpp; sourceTree = "<group>"; };
 		05B22D1422D543E80099008B /* pythoninterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythoninterpreter.h; sourceTree = "<group>"; };
 		05B22D1722D54C970099008B /* pythonoutputstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonoutputstream.cpp; sourceTree = "<group>"; };
@@ -5459,7 +5454,6 @@
 				050F5D471B9BAB9C00C1F681 /* progress */,
 				05DA38B42E01101E00BA5452 /* pybind11_v2 */,
 				05DA38F02E01198F00BA5452 /* pybind11_v3 */,
-				05B22D0822D485ED0099008B /* sage */,
 				050F5D4D1B9BAB9C00C1F681 /* snappea */,
 				050F5D521B9BAB9C00C1F681 /* split */,
 				050F5D561B9BAB9C00C1F681 /* subcomplex */,
@@ -8186,16 +8180,6 @@
 			path = gui;
 			sourceTree = "<group>";
 		};
-		05B22D0822D485ED0099008B /* sage */ = {
-			isa = PBXGroup;
-			children = (
-				05B22D0922D485ED0099008B /* CMakeLists.txt */,
-				05B22D0A22D485ED0099008B /* pysage.cpp */,
-				05B22D0B22D485ED0099008B /* registerIntFromPyIndex.cpp */,
-			);
-			path = sage;
-			sourceTree = "<group>";
-		};
 		05B4D2DB229F42E000B7B11C /* core */ = {
 			isa = PBXGroup;
 			children = (
@@ -10029,7 +10013,6 @@
 				050F5DF91B9BAB9C00C1F681 /* matrix2.cpp in Sources */,
 				05754D18258D834E00236ED7 /* randutils.cpp in Sources */,
 				057B0CA826A2ABF40017F5EA /* xmlutils.cpp in Sources */,
-				05B22D0F22D486200099008B /* pysage.cpp in Sources */,
 				05FB46D31DD92D2800BB00E5 /* grouppresentation.cpp in Sources */,
 				050F5E0A1B9BAB9C00C1F681 /* packettype.cpp in Sources */,
 				050F5DF51B9BAB9C00C1F681 /* matrixops.cpp in Sources */,
@@ -10043,7 +10026,6 @@
 				05721F071F97160A00A83FFC /* laurent.cpp in Sources */,
 				050F5E031B9BAB9C00C1F681 /* pymaths.cpp in Sources */,
 				05772EDB270CFAA200D26D8A /* fileformat.cpp in Sources */,
-				05B22D1022D486200099008B /* registerIntFromPyIndex.cpp in Sources */,
 				050F5DFE1B9BAB9C00C1F681 /* polynomial.cpp in Sources */,
 				054209061DF0DA450018AB24 /* snappeacensusmfd.cpp in Sources */,
 				05772F1B270CFBAA00D26D8A /* typetrie.cpp in Sources */,

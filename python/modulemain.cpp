@@ -68,8 +68,6 @@ void addTreewidthClasses(pybind11::module_& m);
 void addTriangulationClasses(pybind11::module_& m, pybind11::module_& internal);
 void addUtilitiesClasses(pybind11::module_& m);
 
-void addSageHacks();
-
 namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
@@ -343,14 +341,5 @@ Try ``help(Triangulation)`` to see what this documentation looks like.)doc");
     addTreewidthClasses(m);
     addEnumerateClasses(m);
     addConceptsClasses(m);
-
-    // This routine allows the user to import sage-related hacks, which
-    // are not included by default in regina's python module.
-    m.def("_addSageHacks", &addSageHacks,
-R"doc(Modifies Regina's Python module to be suitable for use within SageMath.
-
-Since Regina 5.96, this routine does nothing at all. The future of
-this function is uncertain: it may be given a purpose again in some
-future release of Regina, or it may eventually be removed completely.)doc");
 }
 
