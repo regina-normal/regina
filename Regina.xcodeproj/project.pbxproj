@@ -9112,13 +9112,9 @@
 					};
 					05DADAFE2192535F00DC80E1 = {
 						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = 67JTSH67LZ;
-						ProvisioningStyle = Automatic;
 					};
 					05DADB04219256ED00DC80E1 = {
 						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = 67JTSH67LZ;
-						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -12146,9 +12142,7 @@
 		05DADB002192535F00DC80E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -12156,9 +12150,7 @@
 		05DADB012192535F00DC80E1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -12166,9 +12158,7 @@
 		05DADB06219256ED00DC80E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -12176,9 +12166,7 @@
 		05DADB07219256ED00DC80E1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
