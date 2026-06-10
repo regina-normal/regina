@@ -98,6 +98,8 @@ namespace detail {
  * type in Regina, but which itself is a virtual base class for different
  * kinds of filters).
  *
+ * \nopython
+ *
  * \ingroup packet
  */
 template <typename T>
@@ -113,6 +115,8 @@ concept PacketClass =
  * Subclasses are _not_ considered here: we requires `T` to be precisely a
  * class of the form `PacketOf<...>`.
  *
+ * \nopython
+ *
  * \ingroup packet
  */
 template <typename T>
@@ -122,6 +126,8 @@ concept WrappedPacket = detail::is_wrapped_packet_v<T>;
  * A packet class that stores text (possibly alongside other data).
  *
  * Examples of this concept include Text and Script.
+ *
+ * \nopython
  *
  * \ingroup packet
  */
@@ -143,6 +149,8 @@ concept TextPacket =
  *
  * See the Packet class notes for an overview of how wrapped packets work, as
  * well as instructions on how to create a new wrapped packet type.
+ *
+ * \nopython
  *
  * \ingroup packet
  */

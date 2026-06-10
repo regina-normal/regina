@@ -211,7 +211,7 @@ class Bitmask {
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -810,7 +810,7 @@ class Bitmask1 {
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -1266,7 +1266,7 @@ class Bitmask2 {
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.

@@ -65,7 +65,7 @@ namespace regina {
  * two variables.
  *
  * \python In Python, the class Laurent refers to the specific
- * template class Laurent<Integer>.
+ * template class `Laurent<Integer>`.
  *
  * \tparam T the coefficient type.  A typical coefficient type would be
  * Integer or Rational.  Note that native C++ integer types are _not_

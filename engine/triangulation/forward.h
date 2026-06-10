@@ -96,6 +96,8 @@ class NormalSurfaces;
  * If a type adheres to this concept, the precise dimensions can be accessed
  * via the class constants `T::dimension` and `T::subdimension`.
  *
+ * \nopython
+ *
  * \ingroup triangulation
  */
 template <typename T>
@@ -112,6 +114,8 @@ concept FaceClass =
  *
  * If a type adheres to this concept, the precise dimension can be accessed
  * via the class constant `T::dimension`.
+ *
+ * \nopython
  *
  * \ingroup triangulation
  */
@@ -130,6 +134,8 @@ concept SimplexClass =
  * via the class constants `T::dimension` and `T::subdimension`.  These can
  * also be used to identify whether the type is a Face (where `subdim < dim`)
  * or a Simplex (where `subdim == dim`).
+ *
+ * \nopython
  *
  * \ingroup triangulation
  */

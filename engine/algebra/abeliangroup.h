@@ -146,7 +146,8 @@ class AbelianGroup :
          * after it).
          *
          * \python Instead of using a pair of iterators, you should pass the
-         * invariant factors as a Python list.
+         * invariant factors as either a Python list of native integers, or a
+         * Python list of Regina's arbitrary-precision `Integer` objects.
          *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).

@@ -719,21 +719,21 @@ Version 8.0  [ TODO ]
                 concepts/iterator.h)
               + ArbitraryPrecisionIntegerVector, IntegerVector,
                 SignatureEncodable, SignatureType (defined in concepts/maths.h)
-              + PacketClass, PacketHeldType, TextPacket, WrappedPacket
-                (defined in concepts/packet.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
               + CensusSearchable (defined in census/census.h)
               + BanConstraint, LPConstraint, LPSubspace (defined in
                 enumerate/treelp.h)
-              + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
-                IntegerComparable, IntegerCompatible, ReginaInteger,
-                StandardCppInteger, SignedCppInteger, UnsignedCppInteger
-                (defined in utilities/intutils.h)
               + LinkSigEncoding (defined in link/linksig.h)
+              + PacketClass, PacketHeldType, TextPacket, WrappedPacket
+                (defined in packet/packet.h)
               + FaceClass, FaceOrSimplexClass, SimplexClass (defined in
                 triangulation/forward.h)
               + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
               + Aggregator (defined in utilities/aggregator.h)
+              + AnyInteger, ArbitraryPrecisionInteger, CppInteger,
+                IntegerComparable, IntegerCompatible, ReginaInteger,
+                StandardCppInteger, SignedCppInteger, UnsignedCppInteger
+                (defined in utilities/intutils.h)
         Header foreign/fromsiglist-impl.h:
             - Renamed to foreign/siglist-impl.h.  The old header has been
               removed completely, since end users do not need to include it.

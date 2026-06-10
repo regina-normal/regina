@@ -7,9 +7,7 @@ AngleStructures : class -> EqualityType.ByValue
 AnyInteger : concept
 ArbitraryPrecisionInteger : concept
 ArbitraryPrecisionIntegerVector : concept
-ArrayOf : concept
 Arrow : class -> EqualityType.ByValue
-AssignableTo : concept
 Attachment : class -> EqualityType.ByValue
 AugTriSolidTorus : class -> EqualityType.ByValue
 BagComparison : enum
@@ -23,8 +21,6 @@ Base64BitEncoder : class -> EqualityType.ByReference
 Base64Decoder : class -> EqualityType.ByReference
 Base64Encoder : class -> EqualityType.ByReference
 Base64SigEncoding : class -> EqualityType.NeverInstantiated
-BidirectionalIterableFor : concept
-BidirectionalIteratorFor : concept
 BitDecoder : class -> EqualityType.ByReference
 BitEncoder : class -> EqualityType.ByReference
 BitManipulator : class -> EqualityType.NeverInstantiated
@@ -46,7 +42,6 @@ BoundaryComponent5 : class -> EqualityType.ByReference
 BoundaryComponent6 : class -> EqualityType.ByReference
 BoundaryComponent7 : class -> EqualityType.ByReference
 BoundaryComponent8 : class -> EqualityType.ByReference
-CanConstruct : concept
 Census : class -> EqualityType.NeverInstantiated
 CensusCollection3 : class -> EqualityType.NeverInstantiated
 CensusCollectionLink : class -> EqualityType.NeverInstantiated
@@ -55,7 +50,6 @@ CensusHit : class -> EqualityType.ByValue
 CensusPurge : enum
 CensusPurgeFlags : alias -> enum CensusPurge
 CensusSearchable : concept
-CharIterator : concept
 ChildIterator : class -> EqualityType.ByValue
 ClosedPrimeMinSearcher : class -> EqualityType.ByReference
 CoefficientDomain : concept
@@ -68,7 +62,6 @@ Component6 : class -> EqualityType.ByReference
 Component7 : class -> EqualityType.ByReference
 Component8 : class -> EqualityType.ByReference
 Concept : concept
-ConstRefArrayOf : concept
 Container : class -> EqualityType.Disabled
 CppInteger : concept
 Crossing : class -> EqualityType.ByReference
@@ -151,7 +144,6 @@ Face8_5 : class -> EqualityType.ByReference
 Face8_6 : class -> EqualityType.ByReference
 Face8_7 : class -> EqualityType.ByReference
 Face8_8 : alias -> Simplex8
-FaceClass : concept
 FaceEmbedding2_0 : class -> EqualityType.ByValue
 FaceEmbedding2_1 : class -> EqualityType.ByValue
 FaceEmbedding3_0 : class -> EqualityType.ByValue
@@ -187,7 +179,6 @@ FaceEmbedding8_4 : class -> EqualityType.ByValue
 FaceEmbedding8_5 : class -> EqualityType.ByValue
 FaceEmbedding8_6 : class -> EqualityType.ByValue
 FaceEmbedding8_7 : class -> EqualityType.ByValue
-FaceOrSimplexClass : concept
 FacePair : class -> EqualityType.ByValue
 FacetPairing2 : class -> EqualityType.ByValue
 FacetPairing3 : class -> EqualityType.ByValue
@@ -216,7 +207,6 @@ Flags_HyperList : class -> EqualityType.ByValue
 Flags_NormalAlg : class -> EqualityType.ByValue
 Flags_NormalList : class -> EqualityType.ByValue
 Flags_SurfaceExport : class -> EqualityType.ByValue
-ForwardIteratorFor : concept
 Framing : enum
 GlobalDirs : class -> EqualityType.NeverInstantiated
 GluingPermSearcher2 : class -> EqualityType.ByReference
@@ -252,9 +242,6 @@ HyperList : enum
 HyperListFlags : alias -> enum HyperList
 HyperbolicMinSearcher : class -> EqualityType.ByReference
 ImpossibleScenario : exception
-IndexedContainer : concept
-InherentlyTightEncodable : concept
-InputIteratorFor : concept
 Integer : class -> EqualityType.ByValue
 IntegerComparable : concept
 IntegerCompatible : concept
@@ -311,8 +298,6 @@ Isomorphism5 : class -> EqualityType.ByValue
 Isomorphism6 : class -> EqualityType.ByValue
 Isomorphism7 : class -> EqualityType.ByValue
 Isomorphism8 : class -> EqualityType.ByValue
-Iterable : concept
-IterableFor : concept
 LPConstraint : concept
 LPConstraintEulerPositive : class -> EqualityType.NeverInstantiated
 LPConstraintEulerZero : class -> EqualityType.NeverInstantiated
@@ -381,14 +366,10 @@ NormalSurfaces : class -> EqualityType.ByValue
 NormalTransform : enum
 NotImplemented : exception
 NumericalError : exception
-OutputIterator : concept
 Packet : class -> EqualityType.NeverInstantiated
 PacketChildren : class -> EqualityType.ByValue
-PacketClass : concept
 PacketDescendants : class -> EqualityType.ByValue
-PacketHeldType : concept
 PacketInfo : class -> EqualityType.NeverInstantiated
-PacketIterator : concept
 PacketListener : class -> EqualityType.ByReference
 PacketOfAngleStructures : class -> EqualityType.ByValue
 PacketOfLink : class -> EqualityType.ByValue
@@ -534,11 +515,8 @@ Qitmask16 : class -> EqualityType.ByValue
 Qitmask32 : class -> EqualityType.ByValue
 Qitmask64 : class -> EqualityType.ByValue
 Qitmask8 : class -> EqualityType.ByValue
-RandomAccessIterableFor : concept
-RandomAccessIteratorFor : concept
 RandomEngine : class -> EqualityType.NeverInstantiated
 Rational : class -> EqualityType.ByValue
-Readable : concept
 ReginaBitmask : concept
 ReginaException : exception
 ReginaInteger : concept
@@ -550,7 +528,6 @@ Rotation3D : class -> EqualityType.ByValue
 SFSAlt : class -> EqualityType.ByValue
 SFSFibre : class -> EqualityType.ByValue
 SFSpace : class -> EqualityType.ByValue
-SameModCVRef : concept
 SatAnnulus : class -> EqualityType.ByValue
 SatBlock : class -> EqualityType.ByValue
 SatBlockModel : class -> EqualityType.ByValue
@@ -564,7 +541,6 @@ SatRegion : class -> EqualityType.ByValue
 SatTriPrism : class -> EqualityType.ByValue
 Script : class -> EqualityType.ByValue
 Segment3D : class -> EqualityType.ByValue
-SelfSentinelInputIterator : concept
 SigCensus : class -> EqualityType.NeverInstantiated
 SigPartialIsomorphism : class -> EqualityType.ByValue
 Signature : class -> EqualityType.ByValue
@@ -579,7 +555,6 @@ Simplex5 : class -> EqualityType.ByReference
 Simplex6 : class -> EqualityType.ByReference
 Simplex7 : class -> EqualityType.ByReference
 Simplex8 : class -> EqualityType.ByReference
-SimplexClass : concept
 SnapPeaCensusManifold : class -> EqualityType.ByValue
 SnapPeaCensusTri : class -> EqualityType.ByValue
 SnapPeaFatalError : exception
@@ -594,7 +569,6 @@ SpatialLink : class -> EqualityType.ByValue
 SpiralSolidTorus : class -> EqualityType.ByValue
 SplayedExpression : class -> EqualityType.ByValue
 StandardCppInteger : concept
-StandardStringifiable : concept
 StandardSubcomplex3 : class -> EqualityType.NeverInstantiated
 StandardSubcomplex4 : class -> EqualityType.NeverInstantiated
 StandardSubcomplexOptions : documentation
@@ -626,7 +600,6 @@ TetrahedronEmbedding6 : alias -> FaceEmbedding6_3
 TetrahedronEmbedding7 : alias -> FaceEmbedding7_3
 TetrahedronEmbedding8 : alias -> FaceEmbedding8_3
 Text : class -> EqualityType.ByValue
-TextPacket : concept
 TorusBundle : class -> EqualityType.ByValue
 TreeBag : class -> EqualityType.ByReference
 TreeDecomposition : class -> EqualityType.ByValue
@@ -716,8 +689,6 @@ VertexEmbedding6 : alias -> FaceEmbedding6_0
 VertexEmbedding7 : alias -> FaceEmbedding7_0
 VertexEmbedding8 : alias -> FaceEmbedding8_0
 VoidCallback : concept
-WrappedPacket : concept
-Writeable : concept
 base64Decode : function
 base64Encode : function
 base64Length : function

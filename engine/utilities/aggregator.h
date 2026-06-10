@@ -84,6 +84,10 @@ namespace regina {
  *   `+=` may throw a NoSolution exception.  If this could happen, you should
  *   document this in your aggregator class (e.g., see `MinAggregator<double>`,
  *   which cannot combine real numbers with `NaN`).
+ *
+ * \nopython
+ *
+ * \ingroup utilities
  */
 template <typename T, typename Value>
 concept Aggregator =
