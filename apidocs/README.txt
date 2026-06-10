@@ -1,11 +1,12 @@
-Regina Documentation Directory
-------------------------------
+Regina API Documentation
+------------------------
 
-This directory tree is used to generate man pages and API documentation.
+This directory is used to generate API documentation for Regina's calculation
+engine.
 
-The man pages are extracted from the Regina handbook, which is located
-in ../qtui/doc/regina/.
+This documentation is generated via doxygen from the extensive comments
+throughout the C++ source code.  This should happen automatically as part of
+the build process, assume that cmake was able to locate a working doxygen
+installation.
 
-The API documentation is generated via doxygen from the extensive
-comments throughout the source code.
-
+ -- Ben Burton <bab@debian.org>, Thu, 11 Jun 2026 01:02:36 +1000
