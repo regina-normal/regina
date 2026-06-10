@@ -1,10 +1,14 @@
 User handbook and file format reference
 ---------------------------------------
 
-regina/ - User handbook
-regina-xml/ - XML file format reference
+This directory is used to generate the following user documentation:
 
-These user references are written in KDE's XML docbook format.
+  regina/ - User handbook
+  regina-xml/ - XML file format reference
+
+This documentation is written in KDE's XML docbook format.  It should be
+converted to HTML automatically as part of the build process, assuming that
+cmake was able to locate a working xsltproc.
 
 Regarding ksgmltools/:
 
@@ -19,3 +23,4 @@ Regarding ksgmltools/:
   you wish to translate these documents, please mail the Regina
   developers and we can re-add the supporting files for your language.
 
+ -- Ben Burton <bab@debian.org>, Thu, 11 Jun 2026 01:02:36 +1000
