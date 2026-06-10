@@ -71,7 +71,7 @@ void addTriangle2(pybind11::module_& m) {
         .def("triangulation", &Triangle<2>::triangulation, rdoc::triangulation)
         .def("component", &Triangle<2>::component,
             pybind11::return_value_policy::reference, rdoc::component)
-        .def("face", &regina::python::face<2, 2>,
+        .def("face", &regina::python::face<Triangle<2>>,
             "subdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Triangle<2>::vertex,
             pybind11::return_value_policy::reference, rdoc::vertex)
@@ -81,7 +81,7 @@ void addTriangle2(pybind11::module_& m) {
         .def("edge",
             overload_cast<int, int>(&Triangle<2>::edge, pybind11::const_),
             pybind11::return_value_policy::reference, rdoc::edge_2)
-        .def("faceMapping", &regina::python::faceMapping<2, 2>,
+        .def("faceMapping", &regina::python::faceMapping<Triangle<2>>,
             "subdim"_a, "face"_a, rdoc::faceMapping)
         .def("vertexMapping", &Triangle<2>::vertexMapping, rdoc::vertexMapping)
         .def("edgeMapping", &Triangle<2>::edgeMapping, rdoc::edgeMapping)

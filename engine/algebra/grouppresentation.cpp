@@ -33,6 +33,7 @@
 #include <map>
 #include <sstream>
 #include <algorithm>
+#include <deque>
 
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
@@ -42,6 +43,13 @@
 #include "maths/matrixops.h"
 #include "utilities/exception.h"
 #include "utilities/stringutils.h"
+
+namespace { // anonymous namespace
+    inline bool compare_length(const regina::SplayedExpression& a,
+            const regina::SplayedExpression& b) {
+        return a.size() < b.size();
+    }
+}
 
 namespace regina {
 
@@ -154,7 +162,7 @@ bool GroupExpression::simplify(bool cyclic) {
 }
 
 bool GroupExpression::substitute(size_t generator,
-        const GroupExpression& expansion, bool cyclic) {
+        const GroupExpression& replacement, bool cyclic) {
     bool changed = false;
     std::optional<GroupExpression> inverse;
     for (auto current = terms_.begin(); current != terms_.end(); ) {
@@ -165,10 +173,10 @@ bool GroupExpression::substitute(size_t generator,
             if (exponent != 0) {
                 const GroupExpression* use;
                 if (exponent > 0)
-                    use = std::addressof(expansion);
+                    use = std::addressof(replacement);
                 else {
                     if (! inverse)
-                        inverse = expansion.inverse();
+                        inverse = replacement.inverse();
                     use = std::addressof(*inverse);
                     exponent = -exponent;
                 }
@@ -190,19 +198,19 @@ bool GroupExpression::substitute(size_t generator,
     return changed;
 }
 
-void GroupExpression::substitute(const std::vector<GroupExpression>& expansions,
-        bool cyclic) {
+void GroupExpression::substitute(
+        const std::vector<GroupExpression>& replacements, bool cyclic) {
     std::list<GroupExpressionTerm> expanded;
 
     long i;
     for (const auto& t : terms_) {
         if (t.exponent > 0) {
-            const GroupExpression& use = expansions[t.generator];
+            const GroupExpression& use = replacements[t.generator];
             for (i = 0; i < t.exponent; ++i)
                 expanded.insert(expanded.end(),
                     use.terms_.begin(), use.terms_.end());
         } else if (t.exponent < 0) {
-            GroupExpression use = expansions[t.generator].inverse();
+            GroupExpression use = replacements[t.generator].inverse();
             for (i = 0; i > t.exponent; --i)
                 expanded.insert(expanded.end(),
                     use.terms_.begin(), use.terms_.end());
@@ -356,165 +364,170 @@ MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
         std::move(N));
 }
 
-void GroupPresentation::dehnAlgorithmSubMetric(
-    const GroupExpression &this_word,
-    const GroupExpression &that_word,
-    std::set<WordSubstitutionData> &sub_list, int step )
-{
-    size_t this_length = this_word.wordLength();
-    size_t that_length = that_word.wordLength();
+FixedArray<size_t> GroupPresentation::sortedIndices(
+        const SplayedExpression& word) {
+    FixedArray<size_t> ans(word.size());
+    for (size_t i = 0; i < word.size(); ++i)
+        ans[i] = i;
+    std::sort(ans.begin(), ans.end(), [&word](size_t a, size_t b) {
+        return std::abs(word[a]) < std::abs(word[b]);
+    });
+    return ans;
+}
+
+size_t GroupPresentation::extraCancellation(const SplayedExpression& word,
+        auto begin, auto end) {
+    size_t ans = 0;
+    while (true) {
+        if (begin == end)
+            return ans;
+
+        // Move outwards to the next candidate pair of symbols to cancel.
+        word.cycleBackward(begin);
+        if (begin == end)
+            return ans;
+
+        if (*begin != -*end)
+            return ans;
+        ++ans;
+
+        word.cycleForward(end);
+    }
+}
+
+template <Aggregator<GroupPresentation::WordSubstitutionData> Agg>
+typename Agg::Result GroupPresentation::dehnAlgorithmSubMetric(
+        const SplayedExpression& target, const SplayedExpression& reducer,
+        int step) {
     // generic early exit strategy
-    if ( (this_length < 2) || (that_length==0) )
-        return;
-    // early exit strategy based on step.
-    if ( (step==1) && ((step+1)*this_length < that_length) )
-        return;
-    // TODO: should check to whatever extent the above is of much use...
+    if (target.size() < 2 || reducer.size()==0)
+        return Agg().result();
 
-    // this -> splayed to this_word, that_word -> reducer
-    std::vector<GroupExpressionTerm> this_word_vec, reducer;
-    this_word_vec.reserve( this_length );
-    reducer.reserve( that_length );
-    for (const auto& t : this_word.terms()) {
-        for (long i=0; i<std::abs(t.exponent); i++)
-            this_word_vec.emplace_back( t.generator,
-                                        (t.exponent>0) ? 1 : -1 );
-    }
-    for (const auto& t : that_word.terms()) {
-        for (long i=0; i<std::abs(t.exponent); i++)
-            reducer.emplace_back( t.generator,
-                                  (t.exponent>0) ? 1 : -1 );
-    }
-    std::vector< GroupExpressionTerm > inv_reducer( that_length );
-    for (size_t i=0; i<reducer.size(); i++)
-        inv_reducer[that_length-(i+1)] = reducer[i].inverse();
+    // search for cyclic subwords of *reducer* in *target*...
+    size_t max_match = std::min(target.size(), reducer.size());
+    size_t min_match = (reducer.size() < step ? 1 :
+        (reducer.size() - step) / 2 + 1);
+    // Note: min_match is the shortest possible non-empty match to ensure that
+    // score = 2 * match_length - reducer.size() > -step.
 
-    // search for cyclic subwords of reducer in this_word_vec...
-    for (size_t i=0; i<this_length; i++)
-        for (size_t j=0; j<that_length; j++) {
-            size_t comp_length = 0;
-            while ( (this_word_vec[(i+comp_length) % this_length] ==
-                     reducer[(j+comp_length) % that_length]) &&
-                    (comp_length < that_length) && (comp_length < this_length) )
-                comp_length++;
-            WordSubstitutionData subData;
-            subData.invertB=false;
-            subData.sub_length=comp_length;
-            subData.start_sub_at=i;
-            subData.start_from=j;
-            if (comp_length == that_length) {
-                subData.score = that_length;
-                size_t a=1;
-                while ( (this_word_vec[( (i+this_length)-a )%this_length].inverse()==
-                         this_word_vec[( (i+comp_length)+(a-1) )%this_length]) &&
-                        (2*a+that_length <= this_length ) ) {
-                    a++;
-                    subData.score++;
+    // early exit strategy based on step
+    if (min_match > max_match)
+        return Agg().result();
+
+    Agg sub_list;
+
+    // Cache results of extraCancellation(); -1 means not yet computed
+    FixedArray<long> extraScore(target.size(), -1);
+
+    // Our aim is to only examine replacements whose start points in
+    // *target* and *reducer* refer to the same generator.
+    // We therefore begin by grouping together indices in *target* and
+    // *reducer* that refer to the same generator.
+    // TODO: Possibly what we really want here is a trie.
+    auto target_indices = sortedIndices(target);
+    auto reducer_indices = sortedIndices(reducer);
+
+    // Now do iterations through matching blocks of indices into *target*
+    // and *reducer*.
+    auto t = target_indices.begin();
+    auto r = reducer_indices.begin();
+    while (t != target_indices.end() && r != reducer_indices.end()) {
+        auto cmp = std::abs(target[*t]) <=> std::abs(reducer[*r]);
+        if (cmp < 0) {
+            ++t;
+            continue;
+        } else if (cmp > 0) {
+            ++r;
+            continue;
+        }
+
+        // t,r are the start points of matching blocks of indices that refer
+        // to some common generator.  Find the end points.
+        auto tEnd = t;
+        for (++tEnd; tEnd != target_indices.end() &&
+                std::abs(target[*tEnd]) == std::abs(target[*t]); ++tEnd)
+            ;
+        auto rEnd = r;
+        for (++rEnd; rEnd != reducer_indices.end() &&
+                std::abs(reducer[*rEnd]) == std::abs(reducer[*r]); ++rEnd)
+            ;
+
+        // The blocks [t, tEnd) and [r, rEnd) together identify all positions
+        // in *target* and *reducer* that refer to this common generator.
+        WordSubstitutionData sub;
+        for (auto tPos = t; tPos != tEnd; ++tPos) {
+            sub.target_pos = *tPos;
+            for (auto rPos = r; rPos != rEnd; ++rPos) {
+                auto p = target.begin() + *tPos;
+                auto q = reducer.begin() + *rPos;
+                sub.length = 0;
+                if (*p == *q) {
+                    sub.invert_reducer = false;
+                    sub.reducer_pos = *rPos;
+                    while (*p == *q && sub.length < max_match) {
+                        ++sub.length;
+                        target.cycleForward(p);
+                        reducer.cycleForward(q);
+                    }
+                } else {
+                    sub.invert_reducer = true;
+                    sub.reducer_pos = reducer.size() - *rPos - 1;
+                    while (*p == -*q && sub.length < max_match) {
+                        ++sub.length;
+                        target.cycleForward(p);
+                        reducer.cycleBackward(q);
+                    }
                 }
-                sub_list.insert(subData);
-            } else if ( comp_length > 0 ) {
-                subData.score = 2*comp_length - that_length;
-                if ( subData.score > -step )
-                    sub_list.insert(subData);
-            }
-            // and the corresponding search with the inverse of reducer.
-            comp_length = 0;
-            while ( (this_word_vec[(i+comp_length) % this_length] ==
-                     inv_reducer[(j+comp_length) % that_length]) &&
-                    (comp_length < that_length) && (comp_length < this_length) )
-                comp_length++;
-            subData.invertB=true;
-            subData.sub_length=comp_length;
-            if (comp_length == that_length) {
-                subData.score = that_length;
-                size_t a=1;
-                while ( (this_word_vec[( (i+this_length)-a )%this_length].inverse()==
-                         this_word_vec[( (i+comp_length)+(a-1) )%this_length]) &&
-                        (2*a+that_length <= this_length ) ) {
-                    a++;
-                    subData.score++;
+                if (sub.length == reducer.size()) {
+                    // The entire copy of *reducer* will vanish.
+                    // Will the remaining pieces of *target* cancel further?
+                    if (extraScore[sub.target_pos] < 0)
+                        extraScore[sub.target_pos] = extraCancellation(
+                            target, target.begin() + sub.target_pos, p);
+                    sub.score = reducer.size() + extraScore[sub.target_pos];
+                    sub_list += sub;
+                } else if (sub.length >= min_match) {
+                    sub.score = 2 * sub.length - reducer.size();
+                    sub_list += sub;
                 }
-                sub_list.insert(subData);
-            } else if ( comp_length > 0 ) {
-                subData.score = 2*comp_length - that_length;
-                if ( subData.score > -step )
-                    sub_list.insert(subData);
             }
         }
+
+        // Advance to the next blocks.
+        t = tEnd;
+        r = rEnd;
+    }
+
+    return std::move(sub_list).result();
 }
 
 /**
  *  This applies a substitution generated by dehnAlgorithmSubMetric.
  */
-void GroupPresentation::applySubstitution( GroupExpression& this_word,
-        const GroupExpression &that_word,
-        const WordSubstitutionData &sub_data )
-{
-    // okay, so let's do a quick cut-and-replace, reduce the word and
-    // hand it back.
-    size_t this_length = this_word.wordLength();
-    size_t that_length = that_word.wordLength();
-    std::vector<GroupExpressionTerm> this_word_vec, reducer;
-    // we'll splay-out *this and that_word so that it's easier to search
-    // for commonalities.
-    this_word_vec.reserve( this_length );
-    reducer.reserve( that_length );
-    // start the splaying of terms
-    for (const auto& t : this_word.terms()) {
-        for (long i=0; i<std::abs(t.exponent); i++)
-            this_word_vec.emplace_back( t.generator,
-                                        (t.exponent>0) ? 1 : -1 );
-    }
-    // and that_word
-    for (const auto& t : that_word.terms()) {
-        for (long i=0; i<std::abs(t.exponent); i++)
-            reducer.emplace_back( t.generator,
-                                  (t.exponent>0) ? 1 : -1 );
-    }
-    // done splaying, produce inv_reducer
-    std::vector< GroupExpressionTerm > inv_reducer( that_length );
-    for (size_t i=0; i<that_length; i++)
-        inv_reducer[that_length-(i+1)] = reducer[i].inverse();
-    // done with inv_reducer, erase terms
-    this_word.terms().clear();
+void GroupPresentation::applySubstitution(SplayedExpression& target,
+        const SplayedExpression& reducer, const WordSubstitutionData& sub) {
+    #if 0
+    std::cout << "Sub: (" << sub.target_pos << '/' << target.size()
+        << ")-(" << sub.reducer_pos << '/' << reducer.size()
+        << (sub.invert_reducer ? ")^-1: " : "): ")
+        << sub.length << " -> " << sub.score << std::endl;
+    #endif
 
-    // *this word is some conjugate of AB and the relator is some conjugate of AC.
-    //  We are performing the substitution
-    // A=C^{-1}, thus we need to produce the word C^{-1}B. Put in C^{-1} first..
-    for (size_t i=0; i<(that_length - sub_data.sub_length); i++)
-        this_word.terms().push_back( sub_data.invertB ?
-                                        reducer[(that_length - sub_data.start_from + i) % that_length] :
-                                        inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
-    // iterate through remainder of this_word_vec, starting from
-    //     sub_data.start_sub_at + sub_length, ie fill in B
-    for (size_t i=0; i<(this_length - sub_data.sub_length); i++)
-        this_word.terms().push_back(
-            this_word_vec[(sub_data.start_sub_at + sub_data.sub_length + i) %
-                          this_length] );
-    // done
-    this_word.simplify();
-}
+    SplayedExpression ans(target.size() + reducer.size() - 2 * sub.length);
 
+    // *target* is some conjugate of AB and *reducer* is some conjugate of AC.
+    // We are performing the substitution A=C^{-1}, thus we need to produce the
+    // word C^{-1}B. Put in C^{-1} first, then B.
+    auto pos = ans.terms_.begin();
+    for (size_t i = 0; i < reducer.size() - sub.length; ++i)
+        *pos++ = (sub.invert_reducer ?
+            reducer[(reducer.size() - sub.reducer_pos + i) % reducer.size()] :
+            -reducer[(reducer.size() + sub.reducer_pos - i - 1) %
+                reducer.size()]);
+    for (size_t i = 0; i < target.size() - sub.length; ++i)
+        *pos++ = target[(sub.target_pos + sub.length + i) % target.size()];
 
-namespace { // anonymous namespace
-    bool compare_length( const GroupExpression& first,
-             const GroupExpression& second )
-     {  return ( first.wordLength() < second.wordLength() ); }
-
-    /**
-     *  This routine takes a list of words, together with expVec. It's assumed
-     * expVec is initialized to be zero and as long as the number of generators
-     * in the group.  What this routine does is, for each generator of the
-     * group, it records the sum of the absolute value of the exponents of that
-     * generator in word.  For the i-th generator this number is recorded in
-     * expVec[i].
-     */
-    void build_exponent_vec( const std::list< GroupExpressionTerm > & word,
-                              std::vector<unsigned long> &expVec )
-    {
-     for ( const auto& t : word)
-         expVec[ t.generator ] += std::abs( t.exponent );
-    }
+    target.swap(ans);
 }
 
 // gives a string that describes the substitution
@@ -524,28 +537,28 @@ std::string GroupPresentation::WordSubstitutionData::substitutionString(
     // cut the substitution data into bits, assemble what we're cutting
     //  out and what we're pasting in.
     size_t word_length = word.wordLength();
-    std::vector<GroupExpressionTerm> reducer;
-    reducer.reserve( word_length );
+    std::vector<GroupExpressionTerm> reducer_vec;
+    reducer_vec.reserve( word_length );
     // splay word
     for (auto it = word.terms().begin(); it!=word.terms().end(); it++) {
         for (long i=0; i<std::abs(it->exponent); i++)
-            reducer.emplace_back(it->generator, (it->exponent>0) ? 1 : -1);
+            reducer_vec.emplace_back(it->generator, (it->exponent>0) ? 1 : -1);
     }
     // done splaying, produce inv_reducer
     std::vector< GroupExpressionTerm > inv_reducer( word_length );
     for (size_t i=0; i<word_length; i++)
-        inv_reducer[word_length-(i+1)] = reducer[i].inverse();
+        inv_reducer[word_length-(i+1)] = reducer_vec[i].inverse();
     GroupExpression del_word, rep_word;
         // produce word to delete, and word to replace with.
 
-    for (size_t i=0; i<(word_length - sub_length); i++)
-        rep_word.addTermLast( invertB ?
-            reducer[(word_length - start_from + i) % word_length] :
-            inv_reducer[(word_length - start_from + i) % word_length] );
-    for (size_t i=0; i<sub_length; i++)
-        del_word.addTermLast( invertB ?
-            inv_reducer[(start_from + i) % word_length] :
-            reducer[(start_from + i) % word_length] );
+    for (size_t i=0; i<(word_length - length); i++)
+        rep_word.addTermLast( invert_reducer ?
+            reducer_vec[(word_length - reducer_pos + i) % word_length] :
+            inv_reducer[(word_length - reducer_pos + i) % word_length] );
+    for (size_t i=0; i<length; i++)
+        del_word.addTermLast( invert_reducer ?
+            inv_reducer[(reducer_pos + i) % word_length] :
+            reducer_vec[(reducer_pos + i) % word_length] );
     rep_word.simplify();
     del_word.simplify();
     retval = del_word.str()+" -> "+rep_word.str();
@@ -718,6 +731,136 @@ GroupExpression::GroupExpression(const char* word, size_t nGens) {
     simplify();
 }
 
+SplayedExpression::SplayedExpression(const GroupExpression& word,
+        size_t wordLength) : terms_(wordLength) {
+    auto it = terms_.begin();
+    for (const auto& t : word.terms())
+        if (t.exponent >= 0) {
+            Term entry = t.generator + 1;
+            for (long i = 0; i < t.exponent; ++i)
+                *it++ = entry;
+        } else {
+            Term entry = -static_cast<Term>(t.generator + 1);
+            for (long i = 0; i > t.exponent; --i)
+                *it++ = entry;
+        }
+}
+
+GroupExpression SplayedExpression::desplay() const {
+    GroupExpression ans;
+
+    Term gen = -1;
+    long exp = 0;
+    for (auto g : terms_) {
+        if (g == gen + 1)
+            ++exp;
+        else if (g == -(gen + 1))
+            --exp;
+        else {
+            // Push the current term and start a new one.
+            if (exp) {
+                if (ans.terms().empty() || ans.terms().back().generator != gen)
+                    ans.terms().emplace_back(gen, exp);
+                else if (ans.terms().back().exponent == -exp)
+                    ans.terms().pop_back();
+                else
+                    ans.terms().back().exponent += exp;
+            }
+
+            if (g > 0) {
+                gen = g - 1;
+                exp = 1;
+            } else {
+                gen = -(g + 1);
+                exp = -1;
+            }
+        }
+    }
+    if (exp) {
+        if (ans.terms().empty() || ans.terms().back().generator != gen)
+            ans.terms().emplace_back(gen, exp);
+        else if (ans.terms().back().exponent == -exp)
+            ans.terms().pop_back();
+        else
+            ans.terms().back().exponent += exp;
+    }
+
+    return ans;
+}
+
+bool SplayedExpression::simplify(bool cyclic) {
+    bool changed = false;
+
+    // Compress the word by cancelling adjacent inverse pairs (including
+    // follow-on cancellation where this is possible).
+    {
+        auto read = terms_.begin();
+        auto write = terms_.begin();
+
+        while (read != terms_.end()) {
+            if (write == terms_.begin() || *read != -*(write - 1)) {
+                // Append the new symbol.
+                if (read == write) {
+                    ++read;
+                    ++write;
+                } else
+                    *write++ = *read++;
+            } else {
+                // Cancel the new symbol with the previous symbol.
+                ++read;
+                --write;
+            }
+        }
+        if (read != write) {
+            terms_.truncate(write - terms_.begin());
+            changed = true;
+        }
+    }
+
+    if (cyclic && terms_.size() > 1) {
+        auto front = terms_.begin();
+        auto back = terms_.end() - 1;
+        while (front < back && *front == -*back) {
+            ++front;
+            --back;
+        }
+        if (front != terms_.begin()) {
+            std::move(front, back + 1, terms_.begin());
+            terms_.truncate(back - front + 1);
+            changed = true;
+        }
+    }
+
+    return changed;
+}
+
+bool SplayedExpression::substitute(size_t generator,
+        const SplayedExpression& replacement, bool cyclic) {
+    size_t count = std::count_if(terms_.begin(), terms_.end(),
+        [generator](auto i) { return std::abs(i) == generator + 1; });
+    if (count == 0)
+        return false;
+
+    FixedArray<Term> ans(terms_.size() + count * (replacement.size() - 1));
+    auto out = ans.begin();
+    for (auto i : terms_) {
+        if (i == generator + 1) {
+            for (auto j : replacement.terms_)
+                *out++ = j;
+        } else if (i == -(generator + 1)) {
+            auto rev = replacement.terms_.end();
+            while (rev != replacement.terms_.begin())
+                *out++ = -(*--rev);
+        } else {
+            *out++ = i;
+        }
+    }
+    terms_.swap(ans);
+
+    simplify(cyclic);
+    return true;
+}
+
 //             **********  GroupPresentation below **************
 
 GroupPresentation::GroupPresentation(size_t nGens,
@@ -733,15 +876,15 @@ GroupPresentation::GroupPresentation(size_t nGens,
         // that all generators are in range.  Check this now (which for
         // nGens == 0 simply means ensuring each relation is empty).
         for (const auto& r : relations_)
-            if (! r.isTrivial())
+            if (! r.empty())
                 throw InvalidArgument(
                     "Generator out of range in group presentation");
     }
 }
 
-bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
+bool GroupPresentation::simplifyAndConjugate(SplayedExpression& word) const {
     bool retval = word.simplify(false);
-    if (word.isTrivial())
+    if (word.empty())
         return retval;
 
     // now recursively apply relators until no reduction is possible.
@@ -749,19 +892,28 @@ bool GroupPresentation::simplifyAndConjugate(GroupExpression &word) const {
     while (continueSimplify) {
         continueSimplify = false;
         for (const auto& r : relations_) {
-            std::set<WordSubstitutionData> sub_list; // highest score is *first*
-            dehnAlgorithmSubMetric( word, r, sub_list );
-            if (! sub_list.empty())
-                if ( sub_list.begin()->score > 0 ) {
-                    applySubstitution( word, r, *sub_list.begin() );
-                    if (word.isTrivial())
-                        return true;
-                    continueSimplify = true;
-                    retval = true;
-                }
+            auto sub =
+                dehnAlgorithmSubMetric<MinAggregator<WordSubstitutionData>>(
+                word, r);
+            if (sub && sub->score > 0) {
+                applySubstitution(word, r, *sub);
+                if (word.empty())
+                    return true;
+                continueSimplify = true;
+                retval = true;
+            }
         }
     }
     return retval;
+}
+
+bool GroupPresentation::simplifyAndConjugate(GroupExpression& word) const {
+    SplayedExpression splayed(word);
+    if (simplifyAndConjugate(splayed)) {
+        word = splayed.desplay();
+        return true;
+    } else
+        return false;
 }
 
 // for now we iterate:
@@ -821,86 +973,88 @@ std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
     for (size_t i=0; i<nGenerators_; i++)
         substitutionTable[i].addTermFirst( i, 1 );
 
+    // Switch from working with "packed" group expressions to splayed relations.
+    std::deque<SplayedExpression> splayed;
+    for (const auto& r : relations_)
+        splayed.emplace_back(r, r.wordLength());
+
     bool we_value_iteration(true);
     while (we_value_iteration) {
         we_value_iteration = false;
         // cyclically reduce relators
-        for (GroupExpression& r : relations_)
-            r.simplify(true);
-        std::sort(relations_.begin(), relations_.end(), compare_length);// (1)
+        for (SplayedExpression& w : splayed)
+            w.simplify(true);
+        std::sort(splayed.begin(), splayed.end(), compare_length); // (1)
 
         // start (2) deletion of 0-length relators
-        while (! relations_.empty()) {
-            if (relations_.front().wordLength() == 0)
-                relations_.erase(relations_.begin());
-            else
-                break;
-        }
+        while ((! splayed.empty()) && splayed.front().empty())
+            splayed.pop_front();
 
         // start (3) - apply shorter relators to longer.
-        for (auto it = relations_.begin(); it != relations_.end(); it++)
-            if ( it->wordLength() > 0 ) { // don't bother if this is a trivial word.
-                auto tit = it; // target of it manips.
-                tit++;
-                while (tit != relations_.end()) {
-                    // attempt to apply *it to *tit
-                    std::set<WordSubstitutionData> sub_list;
-                    dehnAlgorithmSubMetric( *tit, *it, sub_list ); // take first valid sub
-                    if (sub_list.size() != 0)
-                        if ( sub_list.begin()->score > 0 ) {
-                            applySubstitution( *tit, *it, *sub_list.begin() );
-                            we_value_iteration = true;
-                            didSomething = true;
-                        }
-                    tit++;
+        for (auto it = splayed.begin(); it != splayed.end(); ++it)
+            if (! it->empty()) {
+                auto target = it;
+                for (++target; target != splayed.end(); ++target) {
+                    // TODO: The calls to dehnAlgorithmSubMetric() are our
+                    // bottleneck here.  There should be ways to cache the
+                    // results and call it fewer times - I suspect we are
+                    // calling it for the same words over and over again.
+                    // Actually: we only need to cache calls that do _not_
+                    // result in a usable substitution, since every usable
+                    // substitution we _do_ find gets used and changes the words.
+                    auto sub = dehnAlgorithmSubMetric<
+                        MinAggregator<WordSubstitutionData>>(*target, *it);
+                    if (sub && sub->score > 0) {
+                        applySubstitution(*target, *it, *sub);
+                        we_value_iteration = true;
+                        didSomething = true;
+                    }
                 }
             } // end (3) - application of shorter to longer relators.
 
         // (4) Build and sort a list (by length) of generator-killing relations.
-        std::sort(relations_.begin(), relations_.end(), compare_length);
-        for (const GroupExpression& r : relations_) {
+        std::sort(splayed.begin(), splayed.end(), compare_length);
+        for (const SplayedExpression& w : splayed) {
             bool word_length_3_trigger(false);
-            size_t WL = r.wordLength();
-            // build a table expressing # times each generator is used in r.
-            std::vector<unsigned long> genUsage( nGenerators_ );
-            build_exponent_vec( r.terms(), genUsage );
+            size_t WL = w.size(); // since w may change during substitution
+            // build a table expressing # times each generator is used in w.
+            FixedArray genUsage(nGenerators_, 0);
+            for (auto i : w)
+                ++genUsage[std::abs(i) - 1];
 
-            for (size_t i=0; i<genUsage.size(); i++)
-                if (genUsage[i] == 1) {
-                    // have we found a substitution for generator i ?
-                    if ( ( substitutionTable[i].countTerms() == 1 ) &&
-                            ( substitutionTable[i].generator(0) == i ) ) {
-                        // we have a valid substitution.  Replace all occurances
-                        // of generator genUsage[i] with the inverse of the
+            for (size_t g = 0; g < nGenerators_; ++g)
+                if (genUsage[g] == 1) {
+                    // have we found a substitution for generator g ?
+                    if ( ( substitutionTable[g].countTerms() == 1 ) &&
+                            ( substitutionTable[g].generator(0) == g ) ) {
+                        // we have a valid substitution.  Replace all
+                        // occurrences of generator g with the inverse of the
                         // remaining word
-                        bool inv(true);
-                        bool before_flag(true); // true if we have not yet
-                                                // encountered gen
-                        GroupExpression prefix, complement;
-                        for (const GroupExpressionTerm& t : r.terms()) {
-                            if ( t.generator == i ) {
-                                inv = (t.exponent != 1);
-                                before_flag=false;
-                            } else {
-                                if (before_flag)
-                                    prefix.addTermLast(t);
-                                else
-                                    complement.addTermLast(t);
-                            }
-                        }
-                        complement.addTermsLast(std::move(prefix));
-                        // WARNING: Cannot use prefix beyond here.
+                        auto it = std::find_if(w.begin(), w.end(),
+                            [g](auto i) { return std::abs(i) == g + 1; });
+                        bool inv = (*it < 0);
+                        SplayedExpression complement(w.size() - 1);
+                        std::copy(it + 1, w.end(), complement.terms_.begin());
+                        std::copy(w.begin(), it,
+                            complement.terms_.begin() + (w.end() - it - 1));
                         if (!inv)
                             complement.invert();
                         // sub gi --> complement, in both substitutionTable
-                        // and relations_
+                        // and splayed relations
+                        for (SplayedExpression& r : splayed) {
+                            if (std::addressof(r) == std::addressof(w)) {
+                                // We know this substitution will clear out r.
+                                r.terms_.truncate(0);
+                            } else {
+                                r.substitute(g, complement);
+                            }
+                        }
+                        GroupExpression sub = complement.desplay();
                         for (GroupExpression& e : substitutionTable)
-                            e.substitute( i, complement );
-                        for (GroupExpression& e : relations_)
-                            e.substitute( i, complement );
+                            e.substitute( g, sub );
                         we_value_iteration = true;
                         didSomething = true;
-                        if (WL>3)
+                        if (WL > 3)
                             word_length_3_trigger=true;
                         goto found_a_generator_killer;
                     }
@@ -911,6 +1065,12 @@ found_a_generator_killer:
                 break;
         } // end (4)
     } // end of main_while_loop (6)
+
+    // Now switch from working with splayed relations back to our standard
+    // "packed" group expressions.
+    relations_.clear();
+    for (const auto& w : splayed)
+        relations_.push_back(w.desplay());
 
     nGenerators_ = 0;
     for (size_t i=0; i<substitutionTable.size(); i++)
@@ -1247,21 +1407,21 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
 
 // This algorithm has to be at least moderately sophisticated to ensure it
 // recognises that < a, b, a^2, abaB > is abelian.
-bool GroupPresentation::identifyAbelian() const
-{
+bool GroupPresentation::identifyAbelian() const {
     // The idea will be to take all commutators of the generators, and see if
-    //  the relators can kill them.
+    // the relators can kill them.
     for (size_t i=0; i<nGenerators_; i++)
         for (size_t j=i+1; j<nGenerators_; j++) {
             // let's see if we can recursively apply the relations to
             // [gi,gj] in order to kill it.
-            GroupExpression COM; // commutator [gi,gj]
-            COM.addTermLast( i, 1 );
-            COM.addTermLast( j, 1 );
-            COM.addTermLast( i, -1 );
-            COM.addTermLast( j, -1 );
-            simplifyAndConjugate( COM );
-            if (!COM.isTrivial()) return false;
+            SplayedExpression com(4);
+            com[0] = i + 1;
+            com[1] = j + 1;
+            com[2] = -com[0]; // beware, i is unsigned
+            com[3] = -com[1]; // likewise, j is unsigned
+            simplifyAndConjugate(com);
+            if (! com.empty())
+                return false;
         }
     return true;
 }
@@ -2112,20 +2272,20 @@ void GroupExpression::writeTeX(std::ostream& out) const {
     }
 }
 
-void GroupExpression::writeTextShort(std::ostream& out, bool utf8,
-        bool alphaGen) const {
+void GroupExpression::writeTextShort(std::ostream& out, bool utf8, bool alpha)
+        const {
     if (terms_.empty())
         out << '1';
     else {
         for (auto i = terms_.begin(); i!=terms_.end(); i++) {
             if (i != terms_.begin()) {
-                if (utf8 && ! alphaGen) {
+                if (utf8 && ! alpha) {
                     // Spaces get lost between g012 g456 ...
                     out << " \u00b7 "; // \cdot
                 } else
                     out << ' ';
             }
-            if (alphaGen)
+            if (alpha)
                 out << char('a' + i->generator);
             else
                 out << 'g' << i->generator;
@@ -2135,6 +2295,34 @@ void GroupExpression::writeTextShort(std::ostream& out, bool utf8,
                 else
                     out << '^' << i->exponent;
             }
+        }
+    }
+}
+
+void SplayedExpression::writeTextShort(std::ostream& out, bool utf8,
+        bool alpha) const {
+    if (terms_.empty())
+        out << '1';
+    else if (alpha) {
+        for (auto i = terms_.begin(); i != terms_.end(); ++i) {
+            if (*i > 0)
+                out << char('a' + (*i - 1));
+            else
+                out << char('A' - (*i + 1));
+        }
+    } else {
+        for (auto i = terms_.begin(); i != terms_.end(); ++i) {
+            if (i != terms_.begin()) {
+                if (utf8) {
+                    // Spaces get lost between g012 g456 ...
+                    out << " \u00b7 "; // \cdot
+                } else
+                    out << ' ';
+            }
+            if (*i > 0)
+                out << 'g' << (*i - 1);
+            else
+                out << 'g' << -(*i + 1) << (utf8 ? "\u207B\u00B9" : "^-1");
         }
     }
 }
@@ -2241,38 +2429,47 @@ void GroupPresentation::writeTextCompact(std::ostream& out) const {
 
 void GroupPresentation::proliferateRelators(int depth) {
     std::list< GroupExpression > newRels;
-    for (size_t i=0; i<relations_.size(); i++)
+    for (size_t i=0; i<relations_.size(); i++) {
+        SplayedExpression target(relations_[i]);
         for (size_t j=0; j<relations_.size(); j++) {
-            if (i==j) continue; // TODO: maybe accept novel self-substitutions?
-            std::set<WordSubstitutionData> sub_list;
-            dehnAlgorithmSubMetric( relations_[i], relations_[j], sub_list, depth );
+            if (i==j)
+                continue; // TODO: maybe accept novel self-substitutions?
+            SplayedExpression reducer(relations_[j]);
+            auto sub_list =
+                dehnAlgorithmSubMetric<SetAggregator<WordSubstitutionData>>(
+                target, reducer, depth);
             while (!sub_list.empty()) {
-                GroupExpression newRel( relations_[i] );
-                applySubstitution( newRel, relations_[j], *sub_list.begin() );
-                sub_list.erase( sub_list.begin() );
-                newRels.push_back(std::move(newRel));
+                SplayedExpression newRel(target);
+                applySubstitution(newRel, reducer, *sub_list.begin() );
+                sub_list.erase(sub_list.begin());
+                newRels.push_back(newRel.desplay());
             }
         }
+    }
     --depth;
     while (depth>0) {
         std::list< GroupExpression > tempRels;
-        for (const auto& r : relations_)
+        for (const auto& r : relations_) {
+            SplayedExpression reducer(r);
             for (const auto& j : newRels) {
-                // attempt to tack r to j. To do this, we should perhaps
-                // keep a record of how j was created, as in where the two junction
-                // points are so as to ensure what we're adding spans at least one
-                // of the junctions.
-                std::set<WordSubstitutionData> sub_list;
-                dehnAlgorithmSubMetric( j, r, sub_list, depth );
+                // attempt to tack r to j. To do this, we should perhaps keep
+                // a record of how j was created, as in where the two junction
+                // points are so as to ensure what we're adding spans at least
+                // one of the junctions.
+                SplayedExpression target(j);
+                auto sub_list = dehnAlgorithmSubMetric<
+                    SetAggregator<WordSubstitutionData>>(target, reducer,
+                    depth);
                 while (!sub_list.empty()) {
                     // TODO: we might want to avoid some obviously repetitive
                     //       subs as noted above?
-                    GroupExpression newRel( j );
-                    applySubstitution( newRel, r, *sub_list.begin() );
-                    sub_list.erase( sub_list.begin() );
-                    tempRels.push_back(std::move(newRel));
+                    SplayedExpression newRel(target);
+                    applySubstitution(newRel, reducer, *sub_list.begin());
+                    sub_list.erase(sub_list.begin());
+                    tempRels.push_back(newRel.desplay());
                 }
             }
+        }
         --depth;
 
         // Move our newly generated tempRels onto the end of newRels.

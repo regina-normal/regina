@@ -28,7 +28,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-core.h" // for REGINA_HIGHDIM
+#include "triangulation/forward.h"
+#include "../helpers.h"
+#include "../docstrings/triangulation/forward.h"
 
 namespace pybind11 { class module_; }
 
@@ -53,5 +55,14 @@ void addTriangulationClasses(pybind11::module_& m,
     addCut(m);
     addFaceNumbering(m);
     addIsoSigEncodings(m);
+
+    RDOC_SCOPE_BEGIN_MAIN
+
+    regina::python::add_concept<rdoc::FaceClass>(m, "FaceClass");
+    regina::python::add_concept<rdoc::SimplexClass>(m, "SimplexClass");
+    regina::python::add_concept<rdoc::FaceOrSimplexClass>(m,
+        "FaceOrSimplexClass");
+
+    RDOC_SCOPE_END
 }
 

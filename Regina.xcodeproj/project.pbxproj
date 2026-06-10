@@ -1664,6 +1664,7 @@
 		05E62AF32FCB2D2100AE1B84 /* component.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E62AF22FCB2D2100AE1B84 /* component.h */; };
 		05E62AF52FCB7D1B00AE1B84 /* facetpairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62AF42FCB7D1B00AE1B84 /* facetpairing.cpp */; };
 		05E62AF62FCB7D1B00AE1B84 /* facetpairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62AF42FCB7D1B00AE1B84 /* facetpairing.cpp */; };
+		05E62AF92FD1016E00AE1B84 /* aggregator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62AF82FD1016E00AE1B84 /* aggregator.cpp */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -4617,6 +4618,7 @@
 		05E62AF22FCB2D2100AE1B84 /* component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
 		05E62AF42FCB7D1B00AE1B84 /* facetpairing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing.cpp; sourceTree = "<group>"; };
 		05E62AF72FCB856600AE1B84 /* facetpairing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
+		05E62AF82FD1016E00AE1B84 /* aggregator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = aggregator.cpp; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -7793,6 +7795,7 @@
 		056AED442A431AE200EAF4FA /* compile-time */ = {
 			isa = PBXGroup;
 			children = (
+				05E62AF82FD1016E00AE1B84 /* aggregator.cpp */,
 				056AED4B2A431AE200EAF4FA /* binom.cpp */,
 				056AED462A431AE200EAF4FA /* boolset.cpp */,
 				056AED472A431AE200EAF4FA /* CMakeLists.txt */,
@@ -10524,6 +10527,7 @@
 				056AED7F2A431AE200EAF4FA /* perm.cpp in Sources */,
 				056AED702A431AE200EAF4FA /* gtest-typed-test.cc in Sources */,
 				056AED6C2A431AE200EAF4FA /* gtest-death-test.cc in Sources */,
+				05E62AF92FD1016E00AE1B84 /* aggregator.cpp in Sources */,
 				056AED6D2A431AE200EAF4FA /* gtest-port.cc in Sources */,
 				056AED912A431AE200EAF4FA /* abeliangroup.cpp in Sources */,
 				056AED762A431AE200EAF4FA /* laurent2.cpp in Sources */,

@@ -209,6 +209,7 @@ Version 8.0  [ TODO ]
         Class FixedArray:
             - Now has a default constructor that creates an empty array.
             - New constructor that takes an iterator range.
+            - New routines cycleForward(), cycleBackward(), and truncate().
         Class Flags<T>:
             - Updated to support enumerations with any base C++ integer type,
               not just int.
@@ -217,6 +218,7 @@ Version 8.0  [ TODO ]
               with the new routines baseValue() and fromBase().
         Class GroupExpressionTerm, GroupExpression, GroupPresentation,
                 HomGroupPresentation:
+            - Significant improvements to the speed of group simplification.
             - Now uses size_t instead of unsigned long throughout for
               generator counts and generator indices.
             - The depth argument to GroupPresentation::proliferateRelators()
@@ -225,6 +227,10 @@ Version 8.0  [ TODO ]
               UnsolvedCase exception if an integer overflow occurs when
               transferring information from an abelian group to a group
               expression.
+            - In GroupExpression, renamed isTrivial() and erase() to empty()
+              and clear() respectively.  The old names are kept but deprecated.
+            - Add a variant of GroupPresentation::simplifyAndConjugate() that
+              works with a splayed expression.
         Class HomGroupPresentation:
             - Routine invert() now throws an exception if the homomorphism is
               not a declared isomorphism.
@@ -396,8 +402,9 @@ Version 8.0  [ TODO ]
             - Routines inverse() and invert() now throw an exception if the
               matrix does not have determinant ±1.  This also means that
               invert() no longer returns a boolean to indicate success.
-        Class MaxAggregator<T>:
-            - Helper class for aggregating values using max with multiplicity.
+        Class MaxCountAggregator<T>, MinAggregator<T>:
+            - Helper classes for aggregating values using (i) maximum with
+              multiplicity, and (ii) minimum without multiplicity.
         Class NativeInteger<bytes>:
             - The constructor that takes an Integer or LargeInteger is now
               deprecated.  Instead, you should initialise this using either
@@ -463,6 +470,11 @@ Version 8.0  [ TODO ]
         Class safe_tuple_element<...>:
             - This is now deprecated, since its only purpose is to support
               CallableArg (which is also deprecated).
+        Class SetAggregator<T>:
+            - Helper class for aggregating values that uses sets to eliminate
+              duplicates.
+        Class SFSpace:
+            - New routine fibres().
         Class Simplex<dim>:
             - Now has a unified implementation across all dimensions.  There
               are no more dimension-specific class specialisations or headers,
@@ -482,6 +494,8 @@ Version 8.0  [ TODO ]
               identifying the closest non-adjacent pair of link nodes that are
               connected in the relative neighbourhood graph.  Thanks to
               Kate Turner for this suggestion.
+        Class SplayedExpression:
+            - New class to support operations on group presentations.
         Class StandardSubcomplex<dim>, StandardSubcomplexOptions<dim>,
                 StandardTriangulation:
             - The old 3-dimensional StandardTriangulation class has been
@@ -716,7 +730,10 @@ Version 8.0  [ TODO ]
                 StandardCppInteger, SignedCppInteger, UnsignedCppInteger
                 (defined in utilities/intutils.h)
               + LinkSigEncoding (defined in link/linksig.h)
+              + FaceClass, FaceOrSimplexClass, SimplexClass (defined in
+                triangulation/forward.h)
               + IsoSigEncoding, IsoSigType (defined in triangulation/isosig.h)
+              + Aggregator (defined in utilities/aggregator.h)
         Header foreign/fromsiglist-impl.h:
             - Renamed to foreign/siglist-impl.h.  The old header has been
               removed completely, since end users do not need to include it.
@@ -1019,8 +1036,9 @@ Version 7.4  [ 29 August, 2025 ] - Happy Wear it Purple day!
               effect of implementing all comparison operators, not just
               less-than (<) as before.
         Class GroupPresentation:
-            - Renamed intelligentSimplify() to simplify().  The old name is
-              kept as a deprecated alias.
+            - Renamed intelligentSimplify() and intelligentNielsen() to
+              simplify() and nielsen() respectively.  The old names are kept
+              as deprecated aliases.
         Class HomGroupPresentation:
             - Renamed intelligentSimplify() and intelligentNielsen() to
               simplify() and nielsen() respectively.  The old names are kept

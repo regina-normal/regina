@@ -28,89 +28,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include <cmath>
+#include "maths/integer.h"
 #include "utilities/aggregator.h"
 
-#include "testhelper.h"
+using regina::Aggregator;
+using regina::Integer;
 
-using regina::MaxCountAggregator;
-
-TEST(AggregatorTest, maxCount) {
-    using Agg = MaxCountAggregator<float>;
-
-    Agg a;
-    EXPECT_TRUE(a.empty());
-    EXPECT_THROW({ a.result(); }, regina::NoSolution);
-    EXPECT_EQ(a.count(), 0);
-
-    a += -2.0;
-    EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), -2.0);
-    EXPECT_EQ(a.count(), 1);
-
-    a += -0.0;
-    EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), 0.0);
-    EXPECT_EQ(a.count(), 1);
-
-    a += +0.0; // equivalent but not equal to -0.0
-    EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), 0.0);
-    EXPECT_EQ(a.count(), 2);
-
-#if defined(NAN)
-    EXPECT_THROW({ a += NAN; }, regina::NoSolution);
-    EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), 0.0);
-    EXPECT_EQ(a.count(), 2);
-#endif
-
-    a += -1.0;
-    EXPECT_FALSE(a.empty());
-    EXPECT_EQ(a.result(), 0.0);
-    EXPECT_EQ(a.count(), 2);
-
-    Agg b;
-    EXPECT_NE(a, b);
-    EXPECT_GT(a, b);
-    b += 0.0;
-    EXPECT_NE(a, b);
-    EXPECT_GT(a, b);
-    b += 0.0;
-    EXPECT_EQ(a, b);
-    b += 0.0;
-    EXPECT_NE(a, b);
-    EXPECT_LT(a, b);
-
-    b += a;
-    EXPECT_FALSE(b.empty());
-    EXPECT_EQ(b.result(), 0.0);
-    EXPECT_EQ(b.count(), 5);
-
-    b += 1.0;
-    EXPECT_FALSE(b.empty());
-    EXPECT_EQ(b.result(), 1.0);
-    EXPECT_EQ(b.count(), 1);
-
-    b += a;
-    EXPECT_FALSE(b.empty());
-    EXPECT_EQ(b.result(), 1.0);
-    EXPECT_EQ(b.count(), 1);
-
-#if defined(NAN)
-    Agg c;
-    c += NAN;
-    EXPECT_FALSE(c.empty());
-    EXPECT_TRUE(std::isnan(c.result()));
-    EXPECT_EQ(c.count(), 1);
-
-    EXPECT_NE(c, b);
-    EXPECT_FALSE(c < b);
-    EXPECT_FALSE(c > b);
-    EXPECT_FALSE(c == b);
-    EXPECT_EQ(c <=> b, std::partial_ordering::unordered);
-
-    EXPECT_THROW({ c += 1.0; }, regina::NoSolution);
-#endif
-}
-
+static_assert(Aggregator<regina::MinAggregator<Integer>, Integer>);
+static_assert(Aggregator<regina::SetAggregator<Integer>, Integer>);
+static_assert(Aggregator<regina::MaxCountAggregator<Integer>, Integer>);
