@@ -790,7 +790,7 @@ TEST_F(Dim4Test, move20Vertex) {
     testManualCases(TriangulationTest<4>::verify20Vertex);
 
     // The exhaustive cases below are slow, and so we disable them for now.
-    // On my machine (December 2024) they take around 45 seconds.
+    // On Ben's machine (June 2026) they take around 3 minutes.
     #if 0
     // Exhaustive, with boundary facets:
     runPartialCensus(TriangulationTest<4>::verify20Vertex,
@@ -811,7 +811,7 @@ TEST_F(Dim4Test, move20Edge) {
     testManualCases(TriangulationTest<4>::verify20Edge);
 
     // The exhaustive cases below are slow, and so we disable them for now.
-    // On my machine (December 2024) they take around 3.5 minutes.
+    // On Ben's machine (June 2026) they take around 14 minutes.
     #if 0
     // Exhaustive, with boundary facets:
     runPartialCensus(TriangulationTest<4>::verify20Edge,
@@ -832,7 +832,7 @@ TEST_F(Dim4Test, move20Triangle) {
     testManualCases(TriangulationTest<4>::verify20Triangle);
 
     // The exhaustive cases below are slow, and so we disable them for now.
-    // On my machine (December 2024) they take around 6 minutes.
+    // On Ben's machine (June 2026) they take around 27 minutes.
     #if 0
     // Exhaustive, with boundary facets:
     runPartialCensus(TriangulationTest<4>::verify20Triangle,
