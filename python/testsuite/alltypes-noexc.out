@@ -19,6 +19,8 @@ Base64BitDecoder : class -> EqualityType.ByReference
 Base64BitEncoder : class -> EqualityType.ByReference
 Base64Decoder : class -> EqualityType.ByReference
 Base64Encoder : class -> EqualityType.ByReference
+Base64SigDecoder : alias -> Base64Decoder
+Base64SigEncoder : alias -> Base64Encoder
 Base64SigEncoding : class -> EqualityType.NeverInstantiated
 BitDecoder : class -> EqualityType.ByReference
 BitEncoder : class -> EqualityType.ByReference
@@ -91,6 +93,7 @@ EdgeEmbedding7 : alias -> FaceEmbedding7_1
 EdgeEmbedding8 : alias -> FaceEmbedding8_1
 EqualityType : enum
 EulerSearcher : class -> EqualityType.ByReference
+Example : documentation
 Example2 : class -> EqualityType.NeverInstantiated
 Example3 : class -> EqualityType.NeverInstantiated
 Example4 : class -> EqualityType.NeverInstantiated
@@ -391,6 +394,7 @@ PentachoronEmbedding5 : alias -> FaceEmbedding5_4
 PentachoronEmbedding6 : alias -> FaceEmbedding6_4
 PentachoronEmbedding7 : alias -> FaceEmbedding7_4
 PentachoronEmbedding8 : alias -> FaceEmbedding8_4
+Perm : documentation
 Perm10 : class -> EqualityType.ByValue
 Perm11 : class -> EqualityType.ByValue
 Perm12 : class -> EqualityType.ByValue
@@ -648,6 +652,7 @@ TriangleEmbedding6 : alias -> FaceEmbedding6_2
 TriangleEmbedding7 : alias -> FaceEmbedding7_2
 TriangleEmbedding8 : alias -> FaceEmbedding8_2
 TriangleType : enum
+Triangulation : documentation
 Triangulation2 : class -> EqualityType.ByValue
 Triangulation3 : class -> EqualityType.ByValue
 Triangulation4 : class -> EqualityType.ByValue
