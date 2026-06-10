@@ -28,8 +28,8 @@ os=`uname -s`
 test "apidocs/index.html" "API docs"
 test "engine/data/census/closed-or-census-11.@DB_EXT@" "Census data"
 test "python/regina/engine.@REGINA_PYTHON_EXTENSION@" "Python module"
-test "qtui/doc/regina/index.html" "User handbook"
-test "qtui/doc/regina-xml/index.html" "File format docs "
+test "handbook/regina/index.html" "User handbook"
+test "handbook/regina-xml/index.html" "File format docs "
 if [ "$os" = Darwin ]; then
   test "qtui/src/Regina.app" "GUI"
 else

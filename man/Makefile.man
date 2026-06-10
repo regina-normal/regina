@@ -6,8 +6,8 @@ default:
 	#
 
 man:
-	cd ../qtui/doc/regina && \
-		docbook2man -o ../../../man manonly.docbook
+	cd ../handbook/regina && \
+		docbook2man -o ../../man manonly.docbook
 clean:
 	rm -f manpage.links manpage.refs
 

@@ -5964,13 +5964,13 @@
 			path = python;
 			sourceTree = "<group>";
 		};
-		0514CAE41D9CD42D00EDB2E6 /* doc */ = {
+		0514CAE41D9CD42D00EDB2E6 /* handbook */ = {
 			isa = PBXGroup;
 			children = (
 				0514CAE51D9CD45300EDB2E6 /* regina */,
 				0514CAE61D9CD47B00EDB2E6 /* regina-xml */,
 			);
-			path = doc;
+			path = handbook;
 			sourceTree = "<group>";
 		};
 		0514CAE51D9CD45300EDB2E6 /* regina */ = {
@@ -6118,9 +6118,8 @@
 				05685FEA1F97110500085B44 /* kde-default.css */,
 				05685FC21F9710F900085B44 /* regina_logo.png */,
 			);
-			name = "regina-xml";
-			path = "qtui/doc/regina-xml";
-			sourceTree = SOURCE_ROOT;
+			path = "regina-xml";
+			sourceTree = "<group>";
 		};
 		051AEAFD2AEB6F8F00960BBF /* Support */ = {
 			isa = PBXGroup;
@@ -7174,7 +7173,6 @@
 				0564A2161811D91C002CC2AE /* CMakeLists.txt */,
 				0564A4071811D91E002CC2AE /* README.txt */,
 				0564A4081811D91E002CC2AE /* src */,
-				0514CAE41D9CD42D00EDB2E6 /* doc */,
 				0564A6181811D921002CC2AE /* TODO.txt */,
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
 				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
@@ -7888,6 +7886,7 @@
 				05685F641F970E2600085B44 /* admin */,
 				05E62B002FD9A7EA00AE1B84 /* apidocs */,
 				05A47F961809CB7500F86BFD /* examples */,
+				0514CAE41D9CD42D00EDB2E6 /* handbook */,
 				05E62B132FD9A7EA00AE1B84 /* man */,
 				059D015A25B6A6E3004150F7 /* timing */,
 				05685F701F970F0500085B44 /* cmake */,
@@ -9777,8 +9776,8 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/qtui/doc/regina/index.docbook",
-				"$(SRCROOT)/qtui/doc/regina-xml/index.docbook",
+				"$(SRCROOT)/handbook/regina/index.docbook",
+				"$(SRCROOT)/handbook/regina-xml/index.docbook",
 			);
 			outputFileListPaths = (
 			);
@@ -9788,7 +9787,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "custom=\"${SRCROOT}\"/qtui/doc/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/qtui/doc/$i\n  output=\"${BUILD_DIR}\"/docs-$i\n  /usr/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\n  if [ $i = regina ]; then\n    # The handbook (but not the XML reference) includes HTML files also,\n    # such as the full text of the GPL.\n    cp \"${input}\"/*.html \"${output}\"\n  fi\ndone\n";
+			shellScript = "custom=\"${SRCROOT}\"/handbook/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/handbook/$i\n  output=\"${BUILD_DIR}\"/docs-$i\n  /usr/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\n  if [ $i = regina ]; then\n    # The handbook (but not the XML reference) includes HTML files also,\n    # such as the full text of the GPL.\n    cp \"${input}\"/*.html \"${output}\"\n  fi\ndone\n";
 		};
 		05DADB082192573400DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

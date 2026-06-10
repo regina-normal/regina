@@ -5,7 +5,7 @@ This directory is used to generate man pages that accompany Regina's
 main executables and other command-line utilities.
 
 The man pages are extracted from the Regina handbook, which is located
-in ../qtui/doc/regina/.
+in ../handbook/regina/.
 
 Typically only the Regina developers would generate these man pages:
 this is not part of the usual build process (instead the pre-generated
