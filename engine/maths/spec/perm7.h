@@ -914,7 +914,7 @@ class Perm<7> {
          * then this will wrap around to become the first permutation in
          * Perm<7>::Sn, which is the identity.
          *
-         * \python This routine is named inc() since python does
+         * \python This routine is named inc() since Python does
          * not support the increment operator.
          *
          * \return a copy of this permutation before the increment took place.

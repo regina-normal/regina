@@ -125,7 +125,7 @@ class AbelianGroup :
          * after it).
          *
          * \nopython Instead use the constructor that takes the invariant
-         * factors as a python list (which need not be constant).
+         * factors as a Python list (which need not be constant).
          *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).
@@ -176,7 +176,7 @@ class AbelianGroup :
          * after it).
          *
          * \nopython Instead use the constructor that takes the invariant
-         * factors as a python list.
+         * factors as a Python list.
          *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).

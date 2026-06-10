@@ -164,7 +164,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * takes a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
          * \param end a past-the-end iterator indicating the end of the
@@ -235,7 +235,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * takes a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
          * \param end a past-the-end iterator indicating the end of the

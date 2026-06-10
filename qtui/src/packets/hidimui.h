@@ -80,7 +80,7 @@ class HiDimUI : public QObject, public PacketReadOnlyUI {
         void refresh() override;
 
         /**
-         * Open a python console to work with this triangulation.
+         * Open a Python console to work with this triangulation.
          */
         void pythonConsole();
 };

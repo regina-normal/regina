@@ -152,12 +152,12 @@ class ReginaPrefSet : public QObject {
             /**< Indicates which graph to initially display in a
                  link viewer.  Must not be DualGraph. */
         bool pythonAutoIndent;
-            /**< Should auto-indent be enabled in python consoles? */
+            /**< Should auto-indent be enabled in Python consoles? */
         unsigned pythonSpacesPerTab;
             /**< The number of spaces to insert when <TAB> is pressed in a
-                 python console. */
+                 Python console. */
         bool pythonWordWrap;
-            /**< Should python consoles be word wrapped? */
+            /**< Should Python consoles be word wrapped? */
         int snapPeaCreationType;
             /**< The initial option to select in the list of creation options
                  when creating a new SnapPea triangulation.  This is given as
@@ -267,7 +267,7 @@ class ReginaPrefSet : public QObject {
                  from \c MainSizeV3 to \c MainSizeV4 (since another packet type
                  was added, and so the window needs to be a little wider). */
         QSize windowPythonSize;
-            /**< The initial size of a new python console. */
+            /**< The initial size of a new Python console. */
 
     public:
         /**

@@ -301,7 +301,7 @@ Running tests...
 ... (more output)
 ...
 3: ---------------------------------------
-3: Test suite for Regina's python bindings
+3: Test suite for Regina's Python bindings
 3: ---------------------------------------
 3:
 3: Running alltypes.test ... ok
@@ -318,7 +318,7 @@ Running tests...
 ... (lots and lots of output)
 ...
 4: ----------------------------------------------------------------
-4: Test suite for python bindings with a basic embedded interpreter
+4: Test suite for Python bindings with a basic embedded interpreter
 4: ----------------------------------------------------------------
 4:
 4: Running alltypes.test ... ok

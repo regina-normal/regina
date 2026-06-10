@@ -95,9 +95,9 @@ HiDimUI<dim>::HiDimUI(regina::PacketOf<Triangulation<dim>>* p,
     auto* python = new QPushButton(ReginaSupport::themeIcon(
         "utilities-terminal"), tr("Python Console"));
     python->setToolTip("Open a new Python console");
-    python->setWhatsThis("<qt>Open a new python console to work with "
+    python->setWhatsThis("<qt>Open a new Python console to work with "
         "this triangulation.<p>The triangulation will be available "
-        "through the python variable <tt>item</tt>.</qt>");
+        "through the Python variable <tt>item</tt>.</qt>");
     connect(python, &QPushButton::clicked, this, &HiDimUI::pythonConsole);
     buttonBox->addWidget(python);
     buttonBox->addWidget(new QWidget(), 1);

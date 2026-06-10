@@ -189,7 +189,7 @@ class Laurent2 :
          * using the += operator).
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of tuples.
+         * this routine takes a Python list of tuples.
          *
          * \param begin the beginning of the set of coefficients, as outlined
          * above.

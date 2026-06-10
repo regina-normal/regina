@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file commandedit.h
- *  \brief Provides a line edit designed for entering python commands.
+ *  \brief Provides a line edit designed for entering Python commands.
  */
 
 #ifndef __COMMANDEDIT_H
@@ -42,7 +42,7 @@
 class PythonConsole;
 
 /**
- * A line edit extension designed for entering python commands.
+ * A line edit extension designed for entering Python commands.
  * Tabs are converted into spaces, command-line history is available,
  * and cut/copy/paste shortcuts are disabled (so that Regina's actions
  * are called instead).
@@ -68,7 +68,7 @@ class CommandEdit : public QLineEdit {
             /**< The start of the line when a completion is attempted. */
 
         PythonConsole* console;
-            /**< The associated python console. */
+            /**< The associated Python console. */
         QColor *oldColor;
             /**< The default color of the input text, so we can 
                  change colours if needed. */

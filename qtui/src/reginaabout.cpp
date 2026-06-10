@@ -115,7 +115,7 @@ const QString ReginaAbout::regLicense( tr(
     "Free Software Foundation, either version 3 of the License, or (at your\n"
     "option) any later version.\n\n"
     "PYBIND11:\n\n"
-    "Regina includes a copy of pybind11, which it uses to generate python\n"
+    "Regina includes a copy of pybind11, which it uses to generate Python\n"
     "bindings for Regina's native C++ code.  The pybind11 library was written\n"
     "by Wenzel Jakob, and is distributed under a BSD-style license that is\n"
     "shipped with Regina's source code in the file python/pybind11/LICENSE.\n\n"

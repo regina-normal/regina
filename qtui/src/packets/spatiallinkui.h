@@ -115,7 +115,7 @@ class SpatialLinkUI : public QObject, public PacketUI {
         void refine();
 
         /**
-         * Open a python console to work with this spatial link.
+         * Open a Python console to work with this spatial link.
          */
         void pythonConsole();
 

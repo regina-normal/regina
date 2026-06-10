@@ -484,9 +484,9 @@ void ReginaMain::packetDelete() {
     if (msgBox.clickedButton() != delBtn)
         return;
 
-    // Awkwardly, if a python window still holds a reference to the
+    // Awkwardly, if a Python window still holds a reference to the
     // packet then the packet will not actually be deleted until the
-    // python window closes.  *Probably* this is what we want.
+    // Python window closes.  *Probably* this is what we want.
     //
     // Otherwise, the packet will simply be deleted as its last
     // shared_ptr drops away.

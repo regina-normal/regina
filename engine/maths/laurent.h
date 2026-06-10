@@ -180,7 +180,7 @@ class Laurent :
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of coefficients.
+         * this routine takes a Python list of coefficients.
          *
          * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.
@@ -259,7 +259,7 @@ class Laurent :
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of coefficients.
+         * this routine takes a Python list of coefficients.
          *
          * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.

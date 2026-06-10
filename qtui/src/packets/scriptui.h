@@ -175,7 +175,7 @@ class ScriptUI : public QObject, public PacketUI,
         void removeSelectedVariables();
 
         /**
-         * Handle python execution.
+         * Handle Python execution.
          */
         void execute();
 

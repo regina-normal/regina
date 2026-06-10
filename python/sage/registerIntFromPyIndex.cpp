@@ -35,7 +35,7 @@
 //
 // Luckily, such an Integer follows PEP 357 and provides an __index__
 // method. This file implements a from-python conversion for integer types
-// checking whether the python object has an __index__ method returning an
+// checking whether the Python object has an __index__ method returning an
 // integer.
 //
 // This conversion is not registered by default. It needs to be registered
@@ -52,7 +52,7 @@ using namespace boost::python;
 
 namespace regina::python {
 
-// from_python conversion of python objects implementing PEP 357 to integer
+// from_python conversion of Python objects implementing PEP 357 to integer
 // type T. Calling the c'tor will register the conversion with boost::python.
 template<regina::CppInteger T>
 struct register_int_from_py_index {
@@ -84,8 +84,8 @@ struct register_int_from_py_index {
         return true;
     }
 
-    // Try to convert a python object to an integer of type T.
-    // Return empty boost::optional if python object is not holding
+    // Try to convert a Python object to an integer of type T.
+    // Return empty boost::optional if Python object is not holding
     // the right type or the number is too big.
     static
     boost::optional<T> _convert_py_int(PyObject * obj) {
@@ -102,7 +102,7 @@ struct register_int_from_py_index {
         return boost::none;
     }
 
-    // Get an integer from a python object by calling its __index__ method
+    // Get an integer from a Python object by calling its __index__ method
     static
     boost::optional<T> _convert_py_index(PyObject * const obj) {
         if (not obj) {
@@ -148,7 +148,7 @@ struct register_int_from_py_index {
     // an integer or the integer is too large. Thus, the user will see in
     // these cases the typical boost message that the signature did not
     // match. It might be better, if we actually threw an exception and
-    // gave a python error similar to what, e.g., range(10)[f] does if
+    // gave a Python error similar to what, e.g., range(10)[f] does if
     // f.__index__ returned a non-int:
     //    TypeError: __index__ returned non-(int,long) (type str)
     static
@@ -163,7 +163,7 @@ struct register_int_from_py_index {
     using converter_data =
         boost::python::converter::rvalue_from_python_stage1_data;
 
-    // Implements boost::python constructing a C++ int from a python object
+    // Implements boost::python constructing a C++ int from a Python object
     static
     void construct(PyObject * const obj,
                    converter_data * const data) {

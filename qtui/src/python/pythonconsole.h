@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file pythonconsole.h
- *  \brief Provides a console window containing an embedded python
+ *  \brief Provides a console window containing an embedded Python
  *  interpreter.
  */
 
@@ -56,7 +56,7 @@ namespace regina::python {
 }
 
 /**
- * A top-level window containing an embedded python interpreter.
+ * A top-level window containing an embedded Python interpreter.
  * Python support must be built in for this class to be used.
  *
  * Objects of this class are generally not created directly; instead
@@ -100,7 +100,7 @@ class PythonConsole : public QMainWindow {
          * The constructor will leave the console with input disabled.
          * Input can be re-enabled by calling allowInput().
          *
-         * Generally python consoles are created through
+         * Generally Python consoles are created through
          * PythonManager::launchPythonConsole(), not by calling this
          * constructor directly.
          */
@@ -129,7 +129,7 @@ class PythonConsole : public QMainWindow {
             const QString& suggestedInput = QString());
 
         /**
-         * Configure the python interpreter.
+         * Configure the Python interpreter.
          */
         bool importRegina();
         void setRootPacket(std::shared_ptr<regina::Packet> packet);
@@ -193,7 +193,7 @@ class PythonConsole : public QMainWindow {
         QSize sizeHint() const override;
 
         /**
-         * A completer object to handle python tab completion.
+         * A completer object to handle Python tab completion.
          */
         QCompleter* completer;
 

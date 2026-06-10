@@ -29,9 +29,9 @@
  **************************************************************************/
 
 /*! \file pythonmanager.h
- *  \brief Provides management for python consoles.
+ *  \brief Provides management for Python consoles.
  *
- *  This header may be used whether or not python scripting has been built in.
+ *  This header may be used whether or not Python scripting has been built in.
  */
 
 #ifndef __PYTHONMANAGER_H
@@ -52,12 +52,12 @@ namespace regina {
 }
 
 /**
- * Provides simple management for python consoles.  Consoles launched
+ * Provides simple management for Python consoles.  Consoles launched
  * through a PythonManager are tracked, so that when a PythonManager is
  * destroyed it simultaneously destroys any consoles that it launched
  * that still exist.
  *
- * This class may be used whether or not python scripting has been built in.
+ * This class may be used whether or not Python scripting has been built in.
  */
 class PythonManager {
     private:
@@ -66,19 +66,19 @@ class PythonManager {
 
     public:
         /**
-         * Destroys this python manager.  Any consoles that were either
-         * launched through this python manager or externally
-         * registered with this python manager will also be destroyed
+         * Destroys this Python manager.  Any consoles that were either
+         * launched through this Python manager or externally
+         * registered with this Python manager will also be destroyed
          * if they still exist.
          */
         virtual ~PythonManager();
 
         /**
-         * Launches a new python console to interact with the given packet tree
+         * Launches a new Python console to interact with the given packet tree
          * and selected packet.  Either of these packets may be null.  The new
-         * console is automatically registered with this python manager.
+         * console is automatically registered with this Python manager.
          *
-         * If python scripting is not built in, a notice is displayed
+         * If Python scripting is not built in, a notice is displayed
          * to the user and null is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent,
@@ -86,11 +86,11 @@ class PythonManager {
                 std::shared_ptr<regina::Packet> selectedPacket = nullptr);
 
         /**
-         * Launches a new python console to run the given script.
-         * The new console is automatically registered with this python
+         * Launches a new Python console to run the given script.
+         * The new console is automatically registered with this Python
          * manager.
          *
-         * If python scripting is not built in, a notice is displayed
+         * If Python scripting is not built in, a notice is displayed
          * to the user and 0 is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent,
@@ -98,19 +98,19 @@ class PythonManager {
 
         /**
          * Destroys any consoles still in existence that were either
-         * launched through this python manager or externally registered
-         * with this python manager.
+         * launched through this Python manager or externally registered
+         * with this Python manager.
          */
         void closeAllConsoles();
 
         /**
-         * Asks this python manager to claim responsibility for the
-         * given console.  When this python manager is destroyed, if the
+         * Asks this Python manager to claim responsibility for the
+         * given console.  When this Python manager is destroyed, if the
          * given console still exists then it is destroyed also.
          */
         void registerConsole(PythonConsole* console);
         /**
-         * Asks this python manager to relinquish responsibility for the
+         * Asks this Python manager to relinquish responsibility for the
          * given console.
          */
         void deregisterConsole(PythonConsole* console);

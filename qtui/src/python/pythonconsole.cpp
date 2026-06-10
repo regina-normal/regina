@@ -545,7 +545,7 @@ void PythonConsole::processCommand() {
 void PythonConsole::processCompletion(int start, int end) {
     GUICompleter comp;
 
-    // Send a request for a completion to python.
+    // Send a request for a completion to Python.
     // We only send the last "word" before the cursor / selected block, where
     // a "word" starts with a character or underscore, and only contains
     // letters, numbers, underscores and/or the dot.
@@ -565,7 +565,7 @@ void PythonConsole::processCompletion(int start, int end) {
     QString lineEnd = input->text().mid(end);
     input->setCompletionSurrounds(lineStart, lineEnd);
 
-    // Ask python for all completions.
+    // Ask Python for all completions.
     QString lastWord = m.captured();
     if (interpreter->complete(lastWord.toUtf8().constData(), comp) < 0) {
         // Completion failed.
@@ -609,7 +609,7 @@ void PythonConsole::processCompletion(int start, int end) {
         // No completions, an error occured.
         // Note that if a valid word is completed (like "from") the whole word
         // is also returned as the sole completion, so this part of the
-        // function only fires if python does not recognise the word at all.
+        // function only fires if Python does not recognise the word at all.
         input->highlightErrorInInput();
     }
 }

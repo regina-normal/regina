@@ -206,7 +206,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * insert() or dominates() is called.
          *
          * \python Instead of the arguments \a entry and \a len,
-         * you should pass a single argument which is a python sequence
+         * you should pass a single argument which is a Python sequence
          * of length \a len.  This list should be a type vector, and
          * each list element should be between 0 and (\a nTypes - 1) inclusive.
          *
@@ -224,7 +224,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * insert() or dominates() is called.
          *
          * \python Instead of the arguments \a vec and \a len,
-         * you should pass a single argument which is a python sequence
+         * you should pass a single argument which is a Python sequence
          * of length \a len.  This list should be a type vector, and
          * each list element should be between 0 and (\a nTypes - 1) inclusive.
          *

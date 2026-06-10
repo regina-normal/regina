@@ -180,7 +180,7 @@ class ReginaMain : public QMainWindow {
         static QMenu* getWindowMenu();
 
         /**
-         * Allow access to the python manager.
+         * Allow access to the Python manager.
          */
         PythonManager& getPythonManager();
 

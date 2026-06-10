@@ -89,7 +89,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->show();
     QCoreApplication::instance()->processEvents();
 
-    // Initialise the python interpreter.
+    // Initialise the Python interpreter.
     if (ans->importRegina()) {
         ans->addOutput(parent->QObject::tr("\n"));
         ans->setRootPacket(std::move(tree));
@@ -112,7 +112,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->show();
     QCoreApplication::instance()->processEvents();
 
-    // Initialise the python interpreter.
+    // Initialise the Python interpreter.
     if (ans->importRegina())
         ans->addOutput(parent->QObject::tr("\n"));
 
