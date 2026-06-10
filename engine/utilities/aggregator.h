@@ -40,10 +40,10 @@
 #include "utilities/exception.h"
 #include <compare>
 #include <concepts>
+#include <optional>
 #include <set>
 #include <type_traits>
 #include <utility> // for std::swap
-#include <optional> // for std::optional
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
