@@ -73,7 +73,7 @@ When adding support for a new coordinate system:
 * The file normalcoords.h must be updated. This includes a new enum
   value for NormalCoords, a new case for the NormalEncoding
   constructor, and new cases for the functions in NormalInfo. Do not
-  forget to update the python bindings for NormalCoords also.
+  forget to update the Python bindings for NormalCoords also.
 
 * The global routines makeEmbeddedConstraints() and
   makeMatchingEquations() should be updated to incorporate the new

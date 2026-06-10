@@ -30,9 +30,9 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
 
 Python:
-    The C++ types Matrix<Integer>, Matrix<bool> and Matrix<double> are
-    available using the Python names MatrixInt, MatrixBool and
-    MatrixReal respectively.)doc";
+    The C++ types ``Matrix<Integer>``, ``Matrix<bool>`` and
+    ``Matrix<double>`` are available using the Python names
+    ``MatrixInt``, ``MatrixBool`` and ``MatrixReal`` respectively.)doc";
 
 // Docstring regina::python::doc::Matrix::__copy
 static constexpr const char __copy[] =

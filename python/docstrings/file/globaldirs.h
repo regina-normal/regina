@@ -103,7 +103,7 @@ will take precedence over any automatic deductions:
   ``$REGINA_HOME/data/census``.
 
 * REGINA_PYLIBDIR, if present and non-empty, will determine the
-  directory containing Regina's python module as returned by
+  directory containing Regina's Python module as returned by
   pythonModule().
 
 If you have an unusual setup where Regina cannot deduce the paths
@@ -180,8 +180,8 @@ Returns:
 
 // Docstring regina::python::doc::GlobalDirs::pythonModule
 static constexpr const char pythonModule[] =
-R"doc(Returns the directory in which Regina's python module is installed, or
-the empty string if the module is installed in python's standard site-
+R"doc(Returns the directory in which Regina's Python module is installed, or
+the empty string if the module is installed in Python's standard site-
 packages directory.
 
 .. warning::
@@ -191,7 +191,7 @@ packages directory.
     either setDirs() or deduceDirs() before calling this routine.
 
 Returns:
-    Regina's python module directory.)doc";
+    Regina's Python module directory.)doc";
 
 // Docstring regina::python::doc::GlobalDirs::setDirs
 static constexpr const char setDirs[] =
@@ -215,7 +215,7 @@ Empty strings are treated as follows:
   deduceDirs() has been called before.
 
 * If *pythonDir* is an empty string then this has an explicit meaning,
-  namely that the python module has been installed in python's
+  namely that the Python module has been installed in Python's
   standard site-packages directory.
 
 Parameter ``homeDir``:
@@ -223,8 +223,8 @@ Parameter ``homeDir``:
     homeDir().
 
 Parameter ``pythonDir``:
-    the directory containing Regina's python module, or the empty
-    string if the module has been installed in python's standard site-
+    the directory containing Regina's Python module, or the empty
+    string if the module has been installed in Python's standard site-
     packages directory; this will be returned by pythonModule().
 
 Parameter ``censusDir``:

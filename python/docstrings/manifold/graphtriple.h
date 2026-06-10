@@ -159,6 +159,10 @@ R"doc(Creates a new graph manifold from three bounded Seifert fibred spaces,
 as described in the class notes. The three Seifert fibred spaces and
 both 2-by-2 matching matrices are passed separately.
 
+This constructor will try to simplify the presentation of the graph
+manifold if possible, though there is no guarantee that the
+representation it settles on will be unique for the manifold.
+
 Precondition:
     Each of the given matrices has determinant +1 or -1.
 
