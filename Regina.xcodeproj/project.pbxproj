@@ -8969,7 +8969,6 @@
 				050BEA351D9C8B3700B96DB8 /* Copy Python Scripts */,
 				050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */,
 				050F5E701B9BD50C00C1F681 /* Copy Engine and Utilities */,
-				052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */,
 				057ED8FC2581B49E004F0068 /* Embed Frameworks */,
 				05B9295C259C148700A4503B /* Prepare and Sign Python */,
 			);
@@ -9238,20 +9237,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ninstall_name_tool -change @rpath/libgmp.dylib @loader_path/../../../Frameworks/libgmp.dylib \"${module}\"\ninstall_name_tool -change @rpath/libgmpxx.dylib @loader_path/../../../Frameworks/libgmpxx.dylib \"${module}\"\ninstall_name_tool -change @rpath/libtokyocabinet.dylib @loader_path/../../../Frameworks/libtokyocabinet.dylib \"${module}\"\n\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
-		};
-		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Clean out *.pyc";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# These will break codesign.\nrm -f ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/python/regina/*.pyc\n";
 		};
 		05B9295C259C148700A4503B /* Prepare and Sign Python */ = {
 			isa = PBXShellScriptBuildPhase;
