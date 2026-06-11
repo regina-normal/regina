@@ -28,7 +28,6 @@ SET ( FILES
   conical.cpp
   snappedtwosphere.cpp
   spiralsolidtorus.cpp
-  standardtri4.cpp
   standardsubcomplex3.cpp
   standardsubcomplex4.cpp
   trisolidtorus.cpp
@@ -75,7 +74,6 @@ if (${REGINA_INSTALL_DEV})
     spiralsolidtorus.h
     standardsubcomplex.h
     standardtri.h
-    standardtri4.h
     trisolidtorus.h
     trivialtri.h
     txicore.h

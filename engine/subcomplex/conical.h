@@ -39,7 +39,7 @@
 #include <utility>
 #include <vector>
 #include "regina-core.h"
-#include "subcomplex/standardtri4.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim4.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -68,7 +68,7 @@ namespace regina {
  *
  * \ingroup subcomplex
  */
-class Conical : public StandardTriangulation4 {
+class Conical : public StandardSubcomplex<4> {
     public:
         /**
          * Describes what is currently known about the 3-dimensional base.

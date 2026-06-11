@@ -37,7 +37,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/standardtri4.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim4.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -66,7 +66,7 @@ namespace regina {
  *
  * \ingroup subcomplex
  */
-class DoubleSnappedBall : public StandardTriangulation4 {
+class DoubleSnappedBall : public StandardSubcomplex<4> {
     public:
         /**
          * Identifies which type of double snapped ball this is.

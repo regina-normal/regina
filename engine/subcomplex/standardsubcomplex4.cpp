@@ -28,6 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "subcomplex/snappedball4.h"
 #include "subcomplex/standardsubcomplex.h"
 
 namespace regina {
@@ -35,14 +36,28 @@ namespace regina {
 template <>
 std::unique_ptr<StandardSubcomplex<4>> StandardSubcomplex<4>::recognise(
         Component<4>* comp) {
-    // For now, a placeholder.
+    if (comp->size() == 1) {
+        if (auto ans = SnappedBall4::recognise(comp->pentachoron(0)))
+            return ans;
+    }
+    // Fill in the rest...
+
     return nullptr;
 }
 
 template <>
 std::unique_ptr<StandardSubcomplex<4>> StandardSubcomplex<4>::recognise(
         const Triangulation<4>& tri) {
-    // Again, a placeholder.
+    if (tri.countComponents() != 1)
+        return nullptr;
+
+    // Do what we can through components.
+    if (auto ans = recognise(tri.component(0)))
+        return ans;
+
+    // If there are any tests that require full triangluations (i.e., that
+    // cannot work with component), include them here.
+
     return nullptr;
 }
 

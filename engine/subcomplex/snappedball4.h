@@ -37,7 +37,7 @@
 #endif
 
 #include "regina-core.h"
-#include "subcomplex/standardtri4.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim4.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
@@ -55,13 +55,13 @@ namespace regina {
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
  * It implements the C++ Swappable requirement via its own member and global
- * swap() functions, for consistency with the other StandardTriangulation4
+ * swap() functions, for consistency with the other StandardSubcomplex
  * subclasses.  Note that the only way to create these objects (aside from
  * copying or moving) is via the static member function recognise().
  *
  * \ingroup subcomplex
  */
-class SnappedBall4 : public StandardTriangulation4 {
+class SnappedBall4 : public StandardSubcomplex<4> {
     private:
         Pentachoron<4>* pent_;
             /**< The pentachoron that forms the snapped ball. */

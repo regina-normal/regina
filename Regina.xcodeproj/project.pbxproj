@@ -389,15 +389,12 @@
 		05373B1A277173A300E9418B /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B0F2771734D00E9418B /* sample.rga */; };
 		053905EB2FDAED4C008F3BE3 /* doublesnappedball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905E62FDAED4C008F3BE3 /* doublesnappedball.cpp */; };
 		053905EC2FDAED4C008F3BE3 /* snappedball4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905E82FDAED4C008F3BE3 /* snappedball4.cpp */; };
-		053905ED2FDAED4C008F3BE3 /* standardtri4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905EA2FDAED4C008F3BE3 /* standardtri4.cpp */; };
 		053905EE2FDAED4C008F3BE3 /* conical.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905E42FDAED4C008F3BE3 /* conical.cpp */; };
 		053905EF2FDAED4C008F3BE3 /* doublesnappedball.h in Headers */ = {isa = PBXBuildFile; fileRef = 053905E52FDAED4C008F3BE3 /* doublesnappedball.h */; };
 		053905F02FDAED4C008F3BE3 /* conical.h in Headers */ = {isa = PBXBuildFile; fileRef = 053905E32FDAED4C008F3BE3 /* conical.h */; };
-		053905F12FDAED4C008F3BE3 /* standardtri4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053905E92FDAED4C008F3BE3 /* standardtri4.h */; };
 		053905F22FDAED4C008F3BE3 /* snappedball4.h in Headers */ = {isa = PBXBuildFile; fileRef = 053905E72FDAED4C008F3BE3 /* snappedball4.h */; };
 		053905F32FDAED4C008F3BE3 /* doublesnappedball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905E62FDAED4C008F3BE3 /* doublesnappedball.cpp */; };
 		053905F42FDAED4C008F3BE3 /* snappedball4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905E82FDAED4C008F3BE3 /* snappedball4.cpp */; };
-		053905F52FDAED4C008F3BE3 /* standardtri4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905EA2FDAED4C008F3BE3 /* standardtri4.cpp */; };
 		053905F62FDAED4C008F3BE3 /* conical.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905E42FDAED4C008F3BE3 /* conical.cpp */; };
 		053905F82FDAEDEC008F3BE3 /* layered4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905F72FDAEDEC008F3BE3 /* layered4.cpp */; };
 		053905F92FDAEDEC008F3BE3 /* layered4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053905F72FDAEDEC008F3BE3 /* layered4.cpp */; };
@@ -2818,8 +2815,6 @@
 		053905E62FDAED4C008F3BE3 /* doublesnappedball.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = doublesnappedball.cpp; sourceTree = "<group>"; };
 		053905E72FDAED4C008F3BE3 /* snappedball4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = snappedball4.h; sourceTree = "<group>"; };
 		053905E82FDAED4C008F3BE3 /* snappedball4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = snappedball4.cpp; sourceTree = "<group>"; };
-		053905E92FDAED4C008F3BE3 /* standardtri4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = standardtri4.h; sourceTree = "<group>"; };
-		053905EA2FDAED4C008F3BE3 /* standardtri4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = standardtri4.cpp; sourceTree = "<group>"; };
 		053905F72FDAEDEC008F3BE3 /* layered4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = layered4.cpp; sourceTree = "<group>"; };
 		053CAB271DA710FE00A92F98 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		053CAB281DA710FE00A92F98 /* perm2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm2.h; sourceTree = "<group>"; };
@@ -6350,8 +6345,6 @@
 				05A067001DFA68190047872E /* standardsubcomplex3.cpp */,
 				05E62A9A2FC4730600AE1B84 /* standardsubcomplex4.cpp */,
 				05A067011DFA68190047872E /* standardtri.h */,
-				053905EA2FDAED4C008F3BE3 /* standardtri4.cpp */,
-				053905E92FDAED4C008F3BE3 /* standardtri4.h */,
 				05A067021DFA68190047872E /* trisolidtorus.cpp */,
 				05A067031DFA68190047872E /* trisolidtorus.h */,
 				05A067041DFA68190047872E /* trivialtri.cpp */,
@@ -8613,7 +8606,6 @@
 				05B44D1521914FA300B1D343 /* binom.h in Headers */,
 				053905EF2FDAED4C008F3BE3 /* doublesnappedball.h in Headers */,
 				053905F02FDAED4C008F3BE3 /* conical.h in Headers */,
-				053905F12FDAED4C008F3BE3 /* standardtri4.h in Headers */,
 				053905F22FDAED4C008F3BE3 /* snappedball4.h in Headers */,
 				052F9F8B180600FB00FAE4DF /* isometry.h in Headers */,
 				0512E09926DF352D00DDB222 /* satregion-impl.h in Headers */,
@@ -9998,7 +9990,6 @@
 				0553FB392AEBE73A00BE89A7 /* snappedball.cpp in Sources */,
 				053905EB2FDAED4C008F3BE3 /* doublesnappedball.cpp in Sources */,
 				053905EC2FDAED4C008F3BE3 /* snappedball4.cpp in Sources */,
-				053905ED2FDAED4C008F3BE3 /* standardtri4.cpp in Sources */,
 				053905EE2FDAED4C008F3BE3 /* conical.cpp in Sources */,
 				05A628202AE921580049739E /* numbertheory.cpp in Sources */,
 				0553FAD12AEBE3E100BE89A7 /* cut.cpp in Sources */,
@@ -10645,7 +10636,6 @@
 				052F9F44180600FB00FAE4DF /* perm4.cpp in Sources */,
 				053905F32FDAED4C008F3BE3 /* doublesnappedball.cpp in Sources */,
 				053905F42FDAED4C008F3BE3 /* snappedball4.cpp in Sources */,
-				053905F52FDAED4C008F3BE3 /* standardtri4.cpp in Sources */,
 				053905F62FDAED4C008F3BE3 /* conical.cpp in Sources */,
 				0512E09E26DF354500DDB222 /* matching.cpp in Sources */,
 				050C64691DA1019B00C9420F /* anglestructure.cpp in Sources */,
