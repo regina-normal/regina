@@ -199,6 +199,34 @@ space ``T² × T²``.
 Returns:
     the product space ``T² × T²``.)doc";
 
+// Docstring regina::python::doc::Example_::handlebody
+static const char *handlebody =
+R"doc(Returns a triangulation of the orientable 4-dimensional handlebody
+with the given genus.
+
+This is the boundary connected sum of *genus* copies of
+``S^1 x B^3``.  For positive genus, this routine constructs the
+handlebody by adapting the three-dimensional layered handlebody
+construction one dimension higher: it first builds the layered
+three-dimensional handlebody ``Example<3>::handlebody(genus)``, and
+then layers one pentachoron over each internal triangle of this
+3-dimensional spine.
+
+This is deliberately not the generic prism construction from
+iBundle().  The resulting triangulation is typically much smaller
+than ``Example<4>::iBundle(Example<3>::handlebody(genus))``.
+
+For genus 0, this routine uses the one-pentachoron 4-ball.  For
+genus 1, it uses an explicit two-pentachoron orientable model of
+``S^1 x B^3``; as the naive one-pentachoron closure gives the
+non-orientable twisted thickening instead.
+
+Parameter ``genus``: 
+    the genus of the 4-dimensional handlebody.
+
+Returns:
+    the orientable 4-dimensional handlebody with the given genus.)doc";
+
 // Docstring regina::python::doc::Example_::iBundle
 static const char *iBundle =
 R"doc(Returns a triangulation of the product ``M × I``, where *M* is the
@@ -376,6 +404,35 @@ Parameter ``breakOpen``:
 
 Returns:
     an ideal triangulation of the resulting 2-knot.)doc";
+
+// Docstring regina::python::doc::Example_::surfaceProduct
+static const char *surfaceProduct = 
+R"doc(Returns a triangulation of the product ``U × V``,
+where *U* and *V* are 2-manifold triangulations.
+
+The product is created as follows.  For each pair of original
+triangles, one from *surfaceU* and one from *surfaceV*, we build
+the standard staircase triangulation of triangle x triangle,
+containing six pentachora.  We then glue these product cells
+together in a manner that follows the edge gluings of the two
+original surface triangulations.  
+
+If either input surface has boundary, the corresponding boundary
+facets remain boundary facets of the product.
+
+.. warning::
+    If either given 2-manifold triangulation has ideal
+    boundary, then you will obtain an invalid 4-manifold triangulation
+    as a result.
+
+Parameter ``surfaceU``: 
+    the first 2-manifold triangulation *U*.
+
+Parameter ``surfaceV``: 
+    the second 2-manifold triangulation *V*.
+
+Returns:
+    the product ``U × V``.)doc";
 
 }
 

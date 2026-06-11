@@ -29,8 +29,10 @@
  **************************************************************************/
 
 #include "link/link.h"
+#include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/example3.h"
 #include "triangulation/example4.h"
 
 namespace regina {
@@ -529,7 +531,7 @@ Triangulation<4> Example<4>::spun(const Link& knot, StrandRef breakOpen) {
     // This is because, when simplifying an ideal triangulation, we need to
     // repeatedly run 3-sphere recognition in order to work out which is the
     // ideal vertex.  If we have thousands of vertices, this takes time.
-    // When simplifying a compact triangulation OTOH, regina caches the fact
+    // When simplifying a compact triangulation OTOH, Regina caches the fact
     // that all vertex links are balls or spheres, and does not need to run
     // 3-sphere recognition at all during the simplification process.
     ans.simplify();
@@ -538,6 +540,558 @@ Triangulation<4> Example<4>::spun(const Link& knot, StrandRef breakOpen) {
     // but this time using an ideal triangulation.
     ans.makeIdeal();
     ans.simplify();
+
+    return ans;
+}
+
+namespace {
+    /**
+     * A vertex in a local product triangle x triangle, stored using the two
+     * triangle-local vertex numbers.
+     */
+    struct SurfaceProductVertex {
+        int a;
+        int b;
+
+        friend bool operator<(const SurfaceProductVertex& x,
+                const SurfaceProductVertex& y) {
+            return x.a < y.a || (x.a == y.a && x.b < y.b);
+        }
+
+        friend bool operator==(const SurfaceProductVertex& x,
+                const SurfaceProductVertex& y) {
+            return x.a == y.a && x.b == y.b;
+        }
+    };
+
+    using SurfaceProductTriangleOrder = std::array<int, 3>;
+
+    /**
+     * The staircase triangulation of triangle x triangle depends on an
+     * ordering of each triangle's vertices.  We choose these orders globally
+     * so adjacent triangles induce the same diagonal on each shared edge
+     * product.
+     */
+    constexpr std::array<SurfaceProductTriangleOrder, 6>
+            surfaceProductAllTriangleOrders {{
+        {{0, 1, 2}},
+        {{0, 2, 1}},
+        {{1, 0, 2}},
+        {{1, 2, 0}},
+        {{2, 0, 1}},
+        {{2, 1, 0}}
+    }};
+
+    /**
+     * One edge gluing from an input surface triangulation, used as a
+     * constraint when choosing compatible staircase diagonals.
+     */
+    struct SurfaceProductEdgeConstraint {
+        size_t from;
+        int edge;
+        size_t to;
+        Perm<3> gluing;
+    };
+
+    /**
+     * A product facet, identified independently of the pentachoron that sees
+     * it.
+     *
+     * The two triangle indices identify the product cell triangle x triangle.
+     * The four local product vertices identify the facet inside that cell;
+     * they are sorted when the key is built, so opposite sides of an internal
+     * facet produce identical keys.
+     */
+    struct SurfaceProductFacetKey {
+        size_t aTriangle;
+        size_t bTriangle;
+        std::array<SurfaceProductVertex, 4> vertices;
+
+        friend bool operator<(const SurfaceProductFacetKey& x,
+                const SurfaceProductFacetKey& y) {
+            if (x.aTriangle != y.aTriangle)
+                return x.aTriangle < y.aTriangle;
+            if (x.bTriangle != y.bTriangle)
+                return x.bTriangle < y.bTriangle;
+            return x.vertices < y.vertices;
+        }
+    };
+
+    // (pentachoron, its five local product vertices, opposite facet number).
+    using SurfaceProductFacetData = std::tuple<Pentachoron<4>*,
+        std::array<SurfaceProductVertex, 5>, int>;
+
+    /**
+     * Return the six monotone paths from (0,0) to (2,2).  Each path gives one
+     * pentachoron in the standard staircase triangulation of
+     * Delta^2 x Delta^2: a 0-step advances through the first triangle, and a
+     * 1-step through the second.
+     */
+    std::vector<std::array<int, 4>> surfaceProductShuffles() {
+        std::array<int, 4> word {{0, 0, 1, 1}};
+        std::vector<std::array<int, 4>> ans;
+
+        do {
+            ans.push_back(word);
+        } while (std::next_permutation(word.begin(), word.end()));
+
+        return ans;
+    }
+
+    std::array<SurfaceProductVertex, 5> surfaceProductSimplexVertices(
+            const std::array<int, 4>& shuffle,
+            const SurfaceProductTriangleOrder& aOrder,
+            const SurfaceProductTriangleOrder& bOrder) {
+        std::array<SurfaceProductVertex, 5> ans;
+        int a = 0;
+        int b = 0;
+
+        ans[0] = { aOrder[a], bOrder[b] };
+        for (int i = 0; i < 4; ++i) {
+            if (shuffle[i] == 0)
+                ++a;
+            else
+                ++b;
+            ans[i + 1] = { aOrder[a], bOrder[b] };
+        }
+
+        return ans;
+    }
+
+    bool surfaceProductCompatibleOrders(
+            const SurfaceProductTriangleOrder& fromOrder, int edge,
+            const SurfaceProductTriangleOrder& toOrder,
+            const Perm<3>& gluing) {
+        // u and v are the two endpoints of the edge opposite vertex edge.
+        int u = (edge == 0 ? 1 : 0);
+        int v = (edge == 2 ? 1 : 2);
+
+        auto before = [](const SurfaceProductTriangleOrder& order,
+                int x, int y) {
+            return std::find(order.begin(), order.end(), x) <
+                std::find(order.begin(), order.end(), y);
+        };
+        return before(fromOrder, u, v) ==
+            before(toOrder, gluing[u], gluing[v]);
+    }
+
+    bool surfaceProductAssignOrdersRec(size_t next,
+            const std::vector<SurfaceProductEdgeConstraint>& edges,
+            std::vector<int>& chosen,
+            std::vector<SurfaceProductTriangleOrder>& orders) {
+        if (next == orders.size())
+            return true;
+
+        if (chosen[next] >= 0)
+            return surfaceProductAssignOrdersRec(next + 1, edges, chosen,
+                orders);
+
+        for (size_t candidate = 0;
+                candidate < surfaceProductAllTriangleOrders.size();
+                ++candidate) {
+            orders[next] = surfaceProductAllTriangleOrders[candidate];
+            chosen[next] = static_cast<int>(candidate);
+
+            bool ok = true;
+            for (const SurfaceProductEdgeConstraint& edge : edges) {
+                if (edge.from != next && edge.to != next)
+                    continue;
+                if (chosen[edge.from] < 0 || chosen[edge.to] < 0)
+                    continue;
+                if (! surfaceProductCompatibleOrders(orders[edge.from],
+                        edge.edge, orders[edge.to], edge.gluing)) {
+                    ok = false;
+                    break;
+                }
+            }
+
+            if (ok && surfaceProductAssignOrdersRec(next + 1, edges, chosen,
+                    orders))
+                return true;
+        }
+
+        chosen[next] = -1;
+        return false;
+    }
+
+    std::vector<SurfaceProductTriangleOrder> surfaceProductChooseTriangleOrders(
+            const Triangulation<2>& surface) {
+        std::vector<SurfaceProductEdgeConstraint> edges;
+        for (size_t i = 0; i < surface.size(); ++i) {
+            const Triangle<2>* triangle = surface.triangle(i);
+            for (int edge = 0; edge < 3; ++edge) {
+                const Triangle<2>* adj = triangle->adjacentTriangle(edge);
+                if (! adj)
+                    continue;
+
+                // Record each original edge gluing once, following the same
+                // index-ordering pattern used in Regina's example builders.
+                if (adj->index() > i ||
+                        (adj->index() == i &&
+                            triangle->adjacentEdge(edge) > edge))
+                    edges.push_back({
+                        i, edge, adj->index(), triangle->adjacentGluing(edge)
+                    });
+            }
+        }
+
+        std::vector<SurfaceProductTriangleOrder> orders(surface.size());
+        std::vector<int> chosen(surface.size(), -1);
+        if (! surfaceProductAssignOrdersRec(0, edges, chosen, orders))
+            throw FailedPrecondition("could not choose compatible edge "
+                "diagonals for the surface triangulation");
+
+        return orders;
+    }
+
+    SurfaceProductFacetKey surfaceProductMakeKey(size_t aTriangle,
+            size_t bTriangle,
+            const std::array<SurfaceProductVertex, 5>& vertices, int facet) {
+        SurfaceProductFacetKey ans { aTriangle, bTriangle, {} };
+        for (int src = 0, dst = 0; src < 5; ++src)
+            if (src != facet)
+                ans.vertices[dst++] = vertices[src];
+        std::sort(ans.vertices.begin(), ans.vertices.end());
+        return ans;
+    }
+
+    std::array<int, 5> surfaceProductGluingMap(
+            const SurfaceProductFacetData& from,
+            const SurfaceProductFacetData& to) {
+        const auto& fromVertices = std::get<1>(from);
+        const auto& toVertices = std::get<1>(to);
+        int fromFacet = std::get<2>(from);
+        int toFacet = std::get<2>(to);
+        std::array<int, 5> ans {};
+        ans[fromFacet] = toFacet;
+
+        std::array<bool, 5> used {};
+        used[toFacet] = true;
+
+        for (int i = 0; i < 5; ++i) {
+            if (i == fromFacet)
+                continue;
+
+            bool found = false;
+            for (int j = 0; j < 5; ++j) {
+                if (used[j])
+                    continue;
+                if (fromVertices[i] == toVertices[j]) {
+                    ans[i] = j;
+                    used[j] = true;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (! found)
+                throw ImpossibleScenario("incompatible product facets "
+                    "selected for gluing");
+        }
+
+        return ans;
+    }
+
+    SurfaceProductFacetData surfaceProductLookupFacet(
+            const std::map<SurfaceProductFacetKey,
+                std::vector<SurfaceProductFacetData>>& facets,
+            const SurfaceProductFacetKey& key) {
+        auto it = facets.find(key);
+        if (it == facets.end() || it->second.empty())
+            throw ImpossibleScenario("product facet lookup failed");
+        if (it->second.size() != 1)
+            throw ImpossibleScenario("ambiguous product facet lookup");
+        return it->second.front();
+    }
+}
+
+Triangulation<4> Example<4>::surfaceProduct(
+        const Triangulation<2>& surfaceA,
+        const Triangulation<2>& surfaceB) {
+    Triangulation<4> ans;
+    const auto pieces = surfaceProductShuffles();
+    const auto ordersA = surfaceProductChooseTriangleOrders(surfaceA);
+    const auto ordersB = surfaceProductChooseTriangleOrders(surfaceB);
+
+    std::map<SurfaceProductFacetKey,
+        std::vector<SurfaceProductFacetData>> facets;
+    std::vector<std::pair<SurfaceProductFacetData,
+        SurfaceProductFacetKey>> pending;
+
+    auto missesCoordinate = [](const std::array<SurfaceProductVertex, 4>& facet,
+            bool firstFactor, int coord) {
+        // A product facet lies in edge x triangle (or triangle x edge)
+        // exactly when none of its vertices uses the opposite coordinate.
+        return std::all_of(facet.begin(), facet.end(),
+            [=](const SurfaceProductVertex& v) {
+                return (firstFactor ? v.a : v.b) != coord;
+            });
+    };
+
+    auto addPending = [&](SurfaceProductFacetData data,
+            SurfaceProductFacetKey key, bool firstFactor, size_t newTriangle,
+            const Perm<3>& gluing) {
+        // Transport both the source facet data and the destination lookup key
+        // across an original surface edge gluing.  The transported source data
+        // is later compared with the destination facet to recover Regina's
+        // full Perm<5> gluing.
+        for (SurfaceProductVertex& v : std::get<1>(data)) {
+            if (firstFactor)
+                v.a = gluing[v.a];
+            else
+                v.b = gluing[v.b];
+        }
+
+        if (firstFactor) {
+            key.aTriangle = newTriangle;
+            for (SurfaceProductVertex& v : key.vertices)
+                v.a = gluing[v.a];
+        } else {
+            key.bTriangle = newTriangle;
+            for (SurfaceProductVertex& v : key.vertices)
+                v.b = gluing[v.b];
+        }
+        std::sort(key.vertices.begin(), key.vertices.end());
+
+        pending.emplace_back(data, key);
+    };
+
+    for (size_t a = 0; a < surfaceA.size(); ++a)
+        for (size_t b = 0; b < surfaceB.size(); ++b)
+            for (const auto& piece : pieces) {
+                auto* pent = ans.newPentachoron();
+                auto vertices = surfaceProductSimplexVertices(piece,
+                    ordersA[a], ordersB[b]);
+
+                for (int facet = 0; facet < 5; ++facet) {
+                    auto key = surfaceProductMakeKey(a, b, vertices, facet);
+                    SurfaceProductFacetData data { pent, vertices, facet };
+                    facets[key].push_back(data);
+
+                    // If this facet sits over an original surface edge, then
+                    // either leave it as boundary or schedule it for gluing to
+                    // the adjacent product cell.  We only schedule one
+                    // direction of each original edge gluing.
+                    bool isExternal = false;
+                    for (int edge = 0; edge < 3; ++edge) {
+                        if (! missesCoordinate(key.vertices, true, edge))
+                            continue;
+
+                        isExternal = true;
+                        const Triangle<2>* triangle = surfaceA.triangle(a);
+                        const Triangle<2>* adj =
+                            triangle->adjacentTriangle(edge);
+                        if (adj && (adj->index() > a ||
+                                (adj->index() == a &&
+                                    triangle->adjacentEdge(edge) > edge)))
+                            addPending(data, key, true, adj->index(),
+                                triangle->adjacentGluing(edge));
+                        break;
+                    }
+
+                    if (isExternal)
+                        continue;
+
+                    for (int edge = 0; edge < 3; ++edge) {
+                        if (! missesCoordinate(key.vertices, false, edge))
+                            continue;
+
+                        const Triangle<2>* triangle = surfaceB.triangle(b);
+                        const Triangle<2>* adj =
+                            triangle->adjacentTriangle(edge);
+                        if (adj && (adj->index() > b ||
+                                (adj->index() == b &&
+                                    triangle->adjacentEdge(edge) > edge)))
+                            addPending(data, key, false, adj->index(),
+                                triangle->adjacentGluing(edge));
+                        break;
+                    }
+                }
+            }
+
+    // First glue facets internal to each triangle x triangle staircase
+    // subdivision.  Facets crossing original surface edges have no local mate
+    // here; they are handled by the pending pass below.
+    for (const auto& [key, occ] : facets) {
+        if (occ.size() == 2) {
+            auto map = surfaceProductGluingMap(occ[0], occ[1]);
+            std::get<0>(occ[0])->join(std::get<2>(occ[0]),
+                std::get<0>(occ[1]), Perm<5>(map));
+        } else if (occ.size() > 2)
+            throw ImpossibleScenario("more than two local product facets "
+                "coincide");
+    }
+
+    // Now glue product cells across the original surface edge identifications.
+    for (const auto& join : pending) {
+        auto to = surfaceProductLookupFacet(facets, join.second);
+        auto map = surfaceProductGluingMap(join.first, to);
+        std::get<0>(join.first)->join(std::get<2>(join.first),
+            std::get<0>(to), Perm<5>(map));
+    }
+
+    return ans;
+}
+
+Triangulation<4> Example<4>::handlebody(size_t genus) {
+    if (genus == 0)
+        return Example<4>::ball();
+
+    if (genus == 1) {
+        Triangulation<4> ans;
+        Pentachoron<4>* p0 = ans.newPentachoron();
+        Pentachoron<4>* p1 = ans.newPentachoron();
+
+        // The naive one-pentachoron closure gives the non-orientable
+        // S^1 x~ B^3.  This is a two-pentachoron orientable S^1 x B^3
+        // model.
+        p0->join(0, p1, Perm<5>());
+        p0->join(1, p1, Perm<5>(3, 2, 4, 1, 0));
+        return ans;
+    }
+
+    Triangulation<3> spine = Example<3>::handlebody(genus);
+
+    std::vector<Triangle<3>*> internal;
+    internal.reserve(spine.countTriangles());
+    for (Triangle<3>* tri : spine.triangles())
+        if (! tri->isBoundary())
+            internal.push_back(tri);
+
+    Triangulation<4> ans;
+    ans.newPentachora(internal.size());
+
+    const size_t nTets = spine.size();
+    std::vector<Pentachoron<4>*> topPent(nTets, nullptr);
+    std::vector<Pentachoron<4>*> botPent(nTets, nullptr);
+    std::vector<Perm<5>> topPerm(nTets);
+    std::vector<Perm<5>> botPerm(nTets);
+
+    auto preimage = [](const Perm<5>& p, int image) {
+        for (int i = 0; i < 5; ++i)
+            if (p[i] == image)
+                return i;
+        throw InvalidArgument("Example<4>::handlebody(): invalid permutation");
+    };
+
+    /*
+     * Attach one side of a newly layered pentachoron to a stored top/bottom
+     * sheet over a tetrahedron of the 3-dimensional spine.
+     *
+     * The stored permutation records how the first pentachoron occupied this
+     * sheet.  If the sheet is already occupied, then we follow the
+     * codimension-2 triangle link to the currently exposed endpoint, and glue
+     * the new pentachoron there.
+     */
+    auto attach = [&](Pentachoron<4>* pent, const Perm<5>& basePerm,
+            Pentachoron<4>*& slotPent, Perm<5>& slotPerm) {
+        int sourceFacet = preimage(basePerm, 4);
+
+        if (! slotPent) {
+            slotPent = pent;
+            slotPerm = basePerm;
+            return;
+        }
+
+        Pentachoron<4>* occupant = slotPent;
+        Perm<5> occPerm = slotPerm;
+        Perm<5> local = occPerm.inverse() * basePerm;
+        Triangle<4>* tri = occupant->triangle(
+            Triangle<4>::triangleNumber[local[0]][local[1]][local[2]]);
+
+        const auto& front = tri->front();
+        const auto& back = tri->back();
+        Perm<5> frontVer = front.vertices();
+        Perm<5> backVer = back.vertices();
+        int virtualFacet = preimage(occPerm, 4);
+
+        auto endpointGluing = [&](Perm<5> sourceEndpoint,
+                Perm<5> targetEndpoint, bool toBackEndpoint) {
+            std::array<int, 5> image;
+
+            // Match the three triangle vertices using the canonical
+            // ordering of the triangle around which the link is ordered.
+            for (int i = 0; i < 3; ++i) {
+                int canonical = -1;
+                for (int j = 0; j < 3; ++j) {
+                    if (sourceEndpoint[j] == local[i]) {
+                        canonical = j;
+                        break;
+                    }
+                }
+                if (canonical < 0)
+                    throw InvalidArgument("Example<4>::handlebody(): "
+                        "inconsistent triangle endpoint labelling");
+                image[i] = targetEndpoint[canonical];
+            }
+
+            int sourceOther = 7 - sourceFacet;
+            if (toBackEndpoint) {
+                image[sourceFacet] = targetEndpoint[3];
+                image[sourceOther] = targetEndpoint[4];
+            } else {
+                image[sourceFacet] = targetEndpoint[4];
+                image[sourceOther] = targetEndpoint[3];
+            }
+
+            return Perm<5>(image);
+        };
+
+        if (front.simplex() == occupant && frontVer[4] == virtualFacet) {
+            pent->join(sourceFacet, back.simplex(),
+                endpointGluing(frontVer, backVer, true));
+        } else if (back.simplex() == occupant && backVer[3] == virtualFacet) {
+            pent->join(sourceFacet, front.simplex(),
+                endpointGluing(backVer, frontVer, false));
+        } else {
+            throw InvalidArgument("Example<4>::handlebody(): could not find "
+                "the exposed end of a triangle link");
+        }
+    };
+
+    size_t which = 0;
+    for (Triangle<3>* tri : internal) {
+        if (tri->degree() != 2)
+            throw InvalidArgument("Example<4>::handlebody(): expected every "
+                "internal triangle to have degree 2");
+
+        Pentachoron<4>* pent = ans.pentachoron(which++);
+
+        const auto& emb0 = tri->embedding(0);
+        const auto& emb1 = tri->embedding(1);
+        Perm<4> ver0 = emb0.vertices();
+        Perm<4> ver1 = emb1.vertices();
+        size_t ind0 = emb0.simplex()->index();
+        size_t ind1 = emb1.simplex()->index();
+
+        // First side: put the old tetrahedron's remaining vertex in slot 3,
+        // and the artificial I-direction in slot 4.
+        attach(pent, Perm<5>(ver0[0], ver0[1], ver0[2], ver0[3], 4),
+            topPent[ind0], topPerm[ind0]);
+
+        /*
+         * Second side: swap the old remaining vertex with the artificial
+         * I-direction, as the 3D construction does with faces 012 and 013.
+         * If the two embeddings have the same sign, the second side lands on
+         * the bottom sheet; otherwise it lands on the top sheet.
+         */
+        if (ver1.sign() == ver0.sign())
+            attach(pent, Perm<5>(ver1[0], ver1[1], ver1[2], 4, ver1[3]),
+                botPent[ind1], botPerm[ind1]);
+        else
+            attach(pent, Perm<5>(ver1[0], ver1[1], ver1[2], 4, ver1[3]),
+                topPent[ind1], topPerm[ind1]);
+    }
+
+    /*
+     * Close every tetrahedron of the 3-dimensional spine whose top and bottom
+     * sheets are both present.  This is the direct 4-dimensional analogue of
+     * the final sheet-closing loop in Example<3>::handlebody().
+     */
+    for (size_t i = 0; i < nTets; ++i)
+        if (topPent[i] && botPent[i])
+            topPent[i]->join(preimage(topPerm[i], 4), botPent[i],
+                botPerm[i].inverse() * topPerm[i]);
 
     return ans;
 }

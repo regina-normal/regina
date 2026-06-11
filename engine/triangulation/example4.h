@@ -40,6 +40,7 @@
 
 #include "regina-core.h"
 #include "link/link.h"
+#include "triangulation/dim2.h"
 #include "triangulation/dim4.h"
 #include "triangulation/detail/example.h"
 
@@ -435,6 +436,60 @@ class Example<4> : public detail::ExampleBase<4> {
         /**
          * (end: Constructions from 3-Manifold Triangulations and Links)
          */
+
+        /**
+         * Returns a triangulation of the product `U × V`,
+         * where \a U and \a V are 2-manifold triangulations.
+         *
+         * The product is created as follows.  For each pair of original
+         * triangles, one from \a surfaceU and one from \a surfaceV, we build
+         * the standard staircase triangulation of triangle x triangle,
+         * containing six pentachora.  We then glue these product cells
+         * together in a manner that follows the edge gluings of the two
+         * original surface triangulations.  
+         *
+         * If either input surface has boundary, the corresponding boundary
+         * facets remain boundary facets of the product.
+         *
+         * \warning If either given 2-manifold triangulation has ideal
+         * boundary, then you will obtain an invalid 4-manifold triangulation
+         * as a result.
+         *
+         * \param surfaceU the first 2-manifold triangulation \a U.
+         * \param surfaceV the second 2-manifold triangulation \a V.
+         * \return the product `U × V`.
+         */
+        static Triangulation<4> surfaceProduct(
+            const Triangulation<2>& surfaceU,
+            const Triangulation<2>& surfaceV);
+
+        /**
+         * Returns a triangulation of the orientable 4-dimensional handlebody
+         * with the given genus.
+         *
+         * This is the boundary connected sum of \a genus copies of
+         * `S^1 x B^3`.  For positive genus, this routine constructs the
+         * handlebody by adapting the three-dimensional layered handlebody
+         * construction one dimension higher: it first builds the layered
+         * three-dimensional handlebody `Example<3>::handlebody(genus)`, and
+         * then layers one pentachoron over each internal triangle of this
+         * 3-dimensional spine.
+         *
+         * This is deliberately not the generic prism construction from
+         * iBundle().  The resulting triangulation is typically much smaller
+         * than `Example<4>::iBundle(Example<3>::handlebody(genus))`.
+         *
+         * For genus 0, this routine uses the one-pentachoron 4-ball.  For
+         * genus 1, it uses an explicit two-pentachoron orientable model of
+         * `S^1 x B^3`; as the naive one-pentachoron closure gives the
+         * non-orientable twisted thickening instead.
+         *
+         * \param genus the genus of the 4-dimensional handlebody.
+         * \return the orientable 4-dimensional handlebody with the given
+         * genus.
+         */
+        static Triangulation<4> handlebody(size_t genus);
+
 };
 
 inline Triangulation<4> Example<4>::fourSphere() {

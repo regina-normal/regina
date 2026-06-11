@@ -82,6 +82,10 @@ void addExample4(pybind11::module_& m) {
             pybind11::arg("knot"),
             pybind11::arg("breakOpen") = regina::StrandRef(),
             rdoc::spun)
+        .def_static("surfaceProduct", &Example<4>::surfaceProduct,
+            rdoc::surfaceProduct)
+        .def_static("handlebody", &Example<4>::handlebody,
+            rdoc::handlebody)
     ;
     regina::python::no_eq_static(c);
 
