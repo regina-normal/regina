@@ -7,6 +7,7 @@
  * It displays basic information about the underlying OS and architecture.
  */
 
+#include <cstdio>
 #include <iostream>
 #include <sys/types.h> // for ssize_t
 
