@@ -62,8 +62,11 @@ class Tri4Creator : public PacketCreator {
          */
         PacketChooser* iBundleFrom;
         PacketChooser* s1BundleFrom;
+        PacketChooser* surfaceProductA;
+        PacketChooser* surfaceProductB;
         PacketChooser* singleConeFrom;
         QLineEdit* isoSig;
+        QLineEdit* handlebodyGenus;
         QComboBox* exampleWhich;
 
     public:

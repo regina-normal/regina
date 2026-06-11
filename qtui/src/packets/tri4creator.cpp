@@ -30,6 +30,7 @@
 
 // Regina core includes:
 #include "triangulation/example4.h"
+#include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
@@ -69,7 +70,9 @@ namespace {
         // --- separator ---
         TRI_IBUNDLE = 4,
         TRI_S1BUNDLE,
-        TRI_SINGLECONE
+        TRI_SURFPRODUCT,
+        TRI_SINGLECONE,
+        TRI_HANDLEBODY
     };
 
     /**
@@ -219,6 +222,39 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     lineLayout->addWidget(s1BundleFrom, 1);
     subLayout->addStretch(); // avoids awkward stretching around labels
     details->addWidget(area);
+    
+    type->addItem(QObject::tr("Product of surfaces..."));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    expln = QObject::tr("Select the two source 2-manifold triangulations "
+        "<i>U</i> and <i>V</i> that you wish to use to form the product "
+        "<i>U</i>&nbsp;×&nbsp;<i>V</i>.");
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    label = new QLabel(QObject::tr("<i>U</i>:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    surfaceProductA = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::Triangulation<2>>(),
+        PacketChooser::RootRole::Packet);
+    surfaceProductA->setWhatsThis(expln);
+    surfaceProductA->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(surfaceProductA, 1);
+    lineLayout = new QHBoxLayout();
+    subLayout->addLayout(lineLayout);
+    label = new QLabel(QObject::tr("<i>V</i>:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    surfaceProductB = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::Triangulation<2>>(),
+        PacketChooser::RootRole::Packet);
+    surfaceProductB->setWhatsThis(expln);
+    surfaceProductB->selectPacket(mainWindow->selectedPacket());
+    lineLayout->addWidget(surfaceProductB, 1);
+    subLayout->addStretch(); // avoids awkward stretching around labels
+    details->addWidget(area);
 
     type->addItem(QObject::tr("Cone over…"));
     area = new QWidget();
@@ -239,6 +275,24 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     singleConeFrom->selectPacket(mainWindow->selectedPacket());
     lineLayout->addWidget(singleConeFrom, 1);
     subLayout->addStretch(); // avoids awkward stretching around labels
+    details->addWidget(area);
+
+    type->addItem(QObject::tr("Orientable handlebody"));
+    area = new QWidget();
+    lineLayout = new QHBoxLayout();
+    lineLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(lineLayout);
+    expln = QObject::tr("<qt>The genus of the new orientable handlebody.  "
+        "This must be a non-negative integer.</qt>");
+    label = new QLabel(QObject::tr("Genus:"));
+    label->setWhatsThis(expln);
+    lineLayout->addWidget(label);
+    handlebodyGenus = new QLineEdit();
+    auto* val = new QIntValidator(area);
+    val->setBottom(0);
+    handlebodyGenus->setValidator(val);
+    handlebodyGenus->setWhatsThis(expln);
+    lineLayout->addWidget(handlebodyGenus, 1);
     details->addWidget(area);
 
     // Tidy up.
@@ -303,6 +357,30 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         else
             ans->setLabel(fromPacket->label() + " × S¹");
         return ans;
+    } else if (typeId == TRI_SURFPRODUCT) {
+        auto surfaceAPacket = surfaceProductA->selectedPacket();
+        auto surfaceBPacket = surfaceProductB->selectedPacket();
+        if (! surfaceAPacket || ! surfaceBPacket) {
+            ReginaSupport::info(parentWidget, QObject::tr(
+                "Please select two 2-manifold triangulations to build the "
+                "product from."));
+            return nullptr;
+        }
+
+        auto& surfaceA = regina::static_packet_cast<Triangulation<2>>(
+            *surfaceAPacket);
+        auto& surfaceB = regina::static_packet_cast<Triangulation<2>>(
+            *surfaceBPacket);
+        auto ans = regina::make_packet(Example<4>::surfaceProduct(
+            surfaceA, surfaceB));
+        ans->simplify();
+
+        std::string labelA = surfaceAPacket->label().empty() ?
+            "U" : surfaceAPacket->label();
+        std::string labelB = surfaceBPacket->label().empty() ?
+            "V" : surfaceBPacket->label();
+        ans->setLabel(labelA + " × " + labelB);
+        return ans;
     } else if (typeId == TRI_SINGLECONE) {
         auto fromPacket = singleConeFrom->selectedPacket();
         if (! fromPacket) {
@@ -318,6 +396,19 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         else
             ans->setLabel("Cone over " + fromPacket->label());
         return ans;
+    } else if (typeId == TRI_HANDLEBODY) {
+        if (handlebodyGenus->text().isEmpty()) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("Please enter a genus for the handlebody.  "
+                "This should be a non-negative integer."));
+            return nullptr;
+        }
+        unsigned long genus = handlebodyGenus->text().toULong();
+
+        std::ostringstream s;
+        s << "Handlebody of genus " << genus;
+
+        return regina::make_packet(Example<4>::handlebody(genus), s.str());
     } else if (typeId == TRI_ISOSIG) {
         auto match = reIsoSig.match(isoSig->text());
         if (! match.hasMatch()) {
@@ -360,4 +451,3 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         QObject::tr("Please select a triangulation type."));
     return nullptr;
 }
-
