@@ -23,9 +23,13 @@ SET ( FILES
   satregion.cpp
   snappeacensustri.cpp
   snappedball.cpp
+  snappedball4.cpp
+  doublesnappedball.cpp
+  conical.cpp
   snappedtwosphere.cpp
   spiralsolidtorus.cpp
   standardtri.cpp
+  standardtri4.cpp
   trisolidtorus.cpp
   trivialtri.cpp
   txicore.cpp
@@ -63,9 +67,13 @@ if (${REGINA_INSTALL_DEV})
     satregion-impl.h
     snappeacensustri.h
     snappedball.h
+    snappedball4.h
+    doublesnappedball.h
+    conical.h
     snappedtwosphere.h
     spiralsolidtorus.h
     standardtri.h
+    standardtri4.h
     trisolidtorus.h
     trivialtri.h
     txicore.h

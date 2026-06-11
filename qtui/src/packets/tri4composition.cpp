@@ -34,6 +34,13 @@
 #include "../packetfilter.h"
 #include "reginasupport.h"
 
+#include "subcomplex/snappedball4.h"
+#include "subcomplex/doublesnappedball.h"
+#include "subcomplex/conical.h"
+
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+
 #include <memory>
 #include <QApplication>
 #include <QClipboard>
@@ -46,15 +53,18 @@
 using regina::Packet;
 using regina::Perm;
 using regina::Triangulation;
+using regina::Triangle;
 
 Tri4CompositionUI::Tri4CompositionUI(
         regina::PacketOf<regina::Triangulation<4>>* tri,
         PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), tri_(tri), compare_(nullptr) {
+        PacketViewerTab(useParentUI), tri_(tri), compare_(nullptr),
+        lastComponent(nullptr) {
     // Set up the UI.
 
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
+
 
     // Add the isomorphism signature.
 
@@ -88,8 +98,32 @@ Tri4CompositionUI::Tri4CompositionUI(
             contextIsoSig(p, label);
         });
 
+    // Set up the composition viewer.
+    msg = tr("<qt>Displays the details "
+        "of any standard combinatorial structures found within the "
+        "triangulation.<p>"
+        "You can right-click on any line of text to copy it to the "
+        "clipboard.<p>"
+        "See the users' handbook for further details on the information "
+        "listed here.</qt>");
+
+    label = new QLabel(tr("<qt><b>Components:</b></qt>"), ui);
+    label->setWhatsThis(msg);
+    layout->addWidget(label);
+
+    details = new QTreeWidget(ui);
+    details->setHeaderHidden(true);
+    details->setAlternatingRowColors(true);
+    details->setSelectionMode(QAbstractItemView::SingleSelection);
+    details->setWhatsThis(msg);
+    layout->addWidget(details, 1);
+
+    details->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(details, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(contextComposition(const QPoint&)));
+
     label = new QLabel(tr("<qt><i>Hint: Right-click to copy "
-        "the isomorphism signature</i></qt>"));
+        "any data above</i></qt>"));
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
 
@@ -100,7 +134,7 @@ Tri4CompositionUI::Tri4CompositionUI(
     layout->addWidget(divider);
     */
 
-    layout->addStretch(1);
+    // layout->addStretch(1);
 
     // Set up the isomorphism tester.
     QBoxLayout* wideIsoArea = new QHBoxLayout();
@@ -152,7 +186,7 @@ Tri4CompositionUI::Tri4CompositionUI(
     connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
     wideIsoArea->addWidget(isoView);
 
-    layout->addStretch(6);
+    // layout->addStretch(6);
 }
 
 regina::Packet* Tri4CompositionUI::getPacket() {
@@ -165,6 +199,8 @@ QWidget* Tri4CompositionUI::getInterface() {
 
 void Tri4CompositionUI::refresh() {
     updateIsoPanel();
+    details->clear();
+    lastComponent = nullptr;
 
     // Show the isomorphism signature.
     isoSig->setText(tri_->isoSig().c_str());
@@ -175,6 +211,24 @@ void Tri4CompositionUI::refresh() {
     isoSig->setText(QFontMetrics(isoSig->font()).elidedText(
         tri_->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
     */
+
+    // Look for bounded subcomplexes.
+    findDoubleSnappedBalls();
+    findSnappedBalls();
+    findConicalPieces();
+
+    // Expand so that two levels of children are visible.
+    bool foundInnerChildren = false;
+    QTreeWidgetItem* rootItem = details->invisibleRootItem();
+    for (int i = 0; i < rootItem->childCount(); ++i) {
+        QTreeWidgetItem* topChild = rootItem->child(i);
+        if (topChild->childCount() > 0) {
+            topChild->setExpanded(true);
+            foundInnerChildren = true;
+        }
+    }
+    details->setRootIsDecorated(foundInnerChildren);
+
 }
 
 void Tri4CompositionUI::packetBeingDestroyed(regina::PacketShell) {
@@ -291,6 +345,156 @@ void Tri4CompositionUI::viewIsomorphism() {
         title, msg + "<p>" + isoDetails.join("<br>") + "<qt>");
 }
 
+QTreeWidgetItem* Tri4CompositionUI::addComponentSection(const QString& text) {
+    lastComponent = new QTreeWidgetItem(details);
+    lastComponent->setText(0, text);
+    return lastComponent;
+}
+
+void Tri4CompositionUI::findConicalPieces() {
+    size_t nVertices = tri_->countVertices();
+
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
+
+    for (size_t i = 0; i < nVertices; ++i) {
+        auto cone = regina::Conical::recognise(tri_->vertex(i));
+        if (! cone)
+            cone = regina::Conical::recogniseLayeredSolidTorus(tri_->vertex(i));
+        if (! cone)
+            continue;
+
+        if (cone->size() == 1) {
+            if (auto dsb = regina::DoubleSnappedBall::recognise(
+                    cone->pentachoron(0))) {
+                if (dsb->type() == regina::DoubleSnappedBall::Type::TypeII)
+                    continue;
+            }
+        }
+
+        if (cone->baseType() == regina::Conical::BaseType::LayeredSolidTorus)
+            id = addComponentSection(tr("Cone over layered solid torus"));
+        else
+            id = addComponentSection(tr("Cone over vertex link"));
+
+        detailsItem = new QTreeWidgetItem(id);
+        detailsItem->setText(0, tr("Apex vertex %1").arg(i));
+
+        QString pents(cone->size() == 1 ?
+            tr("Pentachoron: ") : tr("Pentachora: "));
+        for (size_t j = 0; j < cone->size(); ++j) {
+            if (j > 0)
+                pents += ", ";
+            pents += QString::number(cone->pentachoron(j)->index());
+        }
+        detailsItem = new QTreeWidgetItem(id, detailsItem);
+        detailsItem->setText(0, pents);
+
+        if (cone->baseType() == regina::Conical::BaseType::LayeredSolidTorus) {
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Base tetrahedra: %1").
+                arg(cone->layeredSolidTorusSize()));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Base pentachoron: %1").
+                arg(cone->layeredSolidTorusBase()->index()));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Top pentachoron: %1").
+                arg(cone->layeredSolidTorusTop()->index()));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Meridinal cuts: %1, %2, %3").
+                arg(cone->meridinalCuts(0)).
+                arg(cone->meridinalCuts(1)).
+                arg(cone->meridinalCuts(2)));
+        }
+    }
+}
+
+void Tri4CompositionUI::findDoubleSnappedBalls() {
+    size_t nPents = tri_->size();
+
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
+
+    for (size_t i = 0; i < nPents; ++i) {
+        auto ball = regina::DoubleSnappedBall::recognise(tri_->pentachoron(i));
+        if (ball) {
+            id = addComponentSection(tr("Double snapped 4-ball (%1)").
+                arg(ball->typeName()));
+
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Pentachoron %1").arg(i));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Boundary tetrahedron: %1").
+                arg(ball->boundaryTetrahedron()));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("First internal pair: tetrahedra %1, %2").
+                arg(ball->internalTetrahedron(0, 0)).
+                arg(ball->internalTetrahedron(0, 1)));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("First internal triangle: %1%2%3").
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle(0)][0]).
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle(0)][1]).
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle(0)][2]));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Second internal pair: tetrahedra %1, %2").
+                arg(ball->internalTetrahedron(1, 0)).
+                arg(ball->internalTetrahedron(1, 1)));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Second internal triangle: %1%2%3").
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle(1)][0]).
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle(1)][1]).
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle(1)][2]));
+        }
+    }
+}
+
+void Tri4CompositionUI::findSnappedBalls() {
+    size_t nPents = tri_->size();
+
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
+
+    for (size_t i = 0; i < nPents; ++i) {
+        // Don't double up on reporting Double Snapped Balls as
+        // once snapped balls.
+        if (regina::DoubleSnappedBall::recognise(tri_->pentachoron(i)))
+            continue;
+        
+        auto ball = regina::SnappedBall4::recognise(tri_->pentachoron(i));
+        if (ball) {
+            id = addComponentSection(tr("Snapped 4-ball"));
+
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Pentachoron %1").arg(i));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Equator: edge %1%2").
+                arg(ball->internalTetrahedron(0)).
+                arg(ball->internalTetrahedron(1)));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Internal triangle: %1%2%3").
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle()][0]).
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle()][1]).
+                arg(Triangle<4>::triangleVertex[ball->internalTriangle()][2]));
+
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Boundary tetrahedra: %1, %2, %3").
+                arg(ball->boundaryTetrahedron(0)).
+                arg(ball->boundaryTetrahedron(1)).
+                arg(ball->boundaryTetrahedron(2)));
+        }
+    }
+}
+
 void Tri4CompositionUI::contextIsoSig(const QPoint& pos,
         QWidget* fromWidget) {
     QMenu m(tr("Context menu"), fromWidget);
@@ -300,7 +504,22 @@ void Tri4CompositionUI::contextIsoSig(const QPoint& pos,
     m.exec(fromWidget->mapToGlobal(pos));
 }
 
+void Tri4CompositionUI::contextComposition(const QPoint& pos) {
+    if (details->selectedItems().empty())
+        return;
+
+    QMenu m(tr("Context menu"), details);
+    QAction a("Copy line", details);
+    connect(&a, SIGNAL(triggered()), this, SLOT(copyCompositionLine()));
+    m.addAction(&a);
+    m.exec(details->mapToGlobal(pos));
+}
+
 void Tri4CompositionUI::copyIsoSig() {
     QApplication::clipboard()->setText(isoSig->text());
+}
+
+void Tri4CompositionUI::copyCompositionLine() {
+    QApplication::clipboard()->setText(details->selectedItems().front()->text(0));
 }
 

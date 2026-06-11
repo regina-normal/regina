@@ -47,6 +47,9 @@ class PacketChooser;
 class QMenu;
 class QPushButton;
 
+class QTreeWidget;
+class QTreeWidgetItem;
+
 /**
  * A triangulation page for viewing the combinatorial composition.
  */
@@ -78,6 +81,9 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
         QLabel* isoResult;
         QPushButton* isoView;
         QLabel* isoSig;
+        QTreeWidget* details;
+        QTreeWidgetItem* lastComponent;
+
 
     public:
         /**
@@ -119,6 +125,22 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
          * Support clipboard actions.
          */
         void copyIsoSig();
+
+        void contextComposition(const QPoint& pos);
+        void copyCompositionLine();
+
+        /**
+         * Add new items to the list view.
+         */
+        QTreeWidgetItem* addComponentSection(const QString& text);
+
+        /**
+         * Fill the list view with information.
+         */
+        void findSnappedBalls();
+        void findDoubleSnappedBalls();
+        void findConicalPieces();
+
 };
 
 #endif
