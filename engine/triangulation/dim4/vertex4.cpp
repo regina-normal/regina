@@ -35,12 +35,6 @@
 namespace regina {
 
 template <>
-void Face<4, 0>::destroyLink() {
-    // Deleting null is always safe.
-    delete link_.value;
-}
-
-template <>
 const Triangulation<3>& Face<4, 0>::buildLink() const {
     if (! link_.value) {
         // Note: we need to insert tetrahedra in the correct order, as

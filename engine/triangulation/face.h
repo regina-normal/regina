@@ -1701,6 +1701,14 @@ inline void FaceEmbedding<dim, subdim>::writeTextShort(std::ostream& out)
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
+inline void Face<dim, subdim>::destroyLink()
+        requires (standardDim(dim) && dim - subdim >= 3) {
+    // Deleting null is always safe.
+    delete link_.value;
+}
+
+template <int dim, int subdim>
+requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline Face<dim, subdim>::~Face() {
     if constexpr (standardDim(dim) && dim - subdim >= 3)
         destroyLink();

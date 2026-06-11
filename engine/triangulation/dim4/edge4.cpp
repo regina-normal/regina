@@ -35,12 +35,6 @@
 namespace regina {
 
 template <>
-void Face<4, 1>::destroyLink() {
-    // Deleting null is always safe.
-    delete link_.value;
-}
-
-template <>
 const Triangulation<2>& Face<4, 1>::buildLink() const {
     if (! link_.value) {
         // Build the triangulation.
