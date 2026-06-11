@@ -129,8 +129,8 @@ Tri4CompositionUI::Tri4CompositionUI(
 
     copyHint = new QLabel(tr("<qt><i>Hint: Right-click to copy "
         "any data above</i></qt>"));
-    label->setAlignment(Qt::AlignCenter);
-    layout->addWidget(label);
+    copyHint->setAlignment(Qt::AlignCenter);
+    layout->addWidget(copyHint);
 
     /*
     // Add a central divider.
