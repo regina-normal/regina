@@ -218,6 +218,8 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         void insertTriangulation();
         void doubleCover();
         void doubleOverBoundary();
+        void puncture();
+        void connectedSumWith();
         void boundaryComponents();
         void vertexLinks();
         void splitIntoComponents();

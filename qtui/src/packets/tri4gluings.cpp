@@ -532,6 +532,27 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     triActionList.push_back(actMakeIdeal);
     connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(makeIdeal()));
 
+    auto* actPuncture = new QAction(this);
+    actPuncture->setText(tr("Puncture"));
+    actPuncture->setIcon(ReginaSupport::regIcon("puncture"));
+    actPuncture->setToolTip(tr("Puncture the triangulation"));
+    actPuncture->setWhatsThis(tr("Removes a 4-ball from the interior of "
+        "this triangulation, creating a new 3-sphere boundary component."));
+    triActionList.push_back(actPuncture);
+    connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
+
+    auto* actConnectedSumWith = new QAction(this);
+    actConnectedSumWith->setText(tr("Connect Sum With..."));
+    actConnectedSumWith->setIconText(tr("Connect Sum"));
+    actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
+    actConnectedSumWith->setToolTip(tr(
+        "Make this into a connected sum with another triangulation"));
+    actConnectedSumWith->setWhatsThis(tr("Converts this into the connected sum "
+        "of this triangulation with some other chosen triangulation."));
+    triActionList.push_back(actConnectedSumWith);
+    connect(actConnectedSumWith, SIGNAL(triggered()), this,
+        SLOT(connectedSumWith()));
+
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
     actInsertTri->setIconText(tr("Insert"));
@@ -1074,6 +1095,37 @@ void Tri4GluingsUI::doubleOverBoundary() {
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
+void Tri4GluingsUI::puncture() {
+    endEdit();
+
+    if (tri->isEmpty())
+        ReginaSupport::info(ui,
+            tr("I cannot puncture an empty triangulation."));
+    else {
+        regina::Packet::PacketChangeGroup span(*tri);
+        tri->puncture();
+        tri->simplify();
+    }
+}
+
+void Tri4GluingsUI::connectedSumWith() {
+    endEdit();
+
+    auto other = PacketDialog::choose(ui,
+            tri->root(),
+            new SubclassFilter<regina::Triangulation<4>>(),
+            tr("Connected Sum"),
+            tr("Sum this with which other triangulation?"),
+            tr("Regina will form a connected sum of this triangulation "
+                "with whatever triangulation you choose here.  "
+                "The current triangulation will be modified directly."));
+
+    if (other)
+        tri->connectedSumWith(
+            regina::static_packet_cast<regina::Triangulation<4>>(*other));
+}
+
+
 void Tri4GluingsUI::boundaryComponents() {
     endEdit();
 
@@ -1189,4 +1241,3 @@ void Tri4GluingsUI::updateActionStates() {
 
     updateRemoveState();
 }
-
