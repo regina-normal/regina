@@ -1,0 +1,3 @@
+// Xcode config file for a non-sandboxed release through the Regina website
+
+HEADER_SEARCH_PATHS = $(inherited) "$(SRCROOT)/preconfig/macos-release"

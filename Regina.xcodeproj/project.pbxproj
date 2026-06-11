@@ -4451,12 +4451,10 @@
 		05E62B102FD9A7EA00AE1B84 /* sigconvert.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = sigconvert.1; sourceTree = "<group>"; };
 		05E62B112FD9A7EA00AE1B84 /* tricensus.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = tricensus.1; sourceTree = "<group>"; };
 		05E62B122FD9A7EA00AE1B84 /* trisetcmp.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = trisetcmp.1; sourceTree = "<group>"; };
-		05E62B152FDA2FEC00AE1B84 /* regina-config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "regina-config.h"; sourceTree = "<group>"; };
-		05E62B172FDA2FEC00AE1B84 /* regina-config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "regina-config.h"; sourceTree = "<group>"; };
-		05E62B192FDA2FEC00AE1B84 /* regina-config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "regina-config.h"; sourceTree = "<group>"; };
-		05E62B1B2FDA2FEC00AE1B84 /* regina-config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "regina-config.h"; sourceTree = "<group>"; };
-		05E62B1D2FDA2FEC00AE1B84 /* regina-config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "regina-config.h"; sourceTree = "<group>"; };
 		05E62B1F2FDA2FEC00AE1B84 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05E62B222FDA305900AE1B84 /* development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development.xcconfig; sourceTree = "<group>"; };
+		05E62B232FDA324200AE1B84 /* release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = release.xcconfig; sourceTree = "<group>"; };
+		05E62B242FDA324200AE1B84 /* sandbox.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = sandbox.xcconfig; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -8319,57 +8317,23 @@
 			path = man;
 			sourceTree = "<group>";
 		};
-		05E62B162FDA2FEC00AE1B84 /* macos */ = {
-			isa = PBXGroup;
-			children = (
-				05E62B152FDA2FEC00AE1B84 /* regina-config.h */,
-			);
-			path = macos;
-			sourceTree = "<group>";
-		};
-		05E62B182FDA2FEC00AE1B84 /* macos-appstore */ = {
-			isa = PBXGroup;
-			children = (
-				05E62B172FDA2FEC00AE1B84 /* regina-config.h */,
-			);
-			path = "macos-appstore";
-			sourceTree = "<group>";
-		};
-		05E62B1A2FDA2FEC00AE1B84 /* macos-release */ = {
-			isa = PBXGroup;
-			children = (
-				05E62B192FDA2FEC00AE1B84 /* regina-config.h */,
-			);
-			path = "macos-release";
-			sourceTree = "<group>";
-		};
-		05E62B1C2FDA2FEC00AE1B84 /* pypi_legacy */ = {
-			isa = PBXGroup;
-			children = (
-				05E62B1B2FDA2FEC00AE1B84 /* regina-config.h */,
-			);
-			path = pypi_legacy;
-			sourceTree = "<group>";
-		};
-		05E62B1E2FDA2FEC00AE1B84 /* pypi_modern */ = {
-			isa = PBXGroup;
-			children = (
-				05E62B1D2FDA2FEC00AE1B84 /* regina-config.h */,
-			);
-			path = pypi_modern;
-			sourceTree = "<group>";
-		};
 		05E62B202FDA2FEC00AE1B84 /* preconfig */ = {
 			isa = PBXGroup;
 			children = (
-				05E62B162FDA2FEC00AE1B84 /* macos */,
-				05E62B182FDA2FEC00AE1B84 /* macos-appstore */,
-				05E62B1A2FDA2FEC00AE1B84 /* macos-release */,
-				05E62B1C2FDA2FEC00AE1B84 /* pypi_legacy */,
-				05E62B1E2FDA2FEC00AE1B84 /* pypi_modern */,
+				05E62B212FDA302200AE1B84 /* xcode */,
 				05E62B1F2FDA2FEC00AE1B84 /* README.txt */,
 			);
 			path = preconfig;
+			sourceTree = "<group>";
+		};
+		05E62B212FDA302200AE1B84 /* xcode */ = {
+			isa = PBXGroup;
+			children = (
+				05E62B222FDA305900AE1B84 /* development.xcconfig */,
+				05E62B232FDA324200AE1B84 /* release.xcconfig */,
+				05E62B242FDA324200AE1B84 /* sandbox.xcconfig */,
+			);
+			path = xcode;
 			sourceTree = "<group>";
 		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {
@@ -11816,6 +11780,7 @@
 		};
 		0575E65B1805F36D009E3FC4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05E62B222FDA305900AE1B84 /* development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -11868,7 +11833,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/macos\"",
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/python\"",
@@ -11883,6 +11847,7 @@
 		};
 		0575E65C1805F36D009E3FC4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05E62B222FDA305900AE1B84 /* development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -11930,7 +11895,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/macos\"",
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/python\"",
