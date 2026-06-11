@@ -1782,7 +1782,7 @@
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
 			);
 			runOncePerArchitecture = 0;
-			script = "# Use the bundled python3 framework.\n# Also, if sandboxed, use isolation mode; otherwise python\n# imports readline, which accesses /dev/tty... and deadlocks.\npyexec='$prog_dir'/../Frameworks/\"${REGINA_PYTHON_FRAMEWORK}\".framework/Versions/Current/Resources/Python.app/Contents/MacOS/Python\nif ( grep sandbox \"${SRCROOT}\"/utils/bundle/Utils.entitlements >/dev/null ); then\n  pysandboxed=1\nelse\n  pysandboxed=0\nfi\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#'@PERL_Python_EXECUTABLE@'#\\\"$pyexec\\\"#\" \\\n  -e \"s#@PYTHON_SANDBOXED@#$pysandboxed#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@ENGINE_FILENAME@#libregina-engine.dylib#\" \\\n  -e \"s#@CMAKE_CXX20_STANDARD_COMPILE_OPTION@#-std=c++20#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_BINDIR@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_LIBDIR@##\" \\\n  -e \"s#@PERL_PKGDATADIR@##\" \\\n  -e \"s#@PERL_PKGLIBEXECDIR@##\" \\\n  -e \"s#@PERL_PYLIBDIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
+			script = "# Use the bundled python3 framework.\n# Also, if sandboxed, use isolation mode; otherwise python\n# imports readline, which accesses /dev/tty... and deadlocks.\npyexec='$prog_dir'/../Frameworks/\"${REGINA_PYTHON_FRAMEWORK}\".framework/Versions/Current/Resources/Python.app/Contents/MacOS/Python\nif [ \"${ENABLE_APP_SANDBOX}\" = YES ]; then\n  pysandboxed=1\nelse\n  pysandboxed=0\nfi\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#'@PERL_Python_EXECUTABLE@'#\\\"$pyexec\\\"#\" \\\n  -e \"s#@PYTHON_SANDBOXED@#$pysandboxed#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@ENGINE_FILENAME@#libregina-engine.dylib#\" \\\n  -e \"s#@CMAKE_CXX20_STANDARD_COMPILE_OPTION@#-std=c++20#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_BINDIR@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_LIBDIR@##\" \\\n  -e \"s#@PERL_PKGDATADIR@##\" \\\n  -e \"s#@PERL_PKGLIBEXECDIR@##\" \\\n  -e \"s#@PERL_PYLIBDIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
 		};
 /* End PBXBuildRule section */
 
@@ -4455,6 +4455,7 @@
 		05E62B222FDA305900AE1B84 /* development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development.xcconfig; sourceTree = "<group>"; };
 		05E62B232FDA324200AE1B84 /* release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = release.xcconfig; sourceTree = "<group>"; };
 		05E62B242FDA324200AE1B84 /* sandbox.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = sandbox.xcconfig; sourceTree = "<group>"; };
+		05E62B252FDA719600AE1B84 /* Utils.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Utils.plist; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -6745,6 +6746,7 @@
 				05617AEA1D9DC02900B1E33B /* tricensus.cpp */,
 				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
 				05685FEE1F9713B000085B44 /* testsuite */,
+				05E62B252FDA719600AE1B84 /* Utils.plist */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -8971,7 +8973,6 @@
 				050F5E701B9BD50C00C1F681 /* Copy Engine and Utilities */,
 				052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */,
 				057ED8FC2581B49E004F0068 /* Embed Frameworks */,
-				05F37DE929C6B2A500A6203B /* Sign Libraries */,
 				05B9295C259C148700A4503B /* Prepare and Sign Python */,
 			);
 			buildRules = (
@@ -9367,24 +9368,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nfor i in regina regina-xml; do\n  cp -pr \"${BUILD_DIR}\"/docs-$i \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links classical virtual green; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n";
-		};
-		05F37DE929C6B2A500A6203B /* Sign Libraries */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Sign Libraries";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Our shared libraries need to be signed with entitlements also.\n# These will be stripped out when uploading to the App Store;\n# however, their absence causes Xcode to manage automatic signing incorrectly.\n#\n# For details, see: https://stackoverflow.com/questions/75422505/how-to-prevent-xcode-from-adding-malformed-entitlements-to-my-dylibs/75422519#75422519%29\n#\n# For now we reuse the utilities entitlements file, which is an empty placeholder.\n\nfor i in libregina-engine.dylib python/regina/engine.so; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -11036,7 +11019,7 @@
 					"\"$(SRCROOT)/engine/testsuite\"",
 					"\"$(SRCROOT)/engine/testsuite/gtest\"",
 				);
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -11067,7 +11050,7 @@
 					"\"$(SRCROOT)/engine/testsuite\"",
 					"\"$(SRCROOT)/engine/testsuite/gtest\"",
 				);
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -11101,7 +11084,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11131,7 +11114,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11165,7 +11148,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11195,7 +11178,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11226,7 +11209,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11253,7 +11236,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11284,7 +11267,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11311,7 +11294,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11342,7 +11325,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11369,7 +11352,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11400,7 +11383,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11427,7 +11410,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11458,7 +11441,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11485,7 +11468,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11519,7 +11502,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11549,7 +11532,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11580,7 +11563,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11607,7 +11590,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -11941,7 +11924,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -11968,7 +11951,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -12002,7 +11985,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -12032,7 +12015,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = utils/bundle/Utils.plist;
+				INFOPLIST_FILE = utils/Utils.plist;
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -12073,12 +12056,6 @@
 					"@executable_path",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/Utils.plist",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
 				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
@@ -12117,12 +12094,6 @@
 					"@executable_path",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/Utils.plist",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
 				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
