@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -983,7 +983,7 @@ Vector<Integer> HomMarkedAbelianGroup::evalSNF(const Vector<Integer>& input)
 std::string HomMarkedAbelianGroup::summary() const {
     std::ostringstream out;
     summary(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void HomMarkedAbelianGroup::summary(std::ostream& out) const {

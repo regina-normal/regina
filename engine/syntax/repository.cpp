@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
@@ -151,7 +151,7 @@ static long long themeRevision(const Theme &theme)
 void RepositoryPrivate::addTheme(const Theme &theme)
 {
     const auto it = std::lower_bound(m_themes.begin(), m_themes.end(), theme);
-    if (it == m_themes.end() || (*it).name() != theme.name()) {
+    if (it == m_themes.end() || it->name() != theme.name()) {
         m_themes.insert(it, theme);
         return;
     }

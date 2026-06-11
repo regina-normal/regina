@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -178,7 +178,8 @@ class NotImplemented : public ReginaException {
 };
 
 /**
- * An exception thrown when trying to access data from the filesystem.
+ * An exception thrown when trying to read or write data to/from the
+ * filesystem.
  *
  * This could occur, for instance, when trying to read data from the
  * Regina or SnapPea census databases.

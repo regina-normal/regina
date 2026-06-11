@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -750,7 +750,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * This operator increments this integer by one, and returns a
          * copy of the integer _before_ the increment.
          *
-         * \python This routine is named inc() since python does not
+         * \python This routine is named inc() since Python does not
          * support the increment operator.
          *
          * \return a copy of this integer before the increment took place.
@@ -762,7 +762,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * This operator decrements this integer by one, and returns a
          * reference to the integer _after_ the decrement.
          *
-         * \nopython The postdecrement operator is present in python as the
+         * \nopython The postdecrement operator is present in Python as the
          * member function dec().
          *
          * \return a reference to this integer after the decrement.
@@ -774,7 +774,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * This operator decrements this integer by one, and returns a
          * copy of the integer _before_ the decrement.
          *
-         * \python This routine is named dec() since python does not
+         * \python This routine is named dec() since Python does not
          * support the decrement operator.
          *
          * \return a copy of this integer before the decrement took place.
@@ -1812,6 +1812,8 @@ void tightEncode(std::ostream& out, IntegerBase<withInfinity> value);
  * IntegerBase::tightEncoding().  However, this global function is more
  * efficient if the integer argument is an rvalue reference (since the const
  * member function induces an extra deep copy).
+ *
+ * \pydocname{tightEncoding_ReginaInteger}
  *
  * \param value the integer to encode.
  * \return the resulting encoded string.
@@ -3947,7 +3949,7 @@ template <bool withInfinity>
 inline std::string IntegerBase<withInfinity>::tightEncoding() const {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, *this);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <bool withInfinity>
@@ -4036,7 +4038,7 @@ template <bool withInfinity>
 std::string tightEncoding(IntegerBase<withInfinity> value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, std::move(value));
-    return out.str();
+    return std::move(out).str();
 }
 
 // Inline functions for NativeInteger

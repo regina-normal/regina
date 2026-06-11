@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -98,6 +98,8 @@ namespace detail {
  * type in Regina, but which itself is a virtual base class for different
  * kinds of filters).
  *
+ * \nopython
+ *
  * \ingroup packet
  */
 template <typename T>
@@ -113,6 +115,8 @@ concept PacketClass =
  * Subclasses are _not_ considered here: we requires `T` to be precisely a
  * class of the form `PacketOf<...>`.
  *
+ * \nopython
+ *
  * \ingroup packet
  */
 template <typename T>
@@ -122,6 +126,8 @@ concept WrappedPacket = detail::is_wrapped_packet_v<T>;
  * A packet class that stores text (possibly alongside other data).
  *
  * Examples of this concept include Text and Script.
+ *
+ * \nopython
  *
  * \ingroup packet
  */
@@ -143,6 +149,8 @@ concept TextPacket =
  *
  * See the Packet class notes for an overview of how wrapped packets work, as
  * well as instructions on how to create a new wrapped packet type.
+ *
+ * \nopython
  *
  * \ingroup packet
  */
@@ -293,7 +301,7 @@ template <PacketHeldType Held> class XMLWriter;
  * External objects can listen for events on packets, such as when packets
  * are changed or about to be destroyed.  This is useful (for example)
  * when keeping a graphical user interface in sync with any changes that
- * might be happening within the engine and/or via users' python scripts.
+ * might be happening within the engine and/or via users' Python scripts.
  * See the PacketListener class notes for details.
  *
  * Regina's packet types do not support C++ move semantics, since this would
@@ -542,7 +550,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * \python This routine returns a python set.
+         * \python This routine returns a Python set.
          *
          * \return the set of all tags associated with this packet.
          */
@@ -1532,12 +1540,18 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Typically this will be called from the root of the packet
          * tree, which will save the entire packet tree to file.
          *
+         * This routine will throw an exception if an error occurs whilst
+         * writing the file.  This is a change of behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
          * \pre The given packet does not depend on its parent.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file _name_,
          * and simply passes it through unchanged to low-level C/C++ file I/O
          * routines.  The _contents_ of the file will be written using UTF-8.
+         *
+         * \exception FileError An error occurred whilst writing the file.
          *
          * \param filename the pathname of the file to write to.
          * \param compressed \c true if the XML data should be compressed,
@@ -1546,9 +1560,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * You should use the default (FileFormat::Current) unless you need
          * your file to be readable by older versions of Regina.  This must
          * not be FileFormat::BinaryGen1, which is no longer supported.
-         * \return \c true if and only if the file was successfully written.
          */
-        bool save(const char* filename, bool compressed = true,
+        void save(const char* filename, bool compressed = true,
             FileFormat format = FileFormat::Current) const;
 
         /**
@@ -1561,6 +1574,10 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * tree, which will write the entire packet tree to the given
          * output stream.
          *
+         * This routine will throw an exception if an error occurs whilst
+         * writing the data.  This is a change of behaviour as of Regina 8.0:
+         * older versions of Regina (≤ 7.x) returned `false` instead.
+         *
          * \pre The given stream is open for writing.
          * \pre The given packet does not depend on its parent.
          *
@@ -1569,6 +1586,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * XML data file directly to an open Python file, you can still use
          * writeXMLFile() for this.
          *
+         * \exception FileError An error occurred whilst writing the data.
+         *
          * \param s the output stream to which to write.
          * \param compressed \c true if the XML data should be compressed,
          * or \c false if it should be written as plain text.
@@ -1576,9 +1595,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * You should use the default (FileFormat::Current) unless you need
          * your file to be readable by older versions of Regina.  This must
          * not be FileFormat::BinaryGen1, which is no longer supported.
-         * \return \c true if and only if the data was successfully written.
          */
-        bool save(std::ostream& s, bool compressed = true,
+        void save(std::ostream& s, bool compressed = true,
             FileFormat format = FileFormat::Current) const;
 
         /**
@@ -1594,8 +1612,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * Typically this will be called from the root of the packet tree,
          * which will write the entire packet tree to the output stream.
          *
-         * \python The argument \a out should be an open Python file
-         * object.
+         * \python The first argument should be an open Python file object
+         * (not a C++ output stream).
          *
          * \param out the output stream to which the XML data file should
          * be written.
@@ -2770,10 +2788,19 @@ const Held& static_packet_cast(const Packet& p) {
  * This uses Regina's native XML file format; it does not matter whether
  * the XML file is compressed or uncompressed.
  *
- * If the file could not be opened or the top-level packet in the tree
- * could not be read, this routine will return \c null.  If some packet deeper
- * within the tree could not be read then that particular packet (and
- * its descendants, if any) will simply be ignored.
+ * If the file could not be opened, or if the top-level packet in the tree
+ * could not be parsed (i.e., the file does not appear to contain any usable
+ * Regina data), then this routine will throw an exception.  Multiple exception
+ * types are possible: remember that you can just catch the base class
+ * ReginaException if you wish to catch them all together.  This exception
+ * throwing is a change in behaviour as of Regina 8.0: older versions of
+ * Regina (≤ 7.x) would return \c null instead.
+ *
+ * If some packet deeper within the tree could not be read, that particular
+ * packet (and its descendants, if any) will simply be ignored.  This allows
+ * older versions of Regina to read files created by newer versions of Regina,
+ * by simply ignoring any features from the newer version that the older
+ * version does not understand.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file _name_, and simply
@@ -2786,8 +2813,15 @@ const Held& static_packet_cast(const Packet& p) {
  * Python's own built-in open() function.  You can access Regina's open()
  * function by calling `regina.open()`.
  *
+ * \exception FileError The file could not be read.
+ *
+ * \exception InvalidInput The file does not appear to contain any usable
+ * Regina data.
+ *
  * \param filename the pathname of the file to read from.
- * \return the packet tree read from file, or \c null on error.
+ * \return the packet tree read from file.  As of Regina 8.0, if this routine
+ * returns at all (as opposed to throwing an exception), then the pointer it
+ * returns will not be `null`.
  *
  * \ingroup packet
  */
@@ -2799,17 +2833,33 @@ std::shared_ptr<Packet> open(const char* filename);
  * This uses Regina's native XML file format; it does not matter whether
  * the XML file is compressed or uncompressed.
  *
- * If the stream could not be read or if the top-level packet in the tree
- * could not be read, then this routine will return \c null.  If some packet
- * deeper within the tree could not be read then that particular packet (and
- * its descendants, if any) will simply be ignored.
+ * If the stream could not be read, or if the top-level packet in the tree
+ * could not be parsed (i.e., the stream does not appear to contain any usable
+ * Regina data), then this routine will throw an exception.  Multiple exception
+ * types are possible: remember that you can just catch the base class
+ * ReginaException if you wish to catch them all together.  This exception
+ * throwing is a change in behaviour as of Regina 8.0: older versions of
+ * Regina (≤ 7.x) would return \c null instead.
+ *
+ * If some packet deeper within the tree could not be read, that particular
+ * packet (and its descendants, if any) will simply be ignored.  This allows
+ * older versions of Regina to read files created by newer versions of Regina,
+ * by simply ignoring any features from the newer version that the older
+ * version does not understand.
  *
  * \pre The given stream is open for reading.
  *
  * \nopython Instead you can use the variant of open() that takes a filename.
  *
+ * \exception FileError The stream could not be read.
+ *
+ * \exception InvalidInput The file does not appear to contain any usable
+ * Regina data.
+ *
  * \param in the input stream to read from.
- * \return the packet tree read from file, or \c null on error.
+ * \return the packet tree read from file.  As of Regina 8.0, if this routine
+ * returns at all (as opposed to throwing an exception), then the pointer it
+ * returns will not be `null`.
  *
  * \ingroup packet
  */
@@ -3572,7 +3622,7 @@ class PacketShell {
          * temporary, since the underlying packet (and therefore the
          * set that is referenced) is in the process of being destroyed.
          *
-         * \python This routine returns a python set.
+         * \python This routine returns a Python set.
          *
          * \return the set of all tags associated with this packet.
          */

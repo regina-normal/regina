@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::binomMedium
-static const char *binomMedium =
+inline constexpr const char binomMedium[] =
 R"doc(Returns the binomial coefficient *n* choose *k* in linear time for
 medium-sized arguments (*n* ≤ 61).
 

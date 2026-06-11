@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,12 +37,12 @@
 #include "docwidget.h"
 #include "edittableview.h"
 #include "scriptui.h"
-#include "packetchooser.h"
 #include "packeteditiface.h"
 #include "packetmanager.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
 
 #include "syntax/definition.h"
 #include "syntax/repository.h"
@@ -78,6 +78,11 @@ QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         nullptr /* filter */, PacketChooser::RootRole::Subtree,
         true /* allow "none" */, nullptr /* initial selection */, parent);
     e->setAutoUpdate(true);
+    // The following line avoids an awkward problem where the packet chooser
+    // (when visible but not in drop-down form) is translucent and shows both
+    // the old value and the current value (offset from one another), which
+    // makes for an ugly and hard-to-read clash of overlaid content.
+    e->setAutoFillBackground(true);
     return e;
 }
 
@@ -317,7 +322,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         "refers to a single packet.  "
         "This allows your script to easily access the other packets in "
         "this data file."));
-    connect(actAdd, SIGNAL(triggered()), this, SLOT(addVariable()));
+    connect(actAdd, &QAction::triggered, this, &ScriptUI::addVariable);
     actionBar->addAction(actAdd);
     scriptActionList.push_back(actAdd);
 
@@ -334,11 +339,12 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         "refers to a single packet.  "
         "This allows your script to easily access the other packets in "
         "this data file."));
-    connect(actRemove, SIGNAL(triggered()), this,
-        SLOT(removeSelectedVariables()));
-    connect(varTable->selectionModel(),
-        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-        this, SLOT(updateRemoveState()));
+    connect(actRemove, &QAction::triggered, this,
+        &ScriptUI::removeSelectedVariables);
+    connect(varTable->selectionModel(), &QItemSelectionModel::selectionChanged,
+        this, [this](const QItemSelection& selection) {
+            actRemove->setEnabled(! selection.empty());
+        });
     actionBar->addAction(actRemove);
     scriptActionList.push_back(actRemove);
 
@@ -353,7 +359,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actRun->setToolTip(tr("Execute the Python script"));
     actRun->setWhatsThis(tr("Execute this Python script.  The "
         "script will be run in a separate Python console."));
-    connect(actRun, SIGNAL(triggered()), this, SLOT(execute()));
+    connect(actRun, &QAction::triggered, this, &ScriptUI::execute);
     actionBar->addAction(actRun);
     scriptActionList.push_back(actRun);
 
@@ -370,8 +376,8 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
 
     // Notify us if the preferences (e.g., the default fixed-width font)
     // change.
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &ScriptUI::updatePreferences);
 }
 
 ScriptUI::~ScriptUI() {
@@ -546,17 +552,7 @@ void ScriptUI::updatePreferences() {
 }
 
 void ScriptUI::updateTabWidth() {
-#if QT_VERSION >= QT_VERSION_CHECK(5,11,0)
     editWidget->setTabStopDistance(
         QFontMetrics(editWidget->font()).horizontalAdvance('x') *
         ReginaPrefSet::global().pythonSpacesPerTab);
-#elif QT_VERSION >= QT_VERSION_CHECK(5,10,0)
-    editWidget->setTabStopDistance(
-        QFontMetrics(editWidget->font()).width('x') *
-        ReginaPrefSet::global().pythonSpacesPerTab);
-#else
-    editWidget->setTabStopWidth(
-        QFontMetrics(editWidget->font()).width('x') *
-        ReginaPrefSet::global().pythonSpacesPerTab);
-#endif
 }

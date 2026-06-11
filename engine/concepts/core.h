@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,9 +45,9 @@ namespace regina {
 
 class Bitmask;
 template <UnsignedCppInteger> class Bitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
+template <UnsignedCppInteger> class Bitmask2;
 template <UnsignedCppInteger> class Qitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Qitmask2;
+template <UnsignedCppInteger> class Qitmask2;
 
 /**
  * \defgroup concepts Concepts
@@ -61,6 +61,8 @@ template <UnsignedCppInteger, UnsignedCppInteger> class Qitmask2;
  *
  * Typically \a Target would be an lvalue reference.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename Source, typename Target>
@@ -70,6 +72,8 @@ concept AssignableTo = std::assignable_from<Target, Source>;
  * Indicates that a variable of type \a Source can be used to construct a
  * variable of type \a Target.  This is identical to `std::constructible_from`,
  * but with the arguments in the opposite order.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
@@ -82,6 +86,8 @@ concept CanConstruct = std::constructible_from<Target, Source>;
  *
  * So, for example, `std::same_as<const int&, int>` is `false`, but
  * `SameModCVRef<const int&, int>` is `true`.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */

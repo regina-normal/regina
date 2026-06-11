@@ -8,7 +8,7 @@
 # to SageMath, since (using this script) it seems that running the same code
 # in a plain Python interpreter does _not_ exhibit the same time penalty.
 #
-# Copyright (c) 2023-2025, Ben Burton
+# Copyright (c) 2023-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This program is free software; you can redistribute it and/or
@@ -84,7 +84,7 @@ class It:
         self.count = self.count + 1
         return ret
 
-print('--- Start timer: pure python iteration ---')
+print('--- Start timer: pure Python iteration ---')
 start = time.time()
 for i in It(e):
     print(e.embedding(i), (time.time() - start) * 1000)

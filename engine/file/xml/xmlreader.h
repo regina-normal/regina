@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -303,7 +303,7 @@ std::string xmlString(xmlChar* str, bool shouldFree = true);
 inline const std::string& XMLPropertyDict::lookup(const std::string& key)
         const {
     auto it = find(key);
-    return (it == end() ? empty_ : (*it).second);
+    return (it == end() ? empty_ : it->second);
 }
 
 // Inline functions for XMLParserCallback

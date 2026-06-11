@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -153,13 +153,13 @@ bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
             continue;
 
         if (listSign > 0) {
-            if ((**it).nextHyp() <= vec.nextHyp())
+            if ((*it)->nextHyp() <= vec.nextHyp())
                 return true;
         } else if (listSign < 0) {
-            if (vec.nextHyp() <= (**it).nextHyp())
+            if (vec.nextHyp() <= (*it)->nextHyp())
                 return true;
         } else {
-            if (vec.nextHyp() == (**it).nextHyp())
+            if (vec.nextHyp() == (*it)->nextHyp())
                 return true;
         }
     }
@@ -194,13 +194,13 @@ void HilbertDual::reduceBasis(
                 continue;
 
             if (listSign > 0) {
-                if ((**red).nextHyp() <= (**i).nextHyp())
+                if ((*red)->nextHyp() <= (*i)->nextHyp())
                     break;
             } else if (listSign < 0) {
-                if ((**i).nextHyp() <= (**red).nextHyp())
+                if ((*i)->nextHyp() <= (*red)->nextHyp())
                     break;
             } else {
-                if ((**i).nextHyp() == (**red).nextHyp())
+                if ((*i)->nextHyp() == (*red)->nextHyp())
                     break;
             }
         }

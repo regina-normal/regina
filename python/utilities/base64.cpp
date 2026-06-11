@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,8 +30,10 @@
 
 #include <pybind11/pybind11.h>
 #include "utilities/base64.h"
-#include "../helpers/docstrings.h"
+#include "../helpers.h"
 #include "../docstrings/utilities/base64.h"
+
+using namespace pybind11::literals;
 
 void addBase64(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
@@ -64,7 +66,7 @@ void addBase64(pybind11::module_& m) {
         pybind11::str ans(out, outlen);
         delete[] out;
         return ans;
-    }, pybind11::arg("input_bytes"), rdoc::base64Encode_2);
+    }, "input_bytes"_a, rdoc::base64Encode_2);
 
     m.def("base64Decode", [](const std::string& s) -> pybind11::object {
         char* out;
@@ -77,7 +79,7 @@ void addBase64(pybind11::module_& m) {
         } else {
             return pybind11::none();
         }
-    }, pybind11::arg("input_string"), rdoc::base64Decode_2);
+    }, "input_string"_a, rdoc::base64Decode_2);
 
     RDOC_SCOPE_END
 }

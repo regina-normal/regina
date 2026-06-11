@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -67,17 +67,17 @@ namespace regina {
  * boundary of the base orbifold.  Then the tori are joined together so
  * that the curves \a f0, \a o0, \a f1 and \a o1 become related as follows:
  *
- * <pre>
+ * ```
  *     [f1]       [f0]
  *     [  ] = M * [  ]
  *     [o1]       [o0]
- * </pre>
+ * ```
  *
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional Manifold routine homology() is implemented, but
- * the optional routine construct() is not.
+ * The optional Manifold<3> routines homology() and isHyperbolic() are
+ * implemented, but the optional routine construct() is not.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -91,7 +91,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class GraphLoop : public Manifold {
+class GraphLoop : public Manifold<3> {
     private:
         SFSpace sfs_;
             /**< The bounded Seifert fibred space that is joined to itself. */
@@ -107,11 +107,15 @@ class GraphLoop : public Manifold {
          * of the matching matrix combine to give the full matrix \a M as
          * follows:
          *
-         * <pre>
+         * ```
          *           [ mat00  mat01 ]
          *     M  =  [              ]
          *           [ mat10  mat11 ]
-         * </pre>
+         * ```
+         *
+         * This constructor will try to simplify the presentation of the graph
+         * manifold if possible, though there is no guarantee that the
+         * representation it settles on will be unique for the manifold.
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *
@@ -153,6 +157,10 @@ class GraphLoop : public Manifold {
          * Creates a new graph manifold as a self-identified Seifert fibred
          * space.  The bounded Seifert fibred space and the entire 2-by-2
          * matching matrix are each passed separately.
+         *
+         * Other than packing the matching matrix into a single object, this
+         * behaves identically to the constructor that takes the matrix elements
+         * as individual integers.  See that constructor for further details.
          *
          * \pre The given matching matrix has determinant +1 or -1.
          *

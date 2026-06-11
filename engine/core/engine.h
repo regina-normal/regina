@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -162,7 +162,7 @@ const char* versionSnapPy();
 const char* versionSnapPea();
 
 /**
- * Returns the major version of pybind11 that is used with Regina's python
+ * Returns the major version of pybind11 that is used with Regina's Python
  * bindings.  Currently this will return either 2 or 3 (according to whether
  * you are building against Python ≤ 3.11 or Python ≥ 3.12 respectively).
  *

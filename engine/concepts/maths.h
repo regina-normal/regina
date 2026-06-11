@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -99,15 +99,21 @@ concept SignatureType =
     };
 
 /**
- * One of Regina's mathematical types that allows reconstruction from
- * string-based signatures, up to combinatorial isomorphism.
+ * One of Regina's mathematical types that allows generation of and
+ * reconstruction from string-based signatures, up to combinatorial isomorphism.
+ *
+ * In particular, second-generation signatures must be supported via
+ * `T::neoSig()`.
  *
  * Examples of such types include `Triangulation<dim>` and Link.
  */
 template <typename T>
-concept SignatureReconstructible =
-    requires(const std::string sig) {
+concept SignatureEncodable =
+    requires(const T obj, const std::string sig) {
         { T::fromSig(sig) } -> std::same_as<T>;
+        { obj.neoSig() } -> std::same_as<std::string>;
+        { T::sigGeneration(sig) } -> std::same_as<int>;
+        { T::sigComponentSize(sig) } -> std::same_as<size_t>;
     };
 
 } // namespace regina

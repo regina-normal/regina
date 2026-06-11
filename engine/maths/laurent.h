@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,7 +65,7 @@ namespace regina {
  * two variables.
  *
  * \python In Python, the class Laurent refers to the specific
- * template class Laurent<Integer>.
+ * template class `Laurent<Integer>`.
  *
  * \tparam T the coefficient type.  A typical coefficient type would be
  * Integer or Rational.  Note that native C++ integer types are _not_
@@ -180,7 +180,7 @@ class Laurent :
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of coefficients.
+         * this routine takes a Python list of coefficients.
          *
          * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.
@@ -259,7 +259,7 @@ class Laurent :
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of coefficients.
+         * this routine takes a Python list of coefficients.
          *
          * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.
@@ -1492,14 +1492,14 @@ template <CoefficientDomain T>
 inline std::string Laurent<T>::str(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, false, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>
 inline std::string Laurent<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>

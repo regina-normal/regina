@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,7 +45,7 @@
 #define __REGINA_MOVES_IMPL_H_DETAIL
 #endif
 
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/triangulation.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -193,7 +193,7 @@ namespace regina::detail {
 #endif // __DOXYGEN
 
 template <int dim> requires (supportedDim(dim))
-template <int k> requires (k >= 0 && k <= dim)
+template <int k> requires (k >= 0 && k < dim)
 bool TriangulationBase<dim>::internalPachner(Face<dim, k>* f, bool check,
         bool perform) {
     using LockMask = typename Simplex<dim>::LockMask;
@@ -331,87 +331,6 @@ bool TriangulationBase<dim>::internalPachner(Face<dim, k>* f, bool check,
         // Put back any facet locks from the inside.
         // They should already be in place from the outside.
         newSimp->locks_ = oldLocks;
-
-        // All done!
-        return true;
-    } else if constexpr (k == dim) {
-        // Pachner move on a top-dimensional simplex:
-
-        // First check for lock violations.
-        if (f->isLocked()) {
-            if (check)
-                return false;
-            if (perform)
-                throw LockViolation("An attempt was made to perform a "
-                    "Pachner move on a locked top-dimensional simplex");
-        }
-
-        // Next check the legality of the move.
-        // For a 1-(dim+1) move, this is always legal.
-        if (! perform )
-            return true;
-
-        // Perform the move.
-        // The following ChangeAndClearSpan is essential, since we use
-        // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
-        ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
-
-        // Remember any facet locks on f - we will need to restore these later.
-        LockMask oldLock = f->locks_;
-
-        // Create the new simplices.
-        // Facet i of the old simplex will become a facet of newSimp[i].
-        // Vertex i of newSimp[i] will become the new internal vertex, and the
-        // other dim vertices of newSimp[i] will keep the same vertex numbers
-        // that they had in the old simplex.
-        //
-        // We insert the new simplices in reverse order so that the new
-        // vertex becomes vertex 0 of the last simplex of the triangulation.
-        Simplex<dim>* newSimp[dim + 1];
-        for (int i = dim; i >= 0; --i)
-            newSimp[i] = newSimplexRaw();
-
-        // Before we unglue, record how the adjacent simplices are glued to f.
-        Simplex<dim>* adjSimp[dim + 1];
-        Perm<dim + 1> adjGlue[dim + 1];
-        for (int i = 0; i <= dim; i++) {
-            if ((adjSimp[i] = f->adjacentSimplex(i))) {
-                adjGlue[i] = f->adjacentGluing(i);
-
-                // Were we gluing the old simplex to itself?
-                if (adjSimp[i] == f) {
-                    // Adjust this to point to one of the new simplices instead,
-                    // but also ensure the gluing happens in one direction only.
-                    int j = adjGlue[i][i];
-                    if (i < j)
-                        adjSimp[i] = newSimp[j];
-                    else
-                        adjSimp[i] = nullptr;
-                }
-            }
-        }
-
-        // Delete the old simplex.
-        removeSimplexRaw(f);
-
-        // Glue the new simplices to each other internally.
-        for (int i = 0; i <= dim; ++i)
-            for (int j = i + 1; j <= dim; ++j)
-                newSimp[i]->joinRaw(j, newSimp[j], {i, j});
-
-        // Attach the new simplices to the old triangulation.
-        for (int i = 0; i <= dim; ++i)
-            if (adjSimp[i])
-                newSimp[i]->joinRaw(i, adjSimp[i], adjGlue[i]);
-
-        // Put back any facet locks from the inside.
-        // They should already be in place from the outside.
-        if (oldLock)
-            for (int i = 0; i <= dim; ++i) {
-                LockMask lockBit = (LockMask(1) << i);
-                if (oldLock & lockBit)
-                    newSimp[i]->locks_ = lockBit;
-            }
 
         // All done!
         return true;
@@ -699,6 +618,93 @@ bool TriangulationBase<dim>::internalPachner(Face<dim, k>* f, bool check,
         // All done!
         return true;
     }
+}
+
+template <int dim> requires (supportedDim(dim))
+bool TriangulationBase<dim>::internalPachner(Simplex<dim>* s, bool check,
+        bool perform) {
+    using LockMask = typename Simplex<dim>::LockMask;
+
+    // Pachner move on a top-dimensional simplex:
+
+    // First check for lock violations.
+    if (s->isLocked()) {
+        if (check)
+            return false;
+        if (perform)
+            throw LockViolation("An attempt was made to perform a "
+                "Pachner move on a locked top-dimensional simplex");
+    }
+
+    // Next check the legality of the move.
+    // For a 1-(dim+1) move, this is always legal.
+    if (! perform )
+        return true;
+
+    // Perform the move.
+    // The following ChangeAndClearSpan is essential, since we use
+    // "raw" routines (newSimplexRaw, joinRaw, etc.) below.
+    ChangeAndClearSpan<ChangeType::PreserveTopology> span(*this);
+
+    // Remember any facet locks on s - we will need to restore these later.
+    LockMask oldLock = s->locks_;
+
+    // Create the new simplices.
+    // Facet i of the old simplex will become a facet of newSimp[i].
+    // Vertex i of newSimp[i] will become the new internal vertex, and the
+    // other dim vertices of newSimp[i] will keep the same vertex numbers
+    // that they had in the old simplex.
+    //
+    // We insert the new simplices in reverse order so that the new
+    // vertex becomes vertex 0 of the last simplex of the triangulation.
+    Simplex<dim>* newSimp[dim + 1];
+    for (int i = dim; i >= 0; --i)
+        newSimp[i] = newSimplexRaw();
+
+    // Before we unglue, record how the adjacent simplices are glued to s.
+    Simplex<dim>* adjSimp[dim + 1];
+    Perm<dim + 1> adjGlue[dim + 1];
+    for (int i = 0; i <= dim; i++) {
+        if ((adjSimp[i] = s->adjacentSimplex(i))) {
+            adjGlue[i] = s->adjacentGluing(i);
+
+            // Were we gluing the old simplex to itself?
+            if (adjSimp[i] == s) {
+                // Adjust this to point to one of the new simplices instead,
+                // but also ensure the gluing happens in one direction only.
+                int j = adjGlue[i][i];
+                if (i < j)
+                    adjSimp[i] = newSimp[j];
+                else
+                    adjSimp[i] = nullptr;
+            }
+        }
+    }
+
+    // Delete the old simplex.
+    removeSimplexRaw(s);
+
+    // Glue the new simplices to each other internally.
+    for (int i = 0; i <= dim; ++i)
+        for (int j = i + 1; j <= dim; ++j)
+            newSimp[i]->joinRaw(j, newSimp[j], {i, j});
+
+    // Attach the new simplices to the old triangulation.
+    for (int i = 0; i <= dim; ++i)
+        if (adjSimp[i])
+            newSimp[i]->joinRaw(i, adjSimp[i], adjGlue[i]);
+
+    // Put back any facet locks from the inside.
+    // They should already be in place from the outside.
+    if (oldLock)
+        for (int i = 0; i <= dim; ++i) {
+            LockMask lockBit = (LockMask(1) << i);
+            if (oldLock & lockBit)
+                newSimp[i]->locks_ = lockBit;
+        }
+
+    // All done!
+    return true;
 }
 
 template <int dim> requires (supportedDim(dim))

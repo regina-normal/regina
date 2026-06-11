@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
@@ -128,7 +128,11 @@ void Context::load(xmlTextReaderPtr reader)
     m_attribute = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"attribute"));
     m_lineEndContext.parse(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"lineEndContext")));
     m_lineEmptyContext.parse(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"lineEmptyContext")));
-    regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"fallthrough")), m_fallthrough);
+    try {
+        m_fallthrough = parse<bool>(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"fallthrough")));
+    } catch (const InvalidArgument&) {
+        // Leave m_fallthrough as its default value.
+    }
     m_fallthroughContext.parse(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"fallthroughContext")));
     if (m_fallthroughContext.isStay())
         m_fallthrough = false;

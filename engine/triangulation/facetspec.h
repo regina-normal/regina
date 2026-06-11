@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -196,7 +196,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not past-the-end.
      *
-     * \python This routine is named inc() since python does not
+     * \python This routine is named inc() since Python does not
      * support the increment operator.
      *
      * \return a copy of this specifier before it was incremented.
@@ -226,7 +226,7 @@ struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
      *
      * \pre This specifier is not before-the-start.
      *
-     * \python This routine is named dec() since python does not
+     * \python This routine is named dec() since Python does not
      * support the decrement operator.
      *
      * \return a copy of this specifier before it was decremented.

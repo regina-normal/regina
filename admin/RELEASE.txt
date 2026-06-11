@@ -5,12 +5,12 @@ All locations are relative to the primary source directory.
 Program version:
     CHANGES.txt, HIGHLIGHTS.txt (version, date)
     CMakeLists.txt (PACKAGE_VERSION)
-    docs/man/*.1 (windows executable path)
+    handbook/regina/index.docbook (&regversion;, &regdate;, copyrightyears)
+    handbook/regina/manonly.docbook (&regversion;)
+    handbook/regina/python.docbook (python session banner)
+    handbook/regina-xml/index.docbook (&regversion;, &regdate;, copyrightyears)
+    man/*.1 (windows executable path)
     qtui/src/org.computop.regina.metainfo.xml (new entry in <release>)
-    qtui/doc/regina/index.docbook (&regversion;, &regdate;, copyrightyears)
-    qtui/doc/regina/manonly.docbook (&regversion;)
-    qtui/doc/regina/python.docbook (python session banner)
-    qtui/doc/regina-xml/index.docbook (&regversion;, &regdate;, copyrightyears)
     preconfig/*/regina-config.h (PACKAGE_* macros)
     Regina.xcodeproject/project.pbxproj (CURRENT_PROJECT_VERSION x2,
                                          MARKETING_VERSION x4)
@@ -19,9 +19,9 @@ Program version:
     www/source.html (unpacking instructions: filename, directory)
 
 Plus copyright years in:
-    engine/doxygen/doc-footer.html
+    apidocs/doc-footer.html
+    handbook/regina/about.docbook (plain citation, bibTeX citation)
     python/modulemain.cpp
-    qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/src/regina.plist
     qtui/src/reginaabout.cpp (several places)
     ... and the copyright statement in the license (see below)
@@ -29,7 +29,7 @@ Plus copyright years in:
 Full license details:
     LICENSE.txt
     engine/docs.h
-    qtui/doc/regina/credits.docbook
+    handbook/regina/credits.docbook
     qtui/src/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
 
@@ -42,7 +42,7 @@ SnapPea / SnapPy copyright (in addition to full license locations above):
     engine/snappea/snappeatriangulation.h
 
 Acknowledgements (in addition to primary authors listed in the license):
-    qtui/doc/regina/credits.docbook
+    handbook/regina/credits.docbook
     qtui/src/reginaabout.cpp (ReginaAbout constructor)
 
 Don't forget:

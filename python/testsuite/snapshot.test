@@ -1,13 +1,13 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2025, Ben Burton
+# Copyright (c) 2015-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests Regina's mechanism for snapshotting triangulations.
 #
-# This file is a single component of Regina's python test suite.  To run
-# the python test suite, move to the main python directory in the source
+# This file is a single component of Regina's Python test suite.  To run
+# the Python test suite, move to the main python directory in the source
 # tree and run "make check".
 #
 # This program is free software; you can redistribute it and/or
@@ -41,15 +41,15 @@ class Watcher(PacketListener):
 
 t = PacketOfTriangulation3(Example3.whiteheadLink())
 w1 = Watcher(t, 'original')
-print(t.isoSig(), t.isReadOnlySnapshot())
+print(t.neoSig(), t.isReadOnlySnapshot())
 
 a = AngleStructures(t)
 print(a)
-print(a.triangulation().isoSig())
+print(a.triangulation().neoSig())
 
 dummy = a.triangulation().pachner(t.tetrahedron(0))
-print(t.isoSig(), t.isReadOnlySnapshot())
-print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
+print(t.neoSig(), t.isReadOnlySnapshot())
+print(a.triangulation().neoSig(), a.triangulation().isReadOnlySnapshot())
 
 print('Step 1')
 t = None
@@ -64,13 +64,13 @@ print()
 # Test that snapshotting happens when we nullify a SnapPea triangulation.
 
 t = ExampleSnapPea.whiteheadLink()
-print(t.isoSig(), t.isReadOnlySnapshot())
+print(t.neoSig(), t.isReadOnlySnapshot())
 
 a = AngleStructures(t)
 print(a)
-print(a.triangulation().isoSig())
+print(a.triangulation().neoSig())
 
 dummy = a.triangulation().pachner(t.tetrahedron(0))
-print(t.isoSig(), t.isReadOnlySnapshot()) # should be an empty triangulation
-print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
+print(t.neoSig(), t.isReadOnlySnapshot()) # should be an empty triangulation
+print(a.triangulation().neoSig(), a.triangulation().isReadOnlySnapshot())
 

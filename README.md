@@ -12,12 +12,12 @@ and/or a source tarball from http://regina-normal.github.io/#download .
 To run regina from the command-line:
 
   * Type `regina-gui` for the graphical user interface;
-  * Type `regina-python` for the python-only scripting interface.
+  * Type `regina-python` for the Python-only scripting interface.
 
 If you encounter problems:
 
   * See http://regina-normal.github.io/docs/troubleshooting.html for help
-    with the graphical user interface and python scripting;
+    with the graphical user interface and Python scripting;
 
   * See http://regina-normal.github.io/source.html and
     http://regina-normal.github.io/buildtips.html for help with building

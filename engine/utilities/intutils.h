@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -86,6 +86,8 @@ class NativeInteger;
  * Note that 128-bit integers (which are not standard C++) might or might not
  * pass this test, depending on your compiler.
  *
+ * \nopython
+ *
  * \ingroup utilities
  */
 template <typename T>
@@ -106,6 +108,8 @@ concept StandardCppInteger = std::integral<T> && ! std::same_as<T, bool>;
  * The main reason for using this concept (as opposed to
  * `std::is_integral_v<T>`) is because the C++ standard type traits treat
  * 128-bit integers differently under different compilers.
+ *
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -137,6 +141,8 @@ concept CppInteger =
  * C++ standard type traits treat 128-bit integers differently under
  * different compilers.
  *
+ * \nopython
+ *
  * \ingroup utilities
  */
 template <typename T>
@@ -166,6 +172,8 @@ concept SignedCppInteger =
  * `std::is_integral_v<T>` and `std::is_unsigned_v<T>`)
  * is because the C++ standard type traits treat 128-bit integers differently
  * under different compilers.
+ *
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -211,6 +219,8 @@ concept ReginaInteger =
  * This means that 128-bit integers might or might not pass this test,
  * depending on your compiler.
  *
+ * \nopython
+ *
  * \ingroup utilities
  */
 template <typename T>
@@ -219,6 +229,8 @@ concept AnyInteger = StandardCppInteger<T> || ReginaInteger<T>;
 /**
  * A type that supports very basic interoperability with native C++ integer
  * values, via construction, assignment, and equality/inequality testing.
+ *
+ * \nopython
  *
  * \ingroup utilities
  */
@@ -232,6 +244,8 @@ concept IntegerCompatible =
  * A type that supports interoperability with native C++ integer values via
  * construction, assignment, equality/inequality testing, and comparisons.
  * The comparisons must yield a total order.
+ *
+ * \nopython
  *
  * \ingroup utilities
  */

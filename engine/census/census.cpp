@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,63 +32,76 @@
 #include <cstdlib>
 #include <functional>
 #include "census/census-impl.h"
-#include "file/globaldirs.h"
+#include "link/link.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
 
-CensusDB* Census::closedOr_ = nullptr;
-CensusDB* Census::closedNor_ = nullptr;
-CensusDB* Census::closedHyp_ = nullptr;
-CensusDB* Census::cuspedHypOr_ = nullptr;
-CensusDB* Census::cuspedHypNor_ = nullptr;
-CensusDB* Census::christy_ = nullptr;
-bool Census::dbInit_ = false;
+std::list<CensusHit> Census::lookup(const std::string& sig) {
+    auto tri3 = lookupAs<Triangulation<3>>(sig);
+    auto links = lookupAs<Link>(sig);
 
-// Instantiate this template, which we use in the python bindings.
-template bool CensusDB::lookup<const std::function<void(CensusHit&&)>&>(
+    if (tri3.empty())
+        return links;
+    else if (links.empty())
+        return tri3;
+    else {
+        // I'm not sure this can even occur with the census databases we
+        // currently have..?
+        tri3.splice(tri3.end(), std::move(links));
+        return tri3;
+    }
+}
+
+template <>
+void CensusCollection<Triangulation<3>>::init() {
+    // IMPORTANT: Do not forget to update the maximum sizes (both in each
+    // CensusDB creation and also at the end of this list) if/when the
+    // databases change!
+    databases_.reserve(6);
+    databases_.push_back(CensusDB::global("closed-or-census-11",
+        "Closed census (orientable)", 11));
+    databases_.push_back(CensusDB::global("closed-nor-census-11",
+        "Closed census (non-orientable)", 11));
+    databases_.push_back(CensusDB::global("closed-hyp-census-full",
+        "Hodgson-Weeks closed hyperbolic census", 32));
+    databases_.push_back(CensusDB::global("cusped-hyp-or-census-9",
+        "Cusped hyperbolic census (orientable)", 9));
+    databases_.push_back(CensusDB::global("cusped-hyp-nor-census-9",
+        "Cusped hyperbolic census (non-orientable)", 9));
+    databases_.push_back(CensusDB::global("christy-knots-links",
+        "Christy's collection of knot/link complements", 22));
+    maxSize_ = 32;
+}
+
+template <>
+void CensusCollection<Link>::init() {
+    // IMPORTANT: Do not forget to update the maximum sizes (both in each
+    // CensusDB creation and also at the end of this list) if/when the
+    // databases change!
+    databases_.reserve(3);
+    databases_.push_back(CensusDB::global("classical",
+        "Prime classical knots", "classical", 16));
+    databases_.push_back(CensusDB::global("virtual",
+        "Virtual knots", "virtual", 6));
+    databases_.push_back(CensusDB::global("green",
+        "Green's virtual knots", "Green", 6));
+    maxSize_ = 16;
+}
+
+// Instantiate this template, which we use in the Python bindings.
+template void CensusDB::lookupKey<2, const std::function<void(CensusHit&&)>&>(
     const std::string&, const std::function<void(CensusHit&&)>&) const;
 
-std::list<CensusHit> Census::lookup(const Triangulation<3>& tri) {
-    return lookup(tri.isoSig());
-}
+// Other instantiations that we need:
+template std::list<CensusHit> CensusCollection<Triangulation<3>>::lookup(
+    const Triangulation<3>&);
+template std::list<CensusHit> CensusCollection<Triangulation<3>>::lookup(
+    const std::string&);
 
-std::list<CensusHit> Census::lookup(const std::string& isoSig) {
-    if (! dbInit_) {
-        closedOr_ = standardDB("closed-or-census-11." REGINA_DB_EXT,
-            "Closed census (orientable)");
-        closedNor_ = standardDB("closed-nor-census-11." REGINA_DB_EXT,
-            "Closed census (non-orientable)");
-        closedHyp_ = standardDB("closed-hyp-census-full." REGINA_DB_EXT,
-            "Hodgson-Weeks closed hyperbolic census");
-        cuspedHypOr_ = standardDB("cusped-hyp-or-census-9." REGINA_DB_EXT,
-            "Cusped hyperbolic census (orientable)");
-        cuspedHypNor_ = standardDB("cusped-hyp-nor-census-9." REGINA_DB_EXT,
-            "Cusped hyperbolic census (non-orientable)");
-        christy_ = standardDB("christy-knots-links." REGINA_DB_EXT,
-            "Christy's collection of knot/link complements");
-        dbInit_ = true;
-    }
-
-    std::list<CensusHit> hits;
-
-    auto push = [&hits](CensusHit hit) {
-        hits.push_back(std::move(hit));
-    };
-
-    closedOr_->lookup(isoSig, push);
-    closedNor_->lookup(isoSig, push);
-    closedHyp_->lookup(isoSig, push);
-    cuspedHypOr_->lookup(isoSig, push);
-    cuspedHypNor_->lookup(isoSig, push);
-    christy_->lookup(isoSig, push);
-
-    return hits;
-}
-
-CensusDB* Census::standardDB(const char* filename, const char* desc) {
-    return new CensusDB(GlobalDirs::census() + "/" + filename, desc);
-}
+template std::list<CensusHit> CensusCollection<Link>::lookup(const Link&);
+template std::list<CensusHit> CensusCollection<Link>::lookup(
+    const std::string&);
 
 } // namespace regina
 

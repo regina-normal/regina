@@ -1,13 +1,13 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2025, Ben Burton
+# Copyright (c) 2015-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides tests for the wrapping of Packet subclasses through shared_ptr
 #
-# This file is a single component of Regina's python test suite.  To run
-# the python test suite, move to the main python directory in the source
+# This file is a single component of Regina's Python test suite.  To run
+# the Python test suite, move to the main python directory in the source
 # tree and run "make check".
 #
 # This program is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ print("-----------------------------------------------------------")
 print("Basic:")
 print()
 
-print(PacketOfTriangulation3(Example3.poincare()).isoSig())
+print(PacketOfTriangulation3(Example3.poincare()).neoSig())
 print(Text("Hello World"))
 print(Text("Hello World").text())
 
@@ -58,23 +58,23 @@ c.prepend(t1)
 
 print(c.countChildren())
 
-print(t1.isoSig())
+print(t1.neoSig())
 dummy = t1.newTetrahedron()
 dummy = None
 
 print(c.firstChild())
-print(c.firstChild().isoSig())
+print(c.firstChild().neoSig())
 
 t1 = None
 
-print(c.firstChild().isoSig())
+print(c.firstChild().neoSig())
 
 temp = c.lastChild()
 
 dummy = temp.newTetrahedron()
 dummy = None
 
-print(temp.isoSig())
+print(temp.neoSig())
 
 print()
 print("-----------------------------------------------------------")
@@ -84,7 +84,7 @@ print()
 c = None
 
 try:
-    print(temp.isoSig())
+    print(temp.neoSig())
 except RuntimeError:
     print("Got exception")
 
@@ -115,7 +115,7 @@ m = l.root()
 
 print(m == t2)
 
-print(m.isoSig())
+print(m.neoSig())
 
 m = None
 

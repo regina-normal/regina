@@ -3,7 +3,7 @@
 # Regina - Software for low-dimensional topology
 # Command-Line Utilities Test Suite
 #
-# Copyright (c) 2016-2025, Ben Burton
+# Copyright (c) 2016-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This program is free software; you can redistribute it and/or
@@ -26,10 +26,19 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 censuslookup
+censuslookup cV6cqb
 censuslookup cPcbbbiht
+censuslookup fFuC8hYTOTa
 censuslookup fvPQcdecedekrsnrs
 censuslookup foo
-censuslookup cPcbbbiht foo fvPQcdecedekrsnrs eLPkbdcddhgggb
+censuslookup cPcbbbiht foo fFuC8hYTOTa eLPkbdcddhgggb
 censuslookup jLLPLMQacefghghiinbxgaumcsr
 censuslookup nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng
 censuslookup foo cPcbbbiht jLLPLMQacefghghiinbxgaumcsr nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng
+censuslookup eputWe
+censuslookup eabcdbadcvbZa
+censuslookup eputWe cPcbbbiht
+
+# The largest size of triangulation and link in our censuses:
+censuslookup GpaqyGOW4irPHrcIYIAl7YAJtZZJZJRR777-xolbHkrv1wcxCreNvqmtO2dO5wrSfLLa
+censuslookup q--kOamvbVTu5KebuBnamJt9i

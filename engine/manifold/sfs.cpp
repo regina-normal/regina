@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -57,7 +57,7 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f) {
     return (out << '(' << f.alpha << ',' << f.beta << ')');
 }
 
-SFSFibre SFSpace::fibre(unsigned long which) const {
+SFSFibre SFSpace::fibre(size_t which) const {
     auto pos = fibres_.begin();
     advance(pos, which);
     return *pos;
@@ -163,7 +163,7 @@ void SFSpace::addCrosscap(bool fibreReversing) {
     genus_++;
 }
 
-void SFSpace::addPuncture(bool twisted, unsigned long nPunctures) {
+void SFSpace::addPuncture(bool twisted, size_t nPunctures) {
     if (twisted) {
         puncturesTwisted_ += nPunctures;
 
@@ -193,7 +193,7 @@ void SFSpace::addPuncture(bool twisted, unsigned long nPunctures) {
     }
 }
 
-void SFSpace::addReflector(bool twisted, unsigned long nReflectors) {
+void SFSpace::addReflector(bool twisted, size_t nReflectors) {
     if (twisted) {
         reflectorsTwisted_ += nReflectors;
 
@@ -364,8 +364,8 @@ void SFSpace::reduce(bool mayReflect) {
         // with (p,-q) == (1,-1) (p,p-q) == (p,p-q) if it's worth it.
 
         if (mayReflect) {
-            unsigned long nLarge = 0;
-            unsigned long nSmall = 0;
+            size_t nLarge = 0;
+            size_t nSmall = 0;
             // Don't count (2,1) fibres, they don't get changed anyway.
             for (it = fibres_.begin(); it != fibres_.end() && it->alpha == 2;
                     it++)
@@ -530,12 +530,12 @@ void SFSpace::complementAllFibres() {
     while (it != fibres_.end()) {
         // INV: it points to the next block to be reversed.
         auto it2 = it;
-        for (it2++; it2 != fibres_.end() && (*it2).alpha == (*it).alpha; it2++)
+        for (++it2; it2 != fibres_.end() && it2->alpha == it->alpha; ++it2)
             ;
 
         // Now it2 points to the first element of the following block.
         auto next = it2;
-        it2--;
+        --it2;
 
         // Now it2 points to the last element of this block.
         // Reverse this block by swapping elements at each end and
@@ -545,10 +545,10 @@ void SFSpace::complementAllFibres() {
             (*it) = (*it2);
             (*it2) = tmpFibre;
 
-            it++;
+            ++it;
             if (it == it2)
                 break;
-            it2--;
+            --it2;
         }
 
         // Move on to the next block.
@@ -640,9 +640,8 @@ bool SFSpace::operator == (const SFSpace& compare) const {
 std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // Double the genus if it's orientable, so that we can line up tori
     // with Klein bottles, etc.
-    unsigned long adjGenus1 = (baseOrientable() ? genus_ * 2 : genus_);
-    unsigned long adjGenus2 = (rhs.baseOrientable() ?
-        rhs.genus_ * 2 : rhs.genus_);
+    size_t adjGenus1 = (baseOrientable() ? genus_ * 2 : genus_);
+    size_t adjGenus2 = (rhs.baseOrientable() ? rhs.genus_ * 2 : rhs.genus_);
 
     // Too many punctures is worse than anything.
     if (auto c = punctures_ + puncturesTwisted_ <=>
@@ -763,7 +762,7 @@ AbelianGroup SFSpace::homology() const {
     // abelianise.  The presentation without reflectors is given on
     // p91 of Orlik [1972].  Each reflector gives additional generators
     // y and z, for which y acts as a boundary component and z^2 = fibre.
-    unsigned long nRef = reflectors_ + reflectorsTwisted_;
+    size_t nRef = reflectors_ + reflectorsTwisted_;
     bool twisted = fibreReversing();
 
     if (baseOrientable()) {
@@ -782,7 +781,7 @@ AbelianGroup SFSpace::homology() const {
         MatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
             nFibres_ + 1 + 2 * nRef);
 
-        unsigned long which = 0;
+        size_t which = 0;
         for (const auto& f : fibres_) {
             pres.entry(nFibres_ + nRef, which) = 1;
 
@@ -792,7 +791,7 @@ AbelianGroup SFSpace::homology() const {
             ++which;
         }
 
-        unsigned long ref;
+        size_t ref;
         for (ref = 0; ref < nRef; ref++) {
             pres.entry(nFibres_ + ref, nFibres_) = -1;
             pres.entry(nFibres_ + ref, nFibres_ + 1 + ref) = 2;
@@ -824,7 +823,7 @@ AbelianGroup SFSpace::homology() const {
         MatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
             nFibres_ + genus_ + 1 + 2 * nRef);
 
-        unsigned long which = 0;
+        size_t which = 0;
         for (const auto& f : fibres_) {
             pres.entry(nFibres_ + nRef, which) = 1;
 
@@ -834,7 +833,7 @@ AbelianGroup SFSpace::homology() const {
             ++which;
         }
 
-        unsigned long ref;
+        size_t ref;
         for (ref = 0; ref < nRef; ref++) {
             pres.entry(nFibres_ + ref, nFibres_ + genus_) = -1;
             pres.entry(nFibres_ + ref, nFibres_ + genus_ + 1 + ref) = 2;
@@ -854,7 +853,7 @@ AbelianGroup SFSpace::homology() const {
     }
 }
 
-void SFSpace::writeBaseExtraCount(std::ostream& out, unsigned long count,
+void SFSpace::writeBaseExtraCount(std::ostream& out, size_t count,
         const char* object, bool tex) {
     out << " + " << count << (tex ? "\\ \\mbox{" : " ") << object;
     if (count != 1)
@@ -869,8 +868,8 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
     // IMPORTANT: We do not allow spaces with > 2 reflector boundary
     // components to be named.  Otherwise this messes up the reflector
     // boundary output.
-    unsigned long totRef = reflectors_ + reflectorsTwisted_;
-    unsigned long totBdries = totRef + punctures_ + puncturesTwisted_;
+    size_t totRef = reflectors_ + reflectorsTwisted_;
+    size_t totBdries = totRef + punctures_ + puncturesTwisted_;
 
     if (baseOrientable()) {
         // Orientable base surface.

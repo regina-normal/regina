@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -82,7 +82,8 @@ class Container;
  *   text packet that will be the last child of the container.
  *
  * - If an I/O error occurs while trying to read the given file, this routine
- *   will return `null`.
+ *   will throw an exception.  This is a change in behaviour as of Regina 8.0:
+ *   older versions of Regina (≤ 7.x) returned `null` instead.
  *
  * In its simplest form, the text file can simply contain one signature per
  * line and nothing else.  However, more complex formats are allowed.
@@ -105,6 +106,8 @@ class Container;
  * `Triangulation<dim>`, or 0 to specify the object type Link.  Currenty no
  * other object type is supported in Python.
  *
+ * \exception FileError An error occurred whilst reading the given file.
+ *
  * \param filename the name of the text file from which to read.
  * \param colSigs the column of the text file containing the signatures.
  * \param colLabels the column of the text file that provides packet labels
@@ -117,7 +120,7 @@ class Container;
  *
  * \ingroup foreign
  */
-template <SignatureReconstructible ObjectType>
+template <SignatureEncodable ObjectType>
 requires PacketHeldType<ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename,
     int colSigs = 0, int colLabels = -1, size_t ignoreLines = 0);

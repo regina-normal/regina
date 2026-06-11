@@ -2,6 +2,7 @@
 SET ( FILES
   link.cpp
   modellinkgraph.cpp
+  spatiallink.cpp
   )
 
 # Prepend folder name

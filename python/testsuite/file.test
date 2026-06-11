@@ -1,13 +1,13 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2011-2025, Ben Burton
+# Copyright (c) 2011-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests support for the modern XML file format
 #
-# This file is a single component of Regina's python test suite.  To run
-# the python test suite, move to the main python directory in the source
+# This file is a single component of Regina's Python test suite.  To run
+# the Python test suite, move to the main python directory in the source
 # tree and run "make check".
 #
 # This program is free software; you can redistribute it and/or
@@ -85,3 +85,7 @@ dump(regina.open(testpath + '/file4.rga'))
 dump(regina.open(testpath + '/file5.rga'))
 dump(regina.open(testpath + '/file6.rga'))
 
+try:
+    regina.open('/no/such/file')
+except FileError:
+    print('Caught exception')

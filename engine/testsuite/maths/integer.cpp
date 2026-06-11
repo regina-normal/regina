@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -2693,13 +2693,10 @@ static void verifyCppInteger(Native native) {
     // ourselves also - try to avoid computing it twice.
     std::string str = regina::toString(native);
     SCOPED_TRACE_STDSTRING(str);
-    {
-        // Since we've computed the string version of native, this is probably
-        // a good spot to check valueOf().
-        Native dest;
-        EXPECT_TRUE(regina::valueOf(str, dest));
-        EXPECT_EQ(dest, native);
-    }
+
+    // Since we've computed the string version of native, this is probably
+    // a good spot to check parse().
+    EXPECT_NO_THROW({ EXPECT_EQ(regina::parse<Native>(str), native); });
 
     // Construction from Native:
     IntegerType large(native);

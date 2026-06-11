@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,11 @@
 /*! \file python/helpers/equality.h
  *  \brief Assists with wrapping Regina's common string output routines.
  */
+
+#ifndef __HELPERS_OUTPUT_H
+#ifndef __DOXYGEN
+#define __HELPERS_OUTPUT_H
+#endif
 
 #include <type_traits>
 #include <sstream>
@@ -74,18 +79,18 @@ enum class ReprStyle {
      * Indicates that there should be no custom \a __repr__ function at all.
      *
      * This will fall back to the (fairly uninformative) default provided by
-     * pybind11 and/or python.
+     * pybind11 and/or Python.
      */
     None
 };
 
 /**
- * Adds rich string output functions to the python bindings for a C++ class.
+ * Adds rich string output functions to the Python bindings for a C++ class.
  * The corresponding Python class should belong to the main `regina` module
  * (not `regina.interal`).
  *
- * This will add `str()`, `utf8()` and `detail()` to the python class.
- * It will also add `__str__` to provide "native" python string output by
+ * This will add `str()`, `utf8()` and `detail()` to the Python class.
+ * It will also add `__str__` to provide "native" Python string output by
  * calling the C++ `str()` member function, and it will add `__repr__` using
  * the given output style.
  *
@@ -97,11 +102,11 @@ template <RichStringifiable T, typename... options>
 void add_output_rich(pybind11::class_<T, options...>& c,
         ReprStyle style = ReprStyle::Detailed) {
     c.def("str", pybind11::overload_cast<>(&T::str, pybind11::const_),
-        doc::Output_::str);
+        doc::Output::str);
     c.def("utf8", pybind11::overload_cast<>(&T::utf8, pybind11::const_),
-        doc::Output_::utf8);
+        doc::Output::utf8);
     c.def("detail", pybind11::overload_cast<>(&T::detail, pybind11::const_),
-        doc::Output_::detail);
+        doc::Output::detail);
 
     c.def("__str__", pybind11::overload_cast<>(&T::str, pybind11::const_));
 
@@ -114,7 +119,7 @@ void add_output_rich(pybind11::class_<T, options...>& c,
                         "__qualname__")).cast<std::string_view>() << ": ";
                 c.writeTextShort(s);
                 s << '>';
-                return s.str();
+                return std::move(s).str();
             });
             break;
 
@@ -129,11 +134,11 @@ void add_output_rich(pybind11::class_<T, options...>& c,
 }
 
 /**
- * Adds basic string output functions to the python bindings for a C++ class.
+ * Adds basic string output functions to the Python bindings for a C++ class.
  * The corresponding Python class should belong to the main `regina` module
  * (not `regina.interal`).
  *
- * This will add a `str()` function to the python class, and will also add
+ * This will add a `str()` function to the Python class, and will also add
  * `__str__` as an alias for this function to provide "native" Python string
  * output.  The implementation will simply call the C++ `str()` member function.
  * This will also add a `__repr__` function, using the given output style.
@@ -162,7 +167,7 @@ void add_output_basic(pybind11::class_<T, options...>& c,
                     << pybind11::str(pybind11::type::handle_of<T>().attr(
                         "__qualname__")).cast<std::string_view>()
                     << ": " << c.str() << '>';
-                return s.str();
+                return std::move(s).str();
             });
             break;
 
@@ -177,11 +182,11 @@ void add_output_basic(pybind11::class_<T, options...>& c,
 }
 
 /**
- * Adds output stream functionality to the python bindings for a C++ class.
+ * Adds output stream functionality to the Python bindings for a C++ class.
  * The corresponding Python class should belong to the main `regina` module
  * (not `regina.interal`).
  *
- * This will add a function `__str__` to the python class to provide "native"
+ * This will add a function `__str__` to the Python class to provide "native"
  * Python string output.  The implementation just writes the underlying C++
  * object to an output stream and collects the result.  This will also add
  * a `__repr__` function, using the given output style.
@@ -201,7 +206,7 @@ void add_output_ostream(pybind11::class_<T, options...>& c,
     auto func = [](const T& x) {
         std::ostringstream s;
         s << x;
-        return s.str();
+        return std::move(s).str();
     };
 
     c.def("__str__", func);
@@ -214,7 +219,7 @@ void add_output_ostream(pybind11::class_<T, options...>& c,
                     << pybind11::str(pybind11::type::handle_of<T>().attr(
                         "__qualname__")).cast<std::string_view>()
                     << ": " << c << '>';
-                return s.str();
+                return std::move(s).str();
             });
             break;
 
@@ -228,11 +233,11 @@ void add_output_ostream(pybind11::class_<T, options...>& c,
 }
 
 /**
- * Adds custom string output functions to the python bindings for a C++ class.
+ * Adds custom string output functions to the Python bindings for a C++ class.
  * The corresponding Python class should belong to the main `regina` module
  * (not `regina.interal`).
  *
- * This will add a function `__str__` to the python class to provide "native"
+ * This will add a function `__str__` to the Python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
  * which must be a callable type (typically a lambda) that can be called
  * with arguments of the form `outputFunction(const C&, std::ostream&)`.
@@ -255,7 +260,7 @@ void add_output_custom(pybind11::class_<T, options...>& c,
     c.def("__str__", [outputFunction](const T& x) {
         std::ostringstream s;
         outputFunction(x, s);
-        return s.str();
+        return std::move(s).str();
     });
 
     c.def("__repr__", [outputFunction](const T& c) {
@@ -265,18 +270,18 @@ void add_output_custom(pybind11::class_<T, options...>& c,
                 "__qualname__")).cast<std::string_view>() << ": ";
         outputFunction(c, s);
         s << '>';
-        return s.str();
+        return std::move(s).str();
     });
 }
 
 /**
- * Adds custom string output functions to the python bindings for a C++ class,
- * using the given "fake" class name in the python `__repr__` function.
+ * Adds custom string output functions to the Python bindings for a C++ class,
+ * using the given "fake" class name in the Python `__repr__` function.
  * This is useful for internal classes (such as standard C++ view classes and
- * Regina's own TableView classes) whose corresponding python class names are
+ * Regina's own TableView classes) whose corresponding Python class names are
  * both unwieldy and unimportant.
  *
- * This will add a function `__str__` to the python class to provide "native"
+ * This will add a function `__str__` to the Python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
  * which must be a callable type (typically a lambda) that can be called
  * with arguments of the form `outputFunction(const C&, std::ostream&)`.
@@ -300,7 +305,7 @@ void add_output_custom(pybind11::class_<T, options...>& c,
     c.def("__str__", [outputFunction](const T& x) {
         std::ostringstream s;
         outputFunction(x, s);
-        return s.str();
+        return std::move(s).str();
     });
 
     c.def("__repr__", [outputFunction, className](const T& c) {
@@ -308,7 +313,7 @@ void add_output_custom(pybind11::class_<T, options...>& c,
         s << '<' << className << ": ";
         outputFunction(c, s);
         s << '>';
-        return s.str();
+        return std::move(s).str();
     });
 }
 
@@ -344,3 +349,5 @@ void writeStr(std::ostream& out, const T& obj) {
 }
 
 } // namespace regina::python
+
+#endif

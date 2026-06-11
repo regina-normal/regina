@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -133,12 +133,12 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * \endcode
          *
          * \python Instead of the iterators \a begin and \a end, this routine
-         * takes a python list of pairs `(seq, laurent)`, where \a seq is a
-         * python list of integers representing a diagram sequence, and where
+         * takes a Python list of pairs `(seq, laurent)`, where \a seq is a
+         * Python list of integers representing a diagram sequence, and where
          * \a laurent is either (i) a Laurent polynomial, or (ii) a pair
          * `(minExp, coefficients)` which could be used to construct a Laurent
          * polynomial.  In the latter case, \a minExp would an integer, and
-         * \a coefficients would be a python list of integers.
+         * \a coefficients would be a Python list of integers.
          *
          * \pre No diagram sequence ends in zero.
          *

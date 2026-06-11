@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,13 +45,14 @@
 #include "concepts/core.h"
 #include "concepts/iterator.h"
 #include "utilities/bitmanip.h"
+#include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
 template <UnsignedCppInteger> class Bitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
+template <UnsignedCppInteger> class Bitmask2;
 
 /**
  * A bitmask that can store arbitrarily many true-or-false bits.
@@ -76,7 +77,7 @@ template <UnsignedCppInteger, UnsignedCppInteger> class Bitmask2;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \todo \opt Insist that sizeof(Piece) is a power of two, and replace
+ * \todo \opt Insist that `sizeof(Block)` is a power of two, and replace
  * expensive division/mod operations with cheap bit operations.
  *
  * \warning Because this class may increase the length of the bitmask
@@ -99,16 +100,17 @@ class Bitmask {
          */
         static constexpr bool fixedSize = false;
 
+        using Block = unsigned int;
+            /**< The machine-native integer type that this class uses to pack
+                 bits together in internal storage. */
+
+        static constexpr int bitsPerBlock = 8 * sizeof(Block);
+            /**< The number of bits that can fit into a single machine-native
+                 integer block. */
+
     private:
-        using Piece = unsigned;
-            /**< The types of the machine-native pieces into which this
-                 bitmask is split. */
-        size_t pieces;
-            /**< The number of machine-native pieces into which this bitmask
-                 is split. */
-        Piece* mask;
-            /**< The array of pieces, each of which stores 8 * sizeof(Piece)
-                 individual bits. */
+        FixedArray<Block> blocks_;
+            /**< The machine-native blocks into which this bitmask is split. */
 
     public:
         /**
@@ -127,7 +129,7 @@ class Bitmask {
          * destructor is safe to use even if a bitmask has never been
          * initialised.
          */
-        Bitmask();
+        Bitmask() = default;
 
         /**
          * Creates a new bitmask of the given length with all bits set to
@@ -143,10 +145,8 @@ class Bitmask {
          * It is fine if the given bitmask is invalid (but in this case,
          * the new bitmask will be invalid also).  Invalid bitmasks must be
          * assigned a length using reset(size_t) or the assignment operator.
-         *
-         * \param src the bitmask to clone.
          */
-        Bitmask(const Bitmask& src);
+        Bitmask(const Bitmask&) = default;
 
         /**
          * Moves the contents of the given bitmask into this new bitmask.
@@ -155,16 +155,9 @@ class Bitmask {
          * the new bitmask will be invalid also).  Invalid bitmasks must be
          * assigned a length using reset(size_t) or the assignment operator.
          *
-         * The bitmask that was passed (\a src) will no longer be usable.
-         *
-         * \param src the bitmask whose contents should be moved.
+         * The bitmask that was passed will no longer be usable.
          */
-        Bitmask(Bitmask&& src) noexcept;
-
-        /**
-         * Destroys this bitmask.
-         */
-        ~Bitmask();
+        Bitmask(Bitmask&&) noexcept = default;
 
         /**
          * Returns the value of the given bit of this bitmask.
@@ -218,7 +211,7 @@ class Bitmask {
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -229,24 +222,84 @@ class Bitmask {
          */
         template <InputIteratorFor<size_t> Iterator>
         void set(Iterator indexBegin, Iterator indexEnd, bool value) {
-            Piece* base = mask;
+            auto base = blocks_.begin();
             size_t offset = 0;
             size_t diff;
 
             for ( ; indexBegin != indexEnd; ++indexBegin) {
-                // INV: offset = (base - mask) * 8 * sizeof(Piece)
+                // INV: offset = (base - mask) * bitsPerBlock
                 // INV: *indexBegin >= offset
-                if (*indexBegin >= offset + (8 * sizeof(Piece))) {
-                    diff = ((*indexBegin - offset) / (8 * sizeof(Piece)));
+                if (*indexBegin >= offset + bitsPerBlock) {
+                    diff = (*indexBegin - offset) / bitsPerBlock;
                     base += diff;
-                    offset += (8 * sizeof(Piece) * diff);
+                    offset += (bitsPerBlock * diff);
                 }
 
-                *base |= (Piece(1) << (*indexBegin - offset));
+                *base |= (Block(1) << (*indexBegin - offset));
                 if (! value)
-                    *base ^= (Piece(1) << (*indexBegin - offset));
+                    *base ^= (Block(1) << (*indexBegin - offset));
             }
         }
+
+        /**
+         * A begin iterator that grants low-level read-only access to the
+         * machine-native integers that store the individual bits.
+         *
+         * The bits of this bitmask are stored in these integer blocks, in
+         * order from first block to last block, and within each integer block
+         * in order from least significant bit to most significant bit.
+         *
+         * \nopython If you need to read and/or write bits through Python, you
+         * will need to do this one bit at a time via get() and/or set().
+         *
+         * \return an iterator pointing to the first integer block.
+         */
+        typename FixedArray<Block>::const_iterator beginBlocks() const;
+
+        /**
+         * A begin iterator that grants low-level read-write access to the
+         * machine-native integers that store the individual bits.
+         *
+         * The bits of this bitmask are stored in these integer blocks, in
+         * order from first block to last block, and within each integer block
+         * in order from least significant bit to most significant bit.
+         *
+         * \nopython If you need to read and/or write bits through Python, you
+         * will need to do this one bit at a time via get() and/or set().
+         *
+         * \return an iterator pointing to the first integer block.
+         */
+        typename FixedArray<Block>::iterator beginBlocks();
+
+        /**
+         * An end iterator that grants low-level read-only access to the
+         * machine-native integers that store the individual bits.
+         *
+         * The bits of this bitmask are stored in these integer blocks, in
+         * order from first block to last block, and within each integer block
+         * in order from least significant bit to most significant bit.
+         *
+         * \nopython If you need to read and/or write bits through Python, you
+         * will need to do this one bit at a time via get() and/or set().
+         *
+         * \return an iterator pointing beyond the last integer block.
+         */
+        typename FixedArray<Block>::const_iterator endBlocks() const;
+
+        /**
+         * An end iterator that grants low-level read-write access to the
+         * machine-native integers that store the individual bits.
+         *
+         * The bits of this bitmask are stored in these integer blocks, in
+         * order from first block to last block, and within each integer block
+         * in order from least significant bit to most significant bit.
+         *
+         * \nopython If you need to read and/or write bits through Python, you
+         * will need to do this one bit at a time via get() and/or set().
+         *
+         * \return an iterator pointing beyond the last integer block.
+         */
+        typename FixedArray<Block>::iterator endBlocks();
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -295,12 +348,11 @@ class Bitmask {
          * the new bitmask will be invalid also).  Invalid bitmasks must be
          * assigned a length using reset(size_t) or the assignment operator.
          *
-         * The bitmask that was passed (\a src) will no longer be usable.
+         * The bitmask that was passed will no longer be usable.
          *
-         * \param src the bitmask whose contents should be moved.
          * \return a reference to this bitmask.
          */
-        Bitmask& operator = (Bitmask&& src) noexcept;
+        Bitmask& operator = (Bitmask&&) noexcept = default;
 
         /**
          * Swaps the contents of this and the given bitmask.
@@ -391,11 +443,10 @@ class Bitmask {
          * considered equal if the two lengths round up to the same value
          * _and_ the extra bits in the longer bitmask are all \c false.
          *
-         * \param other the bitmask to compare against this.
          * \return \c true if and only if this and the given bitmask are
          * identical.
          */
-        bool operator == (const Bitmask& other) const;
+        bool operator == (const Bitmask&) const = default;
 
         /**
          * Deprecated routine that determines whether this bitmask appears
@@ -603,12 +654,12 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  * with no need for any specialised move operations or swap functions.
  *
  * \python Python does not support templates, and so instead Regina's
- * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+ * Python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
  * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
  * Bitmask256.  Each of these will be an optimised bitmask class that
  * can hold the corresponding number of bits, and is guaranteed to be an
- * instance of either the C++ Bitmask1<T> class (where possible) or the
- * C++ Bitmask2<T,U> template class (if necessary).
+ * instance of either the C++ `Bitmask1<T>` class (where possible) or the
+ * C++ `Bitmask2<T>` template class (if necessary).
  *
  * \ingroup utilities
  */
@@ -624,9 +675,18 @@ class Bitmask1 {
          */
         static constexpr bool fixedSize = true;
 
+        using Block = T;
+            /**< The machine-native integer type that this class uses to pack
+                 bits together in internal storage.  For the class Bitmask1,
+                 only one such integer is used. */
+
+        static constexpr int bitsPerBlock = 8 * sizeof(Block);
+            /**< The number of bits that can fit into a single machine-native
+                 integer block. */
+
     private:
         T mask;
-            /**< Contains all 8 * sizeof(\a T) bits of this bitmask. */
+            /**< Contains all `8 * sizeof(T)` bits of this bitmask. */
 
     public:
         /**
@@ -695,7 +755,7 @@ class Bitmask1 {
          * Returns the value of the given bit of this bitmask.
          *
          * \param index indicates which bit to query; this must be between
-         * 0 and (8 * sizeof(\a T) - 1) inclusive.
+         * 0 and `(8 * sizeof(T) - 1)` inclusive.
          * \return the value of the (\a index)th bit.
          */
         inline bool get(size_t index) const {
@@ -706,7 +766,7 @@ class Bitmask1 {
          * Sets the given bit of this bitmask to the given value.
          *
          * \param index indicates which bit to set; this must be between
-         * 0 and (8 * sizeof(\a T) - 1) inclusive.
+         * 0 and `(8 * sizeof(T) - 1)` inclusive.
          * \param value the value that will be assigned to the (\a index)th bit.
          */
         inline void set(size_t index, bool value) {
@@ -746,11 +806,11 @@ class Bitmask1 {
          * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
          * \pre All indices in the given list are between
-         * 0 and (8 * sizeof(\a T) - 1) inclusive.
+         * 0 and `(8 * sizeof(T) - 1)` inclusive.
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -824,7 +884,7 @@ class Bitmask1 {
          *
          * Unlike the more generic Bitmask, this optimised bitmask
          * class does not store a length.  This means that all
-         * 8 * sizeof(\a T) possible bits will be negated.
+         * `8 * sizeof(T)` possible bits will be negated.
          */
         inline void flip() {
             mask = ~mask;
@@ -994,7 +1054,7 @@ class Bitmask1 {
  * zeroes and ones.
  *
  * Since the length of the bitmask is not stored, the number of bits
- * written will be `8 * sizeof(T) + 8 * sizeof(U)`.
+ * written will be `16 * sizeof(T)`.
  *
  * \param out the output stream to which to write.
  * \param mask the bitmask to write.
@@ -1002,27 +1062,26 @@ class Bitmask1 {
  *
  * \ingroup utilities
  */
-template <UnsignedCppInteger T, UnsignedCppInteger U>
-std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
+template <UnsignedCppInteger T>
+std::ostream& operator << (std::ostream& out, const Bitmask2<T>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << ((mask.low & bit) ? '1' : '0');
-    for (U bit = 1; bit; bit <<= 1)
+    for (T bit = 1; bit; bit <<= 1)
         out << ((mask.high & bit) ? '1' : '0');
     return out;
 }
 
 /**
  * A small but extremely fast bitmask class that can store up to
- * `8 * sizeof(T) + 8 * sizeof(U)` true-or-false bits.
+ * `16 * sizeof(T)` true-or-false bits.
  *
- * This bitmask packs all of the bits together into a single variable of
- * type \a T and a single variable of type \a U.  This means that operations
- * on entire bitmasks are extremely fast, because all of the bits can be
- * processed in just two "native" operations.
+ * This bitmask packs all of the bits together into two variables of type \a T.
+ * This means that operations on entire bitmasks are extremely fast, because
+ * all of the bits can be processed in just two "native" operations.
  *
  * The downside of course is that the number of bits that can be stored
- * is limited to `8 * sizeof(T) + 8 * sizeof(U)`, where \a T and \a U
- * are some native unsigned C++ integer types.
+ * is limited to `16 * sizeof(T)`, where \a T is some native unsigned C++
+ * integer type.
  *
  * For an even faster bitmask class that can only store half as many bits,
  * see Bitmask1.  For a bitmask class that can store arbitrarily many bits,
@@ -1032,16 +1091,16 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  * with no need for any specialised move operations or swap functions.
  *
  * \python Python does not support templates, and so instead Regina's
- * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+ * Python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
  * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
  * Bitmask256.  Each of these will be an optimised bitmask class that
  * can hold the corresponding number of bits, and is guaranteed to be an
- * instance of either the C++ Bitmask1<T> class (where possible) or the
- * C++ Bitmask2<T,U> template class (if necessary).
+ * instance of either the C++ `Bitmask1<T>` class (where possible) or the
+ * C++ `Bitmask2<T>` template class (if necessary).
  *
  * \ingroup utilities
  */
-template <UnsignedCppInteger T, UnsignedCppInteger U = T>
+template <UnsignedCppInteger T>
 class Bitmask2 {
     public:
         /**
@@ -1053,11 +1112,20 @@ class Bitmask2 {
          */
         static constexpr bool fixedSize = true;
 
+        using Block = T;
+            /**< The machine-native integer type that this class uses to pack
+                 bits together in internal storage.  For the class Bitmask2,
+                 exactly two such integers are used. */
+
+        static constexpr int bitsPerBlock = 8 * sizeof(Block);
+            /**< The number of bits that can fit into a single machine-native
+                 integer block. */
+
     private:
         T low;
-            /**< Contains the first 8 * sizeof(\a T) bits of this bitmask. */
-        U high;
-            /**< Contains the final 8 * sizeof(\a U) bits of this bitmask. */
+            /**< Contains the first `8 * sizeof(T)` bits of this bitmask. */
+        T high;
+            /**< Contains the last `8 * sizeof(T)` bits of this bitmask. */
 
     public:
         /**
@@ -1125,8 +1193,8 @@ class Bitmask2 {
                 high = 0;
             } else {
                 numBits -= 8 * sizeof(T);
-                if (numBits < 8 * sizeof(U))
-                    high &= ((U(1) << numBits) - U(1));
+                if (numBits < 8 * sizeof(T))
+                    high &= ((T(1) << numBits) - T(1));
             }
         }
 
@@ -1134,21 +1202,21 @@ class Bitmask2 {
          * Returns the value of the given bit of this bitmask.
          *
          * \param index indicates which bit to query; this must be between
-         * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
+         * 0 and `(16 * sizeof(T) - 1)` inclusive.
          * \return the value of the (\a index)th bit.
          */
         inline bool get(size_t index) const {
             if (index < 8 * sizeof(T))
                 return (low & (T(1) << index));
             else
-                return (high & (U(1) << (index - 8 * sizeof(T))));
+                return (high & (T(1) << (index - 8 * sizeof(T))));
         }
 
         /**
          * Sets the given bit of this bitmask to the given value.
          *
          * \param index indicates which bit to set; this must be between
-         * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
+         * 0 and `(16 * sizeof(T) - 1)` inclusive.
          * \param value the value that will be assigned to the (\a index)th bit.
          */
         inline void set(size_t index, bool value) {
@@ -1157,9 +1225,9 @@ class Bitmask2 {
                 if (! value)
                     low ^= (T(1) << index);
             } else {
-                high |= (U(1) << (index - 8 * sizeof(T)));
+                high |= (T(1) << (index - 8 * sizeof(T)));
                 if (! value)
-                    high ^= (U(1) << (index - 8 * sizeof(T)));
+                    high ^= (T(1) << (index - 8 * sizeof(T)));
             }
         }
 
@@ -1194,11 +1262,11 @@ class Bitmask2 {
          * in _sorted_ order.  This is to allow optimisations for
          * larger bitmask types.
          * \pre All indices in the given list are between
-         * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
+         * 0 and `(16 * sizeof(T) - 1)` inclusive.
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -1219,9 +1287,9 @@ class Bitmask2 {
 
             // Now deal with the bits stored in high.
             for ( ; indexBegin != indexEnd; ++indexBegin) {
-                high |= (U(1) << ((*indexBegin) - 8 * sizeof(T)));
+                high |= (T(1) << ((*indexBegin) - 8 * sizeof(T)));
                 if (! value)
-                    high ^= (U(1) << ((*indexBegin) - 8 * sizeof(T)));
+                    high ^= (T(1) << ((*indexBegin) - 8 * sizeof(T)));
             }
         }
 
@@ -1286,7 +1354,7 @@ class Bitmask2 {
          *
          * Unlike the more generic Bitmask, this optimised bitmask
          * class does not store a length.  This means that all
-         * 8 * sizeof(\a T) + 8 * sizeof(\a U) possible bits will be negated.
+         * `16 * sizeof(T)` possible bits will be negated.
          */
         inline void flip() {
             low = ~low;
@@ -1369,16 +1437,16 @@ class Bitmask2 {
             auto t = BitManipulator<T>::subsetComparison(low, rhs.low);
 
             if (t == std::partial_ordering::equivalent) {
-                return BitManipulator<U>::subsetComparison(high, rhs.high);
+                return BitManipulator<T>::subsetComparison(high, rhs.high);
             } else if (t == std::partial_ordering::less) {
-                auto u = BitManipulator<U>::subsetComparison(high, rhs.high);
+                auto u = BitManipulator<T>::subsetComparison(high, rhs.high);
                 if (u == std::partial_ordering::equivalent ||
                         u == std::partial_ordering::less)
                     return t; // less
                 else
                     return std::partial_ordering::unordered;
             } else if (t == std::partial_ordering::greater) {
-                auto u = BitManipulator<U>::subsetComparison(high, rhs.high);
+                auto u = BitManipulator<T>::subsetComparison(high, rhs.high);
                 if (u == std::partial_ordering::equivalent ||
                         u == std::partial_ordering::greater)
                     return t; // greater
@@ -1430,7 +1498,7 @@ class Bitmask2 {
          * \return the number of \c true bits.
          */
         inline size_t bits() const {
-            return BitManipulator<T>::bits(low) + BitManipulator<U>::bits(high);
+            return BitManipulator<T>::bits(low) + BitManipulator<T>::bits(high);
         }
 
         /**
@@ -1445,7 +1513,7 @@ class Bitmask2 {
             if (low)
                 return BitManipulator<T>::firstBit(low);
             else if (high)
-                return 8 * sizeof(T) + BitManipulator<U>::firstBit(high);
+                return 8 * sizeof(T) + BitManipulator<T>::firstBit(high);
             else
                 return -1;
         }
@@ -1459,7 +1527,7 @@ class Bitmask2 {
         inline ssize_t lastBit() const {
             // -1 case works out of the box in the second IF branch.
             if (high)
-                return 8 * sizeof(T) + BitManipulator<U>::lastBit(high);
+                return 8 * sizeof(T) + BitManipulator<T>::lastBit(high);
             else
                 return BitManipulator<T>::lastBit(low);
         }
@@ -1476,12 +1544,12 @@ class Bitmask2 {
          */
         inline bool atMostOneBit() const {
             return (BitManipulator<T>::bits(low) +
-                BitManipulator<U>::bits(high)) <= 1;
+                BitManipulator<T>::bits(high)) <= 1;
         }
 
 #ifndef __DOXYGEN
     // Doxygen gets confused by the "<< <" combination here.
-    friend std::ostream& operator << <T, U>(std::ostream& out,
+    friend std::ostream& operator << <T>(std::ostream& out,
         const Bitmask2& mask);
 #endif
 };
@@ -1547,142 +1615,129 @@ void usingBitmaskFor(size_t bits, Action&& action, Args&&... args) {
 
 // Inline functions for Bitmask
 
-inline Bitmask::Bitmask() : pieces(0), mask(nullptr) {
-}
-
 inline Bitmask::Bitmask(size_t length) :
-        pieces(length > 0 ? (length - 1) / (8 * sizeof(Piece)) + 1 : 0),
-        mask(new Piece[pieces]) {
-    std::fill(mask, mask + pieces, 0);
-}
-
-inline Bitmask::Bitmask(const Bitmask& src) :
-        pieces(src.pieces), mask(new Piece[src.pieces]) {
-    std::copy(src.mask, src.mask + pieces, mask);
-}
-
-inline Bitmask::Bitmask(Bitmask&& src) noexcept :
-        pieces(src.pieces), mask(src.mask) {
-    src.mask = nullptr;
-}
-
-inline Bitmask::~Bitmask() {
-    delete[] mask;
+        blocks_((length > 0 ? (length - 1) / bitsPerBlock + 1 : 0), 0) {
 }
 
 inline void Bitmask::reset() {
-    std::fill(mask, mask + pieces, 0);
+    std::fill(blocks_.begin(), blocks_.end(), 0);
 }
 
 inline void Bitmask::reset(size_t length) {
-    delete[] mask;
-
-    pieces = (length > 0 ? (length - 1) / (8 * sizeof(Piece)) + 1 : 0);
-    mask = new Piece[pieces];
-
-    std::fill(mask, mask + pieces, 0);
+    blocks_ = FixedArray<Block>(
+        (length > 0 ? (length - 1) / bitsPerBlock + 1 : 0), 0);
 }
 
 inline Bitmask& Bitmask::operator = (const Bitmask& other) {
     // std::copy exhibits undefined behaviour in the case of self-assignment.
     if (std::addressof(other) == this)
         return *this;
-
-    if (pieces != other.pieces) {
-        delete[] mask;
-        pieces = other.pieces;
-        mask = new Piece[pieces];
+    else if (blocks_.size() == other.blocks_.size())
+        std::copy(other.blocks_.begin(), other.blocks_.end(), blocks_.begin());
+    else {
+        // FixedArray does not have copy assignment, but it does have copy
+        // construction (and the subsequent move is cheap).
+        blocks_ = FixedArray<Block>(other.blocks_);
     }
-    if (pieces)
-        std::copy(other.mask, other.mask + pieces, mask);
-    return *this;
-}
-
-inline Bitmask& Bitmask::operator = (Bitmask&& src) noexcept {
-    pieces = src.pieces;
-    std::swap(mask, src.mask);
-    // Let src dispose of the original contents in its own destructor.
     return *this;
 }
 
 inline void Bitmask::swap(Bitmask& other) noexcept {
-    std::swap(pieces, other.pieces);
-    std::swap(mask, other.mask);
+    blocks_.swap(other.blocks_);
 }
 
 inline void Bitmask::truncate(size_t numBits) {
-    size_t skip = numBits / (8 * sizeof(Piece));
-    numBits = numBits % (8 * sizeof(Piece));
+    size_t skip = numBits / bitsPerBlock;
+    numBits = numBits % bitsPerBlock;
 
-    Piece* piece = mask + skip;
-    if (piece < mask + pieces) {
-        (*piece) &= ((Piece(1) << numBits) - Piece(1));
-        for (++piece; piece < mask + pieces; ++piece)
-            *piece = 0;
+    auto block = blocks_.begin() + skip;
+    if (block != blocks_.end()) {
+        (*block) &= ((Block(1) << numBits) - Block(1));
+        for (++block; block != blocks_.end(); ++block)
+            *block = 0;
     }
 }
 
 inline bool Bitmask::get(size_t index) const {
-    return (mask[index / (8 * sizeof(Piece))] &
-        (Piece(1) << (index % (8 * sizeof(Piece)))));
+    return (blocks_[index / bitsPerBlock] &
+        (Block(1) << (index % bitsPerBlock)));
 }
 
 inline void Bitmask::set(size_t index, bool value) {
-    mask[index / (8 * sizeof(Piece))] |=
-        (Piece(1) << (index % (8 * sizeof(Piece))));
+    blocks_[index / bitsPerBlock] |= (Block(1) << (index % bitsPerBlock));
     if (! value)
-        mask[index / (8 * sizeof(Piece))] ^=
-            (Piece(1) << (index % (8 * sizeof(Piece))));
+        blocks_[index / bitsPerBlock] ^= (Block(1) << (index % bitsPerBlock));
+}
+
+inline typename FixedArray<Bitmask::Block>::const_iterator
+        Bitmask::beginBlocks() const {
+    return blocks_.begin();
+}
+
+inline typename FixedArray<Bitmask::Block>::iterator Bitmask::beginBlocks() {
+    return blocks_.begin();
+}
+
+inline typename FixedArray<Bitmask::Block>::const_iterator Bitmask::endBlocks()
+        const {
+    return blocks_.end();
+}
+
+inline typename FixedArray<Bitmask::Block>::iterator Bitmask::endBlocks() {
+    return blocks_.end();
 }
 
 inline Bitmask& Bitmask::operator &= (const Bitmask& other) {
-    for (size_t i = 0; i < pieces; ++i)
-        mask[i] &= other.mask[i];
+    auto lhs = blocks_.begin();
+    auto rhs = other.blocks_.begin();
+    while (lhs != blocks_.end())
+        *lhs++ &= *rhs++;
     return *this;
 }
 
 inline Bitmask& Bitmask::operator |= (const Bitmask& other) {
-    for (size_t i = 0; i < pieces; ++i)
-        mask[i] |= other.mask[i];
+    auto lhs = blocks_.begin();
+    auto rhs = other.blocks_.begin();
+    while (lhs != blocks_.end())
+        *lhs++ |= *rhs++;
     return *this;
 }
 
 inline Bitmask& Bitmask::operator ^= (const Bitmask& other) {
-    for (size_t i = 0; i < pieces; ++i)
-        mask[i] ^= other.mask[i];
+    auto lhs = blocks_.begin();
+    auto rhs = other.blocks_.begin();
+    while (lhs != blocks_.end())
+        *lhs++ ^= *rhs++;
     return *this;
 }
 
 inline Bitmask& Bitmask::operator -= (const Bitmask& other) {
-    for (size_t i = 0; i < pieces; ++i) {
-        mask[i] |= other.mask[i];
-        mask[i] ^= other.mask[i];
+    auto lhs = blocks_.begin();
+    auto rhs = other.blocks_.begin();
+    while (lhs != blocks_.end()) {
+        *lhs |= *rhs;
+        *lhs++ ^= *rhs++;
     }
     return *this;
 }
 
 inline void Bitmask::flip() {
-    for (size_t i = 0; i < pieces; ++i)
-        mask[i] = ~mask[i];
-}
-
-inline bool Bitmask::operator == (const Bitmask& other) const {
-    return std::equal(mask, mask + pieces,
-        other.mask, other.mask + other.pieces);
+    for (auto& b : blocks_)
+        b = ~b;
 }
 
 inline bool Bitmask::lessThan(const Bitmask& other) const {
-    for (ssize_t i = pieces - 1; i >= 0; --i)
-        if (mask[i] < other.mask[i])
+    for (ssize_t i = blocks_.size() - 1; i >= 0; --i)
+        if (blocks_[i] < other.blocks_[i])
             return true;
-        else if (mask[i] > other.mask[i])
+        else if (blocks_[i] > other.blocks_[i])
             return false;
     return false;
 }
 
 inline std::strong_ordering Bitmask::numericalComp(const Bitmask& other) const {
-    for (ssize_t i = pieces - 1; i >= 0; --i)
-        if (auto c = mask[i] <=> other.mask[i]; c != 0)
+    for (ssize_t i = blocks_.size() - 1; i >= 0; --i)
+        if (auto c = blocks_[i] <=> other.blocks_[i]; c != 0)
             return c;
     return std::strong_ordering::equal;
 }
@@ -1690,10 +1745,11 @@ inline std::strong_ordering Bitmask::numericalComp(const Bitmask& other) const {
 inline std::partial_ordering Bitmask::operator <=> (const Bitmask& rhs) const {
     auto ans = std::partial_ordering::equivalent;
 
-    for (size_t i = 0; i < pieces; ++i) {
+    auto x = blocks_.begin();
+    auto y = rhs.blocks_.begin();
+    while (x != blocks_.end()) {
         // INV: ans is equivalent, less, or greater (not unordered).
-        auto next = BitManipulator<Piece>::subsetComparison(
-            mask[i], rhs.mask[i]);
+        auto next = BitManipulator<Block>::subsetComparison(*x++, *y++);
         if (next == std::partial_ordering::unordered)
             return next;
 
@@ -1714,46 +1770,46 @@ inline std::partial_ordering Bitmask::operator <=> (const Bitmask& rhs) const {
 }
 
 inline bool Bitmask::inUnion(const Bitmask& x, const Bitmask& y) const {
-    for (size_t i = 0; i < pieces; ++i)
-        if ((mask[i] & (x.mask[i] | y.mask[i])) != mask[i])
+    for (size_t i = 0; i < blocks_.size(); ++i)
+        if ((blocks_[i] & (x.blocks_[i] | y.blocks_[i])) != blocks_[i])
             return false;
     return true;
 }
 
 inline bool Bitmask::containsIntn(const Bitmask& x, const Bitmask& y) const {
-    for (size_t i = 0; i < pieces; ++i)
-        if ((mask[i] | (x.mask[i] & y.mask[i])) != mask[i])
+    for (size_t i = 0; i < blocks_.size(); ++i)
+        if ((blocks_[i] | (x.blocks_[i] & y.blocks_[i])) != blocks_[i])
             return false;
     return true;
 }
 
 inline size_t Bitmask::bits() const {
     size_t ans = 0;
-    for (size_t i = 0; i < pieces; ++i)
-        ans += std::popcount(mask[i]);
+    for (auto b : blocks_)
+        ans += std::popcount(b);
     return ans;
 }
 
 inline ssize_t Bitmask::firstBit() const {
-    for (size_t i = 0; i < pieces; ++i)
-        if (mask[i])
-            return 8 * sizeof(Piece) * i +
-                BitManipulator<Piece>::firstBit(mask[i]);
+    using BitManip = BitManipulator<Block>;
+    for (size_t i = 0; i < blocks_.size(); ++i)
+        if (blocks_[i])
+            return bitsPerBlock * i + BitManip::firstBit(blocks_[i]);
     return -1;
 }
 
 inline ssize_t Bitmask::lastBit() const {
-    for (ssize_t i = pieces - 1; i >= 0; --i)
-        if (mask[i])
-            return 8 * sizeof(Piece) * i +
-                BitManipulator<Piece>::lastBit(mask[i]);
+    using BitManip = BitManipulator<Block>;
+    for (ssize_t i = blocks_.size() - 1; i >= 0; --i)
+        if (blocks_[i])
+            return bitsPerBlock * i + BitManip::lastBit(blocks_[i]);
     return -1;
 }
 
 inline bool Bitmask::atMostOneBit() const {
     unsigned bits = 0;
-    for (size_t i = 0; i < pieces; ++i) {
-        bits += std::popcount(mask[i]);
+    for (auto b : blocks_) {
+        bits += std::popcount(b);
         if (bits > 1)
             return false;
     }
@@ -1765,10 +1821,9 @@ inline void swap(Bitmask& a, Bitmask& b) noexcept {
 }
 
 inline std::ostream& operator << (std::ostream& out, const Bitmask& mask) {
-    Bitmask::Piece bit;
-    for (size_t i = 0; i < mask.pieces; ++i)
-        for (bit = 1; bit; bit <<= 1)
-            out << ((bit & mask.mask[i]) ? '1' : '0');
+    for (auto block : mask.blocks_)
+        for (Bitmask::Block bit = 1; bit; bit <<= 1)
+            out << ((bit & block) ? '1' : '0');
     return out;
 }
 

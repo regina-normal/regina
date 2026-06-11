@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1036,7 +1036,7 @@ class Perm {
          * then this will wrap around to become the first permutation in
          * Perm<n>::Sn, which is the identity.
          *
-         * \python This routine is named inc() since python does
+         * \python This routine is named inc() since Python does
          * not support the increment operator.
          *
          * \return a copy of this permutation before the increment took place.
@@ -1648,7 +1648,7 @@ class PermClass {
          * to the special past-the-end value (which can be tested by
          * casting to a \c bool).
          *
-         * \python This routine is named inc() since python does
+         * \python This routine is named inc() since Python does
          * not support the increment operator.
          *
          * \return a copy of this conjugacy class before the increment took

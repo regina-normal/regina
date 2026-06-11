@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Runner
 #
-# Copyright (c) 2007-2025, Ben Burton
+# Copyright (c) 2007-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: testsub
@@ -50,7 +50,7 @@ testoutdir=`mktemp -d -t regina.XXX`
 export REGINA_HOME=../../engine
 
 echo "---------------------------------------------------"
-echo "Testing python bindings in embedded subinterpreters"
+echo "Testing Python bindings in embedded subinterpreters"
 echo "---------------------------------------------------"
 echo
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -63,14 +63,14 @@ namespace regina {
  * boxes represent the bounded Seifert fibred spaces, and the small
  * tunnels show how their boundaries are joined.
  *
- * <pre>
+ * ```
  *     /---------------\   /-----------------\   /---------------\
  *     |               |   |                 |   |               |
  *     |  End space 0   ---   Central space   ---   End space 1  |
  *     |                ---                   ---                |
  *     |               |   |                 |   |               |
  *     \---------------/   \-----------------/   \---------------/
- * </pre>
+ * ```
  *
  * The way in which each pair of spaces is joined is specified by a
  * 2-by-2 matrix.  This matrix expresses the locations of the fibres and
@@ -89,11 +89,11 @@ namespace regina {
  * orbifold of the first end space.  Then the curves \a f, \a o,
  * \a f0 and \a o0 are related as follows:
  *
- * <pre>
+ * ```
  *     [f0]       [f ]
  *     [  ] = M * [  ]
  *     [o0]       [o ]
- * </pre>
+ * ```
  *
  * Likewise, let matrix \a M' describe the joining of the central
  * space and the second end space (marked in the diagram above as end
@@ -103,17 +103,17 @@ namespace regina {
  * fibres and the base orbifold of the second end space.  Then the curves
  * \a f', \a o', \a f1 and \a o1 are related as follows:
  *
- * <pre>
+ * ```
  *     [f1]        [f']
  *     [  ] = M' * [  ]
  *     [o1]        [o']
- * </pre>
+ * ```
  *
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional Manifold routine homology() is implemented, but
- * the optional routine construct() is not.
+ * The optional Manifold<3> routines homology() and isHyperbolic() are
+ * implemented, but the optional routine construct() is not.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -141,7 +141,7 @@ namespace regina {
  *
  * \ingroup manifold
  */
-class GraphTriple : public Manifold {
+class GraphTriple : public Manifold<3> {
     private:
         SFSpace end_[2];
             /**< The two end spaces, i.e., the Seifert fibred spaces
@@ -161,6 +161,10 @@ class GraphTriple : public Manifold {
          * Seifert fibred spaces, as described in the class notes.
          * The three Seifert fibred spaces and both 2-by-2 matching
          * matrices are passed separately.
+         *
+         * This constructor will try to simplify the presentation of the graph
+         * manifold if possible, though there is no guarantee that the
+         * representation it settles on will be unique for the manifold.
          *
          * \pre Each of the given matrices has determinant +1 or -1.
          *

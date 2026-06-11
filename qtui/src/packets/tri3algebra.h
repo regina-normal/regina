@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -160,10 +160,6 @@ class Tri3TuraevViroUI : public QObject, public PacketViewerTab {
          * Calculate the requested Turaev-Viro invariant.
          */
         void calculateInvariant();
-        /**
-         * Note that preferences have changed.
-         */
-        void updatePreferences();
 
     private:
         bool calculateInvariant(unsigned long r, bool parity);

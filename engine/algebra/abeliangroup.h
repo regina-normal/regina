@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -125,7 +125,7 @@ class AbelianGroup :
          * after it).
          *
          * \nopython Instead use the constructor that takes the invariant
-         * factors as a python list (which need not be constant).
+         * factors as a Python list (which need not be constant).
          *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).
@@ -146,7 +146,8 @@ class AbelianGroup :
          * after it).
          *
          * \python Instead of using a pair of iterators, you should pass the
-         * invariant factors as a Python list.
+         * invariant factors as either a Python list of native integers, or a
+         * Python list of Regina's arbitrary-precision `Integer` objects.
          *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).
@@ -175,7 +176,7 @@ class AbelianGroup :
          * after it).
          *
          * \nopython Instead use the constructor that takes the invariant
-         * factors as a python list.
+         * factors as a Python list.
          *
          * \param rank the rank of the new group (i.e., the number of
          * copies of \a Z).

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,8 @@
 #ifndef __SIGHANDLER_H
 #define __SIGHANDLER_H
 
+#include "triangulation/forward.h"
+
 #include "foreign/siglist.h"
 #include "packetimporter.h"
 #include "reginamain.h"
@@ -46,7 +48,6 @@
 
 namespace regina {
     class Link;
-    template <int dim> requires (supportedDim(dim)) class Triangulation;
 }
 
 /**
@@ -58,7 +59,7 @@ namespace regina {
  *
  * \tparam PacketType Indicates which types of signatures to import.
  */
-template <regina::SignatureReconstructible PacketType>
+template <regina::SignatureEncodable PacketType>
 class SigHandler : public PacketImporter {
     using PacketImporter::importData;
 
@@ -72,7 +73,7 @@ class SigHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+        std::shared_ptr<regina::Packet> importData(const QString& filename,
             ReginaMain* parentWidget) const override;
 
     private:
@@ -82,37 +83,41 @@ class SigHandler : public PacketImporter {
         SigHandler() = default;
 };
 
-template <regina::SignatureReconstructible PacketType>
+template <regina::SignatureEncodable PacketType>
 const SigHandler<PacketType> SigHandler<PacketType>::instance;
 
-template <regina::SignatureReconstructible PacketType>
+template <regina::SignatureEncodable PacketType>
 std::shared_ptr<regina::Packet> SigHandler<PacketType>::importData(
-        const QString& fileName, ReginaMain* parentWidget) const {
+        const QString& filename, ReginaMain* parentWidget) const {
     QString explnSuffix;
     QString signatures;
     if constexpr (std::is_same_v<PacketType, regina::Link>) {
         explnSuffix = QObject::tr("<p>The file should be a plain text file "
-            "containing one knot/link signature per line.</qt>");
+            "containing one knot/link signature per line. "
+            "Both first-generation signatures (from Regina ≤ 7.x) and "
+            "second-generation signatures (from Regina ≥ 8.0) are "
+            "accepted.</qt>");
         signatures = QObject::tr("knot/link signatures");
     } else {
         explnSuffix = QObject::tr("<p>The file should be a plain text file "
-            "containing one %1-manifold isomorphism signature per line.  "
-            "Isomorphism signatures are described in detail in "
-            "<i>Simplification paths in the Pachner graphs "
-            "of closed orientable 3-manifold triangulations</i>, "
-            "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>")
+            "containing one %1-manifold isomorphism signature per line. "
+            "Both first-generation signatures (from Regina ≤ 7.x) and "
+            "second-generation signatures (from Regina ≥ 8.0) are "
+            "accepted.</qt>")
             .arg(PacketType::dimension);
         signatures = QObject::tr("isomorphism signatures");
     }
 
-    std::shared_ptr<regina::Packet> ans = regina::readSigList<PacketType>(
-        static_cast<const char*>(QFile::encodeName(fileName)));
-    if (! ans) {
+    std::shared_ptr<regina::Packet> ans;
+    try {
+        ans = regina::readSigList<PacketType>(
+            static_cast<const char*>(QFile::encodeName(filename)));
+    } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
-                .arg(fileName.toHtmlEscaped()));
+                .arg(filename.toHtmlEscaped()));
         return nullptr;
     }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -178,8 +178,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * any missing coefficients are assumed to be zero.  In particular,
          * an empty sequence is allowed (and represents the zero field element).
          *
-         * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * \python Instead of a pair of iterators, this routine takes
+         * a Python list of Rational coefficients.
          *
          * \param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
@@ -1006,13 +1006,13 @@ inline Cyclotomic& Cyclotomic::operator /= (const Cyclotomic& other) {
 inline std::string Cyclotomic::str(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, false, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline std::string Cyclotomic::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 inline void swap(Cyclotomic& a, Cyclotomic& b) noexcept {

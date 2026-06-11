@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,8 @@
 #include "../helpers.h"
 #include "../docstrings/surface/disc.h"
 
+using namespace pybind11::literals;
+
 using regina::DiscSpec;
 using regina::DiscSetTet;
 using regina::DiscSetSurface;
@@ -43,7 +45,7 @@ using regina::DiscSpecIterator;
 void addDisc(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(DiscSpec)
 
-    auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc_scope)
+    auto d = pybind11::class_<DiscSpec>(m, "DiscSpec", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t, int, size_t>(), rdoc::__init)
         .def(pybind11::init<const DiscSpec&>(), rdoc::__copy)
@@ -63,16 +65,14 @@ void addDisc(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(DiscSetTet)
 
-    auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet", rdoc_scope)
+    auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet", rdoc::__class)
         .def(pybind11::init<const regina::NormalSurface&, size_t>(),
             rdoc::__init)
         .def(pybind11::init<size_t, size_t, size_t, size_t,
             size_t, size_t, size_t, size_t, size_t, size_t>(),
-            pybind11::arg("tri0"), pybind11::arg("tri1"), pybind11::arg("tri2"),
-            pybind11::arg("tri3"), pybind11::arg("quad0"),
-            pybind11::arg("quad1"), pybind11::arg("quad2"),
-            pybind11::arg("oct0") = 0, pybind11::arg("oct1") = 0,
-            pybind11::arg("oct2") = 0,
+            "tri0"_a, "tri1"_a, "tri2"_a, "tri3"_a,
+            "quad0"_a, "quad1"_a, "quad2"_a,
+            "oct0"_a = 0, "oct1"_a = 0, "oct2"_a = 0,
             rdoc::__init_2)
         .def(pybind11::init<const DiscSetTet&>(), rdoc::__copy)
         .def("nDiscs", &DiscSetTet::nDiscs, rdoc::nDiscs)
@@ -90,7 +90,8 @@ void addDisc(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(DiscSetSurfaceDataImpl)
 
-    auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface", rdoc_scope)
+    auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface",
+            rdoc::__class)
         .def(pybind11::init<const regina::NormalSurface&>(), rdoc::__init)
         .def(pybind11::init<const DiscSetSurface&>(), rdoc::__copy)
         .def("swap", &DiscSetSurface::swap, rdoc::swap)
@@ -116,13 +117,12 @@ void addDisc(pybind11::module_& m) {
         s << " )";
     });
     regina::python::add_eq_operators(s, rdoc::__eq);
-
-    regina::python::add_global_swap<DiscSetSurface>(m, rdoc::global_swap);
+    regina::python::add_global_swap<DiscSetSurface, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(DiscSpecIterator)
 
     auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(
-            m, "DiscSpecIterator", rdoc_scope)
+            m, "DiscSpecIterator", rdoc::__class)
         .def("__next__", [](DiscSpecIterator<DiscSetTet>& it) {
             if (! it.done())
                 return *it++;

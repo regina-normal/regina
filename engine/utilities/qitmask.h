@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 template <UnsignedCppInteger> class Qitmask1;
-template <UnsignedCppInteger, UnsignedCppInteger> class Qitmask2;
+template <UnsignedCppInteger> class Qitmask2;
 
 /**
  * Writes the given qitmask to the given output stream as a sequence of
@@ -92,12 +92,12 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  * with no need for any specialised move operations or swap functions.
  *
  * \python Python does not support templates, and so instead Regina's
- * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
+ * Python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
  * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
  * Qitmask256.  Each of these will be an optimised qitmask class that
  * can hold the corresponding number of bits, and is guaranteed to be an
- * instance of either the C++ Qitmask1<T> class (where possible) or the
- * C++ Qitmask2<T,U> template class (if necessary).
+ * instance of either the C++ `Qitmask1<T>` class (where possible) or the
+ * C++ `Qitmask2<T>` template class (if necessary).
  *
  * \ingroup utilities
  */
@@ -141,7 +141,7 @@ class Qitmask1 {
          * Returns the value of the given qit in this qitmask.
          *
          * \param index indicates which qit to query; this must be between
-         * 0 and (8 * sizeof(\a T) - 1) inclusive.
+         * 0 and `(8 * sizeof(T) - 1)` inclusive.
          * \return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
@@ -156,7 +156,7 @@ class Qitmask1 {
          * Sets the given qit of this qitmask to the given value.
          *
          * \param index indicates which qit to set; this must be between
-         * 0 and (8 * sizeof(\a T) - 1) inclusive.
+         * 0 and `(8 * sizeof(T) - 1)` inclusive.
          * \param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
@@ -265,7 +265,7 @@ class Qitmask1 {
  * digits (0, 1, 2 and/or 3).
  *
  * Since the length of the qitmask is not stored, the number of qits
- * written will be `8 * sizeof(T) + 8 * sizeof(U)`.
+ * written will be `16 * sizeof(T)`.
  *
  * \param out the output stream to which to write.
  * \param mask the qitmask to write.
@@ -273,27 +273,26 @@ class Qitmask1 {
  *
  * \ingroup utilities
  */
-template <UnsignedCppInteger T, UnsignedCppInteger U>
-std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
+template <UnsignedCppInteger T>
+std::ostream& operator << (std::ostream& out, const Qitmask2<T>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << int(((mask.low1 & bit) ? 1 : 0) | ((mask.low2 & bit) ? 2 : 0));
-    for (U bit = 1; bit; bit <<= 1)
+    for (T bit = 1; bit; bit <<= 1)
         out << int(((mask.high1 & bit) ? 1 : 0) | ((mask.high2 & bit) ? 2 : 0));
     return out;
 }
 
 /**
  * A small but extremely fast "base 4 bitmask" class that can store up to
- * `8 * sizeof(T) + 8 * sizeof(U)` "qits", each equal to 0, 1, 2 or 3.
+ * `16 * sizeof(T)` "qits", each equal to 0, 1, 2 or 3.
  *
- * This qitmask packs all of the qits together into two variables of
- * type \a T and two variables of type \a U.  This means that operations
- * on entire qitmasks are extremely fast, because all of the qits can be
- * processed in just a few native CPU operations.
+ * This qitmask packs all of the qits together into four variables of type \a T.
+ * This means that operations on entire qitmasks are extremely fast, because all
+ * of the qits can be processed in just a few native CPU operations.
  *
  * The downside of course is that the number of qits that can be stored
- * is limited to `8 * sizeof(T) + 8 * sizeof(U)`, where \a T and \a U
- * are some native unsigned C++ integer types.
+ * is limited to `16 * sizeof(T)`, where \a T is some native unsigned C++
+ * integer type.
  *
  * For an even faster qitmask class that can only store half as many qits,
  * see Qitmask1.  At present there is no qitmask class
@@ -303,16 +302,16 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  * with no need for any specialised move operations or swap functions.
  *
  * \python Python does not support templates, and so instead Regina's
- * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
+ * Python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
  * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
  * Qitmask256.  Each of these will be an optimised qitmask class that
  * can hold the corresponding number of bits, and is guaranteed to be an
- * instance of either the C++ Qitmask1<T> class (where possible) or the
- * C++ Qitmask2<T,U> template class (if necessary).
+ * instance of either the C++ `Qitmask1<T>` class (where possible) or the
+ * C++ `Qitmask2<T>` template class (if necessary).
  *
  * \ingroup utilities
  */
-template <UnsignedCppInteger T, UnsignedCppInteger U = T>
+template <UnsignedCppInteger T>
 class Qitmask2 {
     private:
         T low1;
@@ -321,12 +320,12 @@ class Qitmask2 {
         T low2;
             /**< The ith bit of this mask stores the most significant bit
                  of the ith qit (i.e., whether the qit is 2 or 3). */
-        U high1;
+        T high1;
             /**< The ith bit of this mask stores the least significant bit
-                 of the (8 * sizeof(\a T) + i)th qit. */
-        U high2;
+                 of the `(8 * sizeof(T) + i)`th qit. */
+        T high2;
             /**< The ith bit of this mask stores the most significant bit
-                 of the (8 * sizeof(\a T) + i)th qit. */
+                 of the `(8 * sizeof(T) + i)`th qit. */
 
     public:
         /**
@@ -359,7 +358,7 @@ class Qitmask2 {
          * Returns the value of the given qit in this qitmask.
          *
          * \param index indicates which qit to query; this must be between
-         * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
+         * 0 and `(16 * sizeof(T) - 1)` inclusive.
          * \return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
@@ -368,7 +367,7 @@ class Qitmask2 {
                 T bit = T(1) << index;
                 return ((low1 & bit) ? 1 : 0) | ((low2 & bit) ? 2 : 0);
             } else {
-                U bit = U(1) << (index - 8 * sizeof(T));
+                T bit = T(1) << (index - 8 * sizeof(T));
                 return ((high1 & bit) ? 1 : 0) | ((high2 & bit) ? 2 : 0);
             }
         }
@@ -377,7 +376,7 @@ class Qitmask2 {
          * Sets the given qit of this qitmask to the given value.
          *
          * \param index indicates which qit to set; this must be between
-         * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
+         * 0 and `(16 * sizeof(T) - 1)` inclusive.
          * \param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
@@ -390,12 +389,12 @@ class Qitmask2 {
                 if (! (value & 2))
                     low2 ^= (T(1) << index);
             } else {
-                high1 |= (U(1) << (index - 8 * sizeof(T)));
+                high1 |= (T(1) << (index - 8 * sizeof(T)));
                 if (! (value & 1))
-                    high1 ^= (U(1) << (index - 8 * sizeof(T)));
-                high2 |= (U(1) << (index - 8 * sizeof(T)));
+                    high1 ^= (T(1) << (index - 8 * sizeof(T)));
+                high2 |= (T(1) << (index - 8 * sizeof(T)));
                 if (! (value & 2))
-                    high2 ^= (U(1) << (index - 8 * sizeof(T)));
+                    high2 ^= (T(1) << (index - 8 * sizeof(T)));
             }
         }
 
@@ -490,7 +489,7 @@ class Qitmask2 {
 
 #ifndef __DOXYGEN
     // Doxygen gets confused by the "<< <" combination here.
-    friend std::ostream& operator << <T, U>(std::ostream& out,
+    friend std::ostream& operator << <T>(std::ostream& out,
         const Qitmask2& mask);
 #endif
 };

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,7 +55,6 @@ template std::pair<std::string, Isomorphism<3>>
     IsoSigRidgeDegrees<3>>(bool) const;
 
 template Triangulation<3> TriangulationBase<3>::fromSig(const std::string&);
-template size_t TriangulationBase<3>::isoSigComponentSize(const std::string&);
 
 template AbelianGroup TriangulationBase<3>::homology<1>() const;
 template AbelianGroup TriangulationBase<3>::homology<2>() const;
@@ -80,7 +79,7 @@ template void TriangulationBase<3>::swapBaseData(TriangulationBase<3>&);
 template bool TriangulationBase<3>::internalPachner(Face<3, 0>*, bool, bool);
 template bool TriangulationBase<3>::internalPachner(Face<3, 1>*, bool, bool);
 template bool TriangulationBase<3>::internalPachner(Face<3, 2>*, bool, bool);
-template bool TriangulationBase<3>::internalPachner(Face<3, 3>*, bool, bool);
+template bool TriangulationBase<3>::internalPachner(Simplex<3>*, bool, bool);
 
 template bool TriangulationBase<3>::internal20(Face<3, 0>*, bool, bool);
 template bool TriangulationBase<3>::internal20(Face<3, 1>*, bool, bool);

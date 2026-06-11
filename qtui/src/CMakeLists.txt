@@ -80,7 +80,6 @@ SET(SOURCES ${SOURCES}
   messagelayer.cpp
   newpacketdialog.cpp
   newpackets.cpp
-  packetchooser.cpp
   packetcreator.cpp
   packeteditiface.cpp
   packetmanager.cpp

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,7 +41,7 @@ using regina::Rational;
 void addRational(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Rational)
 
-    auto c = pybind11::class_<Rational>(m, "Rational", rdoc_scope)
+    auto c = pybind11::class_<Rational>(m, "Rational", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Rational&>(), rdoc::__copy)
         .def(pybind11::init<const Integer&>(), rdoc::__init)
@@ -78,8 +78,7 @@ void addRational(pybind11::module_& m) {
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_cmp_operators(c, rdoc::__cmp);
     regina::python::add_output_ostream(c, regina::python::ReprStyle::Slim);
-
-    regina::python::add_global_swap<Rational>(m, rdoc::global_swap);
+    regina::python::add_global_swap<Rational, rdoc>(m);
 
     RDOC_SCOPE_END
 

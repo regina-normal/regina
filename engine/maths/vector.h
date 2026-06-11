@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -85,9 +85,9 @@ class Rational;
  * constructor instead), and the old makeLinComb() method is also gone
  * (just use operator *= and addCopies()).
  *
- * \python Only the specific types Vector<Integer> and
- * Vector<LargeInteger> are available, under the names VectorInt and
- * VectorLarge respectively.
+ * \python Only the specific types `Vector<Integer>` and
+ * `Vector<LargeInteger>` are available, under the names `VectorInt` and
+ * `VectorLarge` respectively.
  *
  * \ingroup maths
  */
@@ -168,8 +168,8 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * The iterator type must be random access because this allows the
          * implementation to compute the sequence length in constant time.
          *
-         * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * \python Instead of a pair of iterators, this routine takes
+         * a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of elements.
          * \param end a past-the-end iterator indicating the end of the
@@ -212,7 +212,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * accidental (and unintentional) mixing of vector classes.
          *
          * \python Using this constructor, Python allows you to construct a
-         * Vector<Integer> from a Vector<LargeInteger> or vice versa.
+         * `VectorInt` from a `VectorLarge` or vice versa.
          *
          * \param src the vector to clone.
          */

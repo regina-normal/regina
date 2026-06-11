@@ -11,8 +11,84 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Cut
-static const char *Cut =
+struct Cut {
+
+// Docstring regina::python::doc::Cut::__call
+static constexpr const char __call[] =
+R"doc(Partitions the given triangulation using this cut.
+
+This routine will return _two_ triangulations: the first will contain
+all the top-dimensional simplices on side 0 of this cut, and the
+second will contain all the top-dimensional simplices on side 1. All
+gluings within the same side of the partition will be preserved, but
+any gluings that cross the partition will be lost (and so the
+corresponding simplex facets will become boundary).
+
+You can call inclusion() if you need to know how the simplex numbers
+of the resulting triangulations correspond to the simplex numbers of
+the original triangulation.
+
+If any of the facets that cross the partition are locked in the source
+triangulation *tri*, this will not prevent the operation from
+occurring (since the source triangulation will not be changed). The
+two triangulations that are returned will have no simplex and/or facet
+locks at all.
+
+Precondition:
+    The given triangulation has precisely size() top-dimensional
+    simplices.
+
+Exception ``InvalidArgument``:
+    The given triangulation does not have precisely size() top-
+    dimensional simplices.
+
+Parameter ``tri``:
+    the triangulation to partition.
+
+Returns:
+    the two resulting triangulations, one for each side of the
+    partition.)doc";
+
+// Docstring regina::python::doc::Cut::__call_2
+static constexpr const char __call_2[] =
+R"doc(Partitions the given facet pairing using this cut.
+
+This routine will return _two_ facet pairings: the first will contain
+all the top-dimensional simplices on side 0 of this cut, and the
+second will contain all the top-dimensional simplices on side 1. All
+matchings between simplex facets within the same side of the partition
+will be preserved, but any matchings that cross the partition will be
+lost (and so the corresponding simplex facets will become unmatched).
+
+You can call inclusion() if you need to know how the simplex numbers
+of the resulting pairings correspond to the simplex numbers of the
+original pairing.
+
+Precondition:
+    The given facet pairing has precisely size() top-dimensional
+    simplices.
+
+Precondition:
+    Since empty facet pairings are not allowed, this cut must have at
+    least one top-dimensional simplex on each side.
+
+Exception ``InvalidArgument``:
+    The given facet pairing does not have precisely size() top-
+    dimensional simplices.
+
+Exception ``FailedPrecondition``:
+    This cut has all of its top-dimensional simplices on the same
+    side.
+
+Parameter ``pairing``:
+    the facet pairing to partition.
+
+Returns:
+    the two resulting facet pairings, one for each side of the
+    partition.)doc";
+
+// Docstring regina::python::doc::Cut::__class
+static constexpr const char __class[] =
 R"doc(A cut that separates a triangulation, facet pairing or link diagram
 into two pieces. This is essentially the same concept as a cut in
 graph theory.
@@ -54,91 +130,15 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-namespace Cut_ {
-
-// Docstring regina::python::doc::Cut_::__call
-static const char *__call =
-R"doc(Partitions the given triangulation using this cut.
-
-This routine will return _two_ triangulations: the first will contain
-all the top-dimensional simplices on side 0 of this cut, and the
-second will contain all the top-dimensional simplices on side 1. All
-gluings within the same side of the partition will be preserved, but
-any gluings that cross the partition will be lost (and so the
-corresponding simplex facets will become boundary).
-
-You can call inclusion() if you need to know how the simplex numbers
-of the resulting triangulations correspond to the simplex numbers of
-the original triangulation.
-
-If any of the facets that cross the partition are locked in the source
-triangulation *tri*, this will not prevent the operation from
-occurring (since the source triangulation will not be changed). The
-two triangulations that are returned will have no simplex and/or facet
-locks at all.
-
-Precondition:
-    The given triangulation has precisely size() top-dimensional
-    simplices.
-
-Exception ``InvalidArgument``:
-    The given triangulation does not have precisely size() top-
-    dimensional simplices.
-
-Parameter ``tri``:
-    the triangulation to partition.
-
-Returns:
-    the two resulting triangulations, one for each side of the
-    partition.)doc";
-
-// Docstring regina::python::doc::Cut_::__call_2
-static const char *__call_2 =
-R"doc(Partitions the given facet pairing using this cut.
-
-This routine will return _two_ facet pairings: the first will contain
-all the top-dimensional simplices on side 0 of this cut, and the
-second will contain all the top-dimensional simplices on side 1. All
-matchings between simplex facets within the same side of the partition
-will be preserved, but any matchings that cross the partition will be
-lost (and so the corresponding simplex facets will become unmatched).
-
-You can call inclusion() if you need to know how the simplex numbers
-of the resulting pairings correspond to the simplex numbers of the
-original pairing.
-
-Precondition:
-    The given facet pairing has precisely size() top-dimensional
-    simplices.
-
-Precondition:
-    Since empty facet pairings are not allowed, this cut must have at
-    least one top-dimensional simplex on each side.
-
-Exception ``InvalidArgument``:
-    The given facet pairing does not have precisely size() top-
-    dimensional simplices.
-
-Exception ``FailedPrecondition``:
-    This cut has all of its top-dimensional simplices on the same
-    side.
-
-Parameter ``pairing``:
-    the facet pairing to partition.
-
-Returns:
-    the two resulting facet pairings, one for each side of the
-    partition.)doc";
-
-// Docstring regina::python::doc::Cut_::__copy
-static const char *__copy =
+// Docstring regina::python::doc::Cut::__copy
+static constexpr const char __copy[] =
 R"doc(Creates a new copy of the given cut.
 
 Parameter ``src``:
     the cut to copy.)doc";
 
-// Docstring regina::python::doc::Cut_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::Cut::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this and the given cut are identical.
 
 Two cuts are considered identical if they describe the same partition
@@ -153,8 +153,8 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given cut are identical.)doc";
 
-// Docstring regina::python::doc::Cut_::__init
-static const char *__init =
+// Docstring regina::python::doc::Cut::__init
+static constexpr const char __init[] =
 R"doc(Creates a new trivial cut on the given number of nodes.
 
 All nodes will be on side 0.
@@ -162,8 +162,8 @@ All nodes will be on side 0.
 Parameter ``size``:
     the number of nodes in the underlying graph-like object.)doc";
 
-// Docstring regina::python::doc::Cut_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::Cut::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new cut with the given partition sizes.
 
 The total number of nodes under consideration will be ``side0 +
@@ -176,8 +176,8 @@ Parameter ``side0``:
 Parameter ``side1``:
     the number of nodes on side 1 of the partition.)doc";
 
-// Docstring regina::python::doc::Cut_::__init_3
-static const char *__init_3 =
+// Docstring regina::python::doc::Cut::__init_3
+static constexpr const char __init_3[] =
 R"doc(Creates a new cut using the given partition.
 
 Here a cut on *n* nodes is described by a sequence of *n* integers,
@@ -191,7 +191,7 @@ Exception ``InvalidArgument``:
     Some element of the given sequence is neither 0 nor 1.
 
 Python:
-    Instead of a pair of iterators, this routine takes a python list
+    Instead of a pair of iterators, this routine takes a Python list
     of integers.
 
 Parameter ``begin``:
@@ -202,8 +202,8 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the 0-1 sequence of
     sides.)doc";
 
-// Docstring regina::python::doc::Cut_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::Cut::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given cuts.
 
 This global routine simply calls Cut::swap(); it is provided so that
@@ -215,8 +215,8 @@ Parameter ``a``:
 Parameter ``b``:
     the second cut whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::Cut_::inc
-static const char *inc =
+// Docstring regina::python::doc::Cut::inc
+static constexpr const char inc[] =
 R"doc(Converts this into the next cut of the same size.
 
 The total number of nodes will stay the same, but the number on each
@@ -240,8 +240,8 @@ Returns:
     ``False`` if this was already the last partition in such an
     iteration.)doc";
 
-// Docstring regina::python::doc::Cut_::incFixedSizes
-static const char *incFixedSizes =
+// Docstring regina::python::doc::Cut::incFixedSizes
+static constexpr const char incFixedSizes[] =
 R"doc(Converts this into the next cut with the same partition sizes.
 
 Specifically, the number of nodes on each side of the partition will
@@ -266,8 +266,8 @@ Returns:
     ``False`` if this was already the last partition in such an
     iteration.)doc";
 
-// Docstring regina::python::doc::Cut_::inclusion
-static const char *inclusion =
+// Docstring regina::python::doc::Cut::inclusion
+static constexpr const char inclusion[] =
 R"doc(Returns the relationships between simplex numbers before and after
 this cut is used to partition a triangulation or facet pairing into
 two pieces.
@@ -298,8 +298,8 @@ Template parameter ``dim``:
 Returns:
     the two inclusion maps corresponding to this partition.)doc";
 
-// Docstring regina::python::doc::Cut_::isTrivial
-static const char *isTrivial =
+// Docstring regina::python::doc::Cut::isTrivial
+static constexpr const char isTrivial[] =
 R"doc(Determines whether this cut places all nodes on the same side of the
 partition.
 
@@ -307,8 +307,8 @@ Returns:
     ``True`` if all nodes are on side 0 or all nodes are on side 1, or
     ``False`` if both sides of the partition are non-empty.)doc";
 
-// Docstring regina::python::doc::Cut_::set
-static const char *set =
+// Docstring regina::python::doc::Cut::set
+static constexpr const char set[] =
 R"doc(Allows you to set which side of the partition the given node lies on.
 
 Exception ``InvalidArgument``:
@@ -322,8 +322,8 @@ Parameter ``newSide``:
     the side of the partition that the given node should lie on; this
     must be either 0 or 1.)doc";
 
-// Docstring regina::python::doc::Cut_::side
-static const char *side =
+// Docstring regina::python::doc::Cut::side
+static constexpr const char side[] =
 R"doc(Indicates which side of the partition the given node lies on.
 
 Parameter ``node``:
@@ -334,8 +334,8 @@ Returns:
     the corresponding side of the partition; this will be either 0 or
     1.)doc";
 
-// Docstring regina::python::doc::Cut_::size
-static const char *size =
+// Docstring regina::python::doc::Cut::size
+static constexpr const char size[] =
 R"doc(Returns the total number of nodes in the underlying graph-like object.
 
 In particular, if you are working with a triangulation or facet
@@ -344,8 +344,8 @@ pairing, then this returns the number of top-dimensional simplices.
 Returns:
     the total number of nodes.)doc";
 
-// Docstring regina::python::doc::Cut_::size_2
-static const char *size_2 =
+// Docstring regina::python::doc::Cut::size_2
+static constexpr const char size_2[] =
 R"doc(Returns the number of nodes on the given side of the partition
 described by this cut.
 
@@ -366,15 +366,15 @@ Parameter ``whichSide``:
 Returns:
     the number of nodes on the given side.)doc";
 
-// Docstring regina::python::doc::Cut_::swap
-static const char *swap =
+// Docstring regina::python::doc::Cut::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given cut.
 
 Parameter ``other``:
     the cut whose contents are to be swapped with this.)doc";
 
-// Docstring regina::python::doc::Cut_::weight
-static const char *weight =
+// Docstring regina::python::doc::Cut::weight
+static constexpr const char weight[] =
 R"doc(Returns the weight of this cut with respect to the dual graph of the
 given triangulation. This is the number of gluings in the given
 triangulation that cross the partition described by this cut.
@@ -397,8 +397,8 @@ Parameter ``tri``:
 Returns:
     the weight of this cut with respect to *tri*.)doc";
 
-// Docstring regina::python::doc::Cut_::weight_2
-static const char *weight_2 =
+// Docstring regina::python::doc::Cut::weight_2
+static constexpr const char weight_2[] =
 R"doc(Returns the weight of this cut with respect to the given facet
 pairing. This is the number of matchings between facets of simplices
 in the given pairing that cross the partition described by this cut.
@@ -421,8 +421,8 @@ Parameter ``pairing``:
 Returns:
     the weight of this cut with respect to *pairing*.)doc";
 
-// Docstring regina::python::doc::Cut_::weight_3
-static const char *weight_3 =
+// Docstring regina::python::doc::Cut::weight_3
+static constexpr const char weight_3[] =
 R"doc(Returns the weight of this cut with respect to the given link diagram.
 This is the number of arcs in the link diagram that cross the
 partition described by this cut.
@@ -439,8 +439,8 @@ Parameter ``link``:
 Returns:
     the weight of this cut with respect to *link*.)doc";
 
-// Docstring regina::python::doc::Cut_::weight_4
-static const char *weight_4 =
+// Docstring regina::python::doc::Cut::weight_4
+static constexpr const char weight_4[] =
 R"doc(Returns the weight of this cut with respect to the given model link
 graph. This is the number of arcs in the graph that cross the
 partition described by this cut.
@@ -457,7 +457,7 @@ Parameter ``graph``:
 Returns:
     the weight of this cut with respect to *graph*.)doc";
 
-}
+}; // struct Cut
 
 } // namespace regina::python::doc
 

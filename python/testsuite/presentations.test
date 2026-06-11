@@ -1,13 +1,13 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2025, Ben Burton
+# Copyright (c) 2007-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Provides various tests for group presentation.
 #
-# This file is a single component of Regina's python test suite.  To run
-# the python test suite, move to the main python directory in the source
+# This file is a single component of Regina's Python test suite.  To run
+# the Python test suite, move to the main python directory in the source
 # tree and run "make check".
 #
 # This program is free software; you can redistribute it and/or

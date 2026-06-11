@@ -11,8 +11,10 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::LayeredSolidTorus
-static const char *LayeredSolidTorus =
+struct LayeredSolidTorus {
+
+// Docstring regina::python::doc::LayeredSolidTorus::__class
+static constexpr const char __class[] =
 R"doc(Represents a layered solid torus in a triangulation. A layered solid
 torus must contain at least one tetrahedron.
 
@@ -22,24 +24,22 @@ degenerate (2,1,1) mobius strip and layer over the mobius strip
 boundary (including the minimal (1,1,0) triangulation) are not
 described by this class.
 
-All optional StandardTriangulation routines are implemented for this
+All optional StandardSubcomplex routines are implemented for this
 class.
 
 This class supports copying but does not implement separate move
 operations, since its internal data is so small that copying is just
 as efficient. It implements the C++ Swappable requirement via its own
 member and global swap() functions, for consistency with the other
-StandardTriangulation subclasses. Note that the only way to create
-these objects (aside from copying or moving) is via the static member
+StandardSubcomplex subclasses. Note that the only way to create these
+objects (aside from copying or moving) is via the static member
 function recognise().)doc";
 
-namespace LayeredSolidTorus_ {
+// Docstring regina::python::doc::LayeredSolidTorus::__copy
+static constexpr const char __copy[] = R"doc(Creates a new copy of the given structure.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::__copy
-static const char *__copy = R"doc(Creates a new copy of the given structure.)doc";
-
-// Docstring regina::python::doc::LayeredSolidTorus_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::LayeredSolidTorus::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given object represent the same type
 of layered solid torus.
 
@@ -54,10 +54,10 @@ presence of redundant layerings (i.e., consecutive layerings that
 topologically cancel each other out).
 
 This test follows the general rule for most subclasses of
-StandardTriangulation (excluding fixed structures such as SnappedBall
-and TriSolidTorus): two objects compare as equal if and only if they
-have the same combinatorial parameters (which for this subclass, as
-noted above, is weaker than combinatorial isomorphism).
+StandardSubcomplex (excluding fixed structures such as SnappedBall and
+TriSolidTorus): two objects compare as equal if and only if they have
+the same combinatorial parameters (which for this subclass, as noted
+above, is weaker than combinatorial isomorphism).
 
 Parameter ``other``:
     the layered solid torus to compare with this.
@@ -66,16 +66,16 @@ Returns:
     ``True`` if and only if this and the given object represent the
     same type of layered solid torus.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::base
-static const char *base =
+// Docstring regina::python::doc::LayeredSolidTorus::base
+static constexpr const char base[] =
 R"doc(Returns the tetrahedron that is glued to itself at the base of this
 layered solid torus.
 
 Returns:
     the base tetrahedron.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::baseEdge
-static const char *baseEdge =
+// Docstring regina::python::doc::LayeredSolidTorus::baseEdge
+static constexpr const char baseEdge[] =
 R"doc(Returns the requested edge of the base tetrahedron belonging to the
 given group. The layering identifies the six edges of the base
 tetrahedron into a group of three, a group of two and a single
@@ -102,8 +102,8 @@ Returns:
     the edge number in the base tetrahedron of the requested edge;
     this will be between 0 and 5 inclusive.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::baseEdgeGroup
-static const char *baseEdgeGroup =
+// Docstring regina::python::doc::LayeredSolidTorus::baseEdgeGroup
+static constexpr const char baseEdgeGroup[] =
 R"doc(Returns the group that the given edge of the base tetrahedron belongs
 to. See baseEdge() for further details about groups.
 
@@ -117,8 +117,8 @@ Parameter ``edge``:
 Returns:
     the group to which the given edge belongs; this will be 1, 2 or 3.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::baseFace
-static const char *baseFace =
+// Docstring regina::python::doc::LayeredSolidTorus::baseFace
+static constexpr const char baseFace[] =
 R"doc(Returns one of the two faces of the base tetrahedron that are glued to
 each other.
 
@@ -129,8 +129,8 @@ Returns:
     the requested face number in the base tetrahedron; this will be
     between 0 and 3 inclusive.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::flatten
-static const char *flatten =
+// Docstring regina::python::doc::LayeredSolidTorus::flatten
+static constexpr const char flatten[] =
 R"doc(Flattens this layered solid torus to a Mobius band. A new modified
 triangulation is returned; the original triangulation that contains
 this layered solid torus will be left unchanged.
@@ -156,8 +156,8 @@ Returns:
     a new triangulation in which this layered solid torus has been
     flattened to a Mobius band.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::LayeredSolidTorus::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given structures.
 
 This global routine simply calls LayeredSolidTorus::swap(); it is
@@ -170,8 +170,8 @@ Parameter ``a``:
 Parameter ``b``:
     the second structure whose contents should be swapped.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::meridinalCuts
-static const char *meridinalCuts =
+// Docstring regina::python::doc::LayeredSolidTorus::meridinalCuts
+static constexpr const char meridinalCuts[] =
 R"doc(Returns the number of times the meridinal disc of the torus cuts the
 top level tetrahedron edges in the given group. See topEdge() for
 further details about groups.
@@ -183,8 +183,8 @@ Returns:
     the number of times the meridinal disc cuts the edges in the given
     group.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::recognise
-static const char *recognise =
+// Docstring regina::python::doc::LayeredSolidTorus::recognise
+static constexpr const char recognise[] =
 R"doc(Determines if the given triangulation component forms a layered solid
 torus in its entirity.
 
@@ -194,8 +194,8 @@ or gluings. That is, the two boundary triangles of the layered solid
 torus must in fact be boundary triangles of the component.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``comp``:
     the triangulation component to examine.
@@ -204,8 +204,8 @@ Returns:
     a structure containing details of the layered solid torus, or
     ``None`` if the given component is not a layered solid torus.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::recogniseFromBase
-static const char *recogniseFromBase =
+// Docstring regina::python::doc::LayeredSolidTorus::recogniseFromBase
+static constexpr const char recogniseFromBase[] =
 R"doc(Determines if the given tetrahedron forms the base of a layered solid
 torus within a triangulation. The torus need not be the entire
 triangulation; the top level tetrahedron of the torus may be glued to
@@ -216,8 +216,8 @@ tetrahedron furthest from the boundary of the torus, i.e. the
 tetrahedron glued to itself with a twist.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tet``:
     the tetrahedron to examine as a potential base.
@@ -227,8 +227,8 @@ Returns:
     ``None`` if the given tetrahedron is not the base of a layered
     solid torus.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::recogniseFromTop
-static const char *recogniseFromTop =
+// Docstring regina::python::doc::LayeredSolidTorus::recogniseFromTop
+static constexpr const char recogniseFromTop[] =
 R"doc(Determines if the given tetrahedron forms the top level tetrahedron of
 a layered solid torus, with the two given faces of this tetrahedron
 representing the boundary of the layered solid torus.
@@ -242,8 +242,8 @@ extend this smaller layered solid torus to a larger layered solid
 torus.
 
 This function returns by (smart) pointer for consistency with
-StandardTriangulation::recognise(), which makes use of the polymorphic
-nature of the StandardTriangulation class hierarchy.
+StandardSubcomplex<3>::recognise(), which makes use of the polymorphic
+nature of the StandardSubcomplex class hierarchy.
 
 Parameter ``tet``:
     the tetrahedron to examine as a potential top level of a layered
@@ -265,22 +265,22 @@ Returns:
     ``None`` if the given tetrahedron with its two faces do not form
     the top level of a layered solid torus.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::size
-static const char *size =
+// Docstring regina::python::doc::LayeredSolidTorus::size
+static constexpr const char size[] =
 R"doc(Returns the number of tetrahedra in this layered solid torus.
 
 Returns:
     the number of tetrahedra.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::swap
-static const char *swap =
+// Docstring regina::python::doc::LayeredSolidTorus::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given structure.
 
 Parameter ``other``:
     the structure whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::topEdge
-static const char *topEdge =
+// Docstring regina::python::doc::LayeredSolidTorus::topEdge
+static constexpr const char topEdge[] =
 R"doc(Returns the requested edge of the top level tetrahedron belonging to
 the given group. The layering reduces five of the top level
 tetrahedron edges to three boundary edges of the solid torus; this
@@ -313,8 +313,8 @@ Returns:
     possible if the given group was the group of size one and the
     given index was 1).)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::topEdgeGroup
-static const char *topEdgeGroup =
+// Docstring regina::python::doc::LayeredSolidTorus::topEdgeGroup
+static constexpr const char topEdgeGroup[] =
 R"doc(Returns the group that the given edge of the top level tetrahedron
 belongs to. See topEdge() for further details about groups.
 
@@ -330,8 +330,8 @@ Returns:
     this edge does not belong to any group (only possible if this is
     the unique edge in the top tetrahedron not on the torus boundary).)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::topFace
-static const char *topFace =
+// Docstring regina::python::doc::LayeredSolidTorus::topFace
+static constexpr const char topFace[] =
 R"doc(Returns one of the two faces of the top level tetrahedron that form
 the boundary of this layered solid torus.
 
@@ -342,8 +342,8 @@ Returns:
     the requested face number in the top level tetrahedron; this will
     be between 0 and 3 inclusive.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::topLevel
-static const char *topLevel =
+// Docstring regina::python::doc::LayeredSolidTorus::topLevel
+static constexpr const char topLevel[] =
 R"doc(Returns the top level tetrahedron in this layered solid torus. This is
 the tetrahedron that would be on the boundary of the torus if the
 torus were the entire manifold.
@@ -351,8 +351,8 @@ torus were the entire manifold.
 Returns:
     the top level tetrahedron.)doc";
 
-// Docstring regina::python::doc::LayeredSolidTorus_::transform
-static const char *transform =
+// Docstring regina::python::doc::LayeredSolidTorus::transform
+static constexpr const char transform[] =
 R"doc(Adjusts the details of this layered solid torus according to the given
 isomorphism between triangulations.
 
@@ -378,7 +378,7 @@ Parameter ``newTri``:
     the triangulation to be referenced by the updated layered solid
     torus.)doc";
 
-}
+}; // struct LayeredSolidTorus
 
 } // namespace regina::python::doc
 

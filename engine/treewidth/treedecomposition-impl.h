@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -95,27 +95,27 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     // For each bag, work out the maximum cost of all links *below* that
     // bag if the root is located at or *above* that bag.
     // We do this using a leaves-to-root iteration over the tree.
-    FixedArray<MaxAggregator<T>> maxBelow(size_);
+    FixedArray<MaxCountAggregator<T>> maxBelow(size_);
     for (const TreeBag* b = first(); b; b = b->next()) {
         for (const TreeBag* c = b->children(); c; c = c->sibling()) {
-            maxBelow[b->index()].aggregate(maxBelow[c->index()]);
-            maxBelow[b->index()].aggregate(costSame[c->index()]);
+            maxBelow[b->index()] += maxBelow[c->index()];
+            maxBelow[b->index()] += costSame[c->index()];
         }
     }
 
     // Now, for each bag, work out the maximum cost of all links *above*
     // that bag if the root is located at or *below* that bag.
     // We do this using a root-to-leaves iteration over the tree.
-    FixedArray<MaxAggregator<T>> maxAbove(size_);
+    FixedArray<MaxCountAggregator<T>> maxAbove(size_);
     for (const TreeBag* b = firstPrefix(); b; b = b->nextPrefix()) {
         if (const TreeBag* c = b->parent()) {
             maxAbove[b->index()].reset(costReverse[b->index()]);
-            maxAbove[b->index()].aggregate(maxAbove[c->index()]);
+            maxAbove[b->index()] += maxAbove[c->index()];
 
             for (c = b->parent()->children(); c; c = c->sibling()) {
                 if (c != b) {
-                    maxAbove[b->index()].aggregate(maxBelow[c->index()]);
-                    maxAbove[b->index()].aggregate(costSame[c->index()]);
+                    maxAbove[b->index()] += maxBelow[c->index()];
+                    maxAbove[b->index()] += costSame[c->index()];
                 }
             }
         }
@@ -124,13 +124,13 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     // For each node, the final cost of rooting the tree at that node is
     // found by combining maxBelow, maxAbove, and costRoot.
     const TreeBag* bestBag = nullptr;
-    MaxAggregator<T> bestCost;
+    MaxCountAggregator<T> bestCost;
 
     for (const TreeBag* b = first(); b; b = b->next()) {
         // Combine all costs into maxBelow.
-        maxBelow[b->index()].aggregate(maxAbove[b->index()]);
+        maxBelow[b->index()] += maxAbove[b->index()];
         if (costRoot)
-            maxBelow[b->index()].aggregate(costRoot[b->index()]);
+            maxBelow[b->index()] += costRoot[b->index()];
 
 #if 0
         std::cerr << "Bag " << b->index() << ": "

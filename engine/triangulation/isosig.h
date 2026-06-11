@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -205,7 +205,14 @@ concept IsoSigType =
  */
 template <int generation, int dim>
 requires ((generation == 1 || generation == 2) && supportedDim(dim))
-class IsoSigData;
+class IsoSigData {
+    // We give a generic implementation so that the generic class notes are
+    // picked up by the automatic docstring generation.  This in turn is
+    // needed for regina::python::doc::IsoDigData to satisfy the concept
+    // regina::python::ClassDocType.
+    static_assert(false,
+        "Only specialised implementations of IsoSigData may be used.");
+};
 
 /**
  * Holds the combinatorial data required to reconstruct a single non-empty
@@ -285,7 +292,7 @@ class IsoSigData;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \pyname{IsoSigData1}
+ * \pydocname{IsoSigData1}
  *
  * \apinotfinal
  *
@@ -615,7 +622,7 @@ class IsoSigData<1, dim> {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \pyname{IsoSigData2}
+ * \pydocname{IsoSigData2}
  *
  * \apinotfinal
  *
@@ -1116,6 +1123,58 @@ class IsoSigPrintable {
         template <int dim> requires (supportedDim(dim))
         static size_t length(const IsoSigData<2, dim>& data);
 
+        /**
+         * Identifies whether the given string-based isomorphism signature is
+         * first-generation or second-generation.
+         *
+         * This provides the real implementation of
+         * `Triangulation<dim>::sigGeneration()`; it is provided here because
+         * the same implementation can be used for every dimension \a dim.
+         *
+         * This routine does _not_ test the validity of a signature: if \a sig
+         * is invalid then the return value could be any of 0, 1 or 2.
+         *
+         * See `Triangulation<dim>::sigGeneration()` for further details.
+         *
+         * \param sig a string-based isomorphism signature of some generation.
+         * This may have been encoded by either IsoSigPrintable or
+         * IsoSigPrintableLockFree, and can be from a triangulation of any
+         * dimension.
+         * \return 1 or 2 if \a sig was identified as a first-generation or
+         * second-generation signature respectively, or 0 if \a sig was
+         * explicitly discovered to be neither of these.  Note that, if
+         * \s sig is _not_ a string-based isomorphism signature of any
+         * generation, this routine could return any of the values 0, 1 or 2.
+         */
+        static int generation(const std::string& sig);
+
+        /**
+         * Deduces the number of top-dimensional simplices in a connected
+         * triangulation from its string-based isomorphism signature.
+         *
+         * This provides the real implementation of
+         * `Triangulation<dim>::sigComponentSize()`; it is provided here because
+         * the same implementation can be used for every dimension \a dim.
+         *
+         * Note that this routine does _not_ always detect invalid signatures.
+         *
+         * See `Triangulation<dim>::sigComponentSize()` for further details.
+         *
+         * \exception InvalidArgument The given string was not a valid
+         * string-based isomorphism signature.  Invalid signatures are not
+         * always detected; this exception will only be thrown if the error is
+         * so severe that the component size cannot be deduced from the first
+         * few characters.
+         *
+         * \param sig an isomorphism signature of some triangulation.
+         * This may have been encoded by either IsoSigPrintable or
+         * IsoSigPrintableLockFree, may be any generation of isomorphism
+         * signature, and may be from a triangulation of any dimension.
+         * \return the size of the first connected component, or 0 if the
+         * given signature describes the empty triangulation.
+         */
+        static size_t componentSize(const std::string& sig);
+
         // Make this class non-constructible.
         IsoSigPrintable() = delete;
 };
@@ -1315,9 +1374,9 @@ class IsoSigBinary {
         static size_t length(const IsoSigData<2, dim>& data);
 
         /**
-         * Re-encodes the given binary signature as a string-based signature
-         * (using the IsoSigPrintable encoding), which uses only printable
-         * characters from the 7-bit ASCII range.
+         * Re-encodes the given binary signature as a string-based
+         * second-generation signature (using the IsoSigPrintable encoding),
+         * which uses only printable characters from the 7-bit ASCII range.
          *
          * Calling `printable(sig)` is significantly more efficient than calling
          * `Triangulation<dim>::fromSig(sig).neoSig()` (with an appropriate

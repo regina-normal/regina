@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -268,6 +268,9 @@ struct PermSn {
             /**
              * The preincrement operator.
              *
+             * \pre This iterator is dereferenceable (in particular,
+             * it is not past-the-end).
+             *
              * \nopython For Python users, this class implements the Python
              * iterator interface instead.  See __next__() for details.
              *
@@ -285,6 +288,9 @@ struct PermSn {
 
             /**
              * The postincrement operator.
+             *
+             * \pre This iterator is dereferenceable (in particular,
+             * it is not past-the-end).
              *
              * \nopython For Python users, this class implements the Python
              * iterator interface instead.  See __next__() for details.

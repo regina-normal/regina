@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -471,7 +471,7 @@ class SatRegion : public Output<SatRegion> {
          * and joined together in the same way.
          *
          * Like the comparison operators for most parameterised subclasses
-         * of StandardTriangulation, it does not matter how the constituent
+         * of StandardSubcomplex<3>, it does not matter how the constituent
          * tetrahedra and/or their vertices are numbered.  However, this
          * test is more specific than combinatorial isomorphism of the
          * underlying subcomplex of the triangulation, since it does not
@@ -947,7 +947,7 @@ inline size_t SatRegion::countBoundaryAnnuli() const {
 inline std::string SatRegion::blockAbbrs(bool tex) const {
     std::ostringstream s;
     writeBlockAbbrs(s, tex);
-    return s.str();
+    return std::move(s).str();
 }
 
 inline void SatRegion::writeTextLong(std::ostream& out) const {

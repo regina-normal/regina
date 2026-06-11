@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,13 +36,15 @@
 #define __TRI3COMPOSITION_H
 
 #include "packet/packet.h"
-#include "subcomplex/standardtri.h"
+#include "subcomplex/standardsubcomplex.h"
 #include "triangulation/dim3.h"
 
 #include "../packettabui.h"
 
 #include <memory>
 
+class ElidedLabel;
+class TriSigChooser;
 class PacketChooser;
 class QMenu;
 class QPushButton;
@@ -78,7 +80,8 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         regina::Triangulation<3>* tri_;
         regina::Packet* triAsPacket_;
         regina::Packet* compare_;
-        std::unique_ptr<regina::StandardTriangulation> standard;
+        std::unique_ptr<regina::StandardSubcomplex<3>> standard;
+        std::string sig_;
         std::optional<regina::Isomorphism<3>> isomorphism;
         IsomorphismType isoType;
 
@@ -90,7 +93,8 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         QLabel* isoResult;
         QPushButton* isoView;
         QLabel* standardTri;
-        QLabel* isoSig;
+        ElidedLabel* isoSig;
+        TriSigChooser* isoSigVariant;
         QTreeWidget* details;
         QTreeWidgetItem* lastComponent;
 
@@ -121,6 +125,11 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         void contextIsoSig(const QPoint& pos, QWidget* fromWidget);
 
     public slots:
+        /**
+         * Update the isomorphism signature.
+         */
+        void updateIsoSig();
+
         /**
          * Update the isomorphism test panel.
          */

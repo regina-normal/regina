@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,6 +48,8 @@ namespace regina {
 /**
  * A type of the form `std::array<Element, n>` for some integer \a n.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T, typename Element>
@@ -60,6 +62,8 @@ concept ArrayOf =
  *
  * This concept could (for example) be used to constrain the type of an array
  * class constant.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */

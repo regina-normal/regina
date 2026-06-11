@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -115,7 +115,7 @@ class SpatialLinkUI : public QObject, public PacketUI {
         void refine();
 
         /**
-         * Open a python console to work with this spatial link.
+         * Open a Python console to work with this spatial link.
          */
         void pythonConsole();
 

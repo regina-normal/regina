@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,7 +29,7 @@
  **************************************************************************/
 
 /*! \file pythonconsole.h
- *  \brief Provides a console window containing an embedded python
+ *  \brief Provides a console window containing an embedded Python
  *  interpreter.
  */
 
@@ -56,15 +56,13 @@ namespace regina::python {
 }
 
 /**
- * A top-level window containing an embedded python interpreter.
+ * A top-level window containing an embedded Python interpreter.
  * Python support must be built in for this class to be used.
  *
  * Objects of this class are generally not created directly; instead
  * PacketManager::launchPythonConsole() should be used.
  */
 class PythonConsole : public QMainWindow {
-    Q_OBJECT
-
     friend class regina::python::PythonOutputStream;
     friend class CommandEdit;
     private:
@@ -102,7 +100,7 @@ class PythonConsole : public QMainWindow {
          * The constructor will leave the console with input disabled.
          * Input can be re-enabled by calling allowInput().
          *
-         * Generally python consoles are created through
+         * Generally Python consoles are created through
          * PythonManager::launchPythonConsole(), not by calling this
          * constructor directly.
          */
@@ -131,7 +129,7 @@ class PythonConsole : public QMainWindow {
             const QString& suggestedInput = QString());
 
         /**
-         * Configure the python interpreter.
+         * Configure the Python interpreter.
          */
         bool importRegina();
         void setRootPacket(std::shared_ptr<regina::Packet> packet);
@@ -142,7 +140,6 @@ class PythonConsole : public QMainWindow {
         void executeLine(const char* line);
         void runScript(regina::Script* script);
 
-    public slots:
         /**
          * Save a log of the current session.
          */
@@ -166,7 +163,7 @@ class PythonConsole : public QMainWindow {
         /**
          * Help -> What's this has been acctivated.
          */
-        void contextHelpActivated();
+        void contextHelp();
 
         /**
          * Cut selected text from the command area.
@@ -196,7 +193,7 @@ class PythonConsole : public QMainWindow {
         QSize sizeHint() const override;
 
         /**
-         * A completer object to handle python tab completion.
+         * A completer object to handle Python tab completion.
          */
         QCompleter* completer;
 
@@ -213,7 +210,6 @@ class PythonConsole : public QMainWindow {
          */
         static QString initialIndent(const QString& line);
 
-    private slots:
         /**
          * Process the command currently on the input line.
          */

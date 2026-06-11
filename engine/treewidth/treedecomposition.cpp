@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,6 @@
 #include "treewidth/treedecomposition.h"
 #include "treewidth/treedecomposition-impl.h"
 #include "triangulation/facetpairing.h"
-#include "triangulation/facetpairing3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
@@ -916,7 +915,7 @@ void TreeDecomposition::writeDot(std::ostream& out, bool dark) const {
 std::string TreeDecomposition::dot(bool dark) const {
     std::ostringstream out;
     writeDot(out, dark);
-    return out.str();
+    return std::move(out).str();
 }
 
 void TreeDecomposition::writePACE(std::ostream& out) const {
@@ -949,7 +948,7 @@ void TreeDecomposition::writePACE(std::ostream& out) const {
 std::string TreeDecomposition::pace() const {
     std::ostringstream out;
     writePACE(out);
-    return out.str();
+    return std::move(out).str();
 }
 
 void TreeDecomposition::writeTextShort(std::ostream& out) const {

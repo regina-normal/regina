@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,9 +30,11 @@
 
 // UI includes:
 #include "tri4composition.h"
-#include "../packetchooser.h"
-#include "../packetfilter.h"
+#include "elidedlabel.h"
+#include "packetfilter.h"
 #include "reginasupport.h"
+#include "choosers/packetchooser.h"
+#include "choosers/trisigchooser.h"
 
 #include "subcomplex/snappedball4.h"
 #include "subcomplex/doublesnappedball.h"
@@ -67,28 +69,31 @@ Tri4CompositionUI::Tri4CompositionUI(
 
 
     // Add the isomorphism signature.
-
     QBoxLayout* line = new QHBoxLayout();
     QString msg = tr("<qt>Displays the isomorphism signature "
         "of the triangulation.<p>"
         "This is a piece of text that identifies the triangulation uniquely "
-        "up to combinatorial isomorphism.  The analogue for 3-manifolds "
-        "is described in detail in "
-        "<i>Simplification paths in the Pachner graphs "
-        "of closed orientable 3-manifold triangulations</i>, Burton, "
-        "preprint, <tt>arXiv:1110.6080</tt>, October 2011.</qt>");
+        "up to combinatorial isomorphism.<p>"
+        "Using the drop-down box to the right, you can switch between "
+        "<i>first-generation</i> signatures (used in Regina ≤ 7.x), "
+        "and <i>second-generation</i> signatures (introduced in Regina 8.0). "
+        "Second-generation signatures are shorter and faster, and are "
+        "recommended for use in new projects.</qt>");
     auto* label = new QLabel(tr("<qt><b>Isomorphism signature:</b></qt>"), ui);
     label->setWhatsThis(msg);
     line->addWidget(label);
-    isoSig = new QLabel(ui);
-    isoSig->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
-    isoSig->setWordWrap(false);
+    isoSig = new ElidedLabel(ui);
     isoSig->setWhatsThis(msg);
     line->addWidget(isoSig, 1);
+    isoSigVariant = new TriSigChooser(ui);
+    isoSigVariant->setWhatsThis(msg);
+    connect(isoSigVariant, SIGNAL(activated(int)), this, SLOT(updateIsoSig()));
+    line->addWidget(isoSigVariant);
     layout->addLayout(line);
 
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
+    // Contextless connections are ok: senders will be destroyed with [this].
     connect(isoSig, &QPushButton::customContextMenuRequested,
         [this](const QPoint& p) {
             contextIsoSig(p, isoSig);
@@ -122,7 +127,7 @@ Tri4CompositionUI::Tri4CompositionUI(
     connect(details, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(contextComposition(const QPoint&)));
 
-    label = new QLabel(tr("<qt><i>Hint: Right-click to copy "
+    copyHint = new QLabel(tr("<qt><i>Hint: Right-click to copy "
         "any data above</i></qt>"));
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
@@ -181,7 +186,7 @@ Tri4CompositionUI::Tri4CompositionUI(
     isoView->setToolTip(tr("View details of isomorphism"));
     isoView->setWhatsThis(tr("View the details of the isomorphism "
         "(if any) between this and the selected triangulation.  The precise "
-        "mapping between tetrahedra and tetrahedron vertices will be "
+        "mapping between pentachora and pentachoron vertices will be "
         "displayed in a separate window."));
     connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
     wideIsoArea->addWidget(isoView);
@@ -198,19 +203,11 @@ QWidget* Tri4CompositionUI::getInterface() {
 }
 
 void Tri4CompositionUI::refresh() {
+    updateIsoSig();
     updateIsoPanel();
+
     details->clear();
     lastComponent = nullptr;
-
-    // Show the isomorphism signature.
-    isoSig->setText(tri_->isoSig().c_str());
-    /*
-    // If the signature is very long then add an ellipsis to the end.
-    // Update: don't do this, since we would like clipboard copy to
-    // capture the entire signature, not something with ... at the end.
-    isoSig->setText(QFontMetrics(isoSig->font()).elidedText(
-        tri_->isoSig().c_str(), Qt::ElideRight, isoSig->width()));
-    */
 
     // Look for bounded subcomplexes.
     findDoubleSnappedBalls();
@@ -228,7 +225,6 @@ void Tri4CompositionUI::refresh() {
         }
     }
     details->setRootIsDecorated(foundInnerChildren);
-
 }
 
 void Tri4CompositionUI::packetBeingDestroyed(regina::PacketShell) {
@@ -236,6 +232,37 @@ void Tri4CompositionUI::packetBeingDestroyed(regina::PacketShell) {
     isoTest->setCurrentIndex(0); // (i.e., None)
     compare_ = nullptr; // The packet destructor will handle the unlisten.
     updateIsoPanel();
+}
+
+void Tri4CompositionUI::updateIsoSig() {
+    // Show the isomorphism signature.
+    switch (isoSigVariant->selected()) {
+        case ReginaPrefSet::TriSigVariant::Gen1:
+            sig_ = tri_->isoSig();
+            break;
+        case ReginaPrefSet::TriSigVariant::Gen2Oriented:
+            if (! tri_->isOrientable()) {
+                isoSig->setText(tr("Non-orientable triangulation"));
+                sig_.clear();
+            } else if (! tri_->isOriented()) {
+                isoSig->setText(tr("Unoriented triangulation"));
+                sig_.clear();
+            } else {
+                sig_ = tri_->neoSig(true);
+            }
+            break;
+        default: // Gen2
+            sig_ = tri_->neoSig();
+            break;
+    }
+    if (sig_.empty()) {
+        isoSig->setEnabled(false);
+        copyHint->hide();
+    } else {
+        isoSig->setText(sig_.c_str());
+        isoSig->setEnabled(true);
+        copyHint->show();
+    }
 }
 
 void Tri4CompositionUI::updateIsoPanel() {
@@ -497,6 +524,9 @@ void Tri4CompositionUI::findSnappedBalls() {
 
 void Tri4CompositionUI::contextIsoSig(const QPoint& pos,
         QWidget* fromWidget) {
+    if (sig_.empty())
+        return;
+
     QMenu m(tr("Context menu"), fromWidget);
     QAction a("Copy isomorphism signature", fromWidget);
     connect(&a, SIGNAL(triggered()), this, SLOT(copyIsoSig()));
@@ -516,7 +546,8 @@ void Tri4CompositionUI::contextComposition(const QPoint& pos) {
 }
 
 void Tri4CompositionUI::copyIsoSig() {
-    QApplication::clipboard()->setText(isoSig->text());
+    if (! sig_.empty())
+        QApplication::clipboard()->setText(sig_.c_str());
 }
 
 void Tri4CompositionUI::copyCompositionLine() {

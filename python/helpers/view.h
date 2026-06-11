@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,12 +32,20 @@
  *  \brief Assists with wrapping lightweight C++ views.
  */
 
+#ifndef __HELPERS_VIEW_H
+#ifndef __DOXYGEN
+#define __HELPERS_VIEW_H
+#endif
+
 #include <ranges>
 
 namespace regina::python {
 
 /**
  * Adds Python bindings for a lightweight C++ standard view type.
+ * The member functions that are bound will depend upon the iterator type
+ * (e.g., whether it is bidirectional and/or random access); at a bare minimum
+ * this class will support basic Python iteration.
  *
  * The view type \a T must be provided as a template argument to addStdView().
  * Typically you would not write out the explicit type name (since this is an
@@ -82,7 +90,7 @@ template <std::ranges::view T, pybind11::return_value_policy Policy =
     (std::is_pointer_v<std::ranges::range_value_t<T>> ?
         pybind11::return_value_policy::reference_internal :
         pybind11::return_value_policy::copy)>
-requires (std::ranges::random_access_range<T>)
+requires (std::ranges::forward_range<T>)
 void addStdView(pybind11::module_& internal, const char* suffix) {
     auto c = pybind11::class_<T>(internal,
             (std::string("View_") + suffix).c_str(),
@@ -110,7 +118,44 @@ R"doc(Returns a Python iterator over the elements of this view.
 
 Returns:
     an iterator over the elements of this view.)doc")
-        .def("__getitem__", [](const T& view, size_t index) {
+        .def("empty", [](const T& view) {
+            return std::ranges::empty(view);
+        },
+R"doc(Determines if this view is empty.
+
+Returns:
+    ``True`` if and only if this view is empty.)doc")
+        ;
+
+    if constexpr (std::ranges::bidirectional_range<T>) {
+        c.def("front", [](const T& view) {
+            if (std::ranges::empty(view))
+                throw pybind11::index_error("View is empty");
+            return *view.begin();
+        }, Policy,
+R"doc(Returns the first element of this view.
+
+Precondition:
+    This view is not empty.
+
+Returns:
+    the first element in this view.)doc");
+        c.def("back", [](const T& view) {
+            if (std::ranges::empty(view))
+                throw pybind11::index_error("View is empty");
+            return *std::ranges::rbegin(view);
+        }, Policy,
+R"doc(Returns the last element of this view.
+
+Precondition:
+    This view is not empty.
+
+Returns:
+    the last element in this view.)doc");
+    }
+
+    if constexpr (std::ranges::random_access_range<T>) {
+        c.def("__getitem__", [](const T& view, size_t index) {
             if (index >= std::ranges::size(view))
                 throw pybind11::index_error("Index out of range");
             return *(view.begin() + index);
@@ -122,73 +167,57 @@ Parameter ``index``:
     ``size()-1`` inclusive.
 
 Returns:
-    the (*index*)th element in this view.)doc")
-        .def("front", [](const T& view) {
-            if (std::ranges::empty(view))
-                throw pybind11::index_error("View is empty");
-            return *view.begin();
-        }, Policy,
-R"doc(Returns the first element of this view.
+    the (*index*)th element in this view.)doc");
 
-Precondition:
-    This view is not empty.
-
-Returns:
-    the first element in this view.)doc")
-        .def("back", [](const T& view) {
-            if (std::ranges::empty(view))
-                throw pybind11::index_error("View is empty");
-            return *std::ranges::rbegin(view);
-        }, Policy,
-R"doc(Returns the last element of this view.
-
-Precondition:
-    This view is not empty.
-
-Returns:
-    the last element in this view.)doc")
-        .def("empty", [](const T& view) {
-            return std::ranges::empty(view);
-        },
-R"doc(Determines if this view is empty.
-
-Returns:
-    ``True`` if and only if this view is empty.)doc")
-        ;
-
-    auto size = [](const T& view) { return std::ranges::size(view); };
-    static const char* sizeDoc =
+        auto size = [](const T& view) { return std::ranges::size(view); };
+        static const char* sizeDoc =
 R"doc(Returns the number of elements in this view.
 
 Returns:
     the number of elements.)doc";
-    c.def("size", size, sizeDoc);
-    c.def("__len__", size, sizeDoc);
+        c.def("size", size, sizeDoc);
+        c.def("__len__", size, sizeDoc);
+    }
 
     regina::python::add_output_custom(c, [](const T& view, std::ostream& out) {
         out << "[ ";
         // For very small ranges, output all elements.
         // For larger ranges, do not output everything.
         if (std::ranges::empty(view)) {
-            out << "[ ]";
-        } else if (std::ranges::size(view) <= 5) {
-            bool started = false;
-            for (const auto& i : view) {
-                if (started)
+            // Leave the square brackets empty.
+        } else if constexpr (std::ranges::random_access_range<T>) {
+            if (std::ranges::size(view) <= 5) {
+                bool started = false;
+                for (const auto& i : view) {
+                    if (started)
+                        out << ", ";
+                    else
+                        started = true;
+                    regina::python::writeRepr(out, i);
+                }
+                out << ' ';
+            } else {
+                auto it = view.begin();
+                for (int i = 0; i < 3; ++i) {
+                    regina::python::writeRepr(out, *it++);
                     out << ", ";
-                else
-                    started = true;
-                regina::python::writeRepr(out, i);
+                }
+                out << "..., ";
+                regina::python::writeRepr(out, *std::ranges::rbegin(view));
+                out << ' ';
             }
-            out << ' ';
         } else {
+            // We cannot necessarily access the list size quickly in advance.
+            // Just write a few elements, followed by ellipses if we see that
+            // we have not finished.
             auto it = view.begin();
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; it != view.end() && i < 3; ++i) {
+                if (i > 0)
+                    out << ", ";
                 regina::python::writeRepr(out, *it++);
-                out << ", ";
             }
-            out << "..., ";
-            regina::python::writeRepr(out, *std::ranges::rbegin(view));
+            if (it != view.end())
+                out << ", ...";
             out << ' ';
         }
         out << ']';
@@ -199,3 +228,4 @@ Returns:
 
 } // namespace regina::python
 
+#endif

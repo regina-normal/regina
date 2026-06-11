@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,6 +51,8 @@ template <typename, bool> struct Output;
 /**
  * A type that can be written to an output stream.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T>
@@ -61,6 +63,8 @@ concept Writeable =
 
 /**
  * A type that can be read from an input stream.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
@@ -106,6 +110,8 @@ concept RichStringifiable =
  * For example, the standard C++ native integer types support string conversion
  * in this way.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T>
@@ -117,6 +123,8 @@ concept StandardStringifiable =
 /**
  * A type that has member functions for tight encoding and decoding (both via
  * strings and via input/output streams) and also hashing.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */

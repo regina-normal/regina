@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,8 @@
 #include "link/link.h"
 #include "surface/normalsurfaces.h"
 
-#include "testexhaustive.h"
+#include "link/exhaustive-link.h"
+#include "triangulation/exhaustive-tri.h"
 #include "utilities/tightencodingtest.h"
 
 using regina::Algorithm;
@@ -55,21 +56,20 @@ static constexpr int JONES_THRESHOLD = 20;
 static bool isFigureEightComplement(const Triangulation<3>& tri) {
     // True means yes, this is the figure eight knot complement.
     // False means we don't have a definitive answer.
-    return tri.isoSig() == "cPcbbbiht";
+    return tri.neoSig() == "cV6cqb";
 }
 
 static bool isTrefoilComplement(const Triangulation<3>& tri) {
     // True means yes, this is the trefoil complement.
     // False means we don't have a definitive answer.
-    std::string sig = tri.isoSig();
+    std::string sig = tri.neoSig();
 
     // Regina's simplification heuristics have been found to produce these
     // trefoil complements in practice:
     for (const char* s : {
-            "cPcbbbadh", "cPcbbbadu",
-            "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "dLQabccbrwn",
-            "eLAkbbcddaikhc", "eLAkbbcddainqv", "eLAkbcbddducqn", "eLAkbcbdddmcxj",
-            "gLLMQaeefedfbaapgjr", "kLLLALQkbdedfhjjiijafergaxtron" })
+            "cV6Ika", "cV6IAa", "dN0Time", "dN0Timd", "dN0haxc", "dN0haxd",
+            "ehzBNfavf", "ehzBNfWuf", "ehrBRfHcj", "ehrBRfrTl", "ghCRSFjGnZKe",
+            "kFgXo7WmZV5iMHufbDVc" })
         if (sig == s)
             return true;
 
@@ -78,10 +78,9 @@ static bool isTrefoilComplement(const Triangulation<3>& tri) {
 
 static bool isCensusManifold(const Triangulation<3>& tri,
         const std::string& name) {
-    std::string sig = tri.isoSig();
     std::string altName = name + " : ";
 
-    auto hits = regina::Census::lookup(sig);
+    auto hits = regina::Census::lookup(tri);
     for (const auto& hit : hits)
         if (hit.name() == name ||
                 hit.name().substr(0, altName.size()) == altName)
@@ -1883,7 +1882,7 @@ static void verifyComplementTrefoilUnknot(const TestCase& test) {
                 foundSplit = true;
             else
                 ADD_FAILURE() << "Link splits into unexpected components: "
-                    << comp[0].isoSig() << ' ' << comp[1].isoSig();
+                    << comp[0].neoSig() << ' ' << comp[1].neoSig();
         }
     }
 
@@ -2408,7 +2407,7 @@ static void verifyR3(Link link, int crossing, int strand, int side,
     EXPECT_EQ(link.brief(), briefResult);
 }
 
-static void verifyR1Down(const Link& link, const char* name) {
+static void verifyR1DownAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (size_t i = 0; i < link.size(); ++i) {
@@ -2429,7 +2428,7 @@ static void verifyR1Down(const Link& link, const char* name) {
     }
 }
 
-static void verifyR1Up(const Link& link, const char* name) {
+static void verifyR1UpAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (int side = 0; side <= 1; ++side)
@@ -2459,7 +2458,7 @@ static void verifyR1Up(const Link& link, const char* name) {
         }
 }
 
-static void verifyR2Down(const Link& link, const char* name) {
+static void verifyR2DownAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (size_t i = 0; i < link.size(); ++i) {
@@ -2498,7 +2497,7 @@ static void verifyR2Down(const Link& link, const char* name) {
     }
 }
 
-static void verifyR2Up(const Link& link, const char* name) {
+static void verifyR2UpAll(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     for (int uSide = 0; uSide <= 1; ++uSide)
@@ -2618,7 +2617,7 @@ static void verifyR2Up(const Link& link, const char* name) {
         }
 }
 
-static void verifyR3(const Link& link, const char* name) {
+static void verifyR3All(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
     // Note: there is exactly one scenario in which alt == link (and with
@@ -2676,28 +2675,28 @@ static void verifyR3(const Link& link, const char* name) {
 }
 
 TEST_F(LinkTest, reidemeister1Down) {
-    testManualCases(verifyR1Down, false /* gordian */);
-    runCensusAllVirtual(verifyR1Down);
+    testManualCases(verifyR1DownAll, false /* gordian */);
+    runCensusAllVirtual(verifyR1DownAll);
 }
 
 TEST_F(LinkTest, reidemeister1Up) {
-    testManualCases(verifyR1Up, false /* gordian */);
-    runCensusAllVirtual(verifyR1Up, true /* small */);
+    testManualCases(verifyR1UpAll, false /* gordian */);
+    runCensusAllVirtual(verifyR1UpAll, true /* small */);
 }
 
 TEST_F(LinkTest, reidemeister2Down) {
-    testManualCases(verifyR2Down, false /* gordian */);
-    runCensusAllVirtual(verifyR2Down);
+    testManualCases(verifyR2DownAll, false /* gordian */);
+    runCensusAllVirtual(verifyR2DownAll);
 }
 
 TEST_F(LinkTest, reidemeister2Up) {
-    testManualCases(verifyR2Up, false /* gordian */);
-    runCensusAllVirtual(verifyR2Up, true /* small */);
+    testManualCases(verifyR2UpAll, false /* gordian */);
+    runCensusAllVirtual(verifyR2UpAll, true /* small */);
 }
 
 TEST_F(LinkTest, reidemeister3) {
-    testManualCases(verifyR3, false /* gordian */);
-    runCensusAllVirtual(verifyR3);
+    testManualCases(verifyR3All, false /* gordian */);
+    runCensusAllVirtual(verifyR3All);
 }
 
 TEST_F(LinkTest, reidemeisterMisc) {
@@ -3655,8 +3654,11 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     SCOPED_TRACE_NUMERIC(reverse);
     SCOPED_TRACE_NUMERIC(rotate);
 
+    static constexpr bool stringBased = std::same_as<
+        typename Encoding::Signature, std::string>;
+
     auto sig = link.sig<generation, Encoding>(reflect, reverse, rotate);
-    if constexpr (std::same_as<typename Encoding::Signature, std::string>) {
+    if constexpr (stringBased) {
         // The string-based signatures are always non-empty.
         EXPECT_FALSE(sig.empty());
     } else {
@@ -3670,6 +3672,32 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
         std::cerr << sig.size() << ' ' << sig.capacity() << ' '
             << link.size() << ' ' << link.countComponents() << std::endl;
     #endif
+
+    if constexpr (std::same_as<Encoding, LinkSigPrintable>) {
+        if (link.size() == 0)
+            EXPECT_EQ(Link::sigGeneration(sig), 2);
+        else
+            EXPECT_EQ(Link::sigGeneration(sig), generation);
+    }
+
+    if constexpr (stringBased) {
+        size_t sigSize = Link::sigComponentSize(sig);
+        if (link.countComponents() <= 1)
+            EXPECT_EQ(sigSize, link.size());
+        else {
+            // The diagram might or might not be connected.
+            auto bits = link.diagramComponents();
+            bool found = false;
+            for (const auto& c : link.diagramComponents())
+                if (sigSize == c.size()) {
+                    found = true;
+                    break;
+                }
+            if (! found)
+                ADD_FAILURE() << "sigComponentSize() does not "
+                    "match any diagram component";
+        }
+    }
 
     if (reflect) {
         Link alt(link, false);
@@ -3776,7 +3804,7 @@ static void verifySig(const Link& link, bool reflect, bool reverse,
     }
 
     // Verify the "magic" string constructor.
-    if constexpr (std::same_as<typename Encoding::Signature, std::string>) {
+    if constexpr (stringBased) {
         EXPECT_NO_THROW({ EXPECT_EQ(Link(sig), recon); });
     }
 }

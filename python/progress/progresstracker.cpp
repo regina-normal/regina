@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,8 @@
 #include "../helpers.h"
 #include "../docstrings/progress/progresstracker.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::ProgressTracker;
 using regina::ProgressTrackerBase;
@@ -43,7 +45,7 @@ void addProgressTracker(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(ProgressTrackerBase)
 
     auto c0 = pybind11::class_<ProgressTrackerBase>(m, "ProgressTrackerBase",
-            rdoc_scope)
+            rdoc::__class)
         .def("isFinished", &ProgressTrackerBase::isFinished, rdoc::isFinished)
         .def("descriptionChanged", &ProgressTrackerBase::descriptionChanged,
             rdoc::descriptionChanged)
@@ -60,14 +62,13 @@ void addProgressTracker(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ProgressTracker)
 
     auto c1 = pybind11::class_<ProgressTracker, ProgressTrackerBase>(
-            m, "ProgressTracker", rdoc_scope)
+            m, "ProgressTracker", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("percentChanged", &ProgressTracker::percentChanged,
             rdoc::percentChanged)
         .def("percent", &ProgressTracker::percent, rdoc::percent)
         .def("newStage", &ProgressTracker::newStage,
-            pybind11::arg(), pybind11::arg("weight") = 1,
-            rdoc::newStage)
+            "desc"_a, "weight"_a = 1, rdoc::newStage)
         .def("setPercent", &ProgressTracker::setPercent, rdoc::setPercent)
         .def("setFinished", &ProgressTracker::setFinished, rdoc::setFinished)
     ;
@@ -77,7 +78,7 @@ void addProgressTracker(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ProgressTrackerOpen)
 
     auto c2 = pybind11::class_<ProgressTrackerOpen, ProgressTrackerBase>(
-            m, "ProgressTrackerOpen", rdoc_scope)
+            m, "ProgressTrackerOpen", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def("stepsChanged", &ProgressTrackerOpen::stepsChanged,
             rdoc::stepsChanged)
@@ -96,7 +97,7 @@ void addProgressTracker(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ProgressTrackerObjective)
 
     auto c3 = pybind11::class_<ProgressTrackerObjective, ProgressTrackerBase>(
-            m, "ProgressTrackerObjective", rdoc_scope)
+            m, "ProgressTrackerObjective", rdoc::__class)
         .def(pybind11::init<long>(), rdoc::__init)
         .def("objectiveChanged", &ProgressTrackerObjective::objectiveChanged,
             rdoc::objectiveChanged)

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -550,7 +550,7 @@ bool SnapPeaTriangulation::operator == (const SnapPeaTriangulation& other)
 
 void SnapPeaTriangulation::unfill(unsigned whichCusp) {
     if (! data_)
-        return;
+        throw SnapPeaIsNull("SnapPeaTriangulation::unfill");
 
     if (cusp_[whichCusp].complete()) {
         // Nothing to do.
@@ -568,15 +568,15 @@ void SnapPeaTriangulation::unfill(unsigned whichCusp) {
     regina::snappea::do_Dehn_filling(data_);
 }
 
-bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
-    if (! data_)
-        return false;
-
+void SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
     // Are we unfilling?
     if (m == 0 && l == 0) {
-        unfill(whichCusp);
-        return true;
+        unfill(whichCusp); // this also checks for null data_
+        return;
     }
+
+    if (! data_)
+        throw SnapPeaIsNull("SnapPeaTriangulation::fill");
 
     // SnapPea expects reals as filling coefficients.
     //
@@ -585,15 +585,19 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
     regina::snappea::Real mReal = m;
     regina::snappea::Real lReal = l;
     if (m != (int)mReal || l != (int)lReal)
-        return false;
+        throw InvalidArgument(
+            "The filling coefficients are too large to convert to "
+            "SnapPea's internal floating point representation");
 
     // Enforce other preconditions on the filling coefficients.
     if (cusp_[whichCusp].vertex_->isLinkOrientable()) {
         if (std::gcd(m, l) != 1)
-            return false;
+            throw InvalidArgument("The filling coefficients must be coprime "
+                "for an orientable cusp");
     } else {
         if (! (l == 0 && (m == 1 || m == -1)))
-            return false;
+            throw InvalidArgument("The filling coefficients must be (±1, 0) "
+                "for a non-orientable cusp");
     }
 
     // Are we filling a complete cusp, or changing an existing filling?
@@ -612,7 +616,6 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
         ++filledCusps_;
 
     regina::snappea::do_Dehn_filling(data_);
-    return true;
 }
 
 SnapPeaTriangulation SnapPeaTriangulation::filledPartial(unsigned whichCusp)
@@ -990,10 +993,15 @@ void SnapPeaTriangulation::snapPea(std::ostream& out) const {
     free(file);
 }
 
-bool SnapPeaTriangulation::saveSnapPea(const char* filename) const {
-    if (! (data_ && filename && *filename))
-        return false;
-    return regina::snappea::write_triangulation(data_, filename);
+void SnapPeaTriangulation::saveSnapPea(const char* filename) const {
+    if (! data_)
+        throw SnapPeaIsNull("SnapPeaTriangulation::saveSnapPea");
+
+    if (! (filename && *filename))
+        throw FileError("The given filename is null or empty");
+
+    if (! regina::snappea::write_triangulation(data_, filename))
+        throw FileError("Could not write SnapPea data to the given file");
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(

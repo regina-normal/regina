@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,7 +36,7 @@
 
 namespace regina {
 
-std::unique_ptr<Manifold> BlockedSFSLoop::manifold() const {
+std::unique_ptr<Manifold<3>> BlockedSFSLoop::manifold() const {
     try {
         SFSpace sfs = region_.createSFS(false);
         if (sfs.punctures() == 1) {

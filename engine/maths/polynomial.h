@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -60,10 +60,10 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \python The C++ types Polynomial<Integer> and Polynomial<Rational>
- * are available using the Python names PolynomialInt and PolynomialRational
- * respectively.  The alias Polynomial is also provided for the type
- * Polynomial<Rational>.
+ * \python The C++ types `Polynomial<Integer>` and `Polynomial<Rational>`
+ * are available using the Python names `PolynomialInt` and `PolynomialRational`
+ * respectively.  The alias `Polynomial` is also provided for the type
+ * `Polynomial<Rational>`.
  *
  * \tparam T the coefficient type.  A typical coefficient type would be
  * Integer or Rational.  Note that native C++ integer types are _not_
@@ -164,7 +164,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * takes a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
          * \param end a past-the-end iterator indicating the end of the
@@ -235,7 +235,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * takes a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
          * \param end a past-the-end iterator indicating the end of the
@@ -1485,14 +1485,14 @@ template <CoefficientDomain T>
 inline std::string Polynomial<T>::str(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, false, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>
 inline std::string Polynomial<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
-    return out.str();
+    return std::move(out).str();
 }
 
 template <CoefficientDomain T>

@@ -1,13 +1,13 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2025, Ben Burton
+# Copyright (c) 2015-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests the use of pure Python functions as C++ callbacks.
 #
-# This file is a single component of Regina's python test suite.  To run
-# the python test suite, move to the main python directory in the source
+# This file is a single component of Regina's Python test suite.  To run
+# the Python test suite, move to the main python directory in the source
 # tree and run "make check".
 #
 # This program is free software; you can redistribute it and/or
@@ -276,7 +276,7 @@ print()
 # test that the routine seems to do the right thing.
 
 print('Enumerating covers:')
-c = [ (a[0].isoSig(), a[1]) for a in \
+c = [ (a[0].neoSig(), a[1]) for a in \
     ExampleSnapPea.whiteheadLink().enumerateCovers(3, \
     SnapPeaTriangulation.CoverEnumeration.All) ]
 c.sort()

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -407,9 +407,9 @@ std::string LinkSigPrintable::encode(const LinkSigData& data) {
         }
 
         int intBits = bitsRequired(data.size() + 1);
-        enc.encodeBitmask(4 * data.size(), bits);
+        enc.encodeBitmask(bits, 4 * data.size());
         for (auto c : revisited)
-            enc.encodeInt(intBits, c);
+            enc.encodeInt(c, intBits);
 
         return std::move(enc).str();
     }
@@ -477,13 +477,13 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
 
     int intBits = bitsRequired(data.size() + 1);
     if (data.size() < 128) {
-        enc.encodeInt(8, data.size());
+        enc.encodeInt(data.size(), 8);
     } else {
         if (intBits > 127)
             throw ImpossibleScenario("LinkSigBinary::encode(): "
                 "link has ≥ 2^127 crossings");
-        enc.encodeInt(8, static_cast<unsigned>(intBits | 128));
-        enc.encodeInt(intBits, data.size());
+        enc.encodeInt(static_cast<unsigned>(intBits | 128), 8);
+        enc.encodeInt(data.size(), intBits);
     }
 
     Bitmask bits(4 * data.size());
@@ -521,9 +521,9 @@ ByteSequence LinkSigBinary::encode(const LinkSigData& data) {
         }
     }
 
-    enc.encodeBitmask(4 * data.size(), bits);
+    enc.encodeBitmask(bits, 4 * data.size());
     for (auto c : revisited)
-        enc.encodeInt(intBits, c);
+        enc.encodeInt(c, intBits);
     return std::move(enc).bytes();
 }
 
@@ -554,9 +554,9 @@ std::string LinkSigBinary::asString(const ByteSequence& sig) {
             enc.encodeSize(n);
 
             if (n > 0) {
-                enc.encodeBitmask(4 * n, dec.decodeBitmask(4 * n));
+                enc.encodeBitmask(dec.decodeBitmask(4 * n), 4 * n);
                 for (size_t i = 0; i < n; ++i)
-                    enc.encodeInt(intBits, dec.decodeInt<size_t>(intBits));
+                    enc.encodeInt(dec.decodeInt<size_t>(intBits), intBits);
             }
 
             dec.flushByte();
@@ -821,6 +821,56 @@ Link Link::fromSig(const std::string& sig) {
         // Any exception caught here was thrown by the decoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid base64 encoding");
+    }
+}
+
+int Link::sigGeneration(const std::string& sig) {
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
+
+    // Get the empty link out of the way first.
+    switch (dec.peek()) {
+        case Base64Encoder::spare[0]:
+            return 2; // empty link
+        case 0:
+            return 0;
+    }
+
+    try {
+        // Read through components until we find one with non-zero size.
+        auto sizeAndWidth = dec.decodeSize();
+        while (sizeAndWidth.first == 0) {
+            // This component is a zero-crossing unknot.  Keep looking.
+            if (dec.done())
+                return 2; // the entire link is a zero-crossing unlink
+            sizeAndWidth = dec.decodeSize();
+        }
+
+        // We have found a component with non-zero size.  The next character
+        // tells us the generation (see the Link::fromSig() implementation for
+        // why).
+        return (dec.peek() == 'a' ? 1 : 2);
+    } catch (const InvalidInput&) {
+        return 0;
+    }
+}
+
+size_t Link::sigComponentSize(const std::string& sig) {
+    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
+
+    // Get the empty link out of the way first.
+    switch (dec.peek()) {
+        case Base64Encoder::spare[0]:
+            return 0; // empty link
+        case 0:
+            throw InvalidArgument("sigComponentSize(): empty signature");
+        default:
+            break;
+    }
+
+    try {
+        return dec.decodeSize().first;
+    } catch (const InvalidInput&) {
+        throw InvalidArgument("sigComponentSize(): invalid signature");
     }
 }
 

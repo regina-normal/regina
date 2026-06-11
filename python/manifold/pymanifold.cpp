@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,17 +36,17 @@ void addGraphTriple(pybind11::module_& m);
 void addHandlebody(pybind11::module_& m);
 void addManifold(pybind11::module_& m);
 void addLensSpace(pybind11::module_& m);
-void addSFSpace(pybind11::module_& m);
+void addSFSpace(pybind11::module_& m, pybind11::module_& internal);
 void addSFSAlt(pybind11::module_& m);
 void addSimpleSurfaceBundle(pybind11::module_& m);
 void addSnapPeaCensusManifold(pybind11::module_& m);
 void addTorusBundle(pybind11::module_& m);
 
-void addManifoldClasses(pybind11::module_& m) {
+void addManifoldClasses(pybind11::module_& m, pybind11::module_& internal) {
     addManifold(m);
     addHandlebody(m);
     addLensSpace(m);
-    addSFSpace(m);
+    addSFSpace(m, internal);
     addSFSAlt(m);
     addSimpleSurfaceBundle(m);
     addSnapPeaCensusManifold(m);

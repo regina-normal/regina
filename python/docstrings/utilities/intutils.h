@@ -12,7 +12,7 @@ namespace regina::python::doc {
 
 
 // Docstring regina::python::doc::bitsRequired
-static const char *bitsRequired =
+inline constexpr const char bitsRequired[] =
 R"doc(Returns the number of bits required to store integers in the range
 ``0,...,n-1``. This is simply the number of bits in the binary
 expansion of ``n-1``.
@@ -30,7 +30,7 @@ Returns:
     the number of bits required to store ``0,...,n-1``.)doc";
 
 // Docstring regina::python::doc::nextPowerOfTwo
-static const char *nextPowerOfTwo =
+inline constexpr const char nextPowerOfTwo[] =
 R"doc(Returns the smallest integer power of two that is greater than or
 equal to the given argument *n*.
 
@@ -54,7 +54,7 @@ Returns:
     the smallest integer power of two that is ``≥ n``.)doc";
 
 // Docstring regina::python::doc::supportsNativeIntegerSize
-static const char *supportsNativeIntegerSize =
+inline constexpr const char supportsNativeIntegerSize[] =
 R"doc(Determines whether Regina is able to access native C++ integers of the
 given size.
 
@@ -70,6 +70,40 @@ Parameter ``bytes``:
 Returns:
     ``True`` if and only if Regina is able to access native C++
     integers with exactly this number of bytes.)doc";
+
+struct ArbitraryPrecisionInteger {
+
+// Docstring regina::python::doc::ArbitraryPrecisionInteger::__concept
+static constexpr const char __concept[] =
+R"doc(One of Regina's arbitrary precision integer types (Integer or
+LargeInteger).
+
+Concepts:
+    ArbitraryPrecisionInteger is a C++ concept. Concepts work with the
+    C++ compiler at build time: you cannot test in Python which
+    concepts are satisfied by which types. Instead, what this Python
+    wrapper offers is the concept _documentation_ (which you are
+    reading now).)doc";
+
+}; // struct ArbitraryPrecisionInteger
+
+struct ReginaInteger {
+
+// Docstring regina::python::doc::ReginaInteger::__concept
+static constexpr const char __concept[] =
+R"doc(One of Regina's own integer types (Integer, LargeInteger, or
+NativeInteger).
+
+An important feature of all of Regina's integer types is that their
+default constructors initialise the integers to zero.
+
+Concepts:
+    ReginaInteger is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
+
+}; // struct ReginaInteger
 
 } // namespace regina::python::doc
 

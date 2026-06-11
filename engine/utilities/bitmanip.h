@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,7 +54,7 @@ namespace detail {
  *
  * End users should use the BitManipulator class, not this class.
  *
- * \nopython Only the end-user class BitManipulator<unsigned long> is
+ * \nopython Only the end-user class `BitManipulator<unsigned long>` is
  * available to Python users.
  *
  * \ingroup detail

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,7 +43,7 @@ using regina::LinkSigPrintable;
 void addLinkSig(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(LinkSigData)
 
-    auto d = pybind11::class_<LinkSigData>(m, "LinkSigData", rdoc_scope)
+    auto d = pybind11::class_<LinkSigData>(m, "LinkSigData", rdoc::__class)
         .def(pybind11::init<const Link&, BoolSet, bool, BoolSet>(),
             rdoc::__init)
         .def(pybind11::init<const LinkSigData&>(), rdoc::__copy)
@@ -58,27 +58,23 @@ void addLinkSig(pybind11::module_& m) {
         ;
     regina::python::add_eq_operators(d, rdoc::__eq);
     regina::python::add_cmp_operators(d, rdoc::__cmp);
+    regina::python::add_global_swap<LinkSigData, rdoc>(m);
 
-    regina::python::add_global_swap<LinkSigData>(m, rdoc::global_swap);
-
-    RDOC_SCOPE_INNER_BEGIN(Term)
-
-    auto t = pybind11::class_<LinkSigData::Term>(d, "Term", rdoc_inner_scope)
+    auto t = pybind11::class_<LinkSigData::Term>(d, "Term", rdoc::Term::__class)
         .def_readonly("crossing", &LinkSigData::Term::crossing,
-            rdoc_inner::crossing)
-        .def_readonly("strand", &LinkSigData::Term::strand, rdoc_inner::strand)
-        .def_readonly("sign", &LinkSigData::Term::sign, rdoc_inner::sign)
+            rdoc::Term::crossing)
+        .def_readonly("strand", &LinkSigData::Term::strand, rdoc::Term::strand)
+        .def_readonly("sign", &LinkSigData::Term::sign, rdoc::Term::sign)
         .def("makeSentinel", &LinkSigData::Term::makeSentinel,
-            rdoc_inner::makeSentinel)
+            rdoc::Term::makeSentinel)
         ;
-    regina::python::add_eq_operators(t, rdoc_inner::__eq);
-    regina::python::add_cmp_operators(t, rdoc_inner::__cmp);
+    regina::python::add_eq_operators(t, rdoc::Term::__eq);
+    regina::python::add_cmp_operators(t, rdoc::Term::__cmp);
 
-    RDOC_SCOPE_INNER_END
     RDOC_SCOPE_SWITCH(LinkSigPrintable)
 
     auto c = pybind11::class_<LinkSigPrintable>(m, "LinkSigPrintable",
-            rdoc_scope)
+            rdoc::__class)
         .def_static("encodeEmpty", &LinkSigPrintable::encodeEmpty,
             rdoc::encodeEmpty)
         .def_static("encodeUnknot", &LinkSigPrintable::encodeUnknot,
@@ -104,7 +100,7 @@ void addLinkSig(pybind11::module_& m) {
 
     RDOC_SCOPE_SWITCH(LinkSigBinary)
 
-    auto c = pybind11::class_<LinkSigBinary>(m, "LinkSigBinary", rdoc_scope)
+    auto c = pybind11::class_<LinkSigBinary>(m, "LinkSigBinary", rdoc::__class)
         .def_static("encodeEmpty", &LinkSigBinary::encodeEmpty,
             rdoc::encodeEmpty)
         .def_static("encodeUnknot", &LinkSigBinary::encodeUnknot,
@@ -126,6 +122,10 @@ void addLinkSig(pybind11::module_& m) {
         .def_static("asString", &LinkSigBinary::asString, rdoc::asString)
         ;
     regina::python::no_eq_static(c);
+
+    RDOC_SCOPE_SWITCH_MAIN
+
+    regina::python::add_concept<rdoc::LinkSigEncoding>(m, "LinkSigEncoding");
 
     RDOC_SCOPE_END
 }

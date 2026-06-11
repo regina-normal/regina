@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,8 +41,8 @@ using regina::BlockedSFSPair;
 void addBlockedSFSPair(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(BlockedSFSPair)
 
-    auto c = pybind11::class_<BlockedSFSPair, regina::StandardTriangulation>
-            (m, "BlockedSFSPair", rdoc_scope)
+    auto c = pybind11::class_<BlockedSFSPair, regina::StandardSubcomplex<3>>
+            (m, "BlockedSFSPair", rdoc::__class)
         .def(pybind11::init<const BlockedSFSPair&>(), rdoc::__copy)
         .def("swap", &BlockedSFSPair::swap, rdoc::swap)
         .def("region", &BlockedSFSPair::region,
@@ -54,8 +54,7 @@ void addBlockedSFSPair(pybind11::module_& m) {
     ;
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
-
-    regina::python::add_global_swap<BlockedSFSPair>(m, rdoc::global_swap);
+    regina::python::add_global_swap<BlockedSFSPair, rdoc>(m);
 
     RDOC_SCOPE_END
 }

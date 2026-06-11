@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Startup Script
 #
-# Copyright (c) 2002-2025, Ben Burton
+# Copyright (c) 2002-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This is the main wrapper script to start the Python interpreter and import
@@ -113,7 +113,7 @@ if ($interactive and not $script) {
     &usage("The interactive option (-i, --interactive) can only be used with a script.");
 }
 
-# --- Determine the python executable.
+# --- Determine the Python executable.
 
 # In the absence of any user-specified options, use the python
 # command that corresponds to the original build environment.
@@ -236,7 +236,7 @@ if ($install_type eq 'Source') {
     &extendEnvVar('PATH', $prog_dir);
 }
 
-# Do not use PYTHONPATH, since we might be running python in isolation mode.
+# Do not use PYTHONPATH, since we might be running Python in isolation mode.
 # Instead edit the sys.path in code.
 $python_lib_dir =~ s/\\/\\\\/g;
 $python_lib_dir =~ s/'/\\'/g;
@@ -314,7 +314,7 @@ sub setPythonLibDir() {
         exit 1;
     }
     if ($os eq 'Windows' and -e '/usr/bin/cygpath.exe') {
-        # The python that ships with msys2 expects paths in the form c:/... .
+        # The Python that ships with msys2 expects paths in the form c:/... .
         $python_lib_dir = `/usr/bin/cygpath -m "$_[0]"`;
         chomp $python_lib_dir;
     } else {
@@ -364,7 +364,7 @@ sub usage {
     exit 1;
 }
 
-# The python interpreter could not be started.
+# The Python interpreter could not be started.
 #
 sub execError() {
     &err("E: An error occurred whilst trying to start the Python interpreter.\n");

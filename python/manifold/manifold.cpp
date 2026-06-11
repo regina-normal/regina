@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,39 +37,70 @@
 #include "../helpers.h"
 #include "../docstrings/manifold/manifold.h"
 
-using regina::Manifold;
+template <int dim> requires (dim == 3)
+void addManifoldDim(pybind11::module_& m, const char* name) {
+    using Manifold = regina::Manifold<dim>;
+    using Options = regina::ManifoldOptions<dim>;
 
-void addManifold(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(Manifold)
 
-    auto c = pybind11::class_<Manifold>(m, "Manifold", rdoc_scope)
+    auto c = pybind11::class_<Manifold, Options>(m, name, rdoc::__class)
         .def("name", &Manifold::name, rdoc::name)
         .def("texName", &Manifold::texName, rdoc::texName)
         .def("structure", &Manifold::structure, rdoc::structure)
         .def("construct", &Manifold::construct, rdoc::construct)
-        .def("homology", &Manifold::homology, rdoc::homology)
-        .def("isHyperbolic", &Manifold::isHyperbolic, rdoc::isHyperbolic)
-        // We cannot bind the comparison operators in the normal way:
-        // see https://github.com/pybind/pybind11/issues/1487 for details.
-        .def("__lt__", [](const Manifold& lhs, const Manifold& rhs) {
-            return lhs < rhs;
-        }, rdoc::__cmp)
-        .def("__le__", [](const Manifold& lhs, const Manifold& rhs) {
-            return lhs <= rhs;
-        }, rdoc::__cmp)
-        .def("__gt__", [](const Manifold& lhs, const Manifold& rhs) {
-            return lhs > rhs;
-        }, rdoc::__cmp)
-        .def("__ge__", [](const Manifold& lhs, const Manifold& rhs) {
-            return lhs >= rhs;
-        }, rdoc::__cmp)
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
-    // Also leave the equality operators for subclasses to wrap, since
-    // each subclass of Manifold provides its own custom == and != operators.
+    // Also leave the equality operators for subclasses to wrap, since each
+    // subclass of Manifold provides its own custom == and != operators.
     regina::python::no_eq_abstract(c);
 
+    if constexpr (dim == 3) {
+        // We cannot bind the comparison operators in the normal way:
+        // see https://github.com/pybind/pybind11/issues/1487 for details.
+        //
+        // Also: I believe these operators need to be placed in the Manifold3
+        // class for Python to find them (as opposed to C++ where they are
+        // global).
+        c
+            .def("__lt__", [](const Manifold& lhs, const Manifold& rhs) {
+                return lhs < rhs;
+            }, rdoc::__cmp)
+            .def("__le__", [](const Manifold& lhs, const Manifold& rhs) {
+                return lhs <= rhs;
+            }, rdoc::__cmp)
+            .def("__gt__", [](const Manifold& lhs, const Manifold& rhs) {
+                return lhs > rhs;
+            }, rdoc::__cmp)
+            .def("__ge__", [](const Manifold& lhs, const Manifold& rhs) {
+                return lhs >= rhs;
+            }, rdoc::__cmp);
+    }
+
     RDOC_SCOPE_END
+}
+
+void addManifold(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(ManifoldOptions3)
+
+    // 3-D gets a specialised implementation.
+    using Options = regina::ManifoldOptions<3>;
+    auto c = pybind11::class_<Options>(m, "ManifoldOptions3", rdoc::__class)
+        .def("homology", &Options::homology, rdoc::homology)
+        .def("isHyperbolic", &Options::isHyperbolic, rdoc::isHyperbolic)
+    ;
+    regina::python::no_eq_abstract(c);
+
+    RDOC_SCOPE_SWITCH(ManifoldOptions)
+
+    regina::python::add_doc_only_class<rdoc>(m, "ManifoldOptions");
+
+    RDOC_SCOPE_END
+
+    addManifoldDim<3>(m, "Manifold3");
+
+    // Deprecated type aliases:
+    m.attr("Manifold") = m.attr("Manifold3");
 }
 

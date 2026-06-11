@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,7 @@
 #include "linkcodes.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
+#include "packets/censuswidget.h"
 
 #include <QComboBox>
 #include <QLabel>
@@ -98,10 +99,13 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
     code->setAcceptRichText(false);
     layout->addWidget(code, 1);
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
-
     editIface = new PacketEditTextEditor(code);
+
+    census = new CensusWidget<regina::Link>(link, ui);
+    census->setWhatsThis(tr("<qt>Indicates whether this link diagram "
+        "appears in any of Regina's in-built census databases.  "
+        "If so, the name of the link diagram will be shown.</qt>"));
+    layout->addWidget(census);
 }
 
 LinkCodesUI::~LinkCodesUI() {
@@ -117,6 +121,7 @@ QWidget* LinkCodesUI::getInterface() {
 }
 
 void LinkCodesUI::refresh() {
+    // Don't use unicode because we want clipboard copy to fetch pure ASCII.
     QString ans;
     if (type->currentIndex() == 1) {
         code->setWhatsThis("A description of this knot using "
@@ -168,8 +173,8 @@ void LinkCodesUI::refresh() {
             code->setWordWrapMode(QTextOption::WordWrap);
             return;
         }
-        ans = (std::string("2nd gen (neoSig):\n") + link->neoSig() +
-            "\n\n1st gen (knotSig):\n" + link->knotSig() + "\n").c_str();
+        ans = (std::string("2nd-gen:\n") + link->neoSig() +
+            "\n\n1st-gen (Regina ≤ 7.x):\n" + link->knotSig() + "\n").c_str();
 
         code->setWordWrapMode(QTextOption::WrapAnywhere);
     } else if (type->currentIndex() == 3) {
@@ -247,14 +252,9 @@ void LinkCodesUI::refresh() {
         code->setWordWrapMode(QTextOption::WordWrap);
     }
 
-    /* Don't use unicode because we want clipboard copy to fetch pure ASCII.
-    if (ReginaPrefSet::global().displayUnicode) {
-        ans.replace(' ', QChar(0x2002)); // enspace
-        ans.replace('-', QChar(0x2212)); // minus
-    }
-    */
-
     code->setPlainText(ans);
+
+    census->refresh();
 }
 
 void LinkCodesUI::typeChanged(int) {
@@ -281,10 +281,6 @@ void LinkCodesUI::typeChanged(int) {
             break;
     }
 
-    refresh();
-}
-
-void LinkCodesUI::updatePreferences() {
     refresh();
 }
 

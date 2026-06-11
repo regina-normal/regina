@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -223,14 +223,14 @@ class PermGroup : public Output<PermGroup<n, cached>> {
                          a pointer (not a reference) so that we can
                          support the assignment operator. */
                 int pos_[n];
-                    /**< Indicates which of the terms PermGroup::term_[k][j]
+                    /**< Indicates which of the terms `PermGroup::term_[k][j]`
                          are actually being used for the current permutation.
                          Specifically, for each \a k we use
-                         term_[k][usable_[k][pos_[k]]].
-                         We have 0 <= pos_[i] < count_[i] for each \a i.
+                         `term_[k][usable_[k][pos_[k]]]`.
+                         We have `0 <= pos_[i] < count_[i]` for each \a i.
                          For a past-the-end iterator, we set
-                         pos_[0] = count_[0] (which is always 1), and we allow
-                         pos_[i] to be undefined for \a i > 0. */
+                         `pos_[0] = count_[0]` (which is always 1), and we allow
+                         `pos_[i]` to be undefined for \a i > 0. */
                 Perm<n> current_;
                     /**< The curent permutation.
                          For a past-the-end iterator, this is undefined. */
@@ -280,8 +280,11 @@ class PermGroup : public Output<PermGroup<n, cached>> {
                 /**
                  * The preincrement operator.
                  *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
                  * \nopython For Python users, this class implements the Python
-                 * iterator interface instead.  See __next__() for details.
+                 * iterator interface instead.  See `__next__()` for details.
                  *
                  * \return a reference to this iterator after the increment.
                  */
@@ -289,8 +292,11 @@ class PermGroup : public Output<PermGroup<n, cached>> {
                 /**
                  * The postincrement operator.
                  *
+                 * \pre This iterator is dereferenceable (in particular,
+                 * it is not past-the-end).
+                 *
                  * \nopython For Python users, this class implements the Python
-                 * iterator interface instead.  See __next__() for details.
+                 * iterator interface instead.  See `__next__()` for details.
                  *
                  * \return a copy of this iterator before the increment took
                  * place.
@@ -321,7 +327,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
                  * it is not past-the-end).
                  *
                  * \nopython For Python users, this class implements the Python
-                 * iterator interface instead.  See __next__() for details.
+                 * iterator interface instead.  See `__next__()` for details.
                  *
                  * \return the corresponding permutation.
                  */
@@ -331,7 +337,7 @@ class PermGroup : public Output<PermGroup<n, cached>> {
                  * Identifies whether this iterator is dereferenceable.
                  *
                  * \nopython For Python users, this class implements the Python
-                 * iterator interface instead.  See __next__() for details.
+                 * iterator interface instead.  See `__next__()` for details.
                  *
                  * \return \c true if and only if this is dereferenceable
                  * (i.e., not past-the-end).

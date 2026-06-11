@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -112,43 +112,42 @@ void XMLLinkConnectionsReader::initialChars(const std::string& chars) {
 
     std::string s;
     int adjSide;
-    size_t crossing;
-    Crossing* adj;
-    for (size_t read = 0; read < link_->size(); ++read)
-        for (int side = 1; side >= 0; --side) {
-            in >> s;
+    try {
+        for (size_t read = 0; read < link_->size(); ++read)
+            for (int side = 1; side >= 0; --side) {
+                in >> s;
 
-            if ((! in) || s.length() < 2) {
-                link_ = nullptr;
-                return;
-            }
+                if ((! in) || s.length() < 2) {
+                    link_ = nullptr;
+                    return;
+                }
 
-            if (s[0] == '^')
-                adjSide = 1;
-            else if (s[0] == '_')
-                adjSide = 0;
-            else {
-                link_ = nullptr;
-                return;
-            }
+                if (s[0] == '^')
+                    adjSide = 1;
+                else if (s[0] == '_')
+                    adjSide = 0;
+                else {
+                    link_ = nullptr;
+                    return;
+                }
 
-            if (! valueOf(s.c_str() + 1, crossing)) {
-                link_ = nullptr;
-                return;
-            }
-            if (/* crossing < 0 || */ crossing >= link_->size()) {
-                link_ = nullptr;
-                return;
-            }
+                size_t crossing = parse<size_t>(s.c_str() + 1);
+                if (crossing >= link_->size()) {
+                    link_ = nullptr;
+                    return;
+                }
 
-            adj = link_->crossing(crossing);
-            if (adj->prev_[adjSide]) {
-                link_ = nullptr;
-                return;
+                Crossing* adj = link_->crossing(crossing);
+                if (adj->prev_[adjSide]) {
+                    link_ = nullptr;
+                    return;
+                }
+                link_->crossing(read)->next_[side] = adj->strand(adjSide);
+                adj->prev_[adjSide] = link_->crossing(read)->strand(side);
             }
-            link_->crossing(read)->next_[side] = adj->strand(adjSide);
-            adj->prev_[adjSide] = link_->crossing(read)->strand(side);
-        }
+    } catch (const InvalidArgument&) {
+        link_ = nullptr;
+    }
 }
 
 void XMLLinkComponentsReader::initialChars(const std::string& chars) {
@@ -159,39 +158,40 @@ void XMLLinkComponentsReader::initialChars(const std::string& chars) {
 
     std::string s;
     int strand;
-    size_t crossing;
-    for (size_t read = 0; read < size_; ++read) {
-        in >> s;
+    try {
+        for (size_t read = 0; read < size_; ++read) {
+            in >> s;
 
-        if ((! in) || s.length() < 2) {
-            link_ = nullptr;
-            return;
-        }
+            if ((! in) || s.length() < 2) {
+                link_ = nullptr;
+                return;
+            }
 
-        if (s == "(null)") {
-            link_->components_.emplace_back(nullptr, 0);
-            continue;
-        }
+            if (s == "(null)") {
+                link_->components_.emplace_back(nullptr, 0);
+                continue;
+            }
 
-        if (s[0] == '^')
-            strand = 1;
-        else if (s[0] == '_')
-            strand = 0;
-        else {
-            link_ = nullptr;
-            return;
-        }
+            if (s[0] == '^')
+                strand = 1;
+            else if (s[0] == '_')
+                strand = 0;
+            else {
+                link_ = nullptr;
+                return;
+            }
 
-        if (! valueOf(s.c_str() + 1, crossing)) {
-            link_ = nullptr;
-            return;
-        }
-        if (/* crossing < 0 || */ crossing >= link_->size()) {
-            link_ = nullptr;
-            return;
-        }
+            size_t crossing = parse<size_t>(s.c_str() + 1);
+            if (crossing >= link_->size()) {
+                link_ = nullptr;
+                return;
+            }
 
-        link_->components_.push_back(link_->crossing(crossing)->strand(strand));
+            link_->components_.push_back(
+                link_->crossing(crossing)->strand(strand));
+        }
+    } catch (const InvalidArgument&) {
+        link_ = nullptr;
     }
 }
 

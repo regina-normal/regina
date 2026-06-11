@@ -1,0 +1,22 @@
+
+SET(man1dir ${CMAKE_INSTALL_FULL_MANDIR}/man1)
+
+SET(man1_files
+  censuslookup.1
+  katie.1
+  regconcat.1
+  regconvert.1
+  regfiledump.1
+  regfiletype.1
+  retriangulate.1
+  sigcensus.1
+  sigconvert.1
+  tricensus.1
+  trisetcmp.1
+  regina-engine-config.1
+  regina-gui.1
+  regina-helper.1
+  regina-python.1
+  )
+INSTALL(FILES ${man1_files} DESTINATION "${man1dir}" COMPONENT Runtime)
+

@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Runner
 #
-# Copyright (c) 2007-2025, Ben Burton
+# Copyright (c) 2007-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: testall
@@ -59,7 +59,7 @@ testoutdir=`mktemp -d -t regina.XXX`
 pybind11_version='@REGINA_PYBIND11_VERSION@'
 
 echo "---------------------------------------"
-echo "Test suite for Regina's python bindings"
+echo "Test suite for Regina's Python bindings"
 echo "---------------------------------------"
 echo
 

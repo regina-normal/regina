@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,6 +43,8 @@
 
 #include <memory>
 
+class ElidedLabel;
+class TriSigChooser;
 class PacketChooser;
 class QMenu;
 class QPushButton;
@@ -70,6 +72,7 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
          */
         regina::PacketOf<regina::Triangulation<4>>* tri_;
         regina::PacketOf<regina::Triangulation<4>>* compare_;
+        std::string sig_;
         std::optional<regina::Isomorphism<4>> isomorphism;
         IsomorphismType isoType;
 
@@ -80,10 +83,11 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
         PacketChooser* isoTest;
         QLabel* isoResult;
         QPushButton* isoView;
-        QLabel* isoSig;
+        ElidedLabel* isoSig;
+        TriSigChooser* isoSigVariant;
+        QLabel* copyHint;
         QTreeWidget* details;
         QTreeWidgetItem* lastComponent;
-
 
     public:
         /**
@@ -111,6 +115,11 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
         void contextIsoSig(const QPoint& pos, QWidget* fromWidget);
 
     public slots:
+        /**
+         * Update the isomorphism signature.
+         */
+        void updateIsoSig();
+
         /**
          * Update the isomorphism test panel.
          */

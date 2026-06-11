@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,13 +40,13 @@
 #include "tri4gluings.h"
 #include "auxtoolbar.h"
 #include "edittableview.h"
-#include "packetchooser.h"
 #include "packetfilter.h"
 #include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "choosers/boundary4chooser.h"
 #include "choosers/facechooser.h"
+#include "choosers/packetchooser.h"
 
 #include <memory>
 #include <thread>

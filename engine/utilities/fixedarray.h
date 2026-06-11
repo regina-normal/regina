@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -56,10 +56,10 @@ namespace regina {
  * offering safe and simple stack-based memory mangement and exception safety.
  *
  * Typically the size of the array would be passed to the constructor and remain
- * fixed from that point on.  After construction, the only way to change the
- * size of the array is to replace its entire contents with those of some other
- * FixedArray, via swap() or the move assignment operator (both of which are
- * very fast operations).
+ * fixed from that point on.  After construction, the only way to enlarge the
+ * array is to replace its entire contents with those of some other FixedArray,
+ * via swap() or the move assignment operator (both of which are very fast
+ * operations).
  *
  * This class is very similar in nature to LightweightSequence, but was born
  * from different needs.  It is possible that these two classes will be unified
@@ -359,6 +359,90 @@ class FixedArray {
          */
         T& back() {
             return data_[size_ - 1];
+        }
+
+        /**
+         * Cycles the given iterator forward through this array.
+         *
+         * In most cases it will simply be incremented; however, if it points
+         * to the last element of the array then it will wrap around and point
+         * to the first.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of this array.
+         *
+         * \param it the iterator to cycle forward.
+         */
+        void cycleForward(iterator& it) const {
+            if (++it == data_ + size_)
+                it = data_;
+        }
+
+        /**
+         * Cycles the given iterator forward through this array.
+         *
+         * In most cases it will simply be incremented; however, if it points
+         * to the last element of the array then it will wrap around and point
+         * to the first.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of this array.
+         *
+         * \param it the iterator to cycle forward.
+         */
+        void cycleForward(const_iterator& it) const {
+            if (++it == data_ + size_)
+                it = data_;
+        }
+
+        /**
+         * Cycles the given iterator backward through this array.
+         *
+         * In most cases it will simply be decremented; however, if it points
+         * to the first element of the array then it will wrap around and point
+         * to the last.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of this array.
+         *
+         * \param it the iterator to cycle backward.
+         */
+        void cycleBackward(iterator& it) const {
+            if (it == data_)
+                it = data_ + size_;
+            --it;
+        }
+
+        /**
+         * Cycles the given iterator backward through this array.
+         *
+         * In most cases it will simply be decremented; however, if it points
+         * to the first element of the array then it will wrap around and point
+         * to the last.
+         *
+         * \pre The given iterator is dereferencable, and points to an element
+         * of this array.
+         *
+         * \param it the iterator to cycle backward.
+         */
+        void cycleBackward(const_iterator& it) const {
+            if (it == data_)
+                it = data_ + size_;
+            --it;
+        }
+
+        /**
+         * Reduces the size of this array.
+         *
+         * This is a fast operation but wastes memory, in that it does not
+         * reallocate.
+         *
+         * \param newSize the new size of this array.  This must be less than
+         * or equal to `size()`; otherwise this will result in undefined
+         * behaviour (and potential buffer overruns).
+         */
+        void truncate(size_t newSize) {
+            size_ = newSize;
         }
 
         /**

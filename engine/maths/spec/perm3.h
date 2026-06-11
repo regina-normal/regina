@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -83,8 +83,7 @@ namespace regina {
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
- * \python Since Python does not support templates, this class is
- * made available under the name Perm3.
+ * \pyclassname{Perm3}
  *
  * \ingroup maths
  */
@@ -753,7 +752,7 @@ class Perm<3> {
          * then this will wrap around to become the first permutation in
          * Perm<3>::Sn, which is the identity.
          *
-         * \python This routine is named inc() since python does
+         * \python This routine is named inc() since Python does
          * not support the increment operator.
          *
          * \return a copy of this permutation before the increment took place.

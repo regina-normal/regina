@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,7 +30,7 @@
 
 #include <pybind11/pybind11.h>
 #include "utilities/intutils.h"
-#include "../helpers/docstrings.h"
+#include "../helpers.h"
 #include "../docstrings/utilities/intutils.h"
 
 void addIntUtils(pybind11::module_& m) {
@@ -40,6 +40,10 @@ void addIntUtils(pybind11::module_& m) {
     m.def("nextPowerOfTwo", regina::nextPowerOfTwo<long>, rdoc::nextPowerOfTwo);
     m.def("supportsNativeIntegerSize", regina::supportsNativeIntegerSize,
         rdoc::supportsNativeIntegerSize);
+
+    regina::python::add_concept<rdoc::ArbitraryPrecisionInteger>(m,
+        "ArbitraryPrecisionInteger");
+    regina::python::add_concept<rdoc::ReginaInteger>(m, "ReginaInteger");
 
     RDOC_SCOPE_END
 }

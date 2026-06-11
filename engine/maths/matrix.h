@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -69,9 +69,9 @@ class Rational;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \python The C++ types Matrix<Integer>, Matrix<bool> and Matrix<double>
- * are available using the Python names MatrixInt, MatrixBool and MatrixReal
- * respectively.
+ * \python The C++ types `Matrix<Integer>`, `Matrix<bool>` and `Matrix<double>`
+ * are available using the Python names `MatrixInt`, `MatrixBool` and
+ * `MatrixReal` respectively.
  *
  * \ingroup maths
  */

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,6 +36,8 @@
 #include "../helpers.h"
 #include "../docstrings/census/gluingpermsearcher3.h"
 
+using namespace pybind11::literals;
+
 using regina::ClosedPrimeMinSearcher;
 using regina::CompactSearcher;
 using regina::EulerSearcher;
@@ -46,25 +48,23 @@ using regina::HyperbolicMinSearcher;
 void addGluingPermSearcher3(pybind11::module_& m) {
     using Action = const std::function<void(const regina::GluingPerms<3>&)>&;
 
-    RDOC_SCOPE_BEGIN(GluingPermSearcher)
+    RDOC_SCOPE_BEGIN(GluingPermSearcher3)
 
     auto g = pybind11::class_<GluingPermSearcher<3>>(m, "GluingPermSearcher3",
-            rdoc_scope)
+            rdoc::__class)
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, bool, regina::CensusPurge>(), rdoc::__init)
         .def("runSearch", &GluingPermSearcher<3>::runSearch<Action>,
-            pybind11::arg("action"), rdoc::runSearch)
+            "action"_a, rdoc::runSearch)
         .def("partialSearch", &GluingPermSearcher<3>::partialSearch<Action>,
-            pybind11::arg("maxDepth"), pybind11::arg("action"),
-            rdoc::partialSearch)
+            "maxDepth"_a, "action"_a, rdoc::partialSearch)
         .def("isComplete", &GluingPermSearcher<3>::isComplete, rdoc::isComplete)
         .def("taggedData", &GluingPermSearcher<3>::taggedData, rdoc::taggedData)
         .def("data", &GluingPermSearcher<3>::data, rdoc::data)
         .def_static("findAllPerms",
             &GluingPermSearcher<3>::findAllPerms<Action>,
-            pybind11::arg("pairing"), pybind11::arg("autos"),
-            pybind11::arg("orientableOnly"), pybind11::arg("finiteOnly"),
-            pybind11::arg("whichPurge"), pybind11::arg("action"),
+            "pairing"_a, "autos"_a, "orientableOnly"_a, "finiteOnly"_a,
+            "whichPurge"_a, "action"_a,
             rdoc::findAllPerms)
         .def_static("bestSearcher", &GluingPermSearcher<3>::bestSearcher,
             rdoc::bestSearcher)
@@ -79,7 +79,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(EulerSearcher)
 
     auto e = pybind11::class_<EulerSearcher, GluingPermSearcher<3>>(
-            m, "EulerSearcher", rdoc_scope)
+            m, "EulerSearcher", rdoc::__class)
         .def(pybind11::init<int, FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, regina::CensusPurge>(), rdoc::__init)
         .def_readonly_static("dataTag", &EulerSearcher::dataTag)
@@ -97,7 +97,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(CompactSearcher)
 
     auto c = pybind11::class_<CompactSearcher, GluingPermSearcher<3>>(
-            m, "CompactSearcher", rdoc_scope)
+            m, "CompactSearcher", rdoc::__class)
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList,
             bool, regina::CensusPurge>(), rdoc::__init)
         .def_readonly_static("dataTag", &CompactSearcher::dataTag)
@@ -108,7 +108,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(ClosedPrimeMinSearcher)
 
     auto p = pybind11::class_<ClosedPrimeMinSearcher, GluingPermSearcher<3>>(
-            m, "ClosedPrimeMinSearcher", rdoc_scope)
+            m, "ClosedPrimeMinSearcher", rdoc::__class)
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList, bool>(),
             rdoc::__init)
         .def_readonly_static("dataTag", &ClosedPrimeMinSearcher::dataTag)
@@ -119,7 +119,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH(HyperbolicMinSearcher)
 
     auto h = pybind11::class_<HyperbolicMinSearcher, GluingPermSearcher<3>>(
-            m, "HyperbolicMinSearcher", rdoc_scope)
+            m, "HyperbolicMinSearcher", rdoc::__class)
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList, bool>(),
             rdoc::__init)
         .def_readonly_static("dataTag", &HyperbolicMinSearcher::dataTag)

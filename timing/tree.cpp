@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Form a census of splitting surface signatures of given order          *
  *                                                                        *
- *  Copyright (c) 2013-2025, Ben Burton                                   *
+ *  Copyright (c) 2013-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,6 +59,8 @@ void usage(const char* program) {
  * For each isomorphism signature passed on the command line, we build
  * the corresponding triangulation and then run away to perform the tree
  * traversal algorithm.
+ *
+ * Isomorphism signature can be either first-generation or second-generation.
  */
 int main(int argc, char* argv[]) {
     char mode = 0;

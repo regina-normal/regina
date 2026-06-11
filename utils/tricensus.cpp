@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Form a census of triangulations that satisfy given properties         *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,7 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "utilities/exception.h"
 
 #define WORD_face (dimension == 4 ? "facet" : dimension == 2 ? "edge" : "face")
 #define WORD_Face (dimension == 4 ? "Facet" : dimension == 2 ? "Edge" : "Face")
@@ -86,7 +87,7 @@ std::string outFile;
 
 // Variables used for a dump of face pairings.
 std::unique_ptr<std::ostream> dumpStream;
-unsigned long totPairings = 0;
+size_t totPairings = 0;
 
 // Variables used for output.
 size_t nSolns;
@@ -218,7 +219,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
     switch (outputType) {
         case OUTPUT_SIGS:
             {
-                std::string sig = tri.isoSig();
+                std::string sig = tri.neoSig();
                 if (threads > 1) {
                     std::unique_lock<std::mutex> lock(outputMutex);
                     sigStream << sig << std::endl;
@@ -231,7 +232,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
             break;
         case OUTPUT_SIGS_CANONICAL:
             {
-                auto [sig, iso] = tri.isoSigDetail();
+                auto [sig, iso] = tri.neoSigDetail();
                 std::string isoEnc = iso.inverse().tightEncoding();
                 if (threads > 1) {
                     std::unique_lock<std::mutex> lock(outputMutex);
@@ -1086,12 +1087,11 @@ int runCensus() {
     // Write the completed census to file.
     if (textOutput) {
         sigStream.close();
-    } else {
-        if (! parent->save(outFile.c_str())) {
-            std::cerr << "Output file " << outFile
-                << " could not be written.\n";
-            return 1;
-        }
+    } else try {
+        parent->save(outFile.c_str());
+    } catch (const regina::FileError&) {
+        std::cerr << "Output file " << outFile << " could not be written.\n";
+        return 1;
     }
 
     std::cout << "Total triangulations: " << nSolns << std::endl;

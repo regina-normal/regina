@@ -1,0 +1,174 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Python Interface                                                      *
+ *                                                                        *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>. *
+ *                                                                        *
+ **************************************************************************/
+
+#include <pybind11/pybind11.h>
+#include "triangulation/dim3.h"
+#include "../../helpers.h"
+#include "../../helpers/tableview.h"
+#include "../facehelper.h"
+#include "../../docstrings/triangulation/facenumbering.h"
+#include "../../docstrings/triangulation/face.h"
+
+using namespace pybind11::literals;
+
+using regina::Edge;
+using regina::EdgeEmbedding;
+using regina::Face;
+using regina::FaceEmbedding;
+using regina::python::wrapTableView;
+
+void addEdge3(pybind11::module_& m, pybind11::module_& internal) {
+    RDOC_SCOPE_BEGIN(FaceEmbedding)
+
+    auto e = pybind11::class_<FaceEmbedding<3, 1>>(m, "FaceEmbedding3_1",
+            rdoc::__class)
+        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>(),
+            rdoc::__init)
+        .def(pybind11::init<const EdgeEmbedding<3>&>(), rdoc::__copy)
+        .def("simplex", &EdgeEmbedding<3>::simplex,
+            pybind11::return_value_policy::reference, rdoc::simplex)
+        // So: clang can resolve tetrahedron() but gcc cannot.
+        // We could fix this with a static_cast, but we will just bind to
+        // simplex() instead (which gcc _can_ resolve).
+        .def("tetrahedron", &EdgeEmbedding<3>::simplex,
+            pybind11::return_value_policy::reference, rdoc::simplex_dim3)
+        .def("face", &EdgeEmbedding<3>::face, rdoc::face)
+        .def("edge", &EdgeEmbedding<3>::edge, rdoc::edge)
+        .def("vertices", &EdgeEmbedding<3>::vertices, rdoc::vertices)
+    ;
+    regina::python::add_output_rich(e);
+    regina::python::add_eq_operators(e, rdoc::__eq);
+
+    RDOC_SCOPE_SWITCH(Face)
+    RDOC_SCOPE_BASE(FaceNumbering)
+
+    auto c = pybind11::class_<Face<3, 1>>(m, "Face3_1", rdoc::__class)
+        .def("index", &Edge<3>::index, rdoc::index)
+        .def("embedding", &Edge<3>::embedding, rdoc::embedding)
+        .def("embeddings", &Edge<3>::embeddings, rdoc::embeddings)
+        .def("__iter__", [](const Edge<3>& f) {
+            // By default, make_iterator uses reference_internal.
+            return pybind11::make_iterator<pybind11::return_value_policy::copy>(
+                f.begin(), f.end());
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps Face alive
+            rdoc::__iter__)
+        .def("front", &Edge<3>::front, rdoc::front)
+        .def("back", &Edge<3>::back, rdoc::back)
+        .def("triangulation", &Edge<3>::triangulation, rdoc::triangulation)
+        .def("component", &Edge<3>::component,
+            pybind11::return_value_policy::reference, rdoc::component)
+        .def("boundaryComponent", &Edge<3>::boundaryComponent,
+            pybind11::return_value_policy::reference, rdoc::boundaryComponent)
+        .def("face", &regina::python::face<Edge<3>>,
+            "lowerdim"_a, "face"_a, rdoc::face)
+        .def("vertex", &Edge<3>::vertex,
+            pybind11::return_value_policy::reference, rdoc::vertex)
+        .def("faceMapping", &regina::python::faceMapping<Edge<3>>,
+            "lowerdim"_a, "face"_a, rdoc::faceMapping)
+        .def("vertexMapping", &Edge<3>::vertexMapping, rdoc::vertexMapping)
+        .def("isLoop", &Edge<3>::isLoop, rdoc::isLoop)
+        .def("degree", &Edge<3>::degree, rdoc::degree)
+        .def("isBoundary", &Edge<3>::isBoundary, rdoc::isBoundary)
+        .def("isInternal", &Edge<3>::isInternal, rdoc::isInternal)
+        .def("isValid", &Edge<3>::isValid, rdoc::isValid)
+        .def("hasBadIdentification", &Edge<3>::hasBadIdentification,
+            rdoc::hasBadIdentification)
+        .def("hasBadLink", &Edge<3>::hasBadLink, rdoc::hasBadLink)
+        .def("isLinkClosed", &Edge<3>::isLinkClosed, rdoc::isLinkClosed)
+        .def("isLinkOrientable", &Edge<3>::isLinkOrientable,
+            rdoc::isLinkOrientable)
+        .def("linkingSurface",
+            static_cast<regina::python::generalLinkingSurface<3, 1>>(
+                &Edge<3>::linkingSurface),
+            rdoc::linkingSurface)
+        .def_static("ordering", &Edge<3>::ordering, rbase::ordering)
+        .def_static("faceNumber",
+            pybind11::overload_cast<regina::Perm<4>>(&Edge<3>::faceNumber),
+            rbase::faceNumber)
+        .def_static("faceNumber",
+            pybind11::overload_cast<int, int>(&Edge<3>::faceNumber),
+            rbase::faceNumber_2)
+        .def_static("containsVertex", &Edge<3>::containsVertex,
+            rbase::containsVertex)
+        .def_readonly_static("nFaces", &Edge<3>::nFaces)
+        .def_readonly_static("lexNumbering", &Edge<3>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Edge<3>::oppositeDim)
+        .def_readonly_static("dimension", &Edge<3>::dimension)
+        .def_readonly_static("subdimension", &Edge<3>::subdimension)
+        .def_readonly_static("hasNumberingTables", &Edge<3>::hasNumberingTables)
+        // Since the Triangulation<3> maximal forest routines return
+        // sets of edges, we need edges to be hashable.
+        .def("__hash__", [](const Edge<3>& e) {
+            // Edges are equal in python if they reference the same C++
+            // objects.  Therefore we can just use the C++ pointer as a hash.
+            //
+            // So: we cannot cast to long, since this is too small on
+            // 64-bit Windows.  The *correct* type is uintptr_t, but the
+            // C++ standard says this is optional.  Does any compiler *not*
+            // support uintptr_t?  If anyone gets a compile error from this,
+            // please do let Ben know (and in the meantime if you are on a
+            // 64-bit machine then you should be able to change it back to a
+            // long for your own quick fix.)
+            //
+            // A further note: even though long is too small on 64-bit Windows,
+            // this is harmless - since we are only using this as a hash, so
+            // it is okay if the integer is truncated.  Perhaps then the
+            // real standards-compliant solution is to just cast to a long
+            // regardless of platform.
+            return uintptr_t(std::addressof(e));
+        }, R"doc(Hashes this edge.
+
+This hash function is consistent with the equality tests provided for
+Edge3 in Python: if two Edge3 objects refer to the same edge of the
+same triangulation (i.e., the same underlying C++ Edge<3> object),
+then their hashes will be equal.
+
+This hash function is provided so that Python can work with sets of
+edges (e.g., as returned by Triangulation3.maximalForestInBoundary()).
+
+The precise hash function that is used is subject to change in future
+versions of Regina.)doc")
+    ;
+    c.attr("edgeNumber") = wrapTableView(internal, Edge<3>::edgeNumber);
+    c.attr("edgeVertex") = wrapTableView(internal, Edge<3>::edgeVertex);
+
+    regina::python::add_output_rich(c);
+    regina::python::add_eq_operators(c);
+
+    RDOC_SCOPE_END
+
+    regina::python::addStdView<
+        decltype(std::declval<Edge<3>>().embeddings())>(internal,
+        "Face3_1_embeddings");
+
+    m.attr("EdgeEmbedding3") = m.attr("FaceEmbedding3_1");
+    m.attr("Edge3") = m.attr("Face3_1");
+}
+

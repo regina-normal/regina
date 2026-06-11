@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -267,7 +267,7 @@ inline constexpr Perm<4> octDiscArcs[3][8] = {
  * - The file normalcoords.h must be updated.  This includes a new enum
  *   value for NormalCoords, a new case for the NormalEncoding constructor,
  *   and new cases for the functions in NormalInfo.  Do not forget to
- *   update the python bindings for NormalCoords also.
+ *   update the Python bindings for NormalCoords also.
  *
  * - The global routines makeEmbeddedConstraints() and makeMatchingEquations()
  *   should be updated to incorporate the new coordinate system.
@@ -1231,7 +1231,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * A surface (or its positive rational multiple) could be the
          * normalised link of many edges.  The return value will be a pair
-         * (\a v, \a thin), where:
+         * `(v, thin)`, where:
          *
          * - \a v is a vector containing all such edges.  This will begin
          *   with the edges for which this surface is a thin link, followed by
@@ -1243,7 +1243,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this surface is the normalised
-         * link of any edge, then \a link will be 0 and \a v will be the
+         * link of any edge, then \a thin will be 0 and \a v will be the
          * empty vector.
          *
          * Note that the results of this routine are not cached.
@@ -1313,7 +1313,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * A surface (or its positive rational multiple) could be the
          * normalised link of many triangles.  The return value will be a pair
-         * (\a v, \a thin), where:
+         * `(v, thin)`, where:
          *
          * - \a v is a vector containing all such triangles.  This will begin
          *   with the triangles for which this surface is a thin link, followed
@@ -1326,7 +1326,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *   it will often be compared to `v.size()`.
          *
          * If no positive rational multiple of this surface is the normalised
-         * link of any triangle, then \a link will be 0 and \a v will be the
+         * link of any triangle, then \a thin will be 0 and \a v will be the
          * empty vector.
          *
          * Note that the results of this routine are not cached.

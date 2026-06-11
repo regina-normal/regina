@@ -1,13 +1,13 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2015-2025, Ben Burton
+# Copyright (c) 2015-2026, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Prints basic properties of all wrapped objects and types.
 #
-# This file is a single component of Regina's python test suite.  To run
-# the python test suite, move to the main python directory in the source
+# This file is a single component of Regina's Python test suite.  To run
+# the Python test suite, move to the main python directory in the source
 # tree and run "make check".
 #
 # This program is free software; you can redistribute it and/or
@@ -31,6 +31,20 @@
 
 import enum
 
+def isConcept(object):
+    while object:
+        if object is Concept:
+            return True
+        object = object.__base__
+    return False
+
+def isDocOnly(object):
+    while object:
+        if object is Documentation:
+            return True
+        object = object.__base__
+    return False
+
 def isException(object):
     while object:
         if object is Exception:
@@ -46,9 +60,13 @@ def classInfo(name, object):
             # Omit them here so that this test generates the same output
             # across all platforms.
             return
+        # Exception and concept classes do not have equalityType.
         if isException(object):
-            # Exception classes do not have equalityType.
             print(name, ': exception')
+        elif isConcept(object):
+            print(name, ': concept')
+        elif isDocOnly(object):
+            print(name, ': documentation')
         else:
             print(name, ': class ->', object.equalityType)
     else:

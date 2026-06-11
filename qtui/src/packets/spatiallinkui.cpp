@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -97,9 +97,9 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
     auto* python = new QPushButton(
         ReginaSupport::themeIcon("utilities-terminal"), tr("Python Console"));
     python->setToolTip("Open a new Python console");
-    python->setWhatsThis("<qt>Open a new python console to work with "
+    python->setWhatsThis("<qt>Open a new Python console to work with "
         "this spatial link.<p>The link will be available "
-        "through the python variable <tt>item</tt>.</qt>");
+        "through the Python variable <tt>item</tt>.</qt>");
     connect(python, SIGNAL(clicked()), this, SLOT(pythonConsole()));
 
     QBoxLayout* buttonBox = new QHBoxLayout();
@@ -149,8 +149,8 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
 
     refresh();
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &SpatialLinkUI::updatePreferences);
 }
 
 Packet* SpatialLinkUI::getPacket() {

@@ -1,7 +1,7 @@
 example$ regina-python
-Regina 7.0
+Regina 8.0
 Software for low-dimensional topology
-Copyright (c) 1999-2021, The Regina development team
+Copyright (c) 1999-2026, The Regina development team
 >>> ################################
 >>> #
 >>> #  Sample Python Script
@@ -18,9 +18,9 @@ Copyright (c) 1999-2021, The Regina development team
 >>> # Create an 18-tetrahedron triangulation of a knot complement with real
 >>> # boundary faces (not an ideal vertex).  The knot is L106003 from the
 >>> # knot/link census.  We used Regina to truncate the ideal vertex, and
->>> # then copied the isomorphism signature so that we can reconstruct the
->>> # triangulation here.
->>> sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
+>>> # then copied the second-generation isomorphism signature so that we can
+>>> # reconstruct the triangulation here.
+>>> sig = 'sxsgYcsTyPgR9CWimg-EQLvrmlw3DWcsftQhb'
 >>> tri = Triangulation3(sig)
 >>> print(tri)
 Bounded orientable 3-D triangulation, f = ( 1 20 37 18 )
@@ -46,9 +46,9 @@ Bounded orientable 3-D triangulation, f = ( 1 20 37 18 )
 ...     print('Progress:', tracker.percent(), '%')
 ...     time.sleep(0.25)
 ...
-Progress: 0.17578125 %
-Progress: 54.20654296875 %
-Progress: 91.80555555555556 %
+Progress: 0.0604248046875 %
+Progress: 55.2777099609375 %
+Progress: 90.27777777777777 %
 >>>
 >>> # The surface enumeration is now complete.
 >>> thread.join()

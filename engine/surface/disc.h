@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -676,7 +676,7 @@ void swap(DiscSetTetData<T>& a, DiscSetTetData<T>& b) noexcept {
  * impossible, the class constructor will throw an exception.
  *
  * \python The only instance of this class that is available
- * through python is DiscSetSurface (i.e., the "vanilla" case where
+ * through Python is DiscSetSurface (i.e., the "vanilla" case where
  * \a TetData is the type DiscSetTet).
  *
  * \ingroup surface
@@ -1134,7 +1134,7 @@ using DiscSetSurface = DiscSetSurfaceDataImpl<DiscSetTet>;
  * \a reference. Instead you can access these through `std::iterator_traits`.
  *
  * \python The only instance of this class that is available
- * through python is the iterator for DiscSetSurface (i.e., the "vanilla"
+ * through Python is the iterator for DiscSetSurface (i.e., the "vanilla"
  * case where \a TetData is the type DiscSetTet).  Moreover, instead of the
  * C++ interface described here, in Python DiscSetSurface and this class
  * together implement the Python iterable/iterator interface.

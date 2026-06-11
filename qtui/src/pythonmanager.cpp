@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -89,7 +89,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->show();
     QCoreApplication::instance()->processEvents();
 
-    // Initialise the python interpreter.
+    // Initialise the Python interpreter.
     if (ans->importRegina()) {
         ans->addOutput(parent->QObject::tr("\n"));
         ans->setRootPacket(std::move(tree));
@@ -112,7 +112,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->show();
     QCoreApplication::instance()->processEvents();
 
-    // Initialise the python interpreter.
+    // Initialise the Python interpreter.
     if (ans->importRegina())
         ans->addOutput(parent->QObject::tr("\n"));
 

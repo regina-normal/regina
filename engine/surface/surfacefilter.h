@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -408,8 +408,9 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Sets the allowable Euler characteristics to be all integers
          * in the given iterator range.  See eulerChars() for further details.
          *
-         * \python Instead of a pair of iterators, the set of
-         * allowable Euler characteristic should be passed as a Python list.
+         * \python Instead of a pair of iterators, the set of allowable
+         * Euler characteristics should be passed as a Python list of
+         * LargeInteger objects.
          *
          * \param beginEuler the beginning of an iterator range that
          * gives the new set of allowable Euler characteristics.

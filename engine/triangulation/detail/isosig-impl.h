@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,7 +43,7 @@
 #endif
 
 #include <algorithm>
-#include "triangulation/generic/triangulation.h"
+#include "triangulation/triangulation.h"
 #include "utilities/fixedarray.h"
 #include "utilities/sigutils.h"
 
@@ -388,20 +388,20 @@ std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
     // We begin by encoding the bits [11], which can never appear at the
     // beginning of a first-generation signature.  This will allow fromSig()
     // to determine which generation a given base64 signature is.
-    enc.encodeInt<unsigned>(2 /* encode two bits */, 3 /* the bits: 11 */);
+    enc.encodeInt<unsigned>(3 /* the bits: 11 */, 2 /* number of bits */);
 
     enc.encodeBit(oriented);
 
     using UnsignedPermIndex = typename IsoSigData<2, dim>::UnsignedPermIndex;
     for (auto s : data.adjacentSimplices())
-        enc.encodeInt(intBits, s);
-    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
+        enc.encodeInt(s, intBits);
+    enc.encodeBitmask(data.facetTypes(), data.countFacetBits());
     if (oriented) {
         for (UnsignedPermIndex g : data.adjacentGluings())
-            enc.encodeInt(IsoSigData<2, dim>::permBits - 1, g >> 1);
+            enc.encodeInt(g >> 1, IsoSigData<2, dim>::permBits - 1);
     } else {
         for (UnsignedPermIndex g : data.adjacentGluings())
-            enc.encodeInt(IsoSigData<2, dim>::permBits, g);
+            enc.encodeInt(g, IsoSigData<2, dim>::permBits);
     }
     if (data.hasLocks()) {
         // Write locks using a visually obvious suffix, as we do with
@@ -410,7 +410,7 @@ std::string IsoSigPrintable::encode(const IsoSigData<2, dim>& data) {
         // _string prefix_ of the with-locks signature.
         enc.flushAndAppend(Base64Encoder::spare[1]);
         for (auto m : data.locks())
-            enc.encodeInt(IsoSigData<2, dim>::lockBits, m);
+            enc.encodeInt(m, IsoSigData<2, dim>::lockBits);
     }
 
     return std::move(enc).str();
@@ -498,20 +498,20 @@ std::string IsoSigPrintableLockFree::encode(const IsoSigData<2, dim>& data) {
     // We begin by encoding the bits [11], which can never appear at the
     // beginning of a first-generation signature.  This will allow fromSig()
     // to determine which generation a given base64 signature is.
-    enc.encodeInt<unsigned>(2 /* encode two bits */, 3 /* the bits: 11 */);
+    enc.encodeInt<unsigned>(3 /* the bits: 11 */, 2 /* number of bits */);
 
     enc.encodeBit(oriented);
 
     using UnsignedPermIndex = typename IsoSigData<2, dim>::UnsignedPermIndex;
     for (auto s : data.adjacentSimplices())
-        enc.encodeInt(intBits, s);
-    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
+        enc.encodeInt(s, intBits);
+    enc.encodeBitmask(data.facetTypes(), data.countFacetBits());
     if (oriented) {
         for (UnsignedPermIndex g : data.adjacentGluings())
-            enc.encodeInt(IsoSigData<2, dim>::permBits - 1, g >> 1);
+            enc.encodeInt(g >> 1, IsoSigData<2, dim>::permBits - 1);
     } else {
         for (UnsignedPermIndex g : data.adjacentGluings())
-            enc.encodeInt(IsoSigData<2, dim>::permBits, g);
+            enc.encodeInt(g, IsoSigData<2, dim>::permBits);
     }
 
     return std::move(enc).str();
@@ -569,13 +569,13 @@ ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
     enc.reserveBytes(length(data));
 
     if (data.size() < 128) {
-        enc.encodeInt(8, data.size());
+        enc.encodeInt(data.size(), 8);
     } else {
         if (intBits > 127)
             throw ImpossibleScenario("IsoSigBinary::encode(): "
                 "triangulation has ≥ 2^127 top-dimensional simplices");
-        enc.encodeInt(8, static_cast<unsigned>(intBits | 128));
-        enc.encodeInt(intBits, data.size());
+        enc.encodeInt(static_cast<unsigned>(intBits | 128), 8);
+        enc.encodeInt(data.size(), intBits);
     }
 
     enc.encodeBit(oriented);
@@ -583,17 +583,17 @@ ByteSequence IsoSigBinary::encode(const IsoSigData<2, dim>& data) {
 
     using UnsignedPermIndex = typename IsoSigData<2, dim>::UnsignedPermIndex;
     for (auto s : data.adjacentSimplices())
-        enc.encodeInt(intBits, s);
-    enc.encodeBitmask(data.countFacetBits(), data.facetTypes());
+        enc.encodeInt(s, intBits);
+    enc.encodeBitmask(data.facetTypes(), data.countFacetBits());
     if (oriented) {
         for (UnsignedPermIndex g : data.adjacentGluings())
-            enc.encodeInt(IsoSigData<2, dim>::permBits - 1, g >> 1);
+            enc.encodeInt(g >> 1, IsoSigData<2, dim>::permBits - 1);
     } else {
         for (UnsignedPermIndex g : data.adjacentGluings())
-            enc.encodeInt(IsoSigData<2, dim>::permBits, g);
+            enc.encodeInt(g, IsoSigData<2, dim>::permBits);
     }
     for (auto m : data.locks())
-        enc.encodeInt(IsoSigData<2, dim>::lockBits, m);
+        enc.encodeInt(m, IsoSigData<2, dim>::lockBits);
 
     return std::move(enc).bytes();
 }
@@ -654,14 +654,14 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
             bool hasLocks = dec.decodeBit();
 
             enc.encodeSize(nSimp);
-            enc.encodeInt<unsigned>(2 /* two bits */, 3 /* the bits: 11 */);
+            enc.encodeInt<unsigned>(3 /* the bits: 11 */, 2 /* two bits */);
             enc.encodeBit(oriented);
 
             size_t nBdry = 0;
             size_t nDest = 2 * (nSimp - 1);
             while (nDest < nSimp * (dim + 1)) {
                 size_t dest = dec.template decodeInt<size_t>(intBits);
-                enc.encodeInt(intBits, dest);
+                enc.encodeInt(dest, intBits);
                 if (dest == nSimp) {
                     ++nBdry;
                     ++nDest;
@@ -671,21 +671,22 @@ std::string IsoSigBinary::asString(const ByteSequence& sig) {
             }
 
             size_t nFacets = (nDest + nBdry) / 2;
-            enc.encodeBitmask(nFacets, dec.decodeBitmask(nFacets));
+            enc.encodeBitmask(dec.decodeBitmask(nFacets), nFacets);
 
             using UnsignedPermIndex =
                 typename IsoSigData<2, dim>::UnsignedPermIndex;
             int w = (oriented ? IsoSigData<2, dim>::permBits - 1 :
                 IsoSigData<2, dim>::permBits);
             for (size_t i = 0; i < nFacets - nBdry + 1 - nSimp; ++i)
-                enc.encodeInt(w, dec.template decodeInt<UnsignedPermIndex>(w));
+                enc.encodeInt(dec.template decodeInt<UnsignedPermIndex>(w), w);
 
             if (hasLocks) {
                 enc.flushAndAppend(Base64Encoder::spare[1]);
                 for (size_t i = 0; i < nSimp; ++i)
-                    enc.encodeInt(IsoSigData<2, dim>::lockBits,
+                    enc.encodeInt(
                         dec.template decodeInt<typename Simplex<dim>::LockMask>(
-                        IsoSigData<2, dim>::lockBits));
+                            IsoSigData<2, dim>::lockBits),
+                        IsoSigData<2, dim>::lockBits);
             }
 
             dec.flushByte();
@@ -1109,8 +1110,13 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
     try {
         // Read the size of the first component.
         std::pair<size_t, int> sizeAndWidth = dec.decodeSize();
-        if (sizeAndWidth.first == 0)
-            return ans; // empty triangulation
+        if (sizeAndWidth.first == 0) {
+            // This is the signature for the empty triangulation.
+            if (! dec.done())
+                throw InvalidArgument("fromSig(): "
+                    "unexpected additional characters");
+            return ans;
+        }
 
         // Look at the next character: this will tell us whether we have a
         // first-generation or second-generation signature.
@@ -1161,16 +1167,6 @@ Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
         // Any exception caught here was thrown by the decoder.
         throw InvalidArgument(
             "fromSig(): incomplete or invalid base64 encoding");
-    }
-}
-
-template <int dim> requires (supportedDim(dim))
-size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
-    Base64Decoder dec(sig.begin(), sig.end()); // strips whitespace
-    try {
-        return dec.decodeSize().first;
-    } catch (const InvalidInput&) {
-        throw InvalidArgument("isoSigComponentSize(): invalid signature");
     }
 }
 

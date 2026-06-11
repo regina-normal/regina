@@ -5,13 +5,6 @@ from . import engine
 import sage.all
 
 # -------------------------------------------------------------------------
-# Sage-related hacks implemented at the C++ level in Regina
-# -------------------------------------------------------------------------
-
-# These hacks include making pybind11 work with Sage's Integer type.
-engine._addSageHacks()
-
-# -------------------------------------------------------------------------
 # Conversion from Regina objects to Sage objects
 # -------------------------------------------------------------------------
 

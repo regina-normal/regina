@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,14 +30,14 @@
 
 #include "triangulation/detail/facetpairing-canonical-impl.h"
 
-namespace regina::detail {
+namespace regina {
 
-template bool FacetPairingBase<7>::isCanonical() const;
+template bool FacetPairing<7>::isCanonical() const;
 template std::pair<FacetPairing<7>, Isomorphism<7>>
-    FacetPairingBase<7>::canonicalInternal<false>() const;
+    FacetPairing<7>::canonicalInternal<false>() const;
 template std::pair<FacetPairing<7>, FacetPairing<7>::IsoList>
-    FacetPairingBase<7>::canonicalInternal<true>() const;
-template bool FacetPairingBase<7>::isCanonicalInternal(
-    FacetPairingBase<7>::IsoList* list) const;
+    FacetPairing<7>::canonicalInternal<true>() const;
+template bool FacetPairing<7>::isCanonicalInternal(
+    FacetPairing<7>::IsoList* list) const;
 
-} // namespace regina::detail
+} // namespace regina

@@ -11,8 +11,61 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::Perm
-static const char *Perm =
+// Docstring regina::python::doc::digit
+inline constexpr const char digit[] =
+R"doc(Returns the character used to express the integer *i* in a
+permutation.
+
+* For *i* = 0,...,9, this will be the usual digit representing *i*.
+
+* For *i* ≥ 10, this will be a lower-case letter. In particular, for
+  *i* = 10,...,15, this will be the usual hexadecimal digit
+  representing *i*.
+
+* At present, this routine only supports integers *i* < 36.
+
+Parameter ``i``:
+    the integer to represent; this must be between 0 and 35 inclusive.
+
+Returns:
+    the single character used to represent *i*.)doc";
+
+// Docstring regina::python::doc::factorial
+inline constexpr const char factorial[] =
+R"doc(Returns the factorial of *n*.
+
+Parameter ``n``:
+    any non-negative integer; this must be at most 20 (since otherwise
+    the factorial will overflow).
+
+Returns:
+    the factorial of *n*..)doc";
+
+struct Perm {
+
+// Docstring regina::python::doc::Perm::SnIndex
+static constexpr const char SnIndex[] =
+R"doc(Returns the index of this permutation in the Perm<n>::Sn array.
+
+See Sn for further information on how these permutations are indexed.
+
+Returns:
+    the index *i* for which this permutation is equal to
+    Perm<n>::Sn[i]. This will be between 0 and *n*!-1 inclusive.)doc";
+
+// Docstring regina::python::doc::Perm::__array
+static constexpr const char __array[] =
+R"doc(Determines the image of the given integer under this permutation.
+
+Parameter ``source``:
+    the integer whose image we wish to find. This should be between 0
+    and *n*-1 inclusive.
+
+Returns:
+    the image of *source*.)doc";
+
+// Docstring regina::python::doc::Perm::__class
+static constexpr const char __class[] =
 R"doc(Represents a permutation of {0,1,...,*n*-1}. Amongst other things,
 such permutations are used to describe simplex gluings in
 (*n*-1)-manifold triangulations.
@@ -76,310 +129,8 @@ Python:
 Template parameter ``n``:
     the number of objects being permuted.)doc";
 
-// Docstring regina::python::doc::PermClass
-static const char *PermClass =
-R"doc(Represents a conjugacy class of permutations on *n* elements.
-
-Each such conjugacy class correpsonds to an unordered partition of
-*n*, describing the cycle structure of the permutations in the
-conjugacy class.
-
-There is a special "past-the-end" conjugacy class, which effectively
-holds no value; the only way you can obtain such a class is to iterate
-through *all* classes using the increment operators. You can test for
-a past-the-end value by casting to ``bool``.
-
-PermClass objects are, in their current implementation, entirely
-stack-based. This means they cannot support fast move or swap
-operations. However, their size is linear in *n*, so while copy
-operations are not enormously expensive, they are not as cheap as
-copying a Perm object (which just holds a single machine-native
-integer). This decision is a deliberate trade-off between speed versus
-space; the implication for end users is that you should be economical
-about copying PermClass objects, and work with them in-place where
-possible.
-
-Python:
-    Python does not support templates. Instead, you should append the
-    integer *n* to the class name. For example, the C++ class
-    ``PermClass<4>`` is available in Python under the name
-    ``PermClass4``.
-
-Template parameter ``n``:
-    the number of objects being permuted.)doc";
-
-// Docstring regina::python::doc::PermCodeType
-static const char *PermCodeType =
-R"doc(Represents the different kinds of internal permutation codes that are
-used in Regina's various Perm<n> template classes. See the Perm<n>
-class notes for more information on exactly how these codes are
-constructed. The class constant Perm<n>::codeType indicates which type
-of code is used for which *n*.)doc";
-
-// Docstring regina::python::doc::PermOrder
-static const char *PermOrder =
-R"doc(Represents different ways in which permutations on *n* objects can be
-ordered.
-
-In all of these orderings, it is guaranteed that the identity
-permutation comes first.)doc";
-
-// Docstring regina::python::doc::digit
-static const char *digit =
-R"doc(Returns the character used to express the integer *i* in a
-permutation.
-
-* For *i* = 0,...,9, this will be the usual digit representing *i*.
-
-* For *i* ≥ 10, this will be a lower-case letter. In particular, for
-  *i* = 10,...,15, this will be the usual hexadecimal digit
-  representing *i*.
-
-* At present, this routine only supports integers *i* < 36.
-
-Parameter ``i``:
-    the integer to represent; this must be between 0 and 35 inclusive.
-
-Returns:
-    the single character used to represent *i*.)doc";
-
-// Docstring regina::python::doc::factorial
-static const char *factorial =
-R"doc(Returns the factorial of *n*.
-
-Parameter ``n``:
-    any non-negative integer; this must be at most 20 (since otherwise
-    the factorial will overflow).
-
-Returns:
-    the factorial of *n*..)doc";
-
-namespace PermClass_ {
-
-// Docstring regina::python::doc::PermClass_::__as_bool
-static const char *__as_bool =
-R"doc(Determines whether this represents a genuine conjugacy class, or
-whether it represents the special past-the-end value.
-
-See the class notes and the increment operators for further discussion
-on what past-the-end represents.
-
-Returns:
-    ``False`` if this is the past-the-end conjugacy class, or ``True``
-    otherwise.)doc";
-
-// Docstring regina::python::doc::PermClass_::__copy
-static const char *__copy =
-R"doc(Creates a copy of the given conjugacy class.
-
-Parameter ``src``:
-    the conjugacy class to clone.)doc";
-
-// Docstring regina::python::doc::PermClass_::__default
-static const char *__default =
-R"doc(Creates the conjugacy class for the identity permutation.
-
-The corresponding cycle structure (i.e., partition of *n*) is *n*
-cycles, each of length 1.)doc";
-
-// Docstring regina::python::doc::PermClass_::__eq
-static const char *__eq =
-R"doc(Determines whether this and the given object describe the same
-conjugacy class.
-
-Two past-the-end conjugacy classes will be treated as equal.
-
-Parameter ``other``:
-    the conjugacy class to compare with this.
-
-Returns:
-    ``True`` if and only if this and the given conjugacy class are
-    identical.)doc";
-
-// Docstring regina::python::doc::PermClass_::__inc
-static const char *__inc =
-R"doc(A postincrement operator that changes this to become the next
-conjugacy class in a lexicographical enumeration.
-
-Specifically, the increment operators work through conjugacy classes
-in lexicographical order, where each class is represented by its
-sequence of cycle lengths (given in increasing order). Thus the
-conjugacy class ``11...1`` (representing the identity permutation)
-will come first, and the conjugacy class ``n`` (representing a single
-long cycle) will come last.
-
-If there are no more conjugacy classes (i.e., this represents a single
-cycle of length *n*), then this object will be set to the special
-past-the-end value (which can be tested by casting to a ``bool``).
-
-Python:
-    This routine is named inc() since python does not support the
-    increment operator.
-
-Returns:
-    a copy of this conjugacy class before the increment took place.)doc";
-
-// Docstring regina::python::doc::PermClass_::countCycles
-static const char *countCycles =
-R"doc(Returns the number of cycles in this conjugacy class.
-
-Recall from the class notes that a conjugacy class identifies the
-cycle structure of a permutation. This routine simply returns the
-number of cycles for this conjugacy class. Fixed points are also
-counted (they are considered to be cycles of length 1).
-
-Returns:
-    the number of cycles.)doc";
-
-// Docstring regina::python::doc::PermClass_::cycle
-static const char *cycle =
-R"doc(Returns the length of the given cycle in this conjugacy class.
-
-Recall from the class notes that a conjugacy class identifies the
-cycle structure of a permutation. If the cycle lengths are listed in
-order from shortest to longest, then this routine returns the
-*which*th cycle length in this sequence. Fixed points are included in
-this sequence (they are considered to be cycles of length 1, and will
-appear at the beginning of the sequence).
-
-For example, for a conjugacy class in ``PermClass<9>`` with cycle
-lengths ``(1,1,3,4)``, calling ``cycle(2)`` will return 3.
-
-Parameter ``which``:
-    indicates which cycle length to return; this must be between 0 and
-    countCycles()-1 inclusive.
-
-Returns:
-    the requested cycle length.)doc";
-
-// Docstring regina::python::doc::PermClass_::isIdentity
-static const char *isIdentity =
-R"doc(Determines whether this is the conjugacy class for the identity
-permutation.
-
-Returns:
-    ``True`` if and only if this conjugacy class represents the
-    identity permutation.)doc";
-
-// Docstring regina::python::doc::PermClass_::rep
-static const char *rep =
-R"doc(Returns the minimal representative of this conjugacy class.
-
-The _minimal representative_ is the permutation belonging to this
-class with the smallest index in Perm<n>::Sn.
-
-Because all permutations in the same class must have the same sign, it
-follows that this is also the permutation in this class with the
-smallest index in Perm<n>::orderedSn.
-
-Precondition:
-    This is not the past-the-end conjugacy class.
-
-Returns:
-    the minimal representative of this conjugacy class.)doc";
-
-// Docstring regina::python::doc::PermClass_::str
-static const char *str =
-R"doc(Returns a string representation of this conjugacy class.
-
-At present, the string representation consists of a sequence of digits
-indicating the cycle lengths (where cycle lengths 10,11,...,16 use
-``a,b,...,g`` for their respective digits).
-
-If this is the past-the-end conjugacy class, a suitable string will be
-returned.
-
-Returns:
-    a string representation of this conjugacy class.)doc";
-
-}
-
-namespace PermCodeType_ {
-
-// Docstring regina::python::doc::PermCodeType_::Images
-static const char *Images =
-R"doc(This is a permutation code that packs the images of 0,...,*n*-1 into a
-single native integer using a handful of bits per image. Such codes
-are easier to manipulate on an element-by-element basis.
-
-Codes of this type can always be queried using Perm<n>::permCode(),
-and permutations can be recreated from them using
-Perm<n>::fromPermCode().)doc";
-
-// Docstring regina::python::doc::PermCodeType_::Index
-static const char *Index =
-R"doc(This is a permutation code that stores the index into the full
-permutation group *S_n*. Such codes typically require fewer bytes and
-are packed together, making them ideal for working with lookup tables.
-
-Codes of this type can be queried using Perm<n>::SnIndex(), and
-permutations can be recreated from them by indexing into Perm<n>::Sn.
-
-.. warning::
-    The routines Perm<n>::permCode() and Perm<n>::fromPermCode() will
-    still be present, but in some classes (e.g., Perm<4> and Perm<5>),
-    these are legacy routines that refer to different types of codes.)doc";
-
-}
-
-namespace PermOrder_ {
-
-// Docstring regina::python::doc::PermOrder_::Lex
-static const char *Lex =
-R"doc(Indicates that permutations should be ordered lexicographically,
-beginning with the identity permutation.
-
-Specifically, we order permutations lexicographically according to the
-sequence of images ``p[0],p[1],...,p[n-1]`` (where *p* denotes an
-arbitrary permutation on *n* objects).
-
-PermOrder::Lex is the ordering used by ``Perm<n>::orderedSn``.)doc";
-
-// Docstring regina::python::doc::PermOrder_::Sign
-static const char *Sign =
-R"doc(Indicates that permutations should be ordered by sign, beginning with
-the identity permutation and then alternating between even and odd
-permutations.
-
-In particular, if we assign each permutation an index according to
-this ordering, then the identity will have index 0, all even
-permutations will have even indices, and all odd permutations will
-have odd indices.
-
-More specifically: for each *i*, the permutations at indices ``2i``
-and ``2i+1`` will be the same under both ordering methods *Sign* and
-*Lex*, but they might be swapped to ensure the correct signs and/or
-lexicographical ordering.
-
-PermOrder::Sign is the ordering used by ``Perm<n>::Sn``.)doc";
-
-}
-
-namespace Perm_ {
-
-// Docstring regina::python::doc::Perm_::SnIndex
-static const char *SnIndex =
-R"doc(Returns the index of this permutation in the Perm<n>::Sn array.
-
-See Sn for further information on how these permutations are indexed.
-
-Returns:
-    the index *i* for which this permutation is equal to
-    Perm<n>::Sn[i]. This will be between 0 and *n*!-1 inclusive.)doc";
-
-// Docstring regina::python::doc::Perm_::__array
-static const char *__array =
-R"doc(Determines the image of the given integer under this permutation.
-
-Parameter ``source``:
-    the integer whose image we wish to find. This should be between 0
-    and *n*-1 inclusive.
-
-Returns:
-    the image of *source*.)doc";
-
-// Docstring regina::python::doc::Perm_::__cmp
-static const char *__cmp =
+// Docstring regina::python::doc::Perm::__cmp
+static constexpr const char __cmp[] =
 R"doc(Compares two permutations according to which appears earlier in the
 array Perm<n>::Sn.
 
@@ -410,14 +161,14 @@ Returns:
     the result that indicates which permutation appears earlier in
     *Sn*.)doc";
 
-// Docstring regina::python::doc::Perm_::__copy
-static const char *__copy = R"doc(Creates a permutation that is a clone of the given permutation.)doc";
+// Docstring regina::python::doc::Perm::__copy
+static constexpr const char __copy[] = R"doc(Creates a permutation that is a clone of the given permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::__default
-static const char *__default = R"doc(Creates the identity permutation.)doc";
+// Docstring regina::python::doc::Perm::__default
+static constexpr const char __default[] = R"doc(Creates the identity permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::Perm::__eq
+static constexpr const char __eq[] =
 R"doc(Determines if this is equal to the given permutation. This is true if
 and only if both permutations have the same images for all 0 ≤ *i* <
 *n*.
@@ -425,22 +176,22 @@ and only if both permutations have the same images for all 0 ≤ *i* <
 Returns:
     ``True`` if and only if this and the given permutation are equal.)doc";
 
-// Docstring regina::python::doc::Perm_::__inc
-static const char *__inc =
+// Docstring regina::python::doc::Perm::__inc
+static constexpr const char __inc[] =
 R"doc(A postincrement operator that changes this to be the next permutation
 in the array Perm<n>::Sn. If this is the last such permutation then
 this will wrap around to become the first permutation in Perm<n>::Sn,
 which is the identity.
 
 Python:
-    This routine is named inc() since python does not support the
+    This routine is named inc() since Python does not support the
     increment operator.
 
 Returns:
     a copy of this permutation before the increment took place.)doc";
 
-// Docstring regina::python::doc::Perm_::__init
-static const char *__init =
+// Docstring regina::python::doc::Perm::__init
+static constexpr const char __init[] =
 R"doc(Creates the transposition of *a* and *b*. Note that *a* and *b* need
 not be distinct.
 
@@ -453,8 +204,8 @@ Parameter ``a``:
 Parameter ``b``:
     the element to switch with *a*.)doc";
 
-// Docstring regina::python::doc::Perm_::__init_2
-static const char *__init_2 =
+// Docstring regina::python::doc::Perm::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a permutation mapping *i* to *image*[*i*] for each 0 ≤ *i* <
 *n*.
 
@@ -464,8 +215,8 @@ Precondition:
 Parameter ``image``:
     the array of images.)doc";
 
-// Docstring regina::python::doc::Perm_::__mul
-static const char *__mul =
+// Docstring regina::python::doc::Perm::__mul
+static constexpr const char __mul[] =
 R"doc(Returns the composition of this permutation with the given
 permutation. If this permutation is *p*, the resulting permutation
 will be *p*∘*q*, and will satisfy ``(p*q)[x] == p[q[x]]``.
@@ -476,8 +227,8 @@ Parameter ``q``:
 Returns:
     the composition of both permutations.)doc";
 
-// Docstring regina::python::doc::Perm_::cachedComp
-static const char *cachedComp =
+// Docstring regina::python::doc::Perm::cachedComp
+static constexpr const char cachedComp[] =
 R"doc(An alias for the composition operator, provided to assist with writing
 generic code.
 
@@ -509,8 +260,8 @@ Parameter ``q``:
 Returns:
     the composition of both permutations.)doc";
 
-// Docstring regina::python::doc::Perm_::cachedComp_2
-static const char *cachedComp_2 =
+// Docstring regina::python::doc::Perm::cachedComp_2
+static constexpr const char cachedComp_2[] =
 R"doc(Deprecated alias for using the composition operator twice, provided to
 assist with writing generic code.
 
@@ -539,8 +290,8 @@ Parameter ``r``:
 Returns:
     the composition of both permutations.)doc";
 
-// Docstring regina::python::doc::Perm_::cachedConjugate
-static const char *cachedConjugate =
+// Docstring regina::python::doc::Perm::cachedConjugate
+static constexpr const char cachedConjugate[] =
 R"doc(An alias for conjugate(), provided to assist with writing generic
 code.
 
@@ -569,8 +320,8 @@ Parameter ``q``:
 Returns:
     the conjugate of this permutation by *q*.)doc";
 
-// Docstring regina::python::doc::Perm_::cachedInverse
-static const char *cachedInverse =
+// Docstring regina::python::doc::Perm::cachedInverse
+static constexpr const char cachedInverse[] =
 R"doc(Finds the inverse of this permutation, optimised using precomputed
 "partial lookup tables".
 
@@ -595,8 +346,8 @@ Precondition:
 Returns:
     the inverse of this permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::cachedOrder
-static const char *cachedOrder =
+// Docstring regina::python::doc::Perm::cachedOrder
+static constexpr const char cachedOrder[] =
 R"doc(An alias for order(), provided to assist with writing generic code.
 
 This specialised Perm<n> class does not use precomputation to compute
@@ -621,8 +372,8 @@ Precondition:
 Returns:
     the order of this permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::cachedPow
-static const char *cachedPow =
+// Docstring regina::python::doc::Perm::cachedPow
+static constexpr const char cachedPow[] =
 R"doc(An alias for pow(), provided to assist with writing generic code.
 
 This specialised Perm<n> class does not use precomputation to compute
@@ -650,8 +401,8 @@ Parameter ``exp``:
 Returns:
     this permutation raised to the power of *exp*.)doc";
 
-// Docstring regina::python::doc::Perm_::clear
-static const char *clear =
+// Docstring regina::python::doc::Perm::clear
+static constexpr const char clear[] =
 R"doc(Resets the images of all integers from *from* onwards to the identity
 map.
 
@@ -667,8 +418,8 @@ Parameter ``from``:
     the first integer whose image should be reset. This must be
     between 0 and *n* inclusive.)doc";
 
-// Docstring regina::python::doc::Perm_::compareWith
-static const char *compareWith =
+// Docstring regina::python::doc::Perm::compareWith
+static constexpr const char compareWith[] =
 R"doc(Lexicographically compares the images of (0,1,...,*n*-1) under this
 and the given permutation.
 
@@ -680,8 +431,8 @@ Returns:
     permutations are equal, and 1 if this permutation produces a
     greater image.)doc";
 
-// Docstring regina::python::doc::Perm_::conjugate
-static const char *conjugate =
+// Docstring regina::python::doc::Perm::conjugate
+static constexpr const char conjugate[] =
 R"doc(Computes the conjugate of this permutation by *q*.
 
 Specifically, calling ``p.conjugate(q)`` is equivalent to computing
@@ -695,8 +446,8 @@ Parameter ``q``:
 Returns:
     the conjugate of this permutation by *q*.)doc";
 
-// Docstring regina::python::doc::Perm_::contract
-static const char *contract =
+// Docstring regina::python::doc::Perm::contract
+static constexpr const char contract[] =
 R"doc(Restricts a *k*-element permutation to an *n*-element permutation,
 where ``k > n``.
 
@@ -714,8 +465,8 @@ Parameter ``p``:
 Returns:
     the same permutation restricted to a permutation on *n* elements.)doc";
 
-// Docstring regina::python::doc::Perm_::extend
-static const char *extend =
+// Docstring regina::python::doc::Perm::extend
+static constexpr const char extend[] =
 R"doc(Extends a *k*-element permutation to an *n*-element permutation, where
 ``2 ≤ k < n``.
 
@@ -729,8 +480,8 @@ Parameter ``p``:
 Returns:
     the same permutation expressed as a permutation on *n* elements.)doc";
 
-// Docstring regina::python::doc::Perm_::fromImagePack
-static const char *fromImagePack =
+// Docstring regina::python::doc::Perm::fromImagePack
+static constexpr const char fromImagePack[] =
 R"doc(Creates a permutation from the given image pack.
 
 See the class notes for more information on image packs, and how they
@@ -748,8 +499,8 @@ Parameter ``pack``:
 Returns:
     the permutation represented by the given image pack.)doc";
 
-// Docstring regina::python::doc::Perm_::fromPermCode
-static const char *fromPermCode =
+// Docstring regina::python::doc::Perm::fromPermCode
+static constexpr const char fromPermCode[] =
 R"doc(Creates a permutation from the given internal code.
 
 Precondition:
@@ -762,8 +513,8 @@ Parameter ``code``:
 Returns:
     the permutation reprsented by the given internal code.)doc";
 
-// Docstring regina::python::doc::Perm_::hash
-static const char *hash =
+// Docstring regina::python::doc::Perm::hash
+static constexpr const char hash[] =
 R"doc(Hashes this permutation to a non-negative integer, allowing it to be
 used for keys in hash tables.
 
@@ -783,8 +534,8 @@ Python:
 Returns:
     the integer hash of this permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::imagePack
-static const char *imagePack =
+// Docstring regina::python::doc::Perm::imagePack
+static constexpr const char imagePack[] =
 R"doc(Returns the image pack that represents this permutation.
 
 See the class notes for more information on image packs, and how they
@@ -795,8 +546,8 @@ For *n* ≥ 8, this routine is identical to permCode().
 Returns:
     the image pack for this permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::inverse
-static const char *inverse =
+// Docstring regina::python::doc::Perm::inverse
+static constexpr const char inverse[] =
 R"doc(Finds the inverse of this permutation.
 
 For permutations of seven and fewer objects, inversion is extremely
@@ -816,8 +567,8 @@ for some particular value of *n*, you should instead:
 Returns:
     the inverse of this permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::isConjugacyMinimal
-static const char *isConjugacyMinimal =
+// Docstring regina::python::doc::Perm::isConjugacyMinimal
+static constexpr const char isConjugacyMinimal[] =
 R"doc(Is this permutation minimal in its conjugacy class?
 
 Here "minimal" means that, amongst all its conjugates, this
@@ -829,16 +580,16 @@ Returns:
     ``True`` if and only if this permutation is minimal in its
     conjugacy class.)doc";
 
-// Docstring regina::python::doc::Perm_::isIdentity
-static const char *isIdentity =
+// Docstring regina::python::doc::Perm::isIdentity
+static constexpr const char isIdentity[] =
 R"doc(Determines if this is the identity permutation. This is true if and
 only if every integer 0 ≤ *i* < *n* is mapped to itself.
 
 Returns:
     ``True`` if and only if this is the identity permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::isImagePack
-static const char *isImagePack =
+// Docstring regina::python::doc::Perm::isImagePack
+static constexpr const char isImagePack[] =
 R"doc(Determines whether the given argument is the image pack of some
 *n*-element permutation.
 
@@ -853,8 +604,8 @@ Parameter ``pack``:
 Returns:
     ``True`` if and only if *pack* is a valid image pack.)doc";
 
-// Docstring regina::python::doc::Perm_::isPermCode
-static const char *isPermCode =
+// Docstring regina::python::doc::Perm::isPermCode
+static constexpr const char isPermCode[] =
 R"doc(Determines whether the given integer is a valid internal permutation
 code. Valid permutation codes can be passed to setPermCode() or
 fromPermCode(), and are returned by permCode().
@@ -866,8 +617,8 @@ Returns:
     ``True`` if and only if the given code is a valid internal
     permutation code.)doc";
 
-// Docstring regina::python::doc::Perm_::order
-static const char *order =
+// Docstring regina::python::doc::Perm::order
+static constexpr const char order[] =
 R"doc(Returns the order of this permutation.
 
 In other words; this routine returns the smallest positive integer *k*
@@ -879,8 +630,8 @@ Note that the largest possible order for the largest supported *n*
 Returns:
     the order of this permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::orderedSnIndex
-static const char *orderedSnIndex =
+// Docstring regina::python::doc::Perm::orderedSnIndex
+static constexpr const char orderedSnIndex[] =
 R"doc(Returns the lexicographical index of this permutation. This will be
 the index of this permutation in the Perm<n>::orderedSn array.
 
@@ -890,8 +641,8 @@ Returns:
     the lexicographical index of this permutation. This will be
     between 0 and *n*!-1 inclusive.)doc";
 
-// Docstring regina::python::doc::Perm_::permCode
-static const char *permCode =
+// Docstring regina::python::doc::Perm::permCode
+static constexpr const char permCode[] =
 R"doc(Returns the internal code representing this permutation. Note that the
 internal code is sufficient to reproduce the entire permutation.
 
@@ -901,8 +652,8 @@ isPermCode().
 Returns:
     the internal code.)doc";
 
-// Docstring regina::python::doc::Perm_::pow
-static const char *pow =
+// Docstring regina::python::doc::Perm::pow
+static constexpr const char pow[] =
 R"doc(Computes the given power of this permutation.
 
 This routine runs in time linear in *n* (in particular, the running
@@ -914,8 +665,8 @@ Parameter ``exp``:
 Returns:
     this permutation raised to the power of *exp*.)doc";
 
-// Docstring regina::python::doc::Perm_::pre
-static const char *pre =
+// Docstring regina::python::doc::Perm::pre
+static constexpr const char pre[] =
 R"doc(Determines the preimage of the given integer under this permutation.
 
 Parameter ``image``:
@@ -925,8 +676,8 @@ Parameter ``image``:
 Returns:
     the preimage of *image*.)doc";
 
-// Docstring regina::python::doc::Perm_::precompute
-static const char *precompute =
+// Docstring regina::python::doc::Perm::precompute
+static constexpr const char precompute[] =
 R"doc(Performs the precomputation necessary for using the optimised
 cachedInverse() routine.
 
@@ -972,8 +723,8 @@ Exception ``FailedPrecondition``:
 
 This routine is thread-safe.)doc";
 
-// Docstring regina::python::doc::Perm_::rand
-static const char *rand =
+// Docstring regina::python::doc::Perm::rand
+static constexpr const char rand[] =
 R"doc(Returns a random permutation on *n* elements. All permutations are
 returned with equal probability.
 
@@ -995,16 +746,16 @@ Parameter ``even``:
 Returns:
     a random permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::reverse
-static const char *reverse =
+// Docstring regina::python::doc::Perm::reverse
+static constexpr const char reverse[] =
 R"doc(Finds the reverse of this permutation.
 
 Here _reverse_ means that we reverse the images of 0,...,*n*-1. In
 other words, if permutation *q* is the reverse of *p*, then ``p[i] ==
 q[n - 1 - i]`` for all *i*.)doc";
 
-// Docstring regina::python::doc::Perm_::rot
-static const char *rot =
+// Docstring regina::python::doc::Perm::rot
+static constexpr const char rot[] =
 R"doc(Returns the *i*th rotation. This maps *k* to *k* + *i* (mod *n*) for
 all *k*.
 
@@ -1014,8 +765,8 @@ Parameter ``i``:
 Returns:
     the *i*th rotation.)doc";
 
-// Docstring regina::python::doc::Perm_::setPermCode
-static const char *setPermCode =
+// Docstring regina::python::doc::Perm::setPermCode
+static constexpr const char setPermCode[] =
 R"doc(Sets this permutation to that represented by the given internal code.
 
 Precondition:
@@ -1026,15 +777,15 @@ Parameter ``code``:
     the internal code that will determine the new value of this
     permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::sign
-static const char *sign =
+// Docstring regina::python::doc::Perm::sign
+static constexpr const char sign[] =
 R"doc(Determines the sign of this permutation.
 
 Returns:
     1 if this permutation is even, or -1 if this permutation is odd.)doc";
 
-// Docstring regina::python::doc::Perm_::str
-static const char *str =
+// Docstring regina::python::doc::Perm::str
+static constexpr const char str[] =
 R"doc(Returns a string representation of this permutation. The
 representation will consist of *n* adjacent digits representing the
 images of 0,...,*n*-1 respectively. If *n* > 10, then lower-case
@@ -1045,8 +796,8 @@ An example of a string representation for *n* = 5 is ``30421``.
 Returns:
     a string representation of this permutation.)doc";
 
-// Docstring regina::python::doc::Perm_::tightDecoding
-static const char *tightDecoding =
+// Docstring regina::python::doc::Perm::tightDecoding
+static constexpr const char tightDecoding[] =
 R"doc(Reconstructs a permutation from its given tight encoding. See the page
 on tight encodings for details.
 
@@ -1069,8 +820,8 @@ Parameter ``enc``:
 Returns:
     the permutation represented by the given tight encoding.)doc";
 
-// Docstring regina::python::doc::Perm_::tightEncoding
-static const char *tightEncoding =
+// Docstring regina::python::doc::Perm::tightEncoding
+static constexpr const char tightEncoding[] =
 R"doc(Returns the tight encoding of this permutation. See the page on tight
 encodings for details.
 
@@ -1084,8 +835,8 @@ requires some non-trivial work to compute.
 Returns:
     the resulting encoded string.)doc";
 
-// Docstring regina::python::doc::Perm_::trunc
-static const char *trunc =
+// Docstring regina::python::doc::Perm::trunc
+static constexpr const char trunc[] =
 R"doc(Returns a prefix of the string representation of this permutation,
 containing only the images of the first *len* integers.
 
@@ -1097,7 +848,256 @@ Returns:
     the corresponding prefix of the string representation of this
     permutation.)doc";
 
-}
+}; // struct Perm
+
+struct PermClass {
+
+// Docstring regina::python::doc::PermClass::__as_bool
+static constexpr const char __as_bool[] =
+R"doc(Determines whether this represents a genuine conjugacy class, or
+whether it represents the special past-the-end value.
+
+See the class notes and the increment operators for further discussion
+on what past-the-end represents.
+
+Returns:
+    ``False`` if this is the past-the-end conjugacy class, or ``True``
+    otherwise.)doc";
+
+// Docstring regina::python::doc::PermClass::__class
+static constexpr const char __class[] =
+R"doc(Represents a conjugacy class of permutations on *n* elements.
+
+Each such conjugacy class correpsonds to an unordered partition of
+*n*, describing the cycle structure of the permutations in the
+conjugacy class.
+
+There is a special "past-the-end" conjugacy class, which effectively
+holds no value; the only way you can obtain such a class is to iterate
+through *all* classes using the increment operators. You can test for
+a past-the-end value by casting to ``bool``.
+
+PermClass objects are, in their current implementation, entirely
+stack-based. This means they cannot support fast move or swap
+operations. However, their size is linear in *n*, so while copy
+operations are not enormously expensive, they are not as cheap as
+copying a Perm object (which just holds a single machine-native
+integer). This decision is a deliberate trade-off between speed versus
+space; the implication for end users is that you should be economical
+about copying PermClass objects, and work with them in-place where
+possible.
+
+Python:
+    Python does not support templates. Instead, you should append the
+    integer *n* to the class name. For example, the C++ class
+    ``PermClass<4>`` is available in Python under the name
+    ``PermClass4``.
+
+Template parameter ``n``:
+    the number of objects being permuted.)doc";
+
+// Docstring regina::python::doc::PermClass::__copy
+static constexpr const char __copy[] =
+R"doc(Creates a copy of the given conjugacy class.
+
+Parameter ``src``:
+    the conjugacy class to clone.)doc";
+
+// Docstring regina::python::doc::PermClass::__default
+static constexpr const char __default[] =
+R"doc(Creates the conjugacy class for the identity permutation.
+
+The corresponding cycle structure (i.e., partition of *n*) is *n*
+cycles, each of length 1.)doc";
+
+// Docstring regina::python::doc::PermClass::__eq
+static constexpr const char __eq[] =
+R"doc(Determines whether this and the given object describe the same
+conjugacy class.
+
+Two past-the-end conjugacy classes will be treated as equal.
+
+Parameter ``other``:
+    the conjugacy class to compare with this.
+
+Returns:
+    ``True`` if and only if this and the given conjugacy class are
+    identical.)doc";
+
+// Docstring regina::python::doc::PermClass::__inc
+static constexpr const char __inc[] =
+R"doc(A postincrement operator that changes this to become the next
+conjugacy class in a lexicographical enumeration.
+
+Specifically, the increment operators work through conjugacy classes
+in lexicographical order, where each class is represented by its
+sequence of cycle lengths (given in increasing order). Thus the
+conjugacy class ``11...1`` (representing the identity permutation)
+will come first, and the conjugacy class ``n`` (representing a single
+long cycle) will come last.
+
+If there are no more conjugacy classes (i.e., this represents a single
+cycle of length *n*), then this object will be set to the special
+past-the-end value (which can be tested by casting to a ``bool``).
+
+Python:
+    This routine is named inc() since Python does not support the
+    increment operator.
+
+Returns:
+    a copy of this conjugacy class before the increment took place.)doc";
+
+// Docstring regina::python::doc::PermClass::countCycles
+static constexpr const char countCycles[] =
+R"doc(Returns the number of cycles in this conjugacy class.
+
+Recall from the class notes that a conjugacy class identifies the
+cycle structure of a permutation. This routine simply returns the
+number of cycles for this conjugacy class. Fixed points are also
+counted (they are considered to be cycles of length 1).
+
+Returns:
+    the number of cycles.)doc";
+
+// Docstring regina::python::doc::PermClass::cycle
+static constexpr const char cycle[] =
+R"doc(Returns the length of the given cycle in this conjugacy class.
+
+Recall from the class notes that a conjugacy class identifies the
+cycle structure of a permutation. If the cycle lengths are listed in
+order from shortest to longest, then this routine returns the
+*which*th cycle length in this sequence. Fixed points are included in
+this sequence (they are considered to be cycles of length 1, and will
+appear at the beginning of the sequence).
+
+For example, for a conjugacy class in ``PermClass<9>`` with cycle
+lengths ``(1,1,3,4)``, calling ``cycle(2)`` will return 3.
+
+Parameter ``which``:
+    indicates which cycle length to return; this must be between 0 and
+    countCycles()-1 inclusive.
+
+Returns:
+    the requested cycle length.)doc";
+
+// Docstring regina::python::doc::PermClass::isIdentity
+static constexpr const char isIdentity[] =
+R"doc(Determines whether this is the conjugacy class for the identity
+permutation.
+
+Returns:
+    ``True`` if and only if this conjugacy class represents the
+    identity permutation.)doc";
+
+// Docstring regina::python::doc::PermClass::rep
+static constexpr const char rep[] =
+R"doc(Returns the minimal representative of this conjugacy class.
+
+The _minimal representative_ is the permutation belonging to this
+class with the smallest index in Perm<n>::Sn.
+
+Because all permutations in the same class must have the same sign, it
+follows that this is also the permutation in this class with the
+smallest index in Perm<n>::orderedSn.
+
+Precondition:
+    This is not the past-the-end conjugacy class.
+
+Returns:
+    the minimal representative of this conjugacy class.)doc";
+
+// Docstring regina::python::doc::PermClass::str
+static constexpr const char str[] =
+R"doc(Returns a string representation of this conjugacy class.
+
+At present, the string representation consists of a sequence of digits
+indicating the cycle lengths (where cycle lengths 10,11,...,16 use
+``a,b,...,g`` for their respective digits).
+
+If this is the past-the-end conjugacy class, a suitable string will be
+returned.
+
+Returns:
+    a string representation of this conjugacy class.)doc";
+
+}; // struct PermClass
+
+struct PermCodeType {
+
+// Docstring regina::python::doc::PermCodeType::Images
+static constexpr const char Images[] =
+R"doc(This is a permutation code that packs the images of 0,...,*n*-1 into a
+single native integer using a handful of bits per image. Such codes
+are easier to manipulate on an element-by-element basis.
+
+Codes of this type can always be queried using Perm<n>::permCode(),
+and permutations can be recreated from them using
+Perm<n>::fromPermCode().)doc";
+
+// Docstring regina::python::doc::PermCodeType::Index
+static constexpr const char Index[] =
+R"doc(This is a permutation code that stores the index into the full
+permutation group *S_n*. Such codes typically require fewer bytes and
+are packed together, making them ideal for working with lookup tables.
+
+Codes of this type can be queried using Perm<n>::SnIndex(), and
+permutations can be recreated from them by indexing into Perm<n>::Sn.
+
+.. warning::
+    The routines Perm<n>::permCode() and Perm<n>::fromPermCode() will
+    still be present, but in some classes (e.g., Perm<4> and Perm<5>),
+    these are legacy routines that refer to different types of codes.)doc";
+
+// Docstring regina::python::doc::PermCodeType::__class
+static constexpr const char __class[] =
+R"doc(Represents the different kinds of internal permutation codes that are
+used in Regina's various Perm<n> template classes. See the Perm<n>
+class notes for more information on exactly how these codes are
+constructed. The class constant Perm<n>::codeType indicates which type
+of code is used for which *n*.)doc";
+
+}; // struct PermCodeType
+
+struct PermOrder {
+
+// Docstring regina::python::doc::PermOrder::Lex
+static constexpr const char Lex[] =
+R"doc(Indicates that permutations should be ordered lexicographically,
+beginning with the identity permutation.
+
+Specifically, we order permutations lexicographically according to the
+sequence of images ``p[0],p[1],...,p[n-1]`` (where *p* denotes an
+arbitrary permutation on *n* objects).
+
+PermOrder::Lex is the ordering used by ``Perm<n>::orderedSn``.)doc";
+
+// Docstring regina::python::doc::PermOrder::Sign
+static constexpr const char Sign[] =
+R"doc(Indicates that permutations should be ordered by sign, beginning with
+the identity permutation and then alternating between even and odd
+permutations.
+
+In particular, if we assign each permutation an index according to
+this ordering, then the identity will have index 0, all even
+permutations will have even indices, and all odd permutations will
+have odd indices.
+
+More specifically: for each *i*, the permutations at indices ``2i``
+and ``2i+1`` will be the same under both ordering methods *Sign* and
+*Lex*, but they might be swapped to ensure the correct signs and/or
+lexicographical ordering.
+
+PermOrder::Sign is the ordering used by ``Perm<n>::Sn``.)doc";
+
+// Docstring regina::python::doc::PermOrder::__class
+static constexpr const char __class[] =
+R"doc(Represents different ways in which permutations on *n* objects can be
+ordered.
+
+In all of these orderings, it is guaranteed that the identity
+permutation comes first.)doc";
+
+}; // struct PermOrder
 
 } // namespace regina::python::doc
 

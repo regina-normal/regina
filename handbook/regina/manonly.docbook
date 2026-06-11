@@ -1,0 +1,89 @@
+
+<!-- This alternate index file is used by docbook2man to generate man pages
+     without the need to parse the entire handbook. -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.2//EN" [
+  <!ENTITY regina "Regina">
+
+  <!ENTITY regversion "8.0">
+  <!ENTITY regabstract
+   "<para>
+     &regina; is a software package for studying 3-manifold triangulations
+     and normal surfaces.  Other key features include
+     angle structures, census enumeration, combinatorial
+     recognition of triangulations, and high-level tasks such as
+     3-sphere recognition and connected sum decomposition.
+     &regina; comes with a full graphical user interface, and also offers
+     &python; bindings and a low-level &cpp; programming interface.
+    </para>">
+  <!ENTITY regwebsite
+   "<ulink url='http://regina-normal.github.io/'>&regina; website</ulink>">
+  <!ENTITY regmanapiurl
+   "<emphasis>http://regina-normal.github.io/engine-docs/</emphasis>">
+  <!ENTITY regmanhandbookurl
+   "<emphasis>http://regina-normal.github.io/docs/</emphasis>">
+  <!ENTITY regmanburtonthesisurl
+   "<emphasis>http://www.maths.uq.edu.au/~bab/papers/</emphasis>">
+  <!ENTITY manpageack "Many people have been involved in the development
+   of &regina;; see the users' handbook for a full list of credits.">
+
+  <!ENTITY versionhelpopts
+   "<group choice='req'>
+     <arg choice='req'><option>-v, --version</option></arg>
+     <arg choice='req'><option>-?, --help</option></arg>
+    </group>">
+  <!ENTITY versionhelpdesc
+   "<varlistentry>
+     <term><option>-v, --version</option></term>
+     <listitem>
+      <para>Show which version of &regina; is being used, and exit
+      immediately.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-?, --help</option></term>
+     <listitem>
+      <para>Display brief usage information, and exit immediately.</para>
+     </listitem>
+    </varlistentry>">
+
+  <!ENTITY api "<acronym>API</acronym>">
+  <!ENTITY bzip2 "bzip2">
+  <!ENTITY cpp "C++">
+  <!ENTITY ge ">=">
+  <!ENTITY gui "<acronym>GUI</acronym>">
+  <!ENTITY gzip "gzip">
+  <!ENTITY html "<acronym>HTML</acronym>">
+  <!ENTITY katie "<application>Katie</application>">
+  <!ENTITY kde "<acronym>KDE</acronym>">
+  <!ENTITY ldquo "&#34;">
+  <!ENTITY le "<=">
+  <!ENTITY linux "<application><acronym>GNU</acronym>/Linux</application>">
+  <!ENTITY macosx "<application>macOS</application>">
+  <!ENTITY mdash " - ">
+  <!ENTITY menuapidocs "Help-&gt;&python; &api; Reference">
+  <!ENTITY menuhandbook "Help-&gt;Regina Handbook">
+  <!ENTITY menuimportsigs "File-&gt;Import-&gt;Isomorphism Signature List">
+  <!ENTITY ndash "-">
+  <!ENTITY plink "<application>PLink</application>">
+  <!ENTITY poincare "Poincare">
+  <!ENTITY python "Python">
+  <!ENTITY rdquo "&#34;">
+  <!ENTITY s3 "S<superscript>3</superscript>">
+  <!ENTITY snappy "<application>SnapPy</application>">
+  <!ENTITY url "<acronym>URL</acronym>">
+  <!ENTITY windows "<application>Windows</application>">
+  <!ENTITY xml "<acronym>XML</acronym>">
+
+  <!ENTITY reginaman SYSTEM "reginaman.docbook">
+  <!ENTITY reginautils SYSTEM "utils.docbook">
+
+  <!ENTITY submani18n SYSTEM "submani18n.docbook">
+]>
+
+<book>
+ <title>The &regina; Handbook</title>
+ &reginaman;
+ &reginautils;
+</book>
+

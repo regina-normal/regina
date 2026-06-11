@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -180,7 +180,7 @@ class ReginaMain : public QMainWindow {
         static QMenu* getWindowMenu();
 
         /**
-         * Allow access to the python manager.
+         * Allow access to the Python manager.
          */
         PythonManager& getPythonManager();
 

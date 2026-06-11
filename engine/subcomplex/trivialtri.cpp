@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -142,7 +142,7 @@ std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
     return nullptr;
 }
 
-std::unique_ptr<Manifold> TrivialTri::manifold() const {
+std::unique_ptr<Manifold<3>> TrivialTri::manifold() const {
     switch (type_) {
         case SPHERE_4_VERTEX:
             return std::make_unique<LensSpace>(1, 0);

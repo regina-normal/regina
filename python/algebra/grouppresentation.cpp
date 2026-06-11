@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,16 +41,19 @@
 #include "../helpers.h"
 #include "../docstrings/algebra/grouppresentation.h"
 
+using namespace pybind11::literals;
+
 using pybind11::overload_cast;
 using regina::GroupExpressionTerm;
 using regina::GroupExpression;
 using regina::GroupPresentation;
+using regina::SplayedExpression;
 
 void addGroupPresentation(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN(GroupExpressionTerm)
 
-    auto c1 = pybind11::class_<GroupExpressionTerm>(m, "GroupExpressionTerm",
-            rdoc_scope)
+    auto c = pybind11::class_<GroupExpressionTerm>(m, "GroupExpressionTerm",
+            rdoc::__class)
         .def_readwrite("generator", &GroupExpressionTerm::generator)
         .def_readwrite("exponent", &GroupExpressionTerm::exponent)
         .def(pybind11::init<>(), rdoc::__default)
@@ -59,27 +62,29 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("inverse", &GroupExpressionTerm::inverse, rdoc::inverse)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
     ;
-    regina::python::add_output_ostream(c1);
-    regina::python::add_eq_operators(c1, rdoc::__eq);
-    regina::python::add_cmp_operators(c1, rdoc::__cmp);
+    regina::python::add_output_ostream(c);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
 
     RDOC_SCOPE_SWITCH(GroupExpression)
 
-    auto c2 = pybind11::class_<GroupExpression>(m, "GroupExpression",
-            rdoc_scope)
+    auto c = pybind11::class_<GroupExpression>(m, "GroupExpression",
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const GroupExpressionTerm&>(), rdoc::__init)
         .def(pybind11::init<size_t, long>(), rdoc::__init_2)
         .def(pybind11::init<const GroupExpression&>(), rdoc::__copy)
         .def(pybind11::init<const std::string&, size_t>(),
-            pybind11::arg(), pybind11::arg("nGens") = 0, rdoc::__init_3)
+            "input"_a, "nGens"_a = 0, rdoc::__init_3)
         .def("swap", &GroupExpression::swap, rdoc::swap)
         .def("terms", overload_cast<>(&GroupExpression::terms),
             pybind11::return_value_policy::reference_internal, rdoc::terms)
         .def("countTerms", &GroupExpression::countTerms, rdoc::countTerms)
         .def("wordLength", &GroupExpression::wordLength, rdoc::wordLength)
-        .def("isTrivial", &GroupExpression::isTrivial, rdoc::isTrivial)
-        .def("erase", &GroupExpression::erase, rdoc::erase)
+        .def("empty", &GroupExpression::empty, rdoc::empty)
+        .def("isTrivial", &GroupExpression::empty, rdoc::isTrivial) //deprecated
+        .def("clear", &GroupExpression::clear, rdoc::clear)
+        .def("erase", &GroupExpression::clear, rdoc::erase) // deprecated
         .def("term", overload_cast<size_t>(&GroupExpression::term),
             pybind11::return_value_policy::reference_internal, rdoc::term)
         .def("generator", &GroupExpression::generator, rdoc::generator)
@@ -101,17 +106,16 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("invert", &GroupExpression::invert, rdoc::invert)
         .def("power", &GroupExpression::power, rdoc::power)
         .def("simplify", &GroupExpression::simplify,
-            pybind11::arg("cyclic") = false, rdoc::simplify)
+            "cyclic"_a = false, rdoc::simplify)
         .def("substitute",
             overload_cast<size_t, const GroupExpression&, bool>(
                 &GroupExpression::substitute),
-            pybind11::arg(), pybind11::arg(), pybind11::arg("cyclic") = false,
+            "generator"_a, "replacement"_a, "cyclic"_a = false,
             rdoc::substitute)
         .def("substitute",
             overload_cast<const std::vector<GroupExpression>&, bool>(
                 &GroupExpression::substitute),
-            pybind11::arg(), pybind11::arg("cyclic") = false,
-            rdoc::substitute_2)
+            "replacements"_a, "cyclic"_a = false, rdoc::substitute_2)
         .def("writeXMLData", [](const GroupExpression& e,
                 pybind11::object file) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
@@ -120,20 +124,61 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("tex", &GroupExpression::tex, rdoc::tex)
         .def("str",
             overload_cast<bool>(&GroupExpression::str, pybind11::const_),
-            rdoc::str)
+            "alpha"_a, rdoc::str)
         .def("utf8",
             overload_cast<bool>(&GroupExpression::utf8, pybind11::const_),
-            rdoc::utf8)
+            "alpha"_a, rdoc::utf8)
     ;
-    regina::python::add_output_rich(c2);
-    regina::python::add_eq_operators(c2, rdoc::__eq);
+    regina::python::add_output_rich(c);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_global_swap<GroupExpression, rdoc>(m);
 
-    regina::python::add_global_swap<GroupExpression>(m, rdoc::global_swap);
+    RDOC_SCOPE_SWITCH(SplayedExpression)
+
+    auto c = pybind11::class_<SplayedExpression>(m, "SplayedExpression",
+            rdoc::__class)
+        .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<const SplayedExpression&>(), rdoc::__copy)
+        .def(pybind11::init<const GroupExpression&>(), rdoc::__init)
+        .def(pybind11::init<const GroupExpression&, size_t>(), rdoc::__init_2)
+        .def("desplay", &SplayedExpression::desplay, rdoc::desplay)
+        .def("swap", &SplayedExpression::swap, rdoc::swap)
+        .def("size", &SplayedExpression::size, rdoc::size)
+        .def("empty", &SplayedExpression::empty, rdoc::empty)
+        .def("__iter__", [](const SplayedExpression& exp) {
+            return pybind11::make_iterator(exp);
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps expression alive
+            rdoc::__iter__)
+        .def("__getitem__", overload_cast<size_t>(
+                &SplayedExpression::operator[], pybind11::const_),
+            rdoc::__array)
+        .def("__setitem__", [](SplayedExpression& exp, size_t index,
+                    SplayedExpression::Term value) {
+                exp[index] = value;
+            }, rdoc::__array)
+        .def("inverse", &SplayedExpression::inverse, rdoc::inverse)
+        .def("invert", &SplayedExpression::invert, rdoc::invert)
+        .def("simplify", &SplayedExpression::simplify,
+            "cyclic"_a = false, rdoc::simplify)
+        .def("substitute", &SplayedExpression::substitute,
+            "generator"_a, "replacement"_a, "cyclic"_a = false,
+            rdoc::substitute)
+        .def("str",
+            overload_cast<bool>(&SplayedExpression::str, pybind11::const_),
+            "alpha"_a, rdoc::str)
+        .def("utf8",
+            overload_cast<bool>(&SplayedExpression::utf8, pybind11::const_),
+            "alpha"_a, rdoc::utf8)
+    ;
+    regina::python::add_output_rich(c);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_cmp_operators(c, rdoc::__cmp);
+    regina::python::add_global_swap<SplayedExpression, rdoc>(m);
 
     RDOC_SCOPE_SWITCH(GroupPresentation)
 
-    auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation",
-            rdoc_scope)
+    auto c = pybind11::class_<GroupPresentation>(m, "GroupPresentation",
+            rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const GroupPresentation&>(), rdoc::__copy)
         .def(pybind11::init<size_t>(), rdoc::__init)
@@ -141,7 +186,7 @@ void addGroupPresentation(pybind11::module_& m) {
             rdoc::__init_2)
         .def("swap", &GroupPresentation::swap, rdoc::swap)
         .def("addGenerator", &GroupPresentation::addGenerator,
-            pybind11::arg("numToAdd") = 1, rdoc::addGenerator)
+            "numToAdd"_a = 1, rdoc::addGenerator)
         .def("addRelation", &GroupPresentation::addRelation, rdoc::addRelation)
         .def("countGenerators", &GroupPresentation::countGenerators,
             rdoc::countGenerators)
@@ -158,10 +203,14 @@ void addGroupPresentation(pybind11::module_& m) {
             rdoc::intelligentSimplify)
         .def("smallCancellation", &GroupPresentation::smallCancellation,
             rdoc::smallCancellation)
-        .def("simplifyAndConjugate", &GroupPresentation::simplifyAndConjugate,
+        .def("simplifyAndConjugate", overload_cast<GroupExpression&>(
+                &GroupPresentation::simplifyAndConjugate, pybind11::const_),
             rdoc::simplifyAndConjugate)
+        .def("simplifyAndConjugate", overload_cast<SplayedExpression&>(
+                &GroupPresentation::simplifyAndConjugate, pybind11::const_),
+            rdoc::simplifyAndConjugate_2)
         .def("proliferateRelators", &GroupPresentation::proliferateRelators,
-            pybind11::arg("depth") = 1, rdoc::proliferateRelators)
+            "depth"_a = 1, rdoc::proliferateRelators)
         .def("identifyAbelian", &GroupPresentation::identifyAbelian,
             rdoc::identifyAbelian)
         .def("nielsenTransposition", &GroupPresentation::nielsenTransposition,
@@ -169,9 +218,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("nielsenInvert", &GroupPresentation::nielsenInvert,
             rdoc::nielsenInvert)
         .def("nielsenCombine", &GroupPresentation::nielsenCombine,
-            pybind11::arg(), pybind11::arg(), pybind11::arg(),
-            pybind11::arg("rightMult") = true,
-            rdoc::nielsenCombine)
+            "i"_a, "j"_a, "k"_a, "rightMult"_a = true, rdoc::nielsenCombine)
         .def("nielsen", &GroupPresentation::nielsen, rdoc::nielsen)
         .def("intelligentNielsen", &GroupPresentation::nielsen, // deprecated
             rdoc::intelligentNielsen)
@@ -183,7 +230,7 @@ void addGroupPresentation(pybind11::module_& m) {
             &GroupPresentation::identifySimplyIsomorphicTo,
             rdoc::identifySimplyIsomorphicTo)
         .def("recogniseGroup", &GroupPresentation::recogniseGroup,
-            pybind11::arg("moreUtf8") = false, rdoc::recogniseGroup)
+            "moreUtf8"_a = false, rdoc::recogniseGroup)
         .def("writeXMLData", [](const GroupPresentation& p,
                 pybind11::object file) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
@@ -218,7 +265,7 @@ void addGroupPresentation(pybind11::module_& m) {
                         "inclusive.");
             }
             return ans;
-        }, pybind11::arg("index"), rdoc::enumerateCovers)
+        }, "index"_a, rdoc::enumerateCovers)
         .def("enumerateCovers", [](const GroupPresentation& p, int index,
                 const std::function<void(GroupPresentation&&)>& action)
                 -> size_t {
@@ -236,18 +283,16 @@ void addGroupPresentation(pybind11::module_& m) {
             }
             throw regina::InvalidArgument("The index passed to "
                 "enumerateCovers() must be between 2 and 11 inclusive.");
-        }, pybind11::arg("index"), pybind11::arg("action"),
-            rdoc::enumerateCovers)
+        }, "index"_a, "action"_a, rdoc::enumerateCovers)
         .def("incidence", &GroupPresentation::incidence, rdoc::incidence)
         .def("tex", &GroupPresentation::tex, rdoc::tex)
         .def("compact", &GroupPresentation::compact, rdoc::compact)
         .def("gap", &GroupPresentation::gap,
-            pybind11::arg("groupVariable") = "g", rdoc::gap)
+            "groupVariable"_a = "g", rdoc::gap)
     ;
-    regina::python::add_output_rich(c3);
-    regina::python::add_eq_operators(c3, rdoc::__eq);
-
-    regina::python::add_global_swap<GroupPresentation>(m, rdoc::global_swap);
+    regina::python::add_output_rich(c);
+    regina::python::add_eq_operators(c, rdoc::__eq);
+    regina::python::add_global_swap<GroupPresentation, rdoc>(m);
 
     RDOC_SCOPE_END
 }

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,11 @@
 /*! \file python/helpers/gil.h
  *  \brief Assists with managing the Python global interpreter lock (GIL).
  */
+
+#ifndef __HELPERS_GIL_H
+#ifndef __DOXYGEN
+#define __HELPERS_GIL_H
+#endif
 
 #include "regina-config.h"
 #if REGINA_PYBIND11_VERSION == 3
@@ -371,3 +376,5 @@ namespace regina::python {
 #endif
 
 } // namespace regina::python
+
+#endif

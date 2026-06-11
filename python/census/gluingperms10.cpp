@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -29,7 +29,7 @@
  **************************************************************************/
 
 #include "gluingperms-bindings.h"
-#include "triangulation/generic.h"
+#include "triangulation/hidim.h"
 
 void addGluingPerms10(pybind11::module_& m) {
     addGluingPerms<10>(m, "GluingPerms10");

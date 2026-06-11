@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,9 +32,10 @@
 #include "triangulation/dim2.h"
 
 // UI includes:
-#include "tri2ui.h"
+#include "tri2composition.h"
 #include "tri2gluings.h"
 #include "tri2skeleton.h"
+#include "tri2ui.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
@@ -59,9 +60,10 @@ Tri2UI::Tri2UI(regina::PacketOf<regina::Triangulation<2>>* packet,
     addHeader(header);
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
+    addTab(new Tri2CompositionUI(packet, this), QObject::tr("&Composition"));
 
-    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
-        this, SLOT(updatePreferences()));
+    connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
+        this, &Tri2UI::updatePreferences);
 }
 
 const std::vector<QAction*>& Tri2UI::getPacketTypeActions() {

@@ -11,8 +11,42 @@
 namespace regina::python::doc {
 
 
-// Docstring regina::python::doc::AngleStructures
-static const char *AngleStructures =
+// Docstring regina::python::doc::makeAngleEquations
+inline constexpr const char makeAngleEquations[] =
+R"doc(Generates the set of angle structure equations for the given
+triangulation.
+
+These are the angle equations that will be used when enumerating angle
+structures on the given triangulation.
+
+Each equation will be represented as a row of the resulting matrix,
+and each column will represent a coordinate in the underlying
+coordinate system (which is described in the notes for
+AngleStructure::vector()).
+
+Parameter ``tri``:
+    the triangulation upon which these angle structure equations will
+    be based.
+
+Returns:
+    the resulting set of angle structure equations.)doc";
+
+struct AngleStructures {
+
+// Docstring regina::python::doc::AngleStructures::__array
+static constexpr const char __array[] =
+R"doc(Returns the angle structure at the requested index in this list. This
+is identical to calling structure().
+
+Parameter ``index``:
+    the index of the requested angle structure in this list; this must
+    be between 0 and size()-1 inclusive.
+
+Returns:
+    the angle structure at the requested index.)doc";
+
+// Docstring regina::python::doc::AngleStructures::__class
+static constexpr const char __class[] =
 R"doc(A collection of angle structures on a 3-manifold triangulation.
 
 There are some important changes to this class as of Regina 7.0:
@@ -60,45 +94,11 @@ This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.)doc";
 
-// Docstring regina::python::doc::makeAngleEquations
-static const char *makeAngleEquations =
-R"doc(Generates the set of angle structure equations for the given
-triangulation.
+// Docstring regina::python::doc::AngleStructures::__copy
+static constexpr const char __copy[] = R"doc(Constructs a new copy of the given list.)doc";
 
-These are the angle equations that will be used when enumerating angle
-structures on the given triangulation.
-
-Each equation will be represented as a row of the resulting matrix,
-and each column will represent a coordinate in the underlying
-coordinate system (which is described in the notes for
-AngleStructure::vector()).
-
-Parameter ``tri``:
-    the triangulation upon which these angle structure equations will
-    be based.
-
-Returns:
-    the resulting set of angle structure equations.)doc";
-
-namespace AngleStructures_ {
-
-// Docstring regina::python::doc::AngleStructures_::__array
-static const char *__array =
-R"doc(Returns the angle structure at the requested index in this list. This
-is identical to calling structure().
-
-Parameter ``index``:
-    the index of the requested angle structure in this list; this must
-    be between 0 and size()-1 inclusive.
-
-Returns:
-    the angle structure at the requested index.)doc";
-
-// Docstring regina::python::doc::AngleStructures_::__copy
-static const char *__copy = R"doc(Constructs a new copy of the given list.)doc";
-
-// Docstring regina::python::doc::AngleStructures_::__eq
-static const char *__eq =
+// Docstring regina::python::doc::AngleStructures::__eq
+static constexpr const char __eq[] =
 R"doc(Determines whether this and the given list contain the same set of
 angle structures.
 
@@ -125,8 +125,8 @@ Returns:
     ``True`` if both lists represent the same multiset of angle
     structures, or ``False`` if not.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::__init
-static const char *__init =
+// Docstring regina::python::doc::AngleStructures::__init
+static constexpr const char __init[] =
 R"doc(A unified constructor for enumerating various classes of angle
 structures on a given triangulation.
 
@@ -183,8 +183,8 @@ Parameter ``tracker``:
     a progress tracker through which progress will be reported, or
     ``None`` if no progress reporting is required.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::__iter__
-static const char *__iter__ =
+// Docstring regina::python::doc::AngleStructures::__iter__
+static constexpr const char __iter__[] =
 R"doc(Returns a Python iterator over the angle structures in this list.
 
 In Python, an angle structure list can be treated as an iterable
@@ -199,8 +199,8 @@ for s in list:
 Returns:
     an iterator over the angle structures in this list.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::algorithm
-static const char *algorithm =
+// Docstring regina::python::doc::AngleStructures::algorithm
+static constexpr const char algorithm[] =
 R"doc(Returns details of the algorithm that was used to enumerate this list.
 
 These may not be the same algorithm flags that were passed to the
@@ -212,8 +212,8 @@ flags will be replaced with whatever algorithm was actually used.
 Returns:
     details of the algorithm used to enumerate this list.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::global_swap
-static const char *global_swap =
+// Docstring regina::python::doc::AngleStructures::global_swap
+static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the two given lists.
 
 This global routine simply calls AngleStructures::swap(); it is
@@ -232,8 +232,8 @@ Parameter ``lhs``:
 Parameter ``rhs``:
     the list whose contents should be swapped with *lhs*.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::isTautOnly
-static const char *isTautOnly =
+// Docstring regina::python::doc::AngleStructures::isTautOnly
+static constexpr const char isTautOnly[] =
 R"doc(Returns whether this list was produced by enumerating taut angle
 structures only.
 
@@ -242,8 +242,8 @@ Returns:
     structures only, or ``False`` if the enumeration procedure allowed
     for any angle structures.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::knowsSpansStrict
-static const char *knowsSpansStrict =
+// Docstring regina::python::doc::AngleStructures::knowsSpansStrict
+static constexpr const char knowsSpansStrict[] =
 R"doc(Is it already known (or trivial to determine) whether some convex
 combination of the angle structures in this list forms a strict angle
 structure? See AngleStructure::isStrict() for details on strict angle
@@ -272,8 +272,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to compute.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::knowsSpansTaut
-static const char *knowsSpansTaut =
+// Docstring regina::python::doc::AngleStructures::knowsSpansTaut
+static constexpr const char knowsSpansTaut[] =
 R"doc(Is it already known (or trivial to determine) whether some angle
 structure in this list is a taut structure? See
 AngleStructure::isTaut() for details on taut structures.
@@ -301,8 +301,8 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to compute.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::size
-static const char *size =
+// Docstring regina::python::doc::AngleStructures::size
+static constexpr const char size[] =
 R"doc(Returns the number of angle structures stored in this list.
 
 Python:
@@ -312,8 +312,8 @@ Python:
 Returns:
     the number of angle structures.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::sort
-static const char *sort =
+// Docstring regina::python::doc::AngleStructures::sort
+static constexpr const char sort[] =
 R"doc(Sorts the angle structures in this list according to the given
 criterion.
 
@@ -332,8 +332,8 @@ Parameter ``comp``:
     first angle structure should appear before the second in the
     sorted list.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::spansStrict
-static const char *spansStrict =
+// Docstring regina::python::doc::AngleStructures::spansStrict
+static constexpr const char spansStrict[] =
 R"doc(Determines whether any convex combination of the angle structures in
 this list is a strict angle structure. See AngleStructure::isStrict()
 for details on strict angle structures.
@@ -341,8 +341,8 @@ for details on strict angle structures.
 Returns:
     ``True`` if and only if a strict angle structure can be produced.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::spansTaut
-static const char *spansTaut =
+// Docstring regina::python::doc::AngleStructures::spansTaut
+static constexpr const char spansTaut[] =
 R"doc(Determines whether any angle structure in this list is a taut
 structure. Because taut structures always appear as vertices of the
 angle structure solution space, this routine is equivalent to testing
@@ -354,8 +354,8 @@ See AngleStructure::isTaut() for details on taut structures.
 Returns:
     ``True`` if and only if a taut structure can be produced.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::structure
-static const char *structure =
+// Docstring regina::python::doc::AngleStructures::structure
+static constexpr const char structure[] =
 R"doc(Returns the angle structure at the requested index in this list. This
 is identical to using the square bracket operator.
 
@@ -366,8 +366,8 @@ Parameter ``index``:
 Returns:
     the angle structure at the requested index.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::swap
-static const char *swap =
+// Docstring regina::python::doc::AngleStructures::swap
+static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given list.
 
 This routine will behave correctly if *other* is in fact this list.
@@ -380,8 +380,8 @@ This routine will behave correctly if *other* is in fact this list.
 Parameter ``other``:
     the list whose contents should be swapped with this.)doc";
 
-// Docstring regina::python::doc::AngleStructures_::triangulation
-static const char *triangulation =
+// Docstring regina::python::doc::AngleStructures::triangulation
+static constexpr const char triangulation[] =
 R"doc(Returns the triangulation on which these angle structures lie.
 
 This will be a snapshot frozen in time of the triangulation that was
@@ -412,7 +412,7 @@ The rules for using the triangulation() reference are:
 Returns:
     a reference to the underlying triangulation.)doc";
 
-}
+}; // struct AngleStructures
 
 } // namespace regina::python::doc
 

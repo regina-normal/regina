@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,7 +53,6 @@
 #include "packets/tri4ui.h"
 #include "packets/filtercomb.h"
 #include "packets/filterprop.h"
-#include "packets/generictriui.h"
 #include "packets/containerui.h"
 #include "packets/hyperui.h"
 #include "packets/linkui.h"
@@ -63,6 +62,7 @@
 #include "packets/surfacesui.h"
 #include "packets/textui.h"
 #include "packets/tri3ui.h"
+#include "packets/hidimui.h"
 
 #include <QPlainTextEdit>
 
@@ -125,7 +125,7 @@ QIcon PacketManager::icon(const Packet& packet) {
         case PacketType::Triangulation4:
             id = IconCache::Icon::packet_triangulation4;
             break;
-        // For generic dimensions, we don't cache the icons.
+        // For higher dimensions, we don't cache the icons.
         case PacketType::Triangulation5:
             return ReginaSupport::regIcon("packet_triangulation5");
         case PacketType::Triangulation6:
@@ -222,48 +222,48 @@ PacketUI* PacketManager::createUI(regina::Packet& packet,
                 static_cast<regina::PacketOf<Triangulation<4>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation5:
-            return new GenericTriangulationUI<5>(
+            return new HiDimUI<5>(
                 static_cast<regina::PacketOf<Triangulation<5>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation6:
-            return new GenericTriangulationUI<6>(
+            return new HiDimUI<6>(
                 static_cast<regina::PacketOf<Triangulation<6>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation7:
-            return new GenericTriangulationUI<7>(
+            return new HiDimUI<7>(
                 static_cast<regina::PacketOf<Triangulation<7>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation8:
-            return new GenericTriangulationUI<8>(
+            return new HiDimUI<8>(
                 static_cast<regina::PacketOf<Triangulation<8>>*>(&packet),
                 enclosingPane);
 #ifdef REGINA_HIGHDIM
         case PacketType::Triangulation9:
-            return new GenericTriangulationUI<9>(
+            return new HiDimUI<9>(
                 static_cast<regina::PacketOf<Triangulation<9>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation10:
-            return new GenericTriangulationUI<10>(
+            return new HiDimUI<10>(
                 static_cast<regina::PacketOf<Triangulation<10>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation11:
-            return new GenericTriangulationUI<11>(
+            return new HiDimUI<11>(
                 static_cast<regina::PacketOf<Triangulation<11>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation12:
-            return new GenericTriangulationUI<12>(
+            return new HiDimUI<12>(
                 static_cast<regina::PacketOf<Triangulation<12>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation13:
-            return new GenericTriangulationUI<13>(
+            return new HiDimUI<13>(
                 static_cast<regina::PacketOf<Triangulation<13>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation14:
-            return new GenericTriangulationUI<14>(
+            return new HiDimUI<14>(
                 static_cast<regina::PacketOf<Triangulation<14>>*>(&packet),
                 enclosingPane);
         case PacketType::Triangulation15:
-            return new GenericTriangulationUI<15>(
+            return new HiDimUI<15>(
                 static_cast<regina::PacketOf<Triangulation<15>>*>(&packet),
                 enclosingPane);
 #endif /* REGINA_HIGHDIM */

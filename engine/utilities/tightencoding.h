@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2025, Ben Burton                                   *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -210,7 +210,7 @@ struct TightEncodable {
     std::string tightEncoding() const {
         std::ostringstream out;
         static_cast<const T*>(this)->tightEncode(out);
-        return out.str();
+        return std::move(out).str();
     }
 
     /**
@@ -305,6 +305,8 @@ void tightEncode(std::ostream& out, IntType value) {
  * `Integer(value).tightEncoding()`, which is slower but will give the
  * correct result.
  *
+ * \pydocname{tightEncoding_CppInteger}
+ *
  * \param value the integer to encode.
  * \return the resulting encoded string.
  *
@@ -314,7 +316,7 @@ template <CppInteger IntType>
 std::string tightEncoding(IntType value) {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, value);
-    return out.str();
+    return std::move(out).str();
 }
 
 /**
@@ -339,6 +341,8 @@ void tightEncode(std::ostream& out, bool value);
  *
  * The booleans \c true and \c false are guaranteed to have the same
  * tight encodings as the integers 1 and 0 respectively.
+ *
+ * \pydocname{tightEncoding_bool}
  *
  * \param value the boolean to encode.
  * \return the resulting encoded string.
