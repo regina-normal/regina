@@ -2951,7 +2951,6 @@
 		05431FD31C40F67C009BC072 /* equality.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = equality.test; sourceTree = "<group>"; };
 		05431FD41C40F67C009BC072 /* skeleton.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = skeleton.out; sourceTree = "<group>"; };
 		05431FD51C40F67C009BC072 /* skeleton.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = skeleton.test; sourceTree = "<group>"; };
-		0543AEC71811E2AD002758F8 /* Regina.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Regina.entitlements; sourceTree = "<group>"; };
 		0544BBA42B0D6AD500FF26CD /* LinkAlgebra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAlgebra.swift; sourceTree = "<group>"; };
 		0544BBA52B0D6AD500FF26CD /* LinkCrossings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCrossings.swift; sourceTree = "<group>"; };
 		0544BBA62B0D6AD500FF26CD /* LinkGraphs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkGraphs.swift; sourceTree = "<group>"; };
@@ -6781,7 +6780,6 @@
 				0564A4081811D91E002CC2AE /* src */,
 				0564A6181811D921002CC2AE /* TODO.txt */,
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
-				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
 				05754E73258F92CA00236ED7 /* Assets.xcassets */,
 				051806D5181202E0008EBB01 /* examples */,
 				051806D3181202BD008EBB01 /* icons */,
@@ -11645,7 +11643,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				AUTOMATION_APPLE_EVENTS = NO;
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -11709,7 +11706,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				AUTOMATION_APPLE_EVENTS = NO;
 				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
