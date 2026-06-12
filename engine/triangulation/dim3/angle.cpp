@@ -97,6 +97,7 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
     return true;
 }
 
+//TODO Independent boundary-null computation.
 bool Triangulation<3>::hasGeneralAngleStructure() const {
     if (std::holds_alternative<AngleStructure>(generalAngleStructure_)) {
         return true; // known to have a solution

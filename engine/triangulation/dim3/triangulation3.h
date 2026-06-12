@@ -199,6 +199,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                      if the computation has not yet been attempted, or \c true
                      if it is confirmed that no such angle structure exists. */
 
+        mutable std::variant<bool, AngleStructure>
+            bdryNullAngleStructure_ { false };
+                /**< A boundary null angle structure on this triangulation, or
+                     a bool if we do not have one.  The bool will be \c false
+                     if the computation has not yet been attempted, or \c true
+                     if either the computation failed or it is confirmed that
+                     no such angle structure exists. */
+
     public:
         /**
          * \name Constructors and Destructors
@@ -1640,6 +1648,64 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * on this triangulation.
          */
         bool hasGeneralAngleStructure() const;
+
+        //TODO  knows...() routines for generalised angle structures and/or
+        //      boundary-null angle structures?
+
+        //TODO Fix how "boundary-null" is defined.
+        /**
+         * Returns a boundary-null angle structure on this triangulation, if
+         * one exists.
+         *
+         * A _boundary-null_ angle structure is a generalised angle structure
+         * (as defined in the generalAngleStructure() documentation) that
+         * satisfies the additional condition of having vanishing peripheral
+         * rotational holonomy. Such an angle structure always exists in a
+         * valid oriented triangulation in which every vertex link is a torus,
+         * and for the purposes of this routine these triangulations are
+         * considered to be the _only_ triangulations in which boundary-null
+         * angle structures exist.
+         *
+         * This routine is designed for scenarios where you already know
+         * that a boundary-null angle structure exists.  This means:
+         *
+         * - If no boundary-null angle structure exists, this routine will
+         *   throw an exception, which will incur a significant overhead.
+         *
+         * - It should be rare that you do not know in advance whether a
+         *   boundary-null angle structure exists (the simple conditions were
+         *   outlined above).  However, if you don't yet know, you should
+         *   call hasBoundaryNullAngleStructure() first.  If the answer is no,
+         *   this will avoid the overhead of throwing and catching exceptions.
+         *   If the answer is yes, this will have the side-effect of caching
+         *   the angle structure, which means your subsequent call to
+         *   boundaryNullAngleStructure() will be essentially instantaneous.
+         *
+         * The underlying algorithm simply solves a system of linear equations,
+         * and so should be fast even for large triangulations.
+         *
+         * The result of this routine is cached internally: as long as
+         * the triangulation does not change, multiple calls to
+         * boundaryNullAngleStructure() will return identical angle structures,
+         * and every call after the first will be essentially instantaneous.
+         *
+         * If the triangulation does change, however, then the cached angle
+         * structure will be deleted, and any reference that was returned
+         * before will become invalid.
+         *
+         * For the empty triangulation, this routine returns the empty angle
+         * structure.
+         *
+         * \exception NoSolution No boundary-null angle structure exists on
+         * this triangulation.
+         *
+         * \return a boundary-null angle structure on this triangulation, if
+         * one exists.
+         */
+        const AngleStructure& boundaryNullAngleStructure() const;
+        /**
+         */
+        bool hasBoundaryNullAngleStructure() const;
 
         /*@}*/
         /**
@@ -5008,6 +5074,8 @@ inline Triangulation<3>::~Triangulation() {
         strictAngleStructure_ = false;
     if (std::holds_alternative<AngleStructure>(generalAngleStructure_))
         generalAngleStructure_ = false;
+    if (std::holds_alternative<AngleStructure>(bdryNullAngleStructure_))
+        bdryNullAngleStructure_ = false;
 
     Snapshottable<Triangulation<3>>::takeSnapshot();
     clearAllProperties();
@@ -5105,6 +5173,11 @@ inline Triangulation<3>& Triangulation<3>::operator = (
             std::get<AngleStructure>(src.generalAngleStructure_), *this);
     else
         generalAngleStructure_ = std::get<bool>(src.generalAngleStructure_);
+    if (std::holds_alternative<AngleStructure>(src.bdryNullAngleStructure_))
+        bdryNullAngleStructure_ = AngleStructure(
+            std::get<AngleStructure>(src.bdryNullAngleStructure_), *this);
+    else
+        bdryNullAngleStructure_ = std::get<bool>(src.bdryNullAngleStructure_);
 
     return *this;
 }
@@ -5126,6 +5199,7 @@ inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
 
     strictAngleStructure_ = std::move(src.strictAngleStructure_);
     generalAngleStructure_ = std::move(src.generalAngleStructure_);
+    bdryNullAngleStructure_ = std::move(src.bdryNullAngleStructure_);
 
     TriangulationBase<3>::operator = (std::move(src));
 
@@ -5216,6 +5290,7 @@ inline const AngleStructure& Triangulation<3>::strictAngleStructure() const {
         throw NoSolution();
 }
 
+//TODO Independent boundary-null computation.
 inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
     // Optimise for the common case where a solution is known to exist,
     // so we can inline it.
