@@ -6771,14 +6771,6 @@
 			path = utils;
 			sourceTree = "<group>";
 		};
-		0564A2151811D91C002CC2AE /* qtui */ = {
-			isa = PBXGroup;
-			children = (
-				0564A4081811D91E002CC2AE /* qtui */,
-			);
-			path = qtui;
-			sourceTree = "<group>";
-		};
 		0564A4081811D91E002CC2AE /* qtui */ = {
 			isa = PBXGroup;
 			children = (
@@ -6880,7 +6872,7 @@
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
 				0564A6171811D921002CC2AE /* x-regina.ico */,
 			);
-			name = qtui;
+			path = qtui;
 			sourceTree = "<group>";
 		};
 		0564A40C1811D91E002CC2AE /* choosers */ = {
@@ -7482,7 +7474,7 @@
 				052F9BFD180600FA00FAE4DF /* engine */,
 				050F5CDE1B9BAAAA00C1F681 /* python */,
 				05617ADE1D9DBFBF00B1E33B /* utils */,
-				0564A2151811D91C002CC2AE /* qtui */,
+				0564A4081811D91E002CC2AE /* qtui */,
 				052909482AE5EA090028990D /* swiftui */,
 				05685F641F970E2600085B44 /* admin */,
 				05E62B002FD9A7EA00AE1B84 /* apidocs */,
