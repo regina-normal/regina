@@ -1662,6 +1662,9 @@
 		05E62AF62FCB7D1B00AE1B84 /* facetpairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62AF42FCB7D1B00AE1B84 /* facetpairing.cpp */; };
 		05E62AF92FD1016E00AE1B84 /* aggregator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62AF82FD1016E00AE1B84 /* aggregator.cpp */; };
 		05E62B142FD9A95900AE1B84 /* docs.conf.in in Resources */ = {isa = PBXBuildFile; fileRef = 05E62AFE2FD9A7EA00AE1B84 /* docs.conf.in */; };
+		05E62B372FDC10D500AE1B84 /* cpython.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E62B362FDC10D500AE1B84 /* cpython.cpp */; };
+		05E62B382FDC116D00AE1B84 /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05B0E139259AAC87000B62A3 /* Python3.framework */; };
+		05E62B3D2FDC1FFB00AE1B84 /* cpython in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05E62B342FDC103700AE1B84 /* cpython */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05E7DA352758760200B01C09 /* homologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA332758760100B01C09 /* homologicaldata.cpp */; };
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
@@ -1782,7 +1785,7 @@
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
 			);
 			runOncePerArchitecture = 0;
-			script = "# Use the bundled python3 framework.\n# Also, if sandboxed, use isolation mode; otherwise python\n# imports readline, which accesses /dev/tty... and deadlocks.\npyexec='$prog_dir'/../Helpers/Python.app/Contents/MacOS/Python\nif [ \"${ENABLE_APP_SANDBOX}\" = YES ]; then\n  pysandboxed=1\nelse\n  pysandboxed=0\nfi\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#'@PERL_Python_EXECUTABLE@'#\\\"$pyexec\\\"#\" \\\n  -e \"s#@PYTHON_SANDBOXED@#$pysandboxed#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@ENGINE_FILENAME@#libregina-engine.dylib#\" \\\n  -e \"s#@CMAKE_CXX20_STANDARD_COMPILE_OPTION@#-std=c++20#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_BINDIR@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_LIBDIR@##\" \\\n  -e \"s#@PERL_PKGDATADIR@##\" \\\n  -e \"s#@PERL_PKGLIBEXECDIR@##\" \\\n  -e \"s#@PERL_PYLIBDIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
+			script = "# Use the bundled python3 framework.\n# Also, if sandboxed, use isolation mode; otherwise python\n# imports readline, which accesses /dev/tty... and deadlocks.\npyexec='$prog_dir'/cpython\nif [ \"${ENABLE_APP_SANDBOX}\" = YES ]; then\n  pysandboxed=1\nelse\n  pysandboxed=0\nfi\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#'@PERL_Python_EXECUTABLE@'#\\\"$pyexec\\\"#\" \\\n  -e \"s#@PYTHON_SANDBOXED@#$pysandboxed#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@ENGINE_FILENAME@#libregina-engine.dylib#\" \\\n  -e \"s#@CMAKE_CXX20_STANDARD_COMPILE_OPTION@#-std=c++20#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_BINDIR@##\" \\\n  -e \"s#@PERL_CMAKE_INSTALL_FULL_LIBDIR@##\" \\\n  -e \"s#@PERL_PKGDATADIR@##\" \\\n  -e \"s#@PERL_PKGLIBEXECDIR@##\" \\\n  -e \"s#@PERL_PYLIBDIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
 		};
 /* End PBXBuildRule section */
 
@@ -1863,6 +1866,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 05DADB04219256ED00DC80E1;
 			remoteInfo = Databases;
+		};
+		05E62B3B2FDC11AA00AE1B84 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05E62B2A2FDC103700AE1B84;
+			remoteInfo = "Python Interpreter";
 		};
 		05EBB42D259DB56700362FA5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1950,6 +1960,7 @@
 				0545A0342FB3015D008D3ADB /* sigconvert in Copy Engine and Utilities */,
 				05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */,
 				05EBB41D259DB4AC00362FA5 /* trisetcmp in Copy Engine and Utilities */,
+				05E62B3D2FDC1FFB00AE1B84 /* cpython in Copy Engine and Utilities */,
 				056AED972A43209D00EAF4FA /* regina-testsuite in Copy Engine and Utilities */,
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
@@ -4458,6 +4469,8 @@
 		05E62B262FDBE0B700AE1B84 /* plain.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = plain.entitlements; sourceTree = "<group>"; };
 		05E62B272FDBE0B700AE1B84 /* sandbox.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sandbox.entitlements; sourceTree = "<group>"; };
 		05E62B292FDBE0B700AE1B84 /* tools.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = tools.xcconfig; sourceTree = "<group>"; };
+		05E62B342FDC103700AE1B84 /* cpython */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cpython; sourceTree = BUILT_PRODUCTS_DIR; };
+		05E62B362FDC10D500AE1B84 /* cpython.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cpython.cpp; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -4735,6 +4748,14 @@
 				05E62ABF2FC691BD00AE1B84 /* liblzma.xcframework in Frameworks */,
 				0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */,
 				05E0F1722582427000965440 /* libz.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05E62B2D2FDC103700AE1B84 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05E62B382FDC116D00AE1B84 /* Python3.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5141,6 +5162,7 @@
 				050F5D071B9BAB9C00C1F681 /* angle */,
 				050F5DC01B9BAB9C00C1F681 /* census */,
 				05E62A922FC0932A00AE1B84 /* concepts */,
+				05E62B362FDC10D500AE1B84 /* cpython.cpp */,
 				05098A6B28F24D98005E4716 /* docstrings */,
 				05772F13270CFBA900D26D8A /* enumerate */,
 				050F5D181B9BAB9C00C1F681 /* file */,
@@ -7488,6 +7510,7 @@
 			children = (
 				0575E6591805F36D009E3FC4 /* libregina-engine.dylib */,
 				052FA0C11806072900FAE4DF /* regina-testsuite */,
+				05E62B342FDC103700AE1B84 /* cpython */,
 				0564A1DF1811D6F8002CC2AE /* Regina.app */,
 				05B14EA319B423A0002138C0 /* mkcensusdb */,
 				050F5CDD1B9BAAAA00C1F681 /* engine.so */,
@@ -8996,6 +9019,7 @@
 				05DADB0C2192599600DC80E1 /* PBXTargetDependency */,
 				05DADB0E2192599A00DC80E1 /* PBXTargetDependency */,
 				050F5E6F1B9BD3A000C1F681 /* PBXTargetDependency */,
+				05E62B3C2FDC11AA00AE1B84 /* PBXTargetDependency */,
 				05EBB42E259DB56700362FA5 /* PBXTargetDependency */,
 				057B0CC626A506F70017F5EA /* PBXTargetDependency */,
 				05EBB430259DB57100362FA5 /* PBXTargetDependency */,
@@ -9095,6 +9119,22 @@
 			productReference = 05B14EA319B423A0002138C0 /* mkcensusdb */;
 			productType = "com.apple.product-type.tool";
 		};
+		05E62B2A2FDC103700AE1B84 /* Python Interpreter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05E62B312FDC103700AE1B84 /* Build configuration list for PBXNativeTarget "Python Interpreter" */;
+			buildPhases = (
+				05E62B2B2FDC103700AE1B84 /* Sources */,
+				05E62B2D2FDC103700AE1B84 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Python Interpreter";
+			productName = "Utils - CensusLookup";
+			productReference = 05E62B342FDC103700AE1B84 /* cpython */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -9169,6 +9209,7 @@
 				0575E6581805F36D009E3FC4 /* Engine */,
 				050F5CDC1B9BAAAA00C1F681 /* Python */,
 				052FA0C01806072900FAE4DF /* Test Suite */,
+				05E62B2A2FDC103700AE1B84 /* Python Interpreter */,
 				05DADB04219256ED00DC80E1 /* Databases */,
 				05DADAFE2192535F00DC80E1 /* Handbook */,
 				0564A1DE1811D6F8002CC2AE /* Regina for macOS */,
@@ -10692,6 +10733,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05E62B2B2FDC103700AE1B84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05E62B372FDC10D500AE1B84 /* cpython.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -10749,6 +10798,11 @@
 			isa = PBXTargetDependency;
 			target = 05DADB04219256ED00DC80E1 /* Databases */;
 			targetProxy = 05DADB1121926ABF00DC80E1 /* PBXContainerItemProxy */;
+		};
+		05E62B3C2FDC11AA00AE1B84 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05E62B2A2FDC103700AE1B84 /* Python Interpreter */;
+			targetProxy = 05E62B3B2FDC11AA00AE1B84 /* PBXContainerItemProxy */;
 		};
 		05EBB42E259DB56700362FA5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -12176,6 +12230,82 @@
 			};
 			name = Release;
 		};
+		05E62B322FDC103700AE1B84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
+				);
+				INFOPLIST_FILE = utils/Utils.plist;
+				INFOPLIST_PREPROCESS = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.utils.cpython;
+				PRODUCT_NAME = cpython;
+				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		05E62B332FDC103700AE1B84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
+				);
+				INFOPLIST_FILE = utils/Utils.plist;
+				INFOPLIST_PREPROCESS = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.utils.cpython;
+				PRODUCT_NAME = cpython;
+				RUNTIME_EXCEPTION_DISABLE_LIBRARY_VALIDATION = YES;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -12364,6 +12494,15 @@
 			buildConfigurations = (
 				05DADB06219256ED00DC80E1 /* Debug */,
 				05DADB07219256ED00DC80E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05E62B312FDC103700AE1B84 /* Build configuration list for PBXNativeTarget "Python Interpreter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05E62B322FDC103700AE1B84 /* Debug */,
+				05E62B332FDC103700AE1B84 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
