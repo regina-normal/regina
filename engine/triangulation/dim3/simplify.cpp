@@ -32,9 +32,6 @@
 #include "triangulation/dim3.h"
 #include "utilities/randutils.h"
 
-// Affects the number of random 4-4 moves attempted during simplification.
-#define COEFF_4_4 5
-
 // If you define PINCH_NOT_COLLAPSE, then simplify() will use
 // pinchEdge() instead of collapseEdge() to reduce the number of vertices.
 // This may *increase* the number of tetrahedra, and so it should be used with
@@ -181,33 +178,38 @@ startLoop:
     }
 }
 
-bool Triangulation<3>::simplify() {
+template <Triangulation<3>::SimplifyContext context>
+bool Triangulation<3>::simplifyInternal() {
     bool changed;
 
     { // Begin scope for change event block.
         PacketChangeGroup span(*this);
 
         // Reduce to a local minimum.
-        changed = simplifyToLocalMinimum(true);
+        changed = simplifyToLocalMinimumInternal<context>(true);
 
-        // If we still haven't minimised vertices, try to do this now.
-        // We will throw this away if it increases the number of tetrahedra,
-        // but even if the size stays the same we will keep it since
-        // fewer vertices is generally better.
-        if (isValid() && ! hasMinimalVertices()) {
-            Triangulation<3> tmp(*this, false, true);
-            try {
-                tmp.minimiseVertices();
-            } catch (const LockViolation&) {
-                // Calling minimiseVertices() could cause a lock violation if
-                // there are locked boundary triangles.  In this case it could
-                // still have performed some moves, and it guarantees that the
-                // resulting triangulation is sensible.  Keep whatever we got.
-            }
-            tmp.simplifyToLocalMinimum(true);
-            if (tmp.size() <= size()) {
-                swap(tmp);
-                changed = true;
+        // At least for now, intermediate "down" sequences in simplifyUpDown()
+        // won't bother with minimising vertices.
+        if constexpr ( context != SimplifyContext::UpDownDescent ) {
+            // If we still haven't minimised vertices, try to do this now.
+            // We will throw this away if it increases the number of tetrahedra,
+            // but even if the size stays the same we will keep it since
+            // fewer vertices is generally better.
+            if (isValid() && ! hasMinimalVertices()) {
+                Triangulation<3> tmp(*this, false, true);
+                try {
+                    tmp.minimiseVertices();
+                } catch (const LockViolation&) {
+                    // Calling minimiseVertices() could cause a lock violation if
+                    // there are locked boundary triangles.  In this case it could
+                    // still have performed some moves, and it guarantees that the
+                    // resulting triangulation is sensible.  Keep whatever we got.
+                }
+                tmp.simplifyToLocalMinimum(true);
+                if (tmp.size() <= size()) {
+                    swap(tmp);
+                    changed = true;
+                }
             }
         }
 
@@ -229,15 +231,31 @@ bool Triangulation<3>::simplify() {
             // If we've already simplified then there's no need to use a
             // separate clone since we won't need to undo further changes.
             //
+            // Also, if we are in an intermediate "down" sequence of
+            // simplifyUpDown(), then we are happy to make some random changes
+            // even if they don't immediately help to improve the
+            // triangulation.
+            //
             // If we are cloning the triangulation, ensure we clone the locks
             // also.
-            if (changed)
+            if constexpr ( context == SimplifyContext::UpDownDescent ) {
                 use = this;
-            else {
+            } else if (changed) {
+                use = this;
+            } else {
                 use = new Triangulation<3>(*this, false, true);
             }
 
             // Make random 4-4 moves.
+            int COEFF_4_4;
+            if constexpr ( context == SimplifyContext::UpDownDescent ) {
+                COEFF_4_4 = use->size() / 20;
+                if ( COEFF_4_4 < 5 ) {
+                    COEFF_4_4 = 5;
+                }
+            } else {
+                COEFF_4_4 = 5;
+            }
             fourFourAttempts = fourFourCap = 0;
             while (true) {
                 // Calculate the list of available 4-4 moves.
@@ -262,7 +280,7 @@ bool Triangulation<3>::simplify() {
                 use->move44(fourFourChoice.first, fourFourChoice.second);
 
                 // See if we can simplify now.
-                if (use->simplifyToLocalMinimum(true)) {
+                if (use->simplifyToLocalMinimumInternal<context>(true)) {
                     // We have successfully simplified!
                     // Start all over again.
                     fourFourAttempts = fourFourCap = 0;
@@ -283,6 +301,12 @@ bool Triangulation<3>::simplify() {
 
             // At this point we have decided that 4-4 moves will help us
             // no more.
+            if constexpr ( context == SimplifyContext::UpDownDescent ) {
+                // At least for now, intermediate "down" sequences in
+                // simplifyUpDown() won't bother with open and close book
+                // moves.
+                break;
+            }
 
             // --- Open book and close book moves ---
 
@@ -364,35 +388,51 @@ bool Triangulation<3>::simplify() {
     return changed;
 }
 
-bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
+// Instantiate all variants of simplifyInternal().
+template bool Triangulation<3>::simplifyInternal<
+    Triangulation<3>::SimplifyContext::Best>();
+template bool Triangulation<3>::simplifyInternal<
+    Triangulation<3>::SimplifyContext::UpDownDescent>();
+
+template <Triangulation<3>::SimplifyContext context>
+bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
     if (! perform) {
         ensureSkeleton();
 
-        // Try to reduce the number of vertices.
-        if (countVertices() > components().size() &&
-                countVertices() > countBoundaryComponents()) {
-            for (Edge<3>* edge : edges()) {
+        // At least for now, intermediate "down" sequences in simplifyUpDown()
+        // won't bother with edge collapses.
+        if constexpr ( context != SimplifyContext::UpDownDescent ) {
+            // Try to reduce the number of vertices.
+            if (countVertices() > components().size() &&
+                    countVertices() > countBoundaryComponents()) {
+                for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
-                if (edge->vertex(0) != edge->vertex(1) &&
-                        (edge->vertex(0)->isInternal() ||
-                         edge->vertex(1)->isInternal())) {
-                    // There must be a pinch-edge move here.
-                    // Note: this *increases* the number of tetrahedra.
-                    // We return true anyway, since this matches the behaviour
-                    // when perform == true.
-                    return true;
-                }
+                    if (edge->vertex(0) != edge->vertex(1) &&
+                            (edge->vertex(0)->isInternal() ||
+                             edge->vertex(1)->isInternal())) {
+                        // There must be a pinch-edge move here.
+                        // Note: this *increases* the number of tetrahedra.
+                        // We return true anyway, since this matches the behaviour
+                        // when perform == true.
+                        return true;
+                    }
 #else
-                if (hasCollapseEdge(edge))
-                    return true;
+                    if (hasCollapseEdge(edge))
+                        return true;
 #endif
+                }
             }
         }
 
+
         // Look for internal simplifications.
         for (Edge<3>* edge : edges()) {
-            if (hasPachner(edge))
-                return true;
+            if constexpr ( context != SimplifyContext::UpDownDescent ) {
+                // Intermediate "down" sequences in simplifyUpDown() should not
+                // use 3-2 moves.
+                if (hasPachner(edge))
+                    return true;
+            }
             if (has20(edge))
                 return true;
             if (has21(edge, 0))
@@ -404,14 +444,18 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
             if (has20(vertex))
                 return true;
 
-        // Look for boundary simplifications.
-        if (hasBoundaryTriangles()) {
-            for (BoundaryComponent<3>* bc : boundaryComponents()) {
-                // Run through triangles of this boundary component looking
-                // for shell boundary moves.
-                for (Triangle<3>* f : bc->facets())
-                    if (hasShellBoundary(f->front().tetrahedron()))
-                        return true;
+        // At least for now, intermediate "down" sequences in simplifyUpDown()
+        // won't bother with boundary simplifications.
+        if constexpr ( context != SimplifyContext::UpDownDescent ) {
+            // Look for boundary simplifications.
+            if (hasBoundaryTriangles()) {
+                for (BoundaryComponent<3>* bc : boundaryComponents()) {
+                    // Run through triangles of this boundary component looking
+                    // for shell boundary moves.
+                    for (Triangle<3>* f : bc->facets())
+                        if (hasShellBoundary(f->front().tetrahedron()))
+                            return true;
+                }
             }
         }
 
@@ -428,39 +472,47 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
             changedNow = false;
             ensureSkeleton();
 
-            // Try to reduce the number of vertices.
-            if (countVertices() > components().size() &&
-                    countVertices() > countBoundaryComponents()) {
-                for (Edge<3>* edge : edges()) {
+            // At least for now, intermediate "down" sequences in
+            // simplifyUpDown() won't bother with edge collapses.
+            if constexpr ( context != SimplifyContext::UpDownDescent ) {
+                // Try to reduce the number of vertices.
+                if (countVertices() > components().size() &&
+                        countVertices() > countBoundaryComponents()) {
+                    for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
-                    if (edge->vertex(0) != edge->vertex(1) &&
-                            (edge->vertex(0)->isInternal() ||
-                             edge->vertex(1)->isInternal())) {
-                        // Note: this *increases* the number of tetrahedra.
-                        pinchEdge(edge);
-                        changedNow = changed = true;
-                        break;
-                    }
+                        if (edge->vertex(0) != edge->vertex(1) &&
+                                (edge->vertex(0)->isInternal() ||
+                                 edge->vertex(1)->isInternal())) {
+                            // Note: this *increases* the number of tetrahedra.
+                            pinchEdge(edge);
+                            changedNow = changed = true;
+                            break;
+                        }
 #else
-                    if (collapseEdge(edge)) {
-                        changedNow = changed = true;
-                        break;
-                    }
+                        if (collapseEdge(edge)) {
+                            changedNow = changed = true;
+                            break;
+                        }
 #endif
-                }
-                if (changedNow) {
-                    if (perform)
-                        continue;
-                    else
-                        return true;
+                    }
+                    if (changedNow) {
+                        if (perform)
+                            continue;
+                        else
+                            return true;
+                    }
                 }
             }
 
             // Look for internal simplifications.
             for (Edge<3>* edge : edges()) {
-                if (pachner(edge)) {
-                    changedNow = changed = true;
-                    break;
+                if constexpr ( context != SimplifyContext::UpDownDescent ) {
+                    // Intermediate "down" sequences in simplifyUpDown() should
+                    // not use 3-2 moves.
+                    if (pachner(edge)) {
+                        changedNow = changed = true;
+                        break;
+                    }
                 }
                 if (move20(edge)) {
                     changedNow = changed = true;
@@ -493,30 +545,127 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
-            // Look for boundary simplifications.
-            if (hasBoundaryTriangles()) {
-                for (BoundaryComponent<3>* bc : boundaryComponents()) {
-                    // Run through triangles of this boundary component looking
-                    // for shell boundary moves.
-                    for (Triangle<3>* f : bc->facets())
-                        if (shellBoundary(f->front().tetrahedron())) {
-                            changedNow = changed = true;
+            // At least for now, intermediate "down" sequences in
+            // simplifyUpDown() won't bother with boundary simplifications.
+            if constexpr ( context != SimplifyContext::UpDownDescent ) {
+                // Look for boundary simplifications.
+                if (hasBoundaryTriangles()) {
+                    for (BoundaryComponent<3>* bc : boundaryComponents()) {
+                        // Run through triangles of this boundary component
+                        // looking for shell boundary moves.
+                        for (Triangle<3>* f : bc->facets())
+                            if (shellBoundary(f->front().tetrahedron())) {
+                                changedNow = changed = true;
+                                break;
+                            }
+                        if (changedNow)
                             break;
-                        }
-                    if (changedNow)
-                        break;
-                }
-                if (changedNow) {
-                    if (perform)
-                        continue;
-                    else
-                        return true;
+                    }
+                    if (changedNow) {
+                        if (perform)
+                            continue;
+                        else
+                            return true;
+                    }
                 }
             }
         }
     } // End scope for change event span.
 
     return changed;
+}
+
+// Instantiate all variants of simplifyToLocalMinimumInternal().
+template bool Triangulation<3>::simplifyToLocalMinimumInternal<
+    Triangulation<3>::SimplifyContext::Best>(bool);
+template bool Triangulation<3>::simplifyToLocalMinimumInternal<
+    Triangulation<3>::SimplifyContext::UpDownDescent>(bool);
+
+bool Triangulation<3>::simplifyUpDown( ssize_t max23, bool alwaysModify,
+        ProgressTrackerObjective* tracker ) {
+    //TODO Review use of tracker.
+    if ( (not alwaysModify) and size() <= 1 ) {
+        if (tracker) {
+            tracker->setFinished();
+        }
+        return false;
+    }
+
+    // We want our default max23 to be big enough that this routine is often
+    // effective at simplifying triangulations that are otherwise difficult
+    // to simplify (otherwise there's not much point in using this routine).
+    // On the other hand, we don't want the default value to result in
+    // prohibitively long running times.
+    if ( max23 < 0 ) {
+        max23 = 128;
+    }
+    size_t origSize = size();
+
+    // Set up a temporary working triangulation, just in case we end up making
+    // things worse, not better.
+    Triangulation<3> working( *this, false, true );
+
+    // Random 2-3 moves.
+    for ( ssize_t consec23 = 1; consec23 < 2 * max23; consec23 *= 2 ) {
+        ssize_t perform23 = ( consec23 < max23 ) ? consec23 : max23;
+
+        int COEFF_REPS = 6;
+        for ( int rep = 1; rep <= COEFF_REPS; ++rep ) {
+            if (tracker) {
+                tracker->newStage( "Trying run of "
+                        + std::to_string(perform23)
+                        + " random 2-3 moves, round "
+                        + std::to_string(rep) + "/"
+                        + std::to_string(COEFF_REPS) );
+            }
+
+            // Attempt perform23 consecutive random 2-3 moves.
+            for ( ssize_t i = 0; i < perform23; ++i ) {
+                // Pick a random triangle through which to do a 2-3 move.
+                Triangle<3>* triangle = working.triangle(
+                        RandomEngine::rand( working.countTriangles() ) );
+                working.pachner(triangle);
+            }
+
+            // Start by simplifying using only 2-0, 2-1 and 4-4 moves (in
+            // particular, no 3-2 moves, since we don't want to immediately undo
+            // all the random 2-3 moves we just did). This hopefully pushes
+            // subsequent moves to go somewhere new.
+            working.simplifyInternal<SimplifyContext::UpDownDescent>();
+            working.simplifyInternal<SimplifyContext::Best>();
+            if (tracker) {
+                tracker->setObjective( working.size() );
+            }
+            if ( working.size() < origSize ) {
+                // We already simplified, so we might as well stop now.
+                swap(working);
+                if (tracker) {
+                    tracker->setFinished();
+                }
+                return true;
+            } else if ( tracker && tracker->isCancelled() ) {
+                if (alwaysModify) {
+                    swap(working);
+                }
+                tracker->setFinished();
+                return false;
+            }
+        }
+    }
+
+    // Finish up by trying really hard to simplify.
+    bool simplified = working.simplify(); // Did working.simplify() succeed?
+    while (simplified) {
+        simplified = working.simplify();
+    }
+    simplified = ( working.size() < origSize ); // Did we reduce size overall?
+    if ( simplified or alwaysModify ) {
+        swap(working);
+    }
+    if (tracker) {
+        tracker->setFinished();
+    }
+    return simplified;
 }
 
 } // namespace regina

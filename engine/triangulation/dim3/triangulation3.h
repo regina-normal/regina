@@ -199,6 +199,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                      if the computation has not yet been attempted, or \c true
                      if it is confirmed that no such angle structure exists. */
 
+        /**
+         * Represents different contexts in which a member function might try
+         * to simplify a triangulation.
+         */
+        enum class SimplifyContext {
+            /**
+             * Indicates that we want to use all available techniques to
+             * simplify the triangulation as much as possible.
+             */
+            Best,
+            /**
+             * Indicates that we are within a "down" sequence of
+             * simplifyUpDown(). Only 2-0 edge moves, 2-1 edge moves,
+             * 2-0 vertex moves and 4-4 moves will be considered.
+             */
+            UpDownDescent
+        };
+
     public:
         /**
          * \name Constructors and Destructors
@@ -1765,6 +1783,62 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * that it is capable of performing such a change.
          */
         bool simplifyToLocalMinimum(bool perform = true);
+
+        /**
+         * Attempts to simplify this triangulation by making increasingly long
+         * sequences of random 2-3 moves, and then simplifying back down.
+         *
+         * This is a well-climbing heuristic that can be used when `simplify()`
+         * fails. It is partly inspired by techniques used in both the
+         * `Triangulation<4>::simplifyUpDown()` routine (which predates this
+         * routine), as well as SnapPea's `randomize_triangulation()` routine.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
+         * If any tetrahedra and/or triangles are locked, these locks will be
+         * respected: that is, this routine will avoid any moves that would
+         * violate these locks (and in particular, no LockViolation exceptions
+         * should be thrown).  Of course, however, having locks may make the
+         * simplification less effective in reducing the number of tetrahedra.
+         *
+         * This routine might take a little time for larger triangulations
+         * and/or larger values of `max23`, so you can pass a progress tracker
+         * to this routine. This routine will notify the tracker each time it
+         * starts a new stage of the procedure, where each stage consists of a
+         * sequence of consecutive random 2-3 moves followed by an attempted
+         * simplification. At each stage, the value of the tracker's objective
+         * will be set to the size of the triangulation reached at the end of
+         * the previous completed stage.
+         *
+         * \warning The specific behaviour of this routine is likely to change
+         * between releases.
+         *
+         * \python The global interpreter lock will be released while this
+         * function runs, so you can run it as a background computation
+         * without blocking the main Python thread.
+         *
+         * \param max23 the maximum number of consecutive random 2-3 moves to
+         * perform in a single "up" sequence. Note that this routine will
+         * usually attempt several "up" sequences of differing lengths, and in
+         * particular may eventually pass through triangulations with more
+         * than `size() + max23` tetrahedra. If this is -1, then a sensible
+         * default will be chosen.
+         * \param alwaysModify `true` if this triangulation should always be
+         * modified after this operation, even if the final endpoint has _more_
+         * tetrahedra than the triangulation began with, or `false` if this
+         * triangulation should only be modified if this operation succeeded in
+         * strictly reducing the total number of tetrahedra.
+         * \param tracker a progress tracker through which progress will be
+         * reported, or `null` if no progress reporting is required.
+         *
+         * \return `true` if and only if the number of tetrahedra was strictly
+         * reduced.
+         *
+         * \author Alex He
+         */
+        bool simplifyUpDown( ssize_t max23 = -1, bool alwaysModify = false,
+                ProgressTrackerObjective* tracker = nullptr );
 
         /**
          * Attempts to simplify this triangulation using a slow but
@@ -4824,6 +4898,38 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool truncateInternal(Vertex<3>* vertex, bool lockBoundary);
 
+        /**
+         * Implements simplifyToLocalMinimum().
+         *
+         * The template argument \a SimplifyContext indicates the context of
+         * the simplification, which determines the moves that we are allowed
+         * to use.
+         *
+         * If \a perform is `true` (the default), then if this routine does
+         * actually change the triangulation, it is guaranteed that this change
+         * will have reduced the total number of tetrahedra.
+         *
+         * See simplifyToLocalMinimum() for further details.
+         */
+        template <SimplifyContext>
+        bool simplifyToLocalMinimumInternal(bool perform = true);
+
+        /**
+         * Implements simplify().
+         *
+         * The template argument \a SimplifyContext indicates the context of
+         * the simplification, which determines the moves that we are allowed
+         * to use.
+         *
+         * If this routine does actually change the triangulation, then it is
+         * guaranteed that this change will have reduced the total number of
+         * tetrahedra.
+         *
+         * See simplify() for further details.
+         */
+        template <SimplifyContext>
+        bool simplifyInternal();
+
         void stretchBoundaryForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
                 std::set<Vertex<3>*>&) const;
             /**< Internal to maximalForestInBoundary(). */
@@ -5242,6 +5348,14 @@ inline bool Triangulation<3>::knowsHomologyH2Z2(bool) const {
 inline const Triangulation<3>::TuraevViroSet&
         Triangulation<3>::allCalculatedTuraevViro() const {
     return prop_.turaevViroCache_;
+}
+
+inline bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
+    return simplifyToLocalMinimumInternal<SimplifyContext::Best>(perform);
+}
+
+inline bool Triangulation<3>::simplify() {
+    return simplifyInternal<SimplifyContext::Best>();
 }
 
 inline bool Triangulation<3>::intelligentSimplify() {
