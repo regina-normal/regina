@@ -3103,7 +3103,6 @@
 		056184201F97F6910080E7E2 /* linkcreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkcreator.cpp; sourceTree = "<group>"; };
 		056292042DAF217100896529 /* ring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ring.h; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		0564A4091811D91E002CC2AE /* actionspart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = actionspart.cpp; sourceTree = "<group>"; };
 		0564A40A1811D91E002CC2AE /* bigwidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bigwidget.cpp; sourceTree = "<group>"; };
@@ -6775,22 +6774,16 @@
 		0564A2151811D91C002CC2AE /* qtui */ = {
 			isa = PBXGroup;
 			children = (
-				0564A2161811D91C002CC2AE /* CMakeLists.txt */,
-				0564A4071811D91E002CC2AE /* README.txt */,
-				0564A4081811D91E002CC2AE /* src */,
-				0564A6181811D921002CC2AE /* TODO.txt */,
-				05561D191811F27A00FD6E2E /* x-regina.icns */,
-				05754E73258F92CA00236ED7 /* Assets.xcassets */,
-				051806D5181202E0008EBB01 /* examples */,
-				051806D3181202BD008EBB01 /* icons */,
+				0564A4081811D91E002CC2AE /* qtui */,
 			);
 			path = qtui;
 			sourceTree = "<group>";
 		};
-		0564A4081811D91E002CC2AE /* src */ = {
+		0564A4081811D91E002CC2AE /* qtui */ = {
 			isa = PBXGroup;
 			children = (
 				0564A4091811D91E002CC2AE /* actionspart.cpp */,
+				05754E73258F92CA00236ED7 /* Assets.xcassets */,
 				05866B802E52CB7900C74465 /* auxtoolbar.h */,
 				0564A40A1811D91E002CC2AE /* bigwidget.cpp */,
 				0564A40B1811D91E002CC2AE /* bigwidget.h */,
@@ -6809,6 +6802,7 @@
 				05941EF7272A9E3500562586 /* elidedlabel.cpp */,
 				05941EF8272A9E3500562586 /* elidedlabel.h */,
 				0564A4211811D91E002CC2AE /* eventids.h */,
+				051806D5181202E0008EBB01 /* examples */,
 				0564A4221811D91E002CC2AE /* examplesaction.cpp */,
 				0564A4231811D91E002CC2AE /* examplesaction.h */,
 				0564A4241811D91E002CC2AE /* exports.cpp */,
@@ -6817,6 +6811,7 @@
 				0581D2772E2D31C50099E9E7 /* graphviz.h */,
 				0564A4411811D91E002CC2AE /* iconcache.cpp */,
 				0564A4421811D91E002CC2AE /* iconcache.h */,
+				051806D3181202BD008EBB01 /* icons */,
 				0564A56F1811D91F002CC2AE /* imports.cpp */,
 				0564A5701811D920002CC2AE /* introdialog.cpp */,
 				0564A5711811D920002CC2AE /* introdialog.h */,
@@ -6853,6 +6848,7 @@
 				0564A5DC1811D920002CC2AE /* pythonmanager.cpp */,
 				0564A5DD1811D920002CC2AE /* pythonmanager.h */,
 				05431F921C40F4D4009BC072 /* qt.conf */,
+				0564A4071811D91E002CC2AE /* README.txt */,
 				0564A5DE1811D920002CC2AE /* recentfilesaction.cpp */,
 				0564A5DF1811D920002CC2AE /* recentfilesaction.h */,
 				0564A5E01811D920002CC2AE /* regevents.h */,
@@ -6879,10 +6875,12 @@
 				0564A5F51811D920002CC2AE /* shortrunner.cpp */,
 				0564A5F61811D920002CC2AE /* shortrunner.h */,
 				0564A60C1811D920002CC2AE /* syntax */,
+				0564A6181811D921002CC2AE /* TODO.txt */,
 				0564A6161811D921002CC2AE /* treenav.cpp */,
+				05561D191811F27A00FD6E2E /* x-regina.icns */,
 				0564A6171811D921002CC2AE /* x-regina.ico */,
 			);
-			name = src;
+			name = qtui;
 			sourceTree = "<group>";
 		};
 		0564A40C1811D91E002CC2AE /* choosers */ = {
