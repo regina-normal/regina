@@ -127,7 +127,7 @@ case "$pyver" in
 		echo
 		blacklist="$blacklist embeddings faces flype groups hypersurfaces"
 		blacklist="$blacklist iterators listview presentations refs skeleton"
-		blacklist="$blacklist standardtri"
+		blacklist="$blacklist standardsubcomplex"
 		;;
 	*)
 		;;

@@ -1,0 +1,9 @@
+// Xcode config file for general development.
+//
+// DO NOT CHANGE THESE SETTINGS!
+// Any customisation should be done via common.xcconfig.
+
+HEADER_SEARCH_PATHS = $(inherited) "$(SRCROOT)/preconfig/macos"
+ENABLE_APP_SANDBOX = NO
+
+#include "common.xcconfig"

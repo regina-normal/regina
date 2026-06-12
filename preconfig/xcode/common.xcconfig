@@ -1,0 +1,37 @@
+// Allows configuration of external (non-Xcode) tools and dependencies, as
+// well as if/how binaries are signed.
+//
+// You MAY EDIT this file (but please do not commit your changes to the main
+// git repository!).
+//
+// You MUST NOT SELECT this configuration in the Xcode project tab - this file
+// is only intended to be #included by other configurations.
+
+// Third-party tools that Regina uses in its build:
+
+DOXYGEN = /opt/local/bin/doxygen
+
+// A basic configuration for codesigning that is not good for anything other
+// than running building and locally.
+
+CODE_SIGN_IDENTITY = -
+CODE_SIGN_STYLE = Manual
+DEVELOPMENT_TEAM =
+
+// If you are preparing to upload a formal release, you should override this
+// with new signing configuration in the file signing.xcconfig (and again,
+// please do not commit this file to the repository).  Typically your
+// signing.xcconfig would look something like the following:
+//
+// CODE_SIGN_IDENTITY = Apple Development
+// CODE_SIGN_STYLE = Automatic
+// DEVELOPMENT_TEAM = XYZPQ12345
+//
+// Of course, you should use your real development team ID here.
+//
+// If you are just a casual developer and/or not preparing a release, you can
+// ignore all of this discussion about signing and just not provide any file
+// signing.xcconfig.  The #include? below will harmlessly do nothing if the
+// file does not exist.
+
+#include? "signing.xcconfig"
