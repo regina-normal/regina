@@ -71,26 +71,6 @@ Returns:
     ``True`` if and only if Regina is able to access native C++
     integers with exactly this number of bytes.)doc";
 
-struct AnyInteger {
-
-// Docstring regina::python::doc::AnyInteger::__concept
-static constexpr const char __concept[] =
-R"doc(Either any standard non-boolean C++ integer type or any of Regina's
-own integer types.
-
-This concept excludes ``bool``, and does not make any special
-accommodations for 128-bit integer compiler extensions (which are not
-standard C++). This means that 128-bit integers might or might not
-pass this test, depending on your compiler.
-
-Concepts:
-    AnyInteger is a C++ concept. Concepts work with the C++ compiler
-    at build time: you cannot test in Python which concepts are
-    satisfied by which types. Instead, what this Python wrapper offers
-    is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct AnyInteger
-
 struct ArbitraryPrecisionInteger {
 
 // Docstring regina::python::doc::ArbitraryPrecisionInteger::__concept
@@ -106,66 +86,6 @@ Concepts:
     reading now).)doc";
 
 }; // struct ArbitraryPrecisionInteger
-
-struct CppInteger {
-
-// Docstring regina::python::doc::CppInteger::__concept
-static constexpr const char __concept[] =
-R"doc(A native non-boolean C++ integer type, allowing for 128-bit integers
-also if these are supported by the compiler.
-
-Except for booleans, this concept is satisfied precisely when either
-``std::is_integral_v<T>`` is true and/or *T* is a native 128-bit
-integer.
-
-Regina treats booleans differently: ``CppInteger<bool>`` is false,
-even though C++ ``std::is_integral_v<bool>`` is true, since Regina's
-functions aim to identify native types that _behave_ like integers
-arithmetically.
-
-The main reason for using this concept (as opposed to
-``std::is_integral_v<T>``) is because the C++ standard type traits
-treat 128-bit integers differently under different compilers.
-
-Concepts:
-    CppInteger is a C++ concept. Concepts work with the C++ compiler
-    at build time: you cannot test in Python which concepts are
-    satisfied by which types. Instead, what this Python wrapper offers
-    is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct CppInteger
-
-struct IntegerComparable {
-
-// Docstring regina::python::doc::IntegerComparable::__concept
-static constexpr const char __concept[] =
-R"doc(A type that supports interoperability with native C++ integer values
-via construction, assignment, equality/inequality testing, and
-comparisons. The comparisons must yield a total order.
-
-Concepts:
-    IntegerComparable is a C++ concept. Concepts work with the C++
-    compiler at build time: you cannot test in Python which concepts
-    are satisfied by which types. Instead, what this Python wrapper
-    offers is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct IntegerComparable
-
-struct IntegerCompatible {
-
-// Docstring regina::python::doc::IntegerCompatible::__concept
-static constexpr const char __concept[] =
-R"doc(A type that supports very basic interoperability with native C++
-integer values, via construction, assignment, and equality/inequality
-testing.
-
-Concepts:
-    IntegerCompatible is a C++ concept. Concepts work with the C++
-    compiler at build time: you cannot test in Python which concepts
-    are satisfied by which types. Instead, what this Python wrapper
-    offers is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct IntegerCompatible
 
 struct ReginaInteger {
 
@@ -184,86 +104,6 @@ Concepts:
     offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct ReginaInteger
-
-struct SignedCppInteger {
-
-// Docstring regina::python::doc::SignedCppInteger::__concept
-static constexpr const char __concept[] =
-R"doc(A signed native non-boolean C++ integer type, allowing for 128-bit
-integers also if these are supported by the compiler.
-
-Except for booleans, this concept is satisfied precisely when (i)
-either ``std::is_integral_v<T>`` is true and/or *T* is a native
-128-bit integer, and (ii) *T* is a signed type.
-
-Regina treats booleans differently: ``SignedCppInteger<bool>`` is
-false, even though C++ ``std::is_integral_v<bool>`` is true, since
-Regina's functions aim to identify native types that _behave_ like
-integers arithmetically.
-
-The main reason for using this constant (as opposed to
-``std::is_integral_v<T>`` and ``std::is_signed_v<T>``) is because the
-C++ standard type traits treat 128-bit integers differently under
-different compilers.
-
-Concepts:
-    SignedCppInteger is a C++ concept. Concepts work with the C++
-    compiler at build time: you cannot test in Python which concepts
-    are satisfied by which types. Instead, what this Python wrapper
-    offers is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct SignedCppInteger
-
-struct StandardCppInteger {
-
-// Docstring regina::python::doc::StandardCppInteger::__concept
-static constexpr const char __concept[] =
-R"doc(One of the standard non-boolean C++ integer types, without making any
-special accommodations for 128-bit integer compiler extensions.
-
-This concept is exactly like ``std::integral`` but with ``bool``
-excluded.
-
-Note that 128-bit integers (which are not standard C++) might or might
-not pass this test, depending on your compiler.
-
-Concepts:
-    StandardCppInteger is a C++ concept. Concepts work with the C++
-    compiler at build time: you cannot test in Python which concepts
-    are satisfied by which types. Instead, what this Python wrapper
-    offers is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct StandardCppInteger
-
-struct UnsignedCppInteger {
-
-// Docstring regina::python::doc::UnsignedCppInteger::__concept
-static constexpr const char __concept[] =
-R"doc(An unsigned native non-boolean C++ integer type, allowing for 128-bit
-integers also if these are supported by the compiler.
-
-Except for booleans, this concept is satisfied precisely when (i)
-either ``std::is_integral_v<T>`` is true and/or *T* is a native
-128-bit integer, and (ii) *T* is an unsigned type.
-
-Regina treats booleans differently: ``UnsignedCppInteger<bool>`` is
-false, even though C++ ``std::is_integral_v<bool>`` and
-``std::is_unsigned_v<bool>`` are both true, since Regina's functions
-aim to identify native types that _behave_ like integers
-arithmetically.
-
-The main reason for using this constant (as opposed to
-``std::is_integral_v<T>`` and ``std::is_unsigned_v<T>``) is because
-the C++ standard type traits treat 128-bit integers differently under
-different compilers.
-
-Concepts:
-    UnsignedCppInteger is a C++ concept. Concepts work with the C++
-    compiler at build time: you cannot test in Python which concepts
-    are satisfied by which types. Instead, what this Python wrapper
-    offers is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct UnsignedCppInteger
 
 } // namespace regina::python::doc
 

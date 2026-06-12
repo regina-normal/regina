@@ -73,7 +73,7 @@ just one variable.
 
 Python:
     In Python, the class Laurent2 refers to the specific template
-    class Laurent2<Integer>.
+    class ``Laurent2<Integer>``.
 
 Template parameter ``T``:
     the coefficient type. A typical coefficient type would be Integer
@@ -259,7 +259,7 @@ using the += operator).
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
-    python list of tuples.
+    Python list of tuples.
 
 Parameter ``begin``:
     the beginning of the set of coefficients, as outlined above.

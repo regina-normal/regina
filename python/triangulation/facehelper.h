@@ -109,17 +109,16 @@ using generalLinkingSurface =
 
 /**
  * The Python binding for the C++ template member function
- * `Face<dim, subdim>::face<lowerdim>(f)`, where the valid range for
- * the C++ template parameter \a lowerdim is `0, ..., subdim-1`.
+ * `T::face<lowerdim>(f)`, where the C++ template parameter \a lowerdim is
+ * passed to Python at runtime.
  *
  * The return value policy will be treated as
  * `pybind11::return_value_policy::reference`.
  */
-template <int dim, int subdim>
-requires (subdim > 0)
-pybind11::object face(const regina::SafeFace<dim, subdim>& t, int lowerdim,
-        int f) {
-    if (lowerdim < 0 || lowerdim >= subdim)
+template <FaceOrSimplexClass T>
+requires (T::subdimension > 0)
+pybind11::object face(const T& t, int lowerdim, int f) {
+    if (lowerdim < 0 || lowerdim >= T::subdimension)
         throw InvalidArgument("face(): unsupported subface dimension");
 
     // Since the return type of face() depends on lowerdim, we convert return
@@ -130,7 +129,7 @@ pybind11::object face(const regina::SafeFace<dim, subdim>& t, int lowerdim,
     // return_value_policy::reference_internal.  Instead we just get the
     // default return value policy when passing a pointer to pybind11::cast(),
     // which is pybind11::return_value_policy::reference.
-    return select_constexpr<0, subdim, pybind11::object>(lowerdim,
+    return select_constexpr<0, T::subdimension, pybind11::object>(lowerdim,
             [&t, f](auto k) {
         return pybind11::cast(t.template face<k>(f));
     });
@@ -138,17 +137,16 @@ pybind11::object face(const regina::SafeFace<dim, subdim>& t, int lowerdim,
 
 /**
  * The Python binding for the C++ template member function
- * `Face<dim, subdim>::faceMapping<lowerdim>(f)`, where the valid range for
- * the C++ template parameter \a lowerdim is `0, ..., subdim-1`.
+ * `T::faceMapping<lowerdim>(f)`, where the C++ template parameter \a lowerdim
+ * is passed to Python at runtime.
  */
-template <int dim, int subdim>
-requires (subdim > 0)
-Perm<dim + 1> faceMapping(const regina::SafeFace<dim, subdim>& t, int lowerdim,
-        int f) {
-    if (lowerdim < 0 || lowerdim >= subdim)
+template <FaceOrSimplexClass T>
+requires (T::subdimension > 0)
+Perm<T::dimension + 1> faceMapping(const T& t, int lowerdim, int f) {
+    if (lowerdim < 0 || lowerdim >= T::subdimension)
         throw InvalidArgument("faceMapping(): unsupported subface dimension");
-    return select_constexpr<0, subdim, Perm<dim + 1>>(lowerdim,
-            [&t, f](auto k) {
+    return select_constexpr<0, T::subdimension, Perm<T::dimension + 1>>(
+            lowerdim, [&t, f](auto k) {
         return t.template faceMapping<k>(f);
     });
 }

@@ -938,7 +938,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * \exception InvalidArgument The adjacency matrix is not square.
          *
          * \python The adjacency matrix should be given as a list of
-         * lists.
+         * lists of booleans.
          *
          * \param graph the adjacency matrix of the graph.
          * \param alg the algorithm that should be used to compute the

@@ -41,17 +41,9 @@ void addIntUtils(pybind11::module_& m) {
     m.def("supportsNativeIntegerSize", regina::supportsNativeIntegerSize,
         rdoc::supportsNativeIntegerSize);
 
-    using regina::python::add_concept;
-    add_concept<rdoc::StandardCppInteger>(m, "StandardCppInteger");
-    add_concept<rdoc::CppInteger>(m, "CppInteger");
-    add_concept<rdoc::SignedCppInteger>(m, "SignedCppInteger");
-    add_concept<rdoc::UnsignedCppInteger>(m, "UnsignedCppInteger");
-    add_concept<rdoc::ArbitraryPrecisionInteger>(m,
+    regina::python::add_concept<rdoc::ArbitraryPrecisionInteger>(m,
         "ArbitraryPrecisionInteger");
-    add_concept<rdoc::ReginaInteger>(m, "ReginaInteger");
-    add_concept<rdoc::AnyInteger>(m, "AnyInteger");
-    add_concept<rdoc::IntegerCompatible>(m, "IntegerCompatible");
-    add_concept<rdoc::IntegerComparable>(m, "IntegerComparable");
+    regina::python::add_concept<rdoc::ReginaInteger>(m, "ReginaInteger");
 
     RDOC_SCOPE_END
 }

@@ -61,10 +61,10 @@ Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value.
 
 Python:
-    The C++ types Polynomial<Integer> and Polynomial<Rational> are
-    available using the Python names PolynomialInt and
-    PolynomialRational respectively. The alias Polynomial is also
-    provided for the type Polynomial<Rational>.
+    The C++ types ``Polynomial<Integer>`` and ``Polynomial<Rational>``
+    are available using the Python names ``PolynomialInt`` and
+    ``PolynomialRational`` respectively. The alias ``Polynomial`` is
+    also provided for the type ``Polynomial<Rational>``.
 
 Template parameter ``T``:
     the coefficient type. A typical coefficient type would be Integer
@@ -279,7 +279,7 @@ The iterator type must be random access because this allows the
 implementation to compute the sequence length in constant time.
 
 Python:
-    Instead of a pair of iterators, this routine takes a python list
+    Instead of a pair of iterators, this routine takes a Python list
     of coefficients.
 
 Parameter ``begin``:
@@ -496,7 +496,7 @@ The iterator type must be random access because this allows the
 implementation to compute the sequence length in constant time.
 
 Python:
-    Instead of a pair of iterators, this routine takes a python list
+    Instead of a pair of iterators, this routine takes a Python list
     of coefficients.
 
 Parameter ``begin``:

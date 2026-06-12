@@ -116,6 +116,10 @@ matching matrix combine to give the full matrix *M* as follows:
           [ mat10  mat11 ]
 ```
 
+This constructor will try to simplify the presentation of the graph
+manifold if possible, though there is no guarantee that the
+representation it settles on will be unique for the manifold.
+
 Precondition:
     The given matching matrix has determinant +1 or -1.
 
@@ -144,6 +148,10 @@ static constexpr const char __init_2[] =
 R"doc(Creates a new graph manifold as a self-identified Seifert fibred
 space. The bounded Seifert fibred space and the entire 2-by-2 matching
 matrix are each passed separately.
+
+Other than packing the matching matrix into a single object, this
+behaves identically to the constructor that takes the matrix elements
+as individual integers. See that constructor for further details.
 
 Precondition:
     The given matching matrix has determinant +1 or -1.

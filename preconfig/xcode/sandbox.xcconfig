@@ -1,0 +1,12 @@
+// Xcode config file for a sandboxed release through the App Store.
+//
+// DO NOT CHANGE THESE SETTINGS!
+// Any customisation should be done via tools.xcconfig.
+
+HEADER_SEARCH_PATHS = $(inherited) "$(SRCROOT)/preconfig/macos-appstore"
+
+ENABLE_APP_SANDBOX = YES
+ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite
+ENABLE_USER_SELECTED_FILES = readwrite
+
+#include "tools.xcconfig"

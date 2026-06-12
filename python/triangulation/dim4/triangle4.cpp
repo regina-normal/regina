@@ -88,13 +88,13 @@ void addTriangle4(pybind11::module_& m, pybind11::module_& internal) {
             pybind11::return_value_policy::reference, rdoc::component)
         .def("boundaryComponent", &Triangle<4>::boundaryComponent,
             pybind11::return_value_policy::reference, rdoc::boundaryComponent)
-        .def("face", &regina::python::face<4, 2>,
+        .def("face", &regina::python::face<Triangle<4>>,
             "lowerdim"_a, "face"_a, rdoc::face)
         .def("vertex", &Triangle<4>::vertex,
             pybind11::return_value_policy::reference, rdoc::vertex)
         .def("edge", &Triangle<4>::edge,
             pybind11::return_value_policy::reference, rdoc::edge)
-        .def("faceMapping", &regina::python::faceMapping<4, 2>,
+        .def("faceMapping", &regina::python::faceMapping<Triangle<4>>,
             "lowerdim"_a, "face"_a, rdoc::faceMapping)
         .def("vertexMapping", &Triangle<4>::vertexMapping, rdoc::vertexMapping)
         .def("edgeMapping", &Triangle<4>::edgeMapping, rdoc::edgeMapping)

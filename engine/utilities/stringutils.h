@@ -576,7 +576,7 @@ std::string stringToToken(std::string str);
  *
  * The resulting string will be encoded using UTF-8.
  *
- * \python The type \a T is assumed to be \c long.
+ * \python The type \a T is assumed to be `long`.
  *
  * \param value the integer to convert.
  * \return the given integer as a superscript string.
@@ -606,7 +606,7 @@ std::string superscript(const T& value);
  *
  * The resulting string will be encoded using UTF-8.
  *
- * \python The type \a T is assumed to be \c long.
+ * \python The type \a T is assumed to be `long`.
  *
  * \param value the integer to convert.
  * \return the given integer as a subscript string.

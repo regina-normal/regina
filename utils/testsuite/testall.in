@@ -97,8 +97,8 @@ while IFS= read -r -d $'\0' i; do
 	# We use && as opposed to || in order to preserve the exit code from
 	# the first command.
 	#
-	# The code that unsets TERM fixes an issue seen in the python test suite
-	# some years ago on Fedora; see the python test suite script for details.
+	# The code that unsets TERM fixes an issue seen in the Python test suite
+	# some years ago on Fedora; see the Python test suite script for details.
 	#
 	if [ -e "$filter" ]; then
 		echo -n "Running $testname (with filter) ... "

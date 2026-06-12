@@ -1831,7 +1831,7 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * \python The type vector should be passed as a Python list of
          * integers (for example, in the enumeration of normal surfaces, there
          * would be one integer per tetrahedron, each equal to 0, 1, 2 or 3).
-         * The template parameter \a Ray is taken to be Vector<Integer>.
+         * The template parameter \a Ray is taken to be `VectorInt`.
          *
          * \tparam Ray the vector type to use to return the extracted values.
          * The `std::common_type_t` constraint on \a Ray ensures that no
