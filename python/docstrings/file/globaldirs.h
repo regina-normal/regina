@@ -90,9 +90,8 @@ the _build_ tree (any depth of subdirectory within the build tree is
 fine). Moreover, it is assumed that the build tree is either an
 immediate subdirectory of the source root, or else is the source root
 itself. So, for example, an executable path of
-``regina-X.Y/qtui/src/regina-gui`` or
-``regina-X.Y/build/qtui/src/regina-gui`` is fine, but
-``regina-X.Y/tmp/build/qtui/src/regina-gui`` is not.
+``regina-X.Y/qtui/regina-gui`` or ``regina-X.Y/build/qtui/regina-gui``
+is fine, but ``regina-X.Y/tmp/build/qtui/regina-gui`` is not.
 
 This routine respects the following environment variables, and these
 will take precedence over any automatic deductions:

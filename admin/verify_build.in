@@ -31,9 +31,9 @@ test "python/regina/engine.@REGINA_PYTHON_EXTENSION@" "Python module"
 test "handbook/regina/index.html" "User handbook"
 test "handbook/regina-xml/index.html" "File format docs "
 if [ "$os" = Darwin ]; then
-  test "qtui/src/Regina.app" "GUI"
+  test "qtui/Regina.app" "GUI"
 else
-  test "qtui/src/regina-gui@CMAKE_EXECUTABLE_SUFFIX@" "GUI"
+  test "qtui/regina-gui@CMAKE_EXECUTABLE_SUFFIX@" "GUI"
 fi
 test "engine/testsuite/regina-testsuite@CMAKE_EXECUTABLE_SUFFIX@" "C++ test suite"
 test "utils/regfiledump@CMAKE_EXECUTABLE_SUFFIX@" "Utilities"

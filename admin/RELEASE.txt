@@ -10,7 +10,7 @@ Program version:
     handbook/regina/python.docbook (python session banner)
     handbook/regina-xml/index.docbook (&regversion;, &regdate;, copyrightyears)
     man/*.1 (windows executable path)
-    qtui/src/org.computop.regina.metainfo.xml (new entry in <release>)
+    qtui/org.computop.regina.metainfo.xml (new entry in <release>)
     preconfig/*/regina-config.h (PACKAGE_* macros)
     Regina.xcodeproject/project.pbxproj (CURRENT_PROJECT_VERSION x2,
                                          MARKETING_VERSION x4)
@@ -22,15 +22,15 @@ Plus copyright years in:
     apidocs/doc-footer.html
     handbook/regina/about.docbook (plain citation, bibTeX citation)
     python/modulemain.cpp
-    qtui/src/regina.plist
-    qtui/src/reginaabout.cpp (several places)
+    qtui/regina.plist
+    qtui/reginaabout.cpp (several places)
     ... and the copyright statement in the license (see below)
 
 Full license details:
     LICENSE.txt
     engine/docs.h
     handbook/regina/credits.docbook
-    qtui/src/reginaabout.cpp (ReginaAbout constructor)
+    qtui/reginaabout.cpp (ReginaAbout constructor)
     www/index.html
 
 SnapPy version:
@@ -43,7 +43,7 @@ SnapPea / SnapPy copyright (in addition to full license locations above):
 
 Acknowledgements (in addition to primary authors listed in the license):
     handbook/regina/credits.docbook
-    qtui/src/reginaabout.cpp (ReginaAbout constructor)
+    qtui/reginaabout.cpp (ReginaAbout constructor)
 
 Don't forget:
     changes & highlights
