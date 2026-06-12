@@ -179,9 +179,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * The optional Manifold<3> routine isHyperbolic() is implemented always for
  * this class.  The optional routines homology() and construct() are only
  * implemented in some cases: homology() is implemented if and only if the
- * base orbifold has no punctures, and construct() is implemented only for
- * lens spaces and Seifert fibred spaces over the 2-sphere without punctures
- * or reflector boundaries.
+ * base orbifold has no punctures, and construct() is implemented if and only
+ * if the Seifert fibred space is orientable.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,

@@ -46,6 +46,26 @@ class Dim2Test : public TriangulationTest<2> {
 
         // Closed non-orientable triangulations:
         TestCase rp2 { Example<2>::rp2(), "RP^2" };
+        TestCase kb { Example<2>::nonOrientable(2, 0), "KB" };
+
+        // Minimal bounded orientable triangulations:
+        TestCase pants { Example<2>::orientable(0, 3), "Pair of pants" };
+        TestCase orPunc1 { Example<2>::orientable(2, 1),
+            "Or, g=2 + 1 puncture" };
+        TestCase orPunc3 { Example<2>::orientable(2, 3),
+            "Or, g=2 + 3 punctures" };
+
+        // Minimal bounded non-orientable triangulations:
+        TestCase norPunc1 { Example<2>::nonOrientable(2, 1),
+            "Non-or, g=2 + 1 puncture" };
+        TestCase norPunc3 { Example<2>::nonOrientable(2, 3),
+            "Non-or, g=2 + 3 punctures" };
+
+        // Polygons.
+        TestCase poly1 { Example<2>::polygon(1), "Polygon, 1 side" };
+        TestCase poly2 { Example<2>::polygon(2), "Polygon, 2 sides" };
+        TestCase poly3 { Example<2>::polygon(3), "Polygon, 3 sides" };
+        TestCase poly4 { Example<2>::polygon(4), "Polygon, 4 sides" };
 
         // Disconnected triangulations (we build these in the constructor):
         TestCase disjoint2 { {}, "Torus U Mobius" };
@@ -70,8 +90,22 @@ class Dim2Test : public TriangulationTest<2> {
             f(s2Oct.tri, s2Oct.name);
             f(torus2.tri, torus2.name);
             f(rp2.tri, rp2.name);
+            f(kb.tri, kb.name);
             f(disjoint2.tri, disjoint2.name);
             f(disjoint3.tri, disjoint3.name);
+
+            // Minimal bounded triangulations.
+            f(pants.tri, pants.name);
+            f(orPunc1.tri, orPunc1.name);
+            f(orPunc3.tri, orPunc3.name);
+            f(norPunc1.tri, norPunc1.name);
+            f(norPunc3.tri, norPunc3.name);
+
+            // Polygons.
+            f(poly1.tri, poly1.name);
+            f(poly2.tri, poly2.name);
+            f(poly3.tri, poly3.name);
+            f(poly4.tri, poly4.name);
         }
 };
 
@@ -93,8 +127,22 @@ TEST_F(Dim2Test, validity) {
     verifyValid(s2Oct);
     verifyValid(torus2);
     verifyValid(rp2);
+    verifyValid(kb);
     verifyValid(disjoint2);
     verifyValid(disjoint3);
+
+    // Minimal bounded triangulations.
+    verifyValid(pants);
+    verifyValid(orPunc1);
+    verifyValid(orPunc3);
+    verifyValid(norPunc1);
+    verifyValid(norPunc3);
+
+    // Polygons.
+    verifyValid(poly1);
+    verifyValid(poly2);
+    verifyValid(poly3);
+    verifyValid(poly4);
 }
 TEST_F(Dim2Test, connectivity) {
     TriangulationTest<2>::connectivityGenericCases();
@@ -102,8 +150,22 @@ TEST_F(Dim2Test, connectivity) {
     EXPECT_TRUE(s2Oct.tri.isConnected());
     EXPECT_TRUE(torus2.tri.isConnected());
     EXPECT_TRUE(rp2.tri.isConnected());
+    EXPECT_TRUE(kb.tri.isConnected());
     EXPECT_FALSE(disjoint2.tri.isConnected());
     EXPECT_FALSE(disjoint3.tri.isConnected());
+
+    // Minimal bounded triangulations.
+    EXPECT_TRUE(pants.tri.isConnected());
+    EXPECT_TRUE(orPunc1.tri.isConnected());
+    EXPECT_TRUE(orPunc3.tri.isConnected());
+    EXPECT_TRUE(norPunc1.tri.isConnected());
+    EXPECT_TRUE(norPunc3.tri.isConnected());
+
+    // Polygons.
+    EXPECT_TRUE(poly1.tri.isConnected());
+    EXPECT_TRUE(poly2.tri.isConnected());
+    EXPECT_TRUE(poly3.tri.isConnected());
+    EXPECT_TRUE(poly4.tri.isConnected());
 }
 TEST_F(Dim2Test, orientability) {
     TriangulationTest<2>::orientabilityGenericCases();
@@ -111,8 +173,22 @@ TEST_F(Dim2Test, orientability) {
     EXPECT_TRUE(s2Oct.tri.isOrientable());
     EXPECT_TRUE(torus2.tri.isOrientable());
     EXPECT_FALSE(rp2.tri.isOrientable());
+    EXPECT_FALSE(kb.tri.isOrientable());
     EXPECT_FALSE(disjoint2.tri.isOrientable());
     EXPECT_FALSE(disjoint3.tri.isOrientable());
+
+    // Minimal bounded triangulations.
+    EXPECT_TRUE(pants.tri.isOrientable());
+    EXPECT_TRUE(orPunc1.tri.isOrientable());
+    EXPECT_TRUE(orPunc3.tri.isOrientable());
+    EXPECT_FALSE(norPunc1.tri.isOrientable());
+    EXPECT_FALSE(norPunc3.tri.isOrientable());
+
+    // Polygons.
+    EXPECT_TRUE(poly1.tri.isOrientable());
+    EXPECT_TRUE(poly2.tri.isOrientable());
+    EXPECT_TRUE(poly3.tri.isOrientable());
+    EXPECT_TRUE(poly4.tri.isOrientable());
 }
 TEST_F(Dim2Test, orientedExamples) {
     // Ensure that the orientable Example<2> constructions are oriented.
@@ -128,6 +204,17 @@ TEST_F(Dim2Test, orientedExamples) {
     EXPECT_TRUE(Example<2>::orientable(5, 3).isOriented());
     EXPECT_TRUE(Example<2>::sphereOctahedron().isOriented());
     EXPECT_TRUE(Example<2>::disc().isOriented());
+
+    // Minimal bounded triangulations.
+    EXPECT_TRUE(pants.tri.isOriented());
+    EXPECT_TRUE(orPunc1.tri.isOriented());
+    EXPECT_TRUE(orPunc3.tri.isOriented());
+
+    // Polygons.
+    EXPECT_TRUE(poly1.tri.isOriented());
+    EXPECT_TRUE(poly2.tri.isOriented());
+    EXPECT_TRUE(poly3.tri.isOriented());
+    EXPECT_TRUE(poly4.tri.isOriented());
 }
 
 TEST_F(Dim2Test, eulerChar) {
@@ -136,8 +223,22 @@ TEST_F(Dim2Test, eulerChar) {
     EXPECT_EQ(s2Oct.tri.eulerCharTri(), 2);
     EXPECT_EQ(torus2.tri.eulerCharTri(), -2);
     EXPECT_EQ(rp2.tri.eulerCharTri(), 1);
+    EXPECT_EQ(kb.tri.eulerCharTri(), 0);
     EXPECT_EQ(disjoint2.tri.eulerCharTri(), 0);
     EXPECT_EQ(disjoint3.tri.eulerCharTri(), 2);
+
+    // Minimal bounded triangulations.
+    EXPECT_EQ(pants.tri.eulerCharTri(), -1);
+    EXPECT_EQ(orPunc1.tri.eulerCharTri(), -3);
+    EXPECT_EQ(orPunc3.tri.eulerCharTri(), -5);
+    EXPECT_EQ(norPunc1.tri.eulerCharTri(), -1);
+    EXPECT_EQ(norPunc3.tri.eulerCharTri(), -3);
+
+    // Polygons.
+    EXPECT_EQ(poly1.tri.eulerCharTri(), 1);
+    EXPECT_EQ(poly2.tri.eulerCharTri(), 1);
+    EXPECT_EQ(poly3.tri.eulerCharTri(), 1);
+    EXPECT_EQ(poly4.tri.eulerCharTri(), 1);
 }
 TEST_F(Dim2Test, boundaryBasic) {
     TriangulationTest<2>::boundaryBasicGenericCases();
@@ -145,8 +246,22 @@ TEST_F(Dim2Test, boundaryBasic) {
     verifyBoundaryBasic(s2Oct, {}, {}, {});
     verifyBoundaryBasic(torus2, {}, {}, {});
     verifyBoundaryBasic(rp2, {}, {}, {});
+    verifyBoundaryBasic(kb, {}, {}, {});
     verifyBoundaryBasic(disjoint2, {0}, {}, {});
     verifyBoundaryBasic(disjoint3, {0, 0}, {}, {});
+
+    // Minimal bounded triangulations.
+    verifyBoundaryBasic(pants, {0, 0, 0}, {}, {});
+    verifyBoundaryBasic(orPunc1, {0}, {}, {});
+    verifyBoundaryBasic(orPunc3, {0, 0, 0}, {}, {});
+    verifyBoundaryBasic(norPunc1, {0}, {}, {});
+    verifyBoundaryBasic(norPunc3, {0, 0, 0}, {}, {});
+
+    // Polygons.
+    verifyBoundaryBasic(poly1, {0}, {}, {});
+    verifyBoundaryBasic(poly2, {0}, {}, {});
+    verifyBoundaryBasic(poly3, {0}, {}, {});
+    verifyBoundaryBasic(poly4, {0}, {}, {});
 }
 TEST_F(Dim2Test, vertexLinksBasic) {
     TriangulationTest<2>::vertexLinksBasicGenericCases();
@@ -154,8 +269,22 @@ TEST_F(Dim2Test, vertexLinksBasic) {
     verifyVertexLinksBasic(s2Oct, 6, 0);
     verifyVertexLinksBasic(torus2, 1, 0);
     verifyVertexLinksBasic(rp2, 2, 0);
+    verifyVertexLinksBasic(kb, 1, 0);
     verifyVertexLinksBasic(disjoint2, 1, 1);
     verifyVertexLinksBasic(disjoint3, 4, 2);
+
+    // Minimal bounded triangulations.
+    verifyVertexLinksBasic(pants, 0, 3);
+    verifyVertexLinksBasic(orPunc1, 0, 1);
+    verifyVertexLinksBasic(orPunc3, 0, 3);
+    verifyVertexLinksBasic(norPunc1, 0, 1);
+    verifyVertexLinksBasic(norPunc3, 0, 3);
+
+    // Polygons.
+    verifyVertexLinksBasic(poly1, 1, 1);
+    verifyVertexLinksBasic(poly2, 1, 2);
+    verifyVertexLinksBasic(poly3, 0, 3);
+    verifyVertexLinksBasic(poly4, 0, 4);
 }
 TEST_F(Dim2Test, orient) {
     testManualCases(TriangulationTest<2>::verifyOrient);
@@ -218,8 +347,22 @@ TEST_F(Dim2Test, homologyH1) {
     EXPECT_EQ(s2Oct.tri.homology<1>(), regina::AbelianGroup());
     EXPECT_EQ(torus2.tri.homology<1>(), regina::AbelianGroup(4));
     EXPECT_EQ(rp2.tri.homology<1>(), regina::AbelianGroup(0, {2}));
+    EXPECT_EQ(kb.tri.homology<1>(), regina::AbelianGroup(1, {2}));
     EXPECT_EQ(disjoint2.tri.homology<1>(), regina::AbelianGroup(3));
     EXPECT_EQ(disjoint3.tri.homology<1>(), regina::AbelianGroup(2, {2}));
+
+    // Minimal bounded triangulations.
+    EXPECT_EQ(pants.tri.homology<1>(), regina::AbelianGroup(2));
+    EXPECT_EQ(orPunc1.tri.homology<1>(), regina::AbelianGroup(4));
+    EXPECT_EQ(orPunc3.tri.homology<1>(), regina::AbelianGroup(6));
+    EXPECT_EQ(norPunc1.tri.homology<1>(), regina::AbelianGroup(2));
+    EXPECT_EQ(norPunc3.tri.homology<1>(), regina::AbelianGroup(4));
+
+    // Polygons.
+    EXPECT_EQ(poly1.tri.homology<1>(), regina::AbelianGroup());
+    EXPECT_EQ(poly2.tri.homology<1>(), regina::AbelianGroup());
+    EXPECT_EQ(poly3.tri.homology<1>(), regina::AbelianGroup());
+    EXPECT_EQ(poly4.tri.homology<1>(), regina::AbelianGroup());
 }
 TEST_F(Dim2Test, fundGroup) {
     TriangulationTest<2>::fundGroupGenericCases();
@@ -227,8 +370,23 @@ TEST_F(Dim2Test, fundGroup) {
     EXPECT_EQ(s2Oct.tri.group().recogniseGroup(), "0");
     EXPECT_EQ(torus2.tri.group().recogniseGroup(), "");
     EXPECT_EQ(rp2.tri.group().recogniseGroup(), "Z_2");
+    EXPECT_EQ(kb.tri.group().recogniseGroup(),
+            "Z~Z w/monodromy a ↦ a^-1");
 
     // We cannot call group() on disjoint triangulations.
+
+    // Minimal bounded triangulations.
+    EXPECT_EQ(pants.tri.group().recogniseGroup(), "Free(2)");
+    EXPECT_EQ(orPunc1.tri.group().recogniseGroup(), "Free(4)");
+    EXPECT_EQ(orPunc3.tri.group().recogniseGroup(), "Free(6)");
+    EXPECT_EQ(norPunc1.tri.group().recogniseGroup(), "Free(2)");
+    EXPECT_EQ(norPunc3.tri.group().recogniseGroup(), "Free(4)");
+
+    // Polygons.
+    EXPECT_EQ(poly1.tri.group().recogniseGroup(), "0");
+    EXPECT_EQ(poly2.tri.group().recogniseGroup(), "0");
+    EXPECT_EQ(poly3.tri.group().recogniseGroup(), "0");
+    EXPECT_EQ(poly4.tri.group().recogniseGroup(), "0");
 }
 TEST_F(Dim2Test, chainComplex) {
     testManualCases(TriangulationTest<2>::verifyChainComplex);
@@ -241,4 +399,17 @@ TEST_F(Dim2Test, dualToPrimal) {
 }
 TEST_F(Dim2Test, copyMove) {
     testManualCases(TriangulationTest<2>::verifyCopyMove);
+}
+TEST_F(Dim2Test, minimalSize) {
+    // Check that promises of minimality are fulfilled.
+    EXPECT_EQ(Example<2>::orientable(0, 0).size(), 2);
+    EXPECT_EQ(Example<2>::orientable(0, 1).size(), 1);
+    EXPECT_EQ(torus2.tri.size(), 6);
+    EXPECT_EQ(rp2.tri.size(), 2);
+    EXPECT_EQ(kb.tri.size(), 2);
+    EXPECT_EQ(pants.tri.size(), 5);
+    EXPECT_EQ(orPunc1.tri.size(), 7);
+    EXPECT_EQ(orPunc3.tri.size(), 13);
+    EXPECT_EQ(norPunc1.tri.size(), 3);
+    EXPECT_EQ(norPunc3.tri.size(), 9);
 }

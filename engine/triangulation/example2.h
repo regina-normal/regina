@@ -65,28 +65,23 @@ namespace regina {
 template <>
 class Example<2> : public detail::ExampleBase<2> {
     public:
+
         /**
-         * Returns a triangulation of the given orientable surface.
-         *
-         * If the number of punctures is 0, then the resulting triangulation
-         * will be minimal (which, for positive genus, means there is exactly
-         * one vertex).
+         * Returns a minimal triangulation of the given orientable surface.
          *
          * \param genus the genus of the surface; this must be greater
          * than or equal to zero.
          * \param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
          * \return the requested orientable surface.
+         *
+         * \author Alex He, B.B.
          */
         static Triangulation<2> orientable(
-            unsigned genus, unsigned punctures);
+            size_t genus, size_t punctures);
 
         /**
-         * Returns a triangulation of the given non-orientable surface.
-         *
-         * If the number of punctures is 0 or 1, then the resulting
-         * triangulation will be minimal (which, with the exception of
-         * the projective plane, means there is exactly one vertex).
+         * Returns a minimal triangulation of the given non-orientable surface.
          *
          * \param genus the non-orientable genus of the surface, i.e.,
          * the number of crosscaps that it contains; this must be greater
@@ -98,7 +93,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * \author Alex He, B.B.
          */
         static Triangulation<2> nonOrientable(
-            unsigned genus, unsigned punctures);
+            size_t genus, size_t punctures);
 
         /**
          * Returns the four-triangle 2-sphere formed from the boundary
@@ -166,6 +161,47 @@ class Example<2> : public detail::ExampleBase<2> {
          * \return the Klein bottle.
          */
         static Triangulation<2> kb();
+
+        /**
+         * Returns an oriented triangulation of an `n`-sided polygon.
+         *
+         * For `n <= 2`, this routine returns a triangulation built from `n`
+         * triangles.
+         *
+         * For `n >= 3`, this routine returns a triangulation built from
+         * `n - 2` triangles by gluing edge `(01)` of triangle `i` to edge
+         * `(02)` of triangle `i - 1`, for each `i` from 1 to `n - 1`
+         * (inclusive).
+         *
+         * \param n the number of boundary edges of the constructed polygon.
+         *
+         * \return the polygon.
+         *
+         * \author Alex He
+         */
+        static Triangulation<2> polygon(size_t n);
+
+    private:
+
+        /**
+         * Adds punctures to the given once-punctured surface until it has
+         * the given number of punctures.
+         *
+         * This routine modifies \a surf directly. Adding the punctures
+         * increases the size of \a surf by `3*punctures - 3`.
+         *
+         * \pre \a surf has exactly one boundary edge, and this boundary edge
+         * is given by edge (01) of triangle 0.
+         *
+         * \param surf the once-punctured surface to which we should add
+         * extra punctures.
+         * \param punctures the total number of punctures that we should end
+         * up with.
+         *
+         * \author Alex He
+         */
+        static void addPunctures(
+                Triangulation<2>& surf, size_t punctures);
 };
 
 inline Triangulation<2> Example<2>::sphereTetrahedron() {
