@@ -47,7 +47,7 @@ using pybind11::overload_cast;
 using regina::SFSFibre;
 using regina::SFSpace;
 
-void addSFSpace(pybind11::module_& m) {
+void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
     RDOC_SCOPE_BEGIN(SFSFibre)
 
     auto f = pybind11::class_<SFSFibre>(m, "SFSFibre", rdoc::__class)
@@ -94,6 +94,8 @@ void addSFSpace(pybind11::module_& m) {
             rdoc::reflectors_2)
         .def("fibreCount", &SFSpace::fibreCount, rdoc::fibreCount)
         .def("fibre", &SFSpace::fibre, rdoc::fibre)
+        .def("fibres", &SFSpace::fibres,
+            pybind11::keep_alive<0, 1>(), rdoc::fibres)
         .def("obstruction", &SFSpace::obstruction, rdoc::obstruction)
         .def("addHandle", &SFSpace::addHandle,
             "fibreReversing"_a = false, rdoc::addHandle)
@@ -159,6 +161,9 @@ void addSFSpace(pybind11::module_& m) {
     s.attr("bn1") = SFSpace::Class::bn1;
     s.attr("bn2") = SFSpace::Class::bn2;
     s.attr("bn3") = SFSpace::Class::bn3;
+
+    regina::python::addStdView<decltype(SFSpace().fibres())>(internal,
+        "SFSpace_fibres");
 
     RDOC_SCOPE_END
 }

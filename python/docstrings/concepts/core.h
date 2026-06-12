@@ -11,42 +11,6 @@
 namespace regina::python::doc {
 
 
-struct AssignableTo {
-
-// Docstring regina::python::doc::AssignableTo::__concept
-static constexpr const char __concept[] =
-R"doc(Indicates that a variable of type *Source* can be assigned to a
-variable of type *Target*. This is identical to
-``std::assignable_from``, but with the arguments in the opposite
-order.
-
-Typically *Target* would be an lvalue reference.
-
-Concepts:
-    AssignableTo is a C++ concept. Concepts work with the C++ compiler
-    at build time: you cannot test in Python which concepts are
-    satisfied by which types. Instead, what this Python wrapper offers
-    is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct AssignableTo
-
-struct CanConstruct {
-
-// Docstring regina::python::doc::CanConstruct::__concept
-static constexpr const char __concept[] =
-R"doc(Indicates that a variable of type *Source* can be used to construct a
-variable of type *Target*. This is identical to
-``std::constructible_from``, but with the arguments in the opposite
-order.
-
-Concepts:
-    CanConstruct is a C++ concept. Concepts work with the C++ compiler
-    at build time: you cannot test in Python which concepts are
-    satisfied by which types. Instead, what this Python wrapper offers
-    is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct CanConstruct
-
 struct CoefficientDomain {
 
 // Docstring regina::python::doc::CoefficientDomain::__concept
@@ -177,24 +141,6 @@ Concepts:
     concept _documentation_ (which you are reading now).)doc";
 
 }; // struct RingLike
-
-struct SameModCVRef {
-
-// Docstring regina::python::doc::SameModCVRef::__concept
-static constexpr const char __concept[] =
-R"doc(Indicates that types *T* and *U* are identical, after removing
-references and const/volatile qualifiers.
-
-So, for example, ``std::same_as<const int&, int>`` is ``False``, but
-``SameModCVRef<const int&, int>`` is ``True``.
-
-Concepts:
-    SameModCVRef is a C++ concept. Concepts work with the C++ compiler
-    at build time: you cannot test in Python which concepts are
-    satisfied by which types. Instead, what this Python wrapper offers
-    is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct SameModCVRef
 
 struct StrictWeakOrder {
 

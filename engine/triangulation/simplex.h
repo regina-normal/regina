@@ -166,7 +166,8 @@ class Simplex : public MarkedElement, public Output<Simplex<dim>> {
         int orientation_;
             /**< The orientation of this simplex in the triangulation.
                  This will either be +1 or -1, and will only be set
-                 if/when the skeleton of the triangulation is computed. */
+                 if/when the skeleton of the triangulation is computed.
+                 If the triangulation is oriented, this will be +1. */
         Component<dim>* component_;
             /**< The component to which this simplex belongs in the
                  triangulation.  This will only be set if/when the
@@ -923,16 +924,16 @@ class Simplex : public MarkedElement, public Output<Simplex<dim>> {
          * <i>dim</i>-dimensional triangulation.
          *
          * The orientation of each top-dimensional simplex is always +1 or -1.
-         * In an orientable component of a triangulation,
-         * adjacent simplices have the same orientations if one could be
-         * transposed onto the other without reflection, and they have
-         * opposite orientations if a reflection would be required.
-         * In a non-orientable component, orientations are arbitrary
-         * (but they will still all be +1 or -1).
+         * In an orientable component of a triangulation, adjacent simplices
+         * have the same orientations if one could be transposed onto the other
+         * without reflection, and they have opposite orientations if a
+         * reflection would be required.  In a non-orientable component,
+         * orientations are arbitrary (but they will still all be +1 or -1).
          *
          * In each component, the top-dimensional simplex with smallest index
          * will always have orientation +1.  In particular, simplex 0 will
-         * always have orientation +1.
+         * always have orientation +1; moreover, in an _oriented_ triangulation,
+         * all simplices will have orientation +1.
          *
          * \return +1 or -1 according to the orientation of this simplex.
          */

@@ -1491,25 +1491,6 @@ class Face :
             requires (standardDim(dim) && dim - subdim >= 3);
 
         /**
-         * Returns the link of this vertex as a normal surface or hypersurface.
-         *
-         * Note that vertex linking (hyper)surfaces only ever contain triangles
-         * (in dimension 3) or tetrahedra (in dimension 4), not quadrilaterals
-         * or prisms.  Moreover, vertex links are always thin; that is, after
-         * constructing the frontier of a regular neighbourhood of the vertex,
-         * no further normalisation steps are required.
-         *
-         * For faces of dimension ≥ 1, linkingSurface() returns a pair: the
-         * linking (hyper)surface, as well as a boolean indicating whether the
-         * link is thin.  In contrast, for vertices this function returns just
-         * the linking (hyper)surface, since this will always be thin.
-         *
-         * \return the corresponding vertex linking normal (hyper)surface.
-         */
-        SafeHypersurface<dim> linkingSurface() const
-            requires ((dim == 3 || dim == 4) && subdim == 0);
-
-        /**
          * Returns the link of this face as a normal surface or hypersurface.
          *
          * Constructing the link of a face begins with building the frontier
@@ -1528,12 +1509,19 @@ class Face :
          * operations analagous to compressions and boundary compressions along
          * discs and 3-balls, as well as removing trivial 4-sphere components.
          *
-         * \return a pair (\a s, \a thin), where \a s is the face-linking
-         * normal (hyper)surface, and \a thin is \c true if and only if this
-         * link is thin (i.e., no additional normalisation steps were required).
+         * The return type is marked `auto` because it depends upon the
+         * dimension of the face.  For vertices, this routine just returns a
+         * NormalSurface or NormalHypersurface (since vertex links are always
+         * thin).  For higher-dimensional faces, it returns a pair
+         * `(s, thin)`, where \a s is a NormalSurface or NormalHypersurface,
+         * and \a thin is a boolean that is `true` if the link is thin, or
+         * `false` if additional normalisation steps were required.
+         *
+         * \return either the face-linking normal (hyper)surface if \a subdim
+         * is zero (i.e., this face is a vertex), or a pair `(s, thin)` as
+         * described above if \a subdim is positive.
          */
-        std::pair<SafeHypersurface<dim>, bool> linkingSurface() const
-            requires ((dim == 3 || dim == 4) && subdim > 0);
+        auto linkingSurface() const requires (dim == 3 || dim == 4);
 
         /**
          * Writes a short text representation of this object to the
@@ -2164,17 +2152,14 @@ inline bool Face<dim, subdim>::isLocked() const requires (subdim == dim - 1) {
 
 template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline SafeHypersurface<dim> Face<dim, subdim>::linkingSurface() const
-        requires ((dim == 3 || dim == 4) && subdim == 0) {
-    return std::move(triangulation().linkingSurface(*this).first);
-}
-
-template <int dim, int subdim>
-requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
-inline std::pair<SafeHypersurface<dim>, bool>
-            Face<dim, subdim>::linkingSurface() const
-            requires ((dim == 3 || dim == 4) && subdim > 0) {
-    return triangulation().linkingSurface(*this);
+inline auto Face<dim, subdim>::linkingSurface() const
+        requires (dim == 3 || dim == 4) {
+    if constexpr (subdim == 0) {
+        // My understanding is that a data member of an rvalue expression is
+        // itself an rvalue expression.  So no std::move() is needed here.
+        return triangulation().linkingSurface(*this).first;
+    } else
+        return triangulation().linkingSurface(*this);
 }
 
 template <int dim, int subdim>

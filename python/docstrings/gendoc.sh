@@ -31,7 +31,7 @@ else
   PYTHON=python3
 fi
 
-# If we are using Xcode clang, we will use the matching clang python bindings
+# If we are using Xcode clang, we will use the matching clang Python bindings
 # in the regina source tree.
 if ! clang_version=`clang --version | head -n1`; then
   echo "ERROR: Could not find clang on the path."
@@ -47,7 +47,7 @@ case "$clang_version" in
     if [ -d "$clang_support" ]; then
       export PYTHONPATH="$clang_support:$PYTHONPATH"
     else
-      echo "ERROR: Could not access clang python bindings"
+      echo "ERROR: Could not access clang Python bindings"
       echo "       Clang major version: $clang_major"
       echo "       Bindings path: $clang_support"
       exit 1
@@ -114,7 +114,6 @@ for dir in $dirs; do
         subcomplex/standardtri.h ) ;;
         triangulation/dim?.h ) ;;
         triangulation/facetpairing3.h ) ;;
-        triangulation/forward.h ) ;;
         triangulation/generic.h ) ;;
         triangulation/graph.h ) ;;
         triangulation/hidim.h ) ;;
@@ -127,6 +126,7 @@ for dir in $dirs; do
         utilities/shortarray.h ) ;;
         utilities/topologylock.h ) ;;
         utilities/typeutils.h ) ;;
+        utilities/xzstr.h ) ;;
         utilities/zstr.h ) ;;
         * )
           "$PYTHON" ./mkdoc.py -std=c++20 \

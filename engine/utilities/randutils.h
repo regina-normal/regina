@@ -135,7 +135,7 @@ class RandomEngine : std::scoped_lock<std::mutex> {
          * consider creating a single RandomEngine object and accessing
          * engine() directly using the standard C++ randomness functions.
          *
-         * \python The integer type \a Int will be treated as \c long.
+         * \python The integer type \a Int will be treated as `long`.
          *
          * \param range the size of the range of possible results;
          * this must be strictly positive.

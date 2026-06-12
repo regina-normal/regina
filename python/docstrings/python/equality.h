@@ -31,7 +31,7 @@ R"doc(Deprecated constant indicating that objects are compared by value.
 
 // Docstring regina::python::doc::python::EqualityType::ByReference
 static constexpr const char ByReference[] =
-R"doc(The objects are compared by reference. This means that the python
+R"doc(The objects are compared by reference. This means that the Python
 operators == and != simply test whether *x* and *y* refer to the same
 instance of the C++ class *C*. In other words, they test whether the
 underlying C++ _pointers_ to *x* and *y* are the same.)doc";
@@ -75,9 +75,9 @@ R"doc(Indicates the different ways in which the equality (==) and inequality
 (!=) operators can behave under Python. This behaviour differs
 according to the underlying class of the objects being compared.
 
-Specifically, suppose we have two python objects *x* and *y* that wrap
+Specifically, suppose we have two Python objects *x* and *y* that wrap
 instances of some underlying C++ class *C*. Then, if we test ``x ==
-y`` or ``x != y`` under python, the possible behaviours are:)doc";
+y`` or ``x != y`` under Python, the possible behaviours are:)doc";
 
 }; // struct EqualityType
 

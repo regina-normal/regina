@@ -60,10 +60,10 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \python The C++ types Polynomial<Integer> and Polynomial<Rational>
- * are available using the Python names PolynomialInt and PolynomialRational
- * respectively.  The alias Polynomial is also provided for the type
- * Polynomial<Rational>.
+ * \python The C++ types `Polynomial<Integer>` and `Polynomial<Rational>`
+ * are available using the Python names `PolynomialInt` and `PolynomialRational`
+ * respectively.  The alias `Polynomial` is also provided for the type
+ * `Polynomial<Rational>`.
  *
  * \tparam T the coefficient type.  A typical coefficient type would be
  * Integer or Rational.  Note that native C++ integer types are _not_
@@ -164,7 +164,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * takes a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
          * \param end a past-the-end iterator indicating the end of the
@@ -235,7 +235,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * takes a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
          * \param end a past-the-end iterator indicating the end of the

@@ -333,7 +333,8 @@ given iterator range. See eulerChars() for further details.
 
 Python:
     Instead of a pair of iterators, the set of allowable Euler
-    characteristic should be passed as a Python list.
+    characteristics should be passed as a Python list of LargeInteger
+    objects.
 
 Parameter ``beginEuler``:
     the beginning of an iterator range that gives the new set of
