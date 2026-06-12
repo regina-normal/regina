@@ -2497,7 +2497,7 @@
 		051806AD2C2BC447001470F1 /* fixedarray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fixedarray.h; sourceTree = "<group>"; };
 		051806AE2C2CF65D001470F1 /* base64.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = base64.out; sourceTree = "<group>"; };
 		051806AF2C2CF65D001470F1 /* base64.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = base64.test; sourceTree = "<group>"; };
-		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
+		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
 		0518B99329D5932C0020ADC1 /* snappy_get_gluing_equations.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappy_get_gluing_equations.cpp; sourceTree = "<group>"; };
 		0518B99629D594030020ADC1 /* canonize_part_1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = canonize_part_1.cpp; sourceTree = "<group>"; };
@@ -3076,7 +3076,7 @@
 		0553FBB52AF6A4E700BE89A7 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
 		0553FBB92AF8643D00BE89A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0553FBBD2AF92A3700BE89A7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
+		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "macos-icons/x-regina.icns"; sourceTree = "<group>"; };
 		055BC3E82653380600E5E34C /* sigutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigutils.h; sourceTree = "<group>"; };
 		055BC3EC265338FC00E5E34C /* pd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pd.cpp; sourceTree = "<group>"; };
 		055CD8F52A23605A0072F4B5 /* topologylock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = topologylock.h; sourceTree = "<group>"; };
@@ -6882,7 +6882,7 @@
 				0564A6161811D921002CC2AE /* treenav.cpp */,
 				0564A6171811D921002CC2AE /* x-regina.ico */,
 			);
-			path = src;
+			name = src;
 			sourceTree = "<group>";
 		};
 		0564A40C1811D91E002CC2AE /* choosers */ = {
