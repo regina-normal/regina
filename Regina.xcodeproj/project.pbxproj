@@ -1754,7 +1754,7 @@
 				"$(DERIVED_FILE_DIR)/engine-docs",
 			);
 			runOncePerArchitecture = 0;
-			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\n# Note: Our choice for @DOXYGEN_TOPICS@ assumes Doxygen >= 1.9.8.\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#g\" -e \"s#@PROJECT_BINARY_DIR@/apidocs#${output}#g\" -e \"s#@PACKAGE_VERSION@#${MARKETING_VERSION}#g\" -e \"s#@DOXYGEN_TOPICS@#<a href='topics.html'>Topics</a>#\" > \"${conf}\"\n\nmkdir -p \"${output}\"\n/opt/local/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
+			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\n# Note: Our choice for @DOXYGEN_TOPICS@ assumes Doxygen >= 1.9.8.\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#g\" -e \"s#@PROJECT_BINARY_DIR@/apidocs#${output}#g\" -e \"s#@PACKAGE_VERSION@#${MARKETING_VERSION}#g\" -e \"s#@DOXYGEN_TOPICS@#<a href='topics.html'>Topics</a>#\" > \"${conf}\"\n\nmkdir -p \"${output}\"\n${DOXYGEN} \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -4455,6 +4455,9 @@
 		05E62B232FDA324200AE1B84 /* release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = release.xcconfig; sourceTree = "<group>"; };
 		05E62B242FDA324200AE1B84 /* sandbox.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = sandbox.xcconfig; sourceTree = "<group>"; };
 		05E62B252FDA719600AE1B84 /* Utils.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Utils.plist; sourceTree = "<group>"; };
+		05E62B262FDBE0B700AE1B84 /* plain.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = plain.entitlements; sourceTree = "<group>"; };
+		05E62B272FDBE0B700AE1B84 /* sandbox.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sandbox.entitlements; sourceTree = "<group>"; };
+		05E62B292FDBE0B700AE1B84 /* tools.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = tools.xcconfig; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05E7DA332758760100B01C09 /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		05E7DA342758760100B01C09 /* homologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homologicaldata.h; sourceTree = "<group>"; };
@@ -8332,8 +8335,19 @@
 				05E62B222FDA305900AE1B84 /* development.xcconfig */,
 				05E62B232FDA324200AE1B84 /* release.xcconfig */,
 				05E62B242FDA324200AE1B84 /* sandbox.xcconfig */,
+				05E62B292FDBE0B700AE1B84 /* tools.xcconfig */,
+				05E62B282FDBE0B700AE1B84 /* python */,
 			);
 			path = xcode;
+			sourceTree = "<group>";
+		};
+		05E62B282FDBE0B700AE1B84 /* python */ = {
+			isa = PBXGroup;
+			children = (
+				05E62B262FDBE0B700AE1B84 /* plain.entitlements */,
+				05E62B272FDBE0B700AE1B84 /* sandbox.entitlements */,
+			);
+			path = python;
 			sourceTree = "<group>";
 		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {

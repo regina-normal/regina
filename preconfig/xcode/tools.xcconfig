@@ -1,0 +1,3 @@
+// Allows configuration of external (non-Xcode) tools and dependencies:
+
+DOXYGEN = /opt/local/bin/doxygen

@@ -6,3 +6,4 @@ ENABLE_APP_SANDBOX = YES
 ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite
 ENABLE_USER_SELECTED_FILES = readwrite
 
+#include "tools.xcconfig"
