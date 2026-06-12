@@ -1,3 +1,6 @@
-// Allows configuration of external (non-Xcode) tools and dependencies:
+// Allows configuration of external (non-Xcode) tools and dependencies.
+//
+// DO NOT SELECT THIS CONFIGURATION IN THE XCODE PROJECT TAB!
+// This file is intended to be #included by other configurations.
 
 DOXYGEN = /opt/local/bin/doxygen

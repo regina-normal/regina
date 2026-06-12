@@ -1,4 +1,7 @@
-// Xcode config file for a sandboxed release through the App Store
+// Xcode config file for a sandboxed release through the App Store.
+//
+// DO NOT CHANGE THESE SETTINGS!
+// Any customisation should be done via tools.xcconfig.
 
 HEADER_SEARCH_PATHS = $(inherited) "$(SRCROOT)/preconfig/macos-appstore"
 

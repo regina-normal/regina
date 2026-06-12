@@ -1,4 +1,7 @@
-// Xcode config file for a non-sandboxed release through the Regina website
+// Xcode config file for a non-sandboxed release through the Regina website.
+//
+// DO NOT CHANGE THESE SETTINGS!
+// Any customisation should be done via tools.xcconfig.
 
 HEADER_SEARCH_PATHS = $(inherited) "$(SRCROOT)/preconfig/macos-release"
 ENABLE_APP_SANDBOX = NO
