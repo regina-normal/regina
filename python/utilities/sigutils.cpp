@@ -352,7 +352,10 @@ void addSigUtils(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(c);
 
-
     RDOC_SCOPE_END
+
+    // Deprecated type aliases:
+    m.attr("Base64SigDecoder") = m.attr("Base64Decoder");
+    m.attr("Base64SigEncoder") = m.attr("Base64Encoder");
 }
 

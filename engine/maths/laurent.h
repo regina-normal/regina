@@ -65,7 +65,7 @@ namespace regina {
  * two variables.
  *
  * \python In Python, the class Laurent refers to the specific
- * template class Laurent<Integer>.
+ * template class `Laurent<Integer>`.
  *
  * \tparam T the coefficient type.  A typical coefficient type would be
  * Integer or Rational.  Note that native C++ integer types are _not_
@@ -180,7 +180,7 @@ class Laurent :
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of coefficients.
+         * this routine takes a Python list of coefficients.
          *
          * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.
@@ -259,7 +259,7 @@ class Laurent :
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of coefficients.
+         * this routine takes a Python list of coefficients.
          *
          * \param minExp the exponent corresponding to the first
          * coefficient in the sequence.

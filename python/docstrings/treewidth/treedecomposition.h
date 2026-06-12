@@ -622,7 +622,8 @@ Exception ``InvalidArgument``:
     The adjacency matrix is not square.
 
 Python:
-    The adjacency matrix should be given as a list of lists.
+    The adjacency matrix should be given as a list of lists of
+    booleans.
 
 Parameter ``graph``:
     the adjacency matrix of the graph.

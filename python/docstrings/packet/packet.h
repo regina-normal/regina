@@ -294,7 +294,7 @@ External objects can listen for events on packets, such as when
 packets are changed or about to be destroyed. This is useful (for
 example) when keeping a graphical user interface in sync with any
 changes that might be happening within the engine and/or via users'
-python scripts. See the PacketListener class notes for details.
+Python scripts. See the PacketListener class notes for details.
 
 Regina's packet types do not support C++ move semantics, since this
 would interfere with the structure of the packet tree. They do support
@@ -1341,7 +1341,7 @@ distinct, i.e., a particular tag cannot be associated more than once
 with the same packet.
 
 Python:
-    This routine returns a python set.
+    This routine returns a Python set.
 
 Returns:
     the set of all tags associated with this packet.)doc";
@@ -1505,25 +1505,6 @@ Returns:
     an iterator over all immediate child packets.)doc";
 
 }; // struct PacketChildren
-
-struct PacketClass {
-
-// Docstring regina::python::doc::PacketClass::__concept
-static constexpr const char __concept[] =
-R"doc(A class that is equal to or derived from one of Regina's packet types.
-
-This concept does _not_ include the virtual base class Packet. It
-does, however, include SurfaceFilter (which represents a single packet
-type in Regina, but which itself is a virtual base class for different
-kinds of filters).
-
-Concepts:
-    PacketClass is a C++ concept. Concepts work with the C++ compiler
-    at build time: you cannot test in Python which concepts are
-    satisfied by which types. Instead, what this Python wrapper offers
-    is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct PacketClass
 
 struct PacketData {
 
@@ -1702,29 +1683,6 @@ Returns:
     an iterator over all strict descendant packets.)doc";
 
 }; // struct PacketDescendants
-
-struct PacketHeldType {
-
-// Docstring regina::python::doc::PacketHeldType::__concept
-static constexpr const char __concept[] =
-R"doc(A data type (typically mathematical) that can be held within one of
-Regina's wrapped packets. Specifically, such a type *T* can be held in
-the wrapped packet type ``PacketOf<T>``.
-
-Examples of such types *T* include ``Triangulation<dim>``, Link, and
-NormalSurfaces.
-
-See the Packet class notes for an overview of how wrapped packets
-work, as well as instructions on how to create a new wrapped packet
-type.
-
-Concepts:
-    PacketHeldType is a C++ concept. Concepts work with the C++
-    compiler at build time: you cannot test in Python which concepts
-    are satisfied by which types. Instead, what this Python wrapper
-    offers is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct PacketHeldType
 
 struct PacketListener {
 
@@ -2257,7 +2215,7 @@ since the underlying packet (and therefore the set that is referenced)
 is in the process of being destroyed.
 
 Python:
-    This routine returns a python set.
+    This routine returns a Python set.
 
 Returns:
     the set of all tags associated with this packet.)doc";
@@ -2329,39 +2287,6 @@ Returns:
     takes place.)doc";
 
 }; // struct SubtreeIterator
-
-struct TextPacket {
-
-// Docstring regina::python::doc::TextPacket::__concept
-static constexpr const char __concept[] =
-R"doc(A packet class that stores text (possibly alongside other data).
-
-Examples of this concept include Text and Script.
-
-Concepts:
-    TextPacket is a C++ concept. Concepts work with the C++ compiler
-    at build time: you cannot test in Python which concepts are
-    satisfied by which types. Instead, what this Python wrapper offers
-    is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct TextPacket
-
-struct WrappedPacket {
-
-// Docstring regina::python::doc::WrappedPacket::__concept
-static constexpr const char __concept[] =
-R"doc(A class that is equal to one of Regina's wrapped packet types.
-
-Subclasses are _not_ considered here: we requires ``T`` to be
-precisely a class of the form ``PacketOf<...>``.
-
-Concepts:
-    WrappedPacket is a C++ concept. Concepts work with the C++
-    compiler at build time: you cannot test in Python which concepts
-    are satisfied by which types. Instead, what this Python wrapper
-    offers is the concept _documentation_ (which you are reading now).)doc";
-
-}; // struct WrappedPacket
 
 } // namespace regina::python::doc
 

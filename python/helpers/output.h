@@ -79,18 +79,18 @@ enum class ReprStyle {
      * Indicates that there should be no custom \a __repr__ function at all.
      *
      * This will fall back to the (fairly uninformative) default provided by
-     * pybind11 and/or python.
+     * pybind11 and/or Python.
      */
     None
 };
 
 /**
- * Adds rich string output functions to the python bindings for a C++ class.
+ * Adds rich string output functions to the Python bindings for a C++ class.
  * The corresponding Python class should belong to the main `regina` module
  * (not `regina.interal`).
  *
- * This will add `str()`, `utf8()` and `detail()` to the python class.
- * It will also add `__str__` to provide "native" python string output by
+ * This will add `str()`, `utf8()` and `detail()` to the Python class.
+ * It will also add `__str__` to provide "native" Python string output by
  * calling the C++ `str()` member function, and it will add `__repr__` using
  * the given output style.
  *
@@ -134,11 +134,11 @@ void add_output_rich(pybind11::class_<T, options...>& c,
 }
 
 /**
- * Adds basic string output functions to the python bindings for a C++ class.
+ * Adds basic string output functions to the Python bindings for a C++ class.
  * The corresponding Python class should belong to the main `regina` module
  * (not `regina.interal`).
  *
- * This will add a `str()` function to the python class, and will also add
+ * This will add a `str()` function to the Python class, and will also add
  * `__str__` as an alias for this function to provide "native" Python string
  * output.  The implementation will simply call the C++ `str()` member function.
  * This will also add a `__repr__` function, using the given output style.
@@ -182,11 +182,11 @@ void add_output_basic(pybind11::class_<T, options...>& c,
 }
 
 /**
- * Adds output stream functionality to the python bindings for a C++ class.
+ * Adds output stream functionality to the Python bindings for a C++ class.
  * The corresponding Python class should belong to the main `regina` module
  * (not `regina.interal`).
  *
- * This will add a function `__str__` to the python class to provide "native"
+ * This will add a function `__str__` to the Python class to provide "native"
  * Python string output.  The implementation just writes the underlying C++
  * object to an output stream and collects the result.  This will also add
  * a `__repr__` function, using the given output style.
@@ -233,11 +233,11 @@ void add_output_ostream(pybind11::class_<T, options...>& c,
 }
 
 /**
- * Adds custom string output functions to the python bindings for a C++ class.
+ * Adds custom string output functions to the Python bindings for a C++ class.
  * The corresponding Python class should belong to the main `regina` module
  * (not `regina.interal`).
  *
- * This will add a function `__str__` to the python class to provide "native"
+ * This will add a function `__str__` to the Python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
  * which must be a callable type (typically a lambda) that can be called
  * with arguments of the form `outputFunction(const C&, std::ostream&)`.
@@ -275,13 +275,13 @@ void add_output_custom(pybind11::class_<T, options...>& c,
 }
 
 /**
- * Adds custom string output functions to the python bindings for a C++ class,
- * using the given "fake" class name in the python `__repr__` function.
+ * Adds custom string output functions to the Python bindings for a C++ class,
+ * using the given "fake" class name in the Python `__repr__` function.
  * This is useful for internal classes (such as standard C++ view classes and
- * Regina's own TableView classes) whose corresponding python class names are
+ * Regina's own TableView classes) whose corresponding Python class names are
  * both unwieldy and unimportant.
  *
- * This will add a function `__str__` to the python class to provide "native"
+ * This will add a function `__str__` to the Python class to provide "native"
  * Python string output.  The implementation will call \a outputFunction,
  * which must be a callable type (typically a lambda) that can be called
  * with arguments of the form `outputFunction(const C&, std::ostream&)`.

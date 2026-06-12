@@ -5,6 +5,7 @@ include_directories(${CMAKE_BINARY_DIR}/engine)
 set(TIMING_APPS
   group-simplify
   loadlarge
+  shell
   sizes
   tree
   )

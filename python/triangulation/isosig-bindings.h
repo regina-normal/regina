@@ -104,7 +104,7 @@ auto forIsoSigType(pybind11::type sigType, auto action) {
 }
 
 /**
- * Adds the generation/dimension-specific functions to the python bindings for
+ * Adds the generation/dimension-specific functions to the Python bindings for
  * the given encoding class.
  *
  * The type Encoding must conform to `IsoSigEncoding<generation, dim>`; however,
@@ -154,7 +154,7 @@ void add_isosig_encoding_functions(pybind11::class_<Encoding>& c) {
 
 /**
  * Adds all of the available variants of sig() / isoSig() / neoSig() to the
- * python bindings for a C++ triangulation class.
+ * Python bindings for a C++ triangulation class.
  *
  * To use this for the C++ class `Triangulation<dim>`, simply call
  * `regina::python::add_isosig_variants<dim>(c)`, where \a c is the

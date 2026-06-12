@@ -53,6 +53,8 @@ class Packet;
  * Both construction and the assignment operator should be supported, and
  * implicit conversion should be supported also.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T, typename Target>
@@ -68,6 +70,8 @@ concept InputIteratorFor =
  *
  * Both construction and the assignment operator should be supported, and
  * implicit conversion should be supported also.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
@@ -85,6 +89,8 @@ concept ForwardIteratorFor =
  * Both construction and the assignment operator should be supported, and
  * implicit conversion should be supported also.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T, typename Target>
@@ -101,6 +107,8 @@ concept BidirectionalIteratorFor =
  * Both construction and the assignment operator should be supported, and
  * implicit conversion should be supported also.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T, typename Target>
@@ -116,6 +124,8 @@ concept RandomAccessIteratorFor =
  * Specifically, such an iterator should have a `bool` operator that returns
  * \c true if and only if the iterator is dereferenceable.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T>
@@ -129,6 +139,8 @@ concept SelfSentinelInputIterator =
  *
  * Dereferencing the iterator should yield a `char`, possibly as a reference
  * and possibly `const`.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
@@ -144,6 +156,8 @@ concept CharIterator =
  * `const`).  Moreover, the iterator should have a `bool` operator that returns
  * \c true if and only if the iterator is dereferenceable.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T>
@@ -157,6 +171,8 @@ concept PacketIterator =
  * member functions.
  *
  * The corresponding iterator type must be a forward iterator.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
@@ -179,6 +195,8 @@ concept Iterable =
  * assignment operator should be supported, and implicit conversion should be
  * supported also.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T, typename Target>
@@ -197,6 +215,8 @@ concept IterableFor =
  * When converting elements to the type \a Target, both construction and the
  * assignment operator should be supported, and implicit conversion should be
  * supported also.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
@@ -217,6 +237,8 @@ concept BidirectionalIterableFor =
  * assignment operator should be supported, and implicit conversion should be
  * supported also.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T, typename Target>
@@ -227,9 +249,11 @@ concept RandomAccessIterableFor =
 /**
  * An output iterator type.
  *
- * The reason for using OutputIterator instead of std::output_iterator is that
+ * The reason for using OutputIterator instead of `std::output_iterator` is that
  * this concept does not require you to specify the output type in advance.
  * Instead, the output type is deduced automatically via `std::iter_value_t`.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
@@ -244,6 +268,8 @@ concept OutputIterator =
  * We do _not_ require that the elements be accessible via iteration.
  * We do however require some other parts of a standard container interface,
  * including `T::value_type` and `T::size()`.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
