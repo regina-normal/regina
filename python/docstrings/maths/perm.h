@@ -184,7 +184,7 @@ this will wrap around to become the first permutation in Perm<n>::Sn,
 which is the identity.
 
 Python:
-    This routine is named inc() since python does not support the
+    This routine is named inc() since Python does not support the
     increment operator.
 
 Returns:
@@ -941,7 +941,7 @@ cycle of length *n*), then this object will be set to the special
 past-the-end value (which can be tested by casting to a ``bool``).
 
 Python:
-    This routine is named inc() since python does not support the
+    This routine is named inc() since Python does not support the
     increment operator.
 
 Returns:

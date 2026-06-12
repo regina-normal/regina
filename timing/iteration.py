@@ -84,7 +84,7 @@ class It:
         self.count = self.count + 1
         return ret
 
-print('--- Start timer: pure python iteration ---')
+print('--- Start timer: pure Python iteration ---')
 start = time.time()
 for i in It(e):
     print(e.embedding(i), (time.time() - start) * 1000)

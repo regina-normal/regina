@@ -168,7 +168,7 @@ R"doc(The postdecrement operator. This operator decrements this integer by
 one, and returns a copy of the integer _before_ the decrement.
 
 Python:
-    This routine is named dec() since python does not support the
+    This routine is named dec() since Python does not support the
     decrement operator.
 
 Returns:
@@ -437,7 +437,7 @@ R"doc(The postincrement operator. This operator increments this integer by
 one, and returns a copy of the integer _before_ the increment.
 
 Python:
-    This routine is named inc() since python does not support the
+    This routine is named inc() since Python does not support the
     increment operator.
 
 Returns:

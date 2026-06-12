@@ -83,11 +83,11 @@
    Exactly one of REGINA_INSTALL_{XDG,HPC,BUNDLE,WINDOWS} should be defined. */
 /* #undef REGINA_INSTALL_WINDOWS */
 
-/* Define if Regina ships its own python, with the core python libraries
+/* Define if Regina ships its own Python, with the core Python libraries
    in pythonXY.zip. */
 /* #undef PYTHON_CORE_IN_ZIP */
 
-/* Define if Regina's python module is statically linked into the user
+/* Define if Regina's Python module is statically linked into the user
    interface. */
 /* #undef PYTHON_STATIC_LINK */
 
@@ -98,9 +98,9 @@
    This can always be changed at runtime via the GlobalDirs class. */
 #define REGINA_DATADIR "/usr/local/share/regina"
 
-/* Define to the directory on the system in which Regina's python module is
+/* Define to the directory on the system in which Regina's Python module is
    installed, or the empty string if the module is installed in a standard
-   python location (i.e., it can be found automatically on python's sys.path).
+   Python location (i.e., it can be found automatically on Python's sys.path).
    This can always be changed at runtime via the GlobalDirs class. */
 #define REGINA_PYLIBDIR ""
 

@@ -66,7 +66,7 @@ two variables.
 
 Python:
     In Python, the class Laurent refers to the specific template class
-    Laurent<Integer>.
+    ``Laurent<Integer>``.
 
 Template parameter ``T``:
     the coefficient type. A typical coefficient type would be Integer
@@ -238,7 +238,7 @@ implementation to compute the sequence length in constant time.
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
-    python list of coefficients.
+    Python list of coefficients.
 
 Parameter ``minExp``:
     the exponent corresponding to the first coefficient in the
@@ -386,7 +386,7 @@ implementation to compute the sequence length in constant time.
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
-    python list of coefficients.
+    Python list of coefficients.
 
 Parameter ``minExp``:
     the exponent corresponding to the first coefficient in the

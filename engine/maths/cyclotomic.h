@@ -178,8 +178,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * any missing coefficients are assumed to be zero.  In particular,
          * an empty sequence is allowed (and represents the zero field element).
          *
-         * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * \python Instead of a pair of iterators, this routine takes
+         * a Python list of Rational coefficients.
          *
          * \param field the order of the underlying cyclotomic field;
          * this must be strictly positive.

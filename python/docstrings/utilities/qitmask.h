@@ -36,7 +36,7 @@ std::swap(), with no need for any specialised move operations or swap
 functions.
 
 Python:
-    Python does not support templates, and so instead Regina's python
+    Python does not support templates, and so instead Regina's Python
     interface offers the classes Qitmask8, Qitmask16, Qitmask32,
     Qitmask64, Qitmask128, and (if the machine supports 128-bit
     integers) Qitmask256. Each of these will be an optimised qitmask
@@ -174,7 +174,7 @@ std::swap(), with no need for any specialised move operations or swap
 functions.
 
 Python:
-    Python does not support templates, and so instead Regina's python
+    Python does not support templates, and so instead Regina's Python
     interface offers the classes Qitmask8, Qitmask16, Qitmask32,
     Qitmask64, Qitmask128, and (if the machine supports 128-bit
     integers) Qitmask256. Each of these will be an optimised qitmask

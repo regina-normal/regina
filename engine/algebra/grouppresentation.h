@@ -2312,9 +2312,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          *  If no substitutions were found, this routine behaves in the same
          *  manner as `Agg::result()` does when no values were supplied to the
-         *  aggregator.  That is: depending on the aggregator type, this routine
-         *  might return a special empty value, or it might throw a NoSolution
-         *  exception.
+         *  aggregator.  Typically this means returning a special empty value;
+         *  what this looks like will depend on your chosen aggregator type.
          */
         template <Aggregator<WordSubstitutionData> Agg>
         static typename Agg::Result dehnAlgorithmSubMetric(

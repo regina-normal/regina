@@ -48,6 +48,8 @@ namespace regina {
 /**
  * A type of the form `std::array<Element, n>` for some integer \a n.
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T, typename Element>
@@ -60,6 +62,8 @@ concept ArrayOf =
  *
  * This concept could (for example) be used to constrain the type of an array
  * class constant.
+ *
+ * \nopython
  *
  * \ingroup concepts
  */

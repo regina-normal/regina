@@ -2154,9 +2154,11 @@ template <int dim, int subdim>
 requires (supportedDim(dim) && subdim >= 0 && subdim < dim)
 inline auto Face<dim, subdim>::linkingSurface() const
         requires (dim == 3 || dim == 4) {
-    if constexpr (subdim == 0)
-        return std::move(triangulation().linkingSurface(*this).first);
-    else
+    if constexpr (subdim == 0) {
+        // My understanding is that a data member of an rvalue expression is
+        // itself an rvalue expression.  So no std::move() is needed here.
+        return triangulation().linkingSurface(*this).first;
+    } else
         return triangulation().linkingSurface(*this);
 }
 

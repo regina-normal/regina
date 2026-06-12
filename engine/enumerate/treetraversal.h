@@ -914,7 +914,7 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * but you should not use it as a callback with run().  Currently this
          * causes a crash in Python, most likely coming from some confusion
          * in passing a C++ function as a C++ callback via a Python wrapper.
-         * Instead you can use a pure python function \a f as a callback,
+         * Instead you can use a pure Python function \a f as a callback,
          * where `f(tree)` just calls `tree.writeSurface()`.
          *
          * \param tree the tree traversal object from which we are
@@ -1234,7 +1234,7 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * but you should not use it as a callback with run().  Currently this
          * causes a crash in Python, most likely coming from some confusion
          * in passing a C++ function as a C++ callback via a Python wrapper.
-         * Instead you can use a pure python function \a f as a callback,
+         * Instead you can use a pure Python function \a f as a callback,
          * where `f(tree)` just calls `tree.writeStructure()`.
          *
          * \param tree the tree traversal object from which we are
