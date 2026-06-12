@@ -3625,7 +3625,6 @@
 		057EDAF42581D95B004F0068 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = ../../Qt/current/macos/plugins/platforms/libqcocoa.dylib; sourceTree = "<group>"; };
 		057EDEF82582370B004F0068 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
 		057EDF1925823779004F0068 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
-		057EE01C2582416B004F0068 /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
 		057FDAF22EE56488000C706E /* stringutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stringutils.cpp; sourceTree = "<group>"; };
 		057FDAF42EE7ACC3000C706E /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		057FDAF52EE7ACC3000C706E /* core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
@@ -3917,7 +3916,6 @@
 		05ACCA002AFC775B000CF07F /* SpatialLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialLinkView.swift; sourceTree = "<group>"; };
 		05AF8FD227F66B4E00D3A383 /* hilbertprimal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hilbertprimal.cpp; sourceTree = "<group>"; };
 		05B0E139259AAC87000B62A3 /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
-		05B0E13B259AAC98000B62A3 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = /Library/Frameworks/Python.framework; sourceTree = "<absolute>"; };
 		05B14EA319B423A0002138C0 /* mkcensusdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mkcensusdb; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B1EF141C542991008E7B49 /* boundary4chooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundary4chooser.cpp; sourceTree = "<group>"; };
 		05B1EF151C542991008E7B49 /* boundary4chooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundary4chooser.h; sourceTree = "<group>"; };
@@ -6516,9 +6514,7 @@
 				057ED8E92581B49E004F0068 /* QtPrintSupport.framework */,
 				057ED8E72581B49E004F0068 /* QtSvg.framework */,
 				057ED8ED2581B49E004F0068 /* QtWidgets.framework */,
-				05B0E13B259AAC98000B62A3 /* Python.framework */,
 				05B0E139259AAC87000B62A3 /* Python3.framework */,
-				057EE01C2582416B004F0068 /* DBChooser.framework */,
 				05C65E781D9C7B1200877233 /* System */,
 			);
 			name = Frameworks;
