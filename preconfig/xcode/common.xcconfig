@@ -14,16 +14,16 @@ DOXYGEN = /opt/local/bin/doxygen
 // A basic configuration for codesigning that is not good for anything other
 // than running building and locally.
 
-CODE_SIGN_IDENTITY = "-"
+CODE_SIGN_IDENTITY = -
 CODE_SIGN_STYLE = Manual
-DEVELOPMENT_TEAM = ""
+DEVELOPMENT_TEAM =
 
 // If you are preparing to upload a formal release, you should override this
 // with new signing configuration in the file signing.xcconfig (and again,
 // please do not commit this file to the repository).  Typically your
 // signing.xcconfig would look something like the following:
 //
-// CODE_SIGN_IDENTITY = "Apple Development"
+// CODE_SIGN_IDENTITY = Apple Development
 // CODE_SIGN_STYLE = Automatic
 // DEVELOPMENT_TEAM = XYZPQ12345
 //
