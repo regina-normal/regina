@@ -1646,9 +1646,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         //TODO  knows...() routines for generalised angle structures and/or
         //      boundary-null angle structures?
 
+        //TODO  Fix definition of boundary-null.
         /**
          * Returns a boundary-null angle structure on this triangulation, if
-         * one exists.
+         * one exists and can be computed.
          *
          * A _boundary-null_ angle structure is a generalised angle structure
          * (as defined in the generalAngleStructure() documentation) that
@@ -1698,10 +1699,56 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * this routine might throw NoSolution in some circumstances.
          *
          * \return a boundary-null angle structure on this triangulation, if
-         * one exists.
+         * one exists and can be computed.
          */
         const AngleStructure& boundaryNullAngleStructure() const;
         /**
+         * Determines whether this triangulation supports a boundary-null
+         * angle structure.
+         *
+         * A _boundary-null_ angle structure is a generalised angle structure
+         * (as defined in the generalAngleStructure() documentation) that
+         * satisfies the additional condition of having vanishing peripheral
+         * rotational holonomy. In a valid orientable triangulation in which
+         * every vertex link is a torus, such an angle structure always
+         * exists; see Proposition 3.3 of "The Thurston norm via spun-normal
+         * immersions", Daryl Cooper and Stephan Tillmann and William Worden,
+         * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236).
+         *
+         * This routine returns \c false if and only if
+         * boundaryNullAngleStructure() throws an exception. However, if you
+         * do not _know_ whether a boundary-null angle structure exists, then
+         * this routine is faster:
+         *
+         * - If there is _no_ boundary-null angle structure, this routine will
+         *   avoid the overhead of throwing and catching exceptions.
+         *
+         * - If there _is_ a boundary-null angle structure, this routine will
+         *   find and cache this angle structure, which means that any
+         *   subsequent call to boundaryNullAngleStructure() to retrieve its
+         *   details will be essentially instantaneous.
+         *
+         * At present, we have preconditions on when
+         * boundaryNullAngleStructure() can compute a boundary-null angle
+         * structure, so a return value of \c false does not necessarily
+         * indicate that no such angle structure exists; instead, it might
+         * simply mean that the preconditions are not satisfied. Since these
+         * preconditions might be weakened in future versions of Regina, this
+         * means that future versions of this routine might return different
+         * answers.
+         *
+         * The underlying algorithm simply solves a system of linear equations,
+         * and so should be fast even for large triangulations.
+         *
+         * For the empty triangulation, this routine returns \c true, and
+         * caches the empty angle structure as its solution.
+         *
+         * \warning As explained above, in cases where this routine currently
+         * returns \c false, the return value might change in future versions
+         * of Regina.
+         *
+         * \return \c true if and only if a boundary-null angle structure
+         * exists on this triangulation.
          */
         bool hasBoundaryNullAngleStructure() const;
 
