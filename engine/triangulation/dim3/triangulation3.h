@@ -1646,7 +1646,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         //TODO  knows...() routines for generalised angle structures and/or
         //      boundary-null angle structures?
 
-        //TODO  Fix definition of boundary-null.
         /**
          * Returns a boundary-null angle structure on this triangulation, if
          * one exists and can be computed.
@@ -1703,8 +1702,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         const AngleStructure& boundaryNullAngleStructure() const;
         /**
-         * Determines whether this triangulation supports a boundary-null
-         * angle structure.
+         * Determines whether a boundary-null angle structure can be computed
+         * for this triangulation.
          *
          * A _boundary-null_ angle structure is a generalised angle structure
          * (as defined in the generalAngleStructure() documentation) that
@@ -1717,25 +1716,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * This routine returns \c false if and only if
          * boundaryNullAngleStructure() throws an exception. However, if you
-         * do not _know_ whether a boundary-null angle structure exists, then
-         * this routine is faster:
+         * do not _know_ whether a boundary-null angle structure can be
+         * computed, then this routine is faster:
          *
-         * - If there is _no_ boundary-null angle structure, this routine will
-         *   avoid the overhead of throwing and catching exceptions.
+         * - If there is no boundary-null angle structure, or if one or more
+         *   preconditions of boundaryNullAngleStructure() fails, this routine
+         *   will avoid the overhead of throwing and catching exceptions.
          *
-         * - If there _is_ a boundary-null angle structure, this routine will
-         *   find and cache this angle structure, which means that any
+         * - If a boundary-null angle structure can be computed, this routine
+         *   will find and cache this angle structure, which means that any
          *   subsequent call to boundaryNullAngleStructure() to retrieve its
          *   details will be essentially instantaneous.
          *
-         * At present, we have preconditions on when
-         * boundaryNullAngleStructure() can compute a boundary-null angle
-         * structure, so a return value of \c false does not necessarily
-         * indicate that no such angle structure exists; instead, it might
-         * simply mean that the preconditions are not satisfied. Since these
-         * preconditions might be weakened in future versions of Regina, this
-         * means that future versions of this routine might return different
-         * answers.
+         * Because boundaryNullAngleStructure() currently has preconditions
+         * for when it can compute a boundary-null angle structure, a return
+         * value of \c false from this routine does not necessarily indicate
+         * that no such angle structure exists; instead, it might simply mean
+         * that the preconditions are not satisfied. Since these preconditions
+         * might be weakened in future versions of Regina, future versions of
+         * this routine might therefore return different answers.
          *
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
@@ -1743,12 +1742,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * For the empty triangulation, this routine returns \c true, and
          * caches the empty angle structure as its solution.
          *
-         * \warning As explained above, in cases where this routine currently
-         * returns \c false, the return value might change in future versions
-         * of Regina.
+         * \warning As explained above, for some cases where this routine
+         * currently returns \c false, the return value might change to
+         * \c true in future versions of Regina.
          *
-         * \return \c true if and only if a boundary-null angle structure
-         * exists on this triangulation.
+         * \return \c true if and only if a boundary-null angle structure can
+         * be computed on this triangulation.
          */
         bool hasBoundaryNullAngleStructure() const;
 
@@ -4989,6 +4988,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * SnapPea data.
          */
         static Triangulation<3> fromSnapPea(std::istream& in);
+
+        /**
+         * Implements boundaryNullAngleStructure() and
+         * hasBoundaryNullAngleStructure().
+         */
+        template <bool throwIfNoSolution>
+        bool hasBoundaryNullAngleStructureInternal() const;
 
     friend class Simplex<3>;
     friend class detail::TriangulationBase<3>;
