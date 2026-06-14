@@ -1574,12 +1574,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
          *
-         * In the specific case where this triangulation is orientable and is
-         * held by a SnapPeaTriangulation, this routine solves additional
-         * linear equations to ensure that the returned generalised angle
-         * structure is boundary-null (i.e., has vanishing peripheral
-         * rotational holonomy).
-         *
          * The result of this routine is cached internally: as long as
          * the triangulation does not change, multiple calls to
          * generalAngleStructure() will return identical angle structures,
@@ -1652,7 +1646,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         //TODO  knows...() routines for generalised angle structures and/or
         //      boundary-null angle structures?
 
-        //TODO Fix how "boundary-null" is defined.
         /**
          * Returns a boundary-null angle structure on this triangulation, if
          * one exists.
@@ -1660,26 +1653,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * A _boundary-null_ angle structure is a generalised angle structure
          * (as defined in the generalAngleStructure() documentation) that
          * satisfies the additional condition of having vanishing peripheral
-         * rotational holonomy. Such an angle structure always exists in a
-         * valid oriented triangulation in which every vertex link is a torus,
-         * and for the purposes of this routine these triangulations are
-         * considered to be the _only_ triangulations in which boundary-null
-         * angle structures exist.
+         * rotational holonomy. In a valid orientable triangulation in which
+         * every vertex link is a torus, such an angle structure always
+         * exists; see Proposition 3.3 of "The Thurston norm via spun-normal
+         * immersions", Daryl Cooper and Stephan Tillmann and William Worden,
+         * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236).
          *
-         * This routine is designed for scenarios where you already know
-         * that a boundary-null angle structure exists.  This means:
+         * At present, this routine requires that this is a valid oriented
+         * triangulation in which every vertex link is a torus (hence, a
+         * boundary-null angle structure always exists if these preconditions
+         * are satisfied). However, future versions of Regina might ease these
+         * restrictions on the triangulation, so future versions of this
+         * routine might throw NoSolution even when all preconditions are
+         * satisfied.
          *
-         * - If no boundary-null angle structure exists, this routine will
-         *   throw an exception, which will incur a significant overhead.
-         *
-         * - It should be rare that you do not know in advance whether a
-         *   boundary-null angle structure exists (the simple conditions were
-         *   outlined above).  However, if you don't yet know, you should
-         *   call hasBoundaryNullAngleStructure() first.  If the answer is no,
-         *   this will avoid the overhead of throwing and catching exceptions.
-         *   If the answer is yes, this will have the side-effect of caching
-         *   the angle structure, which means your subsequent call to
-         *   boundaryNullAngleStructure() will be essentially instantaneous.
+         * To avoid the overhead of throwing and catching exceptions, you can
+         * call hasBoundaryNullAngleStructure(), which will return \c true if
+         * and only if all preconditions of this routine are satisfied and a
+         * boundary-null angle structure exists.
          *
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
@@ -1696,8 +1687,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * For the empty triangulation, this routine returns the empty angle
          * structure.
          *
-         * \exception NoSolution No boundary-null angle structure exists on
-         * this triangulation.
+         * \pre This triangulation is valid and oriented.
+         * \pre Every vertex link is a torus.
+         *
+         * \exception FailedPrecondition This triangulation is invalid, or is
+         * not oriented, or has one or more non-torus vertex links.
+         *
+         * \warning As explained above, the preconditions might be weakened in
+         * future versions of Regina, and as a side-effect future versions of
+         * this routine might throw NoSolution in some circumstances.
          *
          * \return a boundary-null angle structure on this triangulation, if
          * one exists.
