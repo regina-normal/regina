@@ -335,6 +335,35 @@ void NormalSurface::calculateEulerChar() const {
     eulerChar_ = ans;
 }
 
+void NormalSurface::calculateSpunEulerChar() const {
+    const SnapPeaTriangulation* snapPea = triangulation().isSnapPea();
+    if ( !snapPea || !triangulation().isOrientable() ) {
+        // Fall back on the old implementation.
+        calculateEulerChar();
+        return;
+    }
+
+    // We are guaranteed to have a generalised angle structure. Moreover, the
+    // new implementation ensures vanishing peripheral rotational holonomy.
+    // Using the combinatorial Gauss-Bonnet formula, we can therefore compute
+    // the Euler characteristic by, in effect, taking the dot product of the
+    // angles vector with the quad coordinate vector.
+    AngleStructure angles = snapPea->generalAngleStructure();
+    Rational ans;   // Initialised to zero
+    for ( size_t tetIndex = 0; tetIndex < snapPea->size(); ++tetIndex ) {
+        for ( int quadType = 0; quadType < 3; ++quadType ) {
+            LargeInteger quadCount = quads( tetIndex, quadType );
+            if ( quadCount != LargeInteger::zero ) {
+                Rational quadArea = angles.angle( tetIndex, quadType );
+                ans -= quadArea * Rational(quadCount);
+            }
+        }
+    }
+
+    // Done!
+    eulerChar_ = LargeInteger( ans.numerator() );
+}
+
 void NormalSurface::calculateRealBoundary() const {
     if (triangulation_->isClosed()) {
         realBoundary_ = false;

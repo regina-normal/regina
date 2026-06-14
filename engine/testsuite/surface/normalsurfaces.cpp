@@ -368,6 +368,8 @@ TEST(NormalSurfacesTest, norSFS) {
     }, 36);
 }
 
+//TODO Test the new euler char implementation for spun-normal surfaces.
+
 // Use std::tuple for the free comparison operators.
 using NonCompactProfile = std::tuple<
     regina::Integer /* euler char, or always 0 for non-compact surfaces */,
