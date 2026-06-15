@@ -1672,11 +1672,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * exceptions that this routine can throw if these requirements are
          * not met.
          *
-         * To avoid the overhead of throwing and catching exceptions, you can
-         * call hasBoundaryNullAngleStructure(), which will return \c true if
-         * and only if all preconditions of this routine are satisfied and a
-         * boundary-null angle structure exists.
-         *
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
          *
@@ -1698,21 +1693,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception FailedPrecondition This triangulation is invalid, or is
          * not oriented, or has one or more non-torus vertex links.
          *
+         * \exception UnsolvedCase SnapPea retriangulates the underlying
+         * triangulation.
+         *
          * \note At present, the preconditions are strong enough to ensure
          * that a boundary-null angle structure always exists. However, these
-         * preconditions might be weakened in future versions of Regina.
+         * preconditions might be eased in future versions of Regina.
          *
          * \return a boundary-null angle structure on this triangulation.
          *
          * \author Alex He
          */
         const AngleStructure& boundaryNullAngleStructure() const;
-        //TODO  It's probably not good to use the return value of
-        //      hasBoundaryNullAngleStructure() to indicate whether
-        //      preconditions are satisfied.
         /**
-         * Determines whether a boundary-null angle structure can be computed
-         * for this triangulation.
+         * Determines whether this triangulation supports a boundary-null
+         * angle structure.
          *
          * A _boundary-null_ angle structure is a generalised angle structure
          * (as defined in the generalAngleStructure() documentation) that
@@ -1723,27 +1718,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * immersions", Daryl Cooper and Stephan Tillmann and William Worden,
          * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236).
          *
+         * At present, this routine only works with valid oriented
+         * triangulations in which every vertex link is a torus. Moreover,
+         * this routine relies on the SnapPea kernel, so SnapPea must be able
+         * to work directly with this triangulation. See below for details on
+         * the exceptions that this routine can throw if these requirements
+         * are not met.
+         *
          * This routine returns \c false if and only if
-         * boundaryNullAngleStructure() throws an exception. However, if you
-         * do not _know_ whether a boundary-null angle structure can be
-         * computed, then this routine is faster:
-         *
-         * - If there is no boundary-null angle structure, or if one or more
-         *   preconditions of boundaryNullAngleStructure() fails, this routine
-         *   will avoid the overhead of throwing and catching exceptions.
-         *
-         * - If a boundary-null angle structure can be computed, this routine
-         *   will find and cache this angle structure, which means that any
-         *   subsequent call to boundaryNullAngleStructure() to retrieve its
-         *   details will be essentially instantaneous.
-         *
-         * Because boundaryNullAngleStructure() currently has preconditions
-         * for when it can compute a boundary-null angle structure, a return
-         * value of \c false from this routine does not necessarily indicate
-         * that no such angle structure exists; instead, it might simply mean
-         * that the preconditions are not satisfied. Since these preconditions
-         * might be weakened in future versions of Regina, future versions of
-         * this routine might therefore return different answers.
+         * boundaryNullAngleStructure() throws NoSolution. Since the current
+         * preconditions are sufficient to ensure that a boundary-null angle
+         * angle structure always exists, this means that at present, this
+         * routine always either returns \c true, or throws an exception other
+         * than NoSolution. However, the preconditions might be eased in
+         * future versions of Regina, so a return value of \c false might
+         * become possible in future.
          *
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
@@ -1751,12 +1740,21 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * For the empty triangulation, this routine returns \c true, and
          * caches the empty angle structure as its solution.
          *
-         * \warning As explained above, for some cases where this routine
-         * currently returns \c false, the return value might change to
-         * \c true in future versions of Regina.
+         * \pre This triangulation is valid and oriented.
+         * \pre Every vertex link is a torus.
          *
-         * \return \c true if and only if a boundary-null angle structure can
-         * be computed on this triangulation.
+         * \exception FailedPrecondition This triangulation is invalid, or is
+         * not oriented, or has one or more non-torus vertex links.
+         *
+         * \exception UnsolvedCase SnapPea retriangulates the underlying
+         * triangulation.
+         *
+         * \note At present, the preconditions are strong enough to ensure
+         * that a boundary-null angle structure always exists. However, these
+         * preconditions might be eased in future versions of Regina.
+         *
+         * \return \c true if and only if a boundary-null angle structure
+         * exists on this triangulation.
          *
          * \author Alex He
          */
@@ -5004,9 +5002,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Implements hasGeneralAngleStructure() and
          * hasBoundaryNullAngleStructure().
          *
+         * \exception FailedPrecondition `bdryNull` is true, and this
+         * triangulation fails to satisfy the preconditions for
+         * hasBoundaryNullAngleStructure().
+         *
+         * \exception UnsolvedCase `bdryNull` is true, and SnapPea
+         * retriangulates the underlying triangulation.
+         *
          * \author B.B., Alex He
          */
-        template <bool bdryNull, bool throwIfNoSolution>
+        template <bool bdryNull>
         bool hasGeneralAngleStructureInternal() const;
 
     friend class Simplex<3>;
@@ -5354,7 +5359,6 @@ inline const AngleStructure& Triangulation<3>::strictAngleStructure() const {
         throw NoSolution();
 }
 
-//TODO Independent boundary-null computation.
 inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
     // Optimise for the common case where a solution is known to exist,
     // so we can inline it.
@@ -5366,6 +5370,31 @@ inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
         return std::get<AngleStructure>(generalAngleStructure_);
     else
         throw NoSolution();
+}
+
+inline bool Triangulation<3>::hasGeneralAngleStructure() const {
+    // Don't enforce boundary-null condition.
+    return hasGeneralAngleStructureInternal<false>();
+}
+
+inline const AngleStructure& Triangulation<3>::boundaryNullAngleStructure() const {
+    // Optimise for the common case where a solution is known to exist,
+    // so we can inline it.
+    if (std::holds_alternative<AngleStructure>(bdryNullAngleStructure_))
+        return std::get<AngleStructure>(bdryNullAngleStructure_);
+
+    // Either there is no solution or we don't know yet.
+    if (hasGeneralAngleStructure())
+        return std::get<AngleStructure>(bdryNullAngleStructure_);
+    else
+        throw NoSolution();
+}
+
+inline bool Triangulation<3>::hasBoundaryNullAngleStructure() const {
+    // Enforce boundary-null condition.
+    // The internal implementation automatically throws the required
+    // exceptions.
+    return hasGeneralAngleStructureInternal<true>();
 }
 
 inline bool Triangulation<3>::knowsHomologyRel(bool) const {

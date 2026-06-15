@@ -32,6 +32,7 @@
 #include "enumerate/treeconstraint.h"
 #include "enumerate/treelp.h"
 #include "triangulation/dim3.h"
+#include "snappea/snappeatriangulation.h"
 
 namespace regina {
 
@@ -97,76 +98,60 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
     return true;
 }
 
-template <bool bdryNull, bool throwIfNoSolution>
+template <bool bdryNull>
 bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     if constexpr (bdryNull) {
         if (std::holds_alternative<AngleStructure>(bdryNullAngleStructure_)) {
             return true; // known to have a solution
         } else if (std::get<bool>(bdryNullAngleStructure_)) {
             // At present, the preconditions are strong enough to ensure that
-            // a boundary-null angle structure always exists, so we should
-            // never see this case.
+            // a boundary-null angle structure always exists.
+            //TODO  Should probably use an exception or an assert.
             std::cerr << "ERROR: Failed to find a "
                 "boundary-null angle structure." << std::endl;
 
             // At any rate, it must be the case that we successfully ran the
-            // computation and failed to find a solution. And this will handle
-            // things correctly if we ever ease the preconditions.
-            if constexpr (throwIfNoSolution) {
-                throw regina::NoSolution();
-            } else {
-                return false;
-            }
+            // computation and failed to find a solution.
+            return false;
         }
     } else {
         if (std::holds_alternative<AngleStructure>(generalAngleStructure_)) {
             return true; // known to have a solution
         } else if (std::get<bool>(generalAngleStructure_)) {
-            // Known to have no solution.
-            if constexpr (throwIfNoSolution) {
-                throw regina::NoSolution();
-            } else {
-                return false;
-            }
+            return false; // known to have no solution.
         }
     }
 
-    // For computing a boundary-null angle structure, we currently have
-    // preconditions which we promise to check.
-    if constexpr (bdryNull) {
-        if constexpr (throwIfNoSolution) {
-            if (! isValid()) {
-                throw regina::FailedPrecondition(
-                        "boundaryNullAngleStructure() "
-                        "requires a valid triangulation" );
-            } else if (! isOriented()) {
-                throw regina::FailedPrecondition(
-                        "boundaryNullAngleStructure() "
-                        "requires an oriented triangulation");
-            }
-
-            // Check that every vertex link is a torus.
-            //TODO
-        } else {
-            if ( !isValid() || !isOriented() ) {
-                return false;
-            }
-
-            // Check that every vertex link is a torus.
-            //TODO
-        }
-    }
-
-    // Run the full computation and cache the resulting structure, if any.
-
-    // There are some simple cases for which we can deduce the answer
-    // automatically.
+    // As promised in the documentation, the empty triangulation gets the
+    // empty angle structure.
     if (simplices_.empty()) {
+        if constexpr (bdryNull) {
+            bdryNullAngleStructure_ = AngleStructure(*this, { 1 });
+        }
         generalAngleStructure_ = AngleStructure(*this, { 1 });
         return true;
     }
 
-    if (! hasBoundaryTriangles()) {
+    // Handle the preconditions and/or other easy cases.
+    if constexpr (bdryNull) {
+        if (! isValid()) {
+            throw regina::FailedPrecondition(
+                    "boundaryNullAngleStructure() "
+                    "requires a valid triangulation" );
+        } else if (! isOriented()) {
+            throw regina::FailedPrecondition(
+                    "boundaryNullAngleStructure() "
+                    "requires an oriented triangulation");
+        }
+        for ( Vertex<3>* v : vertices() ) {
+            if ( (! v->isIdeal()) || (! v->isLinkOrientable()) ||
+                    (v->linkEulerChar() != 0) ) {
+                throw regina::FailedPrecondition(
+                        "boundaryNullAngleStructure() "
+                        "requires every vertex link to be a torus");
+            }
+        }
+    } else if (! hasBoundaryTriangles()) {
         // It is easy to prove that, if an angle structure exists,
         // then we must have #edges = #tetrahedra.
         if (countEdges() != simplices_.size()) {
@@ -184,22 +169,33 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
         // thing if there is no solution).
     }
 
-    //TODO Update implementation using template arguments.
-
-    // In general, we want *any* solution to the homogeneous angle structure
-    // equations where the final coordinate (representing the scaling factor)
-    // is non-zero.
+    // Run the full computation and cache the resulting structure, if any.
+    //
+    // We want a solution to the homogeneous angle structure equations where
+    // the final coordinate (representing the scaling factor) is non-zero. In
+    // the case where bdryNull is true, we also want the solution to have
+    // vanishing peripheral rotational holonomy.
+    //
     // The MatrixInt::rowEchelonForm() routine is enough for this: if there is
     // any solution where the final coordinate is non-zero, then the final
     // column will not appear as a leading coefficient in row echelon form.
-    //
-    // In the specific case where we have an orientable SnapPeaTriangulation,
-    // we can always impose the additional condition that the angle structure
-    // is boundary-null (i.e., has vanishing peripheral rotational holonomy).
-
     MatrixInt eqns;
-    if ( isSnapPea() && isOrientable() ) {
-        eqns = regina::makeBoundaryNullAngleEquations( *isSnapPea() );
+    if constexpr (bdryNull) {
+        SnapPeaTriangulation snapPea(*this);
+        if (snapPea.isNull()) {
+            throw regina::UnsolvedCase( "SnapPea produced a null "
+                    "triangulation when attempting to make the "
+                    "boundary-null angle structure equations" );
+        }
+
+        // Use a static_cast to ensure we are using the Triangulation<3>
+        // equality test.
+        if (static_cast<const Triangulation<3>&>(snapPea) != *this) {
+            throw regina::UnsolvedCase( "SnapPea retriangulated "
+                    "when attempting to make the boundary-null angle "
+                    "structure equations" );
+        }
+        eqns = regina::makeBoundaryNullAngleEquations(snapPea);
     } else {
         eqns = regina::makeAngleEquations(*this);
     }
@@ -222,10 +218,20 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
         ++col;
     }
 
+    //TODO  When we compute an answer for bdryNullAngleStructure_, the same
+    //      answer should also be suitable for generalAngleStructure_.
+    //      But at least for now, we will keep the two computations completely
+    //      independent (which keeps the behaviour of generalAngleStructure()
+    //      consistent with Regina ≤ 7.x).
+
     if (leading[rank - 1] + 1 == eqns.columns()) {
         // The final column appears as a leading coefficient.
         delete[] leading;
-        generalAngleStructure_ = true; // confirmed: no solution
+        if constexpr (bdryNull) {
+            bdryNullAngleStructure_ = true; // confirmed: no solution
+        } else {
+            generalAngleStructure_ = true; // confirmed: no solution
+        }
         return false;
     }
 
@@ -272,9 +278,17 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     }
 
     delete[] leading;
-    generalAngleStructure_ = AngleStructure(*this, std::move(v));
+    if constexpr (bdryNull) {
+        bdryNullAngleStructure_ = AngleStructure(*this, std::move(v));
+    } else {
+        generalAngleStructure_ = AngleStructure(*this, std::move(v));
+    }
     return true;
 }
+
+// Instantiate both variants of hasGeneralAngleStructureInternal().
+template bool Triangulation<3>::hasGeneralAngleStructureInternal<true>() const;
+template bool Triangulation<3>::hasGeneralAngleStructureInternal<false>() const;
 
 } // namespace regina
 
