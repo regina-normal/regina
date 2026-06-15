@@ -74,7 +74,8 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     chooseType->addItem(tr("Dual graph"));
     chooseType->addItem(tr("Tree decomposition"));
     chooseType->addItem(tr("Nice tree decomposition"));
-    connect(chooseType, SIGNAL(activated(int)), this, SLOT(changeType(int)));
+    connect(chooseType, &QComboBox::activated, this,
+        &FacetGraphTab::changeType);
     hdrLayout->addWidget(chooseType);
     QString msg = tr("<qt>Allows you to switch between different graphs.<p>"
         "The <i>dual graph</i> (or the %1 pairing graph) has a node "

@@ -307,6 +307,11 @@ Version 8.0  [ TODO ]
         Class Laurent<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
+            - Removed the exponent-based constructor Laurent(exp) and
+              initialiser init(exp), which were deprecated in Regina 7.4.
+        Class Laurent2<T>:
+            - Removed the exponent-based constructor Laurent2(xExp, yExp) and
+              initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
         Class LightweightSequence<T>:
             - Removed the inner class SubsequenceCompareFirst<...>.
               This was a very specialised class designed specifically for
@@ -456,6 +461,8 @@ Version 8.0  [ TODO ]
         Class Polynomial<T>:
             - For the iterator-based constructor and init() routine, the
               iterator type is now required to be random access.
+            - Removed the exponent-based constructor Polynomial(degree) and
+              initialiser init(degree), which were deprecated in Regina 7.4.
         Class Primes:
             - The python-only routines primeDecompInt() and
               primePowerDecompInt() are now just overloads for primeDecomp()

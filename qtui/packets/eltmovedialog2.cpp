@@ -172,10 +172,10 @@ EltMoveDialog2::EltMoveDialog2(QWidget* parent,
         QDialogButtonBox::Apply | QDialogButtonBox::Close);
     dialogLayout->addWidget(buttons);
 
-    connect(buttons, SIGNAL(clicked(QAbstractButton*)), this,
-        SLOT(clicked(QAbstractButton*)));
-    connect(moveTypes, SIGNAL(buttonClicked(QAbstractButton*)), this,
-        SLOT(updateApply()));
+    connect(buttons, &QDialogButtonBox::clicked, this,
+        &EltMoveDialog2::clicked);
+    connect(moveTypes, &QButtonGroup::buttonClicked, this,
+        &EltMoveDialog2::updateApply);
 
     packetWasRenamed(*tri);
     packetWasChanged(*tri);

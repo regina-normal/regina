@@ -121,8 +121,6 @@ class GluingsModel2 : public QAbstractItemModel {
  * A 2-manifold triangulation page for editing edge gluings.
  */
 class Tri2GluingsUI : public QObject, public PacketEditorTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -184,7 +182,6 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         void refresh() override;
         void endEdit() override;
 
-    public slots:
         /**
          * Gluing edit actions.
          */

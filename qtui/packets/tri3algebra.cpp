@@ -198,7 +198,8 @@ Tri3HomologyFundUI::Tri3HomologyFundUI(
     fgGroup = new GroupWidget(true /* simplification */, true /* padding */);
     fgGroup->setWhatsThis(tr("A full set of generators and relations "
         "for the fundamental group of this triangulation."));
-    connect(fgGroup, SIGNAL(simplified()), this, SLOT(fundGroupSimplified()));
+    connect(fgGroup, &GroupWidget::simplified, this,
+        &Tri3HomologyFundUI::fundGroupSimplified);
     fundLayout->addWidget(fgGroup, 1);
 
     master->addLayout(fundLayout, tr("Fundamental Group"));
@@ -337,7 +338,8 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(
     val->setBottom(0);
     params->setValidator(val);
     params->setWhatsThis(expln);
-    connect(params, SIGNAL(returnPressed()), this, SLOT(calculateInvariant()));
+    connect(params, &QLineEdit::returnPressed, this,
+        qOverload<>(&Tri3TuraevViroUI::calculateInvariant));
     paramsArea->addWidget(params);
 
     calculate = new QPushButton(ReginaSupport::themeIcon("system-run"),
@@ -351,7 +353,8 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(
         "<b>Warning:</b> This calculation can be quite slow for large "
         "values of <i>r</i>, since the processing time grows exponentially "
         "with <i>r</i>.</qt>"));
-    connect(calculate, SIGNAL(clicked()), this, SLOT(calculateInvariant()));
+    connect(calculate, &QPushButton::clicked, this,
+        qOverload<>(&Tri3TuraevViroUI::calculateInvariant));
     paramsArea->addWidget(calculate);
 
     paramsArea->addStretch(1);

@@ -54,8 +54,6 @@ class QPushButton;
  */
 class Tri2CompositionUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Describes the type of isomorphism relationship that has been
@@ -109,7 +107,6 @@ class Tri2CompositionUI : public QObject, public PacketViewerTab,
          */
         void contextIsoSig(const QPoint& pos, QWidget* fromWidget);
 
-    public slots:
         /**
          * Update the isomorphism signature.
          */
@@ -124,11 +121,6 @@ class Tri2CompositionUI : public QObject, public PacketViewerTab,
          * View the isomorphism details.
          */
         void viewIsomorphism();
-
-        /**
-         * Support clipboard actions.
-         */
-        void copyIsoSig();
 };
 
 #endif

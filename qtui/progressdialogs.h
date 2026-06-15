@@ -60,8 +60,6 @@ class QLabel;
  * running in a separate thread.
  */
 class ProgressDialogNumeric : public QProgressDialog {
-    Q_OBJECT
-
     private:
         regina::ProgressTracker* tracker_;
             /**< The progress tracker handling the inter-thread
@@ -102,8 +100,6 @@ class ProgressDialogNumeric : public QProgressDialog {
  * running in a separate thread.
  */
 class ProgressDialogMessage : public QDialog {
-    Q_OBJECT
-
     private:
         regina::ProgressTrackerBase* tracker_;
             /**< The progress tracker handling the inter-thread
@@ -144,8 +140,6 @@ class ProgressDialogMessage : public QDialog {
  * running in a separate thread.
  */
 class ProgressDialogOpen : public QDialog {
-    Q_OBJECT
-
     private:
         regina::ProgressTrackerOpen* tracker_;
             /**< The progress tracker handling the inter-thread
@@ -182,7 +176,6 @@ class ProgressDialogOpen : public QDialog {
          */
         bool run();
 
-    public slots:
         /**
          * Called when the user asks to cancel the operation.
          */
@@ -200,8 +193,6 @@ class ProgressDialogOpen : public QDialog {
  * running in a separate thread.
  */
 class ProgressDialogObjective : public QDialog {
-    Q_OBJECT
-
     private:
         regina::ProgressTrackerObjective* tracker_;
             /**< The progress tracker handling the inter-thread
@@ -240,7 +231,6 @@ class ProgressDialogObjective : public QDialog {
          */
         bool run();
 
-    public slots:
         /**
          * Called when the user asks to cancel the operation.
          */

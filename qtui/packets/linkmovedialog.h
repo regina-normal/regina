@@ -128,8 +128,6 @@ struct R3Arg {
  * A dialog used to select and perform Reidemeister moves on a knot or link.
  */
 class LinkMoveDialog : public QDialog, public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Internal components:
@@ -181,7 +179,7 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
         void packetWasChanged(regina::Packet&) override;
         void packetBeingDestroyed(regina::PacketShell) override;
 
-    protected slots:
+    protected:
         /**
          * A button at the bottom of the dialog has been clicked.
          */

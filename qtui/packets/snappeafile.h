@@ -47,8 +47,6 @@ namespace regina {
  * A triangulation page for viewing normal surface properties.
  */
 class SnapPeaFileUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

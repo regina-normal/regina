@@ -49,8 +49,6 @@ namespace regina {
  * A triangulation page for viewing algebraic properties.
  */
 class SnapPeaAlgebraUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

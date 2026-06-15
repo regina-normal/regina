@@ -80,7 +80,8 @@ print(p.str('z'))
 print(p.utf8())
 print(p.utf8('z'))
 
-p = Laurent(4)
+p = Laurent()
+p[4] = 1
 p[-3] = 2
 print(p)
 print(p.str())
@@ -88,7 +89,8 @@ print(p.str('z'))
 print(p.utf8())
 print(p.utf8('z'))
 
-p = Laurent2(-1, 2)
+p = Laurent2()
+p[-1, 2] = 1
 p[0, -3] = 4
 print(p)
 print(p.str())

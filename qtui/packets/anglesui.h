@@ -86,8 +86,6 @@ class AngleModel : public QAbstractItemModel {
  */
 class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -136,7 +134,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         void packetWasChanged(regina::Packet&) override;
         void packetBeingDestroyed(regina::PacketShell) override;
 
-    public slots:
+    private:
         /**
          * View the underlying triangulation.
          */

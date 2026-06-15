@@ -168,7 +168,7 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::PacketOf<Triangulation<4>>* packet,
     btn->setToolTip(tr("View details of individual vertices"));
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual vertices in a separate window."));
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
+    connect(btn, &QPushButton::clicked, this, &Tri4SkelCompUI::viewVertices);
     grid->addWidget(btn, 0, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -177,7 +177,7 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::PacketOf<Triangulation<4>>* packet,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual edges in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
+    connect(btn, &QPushButton::clicked, this, &Tri4SkelCompUI::viewEdges);
     grid->addWidget(btn, 1, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -186,7 +186,7 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::PacketOf<Triangulation<4>>* packet,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual triangles in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewTriangles()));
+    connect(btn, &QPushButton::clicked, this, &Tri4SkelCompUI::viewTriangles);
     grid->addWidget(btn, 2, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -195,7 +195,7 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::PacketOf<Triangulation<4>>* packet,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual tetrahedra in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewTetrahedra()));
+    connect(btn, &QPushButton::clicked, this, &Tri4SkelCompUI::viewTetrahedra);
     grid->addWidget(btn, 3, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -204,7 +204,7 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::PacketOf<Triangulation<4>>* packet,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual connected components in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
+    connect(btn, &QPushButton::clicked, this, &Tri4SkelCompUI::viewComponents);
     grid->addWidget(btn, 0, 11);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -213,7 +213,8 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::PacketOf<Triangulation<4>>* packet,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual boundary components in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewBoundaryComponents()));
+    connect(btn, &QPushButton::clicked, this,
+        &Tri4SkelCompUI::viewBoundaryComponents);
     grid->addWidget(btn, 1, 11);
 
     layout->addStretch(1);

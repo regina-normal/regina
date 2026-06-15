@@ -48,8 +48,6 @@ class QLabel;
  * A packet interface for viewing 2-manifold triangulations.
  */
 class Tri2UI : public PacketTabbedUI {
-    Q_OBJECT
-
     private:
         /**
          * Internal components
@@ -73,7 +71,6 @@ class Tri2UI : public PacketTabbedUI {
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
 
-    public slots:
         /**
          * Reflect preference changes.
          */

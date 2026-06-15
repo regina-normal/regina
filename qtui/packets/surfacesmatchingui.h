@@ -85,8 +85,6 @@ class MatchingModel : public QAbstractItemModel {
  * A surface list page for viewing matching equations.
  */
 class SurfacesMatchingUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -121,7 +119,7 @@ class SurfacesMatchingUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    protected slots:
+    private:
         /**
          * Provides auto-resizing of columns.
          */

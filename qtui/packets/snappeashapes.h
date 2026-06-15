@@ -91,8 +91,6 @@ class CuspModel : public QAbstractItemModel {
  * A triangulation page for viewing normal surface properties.
  */
 class SnapPeaShapesUI : public QObject, public PacketEditorTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -144,7 +142,6 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
         void refresh() override;
         void endEdit() override;
 
-    public slots:
         /**
          * Actions.
          */

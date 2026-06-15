@@ -123,9 +123,9 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     // Start the GAP process.
     proc = new QProcess();
 
-    connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)),
-        this, SLOT(processExited()));
-    connect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(readReady()));
+    connect(proc, &QProcess::finished, this, &GAPRunner::processExited);
+    connect(proc, &QProcess::readyReadStandardOutput, this,
+        &GAPRunner::readReady);
     proc->setProcessChannelMode(QProcess::MergedChannels);
 
     status->setText(tr("Starting GAP..."));
@@ -134,7 +134,7 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     if (! proc->waitForStarted(10000 /* milliseconds */))
         error(tr("GAP could not be started."));
 
-    connect(killBtn, SIGNAL(clicked()), this, SLOT(slotCancel()));
+    connect(killBtn, &QPushButton::clicked, this, &GAPRunner::slotCancel);
 }
 
 GAPRunner::~GAPRunner() {

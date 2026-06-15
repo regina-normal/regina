@@ -142,16 +142,26 @@ PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent)
     setSelectionMode(QAbstractItemView::SingleSelection);
     setExpandsOnDoubleClick(false); // since double-click opens a packet
 
-    connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
-        this, SLOT(handleItemExpanded(QTreeWidgetItem*)));
-    connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem*)),
-        this, SLOT(handleItemCollapsed(QTreeWidgetItem*)));
+    connect(this, &QTreeWidget::itemExpanded, this,
+        [](QTreeWidgetItem* item) {
+            if (auto p = dynamic_cast<PacketTreeItem*>(item))
+                p->markShouldBeExpanded(true);
+        });
+    connect(this, &QTreeWidget::itemCollapsed, this,
+        [](QTreeWidgetItem* item) {
+            if (auto p = dynamic_cast<PacketTreeItem*>(item))
+                p->markShouldBeExpanded(false);
+        });
 
     // Currently we use the platform default activation method (which is
     // often double-click).  To make this single-click always, change
     // itemActivated() to itemClicked().
-    connect(this, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
-        SLOT(packetView(QTreeWidgetItem*)));
+    connect(this, &QTreeWidget::itemActivated, this,
+        [this](QTreeWidgetItem* item) {
+            if (item)
+                mainWindow->packetView(*(static_cast<PacketTreeItem*>(item)->
+                    getPacket()));
+        });
 }
 
 void PacketTreeView::fill(std::shared_ptr<Packet> topPacket) {
@@ -206,12 +216,6 @@ void PacketTreeView::selectPacket(std::shared_ptr<regina::Packet> p,
         if (allowDefer)
             toSelect = p.get();
     }
-}
-
-void PacketTreeView::packetView(QTreeWidgetItem* packet) {
-    if (packet)
-        mainWindow->packetView(*(static_cast<PacketTreeItem*>(packet)->
-            getPacket()));
 }
 
 void PacketTreeView::refreshSubtree(const Packet& fromPacket,
@@ -344,16 +348,6 @@ void PacketTreeView::customEvent(QEvent* evt) {
             refreshFullTree();
         mainWindow->setModified(true);
     }
-}
-
-void PacketTreeView::handleItemExpanded(QTreeWidgetItem* item) {
-    if (auto p = dynamic_cast<PacketTreeItem*>(item))
-        p->markShouldBeExpanded(true);
-}
-
-void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
-    if (auto p = dynamic_cast<PacketTreeItem*>(item))
-        p->markShouldBeExpanded(false);
 }
 
 void PacketTreeView::childWasAdded(regina::Packet&, regina::Packet&) {

@@ -106,8 +106,6 @@ class HyperModel : public QAbstractItemModel {
  * A normal surface page for viewing surface coordinates.
  */
 class HyperCoordinateUI : public QObject, public PacketEditorTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -149,7 +147,6 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         QWidget* getInterface() override;
         const std::vector<QAction*>& getPacketTypeActions() override;
 
-    public slots:
         /**
          * More PacketEditorTab overrides.
          */

@@ -53,8 +53,6 @@ namespace regina {
  * A normal surface page for viewing surface coordinates.
  */
 class HyperCompatibilityUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Constants for the various "computer says no" messages that can be
@@ -108,7 +106,6 @@ class HyperCompatibilityUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Notify that preferences have changed.
          */
@@ -120,7 +117,6 @@ class HyperCompatibilityUI : public QObject, public PacketViewerTab {
          */
         void setMessage(Message msg);
 
-    private slots:
         /**
          * Compute or change matrices.
          */

@@ -355,10 +355,10 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         QDialogButtonBox::Apply | QDialogButtonBox::Close);
     dialogLayout->addWidget(buttons);
 
-    connect(buttons, SIGNAL(clicked(QAbstractButton*)), this,
-        SLOT(clicked(QAbstractButton*)));
-    connect(moveTypes, SIGNAL(buttonClicked(QAbstractButton*)), this,
-        SLOT(updateApply()));
+    connect(buttons, &QDialogButtonBox::clicked, this,
+        &EltMoveDialog4::clicked);
+    connect(moveTypes, &QButtonGroup::buttonClicked, this,
+        &EltMoveDialog4::updateApply);
 
     packetWasRenamed(*tri);
     packetWasChanged(*tri);

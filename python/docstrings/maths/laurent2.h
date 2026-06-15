@@ -208,25 +208,6 @@ Returns:
 
 // Docstring regina::python::doc::Laurent2::__init
 static constexpr const char __init[] =
-R"doc(Deprecated constructor that creates the polynomial ``x^d y^e`` for the
-given exponents *d* and *e*.
-
-.. deprecated::
-    This will be removed in a future version of Regina for consistency
-    with the single-variable polynomial classes Laurent and
-    Polynomial, since for those classes it is too easy for a casual
-    reader to misread what such an "exponent-based constructor"
-    actually does. You can still create ``x^d y^e`` by calling
-    ``initExp(d, e)`` instead.
-
-Parameter ``xExp``:
-    the exponent *d*, which is attached to *x*.
-
-Parameter ``yExp``:
-    the exponent *e*, which is attached to *y*.)doc";
-
-// Docstring regina::python::doc::Laurent2::__init_2
-static constexpr const char __init_2[] =
 R"doc(Creates a copy of the given polynomial with all terms multiplied by
 ``x^d y^e`` for some integers *d* and *e*.
 
@@ -241,8 +222,8 @@ Parameter ``xShift``:
 Parameter ``yShift``:
     the integer *e*, which will be added to all exponents for *y*.)doc";
 
-// Docstring regina::python::doc::Laurent2::__init_3
-static constexpr const char __init_3[] =
+// Docstring regina::python::doc::Laurent2::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new polynomial from the given collection of coefficients.
 
 The coefficients should be presented as a collection of tuples of the
@@ -372,23 +353,6 @@ Parameter ``b``:
 
 // Docstring regina::python::doc::Laurent2::init
 static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent2::init_2
-static constexpr const char init_2[] =
-R"doc(Deprecated function that sets this to become the polynomial ``x^d
-y^e`` for the given exponents *d* and *e*.
-
-.. deprecated::
-    This has been renamed to initExp() for consistency with the
-    single-variable polynomial classes Laurent and Polynomial, since
-    for those classes it is too easy for a casual reader to misread
-    what such an "exponent-based initialisation" actually does.
-
-Parameter ``xExp``:
-    the new exponent *d*, which is attached to *x*.
-
-Parameter ``yExp``:
-    the new exponent *e*, which is attached to *y*.)doc";
 
 // Docstring regina::python::doc::Laurent2::initExp
 static constexpr const char initExp[] =

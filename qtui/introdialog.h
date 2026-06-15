@@ -42,17 +42,11 @@
 class QPushButton;
 
 /**
- * Provides constants offering general information about the application.
+ * Provides getting-started information for users new to Regina.
  */
 class IntroDialog : public QDialog {
-    Q_OBJECT
-
     public:
         IntroDialog(QWidget *parent);
-
-    private slots:
-        void openHandbook();
-        void helpChanged(int newState);
 };
 
 #endif

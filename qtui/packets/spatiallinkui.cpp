@@ -100,7 +100,7 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
     python->setWhatsThis("<qt>Open a new Python console to work with "
         "this spatial link.<p>The link will be available "
         "through the Python variable <tt>item</tt>.</qt>");
-    connect(python, SIGNAL(clicked()), this, SLOT(pythonConsole()));
+    connect(python, &QPushButton::clicked, this, &SpatialLinkUI::pythonConsole);
 
     QBoxLayout* buttonBox = new QHBoxLayout();
     buttonBox->addWidget(new QWidget(), 1);
@@ -121,7 +121,7 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
     actThinner->setToolTip(tr("Make the link appear thinner"));
     actThinner->setWhatsThis(tr("Reduces the radius that is used to render "
         "the link."));
-    connect(actThinner, SIGNAL(triggered()), this, SLOT(makeThinner()));
+    connect(actThinner, &QAction::triggered, this, &SpatialLinkUI::makeThinner);
     actionList.push_back(actThinner);
     actionBar->addAction(actThinner);
 
@@ -131,7 +131,7 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
     actThicker->setToolTip(tr("Make the link appear thicker"));
     actThicker->setWhatsThis(tr("Increases the radius that is used to render "
         "the link."));
-    connect(actThicker, SIGNAL(triggered()), this, SLOT(makeThicker()));
+    connect(actThicker, &QAction::triggered, this, &SpatialLinkUI::makeThicker);
     actionList.push_back(actThicker);
     actionBar->addAction(actThicker);
 
@@ -141,7 +141,7 @@ SpatialLinkUI::SpatialLinkUI(regina::PacketOf<SpatialLink>* packet,
     actRefine->setToolTip(tr("Makes the link appear smoother"));
     actRefine->setWhatsThis(tr("Increases the number of line segments that are "
         "used to render the link."));
-    connect(actRefine, SIGNAL(triggered()), this, SLOT(refine()));
+    connect(actRefine, &QAction::triggered, this, &SpatialLinkUI::refine);
     actionList.push_back(actRefine);
     actionBar->addAction(actRefine);
 

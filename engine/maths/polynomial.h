@@ -98,19 +98,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial();
 
         /**
-         * Deprecated constructor that creates the polynomial `x^d` for the
-         * given degree \a d.
-         *
-         * \deprecated This will be removed in a future version of Regina,
-         * since in casual reading of code it is too easy to misread this as
-         * creating a polynomial with only a constant term.  You can still
-         * create `x^d` by calling `initExp(d)` instead.
-         *
-         * \param degree the degree of the new polynomial.
-         */
-        [[deprecated]] explicit Polynomial(size_t degree);
-
-        /**
          * Creates a new copy of the given polynomial.
          *
          * This constructor induces a deep copy of \a value.
@@ -206,18 +193,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param degree the new degree of this polynomial.
          */
         void initExp(size_t degree);
-
-        /**
-         * Deprecated function that sets this to become the polynomial `x^d`
-         * for the given degree \a d.
-         *
-         * \deprecated This has been renamed to initExp(), since in casual
-         * reading of code it is too easy to misread this as setting this
-         * polynomial to have only a constant term.
-         *
-         * \param degree the new degree of this polynomial.
-         */
-        [[deprecated]] void init(size_t degree);
 
         /**
          * Sets this to become the polynomial described by the given
@@ -926,12 +901,6 @@ inline Polynomial<T>::Polynomial() : degree_(0), coeff_(new T[1]) {
 }
 
 template <CoefficientDomain T>
-inline Polynomial<T>::Polynomial(size_t degree) :
-        degree_(degree), coeff_(new T[degree + 1]) {
-    coeff_[degree] = 1;
-}
-
-template <CoefficientDomain T>
 template <RandomAccessIteratorFor<T> Iterator>
 inline Polynomial<T>::Polynomial(Iterator begin, Iterator end) :
         coeff_(nullptr) {
@@ -987,11 +956,6 @@ inline void Polynomial<T>::initExp(size_t degree) {
     degree_ = degree;
     coeff_ = new T[degree + 1];
     coeff_[degree] = 1;
-}
-
-template <CoefficientDomain T>
-inline void Polynomial<T>::init(size_t degree) {
-    initExp(degree);
 }
 
 template <CoefficientDomain T>

@@ -37,7 +37,7 @@ TriSigChooser::TriSigChooser(QWidget* parent) : QComboBox(parent) {
 
     select(ReginaPrefSet::global().triSigVariant);
 
-    connect(this, &TriSigChooser::activated, this, [this]() {
+    connect(this, &QComboBox::activated, this, [this]() {
         ReginaPrefSet::global().triSigVariant = selected();
     });
 }

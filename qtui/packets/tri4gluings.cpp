@@ -385,8 +385,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     //facetTable->setColumnStretchable(5, true);
 
     facetTable->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(facetTable, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(lockMenu(const QPoint&)));
+    connect(facetTable, &QWidget::customContextMenuRequested, this,
+        &Tri4GluingsUI::lockMenu);
 
     actAddPent = new QAction(this);
     actAddPent->setText(tr("&Add Pentachoron"));
@@ -395,7 +395,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actAddPent->setToolTip(tr("Add a new pentachoron"));
     actAddPent->setWhatsThis(tr("Adds a new pentachoron to this "
         "triangulation."));
-    connect(actAddPent, SIGNAL(triggered()), this, SLOT(addPent()));
+    connect(actAddPent, &QAction::triggered, this, &Tri4GluingsUI::addPent);
 
     actRemovePent = new QAction(this);
     actRemovePent->setText(tr("&Remove Pentachoron"));
@@ -405,11 +405,11 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actRemovePent->setEnabled(false);
     actRemovePent->setWhatsThis(tr("Removes the currently selected "
         "pentachora from this triangulation."));
-    connect(actRemovePent, SIGNAL(triggered()), this,
-        SLOT(removeSelectedPents()));
+    connect(actRemovePent, &QAction::triggered, this,
+        &Tri4GluingsUI::removeSelectedPents);
     connect(facetTable->selectionModel(),
-        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-        this, SLOT(updateRemoveState()));
+        &QItemSelectionModel::selectionChanged,
+        this, &Tri4GluingsUI::updateRemoveState);
 
     actUnlock = new QAction(this);
     actUnlock->setText(tr("&Unlock All"));
@@ -417,7 +417,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actUnlock->setToolTip(tr("Unlock all pentachora and/or tetrahedra"));
     actUnlock->setWhatsThis(tr("Clears all pentachoron and/or tetrahedron "
         "locks from this triangulation."));
-    connect(actUnlock, SIGNAL(triggered()), this, SLOT(unlockAll()));
+    connect(actUnlock, &QAction::triggered, this, &Tri4GluingsUI::unlockAll);
 
     ui = new QWidget();
     QBoxLayout* box = new QVBoxLayout(ui);
@@ -444,7 +444,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "This procedure searches for useful combinations of Pachner moves "
         "and/or other elementary moves.  There is no guarantee that the "
         "smallest possible number of pentachora will be achieved."));
-    connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
+    connect(actSimplify, &QAction::triggered, this, &Tri4GluingsUI::simplify);
     triActionList.push_back(actSimplify);
 
     actMoves = new QAction(this);
@@ -459,7 +459,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "A dialog will be presented for you to select which "
         "elementary moves to apply."));
     triActionList.push_back(actMoves);
-    connect(actMoves, SIGNAL(triggered()), this, SLOT(elementaryMove()));
+    connect(actMoves, &QAction::triggered, this,
+        &Tri4GluingsUI::elementaryMove);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -475,7 +476,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled."));
     triActionList.push_back(actOrient);
-    connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
+    connect(actOrient, &QAction::triggered, this, &Tri4GluingsUI::orient);
 
     actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
@@ -487,7 +488,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "to convert this into an isomorphic triangulation with the "
         "opposite orientation."));
     triActionList.push_back(actReflect);
-    connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
+    connect(actReflect, &QAction::triggered, this, &Tri4GluingsUI::reflect);
 
     actSubdivide = new QAction(this);
     actSubdivide->setText(tr("&Barycentric Subdivide"));
@@ -499,8 +500,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "subdivision on this triangulation.  Each pentachoron "
         "will be subdivided into 120 smaller pentachora."));
     triActionList.push_back(actSubdivide);
-    connect(actSubdivide, SIGNAL(triggered()), this,
-        SLOT(barycentricSubdivide()));
+    connect(actSubdivide, &QAction::triggered, this,
+        &Tri4GluingsUI::barycentricSubdivide);
 
     actTruncate = new QAction(this);
     actTruncate->setText(tr("&Truncate Ideal Vertices"));
@@ -516,7 +517,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "If there are no vertices of this type to truncate, then this "
         "operation will have no effect."));
     triActionList.push_back(actTruncate);
-    connect(actTruncate, SIGNAL(triggered()), this, SLOT(truncateIdeal()));
+    connect(actTruncate, &QAction::triggered, this,
+        &Tri4GluingsUI::truncateIdeal);
 
     actMakeIdeal = new QAction(this);
     actMakeIdeal->setText(tr("Make &Ideal"));
@@ -530,7 +532,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "If there are no real boundary components, then this "
         "operation will have no effect."));
     triActionList.push_back(actMakeIdeal);
-    connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(makeIdeal()));
+    connect(actMakeIdeal, &QAction::triggered, this, &Tri4GluingsUI::makeIdeal);
 
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
@@ -542,8 +544,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "the chosen triangulation will be become additional components of "
         "this triangulation."));
     triActionList.push_back(actInsertTri);
-    connect(actInsertTri, SIGNAL(triggered()), this,
-        SLOT(insertTriangulation()));
+    connect(actInsertTri, &QAction::triggered, this,
+        &Tri4GluingsUI::insertTriangulation);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -562,7 +564,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "If this triangulation is already orientable then the result will be "
         "disconnected, containing two copies of the original triangulation."));
     triActionList.push_back(actDoubleCover);
-    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
+    connect(actDoubleCover, &QAction::triggered, this,
+        &Tri4GluingsUI::doubleCover);
 
     actDoubleOverBoundary = new QAction(this);
     actDoubleOverBoundary->setText(tr("Build Double Over Boundary"));
@@ -578,8 +581,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "This triangulation will not be changed – the result "
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actDoubleOverBoundary);
-    connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
-        SLOT(doubleOverBoundary()));
+    connect(actDoubleOverBoundary, &QAction::triggered, this,
+        &Tri4GluingsUI::doubleOverBoundary);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -598,8 +601,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "If you select an ideal boundary component, this will build "
         "a 3-manifold triangulation from the corresponding vertex link."));
     triActionList.push_back(actBoundaryComponents);
-    connect(actBoundaryComponents, SIGNAL(triggered()), this,
-        SLOT(boundaryComponents()));
+    connect(actBoundaryComponents, &QAction::triggered, this,
+        &Tri4GluingsUI::boundaryComponents);
 
     actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
@@ -613,7 +616,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "The tetrahedra that make up this link sit inside "
         "the pentachoron corners that meet together at <i>V</i>."));
     triActionList.push_back(actVertexLinks);
-    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+    connect(actVertexLinks, &QAction::triggered, this,
+        &Tri4GluingsUI::vertexLinks);
 
     actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
@@ -628,8 +632,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         "If this triangulation is already connected, this operation will "
         "do nothing."));
     triActionList.push_back(actSplitIntoComponents);
-    connect(actSplitIntoComponents, SIGNAL(triggered()), this,
-        SLOT(splitIntoComponents()));
+    connect(actSplitIntoComponents, &QAction::triggered, this,
+        &Tri4GluingsUI::splitIntoComponents);
 
     // Tidy up.
 
@@ -799,7 +803,7 @@ void Tri4GluingsUI::lockMenu(const QPoint& pos) {
                 .arg(action).arg(index.row()).arg(facetDesc)
                 .arg(GluingsModel4::destString(s, lockFacet)));
     }
-    connect(&lock, SIGNAL(triggered()), this, SLOT(changeLock()));
+    connect(&lock, &QAction::triggered, this, &Tri4GluingsUI::changeLock);
     m.addAction(&lock);
     m.exec(facetTable->viewport()->mapToGlobal(pos));
 }

@@ -85,16 +85,19 @@ RecentFilesAction::RecentFilesAction(QWidget *parent) : QMenu(parent) {
     QMenu::addAction(clearAction_);
 
     ReginaPrefSet* prefs = &ReginaPrefSet::global();
-    connect(prefs, SIGNAL(recentFileAdded(const QUrl&)),
-        this, SLOT(addUrl(const QUrl&)));
-    connect(prefs, SIGNAL(recentFilePromoted(const QUrl&)),
-        this, SLOT(promoteUrl(const QUrl&)));
-    connect(prefs, SIGNAL(recentFileRemovedLast()),
-        this, SLOT(removeUrlLast()));
-    connect(prefs, SIGNAL(recentFilesCleared()), this, SLOT(clearUrls()));
-    connect(prefs, SIGNAL(recentFilesFilled()), this, SLOT(fillUrls()));
+    connect(prefs, &ReginaPrefSet::recentFileAdded, this,
+        &RecentFilesAction::addUrl);
+    connect(prefs, &ReginaPrefSet::recentFilePromoted, this,
+        &RecentFilesAction::promoteUrl);
+    connect(prefs, &ReginaPrefSet::recentFileRemovedLast, this,
+        &RecentFilesAction::removeUrlLast);
+    connect(prefs, &ReginaPrefSet::recentFilesCleared, this,
+        &RecentFilesAction::clearUrls);
+    connect(prefs, &ReginaPrefSet::recentFilesFilled, this,
+        &RecentFilesAction::fillUrls);
 
-    connect(clearAction_, SIGNAL(triggered()), prefs, SLOT(clearRecentFiles()));
+    connect(clearAction_, &QAction::triggered, prefs,
+        &ReginaPrefSet::clearRecentFiles);
 
     fillUrls();
 }
@@ -120,7 +123,8 @@ void RecentFilesAction::addUrl(const QUrl& url) {
     urlActions_.push_front(action);
     QMenu::insertAction(actions().value(0), action);
 
-    connect(action, SIGNAL(triggered()), SLOT(fileActivated()));
+    connect(action, &QAction::triggered, this,
+        &RecentFilesAction::fileActivated);
 }
 
 void RecentFilesAction::promoteUrl(const QUrl& url) {
@@ -178,7 +182,8 @@ void RecentFilesAction::fillUrls() {
         urlActions_.push_back(action);
         QMenu::insertAction(clearSeparator_, action);
 
-        connect(action, SIGNAL(triggered()), SLOT(fileActivated()));
+        connect(action, &QAction::triggered, this,
+            &RecentFilesAction::fileActivated);
     }
 }
 

@@ -343,7 +343,6 @@ class ReginaPrefSet : public QObject {
          */
         static void propagate();
 
-    public slots:
         /**
          * Empty the recent files list.
          */

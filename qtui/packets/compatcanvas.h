@@ -49,8 +49,6 @@ namespace regina {
  * normal surfaces or hypersurfaces.
  */
 class CompatCanvas : public QGraphicsScene {
-    Q_OBJECT
-
     private:
         /**
          * Matrix size and state

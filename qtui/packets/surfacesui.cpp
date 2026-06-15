@@ -88,8 +88,8 @@ SurfacesHeaderUI::SurfacesHeaderUI(
         "the specific coordinate system that was originally used.  Also "
         "displays the total number of surfaces in this list."));
     header->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    connect(header, SIGNAL(linkActivated(QString)),
-        this, SLOT(viewTriangulation()));
+    connect(header, &QLabel::linkActivated, this,
+        &SurfacesHeaderUI::viewTriangulation);
 
     ui = header;
 

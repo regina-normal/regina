@@ -70,8 +70,6 @@ class QString;
  * be reimplemented.
  */
 class PacketTabbedUI : public QObject, public PacketUI {
-    Q_OBJECT
-
     private:
         /**
          * Packet interfaces for individual pages.
@@ -159,7 +157,6 @@ class PacketTabbedUI : public QObject, public PacketUI {
         void refresh() override;
         void endEdit() override;
 
-    public slots:
         /**
          * Notification that a new tab has been selected.
          */
@@ -273,8 +270,6 @@ class PacketEditorTab : public PacketUI {
  * made visible then this viewer will never be refreshed at all.
  */
 class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet interfaces for individual pages.
@@ -346,7 +341,6 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Notification that a new tab has been selected.
          */

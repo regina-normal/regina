@@ -70,8 +70,6 @@ namespace regina {
  * Each main window is used for a single data file.
  */
 class ReginaMain : public QMainWindow {
-    Q_OBJECT
-
     private:
         /**
          * Components and Data
@@ -223,29 +221,6 @@ class ReginaMain : public QMainWindow {
          */
         void isClosing(PacketPane* closingPane);
 
-    protected:
-        /**
-         * Overridden for drag-and-drop implementation.
-         */
-        void dragEnterEvent(QDragEnterEvent *event) override;
-        void dropEvent(QDropEvent *event) override;
-
-        /**
-         * Overridden to handle window closing.
-         */
-        void closeEvent(QCloseEvent *event) override;
-
-        /**
-         * Qt override to set preferred size of the window.
-         */
-        QSize sizeHint() const override;
-
-        /**
-         * Qt override to allow postponing actions.
-         */
-        void customEvent(QEvent* evt) override;
-
-    public slots:
         /**
          * Basic file routines.
          */
@@ -365,6 +340,28 @@ class ReginaMain : public QMainWindow {
          */
         void updateTreeActions();
 
+    protected:
+        /**
+         * Overridden for drag-and-drop implementation.
+         */
+        void dragEnterEvent(QDragEnterEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
+
+        /**
+         * Overridden to handle window closing.
+         */
+        void closeEvent(QCloseEvent *event) override;
+
+        /**
+         * Qt override to set preferred size of the window.
+         */
+        QSize sizeHint() const override;
+
+        /**
+         * Qt override to allow postponing actions.
+         */
+        void customEvent(QEvent* evt) override;
+
     private:
         /**
          * Initial setup.
@@ -419,7 +416,6 @@ class ReginaMain : public QMainWindow {
         bool saveFile();
         void renameWindow(const QString& newName);
 
-    private slots:
         /**
          * Notification that the preferences have changed.
          */

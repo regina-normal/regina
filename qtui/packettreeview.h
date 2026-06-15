@@ -151,8 +151,6 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
  * included in the tree.
  */
 class PacketTreeView : public QTreeWidget, public regina::PacketListener {
-    Q_OBJECT
-
     private:
         ReginaMain* mainWindow;
             /**< The main window responsible for this packet tree. */
@@ -254,12 +252,6 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
             override;
         void childrenWereReordered(regina::Packet& packet) override;
 
-    public slots:
-        /**
-         * View or edit the packet corresponding to the given list item.
-         */
-        void packetView(QTreeWidgetItem* packet);
-
     protected:
         /**
          * Allow GUI updates from within a non-GUI thread.
@@ -272,13 +264,6 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * empty part of the tree.
          */
         void mousePressEvent(QMouseEvent* event) override;
-
-    private slots:
-        /**
-         * Manual management of expansion states.
-         */
-        void handleItemExpanded(QTreeWidgetItem* item);
-        void handleItemCollapsed(QTreeWidgetItem* item);
 };
 
 inline regina::Packet* PacketTreeItem::getPacket() {

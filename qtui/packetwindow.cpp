@@ -59,11 +59,12 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
 
     setupMenus();
 
-    connect(windowAction, SIGNAL(triggered()), this, SLOT(raiseWindow()));
+    connect(windowAction, &QAction::triggered, this,
+        &PacketWindow::raiseWindow);
     parent->registerWindow(windowAction);
 
     // If the main window closes, its packet windows must close also.
-    connect(parent, SIGNAL(destroyed()), this, SLOT(deleteLater()));
+    connect(parent, &QMainWindow::destroyed, this, &PacketWindow::deleteLater);
 }
 
 void PacketWindow::closeEvent(QCloseEvent* event) {
@@ -116,7 +117,7 @@ void PacketWindow::setupMenus() {
     actPython->setWhatsThis(tr("Open a new Python console.  You can "
         "use a Python console to interact directly with Regina's "
         "mathematical engine."));
-    connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
+    connect(actPython, &QAction::triggered, this, &PacketWindow::pythonConsole);
     toolMenu->addAction(actPython);
 
     toolMenu->addSeparator();
@@ -128,7 +129,8 @@ void PacketWindow::setupMenus() {
     act->setMenuRole(QAction::PreferencesRole);
     act->setWhatsThis(tr("Configure Regina.  Here you can set "
         "your own preferences for how Regina behaves."));
-    connect(act, SIGNAL(triggered()), mainWindow, SLOT(optionsPreferences()));
+    connect(act, &QAction::triggered, mainWindow,
+        &ReginaMain::optionsPreferences);
     toolMenu->addAction(act);
 
     // The window menu:
@@ -145,7 +147,7 @@ void PacketWindow::setupMenus() {
     act->setShortcuts(QKeySequence::HelpContents);
     act->setWhatsThis(tr("Open the Regina handbook.  "
         "This is the main users' guide for how to use Regina."));
-    connect(act, SIGNAL(triggered()), mainWindow, SLOT(helpHandbook()));
+    connect(act, &QAction::triggered, mainWindow, &ReginaMain::helpHandbook);
     helpMenu->addAction(act);
 
     act = new QAction(this);
@@ -153,7 +155,7 @@ void PacketWindow::setupMenus() {
     act->setIcon(ReginaSupport::regIcon("welcome"));
     act->setWhatsThis(tr("Show some introductory information "
         "for users new to Regina."));
-    connect(act, SIGNAL(triggered()), mainWindow, SLOT(helpIntro()));
+    connect(act, &QAction::triggered, mainWindow, &ReginaMain::helpIntro);
     helpMenu->addAction(act);
 
     helpMenu->addSeparator();
@@ -167,7 +169,8 @@ void PacketWindow::setupMenus() {
         "See the <i>Python Scripting</i> chapter of the user's handbook "
         "for more information (the handbook is "
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
-    connect(act, SIGNAL(triggered()), mainWindow, SLOT(helpPythonReference()));
+    connect(act, &QAction::triggered, mainWindow,
+        &ReginaMain::helpPythonReference);
     helpMenu->addAction(act);
 
     act = new QAction(this);
@@ -176,7 +179,7 @@ void PacketWindow::setupMenus() {
     act->setWhatsThis(tr("Open the file format reference manual.  "
         "This give full details of the XML file format that Regina "
         "uses to store its data files."));
-    connect(act, SIGNAL(triggered()), mainWindow, SLOT(helpXMLRef()));
+    connect(act, &QAction::triggered, mainWindow, &ReginaMain::helpXMLRef);
     helpMenu->addAction(act);
 
     act = new QAction(this);
@@ -184,7 +187,7 @@ void PacketWindow::setupMenus() {
     act->setIcon(ReginaSupport::regIcon("troubleshoot"));
     act->setWhatsThis(tr("Show solutions and discussions for common "
         "problems."));
-    connect(act, SIGNAL(triggered()), mainWindow, SLOT(helpTrouble()));
+    connect(act, &QAction::triggered, mainWindow, &ReginaMain::helpTrouble);
     helpMenu->addAction(act);
 
     helpMenu->addSeparator();
@@ -195,14 +198,14 @@ void PacketWindow::setupMenus() {
     act->setMenuRole(QAction::AboutRole);
     act->setWhatsThis(tr("Display information about Regina, such as "
         "the authors, license and website."));
-    connect(act, SIGNAL(triggered()), mainWindow, SLOT(helpAboutApp()));
+    connect(act, &QAction::triggered, mainWindow, &ReginaMain::helpAboutApp);
     helpMenu->addAction(act);
 
     act = new QAction(this);
     act->setText(tr("What's &This?"));
     act->setIcon(ReginaSupport::themeIcon("help-contextual"));
     act->setShortcuts(QKeySequence::WhatsThis);
-    connect(act, SIGNAL(triggered()), mainWindow, SLOT(helpWhatsThis()));
+    connect(act, &QAction::triggered, mainWindow, &ReginaMain::helpWhatsThis);
     helpMenu->addAction(act);
 }
 

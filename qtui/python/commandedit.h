@@ -70,9 +70,9 @@ class CommandEdit : public QLineEdit {
         PythonConsole* console;
             /**< The associated Python console. */
         QColor *oldColor;
-            /**< The default color of the input text, so we can 
+            /**< The default color of the input text, so we can
                  change colours if needed. */
-       
+
         void clearErrorInInput();
             /**< Return foreground colour of the input box to the default
                  colour. */
@@ -94,13 +94,13 @@ class CommandEdit : public QLineEdit {
          */
         unsigned getSpacesPerTab();
         void setSpacesPerTab(unsigned spacesPerTab);
-        
+
         /**
          * Set the foreground colour of the input box, to highlight
          * that an error occured.
          */
         void highlightErrorInInput();
-       
+
         /**
          * Stores the part of the line that should not change when
          * a completion is attempted mid-line.
