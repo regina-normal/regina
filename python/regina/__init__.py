@@ -93,10 +93,23 @@ def reginaSetup(quiet = False, readline = True, banner = False,
 
             __internal_python_completer = readline.get_completer()
             def regina_completer(text, state):
-              if not text:
-                return ('\t', None)[state]
-              else:
-                return __internal_python_completer(text, state)
+                if not text:
+                    if state == 0:
+                        line = readline.get_line_buffer()
+                        end = readline.get_endidx()
+
+                        # If Tab is pressed at the start of input, or after whitespace,
+                        # insert indentation directly instead of returning a tab as a
+                        # completion candidate.  Returning '\t' confuses libedit/readline
+                        # during continuation prompts and can produce extra displayed lines.
+                        if not line[:end].strip():
+                            readline.insert_text('    ')
+                            readline.redisplay()
+                            return ''
+
+                    return None
+                else:
+                    return __internal_python_completer(text, state)
             readline.set_completer(regina_completer)
 
             if 'libedit' in readline.__doc__:
