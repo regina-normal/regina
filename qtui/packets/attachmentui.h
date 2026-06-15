@@ -47,8 +47,6 @@ namespace regina {
  * A packet interface for viewing or saving attachments.
  */
 class AttachmentUI : public QObject, public PacketReadOnlyUI {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -78,7 +76,6 @@ class AttachmentUI : public QObject, public PacketReadOnlyUI {
         QString getPacketMenuText() const override;
         void refresh() override;
 
-    public slots:
         /**
          * Access the attachment data.
          */

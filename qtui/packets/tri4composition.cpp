@@ -87,18 +87,19 @@ Tri4CompositionUI::Tri4CompositionUI(
     line->addWidget(isoSig, 1);
     isoSigVariant = new TriSigChooser(ui);
     isoSigVariant->setWhatsThis(msg);
-    connect(isoSigVariant, SIGNAL(activated(int)), this, SLOT(updateIsoSig()));
+    connect(isoSigVariant, &QComboBox::activated, this,
+        &Tri4CompositionUI::updateIsoSig);
     line->addWidget(isoSigVariant);
     layout->addLayout(line);
 
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
     // Contextless connections are ok: senders will be destroyed with [this].
-    connect(isoSig, &QPushButton::customContextMenuRequested,
+    connect(isoSig, &QWidget::customContextMenuRequested,
         [this](const QPoint& p) {
             contextIsoSig(p, isoSig);
         });
-    connect(label, &QPushButton::customContextMenuRequested,
+    connect(label, &QWidget::customContextMenuRequested,
         [=, this](const QPoint& p) {
             contextIsoSig(p, label);
         });
@@ -172,7 +173,8 @@ Tri4CompositionUI::Tri4CompositionUI(
         PacketChooser::RootRole::Packet, true, nullptr, ui);
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
-    connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
+    connect(isoTest, &QComboBox::activated, this,
+        &Tri4CompositionUI::updateIsoPanel);
     isoSelectArea->addWidget(isoTest, 1);
     // isoSelectArea->addStretch(1);
 
@@ -188,7 +190,8 @@ Tri4CompositionUI::Tri4CompositionUI(
         "(if any) between this and the selected triangulation.  The precise "
         "mapping between pentachora and pentachoron vertices will be "
         "displayed in a separate window."));
-    connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
+    connect(isoView, &QPushButton::clicked, this,
+        &Tri4CompositionUI::viewIsomorphism);
     wideIsoArea->addWidget(isoView);
 
     // layout->addStretch(6);
@@ -529,7 +532,10 @@ void Tri4CompositionUI::contextIsoSig(const QPoint& pos,
 
     QMenu m(tr("Context menu"), fromWidget);
     QAction a("Copy isomorphism signature", fromWidget);
-    connect(&a, SIGNAL(triggered()), this, SLOT(copyIsoSig()));
+    connect(&a, &QAction::triggered, this, [this]() {
+        if (! sig_.empty())
+            QApplication::clipboard()->setText(sig_.c_str());
+    });
     m.addAction(&a);
     m.exec(fromWidget->mapToGlobal(pos));
 }

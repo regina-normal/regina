@@ -52,8 +52,6 @@ class QToolBar;
  * A packet interface for viewing 3-manifold triangulations.
  */
 class Tri3UI : public PacketTabbedUI {
-    Q_OBJECT
-
     private:
         /**
          * Internal components
@@ -80,7 +78,6 @@ class Tri3UI : public PacketTabbedUI {
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
 
-    public slots:
         /**
          * Reflect preference changes.
          */
@@ -91,8 +88,6 @@ class Tri3UI : public PacketTabbedUI {
  * A header for the 3-manifold triangulation viewer.
  */
 class Tri3HeaderUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

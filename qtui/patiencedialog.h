@@ -45,8 +45,6 @@
  * bit for the current operation to finish.
  */
 class PatienceDialog : public QDialog {
-    Q_OBJECT
-
     public:
         /**
          * Display a non-modal dialog that presents the given message to

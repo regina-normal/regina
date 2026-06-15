@@ -89,7 +89,7 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
         btn->setToolTip(tr("Attempt to simplify the group presentation"));
         btn->setWhatsThis(tr("Attempt to simplify the group presentation. "
             "You can choose the simplification method in Regina's settings."));
-        connect(btn, SIGNAL(clicked()), this, SLOT(simplify()));
+        connect(btn, &QPushButton::clicked, this, &GroupWidget::simplify);
 
         sublayout->addStretch();
         sublayout->addWidget(btn);

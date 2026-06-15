@@ -50,8 +50,6 @@ namespace regina {
  * A packet viewer tab for viewing graphs related to a link.
  */
 class LinkPolynomialUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * The link itself
@@ -94,7 +92,6 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Calculate properties.
          */
@@ -123,18 +120,8 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         void contextBracket(const QPoint& pos);
         void contextAffineIndex(const QPoint& pos);
         void contextArrow(const QPoint& pos);
-        void copyAlexander();
-        void copyJones();
-        void copyHomfly();
-        void copyBracket();
-        void copyAffineIndex();
-        void copyArrow();
-        void copyAlexanderPlain();
-        void copyJonesPlain();
-        void copyHomflyPlain();
-        void copyBracketPlain();
-        void copyAffineIndexPlain();
-        void copyArrowPlain();
+        std::string jonesPlain();
+        std::string homflyPlain();
 
     private:
         /**

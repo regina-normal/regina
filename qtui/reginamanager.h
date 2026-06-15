@@ -47,8 +47,6 @@ class ReginaMain;
  */
 
 class ReginaManager : public QApplication {
-    Q_OBJECT
-
     public:
         ReginaManager(int &argc, char** argv);
         

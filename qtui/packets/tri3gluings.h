@@ -126,8 +126,6 @@ class GluingsModel3 : public QAbstractItemModel {
  * A 3-manifold triangulation page for editing face gluings.
  */
 class Tri3GluingsUI : public QObject, public PacketEditorTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -196,7 +194,6 @@ class Tri3GluingsUI : public QObject, public PacketEditorTab {
         void refresh() override;
         void endEdit() override;
 
-    public slots:
         /**
          * Gluing edit actions.
          */

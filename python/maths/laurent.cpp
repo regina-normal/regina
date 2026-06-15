@@ -48,24 +48,18 @@ void addLaurent(pybind11::module_& m) {
     auto c = pybind11::class_<Laurent<Integer>>(m, "Laurent", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent<Integer>&>(), rdoc::__copy)
-        .def(pybind11::init([](long exp) { // deprecated
-            Laurent<Integer> ans;
-            ans.initExp(exp);
-            return ans;
-        }), rdoc::__init)
         .def(pybind11::init([](long minExp, const std::vector<Integer>& c) {
             return new Laurent<Integer>(minExp, c.begin(), c.end());
-        }), "minExp"_a, "coefficients"_a, rdoc::__init_2)
+        }), "minExp"_a, "coefficients"_a, rdoc::__init)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Laurent<Integer>::*)()>(
             &Laurent<Integer>::init), rdoc::init)
         .def("initExp", &Laurent<Integer>::initExp, rdoc::initExp)
-        .def("init", &Laurent<Integer>::initExp, rdoc::init_2) // deprecated
         .def("init", [](Laurent<Integer>& p, long minExp,
                 const std::vector<Integer>& c) {
             p.init(minExp, c.begin(), c.end());
-        }, "minExp"_a, "coefficients"_a, rdoc::init_3)
+        }, "minExp"_a, "coefficients"_a, rdoc::init_2)
         .def("minExp", &Laurent<Integer>::minExp, rdoc::minExp)
         .def("maxExp", &Laurent<Integer>::maxExp, rdoc::maxExp)
         .def("isZero", &Laurent<Integer>::isZero, rdoc::isZero)

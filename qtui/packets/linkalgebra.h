@@ -71,8 +71,6 @@ class LinkAlgebraUI : public PacketTabbedViewerTab {
  * A packet viewer tab for viewing a particular class of link groups.
  */
 class LinkGroupUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

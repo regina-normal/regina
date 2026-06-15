@@ -255,8 +255,8 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
         new QLabel(tr("<a href=\"#\">License: Click here</a>"));
     licenseLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     // Show license dialog when label is clicked
-    connect(licenseLabel, SIGNAL(linkActivated(QString)),
-        this, SLOT(showLicense()));
+    connect(licenseLabel, &QLabel::linkActivated, this,
+        &ReginaAbout::showLicense);
 
     auto* aboutPage = new QWidget(this);
     auto* aboutLayout = new QVBoxLayout;
@@ -355,7 +355,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     this->setLayout(layout);
 
-    connect(buttons, SIGNAL(clicked(QAbstractButton*)), this, SLOT(accept()));
+    connect(buttons, &QDialogButtonBox::clicked, this, &QDialog::accept);
 }
 
 void ReginaAbout::showLicense() {
@@ -375,7 +375,7 @@ void ReginaAbout::showLicense() {
     layout->addWidget(text);
 
     auto* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
-    connect(buttons, SIGNAL(clicked(QAbstractButton*)), win, SLOT(accept()));
+    connect(buttons, &QDialogButtonBox::clicked, win, &QDialog::accept);
     layout->addWidget(buttons);
 
     win->setLayout(layout);

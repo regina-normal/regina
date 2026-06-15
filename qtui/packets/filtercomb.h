@@ -53,8 +53,6 @@ namespace regina {
  */
 class FilterCombUI : public QObject, public PacketUI,
         public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -95,12 +93,6 @@ class FilterCombUI : public QObject, public PacketUI,
         void childWasRemoved(regina::Packet& packet, regina::Packet& child)
             override;
         void childrenWereReordered(regina::Packet& packet) override;
-
-    public slots:
-        /**
-         * Notification that the boolean type has been changed.
-         */
-        void notifyBoolTypeChanged();
 
     private:
         /**

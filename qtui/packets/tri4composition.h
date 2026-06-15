@@ -57,8 +57,6 @@ class QTreeWidgetItem;
  */
 class Tri4CompositionUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Describes the type of isomorphism relationship that has been
@@ -114,7 +112,6 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
          */
         void contextIsoSig(const QPoint& pos, QWidget* fromWidget);
 
-    public slots:
         /**
          * Update the isomorphism signature.
          */
@@ -149,7 +146,6 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
         void findSnappedBalls();
         void findDoubleSnappedBalls();
         void findConicalPieces();
-
 };
 
 #endif

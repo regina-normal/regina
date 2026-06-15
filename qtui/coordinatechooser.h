@@ -53,8 +53,6 @@ namespace regina {
  * coordinate system in a 3-manifold triangulation.
  */
 class CoordinateChooser : public QComboBox {
-    Q_OBJECT
-
     private:
         std::vector<regina::NormalCoords> systems;
             /**< A list of the coordinate systems corresponding to the
@@ -85,8 +83,6 @@ class CoordinateChooser : public QComboBox {
  * coordinate system in a 4-manifold triangulation.
  */
 class HyperCoordinateChooser : public QComboBox {
-    Q_OBJECT
-
     private:
         std::vector<regina::HyperCoords> systems;
             /**< A list of the coordinate systems corresponding to the

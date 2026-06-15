@@ -164,7 +164,7 @@ Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* tri,
     btn->setToolTip(tr("View details of individual vertices"));
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual vertices in a separate window."));
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
+    connect(btn, &QPushButton::clicked, this, &Tri3SkelCompUI::viewVertices);
     grid->addWidget(btn, 0, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -173,7 +173,7 @@ Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* tri,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual edges in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
+    connect(btn, &QPushButton::clicked, this, &Tri3SkelCompUI::viewEdges);
     grid->addWidget(btn, 1, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -182,7 +182,7 @@ Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* tri,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual triangles in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewTriangles()));
+    connect(btn, &QPushButton::clicked, this, &Tri3SkelCompUI::viewTriangles);
     grid->addWidget(btn, 2, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -191,7 +191,7 @@ Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* tri,
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual connected components in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
+    connect(btn, &QPushButton::clicked, this, &Tri3SkelCompUI::viewComponents);
     grid->addWidget(btn, 0, 11);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -202,7 +202,8 @@ Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* tri,
         "boundary components can either be ideal vertices of collections "
         "of adjacent boundary triangles."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewBoundaryComponents()));
+    connect(btn, &QPushButton::clicked, this,
+        &Tri3SkelCompUI::viewBoundaryComponents);
     grid->addWidget(btn, 1, 11);
 
     layout->addStretch(1);

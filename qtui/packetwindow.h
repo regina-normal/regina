@@ -50,8 +50,6 @@ class ReginaMain;
  * PacketPane::floatPane() should be used.
  */
 class PacketWindow : public QMainWindow {
-    Q_OBJECT
-
     private:
         PacketPane* heldPane;
             /**< The packet pane held within this frame. */
@@ -65,9 +63,6 @@ class PacketWindow : public QMainWindow {
                  that contain it) when the window closes. */
 
     private:
-        /**
-         * Constructor.
-         */
         PacketWindow(PacketPane* newPane, ReginaMain* parent);
 
         void setupMenus();
@@ -75,7 +70,6 @@ class PacketWindow : public QMainWindow {
     public:
         void updateWindowTitle();
 
-    public slots:
         void pythonConsole();
         void raiseWindow();
 

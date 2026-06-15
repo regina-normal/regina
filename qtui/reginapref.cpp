@@ -137,16 +137,17 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
 
     // Finish off.
-    connect(buttonBox, SIGNAL(clicked(QAbstractButton *)), this, SLOT(clicked(QAbstractButton *)));
+    connect(buttonBox, &QDialogButtonBox::clicked, this,
+        &ReginaPreferences::clicked);
 }
 
 // Apply if apply or OK is clicked, then pass to QDialog signals
 void ReginaPreferences::clicked(QAbstractButton *button) {
     if (buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole) {
-        slotApply();
+        apply();
         return;
     } else if (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole) {
-        slotApply();
+        apply();
         accept();
     } else if (buttonBox->buttonRole(button) == QDialogButtonBox::HelpRole) {
         ReginaPrefSet::openHandbook("options", nullptr, this);
@@ -155,7 +156,7 @@ void ReginaPreferences::clicked(QAbstractButton *button) {
     reject();
 }
 
-void ReginaPreferences::slotApply() {
+void ReginaPreferences::apply() {
     // Propagate changes to the main window.
     ReginaPrefSet& prefSet(ReginaPrefSet::global());
 
@@ -346,7 +347,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addWidget(cbGraphvizLabels);
 
     // These combo box indices must be kept in sync with the switch statements
-    // in the ReginaPreferences constructor and slotApply().
+    // in the ReginaPreferences constructor and apply().
     auto* box = new QHBoxLayout();
     auto* label = new QLabel(tr("Toolbars:"));
     box->addWidget(label);
@@ -365,7 +366,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addLayout(box);
 
     // These combo box indices must be kept in sync with the switch statements
-    // in the ReginaPreferences constructor and slotApply().
+    // in the ReginaPreferences constructor and apply().
     box = new QHBoxLayout();
     label = new QLabel(tr("Multithreading:"));
     box->addWidget(label);
@@ -381,7 +382,7 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     layout->addLayout(box);
 
     // These combo box indices must be kept in sync with the switch statements
-    // in the ReginaPreferences constructor and slotApply().
+    // in the ReginaPreferences constructor and apply().
     box = new QHBoxLayout();
     label = new QLabel(tr("Group simplification:"));
     box->addWidget(label);

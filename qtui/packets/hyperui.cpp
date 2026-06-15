@@ -89,8 +89,8 @@ HyperHeaderUI::HyperHeaderUI(
         "the specific coordinate system that was originally used.  Also "
         "displays the total number of hypersurfaces in this list."));
     header->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    connect(header, SIGNAL(linkActivated(QString)),
-        this, SLOT(viewTriangulation()));
+    connect(header, &QLabel::linkActivated, this,
+        &HyperHeaderUI::viewTriangulation);
 
     ui = header;
 

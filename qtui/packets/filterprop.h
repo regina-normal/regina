@@ -54,8 +54,6 @@ namespace regina {
  * A packet interface for working with property-based surface filters.
  */
 class FilterPropUI : public QObject, public PacketUI {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -96,20 +94,12 @@ class FilterPropUI : public QObject, public PacketUI {
         QString getPacketMenuText() const override;
         void refresh() override;
 
-    public slots:
         /**
          * Notification of any change in the dialog.
          * Returns false if the change was not actionable (e.g., if the
          * list of Euler characteristics was invalid).
          */
         bool notifyOptionsChanged();
-
-        /**
-         * Update the enabled/disable state of particular components.
-         */
-        void enableDisableOrient();
-        void enableDisableCompact();
-        void enableDisableBdry();
 
     private:
         /**

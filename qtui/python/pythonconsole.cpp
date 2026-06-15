@@ -192,7 +192,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     actCopy->setEnabled(false);
     menuEdit->addAction(actCopy);
 
-    connect(input, &CommandEdit::selectionChanged, this,
+    connect(input, &QLineEdit::selectionChanged, this,
         &PythonConsole::inputSelectionChanged);
     connect(session, &QTextEdit::selectionChanged, this,
         &PythonConsole::sessionSelectionChanged);

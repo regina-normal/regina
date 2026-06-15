@@ -89,7 +89,7 @@ class ExamplesAction : public QMenu {
          */
         void urlSelected(const QUrl& url, const QString& description);
 
-    protected slots:
+    protected:
         /**
          * All activation events lead here.
          */
