@@ -61,8 +61,6 @@ template <int dim> requires (regina::supportedDim(dim)) class SimplexChooser;
  * 3-manifold triangulation.
  */
 class EltMoveDialog3 : public QDialog, public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Internal components:
@@ -117,7 +115,7 @@ class EltMoveDialog3 : public QDialog, public regina::PacketListener {
         void packetWasChanged(regina::Packet&) override;
         void packetBeingDestroyed(regina::PacketShell) override;
 
-    protected slots:
+    protected:
         /**
          * A button at the bottom of the dialog has been clicked.
          */

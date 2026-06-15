@@ -105,18 +105,22 @@ IntroDialog::IntroDialog(QWidget* parent) : QDialog(parent) {
     buttons->addButton(helpBtn, QDialogButtonBox::HelpRole); 
     layout->addWidget(buttons);
 
-    connect(buttons, SIGNAL(helpRequested()), this, SLOT(openHandbook()));
-    connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(offerHelp, SIGNAL(stateChanged(int)), this, SLOT(helpChanged(int)));
-}
-
-void IntroDialog::openHandbook() {
-    ReginaPrefSet::openHandbook("index", nullptr, this);
-}
-
-void IntroDialog::helpChanged(int newState) {
-    ReginaPrefSet::global().helpIntroOnStartup = (newState == Qt::Checked);
-    ReginaPrefSet::propagate();
+    connect(buttons, &QDialogButtonBox::helpRequested, this, [this]() {
+        ReginaPrefSet::openHandbook("index", nullptr, this);
+    });
+    connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
+#if QT_VERSION >= QT_VERSION_CHECK(6,7,0)
+    connect(offerHelp, &QCheckBox::checkStateChanged, this,
+            [](Qt::CheckState state) {
+        ReginaPrefSet::global().helpIntroOnStartup = (state == Qt::Checked);
+        ReginaPrefSet::propagate();
+    });
+#else
+    connect(offerHelp, &QCheckBox::stateChanged, this, [](int state) {
+        ReginaPrefSet::global().helpIntroOnStartup = (state == Qt::Checked);
+        ReginaPrefSet::propagate();
+    });
+#endif
 }
 

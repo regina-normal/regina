@@ -164,33 +164,36 @@ FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
     refresh();
 
     // Make the UI components interact properly.
-    connect(useOrient, SIGNAL(toggled(bool)),
-        this, SLOT(enableDisableOrient()));
-    connect(useCompact, SIGNAL(toggled(bool)),
-        this, SLOT(enableDisableCompact()));
-    connect(useBdry, SIGNAL(toggled(bool)),
-        this, SLOT(enableDisableBdry()));
+    connect(useOrient, &QCheckBox::toggled, this, [this](bool checked) {
+        optOrient->setEnabled(checked);
+    });
+    connect(useCompact, &QCheckBox::toggled, this, [this](bool checked) {
+        optCompact->setEnabled(checked);
+    });
+    connect(useBdry, &QCheckBox::toggled, this, [this](bool checked) {
+        optBdry->setEnabled(checked);
+    });
 
     // Notify us of any changes.
     // Note that clicked() is *not* triggered when calling setChecked(),
     // so we should not accidentally call notifyOptionsChanged() in the
     // middle of a refresh.
-    connect(useOrient, SIGNAL(clicked(bool)),
-        this, SLOT(notifyOptionsChanged()));
-    connect(useCompact, SIGNAL(clicked(bool)),
-        this, SLOT(notifyOptionsChanged()));
-    connect(useBdry, SIGNAL(clicked(bool)),
-        this, SLOT(notifyOptionsChanged()));
+    connect(useOrient, &QCheckBox::clicked,
+        this, &FilterPropUI::notifyOptionsChanged);
+    connect(useCompact, &QCheckBox::clicked,
+        this, &FilterPropUI::notifyOptionsChanged);
+    connect(useBdry, &QCheckBox::clicked,
+        this, &FilterPropUI::notifyOptionsChanged);
 
-    connect(optOrient, SIGNAL(activated(int)),
-        this, SLOT(notifyOptionsChanged()));
-    connect(optCompact, SIGNAL(activated(int)),
-        this, SLOT(notifyOptionsChanged()));
-    connect(optBdry, SIGNAL(activated(int)),
-        this, SLOT(notifyOptionsChanged()));
+    connect(optOrient, &QComboBox::activated, this,
+        &FilterPropUI::notifyOptionsChanged);
+    connect(optCompact, &QComboBox::activated, this,
+        &FilterPropUI::notifyOptionsChanged);
+    connect(optBdry, &QComboBox::activated, this,
+        &FilterPropUI::notifyOptionsChanged);
 
-    connect(eulerList, SIGNAL(editingFinished()),
-        this, SLOT(notifyOptionsChanged()));
+    connect(eulerList, &QLineEdit::editingFinished, this,
+        &FilterPropUI::notifyOptionsChanged);
 }
 
 regina::Packet* FilterPropUI::getPacket() {
@@ -260,18 +263,6 @@ bool FilterPropUI::notifyOptionsChanged() {
 
     inNotify = false;
     return success;
-}
-
-void FilterPropUI::enableDisableOrient() {
-    optOrient->setEnabled(useOrient->isChecked());
-}
-
-void FilterPropUI::enableDisableCompact() {
-    optCompact->setEnabled(useCompact->isChecked());
-}
-
-void FilterPropUI::enableDisableBdry() {
-    optBdry->setEnabled(useBdry->isChecked());
 }
 
 BoolSet FilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {

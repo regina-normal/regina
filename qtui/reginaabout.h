@@ -44,8 +44,6 @@
  * Provides constants offering general information about the application.
  */
 class ReginaAbout : public QDialog {
-    Q_OBJECT
-
     public:
         static const QString regCopyright;
             /**< The application's copyright notice. */
@@ -96,7 +94,6 @@ class ReginaAbout : public QDialog {
         QList<SoftwareInfo> bundled;
             /**< Stores a list of bundled software with version details. */
 
-    private slots:
         void showLicense();
             /**< Shows the license text in a new dialog. */
 };

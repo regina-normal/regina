@@ -47,8 +47,6 @@ template <regina::CensusSearchable ObjectType> class CensusWidget;
  * A triangulation page for viewing normal surface properties.
  */
 class Tri3SurfacesUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -109,7 +107,6 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Calculate properties.
          */
@@ -128,7 +125,6 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
          * Support clipboard actions.
          */
         void contextManifold(const QPoint& pos);
-        void copyManifold();
 };
 
 #endif

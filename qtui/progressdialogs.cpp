@@ -161,7 +161,8 @@ ProgressDialogOpen::ProgressDialogOpen(regina::ProgressTrackerOpen* tracker,
     layout->addStretch(1);
 
     buttons = new QDialogButtonBox(QDialogButtonBox::Cancel);
-    connect(buttons, SIGNAL(rejected()), this, SLOT(cancelTask()));
+    connect(buttons, &QDialogButtonBox::rejected, this,
+        &ProgressDialogOpen::cancelTask);
     layout->addWidget(buttons);
 }
 
@@ -229,7 +230,8 @@ ProgressDialogObjective::ProgressDialogObjective(
     layout->addStretch(1);
 
     buttons = new QDialogButtonBox(QDialogButtonBox::Cancel);
-    connect(buttons, SIGNAL(rejected()), this, SLOT(cancelTask()));
+    connect(buttons, &QDialogButtonBox::rejected, this,
+        &ProgressDialogObjective::cancelTask);
     layout->addWidget(buttons);
 }
 

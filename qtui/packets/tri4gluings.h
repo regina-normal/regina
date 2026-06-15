@@ -122,8 +122,6 @@ class GluingsModel4 : public QAbstractItemModel {
  * A 4-manifold triangulation page for editing facet gluings.
  */
 class Tri4GluingsUI : public QObject, public PacketEditorTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -190,7 +188,6 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         void refresh() override;
         void endEdit() override;
 
-    public slots:
         /**
          * Gluing edit actions.
          */

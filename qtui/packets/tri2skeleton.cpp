@@ -141,7 +141,7 @@ Tri2SkelCompUI::Tri2SkelCompUI(
     btn->setToolTip(tr("View details of individual vertices"));
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual vertices in a separate window."));
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewVertices()));
+    connect(btn, &QPushButton::clicked, this, &Tri2SkelCompUI::viewVertices);
     grid->addWidget(btn, 0, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -150,7 +150,7 @@ Tri2SkelCompUI::Tri2SkelCompUI(
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual edges in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewEdges()));
+    connect(btn, &QPushButton::clicked, this, &Tri2SkelCompUI::viewEdges);
     grid->addWidget(btn, 1, 5);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -159,7 +159,7 @@ Tri2SkelCompUI::Tri2SkelCompUI(
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual connected components in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewComponents()));
+    connect(btn, &QPushButton::clicked, this, &Tri2SkelCompUI::viewComponents);
     grid->addWidget(btn, 0, 11);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
@@ -168,7 +168,8 @@ Tri2SkelCompUI::Tri2SkelCompUI(
     btn->setWhatsThis(tr("View details of this triangulation's "
         "individual boundary components in a separate window."));
     // btn->setFlat(true);
-    connect(btn, SIGNAL(clicked()), this, SLOT(viewBoundaryComponents()));
+    connect(btn, &QPushButton::clicked, this,
+        &Tri2SkelCompUI::viewBoundaryComponents);
     grid->addWidget(btn, 1, 11);
 
     layout->addStretch(1);

@@ -47,8 +47,6 @@ class QTableView;
  * A SnapPea triangulation page for viewing face gluings.
  */
 class SnapPeaGluingsUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

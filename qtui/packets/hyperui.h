@@ -50,8 +50,6 @@ namespace regina {
  * A packet interface for viewing normal surface lists.
  */
 class HyperUI : public PacketTabbedUI {
-    Q_OBJECT
-
     private:
         /**
          * Internal components
@@ -78,8 +76,6 @@ class HyperUI : public PacketTabbedUI {
  */
 class HyperHeaderUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -114,7 +110,7 @@ class HyperHeaderUI : public QObject, public PacketViewerTab,
         void packetWasChanged(regina::Packet&) override;
         void packetBeingDestroyed(regina::PacketShell) override;
 
-    private slots:
+    private:
         /**
          * View the underlying triangulation.
          */

@@ -110,7 +110,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet& newPacket,
     actClose->setShortcuts(QKeySequence::Close);
     actClose->setToolTip(tr("Close this packet viewer"));
     actClose->setWhatsThis(tr("Close this packet viewer."));
-    connect(actClose,SIGNAL(triggered()), this, SLOT(close()));
+    connect(actClose, &QAction::triggered, this, &PacketPane::close);
 
     // Set up the header.
     // We use a real widget for this - not just a layout - in order to
@@ -206,15 +206,18 @@ void PacketPane::registerEditOperations(QAction* actCut, QAction* actCopy,
 
     PacketEditIface* iface = mainUI->getEditIface();
     if (iface) {
-        connect(iface, SIGNAL(statesChanged()), this,
-            SLOT(updateClipboardActions()));
+        connect(iface, &PacketEditIface::statesChanged, this,
+            &PacketPane::updateClipboardActions);
 
         if (editCut)
-            connect(editCut, SIGNAL(triggered()), iface, SLOT(cut()));
+            connect(editCut, &QAction::triggered, iface,
+                &PacketEditIface::cut);
         if (editCopy)
-            connect(editCopy, SIGNAL(triggered()), iface, SLOT(copy()));
+            connect(editCopy, &QAction::triggered, iface,
+                &PacketEditIface::copy);
         if (editPaste)
-            connect(editPaste, SIGNAL(triggered()), iface, SLOT(paste()));
+            connect(editPaste, &QAction::triggered, iface,
+                &PacketEditIface::paste);
     }
 
     updateClipboardActions();
@@ -223,15 +226,18 @@ void PacketPane::registerEditOperations(QAction* actCut, QAction* actCopy,
 void PacketPane::deregisterEditOperations() {
     PacketEditIface* iface = mainUI->getEditIface();
     if (iface) {
-        disconnect(iface, SIGNAL(statesChanged()), this,
-            SLOT(updateClipboardActions()));
+        disconnect(iface, &PacketEditIface::statesChanged, this,
+            &PacketPane::updateClipboardActions);
 
         if (editCut)
-            disconnect(editCut, SIGNAL(triggered()), iface, SLOT(cut()));
+            disconnect(editCut, &QAction::triggered, iface,
+                &PacketEditIface::cut);
         if (editCopy)
-            disconnect(editCopy, SIGNAL(triggered()), iface, SLOT(copy()));
+            disconnect(editCopy, &QAction::triggered, iface,
+                &PacketEditIface::copy);
         if (editPaste)
-            disconnect(editPaste, SIGNAL(triggered()), iface, SLOT(paste()));
+            disconnect(editPaste, &QAction::triggered, iface,
+                &PacketEditIface::paste);
     }
 
     if (editCut) {

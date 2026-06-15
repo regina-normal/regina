@@ -47,8 +47,6 @@ template <regina::CensusSearchable ObjectType> class CensusWidget;
  * A packet viewer tab for viewing text-based codes for a link.
  */
 class LinkCodesUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * The link itself
@@ -80,7 +78,6 @@ class LinkCodesUI : public QObject, public PacketViewerTab {
         void refresh() override;
         PacketEditIface* getEditIface() override;
 
-    public slots:
         /**
          * Change which code is displayed.
          */

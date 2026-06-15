@@ -61,8 +61,6 @@ namespace regina {
  */
 class Tri3CompositionUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Describes the type of isomorphism relationship that has been
@@ -124,7 +122,6 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         void contextStandardTri(const QPoint& pos, QWidget* fromWidget);
         void contextIsoSig(const QPoint& pos, QWidget* fromWidget);
 
-    public slots:
         /**
          * Update the isomorphism signature.
          */
@@ -144,9 +141,6 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          * Support clipboard actions.
          */
         void contextComposition(const QPoint& pos);
-        void copyStandardTri();
-        void copyIsoSig();
-        void copyCompositionLine();
 
     private:
         /**

@@ -275,11 +275,11 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     }
     sublayout->addWidget(type, 1);
     layout->addLayout(sublayout);
-    connect(type, SIGNAL(activated(int)), this, SLOT(typeChanged(int)));
+    connect(type, &QComboBox::activated, this, &LinkCrossingsUI::typeChanged);
 
     ui->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(contextStrand(const QPoint&)));
+    connect(ui, &QWidget::customContextMenuRequested, this,
+        &LinkCrossingsUI::contextStrand);
 
     if (explnPictorial.isNull())
         explnPictorial = tr("Shows a pictorial representation of each "
@@ -329,7 +329,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "moves.  There is no guarantee that the "
         "smallest possible number of crossings will be achieved."));
     actionList.push_back(actSimplify);
-    connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
+    connect(actSimplify, &QAction::triggered, this, &LinkCrossingsUI::simplify);
 
     actTreewidth = new QAction(this);
     actTreewidth->setText(tr("Improve &Treewidth"));
@@ -343,7 +343,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "but it should improve the performance of treewidth-based algorithms "
         "(e.g., for computing knot/link polynomials)."));
     actionList.push_back(actTreewidth);
-    connect(actTreewidth, SIGNAL(triggered()), this, SLOT(improveTreewidth()));
+    connect(actTreewidth, &QAction::triggered, this,
+        &LinkCrossingsUI::improveTreewidth);
 
     actMoves = new QAction(this);
     actMoves->setText(tr("Reidemeister &Moves..."));
@@ -357,7 +358,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "A dialog will be presented for you to select which "
         "Reidemeister moves to apply."));
     actionList.push_back(actMoves);
-    connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
+    connect(actMoves, &QAction::triggered, this, &LinkCrossingsUI::moves);
 
     auto* sep = new QAction(this);
     sep->setSeparator(true);
@@ -372,7 +373,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "the plane.  Every crossing will change sign, but its upper "
         "and lower strands will remain the same."));
     actionList.push_back(actReflect);
-    connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
+    connect(actReflect, &QAction::triggered, this, &LinkCrossingsUI::reflect);
 
     actRotate = new QAction(this);
     actRotate->setText(tr("&Rotate"));
@@ -384,7 +385,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "This operation simply produces a different diagram of the "
         "same link."));
     actionList.push_back(actRotate);
-    connect(actRotate, SIGNAL(triggered()), this, SLOT(rotate()));
+    connect(actRotate, &QAction::triggered, this, &LinkCrossingsUI::rotate);
 
     actReverse = new QAction(this);
     actReverse->setText(tr("Re&verse"));
@@ -395,7 +396,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "same upper/lower strands, but the order in which you traverse "
         "the strands will be reversed."));
     actionList.push_back(actReverse);
-    connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
+    connect(actReverse, &QAction::triggered, this, &LinkCrossingsUI::reverse);
 
     actAlternating = new QAction(this);
     actAlternating->setText(tr("Make &Alternating"));
@@ -405,7 +406,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actAlternating->setWhatsThis(tr("Switches the upper/lower strands on "
         "crossings where necessary to convert this into an alternating link."));
     actionList.push_back(actAlternating);
-    connect(actAlternating, SIGNAL(triggered()), this, SLOT(alternating()));
+    connect(actAlternating, &QAction::triggered, this,
+        &LinkCrossingsUI::alternating);
 
     actSelfFrame = new QAction(this);
     actSelfFrame->setText(tr("Self Frame"));
@@ -414,7 +416,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actSelfFrame->setWhatsThis(tr("Adds twists to this link "
         "to ensure that each component has zero writhe."));
     actionList.push_back(actSelfFrame);
-    connect(actSelfFrame, SIGNAL(triggered()), this, SLOT(selfFrame()));
+    connect(actSelfFrame, &QAction::triggered, this,
+        &LinkCrossingsUI::selfFrame);
 
     auto* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
@@ -424,7 +427,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actComposeWith->setWhatsThis(tr("Converts this into the composite of "
         "this link with some other chosen link."));
     actionList.push_back(actComposeWith);
-    connect(actComposeWith, SIGNAL(triggered()), this, SLOT(composeWith()));
+    connect(actComposeWith, &QAction::triggered, this,
+        &LinkCrossingsUI::composeWith);
 
     auto* actInsertLink = new QAction(this);
     actInsertLink->setText(tr("&Insert Link..."));
@@ -435,7 +439,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "into this diagram.  The effect will be to convert this into the "
         "split union of the two original links."));
     actionList.push_back(actInsertLink);
-    connect(actInsertLink, SIGNAL(triggered()), this, SLOT(insertLink()));
+    connect(actInsertLink, &QAction::triggered, this,
+        &LinkCrossingsUI::insertLink);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -453,8 +458,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "Whitehead double will be added as a new link beneath "
         "it in the packet tree."));
     actionList.push_back(actWhiteheadDouble);
-    connect(actWhiteheadDouble, SIGNAL(triggered()), this,
-        SLOT(whiteheadDouble()));
+    connect(actWhiteheadDouble, &QAction::triggered, this,
+        &LinkCrossingsUI::whiteheadDouble);
 
     auto* actParallel = new QAction(this);
     actParallel->setText(tr("Build Parallel Ca&bles..."));
@@ -467,7 +472,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "This link will not be changed – the new link will be added "
         "beneath it in the packet tree."));
     actionList.push_back(actParallel);
-    connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
+    connect(actParallel, &QAction::triggered, this, &LinkCrossingsUI::parallel);
 
     actComplement = new QAction(this);
     actComplement->setText(tr("&Complement"));
@@ -478,7 +483,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "ideal Regina triangulation, using Regina's own implementation.  "
         "The meridinal and longitudinal curves will be forgotten."));
     actionList.push_back(actComplement);
-    connect(actComplement, SIGNAL(triggered()), this, SLOT(complement()));
+    connect(actComplement, &QAction::triggered, this,
+        &LinkCrossingsUI::complement);
 
     actSnapPea = new QAction(this);
     actSnapPea->setText(tr("Complement Via S&napPea"));
@@ -490,7 +496,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "link as a SnapPea triangulation, using the SnapPea kernel.  "
         "The meridinal and longitudinal curves will be preserved."));
     actionList.push_back(actSnapPea);
-    connect(actSnapPea, SIGNAL(triggered()), this, SLOT(snapPea()));
+    connect(actSnapPea, &QAction::triggered, this, &LinkCrossingsUI::snapPea);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -514,8 +520,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
         "If this link diagram is already connected, this operation will "
         "do nothing."));
     actionList.push_back(actDiagramComponents);
-    connect(actDiagramComponents, SIGNAL(triggered()), this,
-        SLOT(diagramComponents()));
+    connect(actDiagramComponents, &QAction::triggered, this,
+        &LinkCrossingsUI::diagramComponents);
 
     connect(&ReginaPrefSet::global(), &ReginaPrefSet::preferencesChanged,
         this, &LinkCrossingsUI::updatePreferences);
@@ -1050,10 +1056,14 @@ void LinkCrossingsUI::contextStrand(const QPoint& pos) {
             QAction makeVirtual(tr("Make crossing %1 virtual").arg(useCrossing),
                 this);
             QAction reverse(tr("Reverse component"), this);
-            connect(&change, SIGNAL(triggered()), this, SLOT(changeCrossing()));
-            connect(&resolve, SIGNAL(triggered()), this, SLOT(resolveCrossing()));
-            connect(&makeVirtual, SIGNAL(triggered()), this, SLOT(makeVirtual()));
-            connect(&reverse, SIGNAL(triggered()), this, SLOT(reverseComponent()));
+            connect(&change, &QAction::triggered, this,
+                &LinkCrossingsUI::changeCrossing);
+            connect(&resolve, &QAction::triggered, this,
+                &LinkCrossingsUI::resolveCrossing);
+            connect(&makeVirtual, &QAction::triggered, this,
+                &LinkCrossingsUI::makeVirtual);
+            connect(&reverse, &QAction::triggered, this,
+                &LinkCrossingsUI::reverseComponent);
             m.addAction(&change);
             m.addAction(&resolve);
             m.addAction(&makeVirtual);
@@ -1135,8 +1145,9 @@ ParallelDialog::ParallelDialog(QWidget* parent,
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this,
+        &ParallelDialog::slotOk);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 void ParallelDialog::slotOk() {

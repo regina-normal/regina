@@ -233,8 +233,6 @@ class DefaultPacketUI : public PacketReadOnlyUI {
  * Packet panes float freely in their own frames.
  */
 class PacketPane : public QWidget, public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * External components
@@ -329,7 +327,6 @@ class PacketPane : public QWidget, public regina::PacketListener {
         void packetWasRenamed(regina::Packet& packet) override;
         void packetBeingDestroyed(regina::PacketShell packet) override;
 
-    public slots:
         /**
          * Queries the packet and refreshes the interface accordingly.
          */

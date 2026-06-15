@@ -72,7 +72,8 @@ SurfacesCompatibilityUI::SurfacesCompatibilityUI(
     chooseMatrix = new QComboBox(ui);
     chooseMatrix->addItem(tr("Local compatibility (quads and octagons)"));
     chooseMatrix->addItem(tr("Global compatibility (disjoint surfaces)"));
-    connect(chooseMatrix, SIGNAL(activated(int)), this, SLOT(changeLayer(int)));
+    connect(chooseMatrix, &QComboBox::activated, this,
+        &SurfacesCompatibilityUI::changeLayer);
     hdrLayout->addWidget(chooseMatrix);
     QString msg = tr("<qt>Allows you to switch between local and "
         "global compatibility matrices.<p>"
@@ -101,7 +102,8 @@ SurfacesCompatibilityUI::SurfacesCompatibilityUI(
         "surfaces (which is why these matrices are not always "
         "calculated automatically).</qt>"));
     hdrLayout->addWidget(btnCalculate);
-    connect(btnCalculate, SIGNAL(clicked()), this, SLOT(calculate()));
+    connect(btnCalculate, &QPushButton::clicked, this,
+        &SurfacesCompatibilityUI::calculate);
 
     stack = new QStackedWidget(ui);
     layerNone = new MessageLayer("dialog-information");

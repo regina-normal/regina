@@ -39,15 +39,20 @@
 #include <QTreeWidget>
 
 PacketEditTextEditor::PacketEditTextEditor(QTextEdit *edit) : edit_(edit) {
-    connect(this, SIGNAL(sendCutToEditor()), edit_, SLOT(cut()));
-    connect(this, SIGNAL(sendCopyToEditor()), edit_, SLOT(copy()));
-    connect(this, SIGNAL(sendPasteToEditor()), edit_, SLOT(paste()));
+    connect(this, &PacketEditTextEditor::sendCutToEditor, edit_,
+        &QTextEdit::cut);
+    connect(this, &PacketEditTextEditor::sendCopyToEditor, edit_,
+        &QTextEdit::copy);
+    connect(this, &PacketEditTextEditor::sendPasteToEditor, edit_,
+        &QTextEdit::paste);
 
-    connect(edit_, SIGNAL(selectionChanged()), 
-        this, SLOT(fireStatesChanged()));
-
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
-        this, SLOT(fireStatesChanged()));
+    connect(edit_, &QTextEdit::selectionChanged, this, [this]() {
+        emit statesChanged();
+    });
+    connect(QApplication::clipboard(), &QClipboard::dataChanged, this,
+            [this]() {
+        emit statesChanged();
+    });
 }
 
 bool PacketEditTextEditor::cutEnabled() const {
@@ -78,15 +83,20 @@ void PacketEditTextEditor::paste() {
 
 PacketEditPlainTextEditor::PacketEditPlainTextEditor(QPlainTextEdit *edit) :
         edit_(edit) {
-    connect(this, SIGNAL(sendCutToEditor()), edit_, SLOT(cut()));
-    connect(this, SIGNAL(sendCopyToEditor()), edit_, SLOT(copy()));
-    connect(this, SIGNAL(sendPasteToEditor()), edit_, SLOT(paste()));
+    connect(this, &PacketEditPlainTextEditor::sendCutToEditor, edit_,
+        &QPlainTextEdit::cut);
+    connect(this, &PacketEditPlainTextEditor::sendCopyToEditor, edit_,
+        &QPlainTextEdit::copy);
+    connect(this, &PacketEditPlainTextEditor::sendPasteToEditor, edit_,
+        &QPlainTextEdit::paste);
 
-    connect(edit_, SIGNAL(selectionChanged()), 
-        this, SLOT(fireStatesChanged()));
-
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
-        this, SLOT(fireStatesChanged()));
+    connect(edit_, &QPlainTextEdit::selectionChanged, this, [this]() {
+        emit statesChanged();
+    });
+    connect(QApplication::clipboard(), &QClipboard::dataChanged, this,
+            [this]() {
+        emit statesChanged();
+    });
 }
 
 bool PacketEditPlainTextEditor::cutEnabled() const {
@@ -117,14 +127,16 @@ void PacketEditPlainTextEditor::paste() {
 
 PacketEditTabbedUI::PacketEditTabbedUI(PacketTabbedUI* tabs) :
         tabs_(tabs) {
-    connect(tabs_->tabs, SIGNAL(currentChanged(int)),
-        this, SLOT(tabChanged(int)));
+    connect(tabs_->tabs, &QTabWidget::currentChanged, this,
+        &PacketEditTabbedUI::tabChanged);
 
     currentTab_ = tabs_->currentInterface();
 
     if (currentTab_->getEditIface())
-        connect(currentTab_->getEditIface(), SIGNAL(statesChanged()),
-            this, SLOT(fireStatesChanged()));
+        connect(currentTab_->getEditIface(), &PacketEditIface::statesChanged,
+                this, [this]() {
+            emit statesChanged();
+        });
 }
 
 bool PacketEditTabbedUI::cutEnabled() const {
@@ -161,15 +173,19 @@ void PacketEditTabbedUI::paste() {
 }
 
 void PacketEditTabbedUI::tabChanged(int newTab) {
-    if (currentTab_->getEditIface())
-        disconnect(currentTab_->getEditIface(), SIGNAL(statesChanged()),
-            this, SLOT(fireStatesChanged()));
+    if (currentTab_->getEditIface()) {
+        // This code disconnects the lambda that emits statesChanged().
+        disconnect(currentTab_->getEditIface(), &PacketEditIface::statesChanged,
+            this, nullptr);
+    }
 
     currentTab_ = tabs_->interfaceAtIndex(newTab);
-    fireStatesChanged();
+    emit statesChanged();
 
     if (currentTab_->getEditIface())
-        connect(currentTab_->getEditIface(), SIGNAL(statesChanged()),
-            this, SLOT(fireStatesChanged()));
+        connect(currentTab_->getEditIface(), &PacketEditIface::statesChanged,
+                this, [this]() {
+            emit statesChanged();
+        });
 }
 

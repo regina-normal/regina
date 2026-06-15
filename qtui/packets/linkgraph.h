@@ -54,8 +54,6 @@ namespace regina {
  * A packet viewer tab for viewing graphs related to a link.
  */
 class LinkGraphUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * The link itself.
@@ -97,7 +95,6 @@ class LinkGraphUI : public QObject, public PacketViewerTab {
 
         std::string treeDecomp(bool nice, size_t& bags, size_t& width);
 
-    private slots:
         /**
          * Change graphs.
          */

@@ -92,13 +92,12 @@ class GroupWidget : public QWidget {
          */
         void simplified();
 
-    public slots:
+    private:
         /**
          * Group simplification.
          */
         void simplify();
 
-    private:
         /**
          * Returns the full path to the GAP executable, or a null string
          * if the GAP executable does not appear to be valid.

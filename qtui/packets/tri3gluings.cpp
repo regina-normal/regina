@@ -339,7 +339,8 @@ QString GluingsModel3::destString(regina::Simplex<3>* srcTet, int srcFace) {
             regina::Triangle<3>::ordering(srcFace)).trunc3().c_str() + ')';
 }
 
-regina::Perm<4> GluingsModel3::faceStringToPerm(int srcFace, const QString& str) {
+regina::Perm<4> GluingsModel3::faceStringToPerm(int srcFace,
+        const QString& str) {
     int destVertex[4];
 
     destVertex[3] = 6; // This will be adjusted in a moment.
@@ -391,8 +392,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     //faceTable->setColumnStretchable(4, true);
 
     faceTable->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(faceTable, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(lockMenu(const QPoint&)));
+    connect(faceTable, &QWidget::customContextMenuRequested, this,
+        &Tri3GluingsUI::lockMenu);
 
     actAddTet = new QAction(this);
     actAddTet->setText(tr("&Add Tetrahedron"));
@@ -401,7 +402,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actAddTet->setToolTip(tr("Add a new tetrahedron"));
     actAddTet->setWhatsThis(tr("Adds a new tetrahedron to this "
         "triangulation."));
-    connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
+    connect(actAddTet, &QAction::triggered, this, &Tri3GluingsUI::addTet);
 
     actRemoveTet = new QAction(this);
     actRemoveTet->setText(tr("&Remove Tetrahedron"));
@@ -411,10 +412,10 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actRemoveTet->setEnabled(false);
     actRemoveTet->setWhatsThis(tr("Removes the currently selected "
         "tetrahedra from this triangulation."));
-    connect(actRemoveTet, SIGNAL(triggered()), this, SLOT(removeSelectedTets()));
-    connect(faceTable->selectionModel(),
-        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-        this, SLOT(updateRemoveState()));
+    connect(actRemoveTet, &QAction::triggered, this,
+        &Tri3GluingsUI::removeSelectedTets);
+    connect(faceTable->selectionModel(), &QItemSelectionModel::selectionChanged,
+        this, &Tri3GluingsUI::updateRemoveState);
 
     actUnlock = new QAction(this);
     actUnlock->setText(tr("&Unlock All"));
@@ -422,7 +423,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actUnlock->setToolTip(tr("Unlock all tetrahedra and/or triangles"));
     actUnlock->setWhatsThis(tr("Clears all tetrahedron and/or triangle locks "
         "from this triangulation."));
-    connect(actUnlock, SIGNAL(triggered()), this, SLOT(unlockAll()));
+    connect(actUnlock, &QAction::triggered, this, &Tri3GluingsUI::unlockAll);
 
     ui = new QWidget();
     QBoxLayout* box = new QVBoxLayout(ui);
@@ -450,7 +451,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "smallest possible number of tetrahedra will be achieved.<p>"
         "You can also try <i>Make 0-Efficient</i> for a slower but more "
         "powerful reduction."));
-    connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
+    connect(actSimplify, &QAction::triggered, this, &Tri3GluingsUI::simplify);
     triActionList.push_back(actSimplify);
 
     actTreewidth = new QAction(this);
@@ -463,7 +464,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "triangulation.  This might increase the number of tetrahedra, "
         "but it should improve the performance of treewidth-based algorithms "
         "(e.g., for computing Turaev-Viro invariants)."));
-    connect(actTreewidth, SIGNAL(triggered()), this, SLOT(improveTreewidth()));
+    connect(actTreewidth, &QAction::triggered, this,
+        &Tri3GluingsUI::improveTreewidth);
     triActionList.push_back(actTreewidth);
 
     actMoves = new QAction(this);
@@ -478,7 +480,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "A dialog will be presented for you to select which "
         "elementary moves to apply."));
     triActionList.push_back(actMoves);
-    connect(actMoves, SIGNAL(triggered()), this, SLOT(elementaryMove()));
+    connect(actMoves, &QAction::triggered, this,
+        &Tri3GluingsUI::elementaryMove);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -494,7 +497,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled."));
     triActionList.push_back(actOrient);
-    connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
+    connect(actOrient, &QAction::triggered, this, &Tri3GluingsUI::orient);
 
     actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
@@ -506,7 +509,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "to convert this into an isomorphic triangulation with the "
         "opposite orientation."));
     triActionList.push_back(actReflect);
-    connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
+    connect(actReflect, &QAction::triggered, this, &Tri3GluingsUI::reflect);
 
     actSubdivide = new QAction(this);
     actSubdivide->setText(tr("&Barycentric Subdivide"));
@@ -518,8 +521,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "subdivision on this triangulation.  Each tetrahedron "
         "will be subdivided into 24 smaller tetrahedra."));
     triActionList.push_back(actSubdivide);
-    connect(actSubdivide, SIGNAL(triggered()), this,
-        SLOT(barycentricSubdivide()));
+    connect(actSubdivide, &QAction::triggered, this,
+        &Tri3GluingsUI::barycentricSubdivide);
 
     actTruncate = new QAction(this);
     actTruncate->setText(tr("&Truncate Ideal Vertices"));
@@ -535,7 +538,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "If there are no vertices of this type to truncate, then this "
         "operation will have no effect."));
     triActionList.push_back(actTruncate);
-    connect(actTruncate, SIGNAL(triggered()), this, SLOT(truncateIdeal()));
+    connect(actTruncate, &QAction::triggered, this,
+        &Tri3GluingsUI::truncateIdeal);
 
     auto* actTruncateVertex = new QAction(this);
     actTruncateVertex->setText(tr("Truncate Single Vertex..."));
@@ -547,8 +551,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "boundary component.  If the chosen vertex is ideal, this will "
         "convert it into a real boundary component."));
     triActionList.push_back(actTruncateVertex);
-    connect(actTruncateVertex, SIGNAL(triggered()), this,
-        SLOT(truncateVertex()));
+    connect(actTruncateVertex, &QAction::triggered, this,
+        &Tri3GluingsUI::truncateVertex);
 
     actMakeIdeal = new QAction(this);
     actMakeIdeal->setText(tr("Make &Ideal"));
@@ -562,7 +566,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "If there are no real boundary components, then this "
         "operation will have no effect."));
     triActionList.push_back(actMakeIdeal);
-    connect(actMakeIdeal, SIGNAL(triggered()), this, SLOT(makeIdeal()));
+    connect(actMakeIdeal, &QAction::triggered, this, &Tri3GluingsUI::makeIdeal);
 
     auto* actPuncture = new QAction(this);
     actPuncture->setText(tr("Puncture"));
@@ -571,7 +575,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actPuncture->setWhatsThis(tr("Removes a 3-ball from the interior of "
         "this triangulation, creating a new 2-sphere boundary component."));
     triActionList.push_back(actPuncture);
-    connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
+    connect(actPuncture, &QAction::triggered, this, &Tri3GluingsUI::puncture);
 
     auto* actDrillEdge = new QAction(this);
     actDrillEdge->setText(tr("Drill Ed&ge..."));
@@ -581,7 +585,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actDrillEdge->setWhatsThis(tr("Drills out a regular neighbourhood "
         "of a chosen edge of this triangulation."));
     triActionList.push_back(actDrillEdge);
-    connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
+    connect(actDrillEdge, &QAction::triggered, this, &Tri3GluingsUI::drillEdge);
 
     auto* actConnectedSumWith = new QAction(this);
     actConnectedSumWith->setText(tr("Connect Sum With..."));
@@ -592,8 +596,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     actConnectedSumWith->setWhatsThis(tr("Converts this into the connected sum "
         "of this triangulation with some other chosen triangulation."));
     triActionList.push_back(actConnectedSumWith);
-    connect(actConnectedSumWith, SIGNAL(triggered()), this,
-        SLOT(connectedSumWith()));
+    connect(actConnectedSumWith, &QAction::triggered, this,
+        &Tri3GluingsUI::connectedSumWith);
 
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
@@ -605,8 +609,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "the chosen triangulation will be become additional components of "
         "this triangulation."));
     triActionList.push_back(actInsertTri);
-    connect(actInsertTri, SIGNAL(triggered()), this,
-        SLOT(insertTriangulation()));
+    connect(actInsertTri, &QAction::triggered, this,
+        &Tri3GluingsUI::insertTriangulation);
 
     auto* actZeroEff = new QAction(this);
     actZeroEff->setText(tr("Make &0-Efficient"));
@@ -622,7 +626,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "0-efficient triangulations.  You will be notified if this is the "
         "case."));
     triActionList.push_back(actZeroEff);
-    connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
+    connect(actZeroEff, &QAction::triggered, this,
+        &Tri3GluingsUI::makeZeroEfficient);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -641,7 +646,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "If this triangulation is already orientable then the result will be "
         "disconnected, containing two copies of the original triangulation."));
     triActionList.push_back(actDoubleCover);
-    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
+    connect(actDoubleCover, &QAction::triggered, this,
+        &Tri3GluingsUI::doubleCover);
 
     actDoubleOverBoundary = new QAction(this);
     actDoubleOverBoundary->setText(tr("Build Double Over Boundary"));
@@ -657,8 +663,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "This triangulation will not be changed – the result "
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actDoubleOverBoundary);
-    connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
-        SLOT(doubleOverBoundary()));
+    connect(actDoubleOverBoundary, &QAction::triggered, this,
+        &Tri3GluingsUI::doubleOverBoundary);
 
     actSnapPea = new QAction(this);
     actSnapPea->setText(tr("Convert to SnapPea"));
@@ -673,7 +679,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "SnapPea kernel.  For peripheral curves, Regina will attempt "
         "to install the (shortest, second shortest) basis on each cusp."));
     triActionList.push_back(actSnapPea);
-    connect(actSnapPea, SIGNAL(triggered()), this, SLOT(toSnapPea()));
+    connect(actSnapPea, &QAction::triggered, this, &Tri3GluingsUI::toSnapPea);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -692,8 +698,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "If you select an ideal boundary component, this will build "
         "a 2-manifold triangulation from the corresponding vertex link."));
     triActionList.push_back(actBoundaryComponents);
-    connect(actBoundaryComponents, SIGNAL(triggered()), this,
-        SLOT(boundaryComponents()));
+    connect(actBoundaryComponents, &QAction::triggered, this,
+        &Tri3GluingsUI::boundaryComponents);
 
     actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
@@ -707,7 +713,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "The triangles that make up this link sit inside "
         "the tetrahedron corners that meet together at <i>V</i>."));
     triActionList.push_back(actVertexLinks);
-    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+    connect(actVertexLinks, &QAction::triggered, this,
+        &Tri3GluingsUI::vertexLinks);
 
     actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
@@ -722,8 +729,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "If this triangulation is already connected, this operation will "
         "do nothing."));
     triActionList.push_back(actSplitIntoComponents);
-    connect(actSplitIntoComponents, SIGNAL(triggered()), this,
-        SLOT(splitIntoComponents()));
+    connect(actSplitIntoComponents, &QAction::triggered, this,
+        &Tri3GluingsUI::splitIntoComponents);
 
     auto* actConnectedSumDecomposition = new QAction(this);
     actConnectedSumDecomposition->setText(tr("Co&nnected Sum Decomposition"));
@@ -738,8 +745,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         "summands will be added as new triangulations beneath it in "
         "the packet tree."));
     triActionList.push_back(actConnectedSumDecomposition);
-    connect(actConnectedSumDecomposition, SIGNAL(triggered()), this,
-        SLOT(connectedSumDecomposition()));
+    connect(actConnectedSumDecomposition, &QAction::triggered, this,
+        &Tri3GluingsUI::connectedSumDecomposition);
 
     // Tidy up.
 
@@ -911,7 +918,7 @@ void Tri3GluingsUI::lockMenu(const QPoint& pos) {
                 .arg(action).arg(index.row()).arg(faceDesc)
                 .arg(GluingsModel3::destString(s, lockFacet)));
     }
-    connect(&lock, SIGNAL(triggered()), this, SLOT(changeLock()));
+    connect(&lock, &QAction::triggered, this, &Tri3GluingsUI::changeLock);
     m.addAction(&lock);
     m.exec(faceTable->viewport()->mapToGlobal(pos));
 }

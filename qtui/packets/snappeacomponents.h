@@ -49,8 +49,6 @@
  * triangulation.
  */
 class NoSnapPea : public QLabel {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
