@@ -52,6 +52,7 @@
 #include <QTextBrowser>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include <QAbstractButton>
 
 #define REGINA_XSTR(s) REGINA_STR(s)
 #define REGINA_STR(s) #s
