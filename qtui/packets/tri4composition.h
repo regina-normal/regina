@@ -130,11 +130,9 @@ class Tri4CompositionUI : public QObject, public PacketViewerTab,
         /**
          * Support clipboard actions.
          */
-        void copyIsoSig();
-
         void contextComposition(const QPoint& pos);
-        void copyCompositionLine();
 
+    private:
         /**
          * Add new items to the list view.
          */

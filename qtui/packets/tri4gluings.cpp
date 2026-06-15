@@ -541,7 +541,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actPuncture->setWhatsThis(tr("Removes a 4-ball from the interior of "
         "this triangulation, creating a new 3-sphere boundary component."));
     triActionList.push_back(actPuncture);
-    connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
+    connect(actPuncture, &QAction::triggered, this, &Tri4GluingsUI::puncture);
 
     auto* actConnectedSumWith = new QAction(this);
     actConnectedSumWith->setText(tr("Connect Sum With..."));
@@ -552,8 +552,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
     actConnectedSumWith->setWhatsThis(tr("Converts this into the connected sum "
         "of this triangulation with some other chosen triangulation."));
     triActionList.push_back(actConnectedSumWith);
-    connect(actConnectedSumWith, SIGNAL(triggered()), this,
-        SLOT(connectedSumWith()));
+    connect(actConnectedSumWith, &QAction::triggered, this,
+        &Tri4GluingsUI::connectedSumWith);
 
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));

@@ -125,8 +125,8 @@ Tri4CompositionUI::Tri4CompositionUI(
     layout->addWidget(details, 1);
 
     details->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(details, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(contextComposition(const QPoint&)));
+    connect(details, &QWidget::customContextMenuRequested, this,
+        &Tri4CompositionUI::contextComposition);
 
     copyHint = new QLabel(tr("<qt><i>Hint: Right-click to copy "
         "any data above</i></qt>"));
@@ -546,17 +546,11 @@ void Tri4CompositionUI::contextComposition(const QPoint& pos) {
 
     QMenu m(tr("Context menu"), details);
     QAction a("Copy line", details);
-    connect(&a, SIGNAL(triggered()), this, SLOT(copyCompositionLine()));
+    connect(&a, &QAction::triggered, this, [this]() {
+        QApplication::clipboard()->setText(
+            details->selectedItems().front()->text(0));
+    });
     m.addAction(&a);
     m.exec(details->mapToGlobal(pos));
-}
-
-void Tri4CompositionUI::copyIsoSig() {
-    if (! sig_.empty())
-        QApplication::clipboard()->setText(sig_.c_str());
-}
-
-void Tri4CompositionUI::copyCompositionLine() {
-    QApplication::clipboard()->setText(details->selectedItems().front()->text(0));
 }
 
