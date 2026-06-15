@@ -233,8 +233,8 @@ Tri2Creator::Tri2Creator(ReginaMain*) {
         }
     }
 
-    QObject::connect(type, SIGNAL(activated(int)), details,
-        SLOT(setCurrentIndex(int)));
+    QObject::connect(type, &QComboBox::activated, details,
+        &QStackedWidget::setCurrentIndex);
 }
 
 QWidget* Tri2Creator::getInterface() {

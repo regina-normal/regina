@@ -55,8 +55,6 @@ namespace regina {
  * A packet interface for viewing 3-manifold triangulations.
  */
 class SnapPeaUI : public PacketTabbedUI {
-    Q_OBJECT
-
     private:
         /**
          * Internal components
@@ -85,7 +83,6 @@ class SnapPeaUI : public PacketTabbedUI {
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
 
-    public slots:
         /**
          * Reflect preference changes.
          */
@@ -96,8 +93,6 @@ class SnapPeaUI : public PacketTabbedUI {
  * A header for the SnapPea triangulation viewer.
  */
 class SnapPeaHeaderUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

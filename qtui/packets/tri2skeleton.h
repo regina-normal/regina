@@ -59,8 +59,6 @@ class Tri2SkeletonUI : public PacketTabbedViewerTab {
  * A triangulation page for accessing individual skeletal components.
  */
 class Tri2SkelCompUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -97,7 +95,6 @@ class Tri2SkelCompUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Open skeleton windows.
          */

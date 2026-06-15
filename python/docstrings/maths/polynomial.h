@@ -251,20 +251,6 @@ Returns:
 
 // Docstring regina::python::doc::Polynomial::__init
 static constexpr const char __init[] =
-R"doc(Deprecated constructor that creates the polynomial ``x^d`` for the
-given degree *d*.
-
-.. deprecated::
-    This will be removed in a future version of Regina, since in
-    casual reading of code it is too easy to misread this as creating
-    a polynomial with only a constant term. You can still create
-    ``x^d`` by calling ``initExp(d)`` instead.
-
-Parameter ``degree``:
-    the degree of the new polynomial.)doc";
-
-// Docstring regina::python::doc::Polynomial::__init_2
-static constexpr const char __init_2[] =
 R"doc(Creates a new polynomial from the given sequence of coefficients. The
 coefficients should be given in order from the constant coefficient to
 the leading coefficient.
@@ -469,19 +455,6 @@ static constexpr const char init[] = R"doc(Sets this to become the zero polynomi
 
 // Docstring regina::python::doc::Polynomial::init_2
 static constexpr const char init_2[] =
-R"doc(Deprecated function that sets this to become the polynomial ``x^d``
-for the given degree *d*.
-
-.. deprecated::
-    This has been renamed to initExp(), since in casual reading of
-    code it is too easy to misread this as setting this polynomial to
-    have only a constant term.
-
-Parameter ``degree``:
-    the new degree of this polynomial.)doc";
-
-// Docstring regina::python::doc::Polynomial::init_3
-static constexpr const char init_3[] =
 R"doc(Sets this to become the polynomial described by the given sequence of
 coefficients. The coefficients should appear in order from the
 constant coefficient to the leading coefficient.

@@ -53,8 +53,6 @@
  * More functionality will be added if/when this becomes necessary.
  */
 class ElidedLabel : public QWidget {
-    Q_OBJECT
-
     private:
         QString fullText_;
 

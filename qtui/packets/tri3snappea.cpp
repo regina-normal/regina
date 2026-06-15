@@ -207,7 +207,8 @@ Tri3SnapPeaUI::Tri3SnapPeaUI(regina::PacketOf<Triangulation<3>>* packet,
 
     // Finish off.
 
-    connect(btnToSnapPea, SIGNAL(clicked()), this, SLOT(toSnapPea()));
+    connect(btnToSnapPea, &QPushButton::clicked, this,
+        &Tri3SnapPeaUI::toSnapPea);
 }
 
 Tri3SnapPeaUI::~Tri3SnapPeaUI() {

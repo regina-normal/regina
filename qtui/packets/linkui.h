@@ -51,8 +51,6 @@ namespace regina {
  * A packet interface for viewing knots and links.
  */
 class LinkUI : public PacketTabbedUI {
-    Q_OBJECT
-
     private:
         /**
          * Internal components
@@ -78,7 +76,6 @@ class LinkUI : public PacketTabbedUI {
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
 
-    public slots:
         /**
          * Reflect preference changes.
          */

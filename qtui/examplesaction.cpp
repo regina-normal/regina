@@ -52,8 +52,9 @@ ExamplesAction::ExamplesAction(QWidget* parent) :
     group = new QActionGroup(parent);
     //setMenuAccelsEnabled(false);
     //setEnabled(true);
-    connect(group, SIGNAL(triggered(QAction*)), this, SLOT(exampleActivated(QAction*)));
-    
+    connect(group, &QActionGroup::triggered, this,
+        &ExamplesAction::exampleActivated);
+
     setWhatsThis(tr("Open one of the example data files that "
         "ships with Regina.  These examples are useful starting points "
         "for discovering what Regina can do.  Several censuses of "

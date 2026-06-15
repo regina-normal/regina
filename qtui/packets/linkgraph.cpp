@@ -69,7 +69,7 @@ LinkGraphUI::LinkGraphUI(regina::PacketOf<regina::Link>* useLink,
     chooseType = new QComboBox(ui);
     chooseType->addItem(tr("Tree decomposition"));
     chooseType->addItem(tr("Nice tree decomposition"));
-    connect(chooseType, SIGNAL(activated(int)), this, SLOT(changeType(int)));
+    connect(chooseType, &QComboBox::activated, this, &LinkGraphUI::changeType);
     hdrLayout->addWidget(chooseType);
     QString msg = tr("<qt>Allows you to switch between different graphs.<p>"
         "A <i>tree decomposition</i> models the link as a tree, "

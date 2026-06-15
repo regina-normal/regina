@@ -207,20 +207,6 @@ Returns:
 
 // Docstring regina::python::doc::Laurent::__init
 static constexpr const char __init[] =
-R"doc(Deprecated constructor that creates the polynomial ``x^d`` for the
-given exponent *d*.
-
-.. deprecated::
-    This will be removed in a future version of Regina, since in
-    casual reading of code it is too easy to misread this as creating
-    a polynomial with only a constant term. You can still create
-    ``x^d`` by calling ``initExp(d)`` instead.
-
-Parameter ``exponent``:
-    the exponent to use for the new polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent::__init_2
-static constexpr const char __init_2[] =
 R"doc(Creates a new polynomial from the given sequence of coefficients.
 
 The coefficients should be given in order from the smallest exponent
@@ -355,19 +341,6 @@ static constexpr const char init[] = R"doc(Sets this to become the zero polynomi
 
 // Docstring regina::python::doc::Laurent::init_2
 static constexpr const char init_2[] =
-R"doc(Deprecated function that sets this to become the polynomial ``x^d``
-for the given exponent *d*.
-
-.. deprecated::
-    This has been renamed to initExp(), since in casual reading of
-    code it is too easy to misread this as setting this polynomial to
-    have only a constant term.
-
-Parameter ``exponent``:
-    the new exponent to use for this polynomial.)doc";
-
-// Docstring regina::python::doc::Laurent::init_3
-static constexpr const char init_3[] =
 R"doc(Sets this to become the polynomial described by the given sequence of
 coefficients.
 

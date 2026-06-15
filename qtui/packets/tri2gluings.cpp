@@ -375,15 +375,15 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     //edgeTable->setColumnStretchable(3, true);
 
     edgeTable->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(edgeTable, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(lockMenu(const QPoint&)));
+    connect(edgeTable, &QWidget::customContextMenuRequested, this,
+        &Tri2GluingsUI::lockMenu);
 
     actAddTri = new QAction(this);
     actAddTri->setText(tr("&Add Triangle"));
     actAddTri->setIcon(ReginaSupport::regIcon("insert-mono"));
     actAddTri->setToolTip(tr("Add a new triangle"));
     actAddTri->setWhatsThis(tr("Adds a new triangle to this triangulation."));
-    connect(actAddTri, SIGNAL(triggered()), this, SLOT(addTri()));
+    connect(actAddTri, &QAction::triggered, this, &Tri2GluingsUI::addTri);
 
     actRemoveTri = new QAction(this);
     actRemoveTri->setText(tr("&Remove Triangle"));
@@ -392,10 +392,10 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actRemoveTri->setEnabled(false);
     actRemoveTri->setWhatsThis(tr("Removes the currently selected "
         "triangles from this triangulation."));
-    connect(actRemoveTri, SIGNAL(triggered()), this, SLOT(removeSelectedTris()));
-    connect(edgeTable->selectionModel(),
-        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-        this, SLOT(updateRemoveState()));
+    connect(actRemoveTri, &QAction::triggered, this,
+        &Tri2GluingsUI::removeSelectedTris);
+    connect(edgeTable->selectionModel(), &QItemSelectionModel::selectionChanged,
+        this, &Tri2GluingsUI::updateRemoveState);
 
     actUnlock = new QAction(this);
     actUnlock->setText(tr("&Unlock All"));
@@ -403,7 +403,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
     actUnlock->setToolTip(tr("Unlock all triangles and/or edges"));
     actUnlock->setWhatsThis(tr("Clears all triangle and/or edge locks from "
         "this triangulation."));
-    connect(actUnlock, SIGNAL(triggered()), this, SLOT(unlockAll()));
+    connect(actUnlock, &QAction::triggered, this, &Tri2GluingsUI::unlockAll);
 
     ui = new QWidget();
     QBoxLayout* box = new QVBoxLayout(ui);
@@ -431,7 +431,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         "A dialog will be presented for you to select which "
         "elementary moves to apply."));
     triActionList.push_back(actMoves);
-    connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
+    connect(actMoves, &QAction::triggered, this, &Tri2GluingsUI::moves);
 
     auto* sep = new QAction(this);
     sep->setSeparator(true);
@@ -447,7 +447,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled."));
     triActionList.push_back(actOrient);
-    connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
+    connect(actOrient, &QAction::triggered, this, &Tri2GluingsUI::orient);
 
     actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
@@ -459,7 +459,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         "to convert this into an isomorphic triangulation with the "
         "opposite orientation."));
     triActionList.push_back(actReflect);
-    connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
+    connect(actReflect, &QAction::triggered, this, &Tri2GluingsUI::reflect);
 
     actSubdivide = new QAction(this);
     actSubdivide->setText(tr("&Barycentric Subdivide"));
@@ -471,8 +471,8 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         "subdivision on this triangulation.  Each triangle "
         "will be subdivided into 6 smaller triangles."));
     triActionList.push_back(actSubdivide);
-    connect(actSubdivide, SIGNAL(triggered()), this,
-        SLOT(barycentricSubdivide()));
+    connect(actSubdivide, &QAction::triggered, this,
+        &Tri2GluingsUI::barycentricSubdivide);
 
     auto* actInsertTri = new QAction(this);
     actInsertTri->setText(tr("Insert Triangulation..."));
@@ -484,8 +484,8 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         "the chosen triangulation will be become additional components of "
         "this triangulation."));
     triActionList.push_back(actInsertTri);
-    connect(actInsertTri, SIGNAL(triggered()), this,
-        SLOT(insertTriangulation()));
+    connect(actInsertTri, &QAction::triggered, this,
+        &Tri2GluingsUI::insertTriangulation);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -504,7 +504,8 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         "If this triangulation is already orientable then the result will be "
         "disconnected, containing two copies of the original triangulation."));
     triActionList.push_back(actDoubleCover);
-    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
+    connect(actDoubleCover, &QAction::triggered, this,
+        &Tri2GluingsUI::doubleCover);
 
     actDoubleOverBoundary = new QAction(this);
     actDoubleOverBoundary->setText(tr("Build Double Over Boundary"));
@@ -519,8 +520,8 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         "This triangulation will not be changed – the result "
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actDoubleOverBoundary);
-    connect(actDoubleOverBoundary, SIGNAL(triggered()), this,
-        SLOT(doubleOverBoundary()));
+    connect(actDoubleOverBoundary, &QAction::triggered, this,
+        &Tri2GluingsUI::doubleOverBoundary);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -539,8 +540,8 @@ Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
         "If this triangulation is already connected, this operation will "
         "do nothing."));
     triActionList.push_back(actSplitIntoComponents);
-    connect(actSplitIntoComponents, SIGNAL(triggered()), this,
-        SLOT(splitIntoComponents()));
+    connect(actSplitIntoComponents, &QAction::triggered, this,
+        &Tri2GluingsUI::splitIntoComponents);
 
     // Tidy up.
 
@@ -701,7 +702,7 @@ void Tri2GluingsUI::lockMenu(const QPoint& pos) {
                 .arg(action).arg(index.row()).arg(edgeDesc)
                 .arg(GluingsModel2::destString(s, lockFacet)));
     }
-    connect(&lock, SIGNAL(triggered()), this, SLOT(changeLock()));
+    connect(&lock, &QAction::triggered, this, &Tri2GluingsUI::changeLock);
     m.addAction(&lock);
     m.exec(edgeTable->viewport()->mapToGlobal(pos));
 }

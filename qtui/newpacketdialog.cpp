@@ -85,8 +85,8 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     auto *box = new QDialogButtonBox(
             QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     layout->addWidget(box);
-    connect(box, SIGNAL(accepted()), this, SLOT(slotOk()));
-    connect(box, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(box, &QDialogButtonBox::accepted, this, &NewPacketDialog::slotOk);
+    connect(box, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 NewPacketDialog::~NewPacketDialog() {

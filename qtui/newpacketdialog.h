@@ -57,8 +57,6 @@ namespace regina {
  * overridden for each different packet type.
  */
 class NewPacketDialog : public QDialog {
-    Q_OBJECT
-
     private:
         /**
          * Internal components:
@@ -99,7 +97,7 @@ class NewPacketDialog : public QDialog {
          */
         std::shared_ptr<regina::Packet> createdPacket();
 
-    protected slots:
+    private:
         /**
          * Ok has been clicked.
          */

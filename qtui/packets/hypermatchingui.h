@@ -85,8 +85,6 @@ class HyperMatchingModel : public QAbstractItemModel {
  * A hypersurface list page for viewing matching equations.
  */
 class HyperMatchingUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -121,7 +119,7 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    protected slots:
+    private:
         /**
          * Provides auto-resizing of columns.
          */

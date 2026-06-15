@@ -43,8 +43,6 @@
  * A packet interface for viewing text packets.
  */
 class TextUI : public QObject, public PacketUI {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

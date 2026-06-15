@@ -54,16 +54,12 @@ class PacketEditIface : public QObject {
         virtual bool copyEnabled() const;
         virtual bool pasteEnabled() const;
 
-    signals:
-        void statesChanged();
-
-    public slots:
         virtual void cut();
         virtual void copy();
         virtual void paste();
 
-    protected slots:
-        void fireStatesChanged();
+    signals:
+        void statesChanged();
 };
 
 class PacketEditTextEditor : public PacketEditIface {
@@ -79,7 +75,6 @@ class PacketEditTextEditor : public PacketEditIface {
         bool copyEnabled() const override;
         bool pasteEnabled() const override;
 
-    public slots:
         void cut() override;
         void copy() override;
         void paste() override;
@@ -107,7 +102,6 @@ class PacketEditPlainTextEditor : public PacketEditIface {
         bool copyEnabled() const override;
         bool pasteEnabled() const override;
 
-    public slots:
         void cut() override;
         void copy() override;
         void paste() override;
@@ -123,8 +117,6 @@ class PacketEditPlainTextEditor : public PacketEditIface {
 };
 
 class PacketEditTabbedUI : public PacketEditIface {
-    Q_OBJECT
-
     private:
         PacketTabbedUI* tabs_;
         PacketUI* currentTab_;
@@ -136,12 +128,11 @@ class PacketEditTabbedUI : public PacketEditIface {
         bool copyEnabled() const override;
         bool pasteEnabled() const override;
 
-    public slots:
         void cut() override;
         void copy() override;
         void paste() override;
 
-    private slots:
+    private:
         void tabChanged(int newTab);
 };
 
@@ -164,10 +155,6 @@ inline void PacketEditIface::copy() {
 }
 
 inline void PacketEditIface::paste() {
-}
-
-inline void PacketEditIface::fireStatesChanged() {
-    emit statesChanged();
 }
 
 #endif

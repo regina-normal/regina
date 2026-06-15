@@ -100,8 +100,6 @@ class CrossingModel : public QAbstractItemModel {
  * Used to draw crossing information in a QListView.
  */
 class CrossingDelegate : public QStyledItemDelegate {
-    Q_OBJECT
-
     public:
         static constexpr int hPadding = 5;
             /**< Horizontal, between information and cell edge. */
@@ -126,8 +124,6 @@ class CrossingDelegate : public QStyledItemDelegate {
  * A knot/link page for viewing and switching crossings.
  */
 class LinkCrossingsUI : public QObject, public PacketEditorTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -192,7 +188,6 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         const std::vector<QAction*>& getPacketTypeActions() override;
         void refresh() override;
 
-    public slots:
         /**
          * Knot/link actions.
          */
@@ -237,8 +232,6 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
  * header so that automoc can find it.
  */
 class ParallelDialog : public QDialog {
-    Q_OBJECT
-
     private:
         regina::PacketOf<regina::Link>* link_;
         ReginaMain* mainWindow_;
@@ -256,7 +249,7 @@ class ParallelDialog : public QDialog {
         ParallelDialog(QWidget* parent, regina::PacketOf<regina::Link>* link,
             ReginaMain* mainWindow);
 
-    protected slots:
+    protected:
         /**
          * Ok has been clicked.
          */

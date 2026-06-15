@@ -138,7 +138,8 @@ Tri4HomologyFundUI::Tri4HomologyFundUI(
     fgGroup = new GroupWidget(true /* simplification */, true /* padding */);
     fgGroup->setWhatsThis(tr("A full set of generators and relations "
         "for the fundamental group of this triangulation."));
-    connect(fgGroup, SIGNAL(simplified()), this, SLOT(fundGroupSimplified()));
+    connect(fgGroup, &GroupWidget::simplified, this,
+        &Tri4HomologyFundUI::fundGroupSimplified);
     fundLayout->addWidget(fgGroup, 1);
 
     master->addLayout(fundLayout, tr("Fundamental Group"));

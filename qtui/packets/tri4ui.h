@@ -50,8 +50,6 @@ class QToolBar;
  * A packet interface for viewing 4-manifold triangulations.
  */
 class Tri4UI : public PacketTabbedUI {
-    Q_OBJECT
-
     private:
         /**
          * Internal components
@@ -76,7 +74,6 @@ class Tri4UI : public PacketTabbedUI {
         const std::vector<QAction*>& getPacketTypeActions() override;
         QString getPacketMenuText() const override;
 
-    public slots:
         /**
          * Reflect preference changes.
          */
@@ -87,8 +84,6 @@ class Tri4UI : public PacketTabbedUI {
  * A header for the 4-manifold triangulation viewer.
  */
 class Tri4HeaderUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

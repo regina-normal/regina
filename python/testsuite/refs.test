@@ -72,7 +72,8 @@ p[1] = 7; # should work
 print(p)
 print()
 
-p = Laurent2(2,3)
+p = Laurent2()
+p.initExp(2,3)
 print(p)
 p[2,3].negate() # should do nothing due to constness
 print(p)

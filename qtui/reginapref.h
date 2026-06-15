@@ -61,8 +61,6 @@ class ReginaPrefTri;
  * The Regina configuration dialog.
  */
 class ReginaPreferences : public QDialog {
-    Q_OBJECT
-
     private:
         ReginaMain* mainWindow;
 
@@ -71,17 +69,16 @@ class ReginaPreferences : public QDialog {
         ReginaPrefPython* pythonPrefs;
         ReginaPrefTools* toolsPrefs;
 
-        // Needed for clicked() slot
+        // Needed for clicked() action
         QDialogButtonBox *buttonBox;
 
     public:
         ReginaPreferences(ReginaMain* parent);
 
-    public slots:
         /**
          * Propagate changes back to the main UI.
          */
-        virtual void slotApply();
+        virtual void apply();
 
         /**
          * Overridden to handle saving of preferences.
@@ -93,8 +90,6 @@ class ReginaPreferences : public QDialog {
  * The page of the Regina configuration dialog for general preferences.
  */
 class ReginaPrefGeneral : public QWidget {
-    Q_OBJECT
-
     private:
         // QCheckBox* cbDisplayTagsInTree;
         QCheckBox* cbUnicode;
@@ -117,8 +112,6 @@ class ReginaPrefGeneral : public QWidget {
  * The page of the Regina configuration dialog for Python preferences.
  */
 class ReginaPrefPython : public QWidget {
-    Q_OBJECT
-
     private:
         QCheckBox* cbAutoIndent;
         QCheckBox* cbWordWrap;
@@ -135,8 +128,6 @@ class ReginaPrefPython : public QWidget {
  * third-party tools.
  */
 class ReginaPrefTools: public QWidget {
-    Q_OBJECT
-
     private:
         QCheckBox* cbSnapPeaMessages;
         QLineEdit* editGAPExec;

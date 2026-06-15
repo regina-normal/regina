@@ -51,8 +51,6 @@ namespace regina {
  * A triangulation page for viewing normal surface properties.
  */
 class Tri3SnapPeaUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -87,7 +85,6 @@ class Tri3SnapPeaUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Convert this to a full SnapPea triangulation.
          */

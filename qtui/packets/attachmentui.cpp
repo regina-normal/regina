@@ -86,7 +86,7 @@ AttachmentUI::AttachmentUI(Attachment* packet, PacketPane* enclosingPane) :
         "The viewer application will be chosen by your desktop environment.<p>"
         "Any changes that you make in this external viewer will "
         "<i>not</i> be saved back to Regina."));
-    connect(viewButton, SIGNAL(clicked()), this, SLOT(view()));
+    connect(viewButton, &QPushButton::clicked, this, &AttachmentUI::view);
     buttons->addWidget(viewButton);
 
     buttons->addStretch(1);
@@ -94,7 +94,7 @@ AttachmentUI::AttachmentUI(Attachment* packet, PacketPane* enclosingPane) :
     saveButton->setToolTip(tr("Save this attachment as a separate file"));
     saveButton->setWhatsThis(tr("Save this attachment as a regular file.  "
         "This will allow you to access the attachment from outside Regina."));
-    connect(saveButton, SIGNAL(clicked()), this, SLOT(save()));
+    connect(saveButton, &QPushButton::clicked, this, &AttachmentUI::save);
     buttons->addWidget(saveButton);
 
     buttons->addStretch(1);

@@ -188,8 +188,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         "larger triangulations (which is why 3-sphere recognition is not "
         "always run automatically).</qt>"));
     grid->addWidget(btnThreeSphere, row++, 5);
-    connect(btnThreeSphere, SIGNAL(clicked()), this,
-        SLOT(calculateThreeSphere()));
+    connect(btnThreeSphere, &QPushButton::clicked, this,
+        &Tri3SurfacesUI::calculateThreeSphere);
 
     btnHandlebody = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -203,8 +203,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         "larger triangulations (which is why handlebody recognition is not "
         "always run automatically).</qt>"));
     grid->addWidget(btnHandlebody, row++, 5);
-    connect(btnHandlebody, SIGNAL(clicked()), this,
-        SLOT(calculateHandlebody()));
+    connect(btnHandlebody, &QPushButton::clicked, this,
+        &Tri3SurfacesUI::calculateHandlebody);
 
     btnTxI = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -219,7 +219,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         "larger triangulations (which is why this recognition is not "
         "always run automatically).</qt>"));
     grid->addWidget(btnTxI, row++, 5);
-    connect(btnTxI, SIGNAL(clicked()), this, SLOT(calculateTxI()));
+    connect(btnTxI, &QPushButton::clicked, this, &Tri3SurfacesUI::calculateTxI);
 
     btnZeroEff = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -230,7 +230,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         "triangulations (which is why 0-efficiency is not always "
         "calculated automatically).</qt>"));
     grid->addWidget(btnZeroEff, row++, 5);
-    connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
+    connect(btnZeroEff, &QPushButton::clicked, this,
+        &Tri3SurfacesUI::calculateZeroEff);
 
     btnSplitting = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -242,7 +243,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         "triangulations (which is why the existence of a splitting "
         "surface is not always determined automatically).</qt>"));
     grid->addWidget(btnSplitting, row++, 5);
-    connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
+    connect(btnSplitting, &QPushButton::clicked, this,
+        &Tri3SurfacesUI::calculateSplitting);
 
     btnIrreducible = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -254,8 +256,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         "triangulations (which is why irreducibility is not always "
         "tested automatically).</qt>"));
     grid->addWidget(btnIrreducible, row++, 5);
-    connect(btnIrreducible, SIGNAL(clicked()), this,
-        SLOT(calculateIrreducible()));
+    connect(btnIrreducible, &QPushButton::clicked, this,
+        &Tri3SurfacesUI::calculateIrreducible);
 
     btnHaken = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -267,7 +269,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         "triangulations (which is why Hakenness is not always "
         "tested automatically).</qt>"));
     grid->addWidget(btnHaken, row++, 5);
-    connect(btnHaken, SIGNAL(clicked()), this, SLOT(calculateHaken()));
+    connect(btnHaken, &QPushButton::clicked, this,
+        &Tri3SurfacesUI::calculateHaken);
 
     btnStrict = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
@@ -280,7 +283,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         "is extremely large (which is why this property is not always "
         "tested automatically).</qt>"));
     grid->addWidget(btnStrict, row++, 5);
-    connect(btnStrict, SIGNAL(clicked()), this, SLOT(calculateStrict()));
+    connect(btnStrict, &QPushButton::clicked, this,
+        &Tri3SurfacesUI::calculateStrict);
 
     layout->addStretch(1);
 
@@ -309,8 +313,8 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
         this, &Tri3SurfacesUI::refresh);
 
     manifold->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(manifold, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(contextManifold(const QPoint&)));
+    connect(manifold, &QWidget::customContextMenuRequested, this,
+        &Tri3SurfacesUI::contextManifold);
 }
 
 regina::Packet* Tri3SurfacesUI::getPacket() {
@@ -791,12 +795,10 @@ void Tri3SurfacesUI::contextManifold(const QPoint& pos) {
 
     QMenu m(tr("Context menu"), manifold);
     QAction a("Copy manifold", manifold);
-    connect(&a, SIGNAL(triggered()), this, SLOT(copyManifold()));
+    connect(&a, &QAction::triggered, this, [this]() {
+        QApplication::clipboard()->setText(name.c_str());
+    });
     m.addAction(&a);
     m.exec(manifold->mapToGlobal(pos));
-}
-
-void Tri3SurfacesUI::copyManifold() {
-    QApplication::clipboard()->setText(name.c_str());
 }
 

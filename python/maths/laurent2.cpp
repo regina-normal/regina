@@ -48,20 +48,14 @@ void addLaurent2(pybind11::module_& m) {
     auto c = pybind11::class_<Laurent2<Integer>>(m, "Laurent2", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent2<Integer>&>(), rdoc::__copy)
-        .def(pybind11::init([](long xExp, long yExp) { // deprecated
-            Laurent2<Integer> ans;
-            ans.initExp(xExp, yExp);
-            return ans;
-        }) , rdoc::__init)
         .def(pybind11::init<const Laurent2<Integer>&, long, long>(),
-            rdoc::__init_2)
+            rdoc::__init)
         .def(pybind11::init([](const std::vector<
                 std::tuple<long, long, Integer>>& coeffs) {
             return new Laurent2<Integer>(coeffs.begin(), coeffs.end());
-        }), "coefficients"_a, rdoc::__init_3)
+        }), "coefficients"_a, rdoc::__init_2)
         .def("init", overload_cast<>(&Laurent2<Integer>::init), rdoc::init)
         .def("initExp", &Laurent2<Integer>::initExp, rdoc::initExp)
-        .def("init", &Laurent2<Integer>::initExp, rdoc::init_2) // deprecated
         .def("isZero", &Laurent2<Integer>::isZero, rdoc::isZero)
         .def("set", &Laurent2<Integer>::set, rdoc::set)
         .def("swap", &Laurent2<Integer>::swap, rdoc::swap)

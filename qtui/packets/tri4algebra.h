@@ -61,8 +61,6 @@ class Tri4AlgebraUI : public PacketTabbedViewerTab {
  * A triangulation page for viewing homology and the fundamental group.
  */
 class Tri4HomologyFundUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -97,7 +95,6 @@ class Tri4HomologyFundUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Notify us that the presentation has been simplified.
          */

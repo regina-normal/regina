@@ -160,8 +160,8 @@ AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
         "– the strict angle structure might only be found as a "
         "combination of several different vertex angle structures."));
     stats->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    connect(stats, SIGNAL(linkActivated(QString)),
-        this, SLOT(viewTriangulation()));
+    connect(stats, &QLabel::linkActivated, this,
+        &AngleStructureUI::viewTriangulation);
     layout->addWidget(stats);
     layout->addSpacing(ANGLE_STATS_PADDING);
 
@@ -203,8 +203,8 @@ AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
     // Resize columns now that the table is full of data.
     table->header()->resizeSections(QHeaderView::ResizeToContents);
 
-    connect(table->header(), SIGNAL(sectionResized(int, int, int)),
-        this, SLOT(columnResized(int, int, int)));
+    connect(table->header(), &QHeaderView::sectionResized, this,
+        &AngleStructureUI::columnResized);
 
     ui->setFocusProxy(table);
 }

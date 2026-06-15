@@ -253,8 +253,8 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
         }
     }
 
-    QObject::connect(type, SIGNAL(activated(int)), details,
-        SLOT(setCurrentIndex(int)));
+    QObject::connect(type, &QComboBox::activated, details,
+        &QStackedWidget::setCurrentIndex);
 }
 
 QWidget* Tri4Creator::getInterface() {

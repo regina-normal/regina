@@ -92,7 +92,7 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
     }
     sublayout->addWidget(type, 1);
     layout->addLayout(sublayout);
-    connect(type, SIGNAL(activated(int)), this, SLOT(typeChanged(int)));
+    connect(type, &QComboBox::activated, this, &LinkCodesUI::typeChanged);
 
     code = new QTextEdit();
     code->setReadOnly(true);
