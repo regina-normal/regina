@@ -97,12 +97,64 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
     return true;
 }
 
-//TODO Independent boundary-null computation.
-bool Triangulation<3>::hasGeneralAngleStructure() const {
-    if (std::holds_alternative<AngleStructure>(generalAngleStructure_)) {
-        return true; // known to have a solution
-    } else if (std::get<bool>(generalAngleStructure_)) {
-        return false; // known to have no solution
+template <bool bdryNull, bool throwIfNoSolution>
+bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
+    if constexpr (bdryNull) {
+        if (std::holds_alternative<AngleStructure>(bdryNullAngleStructure_)) {
+            return true; // known to have a solution
+        } else if (std::get<bool>(bdryNullAngleStructure_)) {
+            // At present, the preconditions are strong enough to ensure that
+            // a boundary-null angle structure always exists, so we should
+            // never see this case.
+            std::cerr << "ERROR: Failed to find a "
+                "boundary-null angle structure." << std::endl;
+
+            // At any rate, it must be the case that we successfully ran the
+            // computation and failed to find a solution. And this will handle
+            // things correctly if we ever ease the preconditions.
+            if constexpr (throwIfNoSolution) {
+                throw regina::NoSolution();
+            } else {
+                return false;
+            }
+        }
+    } else {
+        if (std::holds_alternative<AngleStructure>(generalAngleStructure_)) {
+            return true; // known to have a solution
+        } else if (std::get<bool>(generalAngleStructure_)) {
+            // Known to have no solution.
+            if constexpr (throwIfNoSolution) {
+                throw regina::NoSolution();
+            } else {
+                return false;
+            }
+        }
+    }
+
+    // For computing a boundary-null angle structure, we currently have
+    // preconditions which we promise to check.
+    if constexpr (bdryNull) {
+        if constexpr (throwIfNoSolution) {
+            if (! isValid()) {
+                throw regina::FailedPrecondition(
+                        "boundaryNullAngleStructure() "
+                        "requires a valid triangulation" );
+            } else if (! isOriented()) {
+                throw regina::FailedPrecondition(
+                        "boundaryNullAngleStructure() "
+                        "requires an oriented triangulation");
+            }
+
+            // Check that every vertex link is a torus.
+            //TODO
+        } else {
+            if ( !isValid() || !isOriented() ) {
+                return false;
+            }
+
+            // Check that every vertex link is a torus.
+            //TODO
+        }
     }
 
     // Run the full computation and cache the resulting structure, if any.
@@ -131,6 +183,8 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
         // just run the full linear algebra code (which still does the right
         // thing if there is no solution).
     }
+
+    //TODO Update implementation using template arguments.
 
     // In general, we want *any* solution to the homogeneous angle structure
     // equations where the final coordinate (representing the scaling factor)
