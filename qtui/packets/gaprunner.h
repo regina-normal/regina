@@ -53,8 +53,6 @@ class QSize;
  * group presentation.
  */
 class GAPRunner : public QDialog {
-    Q_OBJECT
-
     private:
         /**
          * Internal components:
@@ -103,13 +101,12 @@ class GAPRunner : public QDialog {
          */
         std::optional<regina::GroupPresentation> simplifiedGroup();
 
-    protected slots:
+    private:
         /**
          * Cancel has been pressed.
          */
         virtual void slotCancel();
 
-    protected:
         /**
          * Qt override to set preferred size of the window
          */
@@ -120,7 +117,6 @@ class GAPRunner : public QDialog {
          */
         void closeEvent(QCloseEvent* e) override;
 
-    private:
         /**
          * Handle I/O to and from GAP.
          */
@@ -142,7 +138,6 @@ class GAPRunner : public QDialog {
          */
         static QString escape(const QString& str);
 
-    private slots:
         /**
          * Process notifications.
          */

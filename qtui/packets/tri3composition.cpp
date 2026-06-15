@@ -108,11 +108,11 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
     standardTri->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
     // Contextless connections are ok: senders will be destroyed with [this].
-    connect(standardTri, &QPushButton::customContextMenuRequested,
+    connect(standardTri, &QWidget::customContextMenuRequested,
         [this](const QPoint& p) {
             contextStandardTri(p, standardTri);
         });
-    connect(label, &QPushButton::customContextMenuRequested,
+    connect(label, &QWidget::customContextMenuRequested,
         [=, this](const QPoint& p) {
             contextStandardTri(p, label);
         });
@@ -138,27 +138,19 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
     line->addWidget(isoSig, 1);
     isoSigVariant = new TriSigChooser(ui);
     isoSigVariant->setWhatsThis(msg);
-    connect(isoSigVariant, SIGNAL(activated(int)), this, SLOT(updateIsoSig()));
+    connect(isoSigVariant, &QComboBox::activated, this,
+        &Tri3CompositionUI::updateIsoSig);
     line->addWidget(isoSigVariant);
-    /*
-    auto* copy = new QPushButton(ReginaSupport::themeIcon("edit-copy"), {}, ui);
-    copy->setFlat(true);
-    copy->setToolTip(tr("Copy the isomorphism signature to the clipboard"));
-    copy->setWhatsThis(tr("Copies the isomorphism signature to "
-        "the clipboard."));
-    connect(copy, SIGNAL(clicked()), this, SLOT(copyIsoSig()));
-    line->addWidget(copy);
-    */
     layout->addLayout(line);
 
     isoSig->setContextMenuPolicy(Qt::CustomContextMenu);
     label->setContextMenuPolicy(Qt::CustomContextMenu);
     // Contextless connections are ok: senders will be destroyed with [this].
-    connect(isoSig, &QPushButton::customContextMenuRequested,
+    connect(isoSig, &QWidget::customContextMenuRequested,
         [this](const QPoint& p) {
             contextIsoSig(p, isoSig);
         });
-    connect(label, &QPushButton::customContextMenuRequested,
+    connect(label, &QWidget::customContextMenuRequested,
         [=, this](const QPoint& p) {
             contextIsoSig(p, label);
         });
@@ -184,8 +176,8 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
     layout->addWidget(details, 1);
 
     details->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(details, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(contextComposition(const QPoint&)));
+    connect(details, &QWidget::customContextMenuRequested, this,
+        &Tri3CompositionUI::contextComposition);
 
     label = new QLabel(tr("<qt><i>Hint: Right-click to copy "
         "any data above</i></qt>"));
@@ -230,7 +222,8 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
         PacketChooser::RootRole::Packet, true, nullptr, ui);
     isoTest->setAutoUpdate(true);
     isoTest->setWhatsThis(msg);
-    connect(isoTest, SIGNAL(activated(int)), this, SLOT(updateIsoPanel()));
+    connect(isoTest, &QComboBox::activated, this,
+        &Tri3CompositionUI::updateIsoPanel);
     isoSelectArea->addWidget(isoTest, 1);
     // isoSelectArea->addStretch(1);
 
@@ -246,7 +239,8 @@ Tri3CompositionUI::Tri3CompositionUI(regina::Triangulation<3>* tri,
         "(if any) between this and the selected triangulation.  The precise "
         "mapping between tetrahedra and tetrahedron vertices will be "
         "displayed in a separate window."));
-    connect(isoView, SIGNAL(clicked()), this, SLOT(viewIsomorphism()));
+    connect(isoView, &QPushButton::clicked, this,
+        &Tri3CompositionUI::viewIsomorphism);
     wideIsoArea->addWidget(isoView);
 
 }
@@ -1073,7 +1067,9 @@ void Tri3CompositionUI::contextStandardTri(const QPoint& pos,
 
     QMenu m(tr("Context menu"), fromWidget);
     QAction a("Copy triangulation", fromWidget);
-    connect(&a, SIGNAL(triggered()), this, SLOT(copyStandardTri()));
+    connect(&a, &QAction::triggered, this, [this]() {
+        QApplication::clipboard()->setText(standardTri->text());
+    });
     m.addAction(&a);
     m.exec(fromWidget->mapToGlobal(pos));
 }
@@ -1085,7 +1081,10 @@ void Tri3CompositionUI::contextIsoSig(const QPoint& pos,
 
     QMenu m(tr("Context menu"), fromWidget);
     QAction a("Copy isomorphism signature", fromWidget);
-    connect(&a, SIGNAL(triggered()), this, SLOT(copyIsoSig()));
+    connect(&a, &QAction::triggered, this, [this]() {
+        if (! sig_.empty())
+            QApplication::clipboard()->setText(sig_.c_str());
+    });
     m.addAction(&a);
     m.exec(fromWidget->mapToGlobal(pos));
 }
@@ -1096,20 +1095,11 @@ void Tri3CompositionUI::contextComposition(const QPoint& pos) {
 
     QMenu m(tr("Context menu"), details);
     QAction a("Copy line", details);
-    connect(&a, SIGNAL(triggered()), this, SLOT(copyCompositionLine()));
+    connect(&a, &QAction::triggered, this, [this]() {
+        QApplication::clipboard()->setText(
+            details->selectedItems().front()->text(0));
+    });
     m.addAction(&a);
     m.exec(details->mapToGlobal(pos));
 }
 
-void Tri3CompositionUI::copyStandardTri() {
-    QApplication::clipboard()->setText(standardTri->text());
-}
-
-void Tri3CompositionUI::copyIsoSig() {
-    if (! sig_.empty())
-        QApplication::clipboard()->setText(sig_.c_str());
-}
-
-void Tri3CompositionUI::copyCompositionLine() {
-    QApplication::clipboard()->setText(details->selectedItems().front()->text(0));
-}

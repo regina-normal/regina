@@ -47,8 +47,8 @@ PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane,
 
     tabs = new QTabWidget(ui);
     layout->addWidget(tabs, 1);
-    connect(tabs, SIGNAL(currentChanged(int)), this,
-        SLOT(notifyTabSelected(int)));
+    connect(tabs, &QTabWidget::currentChanged, this,
+        &PacketTabbedUI::notifyTabSelected);
 
     ui->setFocusProxy(tabs);
 }
@@ -218,8 +218,8 @@ PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI,
 
     tabs = new QTabWidget(ui);
     layout->addWidget(tabs, 1);
-    connect(tabs, SIGNAL(currentChanged(int)), this,
-        SLOT(notifyTabSelected(int)));
+    connect(tabs, &QTabWidget::currentChanged, this,
+        &PacketTabbedViewerTab::notifyTabSelected);
 }
 
 PacketTabbedViewerTab::~PacketTabbedViewerTab() {

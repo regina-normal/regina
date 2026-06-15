@@ -268,7 +268,8 @@ SnapPeaShapesUI::SnapPeaShapesUI(
         "that preserve the topology."));
     triActionList.push_back(actRandomise);
     requiresNonNull.push_back(actRandomise);
-    connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
+    connect(actRandomise, &QAction::triggered, this,
+        &SnapPeaShapesUI::randomise);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -286,7 +287,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
         "will be added as a new triangulation beneath it in the packet tree."));
     triActionList.push_back(actFill);
     requiresNonNull.push_back(actFill);
-    connect(actFill, SIGNAL(triggered()), this, SLOT(fill()));
+    connect(actFill, &QAction::triggered, this, &SnapPeaShapesUI::fill);
 
     actCanonise = new QAction(this);
     actCanonise->setText(tr("Build &Canonical Retriangulation"));
@@ -307,7 +308,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
         "retriangulation will be added beneath it in the packet tree."));
     triActionList.push_back(actCanonise);
     requiresNonNull.push_back(actCanonise);
-    connect(actCanonise, SIGNAL(triggered()), this, SLOT(canonise()));
+    connect(actCanonise, &QAction::triggered, this, &SnapPeaShapesUI::canonise);
 
     actToRegina = new QAction(this);
     actToRegina->setText(tr("&Convert to Regina"));
@@ -325,7 +326,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(
         "information (such as peripheral curves on cusps)."));
     triActionList.push_back(actToRegina);
     requiresNonNull.push_back(actToRegina);
-    connect(actToRegina, SIGNAL(triggered()), this, SLOT(toRegina()));
+    connect(actToRegina, &QAction::triggered, this, &SnapPeaShapesUI::toRegina);
 
     sep = new QAction(this);
     sep->setSeparator(true);
@@ -344,7 +345,8 @@ SnapPeaShapesUI::SnapPeaShapesUI(
         "the tetrahedron corners that meet together at <i>V</i>."));
     triActionList.push_back(actVertexLinks);
     requiresNonNull.push_back(actVertexLinks);
-    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+    connect(actVertexLinks, &QAction::triggered, this,
+        &SnapPeaShapesUI::vertexLinks);
 
     // Tidy up.
     refresh();

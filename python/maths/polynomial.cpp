@@ -48,23 +48,17 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
     auto c = pybind11::class_<Polynomial<T>>(m, className, rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Polynomial<T>&>(), rdoc::__copy)
-        .def(pybind11::init([](size_t exp) { // deprecated
-            Polynomial<T> ans;
-            ans.initExp(exp);
-            return ans;
-        }), rdoc::__init)
         .def(pybind11::init([](const std::vector<T>& coeffs) {
             return new Polynomial<T>(coeffs.begin(), coeffs.end());
-        }), "coefficients"_a, rdoc::__init_2)
+        }), "coefficients"_a, rdoc::__init)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Polynomial<T>::*)()>(
             &Polynomial<T>::init), rdoc::init)
         .def("initExp", &Polynomial<T>::initExp, rdoc::initExp)
-        .def("init", &Polynomial<T>::initExp, rdoc::init_2) // deprecated
         .def("init", [](Polynomial<T>& p, const std::vector<T>& c) {
             p.init(c.begin(), c.end());
-        }, "coefficients"_a, rdoc::init_3)
+        }, "coefficients"_a, rdoc::init_2)
         .def("degree", &Polynomial<T>::degree, rdoc::degree)
         .def("isZero", &Polynomial<T>::isZero, rdoc::isZero)
         .def("isMonic", &Polynomial<T>::isMonic, rdoc::isMonic)

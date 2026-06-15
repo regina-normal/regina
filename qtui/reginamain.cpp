@@ -624,8 +624,8 @@ void ReginaMain::setupWidgets() {
         "which you will see in this window.  "
         "You can click on a packet in the tree to "
         "edit it or view detailed information.</qt>"));
-    connect(treeView, SIGNAL(itemSelectionChanged()), this,
-        SLOT(updateTreeActions()));
+    connect(treeView, &QTreeWidget::itemSelectionChanged, this,
+        &ReginaMain::updateTreeActions);
     layout->addWidget(treeView, 1);
 
     if (starterWindow_ && ReginaPrefSet::global().helpIntroOnStartup) {
@@ -646,7 +646,7 @@ void ReginaMain::setupWidgets() {
         text->setWordWrap(false);
         text->setTextInteractionFlags(Qt::TextBrowserInteraction);
         advLayout->addWidget(text);
-        connect(text, SIGNAL(linkActivated(QString)), this, SLOT(helpIntro()));
+        connect(text, &QLabel::linkActivated, this, &ReginaMain::helpIntro);
 
         advLayout->addStretch(1);
 

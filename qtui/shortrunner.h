@@ -48,8 +48,6 @@
  * An object of this class can only be used once.
  */
 class ShortRunner : public QObject {
-    Q_OBJECT
-
     private:
         QProcess proc;
         QStringList args;
@@ -88,7 +86,7 @@ class ShortRunner : public QObject {
          */
         bool timedOut() const;
 
-    private slots:
+    private:
         void processStarted();
         void processFinished();
 };

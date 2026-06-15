@@ -59,7 +59,7 @@ void ReginaMain::setupActions() {
     actNew->setShortcuts(QKeySequence::New);
     actNew->setWhatsThis(tr("Create a new topology data file.  This is "
         "the standard type of data file used by Regina."));
-    connect(actNew, SIGNAL(triggered()), this, SLOT(fileNew()));
+    connect(actNew, &QAction::triggered, this, &ReginaMain::fileNew);
     fileMenu->addAction(actNew);
 
     auto* actOpen = new QAction(this);
@@ -67,25 +67,25 @@ void ReginaMain::setupActions() {
     actOpen->setIcon(ReginaSupport::themeIcon("document-open"));
     actOpen->setShortcuts(QKeySequence::Open);
     actOpen->setWhatsThis(tr("Open a topology data file."));
-    connect(actOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
+    connect(actOpen, &QAction::triggered, this, &ReginaMain::fileOpen);
     fileMenu->addAction(actOpen);
 
     auto* fileOpenRecent = new RecentFilesAction(this);
-    connect(fileOpenRecent, SIGNAL(urlSelected(const QUrl&)),
-        this, SLOT(fileOpenUrl(const QUrl&)));
+    connect(fileOpenRecent, &RecentFilesAction::urlSelected,
+        this, &ReginaMain::fileOpenUrl);
     fileMenu->addMenu(fileOpenRecent);
 
     auto* fileExamples = new ExamplesAction(this);
     fileExamples->fillStandard();
-    connect(fileExamples, SIGNAL(urlSelected(const QUrl&, const QString&)),
-        this, SLOT(fileOpenExample(const QUrl&, const QString&)));
+    connect(fileExamples, &ExamplesAction::urlSelected, this,
+        &ReginaMain::fileOpenExample);
     fileMenu->addMenu(fileExamples);
 
     actSave = new QAction(ReginaSupport::themeIcon("document-save"),
         tr("&Save"), this);
     actSave->setShortcuts(QKeySequence::Save);
     actSave->setWhatsThis(tr("Save the current data file."));
-    connect(actSave, SIGNAL(triggered()), this, SLOT(fileSave()));
+    connect(actSave, &QAction::triggered, this, &ReginaMain::fileSave);
     fileMenu->addAction(actSave);
 
     act = new QAction(ReginaSupport::themeIcon("document-save-as"),
@@ -93,7 +93,7 @@ void ReginaMain::setupActions() {
     act->setShortcuts(QKeySequence::SaveAs);
     act->setWhatsThis(tr(
         "Save the current data file, but give it a different name."));
-    connect(act, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+    connect(act, &QAction::triggered, this, &ReginaMain::fileSaveAs);
     fileMenu->addAction(act);
 
     fileMenu->addSeparator();
@@ -107,7 +107,7 @@ void ReginaMain::setupActions() {
     act->setToolTip(tr("Import a Regina data file"));
     act->setWhatsThis(tr("Import an external Regina data file.  The "
         "imported packet tree will be grafted into this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importRegina()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importRegina);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -117,7 +117,7 @@ void ReginaMain::setupActions() {
     act->setToolTip(tr("Import a SnapPea triangulation"));
     act->setWhatsThis(tr("Import an external SnapPea file as a new "
         "triangulation in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importSnapPea()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importSnapPea);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -127,7 +127,7 @@ void ReginaMain::setupActions() {
     act->setToolTip(tr("Import an Orb / Casson triangulation"));
     act->setWhatsThis(tr("Import an external Orb / Casson file as a new "
         "triangulation in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importOrb()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importOrb);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -140,7 +140,7 @@ void ReginaMain::setupActions() {
         "isomorphism signatures for 2-manifold triangulations.  "
         "For each isomorphism signature, "
         "a new 2-manifold triangulation will be created in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig2()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importIsoSig2);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -153,7 +153,7 @@ void ReginaMain::setupActions() {
         "isomorphism signatures for 3-manifold triangulations.  "
         "For each isomorphism signature, "
         "a new 3-manifold triangulation will be created in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig3()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importIsoSig3);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -166,7 +166,7 @@ void ReginaMain::setupActions() {
         "isomorphism signatures for 4-manifold triangulations.  "
         "For each isomorphism signature, "
         "a new 4-manifold triangulation will be created in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importIsoSig4()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importIsoSig4);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -177,7 +177,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Import an external text file containing "
         "knot signatures.  For each signature, "
         "a new knot will be created in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importKnotSig()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importKnotSig);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -188,7 +188,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Import an external text file containing "
         "dehydrated triangulation strings.  For each dehydration string, "
         "a new triangulation will be created in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importDehydration()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importDehydration);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -198,7 +198,7 @@ void ReginaMain::setupActions() {
     act->setToolTip(tr("Import a Python script"));
     act->setWhatsThis(tr("Import an external Python file as a new script "
         "packet in this tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importPython()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importPython);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -208,7 +208,7 @@ void ReginaMain::setupActions() {
     act->setToolTip(tr("Import a file attachment"));
     act->setWhatsThis(tr("Import an external file as a new attachment "
         "in this packet tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(importAttachment()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::importAttachment);
     treeGeneralEditActions.push_back(act);
     importMenu->addAction(act);
 
@@ -221,7 +221,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a separate Regina data file.  The separate data file will "
         "be saved as compressed XML (the default format)."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportRegina()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::exportRegina);
     exportMenu->addAction(act);
 
     act = new QAction(this);
@@ -231,7 +231,8 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a separate Regina data file.  The separate data file will "
         "be saved as uncompressed XML."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportReginaUncompressed()) );
+    connect(act, &QAction::triggered, this,
+        &ReginaMain::exportReginaUncompressed);
     exportMenu->addAction(act);
 
     act = new QAction(this);
@@ -242,7 +243,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Export all or part of this packet tree "
         "to a data file in Regina's legacy format, which was used by "
         "Regina versions 3.0–6.0.1."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportReginaLegacy()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::exportReginaLegacy);
     exportMenu->addAction(act);
 
     act = new QAction(this);
@@ -251,7 +252,7 @@ void ReginaMain::setupActions() {
     act->setToolTip(tr("Export a SnapPea triangulation"));
     act->setWhatsThis(tr("Export a triangulation from this packet tree "
         "to a separate SnapPea file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportSnapPea()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::exportSnapPea);
     exportMenu->addAction(act);
 
     act = new QAction(this);
@@ -262,7 +263,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Export a triangulation from this packet tree "
         "to a plain text file that can be given to Matveev's "
         "3-manifold recogniser."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportRecogniser()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::exportRecogniser);
     exportMenu->addAction(act);
 
     act = new QAction(this);
@@ -277,7 +278,7 @@ void ReginaMain::setupActions() {
         "Individual disc coordinates as well as various properties of the "
         "normal surfaces (such as orientability and Euler characteristic) "
         "will all be stored as separate fields in the CSV file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportCSVSurfaceList()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::exportCSVSurfaceList);
     exportMenu->addAction(act);
 
     act = new QAction(this);
@@ -286,7 +287,7 @@ void ReginaMain::setupActions() {
     act->setToolTip(tr("Export a Python script"));
     act->setWhatsThis(tr("Export a script packet from this packet tree "
         "to a separate Python file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::exportPython);
     exportMenu->addAction(act);
 
     fileMenu->addSeparator();
@@ -296,7 +297,7 @@ void ReginaMain::setupActions() {
     act->setIcon(ReginaSupport::themeIcon("window-close"));
     act->setShortcuts(QKeySequence::Close);
     act->setWhatsThis(tr("Close this topology data file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(close()));
+    connect(act, &QAction::triggered, this, &ReginaMain::close);
     fileMenu->addAction(act);
 
     act = new QAction(this);
@@ -305,7 +306,7 @@ void ReginaMain::setupActions() {
     act->setShortcuts(QKeySequence::Quit);
     act->setMenuRole(QAction::QuitRole);
     act->setWhatsThis(tr("Close all files and quit Regina."));
-    connect(act, SIGNAL(triggered()), manager, SLOT(closeAllWindows()));
+    connect(act, &QAction::triggered, manager, &ReginaManager::closeAllWindows);
     fileMenu->addAction(act);
 
     // --- Edit actions ---
@@ -347,7 +348,7 @@ void ReginaMain::setupActions() {
     actContainer->setWhatsThis(tr("Create a new container packet.  Containers "
         "are used to help keep the packet tree organised – "
         "they serve no purpose other than to store child packets."));
-    connect(actContainer, SIGNAL(triggered()), this, SLOT(newContainer()) );
+    connect(actContainer, &QAction::triggered, this, &ReginaMain::newContainer);
     treeGeneralEditActions.push_back(actContainer);
     treeMenu->addAction(actContainer);
 
@@ -359,8 +360,8 @@ void ReginaMain::setupActions() {
     actTriangulation2->setToolTip(tr("New 2-manifold triangulation"));
     actTriangulation2->setWhatsThis(
         tr("Create a new 2-manifold triangulation."));
-    connect(actTriangulation2, SIGNAL(triggered()), this,
-        SLOT(newTriangulation2()) );
+    connect(actTriangulation2, &QAction::triggered, this,
+        &ReginaMain::newTriangulation2);
     treeGeneralEditActions.push_back(actTriangulation2);
     treeMenu->addAction(actTriangulation2);
 
@@ -372,8 +373,8 @@ void ReginaMain::setupActions() {
     actTriangulation3->setToolTip(tr("New 3-manifold triangulation"));
     actTriangulation3->setWhatsThis(
         tr("Create a new 3-manifold triangulation."));
-    connect(actTriangulation3, SIGNAL(triggered()), this,
-        SLOT(newTriangulation3()) );
+    connect(actTriangulation3, &QAction::triggered, this,
+        &ReginaMain::newTriangulation3);
     treeGeneralEditActions.push_back(actTriangulation3);
     treeMenu->addAction(actTriangulation3);
 
@@ -385,8 +386,8 @@ void ReginaMain::setupActions() {
     actTriangulation4->setToolTip(tr("New 4-manifold triangulation"));
     actTriangulation4->setWhatsThis(
         tr("Create a new 4-manifold triangulation."));
-    connect(actTriangulation4, SIGNAL(triggered()), this,
-        SLOT(newTriangulation4()) );
+    connect(actTriangulation4, &QAction::triggered, this,
+        &ReginaMain::newTriangulation4);
     treeGeneralEditActions.push_back(actTriangulation4);
     treeMenu->addAction(actTriangulation4);
 
@@ -397,19 +398,21 @@ void ReginaMain::setupActions() {
     actSurfaces->setToolTip(tr("New normal surface list"));
     actSurfaces->setWhatsThis(tr("Create a new list of normal surfaces "
         "within a 3-manifold triangulation."));
-    connect(actSurfaces, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
+    connect(actSurfaces, &QAction::triggered, this,
+        &ReginaMain::newNormalSurfaces);
     treeGeneralEditActions.push_back(actSurfaces);
     treeMenu->addAction(actSurfaces);
 
     auto* actHypersurfaces = new QAction(this);
     actHypersurfaces->setText(tr("New Normal &Hypersurface List (4-D)"));
-    actHypersurfaces->setIcon(IconCache::icon(IconCache::Icon::packet_hypersurfaces));
+    actHypersurfaces->setIcon(IconCache::icon(
+        IconCache::Icon::packet_hypersurfaces));
     actHypersurfaces->setShortcut(tr("Alt+h"));
     actHypersurfaces->setToolTip(tr("New normal hypersurface list"));
     actHypersurfaces->setWhatsThis(tr("Create a new list of "
         "normal hypersurfaces within a 4-manifold triangulation."));
-    connect(actHypersurfaces, SIGNAL(triggered()), this,
-        SLOT(newNormalHypersurfaces()) );
+    connect(actHypersurfaces, &QAction::triggered, this,
+        &ReginaMain::newNormalHypersurfaces);
     treeGeneralEditActions.push_back(actHypersurfaces);
     treeMenu->addAction(actHypersurfaces);
 
@@ -421,19 +424,21 @@ void ReginaMain::setupActions() {
     actAngleStructure->setWhatsThis(
         tr("Create a new list of vertex angle structures "
         "for a triangulation."));
-    connect(actAngleStructure, SIGNAL(triggered()), this, SLOT(newAngleStructures()) );
+    connect(actAngleStructure, &QAction::triggered, this,
+        &ReginaMain::newAngleStructures);
     treeGeneralEditActions.push_back(actAngleStructure);
     treeMenu->addAction(actAngleStructure);
 
     auto* actSnapPeaTriangulation = new QAction(this);
     actSnapPeaTriangulation->setText(tr("New SnapP&ea Triangulation"));
-    actSnapPeaTriangulation->setIcon(IconCache::icon(IconCache::Icon::packet_snappea));
+    actSnapPeaTriangulation->setIcon(IconCache::icon(
+        IconCache::Icon::packet_snappea));
     actSnapPeaTriangulation->setShortcut(tr("Alt+e"));
     actSnapPeaTriangulation->setToolTip(tr("New SnapPea triangulation"));
     actSnapPeaTriangulation->setWhatsThis(
         tr("Create a new SnapPea triangulation."));
-    connect(actSnapPeaTriangulation, SIGNAL(triggered()), this,
-        SLOT(newSnapPeaTriangulation()) );
+    connect(actSnapPeaTriangulation, &QAction::triggered, this,
+        &ReginaMain::newSnapPeaTriangulation);
     treeGeneralEditActions.push_back(actSnapPeaTriangulation);
     treeMenu->addAction(actSnapPeaTriangulation);
 
@@ -443,7 +448,7 @@ void ReginaMain::setupActions() {
     actLink->setShortcut(tr("Alt+k"));
     actLink->setToolTip(tr("New knot or link"));
     actLink->setWhatsThis(tr("Create a new knot or link."));
-    connect(actLink, SIGNAL(triggered()), this, SLOT(newLink()));
+    connect(actLink, &QAction::triggered, this, &ReginaMain::newLink);
     treeGeneralEditActions.push_back(actLink);
     treeMenu->addAction(actLink);
 
@@ -455,7 +460,7 @@ void ReginaMain::setupActions() {
     actFilter->setWhatsThis(tr("Create a new normal surface filter.  Surface "
         "filters can be used to sort through normal surface lists and "
         "display only surfaces of particular interest."));
-    connect(actFilter, SIGNAL(triggered()), this, SLOT(newFilter()) );
+    connect(actFilter, &QAction::triggered, this, &ReginaMain::newFilter);
     treeGeneralEditActions.push_back(actFilter);
     treeMenu->addAction(actFilter);
 
@@ -466,7 +471,7 @@ void ReginaMain::setupActions() {
     actText->setToolTip(tr("New text packet"));
     actText->setWhatsThis(tr("Create a new piece of text to store within "
         "the packet tree."));
-    connect(actText, SIGNAL(triggered()), this, SLOT(newText()) );
+    connect(actText, &QAction::triggered, this, &ReginaMain::newText);
     treeGeneralEditActions.push_back(actText);
     treeMenu->addAction(actText);
 
@@ -477,7 +482,7 @@ void ReginaMain::setupActions() {
     actScript->setToolTip(tr("New script packet"));
     actScript->setWhatsThis(tr("Create a new Python script that can work "
         "directly with this data file."));
-    connect(actScript, SIGNAL(triggered()), this, SLOT(newScript()) );
+    connect(actScript, &QAction::triggered, this, &ReginaMain::newScript);
     treeGeneralEditActions.push_back(actScript);
     treeMenu->addAction(actScript);
 
@@ -488,7 +493,8 @@ void ReginaMain::setupActions() {
     actAttachment->setToolTip(tr("New file attachment"));
     actAttachment->setWhatsThis(tr("Create a new attachment that "
         "contains a copy of an external file."));
-    connect(actAttachment, SIGNAL(triggered()), this, SLOT(newAttachment()) );
+    connect(actAttachment, &QAction::triggered, this,
+        &ReginaMain::newAttachment);
     treeGeneralEditActions.push_back(actAttachment);
     treeMenu->addAction(actAttachment);
 
@@ -502,7 +508,8 @@ void ReginaMain::setupActions() {
     actView->setToolTip(tr("View or edit the selected packet"));
     actView->setWhatsThis(tr("View or edit the packet currently selected "
         "in the tree."));
-    connect(actView, SIGNAL(triggered()), this, SLOT(packetView()) );
+    connect(actView, &QAction::triggered, this,
+        qOverload<>(&ReginaMain::packetView));
     treePacketViewActions.push_back(actView);
     treeMenu->addAction(actView);
 
@@ -513,7 +520,7 @@ void ReginaMain::setupActions() {
     actRename->setToolTip(tr("Rename the selected packet"));
     actRename->setWhatsThis(tr("Rename the packet currently selected "
         "in the tree."));
-    connect(actRename, SIGNAL(triggered()), this, SLOT(packetRename()) );
+    connect(actRename, &QAction::triggered, this, &ReginaMain::packetRename);
     treePacketEditActions.push_back(actRename);
     treeMenu->addAction(actRename);
 
@@ -524,7 +531,7 @@ void ReginaMain::setupActions() {
     actDelete->setToolTip(tr("Delete the selected packet"));
     actDelete->setWhatsThis(tr("Delete the packet currently selected "
         "in the tree."));
-    connect(actDelete, SIGNAL(triggered()), this, SLOT(packetDelete()) );
+    connect(actDelete, &QAction::triggered, this, &ReginaMain::packetDelete);
     treePacketEditActions.push_back(actDelete);
     treeMenu->addAction(actDelete);
 
@@ -542,7 +549,7 @@ void ReginaMain::setupActions() {
         "one level higher (shallower) in the packet tree.  The packet will "
         "abandon its current parent, and move one level closer to the "
         "top level of the tree."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveShallow()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::moveShallow);
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
 
@@ -555,7 +562,7 @@ void ReginaMain::setupActions() {
         "one level lower (deeper) in the packet tree.  The packet will "
         "abandon its current parent, and instead become a child of its "
         "next sibling."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveDeep()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::moveDeep);
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
 
@@ -569,7 +576,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Move the currently selected packet "
         "one step up in the packet tree.  The packet will keep the "
         "same parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveUp()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::moveUp);
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
 
@@ -581,7 +588,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Move the currently selected packet "
         "several steps up in the packet tree.  The packet will keep the "
         "same parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(movePageUp()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::movePageUp);
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
 
@@ -594,7 +601,7 @@ void ReginaMain::setupActions() {
         "up as far as possible amongst its siblings in the packet tree.  "
         "The packet will keep the same parent, but it will become the "
         "first child of this parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveTop()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::moveTop);
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
 
@@ -608,7 +615,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Move the currently selected packet "
         "one step down in the packet tree.  The packet will keep the "
         "same parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveDown()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::moveDown);
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
 
@@ -620,7 +627,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Move the currently selected packet "
         "several steps down in the packet tree.  The packet will keep the "
         "same parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(movePageDown()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::movePageDown);
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
 
@@ -633,7 +640,7 @@ void ReginaMain::setupActions() {
         "down as far as possible amongst its siblings in the packet tree.  "
         "The packet will keep the same parent, but it will become the "
         "last child of this parent."));
-    connect(act, SIGNAL(triggered()), this, SLOT(moveBottom()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::moveBottom);
     treePacketEditActions.push_back(act);
     treeNavMenu->addAction(act);
 
@@ -646,7 +653,7 @@ void ReginaMain::setupActions() {
     act->setToolTip(tr("Clone the selected packet only"));
     act->setWhatsThis(tr("Clone the packet currently selected in the tree.  "
         "The new clone will be placed alongside the original packet."));
-    connect(act, SIGNAL(triggered()), this, SLOT(clonePacket()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::clonePacket);
     treePacketEditActions.push_back(act);
     treeMenu->addAction(act);
 
@@ -657,7 +664,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Clone the packet currently selected in "
         "the tree, as well as all of its descendants in the tree.  The new "
         "cloned subtree will be placed alongside the original packet."));
-    connect(act, SIGNAL(triggered()), this, SLOT(cloneSubtree()) );
+    connect(act, &QAction::triggered, this, &ReginaMain::cloneSubtree);
     treePacketEditActions.push_back(act);
     treeMenu->addAction(act);
 
@@ -672,7 +679,7 @@ void ReginaMain::setupActions() {
     actPython->setWhatsThis(tr("Open a new Python console.  You can "
         "use a Python console to interact directly with Regina's "
         "mathematical engine."));
-    connect(actPython, SIGNAL(triggered()), this, SLOT(pythonConsole()));
+    connect(actPython, &QAction::triggered, this, &ReginaMain::pythonConsole);
     toolMenu->addAction(actPython);
 
     toolMenu->addSeparator();
@@ -684,7 +691,7 @@ void ReginaMain::setupActions() {
     act->setMenuRole(QAction::PreferencesRole);
     act->setWhatsThis(tr("Configure Regina.  Here you can set "
         "your own preferences for how Regina behaves."));
-    connect(act, SIGNAL(triggered()), this, SLOT(optionsPreferences()));
+    connect(act, &QAction::triggered, this, &ReginaMain::optionsPreferences);
     toolMenu->addAction(act);
 
     // --- Window actions ---
@@ -694,7 +701,7 @@ void ReginaMain::setupActions() {
 
     docMenu = new QMenu(windowTitle(), this);
     docAction = new QAction(tr("– Main window –"), this);
-    connect(docAction, SIGNAL(triggered()), this, SLOT(raiseWindow()));
+    connect(docAction, &QAction::triggered, this, &ReginaMain::raiseWindow);
 
     docMenu->addAction(docAction);
     windowMenu->addMenu(docMenu);
@@ -710,7 +717,7 @@ void ReginaMain::setupActions() {
     act->setShortcuts(QKeySequence::HelpContents);
     act->setWhatsThis(tr("Open the Regina handbook.  "
         "This is the main users' guide for how to use Regina."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpHandbook()));
+    connect(act, &QAction::triggered, this, &ReginaMain::helpHandbook);
     helpMenu->addAction(act);
 
     act = new QAction(this);
@@ -718,7 +725,7 @@ void ReginaMain::setupActions() {
     act->setIcon(ReginaSupport::regIcon("welcome"));
     act->setWhatsThis(tr("Show some introductory information "
         "for users new to Regina."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpIntro()));
+    connect(act, &QAction::triggered, this, &ReginaMain::helpIntro);
     helpMenu->addAction(act);
 
     helpMenu->addSeparator();
@@ -732,7 +739,7 @@ void ReginaMain::setupActions() {
         "See the <i>Python Scripting</i> chapter of the user's handbook "
         "for more information (the handbook is "
         "accessed through <i>Regina Handbook</i> in the <i>Help</i> menu)."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpPythonReference()));
+    connect(act, &QAction::triggered, this, &ReginaMain::helpPythonReference);
     helpMenu->addAction(act);
 
     act = new QAction(this);
@@ -741,7 +748,7 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Open the file format reference manual.  "
         "This give full details of the XML file format that Regina "
         "uses to store its data files."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpXMLRef()));
+    connect(act, &QAction::triggered, this, &ReginaMain::helpXMLRef);
     helpMenu->addAction(act);
 
     act = new QAction(this);
@@ -749,7 +756,7 @@ void ReginaMain::setupActions() {
     act->setIcon(ReginaSupport::regIcon("troubleshoot"));
     act->setWhatsThis(tr("Show solutions and discussions for common "
         "problems."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));
+    connect(act, &QAction::triggered, this, &ReginaMain::helpTrouble);
     helpMenu->addAction(act);
 
     helpMenu->addSeparator();
@@ -760,14 +767,14 @@ void ReginaMain::setupActions() {
     act->setMenuRole(QAction::AboutRole);
     act->setWhatsThis(tr("Display information about Regina, such as "
         "the authors, license and website."));
-    connect(act, SIGNAL(triggered()), this, SLOT(helpAboutApp()));
+    connect(act, &QAction::triggered, this, &ReginaMain::helpAboutApp);
     helpMenu->addAction(act);
 
     act = new QAction(this);
     act->setText(tr("What's &This?"));
     act->setIcon(ReginaSupport::themeIcon("help-contextual"));
     act->setShortcuts(QKeySequence::WhatsThis);
-    connect(act, SIGNAL(triggered()), this, SLOT(helpWhatsThis()));
+    connect(act, &QAction::triggered, this, &ReginaMain::helpWhatsThis);
     helpMenu->addAction(act);
 
     // --- Toolbars ---

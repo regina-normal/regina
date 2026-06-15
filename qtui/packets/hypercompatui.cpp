@@ -69,7 +69,8 @@ HyperCompatibilityUI::HyperCompatibilityUI(
     hdrLayout->addWidget(label);
     chooseMatrix = new QComboBox(ui);
     chooseMatrix->addItem(tr("Local compatibility (prism types)"));
-    connect(chooseMatrix, SIGNAL(activated(int)), this, SLOT(changeLayer(int)));
+    connect(chooseMatrix, &QComboBox::activated, this,
+        &HyperCompatibilityUI::changeLayer);
     hdrLayout->addWidget(chooseMatrix);
     QString msg = tr("<qt>Allows you to switch between different types of "
         "compatibility matrix.<p>"
@@ -95,7 +96,8 @@ HyperCompatibilityUI::HyperCompatibilityUI(
         "hypersurfaces (which is why this matrix is not always "
         "calculated automatically).</qt>"));
     hdrLayout->addWidget(btnCalculate);
-    connect(btnCalculate, SIGNAL(clicked()), this, SLOT(calculate()));
+    connect(btnCalculate, &QPushButton::clicked, this,
+        &HyperCompatibilityUI::calculate);
 
     stack = new QStackedWidget(ui);
     layerNone = new MessageLayer("dialog-information");

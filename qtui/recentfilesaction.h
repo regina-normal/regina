@@ -74,7 +74,7 @@ class RecentFilesAction : public QMenu {
          */
         void urlSelected(const QUrl& url);
 
-    private slots:
+    private:
         /**
          * All activation events lead here.
          */

@@ -48,8 +48,6 @@ class QTreeWidget;
  * A normal surface page for viewing surface coordinates.
  */
 class HyperSummaryUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details

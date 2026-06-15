@@ -140,8 +140,9 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
     // Final tidying up.
     // Connect to the button group, so that we only get notified when a
     // user-initiated change occurs (i.e., not when refresh() changes things).
-    connect(boolType, SIGNAL(buttonClicked(QAbstractButton*)),
-        this, SLOT(notifyBoolTypeChanged()));
+    connect(boolType, &QButtonGroup::buttonClicked, this, [this]() {
+        filter->setUsesAnd(boolType->checkedId() == ID_AND ? true : false);
+    });
     filter->listen(this);
 }
 
@@ -183,10 +184,6 @@ void FilterCombUI::childWasRemoved(Packet& p, Packet&) {
 void FilterCombUI::childrenWereReordered(Packet& p) {
     if (std::addressof(p) == filter)
         refreshChildList();
-}
-
-void FilterCombUI::notifyBoolTypeChanged() {
-    filter->setUsesAnd(boolType->checkedId() == ID_AND ? true : false);
 }
 
 void FilterCombUI::refreshChildList() {

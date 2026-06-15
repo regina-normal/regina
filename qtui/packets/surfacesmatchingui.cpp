@@ -128,8 +128,8 @@ SurfacesMatchingUI::SurfacesMatchingUI(
     // Don't bother creating columns until we first create a set of
     // matching equations.
 
-    connect(table->header(), SIGNAL(sectionResized(int, int, int)),
-        this, SLOT(columnResized(int, int, int)));
+    connect(table->header(), &QHeaderView::sectionResized, this,
+        &SurfacesMatchingUI::columnResized);
 
     ui = table;
 }

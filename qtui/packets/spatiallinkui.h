@@ -60,8 +60,6 @@ namespace regina {
  * A packet interface for viewing spatial links.
  */
 class SpatialLinkUI : public QObject, public PacketUI {
-    Q_OBJECT
-
     public:
         /**
          * The maximum number of nodes that we are willing to render.
@@ -106,7 +104,6 @@ class SpatialLinkUI : public QObject, public PacketUI {
         QString getPacketMenuText() const override;
         void refresh() override;
 
-    public slots:
         /**
          * Spatial link actions.
          */

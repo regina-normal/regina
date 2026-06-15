@@ -108,8 +108,6 @@ class SkeletalModel : public QAbstractItemModel {
  * available.
  */
 class SkeletonWindow : public QDialog, public regina::PacketListener {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -146,8 +144,6 @@ class SkeletonWindow : public QDialog, public regina::PacketListener {
  * A tree view with a larger size hint than normal.
  */
 class SkeletonTreeView : public QTreeView {
-    Q_OBJECT
-
     public:
         SkeletonTreeView();
 

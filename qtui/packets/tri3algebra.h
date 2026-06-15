@@ -64,8 +64,6 @@ class Tri3AlgebraUI : public PacketTabbedViewerTab {
  * A triangulation page for viewing homology and the fundamental group.
  */
 class Tri3HomologyFundUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -103,7 +101,6 @@ class Tri3HomologyFundUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Notify us that the presentation has been simplified.
          */
@@ -124,8 +121,6 @@ class Tri3HomologyFundUI : public QObject, public PacketViewerTab {
  * A triangulation page for viewing Turaev-Viro invariants.
  */
 class Tri3TuraevViroUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -155,7 +150,6 @@ class Tri3TuraevViroUI : public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Calculate the requested Turaev-Viro invariant.
          */
@@ -171,8 +165,6 @@ class Tri3TuraevViroUI : public QObject, public PacketViewerTab {
  * \author Ryan Budney
  */
 class Tri3CellularInfoUI: public QObject, public PacketViewerTab {
-    Q_OBJECT
-
     private:
         /**
          * Packet details
@@ -210,7 +202,6 @@ class Tri3CellularInfoUI: public QObject, public PacketViewerTab {
         QWidget* getInterface() override;
         void refresh() override;
 
-    public slots:
         /**
          * Note that preferences have changed.
          */

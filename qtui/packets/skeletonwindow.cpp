@@ -43,6 +43,7 @@
 #include <QScreen>
 #include <QScrollBar>
 #include <QStyle>
+#include <QAbstractButton>
 
 using regina::BoundaryComponent;
 using regina::Component;
@@ -134,7 +135,7 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     p->listen(this);
 
     // Only one button to press (Close).
-    connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(accept()));
+    connect(buttonBox, &QDialogButtonBox::clicked, this, &QDialog::accept);
 }
 
 void SkeletonWindow::refresh() {

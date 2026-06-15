@@ -74,7 +74,7 @@ SET(SOURCES ${SOURCES}
   reginamain.cpp
   reginapref.cpp
   reginamanager.cpp
-  actionspart.cpp
+  actions.cpp
   exports.cpp
   imports.cpp
   messagelayer.cpp

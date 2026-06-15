@@ -38,7 +38,6 @@
 #include <QKeyEvent>
 #include <QKeySequence>
 #include <QPalette>
-#include <QtGlobal> // For QT_VERSION
 
 #define COMMAND_EDIT_DEFAULT_SPACES_PER_TAB 4
 

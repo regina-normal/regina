@@ -82,7 +82,7 @@ CensusWidget<ObjectType>::CensusWidget(ObjectType* obj, QWidget* parent) :
     setWordWrap(true);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, &QLabel::customContextMenuRequested,
+    connect(this, &QWidget::customContextMenuRequested,
         this, &CensusWidget<ObjectType>::contextCensus);
 }
 
