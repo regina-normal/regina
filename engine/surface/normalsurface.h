@@ -1011,17 +1011,25 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surfaces it will report a _larger_ number than it should since it
          * essentially counts each branch point as multiple vertices.
          *
-         * For spun-normal surfaces, eulerChar() computes the correct Euler
-         * characteristic provided this surface resides in an orientable
-         * SnapPea triangulation.
+         * As of Regina 8.0, eulerChar() is able to compute the Euler
+         * characteristic for a spun-normal surface provided it resides in a
+         * valid oriented triangulation in which every vertex link is a torus.
+         * The computation relies on the SnapPea kernel, so SnapPea must be
+         * able to work directly with the triangulation; see below for details
+         * on the exceptions that this routine can throw if this requirement
+         * is not met.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre Either this normal surface is compact (has finitely many
-         * discs), or it resides in an orientable triangulation that is held
-         * by a SnapPeaTriangulation.
+         * discs), or it resides in a valid oriented triangulation in which
+         * every vertex link is a torus.
+         *
+         * \exception UnsolvedCase This surface is non-compact, and SnapPea
+         * either produces a null triangulation or retriangulates the
+         * triangulation in which this surface resides.
          *
          * \return the Euler characteristic.
          *
@@ -1969,8 +1977,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Calculates the Euler characteristic of this spun-normal surface
          * and stores it as a property.
          *
-         * \pre This normal surface is non-compact, and resides in an
-         * orientable triangulation that is held by a SnapPeaTriangulation.
+         * \pre This normal surface is non-compact, and resides in a valid
+         * oriented triangulation in which every vertex link is a torus.
          *
          * \author Alex He
          */
@@ -2180,12 +2188,15 @@ inline LargeInteger NormalSurface::eulerChar() const {
         if ( isCompact() ) {
             calculateEulerChar();
         } else {
-            // If this surface resides in an orientable SnapPeaTriangulation,
-            // then this will use the combinatorial Gauss-Bonnet formula
-            // together with a boundary-null angle structure (i.e., an angle
-            // structure with vanishing peripheral rotational holonomy).
+            // We have a spun-normal surface.
             //
-            // Otherwise, this will internally fall back on
+            // If the surface resides in a valid oriented triangulation in
+            // which every vertex link is a torus, then we can compute a
+            // boundary-null angle structure. We can then use this angle
+            // structure, together with the combinatorial Gauss-Bonnet
+            // formula, to compute the Euler characteristic of the surface.
+            //
+            // Otherwise, the implementation currently falls back on
             // calculateEulerChar(). This gives infinity, but we aren't
             // breaking any promises since this is a situation that violates
             // the preconditions anyway.

@@ -1693,8 +1693,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception FailedPrecondition This triangulation is invalid, or is
          * not oriented, or has one or more non-torus vertex links.
          *
-         * \exception UnsolvedCase SnapPea retriangulates the underlying
-         * triangulation.
+         * \exception UnsolvedCase SnapPea produces a null triangulation, or
+         * retriangulates the underlying triangulation.
          *
          * \note At present, the preconditions are strong enough to ensure
          * that a boundary-null angle structure always exists. However, these
@@ -1746,8 +1746,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception FailedPrecondition This triangulation is invalid, or is
          * not oriented, or has one or more non-torus vertex links.
          *
-         * \exception UnsolvedCase SnapPea retriangulates the underlying
-         * triangulation.
+         * \exception UnsolvedCase SnapPea produces a null triangulation, or
+         * retriangulates the underlying triangulation.
          *
          * \note At present, the preconditions are strong enough to ensure
          * that a boundary-null angle structure always exists. However, these

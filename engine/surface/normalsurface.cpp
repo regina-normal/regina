@@ -336,25 +336,30 @@ void NormalSurface::calculateEulerChar() const {
 }
 
 void NormalSurface::calculateSpunEulerChar() const {
-    const SnapPeaTriangulation* snapPea = triangulation().isSnapPea();
-    if ( !snapPea || !triangulation().isOrientable() ) {
+    // The preconditions should guarantee that a boundary-null angle structure
+    // exists. At present, these preconditions are all automatically checked
+    // by boundaryNullAngleStructure().
+    //
+    // If boundaryNullAngleStructure() ever throws UnsolvedCase, then we
+    // simply pass this exception along.
+    std::optional<AngleStructure> angles;
+    try {
+        angles.emplace( triangulation().boundaryNullAngleStructure() );
+    } catch (const FailedPrecondition) {
         // Fall back on the old implementation.
         calculateEulerChar();
         return;
     }
 
-    // We are guaranteed to have a generalised angle structure. Moreover, the
-    // new implementation ensures vanishing peripheral rotational holonomy.
-    // Using the combinatorial Gauss-Bonnet formula, we can therefore compute
-    // the Euler characteristic by, in effect, taking the dot product of the
-    // angles vector with the quad coordinate vector.
-    AngleStructure angles = snapPea->generalAngleStructure();
+    // Using the combinatorial Gauss-Bonnet formula, we can compute the Euler
+    // characteristic by, in effect, taking the dot product of the angles
+    // vector with the quad coordinate vector.
     Rational ans;   // Initialised to zero
-    for ( size_t tetIndex = 0; tetIndex < snapPea->size(); ++tetIndex ) {
+    for (size_t tetIndex = 0; tetIndex < triangulation().size(); ++tetIndex) {
         for ( int quadType = 0; quadType < 3; ++quadType ) {
             LargeInteger quadCount = quads( tetIndex, quadType );
             if ( quadCount != LargeInteger::zero ) {
-                Rational quadArea = angles.angle( tetIndex, quadType );
+                Rational quadArea = angles->angle( tetIndex, quadType );
                 ans -= quadArea * Rational(quadCount);
             }
         }
