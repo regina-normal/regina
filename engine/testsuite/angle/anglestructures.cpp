@@ -303,26 +303,6 @@ static void verifyGeneralAngleStructure(const Triangulation<3>& tri,
         const regina::VectorInt& vec = tri.generalAngleStructure().vector();
         ASSERT_EQ(vec.size(), m.columns());
         EXPECT_TRUE((m * vec).isZero());
-
-        // Verify the promise that for an orientable SnapPeaTriangulation,
-        // generalAngleStructure() always satisfies the boundary-null angle
-        // equations.
-        const regina::SnapPeaTriangulation snapPea(tri);
-        if ( ! snapPea.isNull() ) {
-            // A general angle structure should always exist, regardless of
-            // whether the triangulation is orientable. We just don't make
-            // any promise about the peripheral rotational holonomy in the
-            // non-orientable case.
-            ASSERT_TRUE( snapPea.hasGeneralAngleStructure() );
-            if ( snapPea.isOrientable() ) {
-                const regina::VectorInt& vpVec =
-                    snapPea.generalAngleStructure().vector();
-                regina::MatrixInt vpm =
-                    regina::makeBoundaryNullAngleEquations(snapPea);
-                ASSERT_EQ( vec.size(), vpm.columns() );
-                EXPECT_TRUE( (vpm * vpVec).isZero() );
-            }
-        }
     }
 }
 
@@ -330,6 +310,67 @@ TEST(AngleStructuresTest, generalAngleStructure) {
     runCensusAllIdeal(verifyGeneralAngleStructure);
     runCensusAllClosed(verifyGeneralAngleStructure);
     runCensusAllBounded(verifyGeneralAngleStructure);
+}
+
+static void verifyBoundaryNullAngleStructure(const Triangulation<3>& tri,
+        const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    // At present, hasBoundaryNullAngleStructure() requires that tri is valid
+    // and oriented.
+    if (! tri.isValid()) {
+        EXPECT_THROW( tri.hasBoundaryNullAngleStructure(),
+                regina::FailedPrecondition );
+        return;
+    } else if (! tri.isOriented()) {
+        EXPECT_THROW( tri.hasBoundaryNullAngleStructure(),
+                regina::FailedPrecondition );
+
+        // If tri is orientable, then we can construct an oriented copy of it
+        // and run further tests.
+        if (! tri.isOrientable()) {
+            return;
+        }
+    }
+    Triangulation<3> orientedTri(tri);
+    orientedTri.orient();
+
+    // We also require that every vertex link is a torus.
+    for ( const auto v : orientedTri.vertices() ) {
+        if ( (! v->isIdeal()) || (! v->isLinkOrientable()) ||
+                (v->linkEulerChar() != 0) ) {
+            EXPECT_THROW( orientedTri.hasBoundaryNullAngleStructure(),
+                    regina::FailedPrecondition );
+            return;
+        }
+    }
+
+    // At this point, we can compute a boundary-null angle structure as long
+    // as SnapPea is able to work directly with orientedTri.
+    const regina::SnapPeaTriangulation snapPea(orientedTri);
+    if (snapPea.isNull()) {
+        EXPECT_THROW( orientedTri.hasBoundaryNullAngleStructure(),
+                regina::UnsolvedCase );
+        return;
+    }
+
+    // Proceed under the assumption that SnapPea will never retriangulate
+    // orientedTri.
+    // Check that the computed angle structure does indeed satisfy the
+    // boundary-null condition.
+    ASSERT_TRUE( orientedTri.hasBoundaryNullAngleStructure() );
+    regina::MatrixInt m =
+        regina::makeBoundaryNullAngleEquations(snapPea);
+    const regina::VectorInt& vec =
+        orientedTri.boundaryNullAngleStructure().vector();
+    ASSERT_EQ( vec.size(), m.columns() );
+    EXPECT_TRUE( (m * vec).isZero() );
+}
+
+TEST(AngleStructuresTest, boundaryNullAngleStructure) {
+    runCensusAllIdeal(verifyBoundaryNullAngleStructure);
+    runCensusAllClosed(verifyBoundaryNullAngleStructure);
+    runCensusAllBounded(verifyBoundaryNullAngleStructure);
 }
 
 TEST(AngleStructuresTest, copyMove) {

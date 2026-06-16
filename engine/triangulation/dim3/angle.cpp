@@ -143,7 +143,7 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
                     "boundaryNullAngleStructure() "
                     "requires an oriented triangulation");
         }
-        for ( Vertex<3>* v : vertices() ) {
+        for ( const Vertex<3>* v : vertices() ) {
             if ( (! v->isIdeal()) || (! v->isLinkOrientable()) ||
                     (v->linkEulerChar() != 0) ) {
                 throw regina::FailedPrecondition(
