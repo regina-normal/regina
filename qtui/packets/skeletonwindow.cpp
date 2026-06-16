@@ -43,6 +43,7 @@
 #include <QScreen>
 #include <QScrollBar>
 #include <QStyle>
+#include <QAbstractButton>
 
 using regina::BoundaryComponent;
 using regina::Component;
