@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -3221,9 +3221,9 @@
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		05669D911DCB0E9A00C870C6 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
-		0567B4AC2581ABA20022EA5D /* libgmp.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:67JTSH67LZ:Benjamin Burton"; lastKnownFileType = wrapper.xcframework; path = libgmp.xcframework; sourceTree = "<group>"; };
-		0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:67JTSH67LZ:Benjamin Burton"; lastKnownFileType = wrapper.xcframework; path = libgmpxx.xcframework; sourceTree = "<group>"; };
-		0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:67JTSH67LZ:Benjamin Burton"; lastKnownFileType = wrapper.xcframework; path = libtokyocabinet.xcframework; sourceTree = "<group>"; };
+		0567B4AC2581ABA20022EA5D /* libgmp.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libgmp.xcframework; sourceTree = "<group>"; };
+		0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libgmpxx.xcframework; sourceTree = "<group>"; };
+		0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = libtokyocabinet.xcframework; sourceTree = "<group>"; };
 		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
 		05685F6C1F970E6400085B44 /* RELEASE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = RELEASE.txt; sourceTree = "<group>"; };
 		05685F6E1F970E6500085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -3561,7 +3561,7 @@
 		057ED8EB2581B49E004F0068 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QtDBus.framework; sourceTree = "<group>"; };
 		057ED8EC2581B49E004F0068 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QtGui.framework; sourceTree = "<group>"; };
 		057ED8ED2581B49E004F0068 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QtWidgets.framework; sourceTree = "<group>"; };
-		057ED9C32581BAAE004F0068 /* graphviz.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:67JTSH67LZ:Benjamin Burton"; lastKnownFileType = wrapper.xcframework; path = graphviz.xcframework; sourceTree = "<group>"; };
+		057ED9C32581BAAE004F0068 /* graphviz.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = graphviz.xcframework; sourceTree = "<group>"; };
 		057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; name = libqtuiotouchplugin.dylib; path = generic/libqtuiotouchplugin.dylib; sourceTree = "<group>"; };
 		057EDAE62581D877004F0068 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; name = libqsvgicon.dylib; path = iconengines/libqsvgicon.dylib; sourceTree = "<group>"; };
 		057EDAE82581D8BA004F0068 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; name = libqgif.dylib; path = imageformats/libqgif.dylib; sourceTree = "<group>"; };
@@ -4336,7 +4336,7 @@
 		05E62AAA2FC5F1AF00AE1B84 /* strict_fstream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = strict_fstream.hpp; sourceTree = "<group>"; };
 		05E62AAB2FC5F1AF00AE1B84 /* z_stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = z_stream_wrapper.hpp; sourceTree = "<group>"; };
 		05E62AAC2FC5F1AF00AE1B84 /* zstd_stream_wrapper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = zstd_stream_wrapper.hpp; sourceTree = "<group>"; };
-		05E62ABE2FC691BD00AE1B84 /* liblzma.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:67JTSH67LZ:Benjamin Burton"; lastKnownFileType = wrapper.xcframework; path = liblzma.xcframework; sourceTree = "<group>"; };
+		05E62ABE2FC691BD00AE1B84 /* liblzma.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = liblzma.xcframework; sourceTree = "<group>"; };
 		05E62AC02FC7070F00AE1B84 /* christy-knots-links.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "christy-knots-links.xzsig"; sourceTree = "<group>"; };
 		05E62AC12FC7070F00AE1B84 /* classical.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = classical.xzsig; sourceTree = "<group>"; };
 		05E62AC22FC7070F00AE1B84 /* closed-hyp-census-full.xzsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census-full.xzsig"; sourceTree = "<group>"; };
