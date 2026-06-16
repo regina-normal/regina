@@ -5384,7 +5384,7 @@ inline const AngleStructure& Triangulation<3>::boundaryNullAngleStructure() cons
         return std::get<AngleStructure>(bdryNullAngleStructure_);
 
     // Either there is no solution or we don't know yet.
-    if (hasGeneralAngleStructure())
+    if (hasBoundaryNullAngleStructure())
         return std::get<AngleStructure>(bdryNullAngleStructure_);
     else
         throw NoSolution();
