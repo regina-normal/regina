@@ -1597,7 +1597,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is a torus or Klein bottle.  The "only if" direction is a simple
          * Euler characteristic calculation; for the "if" direction see
          * "Angle structures and normal surfaces", Feng Luo and Stephan
-         * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
+         * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866.
          *
          * \exception NoSolution No generalised angle structure exists on
          * this triangulation.
@@ -1637,7 +1637,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * is a torus or Klein bottle.  The "only if" direction is a simple
          * Euler characteristic calculation; for the "if" direction see
          * "Angle structures and normal surfaces", Feng Luo and Stephan
-         * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
+         * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866.
          *
          * \note Even if the condition above is true and it is clear that a
          * generalised angle structure should exist, this routine will still do
@@ -1662,7 +1662,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * every vertex link is a torus, such an angle structure always
          * exists; see Proposition 3.3 of "The Thurston norm via spun-normal
          * immersions", Daryl Cooper and Stephan Tillmann and William Worden,
-         * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236).
+         * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236.
          *
          * At present, this routine only works with valid oriented
          * triangulations in which every vertex link is a torus (though future
@@ -1716,7 +1716,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * every vertex link is a torus, such an angle structure always
          * exists; see Proposition 3.3 of "The Thurston norm via spun-normal
          * immersions", Daryl Cooper and Stephan Tillmann and William Worden,
-         * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236).
+         * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236.
          *
          * At present, this routine only works with valid oriented
          * triangulations in which every vertex link is a torus. Moreover,
