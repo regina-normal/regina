@@ -368,11 +368,9 @@ TEST(NormalSurfacesTest, norSFS) {
     }, 36);
 }
 
-//TODO Test the new euler char implementation for spun-normal surfaces.
-
 // Use std::tuple for the free comparison operators.
 using NonCompactProfile = std::tuple<
-    regina::Integer /* euler char, or always 0 for non-compact surfaces */,
+    regina::LargeInteger /* euler char, or infinity for some non-compact surfaces */,
     bool    /* orientable?, or always false for non-compact surfaces */,
     bool    /* two-sided?, or always false for non-compact surfaces */,
     bool    /* compact? */,
@@ -381,6 +379,25 @@ using NonCompactProfile = std::tuple<
     int     /* edge link (number of edges) */,
     size_t  /* central (number of discs) */,
     bool    /* splitting? */ >;
+
+static bool canComputeSpunNormalEulerChar(const NormalSurface& surf) {
+    // Assume surf is non-compact.
+    //
+    // At present, we can compute the Euler characteristic provided surf
+    // resides in a valid oriented triangulation in which every vertex link
+    // is a torus.
+    const Triangulation<3>& tri = surf.triangulation();
+    if ( (! tri.isValid()) || (! tri.isOriented()) ) {
+        return false;
+    }
+    for ( const auto v : tri.vertices() ) {
+        if ( (! v->isIdeal()) || (! v->isLinkOrientable()) ||
+                (v->linkEulerChar() != 0) ) {
+            return false;
+        }
+    }
+    return true;
+}
 
 static std::vector<NonCompactProfile> sortedNonCompactProfiles(
         const NormalSurfaces& list) {
@@ -396,12 +413,22 @@ static std::vector<NonCompactProfile> sortedNonCompactProfiles(
                 s.isVertexLinking(), (edgeLinks.first == nullptr ? 0 :
                     edgeLinks.second == nullptr ? 1 : 2),
                 s.isCentral(), s.isSplitting() });
+        } else if ( canComputeSpunNormalEulerChar(s) ) {
+            // We can compute Euler characteristic, but not (yet)
+            // orientability and two-sidedness.
+            found.push_back({ s.eulerChar(), false, false,
+                    false, s.hasRealBoundary(), s.isVertexLinking(),
+                    ( edgeLinks.first == nullptr ? 0 :
+                      edgeLinks.second == nullptr ? 1 : 2 ),
+                    s.isCentral(), s.isSplitting() });
         } else {
-            // Several tests we cannot perform for non-compact surfaces.
-            found.push_back({ 0, false, false, false, s.hasRealBoundary(),
-                s.isVertexLinking(), (edgeLinks.first == nullptr ? 0 :
-                    edgeLinks.second == nullptr ? 1 : 2),
-                s.isCentral(), s.isSplitting() });
+            // We cannot (yet) compute Euler characteristic, orientability
+            // and two-sidedness.
+            found.push_back({ regina::LargeInteger::infinity, false, false,
+                    false, s.hasRealBoundary(), s.isVertexLinking(),
+                    ( edgeLinks.first == nullptr ? 0 :
+                      edgeLinks.second == nullptr ? 1 : 2 ),
+                    s.isCentral(), s.isSplitting() });
         }
     }
     std::sort(found.begin(), found.end());
@@ -412,7 +439,12 @@ static void compareNonCompactProfiles(const Triangulation<3>& tri,
         std::initializer_list<NonCompactProfile> expectQuad,
         std::initializer_list<NonCompactProfile> expectStd,
         std::initializer_list<NonCompactProfile> extraANStd) {
-    // We assume all surfaces should be compact and connected.
+    // Work with an oriented copy of tri, whenever possible, so that we can
+    // test Euler characteristic for spun-normal surfaces.
+    Triangulation<3> orientedTri(tri);
+    orientedTri.orient();
+
+    // We assume all surfaces should be connected (but possibly non-compact).
     // All hard-coded "expected solution" lists passed to this function
     // should already be in sorted order.
     {
@@ -423,7 +455,7 @@ static void compareNonCompactProfiles(const Triangulation<3>& tri,
         std::copy(expectQuad.begin(), expectQuad.end(), dest);
 
         SCOPED_TRACE("Quad coordinates");
-        NormalSurfaces list(tri, NormalCoords::Quad);
+        NormalSurfaces list(orientedTri, NormalCoords::Quad);
         std::vector<NonCompactProfile> found = sortedNonCompactProfiles(list);
         EXPECT_EQ(found, expect);
     }
@@ -436,7 +468,7 @@ static void compareNonCompactProfiles(const Triangulation<3>& tri,
         std::copy(expectStd.begin(), expectStd.end(), dest);
         {
             SCOPED_TRACE("Standard coordinates");
-            NormalSurfaces list(tri, NormalCoords::Standard);
+            NormalSurfaces list(orientedTri, NormalCoords::Standard);
             std::vector<NonCompactProfile> found =
                 sortedNonCompactProfiles(list);
             EXPECT_EQ(found, expect);
@@ -447,7 +479,7 @@ static void compareNonCompactProfiles(const Triangulation<3>& tri,
         std::inplace_merge(expect.begin(), split, expect.end());
         {
             SCOPED_TRACE("Standard almost normal coordinates");
-            NormalSurfaces list(tri, NormalCoords::AlmostNormal);
+            NormalSurfaces list(orientedTri, NormalCoords::AlmostNormal);
             std::vector<NonCompactProfile> found =
                 sortedNonCompactProfiles(list);
             EXPECT_EQ(found, expect);
@@ -473,10 +505,10 @@ TEST(NormalSurfacesTest, figureEight) {
 
     Triangulation<3> tri = Example<3>::figureEight();
     compareNonCompactProfiles(tri, {
-        { 0, false, false, false, false, false, 0, 0, false },
-        { 0, false, false, false, false, false, 0, 0, false },
-        { 0, false, false, false, false, false, 0, 0, false },
-        { 0, false, false, false, false, false, 0, 0, false }
+        { -1, false, false, false, false, false, 0, 0, false },
+        { -1, false, false, false, false, false, 0, 0, false },
+        { -1, false, false, false, false, false, 0, 0, false },
+        { -1, false, false, false, false, false, 0, 0, false }
     }, {
         { 0, true, true, true, false, true, 0, 0, false }
     }, {
