@@ -35,6 +35,7 @@
 #include "skeletonwindow.h"
 #include "../packetui.h"
 
+#include <QAbstractButton>
 #include <QApplication>
 #include <QDialogButtonBox>
 #include <QHeaderView>
@@ -43,7 +44,6 @@
 #include <QScreen>
 #include <QScrollBar>
 #include <QStyle>
-#include <QAbstractButton>
 
 using regina::BoundaryComponent;
 using regina::Component;
