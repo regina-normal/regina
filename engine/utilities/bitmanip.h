@@ -54,7 +54,7 @@ namespace detail {
  *
  * End users should use the BitManipulator class, not this class.
  *
- * \nopython Only the end-user class BitManipulator<unsigned long> is
+ * \nopython Only the end-user class `BitManipulator<unsigned long>` is
  * available to Python users.
  *
  * \ingroup detail

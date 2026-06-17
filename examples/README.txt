@@ -23,7 +23,7 @@ The types of files in this directory are:
 
 *.session:
     Transcripts of example Python sessions, showing both the user input and
-    the corresponding Python output.  You can start a python session from
+    the corresponding Python output.  You can start a Python session from
     the command line by running "regina-python".
 
 *.py:

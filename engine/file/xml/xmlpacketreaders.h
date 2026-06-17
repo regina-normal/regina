@@ -52,7 +52,7 @@ namespace regina {
  * An XML packet reader that resolves an anonref element.
  *
  * Immediately upon construction, this reader will attempt to resolve
- * the given ID.  If successful, the corresopnding packet will be removed
+ * the given ID.  If successful, the corresponding packet will be removed
  * from its current location (either the packet tree or the anonymous pool),
  * with the assumption that it will be re-inserted when this anonref element
  * commits its packet.

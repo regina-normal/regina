@@ -1,0 +1,567 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Qt User Interface                                                     *
+ *                                                                        *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>. *
+ *                                                                        *
+ **************************************************************************/
+
+// Regina core includes:
+#include "maths/numbertheory.h"
+#include "snappea/snappeatriangulation.h"
+#include "triangulation/dim2.h"
+
+// UI includes:
+#include "edittreeview.h"
+#include "snappeashapes.h"
+#include "reginamain.h"
+#include "reginasupport.h"
+#include "choosers/cuspchooser.h"
+#include "choosers/facechooser.h"
+
+#include <numeric> // for std::gcd()
+#include <QAction>
+#include <QHeaderView>
+#include <QLabel>
+#include <QLayout>
+#include <QMessageBox>
+#include <QRegularExpression>
+#include <QToolBar>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+
+using regina::Packet;
+using regina::SnapPeaTriangulation;
+
+namespace {
+    const QRegularExpression reIntPair(
+        R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+)[^0-9\-]*$)");
+}
+
+void CuspModel::rebuild() {
+    beginResetModel();
+    endResetModel();
+}
+
+QModelIndex CuspModel::index(int row, int column,
+        const QModelIndex& /* parent */) const {
+    return createIndex(row, column, quint32(3 * row + column));
+}
+
+int CuspModel::rowCount(const QModelIndex& /* unused parent*/) const {
+    return tri_->countCusps();
+}
+
+int CuspModel::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 3;
+}
+
+QVariant CuspModel::data(const QModelIndex& index, int role) const {
+    if (role == Qt::DisplayRole) {
+        const regina::Cusp& cusp = tri_->cusp(index.row());
+        switch (index.column()) {
+            case 0:
+                return QString::number(index.row());
+            case 1:
+                return QString::number(cusp.vertex()->markedIndex());
+            case 2:
+                if (cusp.complete())
+                    return QString(QChar(0x2014 /* emdash */));
+                else
+                    return tr("%1, %2").arg(cusp.m()).arg(cusp.l());
+            default:
+                return QVariant();
+        }
+    } else if (role == Qt::EditRole) {
+        if (index.column() == 2) {
+            const regina::Cusp& cusp = tri_->cusp(index.row());
+            if (cusp.complete())
+                return QString();
+            else
+                return tr("%1, %2").arg(cusp.m()).arg(cusp.l());
+        } else
+            return QVariant();
+    } else if (role == Qt::ToolTipRole) {
+        return headerData(index.column(), Qt::Horizontal, Qt::ToolTipRole);
+    } else if (role == Qt::TextAlignmentRole) {
+        return Qt::AlignCenter;
+    }
+
+    return QVariant();
+}
+
+QVariant CuspModel::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Cusp #");
+            case 1: return tr("Vertex #");
+            case 2: return tr("Filling");
+        }
+    } else if (role == Qt::ToolTipRole) {
+        switch (section) {
+            case 0: return tr("The cusp number according to SnapPea");
+            case 1: return tr("<qt>The vertex number according to Regina, "
+                "as seen in the <i>Skeleton</i> tab</qt>");
+            case 2: return tr("The current filling coefficients on this cusp");
+        }
+    } else if (role == Qt::TextAlignmentRole)
+        return Qt::AlignCenter;
+
+    return QVariant();
+}
+
+Qt::ItemFlags CuspModel::flags(const QModelIndex& index) const {
+    if (index.column() == 2)
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
+        int /* role */) {
+    if (index.column() == 2) {
+        QString data = value.toString().trimmed();
+        if (data.isEmpty() || data == "-") {
+            tri_->unfill(index.row());
+            return true;
+        }
+        auto match = reIntPair.match(data);
+        if (! match.hasMatch()) {
+            ReginaSupport::info(nullptr,
+                tr("Please enter a pair of filling coefficients."),
+                tr("<qt>This should be a pair of integers, such as "
+                    "<i>3, 2</i>."));
+            return false;
+        }
+
+        bool mOk, lOk;
+        int m = match.captured(1).toInt(&mOk);
+        int l = match.captured(2).toInt(&lOk);
+        if (! (mOk && lOk)) {
+            ReginaSupport::sorry(nullptr,
+                tr("The filling coefficients are too large."),
+                tr("The coefficients you provided are too large for "
+                    "this machine to store using its native integer type."));
+            return false;
+        }
+
+        if (m == 0 && l == 0) {
+            tri_->unfill(index.row());
+            return true;
+        }
+
+        if (std::gcd(m, l) != 1) {
+            ReginaSupport::sorry(nullptr,
+                tr("The filling coefficients must be coprime."),
+                tr("Although SnapPea can handle more general filling "
+                    "coefficients, Regina insists that the filling "
+                    "coefficients be relatively prime."));
+            return false;
+        }
+        if ((! tri_->cusp(index.row()).vertex()->isLinkOrientable()) &&
+                l != 0) {
+            ReginaSupport::sorry(nullptr,
+                tr("For non-orientable cusps, the filling coefficients "
+                    "must be (±1, 0)."),
+                tr("Although SnapPea can handle more general filling "
+                    "coefficients, Regina insists on (±1, 0) for "
+                    "non-orientable cusps."));
+            return false;
+        }
+        try {
+            tri_->fill(m, l, index.row());
+            return true;
+        } catch (const regina::InvalidArgument&) {
+            ReginaSupport::info(nullptr,
+                tr("I could not use these filling coefficients."),
+                tr("<qt>SnapPea rejected them, and I'm not sure why.  "
+                    "This could happen (for instance) if the coefficients "
+                    "are too large for SnapPea to represent exactly "
+                    "using its internal floating point data type.<p>"
+                    "If you are not sure what is happening, please feel "
+                    "free to contact the Regina developers.</qt>"));
+            return false;
+        }
+    } else
+        return false;
+}
+
+SnapPeaShapesUI::SnapPeaShapesUI(
+        regina::PacketOf<regina::SnapPeaTriangulation>* packet,
+        PacketTabbedUI* useParentUI) :
+        PacketEditorTab(useParentUI), tri(packet) {
+    ui = new QWidget();
+    QBoxLayout* layout = new QVBoxLayout(ui);
+
+    auto* label = new QLabel(tr("Cusps:"));
+    layout->addWidget(label);
+
+    model = new CuspModel(packet);
+    cusps = new EditTreeView();
+    cusps->setItemsExpandable(false);
+    cusps->setRootIsDecorated(false);
+    cusps->setAlternatingRowColors(true);
+    cusps->header()->setStretchLastSection(false);
+    cusps->setSelectionMode(QTreeView::NoSelection);
+    cusps->setWhatsThis(tr("<qt>Shows information on each cusp.<p>"
+        "Cusps are numbered according to SnapPea's internal numbering "
+        "(see the <i>Cusp #</i> column).  This table also gives the "
+        "corresponding vertex number (using Regina's numbering, as seen "
+        "in the <i>Skeleton</i> tab).<p>"
+        "You can change the filling on each cusp by typing new "
+        "filling coefficients directly into the table.</qt>"));
+    cusps->setModel(model);
+    cusps->header()->resizeSections(QHeaderView::ResizeToContents);
+    layout->addWidget(cusps, 1);
+
+    label = new QLabel(tr("Tetrahedron shapes:"));
+    layout->addWidget(label);
+
+    shapes = new QTreeWidget();
+    shapes->setRootIsDecorated(false);
+    shapes->setAlternatingRowColors(true);
+    shapes->header()->setStretchLastSection(false);
+    shapes->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    shapes->setSelectionMode(QAbstractItemView::NoSelection);
+    shapes->setWhatsThis(tr("Shows the shape of each tetrahedron, "
+        "with respect to the Dehn filled hyperbolic structure.  "
+        "Tetrahedron shapes are given in rectangular form, and using "
+        "a fixed coordinate system (fixed alignment, in SnapPea's "
+        "terminology)."));
+    layout->addWidget(shapes, 3);
+
+    // Set up the actions.
+    QAction* sep;
+
+    actRandomise = new QAction(this);
+    actRandomise->setText(tr("&Randomise"));
+    actRandomise->setIcon(ReginaSupport::regIcon("randomise"));
+    actRandomise->setToolTip(tr("Randomise the triangulation"));
+    actRandomise->setWhatsThis(tr("Randomises this triangulation.  "
+        "The manifold will be randomly retriangulated using local moves "
+        "that preserve the topology."));
+    triActionList.push_back(actRandomise);
+    requiresNonNull.push_back(actRandomise);
+    connect(actRandomise, &QAction::triggered, this,
+        &SnapPeaShapesUI::randomise);
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actFill = new QAction(this);
+    actFill->setText(tr("Build &Filled Manifold..."));
+    actFill->setIconText(tr("Fill"));
+    actFill->setIcon(ReginaSupport::regIcon("fill"));
+    actFill->setToolTip(tr("Build a new manifold that fills one or all cusps"));
+    actFill->setWhatsThis(tr("Builds a new manifold that permanently "
+        "fills either all cusps or one chosen cusp, using the current "
+        "filling coefficients.<p>"
+        "This triangulation will not be changed – the filled manifold "
+        "will be added as a new triangulation beneath it in the packet tree."));
+    triActionList.push_back(actFill);
+    requiresNonNull.push_back(actFill);
+    connect(actFill, &QAction::triggered, this, &SnapPeaShapesUI::fill);
+
+    actCanonise = new QAction(this);
+    actCanonise->setText(tr("Build &Canonical Retriangulation"));
+    actCanonise->setIconText(tr("Canonical"));
+    actCanonise->setIcon(ReginaSupport::regIcon("canonical"));
+    actCanonise->setToolTip(tr("Build the canonical retriangulation"));
+    actCanonise->setWhatsThis(tr("Builds the canonical retriangulation "
+        "of the canonical cell decomposition, as described in "
+        "<i>Convex hulls and isometries of cusped hyperbolic 3-manifolds</i>, "
+        "Jeffrey R. Weeks, Topology Appl. 52 (1993), 127-149.<p>"
+        "If the canonical cell decomposition contains non-tetrahedron "
+        "cells, then SnapPea will canonically retriangulate it by introducing "
+        "internal vertices.<p>"
+        "<b>Warning:</b> SnapPea might not compute the canonical "
+        "cell decomposition correctly.  However, it does guarantee "
+        "that the resulting manifold is homeomorphic to the original.<p>"
+        "This triangulation will not be changed – the canonical "
+        "retriangulation will be added beneath it in the packet tree."));
+    triActionList.push_back(actCanonise);
+    requiresNonNull.push_back(actCanonise);
+    connect(actCanonise, &QAction::triggered, this, &SnapPeaShapesUI::canonise);
+
+    actToRegina = new QAction(this);
+    actToRegina->setText(tr("&Convert to Regina"));
+    actToRegina->setIconText(tr("Regina"));
+    actToRegina->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
+    actToRegina->setToolTip(tr("Convert this to a Regina triangulation"));
+    actToRegina->setWhatsThis(tr("Converts this into one of Regina's native "
+        "3-manifold triangulations.  This original SnapPea triangulation "
+        "will be kept, and the new Regina triangulation will be added "
+        "beneath it in the packet tree.<p>"
+        "A native Regina triangulation allows you to use Regina's "
+        "full suite of tools to edit and analyse the triangulation.  "
+        "However, the native Regina "
+        "triangulation will lose any SnapPea-specific "
+        "information (such as peripheral curves on cusps)."));
+    triActionList.push_back(actToRegina);
+    requiresNonNull.push_back(actToRegina);
+    connect(actToRegina, &QAction::triggered, this, &SnapPeaShapesUI::toRegina);
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actVertexLinks = new QAction(this);
+    actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIconText(tr("Vertex Links"));
+    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
+    actVertexLinks->setToolTip(tr("Build a chosen vertex link"));
+    actVertexLinks->setWhatsThis(tr("Builds a 2-manifold triangulation "
+        "from the link of a chosen vertex of this triangulation.<p>"
+        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
+        "frontier of a small regular neighbourhood of <i>V</i>.  "
+        "The triangles that make up this link sit inside "
+        "the tetrahedron corners that meet together at <i>V</i>."));
+    triActionList.push_back(actVertexLinks);
+    requiresNonNull.push_back(actVertexLinks);
+    connect(actVertexLinks, &QAction::triggered, this,
+        &SnapPeaShapesUI::vertexLinks);
+
+    // Tidy up.
+    refresh();
+}
+
+SnapPeaShapesUI::~SnapPeaShapesUI() {
+    delete model;
+}
+
+const std::vector<QAction*>& SnapPeaShapesUI::getPacketTypeActions() {
+    return triActionList;
+}
+
+void SnapPeaShapesUI::fillToolBar(QToolBar* bar) {
+    if (ReginaPrefSet::global().displaySimpleToolbars) {
+        bar->addAction(actRandomise);
+        bar->addAction(actFill);
+        bar->addAction(actToRegina);
+    } else {
+        bar->addAction(actRandomise);
+        bar->addSeparator();
+        bar->addAction(actFill);
+        bar->addAction(actCanonise);
+        bar->addAction(actToRegina);
+        bar->addSeparator();
+        bar->addAction(actVertexLinks);
+    }
+}
+
+regina::Packet* SnapPeaShapesUI::getPacket() {
+    return tri;
+}
+
+QWidget* SnapPeaShapesUI::getInterface() {
+    return ui;
+}
+
+void SnapPeaShapesUI::refresh() {
+    // Rebuild the cusps table.
+    model->rebuild();
+
+    // Rebuild the shapes table.
+    shapes->clear();
+
+    QTreeWidgetItem *row, *header;
+
+    shapes->setColumnCount(3);
+    header = new QTreeWidgetItem();
+    header->setText(0, tr("Tet #"));
+    header->setText(1, tr("Real"));
+    header->setText(2, tr("Imag"));
+    header->setToolTip(0, tr("The tetrahedron number"));
+    header->setToolTip(1, tr("The real part of the complex shape parameter"));
+    header->setToolTip(2, tr("The imaginary part of the complex shape parameter"));
+    header->setTextAlignment(0, Qt::AlignCenter);
+    header->setTextAlignment(1, Qt::AlignCenter);
+    header->setTextAlignment(2, Qt::AlignCenter);
+    shapes->setHeaderItem(header);
+
+    if (tri->isNull()) {
+        updateNonNullActions();
+        return;
+    }
+    if (tri->solutionType() == SnapPeaTriangulation::Solution::NotAttempted ||
+            tri->solutionType() == SnapPeaTriangulation::Solution::None) {
+        updateNonNullActions();
+        return;
+    }
+
+    std::complex<double> s;
+    for (unsigned i = 0; i < tri->size(); ++i) {
+        s = tri->shape(i);
+        row = new QTreeWidgetItem();
+        row->setText(0, QString::number(i));
+        row->setText(1, QString::number(s.real()));
+        row->setText(2, QString::number(s.imag()));
+        row->setTextAlignment(0, Qt::AlignRight);
+        row->setTextAlignment(1, Qt::AlignRight);
+        row->setTextAlignment(2, Qt::AlignRight);
+        shapes->addTopLevelItem(row);
+    }
+
+    updateNonNullActions();
+}
+
+void SnapPeaShapesUI::endEdit() {
+    cusps->endEdit();
+}
+
+void SnapPeaShapesUI::vertexLinks() {
+    endEdit();
+
+    if (tri->countVertices() == 0)
+        ReginaSupport::sorry(ui,
+            tr("This triangulation does not have any vertices."));
+    else {
+        regina::Vertex<3>* chosen =
+            FaceDialog<3, 0>::choose(ui, tri, nullptr /* filter */,
+            tr("Vertex Links"),
+            tr("Triangulate the link of which vertex?"),
+            tr("<qt>Regina will triangulate the link of whichever "
+                "vertex you choose.<p>"
+                "If <i>V</i> is a vertex, then the <i>link</i> of "
+                "<i>V</i> is the "
+                "frontier of a small regular neighbourhood of <i>V</i>.  "
+                "The triangles that make up this link sit inside "
+                "the tetrahedron corners that meet together at "
+                "<i>V</i>.</qt>"));
+        if (chosen) {
+            auto ans = regina::make_packet<regina::Triangulation<2>>(
+                std::in_place, chosen->buildLink());
+            ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
+                toUtf8().constData());
+            tri->append(ans);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
+        }
+    }
+}
+
+void SnapPeaShapesUI::toRegina() {
+    endEdit();
+
+    if (tri->isNull())
+        ReginaSupport::sorry(ui,
+            tr("This is a null triangulation: there is no SnapPea "
+            "triangulation for me to convert."));
+    else {
+        auto ans = regina::make_packet<regina::Triangulation<3>>(
+            std::in_place, *tri);
+        ans->setLabel(tri->label());
+        tri->append(ans);
+        enclosingPane->getMainWindow()->packetView(*ans, true, true);
+    }
+}
+
+void SnapPeaShapesUI::fill() {
+    endEdit();
+
+    if (tri->isNull())
+        ReginaSupport::sorry(ui,
+            tr("This is a null triangulation: there is no SnapPea "
+            "triangulation for me to fill."));
+    else if (tri->countFilledCusps() == 0) {
+        ReginaSupport::sorry(ui,
+            tr("There are no filling coefficients on any of the cusps."),
+            tr("You can enter filling coefficients on the "
+                "<i>Shapes & Cusps</i> tab."));
+    } else {
+        std::shared_ptr<regina::Packet> ans;
+        if (tri->countFilledCusps() == 1) {
+            if (tri->countCompleteCusps() == 0)
+                ans = regina::make_packet(tri->filledAll());
+            else
+                ans = regina::make_packet(tri->filledPartial());
+        } else {
+            int chosen = CuspDialog::choose(ui, tri, CuspChooser::filterFilled,
+                tr("Permanently Fill Cusps"),
+                tr("Permanently fill which cusp(s)?"),
+                tr("SnapPea will retriangulate to permanently fill "
+                    "whatever cusp you choose."));
+            if (chosen == CuspChooser::CUSP_NO_SELECTION)
+                return;
+            else if (chosen == CuspChooser::CUSP_ALL) {
+                if (tri->countCompleteCusps() == 0)
+                    ans = regina::make_packet(tri->filledAll());
+                else
+                    ans = regina::make_packet(tri->filledPartial());
+            } else {
+                ans = regina::make_packet(tri->filledPartial(chosen));
+            }
+        }
+        if (! ans) {
+            ReginaSupport::sorry(ui,
+                tr("SnapPea was not able to contruct the filled "
+                    "triangulation."),
+                tr("Please report this to the Regina developers."));
+        } else {
+            ans->setLabel(tri->adornedLabel("Filled"));
+            tri->append(ans);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
+        }
+    }
+}
+
+void SnapPeaShapesUI::randomise() {
+    endEdit();
+
+    tri->randomize();
+}
+
+void SnapPeaShapesUI::canonise() {
+    endEdit();
+
+    if (tri->isNull())
+        ReginaSupport::sorry(ui,
+            tr("This is a null triangulation: there is no SnapPea "
+            "triangulation for me to canonise."));
+    else {
+        try {
+            auto ans = make_packet(tri->canonise(), "Canonical retriangulation");
+            tri->append(ans);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
+        } catch (const regina::UnsolvedCase&) {
+            ReginaSupport::sorry(ui,
+                tr("The SnapPea kernel was not able to build the "
+                "canonical retriangulation of the "
+                "canonical cell decomposition."));
+        }
+    }
+}
+
+void SnapPeaShapesUI::updateNonNullActions() {
+    if (tri->isNull()) {
+        for (auto action : requiresNonNull)
+            action->setEnabled(false);
+    }
+}
+

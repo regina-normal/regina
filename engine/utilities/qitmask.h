@@ -92,7 +92,7 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  * with no need for any specialised move operations or swap functions.
  *
  * \python Python does not support templates, and so instead Regina's
- * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
+ * Python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
  * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
  * Qitmask256.  Each of these will be an optimised qitmask class that
  * can hold the corresponding number of bits, and is guaranteed to be an
@@ -302,7 +302,7 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T>& mask) {
  * with no need for any specialised move operations or swap functions.
  *
  * \python Python does not support templates, and so instead Regina's
- * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
+ * Python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
  * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
  * Qitmask256.  Each of these will be an optimised qitmask class that
  * can hold the corresponding number of bits, and is guaranteed to be an

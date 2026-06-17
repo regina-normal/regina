@@ -133,7 +133,7 @@
  *
  *  <h3>pybind11</h3>
  *
- *  Regina includes a copy of pybind11, which it uses to generate python
+ *  Regina includes a copy of pybind11, which it uses to generate Python
  *  bindings for Regina's native C++ code.  The pybind11 library was written by
  *  Wenzel Jakob, and is distributed under a BSD-style license that is shipped
  *  with Regina's source code in the file python/pybind11/LICENSE.

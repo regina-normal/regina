@@ -28,7 +28,9 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "regina-core.h"
+#include "../helpers.h"
+#include "../docstrings/maths/perm.h"
 
 void add3D(pybind11::module_& m);
 void addArrow(pybind11::module_& m);
@@ -83,5 +85,11 @@ void addMathsClasses(pybind11::module_& m) {
     addLaurent(m);
     addLaurent2(m);
     addArrow(m);
+
+    RDOC_SCOPE_BEGIN(Perm)
+
+    regina::python::add_doc_only_class<rdoc>(m, "Perm");
+
+    RDOC_SCOPE_END
 }
 

@@ -89,7 +89,7 @@ void CensusCollection<Link>::init() {
     maxSize_ = 16;
 }
 
-// Instantiate this template, which we use in the python bindings.
+// Instantiate this template, which we use in the Python bindings.
 template void CensusDB::lookupKey<2, const std::function<void(CensusHit&&)>&>(
     const std::string&, const std::function<void(CensusHit&&)>&) const;
 

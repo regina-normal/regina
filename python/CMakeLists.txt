@@ -23,7 +23,6 @@ ADD_SUBDIRECTORY("triangulation")
 ADD_SUBDIRECTORY("utilities")
 
 ADD_SUBDIRECTORY("testsuite")
-ADD_SUBDIRECTORY("sage")
 
 # The module itself is built in the regina/ subdirectory, so that we can
 # import the module directly from the source tree if we like.

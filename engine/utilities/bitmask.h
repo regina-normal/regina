@@ -211,7 +211,7 @@ class Bitmask {
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -654,7 +654,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  * with no need for any specialised move operations or swap functions.
  *
  * \python Python does not support templates, and so instead Regina's
- * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+ * Python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
  * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
  * Bitmask256.  Each of these will be an optimised bitmask class that
  * can hold the corresponding number of bits, and is guaranteed to be an
@@ -810,7 +810,7 @@ class Bitmask1 {
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -1091,7 +1091,7 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T>& mask) {
  * with no need for any specialised move operations or swap functions.
  *
  * \python Python does not support templates, and so instead Regina's
- * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+ * Python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
  * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
  * Bitmask256.  Each of these will be an optimised bitmask class that
  * can hold the corresponding number of bits, and is guaranteed to be an
@@ -1266,7 +1266,7 @@ class Bitmask2 {
          *
          * \python Instead of a pair of iterators, you should pass
          * a Python list (which, as described above, must be a sorted
-         * list of indices).
+         * list of integer indices).
          *
          * \param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.

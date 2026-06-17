@@ -89,9 +89,9 @@ possible, even when passing or returning objects by value.
     *= and addCopies()).
 
 Python:
-    Only the specific types Vector<Integer> and Vector<LargeInteger>
-    are available, under the names VectorInt and VectorLarge
-    respectively.)doc";
+    Only the specific types ``Vector<Integer>`` and
+    ``Vector<LargeInteger>`` are available, under the names
+    ``VectorInt`` and ``VectorLarge`` respectively.)doc";
 
 // Docstring regina::python::doc::Vector::__copy
 static constexpr const char __copy[] =
@@ -174,7 +174,7 @@ The iterator type must be random access because this allows the
 implementation to compute the sequence length in constant time.
 
 Python:
-    Instead of a pair of iterators, this routine takes a python list
+    Instead of a pair of iterators, this routine takes a Python list
     of coefficients.
 
 Parameter ``begin``:
@@ -194,7 +194,7 @@ accidental (and unintentional) mixing of vector classes.
 
 Python:
     Using this constructor, Python allows you to construct a
-    Vector<Integer> from a Vector<LargeInteger> or vice versa.
+    ``VectorInt`` from a ``VectorLarge`` or vice versa.
 
 Parameter ``src``:
     the vector to clone.)doc";

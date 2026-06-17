@@ -98,6 +98,8 @@ namespace detail {
  * type in Regina, but which itself is a virtual base class for different
  * kinds of filters).
  *
+ * \nopython
+ *
  * \ingroup packet
  */
 template <typename T>
@@ -113,6 +115,8 @@ concept PacketClass =
  * Subclasses are _not_ considered here: we requires `T` to be precisely a
  * class of the form `PacketOf<...>`.
  *
+ * \nopython
+ *
  * \ingroup packet
  */
 template <typename T>
@@ -122,6 +126,8 @@ concept WrappedPacket = detail::is_wrapped_packet_v<T>;
  * A packet class that stores text (possibly alongside other data).
  *
  * Examples of this concept include Text and Script.
+ *
+ * \nopython
  *
  * \ingroup packet
  */
@@ -143,6 +149,8 @@ concept TextPacket =
  *
  * See the Packet class notes for an overview of how wrapped packets work, as
  * well as instructions on how to create a new wrapped packet type.
+ *
+ * \nopython
  *
  * \ingroup packet
  */
@@ -293,7 +301,7 @@ template <PacketHeldType Held> class XMLWriter;
  * External objects can listen for events on packets, such as when packets
  * are changed or about to be destroyed.  This is useful (for example)
  * when keeping a graphical user interface in sync with any changes that
- * might be happening within the engine and/or via users' python scripts.
+ * might be happening within the engine and/or via users' Python scripts.
  * See the PacketListener class notes for details.
  *
  * Regina's packet types do not support C++ move semantics, since this would
@@ -542,7 +550,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * \python This routine returns a python set.
+         * \python This routine returns a Python set.
          *
          * \return the set of all tags associated with this packet.
          */
@@ -3614,7 +3622,7 @@ class PacketShell {
          * temporary, since the underlying packet (and therefore the
          * set that is referenced) is in the process of being destroyed.
          *
-         * \python This routine returns a python set.
+         * \python This routine returns a Python set.
          *
          * \return the set of all tags associated with this packet.
          */

@@ -38,7 +38,7 @@
 #endif
 
 /**
- * To access docstrings, python binding code should be structured as:
+ * To access docstrings, Python binding code should be structured as:
  *
  * RDOC_SCOPE_BEGIN...
  * ...

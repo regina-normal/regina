@@ -18,3 +18,7 @@ Caveats:
   version string, which must be updated whenever Regina syncs with a newer
   version of SnapPy.
 
+In addition, xcode/ contains files for configuring the Xcode build
+environment.  See xcode/README.txt for further details.
+
+ -- Ben Burton <bab@debian.org>, Fri, 12 Jun 2026 16:51:17 +1000

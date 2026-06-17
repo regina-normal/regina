@@ -14,6 +14,13 @@
 			<key>orderHint</key>
 			<integer>7</integer>
 		</dict>
+		<key>Python Interpreter.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>19</integer>
+		</dict>
 		<key>Python.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -32,7 +39,7 @@
 		<key>Timing.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>19</integer>
+			<integer>20</integer>
 		</dict>
 		<key>Utils - CensusLookup.xcscheme</key>
 		<dict>
@@ -249,6 +256,11 @@
 			<true/>
 		</dict>
 		<key>05DADB04219256ED00DC80E1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05E62B2A2FDC103700AE1B84</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -85,7 +85,7 @@ Returns:
 // Docstring regina::python::doc::versionPybind11Major
 inline constexpr const char versionPybind11Major[] =
 R"doc(Returns the major version of pybind11 that is used with Regina's
-python bindings. Currently this will return either 2 or 3 (according
+Python bindings. Currently this will return either 2 or 3 (according
 to whether you are building against Python ≤ 3.11 or Python ≥ 3.12
 respectively).
 

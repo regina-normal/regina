@@ -202,7 +202,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * iterator range that encodes the three integers 4, 5, 6.
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of integers.
+         * this routine takes a Python list of integers.
          *
          * \param begin the beginning of the list of coordinates to constraint
          * within each block, relative to the start of the block, as outlined
@@ -247,7 +247,7 @@ class ValidityConstraints : public Output<ValidityConstraints> {
          * encodes the three integers 7, 8, 9.
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of integers.
+         * this routine takes a Python list of integers.
          *
          * \param begin the beginning of the list of coordinates to constraint
          * within each block, relative to the start of the block, as outlined

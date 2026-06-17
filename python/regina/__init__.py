@@ -57,7 +57,7 @@ else:
 def reginaSetup(quiet = False, readline = True, banner = False,
                 snappyPath = True, namespace = None, builtinOpen = True):
     """
-    Initialise a Regina python session.
+    Initialise a Regina Python session.
 
     Arguments:
         quiet      : If true, suppress informative messages that would
@@ -65,10 +65,10 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                      occurs, details of the error will be written regardless.
         readline   : If true, attempt to enable tab completion.
         snappyPath : Applies to platforms where SnapPy might not be installed
-                     on the python path (e.g., macOS users with the SnapPy app
+                     on the Python path (e.g., macOS users with the SnapPy app
                      bundle).  If true, this setup routine will (i) attempt
                      to locate SnapPy, and (ii) if successful, extend sys.path
-                     to include the location of SnapPy's python module and its
+                     to include the location of SnapPy's Python module and its
                      dependencies.
         banner     : If true, print a welcome banner to standard output.
         namespace  : The global namespace in which the start-up library scripts
@@ -142,7 +142,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
 def __execScript(namespace = None):
     """
     For internal use by regina-python.
-    Executes a given python script.
+    Executes a given Python script.
 
     The filename of the script should be in sys.argv[1], and
     any arguments to the script should be in sys.argv[2:].

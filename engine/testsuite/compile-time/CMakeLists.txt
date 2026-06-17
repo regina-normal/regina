@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  aggregator.cpp
   binom.cpp
   boolset.cpp
   concepts.cpp

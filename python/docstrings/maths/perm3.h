@@ -137,7 +137,7 @@ this will wrap around to become the first permutation in Perm<3>::Sn,
 which is the identity.
 
 Python:
-    This routine is named inc() since python does not support the
+    This routine is named inc() since Python does not support the
     increment operator.
 
 Returns:

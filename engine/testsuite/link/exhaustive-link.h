@@ -34,23 +34,18 @@
 #include "link/link.h"
 #include "link/modellinkgraph.h"
 
-#define LINK_CENSUS_SIZE 4
-#define LINK_SMALL_CENSUS_SIZE 3
-
 /**
  * Run the given test over all link diagrams from a census that is generated
  * on the fly.
  *
- * The argument \a small indicates whether a smaller census should be
- * used (e.g., if the given test is extremely slow).
- *
- * The test should be a callable object that takes two arguments:
- * a link, and a human-readable name for the link.
+ * \param action the test to run.  This should be a callable object that takes
+ * two arguments: a link diagram, and a human-readable link diagram name.
+ * \param small indicates whether a smaller census should be used.  This can
+ * help with the overall running time when the test \a action is expensive.
  */
 template <std::invocable<regina::Link&&, const char*> Action>
 inline void runCensusAllVirtual(Action&& action, bool small_ = false) {
-    for (int n = 1;
-            n <= (small_ ? LINK_SMALL_CENSUS_SIZE : LINK_CENSUS_SIZE); ++n) {
+    for (int n = 1; n <= (small_ ? 3 : 4) /* size */; ++n) {
         regina::FacetPairing<3>::findAllPairings(n, false, -1,
                 [&action](const regina::FacetPairing<3>& p) {
             regina::ModelLinkGraph::generateAllEmbeddings(p, false, {},

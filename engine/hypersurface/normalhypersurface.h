@@ -99,7 +99,7 @@ class NormalHypersurfaces;
  * - The file hypercoords.h must be updated.  This includes a new enum
  *   value for HyperCoords, a new case for the HyperEncoding constructor,
  *   and new cases for the functions in HyperInfo.  Do not forget to
- *   update the python bindings for HyperCoords also.
+ *   update the Python bindings for HyperCoords also.
  *
  * - The global routines makeEmbeddedConstraints() and makeMatchingEquations()
  *   should be updated to incorporate the new coordinate system.

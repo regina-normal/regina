@@ -723,7 +723,7 @@ class Isomorphism :
          * not support the increment operator.  Unlike other Regina
          * classes, here inc() wraps the preincrement operator (not the
          * postincrement operator), since the postincrement operator is
-         * significantly more expensive.  To avoid confusion, the python
+         * significantly more expensive.  To avoid confusion, the Python
          * inc() function returns `None` (not this isomorphism).
          *
          * \return a reference to this isomorphism after the increment.

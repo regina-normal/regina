@@ -1241,6 +1241,10 @@ using Base64SigEncoder [[deprecated]] = Base64Encoder;
  *
  * \deprecated This class has been renamed `Base64Decoder<Iterator>`.
  *
+ * \python The type \a Iterator is an implementation detail, and is hidden
+ * from Python users.  Just use the unadorned type name `Base64SigDecoder`
+ * (or better yet, the new name `Base64Decoder`).
+ *
  * \ingroup utilities
  */
 template <CharIterator Iterator>

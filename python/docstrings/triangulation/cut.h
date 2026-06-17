@@ -191,7 +191,7 @@ Exception ``InvalidArgument``:
     Some element of the given sequence is neither 0 nor 1.
 
 Python:
-    Instead of a pair of iterators, this routine takes a python list
+    Instead of a pair of iterators, this routine takes a Python list
     of integers.
 
 Parameter ``begin``:

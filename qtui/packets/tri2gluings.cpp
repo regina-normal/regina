@@ -1,0 +1,882 @@
+
+/**************************************************************************
+ *                                                                        *
+ *  Regina - A Normal Surface Theory Calculator                           *
+ *  Qt User Interface                                                     *
+ *                                                                        *
+ *  Copyright (c) 1999-2026, Ben Burton                                   *
+ *  For further details contact Ben Burton (bab@debian.org).              *
+ *                                                                        *
+ *  This program is free software; you can redistribute it and/or         *
+ *  modify it under the terms of the GNU General Public License as        *
+ *  published by the Free Software Foundation; either version 2 of the    *
+ *  License, or (at your option) any later version.                       *
+ *                                                                        *
+ *  As an exception, when this program is distributed through (i) the     *
+ *  App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or     *
+ *  (iii) Google Play by Google Inc., then that store may impose any      *
+ *  digital rights management, device limits and/or redistribution        *
+ *  restrictions that are required by its terms of service.               *
+ *                                                                        *
+ *  This program is distributed in the hope that it will be useful, but   *
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *  General Public License for more details.                              *
+ *                                                                        *
+ *  You should have received a copy of the GNU General Public License     *
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>. *
+ *                                                                        *
+ **************************************************************************/
+
+// Regina core includes:
+#include "packet/container.h"
+#include "triangulation/dim2.h"
+
+// UI includes:
+#include "tri2gluings.h"
+#include "auxtoolbar.h"
+#include "edittableview.h"
+#include "eltmovedialog2.h"
+#include "packetfilter.h"
+#include "reginamain.h"
+#include "reginasupport.h"
+#include "choosers/packetchooser.h"
+
+#include <memory>
+#include <QAction>
+#include <QBoxLayout>
+#include <QCoreApplication>
+#include <QFileInfo>
+#include <QHeaderView>
+#include <QLabel>
+#include <QMessageBox>
+#include <QMenu>
+#include <QProgressDialog>
+#include <QRegularExpression>
+#include <QTextDocument>
+#include <QToolBar>
+#include <set>
+
+using regina::Packet;
+using regina::Triangulation;
+
+namespace {
+    /**
+     * Represents a destination for a single edge gluing.
+     */
+    const QRegularExpression reEdgeGluing(
+        "^\\s*"
+        "(\\d+)"
+        "(?:\\s*\\(\\s*|\\s+)"
+        "([0-2][0-2])"
+        "\\s*\\)?\\s*$");
+
+    /**
+     * Represents a single triangle edge.
+     */
+    const QRegularExpression reEdge("^[0-2][0-2]$");
+}
+
+GluingsModel2::GluingsModel2(regina::Triangulation<2>* tri) : tri_(tri) {
+}
+
+void GluingsModel2::rebuild() {
+    beginResetModel();
+    endResetModel();
+}
+
+QModelIndex GluingsModel2::index(int row, int column,
+        const QModelIndex& /* unused parent*/) const {
+    return createIndex(row, column, quint32(4 * row + column));
+}
+
+int GluingsModel2::rowCount(const QModelIndex& /* unused parent*/) const {
+    return tri_->size();
+}
+
+int GluingsModel2::columnCount(const QModelIndex& /* unused parent*/) const {
+    return 4;
+}
+
+QVariant GluingsModel2::data(const QModelIndex& index, int role) const {
+    regina::Triangle<2>* t = tri_->simplex(index.row());
+    if (role == Qt::DisplayRole) {
+        // Triangle name?
+        if (index.column() == 0)
+            return (t->description().empty() ? QString::number(index.row()) :
+                (QString::number(index.row()) + " (" +
+                t->description().c_str() + ')'));
+
+        // Edge gluing?
+        int edge = 3 - index.column();
+        if (edge >= 0)
+            return destString(t, edge);
+        return QVariant();
+    } else if (role == Qt::EditRole) {
+        // Triangle name?
+        if (index.column() == 0)
+            return t->description().c_str();
+
+        // Edge gluing?
+        int edge = 3 - index.column();
+        if (edge >= 0)
+            return destString(t, edge);
+        return QVariant();
+    } else if (role == Qt::BackgroundRole) {
+        if (index.column() == 0) {
+            if (t->isLocked())
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        } else {
+            if (t->isFacetLocked(3 - index.column()))
+                return QColor(0xee, 0xdd, 0x82); // lightgoldenrod
+        }
+        return QVariant();
+    } else if (role == Qt::ForegroundRole) {
+        if (index.column() == 0) {
+            if (t->isLocked())
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        } else {
+            if (t->isFacetLocked(3 - index.column()))
+                return QColor(0x8b, 0x5a, 0x2b); // tan4
+        }
+        return QVariant();
+    } else
+        return QVariant();
+}
+
+QVariant GluingsModel2::headerData(int section, Qt::Orientation orientation,
+        int role) const {
+    if (orientation != Qt::Horizontal)
+        return QVariant();
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    switch (section) {
+        case 0: return tr("Triangle");
+        case 1: return tr("Edge 01");
+        case 2: return tr("Edge 02");
+        case 3: return tr("Edge 12");
+    }
+    return QVariant();
+}
+
+Qt::ItemFlags GluingsModel2::flags(const QModelIndex& index) const {
+    // Do not allow locked facets to be edited.
+    if (index.column() == 0 ||
+            ! tri_->simplex(index.row())->isFacetLocked(3 - index.column()))
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    else
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
+        int /* unused role*/) {
+    regina::Triangle<2>* t = tri_->simplex(index.row());
+    if (index.column() == 0) {
+        QString newName = value.toString().trimmed();
+        if (newName == t->description().c_str())
+            return false;
+
+        t->setDescription(newName.toUtf8().constData());
+        return true;
+    }
+
+    int edge = 3 - index.column();
+    if (edge < 0)
+        return false;
+
+    int newAdjTri;
+    regina::Perm<3> newAdjPerm;
+    int newAdjEdge;
+
+    // Find the proposed new gluing.
+    QString text = value.toString().trimmed();
+    QString triEdge;
+
+    if (text.isEmpty()) {
+        // Boundary edge.
+        newAdjTri = newAdjEdge = -1;
+    } else {
+        auto match = reEdgeGluing.match(text);
+        if (! match.hasMatch()) {
+            // Bad string.
+            showError(tr("<qt>The edge gluing should be of the "
+                "form: <i>triangle (edge)</i>.  An example is <i>5 (02)</i>, "
+                "which represents edge 02 of triangle 5.</qt>"));
+            return false;
+        } else {
+            // Real edge.
+            newAdjTri = match.captured(1).toInt();
+            triEdge = match.captured(2);
+
+            // Check explicitly for a negative triangle number
+            // since isEdgeStringValid() takes an unsigned integer.
+            if (newAdjTri < 0 || newAdjTri >= tri_->size()) {
+                showError(tr("There is no triangle number %1.").arg(newAdjTri));
+                return false;
+            }
+
+            // Do we have a valid gluing?
+            QString err = isEdgeStringValid(index.row(), edge, newAdjTri, triEdge,
+                &newAdjPerm);
+            if (! err.isNull()) {
+                showError(err);
+                return false;
+            }
+            newAdjEdge = newAdjPerm[edge];
+        }
+    }
+
+    // Yes, looks valid.
+    // Have we even made a change?
+    if (newAdjTri < 0 && ! t->adjacentSimplex(edge))
+        return false;
+    if (t->adjacentSimplex(edge) &&
+            t->adjacentSimplex(edge)->markedIndex() == newAdjTri &&
+            newAdjPerm == t->adjacentGluing(edge))
+        return false;
+
+    // There is a change.  Will it violate a lock?
+    auto newAdj = (newAdjTri < 0 ? nullptr : tri_->simplex(newAdjTri));
+
+    if (t->isFacetLocked(edge)) {
+        ReginaSupport::info(nullptr /* should be a view */,
+            tr("This edge is locked."),
+            tr("This edge is currently locked. "
+            "You can unlock it by right-clicking within the table cell."));
+        return false;
+    }
+    if (newAdj && newAdj->isFacetLocked(newAdjEdge)) {
+        ReginaSupport::info(nullptr /* should be a view */,
+            tr("The destination edge is locked."),
+            tr("The destination edge %1 (%2) is currently locked. "
+            "You can unlock it by right-clicking within the corresponding "
+            "table cell.")
+            .arg(newAdjTri).arg(triEdge));
+        return false;
+    }
+
+    // Yes!  Go ahead and make the change.
+    regina::Triangulation<2>::PacketChangeGroup span(*tri_);
+
+    // First unglue from the old partner if it exists.
+    if (t->adjacentSimplex(edge))
+        t->unjoin(edge);
+
+    // Are we making the edge boundary?
+    if (! newAdj)
+        return true;
+
+    // We are gluing the edge to a new partner.
+
+    // Does this new partner already have its own partner?
+    // If so, better unglue it.
+    if (newAdj->adjacentSimplex(newAdjEdge))
+        newAdj->unjoin(newAdjEdge);
+
+    // Glue the two edges together.
+    t->join(edge, newAdj, newAdjPerm);
+    return true;
+}
+
+QString GluingsModel2::isEdgeStringValid(unsigned long srcTri, int srcEdge,
+        unsigned long destTri, const QString& destEdge,
+        regina::Perm<3>* gluing) {
+    if (destTri >= tri_->size())
+        return tr("There is no triangle number %1.").arg(destTri);
+
+    if (! reEdge.match(destEdge).hasMatch())
+        return tr("<qt>%1 is not a valid triangle edge.  A triangle "
+            "edge must be described by a sequence of two vertices, each "
+            "between 0 and 2 inclusive.  An example is <i>02</i>.</qt>").
+            arg(destEdge);
+
+    if (destEdge[0] == destEdge[1])
+        return tr("%1 is not a valid triangle edge.  The two vertices "
+            "forming the edge must be distinct.").arg(destEdge);
+
+    regina::Perm<3> foundGluing = edgeStringToPerm(srcEdge, destEdge);
+    if (srcTri == destTri && foundGluing[srcEdge] == srcEdge)
+        return tr("An edge cannot be glued to itself.");
+
+    // It's valid!
+    if (gluing)
+        *gluing = foundGluing;
+
+    return QString();
+}
+
+void GluingsModel2::showError(const QString& message) {
+    // We should actually pass the view to the message box, not 0, but we
+    // don't have access to any widget from here...
+    ReginaSupport::info(nullptr /* should be the view? */,
+        tr("This is not a valid gluing."), message);
+}
+
+QString GluingsModel2::destString(regina::Simplex<2>* srcTri, int srcEdge) {
+    regina::Simplex<2>* destTri = srcTri->adjacentSimplex(srcEdge);
+    if (! destTri)
+        return "";
+    else
+        return QString::number(destTri->markedIndex()) + " (" +
+            (srcTri->adjacentGluing(srcEdge) *
+            regina::Edge<2>::ordering(srcEdge)).trunc2().c_str() + ')';
+}
+
+regina::Perm<3> GluingsModel2::edgeStringToPerm(int srcEdge,
+        const QString& str) {
+    int destVertex[3];
+
+    destVertex[2] = 3; // This will be adjusted in a moment.
+    for (int i = 0; i < 2; i++) {
+        // Use toLatin1() here because we are converting characters,
+        // not strings.
+        destVertex[i] = str[i].toLatin1() - '0';
+        destVertex[2] -= destVertex[i];
+    }
+
+    return regina::Perm<3>(destVertex[0], destVertex[1], destVertex[2]) *
+        regina::Edge<2>::ordering(srcEdge).inverse();
+}
+
+Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
+        PacketTabbedUI* useParentUI) :
+        PacketEditorTab(useParentUI), tri(packet) {
+    // Set up the table of edge gluings.
+    model = new GluingsModel2(packet);
+    edgeTable = new EditTableView();
+    edgeTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
+    edgeTable->setModel(model);
+
+    QAbstractItemView::EditTriggers flags(
+        QAbstractItemView::AllEditTriggers);
+    flags ^= QAbstractItemView::CurrentChanged;
+    edgeTable->setEditTriggers(flags);
+
+    edgeTable->setWhatsThis(tr("<qt>A table specifying which triangle "
+        "edges are identified with which others.<p>"
+        "Triangles are numbered upwards from 0, and the three vertices of "
+        "each triangle are numbered 0, 1 and 2.  Each row of the table "
+        "represents a single triangle, and shows the identifications "
+        "for each of its three edges.<p>"
+        "As an example, if we are looking at the table cell for edge 01 of "
+        "triangle 7, a gluing of <i>5 (20)</i> shows that "
+        "that this edge is identified with edge 20 of triangle 5, in "
+        "such a way that vertices 0 and 1 of triangle "
+        "7 are mapped to vertices 2 and 0 respectively of triangle 5.<p>"
+        "To change these identifications, simply type your own gluings into "
+        "the table.</qt>"));
+
+    edgeTable->verticalHeader()->hide();
+
+    //edgeTable->setColumnStretchable(0, true);
+    //edgeTable->setColumnStretchable(1, true);
+    //edgeTable->setColumnStretchable(2, true);
+    //edgeTable->setColumnStretchable(3, true);
+
+    edgeTable->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(edgeTable, &QWidget::customContextMenuRequested, this,
+        &Tri2GluingsUI::lockMenu);
+
+    actAddTri = new QAction(this);
+    actAddTri->setText(tr("&Add Triangle"));
+    actAddTri->setIcon(ReginaSupport::regIcon("insert-mono"));
+    actAddTri->setToolTip(tr("Add a new triangle"));
+    actAddTri->setWhatsThis(tr("Adds a new triangle to this triangulation."));
+    connect(actAddTri, &QAction::triggered, this, &Tri2GluingsUI::addTri);
+
+    actRemoveTri = new QAction(this);
+    actRemoveTri->setText(tr("&Remove Triangle"));
+    actRemoveTri->setIcon(ReginaSupport::regIcon("delete-mono"));
+    actRemoveTri->setToolTip(tr("Remove the currently selected triangles"));
+    actRemoveTri->setEnabled(false);
+    actRemoveTri->setWhatsThis(tr("Removes the currently selected "
+        "triangles from this triangulation."));
+    connect(actRemoveTri, &QAction::triggered, this,
+        &Tri2GluingsUI::removeSelectedTris);
+    connect(edgeTable->selectionModel(), &QItemSelectionModel::selectionChanged,
+        this, &Tri2GluingsUI::updateRemoveState);
+
+    actUnlock = new QAction(this);
+    actUnlock->setText(tr("&Unlock All"));
+    actUnlock->setIcon(ReginaSupport::regIcon("unlock"));
+    actUnlock->setToolTip(tr("Unlock all triangles and/or edges"));
+    actUnlock->setWhatsThis(tr("Clears all triangle and/or edge locks from "
+        "this triangulation."));
+    connect(actUnlock, &QAction::triggered, this, &Tri2GluingsUI::unlockAll);
+
+    ui = new QWidget();
+    QBoxLayout* box = new QVBoxLayout(ui);
+    box->setContentsMargins(0, 0, 0, 0);
+    box->setSpacing(0);
+    auto* sidebar = new AuxToolBar();
+    sidebar->addLabel(tr("Triangles:"));
+    sidebar->addAction(actAddTri);
+    sidebar->addAction(actRemoveTri);
+    sidebar->addAction(actUnlock);
+    box->addWidget(edgeTable, 1);
+    box->addWidget(sidebar);
+
+    // Set up the triangulation actions.
+
+    actMoves = new QAction(this);
+    actMoves->setText(tr("&Elementary Moves..."));
+    actMoves->setIconText(tr("Moves"));
+    actMoves->setIcon(ReginaSupport::regIcon("eltmoves"));
+    actMoves->setToolTip(tr("Perform individual elementary moves"));
+    actMoves->setWhatsThis(tr("Allows you to perform elementary moves upon "
+        "this triangulation.  <i>Elementary moves</i> are modifications local "
+        "to a small number of tetrahedra that do not change the underlying "
+        "2-manifold.<p>"
+        "A dialog will be presented for you to select which "
+        "elementary moves to apply."));
+    triActionList.push_back(actMoves);
+    connect(actMoves, &QAction::triggered, this, &Tri2GluingsUI::moves);
+
+    auto* sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actOrient = new QAction(this);
+    actOrient->setText(tr("&Orient"));
+    actOrient->setIcon(ReginaSupport::regIcon("orient"));
+    actOrient->setToolTip(tr("Orient the triangulation"));
+    actOrient->setWhatsThis(tr("Relabels the vertices of each triangle "
+        "so that all triangles are oriented consistently, i.e., "
+        "so that orientation is preserved across adjacent edges.<p>"
+        "If this triangulation includes both orientable and non-orientable "
+        "components, only the orientable components will be relabelled."));
+    triActionList.push_back(actOrient);
+    connect(actOrient, &QAction::triggered, this, &Tri2GluingsUI::orient);
+
+    actReflect = new QAction(this);
+    actReflect->setText(tr("Re&flect"));
+    actReflect->setIcon(ReginaSupport::regIcon("reflect"));
+    actReflect->setToolTip(tr("Reflect the triangulation"));
+    actReflect->setWhatsThis(tr("Relabels the vertices of each triangle "
+        "so that the orientations of all triangles are reversed.<p>"
+        "If this triangulation is oriented, then the overall effect will be "
+        "to convert this into an isomorphic triangulation with the "
+        "opposite orientation."));
+    triActionList.push_back(actReflect);
+    connect(actReflect, &QAction::triggered, this, &Tri2GluingsUI::reflect);
+
+    actSubdivide = new QAction(this);
+    actSubdivide->setText(tr("&Barycentric Subdivide"));
+    actSubdivide->setIconText(tr("Subdivide"));
+    actSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
+    actSubdivide->setToolTip(tr(
+        "Perform a barycentric subdivision"));
+    actSubdivide->setWhatsThis(tr("Performs a barycentric "
+        "subdivision on this triangulation.  Each triangle "
+        "will be subdivided into 6 smaller triangles."));
+    triActionList.push_back(actSubdivide);
+    connect(actSubdivide, &QAction::triggered, this,
+        &Tri2GluingsUI::barycentricSubdivide);
+
+    auto* actInsertTri = new QAction(this);
+    actInsertTri->setText(tr("Insert Triangulation..."));
+    actInsertTri->setIconText(tr("Insert"));
+    actInsertTri->setIcon(ReginaSupport::regIcon("disjointunion"));
+    actInsertTri->setToolTip(tr("Insert a copy of some other triangulation"));
+    actInsertTri->setWhatsThis(tr("Inserts a copy of some chosen "
+        "triangulation into this triangulation.  The connected components of "
+        "the chosen triangulation will be become additional components of "
+        "this triangulation."));
+    triActionList.push_back(actInsertTri);
+    connect(actInsertTri, &QAction::triggered, this,
+        &Tri2GluingsUI::insertTriangulation);
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actDoubleCover = new QAction(this);
+    actDoubleCover->setText(tr("Build &Double Cover"));
+    actDoubleCover->setIconText(tr("Double"));
+    actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
+    actDoubleCover->setToolTip(tr(
+        "Build the orientable double cover of this triangulation"));
+    actDoubleCover->setWhatsThis(tr("Builds the orientable double cover "
+        "of this triangulation.  This triangulation will not be "
+        "changed – the result will be added as a new triangulation "
+        "beneath it in the packet tree.<p>"
+        "If this triangulation is already orientable then the result will be "
+        "disconnected, containing two copies of the original triangulation."));
+    triActionList.push_back(actDoubleCover);
+    connect(actDoubleCover, &QAction::triggered, this,
+        &Tri2GluingsUI::doubleCover);
+
+    actDoubleOverBoundary = new QAction(this);
+    actDoubleOverBoundary->setText(tr("Build Double Over Boundary"));
+    actDoubleOverBoundary->setIconText(tr("Double Over ∂"));
+    actDoubleOverBoundary->setIcon(ReginaSupport::regIcon("boundary-double"));
+    actDoubleOverBoundary->setToolTip(tr(
+        "Build two copies of this triangulation joined along their "
+        "boundary edges"));
+    actDoubleOverBoundary->setWhatsThis(tr("Builds a new triangulation by "
+        "gluing two copies of this triangulation along their boundary edges.  "
+        "The boundaries will be glued using the identity map.<p>"
+        "This triangulation will not be changed – the result "
+        "will be added as a new triangulation beneath it in the packet tree."));
+    triActionList.push_back(actDoubleOverBoundary);
+    connect(actDoubleOverBoundary, &QAction::triggered, this,
+        &Tri2GluingsUI::doubleOverBoundary);
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.push_back(sep);
+
+    actSplitIntoComponents = new QAction(this);
+    actSplitIntoComponents->setText(tr("E&xtract Components"));
+    actSplitIntoComponents->setIconText(tr("Components"));
+    actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
+    actSplitIntoComponents->setToolTip(tr("Extract connected components"));
+    actSplitIntoComponents->setWhatsThis(tr("Splits a disconnected "
+        "triangulation into its individual connected components.  This "
+        "triangulation will not be changed – each "
+        "connected component will be added as a new triangulation beneath "
+        "it in the packet tree.<p>"
+        "If this triangulation is already connected, this operation will "
+        "do nothing."));
+    triActionList.push_back(actSplitIntoComponents);
+    connect(actSplitIntoComponents, &QAction::triggered, this,
+        &Tri2GluingsUI::splitIntoComponents);
+
+    // Tidy up.
+
+    refresh();
+}
+
+Tri2GluingsUI::~Tri2GluingsUI() {
+    // Make sure the actions, including separators, are all deleted.
+
+    delete model;
+}
+
+const std::vector<QAction*>& Tri2GluingsUI::getPacketTypeActions() {
+    return triActionList;
+}
+
+void Tri2GluingsUI::fillToolBar(QToolBar* bar) {
+    if (ReginaPrefSet::global().displaySimpleToolbars) {
+        bar->addAction(actMoves);
+        bar->addSeparator();
+        bar->addAction(actOrient);
+    } else {
+        bar->addAction(actMoves);
+        bar->addSeparator();
+        bar->addAction(actOrient);
+        bar->addAction(actReflect);
+        bar->addAction(actSubdivide);
+        bar->addSeparator();
+        bar->addAction(actSplitIntoComponents);
+    }
+}
+
+regina::Packet* Tri2GluingsUI::getPacket() {
+    return tri;
+}
+
+QWidget* Tri2GluingsUI::getInterface() {
+    return ui;
+}
+
+void Tri2GluingsUI::refresh() {
+    model->rebuild();
+    updateActionStates();
+}
+
+void Tri2GluingsUI::endEdit() {
+    edgeTable->endEdit();
+}
+
+void Tri2GluingsUI::addTri() {
+    endEdit();
+
+    tri->newTriangle();
+}
+
+void Tri2GluingsUI::removeSelectedTris() {
+    endEdit();
+
+    // Gather together all the triangles to be deleted.
+    QModelIndexList sel = edgeTable->selectionModel()->selectedIndexes();
+    if (sel.empty()) {
+        ReginaSupport::warn(ui, tr("No triangles are selected to remove."));
+        return;
+    }
+
+    // Selections are contiguous.
+    int first, last;
+    first = last = sel.front().row();
+
+    int row, i;
+    for (i = 1; i < sel.count(); ++i) {
+        row = sel[i].row();
+        if (row < first)
+            first = row;
+        if (row > last)
+            last = row;
+    }
+
+    // Look for any potential lock violations.
+    for (i = first; i <= last; ++i)
+        if (tri->simplex(i)->lockMask()) {
+            ReginaSupport::sorry(ui,
+                tr("The selection includes locks."),
+                tr("The selection includes one or more locked "
+                "triangles and/or edges, and so I cannot remove "
+                "the selected triangles.\n\n"
+                "You can unlock triangles and edges by right-clicking "
+                "within the corresponding table cells."));
+            return;
+        }
+
+    // Notify the user that triangles will be removed.
+    QMessageBox msgBox(ui);
+    msgBox.setWindowTitle(tr("Question"));
+    msgBox.setIcon(QMessageBox::Question);
+    if (first == last) {
+        msgBox.setText(tr("Triangle number %1 will be removed.").arg(first));
+        msgBox.setInformativeText(tr("Are you sure?"));
+    } else {
+        msgBox.setText(tr("%1 triangles (numbers %2–%3) will be removed.")
+            .arg(last - first + 1).arg(first).arg(last));
+        msgBox.setInformativeText(tr("Are you sure?"));
+    }
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    if (msgBox.exec() != QMessageBox::Yes)
+        return;
+
+    // Off we go!
+    if (first == 0 && last == tri->size() - 1)
+        tri->removeAllSimplices();
+    else {
+        regina::Packet::PacketChangeGroup span(*tri);
+        for (i = last; i >= first; --i)
+            tri->removeSimplexAt(i);
+    }
+}
+
+void Tri2GluingsUI::lockMenu(const QPoint& pos) {
+    QModelIndex index = edgeTable->indexAt(pos);
+    if ((! index.isValid()) ||
+            static_cast<size_t>(index.row()) >= tri->size()) {
+        lockSimplex = -1;
+        return;
+    }
+
+    lockSimplex = index.row();
+    auto s = tri->simplex(lockSimplex);
+
+    QMenu m(tr("Context menu"), ui);
+    QAction lock(this);
+    if (index.column() == 0) {
+        lockFacet = -1;
+        lockAdd = ! s->isLocked();
+
+        if (lockAdd)
+            lock.setText(tr("Lock triangle %1").arg(index.row()));
+        else
+            lock.setText(tr("Unlock triangle %1").arg(index.row()));
+    } else {
+        lockFacet = 3 - index.column();
+        auto f = s->edge(lockFacet);
+        lockAdd = ! f->isLocked();
+
+        QString action = lockAdd ? tr("Lock") : tr("Unlock");
+        QString edgeDesc;
+        switch (lockFacet) {
+            case 2: edgeDesc = tr("01"); break;
+            case 1: edgeDesc = tr("02"); break;
+            case 0: edgeDesc = tr("12"); break;
+        }
+
+        if (f->isBoundary())
+            lock.setText(tr("%1 boundary edge %2 (%3)")
+                .arg(action).arg(index.row()).arg(edgeDesc));
+        else
+            lock.setText(tr("%1 edge %2 (%3) = %4")
+                .arg(action).arg(index.row()).arg(edgeDesc)
+                .arg(GluingsModel2::destString(s, lockFacet)));
+    }
+    connect(&lock, &QAction::triggered, this, &Tri2GluingsUI::changeLock);
+    m.addAction(&lock);
+    m.exec(edgeTable->viewport()->mapToGlobal(pos));
+}
+
+void Tri2GluingsUI::changeLock() {
+    if (lockSimplex < 0 || lockSimplex >= tri->size())
+        return;
+    if (lockFacet < 0) {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lock();
+        else
+            tri->simplex(lockSimplex)->unlock();
+    } else {
+        if (lockAdd)
+            tri->simplex(lockSimplex)->lockFacet(lockFacet);
+        else
+            tri->simplex(lockSimplex)->unlockFacet(lockFacet);
+    }
+    lockSimplex = -1;
+}
+
+void Tri2GluingsUI::unlockAll() {
+    if (! tri->hasLocks()) {
+        ReginaSupport::info(ui, tr("No triangles or edges are locked "
+            "in this triangulation."));
+        return;
+    }
+
+    QMessageBox msgBox(ui);
+    msgBox.setWindowTitle(tr("Question"));
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setText(tr("This will clear all triangle and edge locks."));
+    msgBox.setInformativeText(tr("Are you sure?"));
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+
+    if (msgBox.exec() == QMessageBox::Yes)
+        tri->unlockAll();
+}
+
+void Tri2GluingsUI::moves() {
+    endEdit();
+
+    (new EltMoveDialog2(ui, tri))->show();
+}
+
+void Tri2GluingsUI::orient() {
+    endEdit();
+
+    if (tri->isOriented()) {
+        ReginaSupport::info(ui, tr("This triangulation is already oriented."));
+        return;
+    }
+
+    bool hasOr = false;
+    for (auto c : tri->components())
+        if (c->isOrientable()) {
+            hasOr = true;
+            break;
+        }
+    if (! hasOr) {
+        ReginaSupport::info(ui,
+            tr("This triangulation has no orientable components."),
+            tr("Non-orientable components cannot be oriented."));
+        return;
+    }
+
+    tri->orient();
+}
+
+void Tri2GluingsUI::reflect() {
+    endEdit();
+
+    tri->reflect();
+}
+
+void Tri2GluingsUI::barycentricSubdivide() {
+    endEdit();
+
+    if (tri->hasLocks())
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has locks."),
+            tr("This triangulation has one or more locked "
+            "triangles or edges, and so cannot be subdivided."));
+    else
+        tri->subdivide();
+}
+
+void Tri2GluingsUI::insertTriangulation() {
+    endEdit();
+
+    auto other = std::static_pointer_cast<regina::PacketOf<
+        regina::Triangulation<2>>>(PacketDialog::choose(ui,
+            tri->root(),
+            new SubclassFilter<regina::Triangulation<2>>(),
+            tr("Insert Triangulation"),
+            tr("Insert a copy of which other triangulation?"),
+            tr("Regina will form the disjoint union of this triangulation "
+                "and whatever triangulation you choose here.  "
+                "The current triangulation will be modified directly.")));
+
+    if (other)
+        tri->insertTriangulation(*other);
+}
+
+void Tri2GluingsUI::doubleCover() {
+    endEdit();
+
+    auto ans = regina::make_packet(tri->doubleCover(), "Double cover");
+    tri->append(ans);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
+}
+
+void Tri2GluingsUI::doubleOverBoundary() {
+    endEdit();
+
+    auto ans = regina::make_packet(tri->doubleOverBoundary(),
+        "Doubled over boundary");
+    tri->append(ans);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
+}
+
+void Tri2GluingsUI::splitIntoComponents() {
+    endEdit();
+
+    if (tri->countComponents() == 0)
+        ReginaSupport::info(ui,
+            tr("This triangulation is empty."),
+            tr("It has no components."));
+    else if (tri->countComponents() == 1)
+        ReginaSupport::info(ui,
+            tr("This triangulation is connected."),
+            tr("It has only one component."));
+    else {
+        // If there are already children of this triangulation, insert
+        // the new triangulations at a deeper level.
+        std::shared_ptr<Packet> base;
+        if (tri->firstChild()) {
+            base = std::make_shared<regina::Container>();
+            tri->append(base);
+            base->setLabel(tri->adornedLabel("Components"));
+        } else
+            base = tri->shared_from_this();
+
+        // Make the split.
+        size_t which = 0;
+        for (auto& c : tri->triangulateComponents()) {
+            std::ostringstream label;
+            label << "Component #" << ++which;
+            base->append(regina::make_packet(std::move(c), label.str()));
+        }
+
+        // Make sure the new components are visible.
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
+            *base->firstChild());
+
+        // Tell the user what happened.
+        ReginaSupport::info(ui,
+            tr("%1 components were extracted.").arg(tri->countComponents()));
+    }
+}
+
+void Tri2GluingsUI::updateRemoveState() {
+    actRemoveTri->setEnabled(
+        ! edgeTable->selectionModel()->selectedIndexes().empty());
+}
+
+void Tri2GluingsUI::updateActionStates() {
+    actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
+    actDoubleCover->setEnabled(! tri->isOrientable());
+    actDoubleOverBoundary->setEnabled(tri->hasBoundaryFacets());
+    actSplitIntoComponents->setEnabled(tri->countComponents() > 1);
+    actUnlock->setVisible(tri->hasLocks());
+
+    updateRemoveState();
+}
+

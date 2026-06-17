@@ -308,8 +308,8 @@ coefficients are assumed to be zero. In particular, an empty sequence
 is allowed (and represents the zero field element).
 
 Python:
-    Instead of a pair of iterators, this routine takes a python list
-    of coefficients.
+    Instead of a pair of iterators, this routine takes a Python list
+    of Rational coefficients.
 
 Parameter ``field``:
     the order of the underlying cyclotomic field; this must be

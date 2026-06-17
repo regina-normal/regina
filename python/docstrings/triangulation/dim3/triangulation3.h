@@ -2108,6 +2108,10 @@ The new tetrahedron will be returned, and the new boundary edge that
 it creates will be edge 5 (i.e., the edge joining vertices 2 and 3) of
 this tetrahedron.
 
+If the triangulation (or more generally, the component of the
+triangulation that contains the given edge) is currently oriented,
+then the layering will preserve this orientation.
+
 Precondition:
     The given edge is a boundary edge of this triangulation, and the
     two boundary triangles on either side of it are distinct.

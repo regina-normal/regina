@@ -233,7 +233,7 @@ Python:
     increment operator. Unlike other Regina classes, here inc() wraps
     the preincrement operator (not the postincrement operator), since
     the postincrement operator is significantly more expensive. To
-    avoid confusion, the python inc() function returns ``None`` (not
+    avoid confusion, the Python inc() function returns ``None`` (not
     this isomorphism).
 
 Returns:

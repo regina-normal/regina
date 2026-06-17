@@ -60,10 +60,10 @@ namespace regina {
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \python The C++ types Polynomial<Integer> and Polynomial<Rational>
- * are available using the Python names PolynomialInt and PolynomialRational
- * respectively.  The alias Polynomial is also provided for the type
- * Polynomial<Rational>.
+ * \python The C++ types `Polynomial<Integer>` and `Polynomial<Rational>`
+ * are available using the Python names `PolynomialInt` and `PolynomialRational`
+ * respectively.  The alias `Polynomial` is also provided for the type
+ * `Polynomial<Rational>`.
  *
  * \tparam T the coefficient type.  A typical coefficient type would be
  * Integer or Rational.  Note that native C++ integer types are _not_
@@ -96,19 +96,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Creates the zero polynomial.
          */
         Polynomial();
-
-        /**
-         * Deprecated constructor that creates the polynomial `x^d` for the
-         * given degree \a d.
-         *
-         * \deprecated This will be removed in a future version of Regina,
-         * since in casual reading of code it is too easy to misread this as
-         * creating a polynomial with only a constant term.  You can still
-         * create `x^d` by calling `initExp(d)` instead.
-         *
-         * \param degree the degree of the new polynomial.
-         */
-        [[deprecated]] explicit Polynomial(size_t degree);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -164,7 +151,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * takes a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
          * \param end a past-the-end iterator indicating the end of the
@@ -208,18 +195,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         void initExp(size_t degree);
 
         /**
-         * Deprecated function that sets this to become the polynomial `x^d`
-         * for the given degree \a d.
-         *
-         * \deprecated This has been renamed to initExp(), since in casual
-         * reading of code it is too easy to misread this as setting this
-         * polynomial to have only a constant term.
-         *
-         * \param degree the new degree of this polynomial.
-         */
-        [[deprecated]] void init(size_t degree);
-
-        /**
          * Sets this to become the polynomial described by the given
          * sequence of coefficients.
          * The coefficients should appear in order from the constant
@@ -235,7 +210,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * implementation to compute the sequence length in constant time.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of coefficients.
+         * takes a Python list of coefficients.
          *
          * \param begin the beginning of the sequence of coefficients.
          * \param end a past-the-end iterator indicating the end of the
@@ -926,12 +901,6 @@ inline Polynomial<T>::Polynomial() : degree_(0), coeff_(new T[1]) {
 }
 
 template <CoefficientDomain T>
-inline Polynomial<T>::Polynomial(size_t degree) :
-        degree_(degree), coeff_(new T[degree + 1]) {
-    coeff_[degree] = 1;
-}
-
-template <CoefficientDomain T>
 template <RandomAccessIteratorFor<T> Iterator>
 inline Polynomial<T>::Polynomial(Iterator begin, Iterator end) :
         coeff_(nullptr) {
@@ -987,11 +956,6 @@ inline void Polynomial<T>::initExp(size_t degree) {
     degree_ = degree;
     coeff_ = new T[degree + 1];
     coeff_[degree] = 1;
-}
-
-template <CoefficientDomain T>
-inline void Polynomial<T>::init(size_t degree) {
-    initExp(degree);
 }
 
 template <CoefficientDomain T>

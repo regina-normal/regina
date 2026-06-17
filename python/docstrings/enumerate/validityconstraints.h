@@ -153,7 +153,7 @@ integers 7, 8, 9.
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
-    python list of integers.
+    Python list of integers.
 
 Parameter ``begin``:
     the beginning of the list of coordinates to constraint within each
@@ -178,7 +178,7 @@ encodes the three integers 4, 5, 6.
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
-    python list of integers.
+    Python list of integers.
 
 Parameter ``begin``:
     the beginning of the list of coordinates to constraint within each

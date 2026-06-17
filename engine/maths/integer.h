@@ -750,7 +750,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * This operator increments this integer by one, and returns a
          * copy of the integer _before_ the increment.
          *
-         * \python This routine is named inc() since python does not
+         * \python This routine is named inc() since Python does not
          * support the increment operator.
          *
          * \return a copy of this integer before the increment took place.
@@ -762,7 +762,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * This operator decrements this integer by one, and returns a
          * reference to the integer _after_ the decrement.
          *
-         * \nopython The postdecrement operator is present in python as the
+         * \nopython The postdecrement operator is present in Python as the
          * member function dec().
          *
          * \return a reference to this integer after the decrement.
@@ -774,7 +774,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * This operator decrements this integer by one, and returns a
          * copy of the integer _before_ the decrement.
          *
-         * \python This routine is named dec() since python does not
+         * \python This routine is named dec() since Python does not
          * support the decrement operator.
          *
          * \return a copy of this integer before the decrement took place.

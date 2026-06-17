@@ -29,12 +29,12 @@
  **************************************************************************/
 
 /*! \file pythoninterpreter.h
- *  \brief Provides an interface to the python interpreter and
+ *  \brief Provides an interface to the Python interpreter and
  *  subinterpreters.
  *
  *  The accompanying source file (pythoninterpreter.cpp) should be built
  *  directly into each user interface that requires it.
- *  It is _not_ built into Regina's python module.
+ *  It is _not_ built into Regina's Python module.
  */
 
 #ifndef __PYTHONINTERPRETER_H
@@ -74,7 +74,7 @@ class PythonCompleter {
         /**
          * Called each time addCompletion() finds a new completion.
          *
-         * Note that python's completion code has been known to return the
+         * Note that Python's completion code has been known to return the
          * same completion multiple times (in which case the same completion
          * will be passed to this function multiple times in turn).
          *
@@ -88,7 +88,7 @@ class PythonCompleter {
 };
 
 /**
- * A python completion callback that computes the longest common prefix
+ * A Python completion callback that computes the longest common prefix
  * for all of the completions that it receives.  This can (for example)
  * be used to decide what text to immediately append to the current line
  * when tab is pressed.
@@ -126,7 +126,7 @@ class PrefixCompleter : public PythonCompleter {
 };
 
 /**
- * A single python subinterpreter.  Multiple subinterpreters are independent
+ * A single Python subinterpreter.  Multiple subinterpreters are independent
  * and may exist simultaneously.
  *
  * Each new subinterpreter corresponds to a new call to
@@ -136,7 +136,7 @@ class PrefixCompleter : public PythonCompleter {
 class PythonInterpreter {
     private:
         static bool pythonInitialised;
-            /**< Has the python system (i.e., the main interpreter) been
+            /**< Has the Python system (i.e., the main interpreter) been
                  initialised yet?  This is only done on demand. */
 
 #if REGINA_PYBIND11_VERSION == 3
@@ -226,7 +226,7 @@ class PythonInterpreter {
         bool executeLine(const std::string& command);
 
         /**
-         * Imports Regina's python module.
+         * Imports Regina's Python module.
          *
          * This function also sets up a completer object, for use with
          * complete().
@@ -292,11 +292,11 @@ class PythonInterpreter {
          *
          * Specifically, this tests whether a \c SystemExit exception
          * has been thrown (typically by calling a Python function such as
-         * exit(), quit(), or sys.quit()).  In a command-line python
-         * session, such a function would exit the python * session; here it
+         * exit(), quit(), or sys.quit()).  In a command-line Python
+         * session, such a function would exit the Python session; here it
          * just sets this flag so the enclosing GUI can clean up nicely.
          *
-         * This does _not_ capture os._exit(), which will instead
+         * This does _not_ capture `os._exit()`, which will instead
          * immediately terminate the parent process (i.e., the enclosing GUI).
          */
         bool exitAttempted() const;
@@ -359,17 +359,17 @@ class PythonInterpreter {
         static bool isEmptyCommand(const std::string& command);
 
         /**
-         * Extract the current error message.  A new python reference is
+         * Extract the current error message.  A new Python reference is
          * returned.
          */
         static PyObject* extractErrMsg();
 
         /**
-         * Push regina's python path onto the beginning of python's sys.path.
+         * Push regina's Python path onto the beginning of Python's sys.path.
          *
          * This routine assumes that the global interpreter lock is already
          * held by the current thread, and it acts on the (sub-)interpreter
-         * that is referenced by the current python thread state.
+         * that is referenced by the current Python thread state.
          */
         static void prependReginaToSysPath();
 
@@ -380,7 +380,7 @@ class PythonInterpreter {
          *
          * This routine assumes that the global interpreter lock is already
          * held by the current thread.  It acts on the (sub-)interpreter
-         * that is referenced by the current python thread state, to which
+         * that is referenced by the current Python thread state, to which
          * the given namespace must belong.
          *
          * If \a fixPythonPath is \c true, then this routine will (before the

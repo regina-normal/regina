@@ -654,8 +654,16 @@ ENDIF()
 
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(timing)
-ADD_SUBDIRECTORY(docs)
 ADD_SUBDIRECTORY(examples)
+ADD_SUBDIRECTORY(man)
+
+IF (REGINA_BUILD_ENGINE_DOCS)
+  ADD_SUBDIRECTORY(apidocs)
+ENDIF (REGINA_BUILD_ENGINE_DOCS)
+
+IF (REGINA_BUILD_HANDBOOK)
+  ADD_SUBDIRECTORY(handbook)
+ENDIF (REGINA_BUILD_HANDBOOK)
 
 # Configure file
 CONFIGURE_FILE (
@@ -684,7 +692,6 @@ set(CPACK_SOURCE_IGNORE_FILES
   "^${PROJECT_SOURCE_DIR}/admin/RELEASE.txt"
   "^${PROJECT_SOURCE_DIR}/admin/distcheck"
   "^${PROJECT_SOURCE_DIR}/engine/snappea/kernel/unused/"
-  "^${PROJECT_SOURCE_DIR}/ios/"
   "^${PROJECT_SOURCE_DIR}/packaging/"
   "^${PROJECT_SOURCE_DIR}/python/docstrings/clang-support/"
   "^${PROJECT_SOURCE_DIR}/swiftui/"

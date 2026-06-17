@@ -120,14 +120,14 @@ PyObject* registerReginaException(pybind11::module_& m, const char* className,
     // removed (although the Python exception type should be destroyed).
     // For now, we live with this memory leak: it is only relevant when using
     // subinterpreters in the GUI, and these are created manually by the user
-    // when opening a new python console -- this means there should never be
+    // when opening a new Python console -- this means there should never be
     // so many that this becomes a serious problem.
 
     static ExceptionCache cache;
 
     // The following exception type should live for only as long as the module
     // is loaded, since it is the reference in m.__dict__ that keeps it alive
-    // on the python side.  In our own cache we just keep a borrowed reference.
+    // on the Python side.  In our own cache we just keep a borrowed reference.
     pybind11::exception<ReginaExceptionType> exc(m, className, Docs::__class,
         base);
     PyObject* ptr = exc.ptr();
@@ -144,7 +144,7 @@ PyObject* registerReginaException(pybind11::module_& m, const char* className,
                 PyErr_SetString(exc, e.what());
             else {
                 // This should never happen.  But.. just in case, translate
-                // this to a standard python RuntimeError instead.
+                // this to a standard Python RuntimeError instead.
                 PyErr_SetString(PyExc_RuntimeError, e.what());
             }
         }

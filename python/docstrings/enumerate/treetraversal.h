@@ -275,7 +275,7 @@ Python:
     should not use it as a callback with run(). Currently this causes
     a crash in Python, most likely coming from some confusion in
     passing a C++ function as a C++ callback via a Python wrapper.
-    Instead you can use a pure python function *f* as a callback,
+    Instead you can use a pure Python function *f* as a callback,
     where ``f(tree)`` just calls ``tree.writeStructure()``.
 
 Parameter ``tree``:
@@ -619,7 +619,7 @@ Python:
     should not use it as a callback with run(). Currently this causes
     a crash in Python, most likely coming from some confusion in
     passing a C++ function as a C++ callback via a Python wrapper.
-    Instead you can use a pure python function *f* as a callback,
+    Instead you can use a pure Python function *f* as a callback,
     where ``f(tree)`` just calls ``tree.writeSurface()``.
 
 Parameter ``tree``:

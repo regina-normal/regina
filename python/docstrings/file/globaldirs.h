@@ -90,9 +90,8 @@ the _build_ tree (any depth of subdirectory within the build tree is
 fine). Moreover, it is assumed that the build tree is either an
 immediate subdirectory of the source root, or else is the source root
 itself. So, for example, an executable path of
-``regina-X.Y/qtui/src/regina-gui`` or
-``regina-X.Y/build/qtui/src/regina-gui`` is fine, but
-``regina-X.Y/tmp/build/qtui/src/regina-gui`` is not.
+``regina-X.Y/qtui/regina-gui`` or ``regina-X.Y/build/qtui/regina-gui``
+is fine, but ``regina-X.Y/tmp/build/qtui/regina-gui`` is not.
 
 This routine respects the following environment variables, and these
 will take precedence over any automatic deductions:
@@ -103,7 +102,7 @@ will take precedence over any automatic deductions:
   ``$REGINA_HOME/data/census``.
 
 * REGINA_PYLIBDIR, if present and non-empty, will determine the
-  directory containing Regina's python module as returned by
+  directory containing Regina's Python module as returned by
   pythonModule().
 
 If you have an unusual setup where Regina cannot deduce the paths
@@ -180,8 +179,8 @@ Returns:
 
 // Docstring regina::python::doc::GlobalDirs::pythonModule
 static constexpr const char pythonModule[] =
-R"doc(Returns the directory in which Regina's python module is installed, or
-the empty string if the module is installed in python's standard site-
+R"doc(Returns the directory in which Regina's Python module is installed, or
+the empty string if the module is installed in Python's standard site-
 packages directory.
 
 .. warning::
@@ -191,7 +190,7 @@ packages directory.
     either setDirs() or deduceDirs() before calling this routine.
 
 Returns:
-    Regina's python module directory.)doc";
+    Regina's Python module directory.)doc";
 
 // Docstring regina::python::doc::GlobalDirs::setDirs
 static constexpr const char setDirs[] =
@@ -215,7 +214,7 @@ Empty strings are treated as follows:
   deduceDirs() has been called before.
 
 * If *pythonDir* is an empty string then this has an explicit meaning,
-  namely that the python module has been installed in python's
+  namely that the Python module has been installed in Python's
   standard site-packages directory.
 
 Parameter ``homeDir``:
@@ -223,8 +222,8 @@ Parameter ``homeDir``:
     homeDir().
 
 Parameter ``pythonDir``:
-    the directory containing Regina's python module, or the empty
-    string if the module has been installed in python's standard site-
+    the directory containing Regina's Python module, or the empty
+    string if the module has been installed in Python's standard site-
     packages directory; this will be returned by pythonModule().
 
 Parameter ``censusDir``:

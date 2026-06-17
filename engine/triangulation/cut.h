@@ -157,7 +157,7 @@ class Cut : public ShortOutput<Cut> {
          * is neither 0 nor 1.
          *
          * \python Instead of a pair of iterators, this routine
-         * takes a python list of integers.
+         * takes a Python list of integers.
          *
          * \param begin an iterator pointing to the beginning of the
          * 0-1 sequence of sides.

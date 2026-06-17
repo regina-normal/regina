@@ -50,7 +50,7 @@ testoutdir=`mktemp -d -t regina.XXX`
 export REGINA_HOME=../../engine
 
 echo "---------------------------------------------------"
-echo "Testing python bindings in embedded subinterpreters"
+echo "Testing Python bindings in embedded subinterpreters"
 echo "---------------------------------------------------"
 echo
 

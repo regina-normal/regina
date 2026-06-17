@@ -411,7 +411,8 @@ Precondition:
 
 Python:
     Instead of a pair of iterators, you should pass a Python list
-    (which, as described above, must be a sorted list of indices).
+    (which, as described above, must be a sorted list of integer
+    indices).
 
 Parameter ``indexBegin``:
     the beginning of the iterator range containing the sorted indices
@@ -472,7 +473,7 @@ std::swap(), with no need for any specialised move operations or swap
 functions.
 
 Python:
-    Python does not support templates, and so instead Regina's python
+    Python does not support templates, and so instead Regina's Python
     interface offers the classes Bitmask8, Bitmask16, Bitmask32,
     Bitmask64, Bitmask128, and (if the machine supports 128-bit
     integers) Bitmask256. Each of these will be an optimised bitmask
@@ -768,7 +769,8 @@ Precondition:
 
 Python:
     Instead of a pair of iterators, you should pass a Python list
-    (which, as described above, must be a sorted list of indices).
+    (which, as described above, must be a sorted list of integer
+    indices).
 
 Parameter ``indexBegin``:
     the beginning of the iterator range containing the sorted indices
@@ -820,7 +822,7 @@ std::swap(), with no need for any specialised move operations or swap
 functions.
 
 Python:
-    Python does not support templates, and so instead Regina's python
+    Python does not support templates, and so instead Regina's Python
     interface offers the classes Bitmask8, Bitmask16, Bitmask32,
     Bitmask64, Bitmask128, and (if the machine supports 128-bit
     integers) Bitmask256. Each of these will be an optimised bitmask
@@ -1116,7 +1118,8 @@ Precondition:
 
 Python:
     Instead of a pair of iterators, you should pass a Python list
-    (which, as described above, must be a sorted list of indices).
+    (which, as described above, must be a sorted list of integer
+    indices).
 
 Parameter ``indexBegin``:
     the beginning of the iterator range containing the sorted indices

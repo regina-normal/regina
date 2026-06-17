@@ -334,14 +334,6 @@ void addPacket(pybind11::module_& m) {
         ;
     regina::python::add_eq_operators(l);
 
-    RDOC_SCOPE_SWITCH_MAIN
-
-    using regina::python::add_concept;
-    add_concept<rdoc::PacketClass>(m, "PacketClass");
-    add_concept<rdoc::WrappedPacket>(m, "WrappedPacket");
-    add_concept<rdoc::TextPacket>(m, "TextPacket");
-    add_concept<rdoc::PacketHeldType>(m, "PacketHeldType");
-
     RDOC_SCOPE_END
 }
 

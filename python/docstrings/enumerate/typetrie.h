@@ -92,7 +92,7 @@ Precondition:
 
 Python:
     Instead of the arguments *vec* and *len*, you should pass a single
-    argument which is a python sequence of length *len*. This list
+    argument which is a Python sequence of length *len*. This list
     should be a type vector, and each list element should be between 0
     and (*nTypes* - 1) inclusive.
 
@@ -127,7 +127,7 @@ Precondition:
 
 Python:
     Instead of the arguments *entry* and *len*, you should pass a
-    single argument which is a python sequence of length *len*. This
+    single argument which is a Python sequence of length *len*. This
     list should be a type vector, and each list element should be
     between 0 and (*nTypes* - 1) inclusive.
 

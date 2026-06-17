@@ -81,7 +81,7 @@ Template parameter ``TetData``:
     exception.
 
 Python:
-    The only instance of this class that is available through python
+    The only instance of this class that is available through Python
     is DiscSetSurface (i.e., the "vanilla" case where *TetData* is the
     type DiscSetTet).)doc";
 
@@ -509,7 +509,7 @@ aliases *value_type*, *iterator_category*, *difference_type*,
 ``std::iterator_traits``.
 
 Python:
-    The only instance of this class that is available through python
+    The only instance of this class that is available through Python
     is the iterator for DiscSetSurface (i.e., the "vanilla" case where
     *TetData* is the type DiscSetTet). Moreover, instead of the C++
     interface described here, in Python DiscSetSurface and this class

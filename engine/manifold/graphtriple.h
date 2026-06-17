@@ -162,6 +162,10 @@ class GraphTriple : public Manifold<3> {
          * The three Seifert fibred spaces and both 2-by-2 matching
          * matrices are passed separately.
          *
+         * This constructor will try to simplify the presentation of the graph
+         * manifold if possible, though there is no guarantee that the
+         * representation it settles on will be unique for the manifold.
+         *
          * \pre Each of the given matrices has determinant +1 or -1.
          *
          * \exception InvalidArgument One of the spaces \a end0 and \a end1

@@ -47,11 +47,11 @@ namespace python {
 
 /**
  * Adds tight encoding and decoding functions, plus a hash function, to the
- * python bindings for a C++ class that provides its own tightEncoding(),
+ * Python bindings for a C++ class that provides its own tightEncoding(),
  * tightDecoding() and hash() member functions.
  *
  * This will add corresponding tightEncoding(), tightDecoding() and __hash__()
- * functions to the python class, with the Python docstrings \a docEnc,
+ * functions to the Python class, with the Python docstrings \a docEnc,
  * \a docDec and \a docHash respectively.
  *
  * To use this for some C++ class \a T in Regina, simply call
@@ -69,10 +69,10 @@ void add_tight_encoding(pybind11::class_<C, options...>& c,
 
 /**
  * Adds tight encoding and decoding functions, plus a hash function, to the
- * python bindings for a C++ class that derives from regina::TightEncodable.
+ * Python bindings for a C++ class that derives from regina::TightEncodable.
  *
  * This will add corresponding tightEncoding(), tightDecoding() and __hash__()
- * functions to the python class, as provided by the regina::TightEncodable
+ * functions to the Python class, as provided by the regina::TightEncodable
  * (templated) C++ base class.
  *
  * To use this for some C++ class \a T in Regina, simply call

@@ -30,11 +30,11 @@
 
 /*! \file pythonoutputstream.h
  *  \brief Supports customised output streams for use with embedded
- *  python interpreters.
+ *  Python interpreters.
  *
  *  The accompanying source file (pythonoutputstream.cpp) should be built
  *  directly into each user interface that requires it.
- *  It is _not_ built into Regina's python module.
+ *  It is _not_ built into Regina's Python module.
  */
 
 #ifndef __PYTHONOUTPUTSTREAM_H
@@ -49,7 +49,7 @@ namespace regina {
 namespace regina::python {
 
 /**
- * A custom output stream that can be used by python as sys.stdout or
+ * A custom output stream that can be used by Python as sys.stdout or
  * sys.stderr.
  *
  * Data is fed to the output stream by calling write().  This data is
@@ -57,7 +57,7 @@ namespace regina::python {
  * unprocessed data will be sent to the virtual routine processOutput().
  *
  * Typically a user interface will create a subclass of PythonOutputStream
- * that writes output to an appropriate location (e.g., a python window,
+ * that writes output to an appropriate location (e.g., a Python window,
  * or a logger), and call install() to redirect Python's standard output
  * and/or standard error to some object of this subclass.
  */
@@ -96,7 +96,7 @@ class PythonOutputStream {
          * This will set `sys.<streamname>` to this object.
          *
          * \pre \a streamName must be either "stdout" or "stderr".
-         * \pre The python bindings for PythonOutputStream have already been
+         * \pre The Python bindings for PythonOutputStream have already been
          * set up by calling the static routine addBindings().
          * \pre The Python global interpreter lock is currently held.
          *
@@ -105,7 +105,7 @@ class PythonOutputStream {
         void install(const char* streamName);
 
         /**
-         * Adds python bindings for the base class PythonOutputStream.
+         * Adds Python bindings for the base class PythonOutputStream.
          *
          * The class name PythonOutputStream is not added to the main
          * namespace, so the only simple way to access the Python

@@ -6,8 +6,8 @@
 #
 # Provides tests for passing by value vs reference.
 #
-# This file is a single component of Regina's python test suite.  To run
-# the python test suite, move to the main python directory in the source
+# This file is a single component of Regina's Python test suite.  To run
+# the Python test suite, move to the main python directory in the source
 # tree and run "make check".
 #
 # This program is free software; you can redistribute it and/or
@@ -72,7 +72,8 @@ p[1] = 7; # should work
 print(p)
 print()
 
-p = Laurent2(2,3)
+p = Laurent2()
+p.initExp(2,3)
 print(p)
 p[2,3].negate() # should do nothing due to constness
 print(p)

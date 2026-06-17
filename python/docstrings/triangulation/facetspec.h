@@ -89,7 +89,7 @@ Precondition:
     This specifier is not before-the-start.
 
 Python:
-    This routine is named dec() since python does not support the
+    This routine is named dec() since Python does not support the
     decrement operator.
 
 Returns:
@@ -122,7 +122,7 @@ Precondition:
     This specifier is not past-the-end.
 
 Python:
-    This routine is named inc() since python does not support the
+    This routine is named inc() since Python does not support the
     increment operator.
 
 Returns:

@@ -66,7 +66,7 @@ namespace regina {
  * just one variable.
  *
  * \python In Python, the class Laurent2 refers to the specific
- * template class Laurent2<Integer>.
+ * template class `Laurent2<Integer>`.
  *
  * \tparam T the coefficient type.  A typical coefficient type would be
  * Integer or Rational.  Note that native C++ integer types are _not_
@@ -103,22 +103,6 @@ class Laurent2 :
          * Creates the zero polynomial.
          */
         Laurent2() = default;
-
-        /**
-         * Deprecated constructor that creates the polynomial `x^d y^e` for
-         * the given exponents \a d and \a e.
-         *
-         * \deprecated This will be removed in a future version of Regina
-         * for consistency with the single-variable polynomial classes
-         * Laurent and Polynomial, since for those classes it is too easy for
-         * a casual reader to misread what such an "exponent-based constructor"
-         * actually does.  You can still create `x^d y^e` by calling
-         * `initExp(d, e)` instead.
-         *
-         * \param xExp the exponent \a d, which is attached to \a x.
-         * \param yExp the exponent \a e, which is attached to \a y.
-         */
-        [[deprecated]] explicit Laurent2(long xExp, long yExp);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -189,7 +173,7 @@ class Laurent2 :
          * using the += operator).
          *
          * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a python list of tuples.
+         * this routine takes a Python list of tuples.
          *
          * \param begin the beginning of the set of coefficients, as outlined
          * above.
@@ -250,20 +234,6 @@ class Laurent2 :
          * \param yExp the new exponent \a e, which is attached to \a y.
          */
         void initExp(long xExp, long yExp);
-
-        /**
-         * Deprecated function that sets this to become the polynomial `x^d y^e`
-         * for the given exponents \a d and \a e.
-         *
-         * \deprecated This has been renamed to initExp() for consistency with
-         * the single-variable polynomial classes Laurent and Polynomial,
-         * since for those classes it is too easy for a casual reader to
-         * misread what such an "exponent-based initialisation" actually does.
-         *
-         * \param xExp the new exponent \a d, which is attached to \a x.
-         * \param yExp the new exponent \a e, which is attached to \a y.
-         */
-        [[deprecated]] void init(long xExp, long yExp);
 
         /**
          * Returns whether this is the zero polynomial.
@@ -804,11 +774,6 @@ template <CoefficientDomain T>
 const T Laurent2<T>::zero_(0);
 
 template <CoefficientDomain T>
-inline Laurent2<T>::Laurent2(long xExp, long yExp) {
-    coeff_.emplace(Exponents(xExp, yExp), 1);
-}
-
-template <CoefficientDomain T>
 inline Laurent2<T>::Laurent2(const Laurent2<T>& value) :
         coeff_(value.coeff_) {
     // TODO: Use default implementation.
@@ -877,11 +842,6 @@ template <CoefficientDomain T>
 inline void Laurent2<T>::initExp(long xExp, long yExp) {
     coeff_.clear();
     coeff_.emplace(Exponents(xExp, yExp), 1);
-}
-
-template <CoefficientDomain T>
-inline void Laurent2<T>::init(long xExp, long yExp) {
-    initExp(xExp, yExp);
 }
 
 template <CoefficientDomain T>

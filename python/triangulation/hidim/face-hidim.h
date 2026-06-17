@@ -130,10 +130,10 @@ void addFace(pybind11::module_& m, pybind11::module_& internal,
             rbase::faceNumber_2);
     }
     if constexpr (subdim > 0) {
-        c.def("face", &regina::python::face<dim, subdim>,
+        c.def("face", &regina::python::face<Face<dim, subdim>>,
             "lowerdim"_a, "face"_a, rdoc::face);
         c.def("faceMapping",
-            &regina::python::faceMapping<dim, subdim>,
+            &regina::python::faceMapping<Face<dim, subdim>>,
             "lowerdim"_a, "face"_a, rdoc::faceMapping);
     }
     if constexpr (subdim > 4) {

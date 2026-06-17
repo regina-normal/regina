@@ -71,7 +71,7 @@ blacklist="file i18n memory1 orb pdf readsiglist repr snappea"
 blacklist="$blacklist docstrings"
 
 echo "----------------------------------------------------------------"
-echo "Test suite for python bindings with a basic embedded interpreter"
+echo "Test suite for Python bindings with a basic embedded interpreter"
 echo "----------------------------------------------------------------"
 echo
 
@@ -127,7 +127,7 @@ case "$pyver" in
 		echo
 		blacklist="$blacklist embeddings faces flype groups hypersurfaces"
 		blacklist="$blacklist iterators listview presentations refs skeleton"
-		blacklist="$blacklist standardtri"
+		blacklist="$blacklist standardsubcomplex"
 		;;
 	*)
 		;;

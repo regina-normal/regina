@@ -378,7 +378,7 @@ Python:
     The type vector should be passed as a Python list of integers (for
     example, in the enumeration of normal surfaces, there would be one
     integer per tetrahedron, each equal to 0, 1, 2 or 3). The template
-    parameter *Ray* is taken to be Vector<Integer>.
+    parameter *Ray* is taken to be ``VectorInt``.
 
 Template parameter ``Ray``:
     the vector type to use to return the extracted values. The

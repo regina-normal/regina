@@ -273,7 +273,7 @@ bool HomGroupPresentation::verify() const {
     for (const auto& r : domain_.relations()) {
         GroupExpression imgRel( evaluate(r) );
         codomain_.simplifyAndConjugate(imgRel);
-        if (!imgRel.isTrivial())
+        if (!imgRel.empty())
             return false;
     }
     return true;
@@ -290,7 +290,7 @@ bool HomGroupPresentation::verifyIsomorphism() const {
         GroupExpression tempW( invEvaluate(evaluate(i)) );
         tempW.addTermLast( i, -1 );
         domain_.simplifyAndConjugate(tempW);
-        if (! tempW.isTrivial())
+        if (! tempW.empty())
             return false;
     }
     // for every generator in the codomain compute f(f^-1(x))x^-1 and reduce
@@ -298,7 +298,7 @@ bool HomGroupPresentation::verifyIsomorphism() const {
         GroupExpression tempW( evaluate(invEvaluate(i)) );
         tempW.addTermLast( i, -1 );
         codomain_.simplifyAndConjugate(tempW);
-        if (! tempW.isTrivial())
+        if (! tempW.empty())
             return false;
     }
     return true;

@@ -42,14 +42,7 @@ void addConceptsClasses(pybind11::module_& m) {
 
     RDOC_SCOPE_BEGIN_MAIN
 
-    // From array.h:
-    add_concept<rdoc::ArrayOf>(m, "ArrayOf");
-    add_concept<rdoc::ConstRefArrayOf>(m, "ConstRefArrayOf");
-
     // From core.h:
-    add_concept<rdoc::AssignableTo>(m, "AssignableTo");
-    add_concept<rdoc::CanConstruct>(m, "CanConstruct");
-    add_concept<rdoc::SameModCVRef>(m, "SameModCVRef");
     add_concept<rdoc::RingLike>(m, "RingLike");
     add_concept<rdoc::Ring>(m, "Ring");
     add_concept<rdoc::Domain>(m, "Domain");
@@ -63,28 +56,8 @@ void addConceptsClasses(pybind11::module_& m) {
     add_concept<rdoc::TerminatingCallback>(m, "TerminatingCallback");
 
     // From io.h:
-    add_concept<rdoc::Writeable>(m, "Writeable");
-    add_concept<rdoc::Readable>(m, "Readable");
     add_concept<rdoc::Stringifiable>(m, "Stringifiable");
     add_concept<rdoc::RichStringifiable>(m, "RichStringifiable");
-    add_concept<rdoc::StandardStringifiable>(m, "StandardStringifiable");
-    add_concept<rdoc::InherentlyTightEncodable>(m, "InherentlyTightEncodable");
-
-    // From iterator.h:
-    add_concept<rdoc::InputIteratorFor>(m, "InputIteratorFor");
-    add_concept<rdoc::ForwardIteratorFor>(m, "ForwardIteratorFor");
-    add_concept<rdoc::BidirectionalIteratorFor>(m, "BidirectionalIteratorFor");
-    add_concept<rdoc::RandomAccessIteratorFor>(m, "RandomAccessIteratorFor");
-    add_concept<rdoc::SelfSentinelInputIterator>(m,
-        "SelfSentinelInputIterator");
-    add_concept<rdoc::CharIterator>(m, "CharIterator");
-    add_concept<rdoc::PacketIterator>(m, "PacketIterator");
-    add_concept<rdoc::Iterable>(m, "Iterable");
-    add_concept<rdoc::IterableFor>(m, "IterableFor");
-    add_concept<rdoc::BidirectionalIterableFor>(m, "BidirectionalIterableFor");
-    add_concept<rdoc::RandomAccessIterableFor>(m, "RandomAccessIterableFor");
-    add_concept<rdoc::OutputIterator>(m, "OutputIterator");
-    add_concept<rdoc::IndexedContainer>(m, "IndexedContainer");
 
     // From maths.h:
     add_concept<rdoc::ArbitraryPrecisionIntegerVector>(m,

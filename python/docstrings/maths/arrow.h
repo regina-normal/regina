@@ -209,12 +209,12 @@ Arrow([([], (-4, [1])), ([1], (-10, [-1,0,0,0,1]))])
 
 Python:
     Instead of the iterators *begin* and *end*, this routine takes a
-    python list of pairs ``(seq, laurent)``, where *seq* is a python
+    Python list of pairs ``(seq, laurent)``, where *seq* is a Python
     list of integers representing a diagram sequence, and where
     *laurent* is either (i) a Laurent polynomial, or (ii) a pair
     ``(minExp, coefficients)`` which could be used to construct a
     Laurent polynomial. In the latter case, *minExp* would an integer,
-    and *coefficients* would be a python list of integers.
+    and *coefficients* would be a Python list of integers.
 
 Precondition:
     No diagram sequence ends in zero.
