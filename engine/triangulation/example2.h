@@ -78,7 +78,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * \author Alex He, B.B.
          */
         static Triangulation<2> orientable(
-            unsigned genus, unsigned punctures);
+            size_t genus, size_t punctures);
 
         /**
          * Returns a minimal triangulation of the given non-orientable surface.
@@ -93,7 +93,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * \author Alex He, B.B.
          */
         static Triangulation<2> nonOrientable(
-            unsigned genus, unsigned punctures);
+            size_t genus, size_t punctures);
 
         /**
          * Returns the four-triangle 2-sphere formed from the boundary
@@ -162,22 +162,26 @@ class Example<2> : public detail::ExampleBase<2> {
          */
         static Triangulation<2> kb();
 
-    private:
-
         /**
-         * Returns an oriented n-triangle polygon with (n + 2) boundary edges.
+         * Returns an oriented triangulation of an `n`-sided polygon.
          *
-         * The triangulation is constructed by gluing edge (01) of triangle
-         * i to edge (02) of triangle (i - 1), for each i from 1 to (n - 1)
+         * For `n <= 2`, this routine returns a triangulation built from `n`
+         * triangles.
+         *
+         * For `n >= 3`, this routine returns a triangulation built from
+         * `n - 2` triangles by gluing edge `(01)` of triangle `i` to edge
+         * `(02)` of triangle `i - 1`, for each `i` from 1 to `n - 1`
          * (inclusive).
          *
-         * \param n the number of triangles used to construct the polygon.
+         * \param n the number of boundary edges of the constructed polygon.
          *
          * \return the polygon.
          *
          * \author Alex He
          */
-        static Triangulation<2> polygon(unsigned n);
+        static Triangulation<2> polygon(size_t n);
+
+    private:
 
         /**
          * Adds punctures to the given once-punctured surface until it has
@@ -197,7 +201,7 @@ class Example<2> : public detail::ExampleBase<2> {
          * \author Alex He
          */
         static void addPunctures(
-                Triangulation<2>& surf, unsigned punctures);
+                Triangulation<2>& surf, size_t punctures);
 };
 
 inline Triangulation<2> Example<2>::sphereTetrahedron() {
