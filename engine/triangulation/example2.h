@@ -41,7 +41,6 @@
 #include "regina-core.h"
 #include "triangulation/dim2.h"
 #include "triangulation/detail/example.h"
-#include "manifold/sfs.h"   // To make regina::SFSpace a friend.
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -199,8 +198,6 @@ class Example<2> : public detail::ExampleBase<2> {
          */
         static void addPunctures(
                 Triangulation<2>& surf, unsigned punctures);
-
-    friend class regina::SFSpace;
 };
 
 inline Triangulation<2> Example<2>::sphereTetrahedron() {
