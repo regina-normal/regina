@@ -271,6 +271,29 @@ Pentachoron<4>* Triangulation<4>::layerOn(Triangle<4>* triangle) {
     return newPent;
 }
 
+bool Triangulation<4>::hasLayerOn(Triangle<4>* triangle) const {
+    if (! triangle)
+        return false;
+    if (! triangle->isBoundary())
+        return false;
+    if (! triangle->boundaryComponent()->isReal())
+        return false;
+
+    Pentachoron<4>* pent1 = triangle->front().pentachoron();
+    Pentachoron<4>* pent2 = triangle->back().pentachoron();
+
+    Perm<5> roles1 = triangle->front().vertices();
+    Perm<5> roles2 = triangle->back().vertices();
+
+    if (pent1->tetrahedron(roles1[4]) == pent2->tetrahedron(roles2[3]))
+        return false;
+    if (pent1->isFacetLocked(roles1[4]) ||
+            pent2->isFacetLocked(roles2[3]))
+        return false;
+
+    return true;
+}
+
 Pentachoron<4>* Triangulation<4>::layerOn(Edge<4>* edge) {
     if (! edge)
         throw InvalidArgument("layerOn() requires a non-null edge");
@@ -302,6 +325,30 @@ Pentachoron<4>* Triangulation<4>::layerOn(Edge<4>* edge) {
     }
 
     return newPent;
+}
+
+bool Triangulation<4>::hasLayerOn(Edge<4>* edge) const {
+    if (! edge)
+        return false;
+    if (! edge->isBoundary())
+        return false;
+    if (! edge->boundaryComponent()->isReal())
+        return false;
+    if (! hasBoundary32(edge))
+        return false;
+
+    std::vector<BoundaryFacet4> facets;
+    try {
+        facets = orderedBoundaryFacets(edge, 3);
+    } catch (const InvalidArgument&) {
+        return false;
+    }
+
+    for (const BoundaryFacet4& facet : facets)
+        if (facet.pentachoron->isFacetLocked(facet.roles[facet.newFacet]))
+            return false;
+
+    return true;
 }
 
 bool Triangulation<4>::layer44(Edge<4>* edge, int axis) {
@@ -340,6 +387,16 @@ bool Triangulation<4>::layer44(Edge<4>* edge, int axis) {
     } catch (const LockViolation&) {
         return false;
     }
+}
+
+bool Triangulation<4>::hasLayer44(Edge<4>* edge, int axis) const {
+    if (! edge)
+        return false;
+    if (axis != 0 && axis != 1)
+        return false;
+
+    Triangulation<4> tmp(*this);
+    return tmp.layer44(tmp.translate(edge), axis);
 }
 
 } // namespace regina

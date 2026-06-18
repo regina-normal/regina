@@ -1409,6 +1409,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \return the new pentachoron provided by the layering.
          */
         Pentachoron<4>* layerOn(Triangle<4>* triangle);
+    
+        /**
+         * Determines whether it is possible to layer upon the given boundary
+         * triangle, without violating any facet locks.
+         *
+         * For more detail, see layerOn(Triangle<4>*).
+         *
+         * \param triangle the candidate boundary triangle.
+         * \return \c true if and only if the requested layering can be
+         * performed.
+         */
+        bool hasLayerOn(Triangle<4>* triangle) const;
 
         /**
          * Performs a layering upon the given boundary edge of the
@@ -1457,6 +1469,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         Pentachoron<4>* layerOn(Edge<4>* edge);
 
         /**
+         * Determines whether it is possible to layer upon the given boundary
+         * edge, without violating any facet locks.
+         *
+         * For more detail, see layerOn(Edge<4>*).
+         *
+         * \param edge the candidate boundary edge.
+         * \return \c true if and only if the requested layering can be
+         * performed.
+         */
+        bool hasLayerOn(Edge<4>* edge) const;
+    
+        /**
          * If possible, performs a 4-4 move about the given edge in the
          * boundary triangulation.
          *
@@ -1492,6 +1516,20 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * performed.
          */
         bool layer44(Edge<4>* edge, int axis);
+
+        /**
+         * Determines whether it is possible to perform a 4-4 move about the
+         * given edge in the boundary triangulation, without violating any
+         * facet locks.
+         *
+         * For more detail, see layer44().
+         *
+         * \param edge the candidate boundary edge.
+         * \param axis one of the two possible axes for the move; this must
+         * be either 0 or 1.
+         * \return \c true if and only if the requested move can be performed.
+         */
+        bool hasLayer44(Edge<4>* edge, int axis) const;
 
         /*@}*/
         /**

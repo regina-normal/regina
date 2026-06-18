@@ -33,6 +33,7 @@
 #include "eltmovedialog4.h"
 #include "reginasupport.h"
 #include "choosers/facechooser.h"
+#include "choosers/edgeintchooser.h"
 #include "choosers/simplexchooser.h"
 
 #include <QButtonGroup>
@@ -95,6 +96,18 @@ namespace {
 
     bool hasSnapEdge(regina::Edge<4>* e) {
         return e->triangulation().hasSnapEdge(e);
+    }
+
+    bool hasLayerTriangle(regina::Triangle<4>* t) {
+        return t->triangulation().hasLayerOn(t);
+    }
+
+    bool hasLayerEdge(regina::Edge<4>* e) {
+        return e->triangulation().hasLayerOn(e);
+    }
+
+    bool hasLayer44(regina::Edge<4>* e, int axis) {
+        return e->triangulation().hasLayer44(e, axis);
     }
 }
 
@@ -233,6 +246,32 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "Only moves that do not change the underlying 4-manifold or "
         "violate any locks are offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useSnapEdge, 12, 0);
+            
+    useLayerTriangle = new QRadioButton(tr("Layer (2-3)"), this);
+    useLayerTriangle->setWhatsThis( tr("<qt>Layer a new pentachoron "
+       "onto a boundary triangle of this triangulation.<p>"
+       "In the induced boundary triangulation, this performs a 2-3 "
+       "Pachner move about the selected triangle.<p>"
+       "Only moves that do not change the underlying 4-manifold or "
+       "violate any locks are offered in the adjacent drop-down list.</qt>"));
+    layout->addWidget(useLayerTriangle, 13, 0);
+    useLayerEdge = new QRadioButton(tr("Layer (3-2)"), this);
+    useLayerEdge->setWhatsThis( tr("<qt>Layer a new pentachoron "
+       "onto a boundary edge of this triangulation.<p>"
+       "In the induced boundary triangulation, this performs a 3-2 "
+       "Pachner move about the selected edge.<p>"
+       "Only moves that do not change the underlying 4-manifold or "
+       "violate any locks are offered in the adjacent drop-down list.</qt>"));
+    layout->addWidget(useLayerEdge, 14, 0);
+    useLayer44 = new QRadioButton(tr("Layer 4-4"), this);
+    useLayer44->setWhatsThis( tr("<qt>Perform a 4-4 move about an edge "
+       "in the boundary triangulation.<p>"
+       "This is implemented as two layerings: first a boundary 2-3 move "
+       "over the selected axis triangle, and then a boundary 3-2 move "
+       "over the resulting degree-three boundary edge.<p>"
+       "Only moves that do not change the underlying 4-manifold or "
+       "violate any locks are offered in the adjacent drop-down list.</qt>"));
+    layout->addWidget(useLayer44, 15, 0);
 
     box51 = new FaceChooser<4, 0>(tri, &has51, this, false);
     box51->setWhatsThis( tr("<qt>Select the degree five vertex about which "
@@ -335,6 +374,33 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
         "Only moves that do not change the underlying 4-manifold or "
         "violate any locks are offered.</qt>"));
     layout->addWidget(boxSnapEdge, 12, 1);
+    boxLayerTriangle = new FaceChooser<4, 2>(tri, &hasLayerTriangle,
+        this, false);
+    boxLayerTriangle->setWhatsThis( tr("<qt>Select the boundary triangle "
+        "upon which the new pentachoron will be layered.  The triangle "
+        "numbers in this list correspond to the triangle numbers seen when "
+        "viewing the triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
+    layout->addWidget(boxLayerTriangle, 13, 1);
+    boxLayerEdge = new FaceChooser<4, 1>(tri, &hasLayerEdge, this, false);
+    boxLayerEdge->setWhatsThis( tr("<qt>Select the boundary edge upon "
+        "which the new pentachoron will be layered.  The edge numbers in "
+        "this list correspond to the edge numbers seen when viewing the "
+        "triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
+    layout->addWidget(boxLayerEdge, 14, 1);
+    boxLayer44 = new DimEdgeIntChooser<4>(tri, 0, 1, tr("axis"),
+        &hasLayer44, this, false);
+    boxLayer44->setWhatsThis( tr("<qt>Select the boundary edge about which "
+        "the 4-4 move will be performed.  You must also select the axis "
+        "for the first boundary layering.<p>"
+        "The edge numbers in this list correspond to the edge numbers seen "
+        "when viewing the triangulation skeleton.<p>"
+        "Only moves that do not change the underlying 4-manifold or "
+        "violate any locks are offered.</qt>"));
+    layout->addWidget(boxLayer44, 15, 1);
 
     moveTypes = new QButtonGroup();
     moveTypes->addButton(use51);
@@ -350,6 +416,9 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent,
     moveTypes->addButton(useShellBdry);
     moveTypes->addButton(useCollapseEdge);
     moveTypes->addButton(useSnapEdge);
+    moveTypes->addButton(useLayerTriangle);
+    moveTypes->addButton(useLayerEdge);
+    moveTypes->addButton(useLayer44);
 
     buttons = new QDialogButtonBox(
         QDialogButtonBox::Apply | QDialogButtonBox::Close);
@@ -429,6 +498,18 @@ void EltMoveDialog4::clicked(QAbstractButton* btn) {
         regina::Edge<4>* e = boxSnapEdge->selected();
         if (e)
             tri->snapEdge(e);
+    } else if (useLayerTriangle->isChecked()) {
+        regina::Triangle<4>* t = boxLayerTriangle->selected();
+        if (t)
+            tri->layerOn(t);
+    } else if (useLayerEdge->isChecked()) {
+        regina::Edge<4>* e = boxLayerEdge->selected();
+        if (e)
+            tri->layerOn(e);
+    } else if (useLayer44->isChecked()) {
+        std::pair<regina::Edge<4>*, int> s = boxLayer44->selected();
+        if (s.first)
+            tri->layer44(s.first, s.second);
     } else
         ReginaSupport::info(this, tr("Please select a move."));
 }
@@ -473,11 +554,12 @@ void EltMoveDialog4::packetWasChanged(regina::Packet&) {
     updateStates(boxShellBdry, useShellBdry);
     updateStates(boxCollapseEdge, useCollapseEdge);
     updateStates(boxSnapEdge, useSnapEdge);
-
+    updateStates(boxLayerTriangle, useLayerTriangle);
+    updateStates(boxLayerEdge, useLayerEdge);
+    updateStates(boxLayer44, useLayer44);
     updateApply();
 }
 
 void EltMoveDialog4::packetBeingDestroyed(regina::PacketShell) {
     reject();
 }
-

@@ -42,6 +42,7 @@
 #include "reginaqt.h"
 #include <QDialog>
 #include <QComboBox>
+#include <utility>
 #include <vector>
 
 /**
@@ -149,6 +150,43 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
 };
 
 /**
+ * A dimension-generic widget through which a single edge of some
+ * triangulation along with an integer argument can be selected.
+ */
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+class DimEdgeIntChooser : public QComboBox, public regina::PacketListener {
+    public:
+        using Choice = std::pair<regina::Edge<dim>*, int>;
+        using Filter = bool (*)(regina::Edge<dim>*, int);
+
+    private:
+        regina::Triangulation<dim>* tri_;
+        Filter filter_;
+        std::vector<Choice> options_;
+        int argMin_, argMax_;
+        QString argDesc_;
+
+    public:
+        DimEdgeIntChooser(regina::PacketOf<regina::Triangulation<dim>>* tri,
+                int argMin, int argMax, const QString& argDesc,
+                Filter filter, QWidget* parent, bool autoUpdate = true);
+
+        Choice selected();
+        void select(regina::Edge<dim>* option, int arg);
+        void select(const Choice& option);
+        bool refresh();
+
+        void packetToBeChanged(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
+
+    private:
+        QString description(regina::Edge<dim>* option, int arg);
+        void fill();
+};
+
+/**
  * A dialog used to select a single edge of a given triangulation
  * along with an integer argument.
  */
@@ -203,6 +241,123 @@ inline void EdgeIntChooser::packetWasChanged(regina::Packet&) {
 inline void EdgeIntChooser::packetBeingDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+DimEdgeIntChooser<dim>::DimEdgeIntChooser(
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
+        int argMin, int argMax, const QString& argDesc,
+        Filter filter, QWidget* parent, bool autoUpdate) :
+        QComboBox(parent), tri_(tri), filter_(filter),
+        argMin_(argMin), argMax_(argMax), argDesc_(argDesc) {
+    setMinimumContentsLength(30);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+    if (autoUpdate)
+        tri->listen(this);
+    fill();
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+typename DimEdgeIntChooser<dim>::Choice DimEdgeIntChooser<dim>::selected() {
+    if (count() == 0)
+        return { nullptr, 0 };
+    int curr = currentIndex();
+    return (curr < 0 ? Choice { nullptr, 0 } : options_[curr]);
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+void DimEdgeIntChooser<dim>::select(regina::Edge<dim>* option, int arg) {
+    int index = 0;
+    for (const auto& e : options_) {
+        if (e.first == option && e.second == arg) {
+            setCurrentIndex(index);
+            return;
+        }
+        ++index;
+    }
+
+    if (! options_.empty())
+        setCurrentIndex(0);
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+void DimEdgeIntChooser<dim>::select(const Choice& option) {
+    select(option.first, option.second);
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+bool DimEdgeIntChooser<dim>::refresh() {
+    clear();
+    options_.clear();
+    fill();
+    return (count() > 0);
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+void DimEdgeIntChooser<dim>::packetToBeChanged(regina::Packet&) {
+    clear();
+    options_.clear();
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+void DimEdgeIntChooser<dim>::packetWasChanged(regina::Packet&) {
+    fill();
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+void DimEdgeIntChooser<dim>::packetBeingDestroyed(regina::PacketShell) {
+    clear();
+    options_.clear();
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+QString DimEdgeIntChooser<dim>::description(regina::Edge<dim>* option,
+        int arg) {
+    if (option->degree() == 1) {
+        const auto& e0 = option->embedding(0);
+        return tr("Edge %1 [%2 %3] — %4 (%5)")
+            .arg(option->index())
+            .arg(argDesc_)
+            .arg(arg)
+            .arg(e0.simplex()->index())
+            .arg(e0.vertices().trunc2().c_str());
+    } else {
+        const auto& e0 = option->embedding(0);
+        const auto& e1 = option->embedding(1);
+        QString base;
+        if (option->degree() == 2)
+            base = tr("Edge %1 [%2 %3] — %4 (%5), %6 (%7)");
+        else
+            base = tr("Edge %1 [%2 %3] — %4 (%5), %6 (%7), ...");
+        return base
+                .arg(option->index())
+                .arg(argDesc_)
+                .arg(arg)
+                .arg(e0.simplex()->index())
+                .arg(e0.vertices().trunc2().c_str())
+                .arg(e1.simplex()->index())
+                .arg(e1.vertices().trunc2().c_str());
+    }
+}
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+void DimEdgeIntChooser<dim>::fill() {
+    for (regina::Edge<dim>* e : tri_->edges())
+        for (int i = argMin_; i <= argMax_; ++i)
+            if ((! filter_) || (*filter_)(e, i)) {
+                addItem(description(e, i));
+                options_.emplace_back(e, i);
+            }
 }
 
 #endif

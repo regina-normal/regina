@@ -48,11 +48,14 @@ class QButtonGroup;
 class QDialogButtonBox;
 class QLabel;
 class QRadioButton;
-class EdgeIntChooser;
 
 template <int dim, int subdim>
 requires (regina::supportedDim(dim) && subdim >= 0 && subdim < dim)
 class FaceChooser;
+
+template <int dim>
+requires (regina::supportedDim(dim) && dim >= 2)
+class DimEdgeIntChooser;
 
 template <int dim> requires (regina::supportedDim(dim)) class SimplexChooser;
 
@@ -81,6 +84,9 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         SimplexChooser<4>* boxShellBdry;
         FaceChooser<4, 1>* boxCollapseEdge;
         FaceChooser<4, 1>* boxSnapEdge;
+        FaceChooser<4, 2>* boxLayerTriangle;
+        FaceChooser<4, 1>* boxLayerEdge;
+        DimEdgeIntChooser<4>* boxLayer44;
         QRadioButton* use51;
         QRadioButton* use42;
         QRadioButton* use33;
@@ -90,6 +96,9 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         QRadioButton* use20t;
         QRadioButton* use20e;
         QRadioButton* use20v;
+        QRadioButton* useLayerTriangle;
+        QRadioButton* useLayerEdge;
+        QRadioButton* useLayer44;
         QRadioButton* useOpenBook;
         QRadioButton* useShellBdry;
         QRadioButton* useCollapseEdge;
