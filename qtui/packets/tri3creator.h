@@ -63,7 +63,6 @@ class Tri3Creator : public PacketCreator {
         QComboBox* sfsBaseWhich;
         QLineEdit* sfsBaseGenus;
         QLineEdit* sfsBasePunctures;
-        QLineEdit* sfsObstruction;
         QLineEdit* sfsOrientableParams;
         QLineEdit* handlebodyGenus;
         QLineEdit* isoSig;

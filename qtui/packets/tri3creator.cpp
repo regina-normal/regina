@@ -44,6 +44,7 @@
 #include <numeric> // for std::gcd()
 #include <QCheckBox>
 #include <QComboBox>
+#include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
@@ -297,61 +298,50 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     hLayout->addWidget(sfsOverSphereParams, 1);
     details->addWidget(hArea);
 
-    //BEGIN TODO
     type->addItem(QObject::tr("Orientable Seifert fibred space"));
     hArea = new QWidget();
-    hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hArea->setLayout(hLayout);
+    auto gridLayout = new QGridLayout();
+    gridLayout->setContentsMargins(0, 0, 0, 0);
+    hArea->setLayout(gridLayout);
     // Choose orientable or non-orientable base surface.
     expln = QObject::tr("<qt>Specifies whether the base surface is "
             "orientable or non-orientable.</qt>");
-    label = new QLabel( QObject::tr("<qt>Base type:</qt>") );
+    label = new QLabel( QObject::tr("Orientability of base surface:") );
     label->setWhatsThis(expln);
-    hLayout->addWidget(label);
+    gridLayout->addWidget(label, 0, 0, Qt::AlignRight);
     sfsBaseWhich = new QComboBox();
     sfsBaseWhich->addItem(QObject::tr("Orientable"));
     sfsBaseWhich->addItem(QObject::tr("Non-orientable"));
     sfsBaseWhich->setCurrentIndex(0);
     sfsBaseWhich->setWhatsThis(expln);
-    hLayout->addWidget(sfsBaseWhich); //TODO stretch = 0 (default) or 1?
+    gridLayout->addWidget(sfsBaseWhich, 0, 1);
     // Choose genus of base surface.
     expln = QObject::tr("<qt>The genus of the base surface.<p>"
             "This is the number of handles if the base surface is "
             "orientable, or the number of crosscaps if the base surface "
             "is non-orientable.</qt>");
-    label = new QLabel(QObject::tr("Genus:"));
+    label = new QLabel(QObject::tr("Genus of base surface:"));
     label->setWhatsThis(expln);
-    hLayout->addWidget(label);
+    gridLayout->addWidget(label, 1, 0, Qt::AlignRight);
     sfsBaseGenus = new QLineEdit();
     auto* val = new QIntValidator(hArea);
     val->setBottom(0); //TODO This isn't enough for non-orientable base.
     sfsBaseGenus->setValidator(val);
     sfsBaseGenus->setWhatsThis(expln);
     sfsBaseGenus->setText("0");
-    hLayout->addWidget(sfsBaseGenus); //TODO stretch = 0 (default) or 1?
+    gridLayout->addWidget(sfsBaseGenus, 1, 1);
     // Choose number of punctures.
     expln = QObject::tr("The number of punctures in the base surface.");
-    label = new QLabel(QObject::tr("Punctures:"));
+    label = new QLabel(QObject::tr("Punctures in base surface:"));
     label->setWhatsThis(expln);
-    hLayout->addWidget(label);
+    gridLayout->addWidget(label, 2, 0, Qt::AlignRight);
     sfsBasePunctures = new QLineEdit();
     val = new QIntValidator(hArea);
     val->setBottom(0);
     sfsBasePunctures->setValidator(val);
     sfsBasePunctures->setWhatsThis(expln);
     sfsBasePunctures->setText("0");
-    hLayout->addWidget(sfsBasePunctures); //TODO stretch = 0 (default) or 1?
-    // Choose obstruction constant.
-    expln = QObject::tr("The obstruction constant.");
-    label = new QLabel(QObject::tr("Obstruction:"));
-    label->setWhatsThis(expln);
-    hLayout->addWidget(label);
-    sfsObstruction = new QLineEdit();
-    sfsObstruction->setValidator(new QIntValidator(hArea));
-    sfsObstruction->setWhatsThis(expln);
-    sfsObstruction->setText("0");
-    hLayout->addWidget(sfsObstruction); //TODO stretch = 0 (default) or 1?
+    gridLayout->addWidget(sfsBasePunctures, 2, 1);
     // Specify parameters for the exceptional fibres.
     expln = QObject::tr("<qt>The parameters "
         "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
@@ -375,14 +365,13 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
         "(<i>a</i><sub>1</sub>,<i>b</i><sub>1</sub>) "
         "... (<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>):</qt>"));
     label->setWhatsThis(expln);
-    hLayout->addWidget(label);
+    gridLayout->addWidget(label, 3, 0, Qt::AlignRight);
     sfsOrientableParams = new QLineEdit();
     sfsOrientableParams->setValidator(new QRegularExpressionValidator(
         reSFSAllParams, hArea));
     sfsOrientableParams->setWhatsThis(expln);
-    hLayout->addWidget(sfsOrientableParams, 1);
+    gridLayout->addWidget(sfsOrientableParams, 3, 1);
     details->addWidget(hArea);
-    //END TODO
 
     type->addItem(QObject::tr("Layered solid torus"));
     hArea = new QWidget();
