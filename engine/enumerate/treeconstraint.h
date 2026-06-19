@@ -58,10 +58,10 @@ class AngleStructure;
  * structure coordinate systems.
  *
  * These linear constraint classes are designed mainly to act as C++ template
- * arguments, and end users will typically not need to construct their own
- * object of these classes.  Instead, to use a linear constraint class, pass it
- * as a template parameter to one of the tree traversal subclasses
- * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ * arguments.  You cannot construct an object of this type; instead, to use a
+ * constraint class, pass it as a template parameter to one of the tree
+ * traversal subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
+ * TautEnumeration).
  *
  * \python It is rare that you would need to access this class directly
  * through Python.  Instead, to use this do-nothing constraint class, you would
@@ -192,10 +192,10 @@ class LPConstraintNone {
  * This constraint type cannot be used with angle structure coordinate systems.
  *
  * These linear constraint classes are designed mainly to act as C++ template
- * arguments, and end users will typically not need to construct their own
- * object of these classes.  Instead, to use a linear constraint class, pass it
- * as a template parameter to one of the tree traversal subclasses
- * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ * arguments.  You cannot construct an object of this type; instead, to use a
+ * constraint class, pass it as a template parameter to one of the tree
+ * traversal subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
+ * TautEnumeration).
  *
  * \pre We are working with a normal or almost normal vector encoding
  * that includes triangle coordinates (i.e., the encoding for standard
@@ -314,10 +314,10 @@ class LPConstraintEulerPositive {
  * coordinates.  It cannot be used with angle structure coordinate systems.
  *
  * These linear constraint classes are designed mainly to act as C++ template
- * arguments, and end users will typically not need to construct their own
- * object of these classes.  Instead, to use a linear constraint class, pass it
- * as a template parameter to one of the tree traversal subclasses
- * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ * arguments.  You cannot construct an object of this type; instead, to use a
+ * constraint class, pass it as a template parameter to one of the tree
+ * traversal subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
+ * TautEnumeration).
  *
  * \pre We are working with a normal vector encoding that includes triangle
  * coordinates, and that does _not_ include octagon coordinates (i.e,
@@ -436,10 +436,10 @@ class LPConstraintEulerZero {
  * This constraint type cannot be used with angle structure coordinate systems.
  *
  * These linear constraint classes are designed mainly to act as C++ template
- * arguments, and end users will typically not need to construct their own
- * object of these classes.  Instead, to use a linear constraint class, pass it
- * as a template parameter to one of the tree traversal subclasses
- * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ * arguments.  You cannot construct an object of this type; instead, to use a
+ * constraint class, pass it as a template parameter to one of the tree
+ * traversal subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
+ * TautEnumeration).
  *
  * \pre We are working with a normal or almost normal vector encoding that
  * does not include triangle coordinates (i.e., the encoding for quad or
