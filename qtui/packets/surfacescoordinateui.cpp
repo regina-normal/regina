@@ -128,8 +128,30 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         else if (index.column() == 1)
             return s.name().c_str();
         else if (index.column() == 2) {
-            if (! s.isCompact())
+            if (! s.isCompact()) {
+                // If we are working with a valid oriented triangulation in
+                // which every vertex link is a torus, then we can compute
+                // the Euler characteristic using combinatorial Gauss-Bonnet.
+                if ( s.triangulation().isValid() &&
+                        s.triangulation().isOriented() ) {
+                    for ( const auto v : s.triangulation().vertices() ) {
+                        if ( (! v->isIdeal()) || (! v->isLinkOrientable()) ||
+                                (v->linkEulerChar() != 0) ) {
+                            return QVariant();
+                        }
+                    }
+
+                    // We *should* be able to compute Euler characteristic,
+                    // but check for UnsolvedCase just in case we get a
+                    // failure with SnapPea.
+                    try {
+                        return s.eulerChar().stringValue().c_str();
+                    } catch (regina::UnsolvedCase) {
+                        return QVariant();
+                    }
+                }
                 return QVariant();
+            }
             return s.eulerChar().stringValue().c_str();
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s.isCompact())
