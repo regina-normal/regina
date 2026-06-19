@@ -42,6 +42,8 @@
 #include "surface/normalcoords.h"
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h" // for Triangulation<3>::size()
+#include "utilities/fixedarray.h"
+// Note: there are additional #includes at the end of this file.
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -634,13 +636,13 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
         LPSystem system_;
             /**< The broad class of vector encodings that our enumeration task
                  is working with. */
-        bool* banned_;
+        FixedArray<bool> banned_;
             /**< Indicates which columns of a tableaux correspond to banned
                  coordinates (e.g., banned normal disc types).
                  The size of this array is the number of normal or angle
                  structure coordinates (so we explicitly exclude extra columns
                  that arise from the LPConstraint parameter also). */
-        bool* marked_;
+        FixedArray<bool> marked_;
             /**< Indicates which columns of a tableaux correspond to marked
                  coordinates (e.g., marked normal disc types).
                  The size of this array is the number of normal or angle
@@ -664,12 +666,11 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * enumeration task.
          */
         template <LPConstraint Constraint>
-        BanConstraintBase(const LPInitialTableaux<Constraint>& init);
-
-        /**
-         * Destroys this object and all associated data.
-         */
-        ~BanConstraintBase();
+        BanConstraintBase(const LPInitialTableaux<Constraint>& init) :
+                tri_(init.tri()), system_(init.system()),
+                banned_(system_.coords(tri_.size()), false),
+                marked_(system_.coords(tri_.size()), false) {
+        }
 
         /**
          * Enforces all bans described by this class in the given
@@ -680,7 +681,11 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * \param lp the tableaux in which to enforce the bans.
          */
         template <LPConstraint Constraint, ReginaInteger IntType>
-        void enforceBans(LPData<Constraint, IntType>& lp) const;
+        void enforceBans(LPData<Constraint, IntType>& lp) const {
+            for (size_t i = 0; i < lp.coordinateColumns(); ++i)
+                if (banned_[i])
+                    lp.constrainZero(i);
+        }
 
         /**
          * Identifies whether the given column of the tableaux corresponds to
@@ -693,7 +698,9 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * \return \c true if and only if the given column corresponds
          * to a marked coordinate.
          */
-        bool marked(size_t column) const;
+        bool marked(size_t column) const {
+            return marked_[column];
+        }
 
         /**
          * Determines if this and the given object ban and mark the same
@@ -713,7 +720,13 @@ class BanConstraintBase : public ShortOutput<BanConstraintBase> {
          * \return \c true if and only if this and the object ban and
          * mark the same tableaux coordinates, as described above.
          */
-        bool operator == (const BanConstraintBase& other) const;
+        bool operator == (const BanConstraintBase& other) const {
+            // Since the sizes of banned_ and marked_ depend upon tri_.size(),
+            // this test effectively compares the sizes of the underlying
+            // triangulations (but not the triangulations themselves).
+            return (system_ == other.system_ &&
+                banned_ == other.banned_ && marked_ == other.marked_);
+        }
 
         /**
          * Writes a short text representation of this object to the
@@ -867,7 +880,11 @@ class BanBoundary : public BanConstraintBase {
         template <LPSurfaceConstraint Constraint>
         BanBoundary(const LPInitialTableaux<Constraint>& init);
 
-        static bool supported(NormalEncoding enc);
+        static bool supported(NormalEncoding enc) {
+            // Note: storesTriangles() will ensure we are not using
+            // angle structures.
+            return enc.storesTriangles();
+        }
 };
 
 /**
@@ -931,7 +948,11 @@ class BanEdge : public BanConstraintBase {
         template <LPSurfaceConstraint Constraint>
         BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge);
 
-        static bool supported(NormalEncoding enc);
+        static bool supported(NormalEncoding enc) {
+            // Note: storesTriangles() will ensure we are not using
+            // angle structures.
+            return enc.storesTriangles();
+        }
 };
 
 /**
@@ -1000,70 +1021,15 @@ class BanTorusBoundary : public BanConstraintBase {
         template <LPSurfaceConstraint Constraint>
         BanTorusBoundary(const LPInitialTableaux<Constraint>& init);
 
-        static bool supported(NormalEncoding enc);
+        static bool supported(NormalEncoding enc) {
+            // Note: storesTriangles() will ensure we are not using
+            // angle structures.
+            return enc.storesTriangles();
+        }
 };
 
-}
+} // namespace regina
 
 #include "enumerate/treelp.h"
-
-namespace regina {
-
-// Inline functions
-
-template <LPConstraint Constraint>
-inline BanConstraintBase::BanConstraintBase(
-        const LPInitialTableaux<Constraint>& init) :
-        tri_(init.tri()), system_(init.system()) {
-    const size_t nCols = system_.coords(tri_.size());
-    banned_ = new bool[nCols];
-    marked_ = new bool[nCols];
-    std::fill(banned_, banned_ + nCols, false);
-    std::fill(marked_, marked_ + nCols, false);
-}
-
-inline BanConstraintBase::~BanConstraintBase() {
-    delete[] banned_;
-    delete[] marked_;
-}
-
-template <LPConstraint Constraint, ReginaInteger IntType>
-inline void BanConstraintBase::enforceBans(LPData<Constraint, IntType>& lp)
-        const {
-    for (size_t i = 0; i < lp.coordinateColumns(); ++i)
-        if (banned_[i])
-            lp.constrainZero(i);
-}
-
-inline bool BanConstraintBase::marked(size_t column) const {
-    return marked_[column];
-}
-
-inline bool BanConstraintBase::operator == (const BanConstraintBase& other)
-        const {
-    if (system_ != other.system_ || tri_.size() != other.tri_.size())
-        return false;
-
-    const size_t nCols = system_.coords(tri_.size());
-    return std::equal(banned_, banned_ + nCols, other.banned_) &&
-        std::equal(marked_, marked_ + nCols, other.marked_);
-}
-
-inline bool BanBoundary::supported(NormalEncoding enc) {
-    // Note: storesTriangles() will ensure we are not using angle structures.
-    return enc.storesTriangles();
-}
-
-inline bool BanEdge::supported(NormalEncoding enc) {
-    // Note: storesTriangles() will ensure we are not using angle structures.
-    return enc.storesTriangles();
-}
-
-inline bool BanTorusBoundary::supported(NormalEncoding enc) {
-    // Note: storesTriangles() will ensure we are not using angle structures.
-    return enc.storesTriangles();
-}
-
-} // namespace regina
 
 #endif
