@@ -1830,7 +1830,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * The orientations of the boundary curves of a
          * spun-normal surface are chosen so that _if_ meridian and
-         * longitude are a positive basis as vieved from the cusp, then
+         * longitude are a positive basis as viewed from the cusp, then
          * as one travels along an oriented boundary curve, the
          * spun-normal surface spirals into the cusp to one's right and
          * down into the manifold to one's left.
