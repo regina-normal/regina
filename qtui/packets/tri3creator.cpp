@@ -546,16 +546,24 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         unsigned long punctures = 0;
         if (typeId == TRI_SFS_ORIENTABLE) {
             genus = sfsBaseGenus->text().toULong();
-            if (sfsBaseWhich->currentIndex() == 1) {
-                baseClass = regina::SFSpace::Class::n2;
+            punctures = sfsBasePunctures->text().toULong();
+            if (sfsBaseWhich->currentIndex() == 0) {
+                if (punctures > 0) {
+                    baseClass = regina::SFSpace::Class::bo1;
+                }
+            } else {
                 if (genus == 0) {
                     ReginaSupport::sorry(parentWidget,
                         QObject::tr("For non-orientable base surface, the genus "
                         "must be a positive integer."));
                     return nullptr;
                 }
+                if (punctures == 0) {
+                    baseClass = regina::SFSpace::Class::n2;
+                } else {
+                    baseClass = regina::SFSpace::Class::bn2;
+                }
             }
-            punctures = sfsBasePunctures->text().toULong();
         }
 
         // Exceptional fibres and obstruction constant.
