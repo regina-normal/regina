@@ -1024,12 +1024,13 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * the answer immediately.
          *
          * \pre Either this normal surface is compact (has finitely many
-         * discs), or it resides in a valid oriented triangulation in which
-         * every vertex link is a torus.
+         * discs), or it has no octagons and resides in a valid oriented
+         * triangulation in which every vertex link is a torus.
          *
-         * \exception UnsolvedCase This surface is non-compact, and SnapPea
-         * either produces a null triangulation or retriangulates the
-         * triangulation in which this surface resides.
+         * \exception UnsolvedCase This surface is non-compact, and all other
+         * preconditions are satisfied, but SnapPea either produces a null
+         * triangulation or retriangulates the triangulation in which this
+         * surface resides.
          *
          * \return the Euler characteristic.
          *
@@ -1977,8 +1978,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Calculates the Euler characteristic of this spun-normal surface
          * and stores it as a property.
          *
-         * \pre This normal surface is non-compact, and resides in a valid
-         * oriented triangulation in which every vertex link is a torus.
+         * \pre This normal surface is non-compact, has no octagons, and
+         * resides in a valid oriented triangulation in which every vertex
+         * link is a torus.
          *
          * \author Alex He
          */
@@ -2190,11 +2192,12 @@ inline LargeInteger NormalSurface::eulerChar() const {
         } else {
             // We have a spun-normal surface.
             //
-            // If the surface resides in a valid oriented triangulation in
-            // which every vertex link is a torus, then we can compute a
-            // boundary-null angle structure. We can then use this angle
-            // structure, together with the combinatorial Gauss-Bonnet
-            // formula, to compute the Euler characteristic of the surface.
+            // If the surface has no octagons, and resides in a valid oriented
+            // triangulation in which every vertex link is a torus, then we
+            // can compute a boundary-null angle structure. We can then use
+            // this angle structure, together with the combinatorial
+            // Gauss-Bonnet formula, to compute the Euler characteristic of
+            // the surface.
             //
             // Otherwise, the implementation currently falls back on
             // calculateEulerChar(). This gives infinity, but we aren't

@@ -383,9 +383,12 @@ using NonCompactProfile = std::tuple<
 static bool canComputeSpunNormalEulerChar(const NormalSurface& surf) {
     // Assume surf is non-compact.
     //
-    // At present, we can compute the Euler characteristic provided surf
-    // resides in a valid oriented triangulation in which every vertex link
-    // is a torus.
+    // At present, we can compute the Euler characteristic provided surf has
+    // no octagons and resides in a valid oriented triangulation in which
+    // every vertex link is a torus.
+    if (static_cast<bool>(surf.octPosition())) {
+        return false;
+    }
     const Triangulation<3>& tri = surf.triangulation();
     if ( (! tri.isValid()) || (! tri.isOriented()) ) {
         return false;

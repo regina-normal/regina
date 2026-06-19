@@ -336,9 +336,16 @@ void NormalSurface::calculateEulerChar() const {
 }
 
 void NormalSurface::calculateSpunEulerChar() const {
-    // The preconditions should guarantee that a boundary-null angle structure
-    // exists. At present, these preconditions are all automatically checked
-    // by boundaryNullAngleStructure().
+    if (static_cast<bool>(octPosition())) {
+        // At present, we require that there are no octagons, so fall back on
+        // the old implementation.
+        calculateEulerChar();
+        return;
+    }
+
+    // The remaining preconditions should guarantee that a boundary-null angle
+    // structure exists. At present, these preconditions are all automatically
+    // checked by boundaryNullAngleStructure().
     //
     // If boundaryNullAngleStructure() ever throws UnsolvedCase, then we
     // simply pass this exception along.

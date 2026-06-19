@@ -129,10 +129,12 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return s.name().c_str();
         else if (index.column() == 2) {
             if (! s.isCompact()) {
-                // If we are working with a valid oriented triangulation in
-                // which every vertex link is a torus, then we can compute
-                // the Euler characteristic using combinatorial Gauss-Bonnet.
-                if ( s.triangulation().isValid() &&
+                // If s has no octagons and resides in a valid oriented
+                // triangulation in which every vertex link is a torus, then
+                // we can compute the Euler characteristic using combinatorial
+                // Gauss-Bonnet.
+                if ( (! static_cast<bool>(s.octPosition())) &&
+                        s.triangulation().isValid() &&
                         s.triangulation().isOriented() ) {
                     for ( const auto v : s.triangulation().vertices() ) {
                         if ( (! v->isIdeal()) || (! v->isLinkOrientable()) ||
