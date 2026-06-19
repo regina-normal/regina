@@ -146,7 +146,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     // failure with SnapPea.
                     try {
                         return s.eulerChar().stringValue().c_str();
-                    } catch (regina::UnsolvedCase) {
+                    } catch (const regina::UnsolvedCase&) {
                         return QVariant();
                     }
                 }
