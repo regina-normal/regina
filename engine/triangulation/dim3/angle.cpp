@@ -181,7 +181,8 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     // column will not appear as a leading coefficient in row echelon form.
     MatrixInt eqns;
     if constexpr (bdryNull) {
-        SnapPeaTriangulation snapPea(*this);
+        const SnapPeaTriangulation& snapPea = this->isSnapPea() ?
+            *this->isSnapPea() : SnapPeaTriangulation(*this);
         if (snapPea.isNull()) {
             throw regina::UnsolvedCase( "SnapPea produced a null "
                     "triangulation when attempting to make the "
