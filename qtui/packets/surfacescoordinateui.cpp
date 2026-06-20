@@ -193,7 +193,15 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     return ans;
                 } catch (const regina::ReginaException&) {
                     // This could be a FailedPrecondition or a SnapPeaisNull.
-                    return tr("Spun");
+                    //
+                    // Although we can't display the boundary slopes, we might
+                    // at least be able to display the total *number* of
+                    // boundary curves in the cusps.
+                    try {
+                        return tr("Spun: %1").arg( s.countBoundaries() );
+                    } catch (const regina::ReginaException&) {
+                        return tr("Spun");
+                    }
                 }
             } else if (s.hasRealBoundary()) {
                 if (surfaces_->isEmbeddedOnly()) {
