@@ -104,3 +104,34 @@ TEST(BoundariesTest, countBoundaries) {
 
     //TODO More thorough testing.
 }
+
+static void verifyFailedPrecondition(NormalSurfaces surfs) {
+    for (size_t i = 0; i < surfs.size(); ++i) {
+        auto s = surfs.surface(i);
+        if (! s.isCompact()) {
+            EXPECT_THROW( s.countBoundaries(), regina::FailedPrecondition );
+        }
+    }
+}
+
+TEST(BoundariesTest, exceptions) {
+    // For now, we just check that countBoundaries() throws FailedPrecondition
+    // whenever it promises to do so for non-compact surfaces.
+
+    // Underlying coordinate system allows octagons.
+    // This has 14 non-compact quad-oct vertex surfaces.
+    auto orientedFigure8 = Triangulation<3>::fromSig("cV6cqb");
+    verifyFailedPrecondition({ orientedFigure8, NormalCoords::QuadOct });
+
+    // Triangulation is not oriented.
+    // We use the first-generation signature for the figure-eight knot
+    // complement, which happens not to be oriented.
+    // This has 4 non-compact quad vertex surfaces.
+    auto unorientedFigure8 = Triangulation<3>::fromSig("cPcbbbiht");
+    verifyFailedPrecondition({ unorientedFigure8, NormalCoords::Quad });
+
+    // Non-torus vertex link.
+    // This has 6 non-compact quad vertex surfaces.
+    auto idealHandlebody2 = Triangulation<3>::fromSig("dN0TiRe");
+    verifyFailedPrecondition({ idealHandlebody2, NormalCoords::Quad });
+}

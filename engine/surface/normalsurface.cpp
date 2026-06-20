@@ -430,6 +430,19 @@ Matrix<Integer> NormalSurface::boundaryIntersections() const {
 }
 
 Matrix<Integer> NormalSurface::boundaryIntersectionsInternal() const {
+    // Check the preconditions.
+    if (! triangulation().isOriented())
+        throw FailedPrecondition("Triangulation must be oriented to "
+                "compute boundary of spun-normal surface");
+    if (enc_.storesOctagons())
+        throw FailedPrecondition("Cannot work with almost normal surface "
+                "encodings when computing boundary of spun-normal surface");
+    for (Vertex<3>* v : triangulation().vertices())
+        if (! (v->isIdeal() && v->isLinkOrientable() &&
+                v->linkEulerChar() == 0))
+            throw FailedPrecondition("All vertex links must be tori to "
+                    "compute boundary of spun-normal surface");
+
     // Get the SnapPeaTriangulation that we will use.
     const SnapPeaTriangulation& snapPea = triangulation().isSnapPea() ?
         *triangulation().isSnapPea() :
@@ -438,19 +451,6 @@ Matrix<Integer> NormalSurface::boundaryIntersectionsInternal() const {
         throw regina::SnapPeaIsNull( "Failed to construct data needed to "
                 "compute boundary of spun-normal surface" );
     }
-
-    // Check the preconditions.
-    if (! snapPea.isOriented())
-        throw FailedPrecondition("Triangulation must be oriented to "
-                "compute boundary of spun-normal surface");
-    if (enc_.storesOctagons())
-        throw FailedPrecondition("Cannot work with almost normal surface "
-                "encodings when computing boundary of spun-normal surface");
-    for (Vertex<3>* v : snapPea.vertices())
-        if (! (v->isIdeal() && v->isLinkOrientable() &&
-                v->linkEulerChar() == 0))
-            throw FailedPrecondition("All vertex links must be tori to "
-                    "compute boundary of spun-normal surface");
 
     // Use a static_cast to ensure we are using the Triangulation<3>
     // equality test.
