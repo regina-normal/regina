@@ -148,11 +148,14 @@ void NormalSurface::calculateSpunBoundaries() const {
     try {
         bdryIntersections = boundaryIntersectionsInternal();
     } catch (const FailedPrecondition&) {
-        // Fall back on old implementation.
-        calculateBoundaries();
-        return;
+        // Assuming the surface is indeed non-compact, the preconditions for
+        // boundaryIntersectionsInternal() are equivalent to the preconditions
+        // for countBoundaries(), so we can just rethrow.
+        throw;
     } catch (const ReginaException&) {
-        // Could be either SnapPeaIsNull or UnsolvedCase.
+        // At present, regardless of whether this is SnapPeaIsNull or
+        // UnsolvedCase, countBoundaries() promises to throw its own
+        // UnsolvedCase.
         throw UnsolvedCase("SnapPea failed to construct data needed to "
                 "count boundaries for spun-normal surface");
     }

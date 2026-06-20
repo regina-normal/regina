@@ -1391,14 +1391,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * For compact surfaces, this routine counts the number of real
          * boundary curves.
          *
-         * As of Regina 8.0, this routine also counts the number of boundary
-         * curves for spun-normal surfaces, provided that the triangulation is
-         * oriented, every vertex link is a torus, and the underlying
-         * coordinate system is for normal surfaces only (not almost normal
-         * surfaces). This relies on the SnapPea kernel, so SnapPea must be
-         * able to work directly with the triangulation; see below for details
-         * on the exceptions that this routine can throw if this requirement
-         * is not met.
+         * As of Regina 8.0, this routine is also able to count the number of
+         * boundary curves for spun-normal surfaces, provided that the
+         * triangulation is oriented, every vertex link is a torus, and the
+         * underlying coordinate system is for normal surfaces only (not
+         * almost normal surfaces). This relies on the SnapPea kernel, so
+         * SnapPea must be able to work directly with the triangulation. See
+         * below for details on the exceptions that this routine can throw if
+         * these requirements are not met.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
@@ -1406,14 +1406,20 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \pre This normal surface is embedded (not singular or immersed).
          * \pre Either this normal surface is compact (has finitely many
-         * discs), or its underlying coordinate system is for normal surfaces
-         * only (not almost normal surfaces) and it resides in an oriented
-         * triangulation in which every vertex link is a torus.
+         * discs), or all of the following associated preconditions for
+         * non-compact surfaces are met: the underlying coordinate system is
+         * for normal surfaces only (not almost normal surfaces) and it
+         * resides in an oriented triangulation in which every vertex link is
+         * a torus.
          *
          * \warning For compact surfaces, this routine explicitly builds all
          * of the normal arcs on the boundary. If the normal coordinates are
          * extremely large, this could lead to performance problems. In
          * extreme cases, this routine will throw an exception (see below).
+         *
+         * \exception FailedPrecondition This normal surface is non-compact,
+         * and one or more of the associated preconditions listed above was
+         * not met.
          *
          * \exception UnsolvedCase This surface is compact, and this algorithm
          * has encountered an impossible memory requirement, due to the need
@@ -2310,10 +2316,9 @@ inline size_t NormalSurface::countBoundaries() const {
             // torus, then we can use boundaryIntersectionsInternal() to
             // calculate the number of boundary curves.
             //
-            // Otherwise, the implementation currently falls back on
-            // calculateBoundaries(). This gives zero, since there's no real
-            // boundary, but we aren't breaking any promises since this is a
-            // situation that violates the preconditions anyway.
+            // If preconditions are not satisfied, then this will be detected
+            // by boundaryIntersectionsInternal(), and we simply pass on the
+            // FailedPrecondition exception.
             calculateSpunBoundaries();
         }
     return *boundaries_;
