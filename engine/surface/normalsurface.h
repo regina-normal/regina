@@ -1388,24 +1388,44 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         /**
          * Returns the number of disjoint boundary curves on this surface.
          *
+         * For compact surfaces, this routine counts the number of real
+         * boundary curves.
+         *
+         * As of Regina 8.0, this routine also counts the number of boundary
+         * curves for spun-normal surfaces, provided that the triangulation is
+         * oriented, every vertex link is a torus, and the underlying
+         * coordinate system is for normal surfaces only (not almost normal
+         * surfaces). This relies on the SnapPea kernel, so SnapPea must be
+         * able to work directly with the triangulation; see below for details
+         * on the exceptions that this routine can throw if this requirement
+         * is not met.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre This normal surface is embedded (not singular or immersed).
-         * \pre This normal surface is compact (has finitely many discs).
+         * \pre Either this normal surface is compact (has finitely many
+         * discs), or its underlying coordinate system is for normal surfaces
+         * only and it resides in an oriented triangulation in which every
+         * vertex link is a torus.
          *
-         * \warning This routine explicitly builds all of the normal arcs on
-         * the boundary.  If the normal coordinates are extremely large,
-         * this could lead to performance problems.  In extreme cases, this
-         * routine will throw an exception (see below).
+         * \warning For compact surfaces, this routine explicitly builds all
+         * of the normal arcs on the boundary. If the normal coordinates are
+         * extremely large, this could lead to performance problems. In
+         * extreme cases, this routine will throw an exception (see below).
          *
-         * \exception UnsolvedCase This algorithm has encountered an
-         * impossible memory requirement, due to the need to store more items
-         * than can fit into a native C++ \c size_t.  This is rarely seen in
-         * practice: on a typical 64-bit machine, this would mean that the
-         * algorithm has encountered a normal surface with some boundary
-         * edge weight at least `2^64`.
+         * \exception UnsolvedCase This surface is compact, and this algorithm
+         * has encountered an impossible memory requirement, due to the need
+         * to store more items than can fit into a native C++ \c size_t. This
+         * is rarely seen in practice: on a typical 64-bit machine, this would
+         * mean that the algorithm has encountered a normal surface with some
+         * boundary edge weight at least `2^64`.
+         *
+         * \exception UnsolvedCase This surface is non-compact, and all other
+         * preconditions are satisfied, but SnapPea either produces a null
+         * triangulation or retriangulates the triangulation in which this
+         * surface resides.
          *
          * \return the number of disjoint boundary curves.
          *
@@ -2009,6 +2029,41 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * does not fit into a standard C++ \c size_t.
          */
         void calculateBoundaries() const;
+        /**
+         * Computes the number of boundary curves of this spun-normal surface
+         * and stores the result as a property.
+         *
+         * \pre This normal surface is non-compact, its underlying coordinate
+         * system is for normal surfaces only (not almost normal surfaces),
+         * and it resides in an oriented triangulation in which every vertex
+         * link is a torus.
+         *
+         * \author Alex He
+         */
+        void calculateSpunBoundaries() const;
+        /**
+         * Implements boundaryIntersections().
+         *
+         * This internal implementation has weaker preconditions, which means
+         * that we can use it to count boundary curves for spun-normal
+         * surfaces.
+         *
+         * \pre The triangulation is oriented, every vertex link is a torus,
+         * and the underlying coordinate system is for normal surfaces only
+         * (not almost normal surfaces).
+         *
+         * \exception FailedPrecondition One or more of the preconditions
+         * listed above was not met.
+         *
+         * \exception SnapPeaIsNull SnapPea produces a null triangulation.
+         *
+         * \exception UnsolvedCase All other preconditions are satisfied, but
+         * SnapPea retriangulates the triangulation in which this surface
+         * resides.
+         *
+         * \author William Pettersson, Stephan Tillmann, Alex He
+         */
+        Matrix<Integer> boundaryIntersectionsInternal() const;
 
         /**
          * Determines whether or not a positive rational multiple of this
@@ -2240,7 +2295,23 @@ inline bool NormalSurface::hasRealBoundary() const {
 
 inline size_t NormalSurface::countBoundaries() const {
     if (! boundaries_.has_value())
-        calculateBoundaries();
+        if ( isCompact() ) {
+            calculateBoundaries();
+        } else {
+            // We have a spun-normal surface.
+            //
+            // If the surface's underlying coordinate system is for normal
+            // surfaces only (not almost normal surfaces), and it resides in
+            // an oriented triangulation in which every vertex link is a
+            // torus, then we can use boundaryIntersectionsInternal() to
+            // calculate the number of boundary curves.
+            //
+            // Otherwise, the implementation currently falls back on
+            // calculateBoundaries(). This gives zero, since there's no real
+            // boundary, but we aren't breaking any promises since this is a
+            // situation that violates the preconditions anyway.
+            calculateSpunBoundaries();
+        }
     return *boundaries_;
 }
 

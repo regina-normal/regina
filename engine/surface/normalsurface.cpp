@@ -421,30 +421,50 @@ void NormalSurface::calculateRealBoundary() const {
 
 Matrix<Integer> NormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
-    const SnapPeaTriangulation* snapPea = triangulation().isSnapPea();
-    if (! snapPea)
+    // This enforces the extra precondition which is not required by the
+    // internal implementation.
+    if (! triangulation().isSnapPea())
         throw FailedPrecondition("NormalSurface::boundaryIntersections() "
             "requires the triangulation to be a SnapPeaTriangulation");
+    return boundaryIntersectionsInternal();
+}
+
+Matrix<Integer> NormalSurface::boundaryIntersectionsInternal() const {
+    // Get the SnapPeaTriangulation that we will use.
+    const SnapPeaTriangulation& snapPea = this->isSnapPea() ?
+        *this->isSnapPea() : SnapPeaTriangulation(*this);
+    if (snapPea.isNull()) {
+        throw regina::SnapPeaIsNull(
+                "NormalSurface::boundaryIntersections()" );
+    }
 
     // Check the preconditions.
-    if (! snapPea->isOriented())
+    if (! snapPea.isOriented())
         throw FailedPrecondition("NormalSurface::boundaryIntersections() "
             "requires the triangulation to be oriented");
     if (enc_.storesOctagons())
         throw FailedPrecondition("NormalSurface::boundaryIntersections() "
             "cannot work with almost normal surface encodings");
-    for (Vertex<3>* v : snapPea->vertices())
+    for (Vertex<3>* v : snapPea.vertices())
         if (! (v->isIdeal() && v->isLinkOrientable() &&
                 v->linkEulerChar() == 0))
             throw FailedPrecondition("NormalSurface::boundaryIntersections() "
                 "requires all vertex links to be tori");
 
+    // Use a static_cast to ensure we are using the Triangulation<3>
+    // equality test.
+    if (static_cast<const Triangulation<3>&>(snapPea) != *this) {
+        throw regina::UnsolvedCase( "SnapPea retriangulated "
+                "when attempting to make the boundary-null angle "
+                "structure equations" );
+    }
+
     // Note: slopeEquations() throws SnapPeaIsNull if we have a
     // null SnapPea triangulation.
-    Matrix<Integer> equations = snapPea->slopeEquations();
+    Matrix<Integer> equations = snapPea.slopeEquations();
 
     size_t cusps = equations.rows() / 2;
-    size_t numTet = snapPea->size();
+    size_t numTet = snapPea.size();
     Matrix<Integer> slopes(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
         Integer meridian; // constructor sets this to 0

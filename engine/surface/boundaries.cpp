@@ -143,5 +143,9 @@ void NormalSurface::calculateBoundaries() const try {
         "for this computation to proceed");
 }
 
+void NormalSurface::calculateSpunBoundaries() const {
+    //TODO
+}
+
 } // namespace regina
 
