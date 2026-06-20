@@ -1407,8 +1407,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \pre This normal surface is embedded (not singular or immersed).
          * \pre Either this normal surface is compact (has finitely many
          * discs), or its underlying coordinate system is for normal surfaces
-         * only and it resides in an oriented triangulation in which every
-         * vertex link is a torus.
+         * only (not almost normal surfaces) and it resides in an oriented
+         * triangulation in which every vertex link is a torus.
          *
          * \warning For compact surfaces, this routine explicitly builds all
          * of the normal arcs on the boundary. If the normal coordinates are
@@ -2037,6 +2037,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * system is for normal surfaces only (not almost normal surfaces),
          * and it resides in an oriented triangulation in which every vertex
          * link is a torus.
+         *
+         * \exception UnsolvedCase All other preconditions are satisfied, but
+         * SnapPea either produces a null triangulation or retriangulates the
+         * triangulation in which this surface resides.
          *
          * \author Alex He
          */

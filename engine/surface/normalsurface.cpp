@@ -431,32 +431,32 @@ Matrix<Integer> NormalSurface::boundaryIntersections() const {
 
 Matrix<Integer> NormalSurface::boundaryIntersectionsInternal() const {
     // Get the SnapPeaTriangulation that we will use.
-    const SnapPeaTriangulation& snapPea = this->isSnapPea() ?
-        *this->isSnapPea() : SnapPeaTriangulation(*this);
+    const SnapPeaTriangulation& snapPea = triangulation().isSnapPea() ?
+        *triangulation().isSnapPea() :
+        SnapPeaTriangulation(triangulation());
     if (snapPea.isNull()) {
-        throw regina::SnapPeaIsNull(
-                "NormalSurface::boundaryIntersections()" );
+        throw regina::SnapPeaIsNull( "Failed to construct data needed to "
+                "compute boundary of spun-normal surface" );
     }
 
     // Check the preconditions.
     if (! snapPea.isOriented())
-        throw FailedPrecondition("NormalSurface::boundaryIntersections() "
-            "requires the triangulation to be oriented");
+        throw FailedPrecondition("Triangulation must be oriented to "
+                "compute boundary of spun-normal surface");
     if (enc_.storesOctagons())
-        throw FailedPrecondition("NormalSurface::boundaryIntersections() "
-            "cannot work with almost normal surface encodings");
+        throw FailedPrecondition("Cannot work with almost normal surface "
+                "encodings when computing boundary of spun-normal surface");
     for (Vertex<3>* v : snapPea.vertices())
         if (! (v->isIdeal() && v->isLinkOrientable() &&
                 v->linkEulerChar() == 0))
-            throw FailedPrecondition("NormalSurface::boundaryIntersections() "
-                "requires all vertex links to be tori");
+            throw FailedPrecondition("All vertex links must be tori to "
+                    "compute boundary of spun-normal surface");
 
     // Use a static_cast to ensure we are using the Triangulation<3>
     // equality test.
     if (static_cast<const Triangulation<3>&>(snapPea) != *this) {
-        throw regina::UnsolvedCase( "SnapPea retriangulated "
-                "when attempting to make the boundary-null angle "
-                "structure equations" );
+        throw regina::UnsolvedCase( "SnapPea retriangulated when attempting "
+                "to compute boundary of spun-normal surface" );
     }
 
     // Note: slopeEquations() throws SnapPeaIsNull if we have a

@@ -144,7 +144,27 @@ void NormalSurface::calculateBoundaries() const try {
 }
 
 void NormalSurface::calculateSpunBoundaries() const {
-    //TODO
+    Matrix<Integer> bdryIntersections;
+    try {
+        bdryIntersections = boundaryIntersectionsInternal();
+    } catch (const FailedPrecondition&) {
+        // Fall back on old implementation.
+        calculateBoundaries();
+        return;
+    } catch (const ReginaException&) {
+        // Could be either SnapPeaIsNull or UnsolvedCase.
+        throw UnsolvedCase("SnapPea failed to construct data needed to "
+                "count boundaries for spun-normal surface");
+    }
+
+    // Sum up the number of boundary curves contributed by each cusp.
+    size_t total = 0;
+    for (size_t r = 0; r < bdryIntersections.rows(); ++r) {
+        total += std::gcd(
+                bdryIntersections.entry(r, 0).safeValue<size_t>(),
+                bdryIntersections.entry(r, 1).safeValue<size_t>() );
+    }
+    boundaries_ = total;
 }
 
 } // namespace regina
