@@ -41,11 +41,11 @@ void NormalSurface::calculateBoundaries() const try {
     into a collection of "interval isometries", and counting the number of
     orbits of these isometries.
 
-    This is based on the algorithm given by Agol, Hass and Thurston (2006) for
-    counting connected components of normal curves and normal surfaces. However,
-    since this routine works only with boundary curves, which are necessarily
-    closed, this implementation is dramatically simpler than the much more
-    general algorithm originally given by Agol, Hass and Thurston.
+    Although the terminology is drawn from the setup for the orbit-counting
+    algorithm given by Agol, Hass and Thurston (2006), at present the
+    implementation does *not* actually use the Agol-Hass-Thurston algorithm.
+    Instead, we simply use the much more naive (but easier to implement)
+    method of explicitly traversing all the orbits.
 
     Be aware that the Integer-to-size_t conversions in this routine could throw
     an IntegerOverflow exception, which is caught at the end of this
@@ -105,9 +105,7 @@ void NormalSurface::calculateBoundaries() const try {
 
     // Since the boundary curves of surf are all closed curves, we can count the
     // orbits in the interval isometries by simply traversing the orbits, and
-    // "marking" points which have already been visited. This is dramatically
-    // simpler than the much more general algorithm given by Agol, Hass and
-    // Thurston (2006).
+    // "marking" points which have already been visited.
     FixedArray<bool> marked(totalWeight, false);
 
     size_t orbits = 0;
