@@ -40,7 +40,7 @@ using regina::NormalSurfaces;
 using regina::NormalCoords;
 using regina::Triangulation;
 
-static void compareBoundaryCounts(
+static void verifyBoundaryCounts(
         NormalSurfaces surfs, std::vector<size_t> expect ) {
     surfs.sort([](const NormalSurface& a, const NormalSurface& b){
         return a < b;
@@ -58,7 +58,7 @@ TEST(BoundariesTest, countBoundaries) {
         // The expected boundary-counts for this example have been checked by
         // hand.
         auto solidTorus = Triangulation<3>::fromSig("b3Na");
-        compareBoundaryCounts({ solidTorus, NormalCoords::Quad },
+        verifyBoundaryCounts({ solidTorus, NormalCoords::Quad },
             { 1, 2, 1 } );
     }
 
@@ -75,7 +75,7 @@ TEST(BoundariesTest, countBoundaries) {
         // boundary. The expected boundary-counts have been manually checked
         // to coincide with these GCDs.
         auto extraVertex = Triangulation<3>::fromSig("eNAA8hteh");
-        compareBoundaryCounts({ extraVertex, NormalCoords::Standard },
+        verifyBoundaryCounts({ extraVertex, NormalCoords::Standard },
             { 1, 2, 0, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } );
     }
 
@@ -88,7 +88,19 @@ TEST(BoundariesTest, countBoundaries) {
         // test at least ensures that countBoundaries() returns consistent
         // (presumably correct) answers even if the implementation is modified.
         auto handle2 = Triangulation<3>::fromSig("epKKJ81Le");
-        compareBoundaryCounts({ handle2, NormalCoords::Quad },
+        verifyBoundaryCounts({ handle2, NormalCoords::Quad },
             { 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1 } );
     }
+
+    {
+        SCOPED_TRACE("Figure-eight knot complement");
+
+        // Use oriented triangulation so we can test countBoundaries() for
+        // spun-normal surfaces.
+        auto figure8 = Triangulation<3>::fromSig("cV6cqb");
+        verifyBoundaryCounts({ figure8, NormalCoords::Quad },
+                { 1, 1, 1, 1 } );
+    }
+
+    //TODO More thorough testing.
 }

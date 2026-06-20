@@ -161,8 +161,8 @@ void NormalSurface::calculateSpunBoundaries() const {
     size_t total = 0;
     for (size_t r = 0; r < bdryIntersections.rows(); ++r) {
         total += std::gcd(
-                bdryIntersections.entry(r, 0).safeValue<size_t>(),
-                bdryIntersections.entry(r, 1).safeValue<size_t>() );
+                bdryIntersections.entry(r, 0).abs().safeValue<size_t>(),
+                bdryIntersections.entry(r, 1).abs().safeValue<size_t>() );
     }
     boundaries_ = total;
 }

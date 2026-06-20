@@ -454,7 +454,7 @@ Matrix<Integer> NormalSurface::boundaryIntersectionsInternal() const {
 
     // Use a static_cast to ensure we are using the Triangulation<3>
     // equality test.
-    if (static_cast<const Triangulation<3>&>(snapPea) != *this) {
+    if (static_cast<const Triangulation<3>&>(snapPea) != triangulation()) {
         throw regina::UnsolvedCase( "SnapPea retriangulated when attempting "
                 "to compute boundary of spun-normal surface" );
     }
