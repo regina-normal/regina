@@ -134,11 +134,7 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
 
     // Handle the preconditions and/or other easy cases.
     if constexpr (bdryNull) {
-        if (! isValid()) {
-            throw regina::FailedPrecondition(
-                    "boundaryNullAngleStructure() "
-                    "requires a valid triangulation" );
-        } else if (! isOriented()) {
+        if (! isOriented()) {
             throw regina::FailedPrecondition(
                     "boundaryNullAngleStructure() "
                     "requires an oriented triangulation");

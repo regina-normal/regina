@@ -1658,17 +1658,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * A _boundary-null_ angle structure is a generalised angle structure
          * (as defined in the generalAngleStructure() documentation) that
          * satisfies the additional condition of having vanishing peripheral
-         * rotational holonomy. In a valid orientable triangulation in which
-         * every vertex link is a torus, such an angle structure always
-         * exists; see Proposition 3.3 of "The Thurston norm via spun-normal
-         * immersions", Daryl Cooper and Stephan Tillmann and William Worden,
-         * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236.
+         * rotational holonomy. In an orientable triangulation in which every
+         * vertex link is a torus, such an angle structure always exists; see
+         * Proposition 3.3 of "The Thurston norm via spun-normal immersions",
+         * Daryl Cooper and Stephan Tillmann and William Worden, Trans. Amer.
+         * Math. Soc. Ser. B 12 (2025), pp. 191-236.
          *
-         * At present, this routine only works with valid oriented
-         * triangulations in which every vertex link is a torus (though future
-         * versions of Regina might ease these preconditions). Moreover, this
-         * routine relies on the SnapPea kernel, so SnapPea must be able to
-         * work directly with this triangulation. See below for details on the
+         * At present, this routine only works with oriented triangulations in
+         * which every vertex link is a torus (though future versions of
+         * Regina might ease these preconditions). Moreover, this routine
+         * relies on the SnapPea kernel, so SnapPea must be able to work
+         * directly with this triangulation. See below for details on the
          * exceptions that this routine can throw if these requirements are
          * not met.
          *
@@ -1687,11 +1687,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * For the empty triangulation, this routine returns the empty angle
          * structure.
          *
-         * \pre This triangulation is valid and oriented.
-         * \pre Every vertex link is a torus.
+         * \pre This triangulation is oriented, and every vertex link is a
+         * torus.
          *
-         * \exception FailedPrecondition This triangulation is invalid, or is
-         * not oriented, or has one or more non-torus vertex links.
+         * \exception FailedPrecondition This triangulation is not oriented,
+         * or has one or more non-torus vertex links.
          *
          * \exception UnsolvedCase SnapPea produces a null triangulation, or
          * retriangulates the underlying triangulation.
@@ -1712,18 +1712,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * A _boundary-null_ angle structure is a generalised angle structure
          * (as defined in the generalAngleStructure() documentation) that
          * satisfies the additional condition of having vanishing peripheral
-         * rotational holonomy. In a valid orientable triangulation in which
-         * every vertex link is a torus, such an angle structure always
-         * exists; see Proposition 3.3 of "The Thurston norm via spun-normal
-         * immersions", Daryl Cooper and Stephan Tillmann and William Worden,
-         * Trans. Amer. Math. Soc. Ser. B 12 (2025), pp. 191-236.
+         * rotational holonomy. In an orientable triangulation in which every
+         * vertex link is a torus, such an angle structure always exists; see
+         * Proposition 3.3 of "The Thurston norm via spun-normal immersions",
+         * Daryl Cooper and Stephan Tillmann and William Worden, Trans. Amer.
+         * Math. Soc. Ser. B 12 (2025), pp. 191-236.
          *
-         * At present, this routine only works with valid oriented
-         * triangulations in which every vertex link is a torus. Moreover,
-         * this routine relies on the SnapPea kernel, so SnapPea must be able
-         * to work directly with this triangulation. See below for details on
-         * the exceptions that this routine can throw if these requirements
-         * are not met.
+         * At present, this routine only works with oriented triangulations in
+         * which every vertex link is a torus. Moreover, this routine relies
+         * on the SnapPea kernel, so SnapPea must be able to work directly
+         * with this triangulation. See below for details on the exceptions
+         * that this routine can throw if these requirements are not met.
          *
          * This routine returns \c false if and only if
          * boundaryNullAngleStructure() throws NoSolution. Since the current
@@ -1740,11 +1739,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * For the empty triangulation, this routine returns \c true, and
          * caches the empty angle structure as its solution.
          *
-         * \pre This triangulation is valid and oriented.
-         * \pre Every vertex link is a torus.
+         * \pre This triangulation is oriented, and every vertex link is a
+         * torus.
          *
-         * \exception FailedPrecondition This triangulation is invalid, or is
-         * not oriented, or has one or more non-torus vertex links.
+         * \exception FailedPrecondition This triangulation is not oriented,
+         * or has one or more non-torus vertex links.
          *
          * \exception UnsolvedCase SnapPea produces a null triangulation, or
          * retriangulates the underlying triangulation.

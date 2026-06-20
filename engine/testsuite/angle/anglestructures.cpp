@@ -316,13 +316,9 @@ static void verifyBoundaryNullAngleStructure(const Triangulation<3>& tri,
         const char* name) {
     SCOPED_TRACE_CSTRING(name);
 
-    // At present, hasBoundaryNullAngleStructure() requires that tri is valid
-    // and oriented.
-    if (! tri.isValid()) {
-        EXPECT_THROW( tri.hasBoundaryNullAngleStructure(),
-                regina::FailedPrecondition );
-        return;
-    } else if (! tri.isOriented()) {
+    // At present, hasBoundaryNullAngleStructure() requires that tri is
+    // oriented.
+    if (! tri.isOriented()) {
         EXPECT_THROW( tri.hasBoundaryNullAngleStructure(),
                 regina::FailedPrecondition );
 

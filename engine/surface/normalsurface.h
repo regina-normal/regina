@@ -1012,19 +1012,19 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * essentially counts each branch point as multiple vertices.
          *
          * As of Regina 8.0, eulerChar() is able to compute the Euler
-         * characteristic for a spun-normal surface provided it resides in a
-         * valid oriented triangulation in which every vertex link is a torus.
-         * The computation relies on the SnapPea kernel, so SnapPea must be
-         * able to work directly with the triangulation; see below for details
-         * on the exceptions that this routine can throw if this requirement
-         * is not met.
+         * characteristic for a spun-normal surface provided it resides in an
+         * oriented triangulation in which every vertex link is a torus. The
+         * computation relies on the SnapPea kernel, so SnapPea must be able
+         * to work directly with the triangulation; see below for details on
+         * the exceptions that this routine can throw if this requirement is
+         * not met.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre Either this normal surface is compact (has finitely many
-         * discs), or it has no octagons and resides in a valid oriented
+         * discs), or it has no octagons and resides in an oriented
          * triangulation in which every vertex link is a torus.
          *
          * \exception UnsolvedCase This surface is non-compact, and all other
@@ -1979,8 +1979,8 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and stores it as a property.
          *
          * \pre This normal surface is non-compact, has no octagons, and
-         * resides in a valid oriented triangulation in which every vertex
-         * link is a torus.
+         * resides in an oriented triangulation in which every vertex link is
+         * a torus.
          *
          * \author Alex He
          */
@@ -2192,7 +2192,7 @@ inline LargeInteger NormalSurface::eulerChar() const {
         } else {
             // We have a spun-normal surface.
             //
-            // If the surface has no octagons, and resides in a valid oriented
+            // If the surface has no octagons, and resides in an oriented
             // triangulation in which every vertex link is a torus, then we
             // can compute a boundary-null angle structure. We can then use
             // this angle structure, together with the combinatorial
