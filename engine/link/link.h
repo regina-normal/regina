@@ -6851,11 +6851,7 @@ class Link :
          * the strands in order from bottom to top by 0 to <i>n</i> - 1
          * (inclusive). A braid word for such an <i>n</i>-strand braid is
          * given by a (nonempty) sequence of nonzero integers between
-         * 1 - <i>n</i> and <i>n</i> - 1 (inclusive), in which either
-         * 1 - <i>n</i> or <i>n</i> - 1 appears at least once; in other words,
-         * we assume that there is at least one crossing involving the
-         * uppermost strand (we make no such assumption for the lowermost
-         * strand).
+         * 1 - <i>n</i> and <i>n</i> - 1 (inclusive), where:
          *
          * - A positive integer <i>s</i> in the braid word indicates an
          *   exchange of strands <i>s</i> - 1 and <i>s</i> via a positive
@@ -6876,6 +6872,14 @@ class Link :
                  /
              ___/ \___
              \endverbatim
+         *
+         * This routine automatically infers the number <i>n</i> of strands to
+         * be one more than the maximum absolute value appearing in the given
+         * braid word; this is the smallest possible number of strands that
+         * supports the given braid. In effect, this means that the given
+         * braid must have at least one crossing involving the uppermost
+         * strand. (But there is no requirement that the lowermost strand is
+         * involved in any crossings.)
          *
          * As an example, the braid word
            \verbatim

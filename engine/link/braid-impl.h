@@ -63,6 +63,10 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
     // numbered either 0 or 1).
     std::vector<StrandRef> leftmostStrand;
     std::vector<StrandRef> previousStrand;
+    // In particular, we use rowPerm to track an evolving permutation of the
+    // rows as we pass through crossings going from left to right. Thus, at
+    // the end, rowPerm[r] will give the final row index on the right for the
+    // strand that started at row r on the left.
     std::vector<size_t> rowPerm;
     size_t row;
     for (row = 0; row <= 1; ++row) {
@@ -183,7 +187,8 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
     }
 
     // All that remains is to find all the components (with at least one
-    // crossing).
+    // crossing). Note that cycles of rowPerm correspond to components of the
+    // closed braid.
     size_t firstRow;
     size_t currentRow;
     while (not untraversedRows.empty()) {
