@@ -45,56 +45,62 @@
 
 namespace regina {
 
-template <typename Iterator>
+template <std::random_access_iterator Iterator>
 Link Link::fromBraid(Iterator begin, Iterator end) {
     using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
     static_assert(std::is_integral_v<InputInt> &&
         ! std::is_unsigned_v<InputInt>, "fromBraid(): the iterator type "
         "needs to dereference to give a native signed C++ integer type.");
+    //TODO Use C++20 concepts to replace assert with a compile-time requirement?
 
     size_t numCross = end - begin;
     if (numCross == 0) {
         return { 1 };   // Zero-crossing unknot.
     }
 
-    // The braid must have at least 2 "rows" (we use "rows" to avoid a clash
-    // of terminology with "strands" of the link diagram), so we can at least
-    // make a start on the book-keeping for the first 2 rows (ie, the rows
-    // numbered either 0 or 1).
-    std::vector<StrandRef> leftmostStrand;
-    std::vector<StrandRef> previousStrand;
-    // In particular, we use rowPerm to track an evolving permutation of the
-    // rows as we pass through crossings going from left to right. Thus, at
-    // the end, rowPerm[r] will give the final row index on the right for the
-    // strand that started at row r on the left.
-    std::vector<size_t> rowPerm;
-    size_t row;
-    for (row = 0; row <= 1; ++row) {
-        leftmostStrand.emplace_back();
-        previousStrand.emplace_back();
-        rowPerm.push_back(row);
-    }
-
-    // Iterate through the braid word and build the link.
-    Link ans;
-    size_t uppermostRow = 1;
-    size_t upperRow;
+    // Make a first pass through the braid word to figure out the total number
+    // of "rows" (we use "rows" to avoid a clash of terminology with "strands"
+    // of the link diagram).
     size_t iCross;
+    size_t upperRow;
+    size_t numRows = 0;
     InputInt s;
     for (iCross = 0; iCross < numCross; ++iCross) {
         s = begin[iCross];
         if (s == 0) {
             throw InvalidArgument("fromBraid(): braid word contains 0");
         }
-
-        // Have we found a new uppermost row in the braid?
         upperRow = static_cast<size_t>( std::abs(s) );
-        while (upperRow > uppermostRow) {
-            ++uppermostRow;
-            leftmostStrand.emplace_back();
-            previousStrand.emplace_back();
-            rowPerm.push_back(uppermostRow);
+        if (upperRow >= numRows) {
+            numRows = upperRow + 1;
         }
+    }
+
+    // We use rowPerm to track an evolving permutation of the rows as we pass
+    // through the braid from left to right. Thus, at the end, rowPerm[r] will
+    // give the final row index on the right that is reached by the strand
+    // that started at row r on the left.
+    std::vector<size_t> rowPerm;
+    rowPerm.reserve(numRows);
+    size_t row;
+    for (row = 0; row < numRows; ++row) {
+        rowPerm.push_back(row);
+    }
+
+    // We also have vectors to track strands of the link diagram.
+    // Specifically, in each row we track:
+    //  --- the leftmost strand
+    //  --- the previous strand that we encountered in our left-to-right
+    //      traversal of the braid
+    // At the end, the "previous strands" will just be the rightmost strands.
+    std::vector<StrandRef> leftmostStrand(numRows);
+    std::vector<StrandRef> previousStrand(numRows);
+
+    // Make a second pass through the braid word to actually build the link.
+    Link ans;
+    for (iCross = 0; iCross < numCross; ++iCross) {
+        s = begin[iCross];
+        upperRow = static_cast<size_t>( std::abs(s) );
 
         // We have a new crossing that exchanges upperRow and upperRow - 1.
         std::swap( rowPerm[upperRow], rowPerm[upperRow - 1] );
@@ -170,7 +176,7 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
     // At this point, we have effectively built the braid, but haven't done
     // the closure yet.
     std::unordered_set<size_t> untraversedRows;
-    for (row = 0; row <= uppermostRow; ++row) {
+    for (row = 0; row < numRows; ++row) {
         if (previousStrand[row]) {
             // Close up this row.
             ans.join( previousStrand[row], leftmostStrand[row] );

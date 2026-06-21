@@ -6966,7 +6966,7 @@ class Link :
          * sequence of integers for the braid word for a classical link.
          * \return the reconstructed link.
          */
-        template <typename Iterator>
+        template <std::random_access_iterator Iterator>
         static Link fromBraid(Iterator begin, Iterator end);
 
         /*@}*/
