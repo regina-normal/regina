@@ -93,6 +93,18 @@ TEST(BoundariesTest, countBoundaries) {
     }
 
     {
+        SCOPED_TRACE("Circle bundle over annulus");
+
+        // Example with two boundary components.
+        //
+        // Again, since the boundary components are tori, the expected
+        // boundary counts have been independently confirmed using GCDs.
+        auto annulusBundle = Triangulation<3>::fromSig("g3AU01-tuLAi");
+        verifyBoundaryCounts({ annulusBundle, NormalCoords::Quad },
+                { 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 } );
+    }
+
+    {
         SCOPED_TRACE("Figure-eight knot complement");
 
         // Use oriented triangulation so we can test countBoundaries() for
@@ -100,6 +112,16 @@ TEST(BoundariesTest, countBoundaries) {
         auto figure8 = Triangulation<3>::fromSig("cV6cqb");
         verifyBoundaryCounts({ figure8, NormalCoords::Quad },
                 { 1, 1, 1, 1 } );
+    }
+
+    {
+        SCOPED_TRACE("Two cusps");
+
+        // This is 'm125 : #1' from the cusped hyperbolic census.
+        auto m125 = Triangulation<3>::fromSig("epzB3y5aj");
+        verifyBoundaryCounts({ m125, NormalCoords::Quad },
+                { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                2, 2, 2, 2, 2, 2, 2, 2, 2, 2, } );
     }
 
     //TODO More thorough testing.
