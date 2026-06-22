@@ -89,6 +89,9 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
     //  --- the previous strand that we encountered in our left-to-right
     //      traversal of the braid
     // At the end, the "previous strands" will just be the rightmost strands.
+    //
+    // Note that all the StrandRefs are default initialised to a null
+    // reference.
     FixedArray<StrandRef> leftmostStrand(numRows);
     FixedArray<StrandRef> previousStrand(numRows);
 
@@ -99,9 +102,16 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
         upperRow = static_cast<size_t>( std::abs(s) );
 
         // We have a new crossing that exchanges upperRow and upperRow - 1.
+        //
+        // If any of the leftmost and previous strands at upperRow and
+        // upperRow - 1 are still null, then we will set these to non-null
+        // StrandRefs below. This will ensure, in particular, that once we
+        // have finished traversing the braid, previousStrand[r] is null if
+        // and only if row r is never involved in any crossings at all.
         std::swap( rowPerm[upperRow], rowPerm[upperRow - 1] );
         Crossing* crossing = new Crossing;
         ans.crossings_.push_back(crossing);
+        size_t overRow, underRow;
         if (s > 0) {
             // Positive crossing.
             //  ___   ___
@@ -110,30 +120,8 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
             //  ___/ \___
             //
             crossing->sign_ = 1;
-
-            // The overstrand either:
-            //  --> joins up with the previous strand in upperRow; or
-            //  --> there is no previous strand, which means that the
-            //      overstrand is the leftmost strand in upperRow.
-            if (previousStrand[upperRow]) {
-                ans.join( previousStrand[upperRow], crossing->over() );
-            } else {
-                leftmostStrand[upperRow] = crossing->over();
-            }
-
-            // The understrand either:
-            //  --> joins up with the previous strand in upperRow - 1; or
-            //  --> there is no previous strand, which means that the
-            //      understrand is the leftmost strand in upperRow - 1.
-            if (previousStrand[upperRow - 1]) {
-                ans.join( previousStrand[upperRow - 1], crossing->under() );
-            } else {
-                leftmostStrand[upperRow - 1] = crossing->under();
-            }
-
-            // Update the previous strands.
-            previousStrand[upperRow - 1] = crossing->over();
-            previousStrand[upperRow] = crossing->under();
+            overRow = upperRow;
+            underRow = upperRow - 1;
         } else {
             // Negative crossing.
             //  ___   ___
@@ -142,31 +130,34 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
             //  ___/ \___
             //
             crossing->sign_ = -1;
-
-            // The understrand either:
-            //  --> joins up with the previous strand in upperRow; or
-            //  --> there is no previous strand, which means that the
-            //      understrand is the leftmost strand in upperRow.
-            if (previousStrand[upperRow]) {
-                ans.join( previousStrand[upperRow], crossing->under() );
-            } else {
-                leftmostStrand[upperRow] = crossing->under();
-            }
-
-            // The overstrand either:
-            //  --> joins up with the previous strand in upperRow - 1; or
-            //  --> there is no previous strand, which means that the
-            //      overstrand is the leftmost strand in upperRow - 1.
-            if (previousStrand[upperRow - 1]) {
-                ans.join( previousStrand[upperRow - 1], crossing->over() );
-            } else {
-                leftmostStrand[upperRow - 1] = crossing->over();
-            }
-
-            // Update the previous strands.
-            previousStrand[upperRow - 1] = crossing->under();
-            previousStrand[upperRow] = crossing->over();
+            overRow = upperRow - 1;
+            underRow = upperRow;
         }
+
+        // The overstrand either:
+        //  --> joins up with the previous strand in overRow; or
+        //  --> there is no previous strand, which means that the overstrand
+        //      is the leftmost strand in overRow.
+        if (previousStrand[overRow]) {
+            ans.join( previousStrand[overRow], crossing->over() );
+        } else {
+            leftmostStrand[overRow] = crossing->over();
+        }
+
+        // The understrand either:
+        //  --> joins up with the previous strand in underRow; or
+        //  --> there is no previous strand, which means that the understrand
+        //      is the leftmost strand in underRow.
+        if (previousStrand[underRow]) {
+            ans.join( previousStrand[underRow], crossing->under() );
+        } else {
+            leftmostStrand[underRow] = crossing->under();
+        }
+
+        // Update the previous strands in preparation for traversing the
+        // crossings to the right of this one.
+        previousStrand[underRow] = crossing->over();
+        previousStrand[overRow] = crossing->under();
     }
 
     // At this point, we have effectively built the braid, but haven't done
