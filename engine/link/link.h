@@ -6946,11 +6946,6 @@ class Link :
          * sequence of integers. This sequence is given by passing a pair of
          * begin/end iterators.
          *
-         * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces a native C++ integer.
-         * (The specific native C++ integer type being used will be deduced
-         * from the type \a Iterator.)
-         *
          * \exception InvalidArgument The given sequence was not a valid braid
          * word for a classical link.
          *
@@ -6967,6 +6962,7 @@ class Link :
          * \return the reconstructed link.
          */
         template <std::random_access_iterator Iterator>
+        requires SignedCppInteger<std::iter_value_t<Iterator>>
         static Link fromBraid(Iterator begin, Iterator end);
 
         /*@}*/

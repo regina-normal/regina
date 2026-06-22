@@ -46,12 +46,9 @@
 namespace regina {
 
 template <std::random_access_iterator Iterator>
+requires SignedCppInteger<std::iter_value_t<Iterator>>
 Link Link::fromBraid(Iterator begin, Iterator end) {
-    using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
-    static_assert(std::is_integral_v<InputInt> &&
-        ! std::is_unsigned_v<InputInt>, "fromBraid(): the iterator type "
-        "needs to dereference to give a native signed C++ integer type.");
-    //TODO Use C++20 concepts to replace assert with a compile-time requirement?
+    using InputInt = std::iter_value_t<Iterator>;
 
     size_t numCross = end - begin;
     if (numCross == 0) {
