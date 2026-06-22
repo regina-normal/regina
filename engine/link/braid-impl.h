@@ -77,21 +77,20 @@ Link Link::fromBraid(Iterator begin, Iterator end) {
     // through the braid from left to right. Thus, at the end, rowPerm[r] will
     // give the final row index on the right that is reached by the strand
     // that started at row r on the left.
-    std::vector<size_t> rowPerm;
-    rowPerm.reserve(numRows);
+    FixedArray<size_t> rowPerm(numRows);
     size_t row;
     for (row = 0; row < numRows; ++row) {
-        rowPerm.push_back(row);
+        rowPerm[row] = row;
     }
 
-    // We also have vectors to track strands of the link diagram.
+    // We also have arrays to track strands of the link diagram.
     // Specifically, in each row we track:
     //  --- the leftmost strand
     //  --- the previous strand that we encountered in our left-to-right
     //      traversal of the braid
     // At the end, the "previous strands" will just be the rightmost strands.
-    std::vector<StrandRef> leftmostStrand(numRows);
-    std::vector<StrandRef> previousStrand(numRows);
+    FixedArray<StrandRef> leftmostStrand(numRows);
+    FixedArray<StrandRef> previousStrand(numRows);
 
     // Make a second pass through the braid word to actually build the link.
     Link ans;
