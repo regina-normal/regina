@@ -1012,25 +1012,40 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * essentially counts each branch point as multiple vertices.
          *
          * As of Regina 8.0, eulerChar() is able to compute the Euler
-         * characteristic for a spun-normal surface provided it resides in an
-         * oriented triangulation in which every vertex link is a torus. The
-         * computation relies on the SnapPea kernel, so SnapPea must be able
-         * to work directly with the triangulation; see below for details on
-         * the exceptions that this routine can throw if this requirement is
-         * not met.
+         * characteristic for a spun-normal surface (i.e., a non-compact
+         * surface with no octagons) provided it resides in a triangulation
+         * for which we can compute a boundary-null angle structure. Computing
+         * such an angle structure requires, in turn, that the following
+         * conditions are satisfied:
+         *
+         * - The triangulation is oriented.
+         *
+         * - Every vertex link is a torus.
+         *
+         * - SnapPea is able to work directly with the triangulation.
+         *
+         * See below for details on the exceptions that this routine can throw
+         * if these requirements are not met. For more on boundary-null angle
+         * structures, see Triangulation<3>::boundaryNullAngleStructure().
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre Either this normal surface is compact (has finitely many
-         * discs), or it has no octagons and resides in an oriented
-         * triangulation in which every vertex link is a torus.
+         * discs), or all of the following associated preconditions for
+         * non-compact surfaces are met: this normal surface has no octagons,
+         * and it resides in an oriented triangulation in which every vertex
+         * link is a torus.
          *
-         * \exception UnsolvedCase This surface is non-compact, and all other
-         * preconditions are satisfied, but SnapPea either produces a null
-         * triangulation or retriangulates the triangulation in which this
-         * surface resides.
+         * \exception FailedPrecondition This normal surface is non-compact,
+         * and one or more of the associated preconditions listed above was
+         * not met.
+         *
+         * \exception UnsolvedCase This surface is non-compact, and all
+         * associated preconditions are satisfied, but SnapPea either produces
+         * a null triangulation or retriangulates the triangulation in which
+         * this surface resides.
          *
          * \return the Euler characteristic.
          *
@@ -1428,10 +1443,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * mean that the algorithm has encountered a normal surface with some
          * boundary edge weight at least `2^64`.
          *
-         * \exception UnsolvedCase This surface is non-compact, and all other
-         * preconditions are satisfied, but SnapPea either produces a null
-         * triangulation or retriangulates the triangulation in which this
-         * surface resides.
+         * \exception UnsolvedCase This surface is non-compact, and all
+         * associated preconditions are satisfied, but SnapPea either produces
+         * a null triangulation or retriangulates the triangulation in which
+         * this surface resides.
          *
          * \return the number of disjoint boundary curves.
          *
@@ -2008,6 +2023,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * resides in an oriented triangulation in which every vertex link is
          * a torus.
          *
+         * \exception FailedPrecondition This normal surface is non-compact,
+         * but one or more of the other preconditions listed above was not met.
+         *
+         * \note Regarding preconditions, the current implementation only
+         * explicitly checks that there are no octagons. Non-compactness is
+         * ensured by the calling context, and the rest is delegated to
+         * Triangulation<3>::boundaryNullAngleStructure().
+         *
          * \author Alex He
          */
         void calculateSpunEulerChar() const;
@@ -2043,6 +2066,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * system is for normal surfaces only (not almost normal surfaces),
          * and it resides in an oriented triangulation in which every vertex
          * link is a torus.
+         *
+         * \exception FailedPrecondition This normal surface is non-compact,
+         * but one or more of the other preconditions listed above was not met.
          *
          * \exception UnsolvedCase All other preconditions are satisfied, but
          * SnapPea either produces a null triangulation or retriangulates the
@@ -2264,10 +2290,9 @@ inline LargeInteger NormalSurface::eulerChar() const {
             // Gauss-Bonnet formula, to compute the Euler characteristic of
             // the surface.
             //
-            // Otherwise, the implementation currently falls back on
-            // calculateEulerChar(). This gives infinity, but we aren't
-            // breaking any promises since this is a situation that violates
-            // the preconditions anyway.
+            // If preconditions are not satisfied, then the internal
+            // implementation will detect this and throw FailedPrecondition,
+            // as promised in the documentation.
             calculateSpunEulerChar();
         }
     }

@@ -337,26 +337,19 @@ void NormalSurface::calculateEulerChar() const {
 
 void NormalSurface::calculateSpunEulerChar() const {
     if (static_cast<bool>(octPosition())) {
-        // At present, we require that there are no octagons, so fall back on
-        // the old implementation.
-        calculateEulerChar();
-        return;
+        // At present, we require that there are no octagons.
+        throw FailedPrecondition("Cannot compute Euler characteristic for a "
+                "non-compact surface that has octagons");
     }
 
-    // The remaining preconditions should guarantee that a boundary-null angle
-    // structure exists. At present, these preconditions are all automatically
-    // checked by boundaryNullAngleStructure().
-    //
-    // If boundaryNullAngleStructure() ever throws UnsolvedCase, then we
-    // simply pass this exception along.
-    std::optional<AngleStructure> angles;
-    try {
-        angles.emplace( triangulation().boundaryNullAngleStructure() );
-    } catch (const FailedPrecondition) {
-        // Fall back on the old implementation.
-        calculateEulerChar();
-        return;
-    }
+    // The remaining preconditions (triangulation is oriented and all vertex
+    // links are tori) should guarantee that a boundary-null angle structure
+    // exists. At present, these preconditions are all automatically checked
+    // by boundaryNullAngleStructure(), so we simply pass on any
+    // FailedPrecondition exceptions that this throws. Likewise, we pass on
+    // any UnsolvedCase exceptions that it throws.
+    const AngleStructure& angles(
+            triangulation().boundaryNullAngleStructure() );
 
     // Using the combinatorial Gauss-Bonnet formula, we can compute the Euler
     // characteristic by, in effect, taking the dot product of the angles
@@ -366,7 +359,7 @@ void NormalSurface::calculateSpunEulerChar() const {
         for ( int quadType = 0; quadType < 3; ++quadType ) {
             LargeInteger quadCount = quads( tetIndex, quadType );
             if ( quadCount != LargeInteger::zero ) {
-                Rational quadArea = angles->angle( tetIndex, quadType );
+                Rational quadArea = angles.angle( tetIndex, quadType );
                 ans -= quadArea * Rational(quadCount);
             }
         }
