@@ -170,7 +170,7 @@ class Example<2> : public detail::ExampleBase<2> {
          *
          * For `n >= 3`, this routine returns a triangulation built from
          * `n - 2` triangles by gluing edge `(01)` of triangle `i` to edge
-         * `(02)` of triangle `i - 1`, for each `i` from 1 to `n - 1`
+         * `(02)` of triangle `i - 1`, for each `i` from 1 to `n - 3`
          * (inclusive).
          *
          * \param n the number of boundary edges of the constructed polygon.

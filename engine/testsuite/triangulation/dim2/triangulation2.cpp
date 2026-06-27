@@ -413,3 +413,39 @@ TEST_F(Dim2Test, minimalSize) {
     EXPECT_EQ(norPunc1.tri.size(), 3);
     EXPECT_EQ(norPunc3.tri.size(), 9);
 }
+
+static void verifyPolygon(
+        const TriangulationTest<2>::TestCase& test, size_t n) {
+    // Other tests already verify that the constructed polygons are oriented
+    // triangulations of topological discs. Here we just check that the
+    // construction fulfils its combinatorial promises.
+    SCOPED_TRACE_CSTRING(test.name);
+
+    // Need to have the correct number of boundary edges.
+    size_t numBdryEdges = 0;
+    for (auto e : test.tri.edges()) {
+        if (e->isBoundary()) {
+            ++numBdryEdges;
+        }
+    }
+    EXPECT_EQ( numBdryEdges, n );
+
+    // For n <= 2, the only other promise is that size() == n.
+    if (n <= 2) {
+        EXPECT_EQ( test.tri.size(), n );
+        return;
+    }
+
+    // For n >= 3, polygon() promises to use a specific construction.
+    EXPECT_EQ( test.tri.size(), n - 2 );
+    for (size_t i = 1; i < n - 2; ++i) {
+        EXPECT_EQ( test.tri.triangle(i)->adjacentTriangle(2)->index(), i - 1 );
+        EXPECT_EQ( test.tri.triangle(i)->adjacentGluing(2), Perm<3>(1, 2) );
+    }
+}
+TEST_F(Dim2Test, polygon) {
+    verifyPolygon( poly1, 1 );
+    verifyPolygon( poly2, 2 );
+    verifyPolygon( poly3, 3 );
+    verifyPolygon( poly4, 4 );
+}
