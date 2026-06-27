@@ -1436,12 +1436,13 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and one or more of the associated preconditions listed above was
          * not met.
          *
-         * \exception UnsolvedCase This surface is compact, and this algorithm
-         * has encountered an impossible memory requirement, due to the need
-         * to store more items than can fit into a native C++ \c size_t. This
-         * is rarely seen in practice: on a typical 64-bit machine, this would
-         * mean that the algorithm has encountered a normal surface with some
-         * boundary edge weight at least `2^64`.
+         * \exception UnsolvedCase The computation could not be completed
+         * because it encountered a value too large to fit into a native C++
+         * \c size_t. This is rarely seen in practice: on a typical 64-bit
+         * machine, this would mean that the algorithm has encountered either
+         * a compact normal surface with some boundary edge weight at least
+         * `2^64`, or a spun-normal surface with at least `2^64` boundary
+         * curves.
          *
          * \exception UnsolvedCase This surface is non-compact, and all
          * associated preconditions are satisfied, but SnapPea either produces
@@ -2073,6 +2074,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \exception UnsolvedCase All other preconditions are satisfied, but
          * SnapPea either produces a null triangulation or retriangulates the
          * triangulation in which this surface resides.
+         *
+         * \exception UnsolvedCase The final answer is too large to fit into
+         * a native C++ \c size_t.
          *
          * \author Alex He
          */

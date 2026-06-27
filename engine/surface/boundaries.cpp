@@ -159,13 +159,17 @@ void NormalSurface::calculateSpunBoundaries() const {
     }
 
     // Sum up the number of boundary curves contributed by each cusp.
-    size_t total = 0;
+    Integer total = 0;
     for (size_t r = 0; r < bdryIntersections.rows(); ++r) {
-        total += std::gcd(
-                bdryIntersections.entry(r, 0).abs().safeValue<size_t>(),
-                bdryIntersections.entry(r, 1).abs().safeValue<size_t>() );
+        total += bdryIntersections.entry(r, 0).gcd(
+                bdryIntersections.entry(r, 1) );
     }
-    boundaries_ = total;
+    try {
+        boundaries_ = total.safeValue<size_t>();
+    } catch (const IntegerOverflow&) {
+        throw UnsolvedCase(
+                "This spun-normal surface has too many boundary curves");
+    }
 }
 
 } // namespace regina
