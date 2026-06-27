@@ -365,7 +365,9 @@ void NormalSurface::calculateSpunEulerChar() const {
         }
     }
 
-    // Done!
+    // Euler characteristic is always an integer, and Rationals are always
+    // stored in lowest terms with non-negative denominator.
+    assert( ans.denominator() == Integer::one );
     eulerChar_ = LargeInteger( ans.numerator() );
 }
 

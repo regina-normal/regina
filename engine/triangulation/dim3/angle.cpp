@@ -103,16 +103,10 @@ bool Triangulation<3>::hasGeneralAngleStructureInternal() const {
     if constexpr (bdryNull) {
         if (std::holds_alternative<AngleStructure>(bdryNullAngleStructure_)) {
             return true; // known to have a solution
-        } else if (std::get<bool>(bdryNullAngleStructure_)) {
+        } else {
             // At present, the preconditions are strong enough to ensure that
             // a boundary-null angle structure always exists.
-            //TODO  Should probably use an exception or an assert.
-            std::cerr << "ERROR: Failed to find a "
-                "boundary-null angle structure." << std::endl;
-
-            // At any rate, it must be the case that we successfully ran the
-            // computation and failed to find a solution.
-            return false;
+            assert( not std::get<bool>(bdryNullAngleStructure_) );
         }
     } else {
         if (std::holds_alternative<AngleStructure>(generalAngleStructure_)) {
