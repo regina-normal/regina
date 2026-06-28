@@ -13,6 +13,7 @@ SET ( FILES
   perm.cpp
   snappea.cpp
   tableview.cpp
+  treeconstraint.cpp
   triangulation.cpp
   )
 

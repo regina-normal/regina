@@ -362,21 +362,20 @@ Version 8.0  [ TODO ]
             - This is now an internal class in the namespace regina::detail,
               and its template parameters have changed.  End users should have
               no need to refer to LPCol<...> at all.
-        Class LPConstraint...:
-            - All linear programming constraint classes must now adhere to the
-              new concept LPConstraint.
-            - The constant nConstraints and the routine constrain() are both
-              removed, and replaced with the class constant array constraints[].
-            - The arguments to addRows() have changed: it no longer takes an
-              initial tableaux, but instead takes the relevant triangulation
-              and column permutation.
-        Class LPConstraintAPI, LPConstraintBase, LPConstraintSubspace:
+        Class LPConstraintBase, LPConstraintSubspace, ...:
             - The old base classes LPConstraintBase and LPConstraintSubspace
-              are now deprecated, and should no longer be used.  Instead they
-              have been replaced with the new concepts LPConstraint and
-              LPSubspace that the relevant constraint types should adhere to.
-              See also the new documentation-only class LPConstraintAPI for
-              details on how a linear programming constraint type should behave.
+              are removed, and instead replaced with new concepts: the concepts
+              LPConstraint, LPSurfaceConstraint and LPStructureConstraint
+              replaces LPConstraintBase, and the concepts LPSurfaceSubspace and
+              LPStructureSubspace replace LPConstraintSubspace.
+            - In particular, all linear programming constraint classes must now
+              adhere to the new concept LPConstraint.
+            - For all constraint classes, the constant nConstraints and the
+              routine constrain() are both removed, and replaced with the class
+              constant array constraints[].
+            - For all constraint classes, the arguments to addRows() have
+              changed: it no longer takes an initial tableaux, but instead
+              takes the relevant triangulation and column permutation.
         Enum LPConstraintType:
             - New enumeration for use with the various LPConstraint classes.
         Class LPData:
@@ -728,8 +727,9 @@ Version 8.0  [ TODO ]
                 SignatureEncodable, SignatureType (defined in concepts/maths.h)
               + ArrayOf, ConstRefArrayOf (defined in concepts/array.h)
               + CensusSearchable (defined in census/census.h)
-              + BanConstraint, LPConstraint, LPSubspace (defined in
-                enumerate/treelp.h)
+              + BanConstraint, LPConstraint, LPStructureConstraint,
+                LPStructureSubspace, LPSurfaceConstraint, LPSurfaceSubspace
+                (defined in enumerate/treelp.h)
               + LinkSigEncoding (defined in link/linksig.h)
               + PacketClass, PacketHeldType, TextPacket, WrappedPacket
                 (defined in packet/packet.h)
