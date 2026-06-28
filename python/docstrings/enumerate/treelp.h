@@ -36,10 +36,170 @@ struct LPConstraint {
 static constexpr const char __concept[] =
 R"doc(Represents a set of additional linear constraints that we can add to
 the tableaux of normal surface or angle structure matching equations.
-This concept is used with Regina's linear programming machinery.
+This concept is used with Regina's linear programming machinery, in
+particular with the TreeEnumeration, TreeSingleSoln and related
+algorithms for enumerating and locating normal surfaces or angle
+structures in a 3-manifold triangulation.
 
-See LPConstraintAPI for further information, including a thorough
-description of how a linear constraint type is expected to behave.
+A constraint type might work with normal surfaces (in which case it
+also satisfies LPSurfaceConstraint), or it might work with angle
+structures (in which case it also satisfies LPStructureConstraint), or
+it might work with both (in which case it satisfies both of these
+other concepts).
+
+Regarding the mathematical form of the linear constraints:
+
+* Typically only one linear constraint _type_ would be used with a
+  normal surface or angle structure enumeration/location algorithm.
+  However, a single type can describe several simultaneous linear
+  equations and/or inequalities (see LPConstraintNonSpun for an
+  example of this). At present the number of constraints must be a
+  compile-time constant (i.e., it cannot depend on the input
+  triangulation).
+
+* Each constraint will generate one new variable (column) and one new
+  equation (row) in the tableaux.
+
+* When working in angle structure coordinates, these linear
+  constraints must _not_ involve the scaling coordinate (the final
+  coordinate that is used to convert the angle structure polytope into
+  a polyhedral cone). Instead, the coefficient for the final scaling
+  coordinate in each additional linear constraint will be assumed to
+  be zero.
+
+* Bear in mind that the tableaux that these linear constraints are
+  working with will not necessarily use the same coordinates as the
+  underlying normal surface or angle structure enumeration task (e.g.,
+  the tableaux will never include separate columns for octagon
+  coordinates). See LPInitialTableaux for a more detailed discussion
+  of this.
+
+A constraint type *T* provides its functionality through static class
+constants and static functions. In particular, if the type *T*
+describes *k* linear constraints, then it must provide:
+
+* A type alias ``T::Coefficient``, used to store each coefficient of
+  each constraint. This may be any signed native C++ integer type.
+
+* A class constant ``std::array<LPConstraintType, k> constraints``,
+  indicating the form of each constraint (equality vs inequality). The
+  preferred way to access the number of constraints *k* is via
+  ``T::constraints.size()``.
+
+* A class constant ``T::Coefficient octAdjustment`` indicating how to
+  adjust the coefficients of these linear constraints when using two
+  quadrilateral columns to represent an octagon type. See below for
+  further discussion on working with octagons in a tableaux. This
+  constant is only required for constraint types that work with normal
+  surfaces (as opposed to angle structures). For a surface constraint
+  that does not work with octagons (i.e., that does not support
+  _almost_ normal surfaces) this constant can just be zero.
+
+* A static function ``constexpr bool supported(NormalEncoding)``,
+  which indicates whether the given vector encoding is supported by
+  the constraint type *T*. This function may assume that the given
+  encoding is already supported by the generic tree traversal
+  infrastructure, and only needs to test any additional prerequisites
+  specific to the constraint type *T*. This function should _only_
+  depend upon which coordinates the encoding stores (e.g., it could
+  query NormalEncoding::storesTriangles()), and it must not require
+  any "semantic guarantees" of the encoding (e.g., it must not query
+  NormalEncoding::couldBeNonCompact()).
+
+* Static functions ``bool verify(const NormalSurface&)`` (for
+  constraints that work with normal surfaces) and/or ``bool
+  verify(const AngleStructure&)`` (for constraints that work with
+  angle structures), which test whether the given surface or structure
+  satisfies whatever constraints this type represents. This is for
+  verification and diagnostic purposes: ideally implementations would
+  not just recompute the relevant linear function(s), but would
+  instead test this "independently" (e.g., a constraint on Euler
+  characterstic might call NormalSurface::eulerChar() and verify the
+  result).
+
+* A static function ``void addRows(col, tri, columnPerm)``, which
+  explicitly builds equations for the linear function(s) constrained
+  by this type. In particular:
+
+* The argument *col* should be of type
+  ``detail::LPCol<constraints.size(), Coefficient>*``, and will be a
+  C-style array of columns as stored in the initial tableaux. Note
+  that the number of columns is not passed explicitly; instead you
+  would typically deduce this from ``tri.size()``.
+
+* The argument *tri* should be of type ``const Triangulation<3>&``,
+  representing the underlying triangulation.
+
+* The argument *columnPerm* should of type ``const size_t*``, and will
+  be a C-style array of integers indicating which columns of the
+  initial tableaux correspond to which normal or angle structure
+  coordinates. This is the array returned by
+  ``LPInitialTableaux<...>::columnPerm()``.
+
+* The purpose of ``addRows()`` is to fill the coefficients for the
+  extra constraints into the array of columns *col*. More precisely:
+  for each linear constraint, the initial tableaux acquires one new
+  variable *x_i* that evaluates the corresponding linear function
+  ``f(x)``. This routine creates the corresponding row that sets
+  ``f(x) = x_i``. Thus it must construct the coefficients of ``f(x)``
+  in the columns corresponding to the "ordinary" normal/angle
+  coordinates (remembering to take the permutation *columnPerm* into
+  account), and it must set a coefficient of ``-1`` in the column for
+  the extra variable *x_i*. The implementation must store these
+  coefficients in ``col[...].extra``, and it may assume that these
+  coefficients have already been initialised to zero (as promised by
+  the LPCol constructor).
+
+* As described in the LPInitialTableaux class notes, it might not be
+  possible to construct the linear functions (since the underlying
+  triangulation might not satisfy the necessary requirements). In such
+  cases this routine should throw an exception, of type
+  InvalidArgument if the error should have been preventable with the
+  right checks in advance (e.g., the user failed to adhere to some
+  precondition), or of type UnsolvedCase if the error was "genuinely"
+  unforseeable (e.g., SnapPea unexpectedly retriangulated the input).
+  If your constraint class does throw exceptions, it _must_ explain
+  this in its class documentation.
+
+If your constraint type works with angle structure coordinates,
+remember that your linear constraints must _not_ interact with the
+scaling coordinate (the final angle structure coordinate that is used
+to projectivise the angle structure polytope into a polyhedral cone).
+Your implementation of ``addRows()`` _must_ leave all constraint
+coefficients in this column as zero.
+
+Regarding octagon coordinates in almost normal surfaces:
+
+* The LPData class offers support for octagonal almost normal
+  surfaces, in which exactly one tetrahedron is allowed to have
+  exactly one octagon type. For this we do not store separate columns
+  for octagon coordinates; instead we represent an octagon as a _pair_
+  of incompatible quadrilaterals within the same tetrahedron. See the
+  LPData class notes for details on how this works.
+
+* Depending on the nature of your extra linear constraints, they might
+  need adjustment in the presence of octagons (i.e., the coefficient
+  of the hypothetical octagon type might not just be the sum of
+  coefficients of the two actual quadrilateral types used to represent
+  it). For this we use the class constant `T::octAdjustment'. In
+  particular, for each of the two quadrilateral columns used to
+  represent an octagon type, the coefficient for each linear
+  constraint will be adjusted by adding ``T::octAdjustment``.
+
+* Currently this is a _very_ blunt mechanism: it assumes that the
+  adjustment can be made by adding a compile-time constant, and it
+  assumes that if there are multiple constraints (i.e.,
+  ``T::constraints.size() > 1``), then then they can all be adjusted
+  in the same way. This mechanism will be made more flexible if/when
+  this becomes necessary.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.
 
 Concepts:
     LPConstraint is a C++ concept. Concepts work with the C++ compiler
@@ -209,7 +369,7 @@ Template parameter ``IntType``:
     aware that there will be no testing for overflow: it is your
     responsibility to prove in advance that overflow will never occur
     as you operate on the tableaux via routines such as
-    constraintZero(), constraintPositive(), and constraintOct().
+    constrainZero(), constrainPositive(), and constrainOct().
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -229,7 +389,7 @@ static constexpr const char columns[] =
 R"doc(Returns the number of columns in this tableaux.
 
 Note that, if we are imposing extra constraints through the
-LPConstraint template parameter, then there will be extra variables to
+*Constraint* template parameter, then there will be extra variables to
 enforce these, and so the number of columns will be larger than in the
 original matching equation matrix.
 
@@ -371,7 +531,7 @@ Precondition:
     No individual coordinate column has had more than one call to
     either of constrainPositive() or constrainOct() (otherwise the
     coordinate will not be correctly reconstructed). Any additional
-    columns arising from the LPConstraint template parameter are
+    columns arising from the *Constraint* template parameter are
     exempt from this requirement.
 
 Python:
@@ -435,7 +595,7 @@ R"doc(Initialises this tableaux by beginning at the original starting
 tableaux and working our way to any feasible basis.
 
 This routine also explicitly enforces the additional constraints from
-the LPConstraint template parameter (i.e., this routine is responsible
+the *Constraint* template parameter (i.e., this routine is responsible
 for forcing the corresponding linear function(s) to be zero or
 strictly positive as appropriate).
 
@@ -583,11 +743,11 @@ quad normal matching equations (if LPSystem::standard() is ``True``),
 the quad normal matching equations (if LPSystem::quad() is ``True``),
 or the homogeneous angle equations (if LPSystem::angles() is true). If
 you need to add extra matching equations beyond these, use the
-Constraint template argument as outlined above. If you need to support
-more exotic vector encodings (e.g., for octagonal almost normal
-surfaces), you will need to find a way to represent it using one of
-these three broad classes; see the LPData class notes for how this is
-done with octagons.
+*Constraint* template argument as outlined above. If you need to
+support more exotic vector encodings (e.g., for octagonal almost
+normal surfaces), you will need to find a way to represent it using
+one of these three broad classes; see the LPData class notes for how
+this is done with octagons.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
@@ -605,9 +765,9 @@ Python:
     This is a heavily templated class; nevertheless, many variants are
     now made available to Python users. Each class name is of the form
     LPInitialTableaux_*Constraint*, where the suffix *Constraint* is
-    an abbreviated version of the Constraint template parameter; this
-    suffix is omitted entirely for the common case LPConstraintNone.
-    An example of such a Python class name is
+    an abbreviated version of the *Constraint* template parameter;
+    this suffix is omitted entirely for the common case
+    LPConstraintNone. An example of such a Python class name is
     ``LPInitialTableaux_NonSpun``. You are encouraged to look through
     the Regina namespace to see which constraint classes are supported
     under Python.
@@ -636,7 +796,7 @@ Precondition:
 
 Exception ``InvalidArgument``:
     It was not possible to add the extra constraints from the
-    LPConstraint template argument, due to an error which should have
+    *Constraint* template argument, due to an error which should have
     been preventable with the right checks in advance. Such exceptions
     are generated by the *Constraint* class, and so you should consult
     the class documentation for your chosen *Constraint* template
@@ -644,7 +804,7 @@ Exception ``InvalidArgument``:
 
 Exception ``InvalidArgument``:
     It was not possible to add the extra constraints from the
-    LPConstraint template argument, due to an error that was
+    *Constraint* template argument, due to an error that was
     "genuinely" unforseeable. Again, such exceptions are generated by
     your chosen *Constraint* class, and you should consult its
     documentation to see if this is a possibility.
@@ -676,7 +836,7 @@ The permutation is returned as an array of columns() integers, such
 that column *i* of this adjusted matrix corresponds to column
 ``columnPerm()[i]`` of the original matrix.
 
-If you are imposing additional constraints through the LPConstraint
+If you are imposing additional constraints through the *Constraint*
 template parameter, then the corresponding extra variables will be
 included in the permutation; however, these are never moved and will
 always remain the rightmost variables in this system (i.e., the
@@ -724,7 +884,7 @@ static constexpr const char columns[] =
 R"doc(Returns the number of columns in this matrix.
 
 Note that, if we are imposing extra constraints through the
-LPConstraint template parameter, then there will be extra variables to
+*Constraint* template parameter, then there will be extra variables to
 enforce these, and so the number of columns will be larger than in the
 original matching equation matrix.
 
@@ -805,7 +965,7 @@ quadrilaterals within the same tetrahedron. See the LPData class notes
 for details on how this works.
 
 In some settings where we are using additional constraints through the
-LPConstraint template parameter, these extra constraints behave
+*Constraint* template parameter, these extra constraints behave
 differently in the presence of octagons (i.e., the coefficient of the
 octagon type is not just the sum of coefficients of the two
 constituent quadrilateral types). This routine effectively allows us
@@ -849,7 +1009,7 @@ static constexpr const char rank[] =
 R"doc(Returns the rank of this matrix.
 
 Note that, if we are imposing extra constraints through the
-LPConstraint template parameter, then there will be extra variables to
+*Constraint* template parameter, then there will be extra variables to
 enforce these, and so the rank will be larger than the rank of the
 original matching equation matrix.
 
@@ -1252,28 +1412,106 @@ Parameter ``r2``:
 
 }; // struct LPMatrix
 
-struct LPSubspace {
+struct LPStructureConstraint {
 
-// Docstring regina::python::doc::LPSubspace::__concept
+// Docstring regina::python::doc::LPStructureConstraint::__concept
 static constexpr const char __concept[] =
-R"doc(Represents a set of additional homogeneous linear equality constraints
-that we can add to the tableaux of normal surface or angle structure
-matching equations. This concept is used with Regina's linear
-programming machinery.
+R"doc(Represents a set of additional linear constraints that we can add to
+the tableaux of angle structure equations.
 
-The concept LPSubspace essentially refines LPConstraint to ensure that
-the additional linear constraints carve out a linear subspace of
-``R^n``.
+This is a special form of LPConstraint, designed for constraints that
+work with angle structures (as opposed to normal surfaces). See the
+LPConstraint concept documentation for further details, including a
+full explanation of how such a constraint type is expected to behave.
 
-See LPConstraintAPI for further information.
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.
 
 Concepts:
-    LPSubspace is a C++ concept. Concepts work with the C++ compiler
-    at build time: you cannot test in Python which concepts are
-    satisfied by which types. Instead, what this Python wrapper offers
-    is the concept _documentation_ (which you are reading now).)doc";
+    LPStructureConstraint is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
 
-}; // struct LPSubspace
+}; // struct LPStructureConstraint
+
+struct LPStructureSubspace {
+
+// Docstring regina::python::doc::LPStructureSubspace::__concept
+static constexpr const char __concept[] =
+R"doc(Represents a set of additional homogeneous linear equality constraints
+that we can add to the tableaux of angle structure equations.
+
+This is a special form of LPConstraint, where the linear constraints
+work with angle structures (as opposed to normal surfaces), and where
+they are all of type LPConstraintType::Zero (i.e., they together carve
+out a linear subspace of ``R^n``).
+
+See the LPConstraint concept for further information.
+
+Concepts:
+    LPStructureSubspace is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
+
+}; // struct LPStructureSubspace
+
+struct LPSurfaceConstraint {
+
+// Docstring regina::python::doc::LPSurfaceConstraint::__concept
+static constexpr const char __concept[] =
+R"doc(Represents a set of additional linear constraints that we can add to
+the tableaux of normal surface matching equations.
+
+This is a special form of LPConstraint, designed for constraints that
+work with normal or almost normal surfaces (as opposed to angle
+strutures). See the LPConstraint concept documentation for further
+details, including a full explanation of how such a constraint type is
+expected to behave.
+
+.. warning::
+    The API for this class or function has not yet been finalised.
+    This means that the interface may change in new versions of
+    Regina, without maintaining backward compatibility. If you use
+    this class directly in your own code, please check the detailed
+    changelog with each new release to see if you need to make changes
+    to your code.
+
+Concepts:
+    LPSurfaceConstraint is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
+
+}; // struct LPSurfaceConstraint
+
+struct LPSurfaceSubspace {
+
+// Docstring regina::python::doc::LPSurfaceSubspace::__concept
+static constexpr const char __concept[] =
+R"doc(Represents a set of additional homogeneous linear equality constraints
+that we can add to the tableaux of normal surface matching equations.
+
+This is a special form of LPConstraint, where the linear constraints
+work with normal or almost normal surfaces (as opposed to angle
+structures), and where they are all of type LPConstraintType::Zero
+(i.e., they together carve out a linear subspace of ``R^n``).
+
+See the LPConstraint concept for further information.
+
+Concepts:
+    LPSurfaceSubspace is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
+
+}; // struct LPSurfaceSubspace
 
 struct LPSystem {
 

@@ -43,6 +43,7 @@
 #include "core/output.h"
 #include "triangulation/forward.h"
 #include "triangulation/detail/strings.h"
+#include "utilities/exception.h"
 #include "utilities/markedvector.h"
 #include "utilities/typeutils.h"
 

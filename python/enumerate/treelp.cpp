@@ -83,12 +83,14 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
         }, rdoc::columnPerm)
         .def("multColByRow", &Tableaux::template multColByRow<Integer>,
             rdoc::multColByRow)
-        .def("multColByRowOct", &Tableaux::template multColByRowOct<Integer>,
-            rdoc::multColByRowOct)
         .def("fillInitialTableaux",
             &Tableaux::template fillInitialTableaux<Integer>,
             rdoc::fillInitialTableaux)
         ;
+    if constexpr (regina::LPSurfaceConstraint<Constraint>) {
+        c.def("multColByRowOct", &Tableaux::template multColByRowOct<Integer>,
+            rdoc::multColByRowOct);
+    }
     regina::python::add_output_rich(c);
     // We need to think more about what a comparison between tableaux should
     // test.  In the meantime, don't make a decision we might regret later.
@@ -119,7 +121,6 @@ void addLPData(pybind11::module_& m, const char* name) {
         .def("constrainZero", &Data::constrainZero, rdoc::constrainZero)
         .def("constrainPositive", &Data::constrainPositive,
             rdoc::constrainPositive)
-        .def("constrainOct", &Data::constrainOct, rdoc::constrainOct)
         .def("extractSolution", [](const Data& d, const std::vector<int>& t) {
             // Currently LPData does not give us an easy way to extract the
             // expected length of the type vector, and so we cannot sanity-check
@@ -132,6 +133,9 @@ void addLPData(pybind11::module_& m, const char* name) {
             return ans;
         }, rdoc::extractSolution)
         ;
+    if constexpr (regina::LPSurfaceConstraint<Constraint>) {
+        c.def("constrainOct", &Data::constrainOct, rdoc::constrainOct);
+    }
     regina::python::add_output_rich(c);
     // We need to think more about what a comparison between tableaux should
     // test.  Do we just compare basis indices?  Do we do a deep comparison of
@@ -216,7 +220,14 @@ void addTreeLP(pybind11::module_& m) {
     RDOC_SCOPE_SWITCH_MAIN
 
     regina::python::add_concept<rdoc::LPConstraint>(m, "LPConstraint");
-    regina::python::add_concept<rdoc::LPSubspace>(m, "LPSubspace");
+    regina::python::add_concept<rdoc::LPSurfaceConstraint>(m,
+        "LPSurfaceConstraint");
+    regina::python::add_concept<rdoc::LPStructureConstraint>(m,
+        "LPStructureConstraint");
+    regina::python::add_concept<rdoc::LPSurfaceSubspace>(m,
+        "LPSurfaceSubspace");
+    regina::python::add_concept<rdoc::LPStructureSubspace>(m,
+        "LPStructureSubspace");
     regina::python::add_concept<rdoc::BanConstraint>(m, "BanConstraint");
 
     RDOC_SCOPE_END
