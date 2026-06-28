@@ -178,6 +178,74 @@ startLoop:
     }
 }
 
+// Set the policies for which moves/techniques to use in each simplification
+// context.
+//
+// Regarding random 4-4 moves:
+//  --- At present, the implementation of simplifyInternal() uses these in all
+//      contexts, and we do not bother with providing a toggle for these. But
+//      this may change in future.
+//  --- The number of attempted 4-4 moves is partly determined by a
+//      coefficient which may depend on the context.
+//      The current implementation of simplifyInternal() allows the following
+//      options:
+//      --> A constant coefficient.
+//      --> A coefficient which, above some minimum value, scales with the
+//          size of the triangulation.
+template<>
+struct Triangulation<3>::SimplifyPolicy<
+Triangulation<3>::SimplifyContext::Best> {
+    // Policies for random 4-4 moves.
+    //  --- Only modify the triangulation if we successfully reduced the size.
+    //  --- Determine the number of 4-4 moves to attempt using a constant
+    //      coefficient.
+    static constexpr bool random44AlwaysModify = false;
+    static constexpr bool scaleCoeff44 = false;
+    static constexpr size_t constantCoeff44 = 5; // Used if (! scaleCoeff44)
+    static constexpr size_t minimumCoeff44 = 5; // Used if (scaleCoeff44)
+    static constexpr size_t scale44Divisor = 20; // Used if (scaleCoeff44)
+    // Use all available techniques to simplify the triangulation as much as
+    // possible.
+    static constexpr bool allowMinimiseVertices = true;
+    static constexpr bool allowOpenAndCloseBook = true;
+    static constexpr bool allowShellBoundary = true;
+    static constexpr bool allowCollapseEdge = true;
+    static constexpr bool allow32 = true;
+    // At present, the moves below are allowed in all contexts, but we include
+    // these toggles to make future modifications easier.
+    static constexpr bool allowEdge20 = true;
+    static constexpr bool allowEdge21 = true;
+    static constexpr bool allowVertex20 = true;
+};
+template<>
+struct Triangulation<3>::SimplifyPolicy<
+Triangulation<3>::SimplifyContext::UpDownDescent> {
+    // Policies for random 4-4 moves.
+    //  --- Since these moves might be helpful for escaping wells, always
+    //      modify the triangulation even if we did not reduce the size.
+    //  --- Determine the number of 4-4 moves to attempt using a coefficient
+    //      that scales with the size. The 1/20 scaling factor is chosen based
+    //      on experimentation with some hard 3-sphere triangulations, and
+    //      tries to find a balance between effectiveness and running time.
+    static constexpr bool random44AlwaysModify = true;
+    static constexpr bool scaleCoeff44 = true;
+    static constexpr size_t constantCoeff44 = 5; // Used if (! scaleCoeff44)
+    static constexpr size_t minimumCoeff44 = 5; // Used if (scaleCoeff44)
+    static constexpr size_t scale44Divisor = 20; // Used if (scaleCoeff44)
+    // At present, "down" sequences of simplifyUpDown() only use 2-0 edge
+    // moves, 2-1 edge moves, 2-0 vertex moves, and 4-4 moves.
+    static constexpr bool allowMinimiseVertices = false;
+    static constexpr bool allowOpenAndCloseBook = false;
+    static constexpr bool allowShellBoundary = false;
+    static constexpr bool allowCollapseEdge = false;
+    static constexpr bool allow32 = false;
+    // At present, the moves below are allowed in all contexts, but we include
+    // these toggles to make future modifications easier.
+    static constexpr bool allowEdge20 = true;
+    static constexpr bool allowEdge21 = true;
+    static constexpr bool allowVertex20 = true;
+};
+
 template <Triangulation<3>::SimplifyContext context>
 bool Triangulation<3>::simplifyInternal() {
     bool changed;
@@ -188,13 +256,11 @@ bool Triangulation<3>::simplifyInternal() {
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimumInternal<context>(true);
 
-        // At least for now, intermediate "down" sequences in simplifyUpDown()
-        // won't bother with minimising vertices.
-        if constexpr ( context != SimplifyContext::UpDownDescent ) {
-            // If we still haven't minimised vertices, try to do this now.
-            // We will throw this away if it increases the number of tetrahedra,
-            // but even if the size stays the same we will keep it since
-            // fewer vertices is generally better.
+        // If we still haven't minimised vertices, try to do this now.
+        // We will throw this away if it increases the number of tetrahedra,
+        // but even if the size stays the same we will keep it since
+        // fewer vertices is generally better.
+        if constexpr (SimplifyPolicy<context>::allowMinimiseVertices) {
             if (isValid() && ! hasMinimalVertices()) {
                 Triangulation<3> tmp(*this, false, true);
                 try {
@@ -205,7 +271,7 @@ bool Triangulation<3>::simplifyInternal() {
                     // still have performed some moves, and it guarantees that the
                     // resulting triangulation is sensible.  Keep whatever we got.
                 }
-                tmp.simplifyToLocalMinimum(true);
+                tmp.simplifyToLocalMinimumInternal<context>(true);
                 if (tmp.size() <= size()) {
                     swap(tmp);
                     changed = true;
@@ -228,17 +294,14 @@ bool Triangulation<3>::simplifyInternal() {
 
             // Clone the triangulation and start making changes that might or
             // might not lead to a simplification.
-            // If we've already simplified then there's no need to use a
-            // separate clone since we won't need to undo further changes.
-            //
-            // Also, if we are in an intermediate "down" sequence of
-            // simplifyUpDown(), then we are happy to make some random changes
-            // even if they don't immediately help to improve the
-            // triangulation.
+            // If we've already simplified, or if we're happy to always modify
+            // the triangulation regardless of whether we simplified, then
+            // there's no need to use a separate clone since we won't need to
+            // undo further changes.
             //
             // If we are cloning the triangulation, ensure we clone the locks
             // also.
-            if constexpr ( context == SimplifyContext::UpDownDescent ) {
+            if constexpr (SimplifyPolicy<context>::random44AlwaysModify) {
                 use = this;
             } else if (changed) {
                 use = this;
@@ -247,14 +310,17 @@ bool Triangulation<3>::simplifyInternal() {
             }
 
             // Make random 4-4 moves.
-            int COEFF_4_4;
-            if constexpr ( context == SimplifyContext::UpDownDescent ) {
-                COEFF_4_4 = use->size() / 20;
-                if ( COEFF_4_4 < 5 ) {
-                    COEFF_4_4 = 5;
+            size_t coeff44;
+            if constexpr (SimplifyPolicy<context>::scaleCoeff44) {
+                // For a large triangulation which might otherwise be very
+                // difficult to simplify, it can help to try a bit harder with
+                // random 4-4 moves.
+                coeff44 = use->size() / SimplifyPolicy<context>::scale44Divisor;
+                if ( coeff44 < SimplifyPolicy<context>::minimumCoeff44 ) {
+                    coeff44 = SimplifyPolicy<context>::minimumCoeff44;
                 }
             } else {
-                COEFF_4_4 = 5;
+                coeff44 = SimplifyPolicy<context>::constantCoeff44;
             }
             fourFourAttempts = fourFourCap = 0;
             while (true) {
@@ -267,8 +333,8 @@ bool Triangulation<3>::simplifyInternal() {
                             fourFourAvailable.emplace_back(edge, axis);
 
                 // Increment fourFourCap if needed.
-                if (fourFourCap < COEFF_4_4 * fourFourAvailable.size())
-                    fourFourCap = COEFF_4_4 * fourFourAvailable.size();
+                if (fourFourCap < coeff44 * fourFourAvailable.size())
+                    fourFourCap = coeff44 * fourFourAvailable.size();
 
                 // Have we tried enough 4-4 moves?
                 if (fourFourAttempts >= fourFourCap)
@@ -301,10 +367,7 @@ bool Triangulation<3>::simplifyInternal() {
 
             // At this point we have decided that 4-4 moves will help us
             // no more.
-            if constexpr ( context == SimplifyContext::UpDownDescent ) {
-                // At least for now, intermediate "down" sequences in
-                // simplifyUpDown() won't bother with open and close book
-                // moves.
+            if constexpr (! SimplifyPolicy<context>::allowOpenAndCloseBook) {
                 break;
             }
 
@@ -332,7 +395,7 @@ bool Triangulation<3>::simplifyInternal() {
 
                 // If we're lucky, we now have an edge that we can collapse.
                 if (opened) {
-                    if (use->simplifyToLocalMinimum(true)) {
+                    if (use->simplifyToLocalMinimumInternal<context>(true)) {
                         // Yay!
                         swap(*use);
                         changed = true;
@@ -365,10 +428,10 @@ bool Triangulation<3>::simplifyInternal() {
                         closed = true;
                         changed = true;
 
-                        // We don't actually care whether we reduce the
-                        // number of tetrahedra or not.  Ignore the
-                        // return value from simplifyToLocalMinimum().
-                        simplifyToLocalMinimum(true);
+                        // We don't actually care whether we reduce the number
+                        // of tetrahedra or not. Ignore the return value from
+                        // simplifyToLocalMinimumInternal().
+                        simplifyToLocalMinimumInternal<context>(true);
 
                         break;
                     }
@@ -399,10 +462,8 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
     if (! perform) {
         ensureSkeleton();
 
-        // At least for now, intermediate "down" sequences in simplifyUpDown()
-        // won't bother with edge collapses.
-        if constexpr ( context != SimplifyContext::UpDownDescent ) {
-            // Try to reduce the number of vertices.
+        // Try to reduce the number of vertices.
+        if constexpr (SimplifyPolicy<context>::allowCollapseEdge) {
             if (countVertices() > components().size() &&
                     countVertices() > countBoundaryComponents()) {
                 for (Edge<3>* edge : edges()) {
@@ -427,27 +488,29 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
 
         // Look for internal simplifications.
         for (Edge<3>* edge : edges()) {
-            if constexpr ( context != SimplifyContext::UpDownDescent ) {
-                // Intermediate "down" sequences in simplifyUpDown() should not
-                // use 3-2 moves.
+            if constexpr (SimplifyPolicy<context>::allow32) {
                 if (hasPachner(edge))
                     return true;
             }
-            if (has20(edge))
-                return true;
-            if (has21(edge, 0))
-                return true;
-            if (has21(edge, 1))
-                return true;
+            if constexpr (SimplifyPolicy<context>::allowEdge20) {
+                if (has20(edge))
+                    return true;
+            }
+            if constexpr (SimplifyPolicy<context>::allowEdge21) {
+                if (has21(edge, 0))
+                    return true;
+                if (has21(edge, 1))
+                    return true;
+            }
         }
-        for (Vertex<3>* vertex : vertices())
-            if (has20(vertex))
-                return true;
+        if constexpr (SimplifyPolicy<context>::allowVertex20) {
+            for (Vertex<3>* vertex : vertices())
+                if (has20(vertex))
+                    return true;
+        }
 
-        // At least for now, intermediate "down" sequences in simplifyUpDown()
-        // won't bother with boundary simplifications.
-        if constexpr ( context != SimplifyContext::UpDownDescent ) {
-            // Look for boundary simplifications.
+        // Look for boundary simplifications.
+        if constexpr (SimplifyPolicy<context>::allowShellBoundary) {
             if (hasBoundaryTriangles()) {
                 for (BoundaryComponent<3>* bc : boundaryComponents()) {
                     // Run through triangles of this boundary component looking
@@ -472,10 +535,8 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
             changedNow = false;
             ensureSkeleton();
 
-            // At least for now, intermediate "down" sequences in
-            // simplifyUpDown() won't bother with edge collapses.
-            if constexpr ( context != SimplifyContext::UpDownDescent ) {
-                // Try to reduce the number of vertices.
+            // Try to reduce the number of vertices.
+            if constexpr (SimplifyPolicy<context>::allowCollapseEdge) {
                 if (countVertices() > components().size() &&
                         countVertices() > countBoundaryComponents()) {
                     for (Edge<3>* edge : edges()) {
@@ -495,6 +556,7 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
                         }
 #endif
                     }
+                    //TODO perform should always be true at this point.
                     if (changedNow) {
                         if (perform)
                             continue;
@@ -506,7 +568,7 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
 
             // Look for internal simplifications.
             for (Edge<3>* edge : edges()) {
-                if constexpr ( context != SimplifyContext::UpDownDescent ) {
+                if constexpr (SimplifyPolicy<context>::allow32) {
                     // Intermediate "down" sequences in simplifyUpDown() should
                     // not use 3-2 moves.
                     if (pachner(edge)) {
@@ -514,41 +576,47 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
                         break;
                     }
                 }
-                if (move20(edge)) {
-                    changedNow = changed = true;
-                    break;
+                if constexpr (SimplifyPolicy<context>::allowEdge20) {
+                    if (move20(edge)) {
+                        changedNow = changed = true;
+                        break;
+                    }
                 }
-                if (move21(edge, 0)) {
-                    changedNow = changed = true;
-                    break;
-                }
-                if (move21(edge, 1)) {
-                    changedNow = changed = true;
-                    break;
+                if constexpr (SimplifyPolicy<context>::allowEdge21) {
+                    if (move21(edge, 0)) {
+                        changedNow = changed = true;
+                        break;
+                    }
+                    if (move21(edge, 1)) {
+                        changedNow = changed = true;
+                        break;
+                    }
                 }
             }
             if (changedNow) {
+                //TODO perform should always be true at this point.
                 if (perform)
                     continue;
                 else
                     return true;
             }
-            for (Vertex<3>* vertex : vertices())
-                if (move20(vertex)) {
-                    changedNow = changed = true;
-                    break;
+            if constexpr (SimplifyPolicy<context>::allowVertex20) {
+                for (Vertex<3>* vertex : vertices())
+                    if (move20(vertex)) {
+                        changedNow = changed = true;
+                        break;
+                    }
+                if (changedNow) {
+                    //TODO perform should always be true at this point.
+                    if (perform)
+                        continue;
+                    else
+                        return true;
                 }
-            if (changedNow) {
-                if (perform)
-                    continue;
-                else
-                    return true;
             }
 
-            // At least for now, intermediate "down" sequences in
-            // simplifyUpDown() won't bother with boundary simplifications.
-            if constexpr ( context != SimplifyContext::UpDownDescent ) {
-                // Look for boundary simplifications.
+            // Look for boundary simplifications.
+            if constexpr (SimplifyPolicy<context>::allowShellBoundary) {
                 if (hasBoundaryTriangles()) {
                     for (BoundaryComponent<3>* bc : boundaryComponents()) {
                         // Run through triangles of this boundary component
@@ -562,6 +630,7 @@ bool Triangulation<3>::simplifyToLocalMinimumInternal(bool perform) {
                             break;
                     }
                     if (changedNow) {
+                        //TODO perform should always be true at this point.
                         if (perform)
                             continue;
                         else
@@ -609,14 +678,14 @@ bool Triangulation<3>::simplifyUpDown( ssize_t max23, bool alwaysModify,
     for ( ssize_t consec23 = 1; consec23 < 2 * max23; consec23 *= 2 ) {
         ssize_t perform23 = ( consec23 < max23 ) ? consec23 : max23;
 
-        int COEFF_REPS = 6;
-        for ( int rep = 1; rep <= COEFF_REPS; ++rep ) {
+        int coeffReps = 6;
+        for ( int rep = 1; rep <= coeffReps; ++rep ) {
             if (tracker) {
                 tracker->newStage( "Trying run of "
                         + std::to_string(perform23)
                         + " random 2-3 moves, round "
                         + std::to_string(rep) + "/"
-                        + std::to_string(COEFF_REPS) );
+                        + std::to_string(coeffReps) );
             }
 
             // Attempt perform23 consecutive random 2-3 moves.

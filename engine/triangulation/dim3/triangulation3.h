@@ -211,11 +211,17 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
             Best,
             /**
              * Indicates that we are within a "down" sequence of
-             * simplifyUpDown(). Only 2-0 edge moves, 2-1 edge moves,
-             * 2-0 vertex moves and 4-4 moves will be considered.
+             * simplifyUpDown().
              */
             UpDownDescent
         };
+
+        /**
+         * Used to set the policy for which moves/techniques to use in each
+         * simplification context.
+         */
+        template<SimplifyContext>
+        struct SimplifyPolicy;
 
     public:
         /**
