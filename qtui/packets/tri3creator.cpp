@@ -44,6 +44,7 @@
 #include <numeric> // for std::gcd()
 #include <QCheckBox>
 #include <QComboBox>
+#include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
@@ -73,6 +74,7 @@ namespace {
         // --- separator ---
         TRI_LAYERED_LENS_SPACE = 6,
         TRI_SFS_SPHERE,
+        TRI_SFS_ORIENTABLE,
         TRI_LAYERED_SOLID_TORUS,
         TRI_HANDLEBODY
     };
@@ -289,11 +291,86 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
         "... (<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>):</qt>"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
-    sfsParams = new QLineEdit();
-    sfsParams->setValidator(new QRegularExpressionValidator(
+    sfsOverSphereParams = new QLineEdit();
+    sfsOverSphereParams->setValidator(new QRegularExpressionValidator(
         reSFSAllParams, hArea));
-    sfsParams->setWhatsThis(expln);
-    hLayout->addWidget(sfsParams, 1);
+    sfsOverSphereParams->setWhatsThis(expln);
+    hLayout->addWidget(sfsOverSphereParams, 1);
+    details->addWidget(hArea);
+
+    type->addItem(QObject::tr("Orientable Seifert fibred space"));
+    hArea = new QWidget();
+    auto gridLayout = new QGridLayout();
+    gridLayout->setContentsMargins(0, 0, 0, 0);
+    hArea->setLayout(gridLayout);
+    // Choose orientable or non-orientable base surface.
+    expln = QObject::tr("<qt>Specifies whether the base surface is "
+            "orientable or non-orientable.</qt>");
+    label = new QLabel( QObject::tr("Orientability of base surface:") );
+    label->setWhatsThis(expln);
+    gridLayout->addWidget(label, 0, 0, Qt::AlignRight);
+    sfsBaseWhich = new QComboBox();
+    sfsBaseWhich->addItem(QObject::tr("Orientable"));       // Index 0
+    sfsBaseWhich->addItem(QObject::tr("Non-orientable"));   // Index 1
+    sfsBaseWhich->setCurrentIndex(0);
+    sfsBaseWhich->setWhatsThis(expln);
+    gridLayout->addWidget(sfsBaseWhich, 0, 1);
+    // Choose genus of base surface.
+    expln = QObject::tr("<qt>The genus of the base surface.<p>"
+            "This is the number of handles if the base surface is "
+            "orientable, or the number of crosscaps if the base surface "
+            "is non-orientable.</qt>");
+    label = new QLabel(QObject::tr("Genus of base surface:"));
+    label->setWhatsThis(expln);
+    gridLayout->addWidget(label, 1, 0, Qt::AlignRight);
+    sfsBaseGenus = new QLineEdit();
+    auto* val = new QIntValidator(hArea);
+    val->setBottom(0);
+    sfsBaseGenus->setValidator(val);
+    sfsBaseGenus->setWhatsThis(expln);
+    sfsBaseGenus->setText("0");
+    gridLayout->addWidget(sfsBaseGenus, 1, 1);
+    // Choose number of punctures.
+    expln = QObject::tr("The number of punctures in the base surface.");
+    label = new QLabel(QObject::tr("Punctures in base surface:"));
+    label->setWhatsThis(expln);
+    gridLayout->addWidget(label, 2, 0, Qt::AlignRight);
+    sfsBasePunctures = new QLineEdit();
+    val = new QIntValidator(hArea);
+    val->setBottom(0);
+    sfsBasePunctures->setValidator(val);
+    sfsBasePunctures->setWhatsThis(expln);
+    sfsBasePunctures->setText("0");
+    gridLayout->addWidget(sfsBasePunctures, 2, 1);
+    // Specify parameters for the exceptional fibres.
+    expln = QObject::tr("<qt>The parameters "
+        "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
+        "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) ... "
+        "(<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>) "
+        "describe the exceptional fibres of the new Seifert fibred space.  "
+        "The two integers in each pair must be relatively prime, and none of "
+        "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
+        "<i>a<sub>n</sub></i> may be zero.<p>"
+        "Each pair of parameters (<i>a</i>,<i>b</i>) does not need to be "
+        "normalised, i.e., the parameters may be positive or negative and "
+        "<i>b</i> may lie outside the range [0,<i>a</i>).  There is no "
+        "separate twisting parameter; each additional twist can be "
+        "incorporated into the existing parameters by replacing some pair "
+        "(<i>a</i>,<i>b</i>) with the pair (<i>a</i>,<i>a</i>+<i>b</i>).  "
+        "Including pairs of the form (1,<i>k</i>) and even (1,0) is "
+        "acceptable.<p>"
+        "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
+        "representing the Poincar&eacute; homology sphere.</qt>");
+    label = new QLabel(QObject::tr("<qt>Parameters "
+        "(<i>a</i><sub>1</sub>,<i>b</i><sub>1</sub>) "
+        "... (<i>a<sub>n</sub></i>,<i>b<sub>n</sub></i>):</qt>"));
+    label->setWhatsThis(expln);
+    gridLayout->addWidget(label, 3, 0, Qt::AlignRight);
+    sfsOrientableParams = new QLineEdit();
+    sfsOrientableParams->setValidator(new QRegularExpressionValidator(
+        reSFSAllParams, hArea));
+    sfsOrientableParams->setWhatsThis(expln);
+    gridLayout->addWidget(sfsOrientableParams, 3, 1);
     details->addWidget(hArea);
 
     type->addItem(QObject::tr("Layered solid torus"));
@@ -327,7 +404,7 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     handlebodyGenus = new QLineEdit();
-    auto* val = new QIntValidator(hArea);
+    val = new QIntValidator(hArea);
     val->setBottom(0);
     handlebodyGenus->setValidator(val);
     handlebodyGenus->setWhatsThis(expln);
@@ -461,8 +538,39 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         s << "Handlebody of genus " << genus;
 
         return regina::make_packet(Example<3>::handlebody(genus), s.str());
-    } else if (typeId == TRI_SFS_SPHERE) {
-        if (! reSFSAllParams.match(sfsParams->text()).hasMatch()) {
+    } else if ( (typeId == TRI_SFS_SPHERE) ||
+            (typeId == TRI_SFS_ORIENTABLE) ) {
+        // Base surface.
+        auto baseClass = regina::SFSpace::Class::o1;
+        unsigned long genus = 0;
+        unsigned long punctures = 0;
+        if (typeId == TRI_SFS_ORIENTABLE) {
+            genus = sfsBaseGenus->text().toULong();
+            punctures = sfsBasePunctures->text().toULong();
+            if (sfsBaseWhich->currentIndex() == 0) {
+                if (punctures > 0) {
+                    baseClass = regina::SFSpace::Class::bo1;
+                }
+            } else {
+                if (genus == 0) {
+                    ReginaSupport::sorry(parentWidget,
+                        QObject::tr("For non-orientable base surface, the genus "
+                        "must be a positive integer."));
+                    return nullptr;
+                }
+                if (punctures == 0) {
+                    baseClass = regina::SFSpace::Class::n2;
+                } else {
+                    baseClass = regina::SFSpace::Class::bn2;
+                }
+            }
+        }
+
+        // Exceptional fibres and obstruction constant.
+        bool hasMatch = (typeId == TRI_SFS_SPHERE) ?
+            reSFSAllParams.match(sfsOverSphereParams->text()).hasMatch() :
+            reSFSAllParams.match(sfsOrientableParams->text()).hasMatch();
+        if (! hasMatch) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The Seifert fibred space parameters "
                     "are not valid."),
@@ -493,11 +601,13 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         }
 
         // Build the Seifert fibred space.
-        regina::SFSpace sfs;
+        regina::SFSpace sfs(baseClass, genus, punctures);
         long a, b;
         long whichPair = 1;
 
-        auto matchIt = reSFSParamPair.globalMatch(sfsParams->text());
+        auto matchIt = (typeId == TRI_SFS_SPHERE) ?
+            reSFSParamPair.globalMatch(sfsOverSphereParams->text()) :
+            reSFSParamPair.globalMatch(sfsOrientableParams->text());
         while (matchIt.hasNext()) {
             auto match = matchIt.next();
             a = match.captured(1).toLong();
@@ -532,8 +642,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             whichPair++;
         }
 
-        // Note: Our SFS is over the sphere, and SFSpace::construct()
-        // is implemented for all such manifolds.
+        // Note: Our SFS is orientable, and SFSpace::construct() is
+        // implemented for all such manifolds.
         return regina::make_packet(sfs.construct(), sfs.structure());
     } else if (typeId == TRI_ISOSIG) {
         auto match = reIsoSig.match(isoSig->text());
