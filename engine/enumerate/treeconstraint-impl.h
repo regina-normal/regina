@@ -51,7 +51,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
-template <LPConstraint Constraint>
+template <LPSurfaceConstraint Constraint>
 BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) :
         BanConstraintBase(init) {
     size_t n = tri_.size();
@@ -94,7 +94,7 @@ BanBoundary::BanBoundary(const LPInitialTableaux<Constraint>& init) :
         }
 }
 
-template <LPConstraint Constraint>
+template <LPSurfaceConstraint Constraint>
 BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) :
         BanConstraintBase(init) {
     size_t n = tri_.size();
@@ -142,7 +142,7 @@ BanEdge::BanEdge(const LPInitialTableaux<Constraint>& init, Edge<3>* edge) :
         }
 }
 
-template <LPConstraint Constraint>
+template <LPSurfaceConstraint Constraint>
 BanTorusBoundary::BanTorusBoundary(
         const LPInitialTableaux<Constraint>& init) : BanConstraintBase(init) {
     size_t n = tri_.size();

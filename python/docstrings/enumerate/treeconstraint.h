@@ -96,7 +96,7 @@ This class adds constraints of two types:
 All of these constraints operate only on normal or angle structure
 coordinates in the underlying tableaux (and in particular not the
 additional variables introduced by additional linear constraints, as
-described in the LPConstraintAPI documentation).
+described in the LPConstraint concept documentation).
 
 Currently marking is used in the following ways:
 
@@ -431,233 +431,6 @@ Parameter ``init``:
 
 }; // struct BanTorusBoundary
 
-struct LPConstraintAPI {
-
-// Docstring regina::python::doc::LPConstraintAPI::__class
-static constexpr const char __class[] =
-R"doc(A documentation-only class describing the expected behaviour of linear
-constraint types.
-
-Regina supports _linear constraint types_, which describe different
-families of linear constraints that can be used with Regina's linear
-programming machinery. These constraints are added to the tableaux of
-normal surface or angle structure matching equations, as part of the
-TreeEnumeration, TreeSingleSoln and related algorithms for enumerating
-and locating normal surfaces or angle structures in a 3-manifold
-triangulation.
-
-This LPConstraintAPI class is a documentation-only class (it is not
-actually built into Regina). Its purpose is to describe in detail the
-interface that a linear constraint type should provide.
-
-Regarding the mathematical form of the linear constraints:
-
-* Typically only one linear constraint _type_ would be used with a
-  normal surface or angle structure enumeration/location algorithm.
-  However, a single type can describe several simultaneous linear
-  equations and/or inequalities (see LPConstraintNonSpun for an
-  example of this).
-
-* The enumeration LPConstraintType describes what form each individual
-  constraint takes (in particular, whether it is an equality or an
-  inequality). See the LPInitialTableaux class notes for details on
-  how these different forms of constraint interact with the tableaux
-  of normal surface or angle structure matching equations.
-
-* When working in angle structure coordinates, these linear
-  constraints must _not_ involve the scaling coordinate (the final
-  coordinate that is used to convert the angle structure polytope into
-  a polyhedral cone). Instead, the coefficient for the final scaling
-  coordinate in each additional linear constraint will be assumed to
-  be zero.
-
-* Bear in mind that the tableaux that these linear constraints are
-  working with will not necessarily use the same coordinates as the
-  underlying normal surface or angle structure enumeration task (e.g.,
-  the tableaux will never include separate columns for octagon
-  coordinates). See LPInitialTableaux for a more detailed discussion
-  of this.
-
-All constraint types provide their functionality through static
-members and static routines: they do not contain any member data, and
-it is unnecessary (but harmless) to construct them. Instead constraint
-types are typically used as C++ template arguments (in particular,
-template arguments for tree traversal classes such as TreeEnumeration,
-TreeSingleSolution, and TautEnumeration).
-
-Python:
-    Whilst Regina's linear constraint types are available, it is rare
-    that you would need to access any of these types directly through
-    Python. Instead, to use a linear constraint type, you would
-    typically create a tree traversal object whose class name includes
-    the constraint type as a suffix (e.g.,
-    ``TreeEnumeration_NonSpun``, which represents the C++ class
-    ``TreeEnumeration<LPConstraintNonSpun>``).
-
-.. warning::
-    The API for this class or function has not yet been finalised.
-    This means that the interface may change in new versions of
-    Regina, without maintaining backward compatibility. If you use
-    this class directly in your own code, please check the detailed
-    changelog with each new release to see if you need to make changes
-    to your code.)doc";
-
-// Docstring regina::python::doc::LPConstraintAPI::addRows
-static constexpr const char addRows[] =
-R"doc(Explicitly builds equations for the linear function(s) constrained by
-this class. Specifically, this routine takes an array of columns in
-the initial tableaux and fills in the necessary coefficient data.
-
-More precisely: recall that, for each linear function, the initial
-tableaux acquires one new variable *x_i* that evaluates this linear
-function f(x). This routine must create the corresponding row that
-sets ``f(x) - x_i = 0``. Thus it must construct the coefficients of
-``f(x)`` in the columns corresponding to normal coordinates, and it
-must also set a coefficient of -1 in the column for the corresponding
-new variable.
-
-As described in the LPInitialTableaux class notes, it might not be
-possible to construct the linear functions (since the underlying
-triangulation might not satisfy the necessary requirements). In such
-cases this routine should throw an exception, as described below, and
-your constraint class _must_ mention this possibility in its class
-documentation.
-
-If you are implementing this routine for a constraint type that works
-with angle structure coordinates, remember that your linear
-constraints must not interact with the scaling coordinate (the final
-angle structure coordinate that is used to projectivise the angle
-structure polytope into a polyhedral cone). Your implementation of
-``addRows()`` _must_ leave all of your constraint coefficients in this
-column as zero.
-
-The precise form of the linear function(s) will typically depend upon
-the underlying triangulation, as well as the permutation that
-indicates which columns of the initial tableaux correspond to which
-normal or angle structure coordinates. All of this information will be
-accessible via the arguments to ``addRows()``. Note that the number of
-columns is _not_ passed as an argument; instead you would typically
-deduce this from ``tri.size()`` and knowledge of the particular type
-of constraint. For example, if you are implementing a single linear
-constraint that works with standard normal coordinates, the number of
-columns would be ``7 * tri.size() + 1``.
-
-This routine should only write to the coefficients stored in
-``col[...].extra``. Your implementation of ``addRows()`` may assume
-that these coefficients have already been initialised to zero (this is
-done automatically by the LPCol constructor).
-
-Precondition:
-    For all columns in the array *col*, the members LPCol::extra have
-    all been initialised to zero.
-
-Exception ``InvalidArgument``:
-    It was not possible to create the linear functions for these
-    constraints, due to an error which should have been preventable
-    with the right checks in advance. Any constraint class that could
-    throw exceptions in this way _must_ describe this behaviour in its
-    own class documentation.
-
-Exception ``UnsolvedCase``:
-    It was not possible to create the linear functions for these
-    constraints, due to an error that was "genuinely" unforseeable.
-    Again, any constraint class that could throw exceptions in this
-    way _must_ describe this behaviour in its own class documentation.
-
-Python:
-    The array *columnPerm* should be presented as a Python list of
-    integers. Moreover, the argument *col* is not present at all,
-    since LPCol is an internal class, not for general use. Instead,
-    this routine returns a Python list of constraints, where each
-    constraint is presented as a Python list of coefficients. Each of
-    these inner lists will have size equal to the number of columns.
-
-Parameter ``col``:
-    the array of columns as stored in the initial tableaux, presented
-    as a C-style array. These are the same columns that are stored in
-    the data member ``LPInitialTableaux<...>::col_``.
-
-Parameter ``tri``:
-    the underlying triangulation.
-
-Parameter ``columnPerm``:
-    the permutation that indicates which columns of the initial
-    tableaux correspond to which normal or angle structure
-    coordinates, presented as a C-style array. This is the same
-    permutation that would be returned by
-    ``LPInitialTableaux<...>::columnPerm()``.)doc";
-
-// Docstring regina::python::doc::LPConstraintAPI::supported
-static constexpr const char supported[] =
-R"doc(Indicates whether the given vector encoding is supported by this
-constraint class.
-
-This routine assumes that the given encoding is already known to be
-supported by the generic tree traversal infrastructure, and only
-returns ``False`` if there are additional prerequisites imposed by
-this particular constraint class that the given encoding does not
-satisfy. If this constraint class does not impose any of its own
-additional conditions, this routine may simply return ``True``.
-
-The only features of the encoding that this routine should examine are
-what coordinates are stored (e.g., NormalEncoding::storesTriangles()).
-In particular, this routine will not look at any "semantic guarantees"
-(e.g. NormalEncoding::couldBeNonCompact()).
-
-Parameter ``enc``:
-    the vector encoding being queried. This must be one of the vector
-    encodings known to be supported by the generic TreeTraversal
-    infrastructure, and in particular it may be the special angle
-    structure encoding.
-
-Returns:
-    ``True`` if and only if this vector encoding is also supported by
-    this specific constraint class.)doc";
-
-// Docstring regina::python::doc::LPConstraintAPI::verify
-static constexpr const char verify[] =
-R"doc(Ensures that the given normal surface satisfies the extra constraints
-described by this class.
-
-Ideally this test is not based on explicitly recomputing the linear
-function(s), but instead runs independent tests. For instance, if this
-class is used to constraint Euler characteristic, then ideally this
-routine would call ``s.eulerChar()`` and test the return value of that
-routine instead.
-
-If these linear constraints work with angle structure coordinates (not
-normal or almost normal surfaces), then this routine should return
-``False``.
-
-Parameter ``s``:
-    the surface to test.
-
-Returns:
-    ``True`` if the given surface satisfies these linear constraints,
-    or ``False`` if it does not.)doc";
-
-// Docstring regina::python::doc::LPConstraintAPI::verify_2
-static constexpr const char verify_2[] =
-R"doc(Ensures that the given angle structure satisfies the extra constraints
-described by this class.
-
-Ideally this test is not based on explicitly recomputing the linear
-function(s), but instead runs independent tests; see the related
-routine verify(const NormalSurface&) for examples.
-
-If these linear constraints work with normal or almost normal surfaces
-(not angle structure coordinates), then this routine should return
-``False``.
-
-Parameter ``s``:
-    the angle structure to test.
-
-Returns:
-    ``True`` if the given angle structure satisfies these linear
-    constraints, or ``False`` if it does not.)doc";
-
-}; // struct LPConstraintAPI
-
 struct LPConstraintEulerPositive {
 
 // Docstring regina::python::doc::LPConstraintEulerPositive::__class
@@ -677,8 +450,8 @@ used to ensure we do not have more than two octagons when searching
 for a normal or almost normal sphere in the 3-sphere recognition
 algorithm).
 
-See the LPConstraintAPI documentation for details on all member
-functions.
+This constraint type cannot be used with angle structure coordinate
+systems.
 
 These linear constraint classes are designed mainly to act as C++
 template arguments, and end users will typically not need to construct
@@ -697,8 +470,8 @@ Python:
     through Python. Instead, to use a linear constraint class, you
     would typically create a tree traversal object with the
     appropriate class suffix (e.g., one such Python class is
-    ``TreeSingleSolution_EulerPositive``). See the LPConstraintAPI
-    documentation for further details.
+    ``TreeSingleSolution_EulerPositive``). See the LPConstraint
+    concept documentation for further details.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -707,6 +480,63 @@ Python:
     this class directly in your own code, please check the detailed
     changelog with each new release to see if you need to make changes
     to your code.)doc";
+
+// Docstring regina::python::doc::LPConstraintEulerPositive::addRows
+static constexpr const char addRows[] =
+R"doc(Explicitly builds equations for the linear function(s) constrained by
+this class. See the LPConstraint concept documentation for more
+precise details on what this function does.
+
+Precondition:
+    For all columns in the array *col*, the members LPCol::extra have
+    all been initialised to zero.
+
+Python:
+    The array *columnPerm* should be presented as a Python list of
+    integers. Moreover, the argument *col* is not present at all,
+    since LPCol is an internal class, not for general use. Instead,
+    this routine returns a Python list of constraints, where each
+    constraint is presented as a Python list of coefficients. Each of
+    these inner lists will have size equal to the number of columns.
+
+Parameter ``col``:
+    the array of columns as stored in the initial tableaux, presented
+    as a C-style array.
+
+Parameter ``tri``:
+    the underlying triangulation.
+
+Parameter ``columnPerm``:
+    the permutation that indicates which columns of the initial
+    tableaux correspond to which normal coordinates, presented as a
+    C-style array. This is the same permutation returned by
+    ``LPInitialTableaux<...>::columnPerm()``.)doc";
+
+// Docstring regina::python::doc::LPConstraintEulerPositive::supported
+static constexpr const char supported[] =
+R"doc(Indicates whether the given vector encoding is supported by this
+constraint class.
+
+Parameter ``enc``:
+    the vector encoding being queried, which must already be known to
+    be supported by the generic TreeTraversal infrastructure.
+
+Returns:
+    ``True`` if and only if the given encoding is supported by this
+    specific constraint class.)doc";
+
+// Docstring regina::python::doc::LPConstraintEulerPositive::verify_surface
+static constexpr const char verify_surface[] =
+R"doc(Ensures that the given normal surface satisfies the extra constraints
+described by this class. For LPConstraintEulerPositive, this simply
+tests whether *s* has positive Euler characteristic.
+
+Parameter ``s``:
+    the surface to test.
+
+Returns:
+    ``True`` if the given surface satisfies these linear constraints,
+    or ``False`` if it does not.)doc";
 
 }; // struct LPConstraintEulerPositive
 
@@ -722,10 +552,8 @@ function. The function constructed here has integer coefficients, but
 otherwise has no special properties of note.
 
 This constraint currently only works with normal (and _not_ almost
-normal) coordinates.
-
-See the LPConstraintAPI documentation for details on all member
-functions.
+normal) coordinates. It cannot be used with angle structure coordinate
+systems.
 
 These linear constraint classes are designed mainly to act as C++
 template arguments, and end users will typically not need to construct
@@ -744,7 +572,7 @@ Python:
     through Python. Instead, to use a linear constraint class, you
     would typically create a tree traversal object with the
     appropriate class suffix (e.g., one such Python class is
-    ``TreeEnumeration_EulerZero``). See the LPConstraintAPI
+    ``TreeEnumeration_EulerZero``). See the LPConstraint concept
     documentation for further details.
 
 .. warning::
@@ -754,6 +582,63 @@ Python:
     this class directly in your own code, please check the detailed
     changelog with each new release to see if you need to make changes
     to your code.)doc";
+
+// Docstring regina::python::doc::LPConstraintEulerZero::addRows
+static constexpr const char addRows[] =
+R"doc(Explicitly builds equations for the linear function(s) constrained by
+this class. See the LPConstraint concept documentation for more
+precise details on what this function does.
+
+Precondition:
+    For all columns in the array *col*, the members LPCol::extra have
+    all been initialised to zero.
+
+Python:
+    The array *columnPerm* should be presented as a Python list of
+    integers. Moreover, the argument *col* is not present at all,
+    since LPCol is an internal class, not for general use. Instead,
+    this routine returns a Python list of constraints, where each
+    constraint is presented as a Python list of coefficients. Each of
+    these inner lists will have size equal to the number of columns.
+
+Parameter ``col``:
+    the array of columns as stored in the initial tableaux, presented
+    as a C-style array.
+
+Parameter ``tri``:
+    the underlying triangulation.
+
+Parameter ``columnPerm``:
+    the permutation that indicates which columns of the initial
+    tableaux correspond to which normal coordinates, presented as a
+    C-style array. This is the same permutation returned by
+    ``LPInitialTableaux<...>::columnPerm()``.)doc";
+
+// Docstring regina::python::doc::LPConstraintEulerZero::supported
+static constexpr const char supported[] =
+R"doc(Indicates whether the given vector encoding is supported by this
+constraint class.
+
+Parameter ``enc``:
+    the vector encoding being queried, which must already be known to
+    be supported by the generic TreeTraversal infrastructure.
+
+Returns:
+    ``True`` if and only if the given encoding is supported by this
+    specific constraint class.)doc";
+
+// Docstring regina::python::doc::LPConstraintEulerZero::verify_surface
+static constexpr const char verify_surface[] =
+R"doc(Ensures that the given normal surface satisfies the extra constraints
+described by this class. For LPConstraintEulerZero, this simply tests
+whether *s* has zero Euler characteristic.
+
+Parameter ``s``:
+    the surface to test.
+
+Returns:
+    ``True`` if the given surface satisfies these linear constraints,
+    or ``False`` if it does not.)doc";
 
 }; // struct LPConstraintEulerZero
 
@@ -770,16 +655,16 @@ At present this class can only work with oriented triangulations that
 have precisely one vertex, which is ideal with torus link. Moreover,
 it uses the SnapPea kernel for some of its computations, and so
 SnapPea must be able to work directly with the given triangulation.
-See below for details on the exceptions that addRows() can throw if
-these requirements are not met.
+See the addRows() notes below for details on the exceptions that will
+be thrown if these requirements are not met.
 
 Also, at present this class can only work with quadrilateral normal
 coordinates (and cannot handle almost normal coordinates at all). This
 is _not_ explicitly checked; instead it appears as a precondition (see
 below).
 
-See the LPConstraintAPI documentation for details on all member
-functions.
+This constraint type cannot be used with angle structure coordinate
+systems.
 
 These linear constraint classes are designed mainly to act as C++
 template arguments, and end users will typically not need to construct
@@ -808,7 +693,7 @@ Python:
     through Python. Instead, to use a linear constraint class, you
     would typically create a tree traversal object with the
     appropriate class suffix (e.g., one such Python class is
-    ``TreeEnumeration_NonSpun``). See the LPConstraintAPI
+    ``TreeEnumeration_NonSpun``). See the LPConstraint concept
     documentation for further details.
 
 .. warning::
@@ -819,6 +704,72 @@ Python:
     changelog with each new release to see if you need to make changes
     to your code.)doc";
 
+// Docstring regina::python::doc::LPConstraintNonSpun::addRows
+static constexpr const char addRows[] =
+R"doc(Explicitly builds equations for the linear function(s) constrained by
+this class. See the LPConstraint concept documentation for more
+precise details on what this function does.
+
+Precondition:
+    For all columns in the array *col*, the members LPCol::extra have
+    all been initialised to zero.
+
+Exception ``InvalidArgument``:
+    The underlying triangulation is not oriented with precisely one
+    vertex, which must have a torus link.
+
+Exception ``UnsolvedCase``:
+    SnapPea retriangulated the underlying triangulation or produced a
+    null triangulation, or the coefficients of the slope equations
+    were found to be too large to store in a native C++ long integer.
+
+Python:
+    The array *columnPerm* should be presented as a Python list of
+    integers. Moreover, the argument *col* is not present at all,
+    since LPCol is an internal class, not for general use. Instead,
+    this routine returns a Python list of constraints, where each
+    constraint is presented as a Python list of coefficients. Each of
+    these inner lists will have size equal to the number of columns.
+
+Parameter ``col``:
+    the array of columns as stored in the initial tableaux, presented
+    as a C-style array.
+
+Parameter ``tri``:
+    the underlying triangulation.
+
+Parameter ``columnPerm``:
+    the permutation that indicates which columns of the initial
+    tableaux correspond to which normal coordinates, presented as a
+    C-style array. This is the same permutation returned by
+    ``LPInitialTableaux<...>::columnPerm()``.)doc";
+
+// Docstring regina::python::doc::LPConstraintNonSpun::supported
+static constexpr const char supported[] =
+R"doc(Indicates whether the given vector encoding is supported by this
+constraint class.
+
+Parameter ``enc``:
+    the vector encoding being queried, which must already be known to
+    be supported by the generic TreeTraversal infrastructure.
+
+Returns:
+    ``True`` if and only if the given encoding is supported by this
+    specific constraint class.)doc";
+
+// Docstring regina::python::doc::LPConstraintNonSpun::verify_surface
+static constexpr const char verify_surface[] =
+R"doc(Ensures that the given normal surface satisfies the extra constraints
+described by this class. For LPConstraintNonSpun, this simply tests
+whether *s* is compact.
+
+Parameter ``s``:
+    the surface to test.
+
+Returns:
+    ``True`` if the given surface satisfies these linear constraints,
+    or ``False`` if it does not.)doc";
+
 }; // struct LPConstraintNonSpun
 
 struct LPConstraintNone {
@@ -827,9 +778,8 @@ struct LPConstraintNone {
 static constexpr const char __class[] =
 R"doc(A do-nothing class that imposes no additional linear constraints on
 the tableaux of normal surface or angle structure matching equations.
-
-See the LPConstraintAPI documentation for details on all member
-functions.
+This constraint type can be used with both normal surface and angle
+structure coordinate systems.
 
 These linear constraint classes are designed mainly to act as C++
 template arguments, and end users will typically not need to construct
@@ -846,8 +796,9 @@ Python:
     default behaviour). For example, the Python classes
     ``TreeEnumeration``, ``TreeSingleSoln_BanBoundary`` and
     ``TautEnumeration`` all use this do-nothing LPConstraintNone
-    class. See the LPConstraintAPI documentation for further details
-    on accessing other types of linear constraints from within Python.
+    class. See the LPConstraint concept documentation for further
+    details on accessing other types of linear constraints from within
+    Python.
 
 .. warning::
     The API for this class or function has not yet been finalised.
@@ -856,6 +807,79 @@ Python:
     this class directly in your own code, please check the detailed
     changelog with each new release to see if you need to make changes
     to your code.)doc";
+
+// Docstring regina::python::doc::LPConstraintNone::addRows
+static constexpr const char addRows[] =
+R"doc(Explicitly builds equations for the linear function(s) constrained by
+this class. See the LPConstraint concept documentation for more
+precise details on what this function does.
+
+For LPConstraintNone, since there are no constraints to add, this
+function does nothing at all.
+
+Precondition:
+    For all columns in the array *col*, the members LPCol::extra have
+    all been initialised to zero.
+
+Python:
+    The array *columnPerm* should be presented as a Python list of
+    integers. Moreover, the argument *col* is not present at all,
+    since LPCol is an internal class, not for general use. Instead,
+    this routine returns a Python list of constraints, where each
+    constraint is presented as a Python list of coefficients. Each of
+    these inner lists will have size equal to the number of columns.
+
+Parameter ``col``:
+    the array of columns as stored in the initial tableaux, presented
+    as a C-style array.
+
+Parameter ``tri``:
+    the underlying triangulation.
+
+Parameter ``columnPerm``:
+    the permutation that indicates which columns of the initial
+    tableaux correspond to which normal or angle structure
+    coordinates, presented as a C-style array. This is the same
+    permutation returned by ``LPInitialTableaux<...>::columnPerm()``.)doc";
+
+// Docstring regina::python::doc::LPConstraintNone::supported
+static constexpr const char supported[] =
+R"doc(Indicates whether the given vector encoding is supported by this
+constraint class.
+
+Parameter ``enc``:
+    the vector encoding being queried, which must already be known to
+    be supported by the generic TreeTraversal infrastructure.
+
+Returns:
+    ``True`` if and only if the given encoding is supported by this
+    specific constraint class.)doc";
+
+// Docstring regina::python::doc::LPConstraintNone::verify_structure
+static constexpr const char verify_structure[] =
+R"doc(Ensures that the given angle structure satisfies the extra constraints
+described by this class. For LPConstraintNone, this function always
+returns ``True``.
+
+Parameter ``s``:
+    the angle structure to test.
+
+Returns:
+    ``True`` if the given angle structure satisfies these linear
+    constraints, or ``False`` if it does not.)doc";
+
+// Docstring regina::python::doc::LPConstraintNone::verify_surface
+static constexpr const char verify_surface[] =
+R"doc(Ensures that the given normal surface satisfies the extra constraints
+described by this class. For LPConstraintNone, this function always
+returns ``True``.
+
+Parameter ``s``:
+    the surface to test.
+
+Returns:
+    ``True`` if the given surface satisfies these linear constraints,
+    or ``False`` if it does not.)doc";
 
 }; // struct LPConstraintNone
 
