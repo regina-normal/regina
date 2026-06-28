@@ -1011,13 +1011,45 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * surfaces it will report a _larger_ number than it should since it
          * essentially counts each branch point as multiple vertices.
          *
+         * As of Regina 8.0, eulerChar() is able to compute the Euler
+         * characteristic for a spun-normal surface (i.e., a non-compact
+         * surface with no octagons) provided it resides in a triangulation
+         * for which we can compute a boundary-null angle structure. Computing
+         * such an angle structure requires, in turn, that the following
+         * conditions are satisfied:
+         *
+         * - The triangulation is oriented.
+         *
+         * - Every vertex link is a torus.
+         *
+         * - SnapPea is able to work directly with the triangulation.
+         *
+         * See below for details on the exceptions that this routine can throw
+         * if these requirements are not met. For more on boundary-null angle
+         * structures, see Triangulation<3>::boundaryNullAngleStructure().
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * \pre This normal surface is compact (has finitely many discs).
+         * \pre Either this normal surface is compact (has finitely many
+         * discs), or all of the following associated preconditions for
+         * non-compact surfaces are met: this normal surface has no octagons,
+         * and it resides in an oriented triangulation in which every vertex
+         * link is a torus.
+         *
+         * \exception FailedPrecondition This normal surface is non-compact,
+         * and one or more of the associated preconditions listed above was
+         * not met.
+         *
+         * \exception UnsolvedCase This surface is non-compact, and all
+         * associated preconditions are satisfied, but SnapPea either produces
+         * a null triangulation or retriangulates the triangulation in which
+         * this surface resides.
          *
          * \return the Euler characteristic.
+         *
+         * \author B.B., Alex He
          */
         LargeInteger eulerChar() const;
         /**
@@ -1371,24 +1403,51 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         /**
          * Returns the number of disjoint boundary curves on this surface.
          *
+         * For compact surfaces, this routine counts the number of real
+         * boundary curves.
+         *
+         * As of Regina 8.0, this routine is also able to count the number of
+         * boundary curves for spun-normal surfaces, provided that the
+         * triangulation is oriented, every vertex link is a torus, and the
+         * underlying coordinate system is for normal surfaces only (not
+         * almost normal surfaces). This relies on the SnapPea kernel, so
+         * SnapPea must be able to work directly with the triangulation. See
+         * below for details on the exceptions that this routine can throw if
+         * these requirements are not met.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
          * \pre This normal surface is embedded (not singular or immersed).
-         * \pre This normal surface is compact (has finitely many discs).
+         * \pre Either this normal surface is compact (has finitely many
+         * discs), or all of the following associated preconditions for
+         * non-compact surfaces are met: the underlying coordinate system is
+         * for normal surfaces only (not almost normal surfaces) and it
+         * resides in an oriented triangulation in which every vertex link is
+         * a torus.
          *
-         * \warning This routine explicitly builds all of the normal arcs on
-         * the boundary.  If the normal coordinates are extremely large,
-         * this could lead to performance problems.  In extreme cases, this
-         * routine will throw an exception (see below).
+         * \warning For compact surfaces, this routine explicitly builds all
+         * of the normal arcs on the boundary. If the normal coordinates are
+         * extremely large, this could lead to performance problems. In
+         * extreme cases, this routine will throw an exception (see below).
          *
-         * \exception UnsolvedCase This algorithm has encountered an
-         * impossible memory requirement, due to the need to store more items
-         * than can fit into a native C++ \c size_t.  This is rarely seen in
-         * practice: on a typical 64-bit machine, this would mean that the
-         * algorithm has encountered a normal surface with some boundary
-         * edge weight at least `2^64`.
+         * \exception FailedPrecondition This normal surface is non-compact,
+         * and one or more of the associated preconditions listed above was
+         * not met.
+         *
+         * \exception UnsolvedCase The computation could not be completed
+         * because it encountered a value too large to fit into a native C++
+         * \c size_t. This is rarely seen in practice: on a typical 64-bit
+         * machine, this would mean that the algorithm has encountered either
+         * a compact normal surface with some boundary edge weight at least
+         * `2^64`, or a spun-normal surface with at least `2^64` boundary
+         * curves.
+         *
+         * \exception UnsolvedCase This surface is non-compact, and all
+         * associated preconditions are satisfied, but SnapPea either produces
+         * a null triangulation or retriangulates the triangulation in which
+         * this surface resides.
          *
          * \return the number of disjoint boundary curves.
          *
@@ -1813,7 +1872,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * The orientations of the boundary curves of a
          * spun-normal surface are chosen so that _if_ meridian and
-         * longitude are a positive basis as vieved from the cusp, then
+         * longitude are a positive basis as viewed from the cusp, then
          * as one travels along an oriented boundary curve, the
          * spun-normal surface spirals into the cusp to one's right and
          * down into the manifold to one's left.
@@ -1958,6 +2017,25 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          */
         void calculateEulerChar() const;
         /**
+         * Calculates the Euler characteristic of this spun-normal surface
+         * and stores it as a property.
+         *
+         * \pre This normal surface is non-compact, has no octagons, and
+         * resides in an oriented triangulation in which every vertex link is
+         * a torus.
+         *
+         * \exception FailedPrecondition This normal surface is non-compact,
+         * but one or more of the other preconditions listed above was not met.
+         *
+         * \note Regarding preconditions, the current implementation only
+         * explicitly checks that there are no octagons. Non-compactness is
+         * ensured by the calling context, and the rest is delegated to
+         * Triangulation<3>::boundaryNullAngleStructure().
+         *
+         * \author Alex He
+         */
+        void calculateSpunEulerChar() const;
+        /**
          * Calculates whether this surface is orientable, two-sided and/or
          * connected, and stores the results as properties.
          *
@@ -1981,6 +2059,51 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * does not fit into a standard C++ \c size_t.
          */
         void calculateBoundaries() const;
+        /**
+         * Computes the number of boundary curves of this spun-normal surface
+         * and stores the result as a property.
+         *
+         * \pre This normal surface is non-compact, its underlying coordinate
+         * system is for normal surfaces only (not almost normal surfaces),
+         * and it resides in an oriented triangulation in which every vertex
+         * link is a torus.
+         *
+         * \exception FailedPrecondition This normal surface is non-compact,
+         * but one or more of the other preconditions listed above was not met.
+         *
+         * \exception UnsolvedCase All other preconditions are satisfied, but
+         * SnapPea either produces a null triangulation or retriangulates the
+         * triangulation in which this surface resides.
+         *
+         * \exception UnsolvedCase The final answer is too large to fit into
+         * a native C++ \c size_t.
+         *
+         * \author Alex He
+         */
+        void calculateSpunBoundaries() const;
+        /**
+         * Implements boundaryIntersections().
+         *
+         * This internal implementation has weaker preconditions, which means
+         * that we can use it to count boundary curves for spun-normal
+         * surfaces.
+         *
+         * \pre The triangulation is oriented, every vertex link is a torus,
+         * and the underlying coordinate system is for normal surfaces only
+         * (not almost normal surfaces).
+         *
+         * \exception FailedPrecondition One or more of the preconditions
+         * listed above was not met.
+         *
+         * \exception SnapPeaIsNull SnapPea produces a null triangulation.
+         *
+         * \exception UnsolvedCase All other preconditions are satisfied, but
+         * SnapPea retriangulates the triangulation in which this surface
+         * resides.
+         *
+         * \author William Pettersson, Stephan Tillmann, Alex He
+         */
+        Matrix<Integer> boundaryIntersectionsInternal() const;
 
         /**
          * Determines whether or not a positive rational multiple of this
@@ -2158,8 +2281,25 @@ inline void NormalSurface::setName(const std::string& name) {
 }
 
 inline LargeInteger NormalSurface::eulerChar() const {
-    if (! eulerChar_.has_value())
-        calculateEulerChar();
+    if (! eulerChar_.has_value()) {
+        if ( isCompact() ) {
+            calculateEulerChar();
+        } else {
+            // We have a spun-normal surface.
+            //
+            // If the surface has no octagons, and resides in an oriented
+            // triangulation in which every vertex link is a torus, then we
+            // can compute a boundary-null angle structure. We can then use
+            // this angle structure, together with the combinatorial
+            // Gauss-Bonnet formula, to compute the Euler characteristic of
+            // the surface.
+            //
+            // If preconditions are not satisfied, then the internal
+            // implementation will detect this and throw FailedPrecondition,
+            // as promised in the documentation.
+            calculateSpunEulerChar();
+        }
+    }
     return *eulerChar_;
 }
 
@@ -2194,7 +2334,22 @@ inline bool NormalSurface::hasRealBoundary() const {
 
 inline size_t NormalSurface::countBoundaries() const {
     if (! boundaries_.has_value())
-        calculateBoundaries();
+        if ( isCompact() ) {
+            calculateBoundaries();
+        } else {
+            // We have a spun-normal surface.
+            //
+            // If the surface's underlying coordinate system is for normal
+            // surfaces only (not almost normal surfaces), and it resides in
+            // an oriented triangulation in which every vertex link is a
+            // torus, then we can use boundaryIntersectionsInternal() to
+            // calculate the number of boundary curves.
+            //
+            // If preconditions are not satisfied, then this will be detected
+            // by boundaryIntersectionsInternal(), and we simply pass on the
+            // FailedPrecondition exception.
+            calculateSpunBoundaries();
+        }
     return *boundaries_;
 }
 

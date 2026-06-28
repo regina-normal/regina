@@ -128,9 +128,13 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         else if (index.column() == 1)
             return s.name().c_str();
         else if (index.column() == 2) {
-            if (! s.isCompact())
+            try {
+                return s.eulerChar().stringValue().c_str();
+            } catch (const regina::ReginaException&) {
+                // This only happens for non-compact surfaces.
+                // We could have either FailedPrecondition or UnsolvedCase.
                 return QVariant();
-            return s.eulerChar().stringValue().c_str();
+            }
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s.isCompact())
                 return QVariant();
@@ -170,7 +174,15 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     return ans;
                 } catch (const regina::ReginaException&) {
                     // This could be a FailedPrecondition or a SnapPeaisNull.
-                    return tr("Spun");
+                    //
+                    // Although we can't display the boundary slopes, we might
+                    // at least be able to display the total *number* of
+                    // boundary curves in the cusps.
+                    try {
+                        return tr("Spun: %1").arg( s.countBoundaries() );
+                    } catch (const regina::ReginaException&) {
+                        return tr("Spun");
+                    }
                 }
             } else if (s.hasRealBoundary()) {
                 if (surfaces_->isEmbeddedOnly()) {
