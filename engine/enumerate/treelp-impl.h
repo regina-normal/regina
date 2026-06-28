@@ -738,7 +738,8 @@ void LPData<Constraint, IntType>::constrainPositive(size_t pos) {
 }
 
 template <LPConstraint Constraint, ReginaInteger IntType>
-void LPData<Constraint, IntType>::constrainOct(size_t quad1, size_t quad2) {
+void LPData<Constraint, IntType>::constrainOct(size_t quad1, size_t quad2)
+        requires LPSurfaceConstraint<Constraint> {
     // If either variable has already been deactivated, it cannot
     // be positive.
     if (! (isActive(quad1) && isActive(quad2))) {

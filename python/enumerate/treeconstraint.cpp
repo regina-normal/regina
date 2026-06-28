@@ -57,11 +57,8 @@ using regina::LPConstraintNonSpun;
 
 template <regina::LPConstraint Constraint, regina::python::ClassDocType Docs>
 void addLPConstraint(pybind11::module_& m, const char* name) {
-    RDOC_SCOPE_BEGIN(LPConstraintAPI)
-
     auto c = pybind11::class_<Constraint>(m, name, Docs::__class)
         .def_readonly_static("constraints", &Constraint::constraints)
-        .def_readonly_static("octAdjustment", &Constraint::octAdjustment)
         .def_static("addRows", [](const Triangulation<3>& tri,
                 const std::vector<size_t>& columnPerm) {
             // The C++ version of this function is likely to change
@@ -84,16 +81,19 @@ void addLPConstraint(pybind11::module_& m, const char* name) {
                     ans[i].push_back(col[j].extra[i]);
             }
             return ans;
-        }, "tri"_a, "columnPerm"_a, rdoc::addRows)
-        .def_static("verify", overload_cast<const regina::NormalSurface&>(
-            &Constraint::verify), rdoc::verify)
-        .def_static("verify", overload_cast<const regina::AngleStructure&>(
-            &Constraint::verify), rdoc::verify_2)
-        .def_static("supported", &Constraint::supported, rdoc::supported)
+        }, "tri"_a, "columnPerm"_a, Docs::addRows)
+        .def_static("supported", &Constraint::supported, Docs::supported)
         ;
+    if constexpr (regina::LPSurfaceConstraint<Constraint>) {
+        c.def_readonly_static("octAdjustment", &Constraint::octAdjustment);
+        c.def_static("verify", overload_cast<const regina::NormalSurface&>(
+            &Constraint::verify), Docs::verify_surface);
+    }
+    if constexpr (regina::LPStructureConstraint<Constraint>) {
+        c.def_static("verify", overload_cast<const regina::AngleStructure&>(
+            &Constraint::verify), Docs::verify_structure);
+    }
     regina::python::no_eq_static(c);
-
-    RDOC_SCOPE_END
 }
 
 template <typename BanConstraint, typename... BanArgs>

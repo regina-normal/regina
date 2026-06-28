@@ -291,7 +291,8 @@ double TreeTraversal<Constraint, Ban, IntType>::percent() const {
     return percent;
 }
 
-template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
+template <LPSurfaceSubspace Constraint, BanConstraint Ban,
+    ReginaInteger IntType>
 bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
@@ -666,7 +667,8 @@ bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     return false;
 }
 
-template <LPSubspace Constraint, BanConstraint Ban, ReginaInteger IntType>
+template <LPStructureSubspace Constraint, BanConstraint Ban,
+    ReginaInteger IntType>
 bool TautEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     // Note that for taut angle structures we have no domination test and
     // no zero test.  The domination comes for free (every taut angle
@@ -834,7 +836,8 @@ bool TautEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     return false;
 }
 
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
+template <LPSurfaceConstraint Constraint, BanConstraint Ban,
+    ReginaInteger IntType>
 bool TreeSingleSoln<Constraint, Ban, IntType>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:
