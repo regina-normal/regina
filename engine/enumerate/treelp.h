@@ -48,6 +48,9 @@
 #include "utilities/fixedarray.h"
 #include <algorithm>
 
+// Note: there are additional #includes further down, once some of our core
+// classes and concepts have been defined.
+
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
 /**
@@ -90,47 +93,256 @@ enum class LPConstraintType {
 
 /**
  * Represents a set of additional linear constraints that we can add to the
- * tableaux of normal surface or angle structure matching equations.
- * This concept is used with Regina's linear programming machinery.
+ * tableaux of normal surface matching equations.
  *
- * See LPConstraintAPI for further information, including a thorough
- * description of how a linear constraint type is expected to behave.
+ * This is a special form of LPConstraint, designed for constraints that work
+ * with normal or almost normal surfaces (as opposed to angle strutures).
+ * See the LPConstraint concept documentation for further details, including a
+ * full explanation of how such a constraint type is expected to behave.
+ *
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
 template <typename T>
-concept LPConstraint =
+concept LPSurfaceConstraint =
     requires(const Triangulation<3> tri, const NormalSurface surface,
-            const AngleStructure structure, const NormalEncoding enc) {
-        { T::constraints } -> ConstRefArrayOf<LPConstraintType>;
+            const NormalEncoding enc) {
         typename T::Coefficient;
         requires SignedCppInteger<typename T::Coefficient>;
+
+        { T::constraints } -> ConstRefArrayOf<LPConstraintType>;
         { T::octAdjustment } -> std::same_as<const typename T::Coefficient&>;
+
+        { T::supported(enc) } -> std::same_as<bool>;
+        { T::verify(surface) } -> std::same_as<bool>;
 
         T::addRows(
             (detail::LPCol<T::constraints.size(),
                 typename T::Coefficient>*)(nullptr),
             tri, (const size_t*)(nullptr));
-        { T::verify(surface) } -> std::same_as<bool>;
-        { T::verify(structure) } -> std::same_as<bool>;
-        { T::supported(enc) } -> std::same_as<bool>;
     };
 
 /**
- * Represents a set of additional homogeneous linear equality constraints that
- * we can add to the tableaux of normal surface or angle structure matching
- * equations.  This concept is used with Regina's linear programming machinery.
+ * Represents a set of additional linear constraints that we can add to the
+ * tableaux of angle structure equations.
  *
- * The concept LPSubspace essentially refines LPConstraint to ensure that the
- * additional linear constraints carve out a linear subspace of `R^n`.
+ * This is a special form of LPConstraint, designed for constraints that work
+ * with angle structures (as opposed to normal surfaces).  See the LPConstraint
+ * concept documentation for further details, including a full explanation of
+ * how such a constraint type is expected to behave.
  *
- * See LPConstraintAPI for further information.
+ * \apinotfinal
  *
  * \ingroup enumerate
  */
 template <typename T>
-concept LPSubspace =
-    LPConstraint<T> &&
+concept LPStructureConstraint =
+    requires(const Triangulation<3> tri, const AngleStructure structure,
+            const NormalEncoding enc) {
+        typename T::Coefficient;
+        requires SignedCppInteger<typename T::Coefficient>;
+
+        { T::constraints } -> ConstRefArrayOf<LPConstraintType>;
+
+        { T::supported(enc) } -> std::same_as<bool>;
+        requires T::supported(NormalEncoding(NormalCoords::Angle));
+        { T::verify(structure) } -> std::same_as<bool>;
+
+        T::addRows(
+            (detail::LPCol<T::constraints.size(),
+                typename T::Coefficient>*)(nullptr),
+            tri, (const size_t*)(nullptr));
+    };
+
+/**
+ * Represents a set of additional linear constraints that we can add to the
+ * tableaux of normal surface or angle structure matching equations.
+ * This concept is used with Regina's linear programming machinery, in
+ * particular with the TreeEnumeration, TreeSingleSoln and related algorithms
+ * for enumerating and locating normal surfaces or angle structures in a
+ * 3-manifold triangulation.
+ *
+ * A constraint type might work with normal surfaces (in which case it also
+ * satisfies LPSurfaceConstraint), or it might work with angle structures (in
+ * which case it also satisfies LPStructureConstraint), or it might work with
+ * both (in which case it satisfies both of these other concepts).
+ *
+ * Regarding the mathematical form of the linear constraints:
+ *
+ * - Typically only one linear constraint _type_ would be used with a normal
+ *   surface or angle structure enumeration/location algorithm.  However,
+ *   a single type can describe several simultaneous linear equations and/or
+ *   inequalities (see LPConstraintNonSpun for an example of this).  At present
+ *   the number of constraints must be a compile-time constant (i.e., it cannot
+ *   depend on the input triangulation).
+ *
+ * - Each constraint will generate one new variable (column) and one new
+ *   equation (row) in the tableaux.
+ *
+ * - When working in angle structure coordinates, these linear constraints
+ *   must _not_ involve the scaling coordinate (the final coordinate that is
+ *   used to convert the angle structure polytope into a polyhedral cone).
+ *   Instead, the coefficient for the final scaling coordinate in each
+ *   additional linear constraint will be assumed to be zero.
+ *
+ * - Bear in mind that the tableaux that these linear constraints are working
+ *   with will not necessarily use the same coordinates as the underlying
+ *   normal surface or angle structure enumeration task (e.g., the tableaux
+ *   will never include separate columns for octagon coordinates).  See
+ *   LPInitialTableaux for a more detailed discussion of this.
+ *
+ * A constraint type \a T provides its functionality through static class
+ * constants and static functions.  In particular, if the type \a T describes
+ * \a k linear constraints, then it must provide:
+ *
+ * - A type alias `T::Coefficient`, used to store each coefficient of each
+ *   constraint.  This may be any signed native C++ integer type.
+ *
+ * - A class constant `std::array<LPConstraintType, k> constraints`, indicating
+ *   the form of each constraint (equality vs inequality).  The preferred way
+ *   to access the number of constraints \a k is via `T::constraints.size()`.
+ *
+ * - A class constant `T::Coefficient octAdjustment` indicating how to adjust
+ *   the coefficients of these linear constraints when using two quadrilateral
+ *   columns to represent an octagon type.  See below for further discussion
+ *   on working with octagons in a tableaux.  This constant is only required
+ *   for constraint types that work with normal surfaces (as opposed to angle
+ *   structures).  For a surface constraint that does not work with octagons
+ *   (i.e., that does not support _almost_ normal surfaces) this constant can
+ *   just be zero.
+ *
+ * - A static function `constexpr bool supported(NormalEncoding)`, which
+ *   indicates whether the given vector encoding is supported by the constraint
+ *   type \a T.  This function may assume that the given encoding is already
+ *   supported by the generic tree traversal infrastructure, and only needs to
+ *   test any additional prerequisites specific to the constraint type \a T.
+ *   This function should _only_ depend upon which coordinates the encoding
+ *   stores (e.g., it could query NormalEncoding::storesTriangles()), and it
+ *   must not require any "semantic guarantees" of the encoding (e.g., it must
+ *   not query NormalEncoding::couldBeNonCompact()).
+ *
+ * - Static functions `bool verify(const NormalSurface&)` (for constraints
+ *   that work with normal surfaces) and/or `bool verify(const AngleStructure&)`
+ *   (for constraints that work with angle structures), which test whether
+ *   the given surface or structure satisfies whatever constraints this type
+ *   represents.  This is for verification and diagnostic purposes: ideally
+ *   implementations would not just recompute the relevant linear function(s),
+ *   but would instead test this "independently" (e.g., a constraint on Euler
+ *   characterstic might call NormalSurface::eulerChar() and verify the result).
+ *
+ * - A static function `void addRows(col, tri, columnPerm)`, which explicitly
+ *   builds equations for the linear function(s) constrained by this type.
+ *   In particular:
+ *
+ *   - The argument \a col should be of type
+ *     `detail::LPCol<constraints.size(), Coefficient>*`, and will be a
+ *     C-style array of columns as stored in the initial tableaux.
+ *     Note that the number of columns is not passed explicitly; instead you
+ *     would typically deduce this from `tri.size()`.
+ *
+ *   - The argument \a tri should be of type `const Triangulation<3>&`,
+ *     representing the underlying triangulation.
+ *
+ *   - The argument \a columnPerm should of type `const size_t*`, and will be a
+ *     C-style array of integers indicating which columns of the initial
+ *     tableaux correspond to which normal or angle structure coordinates.
+ *     This is the array returned by `LPInitialTableaux<...>::columnPerm()`.
+ *
+ *   - The purpose of `addRows()` is to fill the coefficients for the extra
+ *     constraints into the array of columns \a col.  More precisely: for each
+ *     linear constraint, the initial tableaux acquires one new variable \a x_i
+ *     that evaluates the corresponding linear function `f(x)`.  This routine
+ *     creates the corresponding row that sets `f(x) = x_i`.  Thus it must
+ *     construct the coefficients of `f(x)` in the columns corresponding to the
+ *     "ordinary" normal/angle coordinates (remembering to take the permutation
+ *     \a columnPerm into account), and it must set a coefficient of `-1` in
+ *     the column for the extra variable \a x_i.  The implementation must store
+ *     these coefficients in `col[...].extra`, and it may assume that these
+ *     coefficients have already been initialised to zero (as promised by the
+ *     LPCol constructor).
+ *
+ *   - As described in the LPInitialTableaux class notes, it might not be
+ *     possible to construct the linear functions (since the underlying
+ *     triangulation might not satisfy the necessary requirements).  In such
+ *     cases this routine should throw an exception, of type InvalidArgument if
+ *     the error should have been preventable with the right checks in advance
+ *     (e.g., the user failed to adhere to some precondition), or of type
+ *     UnsolvedCase if the error was "genuinely" unforseeable (e.g., SnapPea
+ *     unexpectedly retriangulated the input).  If your constraint class does
+ *     throw exceptions, it _must_ explain this in its class documentation.
+ *
+ * If your constraint type works with angle structure coordinates, remember
+ * that your linear constraints must _not_ interact with the scaling coordinate
+ * (the final angle structure coordinate that is used to projectivise the angle
+ * structure polytope into a polyhedral cone).  Your implementation of
+ * `addRows()` _must_ leave all constraint coefficients in this column as zero.
+ *
+ * Regarding octagon coordinates in almost normal surfaces:
+ *
+ * - The LPData class offers support for octagonal almost normal surfaces, in
+ *   which exactly one tetrahedron is allowed to have exactly one octagon type.
+ *   For this we do not store separate columns for octagon coordinates; instead
+ *   we represent an octagon as a _pair_ of incompatible quadrilaterals within
+ *   the same tetrahedron.  See the LPData class notes for details on how this
+ *   works.
+ *
+ * - Depending on the nature of your extra linear constraints, they might need
+ *   adjustment in the presence of octagons (i.e., the coefficient of the
+ *   hypothetical octagon type might not just be the sum of coefficients of the
+ *   two actual quadrilateral types used to represent it).  For this we use the
+ *   class constant `T::octAdjustment'.  In particular, for each of the two
+ *   quadrilateral columns used to represent an octagon type, the coefficient
+ *   for each linear constraint will be adjusted by adding `T::octAdjustment`.
+ *
+ * - Currently this is a _very_ blunt mechanism: it assumes that the adjustment
+ *   can be made by adding a compile-time constant, and it assumes that if
+ *   there are multiple constraints (i.e., `T::constraints.size() > 1`), then
+ *   then they can all be adjusted in the same way.  This mechanism will be
+ *   made more flexible if/when this becomes necessary.
+ *
+ * \apinotfinal
+ *
+ * \ingroup enumerate
+ */
+template <typename T>
+concept LPConstraint = LPSurfaceConstraint<T> || LPStructureConstraint<T>;
+
+/**
+ * Represents a set of additional homogeneous linear equality constraints that
+ * we can add to the tableaux of normal surface matching equations.
+ *
+ * This is a special form of LPConstraint, where the linear constraints work
+ * with normal or almost normal surfaces (as opposed to angle structures), and
+ * where they are all of type LPConstraintType::Zero (i.e., they together
+ * carve out a linear subspace of `R^n`).
+ *
+ * See the LPConstraint concept for further information.
+ *
+ * \ingroup enumerate
+ */
+template <typename T>
+concept LPSurfaceSubspace =
+    LPSurfaceConstraint<T> &&
+    std::count(T::constraints.begin(), T::constraints.end(),
+        LPConstraintType::Zero) == T::constraints.size();
+
+/**
+ * Represents a set of additional homogeneous linear equality constraints that
+ * we can add to the tableaux of angle structure equations.
+ *
+ * This is a special form of LPConstraint, where the linear constraints work
+ * with angle structures (as opposed to normal surfaces), and where they are
+ * all of type LPConstraintType::Zero (i.e., they together carve out a linear
+ * subspace of `R^n`).
+ *
+ * See the LPConstraint concept for further information.
+ *
+ * \ingroup enumerate
+ */
+template <typename T>
+concept LPStructureSubspace =
+    LPStructureConstraint<T> &&
     std::count(T::constraints.begin(), T::constraints.end(),
         LPConstraintType::Zero) == T::constraints.size();
 
@@ -905,7 +1117,7 @@ class LPSystem : public ShortOutput<LPSystem> {
  * the quad normal matching equations (if LPSystem::quad() is \c true),
  * or the homogeneous angle equations (if LPSystem::angles() is true).
  * If you need to add extra matching equations beyond these, use the
- * Constraint template argument as outlined above.  If you need to support
+ * \a Constraint template argument as outlined above.  If you need to support
  * more exotic vector encodings (e.g., for octagonal almost normal surfaces),
  * you will need to find a way to represent it using one of these three broad
  * classes; see the LPData class notes for how this is done with octagons.
@@ -929,7 +1141,7 @@ class LPSystem : public ShortOutput<LPSystem> {
  * \python This is a heavily templated class; nevertheless, many variants
  * are now made available to Python users.  Each class name is of the form
  * LPInitialTableaux_<i>Constraint</i>, where the suffix \a Constraint
- * is an abbreviated version of the Constraint template parameter;
+ * is an abbreviated version of the \a Constraint template parameter;
  * this suffix is omitted entirely for the common case LPConstraintNone.
  * An example of such a Python class name is \c LPInitialTableaux_NonSpun.
  * You are encouraged to look through the Regina namespace to see which
@@ -1000,7 +1212,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * \pre The given triangulation is non-empty.
          *
          * \exception InvalidArgument It was not possible to add the extra
-         * constraints from the LPConstraint template argument, due to an
+         * constraints from the \a Constraint template argument, due to an
          * error which should have been preventable with the right checks
          * in advance.  Such exceptions are generated by the \a Constraint
          * class, and so you should consult the class documentation for your
@@ -1008,7 +1220,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * possibility.
          *
          * \exception InvalidArgument It was not possible to add the extra
-         * constraints from the LPConstraint template argument, due to an
+         * constraints from the \a Constraint template argument, due to an
          * error that was "genuinely" unforseeable.  Again, such exceptions
          * are generated by your chosen \a Constraint class, and you should
          * consult its documentation to see if this is a possibility.
@@ -1092,7 +1304,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * Returns the rank of this matrix.
          *
          * Note that, if we are imposing extra constraints through the
-         * LPConstraint template parameter, then there will be extra variables
+         * \a Constraint template parameter, then there will be extra variables
          * to enforce these, and so the rank will be larger than the rank of
          * the original matching equation matrix.
          *
@@ -1104,7 +1316,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * Returns the number of columns in this matrix.
          *
          * Note that, if we are imposing extra constraints through the
-         * LPConstraint template parameter, then there will be extra variables
+         * \a Constraint template parameter, then there will be extra variables
          * to enforce these, and so the number of columns will be larger than
          * in the original matching equation matrix.
          *
@@ -1133,7 +1345,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * column `columnPerm()[i]` of the original matrix.
          *
          * If you are imposing additional constraints through the
-         * LPConstraint template parameter, then the corresponding extra
+         * \a Constraint template parameter, then the corresponding extra
          * variables will be included in the permutation; however, these are
          * never moved and will always remain the rightmost variables in
          * this system (i.e., the columns of highest index).
@@ -1210,7 +1422,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * See the LPData class notes for details on how this works.
          *
          * In some settings where we are using additional constraints
-         * through the LPConstraint template parameter, these extra
+         * through the \a Constraint template parameter, these extra
          * constraints behave differently in the presence of octagons
          * (i.e., the coefficient of the octagon type is not just the
          * sum of coefficients of the two constituent quadrilateral types).
@@ -1247,7 +1459,8 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          */
         template <ReginaInteger IntType>
         inline IntType multColByRowOct(const LPMatrix<IntType>& m,
-                size_t mRow, size_t thisCol) const;
+                size_t mRow, size_t thisCol) const
+            requires LPSurfaceConstraint<Constraint>;
 
         /**
          * Fills the given matrix with the contents of this matrix.
@@ -1297,7 +1510,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * on the constraints that this reordering is required to satisfy.
          *
          * This routine is called before any additional constraints are
-         * added from the LPConstraint template parameter; that is, the
+         * added from the \a Constraint template parameter; that is, the
          * rows of the matrix are just the matching equations.  However,
          * we do already have the extra placeholder columns for the new
          * variables that correspond to these extra constraint(s).
@@ -1460,8 +1673,8 @@ inline void swap(LPInitialTableaux<Constraint>& a,
  * integers).  If you are using a fixed-precision integer type here (such as
  * NativeInteger), be aware that there will be no testing for overflow: it is
  * your responsibility to prove in advance that overflow will never occur as
- * you operate on the tableaux via routines such as constraintZero(),
- * constraintPositive(), and constraintOct().
+ * you operate on the tableaux via routines such as constrainZero(),
+ * constrainPositive(), and constrainOct().
  *
  * \apinotfinal
  *
@@ -1609,7 +1822,7 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * starting tableaux and working our way to any feasible basis.
          *
          * This routine also explicitly enforces the additional constraints
-         * from the LPConstraint template parameter  (i.e., this routine
+         * from the \a Constraint template parameter  (i.e., this routine
          * is responsible for forcing the corresponding linear
          * function(s) to be zero or strictly positive as appropriate).
          *
@@ -1637,7 +1850,7 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * Returns the number of columns in this tableaux.
          *
          * Note that, if we are imposing extra constraints through the
-         * LPConstraint template parameter, then there will be extra variables
+         * \a Constraint template parameter, then there will be extra variables
          * to enforce these, and so the number of columns will be larger than
          * in the original matching equation matrix.
          *
@@ -1796,7 +2009,8 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * combine to form the new octagon type.  Again this should be a
          * column index with respect to this tableaux.
          */
-        void constrainOct(size_t quad1, size_t quad2);
+        void constrainOct(size_t quad1, size_t quad2)
+            requires LPSurfaceConstraint<Constraint>;
 
         /**
          * Extracts the values of the individual variables from the
@@ -1825,7 +2039,7 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * \pre No individual coordinate column has had more than one call
          * to either of constrainPositive() or constrainOct() (otherwise
          * the coordinate will not be correctly reconstructed).  Any
-         * additional columns arising from the LPConstraint template parameter
+         * additional columns arising from the \a Constraint template parameter
          * are exempt from this requirement.
          *
          * \python The type vector should be passed as a Python list of
@@ -2252,10 +2466,10 @@ inline IntType LPInitialTableaux<Constraint>::multColByRow(
 template <LPConstraint Constraint>
 template <ReginaInteger IntType>
 inline IntType LPInitialTableaux<Constraint>::multColByRowOct(
-        const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
-    // By the preconditions of this routine, we must be working in some normal
-    // or almost normal coordinate system, and so there is no scaling
-    // coordinate to worry about.
+        const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const
+        requires LPSurfaceConstraint<Constraint> {
+    // Here we are working in some normal or almost normal coordinate system,
+    // and so there is no scaling coordinate to worry about.
     IntType ans; // Initialised to 0.
     for (int i = 0; i < col_[thisCol].nPlus; ++i)
         ans += m.entry(mRow, col_[thisCol].plus[i]);
@@ -2408,41 +2622,56 @@ inline int LPData<Constraint, IntType>::sign(size_t pos) const {
 template <LPConstraint Constraint, ReginaInteger IntType>
 inline IntType LPData<Constraint, IntType>::entry(size_t row, size_t col)
         const {
-    // Remember to take into account any changes of variable due
-    // to previous calls to constrainOct().
-    if (octPrimary_ != static_cast<ssize_t>(col))
+    if constexpr (LPSurfaceConstraint<Constraint>) {
+        // Remember to take into account any changes of variable due
+        // to previous calls to constrainOct().
+        if (octPrimary_ != static_cast<ssize_t>(col))
+            return origTableaux_->multColByRow(rowOps_, row, col);
+        else {
+            IntType ans = origTableaux_->multColByRowOct(rowOps_, row, col);
+            ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
+            return ans;
+        }
+    } else {
+        // We are working with angle structures, and octagons are irrelevant.
         return origTableaux_->multColByRow(rowOps_, row, col);
-    else {
-        IntType ans = origTableaux_->multColByRowOct(rowOps_, row, col);
-        ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
-        return ans;
     }
 }
 
 template <LPConstraint Constraint, ReginaInteger IntType>
 inline void LPData<Constraint, IntType>::entry(size_t row, size_t col,
         IntType& ans) const {
-    // Remember to take into account any changes of variable due
-    // to previous calls to constrainOct().
-    if (octPrimary_ != static_cast<ssize_t>(col))
+    if constexpr (LPSurfaceConstraint<Constraint>) {
+        // Remember to take into account any changes of variable due
+        // to previous calls to constrainOct().
+        if (octPrimary_ != static_cast<ssize_t>(col))
+            ans = origTableaux_->multColByRow(rowOps_, row, col);
+        else {
+            ans = origTableaux_->multColByRowOct(rowOps_, row, col);
+            ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
+        }
+    } else {
+        // We are working with angle structures, and octagons are irrelevant.
         ans = origTableaux_->multColByRow(rowOps_, row, col);
-    else {
-        ans = origTableaux_->multColByRowOct(rowOps_, row, col);
-        ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
     }
 }
 
 template <LPConstraint Constraint, ReginaInteger IntType>
 inline int LPData<Constraint, IntType>::entrySign(size_t row, size_t col)
         const {
-    // Remember to take into account any changes of variable due
-    // to previous calls to constrainOct().
-    if (octPrimary_ != static_cast<ssize_t>(col))
+    if constexpr (LPSurfaceConstraint<Constraint>) {
+        // Remember to take into account any changes of variable due
+        // to previous calls to constrainOct().
+        if (octPrimary_ != static_cast<ssize_t>(col))
+            return origTableaux_->multColByRow(rowOps_, row, col).sign();
+        else {
+            IntType ans = origTableaux_->multColByRowOct(rowOps_, row, col);
+            ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
+            return ans.sign();
+        }
+    } else {
+        // We are working with angle structures, and octagons are irrelevant.
         return origTableaux_->multColByRow(rowOps_, row, col).sign();
-    else {
-        IntType ans = origTableaux_->multColByRowOct(rowOps_, row, col);
-        ans += origTableaux_->multColByRowOct(rowOps_, row, octSecondary_);
-        return ans.sign();
     }
 }
 

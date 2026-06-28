@@ -312,7 +312,10 @@ LPInitialTableaux_EulerPositive : class -> EqualityType.Disabled
 LPInitialTableaux_EulerZero : class -> EqualityType.Disabled
 LPInitialTableaux_NonSpun : class -> EqualityType.Disabled
 LPMatrix : class -> EqualityType.ByValue
-LPSubspace : concept
+LPStructureConstraint : concept
+LPStructureSubspace : concept
+LPSurfaceConstraint : concept
+LPSurfaceSubspace : concept
 LPSystem : class -> EqualityType.ByValue
 Language : enum
 LargeInteger : class -> EqualityType.ByValue

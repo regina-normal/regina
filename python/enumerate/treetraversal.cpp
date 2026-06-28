@@ -71,7 +71,7 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <regina::LPSubspace Constraint,
+template <regina::LPSurfaceSubspace Constraint,
     typename BanConstraint, typename... BanArgs>
 void addTreeEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TreeEnumeration)
@@ -99,7 +99,7 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <regina::LPSubspace Constraint,
+template <regina::LPStructureSubspace Constraint,
     typename BanConstraint, typename... BanArgs>
 void addTautEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TautEnumeration)
@@ -128,7 +128,7 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_END
 }
 
-template <regina::LPConstraint Constraint,
+template <regina::LPSurfaceConstraint Constraint,
     typename BanConstraint, typename... BanArgs>
 void addTreeSingleSoln(pybind11::module_& m, const char* name) {
     RDOC_SCOPE_BEGIN(TreeSingleSoln)
