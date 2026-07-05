@@ -149,29 +149,15 @@ AngleStructure TreeTraversal<Constraint, Ban, IntType>::buildStructure() const {
         lpSlot_[nTypes_]->template extractSolution<VectorInt>(type_));
 }
 
-/**
- * Destroys this object.
- */
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-TreeTraversal<Constraint, Ban, IntType>::~TreeTraversal() {
-    delete[] type_;
-    delete[] typeOrder_;
-    delete[] lp_;
-    delete[] lpSlot_;
-    delete[] nextSlot_;
-}
-
 template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
 void TreeTraversal<Constraint, Ban, IntType>::setNext(size_t nextType) {
-    auto pos = std::find(typeOrder_ + level_ + 1,
-        typeOrder_ + nTypes_, nextType);
-    if (pos != typeOrder_ + level_ + 1) {
-        // Use memmove(), which is safe when the source and
-        // destination ranges overlap.
-        memmove(typeOrder_ + level_ + 2 /* dest */,
-            typeOrder_ + level_ + 1 /* src */,
-            (pos - (typeOrder_ + level_ + 1)) * sizeof(*pos));
-        typeOrder_[level_ + 1] = nextType;
+    auto from = typeOrder_.begin() + level_ + 1;
+    auto pos = std::find(from, typeOrder_.end(), nextType);
+    if (pos != from) {
+        // Shift the slice [from, pos) one step to the right, and insert
+        // nextType (which was at pos) into the gap we created at from.
+        std::ranges::move_backward(from, pos, pos + 1);
+        *from = nextType;
     }
 }
 
@@ -301,13 +287,13 @@ bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
         //
         // Prepare the root node by finding an initial basis
         // from the original starting tableaux.
-        lp_[0].initStart();
-        ban_.enforceBans(lp_[0]);
+        lp_.front().initStart();
+        ban_.enforceBans(lp_.front());
         ++nVisited_;
 
         // Is the system feasible at the root node?
         // If not, there can be no solutions at all.
-        if (! lp_[0].isFeasible())
+        if (! lp_.front().isFeasible())
             return false;
 
         /**
@@ -343,8 +329,6 @@ bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     }
 
     // And... continue the search!
-    size_t idx; /* Index of the type we are currently choosing. */
-    bool outOfRange;
     while (true) {
         // Update the state of progress and test for cancellation.
         if (tracker && ! tracker->setPercent(percent()))
@@ -369,11 +353,11 @@ bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
          *   this node in the tree (with our new value for
          *   type_[typeOrder_[level_]]) passes these tests.
          */
-        idx = typeOrder_[level_];
+        size_t idx = typeOrder_[level_]; // Which type are we now choosing?
 
         // Check whether type_[idx] is out of range,
         // and if so then backtrack further up the tree.
-        outOfRange = false;
+        bool outOfRange = false;
         if (type_[idx] == 4) {
             // This quadrilateral column is out of range.
             if (octLevel_ < 0) {
@@ -628,14 +612,14 @@ bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
                     // search).
                     ssize_t bestQuad = -1;
                     int minBranches = 5; // Greater than any soln.
-                    int tmp;
-                    for (int i = level_ + 1; i < nTypes_; ++i) {
-                        if (typeOrder_[i] < nTets_) {
+                    for (auto it = typeOrder_.begin() + level_ + 1;
+                            it != typeOrder_.end(); ++it) {
+                        if (*it < nTets_) {
                             // It's an available quad type.
-                            tmp = feasibleBranches(typeOrder_[i]);
+                            int tmp = feasibleBranches(*it);
                             if (tmp < minBranches) {
                                 minBranches = tmp;
-                                bestQuad = typeOrder_[i];
+                                bestQuad = *it;
                                 if (tmp == 0)
                                     break; // Can't get any better!
                             }
@@ -676,27 +660,27 @@ bool TautEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     // zero test will always be satisfied because we have enforced the
     // scaling coordinate to be positive.
 
-    if (type_[typeOrder_[0]] == 0) {
+    if (type_[typeOrder_.front()] == 0) {
         // We are starting the search from the very beginning.
         // (We know this because the very first thing that happens at
-        // the very first branch is that type_[typeOrder_[0]] is
+        // the very first branch is that type_[typeOrder_.front()] is
         // incremented to 1.  For taut angle structures, type 0 is
         // simply a placeholder for "we haven't reached this type yet".)
         //
         // Prepare the root node by finding an initial basis
         // from the original starting tableaux.
-        lp_[0].initStart();
+        lp_.front().initStart();
 
         // Ensure that we avoid the zero solution, by insisting that the
         // final scaling coordinate be positive.
-        lp_[0].constrainPositive(origTableaux_.coordinateColumns() - 1);
+        lp_.front().constrainPositive(origTableaux_.coordinateColumns() - 1);
 
-        ban_.enforceBans(lp_[0]);
+        ban_.enforceBans(lp_.front());
         ++nVisited_;
 
         // Is the system feasible at the root node?
         // If not, there can be no solutions at all.
-        if (! lp_[0].isFeasible())
+        if (! lp_.front().isFeasible())
             return false;
 
         /**
@@ -718,7 +702,6 @@ bool TautEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
     }
 
     // And... continue the search!
-    size_t idx; /* Index of the type we are currently choosing. */
     while (true) {
         // Update the state of progress and test for cancellation.
         if (tracker && ! tracker->setPercent(percent()))
@@ -742,7 +725,7 @@ bool TautEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
          *   this node in the tree (with our new value for
          *   type_[typeOrder_[level_]]) passes these tests.
          */
-        idx = typeOrder_[level_];
+        size_t idx = typeOrder_[level_]; // Which type are we now choosing?
 
         // Check whether type_[idx] is out of range, and if so then
         // backtrack further up the tree.
@@ -863,11 +846,11 @@ bool TreeSingleSoln<Constraint, Ban, IntType>::find() {
     //
     // Prepare the root node by finding an initial basis from
     // the original starting tableaux.
-    lp_[0].initStart();
-    ban_.enforceBans(lp_[0]);
+    lp_.front().initStart();
+    ban_.enforceBans(lp_.front());
 
     ++nVisited_;
-    if (! lp_[0].isFeasible())
+    if (! lp_.front().isFeasible())
         return false;
 
     // To kick off our vertex-link-avoiding regime, make
@@ -888,8 +871,6 @@ bool TreeSingleSoln<Constraint, Ban, IntType>::find() {
     level_ = 0;
 
     // Run the search!
-    size_t idx; /* Index of the type we are currently choosing. */
-    bool outOfRange;
     while (! cancelled()) {
         // We can safely return from this point.
 #ifdef REGINA_TREE_TRACE
@@ -900,11 +881,11 @@ bool TreeSingleSoln<Constraint, Ban, IntType>::find() {
         // For details on how it works, see the implementation of
         // TreeEnumeration::next(), which is very thoroughly
         // documented.
-        idx = typeOrder_[level_];
+        size_t idx = typeOrder_[level_]; // Which type are we now choosing?
 
         // Check whether type_[idx] is out of range,
         // and if so then backtrack further up the tree.
-        outOfRange = false;
+        bool outOfRange = false;
         if (type_[idx] == 4) { // Quadrilateral column
             if (octLevel_ < 0)
                 octLevel_ = level_; // Make it an octagon column
@@ -1125,18 +1106,18 @@ bool TreeSingleSoln<Constraint, Ban, IntType>::find() {
                     // search).
                     ssize_t bestQuad = -1;
                     int minBranches = 5; // Greater than any soln.
-                    int tmp;
-                    for (size_t i = level_ + 1; i < nTypes_; ++i) {
-                        if (typeOrder_[i] < nTets_) {
+                    for (auto it = typeOrder_.begin() + level_ + 1;
+                            it != typeOrder_.end(); ++it) {
+                        if (*it < nTets_) {
                             // It's an available quad type.
 #ifdef REGINA_NOOPT_MIN_FEASIBLE
-                            bestQuad = typeOrder_[i];
+                            bestQuad = *it;
                             break;
 #else
-                            tmp = feasibleBranches(typeOrder_[i]);
+                            int tmp = feasibleBranches(*it);
                             if (tmp < minBranches) {
                                 minBranches = tmp;
-                                bestQuad = typeOrder_[i];
+                                bestQuad = *it;
                                 if (tmp == 0)
                                     break; // Can't get any better!
                             }

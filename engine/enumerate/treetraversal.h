@@ -44,6 +44,7 @@
 #include "enumerate/treelp.h"
 #include "enumerate/typetrie.h"
 #include "triangulation/forward.h"
+#include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -97,10 +98,10 @@ class ProgressTracker;
  *   location of the two π angles in the <i>i</i>th tetrahedron.
  *
  * In the original Algorithmica paper, we choose types in the order
- * type_[0], type_[1] and so on, working from the root of the tree down
+ * `type_[0]`, `type_[1]` and so on, working from the root of the tree down
  * to the leaves.  Here we support a more flexible system: there is an
  * internal permutation \a typeOrder_, and we choose types in the order
- * type_[typeOrder_[0]], type_[typeOrder_[1]] and so on.  This
+ * `type_[typeOrder_[0]]`, `type_[typeOrder_[1]]` and so on.  This
  * permutation may mix quadrilateral and triangle processing, and may
  * even change as the algorithm runs.
  *
@@ -183,7 +184,7 @@ class TreeTraversal :
                  that we are using for our enumeration task.
                  Note that the tableaux will _not_ necessarily use this
                  same encoding; see LPInitialTableaux for details. */
-        const Ban ban_;
+        [[no_unique_address]] const Ban ban_;
             /**< Details of any banning/marking constraints that are in use. */
         const size_t nTets_;
             /**< The number of tetrahedra in the underlying triangulation. */
@@ -194,35 +195,40 @@ class TreeTraversal :
                  at any given time during the backtracking search. */
 
         // Details of the current state of the backtracking search:
-        uint8_t* type_;
+        FixedArray<uint8_t> type_;
             /**< The current working type vector.  As the search runs,
                  we modify this type vector in-place.  Any types beyond the
-                 current level in the search tree will always be set to zero. */
-        size_t* typeOrder_;
-            /**< A permutation of 0,...,\a nTypes_-1 that indicates in
+                 current level in the search tree will always be set to zero.
+                 The length of this array is `nTypes_`. */
+        FixedArray<size_t> typeOrder_;
+            /**< A permutation of `0,...,nTypes_-1` that indicates in
                  which order we select types: the first type we select
-                 (at the root of the tree) is type_[typeOrder_[0]], and the
+                 (at the root of the tree) is `type_[typeOrder_[0]]`, and the
                  last type we select (at the leaves of the tree) is
-                 type_[typeOrder_[nTypes_-1]].  This permutation is
+                 `type_[typeOrder_[nTypes_-1]]`.  This permutation is
                  allowed to change as the algorithm runs (though of
                  course you can only change sections of the permutation
-                 that correspond to types not yet selected). */
-        ssize_t level_;
+                 that correspond to types not yet selected).
+                 The length of this array is `nTypes_`. */
+        ssize_t level_ { 0 };
             /**< The current level in the search tree.
                  As the search runs, this holds the index into
-                 typeOrder_ corresponding to the last type that we chose. */
+                 \a typeOrder_ corresponding to the last type that we chose. */
         ssize_t octLevel_;
             /**< The level at which we are enforcing an octagon type (with a
                  strictly positive number of octagons).  If we are working with
                  angle structures or normal surfaces only (and so we do not
-                 allow octagons at all), then \a octLevel_ = \a nTypes_.
+                 allow octagons at all), then `octLevel_ = nTypes_`.
                  If we are allowing almost normal surfaces but we have not yet
-                 chosen an octagon type, then \a octLevel_ = -1. */
-        LPData<Constraint, IntType>* lp_;
+                 chosen an octagon type, then `octLevel_ = -1`. */
+        using TableauxArray = FixedArray<LPData<Constraint, IntType>>;
+            /**< A FixedArray of linear programming tableaux. */
+        TableauxArray lp_;
             /**< Stores tableaux for linear programming at various nodes
                  in the search tree.  We only store a limited number of
                  tableaux at any given time, and as the search
                  progresses we overwrite old tableaux with new tableaux.
+                 The length of this array is `nTableaux_`.
 
                  More precisely, we store a linear number of tableaux,
                  essentially corresponding to the current node in the
@@ -232,32 +238,32 @@ class TreeTraversal :
                  that we have pre-prepared for future processing.  See the
                  documentation within routines such as TreeEnumeration::next()
                  for details of when and how these tableaux are constructed. */
-        LPData<Constraint, IntType>** lpSlot_;
+        FixedArray<typename TableauxArray::iterator> lpSlot_;
             /**< Recall from above that the array \a lp_ stores tableaux
                  for the current node in the search tree and all of its
                  ancestors.  This means we have one tableaux for the
                  root node, as well as additional tableaux at each level
-                 0,1,...,\a level_.
+                 `0,1,...,level_`.
 
-                 The array lpSlot_ indicates which element of the array \a lp_
-                 holds each of these tableaux.  Specifically: lpSlot_[0]
-                 points to the tableaux for the root node, and for each level
-                 \a i in the range 0,...,\a level_, the corresponding
-                 tableaux is *lpSlot_[i+1].  Again, see the documentation
+                 The array \a lpSlot_ indicates which element of the array
+                 \a lp_ holds each of these tableaux.  Specifically:
+                 `lpSlot_[0]` points to the tableaux for the root node, and for
+                 each level \a i in the range `0,...,level_`, the corresponding
+                 tableaux is `*lpSlot_[i+1]`.  Again, see the documentation
                  within routines such as TreeEnumeration::next() for details
                  of when and how these tableaux are constructed and later
-                 overwritten. */
-        LPData<Constraint, IntType>** nextSlot_;
-            /**< Points to the next available tableaux in lp_ that is free to
-                 use at each level of the search tree.  Specifically:
-                 nextSlot_[0] points to the next free tableaux at the root
-                 node, and for each level \a i in the range 0,...,\a level_,
-                 the corresponding next free tableaux is *nextSlot_[i+1].
+                 overwritten.  The length of this array is `nTypes_+1`. */
+        FixedArray<typename TableauxArray::iterator> nextSlot_;
+            /**< Points to the next available tableaux in \a lp_ that is free
+                 to use at each level of the search tree.  Specifically:
+                 `nextSlot_[0]` points to the next free tableaux at the root
+                 node, and for each level \a i in the range `0,...,level_`,
+                 the corresponding next free tableaux is `*nextSlot_[i+1]`.
 
-                 The precise layout of the nextSlot_ array depends on the
+                 The precise layout of the \a nextSlot_ array depends on the
                  order in which we process quadrilateral, triangle and/or
-                 angle types. */
-        size_t nVisited_;
+                 angle types.  The total length of this array is `nTypes_+1`. */
+        size_t nVisited_ { 0 };
             /**< Counts the total number of nodes in the search tree that we
                  have visited thus far.  This may grow much faster than the
                  number of solutions, since it also counts traversals
@@ -273,11 +279,6 @@ class TreeTraversal :
 
     public:
         /**
-         * Destroys this object.
-         */
-        ~TreeTraversal();
-
-        /**
          * Indicates whether the given normal surface or angle structure
          * vector encoding is supported by this tree traversal infrastructure.
          * Any restrictions imposed by the LPConstraint and BanConstraint
@@ -292,7 +293,10 @@ class TreeTraversal :
          * \return \c true if and only if the given vector encoding is
          * supported.
          */
-        static bool supported(NormalEncoding enc);
+        static bool supported(NormalEncoding enc) {
+            return enc.valid() &&
+                Constraint::supported(enc) && Ban::supported(enc);
+        }
 
         /**
          * Returns the total number of nodes in the search tree that we
@@ -316,7 +320,9 @@ class TreeTraversal :
          *
          * \return the number of nodes visited so far.
          */
-        size_t visited() const;
+        size_t visited() const {
+            return nVisited_;
+        }
 
         /**
          * Writes the current type vector to the given output stream.
@@ -330,7 +336,10 @@ class TreeTraversal :
          *
          * \param out the output stream to which to write.
          */
-        void dumpTypes(std::ostream& out) const;
+        void dumpTypes(std::ostream& out) const {
+            for (auto t : type_)
+                out << static_cast<int>(t);
+        }
 
         /**
          * Returns the current type vector in string form.
@@ -340,7 +349,11 @@ class TreeTraversal :
          *
          * \return the type vector in string form.
          */
-        std::string typeString() const;
+        std::string typeString() const {
+            std::ostringstream out;
+            dumpTypes(out);
+            return std::move(out).str();
+        }
 
         /**
          * Writes a short text representation of this object to the
@@ -350,7 +363,22 @@ class TreeTraversal :
          *
          * \param out the output stream to which to write.
          */
-        void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out) const {
+            out << "Level " << level_  << " of 0.." << (nTypes_-1)
+                << ", types: ";
+
+            // We assume the possible types are all single-digit.
+            char* c = new char[nTypes_ + 1];
+            ssize_t i = 0;
+            for ( ; i <= level_; ++i)
+                c[typeOrder_[i]] = char(type_[typeOrder_[i]] + '0');
+            for ( ; i < static_cast<ssize_t>(nTypes_); ++i)
+                c[typeOrder_[i]] = '_';
+            c[i] = 0;
+
+            out << c;
+            delete[] c;
+        }
 
         /**
          * Reconstructs the full normal surface that is represented by
@@ -467,20 +495,57 @@ class TreeTraversal :
         template <typename... BanArgs>
         TreeTraversal(const Triangulation<3>& tri, NormalEncoding enc,
                 int branchesPerQuad, int branchesPerTri, bool enumeration,
-                BanArgs&&... banArgs);
+                BanArgs&&... banArgs) :
+                origTableaux_(tri, enc, enumeration),
+                enc_(enc),
+                ban_(origTableaux_, std::forward<BanArgs>(banArgs)...),
+                nTets_(tri.size()),
+                nTypes_(enc_.storesTriangles() ? 5 * nTets_ : nTets_),
+                /* Each time we branch, one LP can be solved in-place:
+                   therefore we use branchesPerQuad-1 and branchesPerTri-1.
+                   The final +1 is for the root node. */
+                nTableaux_(enc_.storesTriangles() ?
+                    (branchesPerQuad - 1) * nTets_ +
+                        (branchesPerTri - 1) * nTets_ * 4 + 1 :
+                    (branchesPerQuad - 1) * nTets_ + 1),
+                type_(nTypes_, 0) /* the zero type vector */,
+                typeOrder_(nTypes_),
+                octLevel_(enc_.storesOctagons() ? -1 :
+                    static_cast<ssize_t>(nTypes_)),
+                lp_(nTableaux_),
+                lpSlot_(nTypes_ + 1),
+                nextSlot_(nTypes_ + 1) {
+            // Set a default type order.
+            for (size_t i = 0; i < nTypes_; ++i)
+                typeOrder_[i] = i;
+
+            // Reserve space for all the tableaux that we will ever need.
+            for (auto& lp : lp_)
+                lp.reserve(origTableaux_);
+
+            // Mark the location of the initial tableaux at the root node.
+            lpSlot_.front() = lp_.begin();
+            ++(nextSlot_.front() = lp_.begin());
+
+            // Reserve space for our additional temporary tableaux.
+            tmpLP_[0].reserve(origTableaux_);
+            tmpLP_[1].reserve(origTableaux_);
+            tmpLP_[2].reserve(origTableaux_);
+            tmpLP_[3].reserve(origTableaux_);
+        }
 
         /**
          * Rearranges the search tree so that \a nextType becomes the next
          * type that we process.
          *
-         * Specifically, this routine will set typeOrder_[level_ + 1]
-         * to \a nextType_, and will move other elements of typeOrder_
+         * Specifically, this routine will set `typeOrder_[level_ + 1]`
+         * to \a nextType_, and will move other elements of \a typeOrder_
          * back by one position to make space as required.
          *
-         * \pre \a nextType is in the range 0,...,\a nTypes-1 inclusive.
+         * \pre \a nextType is in the range `0,...,nTypes-1` inclusive.
          * \pre \a nextType is still waiting to be processed; that is,
          * \a nextType does not appear in the list
-         * typeOrder_[0,...,level_].
+         * `typeOrder_[0,...,level_]`.
          *
          * \param nextType the next type to process.
          */
@@ -511,7 +576,12 @@ class TreeTraversal :
          * triangle type from \a startFrom onwards, or -1 if there are no
          * more remaining.
          */
-        ssize_t nextUnmarkedTriangleType(size_t startFrom);
+        ssize_t nextUnmarkedTriangleType(size_t startFrom) {
+            for ( ; startFrom < nTypes_; ++startFrom)
+                if (! ban_.marked(2 * nTets_ + startFrom))
+                    return startFrom;
+            return -1;
+        }
 
         /**
          * Determines how many different values we could assign to the given
@@ -682,14 +752,14 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
                  We wastefully allow for 7 possible types always (which
                  are required for almost normal surfaces); the
                  performance loss from changing 4 to 7 is negligible. */
-        size_t nSolns_;
+        size_t nSolns_ { 0 };
             /**< The number of vertex surfaces found so far. */
 
-        ssize_t lastNonZero_;
-            /**< The index into typeOrder_ corresponding to the last non-zero
+        ssize_t lastNonZero_ { -1 };
+            /**< The index into \a typeOrder_ corresponding to the last non-zero
                  type that was selected, or -1 if we still have the zero
                  vector.  Here "last" means "last chosen"; that is, the
-                 highest index into typeOrder_ that gives a non-zero type. */
+                 highest index into \a typeOrder_ that gives a non-zero type. */
 
     public:
         /**
@@ -741,7 +811,12 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          */
         template <typename... BanArgs>
         TreeEnumeration(const Triangulation<3>& tri, NormalEncoding enc,
-            BanArgs&&... banArgs);
+                BanArgs&&... banArgs) :
+                TreeTraversal<Constraint, Ban, IntType>(tri, enc,
+                    (enc.storesOctagons() ? 7 : 4) /* branches per quad */,
+                    2 /* branches per triangle */, true /* enumeration */,
+                    std::forward<BanArgs>(banArgs)...) {
+        }
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -754,7 +829,9 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          *
          * \return the number of solutions found so far.
          */
-        size_t solutions() const;
+        size_t solutions() const {
+            return nSolns_;
+        }
 
         /**
          * Runs the complete tree traversal algorithm to enumerate
@@ -890,7 +967,12 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeTypes(const TreeEnumeration& tree);
+        static bool writeTypes(const TreeEnumeration& tree) {
+            std::cout << "SOLN #" << tree.solutions() << ": ";
+            tree.dumpTypes(std::cout);
+            std::cout << std::endl;
+            return false;
+        }
 
         /**
          * A callback function that writes to standard output the full
@@ -922,7 +1004,11 @@ class TreeEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeSurface(const TreeEnumeration& tree);
+        static bool writeSurface(const TreeEnumeration& tree) {
+            std::cout << "SOLN #" << tree.solutions() << ": ";
+            std::cout << tree.buildSurface().str() << std::endl;
+            return false;
+        }
 
         // Mark this class as non-copyable.
         TreeEnumeration(const TreeEnumeration&) = delete;
@@ -1019,7 +1105,7 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
         using TreeTraversal<Constraint, Ban, IntType>::setNext;
 
     private:
-        size_t nSolns_;
+        size_t nSolns_ { 0 };
             /**< The number of taut angle structures found so far. */
 
     public:
@@ -1061,7 +1147,12 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * For most ban constraint classes, this list of arguments is empty.
          */
         template <typename... BanArgs>
-        TautEnumeration(const Triangulation<3>& tri, BanArgs&&... banArgs);
+        TautEnumeration(const Triangulation<3>& tri, BanArgs&&... banArgs) :
+                TreeTraversal<Constraint, Ban, IntType>(tri,
+                    NormalCoords::Angle, 3 /* branches per quad */,
+                    0 /* branches per triangle; irrelevant here */,
+                    true /* enumeration */, std::forward<BanArgs>(banArgs)...) {
+        }
 
         /**
          * Returns the total number of taut angle structures
@@ -1074,7 +1165,9 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          *
          * \return the number of solutions found so far.
          */
-        size_t solutions() const;
+        size_t solutions() const {
+            return nSolns_;
+        }
 
         /**
          * Runs the complete tree traversal algorithm to enumerate
@@ -1210,7 +1303,12 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeTypes(const TautEnumeration& tree);
+        static bool writeTypes(const TautEnumeration& tree) {
+            std::cout << "SOLN #" << tree.solutions() << ": ";
+            tree.dumpTypes(std::cout);
+            std::cout << std::endl;
+            return false;
+        }
 
         /**
          * A callback function that writes to standard output the full
@@ -1243,7 +1341,11 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * \return \c false (which indicates to run() that we should
          * continue the tree traversal).
          */
-        static bool writeStructure(const TautEnumeration& tree);
+        static bool writeStructure(const TautEnumeration& tree) {
+            std::cout << "SOLN #" << tree.solutions() << ": ";
+            std::cout << tree.buildStructure().str() << std::endl;
+            return false;
+        }
 
         // Mark this class as non-copyable.
         TautEnumeration(const TautEnumeration&) = delete;
@@ -1394,7 +1496,7 @@ class TreeSingleSoln : public TreeTraversal<Constraint, Ban, IntType> {
         using TreeTraversal<Constraint, Ban, IntType>::setNext;
 
     private:
-        ssize_t nextZeroLevel_;
+        ssize_t nextZeroLevel_ { 0 };
             /**< The next level in the search tree at which we will force some
                  triangle coordinate to zero.  We use this to avoid vertex
                  links by dynamically reorganising the search tree as we run
@@ -1402,7 +1504,7 @@ class TreeSingleSoln : public TreeTraversal<Constraint, Ban, IntType> {
                  set to zero at all stages and all levels of the search.
                  We make this type signed for consistenty with \a level_. */
 
-        bool cancelled_;
+        bool cancelled_ { false };
             /**< Has the search been cancelled by another thread?
                  See the cancel() and cancelled() routines for details. */
         std::mutex mCancel_;
@@ -1449,7 +1551,12 @@ class TreeSingleSoln : public TreeTraversal<Constraint, Ban, IntType> {
          */
         template <typename... BanArgs>
         TreeSingleSoln(const Triangulation<3>& tri, NormalEncoding enc,
-            BanArgs&&... banArgs);
+                BanArgs&&... banArgs) :
+                TreeTraversal<Constraint, Ban, IntType>(tri, enc,
+                    (enc.storesOctagons() ? 6 : 3) /* branches per quad */,
+                    2 /* branches per triangle */, false /* enumeration */,
+                    std::forward<BanArgs>(banArgs)...) {
+        }
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -1484,7 +1591,10 @@ class TreeSingleSoln : public TreeTraversal<Constraint, Ban, IntType> {
          * If called, it signals that if find() is currently running
          * then it should be cancelled at the earliest convenient opportunity.
          */
-        void cancel();
+        void cancel() {
+            std::lock_guard<std::mutex> lock(mCancel_);
+            cancelled_ = true;
+        }
 
         // Mark this class as non-copyable.
         TreeSingleSoln(const TreeSingleSoln&) = delete;
@@ -1499,219 +1609,11 @@ class TreeSingleSoln : public TreeTraversal<Constraint, Ban, IntType> {
          *
          * \return \c true if some thread has called cancel() on this object.
          */
-        bool cancelled();
+        bool cancelled() {
+            std::lock_guard<std::mutex> lock(mCancel_);
+            return cancelled_;
+        }
 };
-
-// Inline functions
-
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-inline bool TreeTraversal<Constraint, Ban, IntType>::supported(
-        NormalEncoding enc) {
-    return enc.valid() &&
-        Constraint::supported(enc) && Ban::supported(enc);
-}
-
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-inline size_t TreeTraversal<Constraint, Ban, IntType>::visited() const {
-    return nVisited_;
-}
-
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-inline void TreeTraversal<Constraint, Ban, IntType>::dumpTypes(
-        std::ostream& out) const {
-    for (size_t i = 0; i < nTypes_; ++i)
-        out << static_cast<int>(type_[i]);
-}
-
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-inline std::string TreeTraversal<Constraint, Ban, IntType>::typeString() const {
-    std::ostringstream out;
-    dumpTypes(out);
-    return std::move(out).str();
-}
-
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-void TreeTraversal<Constraint, Ban, IntType>::writeTextShort(std::ostream& out)
-        const {
-    out << "Level " << level_  << " of 0.." << (nTypes_-1) << ", types: ";
-
-    // We assume the possible types are all single-digit.
-    char* c = new char[nTypes_ + 1];
-    ssize_t i = 0;
-    for ( ; i <= level_; ++i)
-        c[typeOrder_[i]] = char(type_[typeOrder_[i]] + '0');
-    for ( ; i < static_cast<ssize_t>(nTypes_); ++i)
-        c[typeOrder_[i]] = '_';
-    c[i] = 0;
-
-    out << c;
-    delete[] c;
-}
-
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-template <typename... BanArgs>
-TreeTraversal<Constraint, Ban, IntType>::TreeTraversal(
-        const Triangulation<3>& tri, NormalEncoding enc,
-        int branchesPerQuad, int branchesPerTri, bool enumeration,
-        BanArgs&&... banArgs) :
-        origTableaux_(tri, enc, enumeration),
-        enc_(enc),
-        ban_(origTableaux_, std::forward<BanArgs>(banArgs)...),
-        nTets_(tri.size()),
-        nTypes_(enc_.storesTriangles() ? 5 * nTets_ : nTets_),
-        /* Each time we branch, one LP can be solved in-place:
-           therefore we use branchesPerQuad-1 and branchesPerTri-1.
-           The final +1 is for the root node. */
-        nTableaux_(enc_.storesTriangles() ?
-            (branchesPerQuad - 1) * nTets_ +
-                (branchesPerTri - 1) * nTets_ * 4 + 1 :
-            (branchesPerQuad - 1) * nTets_ + 1),
-        type_(new uint8_t[nTypes_ + 1]),
-        typeOrder_(new size_t[nTypes_]),
-        level_(0),
-        octLevel_(enc_.storesOctagons() ? -1 : static_cast<ssize_t>(nTypes_)),
-        lp_(new LPData<Constraint, IntType>[nTableaux_]),
-        lpSlot_(new LPData<Constraint, IntType>*[nTypes_ + 1]),
-        nextSlot_(new LPData<Constraint, IntType>*[nTypes_ + 1]),
-        nVisited_(0) {
-    // Initialise the type vector to the zero vector.
-    std::fill(type_, type_ + nTypes_ + 1, 0);
-
-    // Set a default type order.
-    for (size_t i = 0; i < nTypes_; ++i)
-        typeOrder_[i] = i;
-
-    // Reserve space for all the tableaux that we will ever need.
-    for (size_t i = 0; i < nTableaux_; ++i)
-        lp_[i].reserve(origTableaux_);
-
-    // Mark the location of the initial tableaux at the root node.
-    lpSlot_[0] = lp_;
-    nextSlot_[0] = lp_ + 1;
-
-    // Reserve space for our additional temporary tableaux.
-    tmpLP_[0].reserve(origTableaux_);
-    tmpLP_[1].reserve(origTableaux_);
-    tmpLP_[2].reserve(origTableaux_);
-    tmpLP_[3].reserve(origTableaux_);
-}
-
-template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-inline ssize_t TreeTraversal<Constraint, Ban, IntType>::
-        nextUnmarkedTriangleType(size_t startFrom) {
-    while (startFrom < nTypes_ && ban_.marked(2 * nTets_ + startFrom))
-        ++startFrom;
-    // Don't use ( ? : ), since we are combining signed/unsigned return values.
-    if (startFrom == nTypes_)
-        return -1;
-    else
-        return startFrom;
-}
-
-template <LPSurfaceSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-template <typename... BanArgs>
-inline TreeEnumeration<Constraint, Ban, IntType>::TreeEnumeration(
-        const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
-        TreeTraversal<Constraint, Ban, IntType>(tri, enc,
-            (enc.storesOctagons() ? 7 : 4) /* branches per quad */,
-            2 /* branches per triangle */,
-            true /* enumeration */,
-            std::forward<BanArgs>(banArgs)...),
-        nSolns_(0),
-        lastNonZero_(-1) {
-}
-
-template <LPSurfaceSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-inline size_t TreeEnumeration<Constraint, Ban, IntType>::solutions() const {
-    return nSolns_;
-}
-
-template <LPSurfaceSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-inline bool TreeEnumeration<Constraint, Ban, IntType>::writeTypes(
-        const TreeEnumeration& tree) {
-    std::cout << "SOLN #" << tree.solutions() << ": ";
-    tree.dumpTypes(std::cout);
-    std::cout << std::endl;
-    return false;
-}
-
-template <LPSurfaceSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-inline bool TreeEnumeration<Constraint, Ban, IntType>::
-        writeSurface(const TreeEnumeration& tree) {
-    std::cout << "SOLN #" << tree.solutions() << ": ";
-    std::cout << tree.buildSurface().str() << std::endl;
-    return false;
-}
-
-template <LPStructureSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-template <typename... BanArgs>
-inline TautEnumeration<Constraint, Ban, IntType>::TautEnumeration(
-        const Triangulation<3>& tri, BanArgs&&... banArgs) :
-        TreeTraversal<Constraint, Ban, IntType>(tri, NormalCoords::Angle,
-            3 /* branches per quad */,
-            0 /* branches per triangle; irrelevant here */,
-            true /* enumeration */,
-            std::forward<BanArgs>(banArgs)...),
-        nSolns_(0) {
-}
-
-template <LPStructureSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-inline size_t TautEnumeration<Constraint, Ban, IntType>::solutions() const {
-    return nSolns_;
-}
-
-template <LPStructureSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-inline bool TautEnumeration<Constraint, Ban, IntType>::writeTypes(
-        const TautEnumeration& tree) {
-    std::cout << "SOLN #" << tree.solutions() << ": ";
-    tree.dumpTypes(std::cout);
-    std::cout << std::endl;
-    return false;
-}
-
-template <LPStructureSubspace Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-inline bool TautEnumeration<Constraint, Ban, IntType>::writeStructure(
-        const TautEnumeration& tree) {
-    std::cout << "SOLN #" << tree.solutions() << ": ";
-    std::cout << tree.buildStructure().str() << std::endl;
-    return false;
-}
-
-template <LPSurfaceConstraint Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-template <typename... BanArgs>
-inline TreeSingleSoln<Constraint, Ban, IntType>::TreeSingleSoln(
-        const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
-        TreeTraversal<Constraint, Ban, IntType>(tri, enc,
-            (enc.storesOctagons() ? 6 : 3) /* branches per quad */,
-            2 /* branches per triangle */,
-            false /* enumeration */,
-            std::forward<BanArgs>(banArgs)...),
-        nextZeroLevel_(0),
-        cancelled_(false) {
-}
-
-template <LPSurfaceConstraint Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-inline void TreeSingleSoln<Constraint, Ban, IntType>::cancel() {
-    std::lock_guard<std::mutex> lock(mCancel_);
-    cancelled_ = true;
-}
-
-template <LPSurfaceConstraint Constraint, BanConstraint Ban,
-    ReginaInteger IntType>
-inline bool TreeSingleSoln<Constraint, Ban, IntType>::cancelled() {
-    std::lock_guard<std::mutex> lock(mCancel_);
-    return cancelled_;
-}
 
 } // namespace regina
 
