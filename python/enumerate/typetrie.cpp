@@ -29,8 +29,10 @@
  **************************************************************************/
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include "enumerate/typetrie.h"
 #include "utilities/exception.h"
+#include "utilities/fixedarray.h"
 #include "../helpers.h"
 #include "../docstrings/enumerate/typetrie.h"
 
@@ -47,53 +49,13 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
         .def(pybind11::init<const TypeTrie<nTypes>&>(), rdoc::__copy)
         .def("swap", &TypeTrie<nTypes>::swap, rdoc::swap)
         .def("clear", &TypeTrie<nTypes>::clear, rdoc::clear)
-        .def("insert", [](TypeTrie<nTypes>& t, pybind11::list arg) {
-            uint8_t* c = new uint8_t[arg.size() + 1];
-            size_t len = 0;
-            try {
-                int type;
-                for (auto item : arg) {
-                    type = item.cast<int>();
-                    if (type < 0 || type >= nTypes) {
-                        delete[] c;
-                        throw regina::InvalidArgument(
-                            "Element of type vector is out of range");
-                    }
-                    c[len++] = static_cast<uint8_t>(type);
-                }
-            } catch (pybind11::cast_error const&) {
-                delete[] c;
-                throw regina::InvalidArgument(
-                    "Element of type vector not convertible to integer");
-            }
-            c[len] = 0;
-            t.insert(c, len);
-            delete[] c;
-        }, "entry"_a, rdoc::insert)
-        .def("dominates", [](const TypeTrie<nTypes>& t, pybind11::list arg) {
-            uint8_t* c = new uint8_t[arg.size() + 1];
-            size_t len = 0;
-            try {
-                int type;
-                for (auto item : arg) {
-                    type = item.cast<int>();
-                    if (type < 0 || type >= nTypes) {
-                        delete[] c;
-                        throw regina::InvalidArgument(
-                            "Element of type vector is out of range");
-                    }
-                    c[len++] = static_cast<uint8_t>(type);
-                }
-            } catch (pybind11::cast_error const&) {
-                delete[] c;
-                throw regina::InvalidArgument(
-                    "Element of type vector not convertible to integer");
-            }
-            c[len] = 0;
-            bool ans = t.dominates(c, len);
-            delete[] c;
-            return ans;
-        }, "vec"_a, rdoc::dominates)
+        .def("insert", [](TypeTrie<nTypes>& t, const std::vector<int>& types) {
+            t.insert(types.begin(), types.end());
+        }, "types"_a, rdoc::insert)
+        .def("dominates", [](TypeTrie<nTypes>& t,
+                const std::vector<int>& types) {
+            t.dominates(types.begin(), types.end());
+        }, "types"_a, rdoc::dominates)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_output_rich(c);

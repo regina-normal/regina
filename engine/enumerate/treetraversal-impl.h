@@ -401,7 +401,7 @@ bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
         // need to check the domination test, since we know the parent
         // node passed the domination test and setting
         // type_[idx] = 0 will not change the result.
-        if (type_[idx] && solns_.dominates(type_, nTypes_)) {
+        if (type_[idx] && solns_.dominates(type_.begin(), type_.end())) {
             ++type_[idx];
             lastNonZero_ = level_;
             continue;
@@ -633,7 +633,7 @@ bool TreeEnumeration<Constraint, Ban, IntType>::next(ProgressTracker* tracker) {
             } else {
                 // We pass the feasibility test, *and* we're at
                 // a leaf node.  This means we've found a solution!
-                solns_.insert(type_, nTypes_);
+                solns_.insert(type_.begin(), type_.end());
                 ++nSolns_;
                 return true;
             }

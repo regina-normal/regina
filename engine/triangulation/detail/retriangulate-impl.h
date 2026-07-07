@@ -239,6 +239,9 @@ class RetriangulateSigGraph;
 template <SignatureType Signature>
 class RetriangulateSigGraph<Signature, true> :
         private std::map<Signature, Signature> {
+    private:
+        using std::map<Signature, Signature>::find;
+
     public:
         using iterator = std::map<Signature, Signature>::iterator;
 

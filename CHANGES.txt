@@ -604,8 +604,9 @@ Version 8.0  [ TODO ]
               triangulations in data files, since they are easy to reconstruct
               (in some cases, using other invariants that _are_ saved).
         Class TypeTrie:
-            - Now uses uint8_t instead of char for vector elements.  This
-              affects the argument types for insert() and dominates().
+            - The insert() and dominates() routines have been rewritten to take
+              the type vector as an iterator pair (as opposed to a raw pointer
+              and vector length).  The old routines are removed completely.
         Class Vector<T>:
             - Now requires the element type T to have a RingTraits
               specialisation.
