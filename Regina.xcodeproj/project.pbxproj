@@ -513,6 +513,7 @@
 		0545A04E2FB66FC5008D3ADB /* spatiallink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A04D2FB66FC5008D3ADB /* spatiallink.cpp */; };
 		0545A0512FBBCD71008D3ADB /* tri2composition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0545A0502FBBCD71008D3ADB /* tri2composition.cpp */; };
 		0547513A2FE34054002150C4 /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054751392FE34054002150C4 /* treeconstraint.cpp */; };
+		0547513F2FFD30D0002150C4 /* typetrie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0547513D2FFD30D0002150C4 /* typetrie.cpp */; };
 		054C6A7E1DCC20DA005373F0 /* example.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A7C1DCC20DA005373F0 /* example.h */; };
 		054C6A7F1DCC20DA005373F0 /* strings.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A7D1DCC20DA005373F0 /* strings.h */; };
 		054C6A821DCC2127005373F0 /* example.h in Headers */ = {isa = PBXBuildFile; fileRef = 054C6A811DCC2127005373F0 /* example.h */; };
@@ -2925,6 +2926,8 @@
 		0545A04F2FBBCD71008D3ADB /* tri2composition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tri2composition.h; sourceTree = "<group>"; };
 		0545A0502FBBCD71008D3ADB /* tri2composition.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tri2composition.cpp; sourceTree = "<group>"; };
 		054751392FE34054002150C4 /* treeconstraint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = treeconstraint.cpp; sourceTree = "<group>"; };
+		0547513C2FFD30D0002150C4 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		0547513D2FFD30D0002150C4 /* typetrie.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = typetrie.cpp; sourceTree = "<group>"; };
 		0549B4982907D38D00C911AF /* data-anon.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-anon.docbook"; sourceTree = "<group>"; };
 		0549B4992907D38E00C911AF /* data-tri.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-tri.docbook"; sourceTree = "<group>"; };
 		0549B49A2907D38E00C911AF /* data-txi.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-txi.docbook"; sourceTree = "<group>"; };
@@ -6649,6 +6652,15 @@
 			path = helpers;
 			sourceTree = "<group>";
 		};
+		0547513E2FFD30D0002150C4 /* enumerate */ = {
+			isa = PBXGroup;
+			children = (
+				0547513C2FFD30D0002150C4 /* CMakeLists.txt */,
+				0547513D2FFD30D0002150C4 /* typetrie.cpp */,
+			);
+			path = enumerate;
+			sourceTree = "<group>";
+		};
 		0553FBB22AF6808E00BE89A7 /* packets */ = {
 			isa = PBXGroup;
 			children = (
@@ -7071,6 +7083,7 @@
 				056AED3F2A431AE200EAF4FA /* census */,
 				056AECE02A431AE200EAF4FA /* CMakeLists.txt */,
 				056AED442A431AE200EAF4FA /* compile-time */,
+				0547513E2FFD30D0002150C4 /* enumerate */,
 				056AECF72A431AE200EAF4FA /* gtest */,
 				056AED232A431AE200EAF4FA /* link */,
 				056AED432A431AE200EAF4FA /* main.cpp */,
@@ -9989,6 +10002,7 @@
 				056AED892A431AE200EAF4FA /* intutils.cpp in Sources */,
 				056AED642A431AE200EAF4FA /* normalsurfaces.cpp in Sources */,
 				056AED7E2A431AE200EAF4FA /* binom.cpp in Sources */,
+				0547513F2FFD30D0002150C4 /* typetrie.cpp in Sources */,
 				0545A01F2FA83E57008D3ADB /* sigutils.cpp in Sources */,
 				056AED842A431AE200EAF4FA /* main.cpp in Sources */,
 				057FDAFB2EE86FE1000C706E /* concepts.cpp in Sources */,
