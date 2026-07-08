@@ -992,98 +992,147 @@ void LPData<Constraint, IntType>::writeTextLong(std::ostream& out) const {
 }
 
 template <LPConstraint Constraint, ReginaInteger IntType>
-template <IntegerVector Ray>
-requires (std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
-    typename Ray::value_type>)
-Ray LPData<Constraint, IntType>::extractSolution(const uint8_t* type) const {
+template <IntegerVector Ray, std::random_access_iterator Iterator>
+requires
+    std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
+        typename Ray::value_type> &&
+    CppInteger<std::iter_value_t<Iterator>>
+Ray LPData<Constraint, IntType>::extractSurfaceSolution(Iterator beginTypes)
+        const requires LPSurfaceConstraint<Constraint> {
     // Fetch details on how to undo the column permutation.
     const size_t* columnPerm = origTableaux_->columnPerm();
 
     // We will multiply the solution vector by
-    // lcm(basis coefficients in the tableaux), which will
-    // ensure that the variables will all be integers.
-    // This multiple might be too large, but we will shrink the
-    // vector down again at the end of this routine.
+    // lcm(basis coefficients in the tableaux), which ensures that the
+    // variables will all be integers.  This multiple might be too large,
+    // but we will shrink the vector down again at the end of this routine.
     //
     // First compute this lcm.
-    size_t i;
     typename Ray::value_type lcm(1);
-    for (i = 0; i < rank_; ++i)
+    for (size_t i = 0; i < rank_; ++i)
         lcm = lcm.lcm(entry(i, basis_[i]));
 
     Ray v(origTableaux_->coordinateColumns());
 
-    // Now compute (lcm * the solution vector).  We do not yet
-    // take into account the change of variables x_i -> x_i - 1
-    // that occurred each time we called constrainPositive(),
-    // or the more complex changes of variables that occurred
-    // each time we called constrainOct().
+    // Now compute (lcm * the solution vector).  We do not yet take into account
+    // the change of variables x_i -> x_i - 1 that occurred each time we called
+    // constrainPositive(), or the more complex changes of variables that
+    // occurred each time we called constrainOct().
     //
-    // All non-basic variables will be zero (and so we do nothing,
-    // since they will already have been initialised to zero in \a v).
+    // All non-basic variables will be zero (and so we do nothing, since they
+    // will already have been initialised to zero in \a v).
     //
-    // For basic variables, compute the values from the tableaux.
-    // Because we are multiplying everything by lcm, the
-    // divisions in the following code are all perfectly safe
-    // (and give precise integer results).
-    typename Ray::value_type coord;
-    for (i = 0; i < rank_; ++i) {
+    // For basic variables, compute the values from the tableaux.  Because we
+    // are multiplying everything by lcm, the divisions in the following code
+    // are all perfectly safe (and give precise integer results).
+    for (size_t i = 0; i < rank_; ++i) {
         if (basis_[i] >= v.size())
             continue;
-        coord = lcm;
+        typename Ray::value_type coord = lcm;
         coord *= rhs_[i];
         coord /= entry(i, basis_[i]);
         v[columnPerm[basis_[i]]] = coord;
     }
 
-    // Now we take into account the changes of variable due
-    // to past calls to constrainPositive(), as described above.
-    // Since we have multiplied everything by lcm, instead of
-    // adding +1 to each relevant variable we must add +lcm.
-    size_t pos;
-    if (origTableaux_->system().angle()) {
-        if (type) {
-            // For taut angle structures, the only coordinate that is explicitly
-            // constrained to be positive is the final scaling coordinate.
-            // Even better, this coordinate is never moved by the column
-            // permutation.
-            pos = 3 * origTableaux_->tri().size();
-            v[pos] = v[pos] + lcm;
-        } else {
-            // For strict angle structures, we pass type == nullptr, and we
-            // constrain *all* coordinates as positive.
-            for (pos = 0; pos <= 3 * origTableaux_->tri().size(); ++pos)
-                v[pos] = v[pos] + lcm;
-        }
-    } else {
-        // For normal and almost normal surfaces, we need to work through
-        // each past call to constrainPositive() and/or constrainOct().
-        const size_t nTets = origTableaux_->tri().size();
+    // Now we take into account the changes of variable due to past calls to
+    // constrainPositive() and/or constraintOct(), as described above.
+    // Since we have multiplied everything by lcm, instead of adding +1 to
+    // each relevant variable we must add +lcm.
+    const size_t nTets = origTableaux_->tri().size();
 
-        // First take into account the quadrilateral types...
-        for (i = 0; i < nTets; ++i)
-            if (type[i] && type[i] < 4) {
-                pos = columnPerm[3 * i + type[i] - 1];
-                v[pos] = v[pos] + lcm;
-            }
-        // ... and then the triangle types.
-        for (i = 3 * nTets; i < v.size(); ++i)
-            if (type[i - 2 * nTets]) {
-                pos = columnPerm[i];
-                v[pos] = v[pos] + lcm;
-            }
-
-        // Next take into account the changes of variable due to
-        // past calls to constrainOct().
-        if (octPrimary_ >= 0) {
-            pos = columnPerm[octPrimary_];
-            v[pos] = v[pos] + lcm;
-            v[columnPerm[octSecondary_]] = v[pos];
-        }
+    // First take into account the quadrilateral types...
+    auto currType = beginTypes;
+    for (size_t i = 0; i < nTets; ++i) {
+        auto type = *currType++;
+        if (type && type < 4)
+            v[columnPerm[3 * i + type - 1]] += lcm;
     }
+    // ... and then the triangle types.
+    for (size_t i = 3 * nTets; i < v.size(); ++i)
+        if (*currType++)
+            v[columnPerm[i]] += lcm;
+
+    // Next account for changes of variable due to past calls to constrainOct().
+    if (octPrimary_ >= 0)
+        v[columnPerm[octSecondary_]] = (v[columnPerm[octPrimary_]] += lcm);
 
     // To finish, divide through by the gcd so we have the
     // smallest multiple that is an integer vector.
+    v.scaleDown();
+    return v;
+}
+
+template <LPConstraint Constraint, ReginaInteger IntType>
+template <IntegerVector Ray>
+requires (std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
+    typename Ray::value_type>)
+Ray LPData<Constraint, IntType>::extractStrictSolution() const
+        requires LPStructureConstraint<Constraint> {
+    // This follows the logic for extractSurfaceSolution(), but with a simpler
+    // implementation because we do not need to deal with type vectors.
+    // See the extractSurfaceSolution() implementation for a full explanation.
+    const size_t* columnPerm = origTableaux_->columnPerm();
+
+    typename Ray::value_type lcm(1);
+    for (size_t i = 0; i < rank_; ++i)
+        lcm = lcm.lcm(entry(i, basis_[i]));
+
+    Ray v(origTableaux_->coordinateColumns());
+
+    // Compute (lcm * solution vector), but do not yet take into account the
+    // changes of variables x_i -> x_i - 1 that come from constrainPositive().
+    for (size_t i = 0; i < rank_; ++i) {
+        if (basis_[i] >= v.size())
+            continue;
+        typename Ray::value_type coord = lcm;
+        coord *= rhs_[i];
+        coord /= entry(i, basis_[i]);
+        v[columnPerm[basis_[i]]] = coord;
+    }
+
+    // Now undo changes of variable due to constrainPositive().
+    // For strict angle structures, we constrain *all* coordinates as positive.
+    for (auto& coord : v)
+        coord += lcm;
+
+    v.scaleDown();
+    return v;
+}
+
+template <LPConstraint Constraint, ReginaInteger IntType>
+template <IntegerVector Ray>
+requires (std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
+    typename Ray::value_type>)
+Ray LPData<Constraint, IntType>::extractTautSolution() const
+        requires LPStructureConstraint<Constraint> {
+    // This follows the logic for extractSurfaceSolution(), but with a simpler
+    // implementation because we do not need to deal with type vectors.
+    // See the extractSurfaceSolution() implementation for a full explanation.
+    const size_t* columnPerm = origTableaux_->columnPerm();
+
+    typename Ray::value_type lcm(1);
+    for (size_t i = 0; i < rank_; ++i)
+        lcm = lcm.lcm(entry(i, basis_[i]));
+
+    Ray v(origTableaux_->coordinateColumns());
+
+    // Compute (lcm * solution vector), but do not yet take into account the
+    // changes of variables x_i -> x_i - 1 that come from constrainPositive().
+    for (size_t i = 0; i < rank_; ++i) {
+        if (basis_[i] >= v.size())
+            continue;
+        typename Ray::value_type coord = lcm;
+        coord *= rhs_[i];
+        coord /= entry(i, basis_[i]);
+        v[columnPerm[basis_[i]]] = coord;
+    }
+
+    // Now undo changes of variable due to constrainPositive().
+    // For taut angle structures, the only coordinate that is explicitly
+    // constrained to be positive is the final scaling coordinate (and
+    // moreover, this coordinate is never moved by the column permutation).
+    v.back() += lcm;
+
     v.scaleDown();
     return v;
 }

@@ -34,7 +34,7 @@
 #if REGINA_PYBIND11_VERSION == 3
 #include <pybind11/native_enum.h>
 #endif
-#include "enumerate/treelp.h"
+#include "enumerate/treelp-impl.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../docstrings/enumerate/treelp.h"
@@ -121,20 +121,26 @@ void addLPData(pybind11::module_& m, const char* name) {
         .def("constrainZero", &Data::constrainZero, rdoc::constrainZero)
         .def("constrainPositive", &Data::constrainPositive,
             rdoc::constrainPositive)
-        .def("extractSolution", [](const Data& d, const std::vector<int>& t) {
+        ;
+    if constexpr (regina::LPSurfaceConstraint<Constraint>) {
+        c.def("constrainOct", &Data::constrainOct, rdoc::constrainOct);
+        c.def("extractSurfaceSolution", [](const Data& d,
+                const std::vector<int>& types) {
             // Currently LPData does not give us an easy way to extract the
             // expected length of the type vector, and so we cannot sanity-check
             // the size of t right now.  Probably we should add an access
             // function to LPData that lets us view the original tableaux.
-            uint8_t* types = new uint8_t[t.size()];
-            std::copy(t.begin(), t.end(), types);
-            auto ans = d.template extractSolution<regina::VectorInt>(types);
-            delete[] types;
-            return ans;
-        }, rdoc::extractSolution)
-        ;
-    if constexpr (regina::LPSurfaceConstraint<Constraint>) {
-        c.def("constrainOct", &Data::constrainOct, rdoc::constrainOct);
+            return d.template extractSurfaceSolution<regina::VectorInt>(
+                types.begin());
+        }, "types"_a, rdoc::extractSurfaceSolution);
+    }
+    if constexpr (regina::LPStructureConstraint<Constraint>) {
+        c.def("extractStrictSolution",
+            &Data::template extractStrictSolution<regina::VectorInt>,
+            rdoc::extractStrictSolution);
+        c.def("extractTautSolution",
+            &Data::template extractTautSolution<regina::VectorInt>,
+            rdoc::extractTautSolution);
     }
     regina::python::add_output_rich(c);
     // We need to think more about what a comparison between tableaux should

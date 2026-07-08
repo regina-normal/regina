@@ -83,28 +83,31 @@ static constexpr const char clear[] = R"doc(Resets this to the empty trie.)doc";
 // Docstring regina::python::doc::TypeTrie::dominates
 static constexpr const char dominates[] =
 R"doc(Determines whether the given type vector dominates any vector in this
-trie.
+trie. The given type vector is specified by an iterator range.
 
 Precondition:
-    The given length *len* is non-zero, and is fixed throughout the
-    life of this trie; that is, it is the same every time insert() or
-    dominates() is called.
+    Each element of the given type vector is between 0 and
+    ``nTypes-1`` inclusive.
+
+Precondition:
+    The length of the type vector (``endTypes - beginTypes``) is fixed
+    throughout the life of this trie; that is, it is the same for
+    every call to insert() or dominates().
 
 Python:
-    Instead of the arguments *vec* and *len*, you should pass a single
-    argument which is a Python sequence of length *len*. This list
-    should be a type vector, and each list element should be between 0
-    and (*nTypes* - 1) inclusive.
+    Instead of a pair of iterators, you should pass the type vector as
+    a single argument, which is a Python list of integers.
 
-Parameter ``vec``:
-    the type vector to test.
+Parameter ``beginTypes``:
+    the beginning of the type vector to test.
 
-Parameter ``len``:
-    the number of elements in the given type vector.
+Parameter ``endTypes``:
+    a past-the-end iterator indicating the end of the type vector to
+    test.
 
 Returns:
-    ``True`` if and only if *vec* dominates some type vector stored in
-    this trie.)doc";
+    ``True`` if and only if the given type vector dominates some type
+    vector stored in this trie.)doc";
 
 // Docstring regina::python::doc::TypeTrie::global_swap
 static constexpr const char global_swap[] =
@@ -118,24 +121,28 @@ Parameter ``b``:
 
 // Docstring regina::python::doc::TypeTrie::insert
 static constexpr const char insert[] =
-R"doc(Inserts the given type vector into this trie.
+R"doc(Inserts the given type vector into this trie. The type vector is
+specified by an iterator range.
 
 Precondition:
-    The given length *len* is non-zero, and is fixed throughout the
-    life of this trie; that is, it is the same every time insert() or
-    dominates() is called.
+    Each element of the given type vector is between 0 and
+    ``nTypes-1`` inclusive.
+
+Precondition:
+    The length of the type vector (``endTypes - beginTypes``) is fixed
+    throughout the life of this trie; that is, it is the same for
+    every call to insert() or dominates().
 
 Python:
-    Instead of the arguments *entry* and *len*, you should pass a
-    single argument which is a Python sequence of length *len*. This
-    list should be a type vector, and each list element should be
-    between 0 and (*nTypes* - 1) inclusive.
+    Instead of a pair of iterators, you should pass the type vector as
+    a single argument, which is a Python list of integers.
 
-Parameter ``entry``:
-    the type vector to insert.
+Parameter ``beginTypes``:
+    the beginning of the type vector to insert.
 
-Parameter ``len``:
-    the number of elements in the given type vector.)doc";
+Parameter ``endTypes``:
+    a past-the-end iterator indicating the end of the type vector to
+    insert.)doc";
 
 // Docstring regina::python::doc::TypeTrie::swap
 static constexpr const char swap[] =

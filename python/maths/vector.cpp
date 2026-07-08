@@ -69,6 +69,10 @@ void addVectorOf(pybind11::module_& m, const char* className) {
             return pybind11::make_iterator(list);
         }, pybind11::keep_alive<0, 1>(), // iterator keeps vector alive
             rdoc::__iter__)
+        .def("front", overload_cast<>(&Vec::front, pybind11::const_),
+            rdoc::front)
+        .def("back", overload_cast<>(&Vec::back, pybind11::const_),
+            rdoc::back)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= T(), rdoc::__imul)

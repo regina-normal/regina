@@ -44,78 +44,68 @@ template class LPInitialTableaux<LPConstraintEulerPositive>;
 template class LPInitialTableaux<LPConstraintEulerZero>;
 template class LPInitialTableaux<LPConstraintNonSpun>;
 
+using TypeIt = typename FixedArray<uint8_t>::const_iterator;
+
 template class LPData<LPConstraintNone, Integer>;
-template VectorInt LPData<LPConstraintNone, Integer>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintNone, Integer>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
+template VectorInt LPData<LPConstraintNone, Integer>::
+    extractStrictSolution<VectorInt>() const;
+template VectorInt LPData<LPConstraintNone, Integer>::
+    extractTautSolution<VectorInt>() const;
 
 template class LPData<LPConstraintNone, NativeLong>;
-template VectorInt LPData<LPConstraintNone, NativeLong>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintNone, NativeLong>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
+template VectorInt LPData<LPConstraintNone, NativeLong>::
+    extractStrictSolution<VectorInt>() const;
+template VectorInt LPData<LPConstraintNone, NativeLong>::
+    extractTautSolution<VectorInt>() const;
 
 template class LPData<LPConstraintEulerPositive, Integer>;
-template VectorInt LPData<LPConstraintEulerPositive, Integer>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintEulerPositive, Integer>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 
 template class LPData<LPConstraintEulerPositive, NativeLong>;
-template VectorInt LPData<LPConstraintEulerPositive, NativeLong>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintEulerPositive, NativeLong>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 
 template class LPData<LPConstraintEulerZero, Integer>;
-template VectorInt LPData<LPConstraintEulerZero, Integer>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintEulerZero, Integer>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 
 template class LPData<LPConstraintEulerZero, NativeLong>;
-template VectorInt LPData<LPConstraintEulerZero, NativeLong>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintEulerZero, NativeLong>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 
 template class LPData<LPConstraintNonSpun, Integer>;
-template VectorInt LPData<LPConstraintNonSpun, Integer>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintNonSpun, Integer>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 
 template class LPData<LPConstraintNonSpun, NativeLong>;
-template VectorInt LPData<LPConstraintNonSpun, NativeLong>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintNonSpun, NativeLong>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 
 #ifdef INT128_AVAILABLE
 template class LPData<LPConstraintNone, NativeInteger<16>>;
-template VectorInt LPData<LPConstraintNone, NativeInteger<16>>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintNone, NativeInteger<16>>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
+template VectorInt LPData<LPConstraintNone, NativeInteger<16>>::
+    extractStrictSolution<VectorInt>() const;
+template VectorInt LPData<LPConstraintNone, NativeInteger<16>>::
+    extractTautSolution<VectorInt>() const;
 
 template class LPData<LPConstraintEulerPositive, NativeInteger<16>>;
-template VectorInt LPData<LPConstraintEulerPositive, NativeInteger<16>>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintEulerPositive, NativeInteger<16>>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 
 template class LPData<LPConstraintEulerZero, NativeInteger<16>>;
-template VectorInt LPData<LPConstraintEulerZero, NativeInteger<16>>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintEulerZero, NativeInteger<16>>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 
 template class LPData<LPConstraintNonSpun, NativeInteger<16>>;
-template VectorInt LPData<LPConstraintNonSpun, NativeInteger<16>>::
-    extractSolution<VectorInt>(const uint8_t*) const;
 template VectorLarge LPData<LPConstraintNonSpun, NativeInteger<16>>::
-    extractSolution<VectorLarge>(const uint8_t*) const;
+    extractSurfaceSolution<VectorLarge, TypeIt>(TypeIt) const;
 #endif
 
 } // namespace regina

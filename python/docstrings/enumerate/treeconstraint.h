@@ -454,11 +454,10 @@ This constraint type cannot be used with angle structure coordinate
 systems.
 
 These linear constraint classes are designed mainly to act as C++
-template arguments, and end users will typically not need to construct
-their own object of these classes. Instead, to use a linear constraint
-class, pass it as a template parameter to one of the tree traversal
-subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
-TautEnumeration).
+template arguments. You cannot construct an object of this type;
+instead, to use a constraint class, pass it as a template parameter to
+one of the tree traversal subclasses (e.g., TreeEnumeration,
+TreeSingleSolution, or TautEnumeration).
 
 Precondition:
     We are working with a normal or almost normal vector encoding that
@@ -556,11 +555,10 @@ normal) coordinates. It cannot be used with angle structure coordinate
 systems.
 
 These linear constraint classes are designed mainly to act as C++
-template arguments, and end users will typically not need to construct
-their own object of these classes. Instead, to use a linear constraint
-class, pass it as a template parameter to one of the tree traversal
-subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
-TautEnumeration).
+template arguments. You cannot construct an object of this type;
+instead, to use a constraint class, pass it as a template parameter to
+one of the tree traversal subclasses (e.g., TreeEnumeration,
+TreeSingleSolution, or TautEnumeration).
 
 Precondition:
     We are working with a normal vector encoding that includes
@@ -667,11 +665,10 @@ This constraint type cannot be used with angle structure coordinate
 systems.
 
 These linear constraint classes are designed mainly to act as C++
-template arguments, and end users will typically not need to construct
-their own object of these classes. Instead, to use a linear constraint
-class, pass it as a template parameter to one of the tree traversal
-subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
-TautEnumeration).
+template arguments. You cannot construct an object of this type;
+instead, to use a constraint class, pass it as a template parameter to
+one of the tree traversal subclasses (e.g., TreeEnumeration,
+TreeSingleSolution, or TautEnumeration).
 
 Precondition:
     We are working with a normal or almost normal vector encoding that
@@ -782,11 +779,10 @@ This constraint type can be used with both normal surface and angle
 structure coordinate systems.
 
 These linear constraint classes are designed mainly to act as C++
-template arguments, and end users will typically not need to construct
-their own object of these classes. Instead, to use a linear constraint
-class, pass it as a template parameter to one of the tree traversal
-subclasses (e.g., TreeEnumeration, TreeSingleSolution, or
-TautEnumeration).
+template arguments. You cannot construct an object of this type;
+instead, to use a constraint class, pass it as a template parameter to
+one of the tree traversal subclasses (e.g., TreeEnumeration,
+TreeSingleSolution, or TautEnumeration).
 
 Python:
     It is rare that you would need to access this class directly

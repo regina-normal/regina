@@ -78,8 +78,7 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
     lp.initStart();
 
     // Set all angles to be strictly positive.
-    unsigned i;
-    for (i = 0; i < eqns.columns(); ++i) {
+    for (size_t i = 0; i < eqns.columns(); ++i) {
         // std::cerr << "Constraining +ve: "
         //     << i << " / " << eqns.columns() << std::endl;
         lp.constrainPositive(i);
@@ -93,7 +92,7 @@ bool Triangulation<3>::hasStrictAngleStructure() const {
 
     // We have a strict angle structure: reconstruct it.
     strictAngleStructure_ = AngleStructure(*this,
-        lp.extractSolution<VectorInt>(nullptr /* type vector */));
+        lp.extractStrictSolution<VectorInt>());
     return true;
 }
 

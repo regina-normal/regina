@@ -413,7 +413,8 @@ class TreeTraversal :
          * \return a normal surface that has been found at the current stage
          * of the search.
          */
-        NormalSurface buildSurface() const;
+        NormalSurface buildSurface() const
+                requires LPSurfaceConstraint<Constraint>;
 
         /**
          * Reconstructs the full taut angle structure that is represented by
@@ -440,7 +441,34 @@ class TreeTraversal :
          * \return the taut angle structure that has been found at the
          * current stage of the search.
          */
-        AngleStructure buildStructure() const;
+        AngleStructure buildTautStructure() const
+                requires LPStructureConstraint<Constraint>;
+
+        /**
+         * Deprecated routine that reconstructs the full taut angle structure
+         * represented by the type vector at the current stage of the search.
+         *
+         * \deprecated This routine has been renamed to buildTautStructure(),
+         * to emphasise that it is for use with _taut_ angle structures only.
+         * See buildTautStructure() for further details.
+         *
+         * \pre This tree traversal is at a point in the search where it has
+         * found a feasible solution that represents a taut angle structure.
+         *
+         * \pre We are working with angle structure coordinates.
+         * This will be checked (see the exception details below).
+         *
+         * \exception FailedPrecondition We are not working with angle
+         * structure coordinates (i.e., the coordinate system passed to the
+         * TreeTraversal constructor was not NormalCoords::Angle).
+         *
+         * \return the taut angle structure that has been found at the
+         * current stage of the search.
+         */
+        [[deprecated]] AngleStructure buildStructure() const
+                requires LPStructureConstraint<Constraint> {
+            return buildTautStructure();
+        }
 
         // Mark this class as non-copyable.
         TreeTraversal(const TreeTraversal&) = delete;
@@ -1192,7 +1220,7 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * Your action can extract details of the solution directly from the
          * enumeration object: for instance, it can dump the type
          * vector using dumpTypes(), or it can reconstruct the full taut
-         * angle structure using buildStructure() and perform some other
+         * angle structure using buildTautStructure() and perform some other
          * operations upon it.
          *
          * The usual way of using this routine is to construct an
@@ -1250,8 +1278,8 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          * you can extract details of the solution directly from this
          * enumeration object: for instance, you can dump the type
          * vector using dumpTypes(), or you can reconstruct the full
-         * taut angle structure using buildStructure() and perform some other
-         * operations upon it.
+         * taut angle structure using buildTautStructure() and perform some
+         * other operations upon it.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -1343,7 +1371,7 @@ class TautEnumeration : public TreeTraversal<Constraint, Ban, IntType> {
          */
         static bool writeStructure(const TautEnumeration& tree) {
             std::cout << "SOLN #" << tree.solutions() << ": ";
-            std::cout << tree.buildStructure().str() << std::endl;
+            std::cout << tree.buildTautStructure().str() << std::endl;
             return false;
         }
 

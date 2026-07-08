@@ -273,12 +273,34 @@ Parameter ``other``:
 Parameter ``multiple``:
     the multiple of *other* to be added to this vector.)doc";
 
+// Docstring regina::python::doc::Vector::back
+static constexpr const char back[] =
+R"doc(Returns the last element of this vector. A constant reference to the
+element is returned; the element may not be altered.
+
+Precondition:
+    This vector is non-empty.
+
+Returns:
+    the last element.)doc";
+
 // Docstring regina::python::doc::Vector::elementSum
 static constexpr const char elementSum[] =
 R"doc(Returns the sum of all elements of this vector.
 
 Returns:
     the sum of the elements of this vector.)doc";
+
+// Docstring regina::python::doc::Vector::front
+static constexpr const char front[] =
+R"doc(Returns the first element of this vector. A constant reference to the
+element is returned; the element may not be altered.
+
+Precondition:
+    This vector is non-empty.
+
+Returns:
+    the first element.)doc";
 
 // Docstring regina::python::doc::Vector::global_swap
 static constexpr const char global_swap[] =

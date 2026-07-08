@@ -503,11 +503,49 @@ the number of columns in the original matrix of matching equations.
 Returns:
     the number of normal or angle structure coordinate columns.)doc";
 
-// Docstring regina::python::doc::LPData::extractSolution
-static constexpr const char extractSolution[] =
+// Docstring regina::python::doc::LPData::extractStrictSolution
+static constexpr const char extractStrictSolution[] =
 R"doc(Extracts the values of the individual variables from the current
-basis, with some modifications (as described below). The values of the
-variables will be returned in vector form, using type *Ray*.
+basis, with some modifications, for use with strict angle structures.
+The values of the variables will be returned in vector form, using the
+type *Ray*.
+
+Like extractSurfaceSolution(), this routine extracts the values of the
+individual variables from the current basis and returns them in vector
+form using type *Ray*. It orders the variables according to the
+original angle structure equations from the underlying triangulation
+(not the reordered coordinates in the tableaux), it undoes any changes
+of variable caused by calls to constrainPositive(), and it scales the
+result to give the smallest possible integer vector.
+
+This routine is not used as an internal part of the tree traversal
+algorithm; instead it is offered as a helper routine for
+reconstructing the angle structures that result.
+
+Precondition:
+    Every coordinate column (including the final scaling coordinate
+    column) has had exactly one call to constrainPositive(), and no
+    calls at all to constraintOct(). Note that this is consistent with
+    how Regina searches for a strict angle structure. Any additional
+    columns arising from the *Constraint* template parameter are
+    exempt from this requirement.
+
+Template parameter ``Ray``:
+    the vector type to use to return the extracted values. The
+    ``std::common_type_t`` constraint on *Ray* ensures that no
+    information will be lost (e.g., through overflow) when converting
+    integers to the element type for *Ray*.
+
+Returns:
+    a vector containing the values of all the variables. This vector
+    will have length origTableaux_->coordinateColumns().)doc";
+
+// Docstring regina::python::doc::LPData::extractSurfaceSolution
+static constexpr const char extractSurfaceSolution[] =
+R"doc(Extracts the values of the individual variables from the current
+basis, with some modifications, for use with normal and almost normal
+surfaces. The values of the variables will be returned in vector form,
+using the type *Ray*.
 
 The modifications are as follows:
 
@@ -525,7 +563,7 @@ The modifications are as follows:
 
 This routine is not used as an internal part of the tree traversal
 algorithm; instead it is offered as a helper routine for
-reconstructing the normal surfaces or angle structures that result.
+reconstructing the normal surfaces that result.
 
 Precondition:
     No individual coordinate column has had more than one call to
@@ -547,16 +585,54 @@ Template parameter ``Ray``:
     integers to the element type for *Ray*.
 
 Parameter ``type``:
-    the type vector corresponding to the current state of this
-    tableaux, indicating which variables were previously fixed as
-    positive via calls to constrainPositive(). This is necessary
-    because LPData does not keep such historical data on its own. The
-    order of these types should be with respect to the permuted
-    columns (i.e., it should reflect the columns as they are stored in
-    this tableaux, not the original matching equations). As a special
-    case, when extracting a strict angle structure one may pass *type*
-    = ``None``, in which case this routine will assume that _every_
-    coordinate was constrained as positive.
+    the beginning of the type vector corresponding to the current
+    state of this tableaux, indicating which variables were previously
+    fixed as positive via calls to constrainPositive(). This is
+    necessary because LPData does not keep such historical data on its
+    own. The order of these types should be with respect to the
+    permuted columns (i.e., it should reflect the columns as they are
+    stored in this tableaux, not the original matching equations). As
+    a special case, when extracting a strict angle structure one may
+    pass *type* = ``None``, in which case this routine will assume
+    that _every_ coordinate was constrained as positive.
+
+Returns:
+    a vector containing the values of all the variables. This vector
+    will have length origTableaux_->coordinateColumns().)doc";
+
+// Docstring regina::python::doc::LPData::extractTautSolution
+static constexpr const char extractTautSolution[] =
+R"doc(Extracts the values of the individual variables from the current
+basis, with some modifications, for use with taut angle structures.
+The values of the variables will be returned in vector form, using the
+type *Ray*.
+
+Like extractSurfaceSolution(), this routine extracts the values of the
+individual variables from the current basis and returns them in vector
+form using type *Ray*. It orders the variables according to the
+original angle structure equations from the underlying triangulation
+(not the reordered coordinates in the tableaux), it undoes any changes
+of variable caused by calls to constrainPositive(), and it scales the
+result to give the smallest possible integer vector.
+
+This routine is not used as an internal part of the tree traversal
+algorithm; instead it is offered as a helper routine for
+reconstructing the angle structures that result.
+
+Precondition:
+    The scaling coordinate column has had exactly one call to
+    constrainPositive(), and there have been no other calls to
+    constrainPositive() or constrainOct() amongst any of the
+    coordinate columns. Note that this is consistent with how Regina
+    searches for taut angle structures. Any additional columns arising
+    from the *Constraint* template parameter are exempt from this
+    requirement.
+
+Template parameter ``Ray``:
+    the vector type to use to return the extracted values. The
+    ``std::common_type_t`` constraint on *Ray* ensures that no
+    information will be lost (e.g., through overflow) when converting
+    integers to the element type for *Ray*.
 
 Returns:
     a vector containing the values of all the variables. This vector

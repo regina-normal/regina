@@ -54,7 +54,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
         }, "types"_a, rdoc::insert)
         .def("dominates", [](TypeTrie<nTypes>& t,
                 const std::vector<int>& types) {
-            t.dominates(types.begin(), types.end());
+            return t.dominates(types.begin(), types.end());
         }, "types"_a, rdoc::dominates)
     ;
     regina::python::add_eq_operators(c, rdoc::__eq);

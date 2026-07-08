@@ -61,9 +61,16 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
         .def_static("supported", &Tree::supported, rdoc::supported)
         .def("visited", &Tree::visited, rdoc::visited)
         .def("typeString", &Tree::typeString, rdoc::typeString)
-        .def("buildSurface", &Tree::buildSurface, rdoc::buildSurface)
-        .def("buildStructure", &Tree::buildStructure, rdoc::buildStructure)
     ;
+    if constexpr (regina::LPSurfaceConstraint<Constraint>) {
+        c.def("buildSurface", &Tree::buildSurface, rdoc::buildSurface);
+    }
+    if constexpr (regina::LPStructureConstraint<Constraint>) {
+        c.def("buildTautStructure", &Tree::buildTautStructure,
+            rdoc::buildTautStructure);
+        c.def("buildStructure", &Tree::buildTautStructure, // deprecated
+            rdoc::buildStructure);
+    }
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
     regina::python::add_eq_operators(c);

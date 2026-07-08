@@ -84,7 +84,8 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-NormalSurface TreeTraversal<Constraint, Ban, IntType>::buildSurface() const {
+NormalSurface TreeTraversal<Constraint, Ban, IntType>::buildSurface() const
+        requires LPSurfaceConstraint<Constraint> {
     if (enc_.storesAngles())
         throw regina::FailedPrecondition(
             "TreeTraversal::buildSurface() requires "
@@ -99,8 +100,8 @@ NormalSurface TreeTraversal<Constraint, Ban, IntType>::buildSurface() const {
     else
         dim = 3 * nTets_;
 
-    auto v = lpSlot_[nTypes_]->template extractSolution<Vector<LargeInteger>>(
-        type_);
+    auto v = lpSlot_[nTypes_]->template extractSurfaceSolution<
+        Vector<LargeInteger>>(type_.begin());
 
     if (! enc_.storesOctagons())
         return NormalSurface(origTableaux_.tri(), enc_, std::move(v));
@@ -139,14 +140,15 @@ NormalSurface TreeTraversal<Constraint, Ban, IntType>::buildSurface() const {
 }
 
 template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
-AngleStructure TreeTraversal<Constraint, Ban, IntType>::buildStructure() const {
+AngleStructure TreeTraversal<Constraint, Ban, IntType>::buildTautStructure()
+        const requires LPStructureConstraint<Constraint> {
     if (! enc_.storesAngles())
         throw regina::FailedPrecondition(
-            "TreeTraversal::buildStructure() requires "
+            "TreeTraversal::buildTautStructure() requires "
             "angle structure coordinates");
 
     return AngleStructure(origTableaux_.tri(),
-        lpSlot_[nTypes_]->template extractSolution<VectorInt>(type_));
+        lpSlot_[nTypes_]->template extractTautSolution<VectorInt>());
 }
 
 template <LPConstraint Constraint, BanConstraint Ban, ReginaInteger IntType>
@@ -1043,8 +1045,8 @@ bool TreeSingleSoln<Constraint, Ban, IntType>::find() {
                     << ")" << std::endl;
 
                 NormalSurface f(origTableaux_.tri(), NormalCoords::Standard,
-                    lpSlot_[level_ + 1]->
-                        extractSolution<Vector<LargeInteger>>(type_));
+                    lpSlot_[level_ + 1]->extractSurfaceSolution<
+                        Vector<LargeInteger>>(type_.begin()));
                 std::cout << f.str() << std::endl;
             }
 #endif

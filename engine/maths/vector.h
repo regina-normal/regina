@@ -275,6 +275,56 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
             return elts_[index];
         }
         /**
+         * Returns the first element of this vector.
+         * A constant reference to the element is returned; the element may
+         * not be altered.
+         *
+         * \pre This vector is non-empty.
+         *
+         * \return the first element.
+         */
+        inline const T& front() const {
+            return *elts_;
+        }
+        /**
+         * Gives write access to the first element of this vector.
+         *
+         * \pre This vector is non-empty.
+         *
+         * \nopython In Python, front() and back() are read-only.  To set the
+         * first or last element, use the syntax `vector[index] = value`.
+         *
+         * \return a reference to the first element.
+         */
+        inline T& front() {
+            return *elts_;
+        }
+        /**
+         * Returns the last element of this vector.
+         * A constant reference to the element is returned; the element may
+         * not be altered.
+         *
+         * \pre This vector is non-empty.
+         *
+         * \return the last element.
+         */
+        inline const T& back() const {
+            return *(end_ - 1);
+        }
+        /**
+         * Gives write access to the last element of this vector.
+         *
+         * \pre This vector is non-empty.
+         *
+         * \nopython In Python, front() and back() are read-only.  To set the
+         * first or last element, use the syntax `vector[index] = value`.
+         *
+         * \return a reference to the last element.
+         */
+        inline T& back() {
+            return *(end_ - 1);
+        }
+        /**
          * Returns a C++ non-const iterator pointing to the first element of
          * this vector.
          *

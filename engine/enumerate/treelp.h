@@ -2013,10 +2013,10 @@ class LPData : public Output<LPData<Constraint, IntType>> {
             requires LPSurfaceConstraint<Constraint>;
 
         /**
-         * Extracts the values of the individual variables from the
-         * current basis, with some modifications (as described below).
-         * The values of the variables will be returned in vector form,
-         * using type \a Ray.
+         * Extracts the values of the individual variables from the current
+         * basis, with some modifications, for use with normal and almost
+         * normal surfaces.  The values of the variables will be returned in
+         * vector form, using the type \a Ray.
          *
          * The modifications are as follows:
          *
@@ -2034,13 +2034,13 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          *
          * This routine is not used as an internal part of the tree traversal
          * algorithm; instead it is offered as a helper routine for
-         * reconstructing the normal surfaces or angle structures that result.
+         * reconstructing the normal surfaces that result.
          *
-         * \pre No individual coordinate column has had more than one call
-         * to either of constrainPositive() or constrainOct() (otherwise
-         * the coordinate will not be correctly reconstructed).  Any
-         * additional columns arising from the \a Constraint template parameter
-         * are exempt from this requirement.
+         * \pre No individual coordinate column has had more than one call to
+         * either of constrainPositive() or constrainOct() (otherwise the
+         * coordinate will not be correctly reconstructed).  Any additional
+         * columns arising from the \a Constraint template parameter are exempt
+         * from this requirement.
          *
          * \python The type vector should be passed as a Python list of
          * integers (for example, in the enumeration of normal surfaces, there
@@ -2052,16 +2052,59 @@ class LPData : public Output<LPData<Constraint, IntType>> {
          * information will be lost (e.g., through overflow) when converting
          * integers to the element type for \a Ray.
          *
-         * \param type the type vector corresponding to the current state of
-         * this tableaux, indicating which variables were previously fixed as
-         * positive via calls to constrainPositive().  This is necessary
-         * because LPData does not keep such historical data on its own.
-         * The order of these types should be with respect to the permuted
-         * columns (i.e., it should reflect the columns as they are stored
-         * in this tableaux, not the original matching equations).
-         * As a special case, when extracting a strict angle structure
-         * one may pass \a type = \c null, in which case this routine will
-         * assume that _every_ coordinate was constrained as positive.
+         * \param beginTypes the beginning of the type vector corresponding to
+         * the current state of this tableaux, indicating which variables were
+         * previously fixed as positive via calls to constrainPositive().
+         * This is necessary because LPData does not keep such historical data
+         * on its own.  The length of this type vector must be `5n` if the
+         * tableaux has both quadrilateral and triangle coordinate columns,
+         * or `n` if it has quadrilateral columns only, where \a n is the
+         * number of tetrahedra in the underlying triangulation.  The order of
+         * these types should be with respect to the permuted columns (i.e., it
+         * should reflect the columns as they are stored in this tableaux, not
+         * the original matching equations).
+         * \return a vector containing the values of all the variables.
+         * This vector will have length origTableaux_->coordinateColumns().
+         */
+        template <IntegerVector Ray, std::random_access_iterator Iterator>
+        requires
+            std::same_as<std::common_type_t<IntType, typename Ray::value_type>,
+                typename Ray::value_type> &&
+            CppInteger<std::iter_value_t<Iterator>>
+        Ray extractSurfaceSolution(Iterator beginTypes) const
+            requires LPSurfaceConstraint<Constraint>;
+
+        /**
+         * Extracts the values of the individual variables from the current
+         * basis, with some modifications, for use with strict angle structures.
+         * The values of the variables will be returned in vector form, using
+         * the type \a Ray.
+         *
+         * Like extractSurfaceSolution(), this routine extracts the values of
+         * the individual variables from the current basis and returns them
+         * in vector form using type \a Ray.  It orders the variables
+         * according to the original angle structure equations from the
+         * underlying triangulation (not the reordered coordinates in the
+         * tableaux), it undoes any changes of variable caused by calls to
+         * constrainPositive(), and it scales the result to give the smallest
+         * possible integer vector.
+         *
+         * This routine is not used as an internal part of the tree traversal
+         * algorithm; instead it is offered as a helper routine for
+         * reconstructing the angle structures that result.
+         *
+         * \pre Every coordinate column (including the final scaling coordinate
+         * column) has had exactly one call to constrainPositive(), and no
+         * calls at all to constraintOct().  Note that this is consistent with
+         * how Regina searches for a strict angle structure.  Any additional
+         * columns arising from the \a Constraint template parameter are exempt
+         * from this requirement.
+         *
+         * \tparam Ray the vector type to use to return the extracted values.
+         * The `std::common_type_t` constraint on \a Ray ensures that no
+         * information will be lost (e.g., through overflow) when converting
+         * integers to the element type for \a Ray.
+         *
          * \return a vector containing the values of all the variables.
          * This vector will have length origTableaux_->coordinateColumns().
          */
@@ -2069,7 +2112,49 @@ class LPData : public Output<LPData<Constraint, IntType>> {
         requires (std::same_as<
             std::common_type_t<IntType, typename Ray::value_type>,
             typename Ray::value_type>)
-        Ray extractSolution(const uint8_t* type) const;
+        Ray extractStrictSolution() const
+            requires LPStructureConstraint<Constraint>;
+
+        /**
+         * Extracts the values of the individual variables from the current
+         * basis, with some modifications, for use with taut angle structures.
+         * The values of the variables will be returned in vector form, using
+         * the type \a Ray.
+         *
+         * Like extractSurfaceSolution(), this routine extracts the values of
+         * the individual variables from the current basis and returns them
+         * in vector form using type \a Ray.  It orders the variables
+         * according to the original angle structure equations from the
+         * underlying triangulation (not the reordered coordinates in the
+         * tableaux), it undoes any changes of variable caused by calls to
+         * constrainPositive(), and it scales the result to give the smallest
+         * possible integer vector.
+         *
+         * This routine is not used as an internal part of the tree traversal
+         * algorithm; instead it is offered as a helper routine for
+         * reconstructing the angle structures that result.
+         *
+         * \pre The scaling coordinate column has had exactly one call to
+         * constrainPositive(), and there have been no other calls to
+         * constrainPositive() or constrainOct() amongst any of the coordinate
+         * columns.  Note that this is consistent with how Regina searches for
+         * taut angle structures.  Any additional columns arising from the
+         * \a Constraint template parameter are exempt from this requirement.
+         *
+         * \tparam Ray the vector type to use to return the extracted values.
+         * The `std::common_type_t` constraint on \a Ray ensures that no
+         * information will be lost (e.g., through overflow) when converting
+         * integers to the element type for \a Ray.
+         *
+         * \return a vector containing the values of all the variables.
+         * This vector will have length origTableaux_->coordinateColumns().
+         */
+        template <IntegerVector Ray>
+        requires (std::same_as<
+            std::common_type_t<IntType, typename Ray::value_type>,
+            typename Ray::value_type>)
+        Ray extractTautSolution() const
+            requires LPStructureConstraint<Constraint>;
 
         /**
          * Writes a short text representation of this object to the
