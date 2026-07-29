@@ -28,6 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <numeric>
 #include "link/link.h"
 
 namespace regina {
@@ -44,7 +45,7 @@ std::vector<long> Link::longRotations(StrandRef breakOpen) const {
 
     if (size() == 0) {
         // We have a zero-crossing unknot.
-        return std::vector<long>({ 0 });
+        return { 0 }; // std::initializer_list constructor
     }
 
     if (! breakOpen) {
@@ -225,6 +226,51 @@ const Laurent2<Integer>& Link::theta() const {
 
     if (size() == 0)
         return *(theta_ = Laurent2<Integer>{}); // TODO: what??
+
+    // Choose an arbitrary crossing at which to break the knot open.
+    StrandRef breakOpen = crossings_.front()->upper();
+
+    // Build a map that numbers the arcs in order of traversal through the
+    // corresponding long knot.  Here *breakOpen* is numbered both 0 (at the
+    // end of the arc) and 2n (at the beginning of the arc); we store 0 here.
+    size_t n = size();
+    FixedArray<size_t> arcOrder(2 * n); // strand ID -> traversal order
+    {
+        StrandRef s = breakOpen;
+        size_t step = 0;
+        do {
+            arcOrder[(s++).id()] = step++;
+        } while (s != breakOpen);
+    }
+
+    // Build the matrix A whose determinant yields (after appropriate
+    // normalisation) the Alexander polynomial.
+    auto a = Matrix<Laurent<Integer>>::identity(2 * n + 1);
+    for (auto c : crossings_) {
+        size_t i = arcOrder[c->upper().prev().id()];
+        size_t j = arcOrder[c->lower().prev().id()];
+        a.entry(j, j + 1).set(0, a.entry(j, j + 1)[0] - 1);
+        a.entry(i, j + 1).set(0, a.entry(i, j + 1)[0] - 1);
+        a.entry(i, i + 1).set(c->sign(), a.entry(i, i + 1)[c->sign()] - 1);
+        a.entry(i, j + 1).set(c->sign(), a.entry(i, j + 1)[c->sign()] + 1);
+    }
+
+    // Now compute rotation numbers for arcs and extract the Alexander
+    // polynomial.  Note that this differs from the polynomial returned by
+    // alexander(), since the latter scales by powers of t and/or -1 to ensure
+    // that all exponents are non-negative and the constant term is positive.
+    //
+    // Ad-hoc experimentation suggests that the Alexander computation here is
+    // quite a bit slower than alexander(), mostly likely because the matrix
+    // is twice as large in each dimension.
+    auto rot = longRotations(breakOpen);
+    auto alex = a.det();
+    alex.shift(-(writhe() + std::reduce(rot.begin(), rot.end())) / 2);
+
+    // TODO: Set alexander_ if we don't already know it.
+
+
+
 
     auto ans = Laurent2<Integer>(); // TODO
 
