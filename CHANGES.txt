@@ -319,6 +319,8 @@ Version 8.0  [ TODO ]
               directly in the Turaev-Viro code instead.
         Class Link:
             - New routine parityProjection().
+            - New routines theta() and longRotations(), and class constants
+              thetaVarX and thetaVarY.
             - Knot/link signatures have been overhauled.  Regina-now supports:
               + first-generation signatures, which are printable strings,
                 identical to the old signatures from Regina ≤ 7.x, and
@@ -520,6 +522,7 @@ Version 8.0  [ TODO ]
               described by the new base class StandardSubcomplexOptions<dim>.
         Class StrandRef:
             - New routine reset().
+            - New routines turnLeft() and turnRight().
         Class SubtreeIterator<const_>:
             - The type std::iterator_traits<SubtreeIterator<...>>::value_type
               is now just Packet (without any const qualifiers), regardless of

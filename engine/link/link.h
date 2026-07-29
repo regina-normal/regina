@@ -382,6 +382,68 @@ class StrandRef {
         void jump();
 
         /**
+         * Interprets this strand reference as a directed arc, and returns the
+         * next arc when following the boundary of the cell to the left of this
+         * directed arc.
+         *
+         * If \a forwards is `true` (the default), this strand reference will
+         * be interpreted as a directed arc exacty as described in the class
+         * documentation (i.e., moving forwards along the orientation of the
+         * link from this strand of this crossing to the next crossing).
+         *
+         * If \a forwards is `false`, this strand reference will be interpreted
+         * as the same arc as above but pointing in the reverse direction
+         * (i.e., moving from the next crossing back to this strand of this
+         * crossing).
+         *
+         * This routine returns a StrandRef and a boolean.  The StrandRef
+         * indicates the next arc along the boundary of the cell to the left
+         * (again as described in the class documentation); the boolean
+         * indicates whether we are following that next arc forwards (`true`)
+         * or backwards (`false`) with respect to the orientation of the link.
+         *
+         * If this is a null reference (i.e., it represents a zero-crossing
+         * unknot), then this routine will return the same arc pointing in the
+         * same direction.  That is, the return value will consist of another
+         * null strand reference and a copy of the boolean argument \a forwards.
+         *
+         * \return the next directed arc following the cell boundary to the
+         * left, as described above.
+         */
+        std::pair<StrandRef, bool> turnLeft(bool forwards = true) const;
+
+        /**
+         * Interprets this strand reference as a directed arc, and returns the
+         * next arc when following the boundary of the cell to the right of this
+         * directed arc.
+         *
+         * If \a forwards is `true` (the default), this strand reference will
+         * be interpreted as a directed arc exacty as described in the class
+         * documentation (i.e., moving forwards along the orientation of the
+         * link from this strand of this crossing to the next crossing).
+         *
+         * If \a forwards is `false`, this strand reference will be interpreted
+         * as the same arc as above but pointing in the reverse direction
+         * (i.e., moving from the next crossing back to this strand of this
+         * crossing).
+         *
+         * This routine returns a StrandRef and a boolean.  The StrandRef
+         * indicates the next arc along the boundary of the cell to the right
+         * (again as described in the class documentation); the boolean
+         * indicates whether we are following that next arc forwards (`true`)
+         * or backwards (`false`) with respect to the orientation of the link.
+         *
+         * If this is a null reference (i.e., it represents a zero-crossing
+         * unknot), then this routine will return the same arc pointing in the
+         * same direction.  That is, the return value will consist of another
+         * null strand reference and a copy of the boolean argument \a forwards.
+         *
+         * \return the next directed arc following the cell boundary to the
+         * right, as described above.
+         */
+        std::pair<StrandRef, bool> turnRight(bool forwards = true) const;
+
+        /**
          * Converts this into a null reference.
          *
          * The pointer returned by crossing() will be \c null,
@@ -744,8 +806,7 @@ class Link :
                  yet been computed. */
         mutable std::optional<Polynomial<Integer>> alexander_;
             /**< The Alexander polynomial of the link.
-                 This is std::nullopt if it has not yet been computed,
-                 or if this link does not have exactly one component. */
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent<Integer>> jones_;
             /**< The Jones polynomial of the link.
                  This is std::nullopt if it has not yet been computed.
@@ -766,6 +827,11 @@ class Link :
                  This is std::nullopt if it has not yet been computed.
                  We insist that bracket_ is non-null if and only if jones_
                  is non-null. */
+        mutable std::optional<Laurent2<Integer>> theta_;
+            /**< The theta polynomial of the link.  This is the second part of
+                 the invariant of Bar-Natan and van der Veen (the first part
+                 is just the Alexander polynomial).
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Arrow> arrow_;
             /**< The arrow polynomial of the link.
                  This is std::nullopt if it has not yet been computed. */
@@ -881,6 +947,26 @@ class Link :
          * for homflyAZVarY for further details.
          */
         static constexpr const char* homflyVarY = homflyAZVarY;
+
+        /**
+         * The name of the first variable used in the theta polynomial, as
+         * returned by theta().  This is provided to help with pretty-printing
+         * theta polynomials for human consumption.
+         *
+         * To pretty-print the theta polynomial for human consumption, you
+         * can call `Laurent2::str(Link::thetaVarX, Link::thetaVarY)`.
+         */
+        static constexpr const char* thetaVarX = "T\u2081"; // $T_1$
+
+        /**
+         * The name of the second variable used in the theta polynomial, as
+         * returned by theta().  This is provided to help with pretty-printing
+         * theta polynomials for human consumption.
+         *
+         * To pretty-print the theta polynomial for human consumption, you
+         * can call `Laurent2::str(Link::thetaVarX, Link::thetaVarY)`.
+         */
+        static constexpr const char* thetaVarY = "T\u2082"; // $T_2$
 
         /**
          * The name of the variable used in the affine index polynomial, as
@@ -3423,6 +3509,61 @@ class Link :
         size_t seifertCircles() const;
 
         /**
+         * Treats this as a long knot, and computes rotations numbers for each
+         * of the arcs.  These rotation numbers are used (for example) in the
+         * theta invariant of Bar-Natan and van der Veen.
+         *
+         * In detail, this routine does the following:
+         *
+         * - Breaks this knot open at the given arc, thus turning this into a
+         *   _long knot_ where the given arc runs vertically up the plane
+         *   towards positive infinity (before the break), and then returns
+         *   vertically up the plane from negative infinity (after the break);
+         *
+         * - Arranges each crossing so that both strands point upwards;
+         *
+         * - Computes a _rotation number_ for each remaining (unbroken) arc,
+         *   which is a signed integer indicating how many anticlockwise
+         *   rotations the arc makes from start to end (where we assume the
+         *   arc points vertically upwards at both start and end);
+         *
+         * - Returns these rotation numbers as a sequence of integers, indexed
+         *   by strand ID (i.e., indexed by the values of `StrandRef::id()` for
+         *   the StrandRef objects that represent each arc).  See the StrandRef
+         *   documentation for the convention on how arcs are represented
+         *   using StrandRef objects.
+         *
+         * The rotation numbers are not uniquely defined, since they depend
+         * upon the precise positioning of the crossings and arcs in the plane.
+         * This routine simply promises to return the rotation numbers for
+         * _some_ realisation of the diagram that satisfies the conditions
+         * above.  In particular, for this realisation:
+         *
+         * - All rotation numbers will be -1, 0, or +1;
+         *
+         * - The arc at which we break the knot open will have rotation
+         *   number 0.
+         *
+         * As a special case, if this is the zero-crossing unknot diagram,
+         * then this routine will return the sequence `[ 0 ]`.
+         *
+         * \pre This is a classical knot.  That is, the link diagram is not
+         * virtual, and has exactly one link component.
+         *
+         * \exception FailedPrecondition This link is empty, has multiple
+         * components, and/or is virtual (as opposed to classical).
+         *
+         * \param breakOpen indicates where to break open this knot diagram to
+         * produce a long knot.  Again, see the StrandRef documentation for
+         * the convention on how arcs are represented using StrandRef objects.
+         * This may be a null reference (the default), in which case this
+         * routine will choose an arbitrary location to break the knot open.
+         * \return a sequence of rotation numbers indexed by strand ID, as
+         * described above.
+         */
+        std::vector<long> longRotations(StrandRef breakOpen = {}) const;
+
+        /**
          * Returns an ideal triangulation of the complement of this link
          * diagram.  The triangulation will have one ideal vertex for each
          * link component.
@@ -4184,6 +4325,64 @@ class Link :
          * in the class Laurent2<Integer>.
          */
         static Laurent2<Integer> homflyAZtoLM(Laurent2<Integer> homflyAZ);
+
+        /**
+         * Returns the theta polynomial of this classical knot.
+         * This is the second (and more interesting) part of the Θ invariant
+         * of Bar-Natan and van der Veen; the first part is simply the
+         * Alexander polynomial, which you can access by calling alexander()
+         * instead.
+         *
+         * At present, Regina only computes theta polynomials for classical
+         * knots, not multiple-component links or virtual knots.  If this link
+         * is empty, has more than one component, or uses a virtual diagram,
+         * then this routine will throw an exception.
+         *
+         * To pretty-print this polynomial for human consumption, you can call
+         * `Laurent2::str(Link::thetaVarX, Link::thetaVarY)`.
+         *
+         * Bear in mind that each time a link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is returned
+         * from this routine should not be kept for later use.  Instead,
+         * theta() should be called again; this will be instantaneous if
+         * the theta polynomial has already been calculated.
+         *
+         * If this polynomial has already been computed, then the result will
+         * be cached and so this routine will be instantaneous (since it just
+         * returns the previously computed result).
+         *
+         * \pre This link diagram is classical (not virtual), and has exactly
+         * one component (i.e., it is a knot).
+         *
+         * \exception FailedPrecondition This link is empty, has multiple
+         * components, and/or uses a virtual (not classical) link diagram.
+         *
+         * \return the theta polynomial of this knot.
+         */
+        const Laurent2<Integer>& theta() const;
+        /**
+         * Is the theta polynomial of this knot already known (or trivial
+         * to determine)?  See theta() for further details.
+         *
+         * If this property is already known, future calls to theta() will
+         * be very fast (simply returning the precalculated value).
+         *
+         * Note that theta() requires a classical knot as a precondition.
+         * Therefore, if this link diagram is virtual, empty, or has multiple
+         * components, then knowsTheta() will simply return `false`.
+         *
+         * \param cachedOnly if `true`, this routine will only identify
+         * whether the property is already cached, and will not attempt to
+         * compute it even if the computation will be trivial.
+         * Currently this argument is ignored since this routine does not look
+         * for shortcuts that make theta polynomials trivial to compute;
+         * however, it is provided for compatibility with other `knows...()`
+         * routines.
+         * \return \c true if and only if this property is already known or
+         * trivial to calculate, _and_ the preconditions for theta() are
+         * satisfied.
+         */
+        bool knowsTheta(bool cachedOnly = false) const;
 
         /**
          * Returns the normalised arrow polynomial of this link.
@@ -7515,6 +7714,7 @@ inline void Link::clearAllProperties() {
         jones_.reset();
         homflyAZ_.reset();
         homflyLM_.reset();
+        theta_.reset();
         arrow_.reset();
     }
 
@@ -7795,6 +7995,10 @@ inline bool Link::knowsHomfly(bool) const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
     // Handle preconditions in a way that puts the most expensive tests last.
     return homflyAZ_.has_value() && isClassical();
+}
+inline bool Link::knowsTheta(bool) const {
+    // Handle preconditions in a way that puts the most expensive tests last.
+    return theta_.has_value() && components_.size() == 1 && isClassical();
 }
 inline bool Link::knowsArrow(bool) const {
     return arrow_.has_value();

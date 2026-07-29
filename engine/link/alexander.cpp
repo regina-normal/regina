@@ -82,8 +82,7 @@ const Polynomial<Integer>& Link::alexander() const {
     ModelLinkGraph graph(*this);
     const auto& cells = graph.cells();
     if (cells.genus() > 0)
-        throw FailedPrecondition("Regina can only compute Alexander "
-            "polynomials for knots in the 3-sphere");
+        throw ImpossibleScenario("Classical knot has a non-planar diagram");
 
     // We can start traversing the knot from any point, so we will start at
     // the lower strand from crossing 0.

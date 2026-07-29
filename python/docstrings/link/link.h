@@ -3641,6 +3641,30 @@ Returns:
     ``True`` if and only if this property is already known or trivial
     to calculate.)doc";
 
+// Docstring regina::python::doc::Link::knowsTheta
+static constexpr const char knowsTheta[] =
+R"doc(Is the theta polynomial of this knot already known (or trivial to
+determine)? See theta() for further details.
+
+If this property is already known, future calls to theta() will be
+very fast (simply returning the precalculated value).
+
+Note that theta() requires a classical knot as a precondition.
+Therefore, if this link diagram is virtual, empty, or has multiple
+components, then knowsTheta() will simply return ``False``.
+
+Parameter ``cachedOnly``:
+    if ``True``, this routine will only identify whether the property
+    is already cached, and will not attempt to compute it even if the
+    computation will be trivial. Currently this argument is ignored
+    since this routine does not look for shortcuts that make theta
+    polynomials trivial to compute; however, it is provided for
+    compatibility with other ``knows...()`` routines.
+
+Returns:
+    ``True`` if and only if this property is already known or trivial
+    to calculate, _and_ the preconditions for theta() are satisfied.)doc";
+
 // Docstring regina::python::doc::Link::linking
 static constexpr const char linking[] =
 R"doc(Returns the linking number of this link, or throws an exception if it
@@ -3749,6 +3773,62 @@ Parameter ``simplify``:
 Returns:
     the long knot complement with mixed real/ideal boundary, as
     described above.)doc";
+
+// Docstring regina::python::doc::Link::longRotations
+static constexpr const char longRotations[] =
+R"doc(Treats this as a long knot, and computes rotations numbers for each of
+the arcs. These rotation numbers are used (for example) in the theta
+invariant of Bar-Natan and van der Veen.
+
+In detail, this routine does the following:
+
+* Breaks this knot open at the given arc, thus turning this into a
+  _long knot_ where the given arc runs vertically up the plane towards
+  positive infinity (before the break), and then returns vertically up
+  the plane from negative infinity (after the break);
+
+* Arranges each crossing so that both strands point upwards;
+
+* Computes a _rotation number_ for each remaining (unbroken) arc,
+  which is a signed integer indicating how many anticlockwise
+  rotations the arc makes from start to end (where we assume the arc
+  points vertically upwards at both start and end);
+
+* Returns these rotation numbers as a sequence of integers, indexed by
+  strand ID (i.e., indexed by the values of ``StrandRef::id()`` for
+  the StrandRef objects that represent each arc). See the StrandRef
+  documentation for the convention on how arcs are represented using
+  StrandRef objects.
+
+The rotation numbers are not uniquely defined, since they depend upon
+the precise positioning of the crossings and arcs in the plane. This
+routine simply promises to return the rotation numbers for _some_
+realisation of the diagram that satisfies the conditions above.
+
+The arc at which we break the knot open is guaranteed to have a
+rotation number of zero.
+
+As a special case, if this is the zero-crossing unknot diagram, then
+this routine will return the sequence ``[ 0 ]``.
+
+Precondition:
+    This is a classical knot. That is, the link diagram is not
+    virtual, and has exactly one link component.
+
+Exception ``FailedPrecondition``:
+    This link is empty, has multiple components, and/or is virtual (as
+    opposed to classical).
+
+Parameter ``breakOpen``:
+    indicates where to break open this knot diagram to produce a long
+    knot. Again, see the StrandRef documentation for the convention on
+    how arcs are represented using StrandRef objects. This may be a
+    null reference (the default), in which case this routine will
+    choose an arbitrary location to break the knot open.
+
+Returns:
+    a sequence of rotation numbers indexed by strand ID, as described
+    above.)doc";
 
 // Docstring regina::python::doc::Link::makeAlternating
 static constexpr const char makeAlternating[] =
@@ -5671,6 +5751,42 @@ This routine will behave correctly if *other* is in fact this link.
 Parameter ``other``:
     the link whose contents should be swapped with this.)doc";
 
+// Docstring regina::python::doc::Link::theta
+static constexpr const char theta[] =
+R"doc(Returns the theta polynomial of this classical knot. This is the
+second (and more interesting) part of the Θ invariant of Bar-Natan and
+van der Veen; the first part is simply the Alexander polynomial, which
+you can access by calling alexander() instead.
+
+At present, Regina only computes theta polynomials for classical
+knots, not multiple-component links or virtual knots. If this link is
+empty, has more than one component, or uses a virtual diagram, then
+this routine will throw an exception.
+
+To pretty-print this polynomial for human consumption, you can call
+``Laurent2::str(Link::thetaVarX, Link::thetaVarY)``.
+
+Bear in mind that each time a link changes, all of its polynomials
+will be deleted. Thus the reference that is returned from this routine
+should not be kept for later use. Instead, theta() should be called
+again; this will be instantaneous if the theta polynomial has already
+been calculated.
+
+If this polynomial has already been computed, then the result will be
+cached and so this routine will be instantaneous (since it just
+returns the previously computed result).
+
+Precondition:
+    This link diagram is classical (not virtual), and has exactly one
+    component (i.e., it is a knot).
+
+Exception ``FailedPrecondition``:
+    This link is empty, has multiple components, and/or uses a virtual
+    (not classical) link diagram.
+
+Returns:
+    the theta polynomial of this knot.)doc";
+
 // Docstring regina::python::doc::Link::translate
 static constexpr const char translate[] =
 R"doc(Translates a crossing from some other link into the corresponding
@@ -6393,6 +6509,66 @@ exactly which strand of the link this reference points to.
 
 Returns:
     either 0 or 1 to indicate the strand.)doc";
+
+// Docstring regina::python::doc::StrandRef::turnLeft
+static constexpr const char turnLeft[] =
+R"doc(Interprets this strand reference as a directed arc, and returns the
+next arc when following the boundary of the cell to the left of this
+directed arc.
+
+If *forwards* is ``True`` (the default), this strand reference will be
+interpreted as a directed arc exacty as described in the class
+documentation (i.e., moving forwards along the orientation of the link
+from this strand of this crossing to the next crossing).
+
+If *forwards* is ``False``, this strand reference will be interpreted
+as the same arc as above but pointing in the reverse direction (i.e.,
+moving from the next crossing back to this strand of this crossing).
+
+This routine returns a StrandRef and a boolean. The StrandRef
+indicates the next arc along the boundary of the cell to the left
+(again as described in the class documentation); the boolean indicates
+whether we are following that next arc forwards (``True``) or
+backwards (``False``) with respect to the orientation of the link.
+
+If this is a null reference (i.e., it represents a zero-crossing
+unknot), then this routine will return the same arc pointing in the
+same direction. That is, the return value will consist of another null
+strand reference and a copy of the boolean argument *forwards*.
+
+Returns:
+    the next directed arc following the cell boundary to the left, as
+    described above.)doc";
+
+// Docstring regina::python::doc::StrandRef::turnRight
+static constexpr const char turnRight[] =
+R"doc(Interprets this strand reference as a directed arc, and returns the
+next arc when following the boundary of the cell to the right of this
+directed arc.
+
+If *forwards* is ``True`` (the default), this strand reference will be
+interpreted as a directed arc exacty as described in the class
+documentation (i.e., moving forwards along the orientation of the link
+from this strand of this crossing to the next crossing).
+
+If *forwards* is ``False``, this strand reference will be interpreted
+as the same arc as above but pointing in the reverse direction (i.e.,
+moving from the next crossing back to this strand of this crossing).
+
+This routine returns a StrandRef and a boolean. The StrandRef
+indicates the next arc along the boundary of the cell to the right
+(again as described in the class documentation); the boolean indicates
+whether we are following that next arc forwards (``True``) or
+backwards (``False``) with respect to the orientation of the link.
+
+If this is a null reference (i.e., it represents a zero-crossing
+unknot), then this routine will return the same arc pointing in the
+same direction. That is, the return value will consist of another null
+strand reference and a copy of the boolean argument *forwards*.
+
+Returns:
+    the next directed arc following the cell boundary to the right, as
+    described above.)doc";
 
 }; // struct StrandRef
 
