@@ -66,6 +66,26 @@ Returns:
     ``True`` if the matrices are equal as described above, or
     ``False`` otherwise.)doc";
 
+// Docstring regina::python::doc::Matrix::__imul
+static constexpr const char __imul[] =
+R"doc(Multiplies this matrix in-place by the given scalar.
+
+This matrix and the given scalar may use different underlying types
+(e.g., you can multiply a matrix of LargeInteger objects by a native
+C++ integer). The type of object that is stored in the resulting
+matrix will be deduced accordingly (specifically, it will be the type
+obtained by multiplying objects of types *T* and *U* in that order
+using the binary multiplication operator).
+
+Python:
+    It is assumed that type *U* is the same as *T*.
+
+Parameter ``scalar``:
+    the scalar to multiply this matrix by.
+
+Returns:
+    a reference to this matrix.)doc";
+
 // Docstring regina::python::doc::Matrix::__init
 static constexpr const char __init[] =
 R"doc(Creates a new square matrix of the given size. Both the number of rows
@@ -136,6 +156,33 @@ Parameter ``data``:
 
 // Docstring regina::python::doc::Matrix::__mul
 static constexpr const char __mul[] =
+R"doc(A non-destructive routine that multiplies this matrix by the given
+scalar and returns the result. This matrix is not changed.
+
+This matrix and the given scalar may use different underlying types
+(e.g., you can multiply a matrix of LargeInteger objects by a native
+C++ integer). The type of object that is stored in the resulting
+matrix will be deduced accordingly (specifically, it will be the type
+obtained by multiplying objects of types *T* and *U* in that order
+using the binary multiplication operator).
+
+If your matrix is disposable (i.e., you will never need to use it
+again), then it is faster to use the rvalue reference version of this
+operator, which avoids the extra overhead of allocating a new matrix
+to store the result. To do this, replace ``matrix * scalar`` with
+``std::move(matrix) * scalar``.
+
+Python:
+    It is assumed that type *U* is the same as *T*.
+
+Parameter ``scalar``:
+    the scalar to multiply this matrix by.
+
+Returns:
+    the matrix ``this * scalar``.)doc";
+
+// Docstring regina::python::doc::Matrix::__mul_2
+static constexpr const char __mul_2[] =
 R"doc(Multiplies this by the given matrix, and returns the result. This
 matrix is not changed.
 
@@ -143,8 +190,8 @@ The two matrices being multiplied may use different underlying types
 (e.g., you can multiply a matrix of LargeInteger objects with a matrix
 of native C++ long integers). The type of object that is stored in the
 resulting matrix will be deduced accordingly (specifically, it will be
-the type obtained by multiplying objects of types *T* and *U* using
-the binary multiplication operator).
+the type obtained by multiplying objects of types *T* and *U* in that
+order using the binary multiplication operator).
 
 Precondition:
     The number of columns in this matrix equals the number of rows in
@@ -156,8 +203,8 @@ Parameter ``other``:
 Returns:
     the product matrix ``this * other``.)doc";
 
-// Docstring regina::python::doc::Matrix::__mul_2
-static constexpr const char __mul_2[] =
+// Docstring regina::python::doc::Matrix::__mul_3
+static constexpr const char __mul_3[] =
 R"doc(Multiplies this matrix by the given vector, and returns the result.
 The given vector is treated as a column vector.
 
@@ -335,6 +382,30 @@ Parameter ``dest``:
 Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
+
+// Docstring regina::python::doc::Matrix::adjugate
+static constexpr const char adjugate[] =
+R"doc(Computes both the adjugate matrix and the determinant of this matrix.
+The adjugate ``adj`` and the determinant ``det`` of a square matrix
+``M`` satisfy the relation ``M * adj = adj * M = det * I``, where
+``I`` is the identity matrix of the same size.
+
+This algorithm has quartic complexity, and uses the Faddeev-Leverrier
+algorithm. The intention is to switch to something faster (and
+parallelisable) in a future version of Regina.
+
+Although the Matrix class does not formally support empty matrices, if
+this _is_ found to be a 0-by-0 matrix then the adjugate returned will
+also be 0-by-0, and the determinant returned will be 1.
+
+Precondition:
+    This is a square matrix.
+
+Exception ``FailedPrecondition``:
+    This matrix is not square.
+
+Returns:
+    a pair containing the adjugate matrix and the determinant.)doc";
 
 // Docstring regina::python::doc::Matrix::columnEchelonForm
 static constexpr const char columnEchelonForm[] =
@@ -749,6 +820,9 @@ Parameter ``fromCol``:
     the starting point in the row from which the operation will be
     performed.)doc";
 
+// Docstring regina::python::doc::Matrix::negate
+static constexpr const char negate[] = R"doc(Negates every entry in this matrix.)doc";
+
 // Docstring regina::python::doc::Matrix::negateCol
 static constexpr const char negateCol[] =
 R"doc(Negates all elements in the given column.
@@ -783,10 +857,6 @@ If your matrix is disposable (i.e., you will never need to use it
 again), then it is faster to use the rvalue reference version of this
 routine, which will avoid the extra overhead of the deep copy. To do
 this, replace ``matrix.rank()`` with ``std::move(matrix).rank()``.
-
-Python:
-    Only the const version of rank() (i.e., this version) is available
-    for Python users.
 
 Returns:
     the rank of this matrix.)doc";
@@ -928,6 +998,20 @@ Parameter ``first``:
 
 Parameter ``second``:
     the second row to swap.)doc";
+
+// Docstring regina::python::doc::Matrix::trace
+static constexpr const char trace[] =
+R"doc(Returns the trace of this matrix. The trace is simply the sum of the
+elements along the main diagonal.
+
+Precondition:
+    This is a square matrix.
+
+Exception ``FailedPrecondition``:
+    This matrix is not square.
+
+Returns:
+    the trace of this matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::transpose
 static constexpr const char transpose[] =

@@ -44,42 +44,75 @@ using regina::Matrix;
 using regina::Polynomial;
 using regina::Rational;
 
-TEST(MatrixTest, determinant) {
+template <regina::CommutativeRing T>
+void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
+    ASSERT_EQ(m.rows(), m.columns());
+
+    EXPECT_EQ(m.det(), determinant);
+
+    auto adj = m.adjugate();
+    EXPECT_EQ(adj.first.rows(), m.rows());
+    EXPECT_EQ(adj.first.columns(), m.columns());
+    EXPECT_EQ(adj.second, determinant);
+    if (m.rows() != 0)
+        EXPECT_EQ(m * adj.first, Matrix<T>::identity(m.rows()) * determinant);
+}
+
+TEST(MatrixTest, determinantAdjugate) {
     // Some simple determinant tests, to verify that Matrix is working
     // correctly with non-native types.
 
+    using P = Polynomial<Integer>;
     using L = Laurent<Integer>;
     using L2 = Laurent2<Integer>;
-    using P = Polynomial<Integer>;
 
-    EXPECT_EQ(Matrix<Integer>(2).det(), 0);
-    EXPECT_EQ(Matrix<Rational>(2).det(), 0);
-    EXPECT_EQ(Matrix<Laurent<Integer>>(2).det(), Laurent<Integer>());
-    EXPECT_EQ(Matrix<Laurent2<Integer>>(2).det(), Laurent2<Integer>());
-    EXPECT_EQ(Matrix<Polynomial<Integer>>(2).det(), Polynomial<Integer>());
+    // Empty matrices (which are technically not supported by Regina):
+    verifyAdjugate<Integer>({0}, 1);
+    verifyAdjugate<Rational>({0}, 1);
+
+    // Some matrices filled with zeroes:
+    for (size_t size = 1; size < 5; ++size) {
+        verifyAdjugate<Integer>({size}, 0);
+        verifyAdjugate<Rational>({size}, 0);
+        verifyAdjugate<Polynomial<Integer>>({size}, {});
+        verifyAdjugate<Laurent<Integer>>({size}, {});
+        verifyAdjugate<Laurent2<Integer>>({size}, {});
+    }
+
+    // Some ad-hoc 1x1 cases:
+    verifyAdjugate<Integer>({ { -3 } }, {-3});
+    verifyAdjugate<Rational>({ { {2,5} } }, {2,5});
+    verifyAdjugate<Polynomial<Integer>>({ { {3,-1} } }, {3,-1});
+    verifyAdjugate<Laurent<Integer>>({ { {-2, {-1,0,3,2}} } },
+        {-2, {-1,0,3,2}});
+    verifyAdjugate<Laurent2<Integer>>({ { {{-3,2,5}} } }, {{-3,2,5}});
+
+    // Some ad-hoc 2x2 cases:
 
     // [ 1, 2, -3, 4 ] -> 10
-    EXPECT_EQ(Matrix<Integer>({ { 1, 2 }, { -3, 4 } }).det(), 10);
+    verifyAdjugate<Integer>({ { 1, 2 }, { -3, 4 } }, 10);
 
     // [ 1, 1/4 | 2, -1 ] -> -3/2
-    EXPECT_EQ(Matrix<Rational>({ { 1, {1,4} }, { 2, -1 } }).det(),
-        Rational(-3, 2));
-
-    // [ 1, x | x^-1, 1 ] -> 0
-    EXPECT_EQ(Matrix<L>(
-        { { {0, {1}}, {1, {1}} }, { {-1, {1}}, {0, {1}} } }).det(), L());
-
-    // [ 1, x + x^-1 | x - x^-1, -1 ] -> x^-2 - 1 - x^2
-    EXPECT_EQ(Matrix<L>(
-        { { {0, {1}}, {-1, {1,0,1}} }, { {-1, {-1,0,1}}, {0, {-1}} } }).det(),
-        L(-2, {1,0,-1,0,-1}));
-
-    // [ xy, y^-1, -y^2x, x^-1 ] -> y + xy
-    EXPECT_EQ(Matrix<L2>(
-        { { {{1,1,1}}, {{0,-1,1}} }, { {{1,2,-1}}, {{-1,0,1}} } }).det(),
-        L2({ {0, 1, 1}, {1, 1, 1} }));
+    verifyAdjugate<Rational>({ { 1, {1,4} }, { 2, -1 } }, {-3, 2});
 
     // [ 1, x | -x, 1 ] -> x^2 + 1
-    EXPECT_EQ(Matrix<P>({ { {1}, {0,1} }, { {0,-1}, {1} } }).det(), P({1,0,1}));
+    verifyAdjugate<Polynomial<Integer>>(
+        { { {1}, {0,1} }, { {0,-1}, {1} } },
+        {1,0,1});
+
+    // [ 1, x | x^-1, 1 ] -> 0
+    verifyAdjugate<Laurent<Integer>>(
+        { { {0, {1}}, {1, {1}} }, { {-1, {1}}, {0, {1}} } },
+        {});
+
+    // [ 1, x + x^-1 | x - x^-1, -1 ] -> x^-2 - 1 - x^2
+    verifyAdjugate<Laurent<Integer>>(
+        { { {0, {1}}, {-1, {1,0,1}} }, { {-1, {-1,0,1}}, {0, {-1}} } },
+        {-2, {1,0,-1,0,-1}});
+
+    // [ xy, y^-1 | -y^2x, x^-1 ] -> y + xy
+    verifyAdjugate<Laurent2<Integer>>(
+        { { {{1,1,1}}, {{0,-1,1}} }, { {{1,2,-1}}, {{-1,0,1}} } },
+        {{ {0, 1, 1}, {1, 1, 1} }});
 }
 

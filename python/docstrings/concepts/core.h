@@ -33,6 +33,23 @@ Concepts:
 
 }; // struct CoefficientDomain
 
+struct CommutativeRing {
+
+// Docstring regina::python::doc::CommutativeRing::__concept
+static constexpr const char __concept[] =
+R"doc(A commutative ring.
+
+Commutativity is self-identified through the specialisation
+``RingTraits<T>``.
+
+Concepts:
+    CommutativeRing is a C++ concept. Concepts work with the C++
+    compiler at build time: you cannot test in Python which concepts
+    are satisfied by which types. Instead, what this Python wrapper
+    offers is the concept _documentation_ (which you are reading now).)doc";
+
+}; // struct CommutativeRing
+
 struct Domain {
 
 // Docstring regina::python::doc::Domain::__concept
@@ -83,6 +100,26 @@ Concepts:
     offers is the concept _documentation_ (which you are reading now).)doc";
 
 }; // struct IntegralDomain
+
+struct Negatable {
+
+// Docstring regina::python::doc::Negatable::__concept
+static constexpr const char __concept[] =
+R"doc(A mathematical type that has an inherent in-place negation function.
+This function must follow Regina's usual signature of ``void
+negate()``.
+
+Such functions are typically provided when in-place negation is more
+efficient than the usual ``x = -x`` (which makes a temporary deep
+copy).
+
+Concepts:
+    Negatable is a C++ concept. Concepts work with the C++ compiler at
+    build time: you cannot test in Python which concepts are satisfied
+    by which types. Instead, what this Python wrapper offers is the
+    concept _documentation_ (which you are reading now).)doc";
+
+}; // struct Negatable
 
 struct ReginaBitmask {
 

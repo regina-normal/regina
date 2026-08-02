@@ -397,7 +397,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Divides this polynomial by the given constant.
          *
-         * This uses the division operator /= for the coefficient type \a T.
+         * This uses the division operator `/=` for the coefficient type \a T.
          *
          * \pre The argument \a scalar is non-zero.
          *
@@ -455,7 +455,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * and discards the remainder.  If you need to keep the remainder
          * also, then call divisionAlg() instead.
          *
-         * Coefficients are divided using the operator /= on type \a T.
+         * Coefficients are divided using the operator `/=` on type \a T.
          *
          * If your coefficient type \a T is not a field (e.g., if \a T
          * is Integer), you must be sure to know in advance that the
@@ -486,7 +486,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * If you do not need the remainder (e.g., if you know in
          * advance that \a divisor divides into this polynomial exactly),
-         * then you can use the division operator /= instead, which will
+         * then you can use the division operator `/=` instead, which will
          * be a little faster.
          *
          * If your coefficient type \a T is not a field (e.g., if \a T
@@ -494,7 +494,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * quotient exists (see the precondition below).  Otherwise the
          * behaviour of this routine is undefined.
          *
-         * Coefficients are divided using the operator /= on type \a T.
+         * Coefficients are divided using the operator `/=` on type \a T.
          *
          * \pre The given divisor is not the zero polynomial.
          *
@@ -685,7 +685,7 @@ Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
 /**
  * Divides the given polynomial by the given scalar constant.
  *
- * This uses the division operator /= for the coefficient type \a T.
+ * This uses the division operator `/=` for the coefficient type \a T.
  *
  * The scalar is simply of type \a T; we use the identical type
  * Polynomial<T>::Coefficient here to assist with C++ template type matching.
@@ -857,7 +857,7 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * If you need to keep the remainder also, then call Polynomial::divisionAlg()
  * instead.
  *
- * Coefficients are divided using the operator /= on type \a T.
+ * Coefficients are divided using the operator `/=` on type \a T.
  *
  * If your coefficient type \a T is not a field (e.g., if \a T
  * is Integer), you must be sure to know in advance that the

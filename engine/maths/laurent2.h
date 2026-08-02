@@ -401,7 +401,7 @@ class Laurent2 :
         /**
          * Divides this polynomial by the given constant.
          *
-         * This uses the division operator /= for the coefficient type \a T.
+         * This uses the division operator `/=` for the coefficient type \a T.
          *
          * \pre The argument \a scalar is non-zero.
          *
@@ -601,7 +601,7 @@ Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
 /**
  * Divides the given polynomial by the given scalar constant.
  *
- * This uses the division operator /= for the coefficient type \a T.
+ * This uses the division operator `/=` for the coefficient type \a T.
  *
  * The scalar is simply of type \a T; we use the identical type
  * Laurent2<T>::Coefficient here to assist with C++ template type matching.

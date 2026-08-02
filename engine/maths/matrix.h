@@ -352,9 +352,8 @@ class Matrix : public Output<Matrix<T>> {
          * \param value the value to assign to each entry.
          */
         void fill(const T& value) {
-            size_t r, c;
-            for (r = 0; r < rows_; r++)
-                for (c = 0; c < cols_; c++)
+            for (size_t r = 0; r < rows_; r++)
+                for (size_t c = 0; c < cols_; c++)
                     data_[r][c] = value;
         }
         /**
@@ -944,6 +943,103 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * A non-destructive routine that multiplies this matrix by the given
+         * scalar and returns the result.  This matrix is not changed.
+         *
+         * This matrix and the given scalar may use different underlying types
+         * (e.g., you can multiply a matrix of LargeInteger objects by a
+         * native C++ integer).  The type of object that is stored in the
+         * resulting matrix will be deduced accordingly (specifically, it will
+         * be the type obtained by multiplying objects of types \a T and \a U
+         * in that order using the binary multiplication operator).
+         *
+         * If your matrix is disposable (i.e., you will never need to use it
+         * again), then it is faster to use the rvalue reference version of
+         * this operator, which avoids the extra overhead of allocating a new
+         * matrix to store the result.  To do this, replace `matrix * scalar`
+         * with `std::move(matrix) * scalar`.
+         *
+         * \python It is assumed that type \a U is the same as \a T.
+         *
+         * \param scalar the scalar to multiply this matrix by.
+         * \return the matrix `this * scalar`.
+         */
+        template <typename U>
+        requires requires(const T t, const U u) { { t * u }; }
+        Matrix<decltype(T() * U())> operator * (const U& scalar) const& {
+            Matrix<decltype(T() * U())> ans(rows_, cols_);
+            for (size_t row = 0; row < rows_; ++row)
+                for (size_t col = 0; col < cols_; ++col)
+                    ans.data_[row][col] = data_[row][col] * scalar;
+            return ans;
+        }
+
+        /**
+         * A destructive routine that multiplies this matrix by the given
+         * scalar and returns the result.
+         *
+         * Here "destructive" means that this routine uses in-place
+         * multiplication (as opposed to allocating a new matrix to store the
+         * result).  For this reason, it is declared as an rvalue reference
+         * member function: it should only be used if you do not care about
+         * the contents of the original matrix afterwards.
+         *
+         * To use this destructive operator, you can call
+         * `std::move(matrix) * scalar`.
+         *
+         * If you need to preserve the contents of the matrix, you should
+         * instead call the const version of this operator, which you can
+         * access in the usual way as `matrix * scalar`.  The cost of this
+         * constness will be the extra overhead of creating a new matrix to
+         * store the result.
+         *
+         * This matrix and the given scalar may use different underlying types.
+         * However, be aware that (unlike the const version of this operator)
+         * the resulting values will be remain as type \a T.  This means, for
+         * example, that it is fine to multiply a matrix of LargeInteger
+         * objects by a native C++ integer, but you should not try to multiply
+         * a matrix of native C++ integers by a LargeInteger.
+         *
+         * \nopython Only the const version of this operator is available for
+         * Python users.
+         *
+         * \param scalar the scalar to multiply this matrix by.
+         * \return the matrix `this * scalar`.
+         */
+        template <typename U>
+        requires requires(T t, const U u) { { t *= u }; }
+        Matrix operator * (const U& scalar) && {
+            for (size_t row = 0; row < rows_; ++row)
+                for (size_t col = 0; col < cols_; ++col)
+                    data_[row][col] *= scalar;
+            return std::move(*this);
+        }
+
+        /**
+         * Multiplies this matrix in-place by the given scalar.
+         *
+         * This matrix and the given scalar may use different underlying types
+         * (e.g., you can multiply a matrix of LargeInteger objects by a
+         * native C++ integer).  The type of object that is stored in the
+         * resulting matrix will be deduced accordingly (specifically, it will
+         * be the type obtained by multiplying objects of types \a T and \a U
+         * in that order using the binary multiplication operator).
+         *
+         * \python It is assumed that type \a U is the same as \a T.
+         *
+         * \param scalar the scalar to multiply this matrix by.
+         * \return a reference to this matrix.
+         */
+        template <typename U>
+        requires requires(T t, const U u) { { t *= u }; }
+        Matrix& operator *= (const U& scalar) {
+            for (size_t row = 0; row < rows_; ++row)
+                for (size_t col = 0; col < cols_; ++col)
+                    data_[row][col] *= scalar;
+            return *this;
+        }
+
+        /**
          * Multiplies this by the given matrix, and returns the result.
          * This matrix is not changed.
          *
@@ -952,7 +1048,8 @@ class Matrix : public Output<Matrix<T>> {
          * matrix of native C++ long integers).  The type of object that is
          * stored in the resulting matrix will be deduced accordingly
          * (specifically, it will be the type obtained by multiplying objects
-         * of types \a T and \a U using the binary multiplication operator).
+         * of types \a T and \a U in that order using the binary multiplication
+         * operator).
          *
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
@@ -966,11 +1063,10 @@ class Matrix : public Output<Matrix<T>> {
             using Ans = decltype(T() * U());
             Matrix<Ans> ans(this->rows_, other.cols_);
 
-            size_t row, col, k;
-            for (row = 0; row < rows_; ++row)
-                for (col = 0; col < other.cols_; ++col) {
+            for (size_t row = 0; row < rows_; ++row)
+                for (size_t col = 0; col < other.cols_; ++col) {
                     ans.data_[row][col] = RingTraits<Ans>::zero;
-                    for (k = 0; k < cols_; ++k)
+                    for (size_t k = 0; k < cols_; ++k)
                         ans.data_[row][col] +=
                             (data_[row][k] * other.data_[k][col]);
                 }
@@ -1014,6 +1110,28 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Returns the trace of this matrix.  The trace is simply the sum of
+         * the elements along the main diagonal.
+         *
+         * \pre This is a square matrix.
+         *
+         * \exception FailedPrecondition This matrix is not square.
+         *
+         * \return the trace of this matrix.
+         */
+        T trace() const requires Ring<T> {
+            size_t n = this->rows_;
+            if (n != this->cols_)
+                throw FailedPrecondition("The trace can only be computed for "
+                    "a square matrix.");
+
+            T ans = RingTraits<T>::zero;
+            for (size_t i = 0; i < n; ++i)
+                ans += data_[i][i];
+            return ans;
+        }
+
+        /**
          * Evaluates the determinant of the matrix.
          *
          * This algorithm has quartic complexity, and uses the dynamic
@@ -1032,7 +1150,11 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \return the determinant of this matrix.
          */
-        T det() const requires Ring<T> {
+        T det() const requires IntegralDomain<T> {
+            // Note: we requires an integral domain in case we ever decide to
+            // switch to a variant of the Faddeev-Leverrier algorithm, which
+            // involves exact integer division.
+
             size_t n = this->rows_;
             if (n != this->cols_)
                 throw FailedPrecondition("Determinants can only be "
@@ -1090,15 +1212,86 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Computes both the adjugate matrix and the determinant of this
+         * matrix.  The adjugate `adj` and the determinant `det` of a square
+         * matrix `M` satisfy the relation `M * adj = adj * M = det * I`,
+         * where `I` is the identity matrix of the same size.
+         *
+         * This algorithm has quartic complexity, and uses the
+         * Faddeev-Leverrier algorithm.  The intention is to switch to
+         * something faster (and parallelisable) in a future version of Regina.
+         *
+         * Although the Matrix class does not formally support empty matrices,
+         * if this _is_ found to be a 0-by-0 matrix then the adjugate returned
+         * will also be 0-by-0, and the determinant returned will be 1.
+         *
+         * \pre This is a square matrix.
+         *
+         * \exception FailedPrecondition This matrix is not square.
+         *
+         * \return a pair containing the adjugate matrix and the determinant.
+         */
+        std::pair<Matrix, T> adjugate() const requires IntegralDomain<T> {
+            size_t n = this->rows_;
+            if (n != this->cols_)
+                throw FailedPrecondition("The adjugate can only be "
+                    "computed for a square matrix.");
+            if (n == 0)
+                return { 0 /* empty matrix */, RingTraits<T>::one };
+            if (n == 1)
+                return { Matrix::identity(1), **data_ };
+
+            // We basically follow Johansonn's formulation of Faddeev-Leverrier
+            // (https://inria.hal.science/hal-03016034v3, Algorithm 1), but we
+            // do not keep the coefficients of the characteristic polynomial.
+            Matrix b;
+            for (size_t k = 1; k < n; ++k) {
+                if (k == 1)
+                    b = *this;
+                else
+                    b = (*this) * b;
+
+                auto c = b.trace() / k;
+                for (size_t i = 0; i < n; ++i)
+                    b.data_[i][i] -= c;
+            }
+
+            auto c = ((*this) * b).trace() / n;
+            if (n % 2 == 0) {
+                b.negate();
+                if constexpr (Negatable<T>)
+                    c.negate();
+                else
+                    c = -c;
+            }
+            return { std::move(b), std::move(c) };
+        }
+
+        /**
+         * Negates every entry in this matrix.
+         */
+        void negate() requires Ring<T> {
+            for (size_t r = 0; r < rows_; r++)
+                for (size_t c = 0; c < cols_; c++)
+                    if constexpr (Negatable<T>)
+                        data_[r][c].negate();
+                    else
+                        data_[r][c] = -data_[r][c];
+        }
+
+        /**
          * Negates all elements in the given row.
          *
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
          * \param row the index of the row whose elements should be negated.
          */
-        void negateRow(size_t row) requires ReginaInteger<T> {
+        void negateRow(size_t row) requires Ring<T> {
             for (T* x = this->data_[row]; x != this->data_[row] + cols_; ++x)
-                x->negate();
+                if constexpr (Negatable<T>)
+                    x->negate();
+                else
+                    *x = -*x;
         }
 
         /**
@@ -1108,9 +1301,12 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \param col the index of the column whose elements should be negated.
          */
-        void negateCol(size_t col) requires ReginaInteger<T> {
+        void negateCol(size_t col) requires Ring<T> {
             for (T** row = this->data_; row != this->data_ + rows_; ++row)
-                (*row)[col].negate();
+                if constexpr (Negatable<T>)
+                    (*row)[col].negate();
+                else
+                    (*row)[col] = -(*row)[col];
         }
 
         /**
@@ -1416,9 +1612,6 @@ class Matrix : public Output<Matrix<T>> {
          * again), then it is faster to use the rvalue reference version of
          * this routine, which will avoid the extra overhead of the deep copy.
          * To do this, replace `matrix.rank()` with `std::move(matrix).rank()`.
-         *
-         * \python Only the const version of rank() (i.e., this version)
-         * is available for Python users.
          *
          * \return the rank of this matrix.
          */

@@ -113,6 +113,24 @@ This constructor induces a deep copy of the given polynomial.)doc";
 // Docstring regina::python::doc::Arrow::__default
 static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc";
 
+// Docstring regina::python::doc::Arrow::__div
+static constexpr const char __div[] =
+R"doc(Divides the given polynomial by the given integer constant.
+
+This uses the division operator ``/=`` for the Integer class.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Parameter ``poly``:
+    the polynomial upon which to perform the division.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    the quotient of the given polynomial by the given scalar.)doc";
+
 // Docstring regina::python::doc::Arrow::__eq
 static constexpr const char __eq[] =
 R"doc(Tests whether this and the given polynomial are equal.
@@ -143,6 +161,21 @@ R"doc(Adds the given polynomial to this.
 
 Parameter ``other``:
     the polynomial to add to this.
+
+Returns:
+    a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Arrow::__idiv
+static constexpr const char __idiv[] =
+R"doc(Divides this polynomial by the given integer constant.
+
+This uses the division operator ``/=`` for the Integer class.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
 
 Returns:
     a reference to this polynomial.)doc";

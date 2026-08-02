@@ -210,6 +210,21 @@ static_assert(! regina::IntegerComparable<regina::Polynomial<Rational>>);
 static_assert(! regina::IntegerComparable<regina::Laurent<Integer>>);
 static_assert(! regina::IntegerComparable<regina::Laurent2<Integer>>);
 
+static_assert(! regina::Negatable<int>);
+static_assert(! regina::Negatable<unsigned>);
+static_assert(regina::Negatable<Integer>);
+static_assert(regina::Negatable<LargeInteger>);
+static_assert(regina::Negatable<Rational>);
+static_assert(regina::Negatable<regina::Vector<int>>);
+static_assert(regina::Negatable<regina::Matrix2>);
+static_assert(regina::Negatable<regina::Matrix<int>>);
+static_assert(regina::Negatable<regina::Arrow>);
+static_assert(regina::Negatable<regina::Polynomial<Integer>>);
+static_assert(regina::Negatable<regina::Polynomial<Rational>>);
+static_assert(regina::Negatable<regina::Laurent<Integer>>);
+static_assert(regina::Negatable<regina::Laurent2<Integer>>);
+static_assert(regina::Negatable<regina::Cyclotomic>);
+
 static_assert(regina::Ring<int>);
 static_assert(! regina::Ring<unsigned>);
 static_assert(regina::RingLike<unsigned>);
@@ -224,6 +239,19 @@ static_assert(regina::Ring<regina::Laurent<Integer>>);
 static_assert(regina::Ring<regina::Laurent2<Integer>>);
 static_assert(! regina::Ring<regina::Cyclotomic>);
 static_assert(regina::RingLike<regina::Cyclotomic>);
+
+static_assert(regina::CommutativeRing<int>);
+static_assert(! regina::CommutativeRing<unsigned>);
+static_assert(regina::CommutativeRing<Integer>);
+static_assert(regina::CommutativeRing<LargeInteger>);
+static_assert(regina::CommutativeRing<Rational>);
+static_assert(! regina::CommutativeRing<regina::Matrix2>);
+static_assert(regina::CommutativeRing<regina::Arrow>);
+static_assert(regina::CommutativeRing<regina::Polynomial<Integer>>);
+static_assert(regina::CommutativeRing<regina::Polynomial<Rational>>);
+static_assert(regina::CommutativeRing<regina::Laurent<Integer>>);
+static_assert(regina::CommutativeRing<regina::Laurent2<Integer>>);
+static_assert(! regina::CommutativeRing<regina::Cyclotomic>);
 
 static_assert(! regina::Domain<int>);
 static_assert(! regina::Domain<unsigned>);

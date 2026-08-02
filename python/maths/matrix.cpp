@@ -114,6 +114,9 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("isZero", &Matrix::isZero, rdoc::isZero)
             .def_static("identity", &Matrix::identity, rdoc::identity)
             .def("makeIdentity", &Matrix::makeIdentity, rdoc::makeIdentity)
+            .def("negate", &Matrix::negate, rdoc::negate)
+            .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
+            .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
             .def("addRow", overload_cast<size_t, size_t>(&Matrix::addRow),
                 rdoc::addRow)
             .def("addRowFrom", &Matrix::addRowFrom, rdoc::addRowFrom)
@@ -142,16 +145,20 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 "coeff11"_a, "coeff12"_a, "coeff21"_a, "coeff22"_a,
                 "fromRow"_a = 0,
                 rdoc::combCols)
+            .def("trace", &Matrix::trace, rdoc::trace)
+            .def(pybind11::self * Element(), rdoc::__mul)
+            .def(pybind11::self *= Element(), rdoc::__imul)
+            .def(pybind11::self * pybind11::self, rdoc::__mul_2)
+        ;
+    }
+    if constexpr (regina::CommutativeRing<Element>) {
+        c
             .def("det", &Matrix::det, rdoc::det)
-            .def("__mul__", [](const Matrix& m1, const Matrix& m2){
-                return m1 * m2;
-            }, rdoc::__mul)
+            .def("adjugate", &Matrix::adjugate, rdoc::adjugate)
         ;
     }
     if constexpr (regina::ReginaInteger<Element>) {
         c
-            .def("negateRow", &Matrix::negateRow, rdoc::negateRow)
-            .def("negateCol", &Matrix::negateCol, rdoc::negateCol)
             .def("divRowExact", &Matrix::divRowExact, rdoc::divRowExact)
             .def("divColExact", &Matrix::divColExact, rdoc::divColExact)
             .def("gcdRow", &Matrix::gcdRow, rdoc::gcdRow)
@@ -166,10 +173,10 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 &Matrix::rank), rdoc::rank)
             .def("__mul__", [](const Matrix& m, const regina::VectorInt& v){
                 return m * v;
-            }, rdoc::__mul_2)
+            }, rdoc::__mul_3)
             .def("__mul__", [](const Matrix& m, const regina::VectorLarge& v){
                 return m * v;
-            }, rdoc::__mul_2)
+            }, rdoc::__mul_3)
         ;
     }
     regina::python::add_output_rich(c);

@@ -503,6 +503,18 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         Arrow& operator *= (const Laurent<Integer>& laurent);
 
         /**
+         * Divides this polynomial by the given integer constant.
+         *
+         * This uses the division operator `/=` for the Integer class.
+         *
+         * \pre The argument \a scalar is non-zero.
+         *
+         * \param scalar the scalar factor to divide by.
+         * \return a reference to this polynomial.
+         */
+        Arrow& operator /= (const Integer& scalar);
+
+        /**
          * Adds the given polynomial to this.
          *
          * \param other the polynomial to add to this.
@@ -645,6 +657,21 @@ Arrow operator * (Arrow arrow, const Laurent<Integer>& laurent);
  * \ingroup maths
  */
 Arrow operator * (const Laurent<Integer>& laurent, Arrow arrow);
+
+/**
+ * Divides the given polynomial by the given integer constant.
+ *
+ * This uses the division operator `/=` for the Integer class.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * \param poly the polynomial upon which to perform the division.
+ * \param scalar the scalar factor to divide by.
+ * \return the quotient of the given polynomial by the given scalar.
+ *
+ * \ingroup maths
+ */
+Arrow operator / (Arrow poly, const Integer& scalar);
 
 /**
  * Adds the two given polynomials.
@@ -934,6 +961,12 @@ inline Arrow& Arrow::operator *= (const Arrow& other) {
     return *this;
 }
 
+inline Arrow& Arrow::operator /= (const Integer& scalar) {
+    for (auto& term : terms_)
+        term.second /= scalar;
+    return *this;
+}
+
 inline void swap(Arrow& a, Arrow& b) noexcept {
     a.swap(b);
 }
@@ -963,6 +996,11 @@ inline Arrow operator * (Arrow poly, const Laurent<Integer>& laurent) {
 inline Arrow operator * (const Laurent<Integer>& laurent, Arrow poly) {
     // See the notes above on a possible optimisation for laurent == 0.
     poly *= laurent;
+    return poly;
+}
+
+inline Arrow operator / (Arrow poly, const Integer& scalar) {
+    poly /= scalar;
     return poly;
 }
 

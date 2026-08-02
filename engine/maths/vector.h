@@ -611,8 +611,7 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          * Negates every element of this vector.
          */
         inline void negate() {
-            if constexpr (ReginaInteger<T> ||
-                    std::is_same_v<T, regina::Rational>) {
+            if constexpr (Negatable<T>) {
                 for (T* e = elts_; e < end_; ++e)
                     e->negate();
             } else {

@@ -64,7 +64,7 @@ template <ArbitraryPrecisionInteger IntegerType>
 IntegerType gmpInteger(IntegerType x) {
     x.makeLarge();
     EXPECT_FALSE(x.isNative());
-    return std::move(x);
+    return x;
 }
 
 template <UnsignedCppInteger Native>
