@@ -29,6 +29,26 @@ Parameter ``n``:
 Returns:
     the number of bits required to store ``0,...,n-1``.)doc";
 
+// Docstring regina::python::doc::isqrt
+inline constexpr const char isqrt[] =
+R"doc(Returns the integer square root of the given argument. Specifically,
+this returns the floor of the square root of *n*.
+
+If *n* is negative then this function will throw an exception.
+
+Python:
+    In Python, this routine fixes the integer type *IntType* to be
+    ``long``.
+
+Exception ``NoSolution``:
+    The argument *n* is negative.
+
+Parameter ``n``:
+    any integer.
+
+Returns:
+    the floor of the square root of *n*.)doc";
+
 // Docstring regina::python::doc::nextPowerOfTwo
 inline constexpr const char nextPowerOfTwo[] =
 R"doc(Returns the smallest integer power of two that is greater than or

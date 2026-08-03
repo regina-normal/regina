@@ -1396,6 +1396,7 @@
 		05BDA5732CB64CCD006F4738 /* lattice_ideal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA55F2CB64CCD006F4738 /* lattice_ideal.cpp */; };
 		05BDA5752CB65B08006F4738 /* iterators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5742CB65B08006F4738 /* iterators.cpp */; };
 		05BDA5842CB6648D006F4738 /* spatiallinkui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */; };
+		05BE83F930205F32008EB541 /* intutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BE83F830205F32008EB541 /* intutils.cpp */; };
 		05BF6FD02DB0001D0093D7A2 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */; };
 		05BF6FD22DB0116A0093D7A2 /* alexander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FD12DB0116A0093D7A2 /* alexander.cpp */; };
 		05BF6FD32DB0116A0093D7A2 /* alexander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05BF6FD12DB0116A0093D7A2 /* alexander.cpp */; };
@@ -3909,6 +3910,7 @@
 		05BDA5772CB662ED006F4738 /* comparison.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = comparison.test; sourceTree = "<group>"; };
 		05BDA5822CB6648D006F4738 /* spatiallinkui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = spatiallinkui.h; sourceTree = "<group>"; };
 		05BDA5832CB6648D006F4738 /* spatiallinkui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = spatiallinkui.cpp; sourceTree = "<group>"; };
+		05BE83F830205F32008EB541 /* intutils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = intutils.cpp; sourceTree = "<group>"; };
 		05BF6FCF2DB0001D0093D7A2 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
 		05BF6FD12DB0116A0093D7A2 /* alexander.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = alexander.cpp; sourceTree = "<group>"; };
 		05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "boundarycomponent-impl.h"; sourceTree = "<group>"; };
@@ -7153,6 +7155,7 @@
 				056AECF32A431AE200EAF4FA /* bitmask.cpp */,
 				05329E502F25548A0048C8C6 /* boolset.cpp */,
 				056AECF02A431AE200EAF4FA /* CMakeLists.txt */,
+				05BE83F830205F32008EB541 /* intutils.cpp */,
 				0545A01E2FA83E57008D3ADB /* sigutils.cpp */,
 				057FDAF22EE56488000C706E /* stringutils.cpp */,
 				056AECEF2A431AE200EAF4FA /* tightencoding.cpp */,
@@ -9981,6 +9984,7 @@
 				05F3DABE2A5CE3B3007A2CE2 /* integer.cpp in Sources */,
 				056AED632A431AE200EAF4FA /* incompressible.cpp in Sources */,
 				056AED7A2A431AE200EAF4FA /* laurent.cpp in Sources */,
+				05BE83F930205F32008EB541 /* intutils.cpp in Sources */,
 				056AED7B2A431AE200EAF4FA /* primes.cpp in Sources */,
 				056AEDBC2A46690D00EAF4FA /* rational.cpp in Sources */,
 				057FDAF32EE56488000C706E /* stringutils.cpp in Sources */,

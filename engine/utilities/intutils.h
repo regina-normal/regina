@@ -39,6 +39,8 @@
 #endif
 
 #include "regina-core.h"
+#include "utilities/exception.h"
+#include <bit>
 #include <cstdint>
 #include <limits>
 #include <type_traits>
@@ -271,7 +273,35 @@ concept IntegerComparable =
  */
 template <CppInteger IntType>
 constexpr int bitsRequired(IntType n) {
-    return (n <= 1 ? 0 : (bitsRequired((n + 1) / 2)) + 1);
+    if (n <= 1) {
+        return 0;
+    } else if constexpr (sizeof(IntType) <= sizeof(long long)) {
+        // IntType is within the size range of standard C++ integer types.
+        // Assume that std::bit_width is available.
+        //
+        // Note: whilst the C++ standard says that std::bit_width should also
+        // be available for _extended_ integer types (e.g., 128-bit integers),
+        // in practice we see anomalies with some compilers, such as
+        // std::popcount being unavailable for 128-bit integers under gcc 14.
+        // Therefore for 128-bit integers we avoid std::bit_width and instead
+        // implement this ourselves in the subsequent branches below.
+        if constexpr (std::is_unsigned_v<IntType>)
+            return std::bit_width(static_cast<IntType>(n - 1));
+        else
+            return std::bit_width(
+                static_cast<std::make_unsigned_t<IntType>>(n - 1));
+    } else if (n == std::numeric_limits<IntType>::max()) {
+        // We treat this case separately because `n = (n + 1) >> 1`
+        // will overflow in the general implementation below.
+        return sizeof(IntType) * 8;
+    } else {
+        int ans = 0;
+        while (n > 1) {
+            n = (n + 1) >> 1;
+            ++ans;
+        }
+        return ans;
+    }
 }
 
 /**
@@ -322,6 +352,64 @@ inline constexpr IntType maxSafeFactor =
 template <CppInteger IntType, IntType coeff> requires (coeff > 0)
 inline constexpr IntType minSafeFactor =
     std::numeric_limits<IntType>::min() / coeff;
+
+/**
+ * Returns the integer square root of the given argument.
+ * Specifically, this returns the floor of the square root of \a n.
+ *
+ * If \a n is negative then this function will throw an exception.
+ *
+ * \python In Python, this routine fixes the integer type
+ * \a IntType to be \c long.
+ *
+ * \exception NoSolution The argument \a n is negative.
+ *
+ * \param n any integer.
+ * \return the floor of the square root of \a n.
+ *
+ * \ingroup utilities
+ */
+template <CppInteger IntType>
+constexpr IntType isqrt(const IntType n) {
+    if constexpr (SignedCppInteger<IntType>)
+        if (n < 0)
+            throw NoSolution();
+    if (n <= 1)
+        return n;
+
+    // We have n >= 2.  Use Newton's method.
+
+    // Our first guess is the first power of 2 whose square is at least n.
+    // (That is: guess is an estimate for which we know guess ≥ solution.)
+    IntType guess = IntType(1) << ((bitsRequired(n) + 1) >> 1);
+
+    while (true) {
+        // Compute the next estimate via Newton's method.
+        // Note: this will not overflow because both guess and (n / guess) at
+        // worst use a little over half of the available bits in IntType.
+        IntType next = (guess + n / guess) >> 1;
+
+        // If guess == sqrt(n), then next == guess == isqrt(n).
+        //
+        // If guess > sqrt(n), then:
+        // - in real numbers, sqrt(n) < next (before rounding) < guess;
+        // - in the integers, next is rounded down to the nearest integer.
+        //
+        // This means that, if next is rounded to _below_ sqrt(n), then in
+        // fact next == isqrt(n) precisely.  We can detect this in
+        // the next iteration of the loop since Newton's method will then try
+        // to _increase_ the guess (and then will round it down to possibly the
+        // same value as before but never below).
+        //
+        // And, if we have not yet reach the solution and next is rounded to
+        // something still _above_ sqrt(n), then the fact that we round down
+        // ensures that we will make concrete progress towards the solution.
+        if (next >= guess)
+            return guess;
+        guess = next;
+    }
+}
+
 
 /**
  * Gives access to native C++ integer types that hold _exactly_ \a k bytes,
