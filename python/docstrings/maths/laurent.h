@@ -120,7 +120,7 @@ static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc
 static constexpr const char __div[] =
 R"doc(Divides the given polynomial by the given scalar constant.
 
-This uses the division operator /= for the coefficient type *T*.
+This uses the division operator ``/=`` for the coefficient type *T*.
 
 The scalar is simply of type *T*; we use the identical type
 Laurent<T>::Coefficient here to assist with C++ template type
@@ -171,7 +171,7 @@ Returns:
 static constexpr const char __idiv[] =
 R"doc(Divides this polynomial by the given constant.
 
-This uses the division operator /= for the coefficient type *T*.
+This uses the division operator ``/=`` for the coefficient type *T*.
 
 Precondition:
     The argument *scalar* is non-zero.

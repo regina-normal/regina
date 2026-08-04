@@ -47,6 +47,7 @@
 #include "maths/forward.h"
 #include "maths/integer.h"
 #include "maths/ring.h"
+#include "utilities/fixedarray.h"
 
 ENSURE_ESSENTIAL_REGINA_HEADERS
 
@@ -943,6 +944,36 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Adds the given matrix to this matrix in-place.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \param rhs the matrix to add to this.
+         * \return a reference to this matrix.
+         */
+        Matrix& operator += (const Matrix& rhs) requires Ring<T> {
+            for (size_t row = 0; row < rows_; ++row)
+                for (size_t col = 0; col < cols_; ++col)
+                    data_[row][col] += rhs.data_[row][col];
+            return *this;
+        }
+
+        /**
+         * Subtracts the given matrix from this matrix in-place.
+         *
+         * \pre The given matrix has the same dimensions as this matrix.
+         *
+         * \param rhs the matrix to subtract from this.
+         * \return a reference to this matrix.
+         */
+        Matrix& operator -= (const Matrix& rhs) requires Ring<T> {
+            for (size_t row = 0; row < rows_; ++row)
+                for (size_t col = 0; col < cols_; ++col)
+                    data_[row][col] -= rhs.data_[row][col];
+            return *this;
+        }
+
+        /**
          * A non-destructive routine that multiplies this matrix by the given
          * scalar and returns the result.  This matrix is not changed.
          *
@@ -1217,9 +1248,9 @@ class Matrix : public Output<Matrix<T>> {
          * matrix `M` satisfy the relation `M * adj = adj * M = det * I`,
          * where `I` is the identity matrix of the same size.
          *
-         * This algorithm has quartic complexity, and uses the
-         * Faddeev-Leverrier algorithm.  The intention is to switch to
-         * something faster (and parallelisable) in a future version of Regina.
+         * This algorithm has complexity no worse than quartic, though it may
+         * be better (depending upon the underlying algorithm, which is subject
+         * to change in future versions of Regina).
          *
          * Although the Matrix class does not formally support empty matrices,
          * if this _is_ found to be a 0-by-0 matrix then the adjugate returned
@@ -1241,7 +1272,64 @@ class Matrix : public Output<Matrix<T>> {
             if (n == 1)
                 return { Matrix::identity(1), **data_ };
 
-            // We basically follow Johansonn's formulation of Faddeev-Leverrier
+#if 1
+            // This implementation uses the Faddeev-Leverrier algorithm, with
+            // the Preparata-Sarwate baby-step/giant-step improvement.
+            // We essentially follow Johansonn's formulation of the algorithm
+            // (https://inria.hal.science/hal-03016034v3, Algorithm 2), but we
+            // do not keep the coefficients of the characteristic polynomial.
+            size_t m = isqrt(n);
+
+            FixedArray<Matrix> powA(m);
+            powA.front() = *this;
+            for (size_t i = 1; i < m; ++i)
+                powA[i] = (*this) * powA[i - 1];
+            FixedArray<T> traceA(m);
+            for (size_t i = 0; i < m; ++i)
+                traceA[i] = powA[i].trace();
+
+            FixedArray<T> charSlice(m);
+            Matrix b = identity(n);
+            size_t k = 1;
+
+            while (k < n) {
+                if (n - k < m)
+                    m = n - k;
+                charSlice.front() = -trace((*this), b) / k;
+                for (size_t j = 1; j < m; ++j) {
+                    charSlice[j] = trace(powA[j], b);
+                    for (size_t i = 0; i < j; ++i)
+                        charSlice[j] += traceA[j - i - 1] * charSlice[i];
+                    if constexpr (Negatable<T>) {
+                        charSlice[j] /= (k + j);
+                        charSlice[j].negate();
+                    } else {
+                        charSlice[j] = -charSlice[j] / (k + j);
+                    }
+                }
+                b = powA[m - 1] * b;
+                for (size_t j = 0; j < m - 1; ++j)
+                    for (size_t row = 0; row < rows_; ++row)
+                        for (size_t col = 0; col < cols_; ++col)
+                            b.data_[row][col] +=
+                                powA[m - 2 - j].data_[row][col] * charSlice[j];
+                for (size_t i = 0; i < n; ++i)
+                    b.data_[i][i] += charSlice[m - 1];
+                k += m;
+            }
+
+            auto c = trace((*this), b) / n;
+            if (n % 2 == 0) {
+                b.negate();
+                if constexpr (Negatable<T>)
+                    c.negate();
+                else
+                    c = -c;
+            }
+            return { std::move(b), std::move(c) };
+#else
+            // This implementation uses the plain Faddeev-Leverrier algorithm.
+            // Again we essentially follow Johansonn's formulation
             // (https://inria.hal.science/hal-03016034v3, Algorithm 1), but we
             // do not keep the coefficients of the characteristic polynomial.
             Matrix b;
@@ -1256,7 +1344,7 @@ class Matrix : public Output<Matrix<T>> {
                     b.data_[i][i] -= c;
             }
 
-            auto c = ((*this) * b).trace() / n;
+            auto c = trace((*this), b) / n;
             if (n % 2 == 0) {
                 b.negate();
                 if constexpr (Negatable<T>)
@@ -1265,6 +1353,7 @@ class Matrix : public Output<Matrix<T>> {
                     c = -c;
             }
             return { std::move(b), std::move(c) };
+#endif
         }
 
         /**
@@ -1644,6 +1733,27 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t rank() && requires ReginaInteger<T> {
             return rowEchelonForm();
+        }
+
+    private:
+        /**
+         * Returns the trace of the matrix product `lhs * rhs`.
+         *
+         * This routine is faster than computing `(lhs * rhs).trace()`, since
+         * it only needs to evaluate the product along the main diagonal.
+         *
+         * \pre The dimensions of \a lhs are the same as the dimensions of the
+         * transpose of \a rhs.  In other words, `lhs * rhs` is well-defined
+         * and is a square matrix.
+         *
+         * \return the trace of `lhs * rhs`.
+         */
+        static T trace(const Matrix& lhs, const Matrix& rhs) requires Ring<T> {
+            T ans = RingTraits<T>::zero;
+            for (size_t i = 0; i < lhs.rows_; ++i)
+                for (size_t j = 0; j < lhs.cols_; ++j)
+                    ans += lhs.data_[i][j] * rhs.data_[j][i];
+            return ans;
         }
 };
 

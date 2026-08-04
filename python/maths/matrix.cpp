@@ -145,7 +145,10 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 "coeff11"_a, "coeff12"_a, "coeff21"_a, "coeff22"_a,
                 "fromRow"_a = 0,
                 rdoc::combCols)
-            .def("trace", &Matrix::trace, rdoc::trace)
+            .def("trace", overload_cast<>(&Matrix::trace, pybind11::const_),
+                rdoc::trace)
+            .def(pybind11::self += pybind11::self, rdoc::__iadd)
+            .def(pybind11::self -= pybind11::self, rdoc::__isub)
             .def(pybind11::self * Element(), rdoc::__mul)
             .def(pybind11::self *= Element(), rdoc::__imul)
             .def(pybind11::self * pybind11::self, rdoc::__mul_2)

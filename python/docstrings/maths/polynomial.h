@@ -93,7 +93,7 @@ static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc
 static constexpr const char __div[] =
 R"doc(Divides the given polynomial by the given scalar constant.
 
-This uses the division operator /= for the coefficient type *T*.
+This uses the division operator ``/=`` for the coefficient type *T*.
 
 The scalar is simply of type *T*; we use the identical type
 Polynomial<T>::Coefficient here to assist with C++ template type
@@ -124,7 +124,7 @@ This routine returns the quotient *q*, and discards the remainder. If
 you need to keep the remainder also, then call
 Polynomial::divisionAlg() instead.
 
-Coefficients are divided using the operator /= on type *T*.
+Coefficients are divided using the operator ``/=`` on type *T*.
 
 If your coefficient type *T* is not a field (e.g., if *T* is Integer),
 you must be sure to know in advance that the quotient exists (see the
@@ -183,7 +183,7 @@ Returns:
 static constexpr const char __idiv[] =
 R"doc(Divides this polynomial by the given constant.
 
-This uses the division operator /= for the coefficient type *T*.
+This uses the division operator ``/=`` for the coefficient type *T*.
 
 Precondition:
     The argument *scalar* is non-zero.
@@ -207,7 +207,7 @@ This routine replaces this polynomial with the quotient *q*, and
 discards the remainder. If you need to keep the remainder also, then
 call divisionAlg() instead.
 
-Coefficients are divided using the operator /= on type *T*.
+Coefficients are divided using the operator ``/=`` on type *T*.
 
 If your coefficient type *T* is not a field (e.g., if *T* is Integer),
 you must be sure to know in advance that the quotient exists (see the
@@ -385,14 +385,14 @@ pair (*q*, *r*); that is, the _quotient_ and the _remainder_.
 
 If you do not need the remainder (e.g., if you know in advance that
 *divisor* divides into this polynomial exactly), then you can use the
-division operator /= instead, which will be a little faster.
+division operator ``/=`` instead, which will be a little faster.
 
 If your coefficient type *T* is not a field (e.g., if *T* is Integer),
 you must be sure to know in advance that the quotient exists (see the
 precondition below). Otherwise the behaviour of this routine is
 undefined.
 
-Coefficients are divided using the operator /= on type *T*.
+Coefficients are divided using the operator ``/=`` on type *T*.
 
 Precondition:
     The given divisor is not the zero polynomial.

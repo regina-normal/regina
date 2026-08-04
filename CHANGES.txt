@@ -414,6 +414,7 @@ Version 8.0  [ TODO ]
               member function of Manifold), and is specific to 3-manifolds.
         Class Matrix<T>:
             - New scalar multiplication operators * and *=.
+            - New in-place addition and subtractions operators += and -=.
             - New routine negate().
             - New routines trace() and adjugate().
         Class Matrix2:

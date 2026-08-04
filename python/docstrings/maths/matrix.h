@@ -66,6 +66,19 @@ Returns:
     ``True`` if the matrices are equal as described above, or
     ``False`` otherwise.)doc";
 
+// Docstring regina::python::doc::Matrix::__iadd
+static constexpr const char __iadd[] =
+R"doc(Adds the given matrix to this matrix in-place.
+
+Precondition:
+    The given matrix has the same dimensions as this matrix.
+
+Parameter ``rhs``:
+    the matrix to add to this.
+
+Returns:
+    a reference to this matrix.)doc";
+
 // Docstring regina::python::doc::Matrix::__imul
 static constexpr const char __imul[] =
 R"doc(Multiplies this matrix in-place by the given scalar.
@@ -153,6 +166,19 @@ Python:
 
 Parameter ``data``:
     the rows of the matrix, each given as a list of elements.)doc";
+
+// Docstring regina::python::doc::Matrix::__isub
+static constexpr const char __isub[] =
+R"doc(Subtracts the given matrix from this matrix in-place.
+
+Precondition:
+    The given matrix has the same dimensions as this matrix.
+
+Parameter ``rhs``:
+    the matrix to subtract from this.
+
+Returns:
+    a reference to this matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::__mul
 static constexpr const char __mul[] =
@@ -390,9 +416,9 @@ The adjugate ``adj`` and the determinant ``det`` of a square matrix
 ``M`` satisfy the relation ``M * adj = adj * M = det * I``, where
 ``I`` is the identity matrix of the same size.
 
-This algorithm has quartic complexity, and uses the Faddeev-Leverrier
-algorithm. The intention is to switch to something faster (and
-parallelisable) in a future version of Regina.
+This algorithm has complexity no worse than quartic, though it may be
+better (depending upon the underlying algorithm, which is subject to
+change in future versions of Regina).
 
 Although the Matrix class does not formally support empty matrices, if
 this _is_ found to be a 0-by-0 matrix then the adjugate returned will
