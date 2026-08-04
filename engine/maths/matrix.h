@@ -1307,7 +1307,14 @@ class Matrix : public Output<Matrix<T>> {
                         charSlice[j] = -charSlice[j] / (k + j);
                     }
                 }
+
+                // Note: when working with large types T (e.g., Laurent
+                // polynomials) and when the initial matrix is sparse (e.g.,
+                // when computing Alexander polynomials or theta invariants),
+                // _this_ computation is the bottleneck (presumably because
+                // neither A^m nor B is sparse).
                 b = powA[m - 1] * b;
+
                 for (size_t j = 0; j < m - 1; ++j)
                     for (size_t row = 0; row < rows_; ++row)
                         for (size_t col = 0; col < cols_; ++col)
