@@ -11,6 +11,70 @@
 namespace regina::python::doc {
 
 
+struct AdjugateAlgorithm {
+
+// Docstring regina::python::doc::AdjugateAlgorithm::Default
+static constexpr const char Default[] = R"doc(Allow Regina to choose a sensible default.)doc";
+
+// Docstring regina::python::doc::AdjugateAlgorithm::FaddeevLeverrier
+static constexpr const char FaddeevLeverrier[] =
+R"doc(The Faddeev-Leverrier algorithm. This runs in time ``O(n^{ω+1})``, and
+the bottleneck is *n* matrix multiplications.
+
+Every matrix multiplication is by the input matrix. This is beneficial
+if the input matrix is sparse and computing products of matrix
+elements is expensive (e.g., when working with matrices of
+polynomials). In particular, if the input matrix has a constant number
+of non-zero entries per row or column, then each matrix multiplication
+will involve ``O(n^3)`` element products (assuming naïve matrix
+multiplication), but only ``O(n^2)`` of these products will be non-
+trivial.
+
+For a modern write-up of this algorithm, see Fredrik Johansson, "On a
+fast and nearly division-free algorithm for the characteristic
+polynomial", preprint, hal-03016034v3, November 2020.)doc";
+
+// Docstring regina::python::doc::AdjugateAlgorithm::MahajanVinay
+static constexpr const char MahajanVinay[] =
+R"doc(The Mahajan-Vinay dynamic programming algorithm, which is _only_
+suitable for computing determinants (not adjugates). This runs in time
+``O(n^4)``.
+
+For further details, see Meena Mahajan and V. Vinay, "Determinant:
+Combinatorics, algorithms, and complexity", Chicago J. Theor. Comput.
+Sci., Vol. 1997, Article 5.)doc";
+
+// Docstring regina::python::doc::AdjugateAlgorithm::PreparataSarwate
+static constexpr const char PreparataSarwate[] =
+R"doc(The Faddeev-Leverrier algorithm, with the baby-step/giant-step
+improvement of Preparata and Sarwate. This runs in time ``O(n^{ω+0.5}
++ n^3)``. The bottlenecks are ``√n`` multiplications by the input
+matrix, ``√n`` multiplications by arbitrary (typically dense)
+matrices, and *n* "product trace" computations that compute ``Tr(X *
+Y)`` without computing the full matrix product ``X * Y``.
+
+Although the time complexity appears better than plain Faddeev-
+Leverrier, one must be careful: if the input matrix is sparse and
+computing products of matrix elements is expensive (e.g., when working
+with matrices of polynomials), the need to multiply dense matrices
+here may in fact make the overall time complexity worse once the cost
+of element products is factored in.
+
+For a modern write-up of this algorithm, see Fredrik Johansson, "On a
+fast and nearly division-free algorithm for the characteristic
+polynomial", preprint, hal-03016034v3, November 2020.)doc";
+
+// Docstring regina::python::doc::AdjugateAlgorithm::__class
+static constexpr const char __class[] =
+R"doc(Represents different algorithms for computing adjugate matrices and
+determinants.
+
+In all complexity notes, *n* denotes the side length of the input
+matrix, and ω denotes the time complexity of matrix multiplication
+(which in Regina is currently the naïve ``n^3``).)doc";
+
+}; // struct AdjugateAlgorithm
+
 struct Matrix {
 
 // Docstring regina::python::doc::Matrix::__class

@@ -56,6 +56,70 @@ namespace regina {
 class Rational;
 
 /**
+ * Represents different algorithms for computing adjugate matrices and
+ * determinants.
+ *
+ * In all complexity notes, \a n denotes the side length of the input matrix,
+ * and ω denotes the time complexity of matrix multiplication (which in Regina
+ * is currently the naïve `n^3`).
+ *
+ * \ingroup maths
+ */
+enum class AdjugateAlgorithm {
+    /**
+     * Allow Regina to choose a sensible default.
+     */
+    Default = 0,
+    /**
+     * The Faddeev-Leverrier algorithm.  This runs in time `O(n^{ω+1})`, and
+     * the bottleneck is \a n matrix multiplications.
+     *
+     * Every matrix multiplication is by the input matrix.  This is beneficial
+     * if the input matrix is sparse and computing products of matrix elements
+     * is expensive (e.g., when working with matrices of polynomials).
+     * In particular, if the input matrix has a constant number of non-zero
+     * entries per row or column, then each matrix multiplication will
+     * involve `O(n^3)` element products (assuming naïve matrix multiplication),
+     * but only `O(n^2)` of these products will be non-trivial.
+     *
+     * For a modern write-up of this algorithm, see Fredrik Johansson,
+     * "On a fast and nearly division-free algorithm for the characteristic
+     * polynomial", preprint, hal-03016034v3, November 2020.
+     */
+    FaddeevLeverrier = 10,
+    /**
+     * The Faddeev-Leverrier algorithm, with the baby-step/giant-step
+     * improvement of Preparata and Sarwate.  This runs in time
+     * `O(n^{ω+0.5} + n^3)`.  The bottlenecks are `√n` multiplications by the
+     * input matrix, `√n` multiplications by arbitrary (typically dense)
+     * matrices, and \a n "product trace" computations that compute `Tr(X * Y)`
+     * without computing the full matrix product `X * Y`.
+     *
+     * Although the time complexity appears better than plain Faddeev-Leverrier,
+     * one must be careful: if the input matrix is sparse and computing
+     * products of matrix elements is expensive (e.g., when working with
+     * matrices of polynomials), the need to multiply dense matrices here may
+     * in fact make the overall time complexity worse once the cost of element
+     * products is factored in.
+     *
+     * For a modern write-up of this algorithm, see Fredrik Johansson,
+     * "On a fast and nearly division-free algorithm for the characteristic
+     * polynomial", preprint, hal-03016034v3, November 2020.
+     */
+    PreparataSarwate = 11,
+    /**
+     * The Mahajan-Vinay dynamic programming algorithm, which is _only_
+     * suitable for computing determinants (not adjugates).  This runs in time
+     * `O(n^4)`.
+     *
+     * For further details, see Meena Mahajan and V. Vinay, "Determinant:
+     * Combinatorics, algorithms, and complexity", Chicago J. Theor.
+     * Comput. Sci., Vol. 1997, Article 5.
+     */
+    MahajanVinay = 100
+};
+
+/**
  * Represents a matrix of elements of the given type \a T.
  *
  * As of Regina 7.4, the extra boolean \a ring template parameter is gone;
@@ -1165,12 +1229,6 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Evaluates the determinant of the matrix.
          *
-         * This algorithm has quartic complexity, and uses the dynamic
-         * programming approach of Mahajan and Vinay.  For further
-         * details, see Meena Mahajan and V. Vinay, "Determinant:
-         * Combinatorics, algorithms, and complexity", Chicago J. Theor.
-         * Comput. Sci., Vol. 1997, Article 5.
-         *
          * Although the Matrix class does not formally support empty matrices,
          * if this _is_ found to be a 0-by-0 matrix then the determinant
          * returned will be 1.
@@ -1179,67 +1237,77 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \exception FailedPrecondition This matrix is not square.
          *
+         * \param alg the algorithm to use for this computation.  If you do
+         * not specify an algorithm, Regina will choose a sensible default.
          * \return the determinant of this matrix.
          */
-        T det() const requires IntegralDomain<T> {
-            // Note: we requires an integral domain in case we ever decide to
-            // switch to a variant of the Faddeev-Leverrier algorithm, which
-            // involves exact integer division.
+        T det(AdjugateAlgorithm alg = AdjugateAlgorithm::Default) const
+                requires IntegralDomain<T> {
+            // Note: we requires an integral domain because the
+            // Faddeev-Leverrier algorithm involves exact integer division.
 
-            size_t n = this->rows_;
-            if (n != this->cols_)
-                throw FailedPrecondition("Determinants can only be "
-                    "computed for square matrices.");
-            if (n == 0)
-                return RingTraits<T>::one;
+            switch (alg) {
+                case AdjugateAlgorithm::Default:
+                case AdjugateAlgorithm::MahajanVinay:
+                {
+                    size_t n = this->rows_;
+                    if (n != this->cols_)
+                        throw FailedPrecondition("Determinants can only be "
+                            "computed for square matrices.");
+                    if (n == 0)
+                        return RingTraits<T>::one;
 
-            T* partial[2];
-            partial[0] = new T[n * n];
-            partial[1] = new T[n * n];
+                    // Partial computations:
+                    FixedArray<T> part[2] { n * n, n * n };
 
-            size_t len, head, curr, prevHead, prevCurr;
-
-            // Treat the smallest cases of len = 1 separately.
-            int layer = 0; // always 0 or 1
-            for (head = 0; head < n; head++) {
-                partial[0][head + head * n] = RingTraits<T>::one;
-                for (curr = head + 1; curr < n; curr++)
-                    partial[0][head + curr * n] = RingTraits<T>::zero;
-            }
-
-            // Work up through incrementing values of len.
-            for (len = 2; len <= n; len++) {
-                layer ^= 1;
-                for (head = 0; head < n; head++) {
-                    // If curr == head, we need to open a new clow.
-                    partial[layer][head + head * n] = RingTraits<T>::zero;
-                    for (prevHead = 0; prevHead < head; prevHead++)
-                        for (prevCurr = prevHead; prevCurr < n; prevCurr++)
-                            partial[layer][head + head * n] -=
-                                (partial[layer ^ 1][prevHead + prevCurr * n] *
-                                this->data_[prevCurr][prevHead]);
-
-                    // If curr > head, we need to continue an existing clow.
-                    for (curr = head + 1; curr < n; curr++) {
-                        partial[layer][head + curr * n] = RingTraits<T>::zero;
-                        for (prevCurr = head; prevCurr < n; prevCurr++)
-                            partial[layer][head + curr * n] +=
-                                (partial[layer ^ 1][head + prevCurr * n] *
-                                this->data_[prevCurr][curr]);
+                    // Treat the smallest cases of len = 1 separately.
+                    int layer = 0; // always 0 or 1
+                    for (size_t head = 0; head < n; ++head) {
+                        part[0][head + head * n] = RingTraits<T>::one;
+                        for (size_t curr = head + 1; curr < n; ++curr)
+                            part[0][head + curr * n] = RingTraits<T>::zero;
                     }
+
+                    // Work up through incrementing values of len.
+                    for (size_t len = 2; len <= n; ++len) {
+                        layer ^= 1;
+                        for (size_t head = 0; head < n; ++head) {
+                            // If curr == head, we need to open a new clow.
+                            part[layer][head + head * n] = RingTraits<T>::zero;
+                            for (size_t prevHead = 0; prevHead < head;
+                                    ++prevHead)
+                                for (size_t prevCurr = prevHead; prevCurr < n;
+                                        ++prevCurr)
+                                    part[layer][head + head * n] -=
+                                        (part[layer ^ 1]
+                                            [prevHead + prevCurr * n] *
+                                        this->data_[prevCurr][prevHead]);
+
+                            // If curr > head, we continue an existing clow.
+                            for (size_t curr = head + 1; curr < n; ++curr) {
+                                part[layer][head + curr * n] =
+                                    RingTraits<T>::zero;
+                                for (size_t prevCurr = head; prevCurr < n;
+                                        prevCurr++)
+                                    part[layer][head + curr * n] +=
+                                        (part[layer ^ 1][head + prevCurr * n] *
+                                        this->data_[prevCurr][curr]);
+                            }
+                        }
+                    }
+
+                    // All done.  Sum up the determinant.
+                    T ans = RingTraits<T>::zero;
+                    for (size_t head = 0; head < n; head++)
+                        for (size_t curr = head; curr < n; curr++)
+                            ans += (part[layer][head + curr * n] *
+                                this->data_[curr][head]);
+
+                    return (n % 2 == 0 ? -ans : ans);
                 }
+                default:
+                    return adjugate(alg).second;
             }
-
-            // All done.  Sum up the determinant.
-            T ans = RingTraits<T>::zero;
-            for (head = 0; head < n; head++)
-                for (curr = head; curr < n; curr++)
-                    ans += (partial[layer][head + curr * n] *
-                        this->data_[curr][head]);
-
-            delete[] partial[0];
-            delete[] partial[1];
-            return (n % 2 == 0 ? -ans : ans);
         }
 
         /**
@@ -1248,10 +1316,6 @@ class Matrix : public Output<Matrix<T>> {
          * matrix `M` satisfy the relation `M * adj = adj * M = det * I`,
          * where `I` is the identity matrix of the same size.
          *
-         * This algorithm has complexity no worse than quartic, though it may
-         * be better (depending upon the underlying algorithm, which is subject
-         * to change in future versions of Regina).
-         *
          * Although the Matrix class does not formally support empty matrices,
          * if this _is_ found to be a 0-by-0 matrix then the adjugate returned
          * will also be 0-by-0, and the determinant returned will be 1.
@@ -1259,10 +1323,16 @@ class Matrix : public Output<Matrix<T>> {
          * \pre This is a square matrix.
          *
          * \exception FailedPrecondition This matrix is not square.
+         * \exception InvalidArgument The argument \a alg is an algorithm that
+         * does not support adjugates (such as AdjugateAlgorithm::MahajanVinay).
          *
+         * \param alg the algorithm to use for this computation.  If you do
+         * not specify an algorithm, Regina will choose a sensible default.
          * \return a pair containing the adjugate matrix and the determinant.
          */
-        std::pair<Matrix, T> adjugate() const requires IntegralDomain<T> {
+        std::pair<Matrix, T> adjugate(
+                AdjugateAlgorithm alg = AdjugateAlgorithm::Default) const
+                requires IntegralDomain<T> {
             size_t n = this->rows_;
             if (n != this->cols_)
                 throw FailedPrecondition("The adjugate can only be "
@@ -1272,95 +1342,106 @@ class Matrix : public Output<Matrix<T>> {
             if (n == 1)
                 return { Matrix::identity(1), **data_ };
 
-#if 1
-            // This implementation uses the Faddeev-Leverrier algorithm, with
-            // the Preparata-Sarwate baby-step/giant-step improvement.
-            // We essentially follow Johansonn's formulation of the algorithm
-            // (https://inria.hal.science/hal-03016034v3, Algorithm 2), but we
-            // do not keep the coefficients of the characteristic polynomial.
-            size_t m = isqrt(n);
+            switch (alg) {
+                case AdjugateAlgorithm::Default:
+                case AdjugateAlgorithm::FaddeevLeverrier:
+                {
+                    // We essentially follow Johansonn's formulation
+                    // (https://inria.hal.science/hal-03016034v3, Algorithm 1),
+                    // but we do not keep the coefficients of the
+                    // characteristic polynomial.
+                    Matrix b;
+                    for (size_t k = 1; k < n; ++k) {
+                        if (k == 1)
+                            b = *this;
+                        else
+                            b = (*this) * b;
 
-            FixedArray<Matrix> powA(m);
-            powA.front() = *this;
-            for (size_t i = 1; i < m; ++i)
-                powA[i] = (*this) * powA[i - 1];
-            FixedArray<T> traceA(m);
-            for (size_t i = 0; i < m; ++i)
-                traceA[i] = powA[i].trace();
-
-            FixedArray<T> charSlice(m);
-            Matrix b = identity(n);
-            size_t k = 1;
-
-            while (k < n) {
-                if (n - k < m)
-                    m = n - k;
-                charSlice.front() = -trace((*this), b) / k;
-                for (size_t j = 1; j < m; ++j) {
-                    charSlice[j] = trace(powA[j], b);
-                    for (size_t i = 0; i < j; ++i)
-                        charSlice[j] += traceA[j - i - 1] * charSlice[i];
-                    if constexpr (Negatable<T>) {
-                        charSlice[j] /= (k + j);
-                        charSlice[j].negate();
-                    } else {
-                        charSlice[j] = -charSlice[j] / (k + j);
+                        auto c = b.trace() / k;
+                        for (size_t i = 0; i < n; ++i)
+                            b.data_[i][i] -= c;
                     }
+
+                    auto c = trace((*this), b) / n;
+                    if (n % 2 == 0) {
+                        b.negate();
+                        if constexpr (Negatable<T>)
+                            c.negate();
+                        else
+                            c = -c;
+                    }
+                    return { std::move(b), std::move(c) };
                 }
+                case AdjugateAlgorithm::PreparataSarwate:
+                {
+                    // Again we essentially follow Johansonn's formulation
+                    // (https://inria.hal.science/hal-03016034v3, Algorithm 2),
+                    // but we do not keep the coefficients of the
+                    // characteristic polynomial.
+                    size_t m = isqrt(n);
 
-                // Note: when working with large types T (e.g., Laurent
-                // polynomials) and when the initial matrix is sparse (e.g.,
-                // when computing Alexander polynomials or theta invariants),
-                // _this_ computation is the bottleneck (presumably because
-                // neither A^m nor B is sparse).
-                b = powA[m - 1] * b;
+                    FixedArray<Matrix> powA(m);
+                    powA.front() = *this;
+                    for (size_t i = 1; i < m; ++i)
+                        powA[i] = (*this) * powA[i - 1];
+                    FixedArray<T> traceA(m);
+                    for (size_t i = 0; i < m; ++i)
+                        traceA[i] = powA[i].trace();
 
-                for (size_t j = 0; j < m - 1; ++j)
-                    for (size_t row = 0; row < rows_; ++row)
-                        for (size_t col = 0; col < cols_; ++col)
-                            b.data_[row][col] +=
-                                powA[m - 2 - j].data_[row][col] * charSlice[j];
-                for (size_t i = 0; i < n; ++i)
-                    b.data_[i][i] += charSlice[m - 1];
-                k += m;
+                    FixedArray<T> charSlice(m);
+                    Matrix b = identity(n);
+                    size_t k = 1;
+
+                    while (k < n) {
+                        if (n - k < m)
+                            m = n - k;
+                        charSlice.front() = -trace((*this), b) / k;
+                        for (size_t j = 1; j < m; ++j) {
+                            charSlice[j] = trace(powA[j], b);
+                            for (size_t i = 0; i < j; ++i)
+                                charSlice[j] +=
+                                    traceA[j - i - 1] * charSlice[i];
+                            if constexpr (Negatable<T>) {
+                                charSlice[j] /= (k + j);
+                                charSlice[j].negate();
+                            } else {
+                                charSlice[j] = -charSlice[j] / (k + j);
+                            }
+                        }
+
+                        // Note: when working with large types T (e.g., Laurent
+                        // polynomials) and when the initial matrix is sparse
+                        // (e.g., when computing Alexander polynomials or theta
+                        // invariants), _this_ computation is the bottleneck
+                        // (presumably because neither A^m nor B is sparse).
+                        b = powA[m - 1] * b;
+
+                        for (size_t j = 0; j < m - 1; ++j)
+                            for (size_t row = 0; row < rows_; ++row)
+                                for (size_t col = 0; col < cols_; ++col)
+                                    b.data_[row][col] +=
+                                        powA[m - 2 - j].data_[row][col] *
+                                        charSlice[j];
+                        for (size_t i = 0; i < n; ++i)
+                            b.data_[i][i] += charSlice[m - 1];
+                        k += m;
+                    }
+
+                    auto c = trace((*this), b) / n;
+                    if (n % 2 == 0) {
+                        b.negate();
+                        if constexpr (Negatable<T>)
+                            c.negate();
+                        else
+                            c = -c;
+                    }
+                    return { std::move(b), std::move(c) };
+                }
+                case AdjugateAlgorithm::MahajanVinay:
+                    throw InvalidArgument("The Mahajan-Vinay algorithm can "
+                        "only be used for computing determinants, not adjugate "
+                        "matrices.");
             }
-
-            auto c = trace((*this), b) / n;
-            if (n % 2 == 0) {
-                b.negate();
-                if constexpr (Negatable<T>)
-                    c.negate();
-                else
-                    c = -c;
-            }
-            return { std::move(b), std::move(c) };
-#else
-            // This implementation uses the plain Faddeev-Leverrier algorithm.
-            // Again we essentially follow Johansonn's formulation
-            // (https://inria.hal.science/hal-03016034v3, Algorithm 1), but we
-            // do not keep the coefficients of the characteristic polynomial.
-            Matrix b;
-            for (size_t k = 1; k < n; ++k) {
-                if (k == 1)
-                    b = *this;
-                else
-                    b = (*this) * b;
-
-                auto c = b.trace() / k;
-                for (size_t i = 0; i < n; ++i)
-                    b.data_[i][i] -= c;
-            }
-
-            auto c = trace((*this), b) / n;
-            if (n % 2 == 0) {
-                b.negate();
-                if constexpr (Negatable<T>)
-                    c.negate();
-                else
-                    c = -c;
-            }
-            return { std::move(b), std::move(c) };
-#endif
         }
 
         /**

@@ -28,7 +28,11 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include <pybind11/pybind11.h>
+#if REGINA_PYBIND11_VERSION == 3
+#include <pybind11/native_enum.h>
+#endif
 #include "maths/matrix.h"
 #include "maths/vector.h"
 #include "../helpers.h"
@@ -156,8 +160,10 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
     }
     if constexpr (regina::CommutativeRing<Element>) {
         c
-            .def("det", &Matrix::det, rdoc::det)
-            .def("adjugate", &Matrix::adjugate, rdoc::adjugate)
+            .def("det", &Matrix::det,
+                "alg"_a = regina::AdjugateAlgorithm::Default, rdoc::det)
+            .def("adjugate", &Matrix::adjugate,
+                "alg"_a = regina::AdjugateAlgorithm::Default, rdoc::adjugate)
         ;
     }
     if constexpr (regina::ReginaInteger<Element>) {
@@ -190,6 +196,29 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
 }
 
 void addMatrix(pybind11::module_& m) {
+    RDOC_SCOPE_BEGIN(AdjugateAlgorithm)
+
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::AdjugateAlgorithm>(m, "AdjugateAlgorithm",
+            "enum.Enum", rdoc::__class)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<regina::AdjugateAlgorithm>(m, "AdjugateAlgorithm",
+            rdoc::__class)
+#endif
+        .value("Default", regina::AdjugateAlgorithm::Default, rdoc::Default)
+        .value("FaddeevLeverrier", regina::AdjugateAlgorithm::FaddeevLeverrier,
+            rdoc::FaddeevLeverrier)
+        .value("PreparataSarwate", regina::AdjugateAlgorithm::PreparataSarwate,
+            rdoc::PreparataSarwate)
+        .value("MahajanVinay", regina::AdjugateAlgorithm::MahajanVinay,
+            rdoc::MahajanVinay)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
+        ;
+
+    RDOC_SCOPE_END
+
     addMatrixOf<bool>(m, "MatrixBool");
     addMatrixOf<regina::Integer>(m, "MatrixInt");
     addMatrixOf<double>(m, "MatrixReal");

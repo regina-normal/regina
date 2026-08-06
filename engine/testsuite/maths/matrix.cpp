@@ -45,17 +45,33 @@ using regina::Polynomial;
 using regina::Rational;
 
 template <regina::CommutativeRing T>
+void verifyAdjugate(const Matrix<T>& m, const T& determinant,
+        regina::AdjugateAlgorithm alg) {
+    // We have already verified that the matrix is square through the variant
+    // of verifyAdjugate() that does not take an algorithm as input.
+
+    EXPECT_EQ(m.det(alg), determinant);
+
+    if (m.rows() > 1 && alg == regina::AdjugateAlgorithm::MahajanVinay) {
+        EXPECT_THROW({ m.adjugate(alg); }, regina::InvalidArgument);
+    } else {
+        auto adj = m.adjugate(alg);
+        EXPECT_EQ(adj.first.rows(), m.rows());
+        EXPECT_EQ(adj.first.columns(), m.columns());
+        EXPECT_EQ(adj.second, determinant);
+        if (m.rows() != 0)
+            EXPECT_EQ(m * adj.first,
+                Matrix<T>::identity(m.rows()) * determinant);
+    }
+}
+
+template <regina::CommutativeRing T>
 void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
     ASSERT_EQ(m.rows(), m.columns());
 
-    EXPECT_EQ(m.det(), determinant);
-
-    auto adj = m.adjugate();
-    EXPECT_EQ(adj.first.rows(), m.rows());
-    EXPECT_EQ(adj.first.columns(), m.columns());
-    EXPECT_EQ(adj.second, determinant);
-    if (m.rows() != 0)
-        EXPECT_EQ(m * adj.first, Matrix<T>::identity(m.rows()) * determinant);
+    verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::FaddeevLeverrier);
+    verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::PreparataSarwate);
+    verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::MahajanVinay);
 }
 
 TEST(MatrixTest, determinantAdjugate) {

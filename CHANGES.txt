@@ -29,6 +29,9 @@ Version 8.0  [ TODO ]
               for the old deprecated constructor have changed slightly (in
               particular, the container type now needs bidirectional iterators,
               but no longer needs to support rbegin() and rend()).
+        Enum AdjugateAlgorithm:
+            - New enumeration for use with Matrix::adjugate() and
+              Matrix::determinant().
         Class AngleStructures:
             - New routines knowsSpansStrict() and knowsSpansTaut().
         Class Arrow:
@@ -417,6 +420,7 @@ Version 8.0  [ TODO ]
             - New in-place addition and subtractions operators += and -=.
             - New routine negate().
             - New routines trace() and adjugate().
+            - Routine det() now takes an optional algorithm argument.
         Class Matrix2:
             - Routines inverse() and invert() now throw an exception if the
               matrix does not have determinant ±1.  This also means that
