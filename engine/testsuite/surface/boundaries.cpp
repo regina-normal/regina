@@ -40,7 +40,7 @@ using regina::NormalSurfaces;
 using regina::NormalCoords;
 using regina::Triangulation;
 
-static void compareBoundaryCounts(
+static void verifyBoundaryCounts(
         NormalSurfaces surfs, std::vector<size_t> expect ) {
     surfs.sort([](const NormalSurface& a, const NormalSurface& b){
         return a < b;
@@ -58,7 +58,7 @@ TEST(BoundariesTest, countBoundaries) {
         // The expected boundary-counts for this example have been checked by
         // hand.
         auto solidTorus = Triangulation<3>::fromSig("b3Na");
-        compareBoundaryCounts({ solidTorus, NormalCoords::Quad },
+        verifyBoundaryCounts({ solidTorus, NormalCoords::Quad },
             { 1, 2, 1 } );
     }
 
@@ -75,7 +75,7 @@ TEST(BoundariesTest, countBoundaries) {
         // boundary. The expected boundary-counts have been manually checked
         // to coincide with these GCDs.
         auto extraVertex = Triangulation<3>::fromSig("eNAA8hteh");
-        compareBoundaryCounts({ extraVertex, NormalCoords::Standard },
+        verifyBoundaryCounts({ extraVertex, NormalCoords::Standard },
             { 1, 2, 0, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } );
     }
 
@@ -88,7 +88,72 @@ TEST(BoundariesTest, countBoundaries) {
         // test at least ensures that countBoundaries() returns consistent
         // (presumably correct) answers even if the implementation is modified.
         auto handle2 = Triangulation<3>::fromSig("epKKJ81Le");
-        compareBoundaryCounts({ handle2, NormalCoords::Quad },
+        verifyBoundaryCounts({ handle2, NormalCoords::Quad },
             { 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1 } );
     }
+
+    {
+        SCOPED_TRACE("Circle bundle over annulus");
+
+        // Example with two boundary components.
+        //
+        // Again, since the boundary components are tori, the expected
+        // boundary counts have been independently confirmed using GCDs.
+        auto annulusBundle = Triangulation<3>::fromSig("g3AU01-tuLAi");
+        verifyBoundaryCounts({ annulusBundle, NormalCoords::Quad },
+                { 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 } );
+    }
+
+    {
+        SCOPED_TRACE("Figure-eight knot complement");
+
+        // Use oriented triangulation so we can test countBoundaries() for
+        // spun-normal surfaces.
+        auto figure8 = Triangulation<3>::fromSig("cV6cqb");
+        verifyBoundaryCounts({ figure8, NormalCoords::Quad },
+                { 1, 1, 1, 1 } );
+    }
+
+    {
+        SCOPED_TRACE("Two cusps");
+
+        // This is 'm125 : #1' from the cusped hyperbolic census.
+        auto m125 = Triangulation<3>::fromSig("epzB3y5aj");
+        verifyBoundaryCounts({ m125, NormalCoords::Quad },
+                { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                2, 2, 2, 2, 2, 2, 2, 2, 2, 2, } );
+    }
+
+    //TODO More thorough testing.
+}
+
+static void verifyFailedPrecondition(NormalSurfaces surfs) {
+    for (size_t i = 0; i < surfs.size(); ++i) {
+        auto s = surfs.surface(i);
+        if (! s.isCompact()) {
+            EXPECT_THROW( s.countBoundaries(), regina::FailedPrecondition );
+        }
+    }
+}
+
+TEST(BoundariesTest, exceptions) {
+    // For now, we just check that countBoundaries() throws FailedPrecondition
+    // whenever it promises to do so for non-compact surfaces.
+
+    // Underlying coordinate system allows octagons.
+    // This has 14 non-compact quad-oct vertex surfaces.
+    auto orientedFigure8 = Triangulation<3>::fromSig("cV6cqb");
+    verifyFailedPrecondition({ orientedFigure8, NormalCoords::QuadOct });
+
+    // Triangulation is not oriented.
+    // We use the first-generation signature for the figure-eight knot
+    // complement, which happens not to be oriented.
+    // This has 4 non-compact quad vertex surfaces.
+    auto unorientedFigure8 = Triangulation<3>::fromSig("cPcbbbiht");
+    verifyFailedPrecondition({ unorientedFigure8, NormalCoords::Quad });
+
+    // Non-torus vertex link.
+    // This has 6 non-compact quad vertex surfaces.
+    auto idealHandlebody2 = Triangulation<3>::fromSig("dN0TiRe");
+    verifyFailedPrecondition({ idealHandlebody2, NormalCoords::Quad });
 }

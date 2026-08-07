@@ -32,6 +32,7 @@
 #include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
+#include "snappea/snappeatriangulation.h"
 
 #include "testhelper.h"
 #include "triangulation/exhaustive-tri.h"
@@ -309,6 +310,63 @@ TEST(AngleStructuresTest, generalAngleStructure) {
     runCensusAllIdeal(verifyGeneralAngleStructure);
     runCensusAllClosed(verifyGeneralAngleStructure);
     runCensusAllBounded(verifyGeneralAngleStructure);
+}
+
+static void verifyBoundaryNullAngleStructure(const Triangulation<3>& tri,
+        const char* name) {
+    SCOPED_TRACE_CSTRING(name);
+
+    // At present, hasBoundaryNullAngleStructure() requires that tri is
+    // oriented.
+    if (! tri.isOriented()) {
+        EXPECT_THROW( tri.hasBoundaryNullAngleStructure(),
+                regina::FailedPrecondition );
+
+        // If tri is orientable, then we can construct an oriented copy of it
+        // and run further tests.
+        if (! tri.isOrientable()) {
+            return;
+        }
+    }
+    Triangulation<3> orientedTri(tri);
+    orientedTri.orient();
+
+    // We also require that every vertex link is a torus.
+    for ( const auto v : orientedTri.vertices() ) {
+        if ( (! v->isIdeal()) || (! v->isLinkOrientable()) ||
+                (v->linkEulerChar() != 0) ) {
+            EXPECT_THROW( orientedTri.hasBoundaryNullAngleStructure(),
+                    regina::FailedPrecondition );
+            return;
+        }
+    }
+
+    // At this point, we can compute a boundary-null angle structure as long
+    // as SnapPea is able to work directly with orientedTri.
+    const regina::SnapPeaTriangulation snapPea(orientedTri);
+    if (snapPea.isNull()) {
+        EXPECT_THROW( orientedTri.hasBoundaryNullAngleStructure(),
+                regina::UnsolvedCase );
+        return;
+    }
+
+    // Proceed under the assumption that SnapPea will never retriangulate
+    // orientedTri.
+    // Check that the computed angle structure does indeed satisfy the
+    // boundary-null condition.
+    ASSERT_TRUE( orientedTri.hasBoundaryNullAngleStructure() );
+    regina::MatrixInt m =
+        regina::makeBoundaryNullAngleEquations(snapPea);
+    const regina::VectorInt& vec =
+        orientedTri.boundaryNullAngleStructure().vector();
+    ASSERT_EQ( vec.size(), m.columns() );
+    EXPECT_TRUE( (m * vec).isZero() );
+}
+
+TEST(AngleStructuresTest, boundaryNullAngleStructure) {
+    runCensusAllIdeal(verifyBoundaryNullAngleStructure);
+    runCensusAllClosed(verifyBoundaryNullAngleStructure);
+    runCensusAllBounded(verifyBoundaryNullAngleStructure);
 }
 
 TEST(AngleStructuresTest, copyMove) {
