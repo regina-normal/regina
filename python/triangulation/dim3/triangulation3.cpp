@@ -459,6 +459,10 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("simplifyToLocalMinimum",
             &Triangulation<3>::simplifyToLocalMinimum,
             "perform"_a = true, rdoc::simplifyToLocalMinimum)
+        .def("simplifyUpDown", &Triangulation<3>::simplifyUpDown,
+            "max23"_a = -1, "alwaysModify"_a = false, "tracker"_a = nullptr,
+            pybind11::call_guard<regina::python::GILScopedRelease>(),
+            rdoc::simplifyUpDown)
         .def("simplifyExhaustive", &Triangulation<3>::simplifyExhaustive,
             "height"_a = 1, "threads"_a = 1, "tracker"_a = nullptr,
             pybind11::call_guard<regina::python::GILScopedRelease>(),
