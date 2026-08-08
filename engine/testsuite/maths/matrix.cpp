@@ -67,11 +67,22 @@ void verifyAdjugate(const Matrix<T>& m, const T& determinant,
 
 template <regina::CommutativeRing T>
 void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
+    // We use this if we already have an expcted value for the determinant.
     ASSERT_EQ(m.rows(), m.columns());
 
     verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::FaddeevLeverrier);
     verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::PreparataSarwate);
     verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::MahajanVinay);
+}
+
+template <regina::CommutativeRing T>
+void verifyAdjugate(const Matrix<T>& m) {
+    // We use this if we do not know the determinant in advance.
+    ASSERT_EQ(m.rows(), m.columns());
+
+    auto det = m.det(regina::AdjugateAlgorithm::MahajanVinay);
+    verifyAdjugate(m, det, regina::AdjugateAlgorithm::FaddeevLeverrier);
+    verifyAdjugate(m, det, regina::AdjugateAlgorithm::PreparataSarwate);
 }
 
 TEST(MatrixTest, determinantAdjugate) {
@@ -130,5 +141,37 @@ TEST(MatrixTest, determinantAdjugate) {
     verifyAdjugate<Laurent2<Integer>>(
         { { {{1,1,1}}, {{0,-1,1}} }, { {{1,2,-1}}, {{-1,0,1}} } },
         {{ {0, 1, 1}, {1, 1, 1} }});
+
+    // Some slightly larger cases, now just using integers:
+    for (size_t size = 3; size <= 10; ++size) {
+        Matrix<Integer> diagonal(size);
+        Matrix<Integer> antidiagonal(size);
+        Integer factorial = 1;
+        for (size_t i = 0; i < size; ++i) {
+            diagonal.entry(i, i) = i + 1;
+            antidiagonal.entry(size - i - 1, i) = i + 1;
+            factorial *= (i + 1);
+        }
+        verifyAdjugate<Integer>(diagonal, factorial);
+        switch (size & 3) {
+            case 0:
+            case 1:
+                // size == 0 or 1 mod 4
+                verifyAdjugate<Integer>(antidiagonal, factorial);
+                break;
+            default:
+                // size == 2 or 3 mod 4
+                verifyAdjugate<Integer>(antidiagonal, -factorial);
+                break;
+        }
+
+        for (int attempt = 0; attempt < 5; ++attempt) {
+            Matrix<Integer> random(size);
+            for (size_t i = 0; i < size; ++i)
+                for (size_t j = 0; j < size; ++j)
+                    random.entry(i, j) = Integer::randomBinary(8);
+            verifyAdjugate<Integer>(random);
+        }
+    }
 }
 
