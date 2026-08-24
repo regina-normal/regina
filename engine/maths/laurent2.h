@@ -49,6 +49,8 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
+template <CoefficientDomain T> class Laurent;
+
 /**
  * Represents a Laurent polynomial in the two variables \e x, \e y with
  * coefficients of type \a T.  A Laurent polynomial differs from an ordinary
@@ -220,6 +222,20 @@ class Laurent2 :
          * outlined above.
          */
         Laurent2(std::initializer_list<std::tuple<long, long, T>> coefficients);
+
+        /**
+         * Creates a new two-variable Laurent polynomial from a one-variable
+         * Laurent polynomial.
+         *
+         * Specifically, this will become the two-variable polynomial
+         * `poly(x^xExp y^yExp)`.
+         *
+         * \param poly the one-variable polynomial into which we substitute
+         * `x^xExp y^yExp`.
+         * \param xExp the power of \a x to substitute into \a poly.
+         * \param yExp the power of \a y to substitute into \a poly.
+         */
+        Laurent2(const Laurent<T>& poly, long xExp, long yExp);
 
         /**
          * Sets this to become the zero polynomial.
@@ -830,6 +846,24 @@ inline Laurent2<T>::Laurent2(
                 std::get<2>(c)).second)
             throw InvalidArgument("Two of the given tuples share the "
                 "same pair of exponents");
+    }
+}
+
+template <CoefficientDomain T>
+Laurent2<T>::Laurent2(const Laurent<T>& poly, long xExp, long yExp) {
+    if (xExp == 0 && yExp == 0) {
+        // We have a single constant which is the sum of all coefficients.
+        T sum; // zero-initialised
+        for (long exp = poly.minExp(); exp <= poly.maxExp(); ++exp)
+            sum += poly[exp];
+        if (sum != zero_)
+            coeff_.emplace(Exponents(0, 0), std::move(sum));
+    } else {
+        for (long exp = poly.minExp(); exp <= poly.maxExp(); ++exp) {
+            const T& coeff = poly[exp];
+            if (coeff != zero_)
+                coeff_.emplace(Exponents(xExp * exp, yExp * exp), coeff);
+        }
     }
 }
 

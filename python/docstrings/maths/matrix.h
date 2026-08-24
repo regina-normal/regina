@@ -480,10 +480,6 @@ The adjugate ``adj`` and the determinant ``det`` of a square matrix
 ``M`` satisfy the relation ``M * adj = adj * M = det * I``, where
 ``I`` is the identity matrix of the same size.
 
-This algorithm has complexity no worse than quartic, though it may be
-better (depending upon the underlying algorithm, which is subject to
-change in future versions of Regina).
-
 Although the Matrix class does not formally support empty matrices, if
 this _is_ found to be a 0-by-0 matrix then the adjugate returned will
 also be 0-by-0, and the determinant returned will be 1.
@@ -493,6 +489,14 @@ Precondition:
 
 Exception ``FailedPrecondition``:
     This matrix is not square.
+
+Exception ``InvalidArgument``:
+    The argument *alg* is an algorithm that does not support adjugates
+    (such as AdjugateAlgorithm::MahajanVinay).
+
+Parameter ``alg``:
+    the algorithm to use for this computation. If you do not specify
+    an algorithm, Regina will choose a sensible default.
 
 Returns:
     a pair containing the adjugate matrix and the determinant.)doc";
@@ -634,11 +638,6 @@ Parameter ``fromCol``:
 static constexpr const char det[] =
 R"doc(Evaluates the determinant of the matrix.
 
-This algorithm has quartic complexity, and uses the dynamic
-programming approach of Mahajan and Vinay. For further details, see
-Meena Mahajan and V. Vinay, "Determinant: Combinatorics, algorithms,
-and complexity", Chicago J. Theor. Comput. Sci., Vol. 1997, Article 5.
-
 Although the Matrix class does not formally support empty matrices, if
 this _is_ found to be a 0-by-0 matrix then the determinant returned
 will be 1.
@@ -648,6 +647,10 @@ Precondition:
 
 Exception ``FailedPrecondition``:
     This matrix is not square.
+
+Parameter ``alg``:
+    the algorithm to use for this computation. If you do not specify
+    an algorithm, Regina will choose a sensible default.
 
 Returns:
     the determinant of this matrix.)doc";

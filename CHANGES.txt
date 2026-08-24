@@ -315,6 +315,8 @@ Version 8.0  [ TODO ]
             - Removed the exponent-based constructor Laurent(exp) and
               initialiser init(exp), which were deprecated in Regina 7.4.
         Class Laurent2<T>:
+            - New constructor that converts a single-variable Laurent polynomial
+              into a two-variable Laurent polynomial.
             - Removed the exponent-based constructor Laurent2(xExp, yExp) and
               initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
         Class LightweightSequence<T>:

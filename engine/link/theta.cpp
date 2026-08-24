@@ -263,10 +263,14 @@ const Laurent2<Integer>& Link::theta() const {
     // Ad-hoc experimentation suggests that the Alexander computation here is
     // quite a bit slower than alexander(), mostly likely because the matrix
     // is twice as large in each dimension.
+    //
+    // We use Faddeev-Leverrier for the adjugate computation because the matrix
+    // A is sparse and multiplication of Laurent polynomials is expensive.
     auto rot = longRotations(breakOpen);
-    auto alex = a.det();
-    alex.shift(-(writhe() + std::reduce(rot.begin(), rot.end())) / 2);
+    auto [adj, det] = a.adjugate(AdjugateAlgorithm::FaddeevLeverrier);
 
+    long shift = -(writhe() + std::reduce(rot.begin(), rot.end())) / 2;
+    // The Alexander polynomial is (det * x^shift).
     // TODO: Set alexander_ if we don't already know it.
 
 

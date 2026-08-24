@@ -249,6 +249,24 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the set of
     coefficients.)doc";
 
+// Docstring regina::python::doc::Laurent2::__init_3
+static constexpr const char __init_3[] =
+R"doc(Creates a new two-variable Laurent polynomial from a one-variable
+Laurent polynomial.
+
+Specifically, this will become the two-variable polynomial
+``poly(x^xExp y^yExp)``.
+
+Parameter ``poly``:
+    the one-variable polynomial into which we substitute ``x^xExp
+    y^yExp``.
+
+Parameter ``xExp``:
+    the power of *x* to substitute into *poly*.
+
+Parameter ``yExp``:
+    the power of *y* to substitute into *poly*.)doc";
+
 // Docstring regina::python::doc::Laurent2::__isub
 static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
