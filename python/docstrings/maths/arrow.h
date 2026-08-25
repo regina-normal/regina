@@ -503,7 +503,16 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::Arrow::shift
 static constexpr const char shift[] =
-R"doc(Multiplies this polynomial by ``A^s`` for some integer *s*.
+R"doc(Multiplies this polynomial by ``A^s`` for some integer *s*. This
+polynomial will be changed directly.
+
+Parameter ``s``:
+    the power of *A* to multiply by.)doc";
+
+// Docstring regina::python::doc::Arrow::shifted
+static constexpr const char shifted[] =
+R"doc(Returns the product of this polynomial with ``A^s`` for some integer
+*s*. This polynomial will not be changed.
 
 Parameter ``s``:
     the power of *A* to multiply by.)doc";

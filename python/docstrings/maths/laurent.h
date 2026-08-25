@@ -478,7 +478,16 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::Laurent::shift
 static constexpr const char shift[] =
-R"doc(Multiplies this polynomial by ``x^s`` for some integer *s*.
+R"doc(Multiplies this polynomial by ``x^s`` for some integer *s*. This
+polynomial will be changed directly.
+
+Parameter ``s``:
+    the power of *x* to multiply by.)doc";
+
+// Docstring regina::python::doc::Laurent::shifted
+static constexpr const char shifted[] =
+R"doc(Returns the product of this polynomial with ``x^s`` for some integer
+*s*. This polynomial will not be changed.
 
 Parameter ``s``:
     the power of *x* to multiply by.)doc";

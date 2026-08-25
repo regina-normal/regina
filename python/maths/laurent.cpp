@@ -74,6 +74,7 @@ void addLaurent(pybind11::module_& m) {
         .def("set", &Laurent<Integer>::set, rdoc::set)
         .def("swap", &Laurent<Integer>::swap, rdoc::swap)
         .def("shift", &Laurent<Integer>::shift, rdoc::shift)
+        .def("shifted", &Laurent<Integer>::shifted, rdoc::shifted)
         .def("scaleUp", &Laurent<Integer>::scaleUp, rdoc::scaleUp)
         .def("scaleDown", &Laurent<Integer>::scaleDown, rdoc::scaleDown)
         .def("negate", &Laurent<Integer>::negate, rdoc::negate)

@@ -376,7 +376,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 
         /**
          * Multiplies this polynomial by `x^s` for some integer \a s.
-         * This polynomial is changed directly.
+         * This polynomial will be changed directly.
          *
          * If \a s is negative and this polynomial has lower-degree terms
          * of the form `x^k` where `k < |s|`, then these lower-degree terms
@@ -385,6 +385,18 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param s the power of \a x to multiply by.
          */
         void shift(long s);
+
+        /**
+         * Returns the product of this polynomial with `x^s` for some integer
+         * \a s.  This polynomial will not be changed.
+         *
+         * If \a s is negative and this polynomial has lower-degree terms
+         * of the form `x^k` where `k < |s|`, then these lower-degree terms
+         * will simply be omitted from the result.
+         *
+         * \param s the power of \a x to multiply by.
+         */
+        Polynomial shifted(long s) const;
 
         /**
          * Multiplies this polynomial by the given constant.
@@ -1119,6 +1131,27 @@ void Polynomial<T>::shift(long s) {
             // The leading term does survive.
             std::move(coeff_ - s, coeff_ + degree_ + 1, coeff_);
             degree_ += s;
+        }
+    }
+}
+
+template <CoefficientDomain T>
+Polynomial<T> Polynomial<T>::shifted(long s) const {
+    if (s == 0 || isZero()) {
+        return *this;
+    } else if (s > 0) {
+        T* c = new T[degree_ + s + 1]; // all initialised to zero
+        std::copy(coeff_, coeff_ + degree_ + 1, c + s);
+        return { degree_ + s, c };
+    } else /* s < 0 */ {
+        if (degree_ < -s) {
+            // The leading term does not survive.
+            return {};
+        } else {
+            // The leading term does survive.
+            T* c = new T[degree_ + s + 1];
+            std::copy(coeff_ - s, coeff_ + degree_ + 1, c);
+            return { degree_ + s, c };
         }
     }
 }

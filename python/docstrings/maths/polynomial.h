@@ -542,11 +542,23 @@ Parameter ``value``:
 // Docstring regina::python::doc::Polynomial::shift
 static constexpr const char shift[] =
 R"doc(Multiplies this polynomial by ``x^s`` for some integer *s*. This
-polynomial is changed directly.
+polynomial will be changed directly.
 
 If *s* is negative and this polynomial has lower-degree terms of the
 form ``x^k`` where ``k < |s|``, then these lower-degree terms will
 simply disappear.
+
+Parameter ``s``:
+    the power of *x* to multiply by.)doc";
+
+// Docstring regina::python::doc::Polynomial::shifted
+static constexpr const char shifted[] =
+R"doc(Returns the product of this polynomial with ``x^s`` for some integer
+*s*. This polynomial will not be changed.
+
+If *s* is negative and this polynomial has lower-degree terms of the
+form ``x^k`` where ``k < |s|``, then these lower-degree terms will
+simply be omitted from the result.
 
 Parameter ``s``:
     the power of *x* to multiply by.)doc";

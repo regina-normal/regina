@@ -411,10 +411,19 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
 
         /**
          * Multiplies this polynomial by `A^s` for some integer \a s.
+         * This polynomial will be changed directly.
          *
          * \param s the power of \a A to multiply by.
          */
         void shift(long s);
+
+        /**
+         * Returns the product of this polynomial with `A^s` for some integer
+         * \a s.  This polynomial will not be changed.
+         *
+         * \param s the power of \a A to multiply by.
+         */
+        Arrow shifted(long s) const;
 
         /**
          * Multiplies all exponents of `A` in this polynomial by \a k for some
@@ -907,6 +916,12 @@ inline void Arrow::swap(Arrow& other) noexcept {
 inline void Arrow::shift(long k) {
     for (auto& term : terms_)
         term.second.shift(k);
+}
+
+inline Arrow Arrow::shifted(long k) const {
+    Arrow ans(*this);
+    ans.shift(k); // constant time for each Laurent polynomial in A
+    return ans;
 }
 
 inline void Arrow::scaleUp(long k) {

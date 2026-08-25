@@ -76,6 +76,7 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         .def("swap", &Polynomial<T>::swap, rdoc::swap)
         .def("negate", &Polynomial<T>::negate, rdoc::negate)
         .def("shift", &Polynomial<T>::shift, rdoc::shift)
+        .def("shifted", &Polynomial<T>::shifted, rdoc::shifted)
         .def("str", overload_cast<const char*>(
             &Polynomial<T>::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(

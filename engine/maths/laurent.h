@@ -405,10 +405,19 @@ class Laurent :
 
         /**
          * Multiplies this polynomial by `x^s` for some integer \a s.
+         * This polynomial will be changed directly.
          *
          * \param s the power of \a x to multiply by.
          */
         void shift(long s);
+
+        /**
+         * Returns the product of this polynomial with `x^s` for some integer
+         * \a s.  This polynomial will not be changed.
+         *
+         * \param s the power of \a x to multiply by.
+         */
+        Laurent shifted(long s) const;
 
         /**
          * Multiplies all exponents in this polynomial by \a k for some
@@ -1182,6 +1191,13 @@ inline void Laurent<T>::shift(long s) {
     base_ += s;
     minExp_ += s;
     maxExp_ += s;
+}
+
+template <CoefficientDomain T>
+inline Laurent<T> Laurent<T>::shifted(long s) const {
+    Laurent ans(*this);
+    ans.shift(s);
+    return ans;
 }
 
 template <CoefficientDomain T>

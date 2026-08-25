@@ -115,6 +115,7 @@ void addArrow(pybind11::module_& m) {
         }, rdoc::set)
         .def("swap", &Arrow::swap, rdoc::swap)
         .def("shift", &Arrow::shift, rdoc::shift)
+        .def("shifted", &Arrow::shifted, rdoc::shifted)
         .def("scaleUp", &Arrow::scaleUp, rdoc::scaleUp)
         .def("scaleDown", &Arrow::scaleDown, rdoc::scaleDown)
         .def("negate", &Arrow::negate, rdoc::negate)
