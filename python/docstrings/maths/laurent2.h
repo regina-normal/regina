@@ -426,6 +426,31 @@ Parameter ``yExp``:
 Parameter ``value``:
     the new value of the corresponding coefficient.)doc";
 
+// Docstring regina::python::doc::Laurent2::shift
+static constexpr const char shift[] =
+R"doc(Multiplies this polynomial by ``x^s y^t`` for some integers *s* and
+*t*. This polynomial will be changed directly.
+
+Parameter ``s``:
+    the power of *x* to multiply by.
+
+Parameter ``t``:
+    the power of *y* to multiply by.)doc";
+
+// Docstring regina::python::doc::Laurent2::shifted
+static constexpr const char shifted[] =
+R"doc(Returns the product of this polynomial with ``x^s y^t`` for some
+integers *s* and *t*. This polynomial will not be changed.
+
+Parameter ``s``:
+    the power of *x* to multiply by.
+
+Parameter ``t``:
+    the power of *y* to multiply by.
+
+Returns:
+    the product of this with ``x^s y^t``.)doc";
+
 // Docstring regina::python::doc::Laurent2::str
 static constexpr const char str[] =
 R"doc(Returns this polynomial as a human-readable string, using the given

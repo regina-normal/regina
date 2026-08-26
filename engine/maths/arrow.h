@@ -422,6 +422,7 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
          * \a s.  This polynomial will not be changed.
          *
          * \param s the power of \a A to multiply by.
+         * \return the product of this with `A^s`.
          */
         Arrow shifted(long s) const;
 

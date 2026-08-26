@@ -561,7 +561,10 @@ form ``x^k`` where ``k < |s|``, then these lower-degree terms will
 simply be omitted from the result.
 
 Parameter ``s``:
-    the power of *x* to multiply by.)doc";
+    the power of *x* to multiply by.
+
+Returns:
+    the product of this with ``x^s``.)doc";
 
 // Docstring regina::python::doc::Polynomial::str
 static constexpr const char str[] =

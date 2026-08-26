@@ -395,6 +395,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * will simply be omitted from the result.
          *
          * \param s the power of \a x to multiply by.
+         * \return the product of this with `x^s`.
          */
         Polynomial shifted(long s) const;
 

@@ -416,6 +416,7 @@ class Laurent :
          * \a s.  This polynomial will not be changed.
          *
          * \param s the power of \a x to multiply by.
+         * \return the product of this with `x^s`.
          */
         Laurent shifted(long s) const;
 

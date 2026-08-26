@@ -490,7 +490,10 @@ R"doc(Returns the product of this polynomial with ``x^s`` for some integer
 *s*. This polynomial will not be changed.
 
 Parameter ``s``:
-    the power of *x* to multiply by.)doc";
+    the power of *x* to multiply by.
+
+Returns:
+    the product of this with ``x^s``.)doc";
 
 // Docstring regina::python::doc::Laurent::str
 static constexpr const char str[] =

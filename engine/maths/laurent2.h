@@ -389,6 +389,25 @@ class Laurent2 :
         void swap(Laurent2<T>& other) noexcept;
 
         /**
+         * Multiplies this polynomial by `x^s y^t` for some integers \a s and
+         * \a t.  This polynomial will be changed directly.
+         *
+         * \param s the power of \a x to multiply by.
+         * \param t the power of \a y to multiply by.
+         */
+        void shift(long s, long t);
+
+        /**
+         * Returns the product of this polynomial with `x^s y^t` for some
+         * integers \a s and \a t.  This polynomial will not be changed.
+         *
+         * \param s the power of \a x to multiply by.
+         * \param t the power of \a y to multiply by.
+         * \return the product of this with `x^s y^t`.
+         */
+        Laurent2 shifted(long s, long t) const;
+
+        /**
          * Negates this polynomial.
          * This polynomial is changed directly.
          */
@@ -939,7 +958,24 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
 
 template <CoefficientDomain T>
 inline void Laurent2<T>::swap(Laurent2<T>& other) noexcept {
-    std::swap(coeff_, other.coeff_);
+    coeff_.swap(other.coeff_);
+}
+
+template <CoefficientDomain T>
+void Laurent2<T>::shift(long s, long t) {
+    // It is difficult to change all the keys in a map without just building a
+    // complete new map.
+    Laurent2 ans = shifted(s, t);
+    coeff_.swap(ans.coeff_);
+}
+
+template <CoefficientDomain T>
+Laurent2<T> Laurent2<T>::shifted(long s, long t) const {
+    Laurent2 ans;
+    for (auto& c : coeff_)
+        ans.coeff_.emplace(Exponents(c.first.first + s, c.first.second + t),
+            c.second);
+    return ans;
 }
 
 template <CoefficientDomain T>
@@ -1044,7 +1080,7 @@ Laurent2<T>& Laurent2<T>::operator *= (const Laurent2<T>& other) {
         }
 
     coeff_.clear();
-    std::swap(ans, coeff_);
+    ans.swap(coeff_);
 
     // We might have zeroed out some coefficients.
     removeZeroes();

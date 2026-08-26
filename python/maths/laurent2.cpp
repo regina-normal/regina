@@ -62,6 +62,8 @@ void addLaurent2(pybind11::module_& m) {
         .def("isZero", &Laurent2<Integer>::isZero, rdoc::isZero)
         .def("set", &Laurent2<Integer>::set, rdoc::set)
         .def("swap", &Laurent2<Integer>::swap, rdoc::swap)
+        .def("shift", &Laurent2<Integer>::shift, rdoc::shift)
+        .def("shifted", &Laurent2<Integer>::shifted, rdoc::shifted)
         .def("negate", &Laurent2<Integer>::negate, rdoc::negate)
         .def("invertX", &Laurent2<Integer>::invertX, rdoc::invertX)
         .def("invertY", &Laurent2<Integer>::invertY, rdoc::invertY)

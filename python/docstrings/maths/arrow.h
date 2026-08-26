@@ -515,7 +515,10 @@ R"doc(Returns the product of this polynomial with ``A^s`` for some integer
 *s*. This polynomial will not be changed.
 
 Parameter ``s``:
-    the power of *A* to multiply by.)doc";
+    the power of *A* to multiply by.
+
+Returns:
+    the product of this with ``A^s``.)doc";
 
 // Docstring regina::python::doc::Arrow::sumLaurent
 static constexpr const char sumLaurent[] =

@@ -321,6 +321,7 @@ Version 8.0  [ TODO ]
               into a two-variable Laurent polynomial.
             - Removed the exponent-based constructor Laurent2(xExp, yExp) and
               initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
+            - New routines shift() and shifted().
         Class LightweightSequence<T>:
             - Removed the inner class SubsequenceCompareFirst<...>.
               This was a very specialised class designed specifically for
