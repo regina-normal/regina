@@ -270,7 +270,7 @@ const Laurent2<Integer>& Link::theta() const {
     auto [adj, det] = a.adjugate(AdjugateAlgorithm::FaddeevLeverrier);
 
     long shift = -(writhe() + std::reduce(rot.begin(), rot.end())) / 2;
-    // The Alexander polynomial is (det * x^shift).
+    // The normalised Alexander polynomial is ∆ = (det * x^shift).
     // TODO: Set alexander_ if we don't already know it.
 
     // We are trying to avoid denominators, so we do not compute F1, F2 and F3
@@ -278,20 +278,20 @@ const Laurent2<Integer>& Link::theta() const {
 
     using L = Laurent2<Integer>;
 
-    // u[0,1,2] = T_{1,2,3} - 1
-    // v[0,1,2] = T_{1,2,3}^(-1) - 1
-    // w = T_2 + 1
-    // x[0,1] = T_2^{1,-1} - 2
+    // u[0,1,2] = {x,y,xy} - 1
+    // v[0,1,2] = {x,y,xy}^(-1) - 1
+    // w[0,1] = y^{1,-1} + 1
+    // x[0,1] = y^{1,-1} - 2
+    // d[0,1,2] = det({x,y,xy})
     static const L u[3] {
         {{1,0,1}, {0,0,-1}}, {{0,1,1}, {0,0,-1}}, {{1,1,1}, {0,0,-1}} };
     static const L v[3] {
         {{-1,0,1}, {0,0,-1}}, {{0,-1,1}, {0,0,-1}}, {{-1,-1,1}, {0,0,-1}} };
-    static const L w {{0,1,1}, {0,0,1}};
+    static const L w[2] { {{0,1,1}, {0,0,1}}, {{0,-1,1}, {0,0,1}} };
     static const L x[2] { {{0,1,1}, {0,0,-2}}, {{0,-1,1}, {0,0,-2}} };
+    const L d[3] { {det, 1, 0}, {det, 0, 1}, {det, 1, 1} };
 
-    L delta[3] { {det, 1, 0}, {det, 0, 1}, {det, 1, 1} };
-
-    // sum1 = sum_{crossings c} 2 F_1(c) * (T_2 - 1) ∆_1 ∆_2 ∆_3
+    // sum1 = sum_{crossings c} 2 F_1(c) * (y-1) d[0] d[1] d[2]
     L sum1;
     for (auto c : crossings_) {
         size_t i = arcOrder[c->upper().prev().id()];
@@ -299,38 +299,63 @@ const Laurent2<Integer>& Link::theta() const {
         if (c->sign() > 0) {
             L term1 =
                 L(adj.entry(j, i), 0, 1) *
-                    ( delta[2] * L(adj.entry(i, i), 1, 0).shifted(0, 1)
-                    + delta[0] * u[2] * L(adj.entry(j, i), 1, 1)
-                    - delta[0] * L(adj.entry(j, j), 1, 1).shifted(0, 1)
-                    - delta[0] * u[1] * L(adj.entry(i, i), 1, 1))
+                    ( d[2] * L(adj.entry(i, i), 1, 0).shifted(0, 1)
+                    + d[0] * u[2] * L(adj.entry(j, i), 1, 1)
+                    - d[0] * L(adj.entry(j, j), 1, 1).shifted(0, 1)
+                    - d[0] * u[1] * L(adj.entry(i, i), 1, 1))
                 + L(adj.entry(j, j), 0, 1) *
-                    ( delta[0] * L(adj.entry(i, i), 1, 1) * 2
-                    - delta[2] * L(adj.entry(i, i), 1, 0))
+                    ( d[0] * L(adj.entry(i, i), 1, 1) * 2
+                    - d[2] * L(adj.entry(i, i), 1, 0))
                 + L(adj.entry(j, j), 1, 1) *
-                    ( delta[1] * L(adj.entry(i, i), 1, 0)
-                    - delta[0] * L(adj.entry(i, i), 0, 1))
-                - delta[0] * delta[1] * L(adj.entry(i, i), 1, 1);
-            sum1 += u[1] * (delta[0] * delta[1] * delta[2] +
-                std::move(term1) * 2);
+                    ( d[1] * L(adj.entry(i, i), 1, 0)
+                    - d[0] * L(adj.entry(i, i), 0, 1))
+                - d[0] * d[1] * L(adj.entry(i, i), 1, 1);
+            sum1 += u[1] * (d[0] * d[1] * d[2] + std::move(term1) * 2);
 
             L term2 = u[0].shifted(0, 1) * L(adj.entry(j, i), 1, 0) *
-                ( delta[1] * L(adj.entry(j, j), 1, 1)
-                + delta[2] *
+                ( d[1] * L(adj.entry(j, j), 1, 1)
+                + d[2] *
                     ( L(adj.entry(j, i).shifted(1), 0, 1)
                     - L(adj.entry(j, j), 0, 1)));
             L term3 = u[2] * L(adj.entry(j, i), 1, 1) *
-                ( delta[0] * delta[1]
-                - delta[1] * L(adj.entry(i, i), 1, 0).shifted(0, 1)
-                + delta[0] * L(adj.entry(i, j), 0, 1)
-                + delta[0] * x[0] * L(adj.entry(j, j), 0, 1)
-                - delta[1] * u[0] * w * L(adj.entry(j, i), 1, 0));
+                ( d[0] * d[1]
+                - d[1] * L(adj.entry(i, i), 1, 0).shifted(0, 1)
+                + d[0] * L(adj.entry(i, j), 0, 1)
+                + d[0] * x[0] * L(adj.entry(j, j), 0, 1)
+                - d[1] * u[0] * w[0] * L(adj.entry(j, i), 1, 0));
             sum1 += (std::move(term2) + std::move(term3)) * 2;
         } else {
-            // TODO
+            L term1 =
+                L(adj.entry(j, i), 0, 1) *
+                    ( d[2] * L(adj.entry(i, i), 1, 0).shifted(0, -1)
+                    + d[0] * v[2] * L(adj.entry(j, i), 1, 1)
+                    - d[0] * L(adj.entry(j, j), 1, 1).shifted(0, -1)
+                    - d[0] * v[1] * L(adj.entry(i, i), 1, 1))
+                + L(adj.entry(j, j), 0, 1) *
+                    ( d[0] * L(adj.entry(i, i), 1, 1) * 2
+                    - d[2] * L(adj.entry(i, i), 1, 0))
+                + L(adj.entry(j, j), 1, 1) *
+                    ( d[1] * L(adj.entry(i, i), 1, 0)
+                    - d[0] * L(adj.entry(i, i), 0, 1))
+                - d[0] * d[1] * L(adj.entry(i, i), 1, 1);
+            sum1 -= u[1] * (d[0] * d[1] * d[2] + std::move(term1) * 2);
+
+            L term2 = v[0].shifted(0, -1) * L(adj.entry(j, i), 1, 0) *
+                ( d[1] * L(adj.entry(j, j), 1, 1)
+                + d[2] *
+                    ( L(adj.entry(j, i).shifted(-1), 0, 1)
+                    - L(adj.entry(j, j), 0, 1)));
+            L term3 = v[2] * L(adj.entry(j, i), 1, 1) *
+                ( d[0] * d[1]
+                - d[1] * L(adj.entry(i, i), 1, 0).shifted(0, -1)
+                + d[0] * L(adj.entry(i, j), 0, 1)
+                + d[0] * x[1] * L(adj.entry(j, j), 0, 1)
+                - d[1] * v[0] * w[1] * L(adj.entry(j, i), 1, 0));
+            sum1 += (std::move(term2) + std::move(term3)).shifted(0, 1) * 2;
         }
     }
 
-    // sum2 = sum_{crossings c0, c1} F_2(c0, c1) (T_2 - 1) ∆_1 ∆_2 ∆_3
+    // sum2 = sum_{crossings c0, c1} F_2(c0, c1) (y-1) d[0] d[1] d[2]
     L sum2;
     for (auto c0 : crossings_) {
         size_t i0 = arcOrder[c0->upper().prev().id()];
@@ -386,20 +411,23 @@ const Laurent2<Integer>& Link::theta() const {
         }
     }
 
-    // sum3 = sum_{edges k} 2 F_3(k) * ∆_3, as a Laurent polynomial in T3 := xy
+    // sum3 = sum_{edges k} 2 F_3(k) * det, as a Laurent polynomial in T3 := xy
+    // TODO: check use of arcOrder here
     Laurent<Integer> sum3;
     size_t k;
     for (k = 0; k < 2 * n; ++k)
-        if (rot[k])
-            sum3 += (adj.entry(k, k) * 2 - det) * rot[k];
-    if (rot[0])
-        sum3 += (adj.entry(k, k) * 2 - det) * rot[0]; // here k == 2 * n
+        if (rot[arcOrder[k]])
+            sum3 += (adj.entry(k, k) * 2 - det) * rot[arcOrder[k]];
+    if (rot[arcOrder[0]])
+        sum3 += (adj.entry(k, k) * 2 - det) * rot[arcOrder[0]]; // k == 2 * n
 
-    // The following line computes 2 (T_2 - 1) θ :
-    auto ans = std::move(sum1) + std::move(sum2) * 2 +
-        L(std::move(sum3), 1, 1) * delta[0] * delta[1];
+    // The following code computes (y-1) θ :
+    auto ans = std::move(sum1) + L(std::move(sum3), 1, 1) * u[1] * d[0] * d[1];
+    ans /= 2; // TODO: ensure parity
+    ans += std::move(sum2);
+    ans.shift(2 * shift, 2 * shift);
+    // TODO: divide by y-1
 
-    // TODO: Strip out the factor of 2 (T_2 - 1)
     return *(theta_ = std::move(ans));
 }
 

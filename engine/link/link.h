@@ -3527,11 +3527,11 @@ class Link :
          *   rotations the arc makes from start to end (where we assume the
          *   arc points vertically upwards at both start and end);
          *
-         * - Returns these rotation numbers as a sequence of integers, indexed
-         *   by strand ID (i.e., indexed by the values of `StrandRef::id()` for
-         *   the StrandRef objects that represent each arc).  See the StrandRef
-         *   documentation for the convention on how arcs are represented
-         *   using StrandRef objects.
+         * - Returns these rotation numbers as a sequence of `2 * size()`
+         *   integers, indexed by strand ID (i.e., indexed by the values of
+         *   `StrandRef::id()` for the StrandRef objects that represent each
+         *   arc).  See the StrandRef documentation for the convention on how
+         *   arcs are represented using StrandRef objects.
          *
          * The rotation numbers are not uniquely defined, since they depend
          * upon the precise positioning of the crossings and arcs in the plane.
