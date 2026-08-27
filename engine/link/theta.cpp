@@ -289,6 +289,7 @@ const Laurent2<Integer>& Link::theta() const {
     static const L w[2] { {{0,1,1}, {0,0,1}}, {{0,-1,1}, {0,0,1}} };
     static const L x[2] { {{0,1,1}, {0,0,-2}}, {{0,-1,1}, {0,0,-2}} };
     const L d[3] { {det, 1, 0}, {det, 0, 1}, {det, 1, 1} };
+    const L d01 = d[0] * d[1];
 
     // sum1 = sum_{crossings c} 2 F_1(c) * (y-1) d[0] d[1] d[2]
     L sum1;
@@ -308,8 +309,8 @@ const Laurent2<Integer>& Link::theta() const {
                 + L(adj.entry(j, j), 1, 1) *
                     ( d[1] * L(adj.entry(i, i), 1, 0)
                     - d[0] * L(adj.entry(i, i), 0, 1))
-                - d[0] * d[1] * L(adj.entry(i, i), 1, 1);
-            sum1 += u[1] * (d[0] * d[1] * d[2] + std::move(term1) * 2);
+                - d01 * L(adj.entry(i, i), 1, 1);
+            sum1 += u[1] * (d01 * d[2] + std::move(term1) * 2);
 
             L term2 = u[0].shifted(0, 1) * L(adj.entry(j, i), 1, 0) *
                 ( d[1] * L(adj.entry(j, j), 1, 1)
@@ -317,7 +318,7 @@ const Laurent2<Integer>& Link::theta() const {
                     ( L(adj.entry(j, i).shifted(1), 0, 1)
                     - L(adj.entry(j, j), 0, 1)));
             L term3 = u[2] * L(adj.entry(j, i), 1, 1) *
-                ( d[0] * d[1]
+                ( d01
                 - d[1] * L(adj.entry(i, i), 1, 0).shifted(0, 1)
                 + d[0] * L(adj.entry(i, j), 0, 1)
                 + d[0] * x[0] * L(adj.entry(j, j), 0, 1)
@@ -336,8 +337,8 @@ const Laurent2<Integer>& Link::theta() const {
                 + L(adj.entry(j, j), 1, 1) *
                     ( d[1] * L(adj.entry(i, i), 1, 0)
                     - d[0] * L(adj.entry(i, i), 0, 1))
-                - d[0] * d[1] * L(adj.entry(i, i), 1, 1);
-            sum1 -= u[1] * (d[0] * d[1] * d[2] + std::move(term1) * 2);
+                - d01 * L(adj.entry(i, i), 1, 1);
+            sum1 -= u[1] * (d01 * d[2] + std::move(term1) * 2);
 
             L term2 = v[0].shifted(0, -1) * L(adj.entry(j, i), 1, 0) *
                 ( d[1] * L(adj.entry(j, j), 1, 1)
@@ -345,7 +346,7 @@ const Laurent2<Integer>& Link::theta() const {
                     ( L(adj.entry(j, i).shifted(-1), 0, 1)
                     - L(adj.entry(j, j), 0, 1)));
             L term3 = v[2] * L(adj.entry(j, i), 1, 1) *
-                ( d[0] * d[1]
+                ( d01
                 - d[1] * L(adj.entry(i, i), 1, 0).shifted(0, -1)
                 + d[0] * L(adj.entry(i, j), 0, 1)
                 + d[0] * x[1] * L(adj.entry(j, j), 0, 1)
@@ -420,17 +421,38 @@ const Laurent2<Integer>& Link::theta() const {
                 sum3 += (adj.entry(2 * n, 2 * n) * 2 - det) * rot[id];
         }
 
-    // The following code computes (y-1) θ.
-    // For now, we include sanity checks alongside all our division operations.
-    auto ans = std::move(sum1) + L(std::move(sum3), 1, 1) * u[1] * d[0] * d[1];
-    for (auto& term : ans) {
+    // Next we compute comb = (y-1) θ.
+    auto comb = std::move(sum1) + L(std::move(sum3), 1, 1) * u[1] * d01;
+    for (const auto& term : comb)
         if (term.second % 2 != 0)
             throw ImpossibleScenario("theta(): coefficient parity error");
-        term.second.divByExact(2);
+    comb /= 2;
+    comb += std::move(sum2);
+    comb.shift(2 * shift, 2 * shift);
+
+    // Finally, we compute ans = comb / (y-1).
+    L ans;
+    long needX, needY;
+    Integer needCoeff;
+    for (const auto& term : comb) {
+        if (needCoeff == 0) {
+            needX = term.first.first;
+            needY = term.first.second + 1;
+            needCoeff = -term.second;
+            ans.set(term.first.first, term.first.second, needCoeff);
+        } else if (term.first.first == needX) {
+            for ( ; needY < term.first.second; ++needY)
+                ans.set(needX, needY, needCoeff);
+            // Now term.first.second == needY.
+            needCoeff -= term.second;
+            if (needCoeff != 0)
+                ans.set(needX, needY, needCoeff);
+            ++needY;
+        } else
+            throw ImpossibleScenario("theta(): cannot divide by y-1");
     }
-    ans += std::move(sum2);
-    ans.shift(2 * shift, 2 * shift);
-    // TODO: divide by y-1
+    if (needCoeff != 0)
+        throw ImpossibleScenario("theta(): cannot divide by y-1");
 
     if (! alexander_.has_value()) {
         // Stash away a copy of the Alexander polynomial, since we have just
