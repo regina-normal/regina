@@ -74,8 +74,22 @@ namespace regina {
 template <CoefficientDomain T>
 class Polynomial : public ShortOutput<Polynomial<T>, true> {
     public:
+        /**
+         * The type of each coefficient of the polynomial.
+         */
         using Coefficient = T;
-            /**< The type of each coefficient of the polynomial. */
+
+        /**
+         * A read-only iterator type for iterating over polynomial coefficients.
+         * This is identical to \a const_iterator, since iterators over
+         * coefficients are always read-only.
+         */
+        using iterator = const T*;
+
+        /**
+         * A read-only iterator type for iterating over polynomial coefficients.
+         */
+        using const_iterator = const T*;
 
         // Make sure the compiler can see the zero-argument string output
         // routines, since we declare alternative versions of these below.
@@ -298,6 +312,68 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * \param value the new value of this coefficient.
          */
         void set(size_t exp, const T& value);
+
+        /**
+         * Returns a C++ iterator pointing to the constant coefficient of this
+         * polynomial.  Such iterators provide read-only access to the
+         * coefficients: to modify coefficients you will need to call different
+         * routines, such as set().
+         *
+         * The iterator range from begin() to end() runs through all
+         * coefficients of this polynomial, including zeroes, in order from
+         * the constant coefficient to the leading coefficient.  If this is
+         * the zero polynomial then this iterator range will be empty.
+         *
+         * \nopython For Python users, Polynomial implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing to the constant coefficient.
+         */
+        iterator begin() const;
+
+        /**
+         * Returns a C++ iterator pointing beyond the leading coefficient of
+         * this polynomial.  Such iterators provide read-only access to the
+         * coefficients: to modify coefficients you will need to call
+         * different routines, such as set().
+         *
+         * The iterator range from begin() to end() runs through all
+         * coefficients of this polynomial, including zeroes, in order from
+         * the constant coefficient to the leading coefficient.  If this is
+         * the zero polynomial then this iterator range will be empty.
+         *
+         * \nopython For Python users, Polynomial implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing beyond the leading coefficient.
+         */
+        iterator end() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator that provides read-only access to all
+         * coefficients of this polynomial.
+         *
+         * The iterator range runs through all coefficients of this polynomial,
+         * including zeroes, in order from the constant coefficient to the
+         * leading coefficient.  If this is the zero polynomial then the
+         * iterator range will be empty.
+         *
+         * To enforce read-only access, Python iterators will return
+         * coefficients by value, not by reference.  If you wish to modify
+         * coefficients then you will need to call different routines, such as
+         * set().
+         *
+         * \nocpp For C++ users, Polynomial provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over coefficients
+         * in the usual way using a range-based `for` loop.
+         *
+         * \return an iterator over all coefficients of this polynomial.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Tests whether this and the given polynomial are equal.
@@ -1042,6 +1118,16 @@ void Polynomial<T>::set(size_t exp, const T& value) {
         coeff_ = newCoeff;
         degree_ = exp;
     }
+}
+
+template <CoefficientDomain T>
+inline typename Polynomial<T>::iterator Polynomial<T>::begin() const {
+    return coeff_;
+}
+
+template <CoefficientDomain T>
+inline typename Polynomial<T>::iterator Polynomial<T>::end() const {
+    return ((degree_ == 0 && coeff_[0] == 0) ? coeff_ : coeff_ + degree_ + 1);
 }
 
 template <CoefficientDomain T>

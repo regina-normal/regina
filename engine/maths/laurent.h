@@ -78,8 +78,22 @@ class Laurent :
         public ShortOutput<Laurent<T>, true>,
         public TightEncodable<Laurent<T>> {
     public:
+        /**
+         * The type of each coefficient of the polynomial.
+         */
         using Coefficient = T;
-            /**< The type of each coefficient of the polynomial. */
+
+        /**
+         * A read-only iterator type for iterating over polynomial coefficients.
+         * This is identical to \a const_iterator, since iterators over
+         * coefficients are always read-only.
+         */
+        using iterator = const T*;
+
+        /**
+         * A read-only iterator type for iterating over polynomial coefficients.
+         */
+        using const_iterator = const T*;
 
         // Make sure the compiler can see the zero-argument string output
         // routines, since we declare alternative versions of these below.
@@ -313,6 +327,67 @@ class Laurent :
          * \param value the new value of this coefficient.
          */
         void set(long exp, const T& value);
+
+        /**
+         * Returns a C++ iterator pointing to the first non-zero coefficient of
+         * this polynomial; that is, the coefficient corresponding to the
+         * exponent minExp().  Such iterators provide read-only access to the
+         * coefficients: to modify coefficients you will need to call different
+         * routines, such as set().
+         *
+         * The iterator range from begin() to end() runs through all
+         * coefficients of this polynomial, including zeroes, corresponding to
+         * exponents ranging from minExp() to maxExp() inclusive.  If this is
+         * the zero polynomial then this iterator range will be empty.
+         *
+         * \nopython For Python users, Laurent implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing to the first non-zero coefficient.
+         */
+        iterator begin() const;
+
+        /**
+         * Returns a C++ iterator pointing beyond the last non-zero coefficient
+         * of this polynomial; that is, beyond the coefficient corresponding to
+         * the exponent maxExp().  Such iterators provide read-only access to
+         * the coefficients: to modify coefficients you will need to call
+         * different routines, such as set().
+         *
+         * The iterator range from begin() to end() runs through all
+         * coefficients of this polynomial, including zeroes, corresponding to
+         * exponents ranging from minExp() to maxExp() inclusive.  If this is
+         * the zero polynomial then this iterator range will be empty.
+         *
+         * \nopython For Python users, Laurent implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing beyond the last non-zero coefficient.
+         */
+        iterator end() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator that provides read-only access to all
+         * coefficients of this polynomial, including zeroes, corresponding to
+         * exponents ranging from minExp() to maxExp() inclusive.  If this is
+         * the zero polynomial then this iterator range will be empty.
+         *
+         * To enforce read-only access, Python iterators will return
+         * coefficients by value, not by reference.  If you wish to modify
+         * coefficients then you will need to call different routines, such as
+         * set().
+         *
+         * \nocpp For C++ users, Laurent provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over coefficients
+         * in the usual way using a range-based `for` loop.
+         *
+         * \return an iterator over all coefficients of this polynomial.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Tests whether this and the given polynomial are equal.
@@ -1040,6 +1115,16 @@ inline const T& Laurent<T>::operator [] (long exp) const {
         return zero_;
     else
         return coeff_[exp - base_];
+}
+
+template <CoefficientDomain T>
+inline typename Laurent<T>::iterator Laurent<T>::begin() const {
+    return coeff_ + minExp_ - base_;
+}
+
+template <CoefficientDomain T>
+inline typename Laurent<T>::iterator Laurent<T>::end() const {
+    return (isZero() ? begin() : coeff_ + maxExp_ - base_ + 1);
 }
 
 template <CoefficientDomain T>

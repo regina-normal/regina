@@ -316,6 +316,7 @@ Version 8.0  [ TODO ]
             - Removed the exponent-based constructor Laurent(exp) and
               initialiser init(exp), which were deprecated in Regina 7.4.
             - New const routine shifted().
+            - Now supports iteration over coefficients.
         Class Laurent2<T>:
             - New constructor that converts a single-variable Laurent polynomial
               into a two-variable Laurent polynomial.
@@ -487,6 +488,7 @@ Version 8.0  [ TODO ]
             - Removed the exponent-based constructor Polynomial(degree) and
               initialiser init(degree), which were deprecated in Regina 7.4.
             - New const routine shifted().
+            - Now supports iteration over coefficients.
         Class Primes:
             - The python-only routines primeDecompInt() and
               primePowerDecompInt() are now just overloads for primeDecomp()

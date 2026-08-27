@@ -71,6 +71,11 @@ void addLaurent(pybind11::module_& m) {
                 const Integer& value) {
             p.set(exp, value);
         }, rdoc::__array)
+        .def("__iter__", [](const Laurent<Integer>& p) {
+            return
+                pybind11::make_iterator<pybind11::return_value_policy::copy>(p);
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::__iter__)
         .def("set", &Laurent<Integer>::set, rdoc::set)
         .def("swap", &Laurent<Integer>::swap, rdoc::swap)
         .def("shift", &Laurent<Integer>::shift, rdoc::shift)

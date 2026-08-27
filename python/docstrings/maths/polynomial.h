@@ -289,6 +289,23 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
+// Docstring regina::python::doc::Polynomial::__iter__
+static constexpr const char __iter__[] =
+R"doc(Returns a Python iterator that provides read-only access to all
+coefficients of this polynomial.
+
+The iterator range runs through all coefficients of this polynomial,
+including zeroes, in order from the constant coefficient to the
+leading coefficient. If this is the zero polynomial then the iterator
+range will be empty.
+
+To enforce read-only access, Python iterators will return coefficients
+by value, not by reference. If you wish to modify coefficients then
+you will need to call different routines, such as set().
+
+Returns:
+    an iterator over all coefficients of this polynomial.)doc";
+
 // Docstring regina::python::doc::Polynomial::__mul
 static constexpr const char __mul[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.

@@ -72,6 +72,11 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         .def("__setitem__", [](Polynomial<T>& p, size_t exp, const T& value) {
             p.set(exp, value);
         }, rdoc::__array)
+        .def("__iter__", [](const Polynomial<T>& p) {
+            return
+                pybind11::make_iterator<pybind11::return_value_policy::copy>(p);
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::__iter__)
         .def("set", &Polynomial<T>::set, rdoc::set)
         .def("swap", &Polynomial<T>::swap, rdoc::swap)
         .def("negate", &Polynomial<T>::negate, rdoc::negate)

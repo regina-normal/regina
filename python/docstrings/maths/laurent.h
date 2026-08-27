@@ -250,6 +250,20 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
+// Docstring regina::python::doc::Laurent::__iter__
+static constexpr const char __iter__[] =
+R"doc(Returns a Python iterator that provides read-only access to all
+coefficients of this polynomial, including zeroes, corresponding to
+exponents ranging from minExp() to maxExp() inclusive. If this is the
+zero polynomial then this iterator range will be empty.
+
+To enforce read-only access, Python iterators will return coefficients
+by value, not by reference. If you wish to modify coefficients then
+you will need to call different routines, such as set().
+
+Returns:
+    an iterator over all coefficients of this polynomial.)doc";
+
 // Docstring regina::python::doc::Laurent::__mul
 static constexpr const char __mul[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.

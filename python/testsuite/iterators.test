@@ -104,23 +104,50 @@ print('Model link graph cell arc iteration:')
 g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
 c = g.cells()
 for i in range(c.countCells()):
-	bdry = []
-	for a in c.arcs(i):
-		bdry.append(str(a.node().index()) + ':' + str(a.arc()))
-	print(bdry)
+    bdry = []
+    for a in c.arcs(i):
+        bdry.append(str(a.node().index()) + ':' + str(a.arc()))
+    print(bdry)
 
 print('Vector<Integer> iteration:')
 for i in VectorInt([3,5,-1]):
-	print(i)
+    print(i)
 
 print('Vector<LargeInteger> iteration:')
 for i in VectorLarge([3,5,-1]):
-	print(i)
+    print(i)
 
 print('PermGroup iteration:')
 for i in PermGroup4(NamedPermGroup.Alternating):
-	print(i)
+    print(i)
 
 print('TableView iteration:')
 for i in quadString:
-	print(i)
+    print(i)
+
+# Ensure that read-only coefficient iterators behave correctly.
+p = PolynomialInt([1,4,0,6])
+print(p)
+print([c for c in p])
+for c in p:
+    c -= 1
+print(p)
+p = PolynomialInt([3])
+print([c for c in p])
+p = PolynomialInt()
+print([c for c in p])
+
+p = Laurent(-2, [1,4,0,6])
+print(p)
+print([c for c in p])
+for c in p:
+    c -= 1
+print(p)
+p.set(-2, 0)
+print(p)
+print([c for c in p])
+p = Laurent(-4, [3])
+print([c for c in p])
+p = Laurent()
+print([c for c in p])
+
