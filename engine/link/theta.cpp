@@ -225,7 +225,7 @@ const Laurent2<Integer>& Link::theta() const {
         return *theta_;
 
     if (size() == 0)
-        return *(theta_ = Laurent2<Integer>{}); // TODO: what??
+        return *(theta_ = Laurent2<Integer>{}); // theta(unknot) = 0
 
     // Choose an arbitrary crossing at which to break the knot open.
     StrandRef breakOpen = crossings_.front()->upper();
@@ -271,7 +271,6 @@ const Laurent2<Integer>& Link::theta() const {
 
     long shift = -(writhe() + std::reduce(rot.begin(), rot.end())) / 2;
     // The normalised Alexander polynomial is ∆ = (det * x^shift).
-    // TODO: Set alexander_ if we don't already know it.
 
     // We are trying to avoid denominators, so we do not compute F1, F2 and F3
     // directly.  See below for what we compute instead.
@@ -412,22 +411,40 @@ const Laurent2<Integer>& Link::theta() const {
     }
 
     // sum3 = sum_{edges k} 2 F_3(k) * det, as a Laurent polynomial in T3 := xy
-    // TODO: check use of arcOrder here
     Laurent<Integer> sum3;
-    size_t k;
-    for (k = 0; k < 2 * n; ++k)
-        if (rot[arcOrder[k]])
-            sum3 += (adj.entry(k, k) * 2 - det) * rot[arcOrder[k]];
-    if (rot[arcOrder[0]])
-        sum3 += (adj.entry(k, k) * 2 - det) * rot[arcOrder[0]]; // k == 2 * n
+    for (size_t id = 0; id < 2 * n; ++id)
+        if (rot[id]) {
+            size_t k = arcOrder[id];
+            sum3 += (adj.entry(k, k) * 2 - det) * rot[id];
+            if (k == 0)
+                sum3 += (adj.entry(2 * n, 2 * n) * 2 - det) * rot[id];
+        }
 
-    // The following code computes (y-1) θ :
+    // The following code computes (y-1) θ.
+    // For now, we include sanity checks alongside all our division operations.
     auto ans = std::move(sum1) + L(std::move(sum3), 1, 1) * u[1] * d[0] * d[1];
-    ans /= 2; // TODO: ensure parity
+    for (auto& term : ans) {
+        if (term.second % 2 != 0)
+            throw ImpossibleScenario("theta(): coefficient parity error");
+        term.second.divByExact(2);
+    }
     ans += std::move(sum2);
     ans.shift(2 * shift, 2 * shift);
     // TODO: divide by y-1
 
+    if (! alexander_.has_value()) {
+        // Stash away a copy of the Alexander polynomial, since we have just
+        // computed it.  Here we normalise in the same way as alexander():
+        // build a polynomial with all non-negative exponents whose constant
+        // coefficient is positive.
+        if (det.isZero()) {
+            alexander_ = Polynomial<Integer>();
+        } else {
+            alexander_ = Polynomial<Integer>(det.begin(), det.end());
+            if ((*alexander_)[0] < 0)
+                alexander_->negate();
+        }
+    }
     return *(theta_ = std::move(ans));
 }
 
