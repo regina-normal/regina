@@ -323,6 +323,8 @@ Version 8.0  [ TODO ]
             - Removed the exponent-based constructor Laurent2(xExp, yExp) and
               initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
             - New routines shift() and shifted().
+            - Now supports iteration over non-zero coefficients and their
+              corresponding exponent pairs.
         Class LightweightSequence<T>:
             - Removed the inner class SubsequenceCompareFirst<...>.
               This was a very specialised class designed specifically for

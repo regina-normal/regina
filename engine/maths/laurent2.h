@@ -80,9 +80,33 @@ template <CoefficientDomain T>
 class Laurent2 :
         public ShortOutput<Laurent2<T>, true>,
         public TightEncodable<Laurent2<T>> {
+    private:
+        /**
+         * A pair of exponents that appear in a single term of a two-variable
+         * Laurent polynomial.  The first and second elements of the pair are
+         * the exponents of \a x and \a y respectively.
+         */
+        using Exponents = std::pair<long, long>;
+
     public:
+        /**
+         * The type of each coefficient of the polynomial.
+         */
         using Coefficient = T;
-            /**< The type of each coefficient of the polynomial. */
+
+        /**
+         * A read-only iterator type for iterating over non-zero polynomial
+         * coefficients and their corresponding exponent pairs.  This is
+         * identical to \a const_iterator, since iterators over coefficients
+         * are always read-only.
+         */
+        using iterator = std::map<Exponents, T>::const_iterator;
+
+        /**
+         * A read-only iterator type for iterating over non-zero polynomial
+         * coefficients and their corresponding exponent pairs.
+         */
+        using const_iterator = std::map<Exponents, T>::const_iterator;
 
         // Make sure the compiler can see the zero-argument string output
         // routines, since we declare alternative versions of these below.
@@ -90,11 +114,9 @@ class Laurent2 :
         using ShortOutput<Laurent2<T>, true>::utf8;
 
     private:
-        using Exponents = std::pair<long, long>;
-
         std::map<Exponents, T> coeff_;
             /**< Stores all non-zero coefficients of the polynomial.
-                 Specifically, coeff_[(i,j)] stores the coefficient of
+                 Specifically, `coeff_[(i,j)]` stores the coefficient of
                  `x^i y^j`. */
 
         static const T zero_;
@@ -298,6 +320,105 @@ class Laurent2 :
          * \param value the new value of the corresponding coefficient.
          */
         void set(long xExp, long yExp, const T& value);
+
+        /**
+         * Returns a C++ iterator pointing to the beginning of the list of
+         * all non-zero coefficients and their corresponding exponent pairs.
+         * Such iterators provide read-only access to the coefficients:
+         * to modify coefficients you will need to call different routines,
+         * such as set().
+         *
+         * Iterators in Laurent2 work differently from single-variable
+         * polynomial classes such as Polynomial and Laurent:
+         *
+         * - they run through only the _non-zero_ coefficients of the
+         *   polynomial, ignoring any zero coefficients;
+         *
+         * - dereferencing an iterator gives access to not only a coefficent,
+         *   but also its corresponding exponent pair.
+         *
+         * Specifically, dereferencing an iterator will give a result of the
+         * form `((s, t), c)`, where round brackets indicate pairs (stored via
+         * `std::pair`).  This result describes a single term in the polynomial
+         * of the form `c x^s y^t`.
+         *
+         * The order of iteration will be lexicographic in the pair `(s, t)`
+         * above; that is, by increasing \a x exponent and then (in the case
+         * of ties) by increasing \a y exponent.
+         *
+         * If this is the zero polynomial then the iterator range from
+         * begin() to end() will be empty.
+         *
+         * \nopython For Python users, Laurent2 implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing to the first non-zero coefficient and
+         * corresponding exponent pair.
+         */
+        iterator begin() const;
+
+        /**
+         * Returns a C++ iterator pointing beyond the end of the list of
+         * all non-zero coefficients and their corresponding exponent pairs.
+         * Such iterators provide read-only access to the coefficients:
+         * to modify coefficients you will need to call different routines,
+         * such as set().
+         *
+         * See begin() for full details on how these iterators work.
+         * In particular, they work differently from single-variable polynomial
+         * classes such as Polynomial and Laurent: for instance, they only run
+         * through _non-zero_ coefficients, and they also give access to the
+         * corresponding exponent pairs.
+         *
+         * \nopython For Python users, Laurent2 implements the Python iterable
+         * interface.  You can iterate through coefficients in the same way
+         * that you would iterate over any native Python container.
+         *
+         * \return an iterator pointing beyond the last non-zero coefficient and
+         * corresponding exponent pair.
+         */
+        iterator end() const;
+
+#ifdef __APIDOCS
+        /**
+         * Returns a Python iterator that provides read-only access to all
+         * non-zero coefficients and their corresponding exponent pairs.
+         * If this is the zero polynomial then this iterator range will be
+         * empty.
+         *
+         * To enforce read-only access, Python iterators will return
+         * coefficients and exponents by value, not by reference.  If you wish
+         * to modify coefficients or exponents then you will need to call
+         * different routines, such as set().
+         *
+         * Iterators in Laurent2 work differently from single-variable
+         * polynomial classes such as Polynomial and Laurent:
+         *
+         * - they run through only the _non-zero_ coefficients of the
+         *   polynomial, ignoring any zero coefficients;
+         *
+         * - each value returned by an iterator includes not only a coefficent,
+         *   but also its corresponding exponent pair.
+         *
+         * Specifically, each value returned by an iterator will be of the
+         * form `((s, t), c)`, where round brackets indicate pairs (stored via
+         * Python tuples).  This value describes a single term in the polynomial
+         * of the form `c x^s y^t`.
+         *
+         * The order of iteration will be lexicographic in the pair `(s, t)`
+         * above; that is, by increasing \a x exponent and then (in the case
+         * of ties) by increasing \a y exponent.
+         *
+         * \nocpp For C++ users, Laurent2 provides the usual begin() and end()
+         * functions instead.  In particular, you can iterate over coefficients
+         * and exponent pairs in the usual way using a range-based `for` loop.
+         *
+         * \return an iterator over all coefficients and their corresponding
+         * exponent pairs.
+         */
+        auto __iter__() const;
+#endif
 
         /**
          * Tests whether this and the given polynomial are equal.
@@ -922,6 +1043,16 @@ void Laurent2<T>::set(long xExp, long yExp, const T& value) {
             result.first->second = value;
         }
     }
+}
+
+template <CoefficientDomain T>
+inline typename Laurent2<T>::iterator Laurent2<T>::begin() const {
+    return coeff_.begin();
+}
+
+template <CoefficientDomain T>
+inline typename Laurent2<T>::iterator Laurent2<T>::end() const {
+    return coeff_.end();
 }
 
 template <CoefficientDomain T>

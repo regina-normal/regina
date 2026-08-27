@@ -280,6 +280,39 @@ Parameter ``other``:
 Returns:
     a reference to this polynomial.)doc";
 
+// Docstring regina::python::doc::Laurent2::__iter__
+static constexpr const char __iter__[] =
+R"doc(Returns a Python iterator that provides read-only access to all non-
+zero coefficients and their corresponding exponent pairs. If this is
+the zero polynomial then this iterator range will be empty.
+
+To enforce read-only access, Python iterators will return coefficients
+and exponents by value, not by reference. If you wish to modify
+coefficients or exponents then you will need to call different
+routines, such as set().
+
+Iterators in Laurent2 work differently from single-variable polynomial
+classes such as Polynomial and Laurent:
+
+* they run through only the _non-zero_ coefficients of the polynomial,
+  ignoring any zero coefficients;
+
+* each value returned by an iterator includes not only a coefficent,
+  but also its corresponding exponent pair.
+
+Specifically, each value returned by an iterator will be of the form
+``((s, t), c)``, where round brackets indicate pairs (stored via
+Python tuples). This value describes a single term in the polynomial
+of the form ``c x^s y^t``.
+
+The order of iteration will be lexicographic in the pair ``(s, t)``
+above; that is, by increasing *x* exponent and then (in the case of
+ties) by increasing *y* exponent.
+
+Returns:
+    an iterator over all coefficients and their corresponding exponent
+    pairs.)doc";
+
 // Docstring regina::python::doc::Laurent2::__mul
 static constexpr const char __mul[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.

@@ -82,6 +82,11 @@ void addLaurent2(pybind11::module_& m) {
                 std::pair<long, long> exponents, const Integer& value) {
             p.set(exponents.first, exponents.second, value);
         }, rdoc::__call)
+        .def("__iter__", [](const Laurent2<Integer>& p) {
+            return
+                pybind11::make_iterator<pybind11::return_value_policy::copy>(p);
+        }, pybind11::keep_alive<0, 1>(), // iterator keeps polynomial alive
+            rdoc::__iter__)
         .def(pybind11::self *= Integer(), rdoc::__imul)
         .def(pybind11::self /= Integer(), rdoc::__idiv)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
