@@ -1796,6 +1796,95 @@ TEST_F(LinkTest, affineIndex) {
     }
 }
 
+static void verifyTheta(const TestCase& test,
+        const regina::Laurent2<regina::Integer>& expected) {
+    SCOPED_TRACE_CSTRING(test.name);
+
+    Link clone(test.link, false);
+    EXPECT_FALSE(clone.knowsAlexander(true));
+    EXPECT_EQ(clone.theta(), expected);
+    EXPECT_TRUE(clone.knowsAlexander(true));
+
+    // Verify that the Alexander polynomial computed as a side-effect of theta
+    // matches the Alexander polynomial that we compute directly.
+    EXPECT_EQ(Link(test.link, false).alexander(), clone.alexander());
+
+    // Verify that theta behaves as conjectured under simple transformations.
+    {
+        // Reversal should not change theta (Bar-Natan / van der Veen,
+        // Conjecture 22).
+        Link reverse(test.link, false);
+        reverse.reverse();
+        EXPECT_EQ(reverse.theta(), expected);
+    }
+    {
+        // Reflection should negate theta (Bar-Natan / van der Veen,
+        // Conjecture 21).
+        Link reflect(test.link, false);
+        reflect.reflect();
+        EXPECT_EQ(reflect.theta(), -expected);
+    }
+}
+
+TEST_F(LinkTest, theta) {
+    // For classical knots, the affine index polynomial is always zero.
+    verifyTheta(unknot0, {});
+    verifyTheta(unknot1, {});
+    verifyTheta(unknot3, {});
+    verifyTheta(unknotMonster, {});
+    // verifyTheta(unknotGordian, {});
+
+    // The polynomial for the left-hand trefoil is taken from the
+    // original Bar-Natan / van der Veen paper.
+    static const regina::Laurent2<regina::Integer> thetaTrefoilLeft {
+        {-2,-2,-1}, {-2,-1,1}, {-2,0,-1}, {-1,-2,1}, {-1,1,1}, {0,-2,-1},
+        {0,2,-1}, {1,-1,1}, {1,2,1}, {2,0,-1}, {2,1,1}, {2,2,-1} };
+
+    verifyTheta(trefoilLeft, thetaTrefoilLeft);
+    verifyTheta(trefoilRight, -thetaTrefoilLeft);
+    verifyTheta(trefoil_r1x2, -thetaTrefoilLeft);
+    verifyTheta(trefoil_r1x6, -thetaTrefoilLeft);
+
+    verifyTheta(figureEight, {});
+    verifyTheta(figureEight_r1x2, {});
+
+    // TODO: Add conway and kinoshitaTerasaka once we can independently
+    // verify the results.  Do not test gst, since this is a bit slow.
+
+    // The next two results follow from Bar-Natan / van der Veen's Fact 23
+    // (theta_0 is additive under knot composition, and so theta is additive
+    // after multiplying by the relevant Alexander polynomials)).
+    verifyTheta(rht_rht, thetaTrefoilLeft * -2 *
+        regina::Laurent2<regina::Integer>({{1,0,1}, {0,0,-1}, {-1,0,1}}) *
+        regina::Laurent2<regina::Integer>({{0,1,1}, {0,0,-1}, {0,-1,1}}) *
+        regina::Laurent2<regina::Integer>({{1,1,1}, {0,0,-1}, {-1,-1,1}}));
+    verifyTheta(rht_lht, {});
+
+    // The theta invariant is not available for empty, virtual, and/or
+    // multiple-component links.
+    EXPECT_THROW({ empty.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_0.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink3_0.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r2.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ unlink2_r1r1.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ hopf.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ whitehead.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ borromean.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot0.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot1.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ trefoil_unknot_overlap.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ adams6_28.link.theta(); }, FailedPrecondition);
+
+    EXPECT_THROW({ virtualTrefoil.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ kishino.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ gpv.link.theta(); }, FailedPrecondition);
+
+    EXPECT_THROW({ virtualLink2.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualLink3.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualTrefoilx2.link.theta(); }, FailedPrecondition);
+    EXPECT_THROW({ virtualDisconnected.link.theta(); }, FailedPrecondition);
+}
+
 static void verifyComplementBasic(const Link& link, const char* name) {
     SCOPED_TRACE_CSTRING(name);
 

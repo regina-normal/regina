@@ -224,8 +224,12 @@ const Laurent2<Integer>& Link::theta() const {
     if (theta_.has_value())
         return *theta_;
 
-    if (size() == 0)
-        return *(theta_ = Laurent2<Integer>{}); // theta(unknot) = 0
+    if (size() == 0) {
+        // We know theta(unknot) = 0.
+        // Cache the Alexander polynomial while we're here also.
+        alexander_ = Polynomial<Integer>{1};
+        return *(theta_ = Laurent2<Integer>{});
+    }
 
     // Choose an arbitrary crossing at which to break the knot open.
     StrandRef breakOpen = crossings_.front()->upper();
