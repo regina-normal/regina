@@ -31,6 +31,16 @@
 #include <numeric>
 #include "link/link.h"
 
+/**
+ * Uncomment the following definition to output timing details to stderr.
+ */
+// #define REGINA_TIMING_THETA
+
+#ifdef REGINA_TIMING_THETA
+#include <chrono>
+#include <iostream>
+#endif
+
 namespace regina {
 
 std::vector<long> Link::longRotations(StrandRef breakOpen) const {
@@ -247,6 +257,11 @@ const Laurent2<Integer>& Link::theta() const {
         } while (s != breakOpen);
     }
 
+#ifdef REGINA_TIMING_THETA
+    using namespace std::literals; // to enable syntax like 1ms
+    auto stage0 = std::chrono::steady_clock::now();
+#endif
+
     // Build the matrix A whose determinant yields (after appropriate
     // normalisation) the Alexander polynomial.
     auto a = Matrix<Laurent<Integer>>::identity(2 * n + 1);
@@ -275,6 +290,12 @@ const Laurent2<Integer>& Link::theta() const {
 
     long shift = -(writhe() + std::reduce(rot.begin(), rot.end())) / 2;
     // The normalised Alexander polynomial is ∆ = (det * x^shift).
+
+#ifdef REGINA_TIMING_THETA
+    auto stage1 = std::chrono::steady_clock::now();
+    std::cerr << "Stage 1 (adj/det): "
+        << (stage1 - stage0) / 1ms << "ms" << std::endl;
+#endif
 
     // We are trying to avoid denominators, so we do not compute F1, F2 and F3
     // directly.  See below for what we compute instead.
@@ -457,6 +478,12 @@ const Laurent2<Integer>& Link::theta() const {
     }
     if (needCoeff != 0)
         throw ImpossibleScenario("theta(): cannot divide by y-1");
+
+#ifdef REGINA_TIMING_THETA
+    auto stage2 = std::chrono::steady_clock::now();
+    std::cerr << "Stage 2 (combine): "
+        << (stage2 - stage1) / 1ms << "ms" << std::endl;
+#endif
 
     if (! alexander_.has_value()) {
         // Stash away a copy of the Alexander polynomial, since we have just
