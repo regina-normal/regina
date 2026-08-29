@@ -381,7 +381,11 @@ const Laurent2<Integer>& Link::theta() const {
     }
 
     // sum2 = sum_{crossings c0, c1} F_2(c0, c1) (y-1) d[0] d[1] d[2]
-    L sum2;
+    //
+    // To avoid polynomial multiplication where possible, we split sum2 into
+    // four sub-sums according to the signs of c0 and c1, and then combine
+    // these outside the loops.
+    L sum2bits[4];
     for (auto c0 : crossings_) {
         size_t i0 = arcOrder[c0->upper().prev().id()];
         size_t j0 = arcOrder[c0->lower().prev().id()];
@@ -390,7 +394,7 @@ const Laurent2<Integer>& Link::theta() const {
             size_t j1 = arcOrder[c1->lower().prev().id()];
             if (c0->sign() > 0) {
                 if (c1->sign() > 0) {
-                    sum2 += u[0] * u[2] *
+                    sum2bits[0] +=
                         L(adj.entry(j1, i0), 1, 0) *
                         L(adj.entry(j0, i1), 1, 1) *
                         L(
@@ -400,7 +404,7 @@ const Laurent2<Integer>& Link::theta() const {
                             adj.entry(i1, j0),
                             0, 1);
                 } else {
-                    sum2 += u[0] * v[2] *
+                    sum2bits[1] +=
                         L(adj.entry(j1, i0), 1, 0) *
                         L(adj.entry(j0, i1), 1, 1) *
                         L(
@@ -412,7 +416,7 @@ const Laurent2<Integer>& Link::theta() const {
                 }
             } else {
                 if (c1->sign() > 0) {
-                    sum2 += v[0] * u[2] *
+                    sum2bits[2] +=
                         L(adj.entry(j1, i0), 1, 0) *
                         L(adj.entry(j0, i1), 1, 1) *
                         L(
@@ -422,7 +426,7 @@ const Laurent2<Integer>& Link::theta() const {
                             adj.entry(i1, j0),
                             0, 1);
                 } else {
-                    sum2 += v[0] * v[2] *
+                    sum2bits[3] +=
                         L(adj.entry(j1, i0), 1, 0) *
                         L(adj.entry(j0, i1), 1, 1) *
                         L(
@@ -435,6 +439,8 @@ const Laurent2<Integer>& Link::theta() const {
             }
         }
     }
+    L sum2 = u[0] * u[2] * sum2bits[0] + u[0] * v[2] * sum2bits[1] +
+        v[0] * u[2] * sum2bits[2] + v[0] * v[2] * sum2bits[3];
 
     // sum3 = sum_{edges k} 2 F_3(k) * det, as a Laurent polynomial in T3 := xy
     Laurent<Integer> sum3;

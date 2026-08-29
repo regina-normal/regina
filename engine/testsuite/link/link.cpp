@@ -1835,7 +1835,7 @@ TEST_F(LinkTest, theta) {
     // verifyTheta(unknotGordian, {});
 
     // The polynomial for the left-hand trefoil is taken from the
-    // original Bar-Natan / van der Veen paper.
+    // original Bar-Natan / van der Veen paper (where this is Knot[3,1]).
     static const regina::Laurent2<regina::Integer> thetaTrefoilLeft {
         {-2,-2,-1}, {-2,-1,1}, {-2,0,-1}, {-1,-2,1}, {-1,1,1}, {0,-2,-1},
         {0,2,-1}, {1,-1,1}, {1,2,1}, {2,0,-1}, {2,1,1}, {2,2,-1} };
@@ -1848,8 +1848,42 @@ TEST_F(LinkTest, theta) {
     verifyTheta(figureEight, {});
     verifyTheta(figureEight_r1x2, {});
 
-    // TODO: Add conway and kinoshitaTerasaka once we can independently
-    // verify the results.  Do not test gst, since this is a bit slow.
+    // The results for Conway and Kinoshita-Terasaka have been verified against
+    // the output from Dror's Mathematica code, where these knots appear as
+    // Knot["K11n34"] and the _reversal_ of Knot["K11n42"] respectively.
+    // A caveat: the expected Kinoshita-Terasaka output below is taken from
+    // Dror's Knot["K11n42"] - not its reverse - and so our test here assumes
+    // that reversal does not change theta.  This is explicitly conjectured by
+    // Bar-Natan / van der Veen and is tested here by verifyTheta(), and so
+    // this does seem a safe assumption for the purpose of the test suite.
+    verifyTheta(conway, {
+        {-6,-4,-1}, {-6,-3,2}, {-6,-2,-1},
+        {-5,-5,2}, {-5,-4,-2}, {-5,-1,-2}, {-5,0,2},
+        {-4,-6,-1}, {-4,-5,-2}, {-4,-4,2}, {-4,-2,2}, {-4,0,2}, {-4,1,-2},
+            {-4,2,-1},
+        {-3,-6,2}, {-3,-2,-1}, {-3,-1,-1}, {-3,3,2},
+        {-2,-6,-1}, {-2,-4,2}, {-2,-3,-1}, {-2,-2,-2}, {-2,0,-2}, {-2,1,-1},
+            {-2,2,2}, {-2,4,-1},
+        {-1,-5,-2}, {-1,-3,-1}, {-1,-1,4}, {-1,0,4}, {-1,2,-1}, {-1,4,-2},
+        {0,-5,2}, {0,-4,2}, {0,-2,-2}, {0,-1,4}, {0,0,-12}, {0,1,4}, {0,2,-2},
+            {0,4,2}, {0,5,2},
+        {1,-4,-2}, {1,-2,-1}, {1,0,4}, {1,1,4}, {1,3,-1}, {1,5,-2},
+        {2,-4,-1}, {2,-2,2}, {2,-1,-1}, {2,0,-2}, {2,2,-2}, {2,3,-1}, {2,4,2},
+            {2,6,-1},
+        {3,-3,2}, {3,1,-1}, {3,2,-1}, {3,6,2},
+        {4,-2,-1}, {4,-1,-2}, {4,0,2}, {4,2,2}, {4,4,2}, {4,5,-2}, {4,6,-1},
+        {5,0,2}, {5,1,-2}, {5,4,-2}, {5,5,2},
+        {6,2,-1}, {6,3,2}, {6,4,-1} });
+    verifyTheta(kinoshitaTerasaka, {
+        {-3,-2,1}, {-3,-1,1},
+        {-2,-3,1}, {-2,-2,-2}, {-2,-1,-2}, {-2,0,-2}, {-2,1,1},
+        {-1,-3,1}, {-1,-2,-2}, {-1,-1,2}, {-1,0,2}, {-1,1,-2}, {-1,2,1},
+        {0,-2,-2}, {0,-1,2}, {0,1,2}, {0,2,-2},
+        {1,-2,1}, {1,-1,-2}, {1,0,2}, {1,1,2}, {1,2,-2}, {1,3,1},
+        {2,-1,1}, {2,0,-2}, {2,1,-2}, {2,2,-2}, {2,3,1},
+        {3,1,1}, {3,2,1} });
+
+    // We do not test GST, since this is a bit slow at the present time.
 
     // The next two results follow from Bar-Natan / van der Veen's Fact 23
     // (theta_0 is additive under knot composition, and so theta is additive
