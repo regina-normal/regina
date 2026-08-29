@@ -317,74 +317,76 @@ const Laurent2<Integer>& Link::theta() const {
     const L d01 = d[0] * d[1];
 
     // sum1 = sum_{crossings c} 2 F_1(c) * (y-1) d[0] d[1] d[2]
-    L sum1;
+    L sum1bits[6];
+    long writhe = 0;
     for (auto c : crossings_) {
+        // TODO: We could do a bit more here to push expensive multiplications
+        // outside the loop via more use of sum1bits[...]; however, we leave it
+        // for now since the real bottleneck is computing sum2, not sum1.
         size_t i = arcOrder[c->upper().prev().id()];
         size_t j = arcOrder[c->lower().prev().id()];
         if (c->sign() > 0) {
-            L term1 =
-                L(adj.entry(j, i), 0, 1) *
-                    ( d[2] * L(adj.entry(i, i), 1, 0).shifted(0, 1)
-                    + d[0] * u[2] * L(adj.entry(j, i), 1, 1)
-                    - d[0] * L(adj.entry(j, j), 1, 1).shifted(0, 1)
-                    - d[0] * u[1] * L(adj.entry(i, i), 1, 1))
-                + L(adj.entry(j, j), 0, 1) *
-                    ( d[0] * L(adj.entry(i, i), 1, 1) * 2
-                    - d[2] * L(adj.entry(i, i), 1, 0))
-                + L(adj.entry(j, j), 1, 1) *
-                    ( d[1] * L(adj.entry(i, i), 1, 0)
-                    - d[0] * L(adj.entry(i, i), 0, 1))
-                - d01 * L(adj.entry(i, i), 1, 1);
-            sum1 += u[1] * (d01 * d[2] + std::move(term1) * 2);
+            ++writhe;
+            sum1bits[0] += L(adj.entry(j, i), 0, 1) *
+                ( u[2] * L(adj.entry(j, i), 1, 1)
+                - L(adj.entry(j, j), 1, 1).shifted(0, 1)
+                - u[1] * L(adj.entry(i, i), 1, 1));
+            sum1bits[0] +=
+                L(adj.entry(j, j), 0, 1) * L(adj.entry(i, i), 1, 1) * 2;
+            sum1bits[0] -=
+                L(adj.entry(j, j), 1, 1) * L(adj.entry(i, i), 0, 1);
+            sum1bits[1] += L(adj.entry(j, j), 1, 1) * L(adj.entry(i, i), 1, 0);
+            sum1bits[2] += L(adj.entry(j, i), 0, 1) *
+                L(adj.entry(i, i), 1, 0).shifted(0, 1);
+            sum1bits[2] -= L(adj.entry(j, j), 0, 1) * L(adj.entry(i, i), 1, 0);
+            sum1bits[3] -= L(adj.entry(i, i), 1, 1);
 
-            L term2 = u[0].shifted(0, 1) * L(adj.entry(j, i), 1, 0) *
+            sum1bits[4] += u[0].shifted(0, 1) * L(adj.entry(j, i), 1, 0) *
                 ( d[1] * L(adj.entry(j, j), 1, 1)
                 + d[2] *
                     ( L(adj.entry(j, i).shifted(1), 0, 1)
                     - L(adj.entry(j, j), 0, 1)));
-            L term3 = u[2] * L(adj.entry(j, i), 1, 1) *
+            sum1bits[4] += u[2] * L(adj.entry(j, i), 1, 1) *
                 ( d01
                 - d[1] * L(adj.entry(i, i), 1, 0).shifted(0, 1)
                 + d[0] * L(adj.entry(i, j), 0, 1)
                 + d[0] * x[0] * L(adj.entry(j, j), 0, 1)
-                - d[1] * u[0] * w[0] * L(adj.entry(j, i), 1, 0));
-            sum1 += (std::move(term2) + std::move(term3)) * 2;
+                - d[1] * ( u[0] * w[0] ) * L(adj.entry(j, i), 1, 0));
         } else {
-            L term1 =
-                L(adj.entry(j, i), 0, 1) *
-                    ( d[2] * L(adj.entry(i, i), 1, 0).shifted(0, -1)
-                    + d[0] * v[2] * L(adj.entry(j, i), 1, 1)
-                    - d[0] * L(adj.entry(j, j), 1, 1).shifted(0, -1)
-                    - d[0] * v[1] * L(adj.entry(i, i), 1, 1))
-                + L(adj.entry(j, j), 0, 1) *
-                    ( d[0] * L(adj.entry(i, i), 1, 1) * 2
-                    - d[2] * L(adj.entry(i, i), 1, 0))
-                + L(adj.entry(j, j), 1, 1) *
-                    ( d[1] * L(adj.entry(i, i), 1, 0)
-                    - d[0] * L(adj.entry(i, i), 0, 1))
-                - d01 * L(adj.entry(i, i), 1, 1);
-            sum1 -= u[1] * (d01 * d[2] + std::move(term1) * 2);
+            --writhe;
+            sum1bits[0] -= L(adj.entry(j, i), 0, 1) *
+                ( v[2] * L(adj.entry(j, i), 1, 1)
+                - L(adj.entry(j, j), 1, 1).shifted(0, -1)
+                - v[1] * L(adj.entry(i, i), 1, 1));
+            sum1bits[0] -=
+                L(adj.entry(j, j), 0, 1) * L(adj.entry(i, i), 1, 1) * 2;
+            sum1bits[0] +=
+                L(adj.entry(j, j), 1, 1) * L(adj.entry(i, i), 0, 1);
+            sum1bits[1] -= L(adj.entry(j, j), 1, 1) * L(adj.entry(i, i), 1, 0);
+            sum1bits[2] -= L(adj.entry(j, i), 0, 1) *
+                L(adj.entry(i, i), 1, 0).shifted(0, -1);
+            sum1bits[2] += L(adj.entry(j, j), 0, 1) * L(adj.entry(i, i), 1, 0);
+            sum1bits[3] += L(adj.entry(i, i), 1, 1);
 
-            L term2 = v[0].shifted(0, -1) * L(adj.entry(j, i), 1, 0) *
+            sum1bits[5] += v[0].shifted(0, -1) * L(adj.entry(j, i), 1, 0) *
                 ( d[1] * L(adj.entry(j, j), 1, 1)
                 + d[2] *
                     ( L(adj.entry(j, i).shifted(-1), 0, 1)
                     - L(adj.entry(j, j), 0, 1)));
-            L term3 = v[2] * L(adj.entry(j, i), 1, 1) *
+            sum1bits[5] += v[2] * L(adj.entry(j, i), 1, 1) *
                 ( d01
                 - d[1] * L(adj.entry(i, i), 1, 0).shifted(0, -1)
                 + d[0] * L(adj.entry(i, j), 0, 1)
                 + d[0] * x[1] * L(adj.entry(j, j), 0, 1)
-                - d[1] * v[0] * w[1] * L(adj.entry(j, i), 1, 0));
-            sum1 += (std::move(term2) + std::move(term3)).shifted(0, 1) * 2;
+                - d[1] * ( v[0] * w[1] ) * L(adj.entry(j, i), 1, 0));
         }
     }
+    L sum1 = u[1] * d01 * d[2] * writhe +
+        (u[1] * 2) * (d01 * sum1bits[3] +
+            (d[0] * sum1bits[0] + d[1] * sum1bits[1] + d[2] * sum1bits[2])) +
+        (std::move(sum1bits[4]) + std::move(sum1bits[5]).shifted(0, 1)) * 2;
 
     // sum2 = sum_{crossings c0, c1} F_2(c0, c1) (y-1) d[0] d[1] d[2]
-    //
-    // To avoid polynomial multiplication where possible, we split sum2 into
-    // four sub-sums according to the signs of c0 and c1, and then combine
-    // these outside the loops.
     L sum2bits[4];
     for (auto c0 : crossings_) {
         size_t i0 = arcOrder[c0->upper().prev().id()];
