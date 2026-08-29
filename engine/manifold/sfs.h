@@ -149,20 +149,17 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * non-orientable.  Punctures and reflector boundaries in the base orbifold
  * are supported.
  *
- * A Seifert fibred space whose base orbifold has no punctures or
- * reflector boundaries can be placed into one of the six classes
- * \c o1, \c o2, \c n1, \c n2, \c n3 and \c n4, as detailed on page 88
- * of "Seifert Manifolds", Peter Orlik, Springer-Verlag, 1972.
- * These classes describe whether this base surface is orientable, as well
- * as how many of its generators give fibre-reversing paths in the 3-manifold.
+ * At present, reflector arcs in the base orbifold are not supported, but
+ * this may be introduced in future.
  *
- * In the case where the base orbifold has punctures and/or reflector
- * boundaries, we use the five simplified classes \c bo1, \c bo2, \c bn1,
- * \c bn2 and \c bn3.  These classes are not standard terminology (i.e.,
- * they have been created explicitly for Regina), and generally they do not
- * provide enough information to uniquely identify the 3-manifold.  They do
- * however identify whether or not the base orbifold is orientable,
- * and whether or not it contains any fibre-reversing paths.
+ * Any Seifert fibred space can be placed into one of the six bundle types
+ * \c o1, \c o2, \c n1, \c n2, \c n3 and \c n4, as detailed in "On the
+ * complexity of non-orientable Seifert fibre spaces", A. Cattabriga,
+ * S. Matveev, M. Mulazzani, and T. Nasybullov, Indiana University
+ * Mathematics Journal, 69(2):pp. 421-451, 2020. These bundle types describe
+ * whether the base orbifold is orientable, as well as how many generators of
+ * the complement of the cone points give fibre-reversing paths in the
+ * 3-manifold.
  *
  * When describing punctures and reflector boundaries, a _twisted_
  * boundary is one that gives a fibre-reversing path, and an _untwisted_
@@ -189,6 +186,21 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * SFSpace still requires a non-trivial (but constant sized) amount of data to
  * be copied even in a move operation.
  *
+ * \warning In Regina 7.4.1 and earlier, instead of the six bundle types
+ * described above, Seifert fibred spaces were placed into one of eleven
+ * classes as follows:
+ * - If the base orbifold had no punctures or reflector boundaries, then the
+ *   Seifert fibred space was placed into one of the six classes \c o1, \c o2,
+ *   \c n1, \c n2, \c n3 and \c n4, as detailed on page 88 of "Seifert
+ *   Manifolds", Peter Orlik, Springer-Verlag, 1972. These old classes are
+ *   essentially equivalent to the corresponding new bundle types.
+ * - If the base orbifold had punctures and/or reflector boundaries, then the
+ *   Seifert fibred space was placed into one of five simplified classes
+ *   \c bo1, \c bo2, \c bn1, \c bn2 and \c bn3. These classes were not
+ *   standard terminology (i.e., they were created explicitly for Regina), and
+ *   generally they did not provide enough information to uniquely identify
+ *   the 3-manifold.
+ *
  * \warning In Regina 4.2.1 and earlier, this class was named NSFS.
  * As of Regina 4.3, this class was renamed due to significant changes of
  * behaviour (it became more general, and also now keeps the obstruction
@@ -205,12 +217,57 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
 class SFSpace : public Manifold<3> {
     public:
         /**
-         * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3, \c n4
-         * for base orbifolds without boundaries, plus five classes
-         * \c bo1, \c b02, \c bn1, \c bn2, \c bn3 for base orbifolds
-         * with boundaries.
+         * A list of the six bundle types \c o1, \c o2, \c n1, \c n2, \c n3,
+         * \c n4 for a Seifert fibre space.
          */
-        enum class Class {
+         enum class BundleType {
+            /**
+             * Indicates that the base orbifold is orientable, and that in the
+             * surface given by the complement of the cone points, none of the
+             * generators give fibre-reversing paths.
+             */
+            o1 = 101,
+            /**
+             * Indicates that the base orbifold is orientable, and that in the
+             * surface given by the complement of the cone points, all of the
+             * generators give fibre-reversing paths.
+             */
+            o2 = 102,
+            /**
+             * Indicates that the base orbifold is non-orientable, and that in
+             * the surface given by the complement of the cone points, none of
+             * the generators give fibre-reversing paths.
+             */
+            n1 = 201,
+            /**
+             * Indicates that the base orbifold is non-orientable, and that in
+             * the surface given by the complement of the cone points, all of
+             * the generators give fibre-reversing paths.
+             */
+            n2 = 202,
+            /**
+             * Indicates that the base orbifold is non-orientable, that it has
+             * non-orientable genus at least two, and that in the surface given
+             * by the complement of the cone points, precisely one of the
+             * generators gives a fibre-reversing path.
+             */
+            n3 = 203,
+            /**
+             * Indicates that the base orbifold is non-orientable, that it has
+             * non-orientable genus at least three, and that in the surface
+             * given by the complement of the cone points, precisely two of
+             * the generators give fibre-reversing paths.
+             */
+            n4 = 204,
+        };
+
+        /**
+         * A deprecated enumeration of the six classes \c o1, \c o2, \c n1,
+         * \c n2, \c n3, \c n4 for base orbifolds without boundaries, plus
+         * five classes \c bo1, \c b02, \c bn1, \c bn2, \c bn3 for base
+         * orbifolds with boundaries.
+         */
+         enum class [[deprecated]] Class {
             /**
              * Indicates that the base orbifold is orientable with
              * no punctures or reflector boundaries, and that none
@@ -380,6 +437,8 @@ class SFSpace : public Manifold<3> {
          * Class::bn3.
          */
         [[deprecated]] inline static constexpr Class bn3 = Class::bn3;
+
+    //TODO Replace Class enumeration with BundleType
 
     private:
         Class class_;
