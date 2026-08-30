@@ -780,6 +780,28 @@ class Laurent :
          */
         Laurent<T>& subtractFrom(const Laurent<T>& other);
 
+        /**
+         * Multiplies the two given polynomials using the classical algorithm.
+         *
+         * This involves scanning through the coefficients of both polynomials
+         * in a pair of nested loops, and so to multiply two polynomials with
+         * degree span \a n it uses `O(n^2)` operations on type \a T.
+         *
+         * \pre Both \a a and \a b contain more than one non-zero coefficient.
+         */
+        static Laurent multClassic(const Laurent<T>& a, const Laurent<T>& b);
+
+        /**
+         * Multiplies the two given polynomials using Karatsuba's
+         * divide-and-conquer algorithm.
+         *
+         * To multiply two polynomials with degree span \a n, this requires
+         * `O(n^(log₂ 3)) ≃ O(n^1.585)` operations on type \a T.
+         *
+         * \pre Both \a a and \a b contain more than one non-zero coefficient.
+         */
+        static Laurent multKaratsuba(const Laurent<T>& a, const Laurent<T>& b);
+
     template <CoefficientDomain U>
     friend Laurent<U> operator + (const Laurent<U>&, const Laurent<U>&);
 
@@ -2008,22 +2030,43 @@ Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs) {
 }
 
 template <CoefficientDomain T>
-Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
-    if (lhs.isZero() || rhs.isZero())
-        return Laurent<T>(); // zero
-
-    // std::cerr << "Laurent: deep copy (const *)" << std::endl;
-    long i, j;
-    T* coeff = new T[lhs.maxExp_ - lhs.minExp_ + rhs.maxExp_ - rhs.minExp_ + 1];
-    for (i = lhs.minExp_; i <= lhs.maxExp_; ++i)
-        for (j = rhs.minExp_; j <= rhs.maxExp_; ++j)
-            coeff[i + j - lhs.minExp_ - rhs.minExp_] +=
-                (lhs.coeff_[i - lhs.base_] * rhs.coeff_[j - rhs.base_]);
+Laurent<T> Laurent<T>::multClassic(const Laurent<T>& a, const Laurent<T>& b) {
+    T* coeff = new T[a.maxExp_ - a.minExp_ + b.maxExp_ - b.minExp_ + 1];
+    for (long i = a.minExp_; i <= a.maxExp_; ++i)
+        for (long j = b.minExp_; j <= b.maxExp_; ++j)
+            coeff[i + j - a.minExp_ - b.minExp_] +=
+                (a.coeff_[i - a.base_] * b.coeff_[j - b.base_]);
 
     // Note: the final minExp/maxExp coefficients will both be non-zero,
-    // since the same is true of both lhs and rhs.
-    return Laurent<T>(lhs.minExp_ + rhs.minExp_, lhs.maxExp_ + rhs.maxExp_,
-        coeff);
+    // since the same is true of both a and b.
+    return Laurent<T>(a.minExp_ + b.minExp_, a.maxExp_ + b.maxExp_, coeff);
+}
+
+template <CoefficientDomain T>
+Laurent<T> Laurent<T>::multKaratsuba(const Laurent<T>& a, const Laurent<T>& b) {
+    // TODO
+    return {};
+}
+
+template <CoefficientDomain T>
+Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
+    if (lhs.minExp_ == lhs.maxExp_) {
+        const T& scalar = lhs.coeff_[lhs.minExp_ - lhs.base_];
+        if (scalar == 0)
+            return {}; // zero
+        else
+            return (rhs * scalar).shifted(lhs.minExp_);
+    } else if (rhs.minExp_ == rhs.maxExp_) {
+        const T& scalar = rhs.coeff_[rhs.minExp_ - rhs.base_];
+        if (scalar == 0)
+            return {}; // zero
+        else
+            return (lhs * scalar).shifted(rhs.minExp_);
+    } else {
+        // Both polynomials have more than one non-zero coefficient.
+        // TODO
+        return Laurent<T>::multClassic(lhs, rhs);
+    }
 }
 
 } // namespace regina

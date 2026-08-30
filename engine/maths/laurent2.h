@@ -1207,7 +1207,7 @@ Laurent2<T>& Laurent2<T>::operator *= (const Laurent2<T>& other) {
             T term = left.second * right.second;
             auto result = ans.emplace(e, term);
             if (! result.second)
-                result.first->second += term;
+                result.first->second += std::move(term);
         }
 
     coeff_.clear();
@@ -1407,7 +1407,7 @@ inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
             T term = left.second * right.second;
             auto result = ans.coeff_.emplace(e, term);
             if (! result.second)
-                result.first->second += term;
+                result.first->second += std::move(term);
         }
 
     // We might have zeroed out some coefficients.
