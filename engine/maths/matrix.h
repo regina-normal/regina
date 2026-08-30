@@ -1154,16 +1154,19 @@ class Matrix : public Output<Matrix<T>> {
          */
         template <typename U>
         Matrix<decltype(T() * U())> operator * (const Matrix<U>& other) const
-                requires Ring<decltype(T() * U())> {
+                requires Ring<T> && Ring<U> && Ring<decltype(T() * U())> {
             using Ans = decltype(T() * U());
             Matrix<Ans> ans(this->rows_, other.cols_);
 
             for (size_t row = 0; row < rows_; ++row)
                 for (size_t col = 0; col < other.cols_; ++col) {
-                    ans.data_[row][col] = RingTraits<Ans>::zero;
+                    if constexpr (! RingTraits<Ans>::zeroInitialised)
+                        ans.data_[row][col] = RingTraits<Ans>::zero;
                     for (size_t k = 0; k < cols_; ++k)
-                        ans.data_[row][col] +=
-                            (data_[row][k] * other.data_[k][col]);
+                        if (data_[row][k] != RingTraits<T>::zero &&
+                                other.data_[k][col] != RingTraits<U>::zero)
+                            ans.data_[row][col] +=
+                                (data_[row][k] * other.data_[k][col]);
                 }
 
             return ans;
@@ -1189,7 +1192,7 @@ class Matrix : public Output<Matrix<T>> {
          */
         template <typename U>
         Vector<decltype(T() * U())> operator * (const Vector<U>& other) const
-                requires Ring<decltype(T() * U())> {
+                requires Ring<T> && Ring<U> && Ring<decltype(T() * U())> {
             using Ans = decltype(T() * U());
             Vector<Ans> ans(this->rows_);
 
@@ -1197,7 +1200,9 @@ class Matrix : public Output<Matrix<T>> {
             for (row = 0; row < rows_; ++row) {
                 Ans elt = RingTraits<Ans>::zero;
                 for (col = 0; col < cols_; ++col)
-                    elt += (data_[row][col] * other[col]);
+                    if (data_[row][col] != RingTraits<T>::zero &&
+                            other[col] != RingTraits<U>::zero)
+                        elt += (data_[row][col] * other[col]);
                 ans[row] = elt;
             }
 
