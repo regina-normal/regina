@@ -399,21 +399,15 @@ const Laurent2<Integer>& Link::theta() const {
                     sum2bits[0] +=
                         L(adj.entry(j1, i0), 1, 0) *
                         L(adj.entry(j0, i1), 1, 1) *
-                        L(
-                            adj.entry(i1, i0).shifted(1) +
-                            adj.entry(j1, j0) -
-                            adj.entry(j1, i0).shifted(1) -
-                            adj.entry(i1, j0),
+                        L((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
+                            adj.entry(j1, j0) - adj.entry(i1, j0),
                             0, 1);
                 } else {
                     sum2bits[1] +=
                         L(adj.entry(j1, i0), 1, 0) *
                         L(adj.entry(j0, i1), 1, 1) *
-                        L(
-                            adj.entry(i1, i0).shifted(2) +
-                            adj.entry(j1, j0).shifted(1) -
-                            adj.entry(j1, i0).shifted(2) -
-                            adj.entry(i1, j0).shifted(1),
+                        L(((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
+                            adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1),
                             0, 1);
                 }
             } else {
@@ -421,21 +415,15 @@ const Laurent2<Integer>& Link::theta() const {
                     sum2bits[2] +=
                         L(adj.entry(j1, i0), 1, 0) *
                         L(adj.entry(j0, i1), 1, 1) *
-                        L(
-                            adj.entry(i1, i0).shifted(-1) +
-                            adj.entry(j1, j0) -
-                            adj.entry(j1, i0).shifted(-1) -
-                            adj.entry(i1, j0),
+                        L((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(-1) +
+                            adj.entry(j1, j0) - adj.entry(i1, j0),
                             0, 1);
                 } else {
                     sum2bits[3] +=
                         L(adj.entry(j1, i0), 1, 0) *
                         L(adj.entry(j0, i1), 1, 1) *
-                        L(
-                            adj.entry(i1, i0) +
-                            adj.entry(j1, j0).shifted(1) -
-                            adj.entry(j1, i0) -
-                            adj.entry(i1, j0).shifted(1),
+                        L((adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
+                            adj.entry(i1, i0) - adj.entry(j1, i0),
                             0, 1);
                 }
             }

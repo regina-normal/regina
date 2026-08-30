@@ -482,18 +482,56 @@ class Laurent :
          * Multiplies this polynomial by `x^s` for some integer \a s.
          * This polynomial will be changed directly.
          *
+         * This operation is very fast (it runs in small constant time).
+         *
          * \param s the power of \a x to multiply by.
          */
         void shift(long s);
 
         /**
-         * Returns the product of this polynomial with `x^s` for some integer
-         * \a s.  This polynomial will not be changed.
+         * A non-destructive routine that returns the product of this polynomial
+         * with `x^s` for some integer \a s.  This polynomial is not changed.
+         *
+         * If your polynomial is disposable (i.e., you will never need to use it
+         * again), then it is must faster to use the rvalue reference version of
+         * this function, which runs in small constant time (since it does not
+         * need to create a deep copy of this polynomial to store the result).
+         * To do this, replace `poly.shifted(s)` with
+         * `std::move(poly).shifted(s)`.
          *
          * \param s the power of \a x to multiply by.
          * \return the product of this with `x^s`.
          */
-        Laurent shifted(long s) const;
+        Laurent shifted(long s) const&;
+
+        /**
+         * A destructive routine that returns the product of this polynomial
+         * with `x^s` for some integer \a s.
+         *
+         * Here "destructive" means that this routine edits the polynomial
+         * in-place (as opposed to allocating a new polynomial to store the
+         * result).  For this reason, it is declared as an rvalue reference
+         * member function: it should only be used if you do not care about
+         * the contents of the original polynomial afterwards.
+         *
+         * This operation is very fast (it runs in small constant time).
+         *
+         * To use this destructive function, you can call
+         * `std::move(poly).shifted(s)`.
+         *
+         * If you need to preserve the contents of this polynomial, you should
+         * instead call the const version of this function, which you can
+         * access in the usual way as `poly.shifted(s)`.  The cost of this
+         * constness will be the linear-time overhead of creating a deep copy
+         * of this polynomial to store the result.
+         *
+         * \nopython Only the const version of this function is available for
+         * Python users.
+         *
+         * \param s the power of \a x to multiply by.
+         * \return the product of this with `x^s`.
+         */
+        Laurent shifted(long s) &&;
 
         /**
          * Multiplies all exponents in this polynomial by \a k for some
@@ -1280,10 +1318,16 @@ inline void Laurent<T>::shift(long s) {
 }
 
 template <CoefficientDomain T>
-inline Laurent<T> Laurent<T>::shifted(long s) const {
+inline Laurent<T> Laurent<T>::shifted(long s) const & {
     Laurent ans(*this);
     ans.shift(s);
     return ans;
+}
+
+template <CoefficientDomain T>
+inline Laurent<T> Laurent<T>::shifted(long s) && {
+    shift(s);
+    return std::move(*this);
 }
 
 template <CoefficientDomain T>
