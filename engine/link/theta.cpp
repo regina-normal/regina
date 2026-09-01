@@ -322,7 +322,8 @@ const Laurent2<Integer>& Link::theta() const {
     for (auto c : crossings_) {
         // TODO: We could do a bit more here to push expensive multiplications
         // outside the loop via more use of sum1bits[...]; however, we leave it
-        // for now since the real bottleneck is computing sum2, not sum1.
+        // for now since the real bottleneck in this "accumulation stage" of
+        // the algorithm is computing sum2, not sum1.
         size_t i = arcOrder[c->upper().prev().id()];
         size_t j = arcOrder[c->lower().prev().id()];
         if (c->sign() > 0) {
