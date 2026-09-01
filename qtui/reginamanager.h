@@ -49,7 +49,7 @@ class ReginaMain;
 class ReginaManager : public QApplication {
     public:
         ReginaManager(int &argc, char** argv);
-        
+
         ReginaMain* newWindow(bool firstWindow);
 
         void aboutToClose(ReginaMain *child);
