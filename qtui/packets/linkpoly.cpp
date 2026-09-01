@@ -224,6 +224,47 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
     blockLayout->addSpacing(10);
     layout->addWidget(homflyBlock);
 
+    // ---------- Theta polynomial ----------
+
+    thetaBlock = new QWidget();
+    blockLayout = new QVBoxLayout(thetaBlock);
+    blockLayout->setContentsMargins(0, 0, 0, 0);
+    blockLayout->setSpacing(0);
+
+    label = new QLabel(tr("<b>Theta</b>"), ui);
+    msg = tr("The θ polynomial of this link.<p>"
+        "The θ polynomial (due to Bar-Natan and van der Veen) is a "
+        "Laurent polynomial in the variables (<i>T</i>₁, <i>T</i>₂).  "
+        "Regina only computes θ polynomials for knots, not "
+        "multiple-component links.");
+    label->setWhatsThis(msg);
+    blockLayout->addWidget(label);
+
+    blockLayout->addSpacing(5);
+
+    sublayout = new QHBoxLayout();
+    sublayout->setContentsMargins(0, 0, 0, 0);
+    sublayout->setSpacing(0);
+    theta = new QLabel(ui);
+    theta->setWordWrap(true);
+    theta->setWhatsThis(msg);
+    sublayout->addWidget(theta, 1);
+    btnTheta = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnTheta->setToolTip(tr("Calculate the θ polynomial"));
+    btnTheta->setWhatsThis(tr("<qt>Calculate the θ polynomial "
+        "of this link.<p>"
+        "<b>Warning:</b> This calculation is polynomial time, but it may "
+        "still be a little slow for larger links (which is why the "
+        "θ polynomial is not always computed automatically).</qt>"));
+    sublayout->addWidget(btnTheta);
+    connect(btnTheta, &QPushButton::clicked, this,
+        &LinkPolynomialUI::calculateTheta);
+    blockLayout->addLayout(sublayout);
+
+    blockLayout->addSpacing(10);
+    layout->addWidget(thetaBlock);
+
     // ---------- Kauffman bracket ----------
 
     auto* bracketBlock = new QWidget();
@@ -342,6 +383,7 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
     alexander->setContextMenuPolicy(Qt::CustomContextMenu);
     jones->setContextMenuPolicy(Qt::CustomContextMenu);
     homfly->setContextMenuPolicy(Qt::CustomContextMenu);
+    theta->setContextMenuPolicy(Qt::CustomContextMenu);
     bracket->setContextMenuPolicy(Qt::CustomContextMenu);
     affineIndex->setContextMenuPolicy(Qt::CustomContextMenu);
     arrow->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -352,6 +394,8 @@ LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
         &LinkPolynomialUI::contextJones);
     connect(homfly, &QWidget::customContextMenuRequested, this,
         &LinkPolynomialUI::contextHomfly);
+    connect(theta, &QWidget::customContextMenuRequested, this,
+        &LinkPolynomialUI::contextTheta);
     connect(bracket, &QWidget::customContextMenuRequested, this,
         &LinkPolynomialUI::contextBracket);
     connect(affineIndex, &QWidget::customContextMenuRequested, this,
@@ -472,6 +516,42 @@ void LinkPolynomialUI::refresh() {
         homflyBlock->setVisible(false);
     }
 
+    if (link->isClassical()) {
+        if (link->isEmpty()) {
+            btnTheta->setVisible(false);
+            theta->setText("Not available for empty links");
+            QPalette pal = theta->palette();
+            pal.setColor(theta->foregroundRole(), Qt::darkGray);
+            theta->setPalette(pal);
+        } else if (link->countComponents() > 1) {
+            btnTheta->setVisible(false);
+            theta->setText("Not available for multiple-component links");
+            QPalette pal = theta->palette();
+            pal.setColor(theta->foregroundRole(), Qt::darkGray);
+            theta->setPalette(pal);
+        } else if (link->knowsTheta() ||
+                link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
+            btnTheta->setVisible(false);
+            if (unicode)
+                theta->setText(link->theta().utf8(
+                    Link::thetaVarX, Link::thetaVarY).c_str());
+            else
+                theta->setText(link->theta().str("T1", "T2").c_str());
+            QPalette pal = theta->palette();
+            pal.setColor(theta->foregroundRole(), Qt::black);
+            theta->setPalette(pal);
+        } else {
+            theta->setText(tr("Unknown"));
+            QPalette pal = theta->palette();
+            pal.setColor(theta->foregroundRole(), Qt::darkGray);
+            theta->setPalette(pal);
+            btnTheta->setVisible(true);
+        }
+        thetaBlock->setVisible(true);
+    } else {
+        thetaBlock->setVisible(false);
+    }
+
     if (link->knowsBracket() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         btnBracket->setVisible(false);
         if (unicode)
@@ -541,7 +621,7 @@ void LinkPolynomialUI::refresh() {
 
 void LinkPolynomialUI::calculateAlexander() {
     PatienceDialog* dlg = PatienceDialog::warn(tr(
-        "Computing Alexander polynomial is polynomial time,\n"
+        "Computing the Alexander polynomial is polynomial time,\n"
         "but it can still be a little slow for larger diagrams.\n\n"
         "Please be patient."), ui);
     link->alexander();
@@ -577,6 +657,18 @@ void LinkPolynomialUI::calculateHomfly() {
     dlg.hide();
 
     // Now calling homfly() should be instantaneous.
+    refresh();
+}
+
+void LinkPolynomialUI::calculateTheta() {
+    PatienceDialog* dlg = PatienceDialog::warn(tr(
+        "Computing the θ polynomial is polynomial time,\n"
+        "but it can still be a little slow for larger diagrams.\n\n"
+        "Please be patient."), ui);
+    link->theta();
+    delete dlg;
+
+    // Now calling theta() should be instantaneous.
     refresh();
 }
 
@@ -667,6 +759,27 @@ void LinkPolynomialUI::contextHomfly(const QPoint& pos) {
     m.addAction(&copyPlain);
 
     m.exec(homfly->mapToGlobal(pos));
+}
+
+void LinkPolynomialUI::contextTheta(const QPoint& pos) {
+    if (! link->knowsTheta())
+        return;
+
+    QMenu m(tr("Context menu"), theta);
+
+    QAction copy("Copy", this);
+    QAction copyPlain("Copy plain text", this);
+    connect(&copy, &QAction::triggered, this, [this]() {
+        QApplication::clipboard()->setText(theta->text());
+    });
+    connect(&copyPlain, &QAction::triggered, this, [this]() {
+        QApplication::clipboard()->setText(
+            link->theta().str("T1", "T2").c_str());
+    });
+    m.addAction(&copy);
+    m.addAction(&copyPlain);
+
+    m.exec(theta->mapToGlobal(pos));
 }
 
 void LinkPolynomialUI::contextBracket(const QPoint& pos) {

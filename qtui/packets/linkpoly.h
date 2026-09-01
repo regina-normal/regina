@@ -62,17 +62,20 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         QWidget* ui;
         QWidget* alexanderBlock;
         QWidget* homflyBlock;
+        QWidget* thetaBlock;
         QWidget* affineIndexBlock;
         QWidget* arrowBlock;
         QLabel* alexander;
         QLabel* jones;
         QLabel* homfly;
+        QLabel* theta;
         QLabel* bracket;
         QLabel* affineIndex;
         QLabel* arrow;
         QAbstractButton* btnAlexander;
         QAbstractButton* btnJones;
         QAbstractButton* btnHomfly;
+        QAbstractButton* btnTheta;
         QAbstractButton* btnBracket;
         QAbstractButton* btnArrow;
         QRadioButton* btnAZ;
@@ -98,6 +101,7 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         void calculateAlexander();
         void calculateJones();
         void calculateHomfly();
+        void calculateTheta();
         void calculateBracket();
         void calculateArrow();
 
@@ -117,6 +121,7 @@ class LinkPolynomialUI : public QObject, public PacketViewerTab {
         void contextAlexander(const QPoint& pos);
         void contextJones(const QPoint& pos);
         void contextHomfly(const QPoint& pos);
+        void contextTheta(const QPoint& pos);
         void contextBracket(const QPoint& pos);
         void contextAffineIndex(const QPoint& pos);
         void contextArrow(const QPoint& pos);
