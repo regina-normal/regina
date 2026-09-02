@@ -387,6 +387,12 @@ const Laurent2<Integer>& Link::theta() const {
             (d[0] * sum1bits[0] + d[1] * sum1bits[1] + d[2] * sum1bits[2])) +
         (std::move(sum1bits[4]) + std::move(sum1bits[5]).shifted(0, 1)) * 2;
 
+#ifdef REGINA_TIMING_THETA
+    auto stage2 = std::chrono::steady_clock::now();
+    std::cerr << "Stage 2 (comb #1): "
+        << (stage2 - stage1) / 1ms << "ms" << std::endl;
+#endif
+
     // sum2 = sum_{crossings c0, c1} F_2(c0, c1) (y-1) d[0] d[1] d[2]
     L sum2bits[4];
     for (auto c0 : crossings_) {
@@ -433,6 +439,12 @@ const Laurent2<Integer>& Link::theta() const {
     L sum2 = u[0] * u[2] * sum2bits[0] + u[0] * v[2] * sum2bits[1] +
         v[0] * u[2] * sum2bits[2] + v[0] * v[2] * sum2bits[3];
 
+#ifdef REGINA_TIMING_THETA
+    auto stage3 = std::chrono::steady_clock::now();
+    std::cerr << "Stage 3 (comb #2): "
+        << (stage3 - stage2) / 1ms << "ms" << std::endl;
+#endif
+
     // sum3 = sum_{edges k} 2 F_3(k) * det, as a Laurent polynomial in T3 := xy
     Laurent<Integer> sum3;
     for (size_t id = 0; id < 2 * n; ++id)
@@ -477,9 +489,11 @@ const Laurent2<Integer>& Link::theta() const {
         throw ImpossibleScenario("theta(): cannot divide by y-1");
 
 #ifdef REGINA_TIMING_THETA
-    auto stage2 = std::chrono::steady_clock::now();
-    std::cerr << "Stage 2 (combine): "
-        << (stage2 - stage1) / 1ms << "ms" << std::endl;
+    auto stage4 = std::chrono::steady_clock::now();
+    std::cerr << "Stage 4 (comb #3): "
+        << (stage4 - stage3) / 1ms << "ms" << std::endl;
+    std::cerr << "Total: "
+        << (stage4 - stage0) / 1ms << "ms" << std::endl;
 #endif
 
     if (! alexander_.has_value()) {
