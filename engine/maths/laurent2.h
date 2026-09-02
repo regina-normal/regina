@@ -684,6 +684,7 @@ class Laurent2 :
             coeff_.clear();
             if (constant != 0)
                 coeff_.emplace(Exponents(0, 0), constant);
+            return *this;
         }
 
         /**
@@ -701,6 +702,7 @@ class Laurent2 :
             coeff_.clear();
             if (constant != 0)
                 coeff_.emplace(Exponents(0, 0), std::move(constant));
+            return *this;
         }
 
         /**
@@ -723,6 +725,7 @@ class Laurent2 :
             coeff_.clear();
             if (constant)
                 coeff_.emplace(Exponents(0, 0), constant);
+            return *this;
         }
 
         /**

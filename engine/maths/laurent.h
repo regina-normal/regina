@@ -1623,6 +1623,7 @@ inline Laurent<T>& Laurent<T>::operator = (const T& constant) {
     } else {
         coeff_ = nullptr;
     }
+    return *this;
 }
 
 template <CoefficientDomain T>
@@ -1635,6 +1636,7 @@ inline Laurent<T>& Laurent<T>::operator = (T&& constant) {
     } else {
         coeff_ = nullptr;
     }
+    return *this;
 }
 
 template <CoefficientDomain T>
@@ -1648,6 +1650,7 @@ inline Laurent<T>& Laurent<T>::operator = (IntType constant) {
     } else {
         coeff_ = nullptr;
     }
+    return *this;
 }
 
 template <CoefficientDomain T>
