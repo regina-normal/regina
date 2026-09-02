@@ -715,8 +715,6 @@ class Laurent2 :
          * integer types without overflow will depend on how well such integer
          * types are supported by the coefficient type \a T.
          *
-         * \python It is assumed that the type \a IntType is \c long.
-         *
          * \param constant the value to assign to this constant polynomial.
          * \return a reference to this polynomial.
          */
