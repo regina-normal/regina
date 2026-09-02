@@ -151,6 +151,24 @@ class LaurentTest : public testing::Test {
             }
         }
 
+        template <typename T, regina::CppInteger U>
+        void verifyMult(const Laurent<T>& x, U y,
+                long minExp, std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_INTEGER(y);
+
+            verifyEqual(x * y, minExp, coeffs);
+            verifyEqual((x + zero) * y, minExp, coeffs);
+            verifyEqual(y * x, minExp, coeffs);
+            verifyEqual(y * (x + zero), minExp, coeffs);
+            {
+                Laurent<T> z(x);
+                verifyEqual(z *= y, minExp, coeffs);
+            }
+
+            verifyMult(x, T(y), minExp, coeffs);
+        }
+
         template <typename T>
         void verifyDiv(const Laurent<T>& x, const T& y,
                 long minExp, std::initializer_list<T> coeffs) {

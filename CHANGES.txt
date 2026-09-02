@@ -315,16 +315,26 @@ Version 8.0  [ TODO ]
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Laurent(exp) and
               initialiser init(exp), which were deprecated in Regina 7.4.
+            - New constructors, assignment operators and comparison operators
+              that create or compare against a constant polynomial, given by a
+              coefficient of type T or a native C++ integer.
             - New const routine shifted().
             - Now supports iteration over coefficients.
+            - New overloads for scalar multiplication and division that take
+              native C++ integers.
         Class Laurent2<T>:
             - New constructor that converts a single-variable Laurent polynomial
               into a two-variable Laurent polynomial.
             - Removed the exponent-based constructor Laurent2(xExp, yExp) and
               initialiser init(xExp, yExp), which were deprecated in Regina 7.4.
+            - New constructors, assignment operators and comparison operators
+              that create or compare against a constant polynomial, given by a
+              coefficient of type T or a native C++ integer.
             - New routines shift() and shifted().
             - Now supports iteration over non-zero coefficients and their
               corresponding exponent pairs.
+            - New overloads for scalar multiplication and division that take
+              native C++ integers.
         Class LightweightSequence<T>:
             - Removed the inner class SubsequenceCompareFirst<...>.
               This was a very specialised class designed specifically for
@@ -489,8 +499,13 @@ Version 8.0  [ TODO ]
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Polynomial(degree) and
               initialiser init(degree), which were deprecated in Regina 7.4.
+            - New constructors, assignment operators and comparison operators
+              that create or compare against a constant polynomial, given by a
+              coefficient of type T or a native C++ integer.
             - New const routine shifted().
             - Now supports iteration over coefficients.
+            - New overloads for scalar multiplication and division that take
+              native C++ integers.
         Class Primes:
             - The python-only routines primeDecompInt() and
               primePowerDecompInt() are now just overloads for primeDecomp()

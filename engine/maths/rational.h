@@ -367,10 +367,11 @@ class Rational {
          * \python This spaceship operator `x <=> y` is not available, but the
          * other comparison operators that it generates _are_ available.
          *
+         * \param compare the rational against which this will be compared.
          * \return the result of the numerical comparison between this
          * and the given rational.
          */
-        std::strong_ordering operator <=> (const Rational&) const;
+        std::strong_ordering operator <=> (const Rational& compare) const;
 
         /**
          * Attempts to convert this rational to a real number.

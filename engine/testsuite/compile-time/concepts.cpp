@@ -192,10 +192,10 @@ static_assert(regina::IntegerCompatible<LargeInteger>);
 static_assert(regina::IntegerCompatible<Rational>);
 static_assert(! regina::IntegerCompatible<regina::Matrix2>);
 static_assert(! regina::IntegerCompatible<regina::Arrow>);
-static_assert(! regina::IntegerCompatible<regina::Polynomial<Integer>>);
-static_assert(! regina::IntegerCompatible<regina::Polynomial<Rational>>);
-static_assert(! regina::IntegerCompatible<regina::Laurent<Integer>>);
-static_assert(! regina::IntegerCompatible<regina::Laurent2<Integer>>);
+static_assert(regina::IntegerCompatible<regina::Polynomial<Integer>>);
+static_assert(regina::IntegerCompatible<regina::Polynomial<Rational>>);
+static_assert(regina::IntegerCompatible<regina::Laurent<Integer>>);
+static_assert(regina::IntegerCompatible<regina::Laurent2<Integer>>);
 
 static_assert(regina::IntegerComparable<char>);
 static_assert(regina::IntegerComparable<int>);
@@ -207,8 +207,8 @@ static_assert(! regina::IntegerComparable<regina::Matrix2>);
 static_assert(! regina::IntegerComparable<regina::Arrow>);
 static_assert(! regina::IntegerComparable<regina::Polynomial<Integer>>);
 static_assert(! regina::IntegerComparable<regina::Polynomial<Rational>>);
-static_assert(! regina::IntegerComparable<regina::Laurent<Integer>>);
-static_assert(! regina::IntegerComparable<regina::Laurent2<Integer>>);
+static_assert(regina::IntegerComparable<regina::Laurent<Integer>>);
+static_assert(regina::IntegerComparable<regina::Laurent2<Integer>>);
 
 static_assert(! regina::Negatable<int>);
 static_assert(! regina::Negatable<unsigned>);
@@ -288,8 +288,8 @@ static_assert(! regina::CoefficientDomain<regina::Matrix2>);
 static_assert(! regina::CoefficientDomain<regina::Arrow>);
 static_assert(! regina::CoefficientDomain<regina::Polynomial<Integer>>);
 static_assert(! regina::CoefficientDomain<regina::Polynomial<Rational>>);
-static_assert(! regina::CoefficientDomain<regina::Laurent<Integer>>);
-static_assert(! regina::CoefficientDomain<regina::Laurent2<Integer>>);
+static_assert(regina::CoefficientDomain<regina::Laurent<Integer>>);
+static_assert(regina::CoefficientDomain<regina::Laurent2<Integer>>);
 static_assert(! regina::CoefficientDomain<regina::Cyclotomic>);
 
 static_assert(! regina::Field<int>);

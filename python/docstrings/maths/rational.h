@@ -66,6 +66,9 @@ Python:
     This spaceship operator ``x <=> y`` is not available, but the
     other comparison operators that it generates _are_ available.
 
+Parameter ``compare``:
+    the rational against which this will be compared.
+
 Returns:
     the result of the numerical comparison between this and the given
     rational.)doc";

@@ -145,6 +145,31 @@ Parameter ``scalar``:
 Returns:
     the quotient of the given polynomial by the given scalar.)doc";
 
+// Docstring regina::python::doc::Laurent2::__div_2
+static constexpr const char __div_2[] =
+R"doc(Divides the given polynomial by the given scalar constant.
+
+This uses the division operator ``/=`` for the coefficient type *T*.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``poly``:
+    the polynomial to divide by the given scalar.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    the quotient of the given polynomial by the given scalar.)doc";
+
 // Docstring regina::python::doc::Laurent2::__eq
 static constexpr const char __eq[] =
 R"doc(Tests whether this and the given polynomial are equal.
@@ -154,6 +179,35 @@ Parameter ``rhs``:
 
 Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
+
+// Docstring regina::python::doc::Laurent2::__eq_2
+static constexpr const char __eq_2[] =
+R"doc(Tests whether this polynomial is equal to the given constant.
+
+Parameter ``constant``:
+    the value to compare this polynomial against.
+
+Returns:
+    ``True`` if and only if this polynomial is equal to the given
+    constant.)doc";
+
+// Docstring regina::python::doc::Laurent2::__eq_3
+static constexpr const char __eq_3[] =
+R"doc(Tests whether this polynomial is equal to the given integer constant.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``constant``:
+    the integer to compare this polynomial against.
+
+Returns:
+    ``True`` if and only if this polynomial is equal to the given
+    integer constant.)doc";
 
 // Docstring regina::python::doc::Laurent2::__iadd
 static constexpr const char __iadd[] =
@@ -183,6 +237,28 @@ Parameter ``scalar``:
 Returns:
     a reference to this polynomial.)doc";
 
+// Docstring regina::python::doc::Laurent2::__idiv_2
+static constexpr const char __idiv_2[] =
+R"doc(Divides this polynomial by the given integer constant.
+
+This uses the division operator ``/=`` for the coefficient type *T*.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    a reference to this polynomial.)doc";
+
 // Docstring regina::python::doc::Laurent2::__imul
 static constexpr const char __imul[] =
 R"doc(Multiplies this polynomial by the given constant.
@@ -195,6 +271,23 @@ Returns:
 
 // Docstring regina::python::doc::Laurent2::__imul_2
 static constexpr const char __imul_2[] =
+R"doc(Multiplies this polynomial by the given integer constant.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``scalar``:
+    the scalar factor to multiply by.
+
+Returns:
+    a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__imul_3
+static constexpr const char __imul_3[] =
 R"doc(Multiplies this by the given polynomial.
 
 This and the given polynomial need not have the same range of non-zero
@@ -251,6 +344,33 @@ Parameter ``end``:
 
 // Docstring regina::python::doc::Laurent2::__init_3
 static constexpr const char __init_3[] =
+R"doc(Creates a new polynomial with a single constant term, equal to the
+given value.
+
+There is no problem if the given value is zero.
+
+Parameter ``constant``:
+    the value of this new constant polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__init_4
+static constexpr const char __init_4[] =
+R"doc(Creates a new polynomial with a single integer constant term.
+
+There is no problem if the given constant is zero (though you can also
+construct the zero polynomial by passing no arguments at all).
+
+The extent to which this constructor can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``constant``:
+    the value of this new polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__init_5
+static constexpr const char __init_5[] =
 R"doc(Creates a new two-variable Laurent polynomial from a one-variable
 Laurent polynomial.
 
@@ -334,6 +454,26 @@ Returns:
 static constexpr const char __mul_2[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.
 
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Laurent2::__mul_3
+static constexpr const char __mul_3[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
 The scalar is simply of type *T*; we use the identical type
 Laurent2<T>::Coefficient here to assist with C++ template type
 matching.
@@ -347,8 +487,28 @@ Parameter ``poly``:
 Returns:
     the product of the given polynomial and scalar.)doc";
 
-// Docstring regina::python::doc::Laurent2::__mul_3
-static constexpr const char __mul_3[] =
+// Docstring regina::python::doc::Laurent2::__mul_4
+static constexpr const char __mul_4[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Laurent2::__mul_5
+static constexpr const char __mul_5[] =
 R"doc(Multiplies the two given polynomials.
 
 The two polynomials need not have the same range of non-zero

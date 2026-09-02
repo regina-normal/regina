@@ -40,6 +40,7 @@ using namespace pybind11::literals;
 
 using pybind11::overload_cast;
 using regina::Polynomial;
+using regina::python::doc::common::neq_value;
 
 template <regina::CoefficientDomain T>
 void addPolynomialOver(pybind11::module_& m, const char* className) {
@@ -51,6 +52,8 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         .def(pybind11::init([](const std::vector<T>& coeffs) {
             return new Polynomial<T>(coeffs.begin(), coeffs.end());
         }), "coefficients"_a, rdoc::__init)
+        .def(pybind11::init<const T&>(), rdoc::__init_2)
+        .def(pybind11::init<long>(), rdoc::__init_3)
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
         .def("init", static_cast<void (Polynomial<T>::*)()>(
@@ -87,19 +90,28 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         .def("utf8", overload_cast<const char*>(
             &Polynomial<T>::utf8, pybind11::const_), rdoc::utf8)
         .def(pybind11::self *= T(), rdoc::__imul)
+        .def(pybind11::self *= long(), rdoc::__imul_2)
         .def(pybind11::self /= T(), rdoc::__idiv)
+        .def(pybind11::self /= long(), rdoc::__idiv_2)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
-        .def(pybind11::self *= pybind11::self, rdoc::__imul_2)
-        .def(pybind11::self /= pybind11::self, rdoc::__idiv_2)
+        .def(pybind11::self *= pybind11::self, rdoc::__imul_3)
+        .def(pybind11::self /= pybind11::self, rdoc::__idiv_3)
         .def(pybind11::self * T(), rdoc::__mul)
-        .def(T() * pybind11::self, rdoc::__mul_2)
+        .def(pybind11::self * long(), rdoc::__mul_2)
+        .def(T() * pybind11::self, rdoc::__mul_3)
+        .def(long() * pybind11::self, rdoc::__mul_4)
         .def(pybind11::self / T(), rdoc::__div)
+        .def(pybind11::self / long(), rdoc::__div_2)
         .def(pybind11::self + pybind11::self, rdoc::__add)
         .def(pybind11::self - pybind11::self, rdoc::__sub_2)
-        .def(pybind11::self * pybind11::self, rdoc::__mul_3)
-        .def(pybind11::self / pybind11::self, rdoc::__div_2)
+        .def(pybind11::self * pybind11::self, rdoc::__mul_5)
+        .def(pybind11::self / pybind11::self, rdoc::__div_3)
         .def(- pybind11::self, rdoc::__sub)
+        .def(pybind11::self == T(), rdoc::__eq_2)
+        .def(pybind11::self == long(), rdoc::__eq_3)
+        .def(pybind11::self != T(), neq_value)
+        .def(pybind11::self != long(), neq_value)
         .def("divisionAlg", overload_cast<const Polynomial<T>&>(
             &Polynomial<T>::divisionAlg, pybind11::const_),
             rdoc::divisionAlg)

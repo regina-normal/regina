@@ -277,6 +277,54 @@ class Laurent2 :
         }
 
         /**
+         * Creates a new polynomial with a single constant term, equal to the
+         * given value.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value of this new constant polynomial.
+         */
+        Laurent2(const T& constant) {
+            if (constant != 0)
+                coeff_.emplace(Exponents(0, 0), constant);
+        }
+
+        /**
+         * Creates a new polynomial with a single constant term, whose
+         * contents will be moved out of the given value.
+         *
+         * The value that was passed (\a constant) will no longer be usable.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value of this new constant polynomial.
+         */
+        Laurent2(T&& constant) {
+            if (constant != 0)
+                coeff_.emplace(Exponents(0, 0), std::move(constant));
+        }
+
+        /**
+         * Creates a new polynomial with a single integer constant term.
+         *
+         * There is no problem if the given constant is zero (though you can
+         * also construct the zero polynomial by passing no arguments at all).
+         *
+         * The extent to which this constructor can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param constant the value of this new polynomial.
+         */
+        template <CppInteger IntType>
+        Laurent2(IntType constant) {
+            if (constant)
+                coeff_.emplace(Exponents(0, 0), constant);
+        }
+
+        /**
          * Creates a new two-variable Laurent polynomial from a one-variable
          * Laurent polynomial.
          *
@@ -506,6 +554,51 @@ class Laurent2 :
         }
 
         /**
+         * Tests whether this polynomial is equal to the given constant.
+         *
+         * \param constant the value to compare this polynomial against.
+         * \return \c true if and only if this polynomial is equal to the
+         * given constant.
+         */
+        bool operator == (const T& constant) const {
+            if (constant == 0)
+                return coeff_.empty();
+            else {
+                if (coeff_.size() != 1)
+                    return false;
+                const auto& term = *coeff_.begin();
+                return (term.first.first == 0 && term.first.second == 0 &&
+                    term.second == constant);
+            }
+        }
+
+        /**
+         * Tests whether this polynomial is equal to the given integer constant.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param constant the integer to compare this polynomial against.
+         * \return \c true if and only if this polynomial is equal to the
+         * given integer constant.
+         */
+        template <CppInteger IntType>
+        bool operator == (IntType constant) const {
+            if (constant == 0)
+                return coeff_.empty();
+            else {
+                if (coeff_.size() != 1)
+                    return false;
+                const auto& term = *coeff_.begin();
+                return (term.first.first == 0 && term.first.second == 0 &&
+                    term.second == constant);
+            }
+        }
+
+        /**
          * Compares this against the given polynomial under a total
          * ordering of all two-variable Laurent polynomials.
          *
@@ -577,6 +670,60 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         Laurent2& operator = (Laurent2<T>&& value) noexcept = default;
+
+        /**
+         * Sets this to the polynomial with a single constant term, equal to
+         * the given value.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        Laurent2& operator = (const T& constant) {
+            coeff_.clear();
+            if (constant != 0)
+                coeff_.emplace(Exponents(0, 0), constant);
+        }
+
+        /**
+         * Sets this to the polynomial with a single constant term, whose
+         * contents will be moved out of the given value.
+         *
+         * The value that was passed (\a constant) will no longer be usable.
+         *
+         * There is no problem if the given value is zero.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        Laurent2& operator = (T&& constant) {
+            coeff_.clear();
+            if (constant != 0)
+                coeff_.emplace(Exponents(0, 0), std::move(constant));
+        }
+
+        /**
+         * Sets this to the polynomial with a single integer constant term,
+         * equal to the given value.
+         *
+         * There is no problem if the given constant is zero.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param constant the value to assign to this constant polynomial.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Laurent2& operator = (IntType constant) {
+            coeff_.clear();
+            if (constant)
+                coeff_.emplace(Exponents(0, 0), constant);
+        }
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -675,6 +822,31 @@ class Laurent2 :
         }
 
         /**
+         * Multiplies this polynomial by the given integer constant.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param scalar the scalar factor to multiply by.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Laurent2& operator *= (IntType scalar) {
+            if (scalar == 0) {
+                // All coefficients become zero.
+                coeff_.clear();
+            } else {
+                // No coefficients become zero that were not zero already.
+                for (auto& c : coeff_)
+                    c.second *= scalar;
+            }
+            return *this;
+        }
+
+        /**
          * Divides this polynomial by the given constant.
          *
          * This uses the division operator `/=` for the coefficient type \a T.
@@ -685,6 +857,32 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         Laurent2& operator /= (const T& scalar) {
+            for (auto& c : coeff_)
+                c.second /= scalar;
+
+            // For integer division, we could have zeroed out some coefficients.
+            removeZeroes();
+            return *this;
+        }
+
+        /**
+         * Divides this polynomial by the given integer constant.
+         *
+         * This uses the division operator `/=` for the coefficient type \a T.
+         *
+         * The extent to which this operator can handle large native
+         * integer types without overflow will depend on how well such integer
+         * types are supported by the coefficient type \a T.
+         *
+         * \pre The argument \a scalar is non-zero.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param scalar the scalar factor to divide by.
+         * \return a reference to this polynomial.
+         */
+        template <CppInteger IntType>
+        Laurent2& operator /= (IntType scalar) {
             for (auto& c : coeff_)
                 c.second /= scalar;
 
@@ -1034,6 +1232,28 @@ Laurent2<T> operator * (Laurent2<T> poly,
 /**
  * Multiplies the given polynomial by the given scalar constant.
  *
+ * The extent to which this operator can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param poly the polynomial to multiply by.
+ * \param scalar the scalar to multiply by.
+ * \return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Laurent2<T> operator * (Laurent2<T> poly, IntType scalar) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
  * The scalar is simply of type \a T; we use the identical type
  * Laurent2<T>::Coefficient here to assist with C++ template type matching.
  *
@@ -1046,6 +1266,28 @@ Laurent2<T> operator * (Laurent2<T> poly,
 template <CoefficientDomain T>
 Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
         Laurent2<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The extent to which this operator can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param scalar the scalar to multiply by.
+ * \param poly the polynomial to multiply by.
+ * \return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Laurent2<T> operator * (IntType scalar, Laurent2<T> poly) {
     // See the notes above on a possible optimisation for scalar == 0.
     poly *= scalar;
     return poly;
@@ -1070,6 +1312,31 @@ Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
 template <CoefficientDomain T>
 Laurent2<T> operator / (Laurent2<T> poly,
         const typename Laurent2<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
+}
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator `/=` for the coefficient type \a T.
+ *
+ * The extent to which this operator can handle large native
+ * integer types without overflow will depend on how well such integer
+ * types are supported by the coefficient type \a T.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param poly the polynomial to divide by the given scalar.
+ * \param scalar the scalar factor to divide by.
+ * \return the quotient of the given polynomial by the given scalar.
+ *
+ * \ingroup maths
+ */
+template <CoefficientDomain T, CppInteger IntType>
+Laurent2<T> operator / (Laurent2<T> poly, IntType scalar) {
     poly /= scalar;
     return poly;
 }
