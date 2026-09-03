@@ -43,6 +43,72 @@
 
 namespace regina {
 
+namespace {
+    /**
+     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * polynomial `p(x)` (where the second variable \a y does not appear).
+     *
+     * The two-variable polynomial will be presented as a Laurent polynomial
+     * in \a x, whose coefficients are Laurent polynomials in \a y.
+     */
+    Laurent<Laurent<Integer>> T1(const Laurent<Integer>& poly) {
+        return { poly.minExp(), poly.begin(), poly.end() };
+    }
+
+    /**
+     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * polynomial `p(y)` (where the first variable \a x does not appear).
+     *
+     * The two-variable polynomial will be presented as a Laurent polynomial
+     * in \a x, whose coefficients are Laurent polynomials in \a y.
+     */
+    Laurent<Laurent<Integer>> T2(const Laurent<Integer>& poly) {
+        return { poly };
+    }
+
+    /**
+     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * polynomial `p(y)` (where the first variable \a x does not appear).
+     *
+     * The two-variable polynomial will be presented as a Laurent polynomial
+     * in \a x, whose coefficients are Laurent polynomials in \a y.
+     */
+    Laurent<Laurent<Integer>> T2(Laurent<Integer>&& poly) {
+        return { std::move(poly) };
+    }
+
+    /**
+     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * polynomial `p(xy)`.
+     *
+     * The two-variable polynomial will be presented as a Laurent polynomial
+     * in \a x, whose coefficients are Laurent polynomials in \a y.
+     */
+    Laurent<Laurent<Integer>> T3(const Laurent<Integer>& poly) {
+        Laurent<Laurent<Integer>> ans(poly.minExp(), poly.begin(), poly.end());
+        for (long i = ans.minExp(); i <= ans.maxExp(); ++i)
+            ans.set(i, ans[i].shifted(i)); // TODO: avoid deep copies here
+        return ans;
+    }
+
+    /**
+     * Converts between representations of two-variable Laurent polynomials.
+     *
+     * The input is a Laurent polynomial in \a x, whose coefficients are
+     * Laurent polynomials in \a y.  The output is a "native" two-variable
+     * Laurent polynomial.
+     */
+    Laurent2<Integer> conv(const Laurent<Laurent<Integer>>& poly) {
+        Laurent2<Integer> ans;
+        for (long i = poly.minExp(); i <= poly.maxExp(); ++i) {
+            const auto& coeff = poly[i];
+            for (long j = coeff.minExp(); j <= coeff.maxExp(); ++j)
+                ans.set(i, j, coeff[j]);
+        }
+        return ans;
+    }
+}
+
 std::vector<long> Link::longRotations(StrandRef breakOpen) const {
     if (isEmpty())
         throw FailedPrecondition("longRotation() requires a non-empty knot");
@@ -394,7 +460,7 @@ const Laurent2<Integer>& Link::theta() const {
 #endif
 
     // sum2 = sum_{crossings c0, c1} F_2(c0, c1) (y-1) d[0] d[1] d[2]
-    L sum2bits[4];
+    Laurent<Laurent<Integer>> sum2bits[4];
     for (auto c0 : crossings_) {
         size_t i0 = arcOrder[c0->upper().prev().id()];
         size_t j0 = arcOrder[c0->lower().prev().id()];
@@ -404,40 +470,38 @@ const Laurent2<Integer>& Link::theta() const {
             if (c0->sign() > 0) {
                 if (c1->sign() > 0) {
                     sum2bits[0] +=
-                        L(adj.entry(j1, i0), 1, 0) *
-                        L(adj.entry(j0, i1), 1, 1) *
-                        L((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
-                            adj.entry(j1, j0) - adj.entry(i1, j0),
-                            0, 1);
+                        T1(adj.entry(j1, i0)) *
+                        T3(adj.entry(j0, i1)) *
+                        T2((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
+                            adj.entry(j1, j0) - adj.entry(i1, j0));
                 } else {
                     sum2bits[1] +=
-                        L(adj.entry(j1, i0), 1, 0) *
-                        L(adj.entry(j0, i1), 1, 1) *
-                        L(((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
-                            adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1),
-                            0, 1);
+                        T1(adj.entry(j1, i0)) *
+                        T3(adj.entry(j0, i1)) *
+                        T2(((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
+                            adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1));
                 }
             } else {
                 if (c1->sign() > 0) {
                     sum2bits[2] +=
-                        L(adj.entry(j1, i0), 1, 0) *
-                        L(adj.entry(j0, i1), 1, 1) *
-                        L((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(-1) +
-                            adj.entry(j1, j0) - adj.entry(i1, j0),
-                            0, 1);
+                        T1(adj.entry(j1, i0)) *
+                        T3(adj.entry(j0, i1)) *
+                        T2((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(-1) +
+                            adj.entry(j1, j0) - adj.entry(i1, j0));
                 } else {
                     sum2bits[3] +=
-                        L(adj.entry(j1, i0), 1, 0) *
-                        L(adj.entry(j0, i1), 1, 1) *
-                        L((adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
-                            adj.entry(i1, i0) - adj.entry(j1, i0),
-                            0, 1);
+                        T1(adj.entry(j1, i0)) *
+                        T3(adj.entry(j0, i1)) *
+                        T2((adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
+                            adj.entry(i1, i0) - adj.entry(j1, i0));
                 }
             }
         }
     }
-    L sum2 = u[0] * u[2] * sum2bits[0] + u[0] * v[2] * sum2bits[1] +
-        v[0] * u[2] * sum2bits[2] + v[0] * v[2] * sum2bits[3];
+    const Laurent<Integer> uBase(0, {-1,1}), vBase(-1, {1,-1});
+    L sum2 = conv(
+        T1(uBase) * ( T3(uBase) * sum2bits[0] + T3(vBase) * sum2bits[1]) +
+        T1(vBase) * ( T3(uBase) * sum2bits[2] + T3(vBase) * sum2bits[3]));
 
 #ifdef REGINA_TIMING_THETA
     auto stage3 = std::chrono::steady_clock::now();
