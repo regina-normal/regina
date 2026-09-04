@@ -102,6 +102,8 @@ concept SameModCVRef =
  * Such functions are typically provided when in-place negation is more
  * efficient than the usual `x = -x` (which makes a temporary deep copy).
  *
+ * \nopython
+ *
  * \ingroup concepts
  */
 template <typename T>
@@ -114,6 +116,8 @@ concept Negatable =
  * Such functions are typically provided when `x.addProduct(y, z)` can be made
  * more efficient than the usual sequence of operators `x += y * z` (which
  * requires the creation of a temporary object).
+ *
+ * \nopython
  *
  * \ingroup concepts
  */
