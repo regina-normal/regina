@@ -737,6 +737,21 @@ changed.
 Returns:
     the absolute value of this integer.)doc";
 
+// Docstring regina::python::doc::IntegerBase::addProduct
+static constexpr const char addProduct[] =
+R"doc(Adds the product of the two given integers to this integer. This is a
+common operation in (for example) inner products and matrix
+multiplication.
+
+Calling ``x.addProduct(y, z)`` is equivalent to, but sometimes faster
+than, calling ``x += y * z``.
+
+Parameter ``x``:
+    the first integer in the product to add to this.
+
+Parameter ``y``:
+    the second integer in the product to add to this.)doc";
+
 // Docstring regina::python::doc::IntegerBase::divByExact
 static constexpr const char divByExact[] =
 R"doc(Divides this by the given integer. This can only be used when the

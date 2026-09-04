@@ -1941,10 +1941,17 @@ Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
     // The following code works even if &other == this, since we construct the
     // coefficients of the product in a separate section of memory.
     T* ans = new T[maxExp_ - minExp_ + other.maxExp_ - other.minExp_ + 1];
-    for (long i = minExp_; i <= maxExp_; ++i)
-        for (long j = other.minExp_; j <= other.maxExp_; ++j)
-            ans[i + j - minExp_ - other.minExp_] +=
-                (coeff_[i - base_] * other.coeff_[j - other.base_]);
+    if constexpr (HasAddProduct<T>) {
+        for (long i = minExp_; i <= maxExp_; ++i)
+            for (long j = other.minExp_; j <= other.maxExp_; ++j)
+                ans[i + j - minExp_ - other.minExp_].addProduct(
+                    coeff_[i - base_], other.coeff_[j - other.base_]);
+    } else {
+        for (long i = minExp_; i <= maxExp_; ++i)
+            for (long j = other.minExp_; j <= other.maxExp_; ++j)
+                ans[i + j - minExp_ - other.minExp_] +=
+                    (coeff_[i - base_] * other.coeff_[j - other.base_]);
+    }
 
     delete[] coeff_;
     coeff_ = ans;
@@ -1958,7 +1965,6 @@ Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
 
 template <CoefficientDomain T>
 inline void Laurent<T>::addProduct(const Laurent<T>& x, const Laurent<T>& y) {
-    // TODO: add rvalue variants
     if (! (x.coeff_ && y.coeff_)) {
         return;
     } else if (std::addressof(x) == this || std::addressof(y) == this) {
@@ -2481,10 +2487,17 @@ Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs) {
 template <CoefficientDomain T>
 Laurent<T> Laurent<T>::multClassic(const Laurent<T>& a, const Laurent<T>& b) {
     T* coeff = new T[a.maxExp_ - a.minExp_ + b.maxExp_ - b.minExp_ + 1];
-    for (long i = a.minExp_; i <= a.maxExp_; ++i)
-        for (long j = b.minExp_; j <= b.maxExp_; ++j)
-            coeff[i + j - a.minExp_ - b.minExp_] +=
-                (a.coeff_[i - a.base_] * b.coeff_[j - b.base_]);
+    if constexpr (HasAddProduct<T>) {
+        for (long i = a.minExp_; i <= a.maxExp_; ++i)
+            for (long j = b.minExp_; j <= b.maxExp_; ++j)
+                coeff[i + j - a.minExp_ - b.minExp_].addProduct(
+                    a.coeff_[i - a.base_], b.coeff_[j - b.base_]);
+    } else {
+        for (long i = a.minExp_; i <= a.maxExp_; ++i)
+            for (long j = b.minExp_; j <= b.maxExp_; ++j)
+                coeff[i + j - a.minExp_ - b.minExp_] +=
+                    (a.coeff_[i - a.base_] * b.coeff_[j - b.base_]);
+    }
 
     // Note: the final minExp/maxExp coefficients will both be non-zero,
     // since the same is true of both a and b.

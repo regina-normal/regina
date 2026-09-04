@@ -263,6 +263,7 @@ Version 8.0  [ TODO ]
             - Now supports ordering comparisons between Integer and
               LargeInteger (in addition to equality comparisons, which were
               already available).
+            - New routine addProduct(), which optimises x += y * z.
             - Functions that work with NativeInteger<bytes> no longer require
               bytes to be a multiple of sizeof(long).
             - The function makeInfinite() is no longer available for Integer

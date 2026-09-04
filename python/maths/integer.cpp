@@ -143,6 +143,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
             rdoc::divByExact_2)
         .def(pybind11::self %= pybind11::self, rdoc::__imod)
         .def(pybind11::self %= long(), rdoc::__imod_2)
+        .def("addProduct", &Int::addProduct, rdoc::addProduct)
         .def("negate", &Int::negate, rdoc::negate)
         .def("raiseToPower", &Int::raiseToPower, rdoc::raiseToPower)
         .def("abs", &Int::abs, rdoc::abs)

@@ -2317,6 +2317,64 @@ TYPED_TEST(IntegerTest, mod) {
     EXPECT_EQ(longMinDec % -LONG_MAX, -2);
 }
 
+TYPED_TEST(IntegerTest, addProduct) {
+    for (const auto& x : this->cases) {
+        SCOPED_TRACE_REGINA(x);
+        for (const auto& y : this->cases) {
+            SCOPED_TRACE_REGINA(y);
+            for (const auto& z : this->cases) {
+                SCOPED_TRACE_REGINA(z);
+                {
+                    TypeParam tmp(x);
+                    tmp.addProduct(y, z);
+                    EXPECT_EQ(tmp, x + y * z);
+                }
+                {
+                    TypeParam tmp(x);
+                    tmp.makeLarge();
+                    EXPECT_FALSE(tmp.isNative());
+                    tmp.addProduct(y, z);
+                    EXPECT_FALSE(tmp.isNative());
+                    EXPECT_EQ(tmp, x + y * z);
+                }
+            }
+            {
+                TypeParam tmp(x);
+                tmp.addProduct(tmp, y);
+                EXPECT_EQ(tmp, x + x * y);
+            }
+            {
+                TypeParam tmp(x);
+                tmp.addProduct(y, tmp);
+                EXPECT_EQ(tmp, x + x * y);
+            }
+        }
+        {
+            TypeParam tmp(x);
+            tmp.addProduct(tmp, tmp);
+            EXPECT_EQ(tmp, x + x * x);
+        }
+
+        if constexpr (TypeParam::supportsInfinity) {
+            {
+                TypeParam tmp(TypeParam::infinity);
+                tmp.addProduct(x, x);
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp(x);
+                tmp.addProduct(TypeParam::infinity, x);
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp(x);
+                tmp.addProduct(x, TypeParam::infinity);
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+        }
+    }
+}
+
 TYPED_TEST(IntegerTest, negate) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);

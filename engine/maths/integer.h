@@ -1237,6 +1237,18 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         template <CppInteger IntType>
         IntegerBase& operator %=(IntType other);
         /**
+         * Adds the product of the two given integers to this integer.
+         * This is a common operation in (for example) inner products
+         * and matrix multiplication.
+         *
+         * Calling `x.addProduct(y, z)` is equivalent to, but sometimes
+         * faster than, calling `x += y * z`.
+         *
+         * \param x the first integer in the product to add to this.
+         * \param y the second integer in the product to add to this.
+         */
+        void addProduct(const IntegerBase& x, const IntegerBase& y);
+        /**
          * Negates this integer.
          * This integer is changed to reflect the result.
          *
@@ -3818,6 +3830,45 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         }
     }
     return *this;
+}
+
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::addProduct(
+        const IntegerBase& x, const IntegerBase& y) {
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return;
+        if (x.isInfinite() || y.isInfinite()) {
+            makeInfinite();
+            return;
+        }
+    }
+
+    // All three arguments (including this) are finite.
+    // Note: in the case where x.small_ or y.small_ == LONG_MIN, this code
+    // should still do the right thing since -LONG_MIN will be cast to an
+    // unsigned long (and therefore take the correct value |LONG_MIN|).
+    if (x != 0 && y != 0) {
+        if (large_) {
+            if (x.large_) {
+                if (y.large_)
+                    mpz_addmul(large_, x.large_, y.large_);
+                else if (y.small_ > 0)
+                    mpz_addmul_ui(large_, x.large_, y.small_);
+                else
+                    mpz_submul_ui(large_, x.large_, -y.small_);
+            } else if (y.large_) {
+                if (x.small_ > 0)
+                    mpz_addmul_ui(large_, y.large_, x.small_);
+                else
+                    mpz_submul_ui(large_, y.large_, -x.small_);
+            } else {
+                (*this) += x * y;
+            }
+        } else {
+            (*this) += x * y;
+        }
+    }
 }
 
 template <bool withInfinity>
