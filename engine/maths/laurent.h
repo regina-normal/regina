@@ -1913,6 +1913,17 @@ Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
         init();
         return *this;
     }
+    if (other.minExp_ == other.maxExp_) {
+        // We can get away without reallocating here.
+        const auto& scalar = other.coeff_[other.minExp_ - other.base_];
+        for (auto it = coeff_ + minExp_ - base_; it <= coeff_ + maxExp_ - base_;
+                ++it)
+            (*it) *= scalar_;
+        base_ += other.minExp_;
+        minExp_ += other.minExp_;
+        maxExp_ += other.minExp_;
+        return *this;
+    }
 
     // The following code works even if &other == this, since we construct the
     // coefficients of the product in a separate section of memory.
