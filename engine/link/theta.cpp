@@ -36,6 +36,13 @@
  */
 // #define REGINA_TIMING_THETA
 
+/**
+ * Uncomment the following definition to use Laurent<Laurent<Integer>> (which
+ * uses C-style arrays without gaps) instead of Laurent2<Integer> (which uses
+ * a std::map) for some of our intermediate calculations.
+ */
+// #define REGINA_ALT_LAURENT2
+
 #ifdef REGINA_TIMING_THETA
 #include <chrono>
 #include <iostream>
@@ -43,6 +50,7 @@
 
 namespace regina {
 
+#ifdef REGINA_ALT_LAURENT2
 namespace {
     /**
      * Converts a single-variable polynomial `p(x)` into the two-variable
@@ -108,6 +116,33 @@ namespace {
         return ans;
     }
 }
+#else
+namespace {
+    /**
+     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * polynomial `p(x)` (where the second variable \a y does not appear).
+     */
+    Laurent2<Integer> T1(const Laurent<Integer>& poly) {
+        return Laurent2<Integer>(poly, 1, 0);
+    }
+
+    /**
+     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * polynomial `p(y)` (where the first variable \a x does not appear).
+     */
+    Laurent2<Integer> T2(const Laurent<Integer>& poly) {
+        return Laurent2<Integer>(poly, 0, 1);
+    }
+
+    /**
+     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * polynomial `p(xy)`.
+     */
+    Laurent2<Integer> T3(const Laurent<Integer>& poly) {
+        return Laurent2<Integer>(poly, 1, 1);
+    }
+}
+#endif
 
 std::vector<long> Link::longRotations(StrandRef breakOpen) const {
     if (isEmpty())
@@ -460,7 +495,11 @@ const Laurent2<Integer>& Link::theta() const {
 #endif
 
     // sum2 = sum_{crossings c0, c1} F_2(c0, c1) (y-1) d[0] d[1] d[2]
+#ifdef REGINA_ALT_LAURENT2
     Laurent<Laurent<Integer>> sum2bits[4];
+#else
+    Laurent2<Integer> sum2bits[4];
+#endif
     for (auto c0 : crossings_) {
         size_t i0 = arcOrder[c0->upper().prev().id()];
         size_t j0 = arcOrder[c0->lower().prev().id()];
@@ -498,10 +537,16 @@ const Laurent2<Integer>& Link::theta() const {
             }
         }
     }
+#ifdef REGINA_ALT_LAURENT2
     const Laurent<Integer> uBase(0, {-1,1}), vBase(-1, {1,-1});
     L sum2 = conv(
         T1(uBase) * ( T3(uBase) * sum2bits[0] + T3(vBase) * sum2bits[1]) +
         T1(vBase) * ( T3(uBase) * sum2bits[2] + T3(vBase) * sum2bits[3]));
+#else
+    L sum2 =
+        u[0] * ( u[2] * sum2bits[0] + v[2] * sum2bits[1]) +
+        v[0] * ( u[2] * sum2bits[2] + v[2] * sum2bits[3]);
+#endif
 
 #ifdef REGINA_TIMING_THETA
     auto stage3 = std::chrono::steady_clock::now();
