@@ -109,6 +109,19 @@ concept Negatable =
     requires(T t) { { t.negate() } -> std::same_as<void>; };
 
 /**
+ * A mathematical type that has an inherent addProduct() function.
+ *
+ * Such functions are typically provided when `x.addProduct(y, z)` can be made
+ * more efficient than the usual sequence of operators `x += y * z` (which
+ * requires the creation of a temporary object).
+ *
+ * \ingroup concepts
+ */
+template <typename T>
+concept HasAddProduct =
+    requires(T t, const T x, const T y) { { t.addProduct(x, y) }; };
+
+/**
  * A type that has the necessary operations to behave like a mathematical ring.
  *
  * \ingroup concepts

@@ -43,7 +43,6 @@ void addConceptsClasses(pybind11::module_& m) {
     RDOC_SCOPE_BEGIN_MAIN
 
     // From core.h:
-    add_concept<rdoc::Negatable>(m, "Negatable");
     add_concept<rdoc::RingLike>(m, "RingLike");
     add_concept<rdoc::Ring>(m, "Ring");
     add_concept<rdoc::CommutativeRing>(m, "CommutativeRing");

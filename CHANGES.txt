@@ -318,6 +318,7 @@ Version 8.0  [ TODO ]
             - New constructors, assignment operators and comparison operators
               that create or compare against a constant polynomial, given by a
               coefficient of type T or a native C++ integer.
+            - New routine addProduct(), which optimises x += y * z.
             - New const routine shifted().
             - Now supports iteration over coefficients.
             - New overloads for scalar multiplication and division that take
@@ -764,9 +765,10 @@ Version 8.0  [ TODO ]
         Concepts:
             - Many new concepts:
               + AssignableTo, CanConstruct, CoefficientDomain, CommutativeRing,
-                Domain, Field, IntegralDomain, Negatable, ReginaBitmask,
-                ReginaQitmask, Ring, RingLike, SameModCVRef, StrictWeakOrder,
-                TerminatingCallback, VoidCallback (defined in concepts/core.h)
+                Domain, Field, HasAddProduct, IntegralDomain, Negatable,
+                ReginaBitmask, ReginaQitmask, Ring, RingLike, SameModCVRef,
+                StrictWeakOrder, TerminatingCallback, VoidCallback
+                (defined in concepts/core.h)
               + InherentlyTightEncodable, Readable, RichStringifiable,
                 StandardStringifiable, Stringifiable, Writable (defined in
                 concepts/io.h)

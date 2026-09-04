@@ -497,6 +497,21 @@ Parameter ``rhs``:
 Returns:
     the difference of the two given polynomials.)doc";
 
+// Docstring regina::python::doc::Laurent::addProduct
+static constexpr const char addProduct[] =
+R"doc(Adds the product of the two given polynomials to this. This is a
+common operation in (for example) inner products and matrix
+multiplication.
+
+Calling ``x.addProduct(y, z)`` is equivalent to, but often faster
+than, calling ``x += y * z``.
+
+Parameter ``x``:
+    the first polynomial in the product to add to this.
+
+Parameter ``y``:
+    the second polynomial in the product to add to this.)doc";
+
 // Docstring regina::python::doc::Laurent::global_swap
 static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given polynomials.

@@ -90,6 +90,7 @@ void addLaurent(pybind11::module_& m) {
         .def("scaleDown", &Laurent<Integer>::scaleDown, rdoc::scaleDown)
         .def("negate", &Laurent<Integer>::negate, rdoc::negate)
         .def("invertX", &Laurent<Integer>::invertX, rdoc::invertX)
+        .def("addProduct", &Laurent<Integer>::addProduct, rdoc::addProduct)
         .def("str", overload_cast<const char*>(
             &Laurent<Integer>::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(

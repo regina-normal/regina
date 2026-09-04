@@ -777,6 +777,19 @@ class Laurent :
         Laurent& operator *= (const Laurent<T>& other);
 
         /**
+         * Adds the product of the two given polynomials to this.
+         * This is a common operation in (for example) inner products
+         * and matrix multiplication.
+         *
+         * Calling `x.addProduct(y, z)` is equivalent to, but often faster
+         * than, calling `x += y * z`.
+         *
+         * \param x the first polynomial in the product to add to this.
+         * \param y the second polynomial in the product to add to this.
+         */
+        void addProduct(const Laurent<T>& x, const Laurent<T>& y);
+
+        /**
          * Writes this polynomial to the given output stream, using the
          * given variable name instead of \c x.
          *
@@ -1918,7 +1931,7 @@ Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
         const auto& scalar = other.coeff_[other.minExp_ - other.base_];
         for (auto it = coeff_ + minExp_ - base_; it <= coeff_ + maxExp_ - base_;
                 ++it)
-            (*it) *= scalar_;
+            (*it) *= scalar;
         base_ += other.minExp_;
         minExp_ += other.minExp_;
         maxExp_ += other.minExp_;
@@ -1941,6 +1954,35 @@ Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
 
     // Both leading coefficients are non-zero, so the degree is correct.
     return *this;
+}
+
+template <CoefficientDomain T>
+inline void Laurent<T>::addProduct(const Laurent<T>& x, const Laurent<T>& y) {
+    // TODO: add rvalue variants
+    if (! (x.coeff_ && y.coeff_)) {
+        return;
+    } else if (std::addressof(x) == this || std::addressof(y) == this) {
+        // TODO: *this *= (y + 1), or *this *= (x + 1)
+        *this += x * y; // here we _need_ the temporary to hold x * y
+    } else {
+        // The following line ensures that coeff_ becomes non-null.
+        reallocateForRange(x.minExp_ + y.minExp_, x.maxExp_ + y.maxExp_);
+
+        if constexpr (HasAddProduct<T>) {
+            for (long i = x.minExp_; i <= x.maxExp_; ++i)
+                for (long j = y.minExp_; j <= y.maxExp_; ++j)
+                    coeff_[i + j - base_].addProduct(
+                        x.coeff_[i - x.base_], y.coeff_[j - y.base_]);
+        } else {
+            for (long i = x.minExp_; i <= x.maxExp_; ++i)
+                for (long j = y.minExp_; j <= y.maxExp_; ++j)
+                    coeff_[i + j - base_] +=
+                        x.coeff_[i - x.base_] * y.coeff_[j - y.base_];
+        }
+
+        // We might have zeroed out some coefficients.
+        fixDegrees();
+    }
 }
 
 template <CoefficientDomain T>

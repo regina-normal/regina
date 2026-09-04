@@ -1163,10 +1163,15 @@ class Matrix : public Output<Matrix<T>> {
                     if constexpr (! RingTraits<Ans>::zeroInitialised)
                         ans.data_[row][col] = RingTraits<Ans>::zero;
                     for (size_t k = 0; k < cols_; ++k)
-                        if (data_[row][k] != RingTraits<T>::zero &&
-                                other.data_[k][col] != RingTraits<U>::zero)
-                            ans.data_[row][col] +=
-                                (data_[row][k] * other.data_[k][col]);
+                        if constexpr (HasAddProduct<Ans>) {
+                            ans.data_[row][col].addProduct(
+                                data_[row][k], other.data_[k][col]);
+                        } else {
+                            if (data_[row][k] != RingTraits<T>::zero &&
+                                    other.data_[k][col] != RingTraits<U>::zero)
+                                ans.data_[row][col] +=
+                                    (data_[row][k] * other.data_[k][col]);
+                        }
                 }
 
             return ans;
@@ -1200,9 +1205,13 @@ class Matrix : public Output<Matrix<T>> {
             for (row = 0; row < rows_; ++row) {
                 Ans elt = RingTraits<Ans>::zero;
                 for (col = 0; col < cols_; ++col)
-                    if (data_[row][col] != RingTraits<T>::zero &&
-                            other[col] != RingTraits<U>::zero)
-                        elt += (data_[row][col] * other[col]);
+                    if constexpr (HasAddProduct<Ans>) {
+                        elt.addProduct(data_[row][col], other[col]);
+                    } else {
+                        if (data_[row][col] != RingTraits<T>::zero &&
+                                other[col] != RingTraits<U>::zero)
+                            elt += (data_[row][col] * other[col]);
+                    }
                 ans[row] = elt;
             }
 
@@ -1845,7 +1854,10 @@ class Matrix : public Output<Matrix<T>> {
             T ans = RingTraits<T>::zero;
             for (size_t i = 0; i < lhs.rows_; ++i)
                 for (size_t j = 0; j < lhs.cols_; ++j)
-                    ans += lhs.data_[i][j] * rhs.data_[j][i];
+                    if constexpr (HasAddProduct<T>)
+                        ans.addProduct(lhs.data_[i][j], rhs.data_[j][i]);
+                    else
+                        ans += lhs.data_[i][j] * rhs.data_[j][i];
             return ans;
         }
 };

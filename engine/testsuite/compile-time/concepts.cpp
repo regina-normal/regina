@@ -225,6 +225,21 @@ static_assert(regina::Negatable<regina::Laurent<Integer>>);
 static_assert(regina::Negatable<regina::Laurent2<Integer>>);
 static_assert(regina::Negatable<regina::Cyclotomic>);
 
+static_assert(! regina::HasAddProduct<int>);
+static_assert(! regina::HasAddProduct<unsigned>);
+static_assert(! regina::HasAddProduct<Integer>);
+static_assert(! regina::HasAddProduct<LargeInteger>);
+static_assert(! regina::HasAddProduct<Rational>);
+static_assert(! regina::HasAddProduct<regina::Vector<int>>);
+static_assert(! regina::HasAddProduct<regina::Matrix2>);
+static_assert(! regina::HasAddProduct<regina::Matrix<int>>);
+static_assert(! regina::HasAddProduct<regina::Arrow>);
+static_assert(! regina::HasAddProduct<regina::Polynomial<Integer>>);
+static_assert(! regina::HasAddProduct<regina::Polynomial<Rational>>);
+static_assert(regina::HasAddProduct<regina::Laurent<Integer>>);
+static_assert(! regina::HasAddProduct<regina::Laurent2<Integer>>);
+static_assert(! regina::HasAddProduct<regina::Cyclotomic>);
+
 static_assert(regina::Ring<int>);
 static_assert(! regina::Ring<unsigned>);
 static_assert(regina::RingLike<unsigned>);
