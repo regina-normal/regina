@@ -3311,7 +3311,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         const IntegerBase& other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans += other;
+    return std::move(ans += other);
 }
 
 template <bool withInfinity>
@@ -3320,7 +3320,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans += other;
+    return std::move(ans += other);
 }
 
 template <bool withInfinity>
@@ -3328,7 +3328,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         const IntegerBase& other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans -= other;
+    return std::move(ans -= other);
 }
 
 template <bool withInfinity>
@@ -3337,7 +3337,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans -= other;
+    return std::move(ans -= other);
 }
 
 template <bool withInfinity>
@@ -3345,7 +3345,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
         const IntegerBase& other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans *= other;
+    return std::move(ans *= other);
 }
 
 template <bool withInfinity>
@@ -3354,7 +3354,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
         IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans *= other;
+    return std::move(ans *= other);
 }
 
 template <bool withInfinity>
@@ -3362,7 +3362,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         const IntegerBase& other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans /= other;
+    return std::move(ans /= other);
 }
 
 template <bool withInfinity>
@@ -3371,7 +3371,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans /= other;
+    return std::move(ans /= other);
 }
 
 template <bool withInfinity>
@@ -3379,7 +3379,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
         const IntegerBase& other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans.divByExact(other);
+    return std::move(ans.divByExact(other));
 }
 
 template <bool withInfinity>
@@ -3388,7 +3388,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
         IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans.divByExact(other);
+    return std::move(ans.divByExact(other));
 }
 
 template <bool withInfinity>
@@ -3396,7 +3396,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
         const IntegerBase& other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans %= other;
+    return std::move(ans %= other);
 }
 
 template <bool withInfinity>
@@ -3405,7 +3405,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
         IntType other) const {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return ans %= other;
+    return std::move(ans %= other);
 }
 
 template <bool withInfinity>
