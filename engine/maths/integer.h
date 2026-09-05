@@ -3845,9 +3845,13 @@ inline void IntegerBase<withInfinity>::addProduct(
     }
 
     // All three arguments (including this) are finite.
+    //
     // Note: in the case where x.small_ or y.small_ == LONG_MIN, this code
     // should still do the right thing since -LONG_MIN will be cast to an
     // unsigned long (and therefore take the correct value |LONG_MIN|).
+    //
+    // Note also: GMP functions explicitly allow the input and output
+    // variables to be the same (so x.addProduct(x, x) is fine, for example).
     if (x != 0 && y != 0) {
         if (large_) {
             if (x.large_) {

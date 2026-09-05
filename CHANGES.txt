@@ -322,6 +322,7 @@ Version 8.0  [ TODO ]
             - New routine addProduct(), which optimises x += y * z.
             - New const routine shifted().
             - Now supports iteration over coefficients.
+            - New routine transform() for transforming coefficients in bulk.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
         Class Laurent2<T>:

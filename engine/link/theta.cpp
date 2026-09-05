@@ -53,50 +53,89 @@ namespace regina {
 #ifdef REGINA_ALT_LAURENT2
 namespace {
     /**
-     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * The type to use for two-variable Laurent polynomials during our
+     * intermediate calculations.
+     *
+     * Here we store these as Laurent polynomials in \a x, whose coefficients
+     * are Laurent polynomials in \a y.
+     */
+    using WorkingL2 = Laurent<Laurent<Integer>>;
+
+    /**
+     * Converts a single-variable polynomial `p(⋅)` into the two-variable
      * polynomial `p(x)` (where the second variable \a y does not appear).
      *
      * The two-variable polynomial will be presented as a Laurent polynomial
      * in \a x, whose coefficients are Laurent polynomials in \a y.
      */
-    Laurent<Laurent<Integer>> T1(const Laurent<Integer>& poly) {
-        return { poly.minExp(), poly.begin(), poly.end() };
+    WorkingL2 T1(const Laurent<Integer>& p) {
+        return { p.minExp(), p.begin(), p.end() };
     }
 
     /**
-     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * Converts a single-variable polynomial `p(⋅)` into the two-variable
      * polynomial `p(y)` (where the first variable \a x does not appear).
      *
      * The two-variable polynomial will be presented as a Laurent polynomial
      * in \a x, whose coefficients are Laurent polynomials in \a y.
      */
-    Laurent<Laurent<Integer>> T2(const Laurent<Integer>& poly) {
-        return { poly };
+    WorkingL2 T2(const Laurent<Integer>& p) {
+        return { p };
     }
 
     /**
-     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * Converts a single-variable polynomial `p(⋅)` into the two-variable
      * polynomial `p(y)` (where the first variable \a x does not appear).
      *
      * The two-variable polynomial will be presented as a Laurent polynomial
      * in \a x, whose coefficients are Laurent polynomials in \a y.
      */
-    Laurent<Laurent<Integer>> T2(Laurent<Integer>&& poly) {
-        return { std::move(poly) };
+    WorkingL2 T2(Laurent<Integer>&& p) {
+        return { std::move(p) };
     }
 
     /**
-     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * Converts a single-variable polynomial `p(⋅)` into the two-variable
      * polynomial `p(xy)`.
      *
      * The two-variable polynomial will be presented as a Laurent polynomial
      * in \a x, whose coefficients are Laurent polynomials in \a y.
      */
-    Laurent<Laurent<Integer>> T3(const Laurent<Integer>& poly) {
-        Laurent<Laurent<Integer>> ans(poly.minExp(), poly.begin(), poly.end());
-        for (long i = ans.minExp(); i <= ans.maxExp(); ++i)
-            ans.set(i, ans[i].shifted(i)); // TODO: avoid deep copies here
+    WorkingL2 T3(const Laurent<Integer>& p) {
+        WorkingL2 ans(p.minExp(), p.begin(), p.end());
+        ans.transform([](Laurent<Integer>& term, long e) { term.shift(e); });
         return ans;
+    }
+
+    /**
+     * Converts a pair of single-variable polynomials `p(⋅)` and `q(⋅)` into
+     * the two-variable polynomial `p(x) * q(y)`.
+     *
+     * The two-variable polynomial will be presented as a Laurent polynomial
+     * in \a x, whose coefficients are Laurent polynomials in \a y.
+     */
+    WorkingL2 T1T2(const Laurent<Integer>& p, const Laurent<Integer>& q) {
+        WorkingL2 ans(p.minExp(), p.begin(), p.end());
+        ans.transform([&q](Laurent<Integer>& term) { term *= q; });
+        return ans;
+    }
+
+    /**
+     * Multiplies the given two-variable Laurent polynomial by `x^s y^t`.
+     */
+    WorkingL2 shifted(const WorkingL2& p, long s, long t) {
+        WorkingL2 ans = p.shifted(s);
+        ans.transform([t](Laurent<Integer>& term) { term.shift(t); });
+        return ans;
+    }
+
+    /**
+     * Multiplies the given two-variable Laurent polynomial by `x^s y^t`.
+     */
+    WorkingL2 shifted(WorkingL2&& p, long s, long t) {
+        p.shift(s);
+        p.transform([t](Laurent<Integer>& term) { term.shift(t); });
+        return std::move(p);
     }
 
     /**
@@ -106,10 +145,10 @@ namespace {
      * Laurent polynomials in \a y.  The output is a "native" two-variable
      * Laurent polynomial.
      */
-    Laurent2<Integer> conv(const Laurent<Laurent<Integer>>& poly) {
+    Laurent2<Integer> conv(const WorkingL2& p) {
         Laurent2<Integer> ans;
-        for (long i = poly.minExp(); i <= poly.maxExp(); ++i) {
-            const auto& coeff = poly[i];
+        for (long i = p.minExp(); i <= p.maxExp(); ++i) {
+            const auto& coeff = p[i];
             for (long j = coeff.minExp(); j <= coeff.maxExp(); ++j)
                 ans.set(i, j, coeff[j]);
         }
@@ -119,27 +158,57 @@ namespace {
 #else
 namespace {
     /**
-     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * The type to use for two-variable Laurent polynomials during our
+     * intermediate calculations.
+     *
+     * Here we simply use Regina's native Laurent2 type.
+     */
+    using WorkingL2 = Laurent2<Integer>;
+
+    /**
+     * Converts a single-variable polynomial `p(⋅)` into the two-variable
      * polynomial `p(x)` (where the second variable \a y does not appear).
      */
-    Laurent2<Integer> T1(const Laurent<Integer>& poly) {
-        return Laurent2<Integer>(poly, 1, 0);
+    WorkingL2 T1(const Laurent<Integer>& p) {
+        return { p, 1, 0 };
     }
 
     /**
-     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * Converts a single-variable polynomial `p(⋅)` into the two-variable
      * polynomial `p(y)` (where the first variable \a x does not appear).
      */
-    Laurent2<Integer> T2(const Laurent<Integer>& poly) {
-        return Laurent2<Integer>(poly, 0, 1);
+    WorkingL2 T2(const Laurent<Integer>& p) {
+        return { p, 0, 1 };
     }
 
     /**
-     * Converts a single-variable polynomial `p(x)` into the two-variable
+     * Converts a single-variable polynomial `p(⋅)` into the two-variable
      * polynomial `p(xy)`.
      */
-    Laurent2<Integer> T3(const Laurent<Integer>& poly) {
-        return Laurent2<Integer>(poly, 1, 1);
+    WorkingL2 T3(const Laurent<Integer>& p) {
+        return { p, 1, 1 };
+    }
+
+    /**
+     * Converts a pair of single-variable polynomials `p(⋅)` and `q(⋅)` into
+     * the two-variable polynomial `p(x) * q(y)`.
+     */
+    WorkingL2 T1T2(const Laurent<Integer>& p, const Laurent<Integer>& q) {
+        return { p, q };
+    }
+
+    /**
+     * Multiplies the given two-variable Laurent polynomial by `x^s y^t`.
+     */
+    WorkingL2 shifted(const WorkingL2& p, long s, long t) {
+        return p.shifted(s, t);
+    }
+
+    /**
+     * Multiplies the given two-variable Laurent polynomial by `x^s y^t`.
+     */
+    WorkingL2 shifted(WorkingL2&& p, long s, long t) {
+        return std::move(p).shifted(s, t);
     }
 }
 #endif
@@ -401,24 +470,21 @@ const Laurent2<Integer>& Link::theta() const {
     // We are trying to avoid denominators, so we do not compute F1, F2 and F3
     // directly.  See below for what we compute instead.
 
-    using L = Laurent2<Integer>;
-
     // u[0,1,2] = {x,y,xy} - 1
     // v[0,1,2] = {x,y,xy}^(-1) - 1
     // w[0,1] = y^{1,-1} + 1
     // x[0,1] = y^{1,-1} - 2
     // d[0,1,2] = det({x,y,xy})
-    static const L u[3] {
-        {{1,0,1}, {0,0,-1}}, {{0,1,1}, {0,0,-1}}, {{1,1,1}, {0,0,-1}} };
-    static const L v[3] {
-        {{-1,0,1}, {0,0,-1}}, {{0,-1,1}, {0,0,-1}}, {{-1,-1,1}, {0,0,-1}} };
-    static const L w[2] { {{0,1,1}, {0,0,1}}, {{0,-1,1}, {0,0,1}} };
-    static const L x[2] { {{0,1,1}, {0,0,-2}}, {{0,-1,1}, {0,0,-2}} };
-    const L d[3] { {det, 1, 0}, {det, 0, 1}, {det, 1, 1} };
-    const L d01 = d[0] * d[1];
+    static const Laurent<Integer> uBase(0, {-1,1}), vBase(-1, {1,-1});
+    static const WorkingL2 u[3] { T1(uBase), T2(uBase), T3(uBase) };
+    static const WorkingL2 v[3] { T1(vBase), T2(vBase), T3(vBase) };
+    static const WorkingL2 w[2] { T2({0, {1,1}}), T2({-1, {1,1}}) };
+    static const WorkingL2 x[2] { T2({0, {-2,1}}), T2({-1, {1,-2}}) };
+    const WorkingL2 d[3] { T1(det), T2(det), T3(det) };
+    const WorkingL2 d01 = d[0] * d[1];
 
     // sum1 = sum_{crossings c} 2 F_1(c) * (y-1) d[0] d[1] d[2]
-    L sum1bits[6];
+    WorkingL2 sum1bits[6];
     long writhe = 0;
     for (auto c : crossings_) {
         // TODO: We could do a bit more here to push expensive multiplications
@@ -429,64 +495,62 @@ const Laurent2<Integer>& Link::theta() const {
         size_t j = arcOrder[c->lower().prev().id()];
         if (c->sign() > 0) {
             ++writhe;
-            sum1bits[0] += L(adj.entry(j, i), 0, 1) *
-                ( u[2] * L(adj.entry(j, i), 1, 1)
-                - L(adj.entry(j, j), 1, 1).shifted(0, 1)
-                - u[1] * L(adj.entry(i, i), 1, 1));
+            sum1bits[0] += T2(adj.entry(j, i)) *
+                ( u[2] * T3(adj.entry(j, i))
+                - shifted(T3(adj.entry(j, j)), 0, 1)
+                - u[1] * T3(adj.entry(i, i)));
             sum1bits[0] +=
-                L(adj.entry(j, j), 0, 1) * L(adj.entry(i, i), 1, 1) * 2;
+                T2(adj.entry(j, j)) * T3(adj.entry(i, i)) * 2;
             sum1bits[0] -=
-                L(adj.entry(j, j), 1, 1) * L(adj.entry(i, i), 0, 1);
-            sum1bits[1] += L(adj.entry(j, j), 1, 1) * L(adj.entry(i, i), 1, 0);
-            sum1bits[2] += L(adj.entry(j, i), 0, 1) *
-                L(adj.entry(i, i), 1, 0).shifted(0, 1);
-            sum1bits[2] -= L(adj.entry(j, j), 0, 1) * L(adj.entry(i, i), 1, 0);
-            sum1bits[3] -= L(adj.entry(i, i), 1, 1);
+                T3(adj.entry(j, j)) * T2(adj.entry(i, i));
+            sum1bits[1] += T3(adj.entry(j, j)) * T1(adj.entry(i, i));
+            sum1bits[2] += T2(adj.entry(j, i)) *
+                shifted(T1(adj.entry(i, i)), 0, 1);
+            sum1bits[2] -= T2(adj.entry(j, j)) * T1(adj.entry(i, i));
+            sum1bits[3] -= T3(adj.entry(i, i));
 
-            sum1bits[4] += u[0].shifted(0, 1) * L(adj.entry(j, i), 1, 0) *
-                ( d[1] * L(adj.entry(j, j), 1, 1)
+            sum1bits[4] += shifted(u[0], 0, 1) * T1(adj.entry(j, i)) *
+                ( d[1] * T3(adj.entry(j, j))
                 + d[2] *
-                    ( L(adj.entry(j, i).shifted(1), 0, 1)
-                    - L(adj.entry(j, j), 0, 1)));
-            sum1bits[4] += u[2] * L(adj.entry(j, i), 1, 1) *
+                    ( T2(adj.entry(j, i).shifted(1)) - T2(adj.entry(j, j))));
+            sum1bits[4] += u[2] * T3(adj.entry(j, i)) *
                 ( d01
-                - d[1] * L(adj.entry(i, i), 1, 0).shifted(0, 1)
-                + d[0] * L(adj.entry(i, j), 0, 1)
-                + d[0] * x[0] * L(adj.entry(j, j), 0, 1)
-                - d[1] * ( u[0] * w[0] ) * L(adj.entry(j, i), 1, 0));
+                - d[1] * shifted(T1(adj.entry(i, i)), 0, 1)
+                + d[0] * T2(adj.entry(i, j))
+                + d[0] * x[0] * T2(adj.entry(j, j))
+                - d[1] * ( u[0] * w[0] ) * T1(adj.entry(j, i)));
         } else {
             --writhe;
-            sum1bits[0] -= L(adj.entry(j, i), 0, 1) *
-                ( v[2] * L(adj.entry(j, i), 1, 1)
-                - L(adj.entry(j, j), 1, 1).shifted(0, -1)
-                - v[1] * L(adj.entry(i, i), 1, 1));
+            sum1bits[0] -= T2(adj.entry(j, i)) *
+                ( v[2] * T3(adj.entry(j, i))
+                - shifted(T3(adj.entry(j, j)), 0, -1)
+                - v[1] * T3(adj.entry(i, i)));
             sum1bits[0] -=
-                L(adj.entry(j, j), 0, 1) * L(adj.entry(i, i), 1, 1) * 2;
+                T2(adj.entry(j, j)) * T3(adj.entry(i, i)) * 2;
             sum1bits[0] +=
-                L(adj.entry(j, j), 1, 1) * L(adj.entry(i, i), 0, 1);
-            sum1bits[1] -= L(adj.entry(j, j), 1, 1) * L(adj.entry(i, i), 1, 0);
-            sum1bits[2] -= L(adj.entry(j, i), 0, 1) *
-                L(adj.entry(i, i), 1, 0).shifted(0, -1);
-            sum1bits[2] += L(adj.entry(j, j), 0, 1) * L(adj.entry(i, i), 1, 0);
-            sum1bits[3] += L(adj.entry(i, i), 1, 1);
+                T3(adj.entry(j, j)) * T2(adj.entry(i, i));
+            sum1bits[1] -= T3(adj.entry(j, j)) * T1(adj.entry(i, i));
+            sum1bits[2] -= T2(adj.entry(j, i)) *
+                shifted(T1(adj.entry(i, i)), 0, -1);
+            sum1bits[2] += T2(adj.entry(j, j)) * T1(adj.entry(i, i));
+            sum1bits[3] += T3(adj.entry(i, i));
 
-            sum1bits[5] += v[0].shifted(0, -1) * L(adj.entry(j, i), 1, 0) *
-                ( d[1] * L(adj.entry(j, j), 1, 1)
+            sum1bits[5] += shifted(v[0], 0, -1) * T1(adj.entry(j, i)) *
+                ( d[1] * T3(adj.entry(j, j))
                 + d[2] *
-                    ( L(adj.entry(j, i).shifted(-1), 0, 1)
-                    - L(adj.entry(j, j), 0, 1)));
-            sum1bits[5] += v[2] * L(adj.entry(j, i), 1, 1) *
+                    ( T2(adj.entry(j, i).shifted(-1)) - T2(adj.entry(j, j))));
+            sum1bits[5] += v[2] * T3(adj.entry(j, i)) *
                 ( d01
-                - d[1] * L(adj.entry(i, i), 1, 0).shifted(0, -1)
-                + d[0] * L(adj.entry(i, j), 0, 1)
-                + d[0] * x[1] * L(adj.entry(j, j), 0, 1)
-                - d[1] * ( v[0] * w[1] ) * L(adj.entry(j, i), 1, 0));
+                - d[1] * shifted(T1(adj.entry(i, i)), 0, -1)
+                + d[0] * T2(adj.entry(i, j))
+                + d[0] * x[1] * T2(adj.entry(j, j))
+                - d[1] * ( v[0] * w[1] ) * T1(adj.entry(j, i)));
         }
     }
-    L sum1 = u[1] * d01 * d[2] * writhe +
+    WorkingL2 sum1 = u[1] * d01 * d[2] * writhe +
         (u[1] * 2) * (d01 * sum1bits[3] +
             (d[0] * sum1bits[0] + d[1] * sum1bits[1] + d[2] * sum1bits[2])) +
-        (std::move(sum1bits[4]) + std::move(sum1bits[5]).shifted(0, 1)) * 2;
+        (std::move(sum1bits[4]) + shifted(std::move(sum1bits[5]), 0, 1)) * 2;
 
 #ifdef REGINA_TIMING_THETA
     auto stage2 = std::chrono::steady_clock::now();
@@ -495,11 +559,7 @@ const Laurent2<Integer>& Link::theta() const {
 #endif
 
     // sum2 = sum_{crossings c0, c1} F_2(c0, c1) (y-1) d[0] d[1] d[2]
-#ifdef REGINA_ALT_LAURENT2
-    Laurent<Laurent<Integer>> sum2bits[4];
-#else
-    Laurent2<Integer> sum2bits[4];
-#endif
+    WorkingL2 sum2bits[4];
     for (auto c0 : crossings_) {
         size_t i0 = arcOrder[c0->upper().prev().id()];
         size_t j0 = arcOrder[c0->lower().prev().id()];
@@ -508,45 +568,39 @@ const Laurent2<Integer>& Link::theta() const {
             size_t j1 = arcOrder[c1->lower().prev().id()];
             if (c0->sign() > 0) {
                 if (c1->sign() > 0) {
-                    sum2bits[0] +=
-                        T1(adj.entry(j1, i0)) *
-                        T3(adj.entry(j0, i1)) *
-                        T2((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
-                            adj.entry(j1, j0) - adj.entry(i1, j0));
+                    sum2bits[0].addProduct(
+                        T1T2(adj.entry(j1, i0),
+                            (adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
+                                adj.entry(j1, j0) - adj.entry(i1, j0)),
+                        T3(adj.entry(j0, i1)));
                 } else {
-                    sum2bits[1] +=
-                        T1(adj.entry(j1, i0)) *
-                        T3(adj.entry(j0, i1)) *
-                        T2(((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
-                            adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1));
+                    sum2bits[1].addProduct(
+                        T1T2(adj.entry(j1, i0),
+                            ((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1)
+                                + adj.entry(j1, j0)
+                                - adj.entry(i1, j0)).shifted(1)),
+                        T3(adj.entry(j0, i1)));
                 }
             } else {
                 if (c1->sign() > 0) {
-                    sum2bits[2] +=
-                        T1(adj.entry(j1, i0)) *
-                        T3(adj.entry(j0, i1)) *
-                        T2((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(-1) +
-                            adj.entry(j1, j0) - adj.entry(i1, j0));
+                    sum2bits[2].addProduct(
+                        T1T2(adj.entry(j1, i0),
+                            (adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(-1)
+                                + adj.entry(j1, j0) - adj.entry(i1, j0)),
+                        T3(adj.entry(j0, i1)));
                 } else {
-                    sum2bits[3] +=
-                        T1(adj.entry(j1, i0)) *
-                        T3(adj.entry(j0, i1)) *
-                        T2((adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
-                            adj.entry(i1, i0) - adj.entry(j1, i0));
+                    sum2bits[3].addProduct(
+                        T1T2(adj.entry(j1, i0),
+                            (adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
+                                adj.entry(i1, i0) - adj.entry(j1, i0)),
+                        T3(adj.entry(j0, i1)));
                 }
             }
         }
     }
-#ifdef REGINA_ALT_LAURENT2
-    const Laurent<Integer> uBase(0, {-1,1}), vBase(-1, {1,-1});
-    L sum2 = conv(
-        T1(uBase) * ( T3(uBase) * sum2bits[0] + T3(vBase) * sum2bits[1]) +
-        T1(vBase) * ( T3(uBase) * sum2bits[2] + T3(vBase) * sum2bits[3]));
-#else
-    L sum2 =
+    WorkingL2 sum2 =
         u[0] * ( u[2] * sum2bits[0] + v[2] * sum2bits[1]) +
         v[0] * ( u[2] * sum2bits[2] + v[2] * sum2bits[3]);
-#endif
 
 #ifdef REGINA_TIMING_THETA
     auto stage3 = std::chrono::steady_clock::now();
@@ -565,16 +619,32 @@ const Laurent2<Integer>& Link::theta() const {
         }
 
     // Next we compute comb = (y-1) θ.
-    auto comb = std::move(sum1) + L(std::move(sum3), 1, 1) * u[1] * d01;
+    // Regardless of our choice of intermediate working type, we move now to
+    // Regina's native Laurent2, since we need to start iterating through
+    // non-zero integer coefficients.
+    #ifdef REGINA_ALT_LAURENT2
+    auto alt = std::move(sum1) + T3(std::move(sum3)) * u[1] * d01;
+    for (const auto& term : alt)
+        for (const auto& coeff : term)
+            if (coeff % 2 != 0)
+                throw ImpossibleScenario("theta(): coefficient parity error");
+    alt /= 2;
+    alt += std::move(sum2);
+    alt.shift(2 * shift);
+    alt.transform([shift](Laurent<Integer>& term) { term.shift(2 * shift); });
+    Laurent2<Integer> comb = conv(alt);
+    #else
+    Laurent2<Integer> comb = std::move(sum1) + T3(std::move(sum3)) * u[1] * d01;
     for (const auto& term : comb)
         if (term.second % 2 != 0)
             throw ImpossibleScenario("theta(): coefficient parity error");
     comb /= 2;
     comb += std::move(sum2);
-    comb.shift(2 * shift, 2 * shift);
+    comb.shift(2 * shift, 2 * shift); // shift exponents for x and y
+    #endif
 
     // Finally, we compute ans = comb / (y-1).
-    L ans;
+    Laurent2<Integer> ans;
     long needX, needY;
     Integer needCoeff;
     for (const auto& term : comb) {

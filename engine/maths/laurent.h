@@ -685,6 +685,72 @@ class Laurent :
         void invertX();
 
         /**
+         * Applies the given transformation to every coefficient of this
+         * polynomial.
+         *
+         * Specifically, for each coefficient \a c corresponding to an exponent
+         * in the range from minExp() to maxExp() inclusive (including any zero
+         * coefficients in between), this routine will call `action(c)`.
+         *
+         * Each coefficient will be passed to \a action by reference;
+         * typically \a action would modify the coefficient in some way.
+         * It is fine if \a action sets some coefficients to zero.
+         *
+         * If this is the zero polynomial, then \a action will not be called
+         * on any coefficients at all.
+         *
+         * \nopython This function is (for now) not available in Python;
+         * instead you can loop through the coefficients and call `set()`.
+         *
+         * \param action the action (typically a lambda) to perform on each
+         * coefficient.
+         */
+        template <std::invocable<T&> Action>
+        void transform(Action&& action) {
+            if (coeff_) {
+                for (auto it = coeff_ + minExp_ - base_;
+                        it <= coeff_ + maxExp_ - base_; ++it)
+                    std::invoke(std::forward<Action>(action), *it);
+                fixDegrees();
+            }
+        }
+
+        /**
+         * Applies the given transformation to every coefficient of this
+         * polynomial, where the transformation is given knowledge of the
+         * corresponding exponent.
+         *
+         * Specifically, for each coefficient \a c corresponding to an exponent
+         * \a e in the range from minExp() to maxExp() inclusive (including any
+         * zero coefficients in between), this routine will call `action(c, e)`.
+         * Typically this action would modify the coefficients in some way.
+         *
+         * Each coefficient will be passed to \a action by reference;
+         * typically \a action would modify the coefficient in some way.
+         * The corresponding exponent will be passed by value, and so cannot be
+         * modified.  It is fine if \a action sets some coefficients to zero.
+         *
+         * If this is the zero polynomial, then \a action will not be called
+         * on any coefficients at all.
+         *
+         * \nopython This function is (for now) not available in Python;
+         * instead you can loop through the coefficients and call `set()`.
+         *
+         * \param action the action (typically a lambda) to perform on each
+         * coefficient and its corresponding exponent.
+         */
+        template <std::invocable<T&, long> Action>
+        void transform(Action&& action) {
+            if (coeff_) {
+                auto it = coeff_ + minExp_ - base_;
+                auto exp = minExp_;
+                while (exp <= maxExp_)
+                    std::invoke(std::forward<Action>(action), *it++, exp++);
+                fixDegrees();
+            }
+        }
+
+        /**
          * Multiplies this polynomial by the given constant.
          *
          * \param scalar the scalar factor to multiply by.
@@ -1937,6 +2003,25 @@ Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
         maxExp_ += other.minExp_;
         return *this;
     }
+    if (minExp_ == maxExp_) {
+        // We need to reallocate, but the product operation is simple.
+        T* ans = new T[other.maxExp_ - other.minExp_ + 1];
+        const T& me = coeff_[minExp_ - base_];
+        auto out = ans;
+        for (auto in = other.coeff_ + other.minExp_ - other.base_;
+                in <= other.coeff_ + other.maxExp_ - other.base_; ++in)
+            *out++ = (*in) * me;
+        delete[] coeff_;
+        coeff_ = ans;
+
+        minExp_ += other.minExp_;
+        maxExp_ += other.maxExp_;
+        base_ = minExp_;
+        return *this;
+    }
+
+    // From here on, we know that both polynomials have more than one non-zero
+    // coefficient.
 
     // The following code works even if &other == this, since we construct the
     // coefficients of the product in a separate section of memory.
@@ -2520,7 +2605,7 @@ Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
         return (lhs * rhs.coeff_[rhs.minExp_ - rhs.base_]).shifted(rhs.minExp_);
     } else {
         // Both polynomials have more than one non-zero coefficient.
-        // TODO
+        // TODO; also fuss about *=
         return Laurent<T>::multClassic(lhs, rhs);
     }
 }
