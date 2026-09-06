@@ -41,7 +41,7 @@
  * uses C-style arrays without gaps) instead of Laurent2<Integer> (which uses
  * a std::map) for some of our intermediate calculations.
  */
-// #define REGINA_ALT_LAURENT2
+#define REGINA_ALT_LAURENT2
 
 #ifdef REGINA_TIMING_THETA
 #include <chrono>
@@ -136,23 +136,6 @@ namespace {
         p.shift(s);
         p.transform([t](Laurent<Integer>& term) { term.shift(t); });
         return std::move(p);
-    }
-
-    /**
-     * Converts between representations of two-variable Laurent polynomials.
-     *
-     * The input is a Laurent polynomial in \a x, whose coefficients are
-     * Laurent polynomials in \a y.  The output is a "native" two-variable
-     * Laurent polynomial.
-     */
-    Laurent2<Integer> conv(const WorkingL2& p) {
-        Laurent2<Integer> ans;
-        for (long i = p.minExp(); i <= p.maxExp(); ++i) {
-            const auto& coeff = p[i];
-            for (long j = coeff.minExp(); j <= coeff.maxExp(); ++j)
-                ans.set(i, j, coeff[j]);
-        }
-        return ans;
     }
 }
 #else
@@ -632,7 +615,7 @@ const Laurent2<Integer>& Link::theta() const {
     alt += std::move(sum2);
     alt.shift(2 * shift);
     alt.transform([shift](Laurent<Integer>& term) { term.shift(2 * shift); });
-    Laurent2<Integer> comb = conv(alt);
+    Laurent2<Integer> comb(std::move(alt));
     #else
     Laurent2<Integer> comb = std::move(sum1) + T3(std::move(sum3)) * u[1] * d01;
     for (const auto& term : comb)

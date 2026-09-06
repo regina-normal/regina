@@ -224,7 +224,10 @@ concept Field = IntegralDomain<T> && RingTraits<T>::inverses;
  */
 template <typename T>
 concept CoefficientDomain =
-    Domain<T> && IntegerComparable<T> && RingTraits<T>::zeroInitialised;
+    Domain<T> &&
+    IntegerComparable<T> &&
+    Negatable<T> &&
+    RingTraits<T>::zeroInitialised;
 
 /**
  * One of Regina's own bitmask types.

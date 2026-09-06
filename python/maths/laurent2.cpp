@@ -60,16 +60,21 @@ void addLaurent2(pybind11::module_& m) {
         .def(pybind11::init<long>(), rdoc::__init_4)
         .def(pybind11::init<const regina::Laurent<Integer>&, long, long>(),
             rdoc::__init_5)
+        .def(pybind11::init<const regina::Laurent<Integer>&,
+                const regina::Laurent<Integer>&>(), rdoc::__init_6)
         .def("init", overload_cast<>(&Laurent2<Integer>::init), rdoc::init)
         .def("initExp", &Laurent2<Integer>::initExp, rdoc::initExp)
         .def("isZero", &Laurent2<Integer>::isZero, rdoc::isZero)
         .def("set", &Laurent2<Integer>::set, rdoc::set)
         .def("swap", &Laurent2<Integer>::swap, rdoc::swap)
         .def("shift", &Laurent2<Integer>::shift, rdoc::shift)
-        .def("shifted", &Laurent2<Integer>::shifted, rdoc::shifted)
+        .def("shifted", static_cast<Laurent2<Integer> (Laurent2<Integer>::*)(
+                long, long) const&>(&Laurent2<Integer>::shifted),
+            rdoc::shifted)
         .def("negate", &Laurent2<Integer>::negate, rdoc::negate)
         .def("invertX", &Laurent2<Integer>::invertX, rdoc::invertX)
         .def("invertY", &Laurent2<Integer>::invertY, rdoc::invertY)
+        .def("addProduct", &Laurent2<Integer>::addProduct, rdoc::addProduct)
         .def("str", overload_cast<const char*, const char*>(
             &Laurent2<Integer>::str, pybind11::const_),
             "varX"_a, "varY"_a = nullptr, rdoc::str)

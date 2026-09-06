@@ -695,6 +695,8 @@ class Laurent :
          * Each coefficient will be passed to \a action by reference;
          * typically \a action would modify the coefficient in some way.
          * It is fine if \a action sets some coefficients to zero.
+         * The coefficients will be passed in increasing order of their
+         * corresponding exponents.
          *
          * If this is the zero polynomial, then \a action will not be called
          * on any coefficients at all.
@@ -729,6 +731,8 @@ class Laurent :
          * typically \a action would modify the coefficient in some way.
          * The corresponding exponent will be passed by value, and so cannot be
          * modified.  It is fine if \a action sets some coefficients to zero.
+         * The coefficients will be passed in increasing order of their
+         * corresponding exponents.
          *
          * If this is the zero polynomial, then \a action will not be called
          * on any coefficients at all.
@@ -747,6 +751,42 @@ class Laurent :
                 while (exp <= maxExp_)
                     std::invoke(std::forward<Action>(action), *it++, exp++);
                 fixDegrees();
+            }
+        }
+
+        /**
+         * Allows the extraction of the coefficients of this polynomial, one
+         * at a time, by passing them as rvalue references to the given action.
+         *
+         * Specifically, for each _non-zero_ coefficient \a c corresponding to
+         * an exponent \a e in the range from minExp() to maxExp() inclusive,
+         * this routine will call `action(std::move(c), e)`.  Note that this
+         * behaviour differs from transform() (which calls its action for zero
+         * coefficients as well).
+         *
+         * After calling this function, this polynomial will be unusable.
+         *
+         * Each coefficient will be passed to \a action by rvalue reference,
+         * and each corresponding exponent will be passed by value.
+         * The coefficients will be passed in increasing order of their
+         * corresponding exponents.
+         *
+         * If this is the zero polynomial, then \a action will not be called
+         * on any coefficients at all.
+         *
+         * \nopython
+         *
+         * \param action the action (typically a lambda) to perform on each
+         * non-zero coefficient and its corresponding exponent.
+         */
+        template <std::invocable<T&&, long> Action>
+        void extract(Action&& action) && {
+            if (coeff_) {
+                auto it = coeff_ + minExp_ - base_;
+                for (long exp = minExp_; exp <= maxExp_; ++exp, ++it)
+                    if (*it != 0)
+                        std::invoke(std::forward<Action>(action),
+                            std::move(*it), exp);
             }
         }
 
@@ -1862,12 +1902,8 @@ inline void Laurent<T>::negate() {
         return;
 
     for (long exp = minExp_; exp <= maxExp_; ++exp)
-        if (coeff_[exp - base_] != 0) {
-            if constexpr (Negatable<T>)
-                coeff_[exp - base_].negate();
-            else
-                coeff_[exp - base_] = -coeff_[exp - base_];
-        }
+        if (coeff_[exp - base_] != 0)
+            coeff_[exp - base_].negate();
 }
 
 template <CoefficientDomain T>
@@ -2288,12 +2324,8 @@ inline Laurent<T>& Laurent<T>::subtractFrom(const Laurent<T>& other) {
 
     long exp = (minExp_ < other.minExp_ ? minExp_ : other.minExp_);
     for ( ; exp < other.minExp_; ++exp)
-        if (coeff_[exp - base_] != 0) {
-            if constexpr (Negatable<T>)
-                coeff_[exp - base_].negate();
-            else
-                coeff_[exp - base_] = -coeff_[exp - base_];
-        }
+        if (coeff_[exp - base_] != 0)
+            coeff_[exp - base_].negate();
     for ( ; exp <= other.maxExp_; ++exp)
         if (coeff_[exp - base_] != 0)
             coeff_[exp - base_] = other.coeff_[exp - other.base_]
@@ -2301,12 +2333,8 @@ inline Laurent<T>& Laurent<T>::subtractFrom(const Laurent<T>& other) {
         else
             coeff_[exp - base_] = other.coeff_[exp - other.base_];
     for ( ; exp <= maxExp_; ++exp)
-        if (coeff_[exp - base_] != 0) {
-            if constexpr (Negatable<T>)
-                coeff_[exp - base_].negate();
-            else
-                coeff_[exp - base_] = -coeff_[exp - base_];
-        }
+        if (coeff_[exp - base_] != 0)
+            coeff_[exp - base_].negate();
 
     // We might have zeroed out some coefficients.
     fixDegrees();

@@ -791,7 +791,38 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \param other the integer to add to this integer.
          * \return the sum \a this plus \a other.
          */
-        IntegerBase operator +(const IntegerBase& other) const;
+        IntegerBase operator +(const IntegerBase& other) const&;
+        /**
+         * Adds this to the given integer and returns the result.
+         * This integer is not changed.
+         *
+         * If either term of the sum is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to add to this integer.
+         * \return the sum \a this plus \a other.
+         */
+        IntegerBase operator +(IntegerBase&& other) const&;
+        /**
+         * Adds this to the given integer and returns the result.
+         *
+         * If either term of the sum is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to add to this integer.
+         * \return the sum \a this plus \a other.
+         */
+        IntegerBase operator +(const IntegerBase& other) &&;
+        /**
+         * Adds this to the given integer and returns the result.
+         *
+         * If either term of the sum is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to add to this integer.
+         * \return the sum \a this plus \a other.
+         */
+        IntegerBase operator +(IntegerBase&& other) &&;
         /**
          * Adds this to the given native C++ integer and returns the result.
          * This integer is not changed.
@@ -805,7 +836,20 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return the sum \a this plus \a other.
          */
         template <CppInteger IntType>
-        IntegerBase operator +(IntType other) const;
+        IntegerBase operator +(IntType other) const&;
+        /**
+         * Adds this to the given native C++ integer and returns the result.
+         *
+         * If either term of the sum is infinite, the result will be
+         * infinity.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param other the integer to add to this integer.
+         * \return the sum \a this plus \a other.
+         */
+        template <CppInteger IntType>
+        IntegerBase operator +(IntType other) &&;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -816,7 +860,38 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \param other the integer to subtract from this integer.
          * \return the difference \a this minus \a other.
          */
-        IntegerBase operator -(const IntegerBase& other) const;
+        IntegerBase operator -(const IntegerBase& other) const&;
+        /**
+         * Subtracts the given integer from this and returns the result.
+         * This integer is not changed.
+         *
+         * If either term of the difference is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to subtract from this integer.
+         * \return the difference \a this minus \a other.
+         */
+        IntegerBase operator -(IntegerBase&& other) const&;
+        /**
+         * Subtracts the given integer from this and returns the result.
+         *
+         * If either term of the difference is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to subtract from this integer.
+         * \return the difference \a this minus \a other.
+         */
+        IntegerBase operator -(const IntegerBase& other) &&;
+        /**
+         * Subtracts the given integer from this and returns the result.
+         *
+         * If either term of the difference is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to subtract from this integer.
+         * \return the difference \a this minus \a other.
+         */
+        IntegerBase operator -(IntegerBase&& other) &&;
         /**
          * Subtracts the given native C++ integer from this and returns
          * the result.
@@ -831,10 +906,23 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return the difference \a this minus \a other.
          */
         template <CppInteger IntType>
-        IntegerBase operator -(IntType other) const;
+        IntegerBase operator -(IntType other) const&;
         /**
-         * Multiplies this by the given integer and returns the
-         * result.
+         * Subtracts the given native C++ integer from this and returns
+         * the result.
+         *
+         * If either term of the difference is infinite, the result will be
+         * infinity.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param other the integer to subtract from this integer.
+         * \return the difference \a this minus \a other.
+         */
+        template <CppInteger IntType>
+        IntegerBase operator -(IntType other) &&;
+        /**
+         * Multiplies this by the given integer and returns the result.
          * This integer is not changed.
          *
          * If either factor of the product is infinite, the result will be
@@ -843,7 +931,38 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \param other the integer to multiply by this integer.
          * \return the product \a this times \a other.
          */
-        IntegerBase operator *(const IntegerBase& other) const;
+        IntegerBase operator *(const IntegerBase& other) const&;
+        /**
+         * Multiplies this by the given integer and returns the result.
+         * This integer is not changed.
+         *
+         * If either factor of the product is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to multiply by this integer.
+         * \return the product \a this times \a other.
+         */
+        IntegerBase operator *(IntegerBase&& other) const&;
+        /**
+         * Multiplies this by the given integer and returns the result.
+         *
+         * If either factor of the product is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to multiply by this integer.
+         * \return the product \a this times \a other.
+         */
+        IntegerBase operator *(const IntegerBase& other) &&;
+        /**
+         * Multiplies this by the given integer and returns the result.
+         *
+         * If either factor of the product is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to multiply by this integer.
+         * \return the product \a this times \a other.
+         */
+        IntegerBase operator *(IntegerBase&& other) &&;
         /**
          * Multiplies this by the given native C++ integer and returns the
          * result.
@@ -858,7 +977,21 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return the product \a this times \a other.
          */
         template <CppInteger IntType>
-        IntegerBase operator *(IntType other) const;
+        IntegerBase operator *(IntType other) const&;
+        /**
+         * Multiplies this by the given native C++ integer and returns the
+         * result.
+         *
+         * If either factor of the product is infinite, the result will be
+         * infinity.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param other the integer to multiply by this integer.
+         * \return the product \a this times \a other.
+         */
+        template <CppInteger IntType>
+        IntegerBase operator *(IntType other) &&;
         /**
          * Divides this by the given integer and returns the result.
          * The result will be truncated to an integer, i.e., rounded
@@ -882,7 +1015,30 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        IntegerBase operator /(const IntegerBase& other) const;
+        IntegerBase operator /(const IntegerBase& other) const&;
+        /**
+         * Divides this by the given integer and returns the result.
+         * The result will be truncated to an integer, i.e., rounded
+         * towards zero.
+         *
+         * If \a other is known to divide this integer exactly,
+         * divExact() should be used instead.
+         *
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity;
+         * - anything finite divided by infinity will return zero.
+         *
+         * For a division routine that always rounds down, see divisionAlg().
+         *
+         * \exception DivisionByZero The argument \a other is zero, but this
+         * class does not support infinity.
+         *
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
+         */
+        IntegerBase operator /(const IntegerBase& other) &&;
         /**
          * Divides this by the given native C++ integer and returns the result.
          * The result will be truncated to an integer, i.e., rounded
@@ -908,7 +1064,32 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return the quotient \a this divided by \a other.
          */
         template <CppInteger IntType>
-        IntegerBase operator /(IntType other) const;
+        IntegerBase operator /(IntType other) const&;
+        /**
+         * Divides this by the given native C++ integer and returns the result.
+         * The result will be truncated to an integer, i.e., rounded
+         * towards zero.
+         *
+         * If \a other is known to divide this integer exactly,
+         * divExact() should be used instead.
+         *
+         * Regarding special cases:
+         *
+         * - infinity divided by anything will return infinity;
+         * - anything divided by zero will likewise return infinity.
+         *
+         * For a division routine that always rounds down, see divisionAlg().
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception DivisionByZero The argument \a other is zero, but this
+         * class does not support infinity.
+         *
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
+         */
+        template <CppInteger IntType>
+        IntegerBase operator /(IntType other) &&;
         /**
          * Divides this by the given integer and returns the result.
          * This can only be used when the given integer divides into
@@ -923,7 +1104,22 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
          */
-        IntegerBase divExact(const IntegerBase& other) const;
+        IntegerBase divExact(const IntegerBase& other) const&;
+        /**
+         * Divides this by the given integer and returns the result.
+         * This can only be used when the given integer divides into
+         * this exactly, and for large integers can be much faster than
+         * ordinary division.
+         *
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
+         * \pre \a other is not zero.
+         * \pre Neither this nor \a other is infinite.
+         *
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
+         */
+        IntegerBase divExact(const IntegerBase& other) &&;
         /**
          * Divides this by the given native C++ integer and returns the result.
          * This can only be used when the given integer divides into
@@ -941,7 +1137,25 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return the quotient \a this divided by \a other.
          */
         template <CppInteger IntType>
-        IntegerBase divExact(IntType other) const;
+        IntegerBase divExact(IntType other) const&;
+        /**
+         * Divides this by the given native C++ integer and returns the result.
+         * This can only be used when the given integer divides into
+         * this exactly, and for large integers can be much faster than
+         * ordinary division.
+         *
+         * \pre The given integer divides exactly into this integer,
+         * i.e., \a this divided by \a other is an integer.
+         * \pre \a other is not zero.
+         * \pre This integer is not infinite.
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \param other the integer to divide this by.
+         * \return the quotient \a this divided by \a other.
+         */
+        template <CppInteger IntType>
+        IntegerBase divExact(IntType other) &&;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
@@ -963,7 +1177,28 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \param other the integer to divide this by.
          * \return the remainder \a this modulo \a other.
          */
-        IntegerBase operator %(const IntegerBase& other) const;
+        IntegerBase operator %(const IntegerBase& other) const&;
+        /**
+         * Determines the remainder when this integer is divided by the
+         * given integer.  If non-zero, the result will have the same sign
+         * as this integer.
+         *
+         * Regarding special cases:
+         *
+         * - any finite \a x modulo infinity will return \a x;
+         * - infinity modulo anything non-zero will return zero.
+         *
+         * For a division/modulo routine that always returns a non-negative
+         * remainder, see divisionAlg().
+         *
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
+         *
+         * \param other the integer to divide this by.
+         * \return the remainder \a this modulo \a other.
+         */
+        IntegerBase operator %(const IntegerBase& other) &&;
         /**
          * Determines the remainder when this integer is divided by the given
          * native C++ integer.  If non-zero, the result will have the same sign
@@ -987,7 +1222,30 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return the remainder \a this modulo \a other.
          */
         template <CppInteger IntType>
-        IntegerBase operator %(IntType other) const;
+        IntegerBase operator %(IntType other) const&;
+        /**
+         * Determines the remainder when this integer is divided by the given
+         * native C++ integer.  If non-zero, the result will have the same sign
+         * as this integer.
+         *
+         * Regarding special cases:
+         *
+         * - infinity modulo anything non-zero will return zero.
+         *
+         * For a division/modulo routine that always returns a non-negative
+         * remainder, see divisionAlg().
+         *
+         * \python It is assumed that the type \a IntType is \c long.
+         *
+         * \exception DivisionByZero The argument \a other is zero.
+         * Note that, unlike the division operators, this exception will be
+         # thrown even if this class supports infinity.
+         *
+         * \param other the integer to divide this by.
+         * \return the remainder \a this modulo \a other.
+         */
+        template <CppInteger IntType>
+        IntegerBase operator %(IntType other) &&;
 
         /**
          * Uses the division algorithm to obtain a quotient and
@@ -1029,7 +1287,15 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * \return the negative of this integer.
          */
-        IntegerBase operator -() const;
+        IntegerBase operator -() const&;
+        /**
+         * Determines the negative of this integer.
+         *
+         * Negative infinity will return infinity.
+         *
+         * \return the negative of this integer.
+         */
+        IntegerBase operator -() &&;
 
         /**
          * Adds the given integer to this.
@@ -1042,6 +1308,17 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return a reference to this integer with its new value.
          */
         IntegerBase& operator +=(const IntegerBase& other);
+        /**
+         * Adds the given integer to this.
+         * This integer is changed to reflect the result.
+         *
+         * If either term of the sum is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to add to this integer.
+         * \return a reference to this integer with its new value.
+         */
+        IntegerBase& operator +=(IntegerBase&& other);
         /**
          * Adds the given integer to this.
          * This integer is changed to reflect the result.
@@ -1067,6 +1344,17 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return a reference to this integer with its new value.
          */
         IntegerBase& operator -=(const IntegerBase& other);
+        /**
+         * Subtracts the given integer from this.
+         * This integer is changed to reflect the result.
+         *
+         * If either term of the difference is infinite, the result will be
+         * infinity.
+         *
+         * \param other the integer to subtract from this integer.
+         * \return a reference to this integer with its new value.
+         */
+        IntegerBase& operator -=(IntegerBase&& other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -1275,7 +1563,13 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * \return the absolute value of this integer.
          */
-        IntegerBase abs() const;
+        IntegerBase abs() const&;
+        /**
+         * Determines the absolute value of this integer.
+         *
+         * \return the absolute value of this integer.
+         */
+        IntegerBase abs() &&;
         /**
          * Sets this integer to be the greatest common divisor of this
          * and the given integer.
@@ -1303,7 +1597,52 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return the greatest common divisor of this and the given
          * integer.
          */
-        IntegerBase gcd(const IntegerBase& other) const;
+        IntegerBase gcd(const IntegerBase& other) const&;
+        /**
+         * Determines the greatest common divisor of this and the given
+         * integer.  This integer is not changed.
+         *
+         * The result is guaranteed to be non-negative.  As a
+         * special case, gcd(0,0) is considered to be zero.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * \param other the integer whose greatest common divisor with
+         * this will be found.
+         * \return the greatest common divisor of this and the given
+         * integer.
+         */
+        IntegerBase gcd(IntegerBase&& other) const&;
+        /**
+         * Determines the greatest common divisor of this and the given
+         * integer.
+         *
+         * The result is guaranteed to be non-negative.  As a
+         * special case, gcd(0,0) is considered to be zero.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * \param other the integer whose greatest common divisor with
+         * this will be found.
+         * \return the greatest common divisor of this and the given
+         * integer.
+         */
+        IntegerBase gcd(const IntegerBase& other) &&;
+        /**
+         * Determines the greatest common divisor of this and the given
+         * integer.
+         *
+         * The result is guaranteed to be non-negative.  As a
+         * special case, gcd(0,0) is considered to be zero.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * \param other the integer whose greatest common divisor with
+         * this will be found.
+         * \return the greatest common divisor of this and the given
+         * integer.
+         */
+        IntegerBase gcd(IntegerBase&& other) &&;
         /**
          * Sets this integer to be the lowest common multiple of this
          * and the given integer.
@@ -1329,7 +1668,49 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * \return the lowest common multiple of this and the given
          * integer.
          */
-        IntegerBase lcm(const IntegerBase& other) const;
+        IntegerBase lcm(const IntegerBase& other) const&;
+        /**
+         * Determines the lowest common multiple of this and the given
+         * integer.  This integer is not changed.
+         *
+         * Note that the result might possibly be negative.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * \param other the integer whose lowest common multiple with
+         * this will be found.
+         * \return the lowest common multiple of this and the given
+         * integer.
+         */
+        IntegerBase lcm(IntegerBase&& other) const&;
+        /**
+         * Determines the lowest common multiple of this and the given
+         * integer.
+         *
+         * Note that the result might possibly be negative.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * \param other the integer whose lowest common multiple with
+         * this will be found.
+         * \return the lowest common multiple of this and the given
+         * integer.
+         */
+        IntegerBase lcm(const IntegerBase& other) &&;
+        /**
+         * Determines the lowest common multiple of this and the given
+         * integer.
+         *
+         * Note that the result might possibly be negative.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * \param other the integer whose lowest common multiple with
+         * this will be found.
+         * \return the lowest common multiple of this and the given
+         * integer.
+         */
+        IntegerBase lcm(IntegerBase&& other) &&;
 
         /**
          * Determines the greatest common divisor of this and the given
@@ -1781,6 +2162,22 @@ IntegerBase<withInfinity> operator + (IntType lhs,
     const IntegerBase<withInfinity>& rhs);
 
 /**
+ * Adds the given native C++ integer to the given large integer.
+ * If the large integer is infinite, the result will also be infinity.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param lhs the native integer to add.
+ * \param rhs the large integer to add.
+ * \return the sum \a lhs plus \a rhs.
+ *
+ * \ingroup maths
+ */
+template <bool withInfinity, CppInteger IntType>
+IntegerBase<withInfinity> operator + (IntType lhs,
+    IntegerBase<withInfinity>&& rhs);
+
+/**
  * Multiplies the given native C++ integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
  *
@@ -1795,6 +2192,22 @@ IntegerBase<withInfinity> operator + (IntType lhs,
 template <bool withInfinity, CppInteger IntType>
 IntegerBase<withInfinity> operator * (IntType lhs,
     const IntegerBase<withInfinity>& rhs);
+
+/**
+ * Multiplies the given native C++ integer with the given large integer.
+ * If the large integer is infinite, the result will also be infinity.
+ *
+ * \python It is assumed that the type \a IntType is \c long.
+ *
+ * \param lhs the native integer to multiply.
+ * \param rhs the large integer to multiply.
+ * \return the product \a lhs times \a rhs.
+ *
+ * \ingroup maths
+ */
+template <bool withInfinity, CppInteger IntType>
+IntegerBase<withInfinity> operator * (IntType lhs,
+    IntegerBase<withInfinity>&& rhs);
 
 /**
  * Writes the tight encoding of the given arbitrary precision integer to the
@@ -3320,7 +3733,37 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
-        const IntegerBase& other) const {
+        const IntegerBase& other) const& {
+    // Do the standard thing for now.
+    IntegerBase ans(*this);
+    return std::move(ans += other);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
+        IntegerBase&& other) const& {
+    // Do the standard thing for now.
+    return std::move(other += *this);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
+        const IntegerBase& other) && {
+    // Do the standard thing for now.
+    return std::move((*this) += other);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
+        IntegerBase&& other) && {
+    // Do the standard thing for now.
+    return std::move((*this) += std::move(other));
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
+        IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return std::move(ans += other);
@@ -3329,15 +3772,45 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
 template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
-        IntType other) const {
+        IntType other) && {
     // Do the standard thing for now.
-    IntegerBase ans(*this);
-    return std::move(ans += other);
+    return std::move((*this) += other);
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
-        const IntegerBase& other) const {
+        const IntegerBase& other) const& {
+    // Do the standard thing for now.
+    IntegerBase ans(*this);
+    return std::move(ans -= other);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
+        IntegerBase&& other) const& {
+    // Do the standard thing for now.
+    other.negate();
+    return std::move(other += *this);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
+        const IntegerBase& other) && {
+    // Do the standard thing for now.
+    return std::move((*this) -= other);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
+        IntegerBase&& other) && {
+    // Do the standard thing for now.
+    return std::move((*this) -= std::move(other));
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
+        IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return std::move(ans -= other);
@@ -3346,15 +3819,45 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
 template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
-        IntType other) const {
+        IntType other) && {
     // Do the standard thing for now.
-    IntegerBase ans(*this);
-    return std::move(ans -= other);
+    return std::move((*this) -= other);
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
-        const IntegerBase& other) const {
+        const IntegerBase& other) const& {
+    // TODO: GMP prefers out-of-place multiplication.
+    // Do the standard thing for now.
+    IntegerBase ans(*this);
+    return std::move(ans *= other);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
+        IntegerBase&& other) const& {
+    // Do the standard thing for now.
+    return std::move(other *= (*this));
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
+        const IntegerBase& other) && {
+    // Do the standard thing for now.
+    return std::move((*this) *= other);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
+        IntegerBase&& other) && {
+    // Do the standard thing for now.
+    return std::move((*this) *= std::move(other));
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
+        IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return std::move(ans *= other);
@@ -3363,15 +3866,30 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
 template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
-        IntType other) const {
+        IntType other) && {
     // Do the standard thing for now.
-    IntegerBase ans(*this);
-    return std::move(ans *= other);
+    return std::move((*this) *= other);
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
-        const IntegerBase& other) const {
+        const IntegerBase& other) const& {
+    // Do the standard thing for now.
+    IntegerBase ans(*this);
+    return std::move(ans /= other);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
+        const IntegerBase& other) && {
+    // Do the standard thing for now.
+    return std::move((*this) /= other);
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
+        IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return std::move(ans /= other);
@@ -3380,15 +3898,30 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
 template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
-        IntType other) const {
+        IntType other) && {
     // Do the standard thing for now.
-    IntegerBase ans(*this);
-    return std::move(ans /= other);
+    return std::move((*this) /= other);
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
-        const IntegerBase& other) const {
+        const IntegerBase& other) const& {
+    // Do the standard thing for now.
+    IntegerBase ans(*this);
+    return std::move(ans.divByExact(other));
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
+        const IntegerBase& other) && {
+    // Do the standard thing for now.
+    return std::move(divByExact(other));
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
+        IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return std::move(ans.divByExact(other));
@@ -3397,15 +3930,30 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
 template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
-        IntType other) const {
+        IntType other) && {
     // Do the standard thing for now.
-    IntegerBase ans(*this);
-    return std::move(ans.divByExact(other));
+    return std::move(divByExact(other));
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
-        const IntegerBase& other) const {
+        const IntegerBase& other) const& {
+    // Do the standard thing for now.
+    IntegerBase ans(*this);
+    return std::move(ans %= other);
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
+        const IntegerBase& other) && {
+    // Do the standard thing for now.
+    return std::move((*this) %= other);
+}
+
+template <bool withInfinity>
+template <CppInteger IntType>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
+        IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     return std::move(ans %= other);
@@ -3414,14 +3962,14 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
 template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
-        IntType other) const {
+        IntType other) && {
     // Do the standard thing for now.
-    IntegerBase ans(*this);
-    return std::move(ans %= other);
+    return std::move((*this) %= other);
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() const {
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -()
+        const& {
     if constexpr (withInfinity)
         if (isInfinite())
             return *this;
@@ -3444,6 +3992,28 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() const {
 }
 
 template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() && {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this; // copy is cheap here
+
+    if (large_) {
+        // This operation is very cheap, which is the main reason we want a
+        // move variant of negation.
+        mpz_neg(large_, large_);
+        return std::move(*this);
+    } else if (small_ == LONG_MIN) {
+        // Overflow, just.
+        IntegerBase ans;
+        ans.large_ = new __mpz_struct[1];
+        mpz_init_set_si(ans.large_, small_);
+        mpz_neg(ans.large_, ans.large_);
+        return ans;
+    } else
+        return IntegerBase(-small_); // also cheap
+}
+
+template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
@@ -3462,6 +4032,41 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         return *this;
     } else
         return (*this) += other.small_;
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
+        IntegerBase&& other) {
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        else if (other.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
+    }
+
+    if (large_) {
+        if (other.large_) {
+            mpz_add(large_, large_, other.large_);
+        } else if (other.small_ >= 0) {
+            mpz_add_ui(large_, large_, other.small_);
+        } else {
+            mpz_sub_ui(large_, large_,
+                detail::negateToUnsignedType(other.small_));
+        }
+    } else if (other.large_) {
+        if (small_ >= 0) {
+            mpz_add_ui(other.large_, other.large_, small_);
+        } else {
+            mpz_sub_ui(other.large_, other.large_,
+                detail::negateToUnsignedType(small_));
+        }
+        std::swap(large_, other.large_);
+    } else {
+        (*this) += other.small_;
+    }
+    return *this;
 }
 
 template <bool withInfinity>
@@ -3547,6 +4152,42 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         return *this;
     } else
         return (*this) -= other.small_;
+}
+
+template <bool withInfinity>
+inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
+        IntegerBase&& other) {
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return *this;
+        else if (other.isInfinite()) {
+            makeInfinite();
+            return *this;
+        }
+    }
+
+    if (large_) {
+        if (other.large_) {
+            mpz_sub(large_, large_, other.large_);
+        } else if (other.small_ >= 0) {
+            mpz_sub_ui(large_, large_, other.small_);
+        } else {
+            mpz_add_ui(large_, large_,
+                detail::negateToUnsignedType(other.small_));
+        }
+    } else if (other.large_) {
+        if (small_ >= 0) {
+            mpz_sub_ui(other.large_, other.large_, small_);
+        } else {
+            mpz_add_ui(other.large_, other.large_,
+                detail::negateToUnsignedType(small_));
+        }
+        std::swap(large_, other.large_);
+        mpz_neg(large_, large_);
+    } else {
+        (*this) -= other.small_;
+    }
+    return *this;
 }
 
 template <bool withInfinity>
@@ -3846,11 +4487,7 @@ inline void IntegerBase<withInfinity>::addProduct(
 
     // All three arguments (including this) are finite.
     //
-    // Note: in the case where x.small_ or y.small_ == LONG_MIN, this code
-    // should still do the right thing since -LONG_MIN will be cast to an
-    // unsigned long (and therefore take the correct value |LONG_MIN|).
-    //
-    // Note also: GMP functions explicitly allow the input and output
+    // Note: GMP functions explicitly allow the input and output
     // variables to be the same (so x.addProduct(x, x) is fine, for example).
     if (x != 0 && y != 0) {
         if (large_) {
@@ -3860,12 +4497,14 @@ inline void IntegerBase<withInfinity>::addProduct(
                 else if (y.small_ > 0)
                     mpz_addmul_ui(large_, x.large_, y.small_);
                 else
-                    mpz_submul_ui(large_, x.large_, -y.small_);
+                    mpz_submul_ui(large_, x.large_,
+                        detail::negateToUnsignedType(y.small_));
             } else if (y.large_) {
                 if (x.small_ > 0)
                     mpz_addmul_ui(large_, y.large_, x.small_);
                 else
-                    mpz_submul_ui(large_, y.large_, -x.small_);
+                    mpz_submul_ui(large_, y.large_,
+                        detail::negateToUnsignedType(x.small_));
             } else {
                 (*this) += x * y;
             }
@@ -3892,7 +4531,7 @@ inline void IntegerBase<withInfinity>::negate() {
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() const {
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() const& {
     if constexpr (withInfinity)
         if (isInfinite())
             return *this;
@@ -3915,8 +4554,30 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() const {
 }
 
 template <bool withInfinity>
+inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() && {
+    if constexpr (withInfinity)
+        if (isInfinite())
+            return *this; // copy is cheap here
+
+    if (large_) {
+        // This operation is very cheap, which is the main reason we want a
+        // move variant of absolute value.
+        mpz_abs(large_, large_);
+        return std::move(*this);
+    } else if (small_ == LONG_MIN) {
+        // Overflow, just.
+        IntegerBase ans;
+        ans.large_ = new __mpz_struct[1];
+        mpz_init_set_si(ans.large_, small_);
+        mpz_neg(ans.large_, ans.large_);
+        return ans;
+    } else
+        return IntegerBase(small_ >= 0 ? small_ : - small_); // also cheap
+}
+
+template <bool withInfinity>
 IntegerBase<withInfinity> IntegerBase<withInfinity>::gcd(
-        const IntegerBase& other) const {
+        const IntegerBase& other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     ans.gcdWith(other);
@@ -3924,12 +4585,60 @@ IntegerBase<withInfinity> IntegerBase<withInfinity>::gcd(
 }
 
 template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::gcd(
+        IntegerBase&& other) const& {
+    // Do the standard thing for now.
+    other.gcdWith(*this);
+    return std::move(other);
+}
+
+template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::gcd(
+        const IntegerBase& other) && {
+    // Do the standard thing for now.
+    gcdWith(other);
+    return std::move(*this);
+}
+
+template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::gcd(
+        IntegerBase&& other) && {
+    // Do the standard thing for now.
+    gcdWith(std::move(other));
+    return std::move(*this);
+}
+
+template <bool withInfinity>
 IntegerBase<withInfinity> IntegerBase<withInfinity>::lcm(
-        const IntegerBase& other) const {
+        const IntegerBase& other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
     ans.lcmWith(other);
     return ans;
+}
+
+template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::lcm(
+        IntegerBase&& other) const& {
+    // Do the standard thing for now.
+    other.lcmWith(*this);
+    return std::move(other);
+}
+
+template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::lcm(
+        const IntegerBase& other) && {
+    // Do the standard thing for now.
+    lcmWith(other);
+    return std::move(*this);
+}
+
+template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::lcm(
+        IntegerBase&& other) && {
+    // Do the standard thing for now.
+    lcmWith(std::move(other));
+    return std::move(*this);
 }
 
 template <bool withInfinity, CppInteger IntType>
@@ -3939,9 +4648,21 @@ inline IntegerBase<withInfinity> operator +(IntType lhs,
 }
 
 template <bool withInfinity, CppInteger IntType>
+inline IntegerBase<withInfinity> operator +(IntType lhs,
+        IntegerBase<withInfinity>&& rhs) {
+    return std::move(rhs) + lhs;
+}
+
+template <bool withInfinity, CppInteger IntType>
 inline IntegerBase<withInfinity> operator *(IntType lhs,
         const IntegerBase<withInfinity>& rhs) {
     return rhs * lhs;
+}
+
+template <bool withInfinity, CppInteger IntType>
+inline IntegerBase<withInfinity> operator *(IntType lhs,
+        IntegerBase<withInfinity>&& rhs) {
+    return std::move(rhs) * lhs;
 }
 
 template <bool withInfinity>

@@ -387,6 +387,20 @@ Parameter ``xExp``:
 Parameter ``yExp``:
     the power of *y* to substitute into *poly*.)doc";
 
+// Docstring regina::python::doc::Laurent2::__init_6
+static constexpr const char __init_6[] =
+R"doc(Creates a new two-variable Laurent polynomial as a product of two one-
+variable Laurent polynomials.
+
+Specifically, this will become the two-variable polynomial ``xPoly(x)
+* yPoly(y)``.
+
+Parameter ``xPoly``:
+    the factor that is a polynomial in ``x``.
+
+Parameter ``yPoly``:
+    the factor that is a polynomial in ``y``.)doc";
+
 // Docstring regina::python::doc::Laurent2::__isub
 static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
@@ -549,6 +563,21 @@ Parameter ``rhs``:
 Returns:
     the first polynomial minus the second.)doc";
 
+// Docstring regina::python::doc::Laurent2::addProduct
+static constexpr const char addProduct[] =
+R"doc(Adds the product of the two given polynomials to this. This is a
+common operation in (for example) inner products and matrix
+multiplication.
+
+Calling ``x.addProduct(y, z)`` is equivalent to, but often faster
+than, calling ``x += y * z``.
+
+Parameter ``x``:
+    the first polynomial in the product to add to this.
+
+Parameter ``y``:
+    the second polynomial in the product to add to this.)doc";
+
 // Docstring regina::python::doc::Laurent2::global_swap
 static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given polynomials.
@@ -632,8 +661,14 @@ Parameter ``t``:
 
 // Docstring regina::python::doc::Laurent2::shifted
 static constexpr const char shifted[] =
-R"doc(Returns the product of this polynomial with ``x^s y^t`` for some
-integers *s* and *t*. This polynomial will not be changed.
+R"doc(A non-destructive routine that returns the product of this polynomial
+with ``x^s y^t`` for some integers *s* and *t*. This polynomial will
+not be changed.
+
+If your polynomial is disposable (i.e., you will never need to use it
+again), then it is faster to use the rvalue reference version of this
+function. To do this, replace ``poly.shifted(s, t)`` with
+``std::move(poly).shifted(s, t)``.
 
 Parameter ``s``:
     the power of *x* to multiply by.

@@ -1443,7 +1443,7 @@ template <CoefficientDomain T>
 inline void Polynomial<T>::negate() {
     for (size_t i = 0; i <= degree_; ++i)
         if (coeff_[i] != 0)
-            coeff_[i] = - coeff_[i];
+            coeff_[i].negate();
 }
 
 template <CoefficientDomain T>
@@ -1887,7 +1887,7 @@ inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
                 coeff_[i] = other.coeff_[i] - coeff_[i];
         for ( ; i <= degree_; ++i)
             if (coeff_[i] != 0)
-                coeff_[i] = -coeff_[i];
+                coeff_[i].negate();
     }
 
     // We might have zeroed out the leading coefficient.
