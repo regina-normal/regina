@@ -1015,6 +1015,7 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         Laurent2& operator += (const Laurent2<T>& other) {
+            // TODO: the following statement is wrong over Z_2
             // This works even if &other == this, since in this case there are
             // no insertions or deletions.
             // TODO: do things in a good order
@@ -1037,6 +1038,7 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         Laurent2& operator += (Laurent2<T>&& other) {
+            // TODO: the following statement is wrong over Z_2
             // This works even if &other == this, since in this case there are
             // no insertions or deletions.
             // TODO: do things in a good order
@@ -1060,16 +1062,18 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         Laurent2& operator -= (const Laurent2<T>& other) {
-            // This works even if &other == this, since in this case there are
-            // no insertions or deletions.
-            // TODO: order
-            for (auto entry : other.coeff_) {
-                auto result = coeff_.emplace(entry.first, T());
-                if (result.second) {
-                    result.first->second = -entry.second;
-                } else {
-                    if ((result.first->second -= entry.second) == 0)
-                        coeff_.erase(result.first);
+            if (std::addressof(other) == this)
+                coeff_.clear();
+            else {
+                // TODO: do things in a good order
+                for (auto entry : other.coeff_) {
+                    auto result = coeff_.emplace(entry.first, T());
+                    if (result.second) {
+                        result.first->second = -entry.second;
+                    } else {
+                        if ((result.first->second -= entry.second) == 0)
+                            coeff_.erase(result.first);
+                    }
                 }
             }
             return *this;
@@ -1085,17 +1089,20 @@ class Laurent2 :
          * \return a reference to this polynomial.
          */
         Laurent2& operator -= (Laurent2<T>&& other) {
-            // This works even if &other == this, since in this case there are
-            // no insertions or deletions.
-            // TODO: order
-            for (auto entry : other.coeff_) {
-                auto result = coeff_.try_emplace(entry.first,
-                    std::move(entry.second));
-                if (result.second) {
-                    result.first->second.negate();
-                } else {
-                    if ((result.first->second -= std::move(entry.second)) == 0)
-                        coeff_.erase(result.first);
+            if (std::addressof(other) == this)
+                coeff_.clear();
+            else {
+                // TODO: do things in a good order
+                for (auto entry : other.coeff_) {
+                    auto result = coeff_.try_emplace(entry.first,
+                        std::move(entry.second));
+                    if (result.second) {
+                        result.first->second.negate();
+                    } else {
+                        if ((result.first->second -= std::move(entry.second))
+                                == 0)
+                            coeff_.erase(result.first);
+                    }
                 }
             }
             return *this;
@@ -1630,8 +1637,10 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
                 ans.coeff_.emplace_hint(ans.coeff_.end(), y->first, y->second);
                 ++y;
             } else {
-                ans.coeff_.emplace_hint(ans.coeff_.end(), x->first,
-                    x->second + y->second);
+                auto c = x->second + y->second;
+                if (c != 0)
+                    ans.coeff_.emplace_hint(ans.coeff_.end(), x->first,
+                        std::move(c));
                 ++x;
                 ++y;
             }
@@ -1741,8 +1750,10 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
                 ans.coeff_.emplace_hint(ans.coeff_.end(), y->first, -y->second);
                 ++y;
             } else {
-                ans.coeff_.emplace_hint(ans.coeff_.end(), x->first,
-                    x->second - y->second);
+                auto c = x->second - y->second;
+                if (c != 0)
+                    ans.coeff_.emplace_hint(ans.coeff_.end(), x->first,
+                        std::move(c));
                 ++x;
                 ++y;
             }
