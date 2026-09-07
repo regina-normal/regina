@@ -896,6 +896,17 @@ class Laurent :
         void addProduct(const Laurent<T>& x, const Laurent<T>& y);
 
         /**
+         * Subtracts the product of the two given polynomials from this.
+         *
+         * Calling `x.subProduct(y, z)` is equivalent to, but often faster
+         * than, calling `x -= y * z`.
+         *
+         * \param x the first polynomial in the product to subtract from this.
+         * \param y the second polynomial in the product to subtract from this.
+         */
+        void subProduct(const Laurent<T>& x, const Laurent<T>& y);
+
+        /**
          * Writes this polynomial to the given output stream, using the
          * given variable name instead of \c x.
          *
@@ -2104,6 +2115,34 @@ inline void Laurent<T>::addProduct(const Laurent<T>& x, const Laurent<T>& y) {
             for (long i = x.minExp_; i <= x.maxExp_; ++i)
                 for (long j = y.minExp_; j <= y.maxExp_; ++j)
                     coeff_[i + j - base_] +=
+                        x.coeff_[i - x.base_] * y.coeff_[j - y.base_];
+        }
+
+        // We might have zeroed out some coefficients.
+        fixDegrees();
+    }
+}
+
+template <CoefficientDomain T>
+inline void Laurent<T>::subProduct(const Laurent<T>& x, const Laurent<T>& y) {
+    if (! (x.coeff_ && y.coeff_)) {
+        return;
+    } else if (std::addressof(x) == this || std::addressof(y) == this) {
+        // TODO: *this *= (1 - y), or *this *= (1 - x)
+        *this -= x * y; // here we _need_ the temporary to hold x * y
+    } else {
+        // The following line ensures that coeff_ becomes non-null.
+        reallocateForRange(x.minExp_ + y.minExp_, x.maxExp_ + y.maxExp_);
+
+        if constexpr (HasAddProduct<T>) {
+            for (long i = x.minExp_; i <= x.maxExp_; ++i)
+                for (long j = y.minExp_; j <= y.maxExp_; ++j)
+                    coeff_[i + j - base_].subProduct(
+                        x.coeff_[i - x.base_], y.coeff_[j - y.base_]);
+        } else {
+            for (long i = x.minExp_; i <= x.maxExp_; ++i)
+                for (long j = y.minExp_; j <= y.maxExp_; ++j)
+                    coeff_[i + j - base_] -=
                         x.coeff_[i - x.base_] * y.coeff_[j - y.base_];
         }
 

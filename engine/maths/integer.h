@@ -1537,6 +1537,16 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          */
         void addProduct(const IntegerBase& x, const IntegerBase& y);
         /**
+         * Subtracts the product of the two given integers from this integer.
+         *
+         * Calling `x.subProduct(y, z)` is equivalent to, but sometimes
+         * faster than, calling `x -= y * z`.
+         *
+         * \param x the first integer in the product to subtract from this.
+         * \param y the second integer in the product to subtract from this.
+         */
+        void subProduct(const IntegerBase& x, const IntegerBase& y);
+        /**
          * Negates this integer.
          * This integer is changed to reflect the result.
          *
@@ -2042,6 +2052,14 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         constexpr IntegerBase(bool, bool) requires (withInfinity) :
                 large_(nullptr) {
             detail::InfinityBase<withInfinity>::infinite_ = true;
+        }
+
+        /**
+         * Initialises this integer to the given GMP integer.
+         * The GMP integer must have already been initialised, and this object
+         * will take ownership of it.
+         */
+        IntegerBase(mpz_ptr large) : large_(large) {
         }
 
         /**
@@ -3691,7 +3709,7 @@ template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator ++(int) {
     if constexpr (withInfinity)
         if (isInfinite())
-            return *this;
+            return IntegerBase(false, false); // infinity
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
@@ -3722,7 +3740,7 @@ template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
     if constexpr (withInfinity)
         if (isInfinite())
-            return *this;
+            return IntegerBase(false, false); // infinity
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
@@ -3824,14 +3842,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
     return std::move((*this) -= other);
 }
 
-template <bool withInfinity>
-inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
-        const IntegerBase& other) const& {
-    // TODO: GMP prefers out-of-place multiplication.
-    // Do the standard thing for now.
-    IntegerBase ans(*this);
-    return std::move(ans *= other);
-}
+// The const-const variant of multiplication is implemented separately in
+// integer.cpp, since GMP prefers out-of-place multiplication.
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
@@ -3972,30 +3984,28 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -()
         const& {
     if constexpr (withInfinity)
         if (isInfinite())
-            return *this;
+            return IntegerBase(false, false); // infinity
 
     if (large_) {
-        IntegerBase ans;
-        ans.large_ = new __mpz_struct[1];
-        mpz_init(ans.large_);
-        mpz_neg(ans.large_, large_);
+        mpz_ptr ans = new __mpz_struct[1];
+        mpz_init(ans);
+        mpz_neg(ans, large_);
         return ans;
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
-        IntegerBase ans;
-        ans.large_ = new __mpz_struct[1];
-        mpz_init_set_si(ans.large_, small_);
-        mpz_neg(ans.large_, ans.large_);
+        mpz_ptr ans = new __mpz_struct[1];
+        mpz_init_set_si(ans, small_);
+        mpz_neg(ans, ans);
         return ans;
     } else
-        return IntegerBase(-small_);
+        return -small_;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() && {
     if constexpr (withInfinity)
         if (isInfinite())
-            return *this; // copy is cheap here
+            return IntegerBase(false, false); // infinity
 
     if (large_) {
         // This operation is very cheap, which is the main reason we want a
@@ -4004,13 +4014,12 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() && {
         return std::move(*this);
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
-        IntegerBase ans;
-        ans.large_ = new __mpz_struct[1];
-        mpz_init_set_si(ans.large_, small_);
-        mpz_neg(ans.large_, ans.large_);
+        mpz_ptr ans = new __mpz_struct[1];
+        mpz_init_set_si(ans, small_);
+        mpz_neg(ans, ans);
         return ans;
     } else
-        return IntegerBase(-small_); // also cheap
+        return -small_; // also cheap
 }
 
 template <bool withInfinity>
@@ -4275,16 +4284,27 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         } else {
             // Note: even if other is unsigned, casting it to DoubleLong will do
             // the cast correctly, and the multiplication should not overflow.
+            // Moreover, the multiplication cannot reach the minimum possible
+            // DoubleLong, which means we can safely negate the result.
             DoubleLong ans = static_cast<DoubleLong>(small_) *
                 static_cast<DoubleLong>(other);
             if (ans > LONG_MAX || ans < LONG_MIN) {
                 // Overflow.
                 large_ = new __mpz_struct[1];
-                mpz_init_set_si(large_, small_);
-                if constexpr (SignedCppInteger<IntType>) {
-                    mpz_mul_si(large_, large_, other);
+                mpz_init(large_);
+                if (ans >= 0) {
+                    mpz_import(large_, 1 /* word count */, 1 /* word order */,
+                        sizeof(DoubleLong) /* word size */,
+                        0 /* native endianness */, 0 /* full words */, &ans);
                 } else {
-                    mpz_mul_ui(large_, large_, other);
+                    // mpz_import assumes an unsigned type.
+                    // C++20 mandates a two's complement representation, and
+                    // we use that here.
+                    ans = -ans;
+                    mpz_import(large_, 1 /* word count */, 1 /* word order */,
+                        sizeof(DoubleLong) /* word size */,
+                        0 /* native endianness */, 0 /* full words */, &ans);
+                    mpz_neg(large_, large_);
                 }
             } else
                 small_ = static_cast<long>(ans);
@@ -4515,6 +4535,47 @@ inline void IntegerBase<withInfinity>::addProduct(
 }
 
 template <bool withInfinity>
+inline void IntegerBase<withInfinity>::subProduct(
+        const IntegerBase& x, const IntegerBase& y) {
+    if constexpr (withInfinity) {
+        if (isInfinite())
+            return;
+        if (x.isInfinite() || y.isInfinite()) {
+            makeInfinite();
+            return;
+        }
+    }
+
+    // All three arguments (including this) are finite.
+    //
+    // Note: GMP functions explicitly allow the input and output
+    // variables to be the same (so x.subProduct(x, x) is fine, for example).
+    if (x != 0 && y != 0) {
+        if (large_) {
+            if (x.large_) {
+                if (y.large_)
+                    mpz_submul(large_, x.large_, y.large_);
+                else if (y.small_ > 0)
+                    mpz_submul_ui(large_, x.large_, y.small_);
+                else
+                    mpz_addmul_ui(large_, x.large_,
+                        detail::negateToUnsignedType(y.small_));
+            } else if (y.large_) {
+                if (x.small_ > 0)
+                    mpz_submul_ui(large_, y.large_, x.small_);
+                else
+                    mpz_addmul_ui(large_, y.large_,
+                        detail::negateToUnsignedType(x.small_));
+            } else {
+                (*this) -= x * y;
+            }
+        } else {
+            (*this) -= x * y;
+        }
+    }
+}
+
+template <bool withInfinity>
 inline void IntegerBase<withInfinity>::negate() {
     if constexpr (withInfinity)
         if (isInfinite())
@@ -4534,30 +4595,28 @@ template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() const& {
     if constexpr (withInfinity)
         if (isInfinite())
-            return *this;
+            return IntegerBase(false, false); // infinity
 
     if (large_) {
-        IntegerBase ans;
-        ans.large_ = new __mpz_struct[1];
-        mpz_init_set(ans.large_, large_);
-        mpz_abs(ans.large_, large_);
+        mpz_ptr ans = new __mpz_struct[1];
+        mpz_init(ans);
+        mpz_abs(ans, large_);
         return ans;
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
-        IntegerBase ans;
-        ans.large_ = new __mpz_struct[1];
-        mpz_init_set_si(ans.large_, small_);
-        mpz_neg(ans.large_, ans.large_);
+        mpz_ptr ans = new __mpz_struct[1];
+        mpz_init_set_si(ans, small_);
+        mpz_neg(ans, ans);
         return ans;
     } else
-        return IntegerBase(small_ >= 0 ? small_ : - small_);
+        return (small_ >= 0 ? small_ : - small_);
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() && {
     if constexpr (withInfinity)
         if (isInfinite())
-            return *this; // copy is cheap here
+            return IntegerBase(false, false); // infinity
 
     if (large_) {
         // This operation is very cheap, which is the main reason we want a
@@ -4566,13 +4625,12 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() && {
         return std::move(*this);
     } else if (small_ == LONG_MIN) {
         // Overflow, just.
-        IntegerBase ans;
-        ans.large_ = new __mpz_struct[1];
-        mpz_init_set_si(ans.large_, small_);
-        mpz_neg(ans.large_, ans.large_);
+        mpz_ptr ans = new __mpz_struct[1];
+        mpz_init_set_si(ans, small_);
+        mpz_neg(ans, ans);
         return ans;
     } else
-        return IntegerBase(small_ >= 0 ? small_ : - small_); // also cheap
+        return (small_ >= 0 ? small_ : - small_); // also cheap
 }
 
 template <bool withInfinity>

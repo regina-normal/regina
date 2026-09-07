@@ -192,17 +192,86 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         mpz_init(large_);
         mpz_mul_si(large_, other.large_, small_);
     } else {
+        // In DoubleLong, the multiplication will not overflow.
+        // Furthermore, the multiplication cannot reach the minimum possible
+        // DoubleLong, which means we can safely negate the result.
         DoubleLong ans = static_cast<DoubleLong>(small_) *
             static_cast<DoubleLong>(other.small_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
             large_ = new __mpz_struct[1];
-            mpz_init_set_si(large_, small_);
-            mpz_mul_si(large_, large_, other.small_);
+            mpz_init(large_);
+            if (ans >= 0) {
+                mpz_import(large_, 1 /* word count */, 1 /* word order */,
+                    sizeof(DoubleLong) /* word size */,
+                    0 /* native endianness */, 0 /* full words */, &ans);
+            } else {
+                // mpz_import assumes an unsigned type.
+                // C++20 mandates a two's complement representation, and
+                // we use that here.
+                ans = -ans;
+                mpz_import(large_, 1 /* word count */, 1 /* word order */,
+                    sizeof(DoubleLong) /* word size */,
+                    0 /* native endianness */, 0 /* full words */, &ans);
+                mpz_neg(large_, large_);
+            }
         } else
             small_ = static_cast<long>(ans);
     }
     return *this;
+}
+
+template <bool withInfinity>
+IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
+        const IntegerBase& other) const& {
+    // Since GMP prefers out-of-place multiplication, we implement this
+    // separately from *=.
+    if constexpr (withInfinity) {
+        if (isInfinite() || other.isInfinite())
+            return IntegerBase(false, false); // infinity
+    }
+
+    if (large_) {
+        mpz_ptr ans = new __mpz_struct[1];
+        mpz_init(ans);
+        if (other.large_)
+            mpz_mul(ans, large_, other.large_);
+        else
+            mpz_mul_si(ans, large_, other.small_);
+        return ans;
+    } else if (other.large_) {
+        mpz_ptr ans = new __mpz_struct[1];
+        mpz_init(ans);
+        mpz_mul_si(ans, other.large_, small_);
+        return ans;
+    } else {
+        // In DoubleLong, the multiplication will not overflow.
+        // Furthermore, the multiplication cannot reach the minimum possible
+        // DoubleLong, which means we can safely negate the result.
+        DoubleLong ans = static_cast<DoubleLong>(small_) *
+            static_cast<DoubleLong>(other.small_);
+        if (ans > LONG_MAX || ans < LONG_MIN) {
+            // Overflow.
+            mpz_ptr ansLarge = new __mpz_struct[1];
+            mpz_init(ansLarge);
+            if (ans >= 0) {
+                mpz_import(ansLarge, 1 /* word count */, 1 /* word order */,
+                    sizeof(DoubleLong) /* word size */,
+                    0 /* native endianness */, 0 /* full words */, &ans);
+            } else {
+                // mpz_import assumes an unsigned type.
+                // C++20 mandates a two's complement representation, and
+                // we use that here.
+                ans = -ans;
+                mpz_import(ansLarge, 1 /* word count */, 1 /* word order */,
+                    sizeof(DoubleLong) /* word size */,
+                    0 /* native endianness */, 0 /* full words */, &ans);
+                mpz_neg(ansLarge, ansLarge);
+            }
+            return ansLarge;
+        } else
+            return static_cast<long>(ans);
+    }
 }
 
 template <bool withInfinity>

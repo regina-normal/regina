@@ -2375,6 +2375,64 @@ TYPED_TEST(IntegerTest, addProduct) {
     }
 }
 
+TYPED_TEST(IntegerTest, subProduct) {
+    for (const auto& x : this->cases) {
+        SCOPED_TRACE_REGINA(x);
+        for (const auto& y : this->cases) {
+            SCOPED_TRACE_REGINA(y);
+            for (const auto& z : this->cases) {
+                SCOPED_TRACE_REGINA(z);
+                {
+                    TypeParam tmp(x);
+                    tmp.subProduct(y, z);
+                    EXPECT_EQ(tmp, x - y * z);
+                }
+                {
+                    TypeParam tmp(x);
+                    tmp.makeLarge();
+                    EXPECT_FALSE(tmp.isNative());
+                    tmp.subProduct(y, z);
+                    EXPECT_FALSE(tmp.isNative());
+                    EXPECT_EQ(tmp, x - y * z);
+                }
+            }
+            {
+                TypeParam tmp(x);
+                tmp.subProduct(tmp, y);
+                EXPECT_EQ(tmp, x - x * y);
+            }
+            {
+                TypeParam tmp(x);
+                tmp.subProduct(y, tmp);
+                EXPECT_EQ(tmp, x - x * y);
+            }
+        }
+        {
+            TypeParam tmp(x);
+            tmp.subProduct(tmp, tmp);
+            EXPECT_EQ(tmp, x - x * x);
+        }
+
+        if constexpr (TypeParam::supportsInfinity) {
+            {
+                TypeParam tmp(TypeParam::infinity);
+                tmp.subProduct(x, x);
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp(x);
+                tmp.subProduct(TypeParam::infinity, x);
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp(x);
+                tmp.subProduct(x, TypeParam::infinity);
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+        }
+    }
+}
+
 TYPED_TEST(IntegerTest, negate) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);

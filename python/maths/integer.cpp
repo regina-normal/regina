@@ -144,6 +144,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
         .def(pybind11::self %= pybind11::self, rdoc::__imod)
         .def(pybind11::self %= long(), rdoc::__imod_2)
         .def("addProduct", &Int::addProduct, rdoc::addProduct)
+        .def("subProduct", &Int::subProduct, rdoc::subProduct)
         .def("negate", &Int::negate, rdoc::negate)
         .def("raiseToPower", &Int::raiseToPower, rdoc::raiseToPower)
         .def("abs", static_cast<Int (Int::*)() const&>(&Int::abs), rdoc::abs)

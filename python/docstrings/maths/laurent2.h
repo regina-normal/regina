@@ -699,6 +699,19 @@ Parameter ``varY``:
 Returns:
     this polynomial as a human-readable string.)doc";
 
+// Docstring regina::python::doc::Laurent2::subProduct
+static constexpr const char subProduct[] =
+R"doc(Subtracts the product of the two given polynomials from this.
+
+Calling ``x.subProduct(y, z)`` is equivalent to, but often faster
+than, calling ``x -= y * z``.
+
+Parameter ``x``:
+    the first polynomial in the product to subtract from this.
+
+Parameter ``y``:
+    the second polynomial in the product to subtract from this.)doc";
+
 // Docstring regina::python::doc::Laurent2::swap
 static constexpr const char swap[] =
 R"doc(Swaps the contents of this and the given polynomial. This is a fast
