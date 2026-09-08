@@ -48,6 +48,38 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 
 namespace regina {
 
+template <CoefficientDomain> class Laurent;
+
+/**
+ * Indicates if/when to use Karatsuba multiplication when multiplying
+ * polynomials with coefficients of type \a T.
+ *
+ * Karatsuba multiplication is intended to reduce the number of coefficient
+ * product operations, but this comes with some significant overhead.
+ * Therefore whether it is worthwhile may depend on the cost of product
+ * operations for type \a T (which is why this constant is templated).
+ *
+ * Currently Karatsuba multiplication is only used to multiply single-variable
+ * Laurent polynomials (i.e., polynomials of type `Laurent<T>`).
+ *
+ * If `karatsubaThreshold<T>` takes a positive value \a n, this means that
+ * Karatsuba multiplication will only be used when both polynomials being
+ * multiplied have at least \a n coefficients (i.e., both degree spans are
+ * at least `n-1`).  If `karatsubaThreshold<T>` is zero, then Karatsuba
+ * multiplication will not be used at all.
+ *
+ * \nopython
+ */
+template <CoefficientDomain T>
+static constexpr size_t karatsubaThreshold = 0;
+
+#ifndef __DOXYGEN
+// For now, just use Karatsuba multiplication when working with "nested"
+// Laurent polynomials (i.e., Laurent<Laurent<T>>).
+template <CoefficientDomain T>
+static constexpr size_t karatsubaThreshold<Laurent<T>> = 64;
+#endif
+
 /**
  * Represents a single-variable Laurent polynomial with coefficients of
  * type \a T.  A Laurent polynomial differs from an ordinary polynomial
@@ -120,6 +152,30 @@ class Laurent :
 
         static const T zero_;
             /**< A zero coefficient that we can safely make references to. */
+
+        /**
+         * Used to indicate whether the result of some computation should be
+         * added to or assigned to a destination object.
+         */
+        enum class SetOrAdd {
+            /**
+             * Indicates that the result may be _either_ assigned to or added to
+             * the destination object, whichever is fastest.  This is typically
+             * used when assignment is required, but the destination object is
+             * known to have been initialised to zero.
+             */
+            Either = 0,
+            /**
+             * Indicates that the result should be assigned to the destination
+             * object.  This is used (for example) by `x = y * z`.
+             */
+            Set = 1,
+            /**
+             * Indicates that the result should be added to the destination
+             * object.  This is used (for example) by `x.addProduct(y, z)`.
+             */
+            Add = 2
+        };
 
     public:
         /**
@@ -1414,17 +1470,10 @@ class Laurent :
             // the coefficients of the product in a separate section of memory.
             T* ans = new T[maxExp_ - minExp_ + other.maxExp_ - other.minExp_
                 + 1];
-            if constexpr (HasAddProduct<T>) {
-                for (long i = minExp_; i <= maxExp_; ++i)
-                    for (long j = other.minExp_; j <= other.maxExp_; ++j)
-                        ans[i + j - minExp_ - other.minExp_].addProduct(
-                            coeff_[i - base_], other.coeff_[j - other.base_]);
-            } else {
-                for (long i = minExp_; i <= maxExp_; ++i)
-                    for (long j = other.minExp_; j <= other.maxExp_; ++j)
-                        ans[i + j - minExp_ - other.minExp_] +=
-                            (coeff_[i - base_] * other.coeff_[j - other.base_]);
-            }
+            productBest<SetOrAdd::Either>(ans,
+                coeff_ + minExp_ - base_, maxExp_ - minExp_ + 1,
+                other.coeff_ + other.minExp_ - other.base_,
+                    other.maxExp_ - other.minExp_ + 1);
 
             delete[] coeff_;
             coeff_ = ans;
@@ -1454,21 +1503,17 @@ class Laurent :
                 // TODO: *this *= (y + 1), or *this *= (x + 1)
                 *this += x * y; // here we _need_ the temporary to hold x * y
             } else {
+                // At this point, we know that both x and y have at least one
+                // non-zero coefficient.
+                //
                 // The following line ensures that coeff_ becomes non-null.
                 reallocateForRange(x.minExp_ + y.minExp_,
                     x.maxExp_ + y.maxExp_);
 
-                if constexpr (HasAddProduct<T>) {
-                    for (long i = x.minExp_; i <= x.maxExp_; ++i)
-                        for (long j = y.minExp_; j <= y.maxExp_; ++j)
-                            coeff_[i + j - base_].addProduct(
-                                x.coeff_[i - x.base_], y.coeff_[j - y.base_]);
-                } else {
-                    for (long i = x.minExp_; i <= x.maxExp_; ++i)
-                        for (long j = y.minExp_; j <= y.maxExp_; ++j)
-                            coeff_[i + j - base_] +=
-                                x.coeff_[i - x.base_] * y.coeff_[j - y.base_];
-                }
+                productBest<SetOrAdd::Add>(
+                    coeff_ + x.minExp_ + y.minExp_ - base_,
+                    x.coeff_ + x.minExp_ - x.base_, x.maxExp_ - x.minExp_ + 1,
+                    y.coeff_ + y.minExp_ - y.base_, y.maxExp_ - y.minExp_ + 1);
 
                 // We might have zeroed out some coefficients.
                 fixDegrees();
@@ -1870,45 +1915,229 @@ class Laurent :
         }
 
         /**
-         * Multiplies the two given polynomials using the classical algorithm.
+         * Multiplies two ranges of coefficients using the classical polynomial
+         * multiplication algorithm.
          *
-         * This involves scanning through the coefficients of both polynomials
-         * in a pair of nested loops, and so to multiply two polynomials with
-         * degree span \a n it uses `O(n^2)` operations on type \a T.
+         * This involves scanning through both input ranges in a pair of nested
+         * loops, and so to multiply two polynomials with degree span \a n
+         * requires computing `O(n^2)` individual products of coefficients.
          *
-         * \pre Both \a a and \a b contain more than one non-zero coefficient.
+         * See productBest() for details of how the input and output ranges
+         * work, how the results are stored in the output range, and what the
+         * individual function arguments mean.
+         *
+         * \pre Both \a lhsLen and \a rhsLen are strictly positive.
          */
-        static Laurent multClassic(const Laurent<T>& a, const Laurent<T>& b) {
-            T* coeff = new T[a.maxExp_ - a.minExp_ + b.maxExp_ - b.minExp_ + 1];
-            if constexpr (HasAddProduct<T>) {
-                for (long i = a.minExp_; i <= a.maxExp_; ++i)
-                    for (long j = b.minExp_; j <= b.maxExp_; ++j)
-                        coeff[i + j - a.minExp_ - b.minExp_].addProduct(
-                            a.coeff_[i - a.base_], b.coeff_[j - b.base_]);
-            } else {
-                for (long i = a.minExp_; i <= a.maxExp_; ++i)
-                    for (long j = b.minExp_; j <= b.maxExp_; ++j)
-                        coeff[i + j - a.minExp_ - b.minExp_] +=
-                            (a.coeff_[i - a.base_] * b.coeff_[j - b.base_]);
+        template <SetOrAdd operation>
+        static void productClassic(T* dest,
+                const T* lhs, size_t lhsLen, const T* rhs, size_t rhsLen) {
+            if constexpr (operation == SetOrAdd::Set) {
+                // We have to add (not set) inside our nested loops, since we
+                // will be revisiting the same destination exponents over and
+                // over.  Therefore we need to explicitly initialise them to
+                // zero now.
+                std::fill(dest, dest + lhsLen + rhsLen - 1, T());
             }
-
-            // Note: the final minExp/maxExp coefficients will both be non-zero,
-            // since the same is true of both a and b.
-            return { a.minExp_ + b.minExp_, a.maxExp_ + b.maxExp_, coeff };
+            if constexpr (HasAddProduct<T>) {
+                for (size_t i = 0; i < lhsLen; ++i)
+                    for (size_t j = 0; j < rhsLen; ++j)
+                        dest[i + j].addProduct(lhs[i], rhs[j]);
+            } else {
+                for (size_t i = 0; i < lhsLen; ++i)
+                    for (size_t j = 0; j < rhsLen; ++j)
+                        dest[i + j] += lhs[i] * rhs[j];
+            }
         }
 
         /**
-         * Multiplies the two given polynomials using Karatsuba's
-         * divide-and-conquer algorithm.
+         * Multiplies two ranges of coefficients using Karatsuba's polynomial
+         * multiplication algorithm.
          *
-         * To multiply two polynomials with degree span \a n, this requires
-         * `O(n^(log₂ 3)) ≃ O(n^1.585)` operations on type \a T.
+         * Karatsuba's algorithm is a divide-and-conquer algorithm: to multiply
+         * two polynomials with the same degree span \a n, it requires computing
+         * `O(n^(log₂ 3)) ≃ O(n^1.585)` individual products of coefficients.
          *
-         * \pre Both \a a and \a b contain more than one non-zero coefficient.
+         * The algorithm works by dividing each range of coefficients into two
+         * _blocks_ (an upper and lower block).  The argument \a blockSize
+         * indicates the number of coefficients in the two lower blocks; the
+         * two upper blocks will then have the remaining `lhsLen - blockSize`
+         * and `rhsLen - blockSize` coefficients respectively.
+         *
+         * See productBest() for details of how the input and output ranges
+         * work, how the results are stored in the output range, and what the
+         * individual function arguments mean.
+         *
+         * \pre For both input ranges, the upper and lower blocks both contain
+         * at least one and at most \a blockSize coefficients.  That is:
+         * `0 < blockSize < {lhsLen,rhsLen} ≤ 2 * blockSize`.
          */
-        static Laurent multKaratsuba(const Laurent<T>& a, const Laurent<T>& b) {
-            // TODO
-            return {};
+        template <SetOrAdd operation>
+        static void productKaratsuba(T* dest,
+                const T* lhs, size_t lhsLen, const T* rhs, size_t rhsLen,
+                size_t blockSize) {
+            // TODO: Reuse the buffers.
+            // TODO: Audit use of std::move() in here.
+            // TODO: Do we rely on karatsubaThreshold <= {lhsLen,rhsLen} here?
+            // Compute the lengths of the upper blocks.
+            // Here we have: 1 ≤ {lhsUpperLen,rhsUpperLen} ≤ blockSize.
+            size_t lhsUpperLen = lhsLen - blockSize;
+            size_t rhsUpperLen = rhsLen - blockSize;
+
+            // Compute the length of the output range coming from the two
+            // lower blocks.  Here we have: 1 ≤ blockSize ≤ blockOutputLen.
+            size_t blockOutputLen = (blockSize << 1) - 1;
+
+            T* scratch = new T[blockSize << 1];
+            size_t i;
+
+            switch (operation) {
+                case SetOrAdd::Either:
+                case SetOrAdd::Set:
+                    productBest<SetOrAdd::Either>(scratch,
+                        lhs, blockSize, rhs, blockSize);
+                    for (i = 0; i < blockOutputLen; ++i)
+                        dest[i + blockSize] = -scratch[i];
+                    for (i = 0; i < blockSize; ++i)
+                        dest[i] = std::move(scratch[i]);
+                    for ( ; i < blockOutputLen; ++i)
+                        dest[i] += std::move(scratch[i]);
+
+                    productBest<SetOrAdd::Set>(scratch,
+                        lhs + blockSize, lhsUpperLen,
+                        rhs + blockSize, rhsUpperLen);
+                    for (i = 0; i < std::min(blockSize,
+                            lhsUpperLen + rhsUpperLen) - 1; ++i)
+                        dest[i + (blockSize << 1)] += scratch[i];
+                    for ( ; i < lhsUpperLen + rhsUpperLen - 1; ++i)
+                        dest[i + (blockSize << 1)] = scratch[i];
+                    for (i = 0; i < lhsUpperLen + rhsUpperLen - 1; ++i)
+                        dest[i + blockSize] -= std::move(scratch[i]);
+                    break;
+                case SetOrAdd::Add:
+                    productBest<SetOrAdd::Either>(scratch,
+                        lhs, blockSize, rhs, blockSize);
+                    for (i = 0; i < blockOutputLen; ++i) {
+                        dest[i + blockSize] -= scratch[i];
+                        dest[i] += std::move(scratch[i]);
+                    }
+                    productBest<SetOrAdd::Set>(scratch,
+                        lhs + blockSize, lhsUpperLen,
+                        rhs + blockSize, rhsUpperLen);
+                    for (i = 0; i < lhsUpperLen + rhsUpperLen - 1; ++i) {
+                        dest[i + blockSize] -= scratch[i];
+                        dest[i + (blockSize << 1)] += std::move(scratch[i]);
+                    }
+                    break;
+            }
+
+            for (i = 0; i < lhsUpperLen; ++i)
+                scratch[i] = lhs[i] + lhs[blockSize + i];
+            for ( ; i < blockSize; ++i)
+                scratch[i] = lhs[i];
+            for (i = 0; i < rhsUpperLen; ++i)
+                scratch[blockSize + i] = rhs[i] + rhs[blockSize + i];
+            for ( ; i < blockSize; ++i)
+                scratch[blockSize + i] = rhs[i];
+
+            productBest<SetOrAdd::Add>(dest + blockSize,
+                scratch, blockSize, scratch + blockSize, blockSize);
+
+            delete[] scratch;
+        }
+
+        /**
+         * Multiplies two ranges of coefficients using whatever polynomial
+         * multiplication algorithm this routine deems best.
+         *
+         * The input consists of two read-only C-style arrays, each given by a
+         * starting pointer and the number of coefficients.  The output will
+         * consist of `lhsLen + rhsLen - 1` coefficients, which will likewise
+         * be stored in a C-style array.  Whether they are stored via assignment
+         * or addition depends on the template parameter \a operation.
+         *
+         * Each range of input coefficients is given in order from lowest
+         * degree to highest degree, and may include zeroes at the endpoints.
+         * Likewise, the output coefficients will be stored in order from
+         * lowest degree to highest degree, and may include zeroes at the
+         * endpoints.
+         *
+         * \pre Both \a lhsLen and \a rhsLen are strictly positive.
+         *
+         * \tparam storageOperation indicates whether the output coefficients
+         * should be stored via assignment (`dest[i] = result`), addition
+         * (`dest[i] += result`), or whichever is fastest (if `dest[i]` is
+         * known to have been initialised to zero).
+         *
+         * \param dest the C-style array in which the output coefficients
+         * should be stored.
+         * \param lhs the C-style array holding the first range of input
+         * coefficients.
+         * \param lhsLen the total number of coefficients in the first input
+         * range.
+         * \param rhs the C-style array holding the second range of input
+         * coefficients.
+         * \param rhsLen the total number of coefficients in the second input
+         * range.
+         */
+        template <SetOrAdd operation>
+        static void productBest(T* dest,
+                const T* lhs, size_t lhsLen, const T* rhs, size_t rhsLen) {
+            if constexpr (karatsubaThreshold<T> == 0) {
+                // Do not use Karatsuba multiplication at all.
+                productClassic<operation>(dest, lhs, lhsLen, rhs, rhsLen);
+            } else {
+                // We need to decide if/how to use Karatsuba multiplication.
+                if (lhsLen < karatsubaThreshold<T> ||
+                        rhsLen < karatsubaThreshold<T>) {
+                    // One of the polynomials is tiny.
+                    // Just use classic multiplication.
+                    productClassic<operation>(dest, lhs, lhsLen, rhs, rhsLen);
+                } else if ((lhsLen << 1) <= rhsLen + 1) {
+                    // We have rhs much longer than lhs.
+                    // Break rhs into blocks of size lhsLen, and use Karatsuba
+                    // multiplication on each (except possibly the last).
+                    if constexpr (operation == SetOrAdd::Set) {
+                        // Since the destination ranges overlap for each block
+                        // operation, we need to initialise the destination
+                        // coefficients and then add.
+                        std::fill(dest, dest + lhsLen + rhsLen - 1, T());
+                    }
+                    size_t blockSize = (lhsLen + 1) >> 1;
+                    while (rhsLen >= lhsLen) {
+                        productKaratsuba<SetOrAdd::Add>(dest, lhs, lhsLen,
+                            rhs, lhsLen, blockSize);
+                        rhsLen -= lhsLen;
+                        rhs += lhsLen;
+                        dest += lhsLen;
+                    }
+                    productBest<SetOrAdd::Add>(dest, lhs, lhsLen, rhs, rhsLen);
+                } else if ((rhsLen << 1) <= lhsLen + 1) {
+                    // We have lhs much longer than rhs.
+                    // Like above, but with LHS and RHS swapped.
+                    if constexpr (operation == SetOrAdd::Set) {
+                        std::fill(dest, dest + lhsLen + rhsLen - 1, T());
+                    }
+                    size_t blockSize = (rhsLen + 1) >> 1;
+                    while (lhsLen >= rhsLen) {
+                        productKaratsuba<SetOrAdd::Add>(dest, lhs, rhsLen,
+                            rhs, rhsLen, blockSize);
+                        lhsLen -= rhsLen;
+                        lhs += rhsLen;
+                        dest += rhsLen;
+                    }
+                    productBest<SetOrAdd::Add>(dest, lhs, lhsLen, rhs, rhsLen);
+                } else if (lhsLen <= rhsLen) {
+                    // Compute blockSize = ceil(rhsLen/2).  Then we have:
+                    //   blockSize ≤ (rhsLen+1)/2
+                    //             < lhsLen ≤ rhsLen ≤ 2*blockSize.
+                    productKaratsuba<operation>(dest, lhs, lhsLen, rhs, rhsLen,
+                        (rhsLen + 1) >> 1);
+                } else {
+                    // As above, but with LHS and RHS swapped.
+                    productKaratsuba<operation>(dest, lhs, lhsLen, rhs, rhsLen,
+                        (lhsLen + 1) >> 1);
+                }
+            }
         }
 
     template <CoefficientDomain U>
@@ -2411,8 +2640,17 @@ Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
             rhs.minExp_);
     } else {
         // Both polynomials have more than one non-zero coefficient.
-        // TODO; also fuss about *=
-        return Laurent<T>::multClassic(lhs, rhs);
+        T* coeff =
+            new T[lhs.maxExp_ - lhs.minExp_ + rhs.maxExp_ - rhs.minExp_ + 1];
+        Laurent<T>::template productBest<Laurent<T>::SetOrAdd::Either>(coeff,
+            lhs.coeff_ + lhs.minExp_ - lhs.base_,
+                lhs.maxExp_ - lhs.minExp_ + 1,
+            rhs.coeff_ + rhs.minExp_ - rhs.base_,
+                rhs.maxExp_ - rhs.minExp_ + 1);
+
+        // Note: the final minExp/maxExp coefficients will both be non-zero,
+        // since the same is true of both lhs and rhs.
+        return { lhs.minExp_ + rhs.minExp_, lhs.maxExp_ + rhs.maxExp_, coeff };
     }
 }
 
