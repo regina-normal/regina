@@ -2469,7 +2469,11 @@ TYPED_TEST(IntegerTest, abs) {
         std::string str = x.stringValue();
         ASSERT_FALSE(str.empty());
 
-        TypeParam result = TypeParam(x).abs();
+        TypeParam result = TypeParam(x).abs(); // rvalue variant
+        {
+            const TypeParam clone(x);
+            EXPECT_EQ(clone.abs(), result); // const variant
+        }
 
         // Verify the results using string representations.
         if (x.sign() == 0) {
@@ -2496,8 +2500,13 @@ TYPED_TEST(IntegerTest, abs) {
         }
     }
 
-    if constexpr (TypeParam::supportsInfinity)
+    if constexpr (TypeParam::supportsInfinity) {
         EXPECT_EQ(TypeParam(TypeParam::infinity).abs(), TypeParam::infinity);
+        {
+            const TypeParam clone(TypeParam::infinity);
+            EXPECT_EQ(clone.abs(), TypeParam::infinity);
+        }
+    }
 }
 
 TYPED_TEST(IntegerTest, divisionAlg) {
