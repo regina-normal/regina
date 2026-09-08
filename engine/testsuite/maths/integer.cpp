@@ -1303,12 +1303,22 @@ TYPED_TEST(IntegerTest, plusMinus) {
 
             {
                 TypeParam z = x;
-                EXPECT_EQ(z += y, x + y);
+                EXPECT_EQ(z += y, x + y); // const +=
                 EXPECT_EQ(z, x + y);
             }
             {
                 TypeParam z = x;
-                EXPECT_EQ(z -= y, x - y);
+                EXPECT_EQ(z += TypeParam(y), x + y); // rvalue +=
+                EXPECT_EQ(z, x + y);
+            }
+            {
+                TypeParam z = x;
+                EXPECT_EQ(z -= y, x - y); // const -=
+                EXPECT_EQ(z, x - y);
+            }
+            {
+                TypeParam z = x;
+                EXPECT_EQ(z -= TypeParam(y), x - y); // rvalue -=
                 EXPECT_EQ(z, x - y);
             }
 
@@ -1479,12 +1489,16 @@ TYPED_TEST(IntegerTest, plusMinus) {
         EXPECT_EQ(inf - inf, inf);
         {
             TypeParam tmp = TypeParam::infinity;
-            tmp += tmp;
+            tmp += tmp; // const +=
+            EXPECT_EQ(tmp, TypeParam::infinity);
+            EXPECT_EQ(tmp += TypeParam(inf), inf); // rvalue +=
             EXPECT_EQ(tmp, TypeParam::infinity);
         }
         {
             TypeParam tmp = TypeParam::infinity;
-            tmp -= tmp;
+            tmp -= tmp; // const -=
+            EXPECT_EQ(tmp, TypeParam::infinity);
+            EXPECT_EQ(tmp -= TypeParam(inf), inf); // rvalue -=
             EXPECT_EQ(tmp, TypeParam::infinity);
         }
 
@@ -1495,6 +1509,47 @@ TYPED_TEST(IntegerTest, plusMinus) {
             EXPECT_EQ(inf - x, inf);
             EXPECT_EQ(x + inf, inf);
             EXPECT_EQ(x - inf, inf);
+
+            {
+                TypeParam tmp = x;
+                EXPECT_EQ(tmp += inf, inf); // const +=
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = x;
+                EXPECT_EQ(tmp += TypeParam(inf), inf); // rvalue +=
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = inf;
+                EXPECT_EQ(tmp += x, inf); // const +=
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = inf;
+                EXPECT_EQ(tmp += TypeParam(x), inf); // rvalue +=
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = x;
+                EXPECT_EQ(tmp -= inf, inf); // const -=
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = x;
+                EXPECT_EQ(tmp -= TypeParam(inf), inf); // rvalue -=
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = inf;
+                EXPECT_EQ(tmp -= x, inf); // const -=
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
+            {
+                TypeParam tmp = inf;
+                EXPECT_EQ(tmp -= TypeParam(x), inf); // rvalue -=
+                EXPECT_EQ(tmp, TypeParam::infinity);
+            }
         }
 
         for (long x : this->longCases) {
@@ -2437,10 +2492,10 @@ TYPED_TEST(IntegerTest, negate) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
 
-        EXPECT_EQ(x + (-x), 0);
-        EXPECT_EQ((-x) + x, 0);
-        EXPECT_EQ(-(-x), x);
-        EXPECT_EQ(-x, x * (-1));
+        EXPECT_EQ(x + (-x), 0); // const negation
+        EXPECT_EQ((-x) + x, 0); // const negation
+        EXPECT_EQ(-(-x), x); // const _and_ rvalue negation
+        EXPECT_EQ(-x, x * (-1)); // const negation
 
         // Verify the results using string representations.
         if (x.sign() == 0)
@@ -2451,14 +2506,17 @@ TYPED_TEST(IntegerTest, negate) {
             EXPECT_EQ("-" + (-x).stringValue(), x.stringValue());
 
         TypeParam z(x);
-        z.negate();
-        EXPECT_EQ(z, -x);
+        z.negate(); // in-place negation
+        EXPECT_EQ(z, -x); // const negation
+        EXPECT_EQ(-std::move(z), x); // rvalue negation
     }
 
     if constexpr (TypeParam::supportsInfinity) {
         TypeParam i(TypeParam::infinity);
         i.negate();
         EXPECT_EQ(i, TypeParam::infinity);
+        EXPECT_EQ(-i, TypeParam::infinity); // const negation
+        EXPECT_EQ(-std::move(i), TypeParam::infinity); // rvalue negation
     }
 }
 
@@ -2540,8 +2598,11 @@ TYPED_TEST(IntegerTest, gcdLcm) {
 
             TypeParam u, v;
             TypeParam g = x.gcdWithCoeffs(y, u, v);
-            EXPECT_EQ(g, x.gcd(y));
-            EXPECT_EQ(g, y.gcd(x));
+            EXPECT_EQ(g, x.gcd(y)); // const variant
+            EXPECT_EQ(g, y.gcd(x)); // const variant
+            EXPECT_EQ(g, x.gcd(TypeParam(y))); // rvalue variant
+            EXPECT_EQ(g, TypeParam(x).gcd(y)); // rvalue variant
+            EXPECT_EQ(g, TypeParam(x).gcd(TypeParam(y))); // rvalue variant
 
             if (x == 0 && y == 0) {
                 EXPECT_EQ(g, 0);
@@ -2580,8 +2641,11 @@ TYPED_TEST(IntegerTest, gcdLcm) {
 
             // Make sure the LCM is correct.
             // Note that we make no guarantees about the sign of the LCM.
-            TypeParam l = x.lcm(y);
-            EXPECT_EQ(l, y.lcm(x));
+            TypeParam l = x.lcm(y); // const variant
+            EXPECT_EQ(l, y.lcm(x)); // const variant
+            EXPECT_EQ(l, x.lcm(TypeParam(y))); // rvalue variant
+            EXPECT_EQ(l, TypeParam(x).lcm(y)); // rvalue variant
+            EXPECT_EQ(l, TypeParam(x).lcm(TypeParam(y))); // rvalue variant
             EXPECT_EQ((g * l).abs(), (x * y).abs());
 
             // Verify that in-place gcd/lcm operations behave correctly also.
