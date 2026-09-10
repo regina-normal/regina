@@ -56,13 +56,24 @@ you can represent both ``2+3x`` and ``1+1/x``).
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
+possible, even when passing or returning objects by value. If a
+Laurent object is moved from, it can later be reused by assigning it a
+new value or by calling one of the initialisation functions init() or
+initExp().
 
 The underlying storage method for this class is dense (i.e., all
 coefficients are explicitly stored, including zero coefficients).
 
 See also the class Laurent2, which describes Laurent polynomials in
 two variables.
+
+Precondition:
+    The coefficient type *T* has the property that, if an object is
+    moved from, it can later be reused by assigning it a new value.
+    Examples of types with this property include C++ standard library
+    types (see C++ 20 standard, section 16.5.5.16); Regina's Integer,
+    LargeInteger and Rational classes; and Laurent<U> for any *U*
+    having this same property.
 
 Python:
     In Python, the class Laurent refers to the specific template class
@@ -613,11 +624,29 @@ If you just wish to multiply two polynomials, you should use the usual
 product operators (e.g., ``x = y * z``): this way Regina will choose
 the most suitable algorithm for you.
 
+The Karatsuba algorithm is not available for all polynomials: it
+requires the two polynomials to have comparable degree spans (i.e.,
+one polynomial cannot be significantly longer than the other. At
+present, this means (roughly) that the shorter polynomial should be
+more than half the length of the longer polynomial. The precise
+constraints are subject to change in future versions of Regina, and so
+if you are forcing Karatsuba multiplication then it is strongly
+recommended that you wrap this in a try/catch block.
+
+As a special case, if this or the given polynomial is zero or constant
+then the given algorithm will be ignored, and this routine will simply
+use scalar multiplication instead.
+
 Python:
     Since Python does not support C++ templates, you should pass the
     algorithm at runtime as a second argument. For example, to compute
     the product ``p * q`` you could call ``p.product(q,
     PolynomialProductAlgorithm.karatsuba)``.
+
+Exception ``InvalidArgument``:
+    The algorithm argument requested Karatsuba multiplication, but
+    this polynomial and *rhs* do not have comparable degree spans. See
+    above for further explanation.
 
 Template parameter ``the``:
     polynomial multiplication algorithm to use.

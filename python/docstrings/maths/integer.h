@@ -105,7 +105,9 @@ at these ideas.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
+possible, even when passing or returning objects by value. Moving from
+an arbitrary precision integer will leave the source object in a valid
+but undefined state.
 
 Python:
     Both variants of this template are available through Python. For

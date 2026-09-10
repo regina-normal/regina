@@ -49,7 +49,9 @@ ensure that the rational is in lowest terms.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.)doc";
+possible, even when passing or returning objects by value. Moving from
+a Rational will leave the source object in a valid but undefined
+state.)doc";
 
 // Docstring regina::python::doc::Rational::__cmp
 static constexpr const char __cmp[] =

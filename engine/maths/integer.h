@@ -837,8 +837,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * If either term of the sum is infinite, the result will be
          * infinity.
          *
-         * \python It is assumed that the type \a IntType is \c long.
-         *
          * \param other the integer to add to this integer.
          * \return the sum \a this plus \a other.
          */
@@ -908,8 +906,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * If either term of the difference is infinite, the result will be
          * infinity.
          *
-         * \python It is assumed that the type \a IntType is \c long.
-         *
          * \param other the integer to subtract from this integer.
          * \return the difference \a this minus \a other.
          */
@@ -978,8 +974,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * If either factor of the product is infinite, the result will be
          * infinity.
-         *
-         * \python It is assumed that the type \a IntType is \c long.
          *
          * \param other the integer to multiply by this integer.
          * \return the product \a this times \a other.
@@ -1074,8 +1068,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * For a division routine that always rounds down, see divisionAlg().
          *
-         * \python It is assumed that the type \a IntType is \c long.
-         *
          * \exception DivisionByZero The argument \a other is zero, but this
          * class does not support infinity.
          *
@@ -1142,8 +1134,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * i.e., \a this divided by \a other is an integer.
          * \pre \a other is not zero.
          * \pre This integer is not infinite.
-         *
-         * \python It is assumed that the type \a IntType is \c long.
          *
          * \param other the integer to divide this by.
          * \return the quotient \a this divided by \a other.
@@ -1228,8 +1218,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          *
          * For a division/modulo routine that always returns a non-negative
          * remainder, see divisionAlg().
-         *
-         * \python It is assumed that the type \a IntType is \c long.
          *
          * \exception DivisionByZero The argument \a other is zero.
          * Note that, unlike the division operators, this exception will be
@@ -2167,8 +2155,6 @@ IntegerBase<withInfinity> operator + (IntType lhs,
  * Adds the given native C++ integer to the given large integer.
  * If the large integer is infinite, the result will also be infinity.
  *
- * \python It is assumed that the type \a IntType is \c long.
- *
  * \param lhs the native integer to add.
  * \param rhs the large integer to add.
  * \return the sum \a lhs plus \a rhs.
@@ -2198,8 +2184,6 @@ IntegerBase<withInfinity> operator * (IntType lhs,
 /**
  * Multiplies the given native C++ integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
- *
- * \python It is assumed that the type \a IntType is \c long.
  *
  * \param lhs the native integer to multiply.
  * \param rhs the large integer to multiply.
