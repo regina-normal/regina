@@ -1193,42 +1193,6 @@ class Laurent2 :
         }
 
         /**
-         * Subtracts the product of the two given polynomials from this.
-         *
-         * Calling `x.subProduct(y, z)` is equivalent to, but often faster
-         * than, calling `x -= y * z`.
-         *
-         * \param x the first polynomial in the product to subtract from this.
-         * \param y the second polynomial in the product to subtract from this.
-         */
-        void subProduct(const Laurent2<T>& x, const Laurent2<T>& y) {
-            if (std::addressof(x) == this || std::addressof(y) == this) {
-                // TODO: *this *= (1 - y), or *this *= (1 - x)
-                *this -= x * y; // here we _need_ the temporary to hold x * y
-            } else {
-                // TODO: do this in the right order, use hint
-                for (const auto& cx : x.coeff_)
-                    for (const auto& cy : y.coeff_) {
-                        Exponents e(cx.first.first + cy.first.first,
-                            cx.first.second + cy.first.second);
-                        auto result = coeff_.emplace(e, T());
-                        if (result.second) {
-                            result.first->second = -(cx.second * cy.second);
-                        } else {
-                            if constexpr (HasAddProduct<T>)
-                                result.first->second.subProduct(
-                                    cx.second, cy.second);
-                            else
-                                result.first->second -= cx.second * cy.second;
-                        }
-                    }
-
-                // We might have zeroed out some coefficients.
-                removeZeroes(); // TODO: move this up?
-            }
-        }
-
-        /**
          * Writes this polynomial to the given output stream, using the
          * given variable names instead of \c x and \c y.
          *

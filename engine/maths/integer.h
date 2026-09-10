@@ -1531,16 +1531,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          */
         void addProduct(const IntegerBase& x, const IntegerBase& y);
         /**
-         * Subtracts the product of the two given integers from this integer.
-         *
-         * Calling `x.subProduct(y, z)` is equivalent to, but sometimes
-         * faster than, calling `x -= y * z`.
-         *
-         * \param x the first integer in the product to subtract from this.
-         * \param y the second integer in the product to subtract from this.
-         */
-        void subProduct(const IntegerBase& x, const IntegerBase& y);
-        /**
          * Negates this integer.
          * This integer is changed to reflect the result.
          *
@@ -4534,47 +4524,6 @@ inline void IntegerBase<withInfinity>::addProduct(
             }
         } else {
             (*this) += x * y;
-        }
-    }
-}
-
-template <bool withInfinity>
-inline void IntegerBase<withInfinity>::subProduct(
-        const IntegerBase& x, const IntegerBase& y) {
-    if constexpr (withInfinity) {
-        if (isInfinite())
-            return;
-        if (x.isInfinite() || y.isInfinite()) {
-            makeInfinite();
-            return;
-        }
-    }
-
-    // All three arguments (including this) are finite.
-    //
-    // Note: GMP functions explicitly allow the input and output
-    // variables to be the same (so x.subProduct(x, x) is fine, for example).
-    if (x != 0 && y != 0) {
-        if (large_) {
-            if (x.large_) {
-                if (y.large_)
-                    mpz_submul(large_, x.large_, y.large_);
-                else if (y.small_ > 0)
-                    mpz_submul_ui(large_, x.large_, y.small_);
-                else
-                    mpz_addmul_ui(large_, x.large_,
-                        detail::negateToUnsignedType(y.small_));
-            } else if (y.large_) {
-                if (x.small_ > 0)
-                    mpz_submul_ui(large_, y.large_, x.small_);
-                else
-                    mpz_addmul_ui(large_, y.large_,
-                        detail::negateToUnsignedType(x.small_));
-            } else {
-                (*this) -= x * y;
-            }
-        } else {
-            (*this) -= x * y;
         }
     }
 }

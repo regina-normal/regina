@@ -1314,19 +1314,6 @@ Precondition:
 Returns:
     the value of this integer as a string.)doc";
 
-// Docstring regina::python::doc::IntegerBase::subProduct
-static constexpr const char subProduct[] =
-R"doc(Subtracts the product of the two given integers from this integer.
-
-Calling ``x.subProduct(y, z)`` is equivalent to, but sometimes faster
-than, calling ``x -= y * z``.
-
-Parameter ``x``:
-    the first integer in the product to subtract from this.
-
-Parameter ``y``:
-    the second integer in the product to subtract from this.)doc";
-
 // Docstring regina::python::doc::IntegerBase::swap
 static constexpr const char swap[] =
 R"doc(Swaps the values of this and the given integer.

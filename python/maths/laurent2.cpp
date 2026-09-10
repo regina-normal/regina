@@ -75,7 +75,6 @@ void addLaurent2(pybind11::module_& m) {
         .def("invertX", &Laurent2<Integer>::invertX, rdoc::invertX)
         .def("invertY", &Laurent2<Integer>::invertY, rdoc::invertY)
         .def("addProduct", &Laurent2<Integer>::addProduct, rdoc::addProduct)
-        .def("subProduct", &Laurent2<Integer>::subProduct, rdoc::subProduct)
         .def("str", overload_cast<const char*, const char*>(
             &Laurent2<Integer>::str, pybind11::const_),
             "varX"_a, "varY"_a = nullptr, rdoc::str)

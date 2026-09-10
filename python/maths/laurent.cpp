@@ -117,7 +117,6 @@ void addLaurent(pybind11::module_& m) {
             overload_cast<const Laurent<Integer>&, const Laurent<Integer>&>(
                 &Laurent<Integer>::addProduct),
             rdoc::addProduct)
-        .def("subProduct", &Laurent<Integer>::subProduct, rdoc::subProduct)
         .def("product", [](const Laurent<Integer>& lhs,
                 const Laurent<Integer>& rhs, PPA alg) {
             switch (alg) {
