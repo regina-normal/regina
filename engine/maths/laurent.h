@@ -83,12 +83,10 @@ enum class PolynomialProductAlgorithm {
  * polynomials with coefficients of type \a T.
  *
  * Karatsuba multiplication is intended to reduce the number of coefficient
- * product operations, but this comes with some significant overhead.
- * Therefore whether it is worthwhile may depend on the cost of product
- * operations for type \a T (which is why this constant is templated).
- *
- * Currently Karatsuba multiplication is only used to multiply single-variable
- * Laurent polynomials (i.e., polynomials of type `Laurent<T>`).
+ * product operations, but this comes with some significant overhead
+ * (including more addition/subtraction operations, and more temporary
+ * variables).  Therefore whether it is worthwhile will depend on the cost of
+ * different operations for type \a T (which is why this constant is templated).
  *
  * If `karatsubaThreshold<T>` takes a positive value \a n, this means that
  * Karatsuba multiplication will only be used when both polynomials being
@@ -99,13 +97,13 @@ enum class PolynomialProductAlgorithm {
  * \nopython
  */
 template <CoefficientDomain T>
-static constexpr size_t karatsubaThreshold = 64;
+static constexpr size_t karatsubaThreshold = 16;
 
 #ifndef __DOXYGEN
-// For now, just use Karatsuba multiplication when working with "nested"
+// For now, do not use Karatsuba multiplication when working with "nested"
 // Laurent polynomials (i.e., Laurent<Laurent<T>>).
 template <CoefficientDomain T>
-static constexpr size_t karatsubaThreshold<Laurent<T>> = 64;
+static constexpr size_t karatsubaThreshold<Laurent<T>> = 0;
 #endif
 
 /**
