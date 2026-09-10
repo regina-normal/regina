@@ -216,6 +216,25 @@ class LaurentTest : public testing::Test {
                 verifyEqual(z *= (x + zero), minExp, coeffs);
             }
         }
+
+        template <typename T>
+        void verifyMultAllAlgorithms(const Laurent<T>& x, const Laurent<T>& y,
+                long minExp, std::initializer_list<T> coeffs) {
+            SCOPED_TRACE_REGINA(x);
+            SCOPED_TRACE_REGINA(y);
+
+            using PPA = regina::PolynomialProductAlgorithm;
+
+            verifyEqual(x.template product<PPA::Default>(y), minExp, coeffs);
+            verifyEqual(x.template product<PPA::Classic>(y), minExp, coeffs);
+            EXPECT_NO_THROW({ verifyEqual(x.template product<PPA::Karatsuba>(y),
+                minExp, coeffs); });
+
+            verifyEqual(y.template product<PPA::Default>(x), minExp, coeffs);
+            verifyEqual(y.template product<PPA::Classic>(x), minExp, coeffs);
+            EXPECT_NO_THROW({ verifyEqual(y.template product<PPA::Karatsuba>(x),
+                minExp, coeffs); });
+        }
 };
 
 TEST_F(LaurentTest, set) {
@@ -301,6 +320,11 @@ TEST_F(LaurentTest, arithmetic) {
     verifyMult<Integer>(a, 1, -1, {1, -1, 1});
     verifyMult<Integer>(a, -1, -1, {-1, 1, -1});
     verifyMult<Integer>(a, 2, -1, {2, -2, 2});
+
+    verifyMultAllAlgorithms<Integer>(
+        Laurent<Integer>(2, {1,1,1,1,1,1,1,1,1,1,1,1,1}),
+        Laurent<Integer>(3, {-1,0,0,0,0,0,0,0,0,0,1}),
+        5, {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1});
 
     verifyDiv<Integer>(zero, 1, 0, {});
     verifyDiv<Integer>(zero, 2, 0, {});

@@ -141,7 +141,9 @@ struct InfinityBase<false> {
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
+ * even when passing or returning objects by value.  Moving from an arbitrary
+ * precision integer will leave the source object in a valid but undefined
+ * state.
  *
  * \headers Parts of this template class are implemented in a C++ source
  * file that is not available through the headers.  However, this should
@@ -219,16 +221,12 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * Moves the given integer into this new integer.
          * This is a fast (constant time) operation.
          *
-         * The integer that is passed (\a src) will no longer be usable.
-         *
          * \param src the integer to move.
          */
         IntegerBase(IntegerBase&& src) noexcept;
         /**
          * Moves the given integer into this new integer.
          * This is a fast (constant time) operation.
-         *
-         * The integer that is passed (\a src) will no longer be usable.
          *
          * \pre The given integer is not infinite.
          *
@@ -557,8 +555,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * Moves the given integer into this integer.
          * This is a fast (constant time) operation.
          *
-         * The integer that is passed (\a src) will no longer be usable.
-         *
          * \param src the integer to move.
          * \return a reference to this integer.
          */
@@ -566,8 +562,6 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         /**
          * Moves the given integer into this integer.
          * This is a fast (constant time) operation.
-         *
-         * The integer that is passed (\a src) will no longer be usable.
          *
          * \pre The given integer is not infinite.
          *
@@ -3435,8 +3429,12 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntegerBase&& src) noexcept {
-    if constexpr (withInfinity)
-        detail::InfinityBase<true>::infinite_ = src.infinite_;
+    if constexpr (withInfinity) {
+        // Since we are swapping large_, we must swap infinite_ also.
+        // Otherwise we could leave src in an invalid state (infinite but with
+        // a non-null large_ member).
+        std::swap(detail::InfinityBase<true>::infinite_, src.infinite_);
+    }
     small_ = src.small_;
     std::swap(large_, src.large_);
     // Let src dispose of the original large_, if it was non-null.
@@ -3448,6 +3446,10 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntegerBase<! withInfinity>&& src) noexcept {
     if constexpr (withInfinity)
         makeFinite(); // The given value cannot be infinity.
+
+    // The preconditions state that src is finite, and we have now ensured
+    // that *this is finite also.  This is enough to ensure that src is left
+    // in a valid state.
 
     small_ = src.small_;
     std::swap(large_, src.large_);
@@ -4071,7 +4073,8 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
             mpz_sub_ui(other.large_, other.large_,
                 detail::negateToUnsignedType(small_));
         }
-        std::swap(large_, other.large_);
+        large_ = other.large_;
+        other.large_ = nullptr;
     } else {
         (*this) += other.small_;
     }
@@ -4191,8 +4194,9 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
             mpz_add_ui(other.large_, other.large_,
                 detail::negateToUnsignedType(small_));
         }
-        std::swap(large_, other.large_);
+        large_ = other.large_;
         mpz_neg(large_, large_);
+        other.large_ = nullptr;
     } else {
         (*this) -= other.small_;
     }

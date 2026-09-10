@@ -603,6 +603,31 @@ Returns:
 // Docstring regina::python::doc::Laurent::negate
 static constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
 
+// Docstring regina::python::doc::Laurent::product
+static constexpr const char product[] =
+R"doc(Multiplies this with the given polynomial using the given algorithm.
+This polynomial will not be changed.
+
+This routine is provided mainly for timing, testing and diagnostics.
+If you just wish to multiply two polynomials, you should use the usual
+product operators (e.g., ``x = y * z``): this way Regina will choose
+the most suitable algorithm for you.
+
+Python:
+    Since Python does not support C++ templates, you should pass the
+    algorithm at runtime as a second argument. For example, to compute
+    the product ``p * q`` you could call ``p.product(q,
+    PolynomialProductAlgorithm.karatsuba)``.
+
+Template parameter ``the``:
+    polynomial multiplication algorithm to use.
+
+Parameter ``rhs``:
+    the polynomial to multiply with this.
+
+Returns:
+    the product of this and the given polynomial.)doc";
+
 // Docstring regina::python::doc::Laurent::scaleDown
 static constexpr const char scaleDown[] =
 R"doc(Divides all exponents in this polynomial by *k* for some integer *k*.
@@ -756,6 +781,35 @@ Returns:
     this polynomial as a unicode-enabled human-readable string.)doc";
 
 }; // struct Laurent
+
+struct PolynomialProductAlgorithm {
+
+// Docstring regina::python::doc::PolynomialProductAlgorithm::Classic
+static constexpr const char Classic[] =
+R"doc(The classic "schoolbook" algorithm involving two nested loops over the
+polynomial coefficients. To multiply two polynomials with degree span
+*n*, this requires computing ``O(n^2)`` individual products of
+coefficients.)doc";
+
+// Docstring regina::python::doc::PolynomialProductAlgorithm::Default
+static constexpr const char Default[] =
+R"doc(The default algorithm. Here Regina will choose whichever algorithm it
+thinks (rightly or wrongly) is most appropriate.)doc";
+
+// Docstring regina::python::doc::PolynomialProductAlgorithm::Karatsuba
+static constexpr const char Karatsuba[] =
+R"doc(Karatsuba's divide-and-conquer algorithm. To multiply two polynomials
+with the same degree span *n*, this requires computing ``O(n^(log₂ 3))
+≃ O(n^1.585)`` individual products of coefficients.
+
+Karatsuba's algorithm is asymptotically better than the classic
+algorithm, but it carries significant overhead and so will typically
+be slower for small polynomials.)doc";
+
+// Docstring regina::python::doc::PolynomialProductAlgorithm::__class
+static constexpr const char __class[] = R"doc(Represents different algorithms for multiplying polynomials.)doc";
+
+}; // struct PolynomialProductAlgorithm
 
 } // namespace regina::python::doc
 

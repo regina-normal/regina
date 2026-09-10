@@ -69,7 +69,8 @@ namespace regina {
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
+ * even when passing or returning objects by value.  Moving from a Rational
+ * will leave the source object in a valid but undefined state.
  *
  * \ingroup maths
  */
@@ -129,8 +130,6 @@ class Rational {
         /**
          * Moves the given rational into this new rational.
          * This is a fast (constant time) operation.
-         *
-         * The rational that is passed (\a src) will no longer be usable.
          *
          * \param src the rational to move.
          */
@@ -218,8 +217,6 @@ class Rational {
         /**
          * Moves the given rational into this rational.
          * This is a fast (constant time) operation.
-         *
-         * The rational that is passed (\a src) will no longer be usable.
          *
          * \param src the rational to move.
          * \return a reference to this rational.
