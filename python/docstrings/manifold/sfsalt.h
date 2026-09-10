@@ -173,14 +173,6 @@ original Seifert fibred space.
 Returns:
     the alternative representation.)doc";
 
-// Docstring regina::python::doc::SFSAlt::alt_3
-static constexpr const char alt_3[] =
-R"doc(Returns an rvalue reference to the alternative representation of the
-original Seifert fibred space.
-
-Returns:
-    the alternative representation.)doc";
-
 // Docstring regina::python::doc::SFSAlt::altSet
 static constexpr const char altSet[] =
 R"doc(Returns a set of alternatives for the given Seifert fibred space.

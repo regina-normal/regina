@@ -584,17 +584,18 @@ Template parameter ``Ray``:
     information will be lost (e.g., through overflow) when converting
     integers to the element type for *Ray*.
 
-Parameter ``type``:
+Parameter ``beginTypes``:
     the beginning of the type vector corresponding to the current
     state of this tableaux, indicating which variables were previously
     fixed as positive via calls to constrainPositive(). This is
     necessary because LPData does not keep such historical data on its
-    own. The order of these types should be with respect to the
-    permuted columns (i.e., it should reflect the columns as they are
-    stored in this tableaux, not the original matching equations). As
-    a special case, when extracting a strict angle structure one may
-    pass *type* = ``None``, in which case this routine will assume
-    that _every_ coordinate was constrained as positive.
+    own. The length of this type vector must be ``5n`` if the tableaux
+    has both quadrilateral and triangle coordinate columns, or ``n``
+    if it has quadrilateral columns only, where *n* is the number of
+    tetrahedra in the underlying triangulation. The order of these
+    types should be with respect to the permuted columns (i.e., it
+    should reflect the columns as they are stored in this tableaux,
+    not the original matching equations).
 
 Returns:
     a vector containing the values of all the variables. This vector

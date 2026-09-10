@@ -14,8 +14,10 @@ namespace regina::python::doc {
 // Docstring regina::python::doc::bitsRequired
 inline constexpr const char bitsRequired[] =
 R"doc(Returns the number of bits required to store integers in the range
-``0,...,n-1``. This is simply the number of bits in the binary
-expansion of ``n-1``.
+``0,...,n-1``.
+
+This is simply the number of bits in the binary expansion of ``n-1``.
+Equivalently, it is the ceiling of ``log_2(n)``.
 
 If *n* is non-positive then this function will return 0.
 
