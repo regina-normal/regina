@@ -1594,9 +1594,15 @@ Polynomial<T>& Polynomial<T>::operator *= (const Polynomial<T>& other) {
     // std::cerr << "Polynomial: deep copy (*=)" << std::endl;
     size_t i, j;
     T* ans = new T[degree_ + other.degree_ + 1];
-    for (i = 0; i <= degree_; ++i)
-        for (j = 0; j <= other.degree_; ++j)
-            ans[i + j] += (coeff_[i] * other.coeff_[j]);
+    if constexpr (HasAddProduct<T>) {
+        for (i = 0; i <= degree_; ++i)
+            for (j = 0; j <= other.degree_; ++j)
+                ans[i + j].addProduct(coeff_[i], other.coeff_[j]);
+    } else {
+        for (i = 0; i <= degree_; ++i)
+            for (j = 0; j <= other.degree_; ++j)
+                ans[i + j] += (coeff_[i] * other.coeff_[j]);
+    }
 
     delete[] coeff_;
     coeff_ = ans;
@@ -2069,9 +2075,15 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     // std::cerr << "Polynomial: deep copy (const *)" << std::endl;
     size_t i, j;
     T* coeff = new T[lhs.degree_ + rhs.degree_ + 1];
-    for (i = 0; i <= lhs.degree_; ++i)
-        for (j = 0; j <= rhs.degree_; ++j)
-            coeff[i + j] += (lhs.coeff_[i] * rhs.coeff_[j]);
+    if constexpr (HasAddProduct<T>) {
+        for (i = 0; i <= lhs.degree_; ++i)
+            for (j = 0; j <= rhs.degree_; ++j)
+                coeff[i + j].addProduct(lhs.coeff_[i], rhs.coeff_[j]);
+    } else {
+        for (i = 0; i <= lhs.degree_; ++i)
+            for (j = 0; j <= rhs.degree_; ++j)
+                coeff[i + j] += (lhs.coeff_[i] * rhs.coeff_[j]);
+    }
 
     // Both leading coefficients are non-zero, so the degree is correct.
     return Polynomial<T>(lhs.degree_ + rhs.degree_, coeff);

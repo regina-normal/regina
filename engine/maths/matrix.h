@@ -804,8 +804,13 @@ class Matrix : public Output<Matrix<T>> {
          */
         void addRow(size_t source, size_t dest, T copies, size_t fromCol = 0)
                 requires Ring<T> {
-            for (size_t i = fromCol; i < this->cols_; i++)
-                this->data_[dest][i] += copies * this->data_[source][i];
+            if constexpr (HasAddProduct<T>)
+                for (size_t i = fromCol; i < this->cols_; ++i)
+                    this->data_[dest][i].addProduct(copies,
+                        this->data_[source][i]);
+            else
+                for (size_t i = fromCol; i < this->cols_; ++i)
+                    this->data_[dest][i] += copies * this->data_[source][i];
         }
         /**
          * Adds the given source column to the given destination column.
@@ -871,8 +876,13 @@ class Matrix : public Output<Matrix<T>> {
          */
         void addCol(size_t source, size_t dest, T copies, size_t fromRow = 0)
                 requires Ring<T> {
-            for (size_t i = fromRow; i < this->rows_; i++)
-                this->data_[i][dest] += copies * this->data_[i][source];
+            if constexpr (HasAddProduct<T>)
+                for (size_t i = fromRow; i < this->rows_; i++)
+                    this->data_[i][dest].addProduct(copies,
+                        this->data_[i][source]);
+            else
+                for (size_t i = fromRow; i < this->rows_; i++)
+                    this->data_[i][dest] += copies * this->data_[i][source];
         }
         /**
          * Multiplies the given row by the given factor.
@@ -1303,9 +1313,16 @@ class Matrix : public Output<Matrix<T>> {
                                     RingTraits<T>::zero;
                                 for (size_t prevCurr = head; prevCurr < n;
                                         prevCurr++)
-                                    part[layer][head + curr * n] +=
-                                        (part[layer ^ 1][head + prevCurr * n] *
-                                        this->data_[prevCurr][curr]);
+                                    if constexpr (HasAddProduct<T>)
+                                        part[layer][head + curr * n].addProduct(
+                                            part[layer ^ 1]
+                                                [head + prevCurr * n],
+                                            this->data_[prevCurr][curr]);
+                                    else
+                                        part[layer][head + curr * n] +=
+                                            (part[layer ^ 1]
+                                                [head + prevCurr * n] *
+                                            this->data_[prevCurr][curr]);
                             }
                         }
                     }
@@ -1314,8 +1331,12 @@ class Matrix : public Output<Matrix<T>> {
                     T ans = RingTraits<T>::zero;
                     for (size_t head = 0; head < n; head++)
                         for (size_t curr = head; curr < n; curr++)
-                            ans += (part[layer][head + curr * n] *
-                                this->data_[curr][head]);
+                            if constexpr (HasAddProduct<T>)
+                                ans.addProduct(part[layer][head + curr * n],
+                                    this->data_[curr][head]);
+                            else
+                                ans += (part[layer][head + curr * n] *
+                                    this->data_[curr][head]);
 
                     return (n % 2 == 0 ? -ans : ans);
                 }
@@ -1413,8 +1434,12 @@ class Matrix : public Output<Matrix<T>> {
                         for (size_t j = 1; j < m; ++j) {
                             charSlice[j] = trace(powA[j], b);
                             for (size_t i = 0; i < j; ++i)
-                                charSlice[j] +=
-                                    traceA[j - i - 1] * charSlice[i];
+                                if constexpr (HasAddProduct<T>)
+                                    charSlice[j].addProduct(
+                                        traceA[j - i - 1], charSlice[i]);
+                                else
+                                    charSlice[j] +=
+                                        traceA[j - i - 1] * charSlice[i];
                             if constexpr (Negatable<T>) {
                                 charSlice[j] /= (k + j);
                                 charSlice[j].negate();
@@ -1433,9 +1458,14 @@ class Matrix : public Output<Matrix<T>> {
                         for (size_t j = 0; j < m - 1; ++j)
                             for (size_t row = 0; row < rows_; ++row)
                                 for (size_t col = 0; col < cols_; ++col)
-                                    b.data_[row][col] +=
-                                        powA[m - 2 - j].data_[row][col] *
-                                        charSlice[j];
+                                    if constexpr (HasAddProduct<T>)
+                                        b.data_[row][col].addProduct(
+                                            powA[m - 2 - j].data_[row][col],
+                                            charSlice[j]);
+                                    else
+                                        b.data_[row][col] +=
+                                            powA[m - 2 - j].data_[row][col] *
+                                            charSlice[j];
                         for (size_t i = 0; i < n; ++i)
                             b.data_[i][i] += charSlice[m - 1];
                         k += m;

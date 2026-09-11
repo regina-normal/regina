@@ -602,8 +602,13 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
 
             const T* e = elts_;
             const T* o = other.elts_;
-            for ( ; e < end_; ++e, ++o)
-                ans += (*e) * (*o);
+            if constexpr (HasAddProduct<T>) {
+                for ( ; e < end_; ++e, ++o)
+                    ans.addProduct(*e, *o);
+            } else {
+                for ( ; e < end_; ++e, ++o)
+                    ans += (*e) * (*o);
+            }
 
             return ans;
         }
@@ -627,8 +632,13 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          */
         inline T norm() const {
             T ans(0);
-            for (const T* e = elts_; e < end_; ++e)
-                ans += (*e) * (*e);
+            if constexpr (HasAddProduct<T>) {
+                for (const T* e = elts_; e < end_; ++e)
+                    ans.addProduct(*e, *e);
+            } else {
+                for (const T* e = elts_; e < end_; ++e)
+                    ans += (*e) * (*e);
+            }
             return ans;
         }
         /**
@@ -666,8 +676,13 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
             }
             T* e = elts_;
             const T* o = other.elts_;
-            for ( ; e < end_; ++e, ++o)
-                *e += *o * multiple;
+            if constexpr (HasAddProduct<T>) {
+                for ( ; e < end_; ++e, ++o)
+                    e->addProduct(*o, multiple);
+            } else {
+                for ( ; e < end_; ++e, ++o)
+                    *e += *o * multiple;
+            }
         }
         /**
          * Subtracts the given multiple of the given vector to this vector.

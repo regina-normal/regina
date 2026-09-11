@@ -42,6 +42,7 @@
 #include "progress/progresstracker.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 
 namespace regina {
 
@@ -381,16 +382,15 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     // The square of the Hadamard bound for the original tableaux:
     Integer hadamardSquare = 1;
-    auto* colNorm = new Integer[eqns.columns()];
-    for (i = 0; i < eqns.columns(); ++i) {
-        colNorm[i] = 0;
-        for (j = 0; j < rank; ++j)
-            colNorm[i] += Integer(eqns.entry(j, i) * eqns.entry(j, i));
+    {
+        FixedArray<Integer> colNorm(eqns.columns()); // initialised to zeroes
+        for (i = 0; i < eqns.columns(); ++i)
+            for (j = 0; j < rank; ++j)
+                colNorm[i].addProduct(eqns.entry(j, i), eqns.entry(j, i));
+        std::sort(colNorm.begin(), colNorm.end());
+        for (i = 0; i < rank; ++i)
+            hadamardSquare *= std::move(colNorm[eqns.columns() - 1 - i]);
     }
-    std::sort(colNorm, colNorm + eqns.columns());
-    for (i = 0; i < rank; ++i)
-        hadamardSquare *= colNorm[eqns.columns() - 1 - i];
-    delete[] colNorm;
 
     if (enc.storesOctagons()) {
         // The octagon column is the sum of two quadrilateral columns.

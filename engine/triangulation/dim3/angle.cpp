@@ -182,7 +182,7 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
         Integer num; // set to 0
         for (++col; col < v.size(); ++col)
             if (eqns.entry(row, col) != 0)
-                num += (eqns.entry(row, col) * v[col]);
+                num.addProduct(eqns.entry(row, col), v[col]);
 
         // Our row echelon form guarantees that den > 0.
         // We need to set v[leading[row]] = -num/den.

@@ -1274,8 +1274,8 @@ void HomologicalData::computeTorsionLinkingForm() {
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
             for (k=0; k<dualtostandard.columns(); k++)
-                standardBasis.entry(i,j) +=
-                    dualtostandard.entry(i,k)*pvList[j][k];
+                standardBasis.entry(i,j).addProduct(
+                    dualtostandard.entry(i,k), pvList[j][k]);
 
     // step 3: construct bounding classes
     //           the j-th column of standardBasis, when multiplied by

@@ -376,7 +376,8 @@ Vector<Integer> MarkedAbelianGroup::torsionRep(size_t index) const {
         Vector<Integer> tCiSecondV(tensorCi_.rows());
         for (size_t i=0; i<tensorCi_.rows(); i++)
             for (size_t j=tensorIfLoc_; j<tensorCi_.columns(); j++)
-                tCiSecondV[i] += tensorCi_.entry(i,j) * secondV[j-tensorIfLoc_];
+                tCiSecondV[i].addProduct(tensorCi_.entry(i,j),
+                    secondV[j-tensorIfLoc_]);
         // 2nd vec needs be multiplied by tensorCi_, padded, then apply MR_.
         size_t TORLoc = rankM_ - TORVec_.size();
         for (size_t i=0; i<retval.size(); i++)
@@ -384,7 +385,7 @@ Vector<Integer> MarkedAbelianGroup::torsionRep(size_t index) const {
                 retval[i] += MR_.entry(i, TORLoc + j)*firstV[j];
         for (size_t i=0; i<retval.size(); i++)
             for (size_t j=0; j<tCiSecondV.size(); j++)
-                retval[i] += MR_.entry(i, rankM_+j) * tCiSecondV[j];
+                retval[i].addProduct(MR_.entry(i, rankM_+j), tCiSecondV[j]);
         // add answers together.
         return retval;
     }
@@ -400,7 +401,7 @@ Vector<Integer> MarkedAbelianGroup::ccRep(const Vector<Integer>& SNFRep) const {
         Vector<Integer> temp(presCi_.rows()+rankM_);
         for (size_t j=0; j<invFac_.size()+snfFreeRank_; j++)
             for (size_t i=0; i<presCi_.rows(); i++)
-                temp[i+rankM_] += presCi_.entry(i,ifLoc_+j) * SNFRep[j];
+                temp[i+rankM_].addProduct(presCi_.entry(i,ifLoc_+j), SNFRep[j]);
         return MR_ * temp;
     } else {
         // coeff_ > 0
@@ -409,10 +410,11 @@ Vector<Integer> MarkedAbelianGroup::ccRep(const Vector<Integer>& SNFRep) const {
         Vector<Integer> secondV(presC_.rows()-TORVec_.size());
         for (size_t i=0; i<firstV.size(); i++)
             for (size_t j=0; j<SNFRep.size(); j++)
-                firstV[i] += presCi_.entry( i, j + ifLoc_ ) * SNFRep[j];
+                firstV[i].addProduct(presCi_.entry( i, j + ifLoc_ ), SNFRep[j]);
         for (size_t i=0; i<secondV.size(); i++)
             for (size_t j=0; j<SNFRep.size(); j++)
-                secondV[i] += presCi_.entry( i + firstV.size(), j + ifLoc_ ) * SNFRep[j];
+                secondV[i].addProduct(presCi_.entry( i + firstV.size(), j + ifLoc_ ),
+                    SNFRep[j]);
         // 1st vec needs coords scaled appropriately by p/gcd(p,q) and
         //  multiplied by appropriate MR_ columns
         for (size_t i=0; i<firstV.size(); i++)
@@ -420,7 +422,8 @@ Vector<Integer> MarkedAbelianGroup::ccRep(const Vector<Integer>& SNFRep) const {
         Vector<Integer> tCiSecondV(tensorCi_.rows());
         for (size_t i=0; i<tensorCi_.rows(); i++)
             for (size_t j=tensorIfLoc_; j<tensorCi_.columns(); j++)
-                tCiSecondV[i] += tensorCi_.entry(i,j) * secondV[j-tensorIfLoc_];
+                tCiSecondV[i].addProduct(tensorCi_.entry(i,j),
+                    secondV[j-tensorIfLoc_]);
         // 2nd vec needs be multiplied by tensorCi_, padded, then apply MR_.
         size_t TORLoc = rankM_ - TORVec_.size();
         for (size_t i=0; i<retval.size(); i++)
@@ -428,7 +431,7 @@ Vector<Integer> MarkedAbelianGroup::ccRep(const Vector<Integer>& SNFRep) const {
                 retval[i] += MR_.entry(i, TORLoc + j)*firstV[j];
         for (size_t i=0; i<retval.size(); i++)
             for (size_t j=0; j<tCiSecondV.size(); j++)
-                retval[i] += MR_.entry(i, rankM_+j) * tCiSecondV[j];
+                retval[i].addProduct(MR_.entry(i, rankM_+j), tCiSecondV[j]);
         return retval;
     }
 }
@@ -459,7 +462,8 @@ Vector<Integer> MarkedAbelianGroup::ccRep(size_t SNFRep) const {
         Vector<Integer> tCiSecondV(tensorCi_.rows());
         for (size_t i=0; i<tensorCi_.rows(); i++)
             for (size_t j=tensorIfLoc_; j<tensorCi_.columns(); j++)
-                tCiSecondV[i] += tensorCi_.entry(i,j) * secondV[j-tensorIfLoc_];
+                tCiSecondV[i].addProduct(tensorCi_.entry(i,j),
+                    secondV[j-tensorIfLoc_]);
         // 2nd vec needs be multiplied by tensorCi_, padded, then apply MR_.
         size_t TORLoc = rankM_ - TORVec_.size();
         for (size_t i=0; i<retval.size(); i++)
@@ -467,7 +471,7 @@ Vector<Integer> MarkedAbelianGroup::ccRep(size_t SNFRep) const {
                 retval[i] += MR_.entry(i, TORLoc + j)*firstV[j];
         for (size_t i=0; i<retval.size(); i++)
             for (size_t j=0; j<tCiSecondV.size(); j++)
-                retval[i] += MR_.entry(i, rankM_+j) * tCiSecondV[j];
+                retval[i].addProduct(MR_.entry(i, rankM_+j), tCiSecondV[j]);
         return retval;
     }
 }
@@ -534,11 +538,11 @@ Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
     if (coeff_ == 0) {
         for (size_t i=0;i<snfFreeRank_;i++)
             for (size_t j=rankM_;j<N_.rows();j++)
-                retval[i+invFac_.size()] +=
-                    presC_.entry(i+snfFreeIndex_,j-rankM_)*temp[j];
+                retval[i+invFac_.size()].addProduct(
+                    presC_.entry(i+snfFreeIndex_,j-rankM_), temp[j]);
         for (size_t i=0;i<invFac_.size();i++)
             for (size_t j=rankM_;j<N_.rows();j++)
-                retval[i] += presC_.entry(i+ifLoc_,j-rankM_)*temp[j];
+                retval[i].addProduct(presC_.entry(i+ifLoc_,j-rankM_), temp[j]);
         // redundant for loops
     } else {
         size_t TORLoc = rankM_ - TORVec_.size();
@@ -644,13 +648,13 @@ Vector<Integer> MarkedAbelianGroup::asBoundary(const Vector<Integer>& input)
         // we know it's in the image now.
         for (size_t i=0; i<presR_.rows(); i++)
             for (size_t j=0; j<snfFreeIndex_; j++)
-                retval[i] += presR_.entry(i, j) * snfV[j];
+                retval[i].addProduct(presR_.entry(i, j), snfV[j]);
     } else {
         // find tensorV -- apply tensorC_.
         Vector<Integer> tensorV( tensorC_.rows());
         for (size_t i=0; i<tensorC_.rows(); i++)
             for (size_t j=0; j<tensorC_.columns(); j++)
-                tensorV[i] += tensorC_.entry(i, j) * temp[ j + rankM_ ];
+                tensorV[i].addProduct(tensorC_.entry(i, j), temp[j + rankM_]);
         for (size_t i=0; i<tensorInvFac_.size(); i++) {
             if (tensorV[i+tensorIfLoc_] % tensorInvFac_[i] != 0)
                 throw InvalidArgument("The argument to asBoundary() "
@@ -660,7 +664,7 @@ Vector<Integer> MarkedAbelianGroup::asBoundary(const Vector<Integer>& input)
         // so we know it's where it comes from now...
         for (size_t i=0; i<retval.size(); i++)
             for (size_t j=0; j<tensorV.size(); j++)
-                retval[i] += tensorR_.entry(i,j) * tensorV[j];
+                retval[i].addProduct(tensorR_.entry(i,j), tensorV[j]);
         // ah! the other coefficients of tensorR_ gives the relevant congruence.
     }
     return retval;
@@ -707,7 +711,7 @@ Vector<Integer> MarkedAbelianGroup::cycleProjection(size_t ccindx)
     Vector<Integer> retval(MRi_.columns());
     for (size_t i=0; i<retval.size(); i++)
         for (size_t j=rankM_; j<MRi_.rows(); j++)
-            retval[i] += MR_.entry(i,j) * MRi_.entry(j,ccindx);
+            retval[i].addProduct(MR_.entry(i,j), MRi_.entry(j,ccindx));
     return retval;
 }
 
@@ -796,13 +800,15 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
                     } else {
                         // [step1 UR corner] * [dom->tensorC_ first tensorIfLoc_ rows cropped]
                         for (size_t k=domain_.tensorIfLoc_; k<domain_.tensorC_.rows(); k++)
-                            step2Mat.entry(i,j) += step1Mat.entry(i,k-domain_.tensorIfLoc_+domain_.TORVec_.size())*
-                                domain_.tensorC_.entry(k,j-domain_.TORVec_.size());
+                            step2Mat.entry(i,j).addProduct(
+                                step1Mat.entry(i,k-domain_.tensorIfLoc_+domain_.TORVec_.size()),
+                                domain_.tensorC_.entry(k,j-domain_.TORVec_.size()));
                     }
                 } else if (j < domain_.TORVec_.size()) {
                     for (size_t k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.columns(); k++)
-                        step2Mat.entry(i,j) += codomain_.tensorCi_.entry(i-codomain_.TORVec_.size(),k)*
-                            step1Mat.entry(k-codomain_.tensorIfLoc_+codomain_.TORVec_.size(),j);
+                        step2Mat.entry(i,j).addProduct(
+                            codomain_.tensorCi_.entry(i-codomain_.TORVec_.size(),k),
+                            step1Mat.entry(k-codomain_.tensorIfLoc_+codomain_.TORVec_.size(),j));
                 } else {
                     for (size_t k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.rows(); k++)
                         for (size_t l=domain_.tensorIfLoc_; l<domain_.tensorC_.rows(); l++)
