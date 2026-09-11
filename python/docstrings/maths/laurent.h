@@ -54,18 +54,22 @@ type *T*. A Laurent polynomial differs from an ordinary polynomial in
 that it allows negative exponents (so, unlike the Polynomial class,
 you can represent both ``2+3x`` and ``1+1/x``).
 
+The underlying storage method for this class is dense (i.e., all
+coefficients are explicitly stored, including zero coefficients). Like
+``std::vector``, Laurent polynomials allocates additional memory to
+accommodate future growth, which means that (for example) appending a
+term with exponent ``maxExp() + 1`` or ``minExp() - 1`` is amortised
+constant time.
+
+See also the class Laurent2, which describes Laurent polynomials in
+two variables.
+
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
 possible, even when passing or returning objects by value. If a
 Laurent object is moved from, it can later be reused by assigning it a
 new value or by calling one of the initialisation functions init() or
 initExp().
-
-The underlying storage method for this class is dense (i.e., all
-coefficients are explicitly stored, including zero coefficients).
-
-See also the class Laurent2, which describes Laurent polynomials in
-two variables.
 
 Precondition:
     The coefficient type *T* has the property that, if an object is
@@ -523,6 +527,25 @@ Parameter ``x``:
 Parameter ``y``:
     the second polynomial in the product to add to this.)doc";
 
+// Docstring regina::python::doc::Laurent::allocation
+static constexpr const char allocation[] =
+R"doc(Indicates the range of exponents for which memory is currently
+allocated.
+
+This is mainly provided for diagnostics and performance analysis; end
+users will typically not need to use this routine.
+
+For a non-zero polynomial, this routine returns a pair ``(base,
+capacity)``, where *base* indicates the smallest exponent for which
+memory is allocated, and *capacity* indicates the total number of
+exponents for which memory is allocated. This means that the _largest_
+exponent for which memory is allocated will be ``base + capacity -
+1``.
+
+Returns:
+    a pair ``(base, capacity)`` as described above, or ``(0, 0)`` if
+    this is the zero polynomial.)doc";
+
 // Docstring regina::python::doc::Laurent::global_swap
 static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given polynomials.
@@ -648,8 +671,8 @@ Exception ``InvalidArgument``:
     this polynomial and *rhs* do not have comparable degree spans. See
     above for further explanation.
 
-Template parameter ``the``:
-    polynomial multiplication algorithm to use.
+Template parameter ``algorithm``:
+    the polynomial multiplication algorithm to use.
 
 Parameter ``rhs``:
     the polynomial to multiply with this.
@@ -674,7 +697,8 @@ Precondition:
 
 Exception ``FailedPrecondition``:
     Either *k* is zero, or some exponent with a non-zero coefficient
-    is not a multiple of *k*.
+    is not a multiple of *k*. Be aware that this polynomial might
+    change before this exception is thrown.
 
 Parameter ``k``:
     the scaling factor to divide exponents by.)doc";

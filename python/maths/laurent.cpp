@@ -89,6 +89,7 @@ void addLaurent(pybind11::module_& m) {
         .def("minExp", &Laurent<Integer>::minExp, rdoc::minExp)
         .def("maxExp", &Laurent<Integer>::maxExp, rdoc::maxExp)
         .def("isZero", &Laurent<Integer>::isZero, rdoc::isZero)
+        .def("allocation", &Laurent<Integer>::allocation, rdoc::allocation)
         .def("__getitem__", [](const Laurent<Integer>& p, long exp) {
             return p[exp];
         }, pybind11::return_value_policy::copy, // to enforce constness

@@ -330,8 +330,10 @@ Version 8.0  [ TODO ]
               extracting coefficients in bulk.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
-            - Many optimisations to this class, including rvalue variants of
-              many operations.
+            - Many optimisations to this class, including a better growth
+              policy and rvalue variants of many operations.  This comes with
+              a new function allocation() that indicates the range of exponents
+              for which memory is currently allocated.
         Class Laurent2<T>:
             - New constructor that converts a single-variable Laurent polynomial
               into a two-variable Laurent polynomial.

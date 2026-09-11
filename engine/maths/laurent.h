@@ -112,17 +112,20 @@ static constexpr size_t karatsubaThreshold<Laurent<T>> = 0;
  * in that it allows negative exponents (so, unlike the Polynomial class,
  * you can represent both `2+3x` and `1+1/x`).
  *
+ * The underlying storage method for this class is dense (i.e., all
+ * coefficients are explicitly stored, including zero coefficients).
+ * Like `std::vector`, Laurent polynomials allocates additional memory to
+ * accommodate future growth, which means that (for example) appending a term
+ * with exponent `maxExp() + 1` or `minExp() - 1` is amortised constant time.
+ *
+ * See also the class Laurent2, which describes Laurent polynomials in
+ * two variables.
+ *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.  If a Laurent object is
  * moved from, it can later be reused by assigning it a new value or by
  * calling one of the initialisation functions init() or initExp().
- *
- * The underlying storage method for this class is dense (i.e., all
- * coefficients are explicitly stored, including zero coefficients).
- *
- * See also the class Laurent2, which describes Laurent polynomials in
- * two variables.
  *
  * \pre The coefficient type \a T has the property that, if an object is moved
  * from, it can later be reused by assigning it a new value.  Examples of types
@@ -178,11 +181,15 @@ class Laurent :
                  This may take any value if this is the zero polynomial.
                  For a non-zero polynomial, this is less than or equal to
                  \a minExp_ (and in many scenarios they will be the same). */
+        size_t capacity_;
+            /**< The total allocated size of the \a coeff_ array.
+                 For the zero polynomial, this is ignored and may take any
+                 value (since \a coeff_ will be `null`).  For a non-zero
+                 polynomial, this must be at least `maxExp_ - base_ + 1`. */
         T* coeff_;
-            /**< The coefficients of the polynomial, or `null` if this is the
-                 zero polynomial.  Specifically, coeff_[i] stores the
-                 coefficient of `x^(base_ + i)`.  This array has length at
-                 least (\a maxExp_ - \a base_ + 1). */
+            /**< An array of size \a coeff_ holding the coefficients of the
+                 polynomial, or `null` if this is the zero polynomial.  The
+                 coefficient `coeff_[i]` is for the term `x^(base_ + i)`. */
 
         static const T zero_;
             /**< A zero coefficient that we can safely make references to. */
@@ -223,11 +230,24 @@ class Laurent :
         template <bool writeable>
         using Buffer = std::conditional_t<writeable, T*, const T*>;
 
+        /**
+         * Returns the extra capacity to add when growing the array of
+         * coefficients.  This should be a multiple of \a capacity_, in order
+         * to ensure amortised constant append/prepend time.
+         *
+         * \pre This is not the zero polynomial (i.e., \a coeff_ is non-null).
+         *
+         * \return the extra capacity to add.
+         */
+        constexpr size_t growth() const {
+            return (capacity_ + 1) >> 1;
+        }
+
     public:
         /**
          * Creates the zero polynomial.
          */
-        Laurent() : minExp_(0), maxExp_(0), base_(0), coeff_(nullptr) {
+        Laurent() : coeff_(nullptr) {
         }
 
         /**
@@ -242,15 +262,18 @@ class Laurent :
          *
          * \param value the polynomial to clone.
          */
-        Laurent(const Laurent<T>& value) :
-                minExp_(value.minExp_), maxExp_(value.maxExp_),
-                base_(value.minExp_),
-                coeff_(value.coeff_ ? new T[value.maxExp_ - value.minExp_ + 1] :
-                    nullptr) {
-            if (coeff_)
+        Laurent(const Laurent<T>& value) {
+            if (value.coeff_) {
+                minExp_ = base_ = value.minExp_;
+                maxExp_ = value.maxExp_;
+                capacity_ = value.maxExp_ - value.minExp_ + 1;
+                coeff_ = new T[capacity_];
                 std::copy(
                     value.coeff_ + value.minExp_ - value.base_,
                     value.coeff_ + value.maxExp_ - value.base_ + 1, coeff_);
+            } else {
+                coeff_ = nullptr;
+            }
         }
 
         /**
@@ -266,15 +289,18 @@ class Laurent :
          */
         template <CoefficientDomain U>
         requires std::assignable_from<T&, U>
-        Laurent(const Laurent<U>& value) :
-                minExp_(value.minExp_), maxExp_(value.maxExp_),
-                base_(value.minExp_),
-                coeff_(value.coeff_ ? new T[value.maxExp_ - value.minExp_ + 1] :
-                    nullptr) {
-            if (coeff_)
+        Laurent(const Laurent<U>& value) {
+            if (value.coeff_) {
+                minExp_ = base_ = value.minExp_;
+                maxExp_ = value.maxExp_;
+                capacity_ = value.maxExp_ - value.minExp_ + 1;
+                coeff_ = new T[capacity_];
                 std::copy(
                     value.coeff_ + value.minExp_ - value.base_,
                     value.coeff_ + value.maxExp_ - value.base_ + 1, coeff_);
+            } else {
+                coeff_ = nullptr;
+            }
         }
 
         /**
@@ -285,7 +311,8 @@ class Laurent :
          */
         Laurent(Laurent<T>&& value) noexcept :
                 minExp_(value.minExp_), maxExp_(value.maxExp_),
-                base_(value.base_), coeff_(value.coeff_) {
+                base_(value.base_), capacity_(value.capacity_),
+                coeff_(value.coeff_) {
             value.coeff_ = nullptr;
         }
 
@@ -350,12 +377,14 @@ class Laurent :
          *
          * \param constant the value of this new constant polynomial.
          */
-        Laurent(const T& constant) : minExp_(0), maxExp_(0), base_(0) {
-            if (constant != 0) {
+        Laurent(const T& constant) {
+            if (constant == 0) {
+                coeff_ = nullptr;
+            } else {
+                minExp_ = maxExp_ = base_ = 0;
+                capacity_ = 1;
                 coeff_ = new T[1];
                 *coeff_ = constant;
-            } else {
-                coeff_ = nullptr;
             }
         }
 
@@ -367,12 +396,14 @@ class Laurent :
          *
          * \param constant the value of this new constant polynomial.
          */
-        Laurent(T&& constant) : minExp_(0), maxExp_(0), base_(0) {
-            if (constant != 0) {
+        Laurent(T&& constant) {
+            if (constant == 0) {
+                coeff_ = nullptr;
+            } else {
+                minExp_ = maxExp_ = base_ = 0;
+                capacity_ = 1;
                 coeff_ = new T[1];
                 *coeff_ = std::move(constant);
-            } else {
-                coeff_ = nullptr;
             }
         }
 
@@ -391,12 +422,14 @@ class Laurent :
          * \param constant the value of this new polynomial.
          */
         template <CppInteger IntType>
-        Laurent(IntType constant) : minExp_(0), maxExp_(0), base_(0) {
-            if (constant) {
+        Laurent(IntType constant) {
+            if (constant == 0) {
+                coeff_ = nullptr;
+            } else {
+                minExp_ = maxExp_ = base_ = 0;
+                capacity_ = 1;
                 coeff_ = new T[1];
                 *coeff_ = constant;
-            } else {
-                coeff_ = nullptr;
             }
         }
 
@@ -412,7 +445,6 @@ class Laurent :
          */
         void init() {
             delete[] coeff_;
-            minExp_ = maxExp_ = base_ = 0;
             coeff_ = nullptr;
         }
 
@@ -425,6 +457,7 @@ class Laurent :
         void initExp(long exponent) {
             delete[] coeff_;
             minExp_ = maxExp_ = base_ = exponent;
+            capacity_ = 1;
             coeff_ = new T[1];
             *coeff_ = 1;
         }
@@ -464,25 +497,25 @@ class Laurent :
                 ++begin;
                 ++minExp;
             }
-
             if (begin == end) {
-                minExp_ = maxExp_ = base_ = 0;
                 coeff_ = nullptr;
                 return;
             }
 
+            // We have a non-zero polynomial.
             minExp_ = base_ = minExp;
-            maxExp_ = minExp + (end - begin) - 1;
-            coeff_ = new T[maxExp_ - minExp_ + 1];
+            capacity_ = end - begin;
+            maxExp_ = minExp + capacity_ - 1;
+            coeff_ = new T[capacity_];
 
-            size_t i = 0;
+            T* it = coeff_;
             while (begin != end)
-                coeff_[i++] = *begin++;
+                *it++ = *begin++;
 
             // The final coefficient(s) might be zero: fix maxExp_ accordingly.
             // It _is_ guaranteed here that the first coefficient is non-zero.
-            while (maxExp_ > minExp_ && coeff_[maxExp_ - minExp_] == 0)
-                --maxExp_;
+            for (--it; *it == 0; --it, --maxExp_)
+                ;
         }
 
         /**
@@ -514,6 +547,30 @@ class Laurent :
          */
         bool isZero() const {
             return ! coeff_;
+        }
+
+        /**
+         * Indicates the range of exponents for which memory is currently
+         * allocated.
+         *
+         * This is mainly provided for diagnostics and performance analysis;
+         * end users will typically not need to use this routine.
+         *
+         * For a non-zero polynomial, this routine returns a pair
+         * `(base, capacity)`, where \a base indicates the smallest exponent
+         * for which memory is allocated, and \a capacity indicates the total
+         * number of exponents for which memory is allocated.  This means that
+         * the _largest_ exponent for which memory is allocated will be
+         * `base + capacity - 1`.
+         *
+         * \return a pair `(base, capacity)` as described above, or `(0, 0)`
+         * if this is the zero polynomial.
+         */
+        std::pair<long, size_t> allocation() const {
+            if (coeff_)
+                return { base_, capacity_ };
+            else
+                return { 0, 0 };
         }
 
         /**
@@ -571,7 +628,6 @@ class Laurent :
                             // This becomes the zero polynomial.
                             delete[] coeff_;
                             coeff_ = nullptr;
-                            minExp_ = maxExp_ = base_ = 0;
                         } else {
                             --maxExp_;
                             // We know the lowest-exponent coefficient != 0.
@@ -592,35 +648,51 @@ class Laurent :
 
             // From here, value is non-zero.
             if (! coeff_) {
+                minExp_ = maxExp_ = base_ = exp;
+                capacity_ = 1;
                 coeff_ = new T[1];
                 *coeff_ = value;
-                minExp_ = maxExp_ = base_ = exp;
             } else if (exp >= minExp_ && exp <= maxExp_) {
                 coeff_[exp - base_] = value;
             } else if (exp < base_) {
                 // The minimum exponent decreases, and we must reallocate.
-                T* newCoeff = new T[maxExp_ - exp + 1];
-                std::move(coeff_ + (minExp_ - base_),
-                    coeff_ + (maxExp_ - base_) + 1, newCoeff + (minExp_ - exp));
-                *newCoeff = value;
+                size_t extra = std::max(growth(),
+                    static_cast<size_t>(base_ - exp));
+                capacity_ += extra;
 
-                minExp_ = base_ = exp;
+                T* newCoeff = new T[capacity_];
+                std::move(coeff_ + (minExp_ - base_),
+                    coeff_ + (maxExp_ - base_) + 1,
+                    newCoeff + (minExp_ - base_ + extra));
+                base_ -= extra;
+                newCoeff[exp - base_] = value;
+                minExp_ = exp;
+
                 delete[] coeff_;
                 coeff_ = newCoeff;
             } else if (exp < minExp_) {
                 // The minimum exponent decreases, but we need not reallocate.
-                coeff_[exp - base_] = value;
                 for (--minExp_; minExp_ > exp; --minExp_)
                     coeff_[minExp_ - base_] = 0;
+                coeff_[exp - base_] = value;
+            } else if (exp < static_cast<long>(base_ + capacity_)) {
+                // The maximum exponent increases, but we need not reallocate.
+                for (++maxExp_; maxExp_ < exp; ++maxExp_)
+                    coeff_[maxExp_ - base_] = 0;
+                coeff_[exp - base_] = value;
             } else {
                 // The maximum exponent increases, and we must reallocate.
-                T* newCoeff = new T[exp - minExp_ + 1];
-                std::move(coeff_ + (minExp_ - base_),
-                    coeff_ + (maxExp_ - base_) + 1, newCoeff);
-                newCoeff[exp - minExp_] = value;
+                size_t extra = std::max(growth(),
+                    static_cast<size_t>(exp - base_ - capacity_ + 1));
+                capacity_ += extra;
 
-                base_ = minExp_;
+                T* newCoeff = new T[capacity_];
+                std::move(coeff_ + (minExp_ - base_),
+                    coeff_ + (maxExp_ - base_) + 1,
+                    newCoeff + (minExp_ - base_));
+                newCoeff[exp - base_] = value;
                 maxExp_ = exp;
+
                 delete[] coeff_;
                 coeff_ = newCoeff;
             }
@@ -807,10 +879,12 @@ class Laurent :
 
             if (value.coeff_) {
                 if (! coeff_) {
-                    coeff_ = new T[value.maxExp_ - value.minExp_ + 1];
-                } else if (maxExp_ - base_ < value.maxExp_ - value.minExp_) {
+                    capacity_ = value.maxExp_ - value.minExp_ + 1;
+                    coeff_ = new T[capacity_];
+                } else if (capacity_ < value.maxExp_ - value.minExp_ + 1) {
                     delete[] coeff_;
-                    coeff_ = new T[value.maxExp_ - value.minExp_ + 1];
+                    capacity_ = value.maxExp_ - value.minExp_ + 1;
+                    coeff_ = new T[capacity_];
                 }
                 base_ = minExp_ = value.minExp_;
                 maxExp_ = value.maxExp_;
@@ -822,7 +896,6 @@ class Laurent :
                 if (coeff_) {
                     delete[] coeff_;
                     coeff_ = nullptr;
-                    minExp_ = maxExp_ = base_ = 0;
                 }
             }
             return *this;
@@ -849,10 +922,12 @@ class Laurent :
 
             if (value.coeff_) {
                 if (! coeff_) {
-                    coeff_ = new T[value.maxExp_ - value.minExp_ + 1];
-                } else if (maxExp_ - base_ < value.maxExp_ - value.minExp_) {
+                    capacity_ = value.maxExp_ - value.minExp_ + 1;
+                    coeff_ = new T[capacity_];
+                } else if (capacity_ < value.maxExp_ - value.minExp_ + 1) {
                     delete[] coeff_;
-                    coeff_ = new T[value.maxExp_ - value.minExp_ + 1];
+                    capacity_ = value.maxExp_ - value.minExp_ + 1;
+                    coeff_ = new T[capacity_];
                 }
                 base_ = minExp_ = value.minExp_;
                 maxExp_ = value.maxExp_;
@@ -864,7 +939,6 @@ class Laurent :
                 if (coeff_) {
                     delete[] coeff_;
                     coeff_ = nullptr;
-                    minExp_ = maxExp_ = base_ = 0;
                 }
             }
             return *this;
@@ -885,6 +959,10 @@ class Laurent :
             maxExp_ = value.maxExp_;
             base_ = value.base_;
             // Let value dispose of the original coefficients in its destructor.
+            // Note: this leaves value in an invalid state (since its exponent
+            // range might exceed its capacity), but it can still be assigned
+            // a new value and used from there.
+            std::swap(capacity_, value.capacity_);
             std::swap(coeff_, value.coeff_);
             return *this;
         }
@@ -899,9 +977,15 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator = (const T& constant) {
+            // Re-initialising the polynomial to a constant seems like a good
+            // opportunity to claw back memory.  We will dispose of our
+            // pre-allocated coefficient array, if we had one.  The cost of
+            // course is that we will need to re-allocate more space if this
+            // polynomial should subsequently grow again.
             delete[] coeff_;
-            minExp_ = maxExp_ = base_ = 0;
             if (constant != 0) {
+                minExp_ = maxExp_ = base_ = 0;
+                capacity_ = 1;
                 coeff_ = new T[1];
                 *coeff_ = constant;
             } else {
@@ -920,9 +1004,11 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator = (T&& constant) {
+            // See =(const T&) for discussion on why we delete coeff_.
             delete[] coeff_;
-            minExp_ = maxExp_ = base_ = 0;
             if (constant != 0) {
+                minExp_ = maxExp_ = base_ = 0;
+                capacity_ = 1;
                 coeff_ = new T[1];
                 *coeff_ = std::move(constant);
             } else {
@@ -946,9 +1032,11 @@ class Laurent :
          */
         template <CppInteger IntType>
         Laurent& operator = (IntType constant) {
+            // See =(const T&) for discussion on why we delete coeff_.
             delete[] coeff_;
-            minExp_ = maxExp_ = base_ = 0;
             if (constant) {
+                minExp_ = maxExp_ = base_ = 0;
+                capacity_ = 1;
                 coeff_ = new T[1];
                 *coeff_ = constant;
             } else {
@@ -971,6 +1059,7 @@ class Laurent :
             std::swap(minExp_, other.minExp_);
             std::swap(maxExp_, other.maxExp_);
             std::swap(base_, other.base_);
+            std::swap(capacity_, other.capacity_);
             std::swap(coeff_, other.coeff_);
         }
 
@@ -1054,35 +1143,76 @@ class Laurent :
          * \param k the scaling factor to multiply exponents by.
          */
         void scaleUp(long k) {
-            if (k == 1 || ! coeff_)
+            if (k == 1 || ! coeff_) {
                 return;
-
-            if (minExp_ == maxExp_ && base_ == minExp_) {
-                minExp_ *= k;
-                maxExp_ *= k;
-                base_ *= k;
+            } else if (k == -1) {
+                invertX();
                 return;
             }
 
-            T* newCoeff;
-            if (k > 0) {
-                newCoeff = new T[k * (maxExp_ - minExp_) + 1];
-                for (long i = 0; i <= maxExp_ - minExp_; ++i)
-                    newCoeff[k * i] = std::move(coeff_[minExp_ - base_ + i]);
+            if (minExp_ == maxExp_) {
+                long gap = minExp_ - base_;
+                minExp_ *= k;
+                maxExp_ = minExp_;
+                base_ = minExp_ - gap;
+                return;
+            }
+
+            if (k < 0) {
+                // Reverse the sequence of coefficients.
+                // This is simply the non-trivial case of invertX().
+                std::reverse(coeff_ + minExp_ - base_,
+                    coeff_ + maxExp_ - base_ + 1);
+                base_ -= (minExp_ + maxExp_);
+                auto tmp = minExp_;
+                minExp_ = -maxExp_;
+                maxExp_ = -tmp;
+
+                // Now we just scale by |k|.
+                k = -k;
+            }
+
+            // From here we have k ≥ 2, and minExp_ < maxExp_.
+
+            // For now, we will reuse our existing coeff_ array only when we
+            // can do so without changing the gap between base_ and minExp_.
+            // Otherwise, if we needed to shift data left whilst expanding it
+            // to the right, the order of operations would become very messy.
+            long gap = minExp_ - base_;
+            size_t newSpan = (maxExp_ - minExp_) * k;
+            if (static_cast<size_t>(gap + newSpan) < capacity_) {
+                // We can reuse.
+                auto src = coeff_ + maxExp_ - base_;
+                auto dest = coeff_ + gap + newSpan;
+                do {
+                    *dest-- = std::move(*src--);
+                    for (long i = 1; i < k; ++i)
+                        *dest-- = 0;
+                } while (dest != src);
+
                 minExp_ *= k;
                 maxExp_ *= k;
+                base_ = minExp_ - gap;
             } else {
-                newCoeff = new T[k * (minExp_ - maxExp_) + 1];
-                for (long i = maxExp_ - minExp_; i >= 0; --i)
-                    newCoeff[(-k) * i] = std::move(coeff_[maxExp_ - base_ - i]);
+                // We must reallocate.
+                // Since scaleUp() and scaleDown() are typically final steps
+                // in an algorithm (e.g., converting between polynomial output
+                // formats), we just allocate what we need and don't use
+                // growth() here.
+                capacity_ = newSpan + 1;
+
+                T* newCoeff = new T[capacity_];
+                auto src = coeff_ + minExp_ - base_;
+                for (auto dest = newCoeff;
+                        src <= coeff_ + maxExp_ - base_; dest += k)
+                    *dest = std::move(*src++);
+                delete[] coeff_;
+                coeff_ = newCoeff;
+
                 minExp_ *= k;
                 maxExp_ *= k;
-                std::swap(minExp_, maxExp_);
+                base_ = minExp_;
             }
-
-            base_ = minExp_;
-            delete[] coeff_;
-            coeff_ = newCoeff;
         }
 
         /**
@@ -1097,25 +1227,31 @@ class Laurent :
          * are multiples of \a k.
          *
          * \exception FailedPrecondition Either \a k is zero, or some exponent
-         * with a non-zero coefficient is not a multiple of \a k.
+         * with a non-zero coefficient is not a multiple of \a k.  Be aware
+         * that this polynomial might change before this exception is thrown.
          *
          * \param k the scaling factor to divide exponents by.
          */
         void scaleDown(long k) {
-            if (k == 0)
+            if (k == 0) {
                 throw FailedPrecondition("scaleDown() requires a non-zero "
                     "scaling factor");
-            if (k == 1 || ! coeff_)
+            } else if (k == 1 || ! coeff_) {
                 return;
+            } else if (k == -1) {
+                invertX();
+                return;
+            }
 
             if (minExp_ % k != 0)
                 throw FailedPrecondition("scaleDown(k) requires every exponent "
                     "with a non-zero coefficient to be divisible by k");
 
-            if (minExp_ == maxExp_ && base_ == minExp_) {
+            if (minExp_ == maxExp_) {
+                long gap = minExp_ - base_;
                 minExp_ /= k;
-                maxExp_ /= k;
-                base_ /= k;
+                maxExp_ = minExp_;
+                base_ = minExp_ - gap;
                 return;
             }
 
@@ -1123,44 +1259,50 @@ class Laurent :
                 throw FailedPrecondition("scaleDown(k) requires every exponent "
                     "with a non-zero coefficient to be divisible by k");
 
-            T* newCoeff;
+            // From here we have |k| ≥ 2, and minExp_ < maxExp_.
             if (k > 0) {
-                newCoeff = new T[(maxExp_ - minExp_) / k + 1];
-                const T* src = coeff_ + (minExp_ - base_);
-                const T* srcEnd = coeff_ + (maxExp_ - base_);
-                T* dest = newCoeff;
-                while (src != srcEnd) {
-                    *dest++ = std::move(*src++);
+                auto src = coeff_ + minExp_ - base_ + 1;
+                auto dest = src;
+                auto end = coeff_ + maxExp_ - base_ + 1;
+                do {
                     for (long i = 1; i < k; ++i)
                         if ((*src++) != 0)
                             throw FailedPrecondition("scaleDown(k) requires "
                                 "every exponent with a non-zero coefficient "
                                 "to be divisible by k");
-                }
-                *dest = std::move(*src);
+                    *dest++ = std::move(*src++);
+                } while (src != end);
+
+                long gap = minExp_ - base_;
+                minExp_ /= k;
+                maxExp_ /= k;
+                base_ = minExp_ - gap;
             } else {
-                newCoeff = new T[(minExp_ - maxExp_) / k + 1];
-                const T* src = coeff_ + (maxExp_ - base_);
-                const T* srcEnd = coeff_ + (minExp_ - base_);
-                T* dest = newCoeff;
-                while (src != srcEnd) {
-                    *dest++ = std::move(*src--);
-                    for (long i = -1; i > k; --i)
-                        if ((*src--) != 0)
+                k = -k;
+
+                // Scale down by |k| like above, and then reverse the sequence
+                // of coefficients.
+                auto start = coeff_ + minExp_ - base_;
+                auto src = start + 1;
+                auto dest = src;
+                auto end = coeff_ + maxExp_ - base_ + 1;
+                do {
+                    for (long i = 1; i < k; ++i)
+                        if ((*src++) != 0)
                             throw FailedPrecondition("scaleDown(k) requires "
                                 "every exponent with a non-zero coefficient "
                                 "to be divisible by k");
-                }
-                *dest = std::move(*src);
-                std::swap(minExp_, maxExp_);
+                    *dest++ = std::move(*src++);
+                } while (src != end);
+
+                std::reverse(start, dest);
+
+                long gap = minExp_ - base_;
+                auto tmp = -(minExp_ / k);
+                minExp_ = -(maxExp_ / k);
+                maxExp_ = tmp;
+                base_ = minExp_ - gap;
             }
-
-            minExp_ /= k;
-            maxExp_ /= k;
-
-            base_ = minExp_;
-            delete[] coeff_;
-            coeff_ = newCoeff;
         }
 
         /**
@@ -1170,10 +1312,10 @@ class Laurent :
         void negate() {
             if (! coeff_)
                 return;
-
-            for (long exp = minExp_; exp <= maxExp_; ++exp)
-                if (coeff_[exp - base_] != 0)
-                    coeff_[exp - base_].negate();
+            for (auto it = coeff_ + minExp_ - base_;
+                    it <= coeff_ + maxExp_ - base_; ++it)
+                if (*it != 0)
+                    it->negate();
         }
 
         /**
@@ -1183,27 +1325,21 @@ class Laurent :
          * Calling this routine is equivalent to calling `scaleUp(-1)`.
          */
         void invertX() {
-            if (! coeff_)
+            if (! coeff_) {
                 return;
-            if (minExp_ == maxExp_) {
+            } else if (minExp_ == maxExp_) {
                 base_ -= (minExp_ << 1);
                 minExp_ = -minExp_;
                 maxExp_ = -maxExp_;
                 return;
+            } else {
+                std::reverse(coeff_ + minExp_ - base_,
+                    coeff_ + maxExp_ - base_ + 1);
+                base_ -= (minExp_ + maxExp_);
+                auto tmp = minExp_;
+                minExp_ = -maxExp_;
+                maxExp_ = -tmp;
             }
-
-            // TODO: We can do this without reallocating (instead, reverse the
-            // range, or some section thereof).
-            T* newCoeff = new T[maxExp_ - minExp_ + 1];
-            for (long i = maxExp_ - minExp_; i >= 0; --i)
-                newCoeff[i] = std::move(coeff_[maxExp_ - base_ - i]);
-
-            base_ = -maxExp_;
-            maxExp_ = -minExp_;
-            minExp_ = base_;
-
-            delete[] coeff_;
-            coeff_ = newCoeff;
         }
 
         /**
@@ -1419,7 +1555,7 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator += (const Laurent<T>& other) {
-            // TODO: We could offer an rvalue variant also.
+            // TODO: We could offer an rvalue variant also (likewise for -=).
             // This routine works even if &other == this, since in this case
             // we do not reallocate.
 
@@ -1446,7 +1582,6 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator -= (const Laurent<T>& other) {
-            // TODO: We could offer an rvalue variant also.
             // This routine works even if &other == this, since in this case
             // we do not reallocate.
 
@@ -1485,22 +1620,35 @@ class Laurent :
                 for (auto it = coeff_ + minExp_ - base_;
                         it <= coeff_ + maxExp_ - base_; ++it)
                     (*it) *= scalar;
-                base_ += other.minExp_;
                 minExp_ += other.minExp_;
                 maxExp_ += other.minExp_;
+                base_ += other.minExp_;
                 return *this;
             }
             if (minExp_ == maxExp_) {
-                // We need to reallocate, but the product operation is simple.
-                T* ans = new T[other.maxExp_ - other.minExp_ + 1];
-                const T& me = coeff_[minExp_ - base_];
-                auto out = ans;
-                for (auto in = other.coeff_ + other.minExp_ - other.base_;
-                        in <= other.coeff_ + other.maxExp_ - other.base_; ++in)
-                    *out++ = (*in) * me;
-                delete[] coeff_;
-                coeff_ = ans;
-
+                // TODO: This case could benefit from an rvalue ref argument.
+                // We may need to reallocate, but the product itself is simple.
+                if (capacity_ > other.maxExp_ - other.minExp_) {
+                    // Extract the scalar, then overwrite the coeff_ array.
+                    const T scalar = coeff_[minExp_ - base_];
+                    auto out = coeff_;
+                    for (auto in = other.coeff_ + other.minExp_ - other.base_;
+                            in <= other.coeff_ + other.maxExp_ - other.base_;
+                            ++in)
+                        *out++ = (*in) * scalar;
+                } else {
+                    capacity_ = std::max(capacity_ + growth(),
+                        other.maxExp_ - other.minExp_ + 1);
+                    T* newCoeff = new T[capacity_];
+                    const T& scalar = coeff_[minExp_ - base_];
+                    auto out = newCoeff;
+                    for (auto in = other.coeff_ + other.minExp_ - other.base_;
+                            in <= other.coeff_ + other.maxExp_ - other.base_;
+                            ++in)
+                        *out++ = (*in) * scalar;
+                    delete[] coeff_;
+                    coeff_ = newCoeff;
+                }
                 minExp_ += other.minExp_;
                 maxExp_ += other.maxExp_;
                 base_ = minExp_;
@@ -1512,20 +1660,19 @@ class Laurent :
 
             // The following code works even if &other == this, since we build
             // the coefficients of the product in a separate section of memory.
-            T* ans = new T[maxExp_ - minExp_ + other.maxExp_ - other.minExp_
-                + 1];
-            productBest<SetOrAdd::Either, false>(ans,
+            // TODO: Can we reuse our own memory if capacity_ is large enough?
+            capacity_ = maxExp_ - minExp_ + other.maxExp_ - other.minExp_ + 1;
+            T* newCoeff = new T[capacity_];
+            productBest<SetOrAdd::Either, false>(newCoeff,
                 coeff_ + minExp_ - base_, maxExp_ - minExp_ + 1,
                 other.coeff_ + other.minExp_ - other.base_,
                     other.maxExp_ - other.minExp_ + 1);
-
-            delete[] coeff_;
-            coeff_ = ans;
             minExp_ += other.minExp_;
             maxExp_ += other.maxExp_;
             base_ = minExp_;
 
-            // Both leading coefficients are non-zero, so the degree is correct.
+            delete[] coeff_;
+            coeff_ = newCoeff;
             return *this;
         }
 
@@ -1544,8 +1691,11 @@ class Laurent :
             if (! (x.coeff_ && y.coeff_)) {
                 return;
             } else if (std::addressof(x) == this || std::addressof(y) == this) {
-                // TODO: *this *= (y + 1), or *this *= (x + 1)
-                *this += x * y; // here we _need_ the temporary to hold x * y
+                // Here we _need_ a temporary to hold x * y.
+                *this += x * y;
+                // We could speed this up perhaps by implementing
+                // *this *= (y + 1) or *this *= (x + 1).  However, this seems
+                // to be a very niche case and so we leave it for now.
             } else {
                 // At this point, we know that both x and y have at least one
                 // non-zero coefficient.
@@ -1579,8 +1729,11 @@ class Laurent :
             if (! (x.coeff_ && y.coeff_)) {
                 return;
             } else if (std::addressof(x) == this || std::addressof(y) == this) {
-                // TODO: *this *= (y + 1), or *this *= (x + 1)
-                *this += x * y; // here we _need_ the temporary to hold x * y
+                // Here we _need_ a temporary to hold x * y.
+                *this += x * y;
+                // We could speed this up perhaps by implementing
+                // *this *= (y + 1) or *this *= (x + 1).  However, this seems
+                // to be a very niche case and so we leave it for now.
             } else {
                 // At this point, we know that both x and y have at least one
                 // non-zero coefficient.
@@ -1630,7 +1783,7 @@ class Laurent :
          * Karatsuba multiplication, but this polynomial and \a rhs do not
          * have comparable degree spans.  See above for further explanation.
          *
-         * \tparam the polynomial multiplication algorithm to use.
+         * \tparam algorithm the polynomial multiplication algorithm to use.
          *
          * \param rhs the polynomial to multiply with this.
          * \return the product of this and the given polynomial.
@@ -1711,19 +1864,20 @@ class Laurent :
 
             // Both minExp_ and maxExp_ have non-zero coefficients (though
             // minExp_ and maxExp_ might be the same exponent).
-            for (long exp = maxExp(); exp >= minExp(); --exp) {
-                if ((*this)[exp] == 0)
+            auto it = coeff_ + maxExp_ - base_;
+            for (long exp = maxExp_; exp >= minExp_; --exp, --it) {
+                if (*it == 0)
                     continue;
 
-                T writeCoeff = (*this)[exp];
-                if (exp == maxExp()) {
+                T writeCoeff = *it;
+                if (exp == maxExp_) {
                     // This is the first term being output.
                     if (writeCoeff < 0) {
                         if (utf8)
                             out << "\u2212";
                         else
                             out << '-';
-                        writeCoeff = -writeCoeff;
+                        writeCoeff.negate();
                     }
                 } else {
                     if (writeCoeff < 0) {
@@ -1731,7 +1885,7 @@ class Laurent :
                             out << " \u2212 ";
                         else
                             out << " - ";
-                        writeCoeff = -writeCoeff;
+                        writeCoeff.negate();
                     } else
                         out << " + ";
                 }
@@ -1863,7 +2017,7 @@ class Laurent :
                     T* raw = new T[lastExp - firstExp + 1];
                     for (auto& c : coeffs)
                         raw[c.first - firstExp] = std::move(c.second);
-                    return Laurent(firstExp, lastExp, raw);
+                    return { firstExp, lastExp, raw };
                 } else {
                     long exp = regina::tightDecode<long>(input);
                     if (! coeffs.empty()) {
@@ -1880,106 +2034,119 @@ class Laurent :
         /**
          * Constructs a new polynomial with the given exponent range and
          * coefficients.  It is assumed that the coefficient array starts
-         * at exponent \a minExp.
-         *
-         * The data members \a minExp_, \a maxExp_ and \a coeff_ will be
-         * set to the given values, and \a base_ will be set to \a minExp.
-         * In particular, the new object will take ownership of the
-         * coefficient array.
+         * at exponent \a minExp, and has capacity `maxExp - minExp + 1`.
+         * The new object will take ownership of the given coefficient array.
          *
          * The coefficient array may have leading or trailing zeroes,
          * but if this is a possibility then you _must_ pass
-         * \a checkZeroes as \c true.
+         * \a checkZeroes as `true`.
          *
          * \pre The argument \a coeff is both non-null and non-empty.
          */
         Laurent(long minExp, long maxExp, T* coeff, bool checkZeroes = false) :
-                minExp_(minExp), maxExp_(maxExp), base_(minExp), coeff_(coeff) {
+                minExp_(minExp), maxExp_(maxExp), base_(minExp),
+                capacity_(maxExp - minExp + 1), coeff_(coeff) {
             // The preconditions guarantee coeff_ is non-null and non-empty.
             if (checkZeroes)
                 fixDegrees();
         }
 
         /**
-         * Expands the array of coefficients if necessary so that
-         * minExp_ ≤ newMin_ and maxExp_ ≥ newMax.
+         * Ensures that `minExp_ ≤ newMin_` and `maxExp_ ≥ newMax`, and grows
+         * the array of coefficients accordingly if this is necessary.
+         * As a result, the coefficient array will be non-empty (and in
+         * particular, \a coeff_ will be non-null).
          *
          * The value of \a minExp_ might decrease, but it will not increase.
          * The value of \a maxExp_ might increase, but it will not decrease.
-         * All new coefficients that appear in this expanded range will
-         * be set to zero.
+         * If \a minExp_ and/or \a maxExp_ did change, then all new coefficients
+         * in the expanded range will be set to zero.
          *
          * Note that the resulting polynomial might have zero
          * coefficients at the exponents \a minExp_ and/or \a maxExp_.
          *
          * This routine is used (for example) in the implementations
          * of += and -=.
+         *
+         * \pre The given range satisfies `newMin ≤ newMax`.
          */
         void reallocateForRange(long newMin, long newMax) {
+            // TODO: This needs very thorough testing.
             // Note: type T will automatically initialise any newly allocated
             // coefficients to zero.
             if (! coeff_) {
                 minExp_ = base_ = newMin;
                 maxExp_ = newMax;
-                coeff_ = new T[newMax - newMin + 1];
-            } else if (base_ > newMin) {
-                // We must reallocate.
-                if (maxExp_ < newMax) {
-                    // newMin < base_ <= minExp_ <= maxExp_ < newMax
-                    T* newCoeff = new T[newMax - newMin + 1];
+                capacity_ = newMax - newMin + 1;
+                coeff_ = new T[capacity_];
+            } else if (newMin >= minExp_ && newMax <= maxExp_) {
+                // We have nothing to do.
+                return;
+            } else {
+                long finalMin = std::min(minExp_, newMin);
+                long finalMax = std::max(maxExp_, newMax);
+                if (static_cast<size_t>(finalMax - finalMin) >= capacity_) {
+                    // We are going to have to reallocate.
+                    size_t extra = std::max(growth(),
+                        static_cast<size_t>(finalMax - finalMin
+                            - capacity_ + 1));
+                    capacity_ += extra;
+
+                    // Try to locate the new data in the middle of the new
+                    // array, with space on either side.
+                    size_t newBase = finalMin - (static_cast<size_t>(
+                        capacity_ - (finalMax - finalMin + 1)) >> 1);
+
+                    T* newCoeff = new T[capacity_];
                     std::move(coeff_ + minExp_ - base_,
                         coeff_ + maxExp_ - base_ + 1,
-                        newCoeff + minExp_ - newMin);
+                        newCoeff + minExp_ - newBase);
                     delete[] coeff_;
                     coeff_ = newCoeff;
 
-                    minExp_ = base_ = newMin;
-                    maxExp_ = newMax;
+                    minExp_ = finalMin;
+                    maxExp_ = finalMax;
+                    base_ = newBase;
                 } else {
-                    // newMin < base_ <= minExp_  &&  newMax <= maxExp_
-                    T* newCoeff = new T[maxExp_ - newMin + 1];
-                    std::move(coeff_ + minExp_ - base_,
-                        coeff_ + maxExp_ - base_ + 1,
-                        newCoeff + minExp_ - newMin);
-                    delete[] coeff_;
-                    coeff_ = newCoeff;
+                    // We don't need to reallocate, but we might need to shift.
+                    // We measure our shifts to the right (so a positive shift
+                    // corresponds to a reduction in base_).
+                    // If we _do_ need to shift, do this in a way that leaves
+                    // some space on either side.
+                    long minShift = base_ - finalMin;
+                    long maxShift = base_ + static_cast<long>(capacity_)
+                        - finalMax - 1;
+                    if (minShift > 0) {
+                        // We must shift our data to the right.
+                        long shift = (minShift + maxShift + 1) >> 1;
+                        std::move_backward(coeff_ + minExp_ - base_,
+                            coeff_ + maxExp_ - base_ + 1,
+                            coeff_ + maxExp_ - base_ + shift + 1);
+                        base_ -= shift;
+                    } else if (maxShift < 0) {
+                        // We must shift out data to the left.
+                        long shift = (-(minShift + maxShift) + 1) >> 1;
+                        std::move(coeff_ + minExp_ - base_,
+                            coeff_ + maxExp_ - base_ + 1,
+                            coeff_ + minExp_ - base_ - shift);
+                        base_ += shift;
+                    }
 
-                    minExp_ = base_ = newMin;
+                    // Fix minExp_ and maxExp_, and zero out any extra
+                    // coefficients on either end.
+                    if (newMin < minExp_) {
+                        for (auto it = coeff_ + newMin - base_;
+                                it != coeff_ + minExp_ - base_; ++it)
+                            *it = 0;
+                        minExp_ = newMin;
+                    }
+                    if (newMax > maxExp_) {
+                        for (auto it = coeff_ + maxExp_ - base_ + 1;
+                                it <= coeff_ + newMax - base_; ++it)
+                            *it = 0;
+                        maxExp_ = newMax;
+                    }
                 }
-            } else if (maxExp_ < newMax) {
-                // Still, we must reallocate.
-                // (Actually, if base_ is far enough below minExp_ then we might
-                // not have to reallocate, but we'll do it for now anyway.)
-                if (minExp_ <= newMin) {
-                    // base_ <= minExp_ <= newMin  &&  maxExp_ < newMax
-                    T* newCoeff = new T[newMax - minExp_ + 1];
-                    std::move(coeff_ + minExp_ - base_,
-                        coeff_ + maxExp_ - base_ + 1, newCoeff);
-                    delete[] coeff_;
-                    coeff_ = newCoeff;
-
-                    base_ = minExp_;
-                    maxExp_ = newMax;
-                } else {
-                    // base_ <= newMin < minExp_ <= maxExp_ < newMax
-                    T* newCoeff = new T[newMax - newMin + 1];
-                    std::move(coeff_ + minExp_ - base_,
-                        coeff_ + maxExp_ - base_ + 1,
-                        newCoeff + minExp_ - newMin);
-                    delete[] coeff_;
-                    coeff_ = newCoeff;
-
-                    minExp_ = base_ = newMin;
-                    maxExp_ = newMax;
-                }
-            } else if (minExp_ > newMin) {
-                // base_ <= newMin  &&  newMax <= maxExp_
-                // We don't need to reallocate, but minExp_ will drop - we must
-                // zero out everything from newMin to minExp_-1.
-                for (auto it = coeff_ + newMin - base_;
-                        it != coeff_ + minExp_ - base_; ++it)
-                    *it = 0;
-                minExp_ = newMin;
             }
         }
 
@@ -1999,7 +2166,6 @@ class Laurent :
             if (minExp_ == maxExp_ && coeff_[minExp_ - base_] == 0) {
                 // We have the zero polynomial now.
                 delete[] coeff_;
-                minExp_ = maxExp_ = base_ = 0;
                 coeff_ = nullptr;
             }
         }
@@ -2030,7 +2196,7 @@ class Laurent :
             for ( ; exp <= other.maxExp_; ++exp)
                 if (coeff_[exp - base_] != 0)
                     coeff_[exp - base_] = other.coeff_[exp - other.base_]
-                        - coeff_[exp - base_];
+                        - std::move(coeff_[exp - base_]);
                 else
                     coeff_[exp - base_] = other.coeff_[exp - other.base_];
             for ( ; exp <= maxExp_; ++exp)
@@ -2588,7 +2754,7 @@ Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     for ( ; exp <= lhs.maxExp_ && exp <= rhs.maxExp_; ++idx, ++exp)
         coeff[idx] = lhs.coeff_[exp - lhs.base_] + rhs.coeff_[exp - rhs.base_];
 
-    // exp is now (lhs.maxExp_ + 1) or (rhs.maxExp_ + 1).
+    // exp is now min(lhs.maxExp_, rhs.maxExp_) + 1.
     if (exp <= lhs.maxExp_) {
         std::copy(lhs.coeff_ + exp - lhs.base_,
             lhs.coeff_ + lhs.maxExp_ + 1 - lhs.base_, coeff + idx);
@@ -2648,6 +2814,7 @@ Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs) {
  */
 template <CoefficientDomain T>
 Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs) {
+    // TODO: Use a test based on capacity
     // If we can, choose a direction for the addition that avoids a
     // deep copy within +=.
     if (! rhs.coeff_) {
@@ -2757,7 +2924,7 @@ Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     for ( ; exp <= lhs.maxExp_ && exp <= rhs.maxExp_; ++idx, ++exp)
         coeff[idx] = lhs.coeff_[exp - lhs.base_] - rhs.coeff_[exp - rhs.base_];
 
-    // exp is now (lhs.maxExp_ + 1) or (rhs.maxExp_ + 1).
+    // exp is now min(lhs.maxExp_, rhs.maxExp_) + 1.
     if (exp <= lhs.maxExp_) {
         std::copy(lhs.coeff_ + exp - lhs.base_,
             lhs.coeff_ + lhs.maxExp_ + 1 - lhs.base_, coeff + idx);
@@ -2821,6 +2988,7 @@ Laurent<T> operator - (const Laurent<T>& lhs, Laurent<T>&& rhs) {
  */
 template <CoefficientDomain T>
 Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs) {
+    // TODO: Use a test based on capacity
     // If we can, choose a direction for the subtraction that avoids a
     // deep copy within -= / subtractFrom.
     // Prefer the -= operator if we can't avoid the deep copy.
