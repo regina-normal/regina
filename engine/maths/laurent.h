@@ -1638,7 +1638,7 @@ class Laurent :
                         *out++ = (*in) * scalar;
                 } else {
                     capacity_ = std::max(capacity_ + growth(),
-                        other.maxExp_ - other.minExp_ + 1);
+                        static_cast<size_t>(other.maxExp_ - other.minExp_ + 1));
                     T* newCoeff = new T[capacity_];
                     const T& scalar = coeff_[minExp_ - base_];
                     auto out = newCoeff;
