@@ -131,6 +131,7 @@ print(p)
 print([c for c in p])
 for c in p:
     c -= 1
+
 print(p)
 p = PolynomialInt([3])
 print([c for c in p])
@@ -142,6 +143,7 @@ print(p)
 print([c for c in p])
 for c in p:
     c -= 1
+
 print(p)
 p.set(-2, 0)
 print(p)
@@ -156,6 +158,7 @@ print(p)
 print([c for c in p])
 for c in p:
     c[1].negate()
+
 print(p)
 p = Laurent2()
 print([c for c in p])

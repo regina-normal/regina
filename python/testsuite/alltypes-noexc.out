@@ -1,4 +1,5 @@
 AbelianGroup : class -> EqualityType.ByValue
+AdjugateAlgorithm : enum
 Algorithm : enum
 AngleAlg : enum
 AngleAlgFlags : alias -> enum AngleAlg
@@ -54,6 +55,7 @@ CensusSearchable : concept
 ChildIterator : class -> EqualityType.ByValue
 ClosedPrimeMinSearcher : class -> EqualityType.ByReference
 CoefficientDomain : concept
+CommutativeRing : concept
 CompactSearcher : class -> EqualityType.ByReference
 Component2 : class -> EqualityType.ByReference
 Component3 : class -> EqualityType.ByReference
@@ -505,6 +507,7 @@ PlugTriSolidTorus : class -> EqualityType.ByValue
 PluggedTorusBundle : class -> EqualityType.ByValue
 Polynomial : alias -> PolynomialRational
 PolynomialInt : class -> EqualityType.ByValue
+PolynomialProductAlgorithm : enum
 PolynomialRational : class -> EqualityType.ByValue
 PosOrder : class -> EqualityType.Disabled
 Primes : class -> EqualityType.NeverInstantiated
@@ -707,6 +710,7 @@ gcdWithCoeffs : function
 hasInt128 : function
 isBase64 : function
 isTriangulation : function
+isqrt : function
 lcm : function
 makeAngleEquations : function
 makeEmbeddedConstraints : function
