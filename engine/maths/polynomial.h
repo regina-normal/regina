@@ -1458,7 +1458,7 @@ void Polynomial<T>::shift(long s) {
         coeff_ = c;
         degree_ += s;
     } else if (s < 0) {
-        if (degree_ < -s) {
+        if (degree_ < static_cast<size_t>(-s)) {
             // The leading term does not survive.
             init();
         } else {
@@ -1478,7 +1478,7 @@ Polynomial<T> Polynomial<T>::shifted(long s) const {
         std::copy(coeff_, coeff_ + degree_ + 1, c + s);
         return { degree_ + s, c };
     } else /* s < 0 */ {
-        if (degree_ < -s) {
+        if (degree_ < static_cast<size_t>(-s)) {
             // The leading term does not survive.
             return {};
         } else {
