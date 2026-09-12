@@ -172,24 +172,42 @@ class Laurent :
     private:
         long minExp_;
             /**< The minimum exponent that appears in the polynomial.
-                 This may take any value if this is the zero polynomial. */
+                 For the zero polynomial, this may take any value strictly
+                 greater than \a maxExp_.  For a polynomial that has been
+                 moved out of and is in an invalid (but re-assignable) state,
+                 this may take any value at all. */
         long maxExp_;
             /**< The maximum exponent that appears in the polynomial.
-                 This may take any value if this is the zero polynomial. */
+                 For the zero polynomial, this may take any value strictly
+                 less than \a minExp_.  For a polynomial that has been moved
+                 out of and is in an invalid (but re-assignable) state, this
+                 may take any value at all.  */
         long base_;
             /**< The exponent represented by the coefficient coeff_[0].
                  This may take any value if this is the zero polynomial.
                  For a non-zero polynomial, this is less than or equal to
-                 \a minExp_ (and in many scenarios they will be the same). */
+                 \a minExp_.  For a polynomial that has been moved out of and
+                 is in an invalid (but re-assignable) state, this may take
+                 any value at all. */
         size_t capacity_;
-            /**< The total allocated size of the \a coeff_ array.
-                 For the zero polynomial, this is ignored and may take any
-                 value (since \a coeff_ will be `null`).  For a non-zero
-                 polynomial, this must be at least `maxExp_ - base_ + 1`. */
+            /**< The total allocated size of the \a coeff_ array.  If \a coeff_
+                 is `null` (which is possible only for the zero polynomial),
+                 this may take any value.  If \a coeff_ is non-null, then this
+                 must be strictly positive; moreover, for a non-zero polynomial
+                 it must be at least `maxExp_ - base_ + 1`.  For a polynomial
+                 that has been moved out of and is in an invalid (but
+                 re-assignable) state, \a capacity_ must still accurately
+                 reflect the (strictly positive) allocated size of the
+                 \a coeff_ array, or must be 0 if \a coeff_ is `null`. */
         T* coeff_;
-            /**< An array of size \a coeff_ holding the coefficients of the
-                 polynomial, or `null` if this is the zero polynomial.  The
-                 coefficient `coeff_[i]` is for the term `x^(base_ + i)`. */
+            /**< An array holding the coefficients of the polynomial, where
+                 `coeff_[i]` is attached to the term `x^(base_ + i)`.  For the
+                 zero polynomial, this may optionally be `null`.  If this is
+                 non-null, then the array must have positive allocated size.
+                 For a polynomial that has been moved out of and is in an
+                 invalid (but re-assignable) state, \a coeff_ must still
+                 be either an array of strictly positive size \a capacity_,
+                 or `null`. */
 
         static const T zero_;
             /**< A zero coefficient that we can safely make references to. */
@@ -232,22 +250,24 @@ class Laurent :
 
         /**
          * Returns the extra capacity to add when growing the array of
-         * coefficients.  This should be a multiple of \a capacity_, in order
-         * to ensure amortised constant append/prepend time.
+         * coefficients.  This should always be positive; moreover, it should
+         * be asymptotically `Θ(capacity_)` to ensure amortised constant time
+         * when pushing new coefficients onto either end of the polynomial.
          *
-         * \pre This is not the zero polynomial (i.e., \a coeff_ is non-null).
+         * \pre \a coeff_ is non-null (i.e., \a capacity_ genuinely describes
+         * the allocated size of the \a coeff_ array).
          *
          * \return the extra capacity to add.
          */
         constexpr size_t growth() const {
-            return (capacity_ + 1) >> 1;
+            return (capacity_ >> 1) + 1;
         }
 
     public:
         /**
          * Creates the zero polynomial.
          */
-        Laurent() : coeff_(nullptr) {
+        Laurent() : coeff_(nullptr), minExp_(0), maxExp_(-1) {
         }
 
         /**
@@ -263,7 +283,11 @@ class Laurent :
          * \param value the polynomial to clone.
          */
         Laurent(const Laurent<T>& value) {
-            if (value.coeff_) {
+            if (value.isZero()) {
+                coeff_ = nullptr;
+                minExp_ = 0;
+                maxExp_ = -1;
+            } else {
                 minExp_ = base_ = value.minExp_;
                 maxExp_ = value.maxExp_;
                 capacity_ = value.maxExp_ - value.minExp_ + 1;
@@ -271,8 +295,6 @@ class Laurent :
                 std::copy(
                     value.coeff_ + value.minExp_ - value.base_,
                     value.coeff_ + value.maxExp_ - value.base_ + 1, coeff_);
-            } else {
-                coeff_ = nullptr;
             }
         }
 
@@ -290,7 +312,11 @@ class Laurent :
         template <CoefficientDomain U>
         requires std::assignable_from<T&, U>
         Laurent(const Laurent<U>& value) {
-            if (value.coeff_) {
+            if (value.isZero()) {
+                coeff_ = nullptr;
+                minExp_ = 0;
+                maxExp_ = -1;
+            } else {
                 minExp_ = base_ = value.minExp_;
                 maxExp_ = value.maxExp_;
                 capacity_ = value.maxExp_ - value.minExp_ + 1;
@@ -298,8 +324,6 @@ class Laurent :
                 std::copy(
                     value.coeff_ + value.minExp_ - value.base_,
                     value.coeff_ + value.maxExp_ - value.base_ + 1, coeff_);
-            } else {
-                coeff_ = nullptr;
             }
         }
 
@@ -314,6 +338,11 @@ class Laurent :
                 base_(value.base_), capacity_(value.capacity_),
                 coeff_(value.coeff_) {
             value.coeff_ = nullptr;
+
+            // This leaves value in an invalid state (since we might not have
+            // value.minExp_ > value.maxExp_); however, it will become valid
+            // again if we assign it a new value or call one of the
+            // initialisation member functions.
         }
 
         /**
@@ -380,6 +409,8 @@ class Laurent :
         Laurent(const T& constant) {
             if (constant == 0) {
                 coeff_ = nullptr;
+                minExp_ = 0;
+                maxExp_ = -1;
             } else {
                 minExp_ = maxExp_ = base_ = 0;
                 capacity_ = 1;
@@ -399,6 +430,8 @@ class Laurent :
         Laurent(T&& constant) {
             if (constant == 0) {
                 coeff_ = nullptr;
+                minExp_ = 0;
+                maxExp_ = -1;
             } else {
                 minExp_ = maxExp_ = base_ = 0;
                 capacity_ = 1;
@@ -425,6 +458,8 @@ class Laurent :
         Laurent(IntType constant) {
             if (constant == 0) {
                 coeff_ = nullptr;
+                minExp_ = 0;
+                maxExp_ = -1;
             } else {
                 minExp_ = maxExp_ = base_ = 0;
                 capacity_ = 1;
@@ -444,8 +479,10 @@ class Laurent :
          * Sets this to become the zero polynomial.
          */
         void init() {
-            delete[] coeff_;
-            coeff_ = nullptr;
+            // Leave coeff_ and capacity_ untouched: we might want to use this
+            // space for coefficients again later.
+            minExp_ = 0;
+            maxExp_ = -1;
         }
 
         /**
@@ -455,11 +492,18 @@ class Laurent :
          * \param exponent the new exponent to use for this polynomial.
          */
         void initExp(long exponent) {
-            delete[] coeff_;
-            minExp_ = maxExp_ = base_ = exponent;
-            capacity_ = 1;
-            coeff_ = new T[1];
-            *coeff_ = 1;
+            // Reuse any pre-allocated coeff_ array, if we can.
+            if (coeff_) {
+                size_t gap = capacity_ >> 1; // 0 ≤ gap < capacity_
+                base_ = exponent - gap;
+                coeff_[gap] = 1;
+            } else {
+                capacity_ = 1;
+                coeff_ = new T[1];
+                base_ = exponent;
+                *coeff_ = 1;
+            }
+            minExp_ = maxExp_ = exponent;
         }
 
         /**
@@ -490,30 +534,36 @@ class Laurent :
          */
         template <RandomAccessIteratorFor<T> Iterator>
         void init(long minExp, Iterator begin, Iterator end) {
-            delete[] coeff_;
-
             // Skip through any initial zero terms.
             while (begin != end && *begin == 0) {
                 ++begin;
                 ++minExp;
             }
             if (begin == end) {
-                coeff_ = nullptr;
+                // We have the zero polynomial.
+                init();
                 return;
             }
 
             // We have a non-zero polynomial.
+            size_t rangeLen = end - begin;
+            if (! coeff_) {
+                capacity_ = rangeLen;
+                coeff_ = new T[capacity_];
+            } else if (rangeLen > capacity_) {
+                delete[] coeff_;
+                capacity_ = std::max(rangeLen, capacity_ + growth());
+                coeff_ = new T[capacity_];
+            }
             minExp_ = base_ = minExp;
-            capacity_ = end - begin;
-            maxExp_ = minExp + capacity_ - 1;
-            coeff_ = new T[capacity_];
+            maxExp_ = minExp + rangeLen - 1;
 
             T* it = coeff_;
             while (begin != end)
                 *it++ = *begin++;
 
             // The final coefficient(s) might be zero: fix maxExp_ accordingly.
-            // It _is_ guaranteed here that the first coefficient is non-zero.
+            // We _do_ already know that the first coefficient is non-zero.
             for (--it; *it == 0; --it, --maxExp_)
                 ;
         }
@@ -526,7 +576,7 @@ class Laurent :
          * \return the smallest exponent.
          */
         long minExp() const {
-            return coeff_ ? minExp_ : 0;
+            return isZero() ? 0 : minExp_;
         }
 
         /**
@@ -537,7 +587,7 @@ class Laurent :
          * \return the largest exponent.
          */
         long maxExp() const {
-            return coeff_ ? maxExp_ : 0;
+            return isZero() ? 0 : maxExp_;
         }
 
         /**
@@ -546,7 +596,7 @@ class Laurent :
          * \return \c true if and only if this is the zero polynomial.
          */
         bool isZero() const {
-            return ! coeff_;
+            return minExp_ > maxExp_;
         }
 
         /**
@@ -556,15 +606,18 @@ class Laurent :
          * This is mainly provided for diagnostics and performance analysis;
          * end users will typically not need to use this routine.
          *
-         * For a non-zero polynomial, this routine returns a pair
-         * `(base, capacity)`, where \a base indicates the smallest exponent
-         * for which memory is allocated, and \a capacity indicates the total
-         * number of exponents for which memory is allocated.  This means that
-         * the _largest_ exponent for which memory is allocated will be
-         * `base + capacity - 1`.
+         * This routine returns a pair `(base, capacity)`, where \a base
+         * indicates the smallest exponent for which memory is allocated, and
+         * \a capacity indicates the total number of exponents for which memory
+         * is allocated.  This means that the _largest_ exponent for which
+         * memory is allocated will be `base + capacity - 1`.
+         *
+         * In the special case of the zero polynomial, it is possible (but not
+         * necessarily true) that no memory is allocated at all.  In such a
+         * scenario, this routine will return `(0, 0)` instead.
          *
          * \return a pair `(base, capacity)` as described above, or `(0, 0)`
-         * if this is the zero polynomial.
+         * if this is the zero polynomial _and_ no memory is allocated at all.
          */
         std::pair<long, size_t> allocation() const {
             if (coeff_)
@@ -582,12 +635,6 @@ class Laurent :
          * add non-zero coefficients for any `x^i` where `fromExp ≤ i ≤ toExp`
          * without needing to reallocate memory and/or shuffle data around.
          *
-         * As a special case however, if this is the zero polynomial then this
-         * routine will do nothing (since internally, the zero polynomial is
-         * represented by a null coefficient array).  In particular, it makes
-         * no sense to call reserveRange() immediately after a Laurent
-         * polynomial has been default-constructed.
-         *
          * Note that the range `[fromExp, toExp]` is inclusive at both ends
          * (unlike iterator ranges, for example).
          *
@@ -600,14 +647,23 @@ class Laurent :
          * storage reserved.
          */
         void reserveRange(long fromExp, long toExp) {
-            if (coeff_ && fromExp <= toExp) {
-                // This is a bit heavyweight: the biggest unnecessary cost is
-                // zeroing out coefficients in the ranges [fromExp, minexp_)
-                // and/or (maxExp_, toExp] in the case where we don't need to
-                // reallocate.  However, we can live with this for now.
+            if (fromExp > toExp) {
+                return;
+            } else if (! coeff_) {
+                capacity_ = toExp - fromExp + 1;
+                coeff_ = new T[capacity_];
+            } else if (fromExp <= toExp) {
+                // Use reallocateForRange(), which will preserve our existing
+                // coefficient data, but which may also change minExp_ and
+                // maxExp_ (which means we need to change them back).
+                //
+                // This approach is a bit heavyweight: the biggest unnecessary
+                // cost is zeroing out coefficients in the ranges
+                // [fromExp, minexp_) and/or (maxExp_, toExp] in the case where
+                // we don't need to reallocate.  We will live with this for now.
                 long oldMin = minExp_;
                 long oldMax = maxExp_;
-                reallocateForRange(fromExp, toExp); // changes minExp_, maxExp_
+                reallocateForRange(fromExp, toExp);
                 minExp_ = oldMin;
                 maxExp_ = oldMax;
             }
@@ -631,7 +687,7 @@ class Laurent :
          * \return the coefficient of the given term.
          */
         const T& operator [] (long exp) const {
-            if (coeff_ && exp >= minExp_ && exp <= maxExp_)
+            if (exp >= minExp_ && exp <= maxExp_) // implies coeff_ is non-null
                 return coeff_[exp - base_];
             else
                 return zero_;
@@ -662,12 +718,11 @@ class Laurent :
          */
         void set(long exp, const T& value) {
             if (value == 0) {
-                if (coeff_) {
+                if (! isZero()) {
                     if (exp == maxExp_) {
                         if (minExp_ == maxExp_) {
                             // This becomes the zero polynomial.
-                            delete[] coeff_;
-                            coeff_ = nullptr;
+                            init();
                         } else {
                             --maxExp_;
                             // We know the lowest-exponent coefficient != 0.
@@ -687,11 +742,19 @@ class Laurent :
             }
 
             // From here, value is non-zero.
-            if (! coeff_) {
-                minExp_ = maxExp_ = base_ = exp;
-                capacity_ = 1;
-                coeff_ = new T[1];
-                *coeff_ = value;
+            if (isZero()) {
+                // Reuse any pre-allocated coeff_ array, if we can.
+                if (coeff_) {
+                    size_t gap = capacity_ >> 1; // 0 ≤ gap < capacity_
+                    base_ = exp - gap;
+                    coeff_[gap] = value;
+                } else {
+                    capacity_ = 1;
+                    coeff_ = new T[1];
+                    base_ = exp;
+                    *coeff_ = value;
+                }
+                minExp_ = maxExp_ = exp;
             } else if (exp >= minExp_ && exp <= maxExp_) {
                 coeff_[exp - base_] = value;
             } else if (exp < base_) {
@@ -757,7 +820,7 @@ class Laurent :
          * \return an iterator pointing to the first non-zero coefficient.
          */
         iterator begin() const {
-            return coeff_ ? coeff_ + minExp_ - base_ : nullptr;
+            return isZero() ? nullptr : coeff_ + minExp_ - base_;
         }
 
         /**
@@ -779,7 +842,7 @@ class Laurent :
          * \return an iterator pointing beyond the last non-zero coefficient.
          */
         iterator end() const {
-            return coeff_ ? coeff_ + maxExp_ - base_ + 1 : nullptr;
+            return isZero() ? nullptr : coeff_ + maxExp_ - base_ + 1;
         }
 
 #ifdef __APIDOCS
@@ -811,9 +874,9 @@ class Laurent :
          * are equal.
          */
         bool operator == (const Laurent<T>& rhs) const {
-            if (! coeff_)
-                return (! rhs.coeff_);
-            if (! rhs.coeff_)
+            if (isZero())
+                return (rhs.isZero());
+            if (rhs.isZero())
                 return false;
             if (minExp_ != rhs.minExp_ || maxExp_ != rhs.maxExp_)
                 return false;
@@ -831,10 +894,10 @@ class Laurent :
          */
         bool operator == (const T& constant) const {
             if (constant == 0)
-                return ! coeff_;
+                return isZero();
             else
-                return (minExp_ == 0 && maxExp_ == 0 && coeff_ &&
-                    coeff_[-base_] == constant);
+                return minExp_ == 0 && maxExp_ == 0 // implies coeff_ non-null
+                    && coeff_[-base_] == constant;
         }
 
         /**
@@ -853,10 +916,10 @@ class Laurent :
         template <CppInteger IntType>
         bool operator == (IntType constant) const {
             if (constant == 0)
-                return ! coeff_;
+                return isZero();
             else
-                return (minExp_ == 0 && maxExp_ == 0 && coeff_ &&
-                    coeff_[-base_] == constant);
+                return minExp_ == 0 && maxExp_ == 0 // implies coeff_ non-null
+                    && coeff_[-base_] == constant;
         }
 
         /**
@@ -880,10 +943,10 @@ class Laurent :
          * and the given polynomial.
          */
         std::strong_ordering operator <=> (const Laurent<T>& rhs) const {
-            if (! coeff_)
-                return rhs.coeff_ ? std::strong_ordering::less :
-                    std::strong_ordering::equal;
-            if (! rhs.coeff_)
+            if (isZero())
+                return rhs.isZero() ? std::strong_ordering::equal :
+                    std::strong_ordering::less;
+            if (rhs.isZero())
                 return std::strong_ordering::greater;
             if (auto c = minExp_ <=> rhs.minExp_; c != 0)
                 return c;
@@ -898,9 +961,6 @@ class Laurent :
 
         /**
          * Sets this to be a copy of the given polynomial.
-         *
-         * This and the given polynomial need not have the same minimum
-         * and/or maximum exponents.
          *
          * This operator induces a deep copy of \a value.
          *
@@ -917,36 +977,36 @@ class Laurent :
             if (&value == this)
                 return *this;
 
-            if (value.coeff_) {
+            if (value.isZero()) {
+                init();
+            } else {
+                size_t required = value.maxExp_ - value.minExp_ + 1;
                 if (! coeff_) {
-                    capacity_ = value.maxExp_ - value.minExp_ + 1;
+                    capacity_ = required;
                     coeff_ = new T[capacity_];
-                } else if (capacity_ <
-                        static_cast<size_t>(value.maxExp_ - value.minExp_ + 1)) {
+                    base_ = value.minExp_;
+                } else if (capacity_ < required) {
                     delete[] coeff_;
-                    capacity_ = value.maxExp_ - value.minExp_ + 1;
+                    capacity_ = std::max(required, capacity_ + growth());
                     coeff_ = new T[capacity_];
+                    // Aim to (roughly) centre the coefficients within the
+                    // newly allocated array.
+                    base_ = value.minExp_ - ((capacity_ - required) >> 1);
+                } else {
+                    base_ = value.minExp_;
                 }
-                base_ = minExp_ = value.minExp_;
+                minExp_ = value.minExp_;
                 maxExp_ = value.maxExp_;
                 std::copy(
                     value.coeff_ + value.minExp_ - value.base_,
                     value.coeff_ + value.maxExp_ - value.base_ + 1,
-                    coeff_);
-            } else {
-                if (coeff_) {
-                    delete[] coeff_;
-                    coeff_ = nullptr;
-                }
+                    coeff_ + minExp_ - base_);
             }
             return *this;
         }
 
         /**
          * Sets this to be a copy of the given polynomial.
-         *
-         * This and the given polynomial need not have the same minimum
-         * and/or maximum exponents.
          *
          * This operator induces a deep copy of \a value.
          *
@@ -961,26 +1021,30 @@ class Laurent :
             if (&value == this)
                 return *this;
 
-            if (value.coeff_) {
+            if (value.isZero()) {
+                init();
+            } else {
+                size_t required = value.maxExp_ - value.minExp_ + 1;
                 if (! coeff_) {
-                    capacity_ = value.maxExp_ - value.minExp_ + 1;
+                    capacity_ = required;
                     coeff_ = new T[capacity_];
-                } else if (capacity_ < value.maxExp_ - value.minExp_ + 1) {
+                    base_ = value.minExp_;
+                } else if (capacity_ < required) {
                     delete[] coeff_;
-                    capacity_ = value.maxExp_ - value.minExp_ + 1;
+                    capacity_ = std::max(required, capacity_ + growth());
                     coeff_ = new T[capacity_];
+                    // Aim to (roughly) centre the coefficients within the
+                    // newly allocated array.
+                    base_ = value.minExp_ - ((capacity_ - required) >> 1);
+                } else {
+                    base_ = value.minExp_;
                 }
-                base_ = minExp_ = value.minExp_;
+                minExp_ = value.minExp_;
                 maxExp_ = value.maxExp_;
                 std::copy(
                     value.coeff_ + value.minExp_ - value.base_,
                     value.coeff_ + value.maxExp_ - value.base_ + 1,
-                    coeff_);
-            } else {
-                if (coeff_) {
-                    delete[] coeff_;
-                    coeff_ = nullptr;
-                }
+                    coeff_ + minExp_ - base_);
             }
             return *this;
         }
@@ -988,9 +1052,6 @@ class Laurent :
         /**
          * Moves the contents of the given polynomial to this polynomial.
          * This is a fast (constant time) operation.
-         *
-         * This and the given polynomial need not have the same minimum
-         * and/or maximum exponents.
          *
          * \param value the polynomial to move.
          * \return a reference to this polynomial.
@@ -1018,19 +1079,20 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator = (const T& constant) {
-            // Re-initialising the polynomial to a constant seems like a good
-            // opportunity to claw back memory.  We will dispose of our
-            // pre-allocated coefficient array, if we had one.  The cost of
-            // course is that we will need to re-allocate more space if this
-            // polynomial should subsequently grow again.
-            delete[] coeff_;
-            if (constant != 0) {
-                minExp_ = maxExp_ = base_ = 0;
-                capacity_ = 1;
-                coeff_ = new T[1];
-                *coeff_ = constant;
+            if (constant == 0) {
+                init();
             } else {
-                coeff_ = nullptr;
+                if (coeff_) {
+                    // Try to center the coefficient within our
+                    // already-allocated array.
+                    base_ = -(capacity_ >> 1);
+                } else {
+                    capacity_ = 1;
+                    coeff_ = new T[1];
+                    base_ = 0;
+                }
+                minExp_ = maxExp_ = 0;
+                *coeff_ = constant;
             }
             return *this;
         }
@@ -1045,15 +1107,20 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator = (T&& constant) {
-            // See =(const T&) for discussion on why we delete coeff_.
-            delete[] coeff_;
-            if (constant != 0) {
-                minExp_ = maxExp_ = base_ = 0;
-                capacity_ = 1;
-                coeff_ = new T[1];
-                *coeff_ = std::move(constant);
+            if (constant == 0) {
+                init();
             } else {
-                coeff_ = nullptr;
+                if (coeff_) {
+                    // Try to center the coefficient within our
+                    // already-allocated array.
+                    base_ = -(capacity_ >> 1);
+                } else {
+                    capacity_ = 1;
+                    coeff_ = new T[1];
+                    base_ = 0;
+                }
+                minExp_ = maxExp_ = 0;
+                *coeff_ = std::move(constant);
             }
             return *this;
         }
@@ -1073,15 +1140,20 @@ class Laurent :
          */
         template <CppInteger IntType>
         Laurent& operator = (IntType constant) {
-            // See =(const T&) for discussion on why we delete coeff_.
-            delete[] coeff_;
-            if (constant) {
-                minExp_ = maxExp_ = base_ = 0;
-                capacity_ = 1;
-                coeff_ = new T[1];
-                *coeff_ = constant;
+            if (constant == 0) {
+                init();
             } else {
-                coeff_ = nullptr;
+                if (coeff_) {
+                    // Try to center the coefficient within our
+                    // already-allocated array.
+                    base_ = -(capacity_ >> 1);
+                } else {
+                    capacity_ = 1;
+                    coeff_ = new T[1];
+                    base_ = 0;
+                }
+                minExp_ = maxExp_ = 0;
+                *coeff_ = constant;
             }
             return *this;
         }
@@ -1113,7 +1185,7 @@ class Laurent :
          * \param s the power of \a x to multiply by.
          */
         void shift(long s) {
-            if (coeff_) {
+            if (! isZero()) {
                 base_ += s;
                 minExp_ += s;
                 maxExp_ += s;
@@ -1184,7 +1256,7 @@ class Laurent :
          * \param k the scaling factor to multiply exponents by.
          */
         void scaleUp(long k) {
-            if (k == 1 || ! coeff_) {
+            if (k == 1 || isZero()) {
                 return;
             } else if (k == -1) {
                 invertX();
@@ -1277,7 +1349,7 @@ class Laurent :
             if (k == 0) {
                 throw FailedPrecondition("scaleDown() requires a non-zero "
                     "scaling factor");
-            } else if (k == 1 || ! coeff_) {
+            } else if (k == 1 || isZero()) {
                 return;
             } else if (k == -1) {
                 invertX();
@@ -1351,7 +1423,7 @@ class Laurent :
          * This polynomial is changed directly.
          */
         void negate() {
-            if (! coeff_)
+            if (isZero())
                 return;
             for (auto it = coeff_ + minExp_ - base_;
                     it <= coeff_ + maxExp_ - base_; ++it)
@@ -1366,7 +1438,7 @@ class Laurent :
          * Calling this routine is equivalent to calling `scaleUp(-1)`.
          */
         void invertX() {
-            if (! coeff_) {
+            if (isZero()) {
                 return;
             } else if (minExp_ == maxExp_) {
                 base_ -= (minExp_ << 1);
@@ -1408,7 +1480,7 @@ class Laurent :
          */
         template <std::invocable<T&> Action>
         void transform(Action&& action) {
-            if (coeff_) {
+            if (! isZero()) {
                 for (auto it = coeff_ + minExp_ - base_;
                         it <= coeff_ + maxExp_ - base_; ++it)
                     std::invoke(std::forward<Action>(action), *it);
@@ -1444,7 +1516,7 @@ class Laurent :
          */
         template <std::invocable<T&, long> Action>
         void transform(Action&& action) {
-            if (coeff_) {
+            if (! isZero()) {
                 auto it = coeff_ + minExp_ - base_;
                 auto exp = minExp_;
                 while (exp <= maxExp_)
@@ -1478,7 +1550,7 @@ class Laurent :
          */
         template <std::invocable<T&&, long> Action>
         void extract(Action&& action) && {
-            if (coeff_) {
+            if (! isZero()) {
                 auto it = coeff_ + minExp_ - base_;
                 for (long exp = minExp_; exp <= maxExp_; ++exp, ++it)
                     if (*it != 0)
@@ -1494,7 +1566,7 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator *= (const T& scalar) {
-            if (coeff_) {
+            if (! isZero()) {
                 if (scalar == 0)
                     init();
                 else
@@ -1519,7 +1591,7 @@ class Laurent :
          */
         template <CppInteger IntType>
         Laurent& operator *= (IntType scalar) {
-            if (coeff_) {
+            if (! isZero()) {
                 if (scalar == 0)
                     init();
                 else
@@ -1541,7 +1613,7 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator /= (const T& scalar) {
-            if (coeff_) {
+            if (! isZero()) {
                 for (auto it = coeff_ + minExp_ - base_;
                         it <= coeff_ + maxExp_ - base_; ++it)
                     (*it) /= scalar;
@@ -1570,7 +1642,7 @@ class Laurent :
          */
         template <CppInteger IntType>
         Laurent& operator /= (IntType scalar) {
-            if (coeff_) {
+            if (! isZero()) {
                 for (auto it = coeff_ + minExp_ - base_;
                         it <= coeff_ + maxExp_ - base_; ++it)
                     (*it) /= scalar;
@@ -1584,14 +1656,6 @@ class Laurent :
         /**
          * Adds the given polynomial to this.
          *
-         * The given polynomial need not have the same minimum and/or
-         * maximum exponents as this.
-         *
-         * \warning This routine may trigger a deep copy (depending upon
-         * the range of exponents used in \a other).  Consider using
-         * the binary `+` operator instead, which is better able to
-         * avoid this deep copy where possible.
-         *
          * \param other the polynomial to add to this.
          * \return a reference to this polynomial.
          */
@@ -1599,10 +1663,12 @@ class Laurent :
             // This routine works even if &other == this, since in this case
             // we do not reallocate.
 
-            if (! other.coeff_)
+            if (other.isZero())
                 return *this;
+            if (isZero())
+                return *this = other;
 
-            reallocateForRange(other.minExp_, other.maxExp_); // sets coeff_ ≠ 0
+            reallocateForRange(other.minExp_, other.maxExp_);
 
             for (long exp = other.minExp_; exp <= other.maxExp_; ++exp)
                 coeff_[exp - base_] += other.coeff_[exp - other.base_];
@@ -1615,21 +1681,13 @@ class Laurent :
         /**
          * Adds the given polynomial to this.
          *
-         * The given polynomial need not have the same minimum and/or
-         * maximum exponents as this.
-         *
-         * \warning This routine may trigger a deep copy (depending upon
-         * the range of exponents used in \a other).  Consider using
-         * the binary `+` operator instead, which is better able to
-         * avoid this deep copy where possible.
-         *
          * \param other the polynomial to add to this.
          * \return a reference to this polynomial.
          */
         Laurent& operator += (Laurent<T>&& other) {
-            if (! other.coeff_)
+            if (other.isZero())
                 return *this;
-            if (! coeff_)
+            if (isZero())
                 return *this = std::move(other);
 
             if ((base_ <= other.minExp_ && other.maxExp_ < static_cast<long>(
@@ -1668,9 +1726,6 @@ class Laurent :
         /**
          * Subtracts the given polynomial from this.
          *
-         * The given polynomial need not have the same minimum and/or
-         * maximum exponents as this.
-         *
          * \param other the polynomial to subtract from this.
          * \return a reference to this polynomial.
          */
@@ -1678,10 +1733,15 @@ class Laurent :
             // This routine works even if &other == this, since in this case
             // we do not reallocate.
 
-            if (! other.coeff_)
+            if (other.isZero())
                 return *this;
+            if (isZero()) {
+                *this = other;
+                negate();
+                return *this;
+            }
 
-            reallocateForRange(other.minExp_, other.maxExp_); // sets coeff_ ≠ 0
+            reallocateForRange(other.minExp_, other.maxExp_);
 
             for (long exp = other.minExp_; exp <= other.maxExp_; ++exp)
                 coeff_[exp - base_] -= other.coeff_[exp - other.base_];
@@ -1694,16 +1754,13 @@ class Laurent :
         /**
          * Subtracts the given polynomial from this.
          *
-         * The given polynomial need not have the same minimum and/or
-         * maximum exponents as this.
-         *
          * \param other the polynomial to subtract from this.
          * \return a reference to this polynomial.
          */
         Laurent& operator -= (Laurent<T>&& other) {
-            if (! other.coeff_)
+            if (other.isZero())
                 return *this;
-            if (! coeff_) {
+            if (isZero()) {
                 other.negate();
                 return *this = std::move(other);
             }
@@ -1749,16 +1806,13 @@ class Laurent :
         /**
          * Multiplies this by the given polynomial.
          *
-         * The given polynomial need not have the same minimum and/or
-         * maximum exponents as this.
-         *
          * \param other the polynomial to multiply this by.
          * \return a reference to this polynomial.
          */
         Laurent& operator *= (const Laurent<T>& other) {
-            if (! coeff_)
+            if (isZero())
                 return *this;
-            if (! other.coeff_) {
+            if (other.isZero()) {
                 init();
                 return *this;
             }
@@ -1840,7 +1894,7 @@ class Laurent :
          * \param y the second polynomial in the product to add to this.
          */
         void addProduct(const Laurent<T>& x, const Laurent<T>& y) {
-            if (! (x.coeff_ && y.coeff_)) {
+            if (x.isZero() || y.isZero()) {
                 return;
             } else if (std::addressof(x) == this || std::addressof(y) == this) {
                 // Here we _need_ a temporary to hold x * y.
@@ -1878,7 +1932,7 @@ class Laurent :
          * \param y the second polynomial in the product to add to this.
          */
         void addProduct(Laurent<T>&& x, Laurent<T>&& y) {
-            if (! (x.coeff_ && y.coeff_)) {
+            if (x.isZero() || y.isZero()) {
                 return;
             } else if (std::addressof(x) == this || std::addressof(y) == this) {
                 // Here we _need_ a temporary to hold x * y.
@@ -1942,7 +1996,7 @@ class Laurent :
          */
         template <PolynomialProductAlgorithm algorithm>
         Laurent product(const Laurent& rhs) const {
-            if (! (coeff_ && rhs.coeff_)) {
+            if (isZero() || rhs.isZero()) {
                 return {}; // zero
             } else if (minExp_ == maxExp_) {
                 return (rhs * coeff_[minExp_ - base_]).shifted(minExp_);
@@ -2009,7 +2063,7 @@ class Laurent :
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
                 const char* variable = nullptr) const {
-            if (! coeff_) {
+            if (isZero()) {
                 out << '0';
                 return;
             }
@@ -2118,7 +2172,7 @@ class Laurent :
                 requires InherentlyTightEncodable<T> {
             // Write the non-zero coefficients with their exponents, and then
             // terminate with zero.
-            if (coeff_) {
+            if (! isZero()) {
                 auto it = coeff_ + minExp_ - base_;
                 for (long exp = minExp_; exp <= maxExp_; ++exp, ++it)
                     if (*it != 0) {
@@ -2189,9 +2243,11 @@ class Laurent :
          * at exponent \a minExp, and has capacity `maxExp - minExp + 1`.
          * The new object will take ownership of the given coefficient array.
          *
-         * The coefficient array may have leading or trailing zeroes,
-         * but if this is a possibility then you _must_ pass
-         * \a checkZeroes as `true`.
+         * The coefficient array may have leading or trailing zeroes (or
+         * indeed may consist entirely of zeroes), but if this is a possibility
+         * then you _must_ pass \a checkZeroes as `true`.
+         *
+         * \pre The arguments satisfy `minExp ≤ maxExp`.
          *
          * \pre The argument \a coeff is both non-null and non-empty.
          */
@@ -2204,18 +2260,22 @@ class Laurent :
         }
 
         /**
-         * Ensures that `minExp_ ≤ newMin_` and `maxExp_ ≥ newMax`, and grows
+         * Ensures that `minExp_ ≤ newMin` and `maxExp_ ≥ newMax`, and grows
          * the array of coefficients accordingly if this is necessary.
          * As a result, the coefficient array will be non-empty (and in
          * particular, \a coeff_ will be non-null).
          *
-         * The value of \a minExp_ might decrease, but it will not increase.
-         * The value of \a maxExp_ might increase, but it will not decrease.
-         * If \a minExp_ and/or \a maxExp_ did change, then all new coefficients
+         * If this is a non-zero polynomial, then the value of \a minExp_
+         * might decrease, but it will not increase; likewise, the value of
+         * \a maxExp_ might increase, but it will not decrease.  Moreover,
+         * if \a minExp_ and/or \a maxExp_ do change, then all new coefficients
          * in the expanded range will be set to zero.
          *
-         * Note that the resulting polynomial might have zero
-         * coefficients at the exponents \a minExp_ and/or \a maxExp_.
+         * If this is the zero polynomial, then \a minExp_ and \a maxExp_ will
+         * be set to \a newMin and \a newMax respectively.
+         *
+         * Note that, after calling this routine, the polynomial might have
+         * zero coefficients at the exponents \a minExp_ and/or \a maxExp_.
          *
          * This routine is used (for example) in the implementations
          * of += and -=.
@@ -2230,6 +2290,30 @@ class Laurent :
                 maxExp_ = newMax;
                 capacity_ = newMax - newMin + 1;
                 coeff_ = new T[capacity_];
+            } else if (isZero()) {
+                // This is the zero polynomial, but we already have an
+                // allocated coefficient array.
+                size_t rangeLen = newMax - newMin + 1;
+                if (rangeLen > capacity_) {
+                    // We are going to have to reallocate.
+                    capacity_ = std::max(capacity_ + growth(), rangeLen);
+                    delete[] coeff_;
+                    coeff_ = new T[capacity_];
+
+                    // Try to locate the range in the middle of the new array,
+                    // with space on either side.
+                    minExp_ = newMin;
+                    maxExp_ = newMax;
+                    base_ = newMin - ((capacity_ - rangeLen) >> 1);
+                } else {
+                    // We don't need to reallocate, but we will need to zero
+                    // out any pre-existing data in our range.
+                    minExp_ = newMin;
+                    maxExp_ = newMax;
+                    base_ = newMin - ((capacity_ - rangeLen) >> 1);
+                    std::fill(coeff_ + minExp_ - base_,
+                        coeff_ + maxExp_ - base_ + 1, T());
+                }
             } else if (newMin >= minExp_ && newMax <= maxExp_) {
                 // We have nothing to do.
                 return;
@@ -2304,21 +2388,18 @@ class Laurent :
         /**
          * Increases \a minExp_ and/or decreases \a maxExp_ to ensure
          * that both exponents \a minExp_ and \a maxExp_ have non-zero
-         * coefficients.  If this is the zero polynomial then all of
-         * \a minExp_, \a maxExp_ and \a base_ will be set to zero.
+         * coefficients.  If this is the zero polynomial then \a minExp_ and
+         * \a maxExp_ will be left in a state that correctly encodes this.
          *
          * \pre The data member \a coeff_ is non-null.
          */
         void fixDegrees() {
-            while (maxExp_ > minExp_ && coeff_[maxExp_ - base_] == 0)
+            while (minExp_ <= maxExp_ && coeff_[maxExp_ - base_] == 0)
                 --maxExp_;
-            while (minExp_ < maxExp_ && coeff_[minExp_ - base_] == 0)
+            while (minExp_ <= maxExp_ && coeff_[minExp_ - base_] == 0)
                 ++minExp_;
-            if (minExp_ == maxExp_ && coeff_[minExp_ - base_] == 0) {
-                // We have the zero polynomial now.
-                delete[] coeff_;
-                coeff_ = nullptr;
-            }
+            // If we have the zero polynomial, we will be left with
+            // minExp_ < maxExp_, which is exactly what we need.
         }
 
         /**
@@ -2333,12 +2414,15 @@ class Laurent :
             // This routine works even if &other == this, since in this case
             // we do not reallocate.
 
-            if (! other.coeff_) {
+            if (other.isZero()) {
                 negate();
                 return *this;
             }
+            if (isZero()) {
+                return *this = other;
+            }
 
-            reallocateForRange(other.minExp_, other.maxExp_); // sets coeff_ ≠ 0
+            reallocateForRange(other.minExp_, other.maxExp_);
 
             long exp = (minExp_ < other.minExp_ ? minExp_ : other.minExp_);
             for ( ; exp < other.minExp_; ++exp)
@@ -2842,9 +2926,9 @@ Laurent<T> operator / (Laurent<T> poly, IntType scalar) {
 template <CoefficientDomain T>
 Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     // Handle zero polynomials separately.
-    if (! lhs.coeff_)
+    if (lhs.isZero())
         return rhs;
-    if (! rhs.coeff_)
+    if (rhs.isZero())
         return lhs;
 
     // If the two ranges do not overlap, just copy them separately;
@@ -2977,9 +3061,9 @@ Laurent<T> operator - (Laurent<T> arg) {
 template <CoefficientDomain T>
 Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     // Handle zero polynomials separately.
-    if (! rhs.coeff_)
+    if (rhs.isZero())
         return lhs;
-    if (! lhs.coeff_)
+    if (lhs.isZero())
         return -rhs;
 
     // If the two ranges do not overlap, just copy them separately;
@@ -3112,7 +3196,7 @@ Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs) {
  */
 template <CoefficientDomain T>
 Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
-    if (! (lhs.coeff_ && rhs.coeff_)) {
+    if (lhs.isZero() || rhs.isZero()) {
         return {}; // zero
     } else if (lhs.minExp_ == lhs.maxExp_) {
         return (rhs * lhs.coeff_[lhs.minExp_ - lhs.base_]).shifted(
@@ -3148,7 +3232,7 @@ Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
  */
 template <CoefficientDomain T>
 Laurent<T> operator * (Laurent<T>&& lhs, Laurent<T>&& rhs) {
-    if (! (lhs.coeff_ && rhs.coeff_)) {
+    if (lhs.isZero() || rhs.isZero()) {
         return {}; // zero
     } else if (lhs.minExp_ == lhs.maxExp_) {
         rhs *= lhs.coeff_[lhs.minExp_ - lhs.base_];
