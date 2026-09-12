@@ -1733,7 +1733,7 @@ class Laurent :
                 for ( ; dest != other.coeff_ + minExp_ - other.base_; ++dest)
                     dest->negate();
                 for ( ; src <= coeff_ + maxExp_ - base_; ++src, ++dest)
-                    *dest += std::move(*src);
+                    *dest = std::move(*src) - std::move(*dest);
                 for ( ; dest <= other.coeff_ + other.maxExp_ - other.base_;
                         ++dest)
                     dest->negate();
