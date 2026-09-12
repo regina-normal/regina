@@ -17,9 +17,6 @@ struct Laurent {
 static constexpr const char __add[] =
 R"doc(Adds the two given polynomials.
 
-This operator ``+`` is sometimes faster than using ``+=``, since it
-has more flexibility to avoid an internal deep copy.
-
 Parameter ``lhs``:
     the first polynomial to add.
 
@@ -500,9 +497,6 @@ Returns:
 static constexpr const char __sub_2[] =
 R"doc(Subtracts the two given polynomials.
 
-This operator ``-`` is sometimes faster than using ``-=``, since it
-has more flexibility to avoid an internal deep copy.
-
 Parameter ``lhs``:
     the polynomial to sutract *rhs* from.
 
@@ -679,6 +673,36 @@ Parameter ``rhs``:
 
 Returns:
     the product of this and the given polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent::reserveRange
+static constexpr const char reserveRange[] =
+R"doc(Reserves enough memory in the coefficient array to span the given
+range of exponents. This routine merely affects the internal storage;
+it does not change the value of this polynomial.
+
+Specifically, after calling ``reserveRange(fromExp, toExp)``, you can
+add non-zero coefficients for any ``x^i`` where ``fromExp ≤ i ≤
+toExp`` without needing to reallocate memory and/or shuffle data
+around.
+
+As a special case however, if this is the zero polynomial then this
+routine will do nothing (since internally, the zero polynomial is
+represented by a null coefficient array). In particular, it makes no
+sense to call reserveRange() immediately after a Laurent polynomial
+has been default-constructed.
+
+Note that the range ``[fromExp, toExp]`` is inclusive at both ends
+(unlike iterator ranges, for example).
+
+This routine is safe to call even if ``fromExp > toExp`` (in which
+case it will do nothing at all).
+
+Parameter ``fromExp``:
+    the smallest exponent whose coefficient will have storage
+    reserved.
+
+Parameter ``toExp``:
+    the largest exponent whose coefficient will have storage reserved.)doc";
 
 // Docstring regina::python::doc::Laurent::scaleDown
 static constexpr const char scaleDown[] =

@@ -574,6 +574,46 @@ class Laurent :
         }
 
         /**
+         * Reserves enough memory in the coefficient array to span the given
+         * range of exponents.  This routine merely affects the internal
+         * storage; it does not change the value of this polynomial.
+         *
+         * Specifically, after calling `reserveRange(fromExp, toExp)`, you can
+         * add non-zero coefficients for any `x^i` where `fromExp ≤ i ≤ toExp`
+         * without needing to reallocate memory and/or shuffle data around.
+         *
+         * As a special case however, if this is the zero polynomial then this
+         * routine will do nothing (since internally, the zero polynomial is
+         * represented by a null coefficient array).  In particular, it makes
+         * no sense to call reserveRange() immediately after a Laurent
+         * polynomial has been default-constructed.
+         *
+         * Note that the range `[fromExp, toExp]` is inclusive at both ends
+         * (unlike iterator ranges, for example).
+         *
+         * This routine is safe to call even if `fromExp > toExp` (in which
+         * case it will do nothing at all).
+         *
+         * \param fromExp the smallest exponent whose coefficient will have
+         * storage reserved.
+         * \param toExp the largest exponent whose coefficient will have
+         * storage reserved.
+         */
+        void reserveRange(long fromExp, long toExp) {
+            if (coeff_ && fromExp <= toExp) {
+                // This is a bit heavyweight: the biggest unnecessary cost is
+                // zeroing out coefficients in the ranges [fromExp, minexp_)
+                // and/or (maxExp_, toExp] in the case where we don't need to
+                // reallocate.  However, we can live with this for now.
+                long oldMin = minExp_;
+                long oldMax = maxExp_;
+                reallocateForRange(fromExp, toExp); // changes minExp_, maxExp_
+                minExp_ = oldMin;
+                maxExp_ = oldMax;
+            }
+        }
+
+        /**
          * Returns the given coefficient of this polynomial.
          * There are no restrictions on the exponent \a exp.
          *
@@ -881,7 +921,8 @@ class Laurent :
                 if (! coeff_) {
                     capacity_ = value.maxExp_ - value.minExp_ + 1;
                     coeff_ = new T[capacity_];
-                } else if (capacity_ < value.maxExp_ - value.minExp_ + 1) {
+                } else if (capacity_ <
+                        static_cast<size_t>(value.maxExp_ - value.minExp_ + 1)) {
                     delete[] coeff_;
                     capacity_ = value.maxExp_ - value.minExp_ + 1;
                     coeff_ = new T[capacity_];
@@ -1555,7 +1596,6 @@ class Laurent :
          * \return a reference to this polynomial.
          */
         Laurent& operator += (const Laurent<T>& other) {
-            // TODO: We could offer an rvalue variant also (likewise for -=).
             // This routine works even if &other == this, since in this case
             // we do not reallocate.
 
@@ -1570,6 +1610,58 @@ class Laurent :
             // We might have zeroed out some coefficients.
             fixDegrees();
             return *this;
+        }
+
+        /**
+         * Adds the given polynomial to this.
+         *
+         * The given polynomial need not have the same minimum and/or
+         * maximum exponents as this.
+         *
+         * \warning This routine may trigger a deep copy (depending upon
+         * the range of exponents used in \a other).  Consider using
+         * the binary `+` operator instead, which is better able to
+         * avoid this deep copy where possible.
+         *
+         * \param other the polynomial to add to this.
+         * \return a reference to this polynomial.
+         */
+        Laurent& operator += (Laurent<T>&& other) {
+            if (! other.coeff_)
+                return *this;
+            if (! coeff_)
+                return *this = std::move(other);
+
+            if ((base_ <= other.minExp_ &&
+                        other.maxExp_ < static_cast<long>(base_ + capacity_)) ||
+                    minExp_ < other.base_ ||
+                    maxExp_ >= static_cast<long>(other.base_ + other.capacity_)) {
+                // Either: (a) we can avoid the deep copy by adding other to
+                // this; or (b) we cannot avoid the deep copy either way.
+                reallocateForRange(other.minExp_, other.maxExp_);
+
+                auto src = other.coeff_ + other.minExp_ - other.base_;
+                auto dest = coeff_ + other.minExp_ - base_;
+                for ( ; dest <= coeff_ + other.maxExp_ - base_; ++src, ++dest)
+                    *dest += std::move(*src);
+
+                // We might have zeroed out some coefficients.
+                fixDegrees();
+                return *this;
+            } else {
+                // We can avoid the deep copy by adding this to other and
+                // moving the result back into this.
+                other.reallocateForRange(minExp_, maxExp_);
+
+                auto src = coeff_ + minExp_ - base_;
+                auto dest = other.coeff_ + minExp_ - other.base_;
+                for ( ; src <= coeff_ + maxExp_ - base_; ++src, ++dest)
+                    *dest += std::move(*src);
+
+                // We might have zeroed out some coefficients.
+                other.fixDegrees();
+                return *this = std::move(other);
+            }
         }
 
         /**
@@ -1596,6 +1688,60 @@ class Laurent :
             // We might have zeroed out some coefficients.
             fixDegrees();
             return *this;
+        }
+
+        /**
+         * Subtracts the given polynomial from this.
+         *
+         * The given polynomial need not have the same minimum and/or
+         * maximum exponents as this.
+         *
+         * \param other the polynomial to subtract from this.
+         * \return a reference to this polynomial.
+         */
+        Laurent& operator -= (Laurent<T>&& other) {
+            if (! other.coeff_)
+                return *this;
+            if (! coeff_) {
+                other.negate();
+                return *this = std::move(other);
+            }
+
+            if ((base_ <= other.minExp_ &&
+                        other.maxExp_ < static_cast<long>(base_ + capacity_)) ||
+                    minExp_ < other.base_ ||
+                    maxExp_ >= static_cast<long>(other.base_ + other.capacity_)) {
+                // Either: (a) we can avoid the deep copy by subtracting other
+                // from this; or (b) we cannot avoid the deep copy either way.
+                reallocateForRange(other.minExp_, other.maxExp_);
+
+                auto src = other.coeff_ + other.minExp_ - other.base_;
+                auto dest = coeff_ + other.minExp_ - base_;
+                for ( ; dest <= coeff_ + other.maxExp_ - base_; ++src, ++dest)
+                    *dest -= std::move(*src);
+
+                // We might have zeroed out some coefficients.
+                fixDegrees();
+                return *this;
+            } else {
+                // We can avoid the deep copy by doing the computation in-place
+                // within other, and then moving the result back into this.
+                other.reallocateForRange(minExp_, maxExp_);
+
+                auto src = coeff_ + minExp_ - base_;
+                auto dest = other.coeff_ + other.minExp_ - other.base_;
+                for ( ; dest != other.coeff_ + minExp_ - other.base_; ++dest)
+                    dest->negate();
+                for ( ; src <= coeff_ + maxExp_ - base_; ++src, ++dest)
+                    *dest += std::move(*src);
+                for ( ; dest <= other.coeff_ + other.maxExp_ - other.base_;
+                        ++dest)
+                    dest->negate();
+
+                // We might have zeroed out some coefficients.
+                other.fixDegrees();
+                return *this = std::move(other);
+            }
         }
 
         /**
@@ -1628,7 +1774,8 @@ class Laurent :
             if (minExp_ == maxExp_) {
                 // TODO: This case could benefit from an rvalue ref argument.
                 // We may need to reallocate, but the product itself is simple.
-                if (capacity_ > other.maxExp_ - other.minExp_) {
+                if (capacity_ >
+                        static_cast<size_t>(other.maxExp_ - other.minExp_)) {
                     // Extract the scalar, then overwrite the coeff_ array.
                     const T scalar = coeff_[minExp_ - base_];
                     auto out = coeff_;
@@ -2516,16 +2663,10 @@ class Laurent :
     friend Laurent<U> operator + (const Laurent<U>&, const Laurent<U>&);
 
     template <CoefficientDomain U>
-    friend Laurent<U> operator + (Laurent<U>&&, Laurent<U>&&);
-
-    template <CoefficientDomain U>
     friend Laurent<U> operator - (const Laurent<U>&, const Laurent<U>&);
 
     template <CoefficientDomain U>
     friend Laurent<U> operator - (const Laurent<U>&, Laurent<U>&&);
-
-    template <CoefficientDomain U>
-    friend Laurent<U> operator - (Laurent<U>&&, Laurent<U>&&);
 
     template <CoefficientDomain U>
     friend Laurent<U> operator * (const Laurent<U>&, const Laurent<U>&);
@@ -2689,9 +2830,6 @@ Laurent<T> operator / (Laurent<T> poly, IntType scalar) {
 /**
  * Adds the two given polynomials.
  *
- * This operator `+` is sometimes faster than using `+=`,
- * since it has more flexibility to avoid an internal deep copy.
- *
  * \param lhs the first polynomial to add.
  * \param rhs the second polynomial to add.
  * \return the sum of both polynomials.
@@ -2769,9 +2907,6 @@ Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
 /**
  * Adds the two given polynomials.
  *
- * This operator `+` is sometimes faster than using `+=`,
- * since it has more flexibility to avoid an internal deep copy.
- *
  * \param lhs the first polynomial to add.
  * \param rhs the second polynomial to add.
  * \return the sum of both polynomials.
@@ -2785,9 +2920,6 @@ Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs) {
 
 /**
  * Adds the two given polynomials.
- *
- * This operator `+` is sometimes faster than using `+=`,
- * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the first polynomial to add.
  * \param rhs the second polynomial to add.
@@ -2803,9 +2935,6 @@ Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs) {
 /**
  * Adds the two given polynomials.
  *
- * This operator `+` is sometimes faster than using `+=`,
- * since it has more flexibility to avoid an internal deep copy.
- *
  * \param lhs the first polynomial to add.
  * \param rhs the second polynomial to add.
  * \return the sum of both polynomials.
@@ -2814,21 +2943,9 @@ Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs) {
  */
 template <CoefficientDomain T>
 Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs) {
-    // TODO: Use a test based on capacity
-    // If we can, choose a direction for the addition that avoids a
-    // deep copy within +=.
-    if (! rhs.coeff_) {
-        return std::move(lhs);
-    } else if (! lhs.coeff_) {
-        return std::move(rhs);
-    } else if (lhs.base_ <= rhs.minExp_ && rhs.maxExp_ <= lhs.maxExp_) {
-        // We can avoid the deep copy if we start with LHS.
-        return std::move(lhs += rhs);
-    } else {
-        // Either we can avoid the deep copy if we start with RHS,
-        // or else we cannot avoid the deep copy at all.
-        return std::move(rhs += lhs);
-    }
+    // The += operator will choose a direction for the addition that avoids a
+    // deep copy, if possible.
+    return std::move(lhs += std::move(rhs));
 }
 
 /**
@@ -2847,9 +2964,6 @@ Laurent<T> operator - (Laurent<T> arg) {
 
 /**
  * Subtracts the two given polynomials.
- *
- * This operator `-` is sometimes faster than using `-=`,
- * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.
  * \param rhs the polynomial to subtract from \a lhs.
@@ -2943,9 +3057,6 @@ Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs) {
 /**
  * Subtracts the two given polynomials.
  *
- * This operator `-` is sometimes faster than using `-=`,
- * since it has more flexibility to avoid an internal deep copy.
- *
  * \param lhs the polynomial to sutract \a rhs from.
  * \param rhs the polynomial to subtract from \a lhs.
  * \return the difference of the two given polynomials.
@@ -2959,9 +3070,6 @@ Laurent<T> operator - (Laurent<T>&& lhs, const Laurent<T>& rhs) {
 
 /**
  * Subtracts the two given polynomials.
- *
- * This operator `-` is sometimes faster than using `-=`,
- * since it has more flexibility to avoid an internal deep copy.
  *
  * \param lhs the polynomial to sutract \a rhs from.
  * \param rhs the polynomial to subtract from \a lhs.
@@ -2977,9 +3085,6 @@ Laurent<T> operator - (const Laurent<T>& lhs, Laurent<T>&& rhs) {
 /**
  * Subtracts the two given polynomials.
  *
- * This operator `-` is sometimes faster than using `-=`,
- * since it has more flexibility to avoid an internal deep copy.
- *
  * \param lhs the polynomial to sutract \a rhs from.
  * \param rhs the polynomial to subtract from \a lhs.
  * \return the difference of the two given polynomials.
@@ -2988,18 +3093,9 @@ Laurent<T> operator - (const Laurent<T>& lhs, Laurent<T>&& rhs) {
  */
 template <CoefficientDomain T>
 Laurent<T> operator - (Laurent<T>&& lhs, Laurent<T>&& rhs) {
-    // TODO: Use a test based on capacity
-    // If we can, choose a direction for the subtraction that avoids a
-    // deep copy within -= / subtractFrom.
-    // Prefer the -= operator if we can't avoid the deep copy.
-    if (! rhs.coeff_)
-        return std::move(lhs);
-    else if (! lhs.coeff_)
-        return -std::move(rhs);
-    else if (rhs.base_ <= lhs.minExp_ && lhs.maxExp_ <= rhs.maxExp_)
-        return std::move(rhs.subtractFrom(lhs));
-    else
-        return std::move(lhs -= rhs);
+    // The -= operator will choose a direction for the subtraction that avoids
+    // a deep copy, if possible.
+    return std::move(lhs -= std::move(rhs));
 }
 
 /**
