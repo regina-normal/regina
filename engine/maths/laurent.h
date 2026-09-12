@@ -1632,10 +1632,11 @@ class Laurent :
             if (! coeff_)
                 return *this = std::move(other);
 
-            if ((base_ <= other.minExp_ &&
-                        other.maxExp_ < static_cast<long>(base_ + capacity_)) ||
+            if ((base_ <= other.minExp_ && other.maxExp_ < static_cast<long>(
+                        base_ + capacity_)) ||
                     minExp_ < other.base_ ||
-                    maxExp_ >= static_cast<long>(other.base_ + other.capacity_)) {
+                    maxExp_ >= static_cast<long>(
+                        other.base_ + other.capacity_)) {
                 // Either: (a) we can avoid the deep copy by adding other to
                 // this; or (b) we cannot avoid the deep copy either way.
                 reallocateForRange(other.minExp_, other.maxExp_);
@@ -1707,10 +1708,11 @@ class Laurent :
                 return *this = std::move(other);
             }
 
-            if ((base_ <= other.minExp_ &&
-                        other.maxExp_ < static_cast<long>(base_ + capacity_)) ||
+            if ((base_ <= other.minExp_ && other.maxExp_ < static_cast<long>(
+                        base_ + capacity_)) ||
                     minExp_ < other.base_ ||
-                    maxExp_ >= static_cast<long>(other.base_ + other.capacity_)) {
+                    maxExp_ >= static_cast<long>(
+                        other.base_ + other.capacity_)) {
                 // Either: (a) we can avoid the deep copy by subtracting other
                 // from this; or (b) we cannot avoid the deep copy either way.
                 reallocateForRange(other.minExp_, other.maxExp_);
@@ -1762,6 +1764,9 @@ class Laurent :
             }
             if (other.minExp_ == other.maxExp_) {
                 // We can get away without reallocating here.
+                // Also: things should work even if &other == this, since in
+                // such a scenario there is only one coefficient product (which
+                // becomes scalar *= scalar).
                 const auto& scalar = other.coeff_[other.minExp_ - other.base_];
                 for (auto it = coeff_ + minExp_ - base_;
                         it <= coeff_ + maxExp_ - base_; ++it)
@@ -2218,7 +2223,6 @@ class Laurent :
          * \pre The given range satisfies `newMin ≤ newMax`.
          */
         void reallocateForRange(long newMin, long newMax) {
-            // TODO: This needs very thorough testing.
             // Note: type T will automatically initialise any newly allocated
             // coefficients to zero.
             if (! coeff_) {
@@ -2373,22 +2377,21 @@ class Laurent :
         static void productClassic(T* dest,
                 Buffer<false> lhs, size_t lhsLen,
                 Buffer<false> rhs, size_t rhsLen) {
-            if constexpr (operation == SetOrAdd::Set) {
-                // We have to add (not set) inside our nested loops, since we
-                // will be revisiting the same destination exponents over and
-                // over.  Therefore we need to explicitly initialise them to
-                // zero now.
+            // We can only add (not set) inside our nested loops, since we will
+            // be revisiting the same destination exponents over and over.
+            // Therefore, if we have been explicitly asked to _set_ the
+            // elements of dest, we must initialise them to zero first.
+            if constexpr (operation == SetOrAdd::Set)
                 std::fill(dest, dest + lhsLen + rhsLen - 1, T());
-            }
-            if constexpr (HasAddProduct<T>) {
-                for (size_t i = 0; i < lhsLen; ++i)
-                    for (size_t j = 0; j < rhsLen; ++j)
-                        dest[i + j].addProduct(lhs[i], rhs[j]);
-            } else {
-                for (size_t i = 0; i < lhsLen; ++i)
-                    for (size_t j = 0; j < rhsLen; ++j)
-                        dest[i + j] += lhs[i] * rhs[j];
-            }
+
+            for (size_t i = 0; i < lhsLen; ++i)
+                if (lhs[i] != 0)
+                    for (size_t j = 0; j < rhsLen; ++j) {
+                        if constexpr (HasAddProduct<T>)
+                            dest[i + j].addProduct(lhs[i], rhs[j]);
+                        else
+                            dest[i + j] += lhs[i] * rhs[j];
+                    }
         }
 
         /**
