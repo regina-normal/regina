@@ -5,6 +5,7 @@ SET ( FILES
   3d.cpp
   arrow.cpp
   binom.cpp
+  karatsuba.cpp
   laurent.cpp
   laurent2.cpp
   matrixops.cpp

@@ -322,8 +322,6 @@ Version 8.0  [ TODO ]
               that create or compare against a constant polynomial, given by a
               coefficient of type T or a native C++ integer.
             - New routine addProduct(), which optimises x ±= y * z.
-            - New routine product() for computing polynomial products using
-              a specific algorithm.
             - New const routine shifted().
             - Now supports iteration over coefficients.
             - New routines transform() and extract() for transforming and
@@ -706,6 +704,9 @@ Version 8.0  [ TODO ]
               support 128-bit integers (if the platform does), include range
               checking, and are strict with regards to unexpected characters
               (including leading or trailing whitespace).
+        Function polynomialProduct():
+            - New function for computing polynomial products using a specific
+              algorithm.
         Function readDehydrationList(), readOrb(), readSigList():
             - These functions now throw exceptions on error, instead of
               returning null.

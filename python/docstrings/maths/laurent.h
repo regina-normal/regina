@@ -218,15 +218,6 @@ Returns:
 static constexpr const char __iadd[] =
 R"doc(Adds the given polynomial to this.
 
-The given polynomial need not have the same minimum and/or maximum
-exponents as this.
-
-.. warning::
-    This routine may trigger a deep copy (depending upon the range of
-    exponents used in *other*). Consider using the binary ``+``
-    operator instead, which is better able to avoid this deep copy
-    where possible.
-
 Parameter ``other``:
     the polynomial to add to this.
 
@@ -301,9 +292,6 @@ Returns:
 static constexpr const char __imul_3[] =
 R"doc(Multiplies this by the given polynomial.
 
-The given polynomial need not have the same minimum and/or maximum
-exponents as this.
-
 Parameter ``other``:
     the polynomial to multiply this by.
 
@@ -372,9 +360,6 @@ Parameter ``constant``:
 // Docstring regina::python::doc::Laurent::__isub
 static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
-
-The given polynomial need not have the same minimum and/or maximum
-exponents as this.
 
 Parameter ``other``:
     the polynomial to subtract from this.
@@ -529,16 +514,19 @@ allocated.
 This is mainly provided for diagnostics and performance analysis; end
 users will typically not need to use this routine.
 
-For a non-zero polynomial, this routine returns a pair ``(base,
-capacity)``, where *base* indicates the smallest exponent for which
-memory is allocated, and *capacity* indicates the total number of
-exponents for which memory is allocated. This means that the _largest_
-exponent for which memory is allocated will be ``base + capacity -
-1``.
+This routine returns a pair ``(base, capacity)``, where *base*
+indicates the smallest exponent for which memory is allocated, and
+*capacity* indicates the total number of exponents for which memory is
+allocated. This means that the _largest_ exponent for which memory is
+allocated will be ``base + capacity - 1``.
+
+In the special case of the zero polynomial, it is possible (but not
+necessarily true) that no memory is allocated at all. In such a
+scenario, this routine will return ``(0, 0)`` instead.
 
 Returns:
     a pair ``(base, capacity)`` as described above, or ``(0, 0)`` if
-    this is the zero polynomial.)doc";
+    this is the zero polynomial _and_ no memory is allocated at all.)doc";
 
 // Docstring regina::python::doc::Laurent::global_swap
 static constexpr const char global_swap[] =
@@ -631,49 +619,6 @@ Returns:
 // Docstring regina::python::doc::Laurent::negate
 static constexpr const char negate[] = R"doc(Negates this polynomial. This polynomial is changed directly.)doc";
 
-// Docstring regina::python::doc::Laurent::product
-static constexpr const char product[] =
-R"doc(Multiplies this with the given polynomial using the given algorithm.
-This polynomial will not be changed.
-
-This routine is provided mainly for timing, testing and diagnostics.
-If you just wish to multiply two polynomials, you should use the usual
-product operators (e.g., ``x = y * z``): this way Regina will choose
-the most suitable algorithm for you.
-
-The Karatsuba algorithm is not available for all polynomials: it
-requires the two polynomials to have comparable degree spans (i.e.,
-one polynomial cannot be significantly longer than the other. At
-present, this means (roughly) that the shorter polynomial should be
-more than half the length of the longer polynomial. The precise
-constraints are subject to change in future versions of Regina, and so
-if you are forcing Karatsuba multiplication then it is strongly
-recommended that you wrap this in a try/catch block.
-
-As a special case, if this or the given polynomial is zero or constant
-then the given algorithm will be ignored, and this routine will simply
-use scalar multiplication instead.
-
-Python:
-    Since Python does not support C++ templates, you should pass the
-    algorithm at runtime as a second argument. For example, to compute
-    the product ``p * q`` you could call ``p.product(q,
-    PolynomialProductAlgorithm.karatsuba)``.
-
-Exception ``InvalidArgument``:
-    The algorithm argument requested Karatsuba multiplication, but
-    this polynomial and *rhs* do not have comparable degree spans. See
-    above for further explanation.
-
-Template parameter ``algorithm``:
-    the polynomial multiplication algorithm to use.
-
-Parameter ``rhs``:
-    the polynomial to multiply with this.
-
-Returns:
-    the product of this and the given polynomial.)doc";
-
 // Docstring regina::python::doc::Laurent::reserveRange
 static constexpr const char reserveRange[] =
 R"doc(Reserves enough memory in the coefficient array to span the given
@@ -684,12 +629,6 @@ Specifically, after calling ``reserveRange(fromExp, toExp)``, you can
 add non-zero coefficients for any ``x^i`` where ``fromExp ≤ i ≤
 toExp`` without needing to reallocate memory and/or shuffle data
 around.
-
-As a special case however, if this is the zero polynomial then this
-routine will do nothing (since internally, the zero polynomial is
-represented by a null coefficient array). In particular, it makes no
-sense to call reserveRange() immediately after a Laurent polynomial
-has been default-constructed.
 
 Note that the range ``[fromExp, toExp]`` is inclusive at both ends
 (unlike iterator ranges, for example).
@@ -845,35 +784,6 @@ Returns:
     this polynomial as a unicode-enabled human-readable string.)doc";
 
 }; // struct Laurent
-
-struct PolynomialProductAlgorithm {
-
-// Docstring regina::python::doc::PolynomialProductAlgorithm::Classic
-static constexpr const char Classic[] =
-R"doc(The classic "schoolbook" algorithm involving two nested loops over the
-polynomial coefficients. To multiply two polynomials with degree span
-*n*, this requires computing ``O(n^2)`` individual products of
-coefficients.)doc";
-
-// Docstring regina::python::doc::PolynomialProductAlgorithm::Default
-static constexpr const char Default[] =
-R"doc(The default algorithm. Here Regina will choose whichever algorithm it
-thinks (rightly or wrongly) is most appropriate.)doc";
-
-// Docstring regina::python::doc::PolynomialProductAlgorithm::Karatsuba
-static constexpr const char Karatsuba[] =
-R"doc(Karatsuba's divide-and-conquer algorithm. To multiply two polynomials
-with the same degree span *n*, this requires computing ``O(n^(log₂ 3))
-≃ O(n^1.585)`` individual products of coefficients.
-
-Karatsuba's algorithm is asymptotically better than the classic
-algorithm, but it carries significant overhead and so will typically
-be slower for small polynomials.)doc";
-
-// Docstring regina::python::doc::PolynomialProductAlgorithm::__class
-static constexpr const char __class[] = R"doc(Represents different algorithms for multiplying polynomials.)doc";
-
-}; // struct PolynomialProductAlgorithm
 
 } // namespace regina::python::doc
 

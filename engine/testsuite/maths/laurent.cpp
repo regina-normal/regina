@@ -224,16 +224,29 @@ class LaurentTest : public testing::Test {
             SCOPED_TRACE_REGINA(y);
 
             using PPA = regina::PolynomialProductAlgorithm;
+            using Array = regina::FixedArray<T>;
 
-            verifyEqual(x.template product<PPA::Default>(y), minExp, coeffs);
-            verifyEqual(x.template product<PPA::Classic>(y), minExp, coeffs);
-            EXPECT_NO_THROW({ verifyEqual(x.template product<PPA::Karatsuba>(y),
-                minExp, coeffs); });
-
-            verifyEqual(y.template product<PPA::Default>(x), minExp, coeffs);
-            verifyEqual(y.template product<PPA::Classic>(x), minExp, coeffs);
-            EXPECT_NO_THROW({ verifyEqual(y.template product<PPA::Karatsuba>(x),
-                minExp, coeffs); });
+            Array expect(coeffs);
+            EXPECT_NO_THROW({
+                EXPECT_EQ(regina::polynomialProduct<PPA::Default>(
+                    Array(x.begin(), x.end()), Array(y.begin(), y.end())),
+                    coeffs);
+                EXPECT_EQ(regina::polynomialProduct<PPA::Classic>(
+                    Array(x.begin(), x.end()), Array(y.begin(), y.end())),
+                    coeffs);
+                EXPECT_EQ(regina::polynomialProduct<PPA::Karatsuba>(
+                    Array(x.begin(), x.end()), Array(y.begin(), y.end())),
+                    coeffs);
+                EXPECT_EQ(regina::polynomialProduct<PPA::Default>(
+                    Array(y.begin(), y.end()), Array(x.begin(), x.end())),
+                    coeffs);
+                EXPECT_EQ(regina::polynomialProduct<PPA::Classic>(
+                    Array(y.begin(), y.end()), Array(x.begin(), x.end())),
+                    coeffs);
+                EXPECT_EQ(regina::polynomialProduct<PPA::Karatsuba>(
+                    Array(y.begin(), y.end()), Array(x.begin(), x.end())),
+                    coeffs);
+            });
         }
 };
 

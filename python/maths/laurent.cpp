@@ -28,12 +28,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
-#if REGINA_PYBIND11_VERSION == 3
-#include <pybind11/native_enum.h>
-#endif
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
 #include "maths/integer.h"
@@ -49,25 +45,7 @@ using regina::Laurent;
 using regina::python::doc::common::neq_value;
 
 void addLaurent(pybind11::module_& m) {
-    using PPA = regina::PolynomialProductAlgorithm;
-
-    RDOC_SCOPE_BEGIN(PolynomialProductAlgorithm)
-
-#if REGINA_PYBIND11_VERSION == 3
-    pybind11::native_enum<PPA>(m, "PolynomialProductAlgorithm", "enum.Enum",
-            rdoc::__class)
-#elif REGINA_PYBIND11_VERSION == 2
-    pybind11::enum_<PPA>(m, "PolynomialProductAlgorithm", rdoc::__class)
-#endif
-        .value("Default", PPA::Default, rdoc::Default)
-        .value("Classic", PPA::Classic, rdoc::Classic)
-        .value("Karatsuba", PPA::Karatsuba, rdoc::Karatsuba)
-#if REGINA_PYBIND11_VERSION == 3
-        .finalize()
-#endif
-        ;
-
-    RDOC_SCOPE_SWITCH(Laurent)
+    RDOC_SCOPE_BEGIN(Laurent)
 
     auto c = pybind11::class_<Laurent<Integer>>(m, "Laurent", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
@@ -120,17 +98,6 @@ void addLaurent(pybind11::module_& m) {
             overload_cast<const Laurent<Integer>&, const Laurent<Integer>&>(
                 &Laurent<Integer>::addProduct),
             rdoc::addProduct)
-        .def("product", [](const Laurent<Integer>& lhs,
-                const Laurent<Integer>& rhs, PPA alg) {
-            switch (alg) {
-                case PPA::Default:
-                    return lhs.product<PPA::Default>(rhs); break;
-                case PPA::Classic:
-                    return lhs.product<PPA::Classic>(rhs); break;
-                case PPA::Karatsuba:
-                    return lhs.product<PPA::Karatsuba>(rhs); break;
-            }
-        }, "rhs"_a, "algorithm"_a, rdoc::product)
         .def("str", overload_cast<const char*>(
             &Laurent<Integer>::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(
