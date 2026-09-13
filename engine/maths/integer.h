@@ -4504,10 +4504,10 @@ inline void IntegerBase<withInfinity>::addProduct(
                     mpz_submul_ui(large_, y.large_,
                         detail::negateToUnsignedType(x.small_));
             } else {
-                (*this) += x * y;
+                *this += x * y;
             }
         } else {
-            (*this) += x * y;
+            *this += x * y;
         }
     }
 }
