@@ -549,6 +549,17 @@ class Arrow : public ShortOutput<Arrow, true>, public TightEncodable<Arrow> {
         Arrow& operator *= (const Arrow& other);
 
         /**
+         * Adds the product of the given arrow and Laurent polynomials to this.
+         *
+         * Calling `x.addProduct(y, z)` is equivalent to, but often faster
+         * than, calling `x += y * z`.
+         *
+         * \param x the arrow polynomial in the product to add to this.
+         * \param y the Laurent polynomial in the product to add to this.
+         */
+        void addProduct(const Arrow& x, const Laurent<Integer>& y);
+
+        /**
          * Writes this polynomial to the given output stream.
          *
          * If \a utf8 is passed as \c true then unicode subscript and
@@ -981,6 +992,22 @@ inline Arrow& Arrow::operator /= (const Integer& scalar) {
     for (auto& term : terms_)
         term.second /= scalar;
     return *this;
+}
+
+inline void Arrow::addProduct(const Arrow& x, const Laurent<Integer>& y) {
+    if (x.isZero() || y.isZero())
+        return;
+
+    for (const auto& term : x.terms_) {
+        auto result = terms_.emplace(term.first, Laurent<Integer>());
+        if (result.second)
+            result.first->second = term.second * y;
+        else
+            result.first->second.addProduct(term.second, y);
+    }
+
+    // We might have zeroed out some terms.
+    removeZeroes();
 }
 
 inline void swap(Arrow& a, Arrow& b) noexcept {

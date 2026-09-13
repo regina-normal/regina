@@ -37,6 +37,7 @@ Version 8.0  [ TODO ]
         Class Arrow:
             - New integer division operators / and /=.
             - New const routine shifted().
+            - New routine addProduct(), which optimises x ±= y * z.
         Class Attachment:
             - The filename constructor now throws an exception on error,
               instead of creating an empty attachment.
