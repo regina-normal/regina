@@ -248,31 +248,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         void initExp(size_t degree);
 
         /**
-         * Sets this to become the polynomial described by the given
-         * sequence of coefficients.
-         * The coefficients should appear in order from the constant
-         * coefficient to the leading coefficient.
-         *
-         * There is no problem if the leading coefficient (i.e., the
-         * last coefficient in the sequence) is zero.
-         * An empty sequence will be treated as the zero polynomial.
-         *
-         * This routine induces a deep copy of the given range.
-         *
-         * The iterator type must be random access because this allows the
-         * implementation to compute the sequence length in constant time.
-         *
-         * \python Instead of a pair of iterators, this routine
-         * takes a Python list of coefficients.
-         *
-         * \param begin the beginning of the sequence of coefficients.
-         * \param end a past-the-end iterator indicating the end of the
-         * sequence of coefficients.
-         */
-        template <RandomAccessIteratorFor<T> Iterator>
-        void init(Iterator begin, Iterator end);
-
-        /**
          * Returns the degree of this polynomial.
          * This is the largest exponent with a non-zero coefficient.
          *
@@ -1187,15 +1162,26 @@ inline Polynomial<T>::Polynomial() : degree_(0), coeff_(new T[1]) {
 
 template <CoefficientDomain T>
 template <RandomAccessIteratorFor<T> Iterator>
-inline Polynomial<T>::Polynomial(Iterator begin, Iterator end) :
-        coeff_(nullptr) {
-    init(begin, end);
+inline Polynomial<T>::Polynomial(Iterator begin, Iterator end) {
+    if (begin == end) {
+        degree_ = 0;
+        coeff_ = new T[1];
+    } else {
+        degree_ = end - begin - 1;
+        coeff_ = new T[degree_ + 1];
+
+        size_t i = 0;
+        while (begin != end)
+            coeff_[i++] = *begin++;
+
+        // The leading coefficient(s) might be zero.
+        fixDegree();
+    }
 }
 
 template <CoefficientDomain T>
 inline Polynomial<T>::Polynomial(std::initializer_list<T> coefficients) :
-        coeff_(nullptr) {
-    init(coefficients.begin(), coefficients.end());
+        Polynomial(coefficients.begin(), coefficients.end()) {
 }
 
 template <CoefficientDomain T>
@@ -1259,28 +1245,6 @@ inline void Polynomial<T>::initExp(size_t degree) {
     degree_ = degree;
     coeff_ = new T[degree + 1];
     coeff_[degree] = 1;
-}
-
-template <CoefficientDomain T>
-template <RandomAccessIteratorFor<T> Iterator>
-void Polynomial<T>::init(Iterator begin, Iterator end) {
-    delete[] coeff_;
-
-    if (begin == end) {
-        degree_ = 0;
-        coeff_ = new T[1];
-        return;
-    }
-
-    degree_ = end - begin - 1;
-    coeff_ = new T[degree_ + 1];
-
-    size_t i = 0;
-    while (begin != end)
-        coeff_[i++] = *begin++;
-
-    // The leading coefficient might be zero.
-    fixDegree();
 }
 
 template <CoefficientDomain T>

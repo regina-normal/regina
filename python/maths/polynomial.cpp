@@ -59,9 +59,6 @@ void addPolynomialOver(pybind11::module_& m, const char* className) {
         .def("init", static_cast<void (Polynomial<T>::*)()>(
             &Polynomial<T>::init), rdoc::init)
         .def("initExp", &Polynomial<T>::initExp, rdoc::initExp)
-        .def("init", [](Polynomial<T>& p, const std::vector<T>& c) {
-            p.init(c.begin(), c.end());
-        }, "coefficients"_a, rdoc::init_2)
         .def("degree", &Polynomial<T>::degree, rdoc::degree)
         .def("isZero", &Polynomial<T>::isZero, rdoc::isZero)
         .def("isMonic", &Polynomial<T>::isMonic, rdoc::isMonic)
