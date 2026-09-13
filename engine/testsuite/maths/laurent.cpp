@@ -31,6 +31,8 @@
 #include "maths/integer.h"
 #include "maths/laurent.h"
 #include "utilities/stringutils.h"
+#include <array>
+#include <ranges>
 
 #include "utilities/tightencodingtest.h"
 
@@ -40,69 +42,204 @@ using regina::Laurent;
 
 class LaurentTest : public testing::Test {
     protected:
+        using L = Laurent<Integer>;
+
         // An integer that cannot fit into 128 bits.
         // We split the digits into chunks to not break syntax highlighting.
         const Integer bigInt {
             "5421309874" "5789403215" "6654013103" "5798756432" "1035741817" };
 
-        Laurent<Integer> zero {};
-        Laurent<Integer> zero2 { 0, {} };
-        Laurent<Integer> zero3 { 2, {} };
-        Laurent<Integer> one { 0, { 1 } };
-        Laurent<Integer> two { 0, { 2 } };
-        Laurent<Integer> x2 { 2, { 1 } };
-        Laurent<Integer> a { -1, { 1, -1, 1 } };
-        Laurent<Integer> b { 0, { 1, -1, 1 } };
-        Laurent<Integer> c { 1, { 1, -1, 1 } };
-        Laurent<Integer> d { -2, { -1, 1, -1, 1 } };
-        Laurent<Integer> e { 4, { 2, 4, -2, 2 } };
-        Laurent<Integer> f { 3, { -1, 0, 0, 0, 1 } };
-        Laurent<Integer> g { 20, { 2, -3 } };
+        L zero {};
+        L zero2 { 0, {} };
+        L zero3 { 2, {} };
+        L one { 0, { 1 } };
+        L two { 0, { 2 } };
+        L x2 { 2, { 1 } };
+        L a { -1, { 1, -1, 1 } };
+        L b { 0, { 1, -1, 1 } };
+        L c { 1, { 1, -1, 1 } };
+        L d { -2, { -1, 1, -1, 1 } };
+        L e { 4, { 2, 4, -2, 2 } };
+        L f { 3, { -1, 0, 0, 0, 1 } };
+        L g { 20, { 2, -3 } };
 
         // Several ranges each of which overlap at a single coefficient:
-        Laurent<Integer> low { -7, { 1, -2, 3, -4 } };
-        Laurent<Integer> lowish { -4, { -1, 2, -3, 4 } };
-        Laurent<Integer> mid { -1, { 1, -2, 3 } };
-        Laurent<Integer> highish { 1, { 1, -2, -3, 4 } };
-        Laurent<Integer> high { 4, { -1, 2, 3, -4 } };
+        L low { -7, { 1, -2, 3, -4 } };
+        L lowish { -4, { -1, 2, -3, 4 } };
+        L mid { -1, { 1, -2, 3 } };
+        L highish { 1, { 1, -2, -3, 4 } };
+        L high { 4, { -1, 2, 3, -4 } };
 
         // The same polynomials as before, but this time forcing large integer
         // arithmetic:
-        Laurent<Integer> bigLow { -7,
-            { bigInt, bigInt * -2, bigInt * 3, bigInt * -4 } };
-        Laurent<Integer> bigLowish { -4,
-            { -bigInt, bigInt * 2, bigInt * -3, bigInt * 4 } };
-        Laurent<Integer> bigMid { -1,
-            { bigInt, bigInt * -2, bigInt * 3 } };
-        Laurent<Integer> bigHighish { 1,
-            { bigInt, bigInt * -2, bigInt * -3, bigInt * 4 } };
-        Laurent<Integer> bigHigh { 4,
-            { -bigInt, bigInt * 2, bigInt * 3, bigInt * -4 } };
+        L bigLow { -7, { bigInt, bigInt * -2, bigInt * 3, bigInt * -4 } };
+        L bigLowish { -4, { -bigInt, bigInt * 2, bigInt * -3, bigInt * 4 } };
+        L bigMid { -1, { bigInt, bigInt * -2, bigInt * 3 } };
+        L bigHighish { 1, { bigInt, bigInt * -2, bigInt * -3, bigInt * 4 } };
+        L bigHigh { 4, { -bigInt, bigInt * 2, bigInt * 3, bigInt * -4 } };
 
-        template <CoefficientDomain T>
-        static void validate(const Laurent<T>& result) {
-            auto alloc = result.allocation();
+        // Some polynomials with more space allocated than they need.
+        L paddedZero = g - g;
+        L paddedConst = (two + d) - d;
+        L paddedPower = (x2 + highish) - highish;
+        L paddedPoly = ((c + low + high) - low) - high;
+
+        std::array<std::reference_wrapper<const L>, 27> cases {
+            std::cref(zero), std::cref(zero2), std::cref(zero3), std::cref(one),
+            std::cref(two), std::cref(x2), std::cref(a), std::cref(b),
+            std::cref(c), std::cref(d), std::cref(e), std::cref(f),
+            std::cref(g), std::cref(low), std::cref(lowish), std::cref(mid),
+            std::cref(highish), std::cref(high), std::cref(bigLow),
+            std::cref(bigLowish), std::cref(bigMid), std::cref(bigHighish),
+            std::cref(bigHigh), std::cref(paddedZero), std::cref(paddedConst),
+            std::cref(paddedPower), std::cref(paddedPoly) };
+
+        static void validate(const L& poly) {
+            auto alloc = poly.allocation();
             if (alloc.second == 0) {
                 EXPECT_EQ(alloc.first, 0);
-                EXPECT_TRUE(result.isZero());
-                EXPECT_EQ(result.minExp(), 0);
-                EXPECT_EQ(result.maxExp(), 0);
-                EXPECT_EQ(result[0], 0);
-            } else if (result.isZero()) {
+                EXPECT_TRUE(poly.isZero());
+                EXPECT_EQ(poly.minExp(), 0);
+                EXPECT_EQ(poly.maxExp(), 0);
+                EXPECT_EQ(poly[0], 0);
+            } else if (poly.isZero()) {
                 // We have a zero polynomial but with memory pre-allocated.
                 // In this scenario, alloc.first (the base) is arbitrary.
-                EXPECT_EQ(result.minExp(), 0);
-                EXPECT_EQ(result.maxExp(), 0);
-                EXPECT_EQ(result[0], 0);
+                EXPECT_EQ(poly.minExp(), 0);
+                EXPECT_EQ(poly.maxExp(), 0);
+                EXPECT_EQ(poly[0], 0);
             } else {
-                EXPECT_LE(alloc.first, result.minExp());
-                EXPECT_LE(result.minExp(), result.maxExp());
-                EXPECT_LT(result.maxExp(),
-                    static_cast<long>(alloc.first + alloc.second));
-                EXPECT_NE(result[result.minExp()], 0);
-                EXPECT_NE(result[result.maxExp()], 0);
+                EXPECT_LE(alloc.first, poly.minExp());
+                EXPECT_LE(poly.minExp(), poly.maxExp());
+                EXPECT_LT(poly.maxExp(),
+                    alloc.first + static_cast<long>(alloc.second));
+                EXPECT_NE(poly[poly.minExp()], 0);
+                EXPECT_NE(poly[poly.maxExp()], 0);
             }
         }
+
+        static void validateZero(const L& poly) {
+            EXPECT_TRUE(poly.isZero());
+            EXPECT_EQ(poly.minExp(), 0);
+            EXPECT_EQ(poly.maxExp(), 0);
+            EXPECT_EQ(poly[0], 0);
+
+            auto alloc = poly.allocation();
+            if (alloc.second == 0)
+                EXPECT_EQ(alloc.first, 0);
+            // If alloc.second is positive then we have a zero polynomial
+            // but with memory pre-allocated, which means alloc.first
+            // (the base exponent) is arbitrary.
+        }
+
+        static void validate(const L& poly, long minExp,
+                std::initializer_list<Integer> coeffs) {
+            if (coeffs.size() == 0) { // initializer_list does not have empty()
+                EXPECT_TRUE(poly.isZero());
+                EXPECT_EQ(poly.minExp(), 0);
+                EXPECT_EQ(poly.maxExp(), 0);
+                EXPECT_EQ(poly[0], 0);
+
+                auto alloc = poly.allocation();
+                if (alloc.second == 0)
+                    EXPECT_EQ(alloc.first, 0);
+                // If alloc.second is positive then we have a zero polynomial
+                // but with memory pre-allocated, which means alloc.first
+                // (the base exponent) is arbitrary.
+            } else {
+                EXPECT_FALSE(poly.isZero());
+                EXPECT_EQ(poly.minExp(), minExp);
+                EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
+
+                auto alloc = poly.allocation();
+                EXPECT_LE(alloc.first, minExp);
+                EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
+                    minExp + static_cast<long>(coeffs.size()));
+
+                EXPECT_NE(poly[poly.minExp()], 0);
+                EXPECT_NE(poly[poly.maxExp()], 0);
+
+                auto expect = coeffs.begin();
+                for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+                    EXPECT_EQ(poly[e], *expect);
+            }
+        }
+
+        template <std::ranges::sized_range Container>
+        static void validate(const L& poly, long minExp,
+                const Container& coeffs) {
+            if (coeffs.empty()) {
+                EXPECT_TRUE(poly.isZero());
+                EXPECT_EQ(poly.minExp(), 0);
+                EXPECT_EQ(poly.maxExp(), 0);
+                EXPECT_EQ(poly[0], 0);
+
+                auto alloc = poly.allocation();
+                if (alloc.second == 0)
+                    EXPECT_EQ(alloc.first, 0);
+                // If alloc.second is positive then we have a zero polynomial
+                // but with memory pre-allocated, which means alloc.first
+                // (the base exponent) is arbitrary.
+            } else {
+                EXPECT_FALSE(poly.isZero());
+                EXPECT_EQ(poly.minExp(), minExp);
+                EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
+
+                auto alloc = poly.allocation();
+                EXPECT_LE(alloc.first, minExp);
+                EXPECT_GE(alloc.first + alloc.second, minExp + coeffs.size());
+
+                EXPECT_NE(poly[poly.minExp()], 0);
+                EXPECT_NE(poly[poly.maxExp()], 0);
+
+                auto expect = coeffs.begin();
+                for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+                    EXPECT_EQ(poly[e], *expect);
+            }
+        }
+
+        static void validate(const L& poly, const L& expect) {
+            if (expect.isZero()) {
+                EXPECT_TRUE(poly.isZero());
+                EXPECT_EQ(poly.minExp(), 0);
+                EXPECT_EQ(poly.maxExp(), 0);
+                EXPECT_EQ(poly[0], 0);
+
+                auto alloc = poly.allocation();
+                if (alloc.second == 0)
+                    EXPECT_EQ(alloc.first, 0);
+                // If alloc.second is positive then we have a zero polynomial
+                // but with memory pre-allocated, which means alloc.first
+                // (the base exponent) is arbitrary.
+            } else {
+                EXPECT_FALSE(poly.isZero());
+                EXPECT_EQ(poly.minExp(), expect.minExp());
+                EXPECT_EQ(poly.maxExp(), expect.maxExp());
+
+                auto alloc = poly.allocation();
+                EXPECT_LE(alloc.first, poly.minExp());
+                EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+                    poly.maxExp());
+
+                EXPECT_NE(poly[poly.minExp()], 0);
+                EXPECT_NE(poly[poly.maxExp()], 0);
+
+                for (long e = expect.minExp(); e != expect.maxExp(); ++e)
+                    EXPECT_EQ(poly[e], expect[e]);
+            }
+
+        }
+
+        static L padded(const L& poly) {
+            L ans(poly);
+            ans.set(ans.minExp() - 3, 1);
+            ans.set(ans.maxExp() + 2, 1);
+            ans.set(ans.minExp(), 0);
+            ans.set(ans.maxExp(), 0);
+            return ans;
+        }
+
+        // TODO: HERE
 
         template <CoefficientDomain T>
         static void verifyEqual(const Laurent<T>& result,
@@ -302,6 +439,87 @@ class LaurentTest : public testing::Test {
             });
         }
 };
+
+TEST_F(LaurentTest, construct) {
+    validateZero(L());
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        L x(c);
+        validate(x, c);
+        validate(L(std::move(x)), c);
+        validate(L(c.minExp(), c.begin(), c.end()), c);
+        // TODO: Iterator sequences with zeroes, inc. all zeroes
+    }
+    {
+        Integer zero(0), pos(4), neg(-4), big(bigInt);
+        validateZero(L(zero));
+        validateZero(L(std::move(zero)));
+        validateZero(L(0));
+        validate(L(pos), 0, { 4 });
+        validate(L(std::move(pos)), 0, { 4 });
+        validate(L(4), 0, { 4 });
+        validate(L(neg), 0, { -4 });
+        validate(L(std::move(neg)), 0, { -4 });
+        validate(L(-4), 0, { -4 });
+        std::array<Integer, 1> bigConst { big };
+        validate(L(big), 0, bigConst);
+        validate(L(std::move(big)), 0, bigConst);
+    }
+}
+
+TEST_F(LaurentTest, padding) {
+    {
+        auto alloc = paddedZero.allocation();
+        EXPECT_GT(alloc.second, 0);
+    }
+    {
+        // paddedConst: exponent range [0]
+        auto alloc = paddedConst.allocation();
+        EXPECT_LT(alloc.first, 0);
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 1);
+    }
+    {
+        // paddedPower: exponent range [2]
+        auto alloc = paddedPower.allocation();
+        EXPECT_LT(alloc.first, 2);
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 3);
+    }
+    {
+        // paddedPoly: exponent range [1..3]
+        auto alloc = paddedPoly.allocation();
+        EXPECT_LT(alloc.first, 1);
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second), 4);
+    }
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        L x = padded(c);
+        validate(x, c);
+
+        auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        EXPECT_LT(alloc.first, x.minExp());
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+            x.maxExp() + 1);
+    }
+}
+
+TEST_F(LaurentTest, init) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            x.init();
+            validateZero(x);
+        }
+        {
+            L x(c);
+            x.initExp(-2);
+            validate(x, -2, { 1 });
+        }
+    }
+}
+
+// TODO: HERE
 
 TEST_F(LaurentTest, set) {
     Laurent<Integer> x { -1, { 1, 2, 1 } };
