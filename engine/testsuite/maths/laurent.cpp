@@ -34,11 +34,17 @@
 
 #include "utilities/tightencodingtest.h"
 
+using regina::CoefficientDomain;
 using regina::Integer;
 using regina::Laurent;
 
 class LaurentTest : public testing::Test {
     protected:
+        // An integer that cannot fit into 128 bits.
+        // We split the digits into chunks to not break syntax highlighting.
+        const Integer bigInt {
+            "5421309874" "5789403215" "6654013103" "5798756432" "1035741817" };
+
         Laurent<Integer> zero {};
         Laurent<Integer> zero2 { 0, {} };
         Laurent<Integer> zero3 { 2, {} };
@@ -50,8 +56,55 @@ class LaurentTest : public testing::Test {
         Laurent<Integer> c { 1, { 1, -1, 1 } };
         Laurent<Integer> d { -2, { -1, 1, -1, 1 } };
         Laurent<Integer> e { 4, { 2, 4, -2, 2 } };
+        Laurent<Integer> f { 3, { -1, 0, 0, 0, 1 } };
+        Laurent<Integer> g { 20, { 2, -3 } };
 
-        template <typename T>
+        // Several ranges each of which overlap at a single coefficient:
+        Laurent<Integer> low { -7, { 1, -2, 3, -4 } };
+        Laurent<Integer> lowish { -4, { -1, 2, -3, 4 } };
+        Laurent<Integer> mid { -1, { 1, -2, 3 } };
+        Laurent<Integer> highish { 1, { 1, -2, -3, 4 } };
+        Laurent<Integer> high { 4, { -1, 2, 3, -4 } };
+
+        // The same polynomials as before, but this time forcing large integer
+        // arithmetic:
+        Laurent<Integer> bigLow { -7,
+            { bigInt, bigInt * -2, bigInt * 3, bigInt * -4 } };
+        Laurent<Integer> bigLowish { -4,
+            { -bigInt, bigInt * 2, bigInt * -3, bigInt * 4 } };
+        Laurent<Integer> bigMid { -1,
+            { bigInt, bigInt * -2, bigInt * 3 } };
+        Laurent<Integer> bigHighish { 1,
+            { bigInt, bigInt * -2, bigInt * -3, bigInt * 4 } };
+        Laurent<Integer> bigHigh { 4,
+            { -bigInt, bigInt * 2, bigInt * 3, bigInt * -4 } };
+
+        template <CoefficientDomain T>
+        static void validate(const Laurent<T>& result) {
+            auto alloc = result.allocation();
+            if (alloc.second == 0) {
+                EXPECT_EQ(alloc.first, 0);
+                EXPECT_TRUE(result.isZero());
+                EXPECT_EQ(result.minExp(), 0);
+                EXPECT_EQ(result.maxExp(), 0);
+                EXPECT_EQ(result[0], 0);
+            } else if (result.isZero()) {
+                // We have a zero polynomial but with memory pre-allocated.
+                // In this scenario, alloc.first (the base) is arbitrary.
+                EXPECT_EQ(result.minExp(), 0);
+                EXPECT_EQ(result.maxExp(), 0);
+                EXPECT_EQ(result[0], 0);
+            } else {
+                EXPECT_LE(alloc.first, result.minExp());
+                EXPECT_LE(result.minExp(), result.maxExp());
+                EXPECT_LT(result.maxExp(),
+                    static_cast<long>(alloc.first + alloc.second));
+                EXPECT_NE(result[result.minExp()], 0);
+                EXPECT_NE(result[result.maxExp()], 0);
+            }
+        }
+
+        template <CoefficientDomain T>
         static void verifyEqual(const Laurent<T>& result,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(result);
@@ -73,7 +126,7 @@ class LaurentTest : public testing::Test {
             }
         }
 
-        template <typename T>
+        template <CoefficientDomain T>
         void verifyPlus(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(x);
@@ -107,7 +160,7 @@ class LaurentTest : public testing::Test {
             }
         }
 
-        template <typename T>
+        template <CoefficientDomain T>
         void verifyMinus(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(x);
@@ -135,7 +188,7 @@ class LaurentTest : public testing::Test {
             }
         }
 
-        template <typename T>
+        template <CoefficientDomain T>
         void verifyMult(const Laurent<T>& x, const T& y,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(x);
@@ -151,7 +204,7 @@ class LaurentTest : public testing::Test {
             }
         }
 
-        template <typename T, regina::CppInteger U>
+        template <CoefficientDomain T, regina::CppInteger U>
         void verifyMult(const Laurent<T>& x, U y,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(x);
@@ -169,7 +222,7 @@ class LaurentTest : public testing::Test {
             verifyMult(x, T(y), minExp, coeffs);
         }
 
-        template <typename T>
+        template <CoefficientDomain T>
         void verifyDiv(const Laurent<T>& x, const T& y,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(x);
@@ -183,7 +236,7 @@ class LaurentTest : public testing::Test {
             }
         }
 
-        template <typename T>
+        template <CoefficientDomain T>
         void verifyMult(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(x);
@@ -217,7 +270,7 @@ class LaurentTest : public testing::Test {
             }
         }
 
-        template <typename T>
+        template <CoefficientDomain T>
         void verifyMultAllAlgorithms(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(x);

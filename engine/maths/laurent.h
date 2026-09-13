@@ -520,8 +520,11 @@ class Laurent :
          * memory is allocated will be `base + capacity - 1`.
          *
          * In the special case of the zero polynomial, it is possible (but not
-         * necessarily true) that no memory is allocated at all.  In such a
-         * scenario, this routine will return `(0, 0)` instead.
+         * necessarily true) that no memory is allocated at all.  If no memory
+         * is allocated, then this routine will return `(0, 0)`.  If a zero
+         * polynomial _does_ have memory allocated, then this memory will not
+         * be holding any meaningful coefficients, and so this routine will
+         * return a positive capacity but an arbitrary base.
          *
          * \return a pair `(base, capacity)` as described above, or `(0, 0)`
          * if this is the zero polynomial _and_ no memory is allocated at all.
