@@ -41,6 +41,7 @@ if (${REGINA_INSTALL_DEV})
     permgroup.h
     permsn.h
     polynomial.h
+    polyops.h
     primes.h
     rational.h
     ring.h

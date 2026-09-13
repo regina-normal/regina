@@ -35,9 +35,9 @@
 #endif
 #include <pybind11/stl.h>
 #include "maths/integer.h"
-#include "maths/karatsuba.h"
+#include "maths/polyops.h"
 #include "../helpers.h"
-#include "../docstrings/maths/karatsuba.h"
+#include "../docstrings/maths/polyops.h"
 
 using namespace pybind11::literals;
 

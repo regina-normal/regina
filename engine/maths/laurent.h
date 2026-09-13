@@ -40,7 +40,7 @@
 #include "concepts/io.h"
 #include "concepts/iterator.h"
 #include "core/output.h"
-#include "maths/karatsuba.h"
+#include "maths/polyops.h"
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
 #include <iostream>
