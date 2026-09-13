@@ -544,39 +544,6 @@ Parameter ``b``:
 // Docstring regina::python::doc::Laurent::init
 static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
 
-// Docstring regina::python::doc::Laurent::init_2
-static constexpr const char init_2[] =
-R"doc(Sets this to become the polynomial described by the given sequence of
-coefficients.
-
-The coefficients should appear in order from the smallest exponent
-term to the largest. The first coefficient in the sequence will be
-associated with the exponent *minExp*.
-
-There is no problem if the first and/or last coefficient in the
-sequence is zero. An empty sequence will be treated as the zero
-polynomial.
-
-This routine induces a deep copy of the given range.
-
-The iterator type must be random access because this allows the
-implementation to compute the sequence length in constant time.
-
-Python:
-    Instead of the iterators *begin* and *end*, this routine takes a
-    Python list of coefficients.
-
-Parameter ``minExp``:
-    the exponent corresponding to the first coefficient in the
-    sequence.
-
-Parameter ``begin``:
-    the beginning of the sequence of coefficients.
-
-Parameter ``end``:
-    a past-the-end iterator indicating the end of the sequence of
-    coefficients.)doc";
-
 // Docstring regina::python::doc::Laurent::initExp
 static constexpr const char initExp[] =
 R"doc(Sets this to become the polynomial ``x^d`` for the given exponent *d*.

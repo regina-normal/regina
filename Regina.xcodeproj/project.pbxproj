@@ -814,8 +814,8 @@
 		0553FBB62AF6A4E700BE89A7 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB52AF6A4E700BE89A7 /* LinkView.swift */; };
 		0553FBBA2AF8643D00BE89A7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0553FBB92AF8643D00BE89A7 /* SettingsView.swift */; };
 		0553FBBE2AF92A3700BE89A7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0553FBBD2AF92A3700BE89A7 /* Settings.bundle */; };
-		055869C73056399E00E446A3 /* karatsuba.h in Headers */ = {isa = PBXBuildFile; fileRef = 055869C63056399E00E446A3 /* karatsuba.h */; };
-		055869C9305639B400E446A3 /* karatsuba.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055869C8305639B400E446A3 /* karatsuba.cpp */; };
+		055869C73056399E00E446A3 /* polyops.h in Headers */ = {isa = PBXBuildFile; fileRef = 055869C63056399E00E446A3 /* polyops.h */; };
+		055869C9305639B400E446A3 /* polyops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055869C8305639B400E446A3 /* polyops.cpp */; };
 		055BC3E92653380600E5E34C /* sigutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 055BC3E82653380600E5E34C /* sigutils.h */; };
 		055BC3ED265338FC00E5E34C /* pd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055BC3EC265338FC00E5E34C /* pd.cpp */; };
 		055CD8F62A23605A0072F4B5 /* topologylock.h in Headers */ = {isa = PBXBuildFile; fileRef = 055CD8F52A23605A0072F4B5 /* topologylock.h */; };
@@ -3019,9 +3019,9 @@
 		0553FBB92AF8643D00BE89A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		0553FBBD2AF92A3700BE89A7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "macos-icons/x-regina.icns"; sourceTree = "<group>"; };
-		055869C63056399E00E446A3 /* karatsuba.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = karatsuba.h; sourceTree = "<group>"; };
-		055869C8305639B400E446A3 /* karatsuba.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = karatsuba.cpp; sourceTree = "<group>"; };
-		055869CA305639C800E446A3 /* karatsuba.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = karatsuba.h; sourceTree = "<group>"; };
+		055869C63056399E00E446A3 /* polyops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = polyops.h; sourceTree = "<group>"; };
+		055869C8305639B400E446A3 /* polyops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = polyops.cpp; sourceTree = "<group>"; };
+		055869CA305639C800E446A3 /* polyops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = polyops.h; sourceTree = "<group>"; };
 		055BC3E82653380600E5E34C /* sigutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigutils.h; sourceTree = "<group>"; };
 		055BC3EC265338FC00E5E34C /* pd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pd.cpp; sourceTree = "<group>"; };
 		055CD8F52A23605A0072F4B5 /* topologylock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = topologylock.h; sourceTree = "<group>"; };
@@ -4806,7 +4806,6 @@
 				05098AA728F44AAE005E4716 /* cyclotomic.h */,
 				05A1C55C2EF37809004A309E /* forward.h */,
 				05098A9528F24D98005E4716 /* integer.h */,
-				055869CA305639C800E446A3 /* karatsuba.h */,
 				05098AAF28F44AAF005E4716 /* laurent.h */,
 				05098AAC28F44AAF005E4716 /* laurent2.h */,
 				05098AAE28F44AAF005E4716 /* matrix.h */,
@@ -4823,6 +4822,7 @@
 				0594930F2922E93D00940F0D /* permgroup.h */,
 				05E221D62CEC250D009D5D4E /* permsn.h */,
 				05098A9228F24D98005E4716 /* polynomial.h */,
+				055869CA305639C800E446A3 /* polyops.h */,
 				05098A9328F24D98005E4716 /* primes.h */,
 				05098AA928F44AAE005E4716 /* rational.h */,
 				0591FB3B2E5C393C0061D270 /* ring.h */,
@@ -5196,7 +5196,6 @@
 				05DADB1621928EBF00DC80E1 /* binom.cpp */,
 				050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */,
 				050F5D301B9BAB9C00C1F681 /* integer.cpp */,
-				055869C8305639B400E446A3 /* karatsuba.cpp */,
 				05721F011F97160200A83FFC /* laurent.cpp */,
 				05721F021F97160200A83FFC /* laurent2.cpp */,
 				05098AB628F4C4CF005E4716 /* matrix.cpp */,
@@ -5213,6 +5212,7 @@
 				0594930C2920B21600940F0D /* permgroup.cpp */,
 				05E221D72CEC2525009D5D4E /* permsn.cpp */,
 				050F5D371B9BAB9C00C1F681 /* polynomial.cpp */,
+				055869C8305639B400E446A3 /* polyops.cpp */,
 				050F5D381B9BAB9C00C1F681 /* primes.cpp */,
 				050F5D3C1B9BAB9C00C1F681 /* pymaths.cpp */,
 				050F5D391B9BAB9C00C1F681 /* rational.cpp */,
@@ -6020,7 +6020,6 @@
 				057FDB002EE967A3000C706E /* forward.h */,
 				052F9CE3180600FA00FAE4DF /* integer.cpp */,
 				052F9CE4180600FA00FAE4DF /* integer.h */,
-				055869C63056399E00E446A3 /* karatsuba.h */,
 				05721EFE1F9715C700A83FFC /* laurent.h */,
 				05721EFD1F9715C600A83FFC /* laurent2.h */,
 				052F9CE6180600FA00FAE4DF /* matrix.h */,
@@ -6036,6 +6035,7 @@
 				059493052920B1C300940F0D /* permgroup.h */,
 				05E221D42CEC24F3009D5D4E /* permsn.h */,
 				0541AF4A1B8BE2F5002E166B /* polynomial.h */,
+				055869C63056399E00E446A3 /* polyops.h */,
 				052F9CF0180600FA00FAE4DF /* primes.cpp */,
 				052F9CF1180600FA00FAE4DF /* primes.h */,
 				052F9CF2180600FA00FAE4DF /* rational.cpp */,
@@ -8595,7 +8595,7 @@
 				05431F6E1C40F3C9009BC072 /* general.h in Headers */,
 				05772EB7270CF97100D26D8A /* angleflags.h in Headers */,
 				057FDB012EE967A3000C706E /* forward.h in Headers */,
-				055869C73056399E00E446A3 /* karatsuba.h in Headers */,
+				055869C73056399E00E446A3 /* polyops.h in Headers */,
 				0542087A1DF0D0B50018AB24 /* format.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
 				055114D51DCC71A700EC753C /* facetspec.h in Headers */,
@@ -9517,7 +9517,7 @@
 				0594930D2920B21600940F0D /* permgroup.cpp in Sources */,
 				050F5DF91B9BAB9C00C1F681 /* matrix2.cpp in Sources */,
 				05754D18258D834E00236ED7 /* randutils.cpp in Sources */,
-				055869C9305639B400E446A3 /* karatsuba.cpp in Sources */,
+				055869C9305639B400E446A3 /* polyops.cpp in Sources */,
 				057B0CA826A2ABF40017F5EA /* xmlutils.cpp in Sources */,
 				05FB46D31DD92D2800BB00E5 /* grouppresentation.cpp in Sources */,
 				050F5E0A1B9BAB9C00C1F681 /* packettype.cpp in Sources */,

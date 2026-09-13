@@ -375,6 +375,19 @@ Parameter ``rhs``:
 Returns:
     the difference of the two given polynomials.)doc";
 
+// Docstring regina::python::doc::Arrow::addProduct
+static constexpr const char addProduct[] =
+R"doc(Adds the product of the given arrow and Laurent polynomials to this.
+
+Calling ``x.addProduct(y, z)`` is equivalent to, but often faster
+than, calling ``x += y * z``.
+
+Parameter ``x``:
+    the arrow polynomial in the product to add to this.
+
+Parameter ``y``:
+    the Laurent polynomial in the product to add to this.)doc";
+
 // Docstring regina::python::doc::Arrow::global_swap
 static constexpr const char global_swap[] =
 R"doc(Swaps the contents of the given polynomials.

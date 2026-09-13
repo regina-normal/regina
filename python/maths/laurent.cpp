@@ -60,10 +60,6 @@ void addLaurent(pybind11::module_& m) {
         .def("init", static_cast<void (Laurent<Integer>::*)()>(
             &Laurent<Integer>::init), rdoc::init)
         .def("initExp", &Laurent<Integer>::initExp, rdoc::initExp)
-        .def("init", [](Laurent<Integer>& p, long minExp,
-                const std::vector<Integer>& c) {
-            p.init(minExp, c.begin(), c.end());
-        }, "minExp"_a, "coefficients"_a, rdoc::init_2)
         .def("minExp", &Laurent<Integer>::minExp, rdoc::minExp)
         .def("maxExp", &Laurent<Integer>::maxExp, rdoc::maxExp)
         .def("isZero", &Laurent<Integer>::isZero, rdoc::isZero)

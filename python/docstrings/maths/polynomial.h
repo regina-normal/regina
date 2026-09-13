@@ -630,32 +630,6 @@ Parameter ``b``:
 // Docstring regina::python::doc::Polynomial::init
 static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
 
-// Docstring regina::python::doc::Polynomial::init_2
-static constexpr const char init_2[] =
-R"doc(Sets this to become the polynomial described by the given sequence of
-coefficients. The coefficients should appear in order from the
-constant coefficient to the leading coefficient.
-
-There is no problem if the leading coefficient (i.e., the last
-coefficient in the sequence) is zero. An empty sequence will be
-treated as the zero polynomial.
-
-This routine induces a deep copy of the given range.
-
-The iterator type must be random access because this allows the
-implementation to compute the sequence length in constant time.
-
-Python:
-    Instead of a pair of iterators, this routine takes a Python list
-    of coefficients.
-
-Parameter ``begin``:
-    the beginning of the sequence of coefficients.
-
-Parameter ``end``:
-    a past-the-end iterator indicating the end of the sequence of
-    coefficients.)doc";
-
 // Docstring regina::python::doc::Polynomial::initExp
 static constexpr const char initExp[] =
 R"doc(Sets this to become the polynomial ``x^d`` for the given degree *d*.

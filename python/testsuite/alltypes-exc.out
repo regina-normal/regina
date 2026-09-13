@@ -725,6 +725,7 @@ nextPowerOfTwo : function
 numberDiscsAwayFromVertex : function
 open : function
 politeThreads : function
+polynomialProduct : function
 preImageOfLattice : function
 readDehydrationList : function
 readOrb : function

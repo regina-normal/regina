@@ -5,7 +5,6 @@ SET ( FILES
   3d.cpp
   arrow.cpp
   binom.cpp
-  karatsuba.cpp
   laurent.cpp
   laurent2.cpp
   matrixops.cpp
@@ -24,6 +23,7 @@ SET ( FILES
   permgroup.cpp
   permsn.cpp
   polynomial.cpp
+  polyops.cpp
   primes.cpp
   pymaths.cpp
   rational.cpp

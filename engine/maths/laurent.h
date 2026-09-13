@@ -40,7 +40,7 @@
 #include "concepts/io.h"
 #include "concepts/iterator.h"
 #include "core/output.h"
-#include "maths/karatsuba.h"
+#include "maths/polyops.h"
 #include "utilities/stringutils.h"
 #include "utilities/tightencoding.h"
 #include <iostream>
@@ -278,8 +278,34 @@ class Laurent :
          * sequence of coefficients.
          */
         template <RandomAccessIteratorFor<T> Iterator>
-        Laurent(long minExp, Iterator begin, Iterator end) : coeff_(nullptr) {
-            init(minExp, begin, end);
+        Laurent(long minExp, Iterator begin, Iterator end) {
+            // Skip through any initial zero terms.
+            while (begin != end && *begin == 0) {
+                ++begin;
+                ++minExp;
+            }
+            if (begin == end) {
+                // We have the zero polynomial.
+                coeff_ = nullptr;
+                minExp_ = 0;
+                maxExp_ = -1;
+                return;
+            } else {
+                // We have a non-zero polynomial.
+                capacity_ = end - begin;
+                coeff_ = new T[capacity_];
+                minExp_ = base_ = minExp;
+                maxExp_ = minExp + capacity_ - 1;
+
+                T* it = coeff_;
+                while (begin != end)
+                    *it++ = *begin++;
+
+                // The final coefficient(s) might be zero: fix maxExp_.
+                // We _do_ already know that the first coefficient is non-zero.
+                for (--it; *it == 0; --it, --maxExp_)
+                    ;
+            }
         }
 
         /**
@@ -301,8 +327,7 @@ class Laurent :
          * \param coefficients the full sequence of coefficients.
          */
         Laurent(long minExp, std::initializer_list<T> coefficients) :
-                coeff_(nullptr) {
-            init(minExp, coefficients.begin(), coefficients.end());
+                Laurent(minExp, coefficients.begin(), coefficients.end()) {
         }
 
         /**
@@ -411,68 +436,6 @@ class Laurent :
                 *coeff_ = 1;
             }
             minExp_ = maxExp_ = exponent;
-        }
-
-        /**
-         * Sets this to become the polynomial described by the given
-         * sequence of coefficients.
-         *
-         * The coefficients should appear in order from the smallest
-         * exponent term to the largest.  The first coefficient in the
-         * sequence will be associated with the exponent \a minExp.
-         *
-         * There is no problem if the first and/or last coefficient in
-         * the sequence is zero.
-         * An empty sequence will be treated as the zero polynomial.
-         *
-         * This routine induces a deep copy of the given range.
-         *
-         * The iterator type must be random access because this allows the
-         * implementation to compute the sequence length in constant time.
-         *
-         * \python Instead of the iterators \a begin and \a end,
-         * this routine takes a Python list of coefficients.
-         *
-         * \param minExp the exponent corresponding to the first
-         * coefficient in the sequence.
-         * \param begin the beginning of the sequence of coefficients.
-         * \param end a past-the-end iterator indicating the end of the
-         * sequence of coefficients.
-         */
-        template <RandomAccessIteratorFor<T> Iterator>
-        void init(long minExp, Iterator begin, Iterator end) {
-            // Skip through any initial zero terms.
-            while (begin != end && *begin == 0) {
-                ++begin;
-                ++minExp;
-            }
-            if (begin == end) {
-                // We have the zero polynomial.
-                init();
-                return;
-            }
-
-            // We have a non-zero polynomial.
-            size_t rangeLen = end - begin;
-            if (! coeff_) {
-                capacity_ = rangeLen;
-                coeff_ = new T[capacity_];
-            } else if (rangeLen > capacity_) {
-                delete[] coeff_;
-                capacity_ = std::max(rangeLen, capacity_ + growth());
-                coeff_ = new T[capacity_];
-            }
-            minExp_ = base_ = minExp;
-            maxExp_ = minExp + rangeLen - 1;
-
-            T* it = coeff_;
-            while (begin != end)
-                *it++ = *begin++;
-
-            // The final coefficient(s) might be zero: fix maxExp_ accordingly.
-            // We _do_ already know that the first coefficient is non-zero.
-            for (--it; *it == 0; --it, --maxExp_)
-                ;
         }
 
         /**

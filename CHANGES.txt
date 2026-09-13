@@ -37,6 +37,7 @@ Version 8.0  [ TODO ]
         Class Arrow:
             - New integer division operators / and /=.
             - New const routine shifted().
+            - New routine addProduct(), which optimises x ±= y * z.
         Class Attachment:
             - The filename constructor now throws an exception on error,
               instead of creating an empty attachment.
@@ -318,6 +319,8 @@ Version 8.0  [ TODO ]
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Laurent(exp) and
               initialiser init(exp), which were deprecated in Regina 7.4.
+            - Remove the iterator-based init(minExp, begin, end), though the
+              corresponding constructor remains.
             - New constructors, assignment operators and comparison operators
               that create or compare against a constant polynomial, given by a
               coefficient of type T or a native C++ integer.
@@ -516,6 +519,8 @@ Version 8.0  [ TODO ]
               iterator type is now required to be random access.
             - Removed the exponent-based constructor Polynomial(degree) and
               initialiser init(degree), which were deprecated in Regina 7.4.
+            - Remove the iterator-based init(begin, end), though the
+              corresponding constructor remains.
             - New constructors, assignment operators and comparison operators
               that create or compare against a constant polynomial, given by a
               coefficient of type T or a native C++ integer.

@@ -283,7 +283,7 @@ namespace {
                     Arrow diagramTerm;
                     diagramTerm.initDiagram(std::move(diagramSequence));
                     diagramTerm.shift(shift);
-                    count_[loops] += diagramTerm;
+                    count_[loops] += std::move(diagramTerm);
                 }
             }
 
@@ -304,16 +304,17 @@ namespace {
                 }
             }
 
+            /**
+             * Warning: After calling finalise(), this accumulator can no
+             * longer be used (since it may move data out of its own storage).
+             */
             Arrow finalise() {
                 Arrow ans;
 
-                Laurent<Integer> loopPow = RingTraits<Laurent<Integer>>::one;
+                Laurent<Integer> loopPow(1);
                 for (size_t loops = 0; loops < maxLoops_; ++loops) {
-                    if (! count_[loops].isZero()) {
-                        count_[loops] *= loopPow;
-                        ans += count_[loops];
-                    }
-
+                    // Note: addProduct() already tests for zero factors.
+                    ans.addProduct(std::move(count_[loops]), loopPow);
                     loopPow *= loopPoly;
                 }
 
@@ -485,8 +486,7 @@ Arrow Link::arrowTreewidth(ProgressTracker* tracker) const {
             Key k(nStrands);
             std::fill(k.begin(), k.end(), Dest(-2, 0));
 
-            partial[index]->emplace(std::move(k),
-                RingTraits<Laurent<Integer>>::one);
+            partial[index]->emplace(std::move(k), Laurent<Integer>(1));
         } else if (bag->niceType() == NiceType::Introduce) {
             // Introduce bag.
             child = bag->children();
@@ -730,7 +730,7 @@ Arrow Link::arrowTreewidth(ProgressTracker* tracker) const {
                     auto existingSoln = partial[index]->try_emplace(
                         std::move(kNew), std::move(vNew));
                     if (! existingSoln.second)
-                        existingSoln.first->second += vNew;
+                        existingSoln.first->second += std::move(vNew);
                 }
             }
 

@@ -28,13 +28,14 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __REGINA_KARATSUBA_H
+#ifndef __REGINA_POLYOPS_H
 #ifndef __DOXYGEN
-#define __REGINA_KARATSUBA_H
+#define __REGINA_POLYOPS_H
 #endif
 
-/*! \file maths/karatsuba.h
- *  \brief Implements Karatsuba multiplication for polynomials.
+/*! \file maths/polyops.h
+ *  \brief Contains shared implementations for operations on single-variable
+ *  polynomial types.
  */
 
 #include "concepts/core.h"
