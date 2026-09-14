@@ -525,7 +525,7 @@ class Laurent :
             } else if (! coeff_) {
                 capacity_ = toExp - fromExp + 1;
                 coeff_ = new T[capacity_];
-            } else if (fromExp <= toExp) {
+            } else {
                 // Use reallocateForRange(), which will preserve our existing
                 // coefficient data, but which may also change minExp_ and
                 // maxExp_ (which means we need to change them back).
@@ -1698,14 +1698,17 @@ class Laurent :
                 for (auto it = coeff_ + minExp_ - base_;
                         it <= coeff_ + maxExp_ - base_; ++it)
                     (*it) *= scalar;
-                minExp_ += other.minExp_;
+                // We adjust minExp_ last, because if &other == this then
+                // changing minExp_ will change other.minExp_ also.
                 maxExp_ += other.minExp_;
                 base_ += other.minExp_;
+                minExp_ += other.minExp_;
                 return *this;
             }
             if (minExp_ == maxExp_) {
                 // TODO: This case could benefit from an rvalue ref argument.
                 // We may need to reallocate, but the product itself is simple.
+                // Note: here it is logically impossible to have &other == this.
                 if (capacity_ >
                         static_cast<size_t>(other.maxExp_ - other.minExp_)) {
                     // Extract the scalar, then overwrite the coeff_ array.
@@ -1740,6 +1743,7 @@ class Laurent :
             // The following code works even if &other == this, since we build
             // the coefficients of the product in a separate section of memory.
             // TODO: Can we reuse our own memory if capacity_ is large enough?
+            // (If we do, be sure to remember the case &other == this.)
             capacity_ = maxExp_ - minExp_ + other.maxExp_ - other.minExp_ + 1;
             T* newCoeff = new T[capacity_];
             detail::productBest<T, detail::SetOrAdd::Either, false>(newCoeff,
