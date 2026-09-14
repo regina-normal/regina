@@ -245,7 +245,7 @@ class LaurentTest : public testing::Test {
             return ans;
         }
 
-        // TODO: HERE
+        // TODO: Replace the verify... routines below.
 
         template <CoefficientDomain T>
         static void verifyEqual(const Laurent<T>& result,
@@ -512,18 +512,51 @@ TEST_F(LaurentTest, padding) {
     }
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        L x = padded(c);
-        validate(x, c);
+        {
+            L x = padded(c);
+            validate(x, c);
 
-        auto alloc = x.allocation();
-        EXPECT_GT(alloc.second, 0);
-        if (c.isZero()) {
-            EXPECT_TRUE(x.isZero());
-            // In this case, alloc.first is arbitrary.
-        } else {
-            EXPECT_LT(alloc.first, x.minExp());
-            EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
-                x.maxExp() + 1);
+            auto alloc = x.allocation();
+            EXPECT_GT(alloc.second, 0);
+            if (c.isZero()) {
+                EXPECT_TRUE(x.isZero());
+                // In this case, alloc.first is arbitrary.
+            } else {
+                EXPECT_LT(alloc.first, x.minExp());
+                EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+                    x.maxExp() + 1);
+            }
+        }
+        {
+            L x(c);
+            if (c.isZero()) {
+                L x(c);
+                EXPECT_EQ(x.allocation().second, 0);
+
+                x.reserveRange(1000, 999);
+                EXPECT_EQ(x.allocation().second, 0);
+
+                // TODO: Finish this: alloc and set for non-trivial ranges
+            } else {
+                auto alloc = x.allocation();
+                EXPECT_EQ(alloc.first, x.minExp());
+                EXPECT_EQ(alloc.second, x.maxExp() - x.minExp() + 1);
+                const auto initAlloc = alloc;
+
+                x.reserveRange(x.minExp(), x.minExp());
+                EXPECT_EQ(x.allocation(), initAlloc);
+
+                x.reserveRange(x.maxExp(), x.maxExp());
+                EXPECT_EQ(x.allocation(), initAlloc);
+
+                x.reserveRange((x.minExp() + x.maxExp()) / 2, x.maxExp());
+                EXPECT_EQ(x.allocation(), initAlloc);
+
+                x.reserveRange(1000, 999);
+                EXPECT_EQ(x.allocation(), initAlloc);
+
+                // TODO: Finish this: alloc and set for non-trivial ranges
+            }
         }
     }
 }
@@ -544,9 +577,25 @@ TEST_F(LaurentTest, init) {
     }
 }
 
-// TODO: HERE
+// TODO: [], set()
+// TODO: iterators
+// TODO: == (Laurent, Integer, int), <=>
+// TODO: assign (Laurent, Laurent&&, Integer, Integer&&, int)
+// TODO: shift, shifted, shifted &&
+// TODO: scaleUp, scaleDown
+// TODO: -, - &&, negate()
+// TODO: invertX
+// TODO: transform (with, without exponents), extract
+// TODO: *= (Integer, int), /= (Integer, int)
+// TODO: poly (const, &&) * scalar (Integer, int), both directions
+// TODO: poly (const, &&) / scalar (Integer, int)
+// TODO: +=, -= (const&, &&); +, - (all four const&/&& variants); inc. x op x
+// TODO: *=; * (all const&, all &&); inc. x op x
+// TODO: addProduct (both const&, both &&); inc. x op x
+// TODO: str, utf8
 
 TEST_F(LaurentTest, set) {
+    // TODO: This test is to be replaced
     Laurent<Integer> x { -1, { 1, 2, 1 } };
 
     verifyEqual<Integer>(x, -1, {1, 2, 1});
@@ -587,6 +636,7 @@ TEST_F(LaurentTest, set) {
 }
 
 TEST_F(LaurentTest, arithmetic) {
+    // TODO: This test is to be replaced
     verifyEqual<Integer>(zero, 0, {});
     verifyEqual<Integer>(zero2, 0, {});
     verifyEqual<Integer>(zero3, 0, {});
@@ -669,15 +719,10 @@ TEST_F(LaurentTest, ringConstants) {
 }
 
 TEST_F(LaurentTest, tightEncoding) {
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(zero);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(zero2);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(zero3);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(one);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(two);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(x2);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(a);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(b);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(c);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(d);
-    TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(e);
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(c);
+    }
 }
+
+// TODO: member swap, global swap
