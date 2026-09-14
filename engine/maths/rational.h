@@ -82,11 +82,10 @@ class Rational {
             /**< Globally available one. */
         static const Rational infinity;
             /**< Globally available infinity.  Note that both 1/0 and
-             *   -1/0 evaluate to this same rational.  When queried,
-             *   the representation 1/0 will be returned. */
+                 -1/0 evaluate to this same rational.  When queried,
+                 the representation 1/0 will be returned. */
         static const Rational undefined;
-            /**< Globally available undefined.  This is represented as
-             *   0/0. */
+            /**< Globally available undefined.  This is represented as 0/0. */
     private:
         /**
          * Represents the available flavours of rational number.
@@ -101,20 +100,20 @@ class Rational {
         };
         Flavour flavour;
             /**< Stores whether this rational is infinity, undefined or
-             *   normal (non-zero denominator). */
+                 normal (non-zero denominator). */
         mpq_t data;
             /**< Contains the arbitrary precision rational data for normal
-             *   (non-zero denominator) rationals.
-             *   This is initialised even if the rational is infinite. */
+                 (non-zero denominator) rationals.  This is initialised
+                 (but ignored) even if the rational is infinite. */
 
         static const Rational maxDouble;
             /**< The largest positive rational number that can be converted
-             *   to a finite double.  This begins as undefined, and is set
-             *   to its correct value on the first call to doubleApprox(). */
+                 to a finite double.  This begins as undefined, and is set
+                 to its correct value on the first call to doubleApprox(). */
         static const Rational minDouble;
             /**< The smallest positive rational number that can be converted
-             *   to a non-zero double.  This begins as undefined, and is set
-             *   to its correct value on the first call to doubleApprox(). */
+                 to a non-zero double.  This begins as undefined, and is set
+                 to its correct value on the first call to doubleApprox(). */
 
     public:
         /**
