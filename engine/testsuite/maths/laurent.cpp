@@ -85,7 +85,7 @@ class LaurentTest : public testing::Test {
         L long1 { 2, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
         L long2 { 3, { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } };
 
-        // Some polynomials with more space allocated than they need.
+        // Some polynomials with more space allocated than they need:
         L paddedZero = g - g;
         L paddedConst = (two + d) - d;
         L paddedPower = (x2 + highish) - highish;
@@ -124,54 +124,6 @@ class LaurentTest : public testing::Test {
                 EXPECT_FALSE(result.isZero());
                 EXPECT_EQ(result.minExp(), minExp);
                 EXPECT_EQ(result.maxExp(), minExp + coeffs.size() - 1);
-            }
-        }
-
-        template <CoefficientDomain T>
-        void verifyMult(const Laurent<T>& x, const T& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x * y, minExp, coeffs);
-            verifyEqual((x + zero) * y, minExp, coeffs);
-            verifyEqual(y * x, minExp, coeffs);
-            verifyEqual(y * (x + zero), minExp, coeffs);
-            {
-                Laurent<T> z(x);
-                verifyEqual(z *= y, minExp, coeffs);
-            }
-        }
-
-        template <CoefficientDomain T, regina::CppInteger U>
-        void verifyMult(const Laurent<T>& x, U y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_INTEGER(y);
-
-            verifyEqual(x * y, minExp, coeffs);
-            verifyEqual((x + zero) * y, minExp, coeffs);
-            verifyEqual(y * x, minExp, coeffs);
-            verifyEqual(y * (x + zero), minExp, coeffs);
-            {
-                Laurent<T> z(x);
-                verifyEqual(z *= y, minExp, coeffs);
-            }
-
-            verifyMult(x, T(y), minExp, coeffs);
-        }
-
-        template <CoefficientDomain T>
-        void verifyDiv(const Laurent<T>& x, const T& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x / y, minExp, coeffs);
-            verifyEqual((x + zero) / y, minExp, coeffs);
-            {
-                Laurent<T> z(x);
-                verifyEqual(z /= y, minExp, coeffs);
             }
         }
 };
@@ -462,6 +414,59 @@ TEST_F(LaurentTest, init) {
     }
 }
 
+TEST_F(LaurentTest, moveThenAssign) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                L x(c);
+                L y = std::move(x);
+                x = d;
+                validate(x, d);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                L y = std::move(x);
+                x = 3;
+                validate(x, L(3));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                L y = std::move(x);
+                x = bigInt;
+                validate(x, L(bigInt));
+                validate(y, c);
+            }
+            {
+                L x(c);
+                L y = std::move(x);
+                Integer i(bigInt);
+                x = std::move(i);
+                validate(x, L(bigInt));
+                validate(y, c);
+            }
+            // Test move-then-init also.
+            {
+                L x(c);
+                L y = std::move(x);
+                x.init();
+                validateZero(x);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                L y = std::move(x);
+                x.initExp(-5);
+                validate(x, x5Inv);
+                validate(y, c);
+            }
+        }
+    }
+}
+
 TEST_F(LaurentTest, set) {
     // TODO: This test is to be replaced
     Laurent<Integer> x { -1, { 1, 2, 1 } };
@@ -510,41 +515,267 @@ TEST_F(LaurentTest, set) {
 // TODO: shift, shifted, shifted &&
 // TODO: scaleUp, scaleDown
 
-static void verifyNegation(const L& x, const L& result) {
-    if (x.isZero()) {
-        validateZero(result);
-    } else {
-        validate(result);
-        EXPECT_FALSE(result.isZero());
-        EXPECT_EQ(result.minExp(), x.minExp());
-        EXPECT_EQ(result.maxExp(), x.maxExp());
-        for (long i = x.minExp(); i <= x.maxExp(); ++i)
-            EXPECT_EQ(result[i], -x[i]);
-    }
-    validateZero(x + result);
-}
-
 TEST_F(LaurentTest, negate) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        {
+        if (c.isZero()) {
+            validateZero(-c);
+
             L x(c);
             x.negate();
-            verifyNegation(c, x);
-        }
-        verifyNegation(c, -c);
-        {
-            L x(c);
-            verifyNegation(c, -std::move(x));
+            validateZero(x);
+            validateZero(-c);
+            validateZero(-std::move(x));
+        } else {
+            L neg = -c;
+            validate(neg);
+            EXPECT_FALSE(neg.isZero());
+            EXPECT_EQ(neg.minExp(), c.minExp());
+            EXPECT_EQ(neg.maxExp(), c.maxExp());
+            for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                EXPECT_EQ(neg[i], -c[i]);
+
+            {
+                L x(c);
+                validate(-std::move(x), neg);
+            }
+            {
+                L x(c);
+                x.negate();
+                validate(x, neg);
+            }
+
+            validateZero(c + neg);
         }
     }
 }
 
 // TODO: invertX
 // TODO: transform (with, without exponents), extract
-// TODO: *= (Integer, int), /= (Integer, int)
-// TODO: poly (const, &&) * scalar (Integer, int), both directions
-// TODO: poly (const, &&) / scalar (Integer, int)
+
+template <regina::CppInteger Native>
+static void verifyNativeProduct(const L& poly, const Integer& scalar,
+        const L& product) {
+    SCOPED_TRACE_TYPE(Native);
+
+    Native native;
+    if (scalar >= std::numeric_limits<Native>::min() &&
+            scalar <= std::numeric_limits<Native>::max()) {
+        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
+    } else {
+        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
+        return;
+    }
+
+    validate(poly * native, product);
+    validate(L(poly) * native, product);
+    validate(native * poly, product);
+    validate(native * L(poly), product);
+    {
+        L x(poly);
+        validate(x *= native, product);
+    }
+}
+
+template <regina::CppInteger Native>
+static void verifyNativeQuotient(const L& poly, const Integer& scalar,
+        const std::optional<L>& quotient) {
+    SCOPED_TRACE_TYPE(Native);
+
+    Native native;
+    if (scalar >= std::numeric_limits<Native>::min() &&
+            scalar <= std::numeric_limits<Native>::max()) {
+        EXPECT_NO_THROW({ native = scalar.safeValue<Native>(); });
+    } else {
+        EXPECT_THROW({ scalar.safeValue<Native>(); }, regina::IntegerOverflow);
+        return;
+    }
+
+    if (quotient) {
+        validate(poly / native, *quotient);
+        validate(L(poly) / native, *quotient);
+        {
+            L x(poly);
+            validate(x /= native, *quotient);
+        }
+    } else {
+        #if 0 // For now, Laurent division requires a non-zero divisor.
+        EXPECT_THROW({ poly / native; }, regina::DivisionByZero);
+        EXPECT_THROW({ L(poly) / native; }, regina::DivisionByZero);
+        {
+            L x(poly);
+            EXPECT_THROW({ x /= native; }, regina::DivisionByZero);
+        }
+        #endif
+    }
+}
+
+static void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar) {
+    SCOPED_TRACE_REGINA(scalar);
+
+    const L product = poly * scalar;
+    if (poly.isZero() || scalar == 0) {
+        validateZero(product);
+    } else {
+        validate(product);
+        EXPECT_FALSE(product.isZero());
+        EXPECT_EQ(product.minExp(), poly.minExp());
+        EXPECT_EQ(product.maxExp(), poly.maxExp());
+        for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
+            EXPECT_EQ(product[i], poly[i] * scalar);
+    }
+    validate(L(poly) * scalar, product);
+    validate(scalar * poly, product);
+    validate(scalar * L(poly), product);
+    {
+        L x(poly);
+        validate(x *= scalar, product);
+    }
+
+    verifyNativeProduct<int8_t>(poly, scalar, product);
+    verifyNativeProduct<int16_t>(poly, scalar, product);
+    verifyNativeProduct<int32_t>(poly, scalar, product);
+    verifyNativeProduct<int64_t>(poly, scalar, product);
+    #ifdef INT128_AVAILABLE
+    verifyNativeProduct<regina::Int128>(poly, scalar, product);
+    #endif
+
+    if (scalar.sign() >= 0) {
+        verifyNativeProduct<uint8_t>(poly, scalar, product);
+        verifyNativeProduct<uint16_t>(poly, scalar, product);
+        verifyNativeProduct<uint32_t>(poly, scalar, product);
+        verifyNativeProduct<uint64_t>(poly, scalar, product);
+        #ifdef INT128_AVAILABLE
+        verifyNativeProduct<regina::UInt128>(poly, scalar, product);
+        #endif
+    }
+
+    if (scalar == 0) {
+        #if 0 // For now, Laurent division requires a non-zero divisor.
+        EXPECT_THROW({ poly / scalar; }, regina::DivisionByZero);
+        EXPECT_THROW({ L(poly) / scalar; }, regina::DivisionByZero);
+        {
+            L x(poly);
+            EXPECT_THROW({ x /= scalar; }, regina::DivisionByZero);
+        }
+
+        verifyNativeQuotient<int8_t>(poly, scalar, {});
+        verifyNativeQuotient<int16_t>(poly, scalar, {});
+        verifyNativeQuotient<int32_t>(poly, scalar, {});
+        verifyNativeQuotient<int64_t>(poly, scalar, {});
+        #ifdef INT128_AVAILABLE
+        verifyNativeQuotient<regina::Int128>(poly, scalar, {});
+        #endif
+
+        verifyNativeQuotient<uint8_t>(poly, scalar, {});
+        verifyNativeQuotient<uint16_t>(poly, scalar, {});
+        verifyNativeQuotient<uint32_t>(poly, scalar, {});
+        verifyNativeQuotient<uint64_t>(poly, scalar, {});
+        #ifdef INT128_AVAILABLE
+        verifyNativeQuotient<regina::UInt128>(poly, scalar, {});
+        #endif
+        #endif
+    } else {
+        const L quotient = poly / scalar;
+        if (poly.isZero()) {
+            validateZero(quotient);
+        } else {
+            validate(quotient);
+            if (poly[poly.minExp()].abs() >= scalar.abs()) {
+                EXPECT_FALSE(quotient.isZero());
+                EXPECT_EQ(quotient.minExp(), poly.minExp());
+            } else {
+                if (! quotient.isZero())
+                    EXPECT_GT(quotient.minExp(), poly.minExp());
+            }
+            if (poly[poly.maxExp()].abs() >= scalar.abs()) {
+                EXPECT_FALSE(quotient.isZero());
+                EXPECT_EQ(quotient.maxExp(), poly.maxExp());
+            } else {
+                if (! quotient.isZero())
+                    EXPECT_LT(quotient.maxExp(), poly.maxExp());
+            }
+            for (long i = poly.minExp(); i <= poly.maxExp(); ++i)
+                EXPECT_EQ(quotient[i], poly[i] / scalar);
+        }
+        validate(L(poly) / scalar, quotient);
+        {
+            L x(poly);
+            validate(x /= scalar, quotient);
+        }
+
+        verifyNativeQuotient<int8_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int16_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int32_t>(poly, scalar, quotient);
+        verifyNativeQuotient<int64_t>(poly, scalar, quotient);
+        #ifdef INT128_AVAILABLE
+        verifyNativeQuotient<regina::Int128>(poly, scalar, quotient);
+        #endif
+
+        if (scalar.sign() >= 0) {
+            verifyNativeQuotient<uint8_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint16_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint32_t>(poly, scalar, quotient);
+            verifyNativeQuotient<uint64_t>(poly, scalar, quotient);
+            #ifdef INT128_AVAILABLE
+            verifyNativeQuotient<regina::UInt128>(poly, scalar, quotient);
+            #endif
+        }
+    }
+}
+
+TEST_F(LaurentTest, scalarMultiplyDivide) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        for (int i = -3; i <= 3; ++i)
+            verifyScalarMultiplyDivide(c, i);
+
+        // Run through boundaries and "midpoints" for {8,16,32,64,128}-bit ints:
+        Integer pow2 = 256; // 2^8
+        Integer halfPow2 = 128;
+        Integer quarterPow2 = 64;
+        for (int i = 0; i < 5; ++i) {
+            // pow2 = 2^bits = 2^{2^b} for some b
+            // halfPow2 = 2^(bits-1)
+            // quarterPow2 = 2^(bits-2)
+            for (int j = -1; j <= 1; ++j) {
+                verifyScalarMultiplyDivide(c, pow2 + j);
+                verifyScalarMultiplyDivide(c, -pow2 + j);
+                verifyScalarMultiplyDivide(c, halfPow2 + j);
+                verifyScalarMultiplyDivide(c, -halfPow2 + j);
+                verifyScalarMultiplyDivide(c, quarterPow2 + j);
+                verifyScalarMultiplyDivide(c, -quarterPow2 + j);
+            }
+            // Double the number of bits in pow2:
+            quarterPow2 *= pow2;
+            halfPow2 *= pow2;
+            pow2 *= pow2;
+        }
+
+        verifyScalarMultiplyDivide(c, bigInt);
+        verifyScalarMultiplyDivide(c, -bigInt);
+
+        // Test expected arithmetic properties:
+        validateZero(c * 0);
+        validate(c * 1, c);
+        validate(c * -1, -c);
+        validate(c * 2, c + c);
+
+        if (! c.isZero()) {
+            verifyScalarMultiplyDivide(c, c[c.minExp()]);
+            verifyScalarMultiplyDivide(c, c[c.maxExp()]);
+
+            L c0 = c / c[c.minExp()];
+            EXPECT_EQ(c0.minExp(), c.minExp());
+            EXPECT_EQ(c0[c0.minExp()], 1);
+
+            L c1 = c / c[c.maxExp()];
+            EXPECT_EQ(c1.maxExp(), c.maxExp());
+            EXPECT_EQ(c1[c1.maxExp()], 1);
+        }
+    }
+}
 
 TEST_F(LaurentTest, addSubtract) {
     for (const L& c : cases) {
@@ -827,23 +1058,6 @@ TEST_F(LaurentTest, multiply) {
 }
 
 // TODO: str, utf8
-
-TEST_F(LaurentTest, arithmetic) {
-    // TODO: This test is to be replaced
-    verifyMult<Integer>(zero, 0, 0, {});
-    verifyMult<Integer>(zero, 1, 0, {});
-    verifyMult<Integer>(zero, 2, 0, {});
-    verifyMult<Integer>(a, 0, 0, {});
-    verifyMult<Integer>(a, 1, -1, {1, -1, 1});
-    verifyMult<Integer>(a, -1, -1, {-1, 1, -1});
-    verifyMult<Integer>(a, 2, -1, {2, -2, 2});
-
-    verifyDiv<Integer>(zero, 1, 0, {});
-    verifyDiv<Integer>(zero, 2, 0, {});
-    verifyDiv<Integer>(a, 1, -1, {1, -1, 1});
-    verifyDiv<Integer>(a, -1, -1, {-1, 1, -1});
-    verifyDiv<Integer>(e, 2, 4, {1, 2, -1, 1});
-}
 
 TEST_F(LaurentTest, ringConstants) {
     // Verify that the RingTraits constants looks correct.
