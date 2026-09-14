@@ -40,10 +40,10 @@ using regina::CoefficientDomain;
 using regina::Integer;
 using regina::Laurent;
 
+using L = Laurent<Integer>;
+
 class LaurentTest : public testing::Test {
     protected:
-        using L = Laurent<Integer>;
-
         // An integer that cannot fit into 128 bits.
         // We split the digits into chunks to not break syntax highlighting.
         const Integer bigInt {
@@ -93,157 +93,6 @@ class LaurentTest : public testing::Test {
             std::cref(bigLowish), std::cref(bigMid), std::cref(bigHighish),
             std::cref(bigHigh), std::cref(paddedZero), std::cref(paddedConst),
             std::cref(paddedPower), std::cref(paddedPoly) };
-
-        static void validate(const L& poly) {
-            auto alloc = poly.allocation();
-            if (alloc.second == 0) {
-                EXPECT_EQ(alloc.first, 0);
-                EXPECT_TRUE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), 0);
-                EXPECT_EQ(poly.maxExp(), 0);
-                EXPECT_EQ(poly[0], 0);
-            } else if (poly.isZero()) {
-                // We have a zero polynomial but with memory pre-allocated.
-                // In this scenario, alloc.first (the base) is arbitrary.
-                EXPECT_EQ(poly.minExp(), 0);
-                EXPECT_EQ(poly.maxExp(), 0);
-                EXPECT_EQ(poly[0], 0);
-            } else {
-                EXPECT_LE(alloc.first, poly.minExp());
-                EXPECT_LE(poly.minExp(), poly.maxExp());
-                EXPECT_LT(poly.maxExp(),
-                    alloc.first + static_cast<long>(alloc.second));
-                EXPECT_NE(poly[poly.minExp()], 0);
-                EXPECT_NE(poly[poly.maxExp()], 0);
-            }
-        }
-
-        static void validateZero(const L& poly) {
-            EXPECT_TRUE(poly.isZero());
-            EXPECT_EQ(poly.minExp(), 0);
-            EXPECT_EQ(poly.maxExp(), 0);
-            EXPECT_EQ(poly[0], 0);
-
-            auto alloc = poly.allocation();
-            if (alloc.second == 0)
-                EXPECT_EQ(alloc.first, 0);
-            // If alloc.second is positive then we have a zero polynomial
-            // but with memory pre-allocated, which means alloc.first
-            // (the base exponent) is arbitrary.
-        }
-
-        static void validate(const L& poly, long minExp,
-                std::initializer_list<Integer> coeffs) {
-            if (coeffs.size() == 0) { // initializer_list does not have empty()
-                EXPECT_TRUE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), 0);
-                EXPECT_EQ(poly.maxExp(), 0);
-                EXPECT_EQ(poly[0], 0);
-
-                auto alloc = poly.allocation();
-                if (alloc.second == 0)
-                    EXPECT_EQ(alloc.first, 0);
-                // If alloc.second is positive then we have a zero polynomial
-                // but with memory pre-allocated, which means alloc.first
-                // (the base exponent) is arbitrary.
-            } else {
-                EXPECT_FALSE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), minExp);
-                EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
-
-                auto alloc = poly.allocation();
-                EXPECT_LE(alloc.first, minExp);
-                EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
-                    minExp + static_cast<long>(coeffs.size()));
-
-                EXPECT_NE(poly[poly.minExp()], 0);
-                EXPECT_NE(poly[poly.maxExp()], 0);
-
-                auto expect = coeffs.begin();
-                for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
-                    EXPECT_EQ(poly[e], *expect);
-            }
-        }
-
-        template <std::ranges::sized_range Container>
-        static void validate(const L& poly, long minExp,
-                const Container& coeffs) {
-            if (coeffs.empty()) {
-                EXPECT_TRUE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), 0);
-                EXPECT_EQ(poly.maxExp(), 0);
-                EXPECT_EQ(poly[0], 0);
-
-                auto alloc = poly.allocation();
-                if (alloc.second == 0)
-                    EXPECT_EQ(alloc.first, 0);
-                // If alloc.second is positive then we have a zero polynomial
-                // but with memory pre-allocated, which means alloc.first
-                // (the base exponent) is arbitrary.
-            } else {
-                EXPECT_FALSE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), minExp);
-                EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
-
-                auto alloc = poly.allocation();
-                EXPECT_LE(alloc.first, minExp);
-                EXPECT_GE(alloc.first + alloc.second, minExp + coeffs.size());
-
-                EXPECT_NE(poly[poly.minExp()], 0);
-                EXPECT_NE(poly[poly.maxExp()], 0);
-
-                auto expect = coeffs.begin();
-                for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
-                    EXPECT_EQ(poly[e], *expect);
-            }
-        }
-
-        static void validate(const L& poly, const L& expect) {
-            if (expect.isZero()) {
-                EXPECT_TRUE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), 0);
-                EXPECT_EQ(poly.maxExp(), 0);
-                EXPECT_EQ(poly[0], 0);
-
-                auto alloc = poly.allocation();
-                if (alloc.second == 0)
-                    EXPECT_EQ(alloc.first, 0);
-                // If alloc.second is positive then we have a zero polynomial
-                // but with memory pre-allocated, which means alloc.first
-                // (the base exponent) is arbitrary.
-            } else {
-                EXPECT_FALSE(poly.isZero());
-                EXPECT_EQ(poly.minExp(), expect.minExp());
-                EXPECT_EQ(poly.maxExp(), expect.maxExp());
-
-                auto alloc = poly.allocation();
-                EXPECT_LE(alloc.first, poly.minExp());
-                EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
-                    poly.maxExp());
-
-                EXPECT_NE(poly[poly.minExp()], 0);
-                EXPECT_NE(poly[poly.maxExp()], 0);
-
-                for (long e = expect.minExp(); e != expect.maxExp(); ++e)
-                    EXPECT_EQ(poly[e], expect[e]);
-            }
-
-        }
-
-        /**
-         * Returns a polynomial equal to \a poly, but with more space for
-         * coefficients allocated on each end than is necessary.
-         */
-        static L padded(const L& poly) {
-            // Note: this still works if poly is the zero polynomial (in which
-            // case the first call to set() changes _both_ minExp and maxExp).
-            L ans(poly);
-            ans.set(ans.minExp() - 3, 1); // changes minExp
-            ans.set(ans.maxExp() + 2, 1); // changes maxExp
-            ans.set(ans.minExp(), 0);
-            ans.set(ans.maxExp(), 0);
-            return ans;
-        }
 
         // TODO: Replace the verify... routines below.
 
@@ -446,6 +295,155 @@ class LaurentTest : public testing::Test {
         }
 };
 
+static void validate(const L& poly) {
+    auto alloc = poly.allocation();
+    if (alloc.second == 0) {
+        EXPECT_EQ(alloc.first, 0);
+        EXPECT_TRUE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+    } else if (poly.isZero()) {
+        // We have a zero polynomial but with memory pre-allocated.
+        // In this scenario, alloc.first (the base) is arbitrary.
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+    } else {
+        EXPECT_LE(alloc.first, poly.minExp());
+        EXPECT_LE(poly.minExp(), poly.maxExp());
+        EXPECT_LT(poly.maxExp(),
+            alloc.first + static_cast<long>(alloc.second));
+        EXPECT_NE(poly[poly.minExp()], 0);
+        EXPECT_NE(poly[poly.maxExp()], 0);
+    }
+}
+
+static void validateZero(const L& poly) {
+    EXPECT_TRUE(poly.isZero());
+    EXPECT_EQ(poly.minExp(), 0);
+    EXPECT_EQ(poly.maxExp(), 0);
+    EXPECT_EQ(poly[0], 0);
+
+    auto alloc = poly.allocation();
+    if (alloc.second == 0)
+        EXPECT_EQ(alloc.first, 0);
+    // If alloc.second is positive then we have a zero polynomial
+    // but with memory pre-allocated, which means alloc.first
+    // (the base exponent) is arbitrary.
+}
+
+static void validate(const L& poly, long minExp,
+        std::initializer_list<Integer> coeffs) {
+    if (coeffs.size() == 0) { // initializer_list does not have empty()
+        EXPECT_TRUE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+
+        auto alloc = poly.allocation();
+        if (alloc.second == 0)
+            EXPECT_EQ(alloc.first, 0);
+        // If alloc.second is positive then we have a zero polynomial
+        // but with memory pre-allocated, which means alloc.first
+        // (the base exponent) is arbitrary.
+    } else {
+        EXPECT_FALSE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), minExp);
+        EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
+
+        auto alloc = poly.allocation();
+        EXPECT_LE(alloc.first, minExp);
+        EXPECT_GE(alloc.first + static_cast<long>(alloc.second),
+            minExp + static_cast<long>(coeffs.size()));
+
+        EXPECT_NE(poly[poly.minExp()], 0);
+        EXPECT_NE(poly[poly.maxExp()], 0);
+
+        auto expect = coeffs.begin();
+        for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+            EXPECT_EQ(poly[e], *expect);
+    }
+}
+
+template <std::ranges::sized_range Container>
+static void validate(const L& poly, long minExp, const Container& coeffs) {
+    if (coeffs.empty()) {
+        EXPECT_TRUE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+
+        auto alloc = poly.allocation();
+        if (alloc.second == 0)
+            EXPECT_EQ(alloc.first, 0);
+        // If alloc.second is positive then we have a zero polynomial
+        // but with memory pre-allocated, which means alloc.first
+        // (the base exponent) is arbitrary.
+    } else {
+        EXPECT_FALSE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), minExp);
+        EXPECT_EQ(poly.maxExp(), minExp + coeffs.size() - 1);
+
+        auto alloc = poly.allocation();
+        EXPECT_LE(alloc.first, minExp);
+        EXPECT_GE(alloc.first + alloc.second, minExp + coeffs.size());
+
+        EXPECT_NE(poly[poly.minExp()], 0);
+        EXPECT_NE(poly[poly.maxExp()], 0);
+
+        auto expect = coeffs.begin();
+        for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
+            EXPECT_EQ(poly[e], *expect);
+    }
+}
+
+static void validate(const L& poly, const L& expect) {
+    if (expect.isZero()) {
+        EXPECT_TRUE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), 0);
+        EXPECT_EQ(poly.maxExp(), 0);
+        EXPECT_EQ(poly[0], 0);
+
+        auto alloc = poly.allocation();
+        if (alloc.second == 0)
+            EXPECT_EQ(alloc.first, 0);
+        // If alloc.second is positive then we have a zero polynomial
+        // but with memory pre-allocated, which means alloc.first
+        // (the base exponent) is arbitrary.
+    } else {
+        EXPECT_FALSE(poly.isZero());
+        EXPECT_EQ(poly.minExp(), expect.minExp());
+        EXPECT_EQ(poly.maxExp(), expect.maxExp());
+
+        auto alloc = poly.allocation();
+        EXPECT_LE(alloc.first, poly.minExp());
+        EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+            poly.maxExp());
+
+        EXPECT_NE(poly[poly.minExp()], 0);
+        EXPECT_NE(poly[poly.maxExp()], 0);
+
+        for (long e = expect.minExp(); e != expect.maxExp(); ++e)
+            EXPECT_EQ(poly[e], expect[e]);
+    }
+}
+
+/**
+ * Returns a polynomial equal to \a poly, but with more space for
+ * coefficients allocated on each end than is necessary.
+ */
+static L padded(const L& poly) {
+    // Note: this still works if poly is the zero polynomial (in which
+    // case the first call to set() changes _both_ minExp and maxExp).
+    L ans(poly);
+    ans.set(ans.minExp() - 3, 1); // changes minExp
+    ans.set(ans.maxExp() + 2, 1); // changes maxExp
+    ans.set(ans.minExp(), 0);
+    ans.set(ans.maxExp(), 0);
+    return ans;
+}
+
 TEST_F(LaurentTest, construct) {
     validateZero(L());
 
@@ -583,7 +581,37 @@ TEST_F(LaurentTest, init) {
 // TODO: assign (Laurent, Laurent&&, Integer, Integer&&, int)
 // TODO: shift, shifted, shifted &&
 // TODO: scaleUp, scaleDown
-// TODO: -, - &&, negate()
+
+static void verifyNegation(const L& x, const L& result) {
+    if (x.isZero()) {
+        validateZero(result);
+    } else {
+        validate(result);
+        EXPECT_FALSE(result.isZero());
+        EXPECT_EQ(result.minExp(), x.minExp());
+        EXPECT_EQ(result.maxExp(), x.maxExp());
+        for (long i = x.minExp(); i <= x.maxExp(); ++i)
+            EXPECT_EQ(result[i], -x[i]);
+    }
+    validateZero(x + result);
+}
+
+TEST_F(LaurentTest, negate) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            x.negate();
+            verifyNegation(c, x);
+        }
+        verifyNegation(c, -c);
+        {
+            L x(c);
+            verifyNegation(c, -std::move(x));
+        }
+    }
+}
+
 // TODO: invertX
 // TODO: transform (with, without exponents), extract
 // TODO: *= (Integer, int), /= (Integer, int)
@@ -714,15 +742,37 @@ TEST_F(LaurentTest, arithmetic) {
 
 TEST_F(LaurentTest, ringConstants) {
     // Verify that the RingTraits constants looks correct.
-    EXPECT_EQ(regina::RingTraits<Laurent<Integer>>::zero.str(), "0");
-    EXPECT_EQ(regina::RingTraits<Laurent<Integer>>::one.str(), "1");
+    EXPECT_EQ(regina::RingTraits<L>::zero.str(), "0");
+    EXPECT_EQ(regina::RingTraits<L>::one.str(), "1");
 }
 
 TEST_F(LaurentTest, tightEncoding) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        TightEncodingTest<Laurent<Integer>>::verifyTightEncoding(c);
+        TightEncodingTest<L>::verifyTightEncoding(c);
     }
 }
 
-// TODO: member swap, global swap
+TEST_F(LaurentTest, swap) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                L x(c);
+                L y(d);
+                x.swap(y);
+                validate(x, d);
+                validate(y, c);
+            }
+            {
+                L x(c);
+                L y(d);
+                swap(x, y);
+                validate(x, d);
+                validate(y, c);
+            }
+        }
+    }
+}
+
