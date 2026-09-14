@@ -39,6 +39,7 @@
 using regina::CoefficientDomain;
 using regina::Integer;
 using regina::Laurent;
+using regina::polynomialProduct;
 
 using L = Laurent<Integer>;
 
@@ -54,7 +55,9 @@ class LaurentTest : public testing::Test {
         L zero3 { 2, {} };
         L one { 0, { 1 } };
         L two { 0, { 2 } };
+        L minusOne { 0, { -1 } };
         L x2 { 2, { 1 } };
+        L x5Inv { -5, { 1 } };
         L a { -1, { 1, -1, 1 } };
         L b { 0, { 1, -1, 1 } };
         L c { 1, { 1, -1, 1 } };
@@ -78,20 +81,26 @@ class LaurentTest : public testing::Test {
         L bigHighish { 1, { bigInt, bigInt * -2, bigInt * -3, bigInt * 4 } };
         L bigHigh { 4, { -bigInt, bigInt * 2, bigInt * 3, bigInt * -4 } };
 
+        // Some longer polynomials:
+        L long1 { 2, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
+        L long2 { 3, { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } };
+
         // Some polynomials with more space allocated than they need.
         L paddedZero = g - g;
         L paddedConst = (two + d) - d;
         L paddedPower = (x2 + highish) - highish;
         L paddedPoly = ((c + low + high) - low) - high;
 
-        std::array<std::reference_wrapper<const L>, 27> cases {
+        std::array<std::reference_wrapper<const L>, 31> cases {
             std::cref(zero), std::cref(zero2), std::cref(zero3), std::cref(one),
-            std::cref(two), std::cref(x2), std::cref(a), std::cref(b),
-            std::cref(c), std::cref(d), std::cref(e), std::cref(f),
-            std::cref(g), std::cref(low), std::cref(lowish), std::cref(mid),
+            std::cref(two), std::cref(minusOne), std::cref(x2),
+            std::cref(x5Inv), std::cref(a), std::cref(b), std::cref(c),
+            std::cref(d), std::cref(e), std::cref(f), std::cref(g),
+            std::cref(low), std::cref(lowish), std::cref(mid),
             std::cref(highish), std::cref(high), std::cref(bigLow),
             std::cref(bigLowish), std::cref(bigMid), std::cref(bigHighish),
-            std::cref(bigHigh), std::cref(paddedZero), std::cref(paddedConst),
+            std::cref(bigHigh), std::cref(long1), std::cref(long2),
+            std::cref(paddedZero), std::cref(paddedConst),
             std::cref(paddedPower), std::cref(paddedPoly) };
 
         // TODO: Replace the verify... routines below.
@@ -164,72 +173,6 @@ class LaurentTest : public testing::Test {
                 Laurent<T> z(x);
                 verifyEqual(z /= y, minExp, coeffs);
             }
-        }
-
-        template <CoefficientDomain T>
-        void verifyMult(const Laurent<T>& x, const Laurent<T>& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x * y, minExp, coeffs);
-            verifyEqual((x + zero) * y, minExp, coeffs);
-            verifyEqual(x * (y + zero), minExp, coeffs);
-            verifyEqual((x + zero) * (y + zero), minExp, coeffs);
-
-            verifyEqual(y * x, minExp, coeffs);
-            verifyEqual((y + zero) * x, minExp, coeffs);
-            verifyEqual(y * (x + zero), minExp, coeffs);
-            verifyEqual((y + zero) * (x + zero), minExp, coeffs);
-
-            {
-                Laurent<T> z(x);
-                verifyEqual(z *= y, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(x);
-                verifyEqual(z *= (y + zero), minExp, coeffs);
-            }
-            {
-                Laurent<T> z(y);
-                verifyEqual(z *= x, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(y);
-                verifyEqual(z *= (x + zero), minExp, coeffs);
-            }
-        }
-
-        template <CoefficientDomain T>
-        void verifyMultAllAlgorithms(const Laurent<T>& x, const Laurent<T>& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            using PPA = regina::PolynomialProductAlgorithm;
-            using Array = regina::FixedArray<T>;
-
-            Array expect(coeffs);
-            EXPECT_NO_THROW({
-                EXPECT_EQ(regina::polynomialProduct<PPA::Default>(
-                    Array(x.begin(), x.end()), Array(y.begin(), y.end())),
-                    coeffs);
-                EXPECT_EQ(regina::polynomialProduct<PPA::Classic>(
-                    Array(x.begin(), x.end()), Array(y.begin(), y.end())),
-                    coeffs);
-                EXPECT_EQ(regina::polynomialProduct<PPA::Karatsuba>(
-                    Array(x.begin(), x.end()), Array(y.begin(), y.end())),
-                    coeffs);
-                EXPECT_EQ(regina::polynomialProduct<PPA::Default>(
-                    Array(y.begin(), y.end()), Array(x.begin(), x.end())),
-                    coeffs);
-                EXPECT_EQ(regina::polynomialProduct<PPA::Classic>(
-                    Array(y.begin(), y.end()), Array(x.begin(), x.end())),
-                    coeffs);
-                EXPECT_EQ(regina::polynomialProduct<PPA::Karatsuba>(
-                    Array(y.begin(), y.end()), Array(x.begin(), x.end())),
-                    coeffs);
-            });
         }
 };
 
@@ -724,8 +667,165 @@ TEST_F(LaurentTest, addSubtract) {
     }
 }
 
-// TODO: *=; * (all const&, all &&); inc. x op x
-// TODO: addProduct (both const&, both &&); inc. x op x
+TEST_F(LaurentTest, multiply) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+
+            if (c.isZero() || d.isZero()) {
+                validateZero(c * d);
+                validateZero(c * L(d));
+                validateZero(L(c) * d);
+                validateZero(L(c) * L(d));
+                {
+                    L x(c);
+                    validateZero(x *= d);
+                }
+                {
+                    L x(c);
+                    validateZero(x *= L(d));
+                }
+            } else {
+                const L product = c * d;
+                validate(product);
+                EXPECT_FALSE(product.isZero());
+                EXPECT_EQ(product.minExp(), c.minExp() + d.minExp());
+                EXPECT_EQ(product.maxExp(), c.maxExp() + d.maxExp());
+                for (long i = product.minExp(); i <= product.maxExp(); ++i) {
+                    long cExp = std::max(c.minExp(), i - d.maxExp());
+                    long dExp = i - cExp;
+                    Integer coeff;
+                    while (cExp <= c.maxExp() && dExp >= d.minExp())
+                        coeff.addProduct(c[cExp++], d[dExp--]);
+                    EXPECT_EQ(product[i], coeff);
+                }
+
+                validate(c * L(d), product);
+                validate(L(c) * d, product);
+                validate(L(c) * L(d), product);
+                {
+                    L x(c);
+                    validate(x *= d, product);
+                }
+                {
+                    L x(c);
+                    validate(x *= L(d), product);
+                }
+
+                {
+                    L x(c);
+                    x.addProduct(d, d);
+                    validate(x, c + d * d);
+                }
+                {
+                    // Compute the expected result of c -> c + c * d:
+                    const L expect = c * (d + L(1));
+                    {
+                        L x(c);
+                        x.addProduct(x, d);
+                        validate(x, expect);
+                    }
+                    {
+                        L x(c);
+                        x.addProduct(d, x);
+                        validate(x, expect);
+                    }
+                }
+
+                // Test expected arithmetic properties:
+                validate(c * d, d * c);
+
+                // Verify that our different multiplication algorithms
+                // give the same results:
+                using PPA = regina::PolynomialProductAlgorithm;
+                using Array = regina::FixedArray<Integer>;
+
+                auto def = polynomialProduct<PPA::Default>(
+                    Array(c.begin(), c.end()),
+                    Array(d.begin(), d.end()));
+                auto classic = polynomialProduct<PPA::Classic>(
+                    Array(c.begin(), c.end()),
+                    Array(d.begin(), d.end()));
+                EXPECT_EQ(def, classic);
+
+                long cSpan = c.maxExp() - c.minExp();
+                long dSpan = d.maxExp() - d.minExp();
+                if (cSpan >= 1 && dSpan >= 1 &&
+                        (2 * cSpan <= dSpan || 2 * dSpan <= cSpan)) {
+                    EXPECT_THROW({
+                        polynomialProduct<PPA::Karatsuba>(
+                            Array(c.begin(), c.end()),
+                            Array(d.begin(), d.end()));
+                    }, regina::InvalidArgument);
+                } else {
+                    EXPECT_NO_THROW({
+                        auto karatsuba = polynomialProduct<PPA::Karatsuba>(
+                            Array(c.begin(), c.end()),
+                            Array(d.begin(), d.end()));
+                        EXPECT_EQ(def, karatsuba);
+                    });
+                }
+            }
+
+            for (const L& e : cases) {
+                SCOPED_TRACE_REGINA(e);
+                {
+                    L x(c);
+                    x.addProduct(d, e);
+                    validate(x, c + d * e);
+                }
+                {
+                    L x(c);
+                    x.addProduct(L(d), L(e));
+                    validate(x, c + d * e);
+                }
+            }
+        }
+
+        // Test operations upon one's self:
+        const L copy(c);
+        const L square = c * copy;
+        if (c.isZero()) {
+            validateZero(square);
+        } else {
+            validate(square);
+            EXPECT_FALSE(square.isZero());
+            EXPECT_EQ(square.minExp(), 2 * c.minExp());
+            EXPECT_EQ(square.maxExp(), 2 * c.maxExp());
+            for (long i = square.minExp(); i <= square.maxExp(); ++i) {
+                long lhsExp = std::max(c.minExp(), i - c.maxExp());
+                long rhsExp = i - lhsExp;
+                Integer coeff;
+                while (lhsExp <= c.maxExp() && rhsExp >= c.minExp())
+                    coeff.addProduct(c[lhsExp++], c[rhsExp--]);
+                EXPECT_EQ(square[i], coeff);
+            }
+        }
+        validate(c * c, square);
+        {
+            L x(c);
+            validate(x *= x, square);
+        }
+
+        {
+            L x(c);
+            x.addProduct(x, x);
+            validate(x, c + square);
+        }
+
+        // More expected arithmetic properties:
+        validate(c * one, c);
+        validate(one * c, c);
+        validate(c * minusOne, -c);
+        validate(minusOne * c, -c);
+        validate(c * x2, c.shifted(2));
+        validate(x2 * c, c.shifted(2));
+        validate(c * x5Inv, c.shifted(-5));
+        validate(x5Inv * c, c.shifted(-5));
+    }
+}
+
 // TODO: str, utf8
 
 TEST_F(LaurentTest, arithmetic) {
@@ -738,26 +838,11 @@ TEST_F(LaurentTest, arithmetic) {
     verifyMult<Integer>(a, -1, -1, {-1, 1, -1});
     verifyMult<Integer>(a, 2, -1, {2, -2, 2});
 
-    verifyMultAllAlgorithms<Integer>(
-        Laurent<Integer>(2, {1,1,1,1,1,1,1,1,1,1,1,1,1}),
-        Laurent<Integer>(3, {-1,0,0,0,0,0,0,0,0,0,1}),
-        5, {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,1,1,1,1,1,1,1,1,1,1});
-
     verifyDiv<Integer>(zero, 1, 0, {});
     verifyDiv<Integer>(zero, 2, 0, {});
     verifyDiv<Integer>(a, 1, -1, {1, -1, 1});
     verifyDiv<Integer>(a, -1, -1, {-1, 1, -1});
     verifyDiv<Integer>(e, 2, 4, {1, 2, -1, 1});
-
-    verifyMult<Integer>(zero, zero, 0, {});
-    verifyMult<Integer>(zero, a, 0, {});
-    verifyMult<Integer>(a, b, -1, {1, -2, 3, -2, 1});
-
-    {
-        Laurent<Integer> x(-1, {1, 0, 1});
-        verifyEqual<Integer>(x * x, -2, {1, 0, 2, 0, 1});
-        verifyEqual<Integer>(x *= x, -2, {1, 0, 2, 0, 1});
-    }
 }
 
 TEST_F(LaurentTest, ringConstants) {
