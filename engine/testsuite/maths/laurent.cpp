@@ -230,10 +230,16 @@ class LaurentTest : public testing::Test {
 
         }
 
+        /**
+         * Returns a polynomial equal to \a poly, but with more space for
+         * coefficients allocated on each end than is necessary.
+         */
         static L padded(const L& poly) {
+            // Note: this still works if poly is the zero polynomial (in which
+            // case the first call to set() changes _both_ minExp and maxExp).
             L ans(poly);
-            ans.set(ans.minExp() - 3, 1);
-            ans.set(ans.maxExp() + 2, 1);
+            ans.set(ans.minExp() - 3, 1); // changes minExp
+            ans.set(ans.maxExp() + 2, 1); // changes maxExp
             ans.set(ans.minExp(), 0);
             ans.set(ans.maxExp(), 0);
             return ans;
@@ -442,13 +448,27 @@ class LaurentTest : public testing::Test {
 
 TEST_F(LaurentTest, construct) {
     validateZero(L());
+
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        L x(c);
-        validate(x, c);
-        validate(L(std::move(x)), c);
+        {
+            L x(c);
+            validate(x, c);
+            validate(L(std::move(x)), c);
+        }
         validate(L(c.minExp(), c.begin(), c.end()), c);
-        // TODO: Iterator sequences with zeroes, inc. all zeroes
+        {
+            // This test (for iterator ranges with zero padding at either end)
+            // also covers the case where the iterator range contains entirely
+            // zeroes (this is tested when c is the zero polynomial).
+            std::vector<Integer> coeffs(3); // some initial zeroes
+            coeffs.insert(coeffs.end(), c.begin(), c.end());
+            coeffs.resize(coeffs.size() + 2); // some final zeroes
+            EXPECT_FALSE(coeffs.empty());
+            EXPECT_EQ(coeffs.front(), 0);
+            EXPECT_EQ(coeffs.back(), 0);
+            validate(L(c.minExp() - 3, coeffs.begin(), coeffs.end()), c);
+        }
     }
     {
         Integer zero(0), pos(4), neg(-4), big(bigInt);
@@ -497,9 +517,14 @@ TEST_F(LaurentTest, padding) {
 
         auto alloc = x.allocation();
         EXPECT_GT(alloc.second, 0);
-        EXPECT_LT(alloc.first, x.minExp());
-        EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
-            x.maxExp() + 1);
+        if (c.isZero()) {
+            EXPECT_TRUE(x.isZero());
+            // In this case, alloc.first is arbitrary.
+        } else {
+            EXPECT_LT(alloc.first, x.minExp());
+            EXPECT_GT(alloc.first + static_cast<long>(alloc.second),
+                x.maxExp() + 1);
+        }
     }
 }
 
