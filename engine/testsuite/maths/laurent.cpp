@@ -119,68 +119,6 @@ class LaurentTest : public testing::Test {
         }
 
         template <CoefficientDomain T>
-        void verifyPlus(const Laurent<T>& x, const Laurent<T>& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x + y, minExp, coeffs);
-            verifyEqual((x + zero) + y, minExp, coeffs);
-            verifyEqual(x + (y + zero), minExp, coeffs);
-            verifyEqual((x + zero) + (y + zero), minExp, coeffs);
-
-            verifyEqual(y + x, minExp, coeffs);
-            verifyEqual((y + zero) + x, minExp, coeffs);
-            verifyEqual(y + (x + zero), minExp, coeffs);
-            verifyEqual((y + zero) + (x + zero), minExp, coeffs);
-
-            {
-                Laurent<T> z(x);
-                verifyEqual(z += y, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(x);
-                verifyEqual(z += (y + zero), minExp, coeffs);
-            }
-            {
-                Laurent<T> z(y);
-                verifyEqual(z += x, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(y);
-                verifyEqual(z += (x + zero), minExp, coeffs);
-            }
-        }
-
-        template <CoefficientDomain T>
-        void verifyMinus(const Laurent<T>& x, const Laurent<T>& y,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(x);
-            SCOPED_TRACE_REGINA(y);
-
-            verifyEqual(x - y, minExp, coeffs);
-            verifyEqual((x + zero) - y, minExp, coeffs);
-            verifyEqual(x - (y + zero), minExp, coeffs);
-            verifyEqual((x + zero) - (y + zero), minExp, coeffs);
-
-            {
-                Laurent<T> z(x);
-                verifyEqual(z -= y, minExp, coeffs);
-            }
-            {
-                Laurent<T> z(x);
-                verifyEqual(z -= (y + zero), minExp, coeffs);
-            }
-
-            verifyPlus(x, -y, minExp, coeffs);
-            {
-                Laurent<T> z(y);
-                z.negate();
-                verifyPlus(x, z, minExp, coeffs);
-            }
-        }
-
-        template <CoefficientDomain T>
         void verifyMult(const Laurent<T>& x, const T& y,
                 long minExp, std::initializer_list<T> coeffs) {
             SCOPED_TRACE_REGINA(x);
@@ -324,6 +262,7 @@ static void validateZero(const L& poly) {
     EXPECT_EQ(poly.minExp(), 0);
     EXPECT_EQ(poly.maxExp(), 0);
     EXPECT_EQ(poly[0], 0);
+    EXPECT_EQ(poly, 0);
 
     auto alloc = poly.allocation();
     if (alloc.second == 0)
@@ -399,6 +338,7 @@ static void validate(const L& poly, long minExp, const Container& coeffs) {
 }
 
 static void validate(const L& poly, const L& expect) {
+    EXPECT_EQ(poly, expect);
     if (expect.isZero()) {
         EXPECT_TRUE(poly.isZero());
         EXPECT_EQ(poly.minExp(), 0);
@@ -446,6 +386,10 @@ static L padded(const L& poly) {
 
 TEST_F(LaurentTest, construct) {
     validateZero(L());
+    validateZero(zero);
+    validateZero(zero2);
+    validateZero(zero3);
+    validateZero(paddedZero);
 
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
@@ -575,6 +519,47 @@ TEST_F(LaurentTest, init) {
     }
 }
 
+TEST_F(LaurentTest, set) {
+    // TODO: This test is to be replaced
+    Laurent<Integer> x { -1, { 1, 2, 1 } };
+
+    verifyEqual<Integer>(x, -1, {1, 2, 1});
+    x.set(0, 3);
+    verifyEqual<Integer>(x, -1, {1, 3, 1});
+    x.set(1, 0);
+    verifyEqual<Integer>(x, -1, {1, 3});
+    x.set(0, 0);
+    verifyEqual<Integer>(x, -1, {1});
+    x.set(1, 0);
+    verifyEqual<Integer>(x, -1, {1});
+    x.set(-1, 0);
+    verifyEqual<Integer>(x, 0, {});
+    x.set(-1, 0);
+    verifyEqual<Integer>(x, 0, {});
+    x.set(-1, 3);
+    verifyEqual<Integer>(x, -1, {3});
+    x.set(-1, 0);
+    verifyEqual<Integer>(x, 0, {});
+    x.set(2, 1);
+    verifyEqual<Integer>(x, 2, {1});
+
+    Laurent<Integer> y = { -1, { 1, 2, 1 } };
+    y.set(-1, 0);
+    verifyEqual<Integer>(y, 0, {2, 1});
+    y.set(0, 0);
+    verifyEqual<Integer>(y, 1, {1});
+    y.set(-2, 3);
+    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
+    y.set(-2, 0);
+    verifyEqual<Integer>(y, 1, {1});
+    y.set(-2, 3);
+    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
+    y.set(-2, 0);
+    verifyEqual<Integer>(y, 1, {1});
+    y.set(1, 0);
+    verifyEqual<Integer>(y, 0, {});
+}
+
 // TODO: [], set()
 // TODO: iterators
 // TODO: == (Laurent, Integer, int), <=>
@@ -617,89 +602,134 @@ TEST_F(LaurentTest, negate) {
 // TODO: *= (Integer, int), /= (Integer, int)
 // TODO: poly (const, &&) * scalar (Integer, int), both directions
 // TODO: poly (const, &&) / scalar (Integer, int)
-// TODO: +=, -= (const&, &&); +, - (all four const&/&& variants); inc. x op x
+
+TEST_F(LaurentTest, addSubtract) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+
+            const L sum = c + d;
+            if (sum.isZero()) {
+                validateZero(sum);
+                validate(-c, d);
+            } else if (c.isZero()) {
+                validate(sum, d);
+            } else if (d.isZero()) {
+                validate(sum, c);
+            } else {
+                validate(sum);
+                if (c.minExp() == d.minExp())
+                    EXPECT_GE(sum.minExp(), c.minExp());
+                else
+                    EXPECT_EQ(sum.minExp(), std::min(c.minExp(), d.minExp()));
+                if (c.maxExp() == d.maxExp())
+                    EXPECT_LE(sum.maxExp(), c.maxExp());
+                else
+                    EXPECT_EQ(sum.maxExp(), std::max(c.maxExp(), d.maxExp()));
+                for (long i = std::min(c.minExp(), d.minExp());
+                        i <= std::max(c.maxExp(), d.maxExp()); ++i)
+                    EXPECT_EQ(sum[i], c[i] + d[i]);
+            }
+            validate(c + L(d), sum);
+            validate(L(c) + d, sum);
+            validate(L(c) + L(d), sum);
+            {
+                L x(c);
+                validate(x += d, sum);
+            }
+            {
+                L x(c);
+                validate(x += L(d), sum);
+            }
+
+            const L diff = c - d;
+            if (diff.isZero()) {
+                validateZero(diff);
+                validate(c, d);
+            } else if (d.isZero()) {
+                validate(diff, c);
+            } else if (c.isZero()) {
+                validate(diff);
+                EXPECT_EQ(diff.minExp(), d.minExp());
+                EXPECT_EQ(diff.maxExp(), d.maxExp());
+                for (long i = d.minExp(); i <= d.maxExp(); ++i)
+                    EXPECT_EQ(diff[i], - d[i]);
+            } else {
+                validate(diff);
+                if (c.minExp() == d.minExp())
+                    EXPECT_GE(diff.minExp(), c.minExp());
+                else
+                    EXPECT_EQ(diff.minExp(), std::min(c.minExp(), d.minExp()));
+                if (c.maxExp() == d.maxExp())
+                    EXPECT_LE(diff.maxExp(), c.maxExp());
+                else
+                    EXPECT_EQ(diff.maxExp(), std::max(c.maxExp(), d.maxExp()));
+                for (long i = std::min(c.minExp(), d.minExp());
+                        i <= std::max(c.maxExp(), d.maxExp()); ++i)
+                    EXPECT_EQ(diff[i], c[i] - d[i]);
+            }
+            validate(c - L(d), diff);
+            validate(L(c) - d, diff);
+            validate(L(c) - L(d), diff);
+            {
+                L x(c);
+                validate(x -= d, diff);
+            }
+            {
+                L x(c);
+                validate(x -= L(d), diff);
+            }
+
+            // Test expected arithmetic properties:
+            validate((c + d) - d, c);
+            validate((c + d) - c, d);
+            validate(c - d, -(d - c));
+            validate((c - d) + d, c);
+            validate(-((c - d) - c), d);
+            validate(-(c - d) + c, d);
+            validate(c + (-d), c - d);
+            validate(c - (-d), c + d);
+        }
+
+        // Test operations upon one's self:
+        const L dbl = c * 2;
+        if (c.isZero()) {
+            validateZero(dbl);
+        } else {
+            validate(dbl);
+            EXPECT_FALSE(dbl.isZero());
+            EXPECT_EQ(dbl.minExp(), c.minExp());
+            EXPECT_EQ(dbl.maxExp(), c.maxExp());
+            for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                EXPECT_EQ(dbl[i], c[i] * 2);
+        }
+        validate(c + c, dbl);
+        {
+            L x(c);
+            validate(x += x, dbl);
+        }
+        validateZero(c - c);
+        {
+            L x(c);
+            validateZero(x -= x);
+        }
+
+        // More expected arithmetic properties:
+        validate(c + zero, c);
+        validate(zero + c, c);
+        validate(c - zero, c);
+        validate(zero - c, -c);
+        validateZero(c + -c);
+    }
+}
+
 // TODO: *=; * (all const&, all &&); inc. x op x
 // TODO: addProduct (both const&, both &&); inc. x op x
 // TODO: str, utf8
 
-TEST_F(LaurentTest, set) {
-    // TODO: This test is to be replaced
-    Laurent<Integer> x { -1, { 1, 2, 1 } };
-
-    verifyEqual<Integer>(x, -1, {1, 2, 1});
-    x.set(0, 3);
-    verifyEqual<Integer>(x, -1, {1, 3, 1});
-    x.set(1, 0);
-    verifyEqual<Integer>(x, -1, {1, 3});
-    x.set(0, 0);
-    verifyEqual<Integer>(x, -1, {1});
-    x.set(1, 0);
-    verifyEqual<Integer>(x, -1, {1});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(-1, 3);
-    verifyEqual<Integer>(x, -1, {3});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(2, 1);
-    verifyEqual<Integer>(x, 2, {1});
-
-    Laurent<Integer> y = { -1, { 1, 2, 1 } };
-    y.set(-1, 0);
-    verifyEqual<Integer>(y, 0, {2, 1});
-    y.set(0, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(-2, 3);
-    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
-    y.set(-2, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(-2, 3);
-    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
-    y.set(-2, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(1, 0);
-    verifyEqual<Integer>(y, 0, {});
-}
-
 TEST_F(LaurentTest, arithmetic) {
     // TODO: This test is to be replaced
-    verifyEqual<Integer>(zero, 0, {});
-    verifyEqual<Integer>(zero2, 0, {});
-    verifyEqual<Integer>(zero3, 0, {});
-
-    verifyEqual<Integer>(-zero, 0, {});
-    verifyEqual<Integer>(-a, -1, {-1, 1, -1});
-    verifyEqual<Integer>(-c, 1, {-1, 1, -1});
-
-    verifyPlus<Integer>(zero, zero, 0, {});
-    verifyPlus<Integer>(one, two, 0, {3});
-    verifyPlus<Integer>(a, zero, -1, {1, -1, 1});
-    verifyPlus<Integer>(a, one, -1, {1, 0, 1});
-    verifyPlus<Integer>(b, one, 0, {2, -1, 1});
-    verifyPlus<Integer>(b, x2, 0, {1, -1, 2});
-    verifyPlus<Integer>(a, b, -1, {1, 0, 0, 1});
-    verifyPlus<Integer>(a, a + a, -1, {3, -3, 3});
-    verifyPlus<Integer>(a, e, -1, {1, -1, 1, 0, 0, 2, 4, -2, 2});
-    verifyPlus<Integer>(b, d, -2, {-1, 1, 0, 0, 1});
-    verifyPlus<Integer>(c, d, -2, {-1, 1, -1, 2, -1, 1});
-
-    verifyMinus<Integer>(zero, zero, 0, {});
-    verifyMinus<Integer>(one, two, 0, {-1});
-    verifyMinus<Integer>(a, zero, -1, {1, -1, 1});
-    verifyMinus<Integer>(zero, a, -1, {-1, 1, -1});
-    verifyMinus<Integer>(b, one, 1, {-1, 1});
-    verifyMinus<Integer>(b, x2, 0, {1, -1});
-    verifyMinus<Integer>(a, b, -1, {1, -2, 2, -1});
-    verifyMinus<Integer>(b, a, -1, {-1, 2, -2, 1});
-    verifyMinus<Integer>(a, a + a, -1, {-1, 1, -1});
-    verifyMinus<Integer>(a, e, -1, {1, -1, 1, 0, 0, -2, -4, 2, -2});
-    verifyMinus<Integer>(e, a, -1, {-1, 1, -1, 0, 0, 2, 4, -2, 2});
-    verifyMinus<Integer>(b, d, -2, {1, -1, 2, -2, 1});
-    verifyMinus<Integer>(d, b, -2, {-1, 1, -2, 2, -1});
-    verifyMinus<Integer>(a, a, 0, {});
-
     verifyMult<Integer>(zero, 0, 0, {});
     verifyMult<Integer>(zero, 1, 0, {});
     verifyMult<Integer>(zero, 2, 0, {});
@@ -723,16 +753,6 @@ TEST_F(LaurentTest, arithmetic) {
     verifyMult<Integer>(zero, a, 0, {});
     verifyMult<Integer>(a, b, -1, {1, -2, 3, -2, 1});
 
-    {
-        Laurent<Integer> x(a);
-        verifyEqual<Integer>(x + x, -1, {2, -2, 2});
-        verifyEqual<Integer>(x += x, -1, {2, -2, 2});
-    }
-    {
-        Laurent<Integer> x(a);
-        verifyEqual<Integer>(x - x, 0, {});
-        verifyEqual<Integer>(x -= x, 0, {});
-    }
     {
         Laurent<Integer> x(-1, {1, 0, 1});
         verifyEqual<Integer>(x * x, -2, {1, 0, 2, 0, 1});
