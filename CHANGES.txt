@@ -331,6 +331,11 @@ Version 8.0  [ TODO ]
               extracting coefficients in bulk.
             - New overloads for scalar multiplication and division that take
               native C++ integers.
+            - Functions scaleUp() and scaleDown() now throw an InvalidArgument
+              exception if the scaling factor is zero.  Note that this changes
+              the exception type for scaleDown() (which will still throw a
+              FailedPrecondition if the exponents with non-zero coefficients
+              are not all multiples of the scaling factor).
             - Many optimisations to this class, including a better growth
               policy and rvalue variants of many operations.  This comes with
               new functions allocation() and reserveRange() that query and

@@ -1130,16 +1130,21 @@ class Laurent :
         /**
          * Multiplies all exponents in this polynomial by \a k for some
          * integer \a k.  This is equivalent to replacing the variable
-         * \a x of the polynomial with <i>x</i><sup><i>k</i></sup>.
+         * \a x of the polynomial with `x^k`.
          *
          * Both positive and negative scaling factors \a k are allowed.
          *
          * \pre \a k is non-zero.
          *
+         * \exception InvalidArgument The given scaling factor \a k is zero.
+         *
          * \param k the scaling factor to multiply exponents by.
          */
         void scaleUp(long k) {
-            if (k == 1 || isZero()) {
+            if (k == 0) {
+                throw InvalidArgument("scaleUp() requires a non-zero "
+                    "scaling factor");
+            } else if (k == 1 || isZero()) {
                 return;
             } else if (k == -1) {
                 invertX();
@@ -1222,15 +1227,18 @@ class Laurent :
          * \pre All exponents in this polynomial with non-zero coefficients
          * are multiples of \a k.
          *
-         * \exception FailedPrecondition Either \a k is zero, or some exponent
-         * with a non-zero coefficient is not a multiple of \a k.  Be aware
-         * that this polynomial might change before this exception is thrown.
+         * \exception InvalidArgument The given scaling factor \a k is zero.
+         *
+         * \exception FailedPrecondition The scaling factor \a k is non-zero,
+         * but some exponent with a non-zero coefficient is not a multiple of
+         * \a k.  Be aware that this polynomial might be changed before this
+         * exception is thrown.
          *
          * \param k the scaling factor to divide exponents by.
          */
         void scaleDown(long k) {
             if (k == 0) {
-                throw FailedPrecondition("scaleDown() requires a non-zero "
+                throw InvalidArgument("scaleDown() requires a non-zero "
                     "scaling factor");
             } else if (k == 1 || isZero()) {
                 return;

@@ -605,7 +605,112 @@ TEST_F(LaurentTest, shift) {
     }
 }
 
-// TODO: scaleUp, scaleDown
+TEST_F(LaurentTest, scale) {
+    static constexpr int factors[6] = { 1, -1, 2, -2, 5, -5 };
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            EXPECT_THROW({ x.scaleUp(0); }, regina::InvalidArgument);
+        }
+        {
+            L x(c);
+            EXPECT_THROW({ x.scaleDown(0); }, regina::InvalidArgument);
+        }
+        for (int factor : factors) {
+            SCOPED_TRACE_NUMERIC(factor);
+            if (c.isZero()) {
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleUp(factor); });
+                    validateZero(x);
+                }
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleDown(factor); });
+                    validateZero(x);
+                }
+            } else {
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleUp(factor); });
+                    validate(x);
+                    EXPECT_FALSE(x.isZero());
+                    if (factor >= 0) {
+                        EXPECT_EQ(x.minExp(), c.minExp() * factor);
+                        EXPECT_EQ(x.maxExp(), c.maxExp() * factor);
+                    } else {
+                        EXPECT_EQ(x.maxExp(), c.minExp() * factor);
+                        EXPECT_EQ(x.minExp(), c.maxExp() * factor);
+                    }
+                    for (long i = x.minExp(); i <= x.maxExp(); ++i)
+                        if (i % factor == 0)
+                            EXPECT_EQ(x[i], c[i / factor]);
+                        else
+                            EXPECT_EQ(x[i], 0);
+                }
+                bool canScaleDown = true;
+                for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                    if (c[i] != 0 && i % factor != 0) {
+                        canScaleDown = false;
+                        break;
+                    }
+                if (canScaleDown) {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleDown(factor); });
+                    validate(x);
+                    EXPECT_FALSE(x.isZero());
+                    if (factor >= 0) {
+                        EXPECT_EQ(x.minExp() * factor, c.minExp());
+                        EXPECT_EQ(x.maxExp() * factor, c.maxExp());
+                    } else {
+                        EXPECT_EQ(x.maxExp() * factor, c.minExp());
+                        EXPECT_EQ(x.minExp() * factor, c.maxExp());
+                    }
+                    for (long i = x.minExp(); i <= x.maxExp(); ++i)
+                        EXPECT_EQ(x[i], c[i * factor]);
+                } else {
+                    L x(c);
+                    EXPECT_THROW({ x.scaleDown(factor); },
+                        regina::FailedPrecondition);
+                }
+
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleUp(factor); });
+                    EXPECT_NO_THROW({ x.scaleDown(factor); });
+                    validate(x, c);
+                }
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleUp(1); });
+                    validate(x, c);
+                }
+                {
+                    L x(c);
+                    EXPECT_NO_THROW({ x.scaleDown(1); });
+                    validate(x, c);
+                }
+                {
+                    L x(c), y(c);
+                    EXPECT_NO_THROW({ x.scaleUp(-1); });
+                    y.invertX();
+                    validate(x);
+                    validate(y);
+                    EXPECT_EQ(x, y);
+                }
+                {
+                    L x(c), y(c);
+                    EXPECT_NO_THROW({ x.scaleDown(-1); });
+                    y.invertX();
+                    validate(x);
+                    validate(y);
+                    EXPECT_EQ(x, y);
+                }
+            }
+        }
+    }
+}
 
 TEST_F(LaurentTest, negate) {
     for (const L& c : cases) {
