@@ -43,7 +43,6 @@ using regina::polynomialProduct;
 
 using L = Laurent<Integer>;
 
-// TODO: Test transform() with and without exponents, and extract()
 // TODO: Test str() and utf8()
 
 class LaurentTest : public testing::Test {
@@ -109,24 +108,24 @@ class LaurentTest : public testing::Test {
             std::cref(paddedPower), std::cref(paddedPoly) };
 
         // Note which of our cases represent the same mathematical polynomial.
-        // A return value of 0 here means the polynomial is unique.
-        int batch(const L& poly) {
+        enum class Batch { Unique, Zero, Two, X2, Short };
+        Batch batch(const L& poly) {
             if (std::addressof(poly) == std::addressof(zero) ||
                     std::addressof(poly) == std::addressof(zero2) ||
                     std::addressof(poly) == std::addressof(zero3) ||
                     std::addressof(poly) == std::addressof(paddedZero))
-                return 1;
+                return Batch::Zero;
             else if (std::addressof(poly) == std::addressof(two) ||
                     std::addressof(poly) == std::addressof(paddedConst))
-                return 2;
+                return Batch::Two;
             else if (std::addressof(poly) == std::addressof(x2) ||
                     std::addressof(poly) == std::addressof(paddedPower))
-                return 3;
+                return Batch::X2;
             else if (std::addressof(poly) == std::addressof(c) ||
                     std::addressof(poly) == std::addressof(paddedPoly))
-                return 4;
+                return Batch::Short;
             else
-                return 0;
+                return Batch::Unique;
         }
 
         // TODO: Replace the verify... routines below.
@@ -191,6 +190,10 @@ static void validateZero(const L& poly) {
     // If alloc.second is positive then we have a zero polynomial
     // but with memory pre-allocated, which means alloc.first
     // (the base exponent) is arbitrary.
+
+    const L zero;
+    EXPECT_EQ(poly, zero);
+    EXPECT_FALSE(poly != zero);
 }
 
 static void validate(const L& poly, long minExp,
@@ -224,6 +227,10 @@ static void validate(const L& poly, long minExp,
         for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
             EXPECT_EQ(poly[e], *expect);
     }
+
+    const L cmp(minExp, coeffs);
+    EXPECT_EQ(poly, cmp);
+    EXPECT_FALSE(poly != cmp);
 }
 
 template <std::ranges::sized_range Container>
@@ -256,10 +263,13 @@ static void validate(const L& poly, long minExp, const Container& coeffs) {
         for (long e = minExp; expect != coeffs.end(); ++e, ++expect)
             EXPECT_EQ(poly[e], *expect);
     }
+
+    const L cmp(minExp, coeffs.begin(), coeffs.end());
+    EXPECT_EQ(poly, cmp);
+    EXPECT_FALSE(poly != cmp);
 }
 
 static void validate(const L& poly, const L& expect) {
-    EXPECT_EQ(poly, expect);
     if (expect.isZero()) {
         EXPECT_TRUE(poly.isZero());
         EXPECT_EQ(poly.minExp(), 0);
@@ -288,6 +298,9 @@ static void validate(const L& poly, const L& expect) {
         for (long e = expect.minExp(); e != expect.maxExp(); ++e)
             EXPECT_EQ(poly[e], expect[e]);
     }
+
+    EXPECT_EQ(poly, expect);
+    EXPECT_FALSE(poly != expect);
 }
 
 /**
@@ -667,7 +680,7 @@ TEST_F(LaurentTest, iterators) {
 TEST_F(LaurentTest, comparison) {
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        int cBatch = batch(c);
+        Batch cBatch = batch(c);
 
         EXPECT_TRUE(c == c);
         EXPECT_TRUE(c == L(c));
@@ -675,17 +688,16 @@ TEST_F(LaurentTest, comparison) {
         EXPECT_FALSE(c != L(c));
         EXPECT_EQ(c <=> c, std::strong_ordering::equal);
         EXPECT_EQ(c <=> L(c), std::strong_ordering::equal);
-        // TODO: Put comparisons into validate()
 
         for (const L& d : cases) {
             if (std::addressof(c) == std::addressof(d))
                 continue;
 
             SCOPED_TRACE_REGINA(d);
-            int dBatch = batch(d);
+            Batch dBatch = batch(d);
             auto c_vs_d = c <=> d;
 
-            if (cBatch && cBatch == dBatch) {
+            if (cBatch != Batch::Unique && cBatch == dBatch) {
                 EXPECT_TRUE(c == d);
                 EXPECT_FALSE(c != d);
                 EXPECT_EQ(c_vs_d, std::strong_ordering::equal);
@@ -707,8 +719,22 @@ TEST_F(LaurentTest, comparison) {
                     EXPECT_EQ(c <=> e, c_vs_d);
             }
         }
+
+        EXPECT_EQ(c == 0, cBatch == Batch::Zero);
+        EXPECT_EQ(c != 0, cBatch != Batch::Zero);
+        EXPECT_EQ(c == Integer(), cBatch == Batch::Zero);
+        EXPECT_EQ(c != Integer(), cBatch != Batch::Zero);
+        EXPECT_EQ(c == 2, cBatch == Batch::Two);
+        EXPECT_EQ(c != 2, cBatch != Batch::Two);
+        EXPECT_EQ(c == Integer(2), cBatch == Batch::Two);
+        EXPECT_EQ(c != Integer(2), cBatch != Batch::Two);
+        EXPECT_FALSE(c == 3);
+        EXPECT_TRUE(c != 3);
+        EXPECT_FALSE(c == Integer(3));
+        EXPECT_TRUE(c != Integer(3));
+        EXPECT_FALSE(c == bigInt);
+        EXPECT_TRUE(c != bigInt);
     }
-    // TODO: == (Integer, int), <=>
 }
 
 TEST_F(LaurentTest, shift) {
@@ -911,6 +937,70 @@ TEST_F(LaurentTest, invertX) {
                 --xExp;
             }
         }
+    }
+}
+
+TEST_F(LaurentTest, transform) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        {
+            // A transformation that preserves minExp/maxExp:
+            L x(c);
+            x.transform([&c](Integer& i) {
+                EXPECT_FALSE(c.isZero());
+                i *= 2;
+            });
+            validate(x, c * 2);
+        }
+        {
+            // A transformation that could change minExp/maxExp or even make
+            // the entire polynomial zero:
+            L x(c);
+            x.transform([&c](Integer& i) {
+                EXPECT_FALSE(c.isZero());
+                i /= 2;
+            });
+            validate(x, c / 2);
+        }
+        {
+            // A transformation that uses the exponent:
+            L x(c), y;
+            x.transform([&c, &y](Integer& i, long exp) {
+                EXPECT_FALSE(c.isZero());
+                EXPECT_GE(exp, c.minExp());
+                EXPECT_LE(exp, c.maxExp());
+                if (exp == c.minExp() || exp == c.maxExp())
+                    EXPECT_NE(i, 0);
+
+                y.set(exp, i);
+                i /= 2;
+            });
+            validate(x, c / 2);
+            validate(y, c);
+        }
+    }
+}
+
+TEST_F(LaurentTest, extract) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        L x(c);
+        std::vector<Integer> coeffs;
+        if (! c.isZero())
+            coeffs.resize(c.maxExp() - c.minExp() + 1);
+
+        std::move(x).extract([&c, &coeffs](Integer&& i, long exp) {
+            EXPECT_FALSE(c.isZero());
+            EXPECT_NE(i, 0);
+            EXPECT_GE(exp, c.minExp());
+            EXPECT_LE(exp, c.maxExp());
+            coeffs[exp - c.minExp()] = std::move(i);
+        });
+
+        EXPECT_TRUE(std::equal(c.begin(), c.end(),
+            coeffs.begin(), coeffs.end()));
     }
 }
 

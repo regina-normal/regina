@@ -591,6 +591,7 @@ class Laurent :
          * \param value the new value of this coefficient.
          */
         void set(long exp, const T& value) {
+            // TODO: We should probably offer set(long, T&&) also.
             if (value == 0) {
                 if (! isZero()) {
                     if (exp == maxExp_) {
