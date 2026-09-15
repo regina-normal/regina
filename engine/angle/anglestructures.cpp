@@ -37,6 +37,7 @@
 #include "triangulation/dim3.h"
 #include "utilities/fixedarray.h"
 #include "utilities/xmlutils.h"
+#include "snappea/snappeatriangulation.h"
 #include <thread>
 
 namespace regina {
@@ -73,6 +74,49 @@ MatrixInt makeAngleEquations(const Triangulation<3>& tri) {
         eqns.entry(row, 3 * index + 2) = 1;
         eqns.entry(row, cols - 1) = -1;
         ++row;
+    }
+
+    return eqns;
+}
+
+MatrixInt makeBoundaryNullAngleEquations(const SnapPeaTriangulation& tri) {
+    size_t n = tri.size();
+    size_t cols = 3 * n + 1;
+
+    // The gluing equations consist of one equation per edge, plus two
+    // equations per cusp. Our gluing equations include all of these, plus
+    // one further equation per tetrahedron.
+    MatrixInt gluEqns = tri.gluingEquations();
+    size_t rows = gluEqns.rows() + n;
+    MatrixInt eqns(rows, cols);
+
+    // Transfer coefficients for the edge and cusp equations from the gluing
+    // equations matrix.
+    size_t row;
+    for ( row = 0; row < gluEqns.rows(); ++row ) {
+        // Left-hand side.
+        for ( size_t col = 0; col < cols - 1; ++col ) {
+            eqns.entry(row, col) = gluEqns.entry(row, col);
+        }
+
+        // Right-hand side.
+        if ( row < tri.countEdges() ) {
+            // Edge equation: angles sum to 2*pi
+            eqns.entry(row, cols - 1) = -2;
+        } else {
+            // Cusp equation: this is where we enforce vanishing peripheral
+            // rotational holonomy.
+            eqns.entry(row, cols - 1) = 0;
+        }
+    }
+
+    // Tetrahedron equations: angles sum to pi.
+    for ( size_t index = 0; index < n; ++index ) {
+        eqns.entry(row, 3 * index) = 1;
+        eqns.entry(row, 3 * index + 1) = 1;
+        eqns.entry(row, 3 * index + 2) = 1;
+        eqns.entry(row, cols - 1) = -1;
+        ++row;  // This carries over from the previous loop.
     }
 
     return eqns;

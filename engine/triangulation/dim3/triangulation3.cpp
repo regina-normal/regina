@@ -98,6 +98,7 @@ void Triangulation<3>::clearAllProperties() {
 
     strictAngleStructure_ = false; // computation not attempted
     generalAngleStructure_ = false; // computation not attempted
+    bdryNullAngleStructure_ = false; // computation not attempted
 }
 
 void Triangulation<3>::swap(Triangulation<3>& other) {
@@ -139,6 +140,7 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
 
     strictAngleStructure_.swap(other.strictAngleStructure_);
     generalAngleStructure_.swap(other.generalAngleStructure_);
+    bdryNullAngleStructure_.swap(other.bdryNullAngleStructure_);
     prop_.niceTreeDecomposition_.swap(other.prop_.niceTreeDecomposition_);
 
     // Properties stored using std::... containers:
@@ -215,6 +217,11 @@ Triangulation<3>::Triangulation(const Triangulation<3>& src, bool cloneProps,
             std::get<AngleStructure>(src.generalAngleStructure_), *this);
     else
         generalAngleStructure_ = std::get<bool>(src.generalAngleStructure_);
+    if (std::holds_alternative<AngleStructure>(src.bdryNullAngleStructure_))
+        bdryNullAngleStructure_ = AngleStructure(
+            std::get<AngleStructure>(src.bdryNullAngleStructure_), *this);
+    else
+        bdryNullAngleStructure_ = std::get<bool>(src.bdryNullAngleStructure_);
 
     // We do not need to copy skeletal properties (e.g., ideal_ or standard_),
     // since this is computed on demand with the rest of the skeleton.

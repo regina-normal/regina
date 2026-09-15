@@ -335,6 +335,42 @@ void NormalSurface::calculateEulerChar() const {
     eulerChar_ = ans;
 }
 
+void NormalSurface::calculateSpunEulerChar() const {
+    if (static_cast<bool>(octPosition())) {
+        // At present, we require that there are no octagons.
+        throw FailedPrecondition("Cannot compute Euler characteristic for a "
+                "non-compact surface that has octagons");
+    }
+
+    // The remaining preconditions (triangulation is oriented and all vertex
+    // links are tori) should guarantee that a boundary-null angle structure
+    // exists. At present, these preconditions are all automatically checked
+    // by boundaryNullAngleStructure(), so we simply pass on any
+    // FailedPrecondition exceptions that this throws. Likewise, we pass on
+    // any UnsolvedCase exceptions that it throws.
+    const AngleStructure& angles(
+            triangulation().boundaryNullAngleStructure() );
+
+    // Using the combinatorial Gauss-Bonnet formula, we can compute the Euler
+    // characteristic by, in effect, taking the dot product of the angles
+    // vector with the quad coordinate vector.
+    Rational ans;   // Initialised to zero
+    for (size_t tetIndex = 0; tetIndex < triangulation().size(); ++tetIndex) {
+        for ( int quadType = 0; quadType < 3; ++quadType ) {
+            LargeInteger quadCount = quads( tetIndex, quadType );
+            if ( quadCount != LargeInteger::zero ) {
+                Rational quadArea = angles.angle( tetIndex, quadType );
+                ans -= quadArea * Rational(quadCount);
+            }
+        }
+    }
+
+    // Euler characteristic is always an integer, and Rationals are always
+    // stored in lowest terms with non-negative denominator.
+    assert( ans.denominator() == Integer::one );
+    eulerChar_ = LargeInteger( ans.numerator() );
+}
+
 void NormalSurface::calculateRealBoundary() const {
     if (triangulation_->isClosed()) {
         realBoundary_ = false;
@@ -380,30 +416,50 @@ void NormalSurface::calculateRealBoundary() const {
 
 Matrix<Integer> NormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
-    const SnapPeaTriangulation* snapPea = triangulation().isSnapPea();
-    if (! snapPea)
+    // This enforces the extra precondition which is not required by the
+    // internal implementation.
+    if (! triangulation().isSnapPea())
         throw FailedPrecondition("NormalSurface::boundaryIntersections() "
             "requires the triangulation to be a SnapPeaTriangulation");
+    return boundaryIntersectionsInternal();
+}
 
+Matrix<Integer> NormalSurface::boundaryIntersectionsInternal() const {
     // Check the preconditions.
-    if (! snapPea->isOriented())
-        throw FailedPrecondition("NormalSurface::boundaryIntersections() "
-            "requires the triangulation to be oriented");
+    if (! triangulation().isOriented())
+        throw FailedPrecondition("Triangulation must be oriented to "
+                "compute boundary of spun-normal surface");
     if (enc_.storesOctagons())
-        throw FailedPrecondition("NormalSurface::boundaryIntersections() "
-            "cannot work with almost normal surface encodings");
-    for (Vertex<3>* v : snapPea->vertices())
+        throw FailedPrecondition("Cannot work with almost normal surface "
+                "encodings when computing boundary of spun-normal surface");
+    for (Vertex<3>* v : triangulation().vertices())
         if (! (v->isIdeal() && v->isLinkOrientable() &&
                 v->linkEulerChar() == 0))
-            throw FailedPrecondition("NormalSurface::boundaryIntersections() "
-                "requires all vertex links to be tori");
+            throw FailedPrecondition("All vertex links must be tori to "
+                    "compute boundary of spun-normal surface");
+
+    // Get the SnapPeaTriangulation that we will use.
+    const SnapPeaTriangulation& snapPea = triangulation().isSnapPea() ?
+        *triangulation().isSnapPea() :
+        SnapPeaTriangulation(triangulation());
+    if (snapPea.isNull()) {
+        throw regina::SnapPeaIsNull( "Failed to construct data needed to "
+                "compute boundary of spun-normal surface" );
+    }
+
+    // Use a static_cast to ensure we are using the Triangulation<3>
+    // equality test.
+    if (static_cast<const Triangulation<3>&>(snapPea) != triangulation()) {
+        throw regina::UnsolvedCase( "SnapPea retriangulated when attempting "
+                "to compute boundary of spun-normal surface" );
+    }
 
     // Note: slopeEquations() throws SnapPeaIsNull if we have a
     // null SnapPea triangulation.
-    Matrix<Integer> equations = snapPea->slopeEquations();
+    Matrix<Integer> equations = snapPea.slopeEquations();
 
     size_t cusps = equations.rows() / 2;
-    size_t numTet = snapPea->size();
+    size_t numTet = snapPea.size();
     Matrix<Integer> slopes(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
         Integer meridian; // constructor sets this to 0
