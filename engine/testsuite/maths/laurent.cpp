@@ -568,7 +568,43 @@ TEST_F(LaurentTest, set) {
 // TODO: iterators
 // TODO: == (Laurent, Integer, int), <=>
 // TODO: assign (Laurent, Laurent&&, Integer, Integer&&, int)
-// TODO: shift, shifted, shifted &&
+
+TEST_F(LaurentTest, shift) {
+    static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        for (int shift : shifts) {
+            SCOPED_TRACE_NUMERIC(shift);
+            if (c.isZero()) {
+                validateZero(c.shifted(shift));
+                validateZero(L(c).shifted(shift));
+                {
+                    L x(c);
+                    x.shift(shift);
+                    validateZero(x);
+                }
+            } else {
+                L ans = c.shifted(shift);
+                validate(ans);
+                EXPECT_FALSE(ans.isZero());
+                EXPECT_EQ(ans.minExp(), c.minExp() + shift);
+                EXPECT_EQ(ans.maxExp(), c.maxExp() + shift);
+                for (long i = c.minExp(); i <= c.maxExp(); ++i)
+                    EXPECT_EQ(ans[i + shift], c[i]);
+
+                validate(L(c).shifted(shift), ans);
+                {
+                    L x(c);
+                    size_t capacity = x.allocation().second;
+                    x.shift(shift);
+                    validate(x, ans);
+                    EXPECT_EQ(x.allocation().second, capacity);
+                }
+            }
+        }
+    }
+}
+
 // TODO: scaleUp, scaleDown
 
 TEST_F(LaurentTest, negate) {
