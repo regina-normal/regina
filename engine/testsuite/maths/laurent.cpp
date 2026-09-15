@@ -108,6 +108,27 @@ class LaurentTest : public testing::Test {
             std::cref(paddedZero), std::cref(paddedConst),
             std::cref(paddedPower), std::cref(paddedPoly) };
 
+        // Note which of our cases represent the same mathematical polynomial.
+        // A return value of 0 here means the polynomial is unique.
+        int batch(const L& poly) {
+            if (std::addressof(poly) == std::addressof(zero) ||
+                    std::addressof(poly) == std::addressof(zero2) ||
+                    std::addressof(poly) == std::addressof(zero3) ||
+                    std::addressof(poly) == std::addressof(paddedZero))
+                return 1;
+            else if (std::addressof(poly) == std::addressof(two) ||
+                    std::addressof(poly) == std::addressof(paddedConst))
+                return 2;
+            else if (std::addressof(poly) == std::addressof(x2) ||
+                    std::addressof(poly) == std::addressof(paddedPower))
+                return 3;
+            else if (std::addressof(poly) == std::addressof(c) ||
+                    std::addressof(poly) == std::addressof(paddedPoly))
+                return 4;
+            else
+                return 0;
+        }
+
         // TODO: Replace the verify... routines below.
 
         template <CoefficientDomain T>
@@ -643,7 +664,52 @@ TEST_F(LaurentTest, iterators) {
     }
 }
 
-// TODO: == (Laurent, Integer, int), <=>
+TEST_F(LaurentTest, comparison) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        int cBatch = batch(c);
+
+        EXPECT_TRUE(c == c);
+        EXPECT_TRUE(c == L(c));
+        EXPECT_FALSE(c != c);
+        EXPECT_FALSE(c != L(c));
+        EXPECT_EQ(c <=> c, std::strong_ordering::equal);
+        EXPECT_EQ(c <=> L(c), std::strong_ordering::equal);
+        // TODO: Put comparisons into validate()
+
+        for (const L& d : cases) {
+            if (std::addressof(c) == std::addressof(d))
+                continue;
+
+            SCOPED_TRACE_REGINA(d);
+            int dBatch = batch(d);
+            auto c_vs_d = c <=> d;
+
+            if (cBatch && cBatch == dBatch) {
+                EXPECT_TRUE(c == d);
+                EXPECT_FALSE(c != d);
+                EXPECT_EQ(c_vs_d, std::strong_ordering::equal);
+            } else {
+                EXPECT_FALSE(c == d);
+                EXPECT_TRUE(c != d);
+                EXPECT_NE(c_vs_d, std::strong_ordering::equal);
+                EXPECT_EQ(d <=> c, 0 <=> c_vs_d);
+            }
+
+            // Test transitivity of comparisions:
+            for (const L& e : cases) {
+                if (std::addressof(e) == std::addressof(c) ||
+                        std::addressof(e) == std::addressof(d))
+                    continue;
+                if (c_vs_d == std::strong_ordering::equal)
+                    EXPECT_EQ(c <=> e, d <=> e);
+                else if ((d <=> e) != (0 <=> c_vs_d))
+                    EXPECT_EQ(c <=> e, c_vs_d);
+            }
+        }
+    }
+    // TODO: == (Integer, int), <=>
+}
 
 TEST_F(LaurentTest, shift) {
     static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
