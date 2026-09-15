@@ -523,6 +523,7 @@ class Laurent :
             if (fromExp > toExp) {
                 return;
             } else if (! coeff_) {
+                base_ = fromExp;
                 capacity_ = toExp - fromExp + 1;
                 coeff_ = new T[capacity_];
             } else {
@@ -618,9 +619,18 @@ class Laurent :
             if (isZero()) {
                 // Reuse any pre-allocated coeff_ array, if we can.
                 if (coeff_) {
-                    size_t gap = capacity_ >> 1; // 0 ≤ gap < capacity_
-                    base_ = exp - gap;
-                    coeff_[gap] = value;
+                    if (exp >= base_ &&
+                            exp < base_ + static_cast<long>(capacity_)) {
+                        // The given exponent already sits within the
+                        // pre-allocated range.
+                        coeff_[exp - base_] = value;
+                    } else {
+                        // We will need to shift the range so that it covers
+                        // the given exponent.
+                        size_t gap = capacity_ >> 1; // 0 ≤ gap < capacity_
+                        base_ = exp - gap;
+                        coeff_[gap] = value;
+                    }
                 } else {
                     capacity_ = 1;
                     coeff_ = new T[1];

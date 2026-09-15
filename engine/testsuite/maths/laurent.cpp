@@ -364,36 +364,92 @@ TEST_F(LaurentTest, padding) {
                     x.maxExp() + 1);
             }
         }
-        {
-            L x(c);
-            if (c.isZero()) {
-                L x(c);
-                EXPECT_EQ(x.allocation().second, 0);
+    }
+}
 
-                x.reserveRange(1000, 999);
-                EXPECT_EQ(x.allocation().second, 0);
+static void verifyReserveRange(const L& poly, long fromExp, long toExp) {
+    SCOPED_TRACE_NUMERIC(fromExp);
+    SCOPED_TRACE_NUMERIC(toExp);
 
-                // TODO: Finish this: alloc and set for non-trivial ranges
-            } else {
-                auto alloc = x.allocation();
-                EXPECT_EQ(alloc.first, x.minExp());
-                EXPECT_EQ(alloc.second, x.maxExp() - x.minExp() + 1);
-                const auto initAlloc = alloc;
+    L x(poly); // should set the range precisely from poly.
+    const auto initAlloc = x.allocation();
+    if (poly.isZero()) {
+        EXPECT_EQ(initAlloc.second, 0);
+        // initAlloc.first (the base) is arbitrary in this case.
+    } else {
+        EXPECT_EQ(initAlloc.first, poly.minExp());
+        EXPECT_EQ(initAlloc.second, poly.maxExp() - poly.minExp() + 1);
+    }
 
-                x.reserveRange(x.minExp(), x.minExp());
-                EXPECT_EQ(x.allocation(), initAlloc);
+    x.reserveRange(fromExp, toExp);
 
-                x.reserveRange(x.maxExp(), x.maxExp());
-                EXPECT_EQ(x.allocation(), initAlloc);
+    EXPECT_EQ(x.minExp(), poly.minExp());
+    EXPECT_EQ(x.maxExp(), poly.maxExp());
 
-                x.reserveRange((x.minExp() + x.maxExp()) / 2, x.maxExp());
-                EXPECT_EQ(x.allocation(), initAlloc);
+    if (fromExp > toExp) {
+        // Nothing should have changed.
+        EXPECT_EQ(x.allocation(), initAlloc);
+    } else {
+        const auto newAlloc = x.allocation();
+        EXPECT_GT(newAlloc.second, 0);
+        EXPECT_GE(newAlloc.second, initAlloc.second);
+        if (! poly.isZero()) {
+            EXPECT_LE(newAlloc.first, poly.minExp());
+            EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second),
+                poly.maxExp());
+        }
+        EXPECT_LE(newAlloc.first, fromExp);
+        EXPECT_GT(newAlloc.first + static_cast<long>(newAlloc.second), toExp);
 
-                x.reserveRange(1000, 999);
-                EXPECT_EQ(x.allocation(), initAlloc);
+        validate(x, poly);
 
-                // TODO: Finish this: alloc and set for non-trivial ranges
-            }
+        for (long i = fromExp; i <= toExp; ++i) {
+            x.set(i, 1);
+            EXPECT_EQ(x.allocation(), newAlloc);
+        }
+    }
+}
+
+TEST_F(LaurentTest, reserveRange) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        if (c.isZero()) {
+            verifyReserveRange(c, 1000, 999); // no-op
+            verifyReserveRange(c, -999, -1000); // no-op
+            verifyReserveRange(c, 0, 0);
+            verifyReserveRange(c, 100, 100);
+            verifyReserveRange(c, -100, -100);
+            verifyReserveRange(c, -100, -90);
+            verifyReserveRange(c, -10, 10);
+            verifyReserveRange(c, 90, 100);
+        } else {
+            long min = c.minExp();
+            long max = c.maxExp();
+            long mid = (c.minExp() + c.maxExp()) / 2;
+            long span = max - min;
+            verifyReserveRange(c, 1000, 999); // no-op
+            verifyReserveRange(c, -999, -1000); // no-op
+            verifyReserveRange(c, min, min);
+            verifyReserveRange(c, mid, mid);
+            verifyReserveRange(c, max, max);
+            verifyReserveRange(c, min, max);
+            verifyReserveRange(c, min, mid);
+            verifyReserveRange(c, mid, max);
+            verifyReserveRange(c, mid - 1, mid + 1);
+            verifyReserveRange(c, min - 100, min - 100);
+            verifyReserveRange(c, min - 1, min - 1);
+            verifyReserveRange(c, min - 1, min);
+            verifyReserveRange(c, max, max + 1);
+            verifyReserveRange(c, max + 1, max + 1);
+            verifyReserveRange(c, max + 100, max + 100);
+            verifyReserveRange(c, min - 1, max + 1);
+            verifyReserveRange(c, min - 100, max + 100);
+            verifyReserveRange(c, min - 100, mid);
+            verifyReserveRange(c, min - 1, mid);
+            verifyReserveRange(c, mid, max + 1);
+            verifyReserveRange(c, mid, max + 100);
+            verifyReserveRange(c, min - 2 * span, min - span);
+            verifyReserveRange(c, max + span, max + 2 * span);
         }
     }
 }
