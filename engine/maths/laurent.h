@@ -968,14 +968,16 @@ class Laurent :
                 if (coeff_) {
                     // Try to center the coefficient within our
                     // already-allocated array.
-                    base_ = -(capacity_ >> 1);
+                    long gap = capacity_ >> 1;
+                    base_ = -gap;
+                    coeff_[gap] = constant;
                 } else {
                     capacity_ = 1;
                     coeff_ = new T[1];
+                    *coeff_ = constant;
                     base_ = 0;
                 }
                 minExp_ = maxExp_ = 0;
-                *coeff_ = constant;
             }
             return *this;
         }
@@ -996,14 +998,16 @@ class Laurent :
                 if (coeff_) {
                     // Try to center the coefficient within our
                     // already-allocated array.
-                    base_ = -(capacity_ >> 1);
+                    long gap = capacity_ >> 1;
+                    base_ = -gap;
+                    coeff_[gap] = std::move(constant);
                 } else {
                     capacity_ = 1;
                     coeff_ = new T[1];
+                    *coeff_ = std::move(constant);
                     base_ = 0;
                 }
                 minExp_ = maxExp_ = 0;
-                *coeff_ = std::move(constant);
             }
             return *this;
         }
@@ -1029,14 +1033,16 @@ class Laurent :
                 if (coeff_) {
                     // Try to center the coefficient within our
                     // already-allocated array.
-                    base_ = -(capacity_ >> 1);
+                    long gap = capacity_ >> 1;
+                    base_ = -gap;
+                    coeff_[gap] = constant;
                 } else {
                     capacity_ = 1;
                     coeff_ = new T[1];
+                    *coeff_ = constant;
                     base_ = 0;
                 }
                 minExp_ = maxExp_ = 0;
-                *coeff_ = constant;
             }
             return *this;
         }

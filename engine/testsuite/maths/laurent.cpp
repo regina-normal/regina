@@ -43,6 +43,9 @@ using regina::polynomialProduct;
 
 using L = Laurent<Integer>;
 
+// TODO: Test transform() with and without exponents, and extract()
+// TODO: Test str() and utf8()
+
 class LaurentTest : public testing::Test {
     protected:
         // An integer that cannot fit into 128 bits.
@@ -50,48 +53,50 @@ class LaurentTest : public testing::Test {
         const Integer bigInt {
             "5421309874" "5789403215" "6654013103" "5798756432" "1035741817" };
 
-        L zero {};
-        L zero2 { 0, {} };
-        L zero3 { 2, {} };
-        L one { 0, { 1 } };
-        L two { 0, { 2 } };
-        L minusOne { 0, { -1 } };
-        L x2 { 2, { 1 } };
-        L x5Inv { -5, { 1 } };
-        L a { -1, { 1, -1, 1 } };
-        L b { 0, { 1, -1, 1 } };
-        L c { 1, { 1, -1, 1 } };
-        L d { -2, { -1, 1, -1, 1 } };
-        L e { 4, { 2, 4, -2, 2 } };
-        L f { 3, { -1, 0, 0, 0, 1 } };
-        L g { 20, { 2, -3 } };
+        const L zero {};
+        const L zero2 { 0, {} };
+        const L zero3 { 2, {} };
+        const L one { 0, { 1 } };
+        const L two { 0, { 2 } };
+        const L minusOne { 0, { -1 } };
+        const L x2 { 2, { 1 } };
+        const L x5Inv { -5, { 1 } };
+        const L a { -1, { 1, -1, 1 } };
+        const L b { 0, { 1, -1, 1 } };
+        const L c { 1, { 1, -1, 1 } };
+        const L d { -2, { -1, 1, -1, 1 } };
+        const L e { 4, { 2, 4, -2, 2 } };
+        const L f { 3, { -1, 0, 0, 0, 1 } };
+        const L g { 20, { 2, -3 } };
 
         // Several ranges each of which overlap at a single coefficient:
-        L low { -7, { 1, -2, 3, -4 } };
-        L lowish { -4, { -1, 2, -3, 4 } };
-        L mid { -1, { 1, -2, 3 } };
-        L highish { 1, { 1, -2, -3, 4 } };
-        L high { 4, { -1, 2, 3, -4 } };
+        const L low { -7, { 1, -2, 3, -4 } };
+        const L lowish { -4, { -1, 2, -3, 4 } };
+        const L mid { -1, { 1, -2, 3 } };
+        const L highish { 1, { 1, -2, -3, 4 } };
+        const L high { 4, { -1, 2, 3, -4 } };
 
         // The same polynomials as before, but this time forcing large integer
         // arithmetic:
-        L bigLow { -7, { bigInt, bigInt * -2, bigInt * 3, bigInt * -4 } };
-        L bigLowish { -4, { -bigInt, bigInt * 2, bigInt * -3, bigInt * 4 } };
-        L bigMid { -1, { bigInt, bigInt * -2, bigInt * 3 } };
-        L bigHighish { 1, { bigInt, bigInt * -2, bigInt * -3, bigInt * 4 } };
-        L bigHigh { 4, { -bigInt, bigInt * 2, bigInt * 3, bigInt * -4 } };
+        const L bigLow { -7, { bigInt, bigInt * -2, bigInt * 3, bigInt * -4 } };
+        const L bigLowish { -4,
+            { -bigInt, bigInt * 2, bigInt * -3, bigInt * 4 } };
+        const L bigMid { -1, { bigInt, bigInt * -2, bigInt * 3 } };
+        const L bigHighish { 1,
+            { bigInt, bigInt * -2, bigInt * -3, bigInt * 4 } };
+        const L bigHigh { 4, { -bigInt, bigInt * 2, bigInt * 3, bigInt * -4 } };
 
         // Some longer polynomials:
-        L long1 { 2, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
-        L long2 { 3, { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } };
+        const L long1 { 2, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
+        const L long2 { 3, { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } };
 
         // Some polynomials with more space allocated than they need:
-        L paddedZero = g - g;
-        L paddedConst = (two + d) - d;
-        L paddedPower = (x2 + highish) - highish;
-        L paddedPoly = ((c + low + high) - low) - high;
+        const L paddedZero = g - g;
+        const L paddedConst = (two + d) - d;
+        const L paddedPower = (x2 + highish) - highish;
+        const L paddedPoly = ((c + low + high) - low) - high;
 
-        std::array<std::reference_wrapper<const L>, 31> cases {
+        const std::array<std::reference_wrapper<const L>, 31> cases {
             std::cref(zero), std::cref(zero2), std::cref(zero3), std::cref(one),
             std::cref(two), std::cref(minusOne), std::cref(x2),
             std::cref(x5Inv), std::cref(a), std::cref(b), std::cref(c),
@@ -291,7 +296,8 @@ TEST_F(LaurentTest, construct) {
         {
             L x(c);
             validate(x, c);
-            validate(L(std::move(x)), c);
+            L y(std::move(x));
+            validate(y, c);
         }
         validate(L(c.minExp(), c.begin(), c.end()), c);
         {
@@ -307,20 +313,60 @@ TEST_F(LaurentTest, construct) {
             validate(L(c.minExp() - 3, coeffs.begin(), coeffs.end()), c);
         }
     }
-    {
+
+    Integer zero(0), pos(4), neg(-4), big(bigInt);
+    validateZero(L(zero));
+    validateZero(L(std::move(zero)));
+    validateZero(L(0));
+    validate(L(pos), 0, { 4 });
+    validate(L(std::move(pos)), 0, { 4 });
+    validate(L(4), 0, { 4 });
+    validate(L(neg), 0, { -4 });
+    validate(L(std::move(neg)), 0, { -4 });
+    validate(L(-4), 0, { -4 });
+    std::array<Integer, 1> bigConst { big };
+    validate(L(big), 0, bigConst);
+    validate(L(std::move(big)), 0, bigConst);
+    // At this point: zero, pos, neg, big are all unusable.
+}
+
+TEST_F(LaurentTest, assign) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        for (const L& d : cases) {
+            SCOPED_TRACE_REGINA(d);
+            {
+                L x(c);
+                validate(x, c);
+                x = d;
+                validate(x, d);
+            }
+            {
+                L x(c), y(d);
+                validate(x, c);
+                validate(y, d);
+                auto alloc = y.allocation();
+                x = std::move(y);
+                validate(x, d);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+        }
+
         Integer zero(0), pos(4), neg(-4), big(bigInt);
-        validateZero(L(zero));
-        validateZero(L(std::move(zero)));
-        validateZero(L(0));
-        validate(L(pos), 0, { 4 });
-        validate(L(std::move(pos)), 0, { 4 });
-        validate(L(4), 0, { 4 });
-        validate(L(neg), 0, { -4 });
-        validate(L(std::move(neg)), 0, { -4 });
-        validate(L(-4), 0, { -4 });
-        std::array<Integer, 1> bigConst { big };
-        validate(L(big), 0, bigConst);
-        validate(L(std::move(big)), 0, bigConst);
+        { L x(c); validate(x, c); x = zero; validateZero(x); }
+        { L x(c); validate(x, c); x = std::move(zero); validateZero(x); }
+        { L x(c); validate(x, c); x = 0; validateZero(x); }
+        { L x(c); validate(x, c); x = pos; validate(x, 0, { 4 }); }
+        { L x(c); validate(x, c); x = std::move(pos); validate(x, 0, { 4 }); }
+        { L x(c); validate(x, c); x = 4; validate(x, 0, { 4 }); }
+        { L x(c); validate(x, c); x = neg; validate(x, 0, { -4 }); }
+        { L x(c); validate(x, c); x = std::move(neg); validate(x, 0, { -4 }); }
+        { L x(c); validate(x, c); x = -4; validate(x, 0, { -4 }); }
+        const std::array<Integer, 1> coeff { big };
+        { L x(c); validate(x, c); x = big; validate(x, 0, coeff); }
+        { L x(c); validate(x, c); x = std::move(big); validate(x, 0, coeff); }
+        // At this point: zero, pos, neg, big are all unusable.
     }
 }
 
@@ -524,7 +570,7 @@ TEST_F(LaurentTest, moveThenAssign) {
 }
 
 TEST_F(LaurentTest, set) {
-    // TODO: This test is to be replaced
+    // TODO: Completely rewrite the tests for set()
     Laurent<Integer> x { -1, { 1, 2, 1 } };
 
     verifyEqual<Integer>(x, -1, {1, 2, 1});
@@ -564,10 +610,40 @@ TEST_F(LaurentTest, set) {
     verifyEqual<Integer>(y, 0, {});
 }
 
-// TODO: [], set()
-// TODO: iterators
+TEST_F(LaurentTest, iterators) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+
+        // Here is as good a time as any to test operator[] also.
+        if (c.isZero()) {
+            EXPECT_EQ(c.begin(), c.end());
+
+            EXPECT_EQ(c[-100], 0);
+            EXPECT_EQ(c[-1], 0);
+            EXPECT_EQ(c[0], 0);
+            EXPECT_EQ(c[1], 0);
+            EXPECT_EQ(c[100], 0);
+        } else {
+            long exp = c.minExp();
+            auto it = c.begin();
+            while (exp <= c.maxExp() && it != c.end()) {
+                EXPECT_EQ(c[exp], *it);
+                ++exp;
+                ++it;
+            }
+            EXPECT_EQ(it, c.end());
+
+            EXPECT_EQ(c[c.minExp() - 100], 0);
+            EXPECT_EQ(c[c.minExp() - 1], 0);
+            EXPECT_NE(c[c.minExp()], 0);
+            EXPECT_NE(c[c.maxExp()], 0);
+            EXPECT_EQ(c[c.maxExp() + 1], 0);
+            EXPECT_EQ(c[c.maxExp() + 100], 0);
+        }
+    }
+}
+
 // TODO: == (Laurent, Integer, int), <=>
-// TODO: assign (Laurent, Laurent&&, Integer, Integer&&, int)
 
 TEST_F(LaurentTest, shift) {
     static constexpr int shifts[5] = { -100, -5, 0, 5, 100 };
@@ -747,8 +823,30 @@ TEST_F(LaurentTest, negate) {
     }
 }
 
-// TODO: invertX
-// TODO: transform (with, without exponents), extract
+TEST_F(LaurentTest, invertX) {
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        if (c.isZero()) {
+            L x(c);
+            x.invertX();
+            validateZero(x);
+        } else {
+            L x(c);
+            x.invertX();
+            validate(x);
+            EXPECT_FALSE(x.isZero());
+            EXPECT_EQ(x.maxExp(), -c.minExp());
+            EXPECT_EQ(x.minExp(), -c.maxExp());
+            long cExp = c.minExp();
+            long xExp = -c.minExp();
+            while (cExp <= c.maxExp()) {
+                EXPECT_EQ(x[xExp], c[cExp]);
+                ++cExp;
+                --xExp;
+            }
+        }
+    }
+}
 
 template <regina::CppInteger Native>
 static void verifyNativeProduct(const L& poly, const Integer& scalar,
@@ -1253,8 +1351,6 @@ TEST_F(LaurentTest, multiply) {
         validate(x5Inv * c, c.shifted(-5));
     }
 }
-
-// TODO: str, utf8
 
 TEST_F(LaurentTest, ringConstants) {
     // Verify that the RingTraits constants looks correct.
