@@ -191,10 +191,21 @@ class Laurent :
          */
         Laurent(const Laurent<T>& value) {
             if (value.isZero()) {
+                #if 1
                 coeff_ = nullptr;
+                #else
+                // Allocate some space even though we don't need to.
+                // This code is only for diagnostic/testing purposes, and
+                // should not be used in production.
+                // Using this will break the LaurentTest.reserveRange test,
+                // but it should not break any of the other tests.
+                capacity_ = 1;
+                coeff_ = new T[1];
+                #endif
                 minExp_ = 0;
                 maxExp_ = -1;
             } else {
+                #if 1
                 minExp_ = base_ = value.minExp_;
                 maxExp_ = value.maxExp_;
                 capacity_ = value.maxExp_ - value.minExp_ + 1;
@@ -202,6 +213,21 @@ class Laurent :
                 std::copy(
                     value.coeff_ + value.minExp_ - value.base_,
                     value.coeff_ + value.maxExp_ - value.base_ + 1, coeff_);
+                #else
+                // Allocate more space than we need to (at both ends).
+                // This code is only for diagnostic/testing purposes, and
+                // should not be used in production.
+                // Using this will break the LaurentTest.reserveRange test,
+                // but it should not break any of the other tests.
+                minExp_ = value.minExp_;
+                maxExp_ = value.maxExp_;
+                base_ = minExp_ - 1;
+                capacity_ = value.maxExp_ - value.minExp_ + 3;
+                coeff_ = new T[capacity_];
+                std::copy(
+                    value.coeff_ + value.minExp_ - value.base_,
+                    value.coeff_ + value.maxExp_ - value.base_ + 1, coeff_ + 1);
+                #endif
             }
         }
 
