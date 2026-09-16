@@ -43,14 +43,18 @@ using regina::polynomialProduct;
 
 using L = Laurent<Integer>;
 
-// TODO: Test str() and utf8()
+// An integer that cannot fit into 128 bits, and some small multiples of it.
+// We split the digits into chunks to not break syntax highlighting.
+#define BIG "5421309874" "5789403215" "6654013103" "5798756432" "1035741817"
+#define BIG2 "10842619749" "1578806431" "3308026207" "1597512864" "2071483634"
+#define BIG3 "16263929623" "7368209646" "9962039310" "7396269296" "3107225451"
+#define BIG4 "21685239498" "3157612862" "6616052414" "3195025728" "4142967268"
 
 class LaurentTest : public testing::Test {
     protected:
         // An integer that cannot fit into 128 bits.
-        // We split the digits into chunks to not break syntax highlighting.
-        const Integer bigInt {
-            "5421309874" "5789403215" "6654013103" "5798756432" "1035741817" };
+        const Integer bigInt { BIG };
+        const std::array<Integer, 1> bigCoeff { bigInt };
 
         const L zero {};
         const L zero2 { 0, {} };
@@ -126,30 +130,6 @@ class LaurentTest : public testing::Test {
                 return Batch::Short;
             else
                 return Batch::Unique;
-        }
-
-        // TODO: Replace the verify... routines below.
-
-        template <CoefficientDomain T>
-        static void verifyEqual(const Laurent<T>& result,
-                long minExp, std::initializer_list<T> coeffs) {
-            SCOPED_TRACE_REGINA(result);
-
-            Laurent<T> expect(minExp, coeffs);
-            SCOPED_TRACE_REGINA(expect);
-
-            EXPECT_EQ(result, expect);
-            EXPECT_FALSE(result != expect);
-            EXPECT_EQ(result.str(), expect.str());
-            if (coeffs.size() == 0) {
-                EXPECT_TRUE(result.isZero());
-                EXPECT_EQ(result.minExp(), 0);
-                EXPECT_EQ(result.maxExp(), 0);
-            } else {
-                EXPECT_FALSE(result.isZero());
-                EXPECT_EQ(result.minExp(), minExp);
-                EXPECT_EQ(result.maxExp(), minExp + coeffs.size() - 1);
-            }
         }
 };
 
@@ -358,9 +338,8 @@ TEST_F(LaurentTest, construct) {
     validate(L(neg), 0, { -4 });
     validate(L(std::move(neg)), 0, { -4 });
     validate(L(-4), 0, { -4 });
-    std::array<Integer, 1> bigConst { big };
-    validate(L(big), 0, bigConst);
-    validate(L(std::move(big)), 0, bigConst);
+    validate(L(big), 0, bigCoeff);
+    validate(L(std::move(big)), 0, bigCoeff);
     // At this point: zero, pos, neg, big are all unusable.
 }
 
@@ -397,9 +376,9 @@ TEST_F(LaurentTest, assign) {
         { L x(c); validate(x, c); x = neg; validate(x, 0, { -4 }); }
         { L x(c); validate(x, c); x = std::move(neg); validate(x, 0, { -4 }); }
         { L x(c); validate(x, c); x = -4; validate(x, 0, { -4 }); }
-        const std::array<Integer, 1> coeff { big };
-        { L x(c); validate(x, c); x = big; validate(x, 0, coeff); }
-        { L x(c); validate(x, c); x = std::move(big); validate(x, 0, coeff); }
+        { L x(c); validate(x, c); x = big; validate(x, 0, bigCoeff); }
+        { L x(c); validate(x, c); x = std::move(big);
+            validate(x, 0, bigCoeff); }
         // At this point: zero, pos, neg, big are all unusable.
     }
 }
@@ -604,44 +583,379 @@ TEST_F(LaurentTest, moveThenAssign) {
 }
 
 TEST_F(LaurentTest, set) {
-    // TODO: Completely rewrite the tests for set()
-    Laurent<Integer> x { -1, { 1, 2, 1 } };
+    // Some tests specific to the zero polynomial:
+    {
+        L x;
+        const auto alloc = x.allocation();
+        EXPECT_EQ(alloc.second, 0);
+        x.set(0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(-5, 5);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(10, 20);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(0, 0);
+        validateZero(x);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.set(2, -7);
+        validate(x, 2, { -7 });
+    }
+    {
+        L x;
+        x.reserveRange(-5, 5);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -7);
+        validate(x, 2, { -7 });
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(10, 20);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -7);
+        validate(x, 2, { -7 });
+        EXPECT_NE(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(-20, -10);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, -7);
+        validate(x, 2, { -7 });
+        EXPECT_NE(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.set(2, bigInt);
+        validate(x, 2, bigCoeff);
+    }
+    {
+        L x;
+        x.reserveRange(-5, 5);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, bigInt);
+        validate(x, 2, bigCoeff);
+        EXPECT_EQ(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(10, 20);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, bigInt);
+        validate(x, 2, bigCoeff);
+        EXPECT_NE(x.allocation(), alloc);
+    }
+    {
+        L x;
+        x.reserveRange(-20, -10);
+        const auto alloc = x.allocation();
+        EXPECT_GT(alloc.second, 0);
+        x.set(2, bigInt);
+        validate(x, 2, bigCoeff);
+        EXPECT_NE(x.allocation(), alloc);
+    }
 
-    verifyEqual<Integer>(x, -1, {1, 2, 1});
-    x.set(0, 3);
-    verifyEqual<Integer>(x, -1, {1, 3, 1});
-    x.set(1, 0);
-    verifyEqual<Integer>(x, -1, {1, 3});
-    x.set(0, 0);
-    verifyEqual<Integer>(x, -1, {1});
-    x.set(1, 0);
-    verifyEqual<Integer>(x, -1, {1});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(-1, 3);
-    verifyEqual<Integer>(x, -1, {3});
-    x.set(-1, 0);
-    verifyEqual<Integer>(x, 0, {});
-    x.set(2, 1);
-    verifyEqual<Integer>(x, 2, {1});
+    // Tests to run for all cases:
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
 
-    Laurent<Integer> y = { -1, { 1, 2, 1 } };
-    y.set(-1, 0);
-    verifyEqual<Integer>(y, 0, {2, 1});
-    y.set(0, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(-2, 3);
-    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
-    y.set(-2, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(-2, 3);
-    verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
-    y.set(-2, 0);
-    verifyEqual<Integer>(y, 1, {1});
-    y.set(1, 0);
-    verifyEqual<Integer>(y, 0, {});
+        // Setting coefficients to zero:
+        {
+            L x(c);
+            const auto alloc = x.allocation();
+            x.set(c.minExp() - 1, 0);
+            validate(x, c);
+            EXPECT_EQ(x.allocation(), alloc);
+        }
+        {
+            L x(c);
+            const auto alloc = x.allocation();
+            x.set(c.minExp() - 100, 0);
+            validate(x, c);
+            EXPECT_EQ(x.allocation(), alloc);
+        }
+        {
+            L x(c);
+            const auto alloc = x.allocation();
+            x.set(c.maxExp() + 1, 0);
+            validate(x, c);
+            EXPECT_EQ(x.allocation(), alloc);
+        }
+        {
+            L x(c);
+            const auto alloc = x.allocation();
+            x.set(c.maxExp() + 100, 0);
+            validate(x, c);
+            EXPECT_EQ(x.allocation(), alloc);
+        }
+        if (! c.isZero()) {
+            if (c.minExp() == c.maxExp()) {
+                {
+                    L x(c);
+                    x.set(c.minExp(), 0);
+                    validateZero(x);
+                }
+                {
+                    L x(c);
+                    x.reserveRange(c.minExp() - 5, c.minExp() + 5);
+                    x.set(c.minExp(), 0);
+                    validateZero(x);
+                }
+            } else {
+                {
+                    L x(c);
+                    x.set(c.minExp(), 0);
+                    validate(x);
+                    EXPECT_NE(x, c);
+                    EXPECT_GT(x.minExp(), c.minExp());
+                    EXPECT_EQ(x.maxExp(), c.maxExp());
+                }
+                {
+                    L x(c);
+                    x.set(c.maxExp(), 0);
+                    validate(x);
+                    EXPECT_NE(x, c);
+                    EXPECT_EQ(x.minExp(), c.minExp());
+                    EXPECT_LT(x.maxExp(), c.maxExp());
+                }
+                if (c.maxExp() >= c.minExp() + 2) {
+                    L x(c);
+                    long mid = (c.minExp() + c.maxExp()) >> 1;
+                    x.set(mid, 0);
+                    validate(x);
+                    EXPECT_EQ(x.minExp(), c.minExp());
+                    EXPECT_EQ(x.maxExp(), c.maxExp());
+                    if (c[mid] == 0)
+                        EXPECT_EQ(x, c);
+                    else
+                        EXPECT_NE(x, c);
+                }
+            }
+        }
+
+        // Some tests involving setting coefficients to non-zero:
+        if (! c.isZero()) {
+            const long mid = (c.minExp() + c.maxExp()) >> 1;
+            const Integer minCoeff = c[c.minExp()];
+            const Integer midCoeff = c[mid];
+            const Integer maxCoeff = c[c.maxExp()];
+
+            // Changes within the degree span:
+            {
+                L x(c);
+                x.set(c.minExp(), minCoeff + bigInt + 5);
+                validate(x);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[c.minExp()], minCoeff + bigInt + 5);
+                x.set(c.minExp(), minCoeff);
+                validate(x, c);
+            }
+            {
+                L x(c);
+                x.set(mid, midCoeff + bigInt + 5);
+                validate(x);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[mid], midCoeff + bigInt + 5);
+                x.set(mid, midCoeff);
+                validate(x, c);
+            }
+            {
+                L x(c);
+                x.set(c.maxExp(), maxCoeff + bigInt + 5);
+                validate(x);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[c.maxExp()], maxCoeff + bigInt + 5);
+                x.set(c.maxExp(), maxCoeff);
+                validate(x, c);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                x.set(mid, midCoeff + bigInt + 5);
+                validate(x);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[mid], midCoeff + bigInt + 5);
+                x.set(mid, midCoeff);
+                validate(x, c);
+            }
+
+            // Changes outside the degree span, but within the allocated range:
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                const auto alloc = x.allocation();
+
+                x.set(c.minExp() - 1, -7);
+                validate(x);
+                EXPECT_EQ(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp() - 1);
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[c.minExp() - 1], -7);
+
+                x.set(c.minExp() - 1, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                const auto alloc = x.allocation();
+
+                x.set(c.maxExp() + 1, -7);
+                validate(x);
+                EXPECT_EQ(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp() + 1);
+                EXPECT_EQ(x[c.maxExp() + 1], -7);
+
+                x.set(c.maxExp() + 1, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                const auto alloc = x.allocation();
+
+                x.set(c.minExp() - 3, bigInt);
+                validate(x);
+                EXPECT_EQ(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp() - 3);
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[c.minExp() - 3], bigInt);
+
+                x.set(c.minExp() - 3, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                const auto alloc = x.allocation();
+
+                x.set(c.maxExp() + 3, bigInt);
+                validate(x);
+                EXPECT_EQ(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), c.maxExp() + 3);
+                EXPECT_EQ(x[c.maxExp() + 3], bigInt);
+
+                x.set(c.maxExp() + 3, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+
+            // Changes outside the allocated range:
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                auto alloc = x.allocation();
+                long exp = alloc.first - 1;
+
+                x.set(exp, -7);
+                validate(x);
+                EXPECT_NE(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), exp);
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[exp], -7);
+                alloc = x.allocation();
+
+                x.set(exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                auto alloc = x.allocation();
+                long exp = alloc.first + alloc.second;
+
+                x.set(exp, -7);
+                validate(x);
+                EXPECT_NE(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), exp);
+                EXPECT_EQ(x[exp], -7);
+                alloc = x.allocation();
+
+                x.set(exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                auto alloc = x.allocation();
+                long exp = alloc.first - 5;
+
+                x.set(exp, bigInt);
+                validate(x);
+                EXPECT_NE(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), exp);
+                EXPECT_EQ(x.maxExp(), c.maxExp());
+                EXPECT_EQ(x[exp], bigInt);
+                alloc = x.allocation();
+
+                x.set(exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+            {
+                L x(c);
+                x.reserveRange(c.minExp() - 5, c.maxExp() + 5);
+                auto alloc = x.allocation();
+                long exp = alloc.first + alloc.second + 5;
+
+                x.set(exp, bigInt);
+                validate(x);
+                EXPECT_NE(x.allocation(), alloc);
+                EXPECT_NE(x, c);
+                EXPECT_EQ(x.minExp(), c.minExp());
+                EXPECT_EQ(x.maxExp(), exp);
+                EXPECT_EQ(x[exp], bigInt);
+                alloc = x.allocation();
+
+                x.set(exp, 0);
+                validate(x, c);
+                EXPECT_EQ(x.allocation(), alloc);
+            }
+        }
+    }
 }
 
 TEST_F(LaurentTest, iterators) {
@@ -1512,6 +1826,100 @@ TEST_F(LaurentTest, ringConstants) {
     // Verify that the RingTraits constants looks correct.
     EXPECT_EQ(regina::RingTraits<L>::zero.str(), "0");
     EXPECT_EQ(regina::RingTraits<L>::one.str(), "1");
+}
+
+TEST_F(LaurentTest, str) {
+    EXPECT_EQ(zero.str(), "0");
+    EXPECT_EQ(zero2.str(), "0");
+    EXPECT_EQ(zero3.str(), "0");
+    EXPECT_EQ(one.str(), "1");
+    EXPECT_EQ(two.str(), "2");
+    EXPECT_EQ(minusOne.str(), "-1");
+    EXPECT_EQ(x2.str(), "x^2");
+    EXPECT_EQ(x5Inv.str(), "x^-5");
+    EXPECT_EQ(a.str(), "x - 1 + x^-1");
+    EXPECT_EQ(b.str(), "x^2 - x + 1");
+    EXPECT_EQ(c.str(), "x^3 - x^2 + x");
+    EXPECT_EQ(d.str(), "x - 1 + x^-1 - x^-2");
+    EXPECT_EQ(e.str(), "2 x^7 - 2 x^6 + 4 x^5 + 2 x^4");
+    EXPECT_EQ(f.str(), "x^7 - x^3");
+    EXPECT_EQ(g.str(), "-3 x^21 + 2 x^20");
+
+    EXPECT_EQ(low.str(), "-4 x^-4 + 3 x^-5 - 2 x^-6 + x^-7");
+    EXPECT_EQ(lowish.str(), "4 x^-1 - 3 x^-2 + 2 x^-3 - x^-4");
+    EXPECT_EQ(mid.str(), "3 x - 2 + x^-1");
+    EXPECT_EQ(highish.str(), "4 x^4 - 3 x^3 - 2 x^2 + x");
+    EXPECT_EQ(high.str(), "-4 x^7 + 3 x^6 + 2 x^5 - x^4");
+
+    EXPECT_EQ(bigLow.str(),
+        "-" BIG4 " x^-4 + " BIG3 " x^-5 - " BIG2 " x^-6 + " BIG " x^-7");
+    EXPECT_EQ(bigLowish.str(),
+        BIG4 " x^-1 - " BIG3 " x^-2 + " BIG2 " x^-3 - " BIG " x^-4");
+    EXPECT_EQ(bigMid.str(),
+        BIG3 " x - " BIG2 " + " BIG " x^-1");
+    EXPECT_EQ(bigHighish.str(),
+        BIG4 " x^4 - " BIG3 " x^3 - " BIG2 " x^2 + " BIG " x");
+    EXPECT_EQ(bigHigh.str(),
+        "-" BIG4 " x^7 + " BIG3 " x^6 + " BIG2 " x^5 - " BIG " x^4");
+
+    EXPECT_EQ(long1.str(), "x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + "
+        "x^7 + x^6 + x^5 + x^4 + x^3 + x^2");
+    EXPECT_EQ(long2.str(), "x^13 - x^3");
+
+    EXPECT_EQ(paddedZero.str(), "0");
+    EXPECT_EQ(paddedConst.str(), "2");
+    EXPECT_EQ(paddedPower.str(), "x^2");
+    EXPECT_EQ(paddedPoly.str(), "x^3 - x^2 + x");
+}
+
+static void verifyUtf8(const L& poly, const char8_t* expect) {
+    EXPECT_EQ(poly.utf8(), std::string(reinterpret_cast<const char*>(expect)));
+}
+
+TEST_F(LaurentTest, utf8) {
+    // Here we directly use unicode superscripts and minus signs in the C++
+    // source code.
+    verifyUtf8(zero, u8"0");
+    verifyUtf8(zero2, u8"0");
+    verifyUtf8(zero3, u8"0");
+    verifyUtf8(one, u8"1");
+    verifyUtf8(two, u8"2");
+    verifyUtf8(minusOne, u8"−1");
+    verifyUtf8(x2, u8"x²");
+    verifyUtf8(x5Inv, u8"x⁻⁵");
+    verifyUtf8(a, u8"x − 1 + x⁻¹");
+    verifyUtf8(b, u8"x² − x + 1");
+    verifyUtf8(c, u8"x³ − x² + x");
+    verifyUtf8(d, u8"x − 1 + x⁻¹ − x⁻²");
+    verifyUtf8(e, u8"2 x⁷ − 2 x⁶ + 4 x⁵ + 2 x⁴");
+    verifyUtf8(f, u8"x⁷ − x³");
+    verifyUtf8(g, u8"−3 x²¹ + 2 x²⁰");
+
+    verifyUtf8(low, u8"−4 x⁻⁴ + 3 x⁻⁵ − 2 x⁻⁶ + x⁻⁷");
+    verifyUtf8(lowish, u8"4 x⁻¹ − 3 x⁻² + 2 x⁻³ − x⁻⁴");
+    verifyUtf8(mid, u8"3 x − 2 + x⁻¹");
+    verifyUtf8(highish, u8"4 x⁴ − 3 x³ − 2 x² + x");
+    verifyUtf8(high, u8"−4 x⁷ + 3 x⁶ + 2 x⁵ − x⁴");
+
+    verifyUtf8(bigLow,
+        u8"−" BIG4 " x⁻⁴ + " BIG3 " x⁻⁵ − " BIG2 " x⁻⁶ + " BIG " x⁻⁷");
+    verifyUtf8(bigLowish,
+        u8"" BIG4 " x⁻¹ − " BIG3 " x⁻² + " BIG2 " x⁻³ − " BIG " x⁻⁴");
+    verifyUtf8(bigMid,
+        u8"" BIG3 " x − " BIG2 " + " BIG " x⁻¹");
+    verifyUtf8(bigHighish,
+        u8"" BIG4 " x⁴ − " BIG3 " x³ − " BIG2 " x² + " BIG " x");
+    verifyUtf8(bigHigh,
+        u8"−" BIG4 " x⁷ + " BIG3 " x⁶ + " BIG2 " x⁵ − " BIG " x⁴");
+
+    verifyUtf8(long1, u8"x¹⁴ + x¹³ + x¹² + x¹¹ + x¹⁰ + x⁹ + x⁸ + "
+        "x⁷ + x⁶ + x⁵ + x⁴ + x³ + x²");
+    verifyUtf8(long2, u8"x¹³ − x³");
+
+    verifyUtf8(paddedZero, u8"0");
+    verifyUtf8(paddedConst, u8"2");
+    verifyUtf8(paddedPower, u8"x²");
+    verifyUtf8(paddedPoly, u8"x³ − x² + x");
 }
 
 TEST_F(LaurentTest, tightEncoding) {
