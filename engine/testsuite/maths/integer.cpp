@@ -240,6 +240,7 @@ static void verifyInfinite(const LargeInteger& x) {
     EXPECT_THROW({ x.template safeValue<long>(); }, regina::IntegerOverflow);
     EXPECT_EQ(x.sign(), 1);
     EXPECT_FALSE(x.isZero());
+    EXPECT_EQ(x, LargeInteger::infinity);
     EXPECT_EQ(x.stringValue(), "inf");
     {
         std::ostringstream out;
@@ -1197,23 +1198,23 @@ TYPED_TEST(IntegerTest, incDec) {
     if constexpr (TypeParam::supportsInfinity) {
         {
             TypeParam i(TypeParam::infinity);
-            EXPECT_EQ(++i, TypeParam::infinity);
-            EXPECT_EQ(i, TypeParam::infinity);
+            verifyInfinite(++i);
+            verifyInfinite(i);
         }
         {
             TypeParam i(TypeParam::infinity);
-            EXPECT_EQ(i++, TypeParam::infinity);
-            EXPECT_EQ(i, TypeParam::infinity);
+            verifyInfinite(i++);
+            verifyInfinite(i);
         }
         {
             TypeParam i(TypeParam::infinity);
-            EXPECT_EQ(--i, TypeParam::infinity);
-            EXPECT_EQ(i, TypeParam::infinity);
+            verifyInfinite(--i);
+            verifyInfinite(i);
         }
         {
             TypeParam i(TypeParam::infinity);
-            EXPECT_EQ(i--, TypeParam::infinity);
-            EXPECT_EQ(i, TypeParam::infinity);
+            verifyInfinite(i--);
+            verifyInfinite(i);
         }
     }
 }
@@ -1266,31 +1267,21 @@ TYPED_TEST(IntegerTest, plusMinus) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
 
-        EXPECT_EQ(x + 0L, x);
-        EXPECT_EQ(x - 0L, x);
-        EXPECT_EQ(0L + x, x);
-        EXPECT_EQ(x + TypeParam(), x);
-        EXPECT_EQ(x - TypeParam(), x);
-        EXPECT_EQ(TypeParam() + x, x);
-        EXPECT_EQ(TypeParam() - x, -x);
-
-        // Verify operating on one's self.
-        {
-            TypeParam z = x;
-            z += z;
-            EXPECT_EQ(z, x + x);
-        }
-        {
-            TypeParam z = x;
-            z -= z;
-            EXPECT_EQ(z, 0);
-        }
-
         for (const auto& y : this->cases) {
             SCOPED_TRACE_REGINA(y);
 
-            EXPECT_EQ(x + y, y + x);
-            EXPECT_EQ(x - y, -(y - x));
+            const TypeParam sum = x + y;
+            const TypeParam diff = x - y;
+
+            EXPECT_EQ(y + x, sum);
+            EXPECT_EQ(-(y - x), diff);
+
+            EXPECT_EQ(x + TypeParam(y), sum);
+            EXPECT_EQ(TypeParam(x) + y, sum);
+            EXPECT_EQ(TypeParam(x) + TypeParam(y), sum);
+            EXPECT_EQ(x - TypeParam(y), diff);
+            EXPECT_EQ(TypeParam(x) - y, diff);
+            EXPECT_EQ(TypeParam(x) - TypeParam(y), diff);
 
             EXPECT_EQ((x + y) - y, x);
             EXPECT_EQ((x - y) + y, x);
@@ -1303,52 +1294,59 @@ TYPED_TEST(IntegerTest, plusMinus) {
 
             {
                 TypeParam z = x;
-                EXPECT_EQ(z += y, x + y); // const +=
-                EXPECT_EQ(z, x + y);
+                EXPECT_EQ(z += y, sum);
+                EXPECT_EQ(z, sum);
             }
             {
                 TypeParam z = x;
-                EXPECT_EQ(z += TypeParam(y), x + y); // rvalue +=
-                EXPECT_EQ(z, x + y);
+                EXPECT_EQ(z += TypeParam(y), sum);
+                EXPECT_EQ(z, sum);
             }
             {
                 TypeParam z = x;
-                EXPECT_EQ(z -= y, x - y); // const -=
-                EXPECT_EQ(z, x - y);
+                EXPECT_EQ(z -= y, diff);
+                EXPECT_EQ(z, diff);
             }
             {
                 TypeParam z = x;
-                EXPECT_EQ(z -= TypeParam(y), x - y); // rvalue -=
-                EXPECT_EQ(z, x - y);
+                EXPECT_EQ(z -= TypeParam(y), diff);
+                EXPECT_EQ(z, diff);
             }
 
             if (y.sign() > 0) {
-                EXPECT_GT(x + y, x);
-                EXPECT_LT(x - y, x);
+                EXPECT_GT(sum, x);
+                EXPECT_LT(diff, x);
             } else if (y.sign() < 0) {
-                EXPECT_LT(x + y, x);
-                EXPECT_GT(x - y, x);
+                EXPECT_LT(sum, x);
+                EXPECT_GT(diff, x);
             } else {
-                EXPECT_EQ(x + y, x);
-                EXPECT_EQ(x - y, x);
+                EXPECT_EQ(sum, x);
+                EXPECT_EQ(diff, x);
             }
 
             if (x.sign() > 0) {
-                EXPECT_GT(x + y, y);
-                EXPECT_GT(x - y, -y);
+                EXPECT_GT(sum, y);
+                EXPECT_GT(diff, -y);
             } else if (x.sign() < 0) {
-                EXPECT_LT(x + y, y);
-                EXPECT_LT(x - y, -y);
+                EXPECT_LT(sum, y);
+                EXPECT_LT(diff, -y);
             } else {
-                EXPECT_EQ(x + y, y);
-                EXPECT_EQ(x - y, -y);
+                EXPECT_EQ(sum, y);
+                EXPECT_EQ(diff, -y);
             }
         }
 
         for (long y : this->longCases) {
             SCOPED_TRACE_NUMERIC(y);
 
-            EXPECT_EQ(x + y, y + x);
+            const TypeParam sum = x + y;
+            const TypeParam diff = x - y;
+
+            EXPECT_EQ(y + x, sum);
+
+            EXPECT_EQ(TypeParam(x) + y, sum);
+            EXPECT_EQ(y + TypeParam(x), sum);
+            EXPECT_EQ(TypeParam(x) - y, diff);
 
             EXPECT_EQ((x + y) - y, x);
             EXPECT_EQ((x - y) + y, x);
@@ -1366,40 +1364,58 @@ TYPED_TEST(IntegerTest, plusMinus) {
 
             {
                 TypeParam z = x;
-                EXPECT_EQ(z += y, x + y);
-                EXPECT_EQ(z, x + y);
+                EXPECT_EQ(z += y, sum);
+                EXPECT_EQ(z, sum);
             }
             {
                 TypeParam z = x;
-                EXPECT_EQ(z -= y, x - y);
-                EXPECT_EQ(z, x - y);
+                EXPECT_EQ(z -= y, diff);
+                EXPECT_EQ(z, diff);
             }
 
             if (y > 0) {
-                EXPECT_GT(x + y, x);
-                EXPECT_GT(y + x, x);
-                EXPECT_LT(x - y, x);
+                EXPECT_GT(sum, x);
+                EXPECT_LT(diff, x);
             } else if (y < 0) {
-                EXPECT_LT(x + y, x);
-                EXPECT_LT(y + x, x);
-                EXPECT_GT(x - y, x);
+                EXPECT_LT(sum, x);
+                EXPECT_GT(diff, x);
             } else {
-                EXPECT_EQ(x + y, x);
-                EXPECT_EQ(y + x, x);
-                EXPECT_EQ(x - y, x);
+                EXPECT_EQ(sum, x);
+                EXPECT_EQ(diff, x);
             }
 
             if (x.sign() > 0) {
-                EXPECT_GT(x + y, y);
-                EXPECT_LT(-(x - y), y); // -y could overflow
+                EXPECT_GT(sum, y);
+                EXPECT_LT(-diff, y); // -y could overflow
             } else if (x.sign() < 0) {
-                EXPECT_LT(x + y, y);
-                EXPECT_GT(-(x - y), y); // -y could overflow
+                EXPECT_LT(sum, y);
+                EXPECT_GT(-diff, y); // -y could overflow
             } else {
-                EXPECT_EQ(x + y, y);
-                EXPECT_EQ(-(x - y), y); // -y could overflow
+                EXPECT_EQ(sum, y);
+                EXPECT_EQ(-diff, y); // -y could overflow
             }
         }
+
+        // Verify operating on one's self:
+        {
+            TypeParam z = x;
+            z += z;
+            EXPECT_EQ(z, x + x);
+        }
+        {
+            TypeParam z = x;
+            z -= z;
+            EXPECT_EQ(z, 0);
+        }
+
+        // Other expected arithmetic properties:
+        EXPECT_EQ(x + 0L, x);
+        EXPECT_EQ(x - 0L, x);
+        EXPECT_EQ(0L + x, x);
+        EXPECT_EQ(x + TypeParam(), x);
+        EXPECT_EQ(x - TypeParam(), x);
+        EXPECT_EQ(TypeParam() + x, x);
+        EXPECT_EQ(TypeParam() - x, -x);
     }
 
     // Ad-hoc tests for native {+,-} native:
@@ -1484,80 +1500,106 @@ TYPED_TEST(IntegerTest, plusMinus) {
     }
 
     if constexpr (TypeParam::supportsInfinity) {
-        TypeParam inf(TypeParam::infinity);
-        EXPECT_EQ(inf + inf, inf);
-        EXPECT_EQ(inf - inf, inf);
+        const TypeParam inf(TypeParam::infinity);
+
+        verifyInfinite(inf + inf);
+        verifyInfinite(inf + TypeParam(inf));
+        verifyInfinite(TypeParam(inf) + inf);
+        verifyInfinite(TypeParam(inf) + TypeParam(inf));
+        verifyInfinite(inf - inf);
+        verifyInfinite(inf - TypeParam(inf));
+        verifyInfinite(TypeParam(inf) - inf);
+        verifyInfinite(TypeParam(inf) - TypeParam(inf));
+
         {
             TypeParam tmp = TypeParam::infinity;
-            tmp += tmp; // const +=
-            EXPECT_EQ(tmp, TypeParam::infinity);
-            EXPECT_EQ(tmp += TypeParam(inf), inf); // rvalue +=
-            EXPECT_EQ(tmp, TypeParam::infinity);
+            tmp += tmp;
+            verifyInfinite(tmp);
+            tmp += inf;
+            verifyInfinite(tmp);
+            verifyInfinite(tmp += TypeParam(inf));
+            verifyInfinite(tmp);
         }
         {
             TypeParam tmp = TypeParam::infinity;
-            tmp -= tmp; // const -=
-            EXPECT_EQ(tmp, TypeParam::infinity);
-            EXPECT_EQ(tmp -= TypeParam(inf), inf); // rvalue -=
-            EXPECT_EQ(tmp, TypeParam::infinity);
+            tmp -= tmp;
+            verifyInfinite(tmp);
+            tmp -= inf;
+            verifyInfinite(tmp);
+            verifyInfinite(tmp -= TypeParam(inf));
+            verifyInfinite(tmp);
         }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
 
-            EXPECT_EQ(inf + x, inf);
-            EXPECT_EQ(inf - x, inf);
-            EXPECT_EQ(x + inf, inf);
-            EXPECT_EQ(x - inf, inf);
+            verifyInfinite(inf + x);
+            verifyInfinite(inf + TypeParam(x));
+            verifyInfinite(TypeParam(inf) + x);
+            verifyInfinite(TypeParam(inf) + TypeParam(x));
+            verifyInfinite(inf - x);
+            verifyInfinite(inf - TypeParam(x));
+            verifyInfinite(TypeParam(inf) - x);
+            verifyInfinite(TypeParam(inf) - TypeParam(x));
+            verifyInfinite(x + inf);
+            verifyInfinite(x + TypeParam(inf));
+            verifyInfinite(TypeParam(x) + inf);
+            verifyInfinite(TypeParam(x) + TypeParam(inf));
+            verifyInfinite(x - inf);
+            verifyInfinite(x - TypeParam(inf));
+            verifyInfinite(TypeParam(x) - inf);
+            verifyInfinite(TypeParam(x) - TypeParam(inf));
 
             {
                 TypeParam tmp = x;
-                EXPECT_EQ(tmp += inf, inf); // const +=
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp += inf);
+                verifyInfinite(tmp);
             }
             {
                 TypeParam tmp = x;
-                EXPECT_EQ(tmp += TypeParam(inf), inf); // rvalue +=
-                EXPECT_EQ(tmp, TypeParam::infinity);
-            }
-            {
-                TypeParam tmp = inf;
-                EXPECT_EQ(tmp += x, inf); // const +=
-                EXPECT_EQ(tmp, TypeParam::infinity);
-            }
-            {
-                TypeParam tmp = inf;
-                EXPECT_EQ(tmp += TypeParam(x), inf); // rvalue +=
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp += TypeParam(inf));
+                verifyInfinite(tmp);
             }
             {
                 TypeParam tmp = x;
-                EXPECT_EQ(tmp -= inf, inf); // const -=
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp -= inf);
+                verifyInfinite(tmp);
             }
             {
                 TypeParam tmp = x;
-                EXPECT_EQ(tmp -= TypeParam(inf), inf); // rvalue -=
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp -= TypeParam(inf));
+                verifyInfinite(tmp);
             }
             {
                 TypeParam tmp = inf;
-                EXPECT_EQ(tmp -= x, inf); // const -=
-                EXPECT_EQ(tmp, TypeParam::infinity);
-            }
-            {
-                TypeParam tmp = inf;
-                EXPECT_EQ(tmp -= TypeParam(x), inf); // rvalue -=
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp += x);
+                verifyInfinite(tmp);
+                verifyInfinite(tmp += TypeParam(x));
+                verifyInfinite(tmp);
+                verifyInfinite(tmp -= x);
+                verifyInfinite(tmp);
+                verifyInfinite(tmp -= TypeParam(x));
+                verifyInfinite(tmp);
             }
         }
 
         for (long x : this->longCases) {
             SCOPED_TRACE_NUMERIC(x);
 
-            EXPECT_EQ(inf + x, inf);
-            EXPECT_EQ(inf - x, inf);
-            EXPECT_EQ(x + inf, inf);
+            verifyInfinite(inf + x);
+            verifyInfinite(TypeParam(inf) + x);
+            verifyInfinite(inf - x);
+            verifyInfinite(TypeParam(inf) - x);
+            verifyInfinite(x + inf);
+            verifyInfinite(x + TypeParam(inf));
+
+            {
+                TypeParam tmp = inf;
+                verifyInfinite(tmp += x);
+                verifyInfinite(tmp);
+                verifyInfinite(tmp -= x);
+                verifyInfinite(tmp);
+            }
         }
     }
 }
@@ -1592,24 +1634,18 @@ TYPED_TEST(IntegerTest, multiply) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
 
-        verifyProductLargeNative(x, 2, x + x);
-        verifyProductLargeNative(x, 1, x);
-        verifyProductLargeNative(x, 0, TypeParam());
-        verifyProductLargeNative(x, -1, -x);
-        verifyProductLargeNative(x, -2, -x - x);
-
-        // Verify operating on one's self.
-        {
-            TypeParam z = x;
-            z *= z;
-            EXPECT_EQ(z, x * x);
-        }
-
         for (const auto& y : this->cases) {
             SCOPED_TRACE_REGINA(y);
 
+            const TypeParam product = x * y;
+
             // Test the commutative law.
-            EXPECT_EQ(x * y, y * x);
+            EXPECT_EQ(y * x, product);
+
+            // Test operations on rvalue references.
+            EXPECT_EQ(x * TypeParam(y), product);
+            EXPECT_EQ(TypeParam(x) * y, product);
+            EXPECT_EQ(TypeParam(x) * TypeParam(y), product);
 
             // Test the distributive law.
             EXPECT_EQ(x * (y + 1), (x * y) + x);
@@ -1627,37 +1663,43 @@ TYPED_TEST(IntegerTest, multiply) {
             // Test that *= behaves as it should.
             {
                 TypeParam z = x;
-                EXPECT_EQ(z *= y, x * y);
-                EXPECT_EQ(z, x * y);
+                EXPECT_EQ(z *= y, product);
+                EXPECT_EQ(z, product);
             }
 
             // Test signs and ordering.
             if (x.sign() > 0 && y.sign() > 0) {
-                EXPECT_GT(x * y, 0);
-                EXPECT_GE(x * y, x);
-                EXPECT_GE(x * y, y);
+                EXPECT_GT(product, 0);
+                EXPECT_GE(product, x);
+                EXPECT_GE(product, y);
             } else if (x.sign() > 0 && y.sign() < 0) {
-                EXPECT_LT(x * y, 0);
-                EXPECT_LE(x * y, -x);
-                EXPECT_LE(x * y, y);
+                EXPECT_LT(product, 0);
+                EXPECT_LE(product, -x);
+                EXPECT_LE(product, y);
             } else if (x.sign() < 0 && y.sign() > 0) {
-                EXPECT_LT(x * y, 0);
-                EXPECT_LE(x * y, x);
-                EXPECT_LE(x * y, -y);
+                EXPECT_LT(product, 0);
+                EXPECT_LE(product, x);
+                EXPECT_LE(product, -y);
             } else if (x.sign() < 0 && y.sign() < 0) {
-                EXPECT_GT(x * y, 0);
-                EXPECT_GE(x * y, -x);
-                EXPECT_GE(x * y, -y);
+                EXPECT_GT(product, 0);
+                EXPECT_GE(product, -x);
+                EXPECT_GE(product, -y);
             } else {
-                EXPECT_EQ(x * y, 0);
+                EXPECT_EQ(product, 0);
             }
         }
 
         for (long y : this->longCases) {
             SCOPED_TRACE_NUMERIC(y);
 
+            const TypeParam product = x * y;
+
             // Test the commutative law.
-            EXPECT_EQ(x * y, y * x);
+            EXPECT_EQ(y * x, product);
+
+            // Test operations on rvalue references.
+            EXPECT_EQ(TypeParam(x) * y, product);
+            EXPECT_EQ(y * TypeParam(x), product);
 
             // Test the distributive law.
             EXPECT_EQ(x * (TypeParam(y) + 1), (x * y) + x);
@@ -1680,31 +1722,45 @@ TYPED_TEST(IntegerTest, multiply) {
             // Test that *= behaves as it should.
             {
                 TypeParam z = x;
-                EXPECT_EQ(z *= y, x * y);
-                EXPECT_EQ(z, x * y);
+                EXPECT_EQ(z *= y, product);
+                EXPECT_EQ(z, product);
             }
 
             // Test signs and ordering.
             if (x.sign() > 0 && y > 0) {
-                EXPECT_GT(x * y, 0);
-                EXPECT_GE(x * y, x);
-                EXPECT_GE(x * y, y);
+                EXPECT_GT(product, 0);
+                EXPECT_GE(product, x);
+                EXPECT_GE(product, y);
             } else if (x.sign() > 0 && y < 0) {
-                EXPECT_LT(x * y, 0);
-                EXPECT_LE(x * y, -x);
-                EXPECT_LE(x * y, y);
+                EXPECT_LT(product, 0);
+                EXPECT_LE(product, -x);
+                EXPECT_LE(product, y);
             } else if (x.sign() < 0 && y > 0) {
-                EXPECT_LT(x * y, 0);
-                EXPECT_LE(x * y, x);
-                EXPECT_LE(x * y, -y);
+                EXPECT_LT(product, 0);
+                EXPECT_LE(product, x);
+                EXPECT_LE(product, -y);
             } else if (x.sign() < 0 && y < 0) {
-                EXPECT_GT(x * y, 0);
-                EXPECT_GE(x * y, -x);
-                EXPECT_GT(x * y, -(y + 1)); // Note: -y could overflow.
+                EXPECT_GT(product, 0);
+                EXPECT_GE(product, -x);
+                EXPECT_GT(product, -(y + 1)); // Note: -y could overflow.
             } else {
-                EXPECT_EQ(x * y, 0);
+                EXPECT_EQ(product, 0);
             }
         }
+
+        // Verify operating on one's self:
+        {
+            TypeParam z = x;
+            z *= z;
+            EXPECT_EQ(z, x * x);
+        }
+
+        // Other expected arithmetic properties:
+        verifyProductLargeNative(x, 2, x + x);
+        verifyProductLargeNative(x, 1, x);
+        verifyProductLargeNative(x, 0, TypeParam());
+        verifyProductLargeNative(x, -1, -x);
+        verifyProductLargeNative(x, -2, -x - x);
     }
 
     // Ad-hoc tests for native * native:
@@ -1783,26 +1839,67 @@ TYPED_TEST(IntegerTest, multiply) {
         (unsigned long)(LONG_MAX) + 2);
 
     if constexpr (TypeParam::supportsInfinity) {
-        TypeParam inf(TypeParam::infinity);
-        EXPECT_EQ(inf * inf, inf);
+        const TypeParam inf(TypeParam::infinity);
+
+        verifyInfinite(inf * inf);
+        verifyInfinite(inf * TypeParam(inf));
+        verifyInfinite(TypeParam(inf) * inf);
+        verifyInfinite(TypeParam(inf) * TypeParam(inf));
+
         {
             TypeParam tmp = TypeParam::infinity;
             tmp *= tmp;
-            EXPECT_EQ(tmp, TypeParam::infinity);
+            verifyInfinite(tmp);
+            tmp *= inf;
+            verifyInfinite(tmp);
+            verifyInfinite(tmp *= TypeParam(inf));
+            verifyInfinite(tmp);
         }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
 
-            EXPECT_EQ(inf * x, inf);
-            EXPECT_EQ(x * inf, inf);
+            verifyInfinite(inf * x);
+            verifyInfinite(inf * TypeParam(x));
+            verifyInfinite(TypeParam(inf) * x);
+            verifyInfinite(TypeParam(inf) * TypeParam(x));
+            verifyInfinite(x * inf);
+            verifyInfinite(x * TypeParam(inf));
+            verifyInfinite(TypeParam(x) * inf);
+            verifyInfinite(TypeParam(x) * TypeParam(inf));
+
+            {
+                TypeParam tmp = x;
+                verifyInfinite(tmp *= inf);
+                verifyInfinite(tmp);
+            }
+            {
+                TypeParam tmp = x;
+                verifyInfinite(tmp *= TypeParam(inf));
+                verifyInfinite(tmp);
+            }
+            {
+                TypeParam tmp = inf;
+                verifyInfinite(tmp *= x);
+                verifyInfinite(tmp);
+                verifyInfinite(tmp *= TypeParam(x));
+                verifyInfinite(tmp);
+            }
         }
 
         for (long x : this->longCases) {
             SCOPED_TRACE_NUMERIC(x);
 
-            EXPECT_EQ(inf * x, inf);
-            EXPECT_EQ(x * inf, inf);
+            verifyInfinite(inf * x);
+            verifyInfinite(TypeParam(inf) * x);
+            verifyInfinite(x * inf);
+            verifyInfinite(x * TypeParam(inf));
+
+            {
+                TypeParam tmp = inf;
+                verifyInfinite(tmp *= x);
+                verifyInfinite(tmp);
+            }
         }
     }
 }
@@ -1816,27 +1913,29 @@ TYPED_TEST(IntegerTest, divide) {
         if (x == 0) {
             if constexpr (TypeParam::supportsInfinity) {
                 EXPECT_NO_THROW({
-                    EXPECT_TRUE((TypeParam() / x).isInfinite());
-                    EXPECT_TRUE((x / x).isInfinite());
-                    EXPECT_TRUE((x / -x).isInfinite());
-                    EXPECT_TRUE(((x + x) / x).isInfinite());
-                    EXPECT_TRUE(((x + x) / -x).isInfinite());
+                    // The cases below also cover all const-vs-rvalue variants.
+                    verifyInfinite(TypeParam() / x);
+                    verifyInfinite(x / x);
+                    verifyInfinite(x / -x);
+                    verifyInfinite((x + x) / x);
+                    verifyInfinite((x + x) / -x);
                     {
                         TypeParam tmp;
-                        tmp /= x;
-                        EXPECT_TRUE(tmp.isInfinite());
+                        verifyInfinite(tmp /= x);
                     }
                     {
                         TypeParam tmp = x;
-                        tmp /= x;
-                        EXPECT_TRUE(tmp.isInfinite());
+                        verifyInfinite(tmp /= x);
+                    }
+                    {
+                        TypeParam tmp = x;
+                        verifyInfinite(tmp /= -x);
                     }
 
                     // Verify operating on one's self.
                     {
                         TypeParam tmp = x;
-                        tmp /= tmp;
-                        EXPECT_TRUE(tmp.isInfinite());
+                        verifyInfinite(tmp /= tmp);
                     }
                 });
             } else {
@@ -2097,36 +2196,32 @@ TYPED_TEST(IntegerTest, divide) {
     if constexpr (TypeParam::supportsInfinity) {
         TypeParam inf(TypeParam::infinity);
 
-        EXPECT_EQ(inf / inf, inf);
-        EXPECT_EQ(TypeParam() / TypeParam(), inf);
+        verifyInfinite(inf / inf);
+        verifyInfinite(TypeParam() / TypeParam());
         {
             TypeParam tmp = TypeParam::infinity;
-            tmp /= TypeParam::infinity;
-            EXPECT_EQ(tmp, TypeParam::infinity);
+            verifyInfinite(tmp /= TypeParam::infinity);
         }
         {
             TypeParam tmp; // zero
-            tmp /= TypeParam();
-            EXPECT_EQ(tmp, TypeParam::infinity);
+            verifyInfinite(tmp /= TypeParam());
         }
         {
             TypeParam tmp = TypeParam::infinity;
-            tmp /= tmp;
-            EXPECT_EQ(tmp, TypeParam::infinity);
+            verifyInfinite(tmp /= tmp);
         }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
 
-            EXPECT_EQ(inf / x, inf);
+            verifyInfinite(inf / x);
             EXPECT_EQ(x / inf, 0);
-            EXPECT_EQ(x / TypeParam(), inf);
-            EXPECT_EQ(x / 0L, inf);
+            verifyInfinite(x / TypeParam());
+            verifyInfinite(x / 0L);
 
             {
                 TypeParam tmp = TypeParam::infinity;
-                tmp /= x;
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp /= x);
             }
             {
                 TypeParam tmp = x;
@@ -2135,24 +2230,21 @@ TYPED_TEST(IntegerTest, divide) {
             }
             {
                 TypeParam tmp = x;
-                tmp /= TypeParam();
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp /= TypeParam());
             }
             {
                 TypeParam tmp = x;
-                tmp /= 0L;
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp /= 0L);
             }
         }
 
         for (long x : this->longCases) {
             SCOPED_TRACE_NUMERIC(x);
 
-            EXPECT_EQ(inf / x, inf);
+            verifyInfinite(inf / x);
             {
                 TypeParam tmp = TypeParam::infinity;
-                tmp /= x;
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp /= x);
             }
         }
     } else {
@@ -2379,10 +2471,12 @@ TYPED_TEST(IntegerTest, addProduct) {
             SCOPED_TRACE_REGINA(y);
             for (const auto& z : this->cases) {
                 SCOPED_TRACE_REGINA(z);
+
+                const TypeParam result = x + y * z;
                 {
                     TypeParam tmp(x);
                     tmp.addProduct(y, z);
-                    EXPECT_EQ(tmp, x + y * z);
+                    EXPECT_EQ(tmp, result);
                 }
                 {
                     TypeParam tmp(x);
@@ -2390,7 +2484,7 @@ TYPED_TEST(IntegerTest, addProduct) {
                     EXPECT_FALSE(tmp.isNative());
                     tmp.addProduct(y, z);
                     EXPECT_FALSE(tmp.isNative());
-                    EXPECT_EQ(tmp, x + y * z);
+                    EXPECT_EQ(tmp, result);
                 }
             }
             {
@@ -2414,17 +2508,17 @@ TYPED_TEST(IntegerTest, addProduct) {
             {
                 TypeParam tmp(TypeParam::infinity);
                 tmp.addProduct(x, x);
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp);
             }
             {
                 TypeParam tmp(x);
                 tmp.addProduct(TypeParam::infinity, x);
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp);
             }
             {
                 TypeParam tmp(x);
                 tmp.addProduct(x, TypeParam::infinity);
-                EXPECT_EQ(tmp, TypeParam::infinity);
+                verifyInfinite(tmp);
             }
         }
     }
@@ -2434,6 +2528,9 @@ TYPED_TEST(IntegerTest, negate) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
 
+        const TypeParam result = -x;
+        EXPECT_EQ(-TypeParam(x), result);
+
         EXPECT_EQ(x + (-x), 0); // const negation
         EXPECT_EQ((-x) + x, 0); // const negation
         EXPECT_EQ(-(-x), x); // const _and_ rvalue negation
@@ -2441,24 +2538,23 @@ TYPED_TEST(IntegerTest, negate) {
 
         // Verify the results using string representations.
         if (x.sign() == 0)
-            EXPECT_EQ((-x).stringValue(), "0");
+            EXPECT_EQ(result.stringValue(), "0");
         else if (x.sign() > 0)
-            EXPECT_EQ((-x).stringValue(), "-" + x.stringValue());
+            EXPECT_EQ(result.stringValue(), "-" + x.stringValue());
         else
-            EXPECT_EQ("-" + (-x).stringValue(), x.stringValue());
+            EXPECT_EQ("-" + result.stringValue(), x.stringValue());
 
         TypeParam z(x);
-        z.negate(); // in-place negation
-        EXPECT_EQ(z, -x); // const negation
-        EXPECT_EQ(-std::move(z), x); // rvalue negation
+        z.negate();
+        EXPECT_EQ(z, result);
     }
 
     if constexpr (TypeParam::supportsInfinity) {
         TypeParam i(TypeParam::infinity);
+        verifyInfinite(-i); // const negation
+        verifyInfinite(-std::move(i)); // rvalue negation
         i.negate();
-        EXPECT_EQ(i, TypeParam::infinity);
-        EXPECT_EQ(-i, TypeParam::infinity); // const negation
-        EXPECT_EQ(-std::move(i), TypeParam::infinity); // rvalue negation
+        verifyInfinite(i);
     }
 }
 
@@ -2469,11 +2565,8 @@ TYPED_TEST(IntegerTest, abs) {
         std::string str = x.stringValue();
         ASSERT_FALSE(str.empty());
 
-        TypeParam result = TypeParam(x).abs(); // rvalue variant
-        {
-            const TypeParam clone(x);
-            EXPECT_EQ(clone.abs(), result); // const variant
-        }
+        const TypeParam result = x.abs();
+        EXPECT_EQ(TypeParam(x).abs(), result);
 
         // Verify the results using string representations.
         if (x.sign() == 0) {
@@ -2501,11 +2594,8 @@ TYPED_TEST(IntegerTest, abs) {
     }
 
     if constexpr (TypeParam::supportsInfinity) {
-        EXPECT_EQ(TypeParam(TypeParam::infinity).abs(), TypeParam::infinity);
-        {
-            const TypeParam clone(TypeParam::infinity);
-            EXPECT_EQ(clone.abs(), TypeParam::infinity);
-        }
+        verifyInfinite(TypeParam::infinity.abs());
+        verifyInfinite(TypeParam(TypeParam::infinity).abs());
     }
 }
 
@@ -2517,16 +2607,25 @@ TYPED_TEST(IntegerTest, divisionAlg) {
         for (const auto& divisor : this->cases) {
             SCOPED_TRACE_REGINA(divisor);
 
-            auto [q, r] = TypeParam(n).divisionAlg(divisor);
-            EXPECT_EQ(q * divisor + r, n);
+            const auto result = n.divisionAlg(divisor);
+            EXPECT_EQ(n.divisionAlg(TypeParam(divisor)), result);
+            EXPECT_EQ(TypeParam(n).divisionAlg(divisor), result);
+            EXPECT_EQ(TypeParam(n).divisionAlg(TypeParam(divisor)), result);
+
+            EXPECT_EQ(result.first * divisor + result.second, n);
             if (divisor == 0) {
-                EXPECT_EQ(q, 0);
-                EXPECT_EQ(r, n);
+                EXPECT_EQ(result.first, 0);
+                EXPECT_EQ(result.second, n);
             } else {
-                EXPECT_GE(r, 0);
-                EXPECT_LT(r, divisor.abs());
+                EXPECT_GE(result.second, 0);
+                EXPECT_LT(result.second, divisor.abs());
             }
         }
+
+        // Verify operating on one's self.
+        const auto result = n.divisionAlg(n);
+        EXPECT_EQ(result.first, (n == 0 ? 0 : 1));
+        EXPECT_EQ(result.second, 0);
     }
 }
 
@@ -2538,8 +2637,7 @@ TYPED_TEST(IntegerTest, gcdLcm) {
         for (const auto& y : this->cases) {
             SCOPED_TRACE_REGINA(y);
 
-            TypeParam u, v;
-            TypeParam g = x.gcdWithCoeffs(y, u, v);
+            const auto [g, u, v] = x.gcdWithCoeffs(y);
             EXPECT_EQ(g, x.gcd(y)); // const variant
             EXPECT_EQ(g, y.gcd(x)); // const variant
             EXPECT_EQ(g, x.gcd(TypeParam(y))); // rvalue variant
@@ -2583,7 +2681,7 @@ TYPED_TEST(IntegerTest, gcdLcm) {
 
             // Make sure the LCM is correct.
             // Note that we make no guarantees about the sign of the LCM.
-            TypeParam l = x.lcm(y); // const variant
+            const TypeParam l = x.lcm(y); // const variant
             EXPECT_EQ(l, y.lcm(x)); // const variant
             EXPECT_EQ(l, x.lcm(TypeParam(y))); // rvalue variant
             EXPECT_EQ(l, TypeParam(x).lcm(y)); // rvalue variant
@@ -2644,10 +2742,12 @@ TYPED_TEST(IntegerTest, raiseToPower) {
             if (exp == 0)
                 EXPECT_EQ(pow, 1);
             else
-                EXPECT_EQ(pow, TypeParam::infinity);
+                verifyInfinite(pow);
         }
     }
 }
+
+// MARK: - Native integer interaction
 
 TYPED_TEST(IntegerTest, tryReduce) {
     // Note: there used to be a corresponding makeLarge test, but we have
@@ -2770,14 +2870,8 @@ TYPED_TEST(IntegerTest, nativeVsLarge) {
                             case 3:
                                 EXPECT_EQ(x.gcd(y), x2.gcd(y2)); break;
                             case 4:
-                                {
-                                    TypeParam g, u, v, g2, u2, v2;
-                                    g = x.gcdWithCoeffs(y, u, v);
-                                    g2 = x2.gcdWithCoeffs(y2, u2, v2);
-                                    EXPECT_EQ(g, g2);
-                                    EXPECT_EQ(u, u2);
-                                    EXPECT_EQ(v, v2);
-                                }
+                                EXPECT_EQ(x.gcdWithCoeffs(y),
+                                    x2.gcdWithCoeffs(y2));
                                 break;
                             case 5:
                                 EXPECT_EQ(x.lcm(y), x2.lcm(y2)); break;
@@ -3252,12 +3346,27 @@ static void verifyCppIntegerPlusMinus(IntegerType lhs, Native rhs,
         EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
     }
     {
+        IntegerType x = IntegerType(lhs) + rhs;
+        EXPECT_EQ(x, sum);
+        EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
+    }
+    {
         IntegerType x = rhs + lhs;
         EXPECT_EQ(x, sum);
         EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
     }
     {
+        IntegerType x = rhs + IntegerType(lhs);
+        EXPECT_EQ(x, sum);
+        EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
+    }
+    {
         IntegerType x = sum - rhs;
+        EXPECT_EQ(x, lhs);
+        EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
+    }
+    {
+        IntegerType x = IntegerType(sum) - rhs;
         EXPECT_EQ(x, lhs);
         EXPECT_EQ(x.isNative(), lhs.isNative() && sum.isNative());
     }
@@ -3509,12 +3618,27 @@ static void verifyCppIntegerMultiplyDivide(IntegerType lhs, Native rhs,
         EXPECT_EQ(x.isNative(), productShouldBeNative);
     }
     {
+        IntegerType x = IntegerType(lhs) * rhs;
+        EXPECT_EQ(x, product);
+        EXPECT_EQ(x.isNative(), productShouldBeNative);
+    }
+    {
         IntegerType x = rhs * lhs;
+        EXPECT_EQ(x, product);
+        EXPECT_EQ(x.isNative(), productShouldBeNative);
+    }
+    {
+        IntegerType x = rhs * IntegerType(lhs);
         EXPECT_EQ(x, product);
         EXPECT_EQ(x.isNative(), productShouldBeNative);
     }
     if (rhs != 0 && ! lhs.isInfinite()) {
         IntegerType x = product.divExact(rhs);
+        EXPECT_EQ(x, lhs);
+        EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+    }
+    if (rhs != 0 && ! lhs.isInfinite()) {
+        IntegerType x = IntegerType(product).divExact(rhs);
         EXPECT_EQ(x, lhs);
         EXPECT_EQ(x.isNative(), quotientShouldBeNative);
     }
@@ -3834,31 +3958,26 @@ static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
     SCOPED_TRACE_REGINA(IntegerType(rhs)); // to support 128-bit ints
 
     if (lhs.isInfinite()) {
-        {
-            IntegerType q = lhs / rhs;
-            EXPECT_TRUE(q.isInfinite());
-        }
+        verifyInfinite(lhs / rhs);
+        verifyInfinite(IntegerType(lhs) / rhs);
         {
             IntegerType q = lhs;
-            q /= rhs;
-            EXPECT_TRUE(q.isInfinite());
+            verifyInfinite(q /= rhs);
         }
 
         if (rhs == 0) {
             EXPECT_THROW({ lhs % rhs; }, regina::DivisionByZero);
+            EXPECT_THROW({ IntegerType(lhs) % rhs; }, regina::DivisionByZero);
             {
                 IntegerType q = lhs;
                 EXPECT_THROW({ q %= rhs; }, regina::DivisionByZero);
             }
         } else {
-            {
-                IntegerType q = lhs % rhs;
-                EXPECT_EQ(q, 0);
-            }
+            EXPECT_EQ(lhs % rhs, 0);
+            EXPECT_EQ(IntegerType(lhs) % rhs, 0);
             {
                 IntegerType q = lhs;
-                q %= rhs;
-                EXPECT_EQ(q, 0);
+                EXPECT_EQ(q %= rhs, 0);
             }
         }
 
@@ -3867,25 +3986,22 @@ static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
 
     if (rhs == 0) {
         if constexpr (IntegerType::supportsInfinity) {
-            {
-                IntegerType q = lhs / rhs;
-                EXPECT_TRUE(q.isInfinite());
-            }
+            verifyInfinite(lhs / rhs);
+            verifyInfinite(IntegerType(lhs) / rhs);
             {
                 IntegerType q = lhs;
-                q /= rhs;
-                EXPECT_TRUE(q.isInfinite());
+                verifyInfinite(q /= rhs);
             }
         } else {
-            {
-                EXPECT_THROW({ lhs / rhs; }, regina::DivisionByZero);
-            }
+            EXPECT_THROW({ lhs / rhs; }, regina::DivisionByZero);
+            EXPECT_THROW({ IntegerType(lhs) / rhs; }, regina::DivisionByZero);
             {
                 IntegerType q = lhs;
                 EXPECT_THROW({ q /= rhs; }, regina::DivisionByZero);
             }
         }
         EXPECT_THROW({ lhs % rhs; }, regina::DivisionByZero);
+        EXPECT_THROW({ IntegerType(lhs) % rhs; }, regina::DivisionByZero);
         {
             IntegerType q = lhs;
             EXPECT_THROW({ q %= rhs; }, regina::DivisionByZero);
@@ -3902,45 +4018,36 @@ static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
     // unsigned native type, -|rhs| definitely might not fit into Native.
     int lhsSign = lhs.sign();
     IntegerType rhsAbs = IntegerType(rhs).abs();
+
+    IntegerType q = lhs / rhs;
+    IntegerType r = lhs % rhs;
+
+    if (lhsSign > 0) {
+        EXPECT_GE(r, 0);
+        EXPECT_LT(r, rhsAbs);
+    } else if (lhsSign < 0) {
+        EXPECT_LE(r, 0);
+        EXPECT_GT(r, -rhsAbs);
+    } else {
+        EXPECT_EQ(q, 0);
+        EXPECT_EQ(r, 0);
+    }
+
+    SCOPED_TRACE_REGINA(q);
+    SCOPED_TRACE_REGINA(r);
+    EXPECT_EQ(q * rhs + r, lhs);
+
+    EXPECT_EQ(IntegerType(lhs) / rhs, q);
+    EXPECT_EQ(IntegerType(lhs) % rhs, r);
     {
-        IntegerType q = lhs / rhs;
-        IntegerType r = lhs % rhs;
-
-        if (lhsSign > 0) {
-            EXPECT_GE(r, 0);
-            EXPECT_LT(r, rhsAbs);
-        } else if (lhsSign < 0) {
-            EXPECT_LE(r, 0);
-            EXPECT_GT(r, -rhsAbs);
-        } else {
-            EXPECT_EQ(q, 0);
-            EXPECT_EQ(r, 0);
-        }
-
-        SCOPED_TRACE_REGINA(q);
-        SCOPED_TRACE_REGINA(r);
-        EXPECT_EQ(q * rhs + r, lhs);
+        IntegerType qAlt = lhs;
+        EXPECT_EQ(qAlt /= rhs, q);
+        EXPECT_EQ(qAlt, q);
     }
     {
-        IntegerType q = lhs;
-        IntegerType r = lhs;
-        q /= rhs;
-        r %= rhs;
-
-        if (lhsSign > 0) {
-            EXPECT_GE(r, 0);
-            EXPECT_LT(r, rhsAbs);
-        } else if (lhsSign < 0) {
-            EXPECT_LE(r, 0);
-            EXPECT_GT(r, -rhsAbs);
-        } else {
-            EXPECT_EQ(q, 0);
-            EXPECT_EQ(r, 0);
-        }
-
-        SCOPED_TRACE_REGINA(q);
-        SCOPED_TRACE_REGINA(r);
-        EXPECT_EQ(q * rhs + r, lhs);
+        IntegerType rAlt = lhs;
+        EXPECT_EQ(rAlt %= rhs, r);
+        EXPECT_EQ(rAlt, r);
     }
 }
 
