@@ -301,10 +301,12 @@ Returns:
 
 // Docstring regina::python::doc::Laurent2::__init
 static constexpr const char __init[] =
-R"doc(Creates a copy of the given polynomial with all terms multiplied by
-``x^d y^e`` for some integers *d* and *e*.
+R"doc(Deprecated constructor that creates a copy of the given polynomial
+with all terms multiplied by ``x^d y^e`` for some given integers *d*
+and *e*.
 
-This constructor induces a deep (and modified) copy of *value*.
+.. deprecated::
+    Use ``toShift.shifted(xShift, yShift)`` instead.
 
 Parameter ``toShift``:
     the polynomial to clone and shift.

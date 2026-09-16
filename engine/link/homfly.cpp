@@ -897,12 +897,12 @@ namespace {
 
     inline Laurent2<Integer> switchValue(const Laurent2<Integer>& from,
             Crossing* c) {
-        return Laurent2<Integer>(from, (c->sign() > 0 ? -2 : 2), 0);
+        return from.shifted((c->sign() > 0 ? -2 : 2), 0);
     }
 
     inline Laurent2<Integer> spliceValue(const Laurent2<Integer>& from,
             Crossing* c) {
-        Laurent2<Integer> ans(from, (c->sign() > 0 ? -1 : 1), 1);
+        auto ans = from.shifted((c->sign() > 0 ? -1 : 1), 1);
         if (c->sign() < 0)
             ans.negate();
         return ans;

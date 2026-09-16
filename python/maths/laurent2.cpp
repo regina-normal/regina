@@ -50,8 +50,10 @@ void addLaurent2(pybind11::module_& m) {
     auto c = pybind11::class_<Laurent2<Integer>>(m, "Laurent2", rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<const Laurent2<Integer>&>(), rdoc::__copy)
-        .def(pybind11::init<const Laurent2<Integer>&, long, long>(),
-            rdoc::__init)
+        .def(pybind11::init([](const Laurent2<Integer>& toShift,
+                long xShift, long yShift) { // deprecated constructor
+            return toShift.shifted(xShift, yShift);
+        }), "toShift"_a, "xShift"_a, "yShift"_a, rdoc::__init)
         .def(pybind11::init([](const std::vector<
                 std::tuple<long, long, Integer>>& coeffs) {
             return new Laurent2<Integer>(coeffs.begin(), coeffs.end());

@@ -153,10 +153,11 @@ class Laurent2 :
         Laurent2(Laurent2<T>&& value) noexcept = default;
 
         /**
-         * Creates a copy of the given polynomial with all terms
-         * multiplied by `x^d y^e` for some integers \a d and \a e.
+         * Deprecated constructor that creates a copy of the given polynomial
+         * with all terms multiplied by `x^d y^e` for some given integers
+         * \a d and \a e.
          *
-         * This constructor induces a deep (and modified) copy of \a value.
+         * \deprecated Use `toShift.shifted(xShift, yShift)` instead.
          *
          * \param toShift the polynomial to clone and shift.
          * \param xShift the integer \a d, which will be added to all
@@ -164,7 +165,8 @@ class Laurent2 :
          * \param yShift the integer \a e, which will be added to all
          * exponents for \a y.
          */
-        Laurent2(const Laurent2<T>& toShift, long xShift, long yShift) {
+        [[deprecated]] Laurent2(const Laurent2<T>& toShift,
+                long xShift, long yShift) {
             for (const auto& entry : toShift.coeff_)
                 coeff_.emplace_hint(coeff_.end(),
                     std::make_pair(entry.first.first + xShift,

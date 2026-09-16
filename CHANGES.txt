@@ -354,6 +354,8 @@ Version 8.0  [ TODO ]
               coefficient of type T or a native C++ integer.
             - New routine addProduct(), which optimises x ±= y * z.
             - New routines shift() and shifted().
+            - Deprecated the shift constructor Laurent2(poly, xShift, yShift);
+              just use poly.shifted() instead.
             - Now supports iteration over non-zero coefficients and their
               corresponding exponent pairs.
             - New overloads for scalar multiplication and division that take
