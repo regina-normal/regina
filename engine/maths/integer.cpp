@@ -609,10 +609,18 @@ void IntegerBase<withInfinity>::lcmWith(const IntegerBase& other) {
         return;
     }
 
-    IntegerBase gcd(*this);
-    gcd.gcdWith(other);
-    divByExact(gcd);
-    (*this) *= other;
+    if (std::addressof(other) == this) {
+        // The usual mechanism (divide by gcd, multiply by other) won't work,
+        // because we will divide both arguments by the gcd at the same time.
+        // The expected answer: (this * this) / |this| == |this|.
+        if (sign() < 0)
+            negate();
+    } else {
+        IntegerBase gcd(*this);
+        gcd.gcdWith(other);
+        divByExact(gcd);
+        (*this) *= other;
+    }
 }
 
 template <bool withInfinity>

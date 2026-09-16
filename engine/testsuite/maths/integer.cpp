@@ -2464,6 +2464,59 @@ TYPED_TEST(IntegerTest, mod) {
     EXPECT_EQ(longMinDec % -LONG_MAX, -2);
 }
 
+template <ArbitraryPrecisionInteger IntegerType>
+static void verifyAddProduct(const IntegerType& a, const IntegerType& b,
+        const IntegerType& c, const IntegerType& expect) {
+    // The point of this routine is to try all four const/rvalue variants.
+    {
+        IntegerType tmp(a);
+        tmp.addProduct(b, c);
+        EXPECT_EQ(tmp, expect);
+    }
+    {
+        IntegerType tmp(a);
+        tmp.addProduct(b, IntegerType(c));
+        EXPECT_EQ(tmp, expect);
+    }
+    {
+        IntegerType tmp(a);
+        tmp.addProduct(IntegerType(b), c);
+        EXPECT_EQ(tmp, expect);
+    }
+    {
+        IntegerType tmp(a);
+        tmp.addProduct(IntegerType(b), IntegerType(c));
+        EXPECT_EQ(tmp, expect);
+    }
+}
+
+template <ArbitraryPrecisionInteger IntegerType>
+static void verifyAddProductSelf(const IntegerType& a, const IntegerType& b) {
+    // The point of this routine is to put the same object on both the LHS and
+    // the RHS.
+    const IntegerType expect = a * (b + 1);
+    {
+        IntegerType tmp(a);
+        tmp.addProduct(tmp, b);
+        EXPECT_EQ(tmp, expect);
+    }
+    {
+        IntegerType tmp(a);
+        tmp.addProduct(tmp, IntegerType(b));
+        EXPECT_EQ(tmp, expect);
+    }
+    {
+        IntegerType tmp(a);
+        tmp.addProduct(b, tmp);
+        EXPECT_EQ(tmp, expect);
+    }
+    {
+        IntegerType tmp(a);
+        tmp.addProduct(IntegerType(b), tmp);
+        EXPECT_EQ(tmp, expect);
+    }
+}
+
 TYPED_TEST(IntegerTest, addProduct) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
@@ -2471,56 +2524,44 @@ TYPED_TEST(IntegerTest, addProduct) {
             SCOPED_TRACE_REGINA(y);
             for (const auto& z : this->cases) {
                 SCOPED_TRACE_REGINA(z);
+                verifyAddProduct(x, y, z, x + y * z);
+            }
+            verifyAddProductSelf(x, y);
+        }
+        TypeParam tmp(x);
+        tmp.addProduct(tmp, tmp);
+        EXPECT_EQ(tmp, x * (x + 1));
+    }
 
-                const TypeParam result = x + y * z;
-                {
-                    TypeParam tmp(x);
-                    tmp.addProduct(y, z);
-                    EXPECT_EQ(tmp, result);
-                }
-                {
-                    TypeParam tmp(x);
-                    tmp.makeLarge();
-                    EXPECT_FALSE(tmp.isNative());
-                    tmp.addProduct(y, z);
-                    EXPECT_FALSE(tmp.isNative());
-                    EXPECT_EQ(tmp, result);
-                }
-            }
-            {
-                TypeParam tmp(x);
-                tmp.addProduct(tmp, y);
-                EXPECT_EQ(tmp, x + x * y);
-            }
-            {
-                TypeParam tmp(x);
-                tmp.addProduct(y, tmp);
-                EXPECT_EQ(tmp, x + x * y);
-            }
-        }
-        {
-            TypeParam tmp(x);
-            tmp.addProduct(tmp, tmp);
-            EXPECT_EQ(tmp, x + x * x);
-        }
+    if constexpr (TypeParam::supportsInfinity) {
+        const TypeParam inf(TypeParam::infinity);
 
-        if constexpr (TypeParam::supportsInfinity) {
-            {
-                TypeParam tmp(TypeParam::infinity);
-                tmp.addProduct(x, x);
-                verifyInfinite(tmp);
+        verifyAddProduct(inf, inf, inf, inf);
+        verifyAddProductSelf(inf, inf);
+
+        for (const auto& x : this->cases) {
+            SCOPED_TRACE_REGINA(x);
+            verifyAddProduct(x, inf, inf, inf);
+            verifyAddProduct(inf, x, inf, inf);
+            verifyAddProduct(inf, inf, x, inf);
+            verifyAddProduct(x, x, inf, inf);
+            verifyAddProduct(inf, x, x, inf);
+            verifyAddProduct(x, inf, x, inf);
+
+            for (const auto& y : this->cases) {
+                SCOPED_TRACE_REGINA(y);
+                verifyAddProduct(x, y, inf, inf);
+                verifyAddProduct(x, inf, y, inf);
+                verifyAddProduct(inf, x, y, inf);
             }
-            {
-                TypeParam tmp(x);
-                tmp.addProduct(TypeParam::infinity, x);
-                verifyInfinite(tmp);
-            }
-            {
-                TypeParam tmp(x);
-                tmp.addProduct(x, TypeParam::infinity);
-                verifyInfinite(tmp);
-            }
+
+            // Again, put the same argument on the LHS and the RHS.
+            verifyAddProductSelf(x, inf);
+            verifyAddProductSelf(inf, x);
         }
+        TypeParam tmp(inf);
+        tmp.addProduct(tmp, tmp);
+        verifyInfinite(tmp);
     }
 }
 
@@ -2638,11 +2679,11 @@ TYPED_TEST(IntegerTest, gcdLcm) {
             SCOPED_TRACE_REGINA(y);
 
             const auto [g, u, v] = x.gcdWithCoeffs(y);
-            EXPECT_EQ(g, x.gcd(y)); // const variant
-            EXPECT_EQ(g, y.gcd(x)); // const variant
-            EXPECT_EQ(g, x.gcd(TypeParam(y))); // rvalue variant
-            EXPECT_EQ(g, TypeParam(x).gcd(y)); // rvalue variant
-            EXPECT_EQ(g, TypeParam(x).gcd(TypeParam(y))); // rvalue variant
+            EXPECT_EQ(g, x.gcd(y));
+            EXPECT_EQ(g, y.gcd(x));
+            EXPECT_EQ(g, x.gcd(TypeParam(y)));
+            EXPECT_EQ(g, TypeParam(x).gcd(y));
+            EXPECT_EQ(g, TypeParam(x).gcd(TypeParam(y)));
 
             if (x == 0 && y == 0) {
                 EXPECT_EQ(g, 0);
@@ -2681,21 +2722,52 @@ TYPED_TEST(IntegerTest, gcdLcm) {
 
             // Make sure the LCM is correct.
             // Note that we make no guarantees about the sign of the LCM.
-            const TypeParam l = x.lcm(y); // const variant
-            EXPECT_EQ(l, y.lcm(x)); // const variant
-            EXPECT_EQ(l, x.lcm(TypeParam(y))); // rvalue variant
-            EXPECT_EQ(l, TypeParam(x).lcm(y)); // rvalue variant
-            EXPECT_EQ(l, TypeParam(x).lcm(TypeParam(y))); // rvalue variant
+            const TypeParam l = x.lcm(y);
+            EXPECT_EQ(l, y.lcm(x));
+            EXPECT_EQ(l, x.lcm(TypeParam(y)));
+            EXPECT_EQ(l, TypeParam(x).lcm(y));
+            EXPECT_EQ(l, TypeParam(x).lcm(TypeParam(y)));
             EXPECT_EQ((g * l).abs(), (x * y).abs());
 
             // Verify that in-place gcd/lcm operations behave correctly also.
-            TypeParam p(x);
-            p.gcdWith(y);
-            EXPECT_EQ(p, g);
+            {
+                TypeParam p(x);
+                p.gcdWith(y);
+                EXPECT_EQ(p, g);
+            }
+            {
+                TypeParam p(x);
+                p.gcdWith(TypeParam(y));
+                EXPECT_EQ(p, g);
+            }
+            {
+                TypeParam q(x);
+                q.lcmWith(y);
+                EXPECT_EQ(q, l);
+            }
+            {
+                TypeParam q(x);
+                q.lcmWith(TypeParam(y));
+                EXPECT_EQ(q, l);
+            }
+        }
 
-            TypeParam q(x);
-            q.lcmWith(y);
-            EXPECT_EQ(q, l);
+        // Test cases where the same object appears on both the LHS and the RHS.
+        {
+            TypeParam tmp(x);
+            tmp.gcdWith(tmp);
+            EXPECT_EQ(tmp, x.abs());
+        }
+        {
+            TypeParam tmp(x);
+            tmp.lcmWith(tmp);
+            EXPECT_EQ(tmp, x.abs());
+        }
+        {
+            const auto result = x.gcdWithCoeffs(x);
+            EXPECT_EQ(std::get<0>(result), x.abs());
+            EXPECT_EQ(std::get<1>(result), x.sign());
+            EXPECT_EQ(std::get<2>(result), 0);
         }
     }
 
@@ -2899,6 +2971,53 @@ TYPED_TEST(IntegerTest, nativeVsLarge) {
                                 EXPECT_NO_THROW({ EXPECT_EQ(x.divisionAlg(y),
                                     x2.divisionAlg(y2)); });
                                 break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Ternary operations (which is just addProduct):
+    for (auto a : this->cases) {
+        SCOPED_TRACE_REGINA(a);
+        a.tryReduce();
+
+        for (auto b : this->cases) {
+            SCOPED_TRACE_REGINA(b);
+            b.tryReduce();
+
+            for (auto c : this->cases) {
+                SCOPED_TRACE_REGINA(c);
+                c.tryReduce();
+
+                TypeParam result(a);
+                result.addProduct(b, c);
+
+                // Again *Rep (0, 1) means (large, native) storage methods.
+                for (int aRep = 0; aRep < (a.isNative() ? 2 : 1); ++aRep) {
+                    for (int bRep = 0; bRep < (b.isNative() ? 2 : 1); ++bRep) {
+                        for (int cRep = 0; cRep < (c.isNative() ? 2 : 1);
+                                ++cRep) {
+                            if (aRep == 0 && bRep == 0 && cRep == 0)
+                                continue;
+
+                            TypeParam x(a);
+                            if (aRep == 0)
+                                x.makeLarge();
+                            TypeParam y(b);
+                            if (bRep == 0)
+                                y.makeLarge();
+                            TypeParam z(c);
+                            if (cRep == 0)
+                                z.makeLarge();
+
+                            EXPECT_EQ(x.isNative(), aRep == 1);
+                            EXPECT_EQ(y.isNative(), bRep == 1);
+                            EXPECT_EQ(z.isNative(), cRep == 1);
+
+                            x.addProduct(y, z);
+                            EXPECT_EQ(x, result);
                         }
                     }
                 }

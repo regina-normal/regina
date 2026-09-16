@@ -276,6 +276,11 @@ Version 8.0  [ TODO ]
               and now throw an exception when computing anything modulo zero.
             - Added specialisations of std::common_type for use when mixing
               Integer and LargeInteger.
+            - Fixed x.lcmWith(x) (where both operands are the same object in
+              memory), which previously gave an incorrect result.  Note that
+              lcm() was fine, and x.lcmWith(y) where x == y was also fine (as
+              long as x and y were different objects in memory).  No other
+              code within Regina was affected by this.
             - Many optimisations to this class, including rvalue variants of
               many operations.
         Class IntegerOverflow:
