@@ -521,8 +521,11 @@ allocated. This means that the _largest_ exponent for which memory is
 allocated will be ``base + capacity - 1``.
 
 In the special case of the zero polynomial, it is possible (but not
-necessarily true) that no memory is allocated at all. In such a
-scenario, this routine will return ``(0, 0)`` instead.
+necessarily true) that no memory is allocated at all. If no memory is
+allocated, then this routine will return ``(0, 0)``. If a zero
+polynomial _does_ have memory allocated, then this memory will not be
+holding any meaningful coefficients, and so this routine will return a
+positive capacity but an arbitrary base.
 
 Returns:
     a pair ``(base, capacity)`` as described above, or ``(0, 0)`` if
@@ -625,10 +628,13 @@ Precondition:
     All exponents in this polynomial with non-zero coefficients are
     multiples of *k*.
 
+Exception ``InvalidArgument``:
+    The given scaling factor *k* is zero.
+
 Exception ``FailedPrecondition``:
-    Either *k* is zero, or some exponent with a non-zero coefficient
-    is not a multiple of *k*. Be aware that this polynomial might
-    change before this exception is thrown.
+    The scaling factor *k* is non-zero, but some exponent with a non-
+    zero coefficient is not a multiple of *k*. Be aware that this
+    polynomial might be changed before this exception is thrown.
 
 Parameter ``k``:
     the scaling factor to divide exponents by.)doc";
@@ -637,12 +643,15 @@ Parameter ``k``:
 static constexpr const char scaleUp[] =
 R"doc(Multiplies all exponents in this polynomial by *k* for some integer
 *k*. This is equivalent to replacing the variable *x* of the
-polynomial with *x*^{*k*}.
+polynomial with ``x^k``.
 
 Both positive and negative scaling factors *k* are allowed.
 
 Precondition:
     *k* is non-zero.
+
+Exception ``InvalidArgument``:
+    The given scaling factor *k* is zero.
 
 Parameter ``k``:
     the scaling factor to multiply exponents by.)doc";
