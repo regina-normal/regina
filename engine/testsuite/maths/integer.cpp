@@ -1910,123 +1910,46 @@ TYPED_TEST(IntegerTest, divide) {
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
 
-        if (x == 0) {
-            if constexpr (TypeParam::supportsInfinity) {
-                EXPECT_NO_THROW({
-                    // The cases below also cover all const-vs-rvalue variants.
-                    verifyInfinite(TypeParam() / x);
-                    verifyInfinite(x / x);
-                    verifyInfinite(x / -x);
-                    verifyInfinite((x + x) / x);
-                    verifyInfinite((x + x) / -x);
-                    {
-                        TypeParam tmp;
-                        verifyInfinite(tmp /= x);
-                    }
-                    {
-                        TypeParam tmp = x;
-                        verifyInfinite(tmp /= x);
-                    }
-                    {
-                        TypeParam tmp = x;
-                        verifyInfinite(tmp /= -x);
-                    }
-
-                    // Verify operating on one's self.
-                    {
-                        TypeParam tmp = x;
-                        verifyInfinite(tmp /= tmp);
-                    }
-                });
-            } else {
-                EXPECT_THROW({ TypeParam() / x; }, regina::DivisionByZero);
-                EXPECT_THROW({ x / x; }, regina::DivisionByZero);
-                EXPECT_THROW({ x / -x; }, regina::DivisionByZero);
-                EXPECT_THROW({ (x + x) / x; }, regina::DivisionByZero);
-                EXPECT_THROW({ (x + x) / -x; }, regina::DivisionByZero);
-                {
-                    TypeParam tmp;
-                    EXPECT_THROW({ tmp /= x; }, regina::DivisionByZero);
-                }
-                {
-                    TypeParam tmp = x;
-                    EXPECT_THROW({ tmp /= x; }, regina::DivisionByZero);
-                }
-
-                // Verify operating on one's self.
-                {
-                    TypeParam tmp = x;
-                    EXPECT_THROW({ tmp /= tmp; }, regina::DivisionByZero);
-                }
-            }
-            // We do not allow divExact() by zero at all.
-        } else {
-            EXPECT_NO_THROW({
-                EXPECT_EQ(TypeParam() / x, 0);
-                EXPECT_EQ(x / x, 1);
-                EXPECT_EQ(x / -x, -1);
-                EXPECT_EQ((x + x) / x, 2);
-                EXPECT_EQ((x + x) / -x, -2);
-
-                EXPECT_EQ(TypeParam().divExact(x), 0);
-                EXPECT_EQ(x.divExact(x), 1);
-                EXPECT_EQ(x.divExact(-x), -1);
-                EXPECT_EQ((x + x).divExact(x), 2);
-                EXPECT_EQ((x + x).divExact(-x), -2);
-
-                // Just test a few of the cases above with /=.
-                {
-                    TypeParam tmp;
-                    tmp /= x;
-                    EXPECT_EQ(tmp, 0);
-                }
-                {
-                    TypeParam tmp = x;
-                    tmp /= x;
-                    EXPECT_EQ(tmp, 1);
-                }
-                {
-                    TypeParam tmp = x + x;
-                    tmp /= -x;
-                    EXPECT_EQ(tmp, -2);
-                }
-
-                // Verify operating on one's self.
-                {
-                    TypeParam tmp = x;
-                    tmp /= tmp;
-                    EXPECT_EQ(tmp, 1);
-                }
-                {
-                    TypeParam tmp = x;
-                    tmp.divByExact(tmp);
-                    EXPECT_EQ(tmp, 1);
-                }
-            });
-        }
-
         for (const auto& y : this->cases) {
+            SCOPED_TRACE_REGINA(y);
+
             if (y == 0) {
                 if constexpr (TypeParam::supportsInfinity) {
-                    EXPECT_NO_THROW({ EXPECT_TRUE((x / y).isInfinite()); });
-                    {
-                        TypeParam tmp = x;
-                        EXPECT_NO_THROW({ tmp /= y; });
-                        EXPECT_TRUE(tmp.isInfinite());
-                    }
+                    EXPECT_NO_THROW({
+                        verifyInfinite(x / y);
+                        verifyInfinite(x / TypeParam(y));
+                        verifyInfinite(TypeParam(x) / y);
+                        verifyInfinite(TypeParam(x) / TypeParam(y));
+                        {
+                            TypeParam tmp = x;
+                            verifyInfinite(tmp /= y);
+                        }
+                        {
+                            TypeParam tmp = x;
+                            verifyInfinite(tmp /= TypeParam(y));
+                        }
+                    });
                 } else {
                     EXPECT_THROW({ x / y; }, regina::DivisionByZero);
+                    EXPECT_THROW({ x / TypeParam(y); }, regina::DivisionByZero);
+                    EXPECT_THROW({ TypeParam(x) / y; }, regina::DivisionByZero);
+                    EXPECT_THROW({ TypeParam(x) / TypeParam(y); },
+                        regina::DivisionByZero);
                     {
                         TypeParam tmp = x;
                         EXPECT_THROW({ tmp /= y; }, regina::DivisionByZero);
+                    }
+                    {
+                        TypeParam tmp = x;
+                        EXPECT_THROW({ tmp /= TypeParam(y); },
+                            regina::DivisionByZero);
                     }
                 }
                 continue;
             }
 
-            SCOPED_TRACE_REGINA(y);
-
-            TypeParam ans = x / y;
+            // From here, y is non-zero.
+            const TypeParam ans = x / y;
 
             if (ans == 0) {
                 EXPECT_LT(x.abs(), y.abs());
@@ -2044,35 +1967,56 @@ TYPED_TEST(IntegerTest, divide) {
                 }
             }
 
+            EXPECT_EQ(x / TypeParam(y), ans);
+            EXPECT_EQ(TypeParam(x) / y, ans);
+            EXPECT_EQ(TypeParam(x) / TypeParam(y), ans);
+            {
+                TypeParam tmp = x;
+                EXPECT_EQ(tmp /= y, ans);
+            }
+            {
+                TypeParam tmp = x;
+                EXPECT_EQ(tmp /= TypeParam(y), ans);
+            }
+
             EXPECT_EQ((x * y) / y, x);
-            EXPECT_EQ((x * y).divExact(y), x);
             EXPECT_EQ(x / (-y), -ans);
             EXPECT_EQ((-x) / y, -ans);
             EXPECT_EQ((-x) / (-y), ans);
 
+            // Manufacture some cases where we can test divExact / divByExact.
+            // We will test this more thoroughly in the divisionAlg tests.
+            const auto product = x * y;
+            EXPECT_EQ(product.divExact(y), x);
+            EXPECT_EQ(product.divExact(TypeParam(y)), x);
+            EXPECT_EQ(TypeParam(product).divExact(y), x);
+            EXPECT_EQ(TypeParam(product).divExact(TypeParam(y)), x);
             {
-                TypeParam z = x;
-                z /= y;
-                EXPECT_EQ(z, ans);
+                TypeParam tmp = product;
+                EXPECT_EQ(tmp.divByExact(y), x);
             }
             {
-                TypeParam z = x * y;
-                EXPECT_EQ(z.divByExact(y), x);
-                EXPECT_EQ(z, x);
+                TypeParam tmp = product;
+                EXPECT_EQ(tmp.divByExact(TypeParam(y)), x);
             }
         }
 
         for (long y : this->longCases) {
+            SCOPED_TRACE_NUMERIC(y);
+
             if (y == 0) {
                 if constexpr (TypeParam::supportsInfinity) {
-                    EXPECT_NO_THROW({ EXPECT_TRUE((x / y).isInfinite()); });
-                    {
-                        TypeParam tmp = x;
-                        EXPECT_NO_THROW({ tmp /= y; });
-                        EXPECT_TRUE(tmp.isInfinite());
-                    }
+                    EXPECT_NO_THROW({
+                        verifyInfinite(x / y);
+                        verifyInfinite(TypeParam(x) / y);
+                        {
+                            TypeParam tmp = x;
+                            verifyInfinite(tmp /= y);
+                        }
+                    });
                 } else {
                     EXPECT_THROW({ x / y; }, regina::DivisionByZero);
+                    EXPECT_THROW({ TypeParam(x) / y; }, regina::DivisionByZero);
                     {
                         TypeParam tmp = x;
                         EXPECT_THROW({ tmp /= y; }, regina::DivisionByZero);
@@ -2081,9 +2025,8 @@ TYPED_TEST(IntegerTest, divide) {
                 continue;
             }
 
-            SCOPED_TRACE_NUMERIC(y);
-
-            TypeParam ans = x / y;
+            // From here, y is non-zero.
+            const TypeParam ans = x / y;
 
             // Always work with -|y| instead of |y|, since |LONG_MIN| will
             // overflow a native long.
@@ -2107,8 +2050,14 @@ TYPED_TEST(IntegerTest, divide) {
                 }
             }
 
+            EXPECT_EQ(TypeParam(x) / y, ans);
+            {
+                TypeParam tmp = x;
+                tmp /= y;
+                EXPECT_EQ(tmp, ans);
+            }
+
             EXPECT_EQ((x * y) / y, x);
-            EXPECT_EQ((x * y).divExact(y), x);
             EXPECT_EQ((-x) / y, -ans);
             if (y == LONG_MIN) {
                 // -LONG_MIN will overflow.
@@ -2119,16 +2068,77 @@ TYPED_TEST(IntegerTest, divide) {
                 EXPECT_EQ((-x) / (-y), ans);
             }
 
+            // Manufacture some cases where we can test divExact / divByExact.
+            // We will test this more thoroughly in the divisionAlg tests.
+            const auto product = x * y;
+            EXPECT_EQ(product.divExact(y), x);
+            EXPECT_EQ(TypeParam(product).divExact(y), x);
             {
-                TypeParam z = x;
-                z /= y;
-                EXPECT_EQ(z, ans);
+                TypeParam tmp = product;
+                EXPECT_EQ(tmp.divByExact(y), x);
             }
-            {
-                TypeParam z = x * y;
-                EXPECT_EQ(z.divByExact(y), x);
-                EXPECT_EQ(z, x);
+        }
+
+        // Verify operating on one's self.
+        if (x == 0) {
+            if constexpr (TypeParam::supportsInfinity) {
+                EXPECT_NO_THROW({
+                    TypeParam tmp = x;
+                    verifyInfinite(tmp /= tmp);
+                });
+            } else {
+                TypeParam tmp = x;
+                EXPECT_THROW({ tmp /= tmp; }, regina::DivisionByZero);
             }
+            // We do not allow divExact() by zero at all.
+        } else {
+            EXPECT_NO_THROW({
+                TypeParam tmp = x;
+                EXPECT_EQ(tmp /= tmp, 1);
+            });
+            EXPECT_NO_THROW({
+                TypeParam tmp = x;
+                EXPECT_EQ(tmp.divByExact(tmp), 1);
+            });
+        }
+
+        // Other expected arithmetic properties not already tested above:
+        if (x != 0) {
+            EXPECT_NO_THROW({
+                EXPECT_EQ(x / -x, -1);
+                EXPECT_EQ((x + x) / x, 2);
+                EXPECT_EQ((x + x) / -x, -2);
+
+                EXPECT_EQ(x.divExact(-x), -1);
+                EXPECT_EQ((x + x).divExact(x), 2);
+                EXPECT_EQ((x + x).divExact(-x), -2);
+
+                {
+                    TypeParam tmp = x;
+                    EXPECT_EQ(tmp /= x, 1);
+                }
+                {
+                    TypeParam tmp = x + x;
+                    EXPECT_EQ(tmp /= x, 2);
+                }
+                {
+                    TypeParam tmp = x + x;
+                    EXPECT_EQ(tmp /= -x, -2);
+                }
+
+                {
+                    TypeParam tmp = x;
+                    EXPECT_EQ(tmp.divByExact(x), 1);
+                }
+                {
+                    TypeParam tmp = x + x;
+                    EXPECT_EQ(tmp.divByExact(x), 2);
+                }
+                {
+                    TypeParam tmp = x + x;
+                    EXPECT_EQ(tmp.divByExact(-x), -2);
+                }
+            });
         }
     }
 
@@ -2194,28 +2204,38 @@ TYPED_TEST(IntegerTest, divide) {
     EXPECT_EQ(longMaxInc.divExact(LONG_MIN), -1);
 
     if constexpr (TypeParam::supportsInfinity) {
-        TypeParam inf(TypeParam::infinity);
+        const TypeParam inf(TypeParam::infinity);
 
         verifyInfinite(inf / inf);
-        verifyInfinite(TypeParam() / TypeParam());
-        {
-            TypeParam tmp = TypeParam::infinity;
-            verifyInfinite(tmp /= TypeParam::infinity);
-        }
-        {
-            TypeParam tmp; // zero
-            verifyInfinite(tmp /= TypeParam());
-        }
+        verifyInfinite(inf / TypeParam(inf));
+        verifyInfinite(TypeParam(inf) / inf);
+        verifyInfinite(TypeParam(inf) / TypeParam(inf));
+
         {
             TypeParam tmp = TypeParam::infinity;
             verifyInfinite(tmp /= tmp);
+        }
+        {
+            TypeParam tmp = TypeParam::infinity;
+            verifyInfinite(tmp /= inf);
+        }
+        {
+            TypeParam tmp = TypeParam::infinity;
+            verifyInfinite(tmp /= TypeParam(inf));
         }
 
         for (const auto& x : this->cases) {
             SCOPED_TRACE_REGINA(x);
 
             verifyInfinite(inf / x);
+            verifyInfinite(inf / TypeParam(x));
+            verifyInfinite(TypeParam(inf) / x);
+            verifyInfinite(TypeParam(inf) / TypeParam(x));
             EXPECT_EQ(x / inf, 0);
+            EXPECT_EQ(x / TypeParam(inf), 0);
+            EXPECT_EQ(TypeParam(x) / inf, 0);
+            EXPECT_EQ(TypeParam(x) / TypeParam(inf), 0);
+
             verifyInfinite(x / TypeParam());
             verifyInfinite(x / 0L);
 
@@ -2224,17 +2244,16 @@ TYPED_TEST(IntegerTest, divide) {
                 verifyInfinite(tmp /= x);
             }
             {
-                TypeParam tmp = x;
-                tmp /= inf;
-                EXPECT_EQ(tmp, 0);
+                TypeParam tmp = TypeParam::infinity;
+                verifyInfinite(tmp /= TypeParam(x));
             }
             {
                 TypeParam tmp = x;
-                verifyInfinite(tmp /= TypeParam());
+                EXPECT_EQ(tmp /= inf, 0);
             }
             {
                 TypeParam tmp = x;
-                verifyInfinite(tmp /= 0L);
+                EXPECT_EQ(tmp /= TypeParam(inf), 0);
             }
         }
 
@@ -2242,28 +2261,10 @@ TYPED_TEST(IntegerTest, divide) {
             SCOPED_TRACE_NUMERIC(x);
 
             verifyInfinite(inf / x);
+            verifyInfinite(TypeParam(inf) / x);
             {
                 TypeParam tmp = TypeParam::infinity;
                 verifyInfinite(tmp /= x);
-            }
-        }
-    } else {
-        EXPECT_THROW({ TypeParam() / TypeParam(); }, regina::DivisionByZero);
-        {
-            TypeParam tmp;
-            EXPECT_THROW({ tmp /= TypeParam(); }, regina::DivisionByZero);
-        }
-
-        for (const auto& x : this->cases) {
-            EXPECT_THROW({ x / 0L; }, regina::DivisionByZero);
-            EXPECT_THROW({ x / TypeParam(); }, regina::DivisionByZero);
-            {
-                TypeParam tmp = x;
-                EXPECT_THROW({ tmp /= 0L; }, regina::DivisionByZero);
-            }
-            {
-                TypeParam tmp = x;
-                EXPECT_THROW({ tmp /= TypeParam(); }, regina::DivisionByZero);
             }
         }
     }
@@ -2272,91 +2273,29 @@ TYPED_TEST(IntegerTest, divide) {
 TYPED_TEST(IntegerTest, mod) {
     // If the result is non-zero then sign(x % y) = sign(x).
 
-    if constexpr (TypeParam::supportsInfinity) {
-        EXPECT_EQ(TypeParam::infinity % TypeParam::infinity, 0);
-        {
-            TypeParam z = TypeParam::infinity;
-            z %= TypeParam::infinity;
-            EXPECT_EQ(z, 0);
-        }
-        {
-            TypeParam z = TypeParam::infinity;
-            z %= z;
-            EXPECT_EQ(z, 0);
-        }
-    }
-
     for (const auto& x : this->cases) {
         SCOPED_TRACE_REGINA(x);
-
-        EXPECT_EQ(x % 1, 0);
-        if (x == 0) {
-            EXPECT_THROW({ TypeParam() % x; }, regina::DivisionByZero);
-            EXPECT_THROW({ TypeParam() % x; }, regina::DivisionByZero);
-            EXPECT_THROW({ x % x; }, regina::DivisionByZero);
-            EXPECT_THROW({ (-x) % x; }, regina::DivisionByZero);
-            EXPECT_THROW({ (x + x) % x; }, regina::DivisionByZero);
-            EXPECT_THROW({ (-(x + x)) % x; }, regina::DivisionByZero);
-
-            if constexpr (TypeParam::supportsInfinity) {
-                EXPECT_THROW({ TypeParam::infinity % x; },
-                    regina::DivisionByZero);
-                {
-                    TypeParam z = TypeParam::infinity;
-                    EXPECT_THROW({ z %= x; }, regina::DivisionByZero);
-                }
-            }
-
-            // Verify operating on one's self.
-            {
-                TypeParam tmp = x;
-                EXPECT_THROW({ tmp %= tmp; }, regina::DivisionByZero);
-            }
-        } else {
-            EXPECT_EQ(TypeParam() % x, 0);
-            EXPECT_EQ(TypeParam() % x, 0);
-            EXPECT_EQ(x % x, 0);
-            EXPECT_EQ((-x) % x, 0);
-            EXPECT_EQ((x + x) % x, 0);
-            EXPECT_EQ((-(x + x)) % x, 0);
-
-            if constexpr (TypeParam::supportsInfinity) {
-                EXPECT_EQ(TypeParam::infinity % x, 0);
-                {
-                    TypeParam z = TypeParam::infinity;
-                    z %= x;
-                    EXPECT_EQ(z, 0);
-                }
-            }
-
-            // Verify operating on one's self.
-            {
-                TypeParam tmp = x;
-                tmp %= tmp;
-                EXPECT_EQ(tmp, 0);
-            }
-        }
-
-        if constexpr (TypeParam::supportsInfinity) {
-            EXPECT_EQ(x % TypeParam::infinity, x);
-            {
-                TypeParam z = x;
-                z %= TypeParam::infinity;
-                EXPECT_EQ(z, x);
-            }
-        }
 
         for (const auto& y : this->cases) {
             SCOPED_TRACE_REGINA(y);
 
             if (y == 0) {
                 EXPECT_THROW({ x % y; }, regina::DivisionByZero);
+                EXPECT_THROW({ x % TypeParam(y); }, regina::DivisionByZero);
+                EXPECT_THROW({ TypeParam(x) % y; }, regina::DivisionByZero);
+                EXPECT_THROW({ TypeParam(x) % TypeParam(y); },
+                    regina::DivisionByZero);
                 {
-                    TypeParam z = x;
-                    EXPECT_THROW({ z % y; }, regina::DivisionByZero);
+                    TypeParam tmp = x;
+                    EXPECT_THROW({ tmp %= y; }, regina::DivisionByZero);
+                }
+                {
+                    TypeParam tmp = x;
+                    EXPECT_THROW({ tmp %= TypeParam(y); },
+                        regina::DivisionByZero);
                 }
             } else {
-                TypeParam ans = x % y;
+                const TypeParam ans = x % y;
 
                 // Ensure that ans is within range.
                 if (ans < 0) {
@@ -2371,13 +2310,37 @@ TYPED_TEST(IntegerTest, mod) {
                 TypeParam q = (x - ans) / y;
                 EXPECT_EQ(q * y + ans, x);
 
-                TypeParam z = x;
-                EXPECT_EQ(z %= y, ans);
-                EXPECT_EQ(z, ans);
+                // Test operations on rvalue references.
+                EXPECT_EQ(x % TypeParam(y), ans);
+                EXPECT_EQ(TypeParam(x) % y, ans);
+                EXPECT_EQ(TypeParam(x) % TypeParam(y), ans);
+
+                // Test that %= behaves as it should.
+                {
+                    TypeParam tmp = x;
+                    EXPECT_EQ(tmp %= y, ans);
+                }
+                {
+                    TypeParam tmp = x;
+                    EXPECT_EQ(tmp %= TypeParam(y), ans);
+                }
 
                 // Verify divExact() if we can.
-                if (ans == 0)
+                // We will test this more thoroughly in the divisionAlg tests.
+                if (ans == 0) {
                     EXPECT_EQ(x.divExact(y) * y, x);
+                    EXPECT_EQ(x.divExact(TypeParam(y)) * y, x);
+                    EXPECT_EQ(TypeParam(x).divExact(y) * y, x);
+                    EXPECT_EQ(TypeParam(x).divExact(TypeParam(y)) * y, x);
+                    {
+                        TypeParam tmp = x;
+                        EXPECT_EQ(tmp.divByExact(y) * y, x);
+                    }
+                    {
+                        TypeParam tmp = x;
+                        EXPECT_EQ(tmp.divByExact(TypeParam(y)) * y, x);
+                    }
+                }
             }
         }
 
@@ -2386,12 +2349,13 @@ TYPED_TEST(IntegerTest, mod) {
 
             if (y == 0) {
                 EXPECT_THROW({ x % y; }, regina::DivisionByZero);
+                EXPECT_THROW({ TypeParam(x) % y; }, regina::DivisionByZero);
                 {
-                    TypeParam z = x;
-                    EXPECT_THROW({ z % y; }, regina::DivisionByZero);
+                    TypeParam tmp = x;
+                    EXPECT_THROW({ tmp %= y; }, regina::DivisionByZero);
                 }
             } else {
-                TypeParam ans = x % y;
+                const TypeParam ans = x % y;
 
                 // Ensure that ans is within range.
                 if (ans < 0) {
@@ -2408,14 +2372,45 @@ TYPED_TEST(IntegerTest, mod) {
                 TypeParam q = (x - ans) / y;
                 EXPECT_EQ(q * y + ans, x);
 
-                TypeParam z = x;
-                EXPECT_EQ(z %= y, ans);
-                EXPECT_EQ(z, ans);
+                // Test operations on rvalue references.
+                EXPECT_EQ(TypeParam(x) % y, ans);
+
+                // Test that %= behaves as it should.
+                {
+                    TypeParam tmp = x;
+                    EXPECT_EQ(tmp %= y, ans);
+                }
 
                 // Verify divExact() if we can.
-                if (ans == 0)
+                // We will test this more thoroughly in the divisionAlg tests.
+                if (ans == 0) {
                     EXPECT_EQ(x.divExact(y) * y, x);
+                    EXPECT_EQ(TypeParam(x).divExact(y) * y, x);
+                    {
+                        TypeParam tmp = x;
+                        EXPECT_EQ(tmp.divByExact(y) * y, x);
+                    }
+                }
             }
+        }
+
+        // Verify operating on one's self:
+        if (x == 0) {
+            TypeParam tmp = x;
+            EXPECT_THROW({ tmp %= tmp; }, regina::DivisionByZero);
+        } else {
+            TypeParam tmp = x;
+            EXPECT_EQ(tmp %= tmp, 0);
+        }
+
+        // Other expected arithmetic properties:
+        EXPECT_EQ(x % 1, 0);
+        if (x != 0) {
+            EXPECT_EQ(TypeParam() % x, 0);
+            EXPECT_EQ(x % x, 0);
+            EXPECT_EQ((-x) % x, 0);
+            EXPECT_EQ((x + x) % x, 0);
+            EXPECT_EQ((-(x + x)) % x, 0);
         }
     }
 
@@ -2462,6 +2457,100 @@ TYPED_TEST(IntegerTest, mod) {
     EXPECT_EQ(longMinDec % LONG_MAX, -2);
     EXPECT_EQ(longMinDec % LONG_MIN, -1);
     EXPECT_EQ(longMinDec % -LONG_MAX, -2);
+
+    if constexpr (TypeParam::supportsInfinity) {
+        const TypeParam inf(TypeParam::infinity);
+
+        EXPECT_EQ(inf % inf, 0);
+        EXPECT_EQ(inf % TypeParam(inf), 0);
+        EXPECT_EQ(TypeParam(inf) % inf, 0);
+        EXPECT_EQ(TypeParam(inf) % TypeParam(inf), 0);
+
+        {
+            TypeParam z = TypeParam::infinity;
+            z %= z;
+            EXPECT_EQ(z, 0);
+        }
+        {
+            TypeParam z = TypeParam::infinity;
+            z %= inf;
+            EXPECT_EQ(z, 0);
+        }
+        {
+            TypeParam z = TypeParam::infinity;
+            z %= TypeParam(inf);
+            EXPECT_EQ(z, 0);
+        }
+
+        for (const auto& x : this->cases) {
+            SCOPED_TRACE_REGINA(x);
+
+            if (x == 0) {
+                EXPECT_THROW({ inf % x; }, regina::DivisionByZero);
+                EXPECT_THROW({ inf % TypeParam(x); }, regina::DivisionByZero);
+                EXPECT_THROW({ TypeParam(inf) % x; }, regina::DivisionByZero);
+                EXPECT_THROW({ TypeParam(inf) % TypeParam(x); },
+                    regina::DivisionByZero);
+                {
+                    TypeParam tmp = inf;
+                    EXPECT_THROW({ tmp %= x; }, regina::DivisionByZero);
+                }
+                {
+                    TypeParam tmp = inf;
+                    EXPECT_THROW({ tmp %= TypeParam(x); },
+                        regina::DivisionByZero);
+                }
+            } else {
+                EXPECT_EQ(inf % x, 0);
+                EXPECT_EQ(inf % TypeParam(x), 0);
+                EXPECT_EQ(TypeParam(inf) % x, 0);
+                EXPECT_EQ(TypeParam(inf) % TypeParam(x), 0);
+                {
+                    TypeParam tmp = inf;
+                    EXPECT_EQ(tmp %= x, 0);
+                }
+                {
+                    TypeParam tmp = inf;
+                    EXPECT_EQ(tmp %= TypeParam(x), 0);
+                }
+            }
+
+            EXPECT_EQ(x % inf, x);
+            EXPECT_EQ(x % TypeParam(inf), x);
+            EXPECT_EQ(TypeParam(x) % inf, x);
+            EXPECT_EQ(TypeParam(x) % TypeParam(inf), x);
+            {
+                TypeParam tmp = x;
+                tmp %= inf;
+                EXPECT_EQ(tmp, x);
+            }
+            {
+                TypeParam tmp = x;
+                tmp %= TypeParam(inf);
+                EXPECT_EQ(tmp, x);
+            }
+        }
+
+        for (long x : this->longCases) {
+            SCOPED_TRACE_NUMERIC(x);
+
+            if (x == 0) {
+                EXPECT_THROW({ inf % x; }, regina::DivisionByZero);
+                EXPECT_THROW({ TypeParam(inf) % x; }, regina::DivisionByZero);
+                {
+                    TypeParam tmp = inf;
+                    EXPECT_THROW({ tmp %= x; }, regina::DivisionByZero);
+                }
+            } else {
+                EXPECT_EQ(inf % x, 0);
+                EXPECT_EQ(TypeParam(inf) % x, 0);
+                {
+                    TypeParam tmp = inf;
+                    EXPECT_EQ(tmp %= x, 0);
+                }
+            }
+        }
+    }
 }
 
 template <ArbitraryPrecisionInteger IntegerType>
@@ -2645,6 +2734,7 @@ TYPED_TEST(IntegerTest, divisionAlg) {
     // Just run through all (n, d) pairs.
     for (const auto& n : this->cases) {
         SCOPED_TRACE_REGINA(n);
+
         for (const auto& divisor : this->cases) {
             SCOPED_TRACE_REGINA(divisor);
 
@@ -2660,6 +2750,56 @@ TYPED_TEST(IntegerTest, divisionAlg) {
             } else {
                 EXPECT_GE(result.second, 0);
                 EXPECT_LT(result.second, divisor.abs());
+            }
+
+            // Test divExact() and divByExact() now, since we have all the
+            // necessary data for it.
+            if (divisor != 0) {
+                const TypeParam x = n - result.second;
+                EXPECT_EQ(x.divExact(divisor), result.first);
+                EXPECT_EQ(x.divExact(TypeParam(divisor)), result.first);
+                EXPECT_EQ(TypeParam(x).divExact(divisor), result.first);
+                EXPECT_EQ(TypeParam(x).divExact(TypeParam(divisor)),
+                    result.first);
+                {
+                    TypeParam tmp = x;
+                    EXPECT_EQ(tmp.divByExact(divisor), result.first);
+                }
+                {
+                    TypeParam tmp = x;
+                    EXPECT_EQ(tmp.divByExact(TypeParam(divisor)), result.first);
+                }
+            }
+        }
+
+        for (long divisor : this->longCases) {
+            SCOPED_TRACE_NUMERIC(divisor);
+
+            const auto result = n.divisionAlg(divisor);
+            EXPECT_EQ(TypeParam(n).divisionAlg(divisor), result);
+
+            EXPECT_EQ(result.first * divisor + result.second, n);
+            if (divisor == 0) {
+                EXPECT_EQ(result.first, 0);
+                EXPECT_EQ(result.second, n);
+            } else if (divisor == LONG_MIN) {
+                EXPECT_GE(result.second, 0);
+                EXPECT_LE(result.second, LONG_MAX); // remainder < |LONG_MIN|
+            } else {
+                EXPECT_GE(result.second, 0);
+                EXPECT_LT(result.second, std::abs(divisor));
+            }
+
+            // Test divExact() and divByExact() now, since we have all the
+            // necessary data for it.
+            if (divisor != 0) {
+                const TypeParam x = n - result.second;
+                EXPECT_EQ(x.divExact(divisor), result.first);
+                EXPECT_EQ(TypeParam(x).divExact(divisor), result.first);
+                {
+                    TypeParam tmp = x;
+                    EXPECT_EQ(tmp.divByExact(divisor), result.first);
+                }
             }
         }
 
@@ -3728,9 +3868,6 @@ static void verifyCppIntegerMultiplyDivide(IntegerType lhs, Native rhs,
         productShouldBeNative &= ! (lhs == -1 && product == LONG_MIN);
     }
 
-    bool quotientShouldBeNative = product.isNative() &&
-        ! (product == LONG_MIN && rhs == -1);
-
     {
         IntegerType x = lhs * rhs;
         EXPECT_EQ(x, product);
@@ -3751,27 +3888,33 @@ static void verifyCppIntegerMultiplyDivide(IntegerType lhs, Native rhs,
         EXPECT_EQ(x, product);
         EXPECT_EQ(x.isNative(), productShouldBeNative);
     }
-    if (rhs != 0 && ! lhs.isInfinite()) {
-        IntegerType x = product.divExact(rhs);
-        EXPECT_EQ(x, lhs);
-        EXPECT_EQ(x.isNative(), quotientShouldBeNative);
-    }
-    if (rhs != 0 && ! lhs.isInfinite()) {
-        IntegerType x = IntegerType(product).divExact(rhs);
-        EXPECT_EQ(x, lhs);
-        EXPECT_EQ(x.isNative(), quotientShouldBeNative);
-    }
     {
         IntegerType x = lhs;
         x *= rhs;
         EXPECT_EQ(x, product);
         EXPECT_EQ(x.isNative(), productShouldBeNative);
     }
+
     if (rhs != 0 && ! lhs.isInfinite()) {
-        IntegerType x = product;
-        x.divByExact(rhs);
-        EXPECT_EQ(x, lhs);
-        EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+        // Opportunistically use this product as a test for exact division.
+        bool quotientShouldBeNative = product.isNative() &&
+            ! (product == LONG_MIN && rhs == -1);
+
+        {
+            IntegerType x = product.divExact(rhs);
+            EXPECT_EQ(x, lhs);
+            EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+        }
+        {
+            IntegerType x = IntegerType(product).divExact(rhs);
+            EXPECT_EQ(x, lhs);
+            EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+        }
+        {
+            IntegerType x = product;
+            EXPECT_EQ(x.divByExact(rhs), lhs);
+            EXPECT_EQ(x.isNative(), quotientShouldBeNative);
+        }
     }
 }
 
@@ -4100,6 +4243,7 @@ static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
             }
         }
 
+        // We cannot test divExact() / divByExact() when lhs is infinite.
         return;
     }
 
@@ -4119,12 +4263,15 @@ static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
                 EXPECT_THROW({ q /= rhs; }, regina::DivisionByZero);
             }
         }
+
         EXPECT_THROW({ lhs % rhs; }, regina::DivisionByZero);
         EXPECT_THROW({ IntegerType(lhs) % rhs; }, regina::DivisionByZero);
         {
             IntegerType q = lhs;
             EXPECT_THROW({ q %= rhs; }, regina::DivisionByZero);
         }
+
+        // We cannot test divExact() / divByExact() when lhs is infinite.
         return;
     }
 
@@ -4135,11 +4282,12 @@ static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
     // Division should round towards zero, and mod (when non-zero) should take
     // the sign of lhs.  Note: |rhs| might not fit into Native, and for an
     // unsigned native type, -|rhs| definitely might not fit into Native.
+    // TODO: Check nativeness of results
     int lhsSign = lhs.sign();
     IntegerType rhsAbs = IntegerType(rhs).abs();
 
-    IntegerType q = lhs / rhs;
-    IntegerType r = lhs % rhs;
+    const IntegerType q = lhs / rhs;
+    const IntegerType r = lhs % rhs;
 
     if (lhsSign > 0) {
         EXPECT_GE(r, 0);
@@ -4159,14 +4307,20 @@ static void verifyCppIntegerDivMod(IntegerType lhs, Native rhs) {
     EXPECT_EQ(IntegerType(lhs) / rhs, q);
     EXPECT_EQ(IntegerType(lhs) % rhs, r);
     {
-        IntegerType qAlt = lhs;
-        EXPECT_EQ(qAlt /= rhs, q);
-        EXPECT_EQ(qAlt, q);
+        IntegerType tmp = lhs;
+        EXPECT_EQ(tmp /= rhs, q);
     }
     {
-        IntegerType rAlt = lhs;
-        EXPECT_EQ(rAlt %= rhs, r);
-        EXPECT_EQ(rAlt, r);
+        IntegerType tmp = lhs;
+        EXPECT_EQ(tmp %= rhs, r);
+    }
+
+    const IntegerType product = lhs - r;
+    EXPECT_EQ(product.divExact(rhs), q);
+    EXPECT_EQ(IntegerType(product).divExact(rhs), q);
+    {
+        IntegerType tmp = product;
+        EXPECT_EQ(tmp.divByExact(rhs), q);
     }
 }
 
