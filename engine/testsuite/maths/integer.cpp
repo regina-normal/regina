@@ -807,6 +807,76 @@ TYPED_TEST(IntegerTest, swap) {
     }
 }
 
+TYPED_TEST(IntegerTest, validAfterMove) {
+    // We just need a few cases here, involving different kinds of
+    // representations.
+    std::vector moveCases { TypeParam(0), TypeParam(5),
+        TypeParam(LONG_MIN), TypeParam(LONG_MAX),
+        TypeParam("-" ENORMOUS_INTEGER), TypeParam(ENORMOUS_INTEGER) };
+    if constexpr (TypeParam::supportsInfinity)
+        moveCases.push_back(TypeParam::infinity);
+
+    // Choose the integer to move from one place to another:
+    for (const TypeParam& c : moveCases) {
+        SCOPED_TRACE_REGINA(c);
+
+        // Should the data being moved be forced to use GMP format?
+        for (int forceLarge = 0; forceLarge < (c.isNative() ? 2 : 1);
+                ++forceLarge) {
+            SCOPED_TRACE_NUMERIC(forceLarge);
+
+            // Choose an initial value for y (the integer that we move the
+            // data into).  The point here is to ensure that, when moving
+            // data from x into y, we don't end up with unwanted residue
+            // originally from y living in an invalid manner within x.
+            //
+            // We describe this initial value using an iterator into moveCases.
+            // This iterator can also be moveCases.end(), which indicates that
+            // y should be default constructed (hence the awkward structure of
+            // this loop).
+            auto init = moveCases.begin();
+            while (true) {
+                // Choose the new value to assign to x after its original
+                // value has been moved out:
+                for (const TypeParam& d : moveCases) {
+                    SCOPED_TRACE_REGINA(d);
+
+                    TypeParam x(c);
+                    if (forceLarge) {
+                        x.makeLarge();
+                        EXPECT_FALSE(x.isNative());
+                    }
+                    EXPECT_NO_THROW({ x.validate(); });
+                    EXPECT_EQ(x, c);
+
+                    TypeParam y;
+                    if (init != moveCases.end()) {
+                        y = *init;
+                        EXPECT_EQ(y, *init);
+                    } else {
+                        EXPECT_EQ(y, 0);
+                    }
+                    EXPECT_NO_THROW({ y.validate(); });
+
+                    y = std::move(x);
+                    EXPECT_NO_THROW({ x.validate(); });
+                    EXPECT_NO_THROW({ y.validate(); });
+                    EXPECT_EQ(y, c);
+                    if (forceLarge)
+                        EXPECT_FALSE(y.isNative());
+
+                    x = d;
+                    EXPECT_NO_THROW({ x.validate(); });
+                    EXPECT_EQ(x, d);
+                }
+                if (init == moveCases.end())
+                    break;
+                ++init;
+            }
+        }
+    }
+}
+
 #ifdef INT128_AVAILABLE
 static void verifyEqual128(const regina::NativeInteger<16>& x,
         const regina::NativeInteger<16>& y) {
