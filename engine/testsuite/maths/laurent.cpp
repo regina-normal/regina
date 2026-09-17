@@ -530,54 +530,123 @@ TEST_F(LaurentTest, init) {
 }
 
 TEST_F(LaurentTest, moveThenAssign) {
+    // Here we test both move-then-assign and move-then-init.
     for (const L& c : cases) {
         SCOPED_TRACE_REGINA(c);
-        for (const L& d : cases) {
-            SCOPED_TRACE_REGINA(d);
+
+        // Here *junk indicates the initial value of y.  The point of this is
+        // to ensure that, when moving x into y, we don't end up with unwanted
+        // residue from this junk living within x.
+        //
+        // We also allow junk to be cases.end() which means that y should be
+        // default constructed (hence the awkward structure of this loop).
+        auto junk = cases.begin();
+        while (true) {
             {
                 L x(c);
-                L y = std::move(x);
-                x = d;
-                validate(x, d);
-                validate(y, c);
-            }
-            {
-                L x(c);
-                L y = std::move(x);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
                 x = 3;
                 validate(x, L(3));
                 validate(y, c);
             }
             {
                 L x(c);
-                L y = std::move(x);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
                 x = bigInt;
                 validate(x, L(bigInt));
                 validate(y, c);
             }
             {
                 L x(c);
-                L y = std::move(x);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
                 Integer i(bigInt);
                 x = std::move(i);
                 validate(x, L(bigInt));
                 validate(y, c);
             }
-            // Test move-then-init also.
             {
                 L x(c);
-                L y = std::move(x);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
                 x.init();
                 validateZero(x);
                 validate(y, c);
             }
             {
                 L x(c);
-                L y = std::move(x);
+                validate(x, c);
+                L y;
+                if (junk != cases.end()) {
+                    y = *junk;
+                    validate(y, *junk);
+                } else {
+                    validateZero(y);
+                }
+
+                y = std::move(x);
                 x.initExp(-5);
                 validate(x, x5Inv);
                 validate(y, c);
             }
+
+            for (const L& d : cases) {
+                SCOPED_TRACE_REGINA(d);
+                {
+                    L x(c);
+                    validate(x, c);
+                    L y;
+                    if (junk != cases.end()) {
+                        y = *junk;
+                        validate(y, *junk);
+                    } else {
+                        validateZero(y);
+                    }
+
+                    y = std::move(x);
+                    x = d;
+                    validate(x, d);
+                    validate(y, c);
+                }
+            }
+
+            if (junk == cases.end())
+                break;
+            ++junk;
         }
     }
 }
