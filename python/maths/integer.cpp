@@ -167,6 +167,7 @@ void addIntegerBase(pybind11::module_& m, const char* className) {
             rdoc::randomCornerBinary)
         .def("makeLarge", &Int::makeLarge, rdoc::makeLarge)
         .def("tryReduce", &Int::tryReduce, rdoc::tryReduce)
+        .def("validate", &Int::validate, rdoc::validate)
         .def_readonly_static("supportsInfinity", &Int::supportsInfinity)
         .def_readonly_static("zero", &Int::zero)
         .def_readonly_static("one", &Int::one)

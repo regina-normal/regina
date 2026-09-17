@@ -2016,6 +2016,22 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          */
         size_t hash() const;
 
+        /**
+         * A diagnostic routine that ensures that the internal representation
+         * of this integer is valid.
+         *
+         * If Regina is working correctly, this routine should do nothing.
+         * If the internal representation of this integer is _not_ valid,
+         * this routine will throw an exception.
+         *
+         * This routine is provided for use within Regina's various test suites.
+         * End users should not need to call it at all.
+         *
+         * \exception ImpossibleScenario The internal state of this integer is
+         * invalid.
+         */
+        void validate() const;
+
     private:
         /**
          * Initialises this integer to infinity.
@@ -4764,6 +4780,15 @@ inline size_t IntegerBase<withInfinity>::hash() const {
         return static_cast<size_t>(mpz_get_si(large_));
     else
         return static_cast<size_t>(small_);
+}
+
+template <bool withInfinity>
+inline void IntegerBase<withInfinity>::validate() const {
+    // Under the current internal represention, the only _invalid_ state is
+    // one where the infinity marker is true but large_ is non-null.
+    if constexpr (supportsInfinity)
+        if (detail::InfinityBase<true>::infinite_ && large_)
+            throw ImpossibleScenario("Invalid integer representation");
 }
 
 template <bool withInfinity>

@@ -1402,6 +1402,21 @@ Python:
 Returns:
     the value of this integer.)doc";
 
+// Docstring regina::python::doc::IntegerBase::validate
+static constexpr const char validate[] =
+R"doc(A diagnostic routine that ensures that the internal representation of
+this integer is valid.
+
+If Regina is working correctly, this routine should do nothing. If the
+internal representation of this integer is _not_ valid, this routine
+will throw an exception.
+
+This routine is provided for use within Regina's various test suites.
+End users should not need to call it at all.
+
+Exception ``ImpossibleScenario``:
+    The internal state of this integer is invalid.)doc";
+
 }; // struct IntegerBase
 
 namespace detail {

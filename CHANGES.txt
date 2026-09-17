@@ -283,6 +283,7 @@ Version 8.0  [ TODO ]
               code within Regina was affected by this.
             - Many optimisations to this class, including rvalue variants of
               many operations.
+            - New routine validate(), for use in test suites.
         Class IntegerOverflow:
             - New exception class.
         Class Isomorphism<dim>:
