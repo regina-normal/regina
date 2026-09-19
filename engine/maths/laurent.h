@@ -1800,7 +1800,8 @@ class Laurent :
             detail::productBest<T, detail::SetOrAdd::Either, false>(newCoeff,
                 coeff_ + minExp_ - base_, maxExp_ - minExp_ + 1,
                 other.coeff_ + other.minExp_ - other.base_,
-                    other.maxExp_ - other.minExp_ + 1);
+                    other.maxExp_ - other.minExp_ + 1,
+                nullptr /* scratch */);
             minExp_ += other.minExp_;
             maxExp_ += other.maxExp_;
             base_ = minExp_;
@@ -1841,7 +1842,8 @@ class Laurent :
                 detail::productBest<T, detail::SetOrAdd::Add, false>(
                     coeff_ + x.minExp_ + y.minExp_ - base_,
                     x.coeff_ + x.minExp_ - x.base_, x.maxExp_ - x.minExp_ + 1,
-                    y.coeff_ + y.minExp_ - y.base_, y.maxExp_ - y.minExp_ + 1);
+                    y.coeff_ + y.minExp_ - y.base_, y.maxExp_ - y.minExp_ + 1,
+                    nullptr /* scratch */);
 
                 // We might have zeroed out some coefficients.
                 fixDegrees();
@@ -1879,7 +1881,8 @@ class Laurent :
                 detail::productBest<T, detail::SetOrAdd::Add, true>(
                     coeff_ + x.minExp_ + y.minExp_ - base_,
                     x.coeff_ + x.minExp_ - x.base_, x.maxExp_ - x.minExp_ + 1,
-                    y.coeff_ + y.minExp_ - y.base_, y.maxExp_ - y.minExp_ + 1);
+                    y.coeff_ + y.minExp_ - y.base_, y.maxExp_ - y.minExp_ + 1,
+                    nullptr /* scratch */);
 
                 // We might have zeroed out some coefficients.
                 fixDegrees();
@@ -2751,7 +2754,8 @@ Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
             lhs.coeff_ + lhs.minExp_ - lhs.base_,
                 lhs.maxExp_ - lhs.minExp_ + 1,
             rhs.coeff_ + rhs.minExp_ - rhs.base_,
-                rhs.maxExp_ - rhs.minExp_ + 1);
+                rhs.maxExp_ - rhs.minExp_ + 1,
+            nullptr /* scratch */);
 
         // Note: the final minExp/maxExp coefficients will both be non-zero,
         // since the same is true of both lhs and rhs.
@@ -2788,7 +2792,8 @@ Laurent<T> operator * (Laurent<T>&& lhs, Laurent<T>&& rhs) {
             lhs.coeff_ + lhs.minExp_ - lhs.base_,
                 lhs.maxExp_ - lhs.minExp_ + 1,
             rhs.coeff_ + rhs.minExp_ - rhs.base_,
-                rhs.maxExp_ - rhs.minExp_ + 1);
+                rhs.maxExp_ - rhs.minExp_ + 1,
+            nullptr /* scratch */);
 
         // Note: the final minExp/maxExp coefficients will both be non-zero,
         // since the same is true of both lhs and rhs.

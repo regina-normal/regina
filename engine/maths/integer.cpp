@@ -59,10 +59,10 @@ namespace {
 
 template <bool withInfinity>
 IntegerBase<withInfinity>::IntegerBase(const char* value, int base) :
-        large_(nullptr) {
+        rep_(REP_NATIVE) {
     char* endptr;
     errno = 0;
-    small_ = strtol(value, &endptr, base);
+    d_.native_ = strtol(value, &endptr, base);
     if (errno || *endptr) {
         // Something went wrong.  Try again with large integers and/or infinity.
         // Note that in the case of overflow, we may have errno != 0 but
@@ -73,14 +73,17 @@ IntegerBase<withInfinity>::IntegerBase(const char* value, int base) :
             while (*value && isspace(*value))
                 ++value;
             if (strncmp(value, "inf", 3) == 0) {
-                makeInfinite();
+                rep_ = REP_INFINITE;
                 return;
             }
         }
-        large_ = new __mpz_struct[1];
-        if (mpz_init_set_str(large_, value, base) != 0)
+        // The following GMP call will overwrite d_.native_ (which is okay).
+        if (mpz_init_set_str(d_.gmp_, value, base) != 0) {
+            mpz_clear(d_.gmp_);
             throw InvalidArgument("Could not parse the given string "
                 "as an arbitrary-precision integer");
+        }
+        rep_ = REP_GMP;
         // If the strtol() error was just trailing whitespace, we might still
         // fit into a native long.
         if (maybeTrailingWhitespace)
@@ -90,10 +93,12 @@ IntegerBase<withInfinity>::IntegerBase(const char* value, int base) :
 
 template <bool withInfinity>
 std::string IntegerBase<withInfinity>::stringValue(int base) const {
-    if (isInfinite())
-        return "inf";
-    else if (large_) {
-        char* str = mpz_get_str(nullptr, base, large_);
+    if constexpr (withInfinity)
+        if (rep_ == REP_INFINITE)
+            return "inf";
+
+    if (rep_) {
+        char* str = mpz_get_str(nullptr, base, d_.gmp_);
         std::string ans(str);
         free(str);
         return ans;
@@ -101,7 +106,7 @@ std::string IntegerBase<withInfinity>::stringValue(int base) const {
         // Hmm.  std::setbase() only takes 8, 10 or 16 as i understand it.
         // For now, be wasteful and always go through GMP.
         mpz_t tmp;
-        mpz_init_set_si(tmp, small_);
+        mpz_init_set_si(tmp, d_.native_);
 
         char* str = mpz_get_str(nullptr, base, tmp);
         std::string ans(str);
@@ -115,12 +120,9 @@ std::string IntegerBase<withInfinity>::stringValue(int base) const {
 template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const char* value) {
-    if constexpr (withInfinity)
-        makeFinite();
-
     char* endptr;
     errno = 0;
-    small_ = strtol(value, &endptr, 10 /* base */);
+    long parsed = strtol(value, &endptr, 10 /* base */);
     if (errno || *endptr) {
         // Something went wrong.  Try again with large integers and/or infinity.
         // Note that in the case of overflow, we may have errno != 0 but
@@ -135,23 +137,31 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
                 return *this;
             }
         }
-        if (large_) {
-            if (mpz_set_str(large_, value, 10 /* base */) != 0)
+        if (rep_ == REP_GMP) {
+            if (mpz_set_str(d_.gmp_, value, 10 /* base */) != 0)
                 throw InvalidArgument("Could not parse the given string "
                     "as an arbitrary-precision integer");
         } else {
-            large_ = new __mpz_struct[1];
-            if (mpz_init_set_str(large_, value, 10 /* base */) != 0)
+            // Back up native_, which the following GMP call will overwrite.
+            parsed = d_.native_;
+            if (mpz_init_set_str(d_.gmp_, value, 10 /* base */) != 0) {
+                mpz_clear(d_.gmp_);
+                d_.native_ = parsed; // Restore the backup before throwing.
                 throw InvalidArgument("Could not parse the given string "
                     "as an arbitrary-precision integer");
+            }
+            rep_ = REP_GMP;
         }
         // If the strtol() error was just trailing whitespace, we might still
         // fit into a native long.
         if (maybeTrailingWhitespace)
             tryReduce();
-    } else if (large_) {
-        // All good, but we must clear out the old large integer.
-        clearLarge();
+    } else {
+        // Success!  Convert from whatever representation we currently have.
+        if (rep_ == REP_GMP)
+            mpz_clear(d_.gmp_);
+        rep_ = REP_NATIVE;
+        d_.native_ = parsed;
     }
     return *this;
 }
@@ -159,14 +169,16 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 template <bool withInfinity>
 std::ostream& operator << (std::ostream& out,
         const IntegerBase<withInfinity>& i) {
-    if (i.isInfinite())
-        out << "inf";
-    else if (i.large_) {
-        char* str = mpz_get_str(nullptr, 10, i.large_);
+    if constexpr (withInfinity)
+        if (i.rep_ == IntegerBase<withInfinity>::REP_INFINITE)
+            return out << "inf";
+
+    if (i.rep_) {
+        char* str = mpz_get_str(nullptr, 10, i.d_.gmp_);
         out << str;
         free(str);
     } else
-        out << i.small_;
+        out << i.d_.native_;
     return out;
 }
 
@@ -174,35 +186,38 @@ template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
-        else if (other.isInfinite()) {
+        else if (other.rep_ == REP_INFINITE) {
             makeInfinite();
             return *this;
         }
     }
 
-    if (large_) {
-        if (other.large_)
-            mpz_mul(large_, large_, other.large_);
+    // From here on, all integers are finite.
+    if (rep_) {
+        if (other.rep_)
+            mpz_mul(d_.gmp_, d_.gmp_, other.d_.gmp_);
         else
-            mpz_mul_si(large_, large_, other.small_);
-    } else if (other.large_) {
-        large_ = new __mpz_struct[1];
-        mpz_init(large_);
-        mpz_mul_si(large_, other.large_, small_);
+            mpz_mul_si(d_.gmp_, d_.gmp_, other.d_.native_);
+    } else if (other.rep_) {
+        // Copy d_.native_, since d_.gmp_ will overwrite it.
+        long orig = d_.native_;
+        rep_ = REP_GMP;
+        mpz_init(d_.gmp_);
+        mpz_mul_si(d_.gmp_, other.d_.gmp_, orig);
     } else {
         // In DoubleLong, the multiplication will not overflow.
         // Furthermore, the multiplication cannot reach the minimum possible
         // DoubleLong, which means we can safely negate the result.
-        DoubleLong ans = static_cast<DoubleLong>(small_) *
-            static_cast<DoubleLong>(other.small_);
+        DoubleLong ans = static_cast<DoubleLong>(d_.native_) *
+            static_cast<DoubleLong>(other.d_.native_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
-            large_ = new __mpz_struct[1];
-            mpz_init(large_);
+            rep_ = REP_GMP;
+            mpz_init(d_.gmp_);
             if (ans >= 0) {
-                mpz_import(large_, 1 /* word count */, 1 /* word order */,
+                mpz_import(d_.gmp_, 1 /* word count */, 1 /* word order */,
                     sizeof(DoubleLong) /* word size */,
                     0 /* native endianness */, 0 /* full words */, &ans);
             } else {
@@ -210,13 +225,13 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
                 // C++20 mandates a two's complement representation, and
                 // we use that here.
                 ans = -ans;
-                mpz_import(large_, 1 /* word count */, 1 /* word order */,
+                mpz_import(d_.gmp_, 1 /* word count */, 1 /* word order */,
                     sizeof(DoubleLong) /* word size */,
                     0 /* native endianness */, 0 /* full words */, &ans);
-                mpz_neg(large_, large_);
+                mpz_neg(d_.gmp_, d_.gmp_);
             }
         } else
-            small_ = static_cast<long>(ans);
+            d_.native_ = static_cast<long>(ans);
     }
     return *this;
 }
@@ -227,46 +242,44 @@ IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
     // Since GMP prefers out-of-place multiplication, we implement this
     // separately from *=.
     if constexpr (withInfinity) {
-        if (isInfinite() || other.isInfinite())
-            return IntegerBase(false, false); // infinity
+        if (rep_ == REP_INFINITE || other.rep_ == REP_INFINITE)
+            return { detail::InfiniteTag() };
     }
 
-    if (large_) {
-        mpz_ptr ans = new __mpz_struct[1];
-        mpz_init(ans);
-        if (other.large_)
-            mpz_mul(ans, large_, other.large_);
+    // From here on, all integers are finite.
+    if (rep_) {
+        IntegerBase ans(detail::GMPTag{});
+        if (other.rep_)
+            mpz_mul(ans.d_.gmp_, d_.gmp_, other.d_.gmp_);
         else
-            mpz_mul_si(ans, large_, other.small_);
+            mpz_mul_si(ans.d_.gmp_, d_.gmp_, other.d_.native_);
         return ans;
-    } else if (other.large_) {
-        mpz_ptr ans = new __mpz_struct[1];
-        mpz_init(ans);
-        mpz_mul_si(ans, other.large_, small_);
+    } else if (other.rep_) {
+        IntegerBase ans(detail::GMPTag{});
+        mpz_mul_si(ans.d_.gmp_, other.d_.gmp_, d_.native_);
         return ans;
     } else {
         // In DoubleLong, the multiplication will not overflow.
         // Furthermore, the multiplication cannot reach the minimum possible
         // DoubleLong, which means we can safely negate the result.
-        DoubleLong ans = static_cast<DoubleLong>(small_) *
-            static_cast<DoubleLong>(other.small_);
+        DoubleLong ans = static_cast<DoubleLong>(d_.native_) *
+            static_cast<DoubleLong>(other.d_.native_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
-            mpz_ptr ansLarge = new __mpz_struct[1];
-            mpz_init(ansLarge);
+            IntegerBase ansLarge(detail::GMPTag{});
             if (ans >= 0) {
-                mpz_import(ansLarge, 1 /* word count */, 1 /* word order */,
-                    sizeof(DoubleLong) /* word size */,
+                mpz_import(ansLarge.d_.gmp_, 1 /* word count */,
+                    1 /* word order */, sizeof(DoubleLong) /* word size */,
                     0 /* native endianness */, 0 /* full words */, &ans);
             } else {
                 // mpz_import assumes an unsigned type.
                 // C++20 mandates a two's complement representation, and
                 // we use that here.
                 ans = -ans;
-                mpz_import(ansLarge, 1 /* word count */, 1 /* word order */,
-                    sizeof(DoubleLong) /* word size */,
+                mpz_import(ansLarge.d_.gmp_, 1 /* word count */,
+                    1 /* word order */, sizeof(DoubleLong) /* word size */,
                     0 /* native endianness */, 0 /* full words */, &ans);
-                mpz_neg(ansLarge, ansLarge);
+                mpz_neg(ansLarge.d_.gmp_, ansLarge.d_.gmp_);
             }
             return ansLarge;
         } else
@@ -278,9 +291,9 @@ template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
-        if (other.isInfinite())
+        if (other.rep_ == REP_INFINITE)
             return (*this = 0);
         if (other.isZero()) {
             makeInfinite();
@@ -291,9 +304,10 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
             throw DivisionByZero();
     }
 
-    if (other.large_) {
-        if (large_) {
-            mpz_tdiv_q(large_, large_, other.large_);
+    // From here on, all integers (including the result) are finite.
+    if (other.rep_) {
+        if (rep_) {
+            mpz_tdiv_q(d_.gmp_, d_.gmp_, other.d_.gmp_);
             return *this;
         }
         // This is a native C/C++ long.
@@ -307,65 +321,64 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
         // is a native long also.
         //
         // Deal with the problematic LONG_MIN case first.
-        if (small_ == LONG_MIN) {
-            if (! mpz_cmp_ui(other.large_,
-                    LONG_MIN /* casting to unsigned makes this -LONG_MIN */)) {
-                small_ = -1;
+        if (d_.native_ == LONG_MIN) {
+            if (mpz_cmp_ui(other.d_.gmp_, detail::absLongMin) == 0) {
+                d_.native_ = -1;
                 return *this;
             }
-            if (! mpz_cmp_si(other.large_, -1)) {
+            if (mpz_cmp_si(other.d_.gmp_, -1) == 0) {
                 // The result is -LONG_MIN, which requires large integers.
                 // Reduce other while we're at it.
                 const_cast<IntegerBase&>(other).forceReduce();
-                large_ = new __mpz_struct[1];
-                mpz_init_set_si(large_, LONG_MIN);
-                mpz_neg(large_, large_);
+                rep_ = REP_GMP;
+                mpz_init_set_ui(d_.gmp_, detail::absLongMin);
                 return *this;
             }
-            if (mpz_cmp_ui(other.large_,
-                    LONG_MIN /* cast to ui makes this -LONG_MIN */) > 0 ||
-                    mpz_cmp_si(other.large_, LONG_MIN) < 0) {
-                small_ = 0;
+            if (mpz_cmp_ui(other.d_.gmp_, detail::absLongMin) > 0 ||
+                    mpz_cmp_si(other.d_.gmp_, LONG_MIN) < 0) {
+                d_.native_ = 0;
                 return *this;
             }
-            // other is in [ LONG_MIN, -LONG_MIN ) \ {-1}.
+            // other is in the range [ LONG_MIN, -LONG_MIN ) \ {-1}.
             // Reduce it and use native arithmetic.
             const_cast<IntegerBase&>(other).forceReduce();
-            small_ /= other.small_;
+            d_.native_ /= other.d_.native_;
             return *this;
         }
 
-        // From here we have this in ( LONG_MIN, -LONG_MIN ).
-        if (small_ >= 0) {
-            if (mpz_cmp_si(other.large_, small_) > 0 ||
-                    mpz_cmp_si(other.large_, -small_) < 0) {
-                small_ = 0;
+        // From here, we have |d_.native_| < |LONG_MIN|.
+        // Note: this means we can safely negate d_.native_.
+        if (d_.native_ >= 0) {
+            if (mpz_cmp_si(other.d_.gmp_, d_.native_) > 0 ||
+                    mpz_cmp_si(other.d_.gmp_, -d_.native_) < 0) {
+                d_.native_ = 0;
                 return *this;
             }
         } else {
-            // We can negate, since small_ != LONG_MIN.
-            if (mpz_cmp_si(other.large_, -small_) > 0 ||
-                    mpz_cmp_si(other.large_, small_) < 0) {
-                small_ = 0;
+            if (mpz_cmp_si(other.d_.gmp_, -d_.native_) > 0 ||
+                    mpz_cmp_si(other.d_.gmp_, d_.native_) < 0) {
+                d_.native_ = 0;
                 return *this;
             }
         }
 
-        // We can do this all in native longs from here.
+        // Now we have |other| ≤ |d_.native_| < |LONG_MIN|.
+        // This means we can do everything in native (long) integer arithmetic.
         // Opportunistically reduce other, since we know we can.
         const_cast<IntegerBase&>(other).forceReduce();
-        small_ /= other.small_;
+        d_.native_ /= other.d_.native_;
         return *this;
     } else
-        return (*this) /= other.small_;
+        return (*this) /= other.d_.native_;
 }
 
 template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
         const IntegerBase& other) {
-    if (other.large_) {
-        if (large_) {
-            mpz_divexact(large_, large_, other.large_);
+    // Preconditions: both are finite; other ≠ 0; (this / other) is an integer.
+    if (other.rep_) {
+        if (rep_) {
+            mpz_divexact(d_.gmp_, d_.gmp_, other.d_.gmp_);
             return *this;
         }
         // This is a native C/C++ long.
@@ -374,14 +387,13 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
         // (i) this == 0, or (ii) this == LONG_MIN and other == -LONG_MIN.
         // It also follows that the result must fit within a native long,
         // or else this == LONG_MIN and other == -1.
-        if (small_ == 0) {
+        if (d_.native_ == 0) {
             // 0 / anything = 0 (we know from preconditions that other != 0).
             return *this;
-        } else if (small_ == LONG_MIN) {
-            if (! mpz_cmp_ui(other.large_,
-                    LONG_MIN /* casting to unsigned makes this -LONG_MIN */)) {
+        } else if (d_.native_ == LONG_MIN) {
+            if (mpz_cmp_ui(other.d_.gmp_, detail::absLongMin) == 0) {
                 // The result is -1, since we have LONG_MIN / -LONG_MIN.
-                small_ = -1;
+                d_.native_ = -1;
                 return *this;
             }
 
@@ -389,29 +401,27 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
             // Opportunistically reduce its representation.
             const_cast<IntegerBase&>(other).forceReduce();
 
-            if (other.small_ == -1) {
+            if (other.d_.native_ == -1) {
                 // The result is -LONG_MIN, which requires large integers.
-                large_ = new __mpz_struct[1];
-                mpz_init_set_si(large_, LONG_MIN);
-                mpz_neg(large_, large_);
+                rep_ = REP_GMP;
+                mpz_init_set_ui(d_.gmp_, detail::absLongMin);
             } else {
                 // The result will fit within a native long also.
-                small_ /= other.small_;
+                d_.native_ /= other.d_.native_;
             }
             return *this;
         }
 
-        // Here we know that other always fits within a native long,
-        // and so does the result.
-        // Opportunisticaly reduce the representation of other, since
-        // we know we can.
+        // Here we know that other must fit within a native long, and so does
+        // the result.  Opportunisticaly reduce the representation of other,
+        // since we know we can.
         const_cast<IntegerBase&>(other).forceReduce();
-        small_ /= other.small_;
+        d_.native_ /= other.d_.native_;
         return *this;
     } else {
         // other is already a native int.
         // Use the native version of this routine instead.
-        return divByExact(other.small_);
+        return divByExact(other.d_.native_);
     }
 }
 
@@ -419,33 +429,33 @@ template <bool withInfinity>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         const IntegerBase& other) {
     if constexpr (withInfinity)
-        if (other.isInfinite()) {
+        if (other.rep_ == REP_INFINITE) {
             // We have infinity % infinity == 0 (which requires action), and
             // for finite x, x % infinity == x (which means nothing to do).
-            if (isInfinite()) {
-                makeFinite();
-                small_ = 0;
+            if (rep_ == REP_INFINITE) {
+                rep_ = REP_NATIVE;
+                d_.native_ = 0;
             }
             return *this;
         }
 
-    // Test whether other == 0.
-    if (((! other.large_) && (! other.small_)) ||
-            (other.large_ && mpz_sgn(other.large_) == 0))
+    // Test whether other == 0.  (We already know that other is finite.)
+    if (other.rep_ ? mpz_sgn(other.d_.gmp_) == 0 : ! other.d_.native_)
         throw DivisionByZero();
 
     if constexpr (withInfinity)
-        if (isInfinite()) {
+        if (rep_ == REP_INFINITE) {
             // We have infinity % (non-zero) == 0.
-            makeFinite();
-            small_ = 0;
+            rep_ = REP_NATIVE;
+            d_.native_ = 0;
             return *this;
         }
 
-    // From here on, we know this != infinity and other != (infinity or 0).
-    if (other.large_) {
-        if (large_) {
-            mpz_tdiv_r(large_, large_, other.large_);
+    // Now we have this != infinity, and other != (infinity or 0).
+    // From here on, all integers are finite and no exceptions are thrown.
+    if (other.rep_) {
+        if (rep_) {
+            mpz_tdiv_r(d_.gmp_, d_.gmp_, other.d_.gmp_);
             return *this;
         }
 
@@ -456,26 +466,26 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         // everything to native C/C++ integer arithmetic.
 
         // Test other <=> |this|:
-        int res = (small_ >= 0 ?
-            mpz_cmp_si(other.large_, small_) :
-            mpz_cmp_ui(other.large_, - small_) /* ui cast makes this work
-                                                 even if small_ = LONG_MIN */);
+        int res = (d_.native_ >= 0 ?
+            mpz_cmp_si(other.d_.gmp_, d_.native_) :
+            mpz_cmp_ui(other.d_.gmp_,
+                detail::negateToUnsignedType(d_.native_)));
         if (res > 0)
             return *this;
         if (res == 0) {
-            small_ = 0;
+            d_.native_ = 0;
             return *this;
         }
 
         // Test other <=> -|this|:
-        res = (small_ >= 0 ?
-            mpz_cmp_si(other.large_, - small_) :
-            mpz_cmp_si(other.large_, small_));
+        res = (d_.native_ >= 0 ?
+            mpz_cmp_si(other.d_.gmp_, -d_.native_ /* will not overflow */) :
+            mpz_cmp_si(other.d_.gmp_, d_.native_));
 
         if (res < 0)
             return *this;
         if (res == 0) {
-            small_ = 0;
+            d_.native_ = 0;
             return *this;
         }
 
@@ -483,25 +493,28 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         // Opportunistically reduce other while we're at it.
         const_cast<IntegerBase&>(other).forceReduce();
         // Some compilers will crash on LONG_MIN % -1, sigh.
-        if (other.small_ == -1)
-            small_ = 0;
+        if (other.d_.native_ == -1)
+            d_.native_ = 0;
         else
-            small_ %= other.small_;
+            d_.native_ %= other.d_.native_;
         return *this;
     } else
-        return (*this) %= other.small_;
+        return (*this) %= other.d_.native_;
 }
 
 template <bool withInfinity>
 void IntegerBase<withInfinity>::raiseToPower(unsigned long exp) {
-    if (exp == 0)
-        (*this) = one;
-    else if (! isInfinite()) {
-        if (large_) {
+    if (exp == 0) {
+        (*this) = 1;
+    } else if (! isInfinite()) {
+        if (rep_) {
             // Outsource it all to MPI.
-            mpz_pow_ui(large_, large_, exp);
+            mpz_pow_ui(d_.gmp_, d_.gmp_, exp);
         } else {
             // Implement fast modular exponentiation ourselves.
+            // TODO: Assuming a reasonably large exponent, we should probably
+            // outsource this to GMP also, since the result will likely be
+            // too large for a native long anyway.
             IntegerBase base(*this);
             *this = 1;
             while (exp) {
@@ -517,32 +530,29 @@ void IntegerBase<withInfinity>::raiseToPower(unsigned long exp) {
 
 template <bool withInfinity>
 void IntegerBase<withInfinity>::gcdWith(const IntegerBase& other) {
-    if (large_) {
-        if (other.large_) {
-            mpz_gcd(large_, large_, other.large_);
-        } else {
-            mpz_t tmp;
-            mpz_init_set_si(tmp, other.small_);
-            mpz_gcd(large_, large_, tmp);
-            mpz_clear(tmp);
-        }
-        mpz_abs(large_, large_);
-    } else if (other.large_) {
-        makeLarge();
-        mpz_gcd(large_, large_, other.large_);
-        mpz_abs(large_, large_);
+    // Precondition: Both integers are finite.
+    if (other.rep_) {
+        if (! rep_)
+            makeLarge();
+        mpz_gcd(d_.gmp_, d_.gmp_, other.d_.gmp_);
+        mpz_abs(d_.gmp_, d_.gmp_);
+    } else if (rep_) {
+        mpz_t tmp;
+        mpz_init_set_si(tmp, other.d_.native_);
+        mpz_gcd(d_.gmp_, d_.gmp_, tmp);
+        mpz_clear(tmp);
+        mpz_abs(d_.gmp_, d_.gmp_);
     } else {
         // Both integers are native.
-        long a = small_;
-        long b = other.small_;
+        long a = d_.native_;
+        long b = other.d_.native_;
 
         if ((a == LONG_MIN && (b == LONG_MIN || b == 0)) ||
                 (b == LONG_MIN && a == 0)) {
             // gcd(a,b) = LONG_MIN, which means we can't make it
             // non-negative without switching to large integers.
-            large_ = new __mpz_struct[1];
-            mpz_init_set_si(large_, LONG_MIN);
-            mpz_neg(large_, large_);
+            rep_ = REP_GMP;
+            mpz_init_set_ui(d_.gmp_, detail::absLongMin);
             return;
         }
         if (a == LONG_MIN) {
@@ -559,11 +569,11 @@ void IntegerBase<withInfinity>::gcdWith(const IntegerBase& other) {
          * The following code is based on Stein's binary GCD algorithm.
          */
         if (! a) {
-            small_ = b;
+            d_.native_ = b;
             return;
         }
         if (! b) {
-            small_ = a;
+            d_.native_ = a;
             return;
         }
 
@@ -594,18 +604,21 @@ void IntegerBase<withInfinity>::gcdWith(const IntegerBase& other) {
                 while (! (a & 1));
             }
         }
-        small_ = (a << pow2);
+        d_.native_ = (a << pow2);
     }
 }
 
 template <bool withInfinity>
 void IntegerBase<withInfinity>::lcmWith(const IntegerBase& other) {
+    // Precondition: Both integers are finite.
     if (isZero())
         return;
     if (other.isZero()) {
-        if (large_)
-            clearLarge();
-        small_ = 0;
+        if (rep_) {
+            mpz_clear(d_.gmp_);
+            rep_ = REP_NATIVE;
+        }
+        d_.native_ = 0;
         return;
     }
 
@@ -633,42 +646,41 @@ IntegerBase<withInfinity> IntegerBase<withInfinity>::gcdWithCoeffs(
     v.makeLarge();
 
     // TODO: Fix for natives:
-    // regina::gcdWithCoeffs(small_, other.small_, u.small_, v.small_);
+    // regina::gcdWithCoeffs(d_.native_, other.d_.native_,
+    //     u.d_.native_, v.d_.native_);
     // TODO: Escalate to GMP if anyone is equal to MINLONG.
     // Otherwise smalls are fine, but check gmpWithCoeffs() for overflow.
-    IntegerBase ans;
-    ans.makeLarge();
 
     // Check for zero arguments.
     if (isZero()) {
         u = 0L;
-        if (other.isZero()) {
+        int otherSign = other.sign();
+        if (otherSign == 0) {
             v = 0L;
-            // ans is already zero.
-            return ans;
+            return {}; // zero
+        } else if (otherSign > 0) {
+            v = 1;
+            return other;
+        } else {
+            v = -1;
+            return -other;
         }
-        v = 1;
-        ans = other;
-        if (ans < 0) {
-            v.negate();
-            ans.negate();
-        }
-        return ans;
     }
     if (other.isZero()) {
         v = 0L;
-        u = 1;
-        ans = *this;
-        if (ans < 0) {
-            u.negate();
-            ans.negate();
+        if (sign() > 0) {
+            u = 1;
+            return *this;
+        } else {
+            u = -1;
+            return -(*this);
         }
-        return ans;
     }
 
     // Neither argument is zero.
     // Run the gcd algorithm.
-    mpz_gcdext(ans.large_, u.large_, v.large_, large_, other.large_);
+    IntegerBase ans(detail::GMPTag{});
+    mpz_gcdext(ans.d_.gmp_, u.d_.gmp_, v.d_.gmp_, d_.gmp_, other.d_.gmp_);
 
     // Ensure the gcd is positive.
     if (ans < 0) {
@@ -731,7 +743,7 @@ std::pair<IntegerBase<withInfinity>, IntegerBase<withInfinity>>
     if (divisor.isZero())
         return { 0, *this };
 
-    // Preconditions state that nothing is infinite, and we've dealt with d=0.
+    // Preconditions state that nothing is infinite, and we've dealt with rhs=0.
 
     // Throughout the following code:
     // - GMP mpz_fdiv_qr() could give a negative remainder, but that this
@@ -740,155 +752,137 @@ std::pair<IntegerBase<withInfinity>, IntegerBase<withInfinity>>
     //   regardless of the sign of the divisor (I think the standard
     //   indicates that the decision is based on the sign of *this?).
 
-    std::pair<IntegerBase, IntegerBase> ans;
-
-    if (large_) {
+    if (rep_) {
         // We will have to use GMP routines.
-        ans.first.makeLarge();
-        ans.second.makeLarge();
-
-        if (divisor.large_) {
+        std::pair<IntegerBase, IntegerBase> ans(
+            detail::GMPTag{}, detail::GMPTag{});
+        if (divisor.rep_) {
             // Just pass everything straight through to GMP.
-            mpz_fdiv_qr(ans.first.large_, ans.second.large_, large_,
-                divisor.large_);
-            if (ans.second < 0) {
-                ans.second -= divisor;
-                ++ans.first;
+            mpz_fdiv_qr(ans.first.d_.gmp_, ans.second.d_.gmp_, d_.gmp_,
+                divisor.d_.gmp_);
+            if (mpz_sgn(ans.second.d_.gmp_) < 0) {
+                mpz_sub(ans.second.d_.gmp_, ans.second.d_.gmp_,
+                    divisor.d_.gmp_);
+                mpz_add_ui(ans.first.d_.gmp_, ans.first.d_.gmp_, 1);
             }
         } else {
             // Put the divisor in GMP format for the GMP routines to use.
             mpz_t divisorGMP;
-            mpz_init_set_si(divisorGMP, divisor.small_);
-            mpz_fdiv_qr(ans.first.large_, ans.second.large_, large_, divisorGMP);
+            mpz_init_set_si(divisorGMP, divisor.d_.native_);
+            mpz_fdiv_qr(ans.first.d_.gmp_, ans.second.d_.gmp_, d_.gmp_,
+                divisorGMP);
             mpz_clear(divisorGMP);
 
             // The remainder must fit into a long, since
             // 0 <= remainder < |divisor|.
             ans.second.forceReduce();
-            if (ans.second.small_ < 0) {
-                ans.second.small_ -= divisor.small_;
+            if (ans.second.d_.native_ < 0) {
+                ans.second.d_.native_ -= divisor.d_.native_;
                 ++ans.first;
             }
         }
+        return ans;
     } else {
-        // This integer fits into a long.
-        if (divisor.large_) {
-            // Cases:
-            //
-            // 1) Divisor needs to be large (does not fit into long).
-            // Subcases:
-            // 1a) |divisor| > |this|.
-            // --> quotient = -1/0/+1, remainder is large.
-            // 1b) divisor = |LONG_MIN| and this = LONG_MIN.
-            // --> quotient = -1, remainder = 0.
-            //
-            // 2) Otherwise, divisor actually fits into a long.
-            // Fall through to the next code block.
-            //
-            // NOTE: Be careful not to take -small_ when small_ is negative!
-            if (small_ >= 0 && (divisor > small_ || divisor < -small_)) {
-                // quotient is already initialised to 0
-                ans.second.small_ = small_;
-            } else if (small_ < 0 && divisor < small_) {
-                ans.first.small_ = 1;
-                ans.second.small_ = small_;
-                ans.second -= divisor;
-            } else if (small_ < 0 && -divisor < small_) {
-                ans.first.small_ = -1;
-                ans.second.small_ = small_;
-                ans.second += divisor;
-            } else if (small_ == LONG_MIN && -divisor == small_) {
-                ans.first.small_ = -1;
-                // remainder is already initialised to 0
-            } else {
-                // Since we know we can reduce divisor to a native integer,
-                // be kind: cast away the const and reduce it.
-                const_cast<IntegerBase&>(divisor).forceReduce();
-                // Fall through to the next block.
+        // This integer uses a native (long) representation.
+        if (divisor.rep_) {
+            if (d_.native_ >= 0 &&
+                    (divisor > d_.native_ || divisor < -d_.native_)) {
+                // 0 ≤ this < |divisor|
+                return { {}, d_.native_ };
+            } else if (d_.native_ < 0 && divisor < d_.native_) {
+                // |divisor| < this < 0, and divisor is negative
+                return { 1, -divisor + d_.native_ };
+            } else if (d_.native_ < 0 && -divisor < d_.native_) {
+                // |divisor| < this < 0, and divisor is positive
+                return { -1, divisor + d_.native_ };
+            } else if (d_.native_ == LONG_MIN &&
+                    mpz_cmp_ui(divisor.d_.gmp_, detail::absLongMin) == 0) {
+                // |this| == |divisor|, this is -ve, and divisor is +ve
+                return { -1, {} };
             }
+            // If we made it this far, then |this| ≥ |divisor|, and also
+            // we are not in the special case where divisor == |LONG_MIN|.
+            // This means that we can fit divisor into a native long.
+            // Force the reduction now, and fall through to the next case.
+            const_cast<IntegerBase&>(divisor).forceReduce();
         }
-        if (! divisor.large_) {
-            // Here we know divisor fits into a long.
-            // Thus remainder also fits into a long, since
-            // 0 <= |remainder| < |divisor|.
-            //
-            // Cases:
-            // 1) quotient = |LONG_MIN|.
-            // Only happens if this = LONG_MIN, divisor = -1.
-            // 2) |quotient| < |LONG_MIN| --> quotient fits into a long also.
-            if (small_ == LONG_MIN && divisor.small_ == -1) {
-                ans.first = LONG_MIN;
-                ans.first.negate();
-                // remainder is already initialised to 0
-            } else {
-                ans.first.small_ = small_ / divisor.small_;
-                ans.second.small_ =
-                    small_ - (ans.first.small_ * divisor.small_);
-                if (ans.second.small_ < 0) {
-                    if (divisor.small_ > 0) {
-                        ans.second.small_ += divisor.small_;
-                        --ans.first;
-                    } else {
-                        ans.second.small_ -= divisor.small_;
-                        ++ans.first;
-                    }
-                }
-            }
+        // Both this integer _and_ divisor use a native (long) representation.
+        //
+        // This means that the remainder also fits into a long, since
+        // 0 <= |remainder| < |divisor|.
+        //
+        // Cases:
+        // 1) quotient = |LONG_MIN| --> only when this = LONG_MIN, divisor = -1.
+        // 2) |quotient| < |LONG_MIN| --> quotient fits into a long also.
+        if (d_.native_ == LONG_MIN && divisor.d_.native_ == -1) {
+            return { { detail::absLongMin, detail::GMPTag{} }, {} };
+        } else {
+            long quotient = d_.native_ / divisor.d_.native_;
+            long remainder = d_.native_ - (quotient * divisor.d_.native_);
+            if (remainder >= 0)
+                return { quotient, remainder };
+            else if (divisor.d_.native_ > 0)
+                return { quotient - 1, remainder + divisor.d_.native_ };
+            else
+                return { quotient + 1, remainder - divisor.d_.native_ };
         }
     }
-
-    return ans;
 }
 
 template <bool withInfinity>
 int IntegerBase<withInfinity>::legendre(const IntegerBase& p) const {
-    // For now, just do this entirely through GMP.
-    mpz_ptr gmp_this = large_;
-    mpz_ptr gmp_p = p.large_;
+    // Precondition: Both integers are finite, and p is an odd positive prime.
 
-    if (! large_) {
-        gmp_this = new __mpz_struct[1];
-        mpz_init_set_si(gmp_this, small_);
+    // For now, we just do this entirely through GMP.
+    if (rep_) {
+        if (p.rep_) {
+            return mpz_legendre(d_.gmp_, p.d_.gmp_);
+        } else {
+            mpz_t gmp_p;
+            mpz_init_set_si(gmp_p, p.d_.native_);
+            int ans = mpz_legendre(d_.gmp_, gmp_p);
+            mpz_clear(gmp_p);
+            return ans;
+        }
+    } else {
+        if (p.rep_) {
+            mpz_t gmp_this;
+            mpz_init_set_si(gmp_this, d_.native_);
+            int ans = mpz_legendre(gmp_this, p.d_.gmp_);
+            mpz_clear(gmp_this);
+            return ans;
+        } else {
+            mpz_t gmp_this, gmp_p;
+            mpz_init_set_si(gmp_this, d_.native_);
+            mpz_init_set_si(gmp_p, p.d_.native_);
+            int ans = mpz_legendre(gmp_this, gmp_p);
+            mpz_clear(gmp_this);
+            mpz_clear(gmp_p);
+            return ans;
+        }
     }
-    if (! p.large_) {
-        gmp_p = new __mpz_struct[1];
-        mpz_init_set_si(gmp_p, p.small_);
-    }
-
-    int ans = mpz_legendre(gmp_this, gmp_p);
-
-    if (! large_) {
-        mpz_clear(gmp_this);
-        delete[] gmp_this;
-    }
-    if (! p.large_) {
-        mpz_clear(gmp_p);
-        delete[] gmp_p;
-    }
-
-    return ans;
 }
 
 template <bool withInfinity>
 IntegerBase<withInfinity> IntegerBase<withInfinity>::randomBoundedByThis()
         const {
+    // Precondition: This integer is positive and finite.
     std::lock_guard<std::mutex> ml(randMutex);
     if (! randInitialised) {
         gmp_randinit_default(randState);
         randInitialised = true;
     }
 
-    IntegerBase retval;
-    retval.makeLarge();
+    IntegerBase retval(detail::GMPTag{});
 
-    if (large_)
-        mpz_urandomm(retval.large_, randState, large_);
+    if (rep_)
+        mpz_urandomm(retval.d_.gmp_, randState, d_.gmp_);
     else {
-        // Go through GMP anyway, for the rand() routine, so that all
-        // our random number generators use a consistent algorithm.
+        // Go through GMP anyway, so that all our random number generators
+        // use a consistent algorithm.
         mpz_t tmp;
-        mpz_init_set_si(tmp, small_);
-        mpz_urandomm(retval.large_, randState, tmp);
+        mpz_init_set_si(tmp, d_.native_);
+        mpz_urandomm(retval.d_.gmp_, randState, tmp);
         mpz_clear(tmp);
 
         // Since this fits within a long, the result will also.
@@ -907,9 +901,8 @@ IntegerBase<withInfinity> IntegerBase<withInfinity>::randomBinary(
         randInitialised = true;
     }
 
-    IntegerBase retval;
-    retval.makeLarge();
-    mpz_urandomb(retval.large_, randState, n);
+    IntegerBase retval(detail::GMPTag{});
+    mpz_urandomb(retval.d_.gmp_, randState, n);
 
     // If n bits will fit within a signed long, reduce.
     if (n < sizeof(long) * 8)
@@ -926,9 +919,8 @@ IntegerBase<withInfinity> IntegerBase<withInfinity>::randomCornerBinary(
         randInitialised = true;
     }
 
-    IntegerBase retval;
-    retval.makeLarge();
-    mpz_rrandomb(retval.large_, randState, n);
+    IntegerBase retval(detail::GMPTag{});
+    mpz_rrandomb(retval.d_.gmp_, randState, n);
 
     // If n bits will fit within a signed long, reduce.
     if (n < sizeof(long) * 8)
