@@ -4105,8 +4105,45 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
             forceLarge();
         mpz_add(d_.gmp_, d_.gmp_, other.d_.gmp_);
         return *this;
-    } else
-        return (*this) += other.d_.native_;
+    }
+
+    // At this point we need to add the long integer other.d_.native_.
+    // What follows is a stripped-down copy of the operator += (long).
+    if (other.d_.native_ >= 0) {
+        if (! rep_) {
+            // We have long += long.  Stay native as long as we won't overflow.
+            if (d_.native_ <= (LONG_MAX - other.d_.native_)) {
+                d_.native_ += other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                // Beware: we could have other and this as the same object, so
+                // we need to back up the RHS before converting this to GMP.
+                long summand = other.d_.native_;
+                forceLarge();
+                mpz_add_ui(d_.gmp_, d_.gmp_, summand);
+            }
+        } else {
+            mpz_add_ui(d_.gmp_, d_.gmp_, other.d_.native_);
+        }
+    } else {
+        if (! rep_) {
+            // We have long += long.  Stay native as long as we won't overflow.
+            if (d_.native_ >= (LONG_MIN - other.d_.native_)) {
+                d_.native_ += other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                // Again: we could have other and this as the same object, so
+                // we need to back up the RHS before converting this to GMP.
+                long summand = detail::negateToUnsignedType(other.d_.native_);
+                forceLarge();
+                mpz_sub_ui(d_.gmp_, d_.gmp_, summand);
+            }
+        } else {
+            mpz_sub_ui(d_.gmp_, d_.gmp_,
+                detail::negateToUnsignedType(other.d_.native_));
+        }
+    }
+    return *this;
 }
 
 template <bool withInfinity>
@@ -4142,7 +4179,26 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         *d_.gmp_ = *other.d_.gmp_;
         other.rep_ = REP_NATIVE; // becomes valid but undefined
     } else {
-        (*this) += other.d_.native_;
+        // Both integers are stored as native longs.
+        // What follows is a stripped-down copy of the operator += (long).
+        if (other.d_.native_ >= 0) {
+            if (d_.native_ <= (LONG_MAX - other.d_.native_)) {
+                d_.native_ += other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                forceLarge();
+                mpz_add_ui(d_.gmp_, d_.gmp_, other.d_.native_);
+            }
+        } else {
+            if (d_.native_ >= (LONG_MIN - other.d_.native_)) {
+                d_.native_ += other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                forceLarge();
+                mpz_sub_ui(d_.gmp_, d_.gmp_,
+                    detail::negateToUnsignedType(other.d_.native_));
+            }
+        }
     }
     return *this;
 }
@@ -4230,8 +4286,45 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
             forceLarge();
         mpz_sub(d_.gmp_, d_.gmp_, other.d_.gmp_);
         return *this;
-    } else
-        return (*this) -= other.d_.native_;
+    }
+
+    // At this point we need to subtract the long integer other.d_.native_.
+    // What follows is a stripped-down copy of the operator -= (long).
+    if (other.d_.native_ >= 0) {
+        if (! rep_) {
+            // We have long -= long.  Stay native as long as we won't overflow.
+            if (d_.native_ >= other.d_.native_ + LONG_MIN) {
+                d_.native_ -= other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                // Beware: we could have other and this as the same object, so
+                // we need to back up the RHS before converting this to GMP.
+                long summand = other.d_.native_;
+                forceLarge();
+                mpz_sub_ui(d_.gmp_, d_.gmp_, summand);
+            }
+        } else {
+            mpz_sub_ui(d_.gmp_, d_.gmp_, other.d_.native_);
+        }
+    } else {
+        if (! rep_) {
+            // We have long -= long.  Stay native as long as we won't overflow.
+            if (other < 0 && d_.native_ <= other + LONG_MAX) {
+                d_.native_ -= other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                // Again: we could have other and this as the same object, so
+                // we need to back up the RHS before converting this to GMP.
+                long summand = detail::negateToUnsignedType(other.d_.native_);
+                forceLarge();
+                mpz_add_ui(d_.gmp_, d_.gmp_, summand);
+            }
+        } else {
+            mpz_add_ui(d_.gmp_, d_.gmp_,
+                detail::negateToUnsignedType(other.d_.native_));
+        }
+    }
+    return *this;
 }
 
 template <bool withInfinity>
@@ -4268,7 +4361,26 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         mpz_neg(d_.gmp_, d_.gmp_);
         other.rep_ = REP_NATIVE; // becomes valid but undefined
     } else {
-        (*this) -= other.d_.native_;
+        // Both integers are stored as native longs.
+        // What follows is a stripped-down copy of the operator -= (long).
+        if (other.d_.native_ >= 0) {
+            if (d_.native_ >= other.d_.native_ + LONG_MIN) {
+                d_.native_ -= other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                forceLarge();
+                mpz_sub_ui(d_.gmp_, d_.gmp_, other.d_.native_);
+            }
+        } else {
+            if (d_.native_ <= other.d_.native_ + LONG_MAX) {
+                d_.native_ -= other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                forceLarge();
+                mpz_add_ui(d_.gmp_, d_.gmp_,
+                    detail::negateToUnsignedType(other.d_.native_));
+            }
+        }
     }
     return *this;
 }
