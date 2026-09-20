@@ -34,13 +34,6 @@
 #include <cstdlib>
 #include <iterator>
 
-namespace {
-    // Computes abs(a-b) without using negative numbers.
-    size_t absdiff(size_t a, size_t b) {
-        return (a >= b ? a - b : b - a);
-    }
-}
-
 namespace regina {
 
 std::string Link::dt(bool alpha) const {

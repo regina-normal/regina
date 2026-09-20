@@ -323,7 +323,6 @@ void TriangulationBase<dim>::calculateFaces() {
         auto* queue = new std::pair<Simplex<dim>*, int>
             [size() * FaceNumbering<dim, subdim>::nFaces];
         unsigned queueStart, queueEnd;
-        unsigned pos;
 
         for (auto s : simplices_) {
             for (start = 0; start < FaceNumbering<dim, subdim>::nFaces;
