@@ -428,14 +428,28 @@ static void productBest(T* dest,
         T* scratch = nullptr) {
     if constexpr (karatsubaThreshold<T> == 0) {
         // Do not use Karatsuba multiplication at all.
+        #if 1
         productClassic<T, operation>(dest, lhs, lhsLen, rhs, rhsLen);
+        #else
+        if (lhsLen <= rhsLen)
+            productClassic<T, operation>(dest, lhs, lhsLen, rhs, rhsLen);
+        else
+            productClassic<T, operation>(dest, rhs, rhsLen, lhs, lhsLen);
+        #endif
     } else {
         // We need to decide if/how to use Karatsuba multiplication.
         if (lhsLen < karatsubaThreshold<T> ||
                 rhsLen < karatsubaThreshold<T>) {
             // One of the polynomials is tiny.
             // Just use classic multiplication.
+            #if 1
             productClassic<T, operation>(dest, lhs, lhsLen, rhs, rhsLen);
+            #else
+            if (lhsLen <= rhsLen)
+                productClassic<T, operation>(dest, lhs, lhsLen, rhs, rhsLen);
+            else
+                productClassic<T, operation>(dest, rhs, rhsLen, lhs, lhsLen);
+            #endif
         } else if ((lhsLen << 1) <= rhsLen + 1) {
             // We have rhs much longer than lhs.
             // Break rhs into blocks of size lhsLen, and use Karatsuba
