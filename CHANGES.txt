@@ -274,6 +274,12 @@ Version 8.0  [ TODO ]
               since that class supports infinity).
             - The modulo operators % and %= now support infinite arguments,
               and now throw an exception when computing anything modulo zero.
+            - When constructing or setting an Integer from a LargeInteger, you
+              are now allowed to pass infinity: this will be detected and an
+              exception will be thrown.  As a result, the move variants of
+              these mixed-type operations are no longer marked noexcept.
+            - Routines makeLarge() and tryReduce() now explicitly support
+              working with infinity (in which case they safely do nothing).
             - Added specialisations of std::common_type for use when mixing
               Integer and LargeInteger.
             - Fixed x.lcmWith(x) (where both operands are the same object in

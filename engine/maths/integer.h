@@ -71,45 +71,49 @@ class python_int; // Represents a Python arbitrary-precision integer.
 #endif
 
 namespace detail {
+    /**
+     * An empty type used to indicate that we are working with infinity.
+     */
+    struct InfiniteTag {};
 
-/**
- * Internal base classes for use with IntegerBase, templated on whether we
- * should support infinity as an allowed value.
- *
- * See the IntegerBase class notes for details.
- *
- * \ingroup detail
- */
-template <bool withInfinity>
-struct InfinityBase;
+    /**
+     * An empty type used to indicate that we are working with GMP large
+     * integer representations.
+     */
+    struct GMPTag {};
 
-#ifndef __DOXYGEN
-/**
- * An internal base class inherited by LargeInteger, which provides
- * support for infinity as an allowed value.
- *
- * End users should not use this class directly.
- *
- * \ingroup detail
- */
-template <>
-struct InfinityBase<true> {
-    bool infinite_ = false;
-        /**< Does this integer represent infinity? */
-};
+    /**
+     * A compile-time constant equal to `|LONG_MIN|`.
+     */
+    static constexpr unsigned long absLongMin =
+        static_cast<unsigned long>(LONG_MAX) + 1;
 
-/**
- * An empty internal base class inherited by Integer, which does not
- * support infinity as an allowed value.
- *
- * \ingroup detail
- */
-template <>
-struct InfinityBase<false> {
-};
-#endif // __DOXYGEN
+    /**
+     * Holds the internal data for one of Regina's arbitrary precision integers.
+     *
+     * The enclosing integer class is responsible for tracking which of the
+     * various representations is currently in use.
+     *
+     * The only reason this IntegerData type is declared externally (as opposed
+     * to being a private inner type within IntegerBase) is so that Integer and
+     * LargeInteger can swap data (e.g., during move operations).
+     */
+    union IntegerData {
+        long native_;
+            /**< A native C++ integer representation. */
+        mpz_t gmp_;
+            /**< A GMP large integer representation. */
 
-} // namespace detail
+        /**
+         * Leaves this data uninitialised.
+         */
+        IntegerData() = default;
+        /**
+         * Initialises the member `.native_` to the given native integer value.
+         */
+        IntegerData(long native) : native_(native) {}
+    };
+}
 
 /**
  * Represents an arbitrary precision integer.
@@ -157,7 +161,7 @@ struct InfinityBase<false> {
  * \ingroup maths
  */
 template <bool withInfinity = false>
-class IntegerBase : private detail::InfinityBase<withInfinity> {
+class IntegerBase {
     public:
         /**
          * A compile-time constant indicating whether this integer type
@@ -176,18 +180,41 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
                  should generate a linker error. */
 
     private:
-        long small_;
-            /**< Contains the native representation of this integer, if
-                 we are still using native representations (i.e., if
-                 large_ is null).  If we are using GMP large integer
-                 representations, or if this integer is infinity, then this
-                 native integer is ignored (and may be set to anything). */
-        mpz_ptr large_;
-            /**< \c null if we are using native representations, or a pointer to
-                 the full GMP large integer if we are now using these instead.
-                 We require that, whenever this pointer is non-null, the
-                 corresponding GMP large integer is initialised.
-                 If this integer is infinity then large_ must be \c null. */
+        /**
+         * Possible values for \a rep_.  We deliberately use an unscoped
+         * enumeration because we really just want a suite of private
+         * compile-time integer constants.
+         */
+        enum {
+            REP_NATIVE = 0,
+                /**< Indicates that this integer uses a native representation
+                     stored in `d_.native_`. */
+            REP_GMP = 1,
+                /**< Indicates that this integer uses a GMP large integer
+                     representation stored in `d_.gmp_`. */
+            REP_INFINITE = 2
+                /**< Indicates that this integer is infinite.  This is only
+                     allowed if \a withInfinity is `true`. */
+        };
+
+        /**
+         * Indicates the internal representation of this integer.
+         * This must be one of the `REP_...` constants; moreover, the
+         * value *REP_INFINITE* is allowed only if \a withInfinity
+         * is `true`.  A common pattern is to test \a rep_ as a boolean,
+         * which is enough to distinguish between a native (`false`)
+         * versus non-native (`true`) representation.
+         */
+        int rep_;
+
+        /**
+         * Holds the internal representation of this integer (whatever
+         * representation that is).
+         *
+         * We require at all times that `d_.gmp_` is GMP-initialised
+         * if and only if `rep_ == REP_GMP`.
+         */
+        detail::IntegerData d_;
 
     public:
         /**
@@ -212,7 +239,8 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * \pre The given integer is not infinite.
+         * \exception InvalidArgument This class does not support infinity,
+         * but the given integer is infinite.
          *
          * \param value the new value of this integer.
          */
@@ -228,11 +256,12 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * Moves the given integer into this new integer.
          * This is a fast (constant time) operation.
          *
-         * \pre The given integer is not infinite.
+         * \exception InvalidArgument This class does not support infinity,
+         * but the given integer is infinite.
          *
          * \param src the integer to move.
          */
-        IntegerBase(IntegerBase<! withInfinity>&& src) noexcept;
+        IntegerBase(IntegerBase<! withInfinity>&& src);
         /**
          * Initialises this integer to the given value.
          *
@@ -377,7 +406,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          */
         constexpr bool isInfinite() const {
             if constexpr (withInfinity)
-                return detail::InfinityBase<withInfinity>::infinite_;
+                return rep_ == REP_INFINITE;
             else
                 return false;
         }
@@ -386,9 +415,9 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * Sets this integer to be infinity.
          */
         inline void makeInfinite() requires (withInfinity) {
-            detail::InfinityBase<withInfinity>::infinite_ = true;
-            if (large_)
-                clearLarge();
+            if (rep_ == REP_GMP)
+                mpz_clear(d_.gmp_);
+            rep_ = REP_INFINITE;
         }
 
         /**
@@ -545,7 +574,8 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
         /**
          * Sets this integer to the given value.
          *
-         * \pre The given integer is not infinite.
+         * \exception InvalidArgument This class does not support infinity,
+         * but the given integer is infinite.
          *
          * \param value the new value of this integer.
          * \return a reference to this integer with its new value.
@@ -563,12 +593,13 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * Moves the given integer into this integer.
          * This is a fast (constant time) operation.
          *
-         * \pre The given integer is not infinite.
+         * \exception InvalidArgument This class does not support infinity,
+         * but the given integer is infinite.
          *
          * \param src the integer to move.
          * \return a reference to this integer.
          */
-        IntegerBase& operator = (IntegerBase<! withInfinity>&& src) noexcept;
+        IntegerBase& operator = (IntegerBase<! withInfinity>&& src);
         /**
          * Sets this integer to the given native C++ value.
          *
@@ -1796,7 +1827,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * own RandomEngine class, but instead uses a separate random
          * number generator provided by GMP.
          *
-         * \pre This integer is strictly positive.
+         * \pre This integer is strictly positive and not infinite.
          *
          * \warning Even if this integer is small, this routine is still
          * slow - it always goes through the GMP large integer routines
@@ -1898,7 +1929,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * It does not matter which kind of representation this integer
          * is currently using.
          *
-         * \pre This integer is not infinite.
+         * If this integer is infinite then this routine will do nothing.
          */
         void makeLarge();
 
@@ -1912,7 +1943,7 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
          * It does not matter which kind of representation this integer
          * is currently using.
          *
-         * \pre This integer is not infinite.
+         * If this integer is infinite then this routine will do nothing.
          */
         void tryReduce();
 
@@ -2035,65 +2066,55 @@ class IntegerBase : private detail::InfinityBase<withInfinity> {
     private:
         /**
          * Initialises this integer to infinity.
-         * All parameters are ignored.
          */
-        constexpr IntegerBase(bool, bool) requires (withInfinity) :
-                large_(nullptr) {
-            detail::InfinityBase<withInfinity>::infinite_ = true;
+        constexpr IntegerBase(detail::InfiniteTag) requires (withInfinity) :
+                rep_(REP_INFINITE) {
         }
 
         /**
-         * Initialises this integer to the given GMP integer.
-         * The GMP integer must have already been initialised, and this object
-         * will take ownership of it.
+         * Initialises this integer to zero, using a GMP large integer
+         * representation.
          */
-        IntegerBase(mpz_ptr large) : large_(large) {
+        constexpr IntegerBase(detail::GMPTag) : rep_(REP_GMP) {
+            mpz_init(d_.gmp_);
         }
 
         /**
-         * Sets this integer to be finite.
-         * Its new value will be determined by the current contents of
-         * \a small_ which will not be touched.
+         * Initialises this integer to the given value, using a GMP large
+         * integer representation.
          */
-        constexpr inline void makeFinite() requires (withInfinity) {
-            detail::InfinityBase<withInfinity>::infinite_ = false;
+        constexpr IntegerBase(long value, detail::GMPTag) : rep_(REP_GMP) {
+            mpz_init_set_si(d_.gmp_, value);
+        }
+
+        /**
+         * Initialises this integer to the given value, using a GMP large
+         * integer representation.
+         */
+        constexpr IntegerBase(unsigned long value, detail::GMPTag) :
+                rep_(REP_GMP) {
+            mpz_init_set_ui(d_.gmp_, value);
         }
 
         /**
          * Converts this integer from a native C/C++ long representation
          * into a GMP large integer representation.
          *
-         * The contents of \a small will be copied into \a large.
+         * The contents of `d_.native_` will be copied into `d_.gmp_`.
          *
-         * \pre \a large_ is null (i.e., we are indeed using a native
-         * C/C++ long representation at present).
-         * \pre This integer is not infinite.
+         * \pre \a rep_ is *REP_NATIVE*.
          */
         void forceLarge();
-
-        /**
-         * Destroys the GMP large integer representation and reverts to
-         * a native C/C++ long.
-         *
-         * The new value of this integer will be the current contents of
-         * \a small_ (i.e., there is no attempt to "extract" a native long
-         * from the contents of \a large_).
-         *
-         * \pre \a large_ is non-null (i.e., we are indeed using a large
-         * integer reprentation at present).
-         * \pre This integer is not infinite.
-         */
-        void clearLarge();
 
         /**
          * Converts this integer from a GMP large integer representation
          * into a native C/C++ long representation.
          *
-         * The contents of \a large will be extracted and copied into \a small.
+         * The contents of `d_.gmp_` will be extracted and copied into
+         * `d_.native_`.
          *
-         * \pre \a large_ is non-null, and the large integer that it
-         * represents lies between LONG_MIN and LONG_MAX inclusive.
-         * \pre This integer is not infinite.
+         * \pre \a rep_ is *REP_GMP*, and the large integer that `d_.gmp_`
+         * represents lies between `LONG_MIN` and `LONG_MAX` inclusive.
          */
         void forceReduce();
 
@@ -3021,28 +3042,30 @@ inline const IntegerBase<withInfinity> IntegerBase<withInfinity>::one = 1;
 // We define infinity later, after the specialised infinity constructor.
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase() : small_(0), large_(nullptr) {
+inline IntegerBase<withInfinity>::IntegerBase() : rep_(REP_NATIVE), d_(0) {
 }
 
 template <bool withInfinity>
 template <CppInteger IntType>
 inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
-        small_(value), large_(nullptr) {
+        rep_(REP_NATIVE), d_(value) {
+    // If sizeof(IntType) < sizeof(long), or if IntType == long, then we are
+    // already finished.
     if constexpr (sizeof(IntType) == sizeof(long) &&
             UnsignedCppInteger<IntType>) {
         // Detect overflow.
-        if (small_ < 0) {
-            large_ = new __mpz_struct[1];
-            mpz_init_set_ui(large_, value);
+        if (d_.native_ < 0) {
+            rep_ = REP_GMP;
+            mpz_init_set_ui(d_.gmp_, value);
         }
     } else if constexpr (sizeof(IntType) > sizeof(long)) {
         if constexpr (SignedCppInteger<IntType>) {
             // Detect overflow.
-            if (small_ != value) {
-                large_ = new __mpz_struct[1];
-                mpz_init(large_);
+            if (d_.native_ != value) {
+                rep_ = REP_GMP;
+                mpz_init(d_.gmp_);
                 if (value >= 0) {
-                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                    mpz_import(d_.gmp_, 1, 1 /* word order */, sizeof(IntType),
                         0 /* native endianness */, 0 /* full words */, &value);
                 } else {
                     // mpz_import assumes an unsigned type.
@@ -3052,18 +3075,18 @@ inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
                         value = -value;
                     // In all cases - including min() where we did not negate -
                     // if we treat the type as unsigned we get |original value|.
-                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                    mpz_import(d_.gmp_, 1, 1 /* word order */, sizeof(IntType),
                         0 /* native endianness */, 0 /* full words */, &value);
-                    mpz_neg(large_, large_);
+                    mpz_neg(d_.gmp_, d_.gmp_);
                 }
             }
         } else {
             // Detect overflow.  Here we need to be careful about comparisons
             // between signed and unsigned.
-            if (small_ < 0 || static_cast<IntType>(small_) != value) {
-                large_ = new __mpz_struct[1];
-                mpz_init(large_);
-                mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+            if (d_.native_ < 0 || static_cast<IntType>(d_.native_) != value) {
+                rep_ = REP_GMP;
+                mpz_init(d_.gmp_);
+                mpz_import(d_.gmp_, 1, 1 /* word order */, sizeof(IntType),
                     0 /* native endianness */, 0 /* full words */, &value);
             }
         }
@@ -3071,51 +3094,59 @@ inline IntegerBase<withInfinity>::IntegerBase(IntType value) :
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(const IntegerBase& value) {
-    if constexpr (withInfinity) {
-        if (value.isInfinite()) {
-            large_ = nullptr;
-            makeInfinite();
+inline IntegerBase<withInfinity>::IntegerBase(const IntegerBase& value) :
+        rep_(value.rep_) {
+    if constexpr (withInfinity)
+        if (rep_ == REP_INFINITE)
             return;
-        }
-    }
 
-    if (value.large_) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set(large_, value.large_);
-    } else {
-        small_ = value.small_;
-        large_ = nullptr;
-    }
+    if (rep_)
+        mpz_init_set(d_.gmp_, value.d_.gmp_);
+    else
+        d_.native_ = value.d_.native_;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>::IntegerBase(
-        const IntegerBase<! withInfinity>& value) {
-    // If value is infinite, we cannot make this infinite.
-    // This is why we insist via preconditions that value is finite.
-    if (value.large_) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set(large_, value.large_);
-    } else {
-        small_ = value.small_;
-        large_ = nullptr;
-    }
+        const IntegerBase<! withInfinity>& value) : rep_(value.rep_) {
+    if constexpr (! withInfinity)
+        if (rep_ == REP_INFINITE)
+            throw InvalidArgument(
+                "Cannot initialise Integer as LargeInteger::infinity");
+
+    if (rep_)
+        mpz_init_set(d_.gmp_, value.d_.gmp_);
+    else
+        d_.native_ = value.d_.native_;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>::IntegerBase(IntegerBase&& src) noexcept :
-        detail::InfinityBase<withInfinity>(src),
-        small_(src.small_), large_(src.large_) {
-    src.large_ = nullptr;
+        rep_(src.rep_) {
+    if constexpr (supportsInfinity)
+        if (rep_ == REP_INFINITE)
+            return;
+
+    if (rep_) {
+        *d_.gmp_ = *src.d_.gmp_;
+        src.rep_ = REP_NATIVE; // to release src's hold on the GMP int
+    } else
+        d_.native_ = src.d_.native_;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>::IntegerBase(
-        IntegerBase<! withInfinity>&& src) noexcept :
-        small_(src.small_), large_(src.large_) {
-    // The default InfinityBase constructor makes the integer finite.
-    src.large_ = nullptr;
+        IntegerBase<! withInfinity>&& src) : rep_(src.rep_) {
+    if constexpr (! withInfinity)
+        if (rep_ == REP_INFINITE)
+            throw InvalidArgument(
+                "Cannot initialise Integer as LargeInteger::infinity");
+
+    if (rep_) {
+        *d_.gmp_ = *src.d_.gmp_;
+        src.rep_ = REP_NATIVE; // to release src's hold on the GMP int
+    } else
+        d_.native_ = src.d_.native_;
 }
 
 template <bool withInfinity>
@@ -3125,11 +3156,10 @@ inline IntegerBase<withInfinity>::IntegerBase(
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>::IntegerBase(double value) : large_(nullptr) {
+inline IntegerBase<withInfinity>::IntegerBase(double value) : rep_(REP_GMP) {
     // We start with a large representation, since we want to use GMP's
     // double-to-integer conversion.
-    large_ = new __mpz_struct[1];
-    mpz_init_set_d(large_, value);
+    mpz_init_set_d(d_.gmp_, value);
 
     // Now switch to a small representation if we can.
     tryReduce();
@@ -3143,37 +3173,40 @@ inline IntegerBase<withInfinity>::IntegerBase(
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>::~IntegerBase() {
-    if (large_) {
-        mpz_clear(large_);
-        delete[] large_;
+    if constexpr (supportsInfinity) {
+        if (rep_ == REP_GMP)
+            mpz_clear(d_.gmp_);
+    } else {
+        if (rep_)
+            mpz_clear(d_.gmp_);
     }
 }
 
 template <bool withInfinity>
 inline bool IntegerBase<withInfinity>::isNative() const {
     if constexpr (withInfinity)
-        if (isInfinite())
-            return false;
-
-    return (! large_);
+        return rep_ == REP_NATIVE;
+    else
+        return ! rep_;
 }
 
 template <bool withInfinity>
 inline bool IntegerBase<withInfinity>::isZero() const {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return false;
 
-    return (((! large_) && (! small_)) || (large_ && mpz_sgn(large_) == 0));
+    return (rep_ ? mpz_sgn(d_.gmp_) == 0 : ! d_.native_);
 }
 
 template <bool withInfinity>
 inline int IntegerBase<withInfinity>::sign() const {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return 1;
 
-    return (large_ ? mpz_sgn(large_) : small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
+    return (rep_ ? mpz_sgn(d_.gmp_) :
+        d_.native_ > 0 ? 1 : d_.native_ < 0 ? -1 : 0);
 }
 
 template <bool withInfinity>
@@ -3185,30 +3218,30 @@ template <bool withInfinity>
 template <CppInteger IntType>
 IntType IntegerBase<withInfinity>::safeValue() const {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             throw IntegerOverflow();
 
     using limits = std::numeric_limits<IntType>;
 
-    if (large_) {
+    if (rep_) {
         // We have a GMP integer.
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             // Optimise for small native types.
             if constexpr (UnsignedCppInteger<IntType>) {
-                if (mpz_sgn(large_) >= 0 &&
-                        mpz_cmp_ui(large_, limits::max()) <= 0)
-                    return static_cast<IntType>(mpz_get_ui(large_));
+                if (mpz_sgn(d_.gmp_) >= 0 &&
+                        mpz_cmp_ui(d_.gmp_, limits::max()) <= 0)
+                    return static_cast<IntType>(mpz_get_ui(d_.gmp_));
                 else
                     throw IntegerOverflow();
             } else {
-                if (mpz_cmp_si(large_, limits::max()) <= 0 &&
-                        mpz_cmp_si(large_, limits::min()) >= 0)
-                    return static_cast<IntType>(mpz_get_si(large_));
+                if (mpz_cmp_si(d_.gmp_, limits::max()) <= 0 &&
+                        mpz_cmp_si(d_.gmp_, limits::min()) >= 0)
+                    return static_cast<IntType>(mpz_get_si(d_.gmp_));
                 else
                     throw IntegerOverflow();
             }
         } else {
-            int sign = mpz_sgn(large_);
+            int sign = mpz_sgn(d_.gmp_);
             if (sign == 0)
                 return 0;
 
@@ -3220,7 +3253,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                 size_t count;
                 auto* result = mpz_export(nullptr, &count, 1 /* word order */,
                     sizeof(IntType), 0 /* native endianness */,
-                    0 /* full words */, large_);
+                    0 /* full words */, d_.gmp_);
                 // We should have count > 0.
                 if (count == 1) {
                     IntType ans = *static_cast<IntType*>(result);
@@ -3236,7 +3269,7 @@ IntType IntegerBase<withInfinity>::safeValue() const {
                 size_t count;
                 auto* result = mpz_export(nullptr, &count, 1 /* word order */,
                     sizeof(IntType), 0 /* native endianness */,
-                    0 /* full words */, large_);
+                    0 /* full words */, d_.gmp_);
                 // We should have count > 0.
                 if (count == 1) {
                     IntType absVal = *static_cast<IntType*>(result);
@@ -3268,33 +3301,33 @@ IntType IntegerBase<withInfinity>::safeValue() const {
     } else {
         // We have a native long integer.
         if constexpr (UnsignedCppInteger<IntType>) {
-            if (small_ < 0)
+            if (d_.native_ < 0)
                 throw IntegerOverflow();
 
             // We have a _non-negative_ native long integer.
             if constexpr (sizeof(long) <= sizeof(IntType)) {
                 // Any non-negative long can fit inside IntType.
-                return static_cast<IntType>(small_);
+                return static_cast<IntType>(d_.native_);
             } else {
                 // We need to test for overflow.
                 // The following test is fine, since in this scenario the
                 // maximum IntType can be happily represented as a signed long.
-                if (small_ > limits::max())
+                if (d_.native_ > limits::max())
                     throw IntegerOverflow();
-                return static_cast<IntType>(small_);
+                return static_cast<IntType>(d_.native_);
             }
         } else {
             if constexpr (sizeof(long) <= sizeof(IntType)) {
                 // Our native long can fit inside IntType.
-                return static_cast<IntType>(small_);
+                return static_cast<IntType>(d_.native_);
             } else {
                 // We need to test for overflow.
                 // The following test is fine, since in this scenario the
                 // upper and lower bounds on IntType can both be happily
                 // represented as a signed long.
-                if (small_ < limits::min() || small_ > limits::max())
+                if (d_.native_ < limits::min() || d_.native_ > limits::max())
                     throw IntegerOverflow();
-                return static_cast<IntType>(small_);
+                return static_cast<IntType>(d_.native_);
             }
         }
     }
@@ -3305,23 +3338,29 @@ template <CppInteger IntType>
 IntType IntegerBase<withInfinity>::unsafeValue() const {
     // Here we follow the logic for unsafeValue(), but without the bounds
     // checking.
-    if (large_) {
+    if constexpr (withInfinity)
+        if (rep_ == REP_INFINITE) {
+            // Avoid accessing a non-existent GMP integer in the code below.
+            return 0;
+        }
+
+    if (rep_) {
         // We have a GMP integer.
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             // Optimise for small native types.
             if constexpr (UnsignedCppInteger<IntType>)
-                return static_cast<IntType>(mpz_get_ui(large_));
+                return static_cast<IntType>(mpz_get_ui(d_.gmp_));
             else
-                return static_cast<IntType>(mpz_get_si(large_));
+                return static_cast<IntType>(mpz_get_si(d_.gmp_));
         } else {
-            int sign = mpz_sgn(large_);
+            int sign = mpz_sgn(d_.gmp_);
             if (sign == 0)
                 return 0;
 
             // Fetch the absolute value of our GMP integer.
             auto* result = mpz_export(nullptr, nullptr, 1 /* word order */,
                 sizeof(IntType), 0 /* native endianness */, 0 /* full words */,
-                large_);
+                d_.gmp_);
             // We should have result != null, since our GMP integer is non-zero.
             IntType absVal = *static_cast<IntType*>(result);
             free(result);
@@ -3343,7 +3382,7 @@ IntType IntegerBase<withInfinity>::unsafeValue() const {
         }
     } else {
         // We have a native long integer.
-        return static_cast<IntType>(small_);
+        return static_cast<IntType>(d_.native_);
     }
 }
 
@@ -3369,28 +3408,32 @@ template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const IntegerBase& value) {
     if constexpr (withInfinity) {
-        if (value.isInfinite()) {
+        if (value.rep_ == REP_INFINITE) {
             makeInfinite();
             return *this;
-        }
-        makeFinite();
+        } else if (rep_ == REP_INFINITE)
+            rep_ = REP_NATIVE;
     }
 
+    // From here on, both this and value are finite.
+    //
     // We assume that mpz_set() is fine with self-assignment, since:
     // - the GMP docs state that output and input variables can be the same;
     // - the libgmpxx classes do not special-case self-assignment.
     // The C++ test suite tests self-assignment of Integers also.
-    if (value.large_) {
-        if (large_)
-            mpz_set(large_, value.large_);
+    if (value.rep_) {
+        if (rep_)
+            mpz_set(d_.gmp_, value.d_.gmp_);
         else {
-            large_ = new __mpz_struct[1];
-            mpz_init_set(large_, value.large_);
+            rep_ = REP_GMP;
+            mpz_init_set(d_.gmp_, value.d_.gmp_);
         }
     } else {
-        small_ = value.small_;
-        if (large_)
-            clearLarge();
+        if (rep_) {
+            mpz_clear(d_.gmp_);
+            rep_ = REP_NATIVE;
+        }
+        d_.native_ = value.d_.native_; // overwrites d_.gmp_
     }
     return *this;
 }
@@ -3398,20 +3441,29 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         const IntegerBase<! withInfinity>& value) {
-    if constexpr (withInfinity)
-        makeFinite(); // The given value cannot be infinity.
+    if constexpr (withInfinity) {
+        // The given value cannot be infinity.
+        if (rep_ == REP_INFINITE)
+            rep_ = REP_NATIVE;
+    } else if (value.rep_ == REP_INFINITE)
+        throw InvalidArgument(
+            "Cannot set Integer to LargeInteger::infinity");
 
-    if (value.large_) {
-        if (large_)
-            mpz_set(large_, value.large_);
+    // From here on, both this and value are finite.
+    // We follow the same logic as for the copy constructor above.
+    if (value.rep_) {
+        if (rep_)
+            mpz_set(d_.gmp_, value.d_.gmp_);
         else {
-            large_ = new __mpz_struct[1];
-            mpz_init_set(large_, value.large_);
+            rep_ = REP_GMP;
+            mpz_init_set(d_.gmp_, value.d_.gmp_);
         }
     } else {
-        small_ = value.small_;
-        if (large_)
-            clearLarge();
+        if (rep_) {
+            mpz_clear(d_.gmp_);
+            rep_ = REP_NATIVE;
+        }
+        d_.native_ = value.d_.native_; // overwrites d_.gmp_
     }
     return *this;
 }
@@ -3419,31 +3471,31 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntegerBase&& src) noexcept {
-    if constexpr (withInfinity) {
-        // Since we are swapping large_, we must swap infinite_ also.
-        // Otherwise we could leave src in an invalid state (infinite but with
-        // a non-null large_ member).
-        std::swap(detail::InfinityBase<true>::infinite_, src.infinite_);
-    }
-    small_ = src.small_;
-    std::swap(large_, src.large_);
-    // Let src dispose of the original large_, if it was non-null.
+    // We leave *src* to dispose of our GMP integer, if there is one.
+    std::swap(rep_, src.rep_);
+    std::swap(d_, src.d_);
     return *this;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
-        IntegerBase<! withInfinity>&& src) noexcept {
-    if constexpr (withInfinity)
-        makeFinite(); // The given value cannot be infinity.
+        IntegerBase<! withInfinity>&& src) {
+    if constexpr (withInfinity) {
+        if (rep_ == REP_INFINITE) {
+            // We cannot swap an infinite value into src.
+            // Give ourselves a finite (but undefined) value.
+            rep_ = REP_NATIVE;
+        }
+    } else {
+        if (src.rep_ == REP_INFINITE)
+            throw InvalidArgument(
+                "Cannot set Integer to LargeInteger::infinity");
+    }
 
-    // The preconditions state that src is finite, and we have now ensured
-    // that *this is finite also.  This is enough to ensure that src is left
-    // in a valid state.
-
-    small_ = src.small_;
-    std::swap(large_, src.large_);
-    // Let src dispose of the original large_, if it was non-null.
+    // From here on, both this and *src* are finite.
+    // We leave *src* to dispose of our GMP integer, if there is one.
+    std::swap(rep_, src.rep_);
+    std::swap(d_, src.d_);
     return *this;
 }
 
@@ -3452,34 +3504,40 @@ template <CppInteger IntType>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
         IntType value) {
     if constexpr (withInfinity)
-        makeFinite();
+        if (rep_ == REP_INFINITE)
+            rep_ = REP_NATIVE; // makes this finite and valid (but undefined)
 
-    small_ = value;
-
-    // Test for overflow, if we need to.
+    // From here on, we know that we have either a native or GMP representation.
     if constexpr (sizeof(IntType) == sizeof(long) &&
             UnsignedCppInteger<IntType>) {
-        if (small_ < 0) {
-            if (large_)
-                mpz_set_ui(large_, value);
+        // We are trying to faithfully convert an unsigned long to a long.
+        if (value > static_cast<IntType>(LONG_MAX)) {
+            // We cannot do it - switch to a GMP representation.
+            if (rep_)
+                mpz_set_ui(d_.gmp_, value);
             else {
-                large_ = new __mpz_struct[1];
-                mpz_init_set_ui(large_, value);
+                rep_ = REP_GMP;
+                mpz_init_set_ui(d_.gmp_, value);
             }
         } else {
-            // No overflow occurred.
-            if (large_)
-                clearLarge();
+            // The value can fit.
+            if (rep_) {
+                mpz_clear(d_.gmp_);
+                rep_ = REP_NATIVE;
+            }
+            d_.native_ = static_cast<long>(value); // overwrites d_.gmp_
         }
     } else if constexpr (sizeof(IntType) > sizeof(long)) {
+        // Here we can overflow in either direction, and if we do then
+        // importing to a GMP representation is a bit more work.
         if constexpr (SignedCppInteger<IntType>) {
-            if (small_ != value) {
-                if (! large_) {
-                    large_ = new __mpz_struct[1];
-                    mpz_init(large_);
+            if (value < LONG_MIN || value > LONG_MAX) {
+                if (! rep_) {
+                    rep_ = REP_GMP;
+                    mpz_init(d_.gmp_);
                 }
                 if (value >= 0) {
-                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                    mpz_import(d_.gmp_, 1, 1 /* word order */, sizeof(IntType),
                         0 /* native endianness */, 0 /* full words */, &value);
                 } else {
                     // mpz_import assumes an unsigned type.
@@ -3489,34 +3547,43 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
                         value = -value;
                     // In all cases - including min() where we did not negate -
                     // if we treat the type as unsigned we get |original value|.
-                    mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                    mpz_import(d_.gmp_, 1, 1 /* word order */, sizeof(IntType),
                         0 /* native endianness */, 0 /* full words */, &value);
-                    mpz_neg(large_, large_);
+                    mpz_neg(d_.gmp_, d_.gmp_);
                 }
             } else {
-                // No overflow occurred.
-                if (large_)
-                    clearLarge();
+                // The value can fit.
+                if (rep_) {
+                    mpz_clear(d_.gmp_);
+                    rep_ = REP_NATIVE;
+                }
+                d_.native_ = static_cast<long>(value); // overwrites d_.gmp_
             }
         } else {
             // Be careful about comparisons between signed and unsigned.
-            if (small_ < 0 || static_cast<IntType>(small_) != value) {
-                if (! large_) {
-                    large_ = new __mpz_struct[1];
-                    mpz_init(large_);
+            if (value > static_cast<IntType>(LONG_MAX)) {
+                if (! rep_) {
+                    rep_ = REP_GMP;
+                    mpz_init(d_.gmp_);
                 }
-                mpz_import(large_, 1, 1 /* word order */, sizeof(IntType),
+                mpz_import(d_.gmp_, 1, 1 /* word order */, sizeof(IntType),
                     0 /* native endianness */, 0 /* full words */, &value);
             } else {
-                // No overflow occurred.
-                if (large_)
-                    clearLarge();
+                // The value can fit.
+                if (rep_) {
+                    mpz_clear(d_.gmp_);
+                    rep_ = REP_NATIVE;
+                }
+                d_.native_ = static_cast<long>(value); // overwrites d_.gmp_
             }
         }
     } else {
         // IntType is small enough that overflow is impossible.
-        if (large_)
-            clearLarge();
+        if (rep_) {
+            mpz_clear(d_.gmp_);
+            rep_ = REP_NATIVE;
+        }
+        d_.native_ = value; // overwrites d_.gmp_
     }
 
     return *this;
@@ -3538,12 +3605,8 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator =(
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::swap(IntegerBase& other) noexcept {
-    // This should just work, since large_ is a pointer.
-    if constexpr (withInfinity)
-        std::swap(detail::InfinityBase<true>::infinite_,
-            other.detail::InfinityBase<true>::infinite_);
-    std::swap(small_, other.small_);
-    std::swap(large_, other.large_);
+    std::swap(rep_, other.rep_);
+    std::swap(d_, other.d_);
 }
 
 template <bool withInfinity>
@@ -3551,22 +3614,23 @@ template <bool rhsWithInfinity>
 inline bool IntegerBase<withInfinity>::operator ==(
         const IntegerBase<rhsWithInfinity>& rhs) const {
     if constexpr (withInfinity && rhsWithInfinity)
-        if (isInfinite() && rhs.isInfinite())
+        if (rep_ == REP_INFINITE && rhs.rep_ == REP_INFINITE)
             return true;
     if constexpr (withInfinity || rhsWithInfinity)
-        if (isInfinite() || rhs.isInfinite())
+        if (rep_ == REP_INFINITE || rhs.rep_ == REP_INFINITE)
             return false;
 
-    if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) == 0);
+    // From here on, all integers are finite.
+    if (rep_) {
+        if (rhs.rep_)
+            return (mpz_cmp(d_.gmp_, rhs.d_.gmp_) == 0);
         else
-            return (mpz_cmp_si(large_, rhs.small_) == 0);
+            return (mpz_cmp_si(d_.gmp_, rhs.d_.native_) == 0);
     } else {
-        if (rhs.large_)
-            return (mpz_cmp_si(rhs.large_, small_) == 0);
+        if (rhs.rep_)
+            return (mpz_cmp_si(rhs.d_.gmp_, d_.native_) == 0);
         else
-            return (small_ == rhs.small_);
+            return (d_.native_ == rhs.d_.native_);
     }
 }
 
@@ -3574,28 +3638,29 @@ template <bool withInfinity>
 template <CppInteger IntType>
 inline bool IntegerBase<withInfinity>::operator ==(IntType rhs) const {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return false;
 
-    if (large_) {
+    // From here on, all integers are finite.
+    if (rep_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             if constexpr (SignedCppInteger<IntType>) {
-                return (mpz_cmp_si(large_, rhs) == 0);
+                return (mpz_cmp_si(d_.gmp_, rhs) == 0);
             } else {
-                return (mpz_cmp_ui(large_, rhs) == 0);
+                return (mpz_cmp_ui(d_.gmp_, rhs) == 0);
             }
         } else {
-            // TODO: Improve this.
+            // We will need to use GMP-to-GMP comparison.
             return *this == IntegerBase(rhs);
         }
     } else {
         if constexpr (SignedCppInteger<IntType>) {
-            return (small_ == rhs);
+            return (d_.native_ == rhs);
         } else {
-            // Be careful: small_ is signed, but rhs is unsigned.
-            // Testing small_ == rhs might convert small_ to unsigned before
-            // the comparison.
-            return (small_ >= 0 && small_ == rhs);
+            // Be careful: d_.native_ is signed, but rhs is unsigned.
+            // Testing d_.native_ == rhs might convert d_.native_ to unsigned
+            // before the comparison.
+            return (d_.native_ >= 0 && d_.native_ == rhs);
         }
     }
 }
@@ -3612,28 +3677,29 @@ template <bool rhsWithInfinity>
 inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
         const IntegerBase<rhsWithInfinity>& rhs) const {
     if constexpr (withInfinity) {
-        if (isInfinite()) {
+        if (rep_ == REP_INFINITE) {
             if constexpr (rhsWithInfinity)
-                if (rhs.isInfinite())
+                if (rhs.rep_ == REP_INFINITE)
                     return std::strong_ordering::equal;
             return std::strong_ordering::greater;
         }
     }
     if constexpr (rhsWithInfinity) {
-        if (rhs.isInfinite())
+        if (rhs.rep_ == REP_INFINITE)
             return std::strong_ordering::less;
     }
 
-    if (large_) {
-        if (rhs.large_)
-            return (mpz_cmp(large_, rhs.large_) <=> 0);
+    // From here on, all integers are finite.
+    if (rep_) {
+        if (rhs.rep_)
+            return (mpz_cmp(d_.gmp_, rhs.d_.gmp_) <=> 0);
         else
-            return (mpz_cmp_si(large_, rhs.small_) <=> 0);
+            return (mpz_cmp_si(d_.gmp_, rhs.d_.native_) <=> 0);
     } else {
-        if (rhs.large_)
-            return (0 <=> mpz_cmp_si(rhs.large_, small_)); // back-to-front
+        if (rhs.rep_)
+            return (0 <=> mpz_cmp_si(rhs.d_.gmp_, d_.native_)); // back-to-front
         else
-            return (small_ <=> rhs.small_);
+            return (d_.native_ <=> rhs.d_.native_);
     }
 }
 
@@ -3642,31 +3708,32 @@ template <CppInteger IntType>
 inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
         IntType rhs) const {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return std::strong_ordering::greater;
 
-    if (large_) {
+    // From here on, all integers are finite.
+    if (rep_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             if constexpr (SignedCppInteger<IntType>) {
-                return (mpz_cmp_si(large_, rhs) <=> 0);
+                return (mpz_cmp_si(d_.gmp_, rhs) <=> 0);
             } else {
-                return (mpz_cmp_ui(large_, rhs) <=> 0);
+                return (mpz_cmp_ui(d_.gmp_, rhs) <=> 0);
             }
         } else {
-            // TODO: Improve this.
+            // We will need to use GMP-to-GMP comparison.
             return *this <=> IntegerBase(rhs);
         }
     } else {
         if constexpr (SignedCppInteger<IntType>) {
-            // Both small_ and rhs are signed.
-            return (small_ <=> rhs);
+            // Both d_.native_ and rhs are signed.
+            return (d_.native_ <=> rhs);
         } else {
-            // Be careful: small_ is signed, but rhs is unsigned.
-            if (small_ < 0)
+            // Be careful: d_.native_ is signed, but rhs is unsigned.
+            if (d_.native_ < 0)
                 return std::strong_ordering::less;
             else {
-                // Cast small_ to an unsigned type that can contain its value.
-                return (static_cast<unsigned long>(small_) <=> rhs);
+                // Cast d_.native_ to an unsigned type that can hold its value.
+                return (static_cast<unsigned long>(d_.native_) <=> rhs);
             }
         }
     }
@@ -3682,17 +3749,17 @@ inline std::strong_ordering IntegerBase<withInfinity>::operator <=> (
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator ++() {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
 
-    if (large_)
-        mpz_add_ui(large_, large_, 1);
-    else if (small_ != LONG_MAX)
-        ++small_;
+    if (rep_)
+        mpz_add_ui(d_.gmp_, d_.gmp_, 1);
+    else if (d_.native_ != LONG_MAX)
+        ++d_.native_;
     else {
         // This is the point at which we overflow.
         forceLarge();
-        mpz_add_ui(large_, large_, 1);
+        mpz_add_ui(d_.gmp_, d_.gmp_, 1);
     }
     return *this;
 }
@@ -3700,8 +3767,8 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator ++() {
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator ++(int) {
     if constexpr (withInfinity)
-        if (isInfinite())
-            return IntegerBase(false, false); // infinity
+        if (rep_ == REP_INFINITE)
+            return { detail::InfiniteTag() };
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
@@ -3713,17 +3780,17 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator ++(int) {
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator --() {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
 
-    if (large_)
-        mpz_sub_ui(large_, large_, 1);
-    else if (small_ != LONG_MIN)
-        --small_;
+    if (rep_)
+        mpz_sub_ui(d_.gmp_, d_.gmp_, 1);
+    else if (d_.native_ != LONG_MIN)
+        --d_.native_;
     else {
         // This is the point at which we overflow.
         forceLarge();
-        mpz_sub_ui(large_, large_, 1);
+        mpz_sub_ui(d_.gmp_, d_.gmp_, 1);
     }
     return *this;
 }
@@ -3731,8 +3798,8 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator --() {
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator --(int) {
     if constexpr (withInfinity)
-        if (isInfinite())
-            return IntegerBase(false, false); // infinity
+        if (rep_ == REP_INFINITE)
+            return { detail::InfiniteTag() };
 
     // Hrmph, just do the standard thing for now.
     // It's not clear how much microoptimisation will help..?
@@ -3746,7 +3813,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         const IntegerBase& other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans += other);
+    ans += other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3776,7 +3844,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator +(
         IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans += other);
+    ans += other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3792,7 +3861,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         const IntegerBase& other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans -= other);
+    ans -= other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3823,7 +3893,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -(
         IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans -= other);
+    ans -= other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3864,7 +3935,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator *(
         IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans *= other);
+    ans *= other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3880,7 +3952,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         const IntegerBase& other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans /= other);
+    ans /= other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3896,7 +3969,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator /(
         IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans /= other);
+    ans /= other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3912,7 +3986,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
         const IntegerBase& other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans.divByExact(other));
+    ans.divByExact(other);
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3928,7 +4003,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::divExact(
         IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans.divByExact(other));
+    ans.divByExact(other);
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3944,7 +4020,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
         const IntegerBase& other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans %= other);
+    ans %= other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3960,7 +4037,8 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator %(
         IntType other) const& {
     // Do the standard thing for now.
     IntegerBase ans(*this);
-    return std::move(ans %= other);
+    ans %= other;
+    return ans;
 }
 
 template <bool withInfinity>
@@ -3975,98 +4053,152 @@ template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -()
         const& {
     if constexpr (withInfinity)
-        if (isInfinite())
-            return IntegerBase(false, false); // infinity
+        if (rep_ == REP_INFINITE)
+            return { detail::InfiniteTag() };
 
-    if (large_) {
-        mpz_ptr ans = new __mpz_struct[1];
-        mpz_init(ans);
-        mpz_neg(ans, large_);
+    // From here on, all integers are finite.
+    if (rep_) {
+        IntegerBase ans(detail::GMPTag{});
+        mpz_neg(ans.d_.gmp_, d_.gmp_);
         return ans;
-    } else if (small_ == LONG_MIN) {
+    } else if (d_.native_ == LONG_MIN) {
         // Overflow, just.
-        mpz_ptr ans = new __mpz_struct[1];
-        mpz_init_set_si(ans, small_);
-        mpz_neg(ans, ans);
-        return ans;
+        return { detail::absLongMin, detail::GMPTag() };
     } else
-        return -small_;
+        return -d_.native_;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() && {
     if constexpr (withInfinity)
-        if (isInfinite())
-            return IntegerBase(false, false); // infinity
+        if (rep_ == REP_INFINITE)
+            return { detail::InfiniteTag() };
 
-    if (large_) {
+    // From here on, all integers are finite.
+    if (rep_) {
         // This operation is very cheap, which is the main reason we want a
         // move variant of negation.
-        mpz_neg(large_, large_);
+        mpz_neg(d_.gmp_, d_.gmp_);
         return std::move(*this);
-    } else if (small_ == LONG_MIN) {
+    } else if (d_.native_ == LONG_MIN) {
         // Overflow, just.
-        mpz_ptr ans = new __mpz_struct[1];
-        mpz_init_set_si(ans, small_);
-        mpz_neg(ans, ans);
-        return ans;
+        return { detail::absLongMin, detail::GMPTag() };
     } else
-        return -small_; // also cheap
+        return -d_.native_; // also cheap
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
-        else if (other.isInfinite()) {
+        else if (other.rep_ == REP_INFINITE) {
             makeInfinite();
             return *this;
         }
     }
 
-    if (other.large_) {
-        if (! large_)
+    // From here on, all integers are finite.
+    if (other.rep_) {
+        if (! rep_)
             forceLarge();
-        mpz_add(large_, large_, other.large_);
+        mpz_add(d_.gmp_, d_.gmp_, other.d_.gmp_);
         return *this;
-    } else
-        return (*this) += other.small_;
+    }
+
+    // At this point we need to add the long integer other.d_.native_.
+    // What follows is a stripped-down copy of the operator += (long).
+    if (other.d_.native_ >= 0) {
+        if (! rep_) {
+            // We have long += long.  Stay native as long as we won't overflow.
+            if (d_.native_ <= (LONG_MAX - other.d_.native_)) {
+                d_.native_ += other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                // Beware: we could have other and this as the same object, so
+                // we need to back up the RHS before converting this to GMP.
+                long summand = other.d_.native_;
+                forceLarge();
+                mpz_add_ui(d_.gmp_, d_.gmp_, summand);
+            }
+        } else {
+            mpz_add_ui(d_.gmp_, d_.gmp_, other.d_.native_);
+        }
+    } else {
+        if (! rep_) {
+            // We have long += long.  Stay native as long as we won't overflow.
+            if (d_.native_ >= (LONG_MIN - other.d_.native_)) {
+                d_.native_ += other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                // Again: we could have other and this as the same object, so
+                // we need to back up the RHS before converting this to GMP.
+                long summand = detail::negateToUnsignedType(other.d_.native_);
+                forceLarge();
+                mpz_sub_ui(d_.gmp_, d_.gmp_, summand);
+            }
+        } else {
+            mpz_sub_ui(d_.gmp_, d_.gmp_,
+                detail::negateToUnsignedType(other.d_.native_));
+        }
+    }
+    return *this;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         IntegerBase&& other) {
     if constexpr (withInfinity) {
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
-        else if (other.isInfinite()) {
+        else if (other.rep_ == REP_INFINITE) {
             makeInfinite();
             return *this;
         }
     }
 
-    if (large_) {
-        if (other.large_) {
-            mpz_add(large_, large_, other.large_);
-        } else if (other.small_ >= 0) {
-            mpz_add_ui(large_, large_, other.small_);
+    // From here on, all integers are finite.
+    if (rep_) {
+        if (other.rep_) {
+            mpz_add(d_.gmp_, d_.gmp_, other.d_.gmp_);
+        } else if (other.d_.native_ >= 0) {
+            mpz_add_ui(d_.gmp_, d_.gmp_, other.d_.native_);
         } else {
-            mpz_sub_ui(large_, large_,
-                detail::negateToUnsignedType(other.small_));
+            mpz_sub_ui(d_.gmp_, d_.gmp_,
+                detail::negateToUnsignedType(other.d_.native_));
         }
-    } else if (other.large_) {
-        if (small_ >= 0) {
-            mpz_add_ui(other.large_, other.large_, small_);
+    } else if (other.rep_) {
+        if (d_.native_ >= 0) {
+            mpz_add_ui(other.d_.gmp_, other.d_.gmp_, d_.native_);
         } else {
-            mpz_sub_ui(other.large_, other.large_,
-                detail::negateToUnsignedType(small_));
+            mpz_sub_ui(other.d_.gmp_, other.d_.gmp_,
+                detail::negateToUnsignedType(d_.native_));
         }
-        large_ = other.large_;
-        other.large_ = nullptr;
+        rep_ = REP_GMP;
+        *d_.gmp_ = *other.d_.gmp_;
+        other.rep_ = REP_NATIVE; // becomes valid but undefined
     } else {
-        (*this) += other.small_;
+        // Both integers are stored as native longs.
+        // What follows is a stripped-down copy of the operator += (long).
+        if (other.d_.native_ >= 0) {
+            if (d_.native_ <= (LONG_MAX - other.d_.native_)) {
+                d_.native_ += other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                forceLarge();
+                mpz_add_ui(d_.gmp_, d_.gmp_, other.d_.native_);
+            }
+        } else {
+            if (d_.native_ >= (LONG_MIN - other.d_.native_)) {
+                d_.native_ += other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                forceLarge();
+                mpz_sub_ui(d_.gmp_, d_.gmp_,
+                    detail::negateToUnsignedType(other.d_.native_));
+            }
+        }
     }
     return *this;
 }
@@ -4076,16 +4208,17 @@ template <CppInteger IntType>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         IntType other) {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
 
-    if (! large_) {
+    // From here on, all integers are finite.
+    if (! rep_) {
         // Use native arithmetic if we can.
         // Note: both signed and unsigned integer _conversion_ are guaranteed
         // to be correct modulo 2^bits (as of C++20); however, signed integer
         // _arithmetic_ has undefined overflow behaviour.  Be careful.
         if constexpr (UnsignedCppInteger<IntType>) {
-            if (other <= detail::differenceAsUnsigned(LONG_MAX, small_)) {
+            if (other <= detail::differenceAsUnsigned(LONG_MAX, d_.native_)) {
                 // A consequence: 0 ≤ other ≤ ULONG_MAX.
                 // If sizeof(IntType) < sizeof(long) then I understand the
                 // operation takes place via long, and this is fine since
@@ -4093,23 +4226,23 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
                 // If sizeof(IntType) ≥ sizeof(long) then I understand the
                 // operation takes place via IntType (which is unsigned,
                 // and therefore overflow behaviour is well-defined).
-                // Casting small_ up, performing the addition and then
+                // Casting d_.native_ up, performing the addition and then
                 // casting the result down could all introduce errors; however,
                 // I understand these errors are all guaranteed to be
                 // ± 2^long_bits and/or ± 2^IntType_bits, which means the
                 // final result should still be correct.
-                small_ += other;
+                d_.native_ += other;
                 return *this;
             }
         } else {
-            if ((other >= 0 && small_ <= (LONG_MAX - other)) ||
-                    (other < 0 && small_ >= (LONG_MIN - other))) {
+            if ((other >= 0 && d_.native_ <= (LONG_MAX - other)) ||
+                    (other < 0 && d_.native_ >= (LONG_MIN - other))) {
                 // A consequence: -ULONG_MAX ≤ other ≤ ULONG_MAX.
                 // If other does not fit into a long, then we must have
                 // sizeof(IntType) > sizeof(long).  I understand this means the
                 // operation takes place via IntType (correctly) and then gets
                 // cast down to long (again correctly).
-                small_ += other;
+                d_.native_ += other;
                 return *this;
             }
         }
@@ -4118,17 +4251,17 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         forceLarge();
     }
 
-    // And now we're down to large integer arithmetic (large != null).
+    // And now we're down to GMP arithmetic.
     if constexpr (sizeof(IntType) <= sizeof(long)) {
         if constexpr (UnsignedCppInteger<IntType>) {
-            mpz_add_ui(large_, large_, other);
+            mpz_add_ui(d_.gmp_, d_.gmp_, other);
         } else if (other >= 0) {
-            mpz_add_ui(large_, large_, other);
+            mpz_add_ui(d_.gmp_, d_.gmp_, other);
         } else {
-            mpz_sub_ui(large_, large_, detail::negateToUnsignedType(other));
+            mpz_sub_ui(d_.gmp_, d_.gmp_, detail::negateToUnsignedType(other));
         }
     } else {
-        // TODO: Improve this.
+        // TODO: Improve this (the case where IntType is wider than long).
         return (*this) += IntegerBase(other);
     }
 
@@ -4139,56 +4272,115 @@ template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
-        else if (other.isInfinite()) {
+        else if (other.rep_ == REP_INFINITE) {
             makeInfinite();
             return *this;
         }
     }
 
-    if (other.large_) {
-        if (! large_)
+    // From here on, all integers are finite.
+    if (other.rep_) {
+        if (! rep_)
             forceLarge();
-        mpz_sub(large_, large_, other.large_);
+        mpz_sub(d_.gmp_, d_.gmp_, other.d_.gmp_);
         return *this;
-    } else
-        return (*this) -= other.small_;
+    }
+
+    // At this point we need to subtract the long integer other.d_.native_.
+    // What follows is a stripped-down copy of the operator -= (long).
+    if (other.d_.native_ >= 0) {
+        if (! rep_) {
+            // We have long -= long.  Stay native as long as we won't overflow.
+            if (d_.native_ >= other.d_.native_ + LONG_MIN) {
+                d_.native_ -= other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                // Beware: we could have other and this as the same object, so
+                // we need to back up the RHS before converting this to GMP.
+                long summand = other.d_.native_;
+                forceLarge();
+                mpz_sub_ui(d_.gmp_, d_.gmp_, summand);
+            }
+        } else {
+            mpz_sub_ui(d_.gmp_, d_.gmp_, other.d_.native_);
+        }
+    } else {
+        if (! rep_) {
+            // We have long -= long.  Stay native as long as we won't overflow.
+            if (other < 0 && d_.native_ <= other + LONG_MAX) {
+                d_.native_ -= other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                // Again: we could have other and this as the same object, so
+                // we need to back up the RHS before converting this to GMP.
+                long summand = detail::negateToUnsignedType(other.d_.native_);
+                forceLarge();
+                mpz_add_ui(d_.gmp_, d_.gmp_, summand);
+            }
+        } else {
+            mpz_add_ui(d_.gmp_, d_.gmp_,
+                detail::negateToUnsignedType(other.d_.native_));
+        }
+    }
+    return *this;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         IntegerBase&& other) {
     if constexpr (withInfinity) {
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
-        else if (other.isInfinite()) {
+        else if (other.rep_ == REP_INFINITE) {
             makeInfinite();
             return *this;
         }
     }
 
-    if (large_) {
-        if (other.large_) {
-            mpz_sub(large_, large_, other.large_);
-        } else if (other.small_ >= 0) {
-            mpz_sub_ui(large_, large_, other.small_);
+    // From here on, all integers are finite.
+    if (rep_) {
+        if (other.rep_) {
+            mpz_sub(d_.gmp_, d_.gmp_, other.d_.gmp_);
+        } else if (other.d_.native_ >= 0) {
+            mpz_sub_ui(d_.gmp_, d_.gmp_, other.d_.native_);
         } else {
-            mpz_add_ui(large_, large_,
-                detail::negateToUnsignedType(other.small_));
+            mpz_add_ui(d_.gmp_, d_.gmp_,
+                detail::negateToUnsignedType(other.d_.native_));
         }
-    } else if (other.large_) {
-        if (small_ >= 0) {
-            mpz_sub_ui(other.large_, other.large_, small_);
+    } else if (other.rep_) {
+        if (d_.native_ >= 0) {
+            mpz_sub_ui(other.d_.gmp_, other.d_.gmp_, d_.native_);
         } else {
-            mpz_add_ui(other.large_, other.large_,
-                detail::negateToUnsignedType(small_));
+            mpz_add_ui(other.d_.gmp_, other.d_.gmp_,
+                detail::negateToUnsignedType(d_.native_));
         }
-        large_ = other.large_;
-        mpz_neg(large_, large_);
-        other.large_ = nullptr;
+        rep_ = REP_GMP;
+        *d_.gmp_ = *other.d_.gmp_;
+        mpz_neg(d_.gmp_, d_.gmp_);
+        other.rep_ = REP_NATIVE; // becomes valid but undefined
     } else {
-        (*this) -= other.small_;
+        // Both integers are stored as native longs.
+        // What follows is a stripped-down copy of the operator -= (long).
+        if (other.d_.native_ >= 0) {
+            if (d_.native_ >= other.d_.native_ + LONG_MIN) {
+                d_.native_ -= other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                forceLarge();
+                mpz_sub_ui(d_.gmp_, d_.gmp_, other.d_.native_);
+            }
+        } else {
+            if (d_.native_ <= other.d_.native_ + LONG_MAX) {
+                d_.native_ -= other.d_.native_;
+            } else {
+                // It will overflow.  Fall back to large integer arithmetic.
+                forceLarge();
+                mpz_add_ui(d_.gmp_, d_.gmp_,
+                    detail::negateToUnsignedType(other.d_.native_));
+            }
+        }
     }
     return *this;
 }
@@ -4198,16 +4390,17 @@ template <CppInteger IntType>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         IntType other) {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
 
-    if (! large_) {
+    // From here on, all integers are finite.
+    if (! rep_) {
         // Use native arithmetic if we can.
         // Note: both signed and unsigned integer _conversion_ are guaranteed
         // to be correct modulo 2^bits (as of C++20); however, signed integer
         // _arithmetic_ has undefined overflow behaviour.  Be careful.
         if constexpr (UnsignedCppInteger<IntType>) {
-            if (other <= detail::differenceAsUnsigned(small_, LONG_MIN)) {
+            if (other <= detail::differenceAsUnsigned(d_.native_, LONG_MIN)) {
                 // A consequence: 0 ≤ other ≤ ULONG_MAX.
                 // If sizeof(IntType) < sizeof(long) then I understand the
                 // operation takes place via long, and this is fine since
@@ -4215,23 +4408,23 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
                 // If sizeof(IntType) ≥ sizeof(long) then I understand the
                 // operation takes place via IntType (which is unsigned,
                 // and therefore overflow behaviour is well-defined).
-                // Casting small_ up, performing the subtraction and then
+                // Casting d_.native_ up, performing the subtraction and then
                 // casting the result down could all introduce errors; however,
                 // I understand these errors are all guaranteed to be
                 // ± 2^long_bits and/or ± 2^IntType_bits, which means the
                 // final result should still be correct.
-                small_ -= other;
+                d_.native_ -= other;
                 return *this;
             }
         } else {
-            if ((other >= 0 && small_ >= other + LONG_MIN) ||
-                    (other < 0 && small_ <= other + LONG_MAX)) {
+            if ((other >= 0 && d_.native_ >= other + LONG_MIN) ||
+                    (other < 0 && d_.native_ <= other + LONG_MAX)) {
                 // A consequence: -ULONG_MAX ≤ other ≤ ULONG_MAX.
                 // If other does not fit into a long, then we must have
                 // sizeof(IntType) > sizeof(long).  I understand this means the
                 // operation takes place via IntType (correctly) and then gets
                 // cast down to long (again correctly).
-                small_ -= other;
+                d_.native_ -= other;
                 return *this;
             }
         }
@@ -4243,14 +4436,14 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
     // And now we're down to large integer arithmetic (large != null).
     if constexpr (sizeof(IntType) <= sizeof(long)) {
         if constexpr (UnsignedCppInteger<IntType>) {
-            mpz_sub_ui(large_, large_, other);
+            mpz_sub_ui(d_.gmp_, d_.gmp_, other);
         } else if (other >= 0) {
-            mpz_sub_ui(large_, large_, other);
+            mpz_sub_ui(d_.gmp_, d_.gmp_, other);
         } else {
-            mpz_add_ui(large_, large_, detail::negateToUnsignedType(other));
+            mpz_add_ui(d_.gmp_, d_.gmp_, detail::negateToUnsignedType(other));
         }
     } else {
-        // TODO: Improve this.
+        // TODO: Improve this (the case where IntType is wider than long).
         return (*this) -= IntegerBase(other);
     }
 
@@ -4262,32 +4455,34 @@ template <CppInteger IntType>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
         IntType other) {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
 
+    // From here on, all integers are finite.
     if constexpr (sizeof(IntType) <= sizeof(long)) {
-        if (large_) {
+        if (rep_) {
             if (other == 0) {
-                clearLarge();
-                small_ = 0;
+                mpz_clear(d_.gmp_);
+                rep_ = REP_NATIVE;
+                d_.native_ = 0; // overwrites d_.gmp_
             } else if constexpr (SignedCppInteger<IntType>) {
-                mpz_mul_si(large_, large_, other);
+                mpz_mul_si(d_.gmp_, d_.gmp_, other);
             } else {
-                mpz_mul_ui(large_, large_, other);
+                mpz_mul_ui(d_.gmp_, d_.gmp_, other);
             }
         } else {
             // Note: even if other is unsigned, casting it to DoubleLong will do
             // the cast correctly, and the multiplication should not overflow.
             // Moreover, the multiplication cannot reach the minimum possible
             // DoubleLong, which means we can safely negate the result.
-            DoubleLong ans = static_cast<DoubleLong>(small_) *
+            DoubleLong ans = static_cast<DoubleLong>(d_.native_) *
                 static_cast<DoubleLong>(other);
             if (ans > LONG_MAX || ans < LONG_MIN) {
                 // Overflow.
-                large_ = new __mpz_struct[1];
-                mpz_init(large_);
+                rep_ = REP_GMP;
+                mpz_init(d_.gmp_);
                 if (ans >= 0) {
-                    mpz_import(large_, 1 /* word count */, 1 /* word order */,
+                    mpz_import(d_.gmp_, 1 /* word count */, 1 /* word order */,
                         sizeof(DoubleLong) /* word size */,
                         0 /* native endianness */, 0 /* full words */, &ans);
                 } else {
@@ -4295,23 +4490,23 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator *=(
                     // C++20 mandates a two's complement representation, and
                     // we use that here.
                     ans = -ans;
-                    mpz_import(large_, 1 /* word count */, 1 /* word order */,
+                    mpz_import(d_.gmp_, 1 /* word count */, 1 /* word order */,
                         sizeof(DoubleLong) /* word size */,
                         0 /* native endianness */, 0 /* full words */, &ans);
-                    mpz_neg(large_, large_);
+                    mpz_neg(d_.gmp_, d_.gmp_);
                 }
             } else
-                small_ = static_cast<long>(ans);
+                d_.native_ = static_cast<long>(ans);
         }
         return *this;
     } else {
         // Before we pull out the heavy machinery, look for more easy solutions.
         // (The test below does not capture _all_ representations of zero, but
         // it _does_ capture the ones that are trivial to test.)
-        if ((! large_) && small_ == 0)
+        if ((! rep_) && d_.native_ == 0)
             return *this;
 
-        // TODO: Improve this.
+        // TODO: Improve this (the case where IntType is wider than long).
         return (*this) *= IntegerBase(other);
     }
 }
@@ -4321,7 +4516,7 @@ template <CppInteger IntType>
 IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
         IntType other) {
     if constexpr (withInfinity) {
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return *this;
         if (other == 0) {
             makeInfinite();
@@ -4332,47 +4527,48 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator /=(
             throw DivisionByZero();
     }
 
-    if (large_) {
+    // From here on, all integers (including the result) are finite.
+    if (rep_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             if constexpr (UnsignedCppInteger<IntType>) {
-                mpz_tdiv_q_ui(large_, large_, other);
+                mpz_tdiv_q_ui(d_.gmp_, d_.gmp_, other);
             } else if (other >= 0) {
-                mpz_tdiv_q_ui(large_, large_, other);
+                mpz_tdiv_q_ui(d_.gmp_, d_.gmp_, other);
             } else {
-                mpz_tdiv_q_ui(large_, large_,
+                mpz_tdiv_q_ui(d_.gmp_, d_.gmp_,
                     detail::negateToUnsignedType(other));
-                mpz_neg(large_, large_);
+                mpz_neg(d_.gmp_, d_.gmp_);
             }
         } else {
-            // TODO: Improve this.
+            // TODO: Improve this (the case where IntType is wider than long).
             return (*this) /= IntegerBase(other);
         }
     } else {
         if constexpr (UnsignedCppInteger<IntType>) {
             // We can do this all in native arithmetic.
             if constexpr (sizeof(IntType) < sizeof(long))
-                small_ /= static_cast<long>(other);
+                d_.native_ /= static_cast<long>(other);
             else if (other <= static_cast<unsigned long>(LONG_MAX))
-                small_ /= static_cast<long>(other);
-            else if (other == static_cast<unsigned long>(LONG_MAX) + 1)
-                small_ = (small_ == LONG_MIN ? -1 : 0);
+                d_.native_ /= static_cast<long>(other);
+            else if (other == detail::absLongMin)
+                d_.native_ = (d_.native_ == LONG_MIN ? -1 : 0);
             else
-                small_ = 0;
-        } else if (small_ == LONG_MIN && other == -1) {
+                d_.native_ = 0;
+        } else if (d_.native_ == LONG_MIN && other == -1) {
             // This is the special case where we must switch from native to
             // large integers.
-            large_ = new __mpz_struct[1];
-            mpz_init_set_ui(large_, static_cast<unsigned long>(LONG_MAX) + 1);
+            rep_ = REP_GMP;
+            mpz_init_set_ui(d_.gmp_, detail::absLongMin);
         } else {
             // We can do this all in native arithmetic.
             if constexpr (sizeof(IntType) <= sizeof(long))
-                small_ /= other;
+                d_.native_ /= other;
             else if (other >= LONG_MIN && other <= LONG_MAX)
-                small_ /= static_cast<long>(other);
+                d_.native_ /= static_cast<long>(other);
             else if (other == static_cast<IntType>(LONG_MAX) + 1)
-                small_ = (small_ == LONG_MIN ? -1 : 0);
+                d_.native_ = (d_.native_ == LONG_MIN ? -1 : 0);
             else
-                small_ = 0; // since |other| > |small|
+                d_.native_ = 0; // since |other| > |small|
         }
     }
     return *this;
@@ -4385,45 +4581,44 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::divByExact(
     // Preconditions: this is finite; other ≠ 0; (this / other) is an integer.
     if constexpr (sizeof(IntType) <= sizeof(long)) {
         if constexpr (UnsignedCppInteger<IntType>) {
-            if (large_) {
-                mpz_divexact_ui(large_, large_, other);
+            if (rep_) {
+                mpz_divexact_ui(d_.gmp_, d_.gmp_, other);
             } else {
                 // We can do this entirely in native arithmetic.
-                // Our precondition implies: other ≤ |small_|, or small_ == 0
-                // (and if small_ == 0 then there is nothing to do).
-                if (small_ != 0) {
-                    // We have other ≤ |small_|.  The only case where we
-                    // _cannot_ fit other into a signed long is if
-                    // other == |LONG_MIN| (and therefore small_ == LONG_MIN).
+                // Our precondition implies: other ≤ |d_.native_|, or
+                // d_.native_ == 0 (and in the latter case this is a no-op).
+                if (d_.native_ != 0) {
+                    // We have other ≤ |d_.native_|.  The only case where other
+                    // _cannot_ fit into a signed long is if other == |LONG_MIN|
+                    // (and therefore d_.native_ == LONG_MIN).
                     if (other == static_cast<unsigned long>(LONG_MIN))
-                        small_ = -1;
+                        d_.native_ = -1;
                     else
-                        small_ /= static_cast<long>(other);
+                        d_.native_ /= static_cast<long>(other);
                 }
             }
         } else {
-            if (large_) {
+            if (rep_) {
                 if (other >= 0)
-                    mpz_divexact_ui(large_, large_, other);
+                    mpz_divexact_ui(d_.gmp_, d_.gmp_, other);
                 else {
-                    mpz_divexact_ui(large_, large_,
+                    mpz_divexact_ui(d_.gmp_, d_.gmp_,
                         detail::negateToUnsignedType(other));
-                    mpz_neg(large_, large_);
+                    mpz_neg(d_.gmp_, d_.gmp_);
                 }
-            } else if (small_ == LONG_MIN && other == -1) {
+            } else if (d_.native_ == LONG_MIN && other == -1) {
                 // This is the special case where we must switch from native to
                 // large integers.
-                large_ = new __mpz_struct[1];
-                mpz_init_set_ui(large_,
-                    static_cast<unsigned long>(LONG_MAX) + 1);
+                rep_ = REP_GMP;
+                mpz_init_set_ui(d_.gmp_, detail::absLongMin);
             } else {
                 // We can do this entirely in signed native arithmetic.
-                small_ /= other;
+                d_.native_ /= other;
             }
         }
         return *this;
     } else {
-        // TODO: Improve this.
+        // TODO: Improve this (the case where IntType is wider than long).
         return divByExact(IntegerBase(other));
     }
 }
@@ -4435,28 +4630,29 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
     if (other == 0)
         throw DivisionByZero();
     if constexpr (withInfinity)
-        if (isInfinite()) {
-            makeFinite();
-            small_ = 0;
+        if (rep_ == REP_INFINITE) {
+            rep_ = REP_NATIVE;
+            d_.native_ = 0;
             return *this;
         }
 
-    // Now we have this != infinity, other != 0.
-    if (large_) {
+    // Now we have this != infinity, and other != 0.
+    // From here on, all integers are finite and no exceptions are thrown.
+    if (rep_) {
         if constexpr (sizeof(IntType) <= sizeof(long)) {
             if constexpr (UnsignedCppInteger<IntType>) {
-                mpz_tdiv_r_ui(large_, large_, other);
+                mpz_tdiv_r_ui(d_.gmp_, d_.gmp_, other);
             } else if (other >= 0) {
-                mpz_tdiv_r_ui(large_, large_, other);
+                mpz_tdiv_r_ui(d_.gmp_, d_.gmp_, other);
             } else {
                 // We use the fact that (this % other) == (this % |other|).
-                mpz_tdiv_r_ui(large_, large_,
+                mpz_tdiv_r_ui(d_.gmp_, d_.gmp_,
                     detail::negateToUnsignedType(other));
             }
             if constexpr (sizeof(IntType) < sizeof(long))
                 forceReduce();
         } else {
-            // TODO: Improve this.
+            // TODO: Improve this (the case where IntType is wider than long).
             return (*this) %= IntegerBase(other);
         }
     } else {
@@ -4464,24 +4660,25 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
         // Note: some compilers crash on LONG_MIN % -1.
         if constexpr (UnsignedCppInteger<IntType>) {
             if constexpr (sizeof(IntType) < sizeof(long))
-                small_ %= static_cast<long>(other);
+                d_.native_ %= static_cast<long>(other);
             else if (other <= static_cast<unsigned long>(LONG_MAX))
-                small_ %= static_cast<long>(other);
-            else if (other == static_cast<unsigned long>(LONG_MAX) + 1 &&
-                    small_ == LONG_MIN)
-                small_ = 0;
-            // Otherwise we have |other| > |small_|, so small_ remains fixed.
+                d_.native_ %= static_cast<long>(other);
+            else if (other == detail::absLongMin && d_.native_ == LONG_MIN)
+                d_.native_ = 0;
+            // Otherwise we have |other| > |d_.native_|, so d_.native_
+            // remains fixed.
         } else if (other == -1) {
-            small_ = 0;
+            d_.native_ = 0;
         } else {
             if constexpr (sizeof(IntType) <= sizeof(long))
-                small_ %= other;
+                d_.native_ %= other;
             else if (other >= LONG_MIN && other <= LONG_MAX)
-                small_ %= static_cast<long>(other);
+                d_.native_ %= static_cast<long>(other);
             else if (other == static_cast<IntType>(LONG_MAX) + 1 &&
-                    small_ == LONG_MIN)
-                small_ = 0;
-            // Otherwise we have |other| > |small_|, so small_ remains fixed.
+                    d_.native_ == LONG_MIN)
+                d_.native_ = 0;
+            // Otherwise we have |other| > |d_.native_|, so d_.native_
+            // remains fixed.
         }
     }
     return *this;
@@ -4491,99 +4688,95 @@ template <bool withInfinity>
 inline void IntegerBase<withInfinity>::addProduct(
         const IntegerBase& x, const IntegerBase& y) {
     if constexpr (withInfinity) {
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return;
-        if (x.isInfinite() || y.isInfinite()) {
+        if (x.rep_ == REP_INFINITE || y.rep_ == REP_INFINITE) {
             makeInfinite();
             return;
         }
     }
+    if (x.isZero() || y.isZero())
+        return;
 
-    // All three arguments (including this) are finite.
+    // From here on, all integers are finite and the arguments are non-zero
+    // (so there is actually something to do).
     //
     // Note: GMP functions explicitly allow the input and output
     // variables to be the same (so x.addProduct(x, x) is fine, for example).
-    if (x != 0 && y != 0) {
-        if (large_) {
-            if (x.large_) {
-                if (y.large_)
-                    mpz_addmul(large_, x.large_, y.large_);
-                else if (y.small_ > 0)
-                    mpz_addmul_ui(large_, x.large_, y.small_);
-                else
-                    mpz_submul_ui(large_, x.large_,
-                        detail::negateToUnsignedType(y.small_));
-            } else if (y.large_) {
-                if (x.small_ > 0)
-                    mpz_addmul_ui(large_, y.large_, x.small_);
-                else
-                    mpz_submul_ui(large_, y.large_,
-                        detail::negateToUnsignedType(x.small_));
-            } else {
-                *this += x * y;
-            }
+    if (rep_) {
+        if (x.rep_) {
+            if (y.rep_)
+                mpz_addmul(d_.gmp_, x.d_.gmp_, y.d_.gmp_);
+            else if (y.d_.native_ > 0)
+                mpz_addmul_ui(d_.gmp_, x.d_.gmp_, y.d_.native_);
+            else
+                mpz_submul_ui(d_.gmp_, x.d_.gmp_,
+                    detail::negateToUnsignedType(y.d_.native_));
+        } else if (y.rep_) {
+            if (x.d_.native_ > 0)
+                mpz_addmul_ui(d_.gmp_, y.d_.gmp_, x.d_.native_);
+            else
+                mpz_submul_ui(d_.gmp_, y.d_.gmp_,
+                    detail::negateToUnsignedType(x.d_.native_));
         } else {
             *this += x * y;
         }
+    } else {
+        *this += x * y;
     }
 }
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::negate() {
     if constexpr (withInfinity)
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return;
 
-    if (large_)
-        mpz_neg(large_, large_);
-    else if (small_ == LONG_MIN) {
+    // From here on, all integers are finite.
+    if (rep_)
+        mpz_neg(d_.gmp_, d_.gmp_);
+    else if (d_.native_ == LONG_MIN) {
         // Overflow, just.
-        forceLarge();
-        mpz_neg(large_, large_);
+        rep_ = REP_GMP;
+        mpz_init_set_ui(d_.gmp_, detail::absLongMin);
     } else
-        small_ = -small_;
+        d_.native_ = -d_.native_;
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() const& {
     if constexpr (withInfinity)
-        if (isInfinite())
-            return IntegerBase(false, false); // infinity
+        if (rep_ == REP_INFINITE)
+            return { detail::InfiniteTag() };
 
-    if (large_) {
-        mpz_ptr ans = new __mpz_struct[1];
-        mpz_init(ans);
-        mpz_abs(ans, large_);
+    // From here on, all integers are finite.
+    if (rep_) {
+        IntegerBase ans(detail::GMPTag{});
+        mpz_abs(ans.d_.gmp_, d_.gmp_);
         return ans;
-    } else if (small_ == LONG_MIN) {
+    } else if (d_.native_ == LONG_MIN) {
         // Overflow, just.
-        mpz_ptr ans = new __mpz_struct[1];
-        mpz_init_set_si(ans, small_);
-        mpz_neg(ans, ans);
-        return ans;
+        return { detail::absLongMin, detail::GMPTag() };
     } else
-        return (small_ >= 0 ? small_ : - small_);
+        return (d_.native_ >= 0 ? d_.native_ : - d_.native_);
 }
 
 template <bool withInfinity>
 inline IntegerBase<withInfinity> IntegerBase<withInfinity>::abs() && {
     if constexpr (withInfinity)
-        if (isInfinite())
-            return IntegerBase(false, false); // infinity
+        if (rep_ == REP_INFINITE)
+            return { detail::InfiniteTag() };
 
-    if (large_) {
+    if (rep_) {
         // This operation is very cheap, which is the main reason we want a
         // move variant of absolute value.
-        mpz_abs(large_, large_);
+        mpz_abs(d_.gmp_, d_.gmp_);
         return std::move(*this);
-    } else if (small_ == LONG_MIN) {
+    } else if (d_.native_ == LONG_MIN) {
         // Overflow, just.
-        mpz_ptr ans = new __mpz_struct[1];
-        mpz_init_set_si(ans, small_);
-        mpz_neg(ans, ans);
-        return ans;
+        return { detail::absLongMin, detail::GMPTag() };
     } else
-        return (small_ >= 0 ? small_ : - small_); // also cheap
+        return (d_.native_ >= 0 ? d_.native_ : - d_.native_); // also cheap
 }
 
 template <bool withInfinity>
@@ -4689,42 +4882,58 @@ inline std::tuple<IntegerBase<withInfinity>, IntegerBase<withInfinity>,
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::setRaw(mpz_srcptr fromData) {
-    if constexpr (withInfinity)
-        makeFinite();
-
-    if (! large_) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set(large_, fromData);
+    if constexpr (withInfinity) {
+        if (rep_ == REP_GMP) {
+            mpz_set(d_.gmp_, fromData);
+        } else {
+            rep_ = REP_GMP;
+            mpz_init_set(d_.gmp_, fromData);
+        }
     } else {
-        mpz_set(large_, fromData);
+        if (rep_) {
+            mpz_set(d_.gmp_, fromData);
+        } else {
+            rep_ = REP_GMP;
+            mpz_init_set(d_.gmp_, fromData);
+        }
     }
 }
 
 template <bool withInfinity>
 inline mpz_srcptr IntegerBase<withInfinity>::rawData() const {
+    // Precondition: this integer is finite.
     // Cast away the const, since we are not changing the mathematical value.
     // We are, however, bulking up the representation.
     const_cast<IntegerBase&>(*this).makeLarge();
-    return large_;
+    return d_.gmp_;
 }
 
 template <bool withInfinity>
 inline mpz_ptr IntegerBase<withInfinity>::rawData() {
+    // Precondition: this integer is finite.
     makeLarge();
-    return large_;
+    return d_.gmp_;
 }
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::makeLarge() {
-    if (! large_)
+    // Note: this does the right thing if this integer is infinite.
+    if (! rep_)
         forceLarge();
 }
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::tryReduce() {
-    if (large_ && mpz_cmp_si(large_, LONG_MAX) <= 0 &&
-            mpz_cmp_si(large_, LONG_MIN) >= 0)
-        forceReduce();
+    // Note: this does the right thing if this integer is infinite.
+    if constexpr (withInfinity) {
+        if (rep_ == REP_GMP && mpz_cmp_si(d_.gmp_, LONG_MAX) <= 0 &&
+                mpz_cmp_si(d_.gmp_, LONG_MIN) >= 0)
+            forceReduce();
+    } else {
+        if (rep_ && mpz_cmp_si(d_.gmp_, LONG_MAX) <= 0 &&
+                mpz_cmp_si(d_.gmp_, LONG_MIN) >= 0)
+            forceReduce();
+    }
 }
 
 template <bool withInfinity>
@@ -4763,9 +4972,11 @@ template <bool withInfinity>
 inline size_t IntegerBase<withInfinity>::hash() const {
     if constexpr (withInfinity) {
         // For infinity, just return an arbitrary hard-coded constant.
-        if (isInfinite())
+        if (rep_ == REP_INFINITE)
             return 33651164;
     }
+
+    // From here on, all integers are finite.
 
     // We should ensure that hash(k) != hash(-k).
     //
@@ -4776,46 +4987,41 @@ inline size_t IntegerBase<withInfinity>::hash() const {
     // - hash(-k) = 2^n - k (where n is the bitsize of size_t).
     //
     // This is enough distinguishing power for the time being.
-    if (large_)
-        return static_cast<size_t>(mpz_get_si(large_));
+    if (rep_)
+        return static_cast<size_t>(mpz_get_si(d_.gmp_));
     else
-        return static_cast<size_t>(small_);
+        return static_cast<size_t>(d_.native_);
 }
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::validate() const {
-    // Under the current internal represention, the only _invalid_ state is
-    // one where the infinity marker is true but large_ is non-null.
-    if constexpr (supportsInfinity)
-        if (detail::InfinityBase<true>::infinite_ && large_)
-            throw ImpossibleScenario("Invalid integer representation");
+    // Under the current internal represention, all states are valid.
+    // However, we keep this function around for the test suite in case the
+    // internal representation should ever change.
 }
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::forceLarge() {
-    large_ = new __mpz_struct[1];
-    mpz_init_set_si(large_, small_);
-}
-
-template <bool withInfinity>
-inline void IntegerBase<withInfinity>::clearLarge() {
-    mpz_clear(large_);
-    delete[] large_;
-    large_ = nullptr;
+    // Precondition: rep_ == REP_NATIVE.
+    rep_ = REP_GMP;
+    // This call should copy d_.native_ before overwriting it as d_.gmp_.
+    mpz_init_set_si(d_.gmp_, d_.native_);
 }
 
 template <bool withInfinity>
 inline void IntegerBase<withInfinity>::forceReduce() {
-    small_ = mpz_get_si(large_);
-    mpz_clear(large_);
-    delete[] large_;
-    large_ = nullptr;
+    // Precondition: rep_ == REP_GMP, and the value fits into a long.
+    long extracted = mpz_get_si(d_.gmp_);
+    mpz_clear(d_.gmp_);
+    rep_ = REP_NATIVE;
+    d_.native_ = extracted; // overwrites d_.gmp_
 }
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
 
 template <>
-inline const IntegerBase<true> IntegerBase<true>::infinity(false, false);
+inline const IntegerBase<true> IntegerBase<true>::infinity(
+    detail::InfiniteTag{});
 
 #endif // __DOXYGEN
 

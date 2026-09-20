@@ -155,6 +155,10 @@ enum class SetOrAdd {
     Add = 2
 };
 
+template <CoefficientDomain T, SetOrAdd, bool moveable>
+static void productBest(T*, CoefficientBuffer<T, moveable>, size_t,
+        CoefficientBuffer<T, moveable>, size_t, T*);
+
 /**
  * Multiplies two ranges of coefficients using the classical polynomial
  * multiplication algorithm.
@@ -392,9 +396,9 @@ static void productKaratsuba(T* dest,
  * Regarding scratch space: this algorithm may or may not need scratch space
  * (this depends on whether Karatsuba multiplication is used).  However, it
  * manages this perfectly well itself: if it ever discovers that scratch space
- * is required then it will create a single block of scratch space for the
- * entire multiplication process, and will pass this down through to any
- * recursive calls to productKaratsuba() and productBest().
+ * is required but none was provided, then it will create a single block of
+ * scratch space for the entire multiplication process, and will pass this down
+ * through to any recursive calls to productKaratsuba() and productBest().
  *
  * \pre Both \a lhsLen and \a rhsLen are strictly positive.
  *
@@ -425,7 +429,7 @@ template <CoefficientDomain T, SetOrAdd operation, bool moveable>
 static void productBest(T* dest,
         CoefficientBuffer<T, moveable> lhs, size_t lhsLen,
         CoefficientBuffer<T, moveable> rhs, size_t rhsLen,
-        T* scratch = nullptr) {
+        T* scratch) {
     if constexpr (karatsubaThreshold<T> == 0) {
         // Do not use Karatsuba multiplication at all.
         #if 1
@@ -595,7 +599,8 @@ FixedArray<T> polynomialProduct(const FixedArray<T>& lhs,
             }
         } else {
             detail::productBest<T, detail::SetOrAdd::Either, false>(ans.begin(),
-                lhs.begin(), lhs.size(), rhs.begin(), rhs.size());
+                lhs.begin(), lhs.size(), rhs.begin(), rhs.size(),
+                nullptr /* scratch */);
         }
     }
     return ans;
