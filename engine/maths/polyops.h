@@ -476,7 +476,7 @@ static void productBest(T* dest,
             else
                 productClassic<T, operation>(dest, rhs, rhsLen, lhs, lhsLen);
             #endif
-        } else if ((lhsLen << 2) <= 3 * rhsLen) {
+        } else if (lhsLen < rhsLen) {
             // We have rhs longer than lhs, and this is too unbalanced.
             // Break rhs into blocks of size lhsLen, and use Karatsuba
             // multiplication on each (except possibly the last).
@@ -500,7 +500,7 @@ static void productBest(T* dest,
                 productBest<T, SetOrAdd::Add, moveable>(dest, lhs, lhsLen,
                     rhs, rhsLen, scratch);
             #endif
-        } else if ((rhsLen << 2) <= 3 * lhsLen) {
+        } else if (rhsLen < lhsLen) {
             // We have lhs longer than rhs, and this is too unbalanced.
             // Like above, but with LHS and RHS swapped.
             #if 0
