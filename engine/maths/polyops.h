@@ -95,6 +95,9 @@ enum class PolynomialProductAlgorithm {
  * at least `n-1`).  If `karatsubaThreshold<T>` is zero, then Karatsuba
  * multiplication will not be used at all.
  *
+ * At a bare minimum, if `karatsubaThreshold<T>` _is_ positive, then it must
+ * be at least 2 (otherwise divide-and-conquer is not possible).
+ *
  * \nopython
  *
  * \ingroup maths
@@ -441,6 +444,9 @@ static void productBest(T* dest,
             productClassic<T, operation>(dest, rhs, rhsLen, lhs, lhsLen);
         #endif
     } else {
+        // Enforce our minimum requirement on the Karatsuba threshold:
+        static_assert(karatsubaThreshold<T> >= 2);
+
         // We need to decide if/how to use Karatsuba multiplication.
         if (lhsLen < karatsubaThreshold<T> ||
                 rhsLen < karatsubaThreshold<T>) {
