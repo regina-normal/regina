@@ -108,7 +108,8 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def("entry", overload_cast<size_t, size_t>(&Matrix::entry),
             pybind11::return_value_policy::reference_internal, rdoc::entry)
         .def("transpose", &Matrix::transpose, rdoc::transpose)
-        .def("swapRows", &Matrix::swapRows, rdoc::swapRows)
+        .def("swapRows", &Matrix::swapRows,
+            "first"_a, "second"_a, "fromCol"_a = 0, rdoc::swapRows)
         .def("swapCols", &Matrix::swapCols,
             "first"_a, "second"_a, "fromRow"_a = 0, rdoc::swapCols)
     ;

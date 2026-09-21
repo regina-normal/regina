@@ -478,6 +478,10 @@ Version 8.0  [ TODO ]
             - New routine negate().
             - New routines trace() and adjugate().
             - Routine det() now takes an optional algorithm argument.
+            - Routine swapRows() now takes an optional from-column argument.
+            - Changed the underlying data storage method.  This should make
+              many operations faster; however, swapRows() is now linear time
+              instead of constant time.
         Class Matrix2:
             - Routines inverse() and invert() now throw an exception if the
               matrix does not have determinant ±1.  This also means that

@@ -151,12 +151,14 @@ class Matrix : public Output<Matrix<T>> {
 
     private:
         size_t rows_;
-            /**< The number of rows in the matrix. */
+            /**< The number of rows in the matrix.  For an uninitialised
+                 matrix (where \a data_ is `null`), this is ignored. */
         size_t cols_;
-            /**< The number of columns in the matrix. */
-        T** data_;
+            /**< The number of columns in the matrix.  For an uninitialised
+                 matrix (where \a data_ is `null`), this is ignored. */
+        T* data_;
             /**< The actual entries in the matrix.
-             *   `data_[r][c]` is the element in row \a r, column \a c. */
+                 The entry at position `(r, c)` is `data_[r * cols_ + c]`. */
 
     public:
         /**
@@ -198,9 +200,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param size the number of rows and columns in the new matrix.
          */
         Matrix(size_t size) :
-                rows_(size), cols_(size), data_(new T*[size]) {
-            for (size_t i = 0; i < size; ++i)
-                data_[i] = new T[size];
+                rows_(size), cols_(size), data_(new T[size * size]) {
         }
         /**
          * Creates a new matrix of the given size.
@@ -220,9 +220,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param cols the number of columns in the new matrix.
          */
         Matrix(size_t rows, size_t cols) :
-                rows_(rows), cols_(cols), data_(new T*[rows]) {
-            for (size_t i = 0; i < rows; ++i)
-                data_[i] = new T[cols];
+                rows_(rows), cols_(cols), data_(new T[rows * cols]) {
         }
         /**
          * Creates a new matrix containing the given hard-coded entries.
@@ -246,15 +244,11 @@ class Matrix : public Output<Matrix<T>> {
          */
         Matrix(std::initializer_list<std::initializer_list<T>> data) :
                 rows_(data.size()), cols_(data.begin()->size()),
-                data_(new T*[data.size()]) {
-            size_t r = 0;
-            for (auto row : data) {
-                data_[r] = new T[cols_];
-                size_t c = 0;
+                data_(new T[rows_ * cols_]) {
+            T* pos = data_;
+            for (auto row : data)
                 for (auto elt : row)
-                    data_[r][c++] = elt;
-                ++r;
-            }
+                    *pos++ = elt;
         }
         /**
          * Creates a new matrix that is a clone of the given matrix.
@@ -268,13 +262,9 @@ class Matrix : public Output<Matrix<T>> {
          */
         Matrix(const Matrix& src) : rows_(src.rows_), cols_(src.cols_) {
             if (src.data_) {
-                data_ = new T*[src.rows_];
-                size_t r, c;
-                for (r = 0; r < rows_; r++) {
-                    data_[r] = new T[cols_];
-                    for (c = 0; c < cols_; c++)
-                        data_[r][c] = src.data_[r][c];
-                }
+                size_t size = src.rows_ * src.cols_;
+                data_ = new T[size];
+                std::copy(src.data_, src.data_ + size, data_);
             } else {
                 data_ = nullptr;
             }
@@ -299,13 +289,12 @@ class Matrix : public Output<Matrix<T>> {
         explicit Matrix(const Matrix<U>& src) :
                 rows_(src.rows()), cols_(src.columns()) {
             if (src.initialised()) {
-                data_ = new T*[src.rows()];
-                size_t r, c;
-                for (r = 0; r < rows_; r++) {
-                    data_[r] = new T[cols_];
-                    for (c = 0; c < cols_; c++)
-                        data_[r][c] = src.entry(r, c);
-                }
+                data_ = new T[rows_ * cols_];
+                T* pos = data_;
+                // TODO: Iterate over src to avoid unnecessary arithmetic
+                for (size_t r = 0; r < rows_; ++r)
+                    for (size_t c = 0; c < cols_; ++c)
+                        *pos++ = src.entry(r, c);
             } else {
                 data_ = nullptr;
             }
@@ -331,11 +320,7 @@ class Matrix : public Output<Matrix<T>> {
          * This destructor is safe to call even if \a src is uninitialised.
          */
         ~Matrix() {
-            if (data_) {
-                for (size_t i = 0; i < rows_; ++i)
-                    delete[] data_[i];
-                delete[] data_;
-            }
+            delete[] data_;
         }
 
         /**
@@ -358,29 +343,19 @@ class Matrix : public Output<Matrix<T>> {
                 return *this;
 
             if (src.data_) {
+                size_t size = src.rows_ * src.cols_;
+                // We could keep data_ if rows_ * cols_ is larger than we need.
+                // For now don't worry; we assume matrices won't change size
+                // very often.
                 if (rows_ != src.rows_ || cols_ != src.cols_ || ! data_) {
-                    if (data_) {
-                        for (size_t i = 0; i < rows_; ++i)
-                            delete[] data_[i];
-                        delete[] data_;
-                    }
-
                     rows_ = src.rows_;
                     cols_ = src.cols_;
-
-                    data_ = new T*[rows_];
-                    for (size_t i = 0; i < rows_; ++i)
-                        data_[i] = new T[cols_];
-                }
-
-                for (size_t i = 0; i < rows_; ++i)
-                    std::copy(src.data_[i], src.data_[i] + cols_, data_[i]);
-            } else {
-                if (data_) {
-                    for (size_t i = 0; i < rows_; ++i)
-                        delete[] data_[i];
                     delete[] data_;
+                    data_ = new T[size];
                 }
+                std::copy(src.data_, src.data_ + size, data_);
+            } else {
+                delete[] data_;
                 rows_ = cols_ = 0;
                 data_ = nullptr;
             }
@@ -402,9 +377,7 @@ class Matrix : public Output<Matrix<T>> {
          * \return a reference to this matrix.
          */
         Matrix& operator = (Matrix&& src) noexcept {
-            // We need to swap rows_, because src needs this information in
-            // order to dispose of our original data properly.
-            std::swap(rows_, src.rows_);
+            rows_ = src.rows_;
             cols_ = src.cols_;
             std::swap(data_, src.data_);
             // Let src dispose of the original contents in its own destructor.
@@ -417,9 +390,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param value the value to assign to each entry.
          */
         void fill(const T& value) {
-            for (size_t r = 0; r < rows_; r++)
-                for (size_t c = 0; c < cols_; c++)
-                    data_[r][c] = value;
+            std::fill(data_, data_ + rows_ * cols_, value);
         }
         /**
          * Deprecated function that sets every entry in the matrix to the
@@ -499,7 +470,7 @@ class Matrix : public Output<Matrix<T>> {
          * \return a reference to the entry in the given row and column.
          */
         T& entry(size_t row, size_t column) {
-            return data_[row][column];
+            return data_[row * cols_ + column];
         }
         /**
          * Returns a read-only reference to the entry at the given
@@ -512,7 +483,7 @@ class Matrix : public Output<Matrix<T>> {
          * \return a reference to the entry in the given row and column.
          */
         const T& entry(size_t row, size_t column) const {
-            return data_[row][column];
+            return data_[row * cols_ + column];
         }
 #ifdef __APIDOCS
         /**
@@ -546,10 +517,10 @@ class Matrix : public Output<Matrix<T>> {
         Matrix transpose() const {
             Matrix ans(cols_, rows_);
 
-            size_t r, c;
-            for (r = 0; r < rows_; r++)
-                for (c = 0; c < cols_; c++)
-                    ans.data_[c][r] = data_[r][c];
+            const T* pos = data_;
+            for (size_t r = 0; r < rows_; r++)
+                for (size_t c = 0; c < cols_; c++)
+                    ans.data_[c * rows_ + r] = *pos++;
 
             return ans;
         }
@@ -574,43 +545,38 @@ class Matrix : public Output<Matrix<T>> {
          */
         bool operator == (const Matrix& other) const
                 requires std::equality_comparable<T> {
-            if (rows_ != other.rows_ || cols_ != other.cols_)
-                return false;
-
-            size_t r, c;
-            for (r = 0; r < rows_; ++r)
-                for (c = 0; c < cols_; ++c)
-                    if (! (data_[r][c] == other.data_[r][c]))
-                        return false;
-
-            return true;
+            return rows_ == other.rows_ && cols_ == other.cols_ &&
+                std::equal(data_, data_ + rows_ * cols_, other.data_);
         }
 
         /**
          * Swaps the elements of the two given rows in the matrix.
          *
-         * This operation is constant time (unlike swapping columns,
-         * which is linear time).
+         * As of Regina 8.0, this operation is linear time (not constant time).
          *
-         * Unlike swapCols(), this operation does not take a \a fromCol
-         * argument.  This is because swapping rows is already as fast possible
-         * (internally, just a single pointer swap), and so iterating along
-         * only part of the row would slow the routine down considerably.
+         * If the optional argument \a fromCol is passed, then the
+         * operation will only be performed for the elements from that
+         * column to the rightmost end of each row (inclusive).
          *
          * \pre The two given rows are between 0 and rows()-1 inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
          * \param first the first row to swap.
          * \param second the second row to swap.
+         * \param fromCol the starting point in each row from which the
+         * operation will be performed.
          */
-        void swapRows(size_t first, size_t second) {
+        void swapRows(size_t first, size_t second, size_t fromCol = 0) {
             if (first != second)
-                std::swap(data_[first], data_[second]);
+                std::swap_ranges(
+                    data_ + first * cols_ + fromCol,
+                    data_ + (first + 1) * cols_,
+                    data_ + second * cols_ + fromCol);
         }
         /**
          * Swaps the elements of the two given columns in the matrix.
          *
-         * This operation is linear time (unlike swapping rows,
-         * which is constant time).
+         * Like swapRows(), this operation is linear time.
          *
          * If the optional argument \a fromRow is passed, then the
          * operation will only be performed for the elements from that
@@ -629,8 +595,11 @@ class Matrix : public Output<Matrix<T>> {
                 // Give ourselves a chance to use a customised swap(),
                 // if one exists for type T.
                 using std::swap;
-                for (size_t i = fromRow; i < rows_; i++)
-                    swap(data_[i][first], data_[i][second]);
+                ptrdiff_t gap = static_cast<ptrdiff_t>(second) -
+                    static_cast<ptrdiff_t>(first);
+                T* pos = data_ + fromRow * cols_ + first;
+                for (size_t i = fromRow; i < rows_; ++i, pos += cols_)
+                    swap(*pos, *(pos + gap));
             }
         }
 
@@ -643,14 +612,14 @@ class Matrix : public Output<Matrix<T>> {
          * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
-            size_t r, c;
             out << '[';
-            for (r = 0; r < rows_; ++r) {
+            const T* pos = data_;
+            for (size_t r = 0; r < rows_; ++r) {
                 if (r > 0)
                     out << ' ';
                 out << '[';
-                for (c = 0; c < cols_; ++c)
-                    out << ' ' << data_[r][c];
+                for (size_t c = 0; c < cols_; ++c)
+                    out << ' ' << *pos++;
                 out << " ]";
             }
             out << ']';
@@ -664,11 +633,11 @@ class Matrix : public Output<Matrix<T>> {
          * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const {
-            size_t r, c;
-            for (r = 0; r < rows_; r++) {
-                for (c = 0; c < cols_; c++) {
+            const T* pos = data_;
+            for (size_t r = 0; r < rows_; r++) {
+                for (size_t c = 0; c < cols_; c++) {
                     if (c > 0) out << ' ';
-                    out << data_[r][c];
+                    out << *pos++;
                 }
                 out << '\n';
             }
@@ -683,9 +652,11 @@ class Matrix : public Output<Matrix<T>> {
          */
         static Matrix identity(size_t size) requires Ring<T> {
             Matrix ans(size, size);
-            ans.fill(RingTraits<T>::zero);
-            for (size_t i = 0; i < size; ++i)
-                ans.data_[i][i] = RingTraits<T>::one;
+            if constexpr (! RingTraits<T>::zeroInitialised)
+                ans.fill(RingTraits<T>::zero);
+            T* pos = ans.data_;
+            for (size_t i = 0; i < size; ++i, pos += (size + 1))
+                *pos = RingTraits<T>::one;
             return ans;
         }
 
@@ -695,9 +666,10 @@ class Matrix : public Output<Matrix<T>> {
          * `entry(r,c)` equal to 1 if `r == c` and 0 otherwise.
          */
         void makeIdentity() requires Ring<T> {
-            this->fill(RingTraits<T>::zero);
-            for (size_t i = 0; i < this->rows_ && i < this->cols_; i++)
-                this->data_[i][i] = RingTraits<T>::one;
+            fill(RingTraits<T>::zero);
+            T* pos = data_;
+            for (size_t i = 0; i < rows_ && i < cols_; ++i, pos += (cols_ + 1))
+                *pos = RingTraits<T>::one;
         }
 
         /**
@@ -713,17 +685,19 @@ class Matrix : public Output<Matrix<T>> {
          * \return \c true if and only if this is a square identity matrix.
          */
         bool isIdentity() const requires Ring<T> {
-            if (this->rows_ != this->cols_)
+            if (rows_ != cols_)
                 return false;
 
-            size_t r, c;
-            for (r = 0; r < this->rows_; ++r)
-                for (c = 0; c < this->cols_; ++c) {
-                    if (r == c && this->data_[r][c] != RingTraits<T>::one)
-                        return false;
-                    if (r != c && this->data_[r][c] != RingTraits<T>::zero)
-                        return false;
-                }
+            const T* pos = data_;
+            for (size_t r = 0; r < rows_; ++r)
+                for (size_t c = 0; c < cols_; ++c)
+                    if (r == c) {
+                        if (*pos++ != RingTraits<T>::one)
+                            return false;
+                    } else {
+                        if (*pos++ != RingTraits<T>::zero)
+                            return false;
+                    }
 
             return true;
         }
@@ -734,10 +708,11 @@ class Matrix : public Output<Matrix<T>> {
          * \return \c true if and only if all entries in the matrix are zero.
          */
         bool isZero() const requires Ring<T> {
-            for (size_t r=0; r<this->rows_; ++r)
-                for (size_t c=0; c<this->cols_; ++c)
-                    if (this->data_[r][c] != RingTraits<T>::zero)
-                        return false;
+            size_t size = rows_ * cols_;
+            const T* pos = data_;
+            for (size_t i = 0; i < size; ++i)
+                if (*pos++ != RingTraits<T>::zero)
+                    return false;
             return true;
         }
 
@@ -757,8 +732,10 @@ class Matrix : public Output<Matrix<T>> {
          * \param dest the row that will be added to.
          */
         void addRow(size_t source, size_t dest) requires Ring<T> {
-            for (size_t i = 0; i < this->cols_; i++)
-                this->data_[dest][i] += this->data_[source][i];
+            T* srcPos = data_ + source * cols_;
+            T* destPos = data_ + dest * cols_;
+            for (size_t i = 0; i < cols_; ++i)
+                *destPos++ += *srcPos++;
         }
         /**
          * Adds a portion of the given source row to the given destination row.
@@ -778,8 +755,10 @@ class Matrix : public Output<Matrix<T>> {
          */
         void addRowFrom(size_t source, size_t dest, size_t fromCol)
                 requires Ring<T> {
-            for (size_t i = fromCol; i < this->cols_; i++)
-                this->data_[dest][i] += this->data_[source][i];
+            T* srcPos = data_ + source * cols_ + fromCol;
+            T* destPos = data_ + dest * cols_ + fromCol;
+            for (size_t i = fromCol; i < cols_; ++i)
+                *destPos++ += *srcPos++;
         }
         /**
          * Adds the given number of copies of the given source row to
@@ -804,13 +783,14 @@ class Matrix : public Output<Matrix<T>> {
          */
         void addRow(size_t source, size_t dest, T copies, size_t fromCol = 0)
                 requires Ring<T> {
+            T* srcPos = data_ + source * cols_ + fromCol;
+            T* destPos = data_ + dest * cols_ + fromCol;
             if constexpr (HasAddProduct<T>)
-                for (size_t i = fromCol; i < this->cols_; ++i)
-                    this->data_[dest][i].addProduct(copies,
-                        this->data_[source][i]);
+                for (size_t i = fromCol; i < cols_; ++i)
+                    (destPos++)->addProduct(copies, *srcPos++);
             else
-                for (size_t i = fromCol; i < this->cols_; ++i)
-                    this->data_[dest][i] += copies * this->data_[source][i];
+                for (size_t i = fromCol; i < cols_; ++i)
+                    *destPos++ += copies * *srcPos++;
         }
         /**
          * Adds the given source column to the given destination column.
@@ -828,8 +808,11 @@ class Matrix : public Output<Matrix<T>> {
          * \param dest the column that will be added to.
          */
         void addCol(size_t source, size_t dest) requires Ring<T> {
-            for (size_t i = 0; i < this->rows_; i++)
-                this->data_[i][dest] += this->data_[i][source];
+            ptrdiff_t gap = static_cast<ptrdiff_t>(source) -
+                static_cast<ptrdiff_t>(dest);
+            T* pos = data_ + dest;
+            for (size_t i = 0; i < rows_; ++i, pos += cols_)
+                *pos += *(pos + gap);
         }
         /**
          * Adds a portion of the given source column to the given destination
@@ -850,8 +833,11 @@ class Matrix : public Output<Matrix<T>> {
          */
         void addColFrom(size_t source, size_t dest, size_t fromRow = 0)
                 requires Ring<T> {
-            for (size_t i = fromRow; i < this->rows_; i++)
-                this->data_[i][dest] += this->data_[i][source];
+            ptrdiff_t gap = static_cast<ptrdiff_t>(source) -
+                static_cast<ptrdiff_t>(dest);
+            T* pos = data_ + fromRow * cols_ + dest;
+            for (size_t i = fromRow; i < rows_; ++i, pos += cols_)
+                *pos += *(pos + gap);
         }
         /**
          * Adds the given number of copies of the given source column to
@@ -876,13 +862,15 @@ class Matrix : public Output<Matrix<T>> {
          */
         void addCol(size_t source, size_t dest, T copies, size_t fromRow = 0)
                 requires Ring<T> {
+            ptrdiff_t gap = static_cast<ptrdiff_t>(source) -
+                static_cast<ptrdiff_t>(dest);
+            T* pos = data_ + fromRow * cols_ + dest;
             if constexpr (HasAddProduct<T>)
-                for (size_t i = fromRow; i < this->rows_; i++)
-                    this->data_[i][dest].addProduct(copies,
-                        this->data_[i][source]);
+                for (size_t i = fromRow; i < rows_; ++i, pos += cols_)
+                    pos->addProduct(copies, *(pos + gap));
             else
-                for (size_t i = fromRow; i < this->rows_; i++)
-                    this->data_[i][dest] += copies * this->data_[i][source];
+                for (size_t i = fromRow; i < rows_; ++i, pos += cols_)
+                    *pos += copies * *(pos + gap);
         }
         /**
          * Multiplies the given row by the given factor.
@@ -904,8 +892,9 @@ class Matrix : public Output<Matrix<T>> {
          */
         void multRow(size_t row, T factor, size_t fromCol = 0)
                 requires Ring<T> {
-            for (size_t i = fromCol; i < this->cols_; i++)
-                this->data_[row][i] *= factor;
+            T* pos = data_ + row * cols_ + fromCol;
+            for (size_t i = fromCol; i < cols_; ++i)
+                *pos++ *= factor;
         }
         /**
          * Multiplies the given column by the given factor.
@@ -927,8 +916,9 @@ class Matrix : public Output<Matrix<T>> {
          */
         void multCol(size_t column, T factor, size_t fromRow = 0)
                 requires Ring<T> {
-            for (size_t i = fromRow; i < this->rows_; i++)
-                this->data_[i][column] *= factor;
+            T* pos = data_ + fromRow * cols_ + column;
+            for (size_t i = fromRow; i < rows_; ++i, pos += cols_)
+                *pos *= factor;
         }
         /**
          * Rewrites two rows as linear combinations of those two rows.
@@ -965,12 +955,12 @@ class Matrix : public Output<Matrix<T>> {
          */
         void combRows(size_t row1, size_t row2, T coeff11, T coeff12,
                 T coeff21, T coeff22, size_t fromCol = 0) requires Ring<T> {
-            for (size_t i = fromCol; i < this->cols_; ++i) {
-                T tmp = coeff11 * this->data_[row1][i] +
-                    coeff12 * this->data_[row2][i];
-                this->data_[row2][i] = coeff21 * this->data_[row1][i] +
-                    coeff22 * this->data_[row2][i];
-                this->data_[row1][i] = std::move(tmp);
+            T* pos1 = data_ + row1 * cols_ + fromCol;
+            T* pos2 = data_ + row2 * cols_ + fromCol;
+            for (size_t i = fromCol; i < cols_; ++i, ++pos1, ++pos2) {
+                T tmp = coeff11 * *pos1 + coeff12 * *pos2;
+                *pos2 = coeff21 * *pos1 + coeff22 * *pos2;
+                *pos1 = std::move(tmp);
             }
         }
         /**
@@ -1008,12 +998,13 @@ class Matrix : public Output<Matrix<T>> {
          */
         void combCols(size_t col1, size_t col2, T coeff11, T coeff12,
                 T coeff21, T coeff22, size_t fromRow = 0) requires Ring<T> {
-            for (size_t i = fromRow; i < this->rows_; ++i) {
-                T tmp = coeff11 * this->data_[i][col1] +
-                    coeff12 * this->data_[i][col2];
-                this->data_[i][col2] = coeff21 * this->data_[i][col1] +
-                    coeff22 * this->data_[i][col2];
-                this->data_[i][col1] = std::move(tmp);
+            T* pos1 = data_ + fromRow * cols_ + col1;
+            T* pos2 = data_ + fromRow * cols_ + col2;
+            for (size_t i = fromRow; i < rows_;
+                    ++i, pos1 += cols_, pos2 += cols_) {
+                T tmp = coeff11 * *pos1 + coeff12 * *pos2;
+                *pos2 = coeff21 * *pos1 + coeff22 * *pos2;
+                *pos1 = std::move(tmp);
             }
         }
 
@@ -1026,9 +1017,11 @@ class Matrix : public Output<Matrix<T>> {
          * \return a reference to this matrix.
          */
         Matrix& operator += (const Matrix& rhs) requires Ring<T> {
-            for (size_t row = 0; row < rows_; ++row)
-                for (size_t col = 0; col < cols_; ++col)
-                    data_[row][col] += rhs.data_[row][col];
+            size_t size = rows_ * cols_;
+            const T* src = rhs.data_;
+            T* dest = data_;
+            for (size_t i = 0; i < size; ++i)
+                *dest++ += *src++;
             return *this;
         }
 
@@ -1041,9 +1034,11 @@ class Matrix : public Output<Matrix<T>> {
          * \return a reference to this matrix.
          */
         Matrix& operator -= (const Matrix& rhs) requires Ring<T> {
-            for (size_t row = 0; row < rows_; ++row)
-                for (size_t col = 0; col < cols_; ++col)
-                    data_[row][col] -= rhs.data_[row][col];
+            size_t size = rows_ * cols_;
+            const T* src = rhs.data_;
+            T* dest = data_;
+            for (size_t i = 0; i < size; ++i)
+                *dest++ -= *src++;
             return *this;
         }
 
@@ -1073,9 +1068,11 @@ class Matrix : public Output<Matrix<T>> {
         requires requires(const T t, const U u) { { t * u }; }
         Matrix<decltype(T() * U())> operator * (const U& scalar) const& {
             Matrix<decltype(T() * U())> ans(rows_, cols_);
-            for (size_t row = 0; row < rows_; ++row)
-                for (size_t col = 0; col < cols_; ++col)
-                    ans.data_[row][col] = data_[row][col] * scalar;
+            size_t size = rows_ * cols_;
+            const T* src = data_;
+            T* dest = ans.data_;
+            for (size_t i = 0; i < size; ++i)
+                *dest++ = *src++ * scalar;
             return ans;
         }
 
@@ -1114,9 +1111,10 @@ class Matrix : public Output<Matrix<T>> {
         template <typename U>
         requires requires(T t, const U u) { { t *= u }; }
         Matrix operator * (const U& scalar) && {
-            for (size_t row = 0; row < rows_; ++row)
-                for (size_t col = 0; col < cols_; ++col)
-                    data_[row][col] *= scalar;
+            size_t size = rows_ * cols_;
+            T* pos = data_;
+            for (size_t i = 0; i < size; ++i)
+                *pos++ *= scalar;
             return std::move(*this);
         }
 
@@ -1138,9 +1136,10 @@ class Matrix : public Output<Matrix<T>> {
         template <typename U>
         requires requires(T t, const U u) { { t *= u }; }
         Matrix& operator *= (const U& scalar) {
-            for (size_t row = 0; row < rows_; ++row)
-                for (size_t col = 0; col < cols_; ++col)
-                    data_[row][col] *= scalar;
+            size_t size = rows_ * cols_;
+            T* pos = data_;
+            for (size_t i = 0; i < size; ++i)
+                *pos++ *= scalar;
             return *this;
         }
 
@@ -1166,22 +1165,25 @@ class Matrix : public Output<Matrix<T>> {
         Matrix<decltype(T() * U())> operator * (const Matrix<U>& other) const
                 requires Ring<T> && Ring<U> && Ring<decltype(T() * U())> {
             using Ans = decltype(T() * U());
-            Matrix<Ans> ans(this->rows_, other.cols_);
+            Matrix<Ans> ans(rows_, other.cols_);
 
+            T* dest = ans.data_;
             for (size_t row = 0; row < rows_; ++row)
                 for (size_t col = 0; col < other.cols_; ++col) {
                     if constexpr (! RingTraits<Ans>::zeroInitialised)
-                        ans.data_[row][col] = RingTraits<Ans>::zero;
-                    for (size_t k = 0; k < cols_; ++k)
+                        *dest = RingTraits<Ans>::zero;
+                    const T* lhsPos = data_ + row * cols_;
+                    const T* rhsPos = other.data_ + col;
+                    for (size_t k = 0; k < cols_;
+                            ++k, ++lhsPos, rhsPos += other.cols_)
                         if constexpr (HasAddProduct<Ans>) {
-                            ans.data_[row][col].addProduct(
-                                data_[row][k], other.data_[k][col]);
+                            dest->addProduct(*lhsPos, *rhsPos);
                         } else {
-                            if (data_[row][k] != RingTraits<T>::zero &&
-                                    other.data_[k][col] != RingTraits<U>::zero)
-                                ans.data_[row][col] +=
-                                    (data_[row][k] * other.data_[k][col]);
+                            if (*lhsPos != RingTraits<T>::zero &&
+                                    *rhsPos != RingTraits<U>::zero)
+                                *dest += (*lhsPos * *rhsPos);
                         }
+                    ++dest;
                 }
 
             return ans;
@@ -1209,20 +1211,22 @@ class Matrix : public Output<Matrix<T>> {
         Vector<decltype(T() * U())> operator * (const Vector<U>& other) const
                 requires Ring<T> && Ring<U> && Ring<decltype(T() * U())> {
             using Ans = decltype(T() * U());
-            Vector<Ans> ans(this->rows_);
+            Vector<Ans> ans(rows_);
 
-            size_t row, col;
-            for (row = 0; row < rows_; ++row) {
-                Ans elt = RingTraits<Ans>::zero;
-                for (col = 0; col < cols_; ++col)
+            const T* lhsPos = data_;
+            for (auto& dest : ans) {
+                if constexpr (! RingTraits<Ans>::zeroInitialised)
+                    dest = RingTraits<Ans>::zero;
+                for (const auto& rhs : other) {
                     if constexpr (HasAddProduct<Ans>) {
-                        elt.addProduct(data_[row][col], other[col]);
+                        dest.addProduct(*lhsPos++, rhs);
                     } else {
-                        if (data_[row][col] != RingTraits<T>::zero &&
-                                other[col] != RingTraits<U>::zero)
-                            elt += (data_[row][col] * other[col]);
+                        if (*lhsPos != RingTraits<T>::zero &&
+                                *other != RingTraits<U>::zero)
+                            dest += *lhsPos * rhs;
+                        ++lhsPos;
                     }
-                ans[row] = elt;
+                }
             }
 
             return ans;
@@ -1239,14 +1243,16 @@ class Matrix : public Output<Matrix<T>> {
          * \return the trace of this matrix.
          */
         T trace() const requires Ring<T> {
-            size_t n = this->rows_;
-            if (n != this->cols_)
+            if (rows_ != cols_)
                 throw FailedPrecondition("The trace can only be computed for "
                     "a square matrix.");
 
-            T ans = RingTraits<T>::zero;
-            for (size_t i = 0; i < n; ++i)
-                ans += data_[i][i];
+            T ans;
+            if constexpr (! RingTraits<T>::zeroInitialised)
+                ans = RingTraits<T>::zero;
+            const T* pos = data_;
+            for (size_t i = 0; i < rows_; ++i, pos += (rows_ + 1))
+                ans += *pos;
             return ans;
         }
 
@@ -1274,71 +1280,83 @@ class Matrix : public Output<Matrix<T>> {
                 case AdjugateAlgorithm::Default:
                 case AdjugateAlgorithm::MahajanVinay:
                 {
-                    size_t n = this->rows_;
-                    if (n != this->cols_)
+                    if (rows_ != cols_)
                         throw FailedPrecondition("Determinants can only be "
                             "computed for square matrices.");
-                    if (n == 0)
+                    if (rows_ == 0)
                         return RingTraits<T>::one;
 
-                    // Partial computations:
-                    FixedArray<T> part[2] { n * n, n * n };
+                    // Partial computations - each array describes an
+                    // upper-diagonal matrix:
+                    FixedArray<T> part[2] { rows_ * rows_, rows_ * rows_ };
+                    size_t head, r;
 
                     // Treat the smallest cases of len = 1 separately.
-                    int layer = 0; // always 0 or 1
-                    for (size_t head = 0; head < n; ++head) {
-                        part[0][head + head * n] = RingTraits<T>::one;
-                        for (size_t curr = head + 1; curr < n; ++curr)
-                            part[0][head + curr * n] = RingTraits<T>::zero;
+                    // Here we just make part[0] the identity matrix.
+                    typename FixedArray<T>::iterator pit = part[0].begin();
+                    for (head = 0; head < rows_; ++head) {
+                        // Currently pit points to the beginning of row #head.
+                        // Put a one in the main diagonal.
+                        pit += head;
+                        *pit = RingTraits<T>::one;
+                        // Fill the rest of the row to the right with zeroes.
+                        std::fill(pit + 1, pit + (rows_ - head),
+                            RingTraits<T>::zero);
+                        pit += (rows_ - head);
                     }
 
                     // Work up through incrementing values of len.
-                    for (size_t len = 2; len <= n; ++len) {
+                    int layer = 0; // always 0 or 1
+                    typename FixedArray<T>::iterator pdiag;
+                    const T* dit;
+                    for (size_t len = 2; len <= rows_; ++len) {
                         layer ^= 1;
-                        for (size_t head = 0; head < n; ++head) {
-                            // If curr == head, we need to open a new clow.
-                            part[layer][head + head * n] = RingTraits<T>::zero;
-                            for (size_t prevHead = 0; prevHead < head;
-                                    ++prevHead)
-                                for (size_t prevCurr = prevHead; prevCurr < n;
-                                        ++prevCurr)
-                                    part[layer][head + head * n] -=
-                                        (part[layer ^ 1]
-                                            [prevHead + prevCurr * n] *
-                                        this->data_[prevCurr][prevHead]);
-
-                            // If curr > head, we continue an existing clow.
-                            for (size_t curr = head + 1; curr < n; ++curr) {
-                                part[layer][head + curr * n] =
-                                    RingTraits<T>::zero;
-                                for (size_t prevCurr = head; prevCurr < n;
-                                        prevCurr++)
-                                    if constexpr (HasAddProduct<T>)
-                                        part[layer][head + curr * n].addProduct(
-                                            part[layer ^ 1]
-                                                [head + prevCurr * n],
-                                            this->data_[prevCurr][curr]);
-                                    else
-                                        part[layer][head + curr * n] +=
-                                            (part[layer ^ 1]
-                                                [head + prevCurr * n] *
-                                            this->data_[prevCurr][curr]);
+                        pit = part[layer].begin();
+                        for (head = 0; head < rows_; ++head) {
+                            pit += head;
+                            // Now pit points to the diagonal on row #head.
+                            // At this diagonal element we need to open a new
+                            // clow, which requires computing many (negative)
+                            // inner products of corresponding rows of
+                            // part[layer ^ 1] and this matrix.
+                            *pit = RingTraits<T>::zero;
+                            for (r = 0, pdiag = part[layer ^ 1].begin(),
+                                        dit = data_;
+                                    r < head;
+                                    ++r, dit += (rows_ + 1),
+                                        pdiag += (rows_ + 1)) {
+                                // Here dit and pdiag both point to the main
+                                // diagonal on row #r.
+                                *pit -= innerProduct(pdiag, dit, rows_ - r);
                             }
+
+                            // Now walk pit along the row to the right, and at
+                            // each position continue an existing clow.
+                            // Right now, pdiag and dit both point to their
+                            // respective diagonal element on row #head.
+                            // We will leave pdiag fixed, and start stepping
+                            // dit down in its current column.
+                            for (r = head + 1, ++pit, dit += rows_;
+                                    r < rows_; ++r, ++pit, dit += rows_)
+                                *pit = innerProduct(pdiag, dit, rows_ - head);
                         }
                     }
 
-                    // All done.  Sum up the determinant.
-                    T ans = RingTraits<T>::zero;
-                    for (size_t head = 0; head < n; head++)
-                        for (size_t curr = head; curr < n; curr++)
-                            if constexpr (HasAddProduct<T>)
-                                ans.addProduct(part[layer][head + curr * n],
-                                    this->data_[curr][head]);
-                            else
-                                ans += (part[layer][head + curr * n] *
-                                    this->data_[curr][head]);
+                    // All done.  Sum up the determinant, which is now the
+                    // inner product of _everything_ in part[layer] with this
+                    // matrix.
+                    T ans;
+                    if constexpr (! RingTraits<T>::zeroInitialised)
+                        ans = RingTraits<T>::zero;
+                    for (r = 0, pit = part[layer].begin(), dit = data_;
+                            r < rows_;
+                            ++r, pit += (rows_ + 1), dit += (rows_ + 1)) {
+                        // Here pit and dit point to their corresponding
+                        // diagonal elements in row #r.
+                        ans += innerProduct(pit, dit, rows_ - r);
+                    }
 
-                    return (n % 2 == 0 ? -ans : ans);
+                    return (rows_ % 2 == 0 ? -ans : ans);
                 }
                 default:
                     return adjugate(alg).second;
@@ -1368,14 +1386,13 @@ class Matrix : public Output<Matrix<T>> {
         std::pair<Matrix, T> adjugate(
                 AdjugateAlgorithm alg = AdjugateAlgorithm::Default) const
                 requires IntegralDomain<T> {
-            size_t n = this->rows_;
-            if (n != this->cols_)
+            if (rows_ != cols_)
                 throw FailedPrecondition("The adjugate can only be "
                     "computed for a square matrix.");
-            if (n == 0)
+            if (rows_ == 0)
                 return { 0 /* empty matrix */, RingTraits<T>::one };
-            if (n == 1)
-                return { Matrix::identity(1), **data_ };
+            if (rows_ == 1)
+                return { Matrix::identity(1), *data_ };
 
             switch (alg) {
                 case AdjugateAlgorithm::Default:
@@ -1386,19 +1403,21 @@ class Matrix : public Output<Matrix<T>> {
                     // but we do not keep the coefficients of the
                     // characteristic polynomial.
                     Matrix b;
-                    for (size_t k = 1; k < n; ++k) {
+                    for (size_t k = 1; k < rows_; ++k) {
                         if (k == 1)
                             b = *this;
                         else
                             b = (*this) * b;
 
                         auto c = b.trace() / k;
-                        for (size_t i = 0; i < n; ++i)
-                            b.data_[i][i] -= c;
+                        // The following loop implements B -= c * I.
+                        auto pos = b.data_;
+                        for (size_t i = 0; i < rows_; ++i, pos += (rows_ + 1))
+                            *pos -= c;
                     }
 
-                    auto c = trace((*this), b) / n;
-                    if (n % 2 == 0) {
+                    auto c = trace((*this), b) / rows_;
+                    if (rows_ % 2 == 0) {
                         b.negate();
                         if constexpr (Negatable<T>)
                             c.negate();
@@ -1413,7 +1432,7 @@ class Matrix : public Output<Matrix<T>> {
                     // (https://inria.hal.science/hal-03016034v3, Algorithm 2),
                     // but we do not keep the coefficients of the
                     // characteristic polynomial.
-                    size_t m = isqrt(n);
+                    size_t m = isqrt(rows_);
 
                     FixedArray<Matrix> powA(m);
                     powA.front() = *this;
@@ -1424,12 +1443,12 @@ class Matrix : public Output<Matrix<T>> {
                         traceA[i] = powA[i].trace();
 
                     FixedArray<T> charSlice(m);
-                    Matrix b = identity(n);
+                    Matrix b = identity(rows_);
                     size_t k = 1;
 
-                    while (k < n) {
-                        if (n - k < m)
-                            m = n - k;
+                    while (k < rows_) {
+                        if (rows_ - k < m)
+                            m = rows_ - k;
                         charSlice.front() = -trace((*this), b) / k;
                         for (size_t j = 1; j < m; ++j) {
                             charSlice[j] = trace(powA[j], b);
@@ -1455,24 +1474,29 @@ class Matrix : public Output<Matrix<T>> {
                         // (presumably because neither A^m nor B is sparse).
                         b = powA[m - 1] * b;
 
-                        for (size_t j = 0; j < m - 1; ++j)
+                        for (size_t j = 0; j < m - 1; ++j) {
+                            auto bit = b.data_;
+                            auto ait = powA[m - 2 - j].data_;
                             for (size_t row = 0; row < rows_; ++row)
                                 for (size_t col = 0; col < cols_; ++col)
                                     if constexpr (HasAddProduct<T>)
-                                        b.data_[row][col].addProduct(
-                                            powA[m - 2 - j].data_[row][col],
+                                        (bit++)->addProduct(*ait++,
                                             charSlice[j]);
                                     else
-                                        b.data_[row][col] +=
-                                            powA[m - 2 - j].data_[row][col] *
-                                            charSlice[j];
-                        for (size_t i = 0; i < n; ++i)
-                            b.data_[i][i] += charSlice[m - 1];
+                                        *bit++ += *ait++ * charSlice[j];
+                        }
+
+                        // The following loop implements
+                        // B += charSlice[m - 1] * I.
+                        auto pos = b.data_;
+                        for (size_t i = 0; i < rows_; ++i, pos += (rows_ + 1))
+                            *pos += charSlice[m - 1];
+
                         k += m;
                     }
 
-                    auto c = trace((*this), b) / n;
-                    if (n % 2 == 0) {
+                    auto c = trace((*this), b) / rows_;
+                    if (rows_ % 2 == 0) {
                         b.negate();
                         if constexpr (Negatable<T>)
                             c.negate();
@@ -1492,12 +1516,13 @@ class Matrix : public Output<Matrix<T>> {
          * Negates every entry in this matrix.
          */
         void negate() requires Ring<T> {
-            for (size_t r = 0; r < rows_; r++)
-                for (size_t c = 0; c < cols_; c++)
-                    if constexpr (Negatable<T>)
-                        data_[r][c].negate();
-                    else
-                        data_[r][c] = -data_[r][c];
+            size_t size = rows_ * cols_;
+            T* pos = data_;
+            for (size_t i = 0; i < size; ++i, ++pos)
+                if constexpr (Negatable<T>)
+                    pos->negate();
+                else
+                    *pos = -*pos;
         }
 
         /**
@@ -1508,11 +1533,12 @@ class Matrix : public Output<Matrix<T>> {
          * \param row the index of the row whose elements should be negated.
          */
         void negateRow(size_t row) requires Ring<T> {
-            for (T* x = this->data_[row]; x != this->data_[row] + cols_; ++x)
+            T* pos = data_ + row * cols_;
+            for (size_t i = 0; i < cols_; ++i, ++pos)
                 if constexpr (Negatable<T>)
-                    x->negate();
+                    pos->negate();
                 else
-                    *x = -*x;
+                    *pos = -*pos;
         }
 
         /**
@@ -1523,11 +1549,12 @@ class Matrix : public Output<Matrix<T>> {
          * \param col the index of the column whose elements should be negated.
          */
         void negateCol(size_t col) requires Ring<T> {
-            for (T** row = this->data_; row != this->data_ + rows_; ++row)
+            T* pos = data_ + col;
+            for (size_t i = 0; i < rows_; ++i, pos += cols_)
                 if constexpr (Negatable<T>)
-                    (*row)[col].negate();
+                    pos->negate();
                 else
-                    (*row)[col] = -(*row)[col];
+                    *pos = -*pos;
         }
 
         /**
@@ -1547,8 +1574,9 @@ class Matrix : public Output<Matrix<T>> {
          * \param divBy the integer to divide each row element by.
          */
         void divRowExact(size_t row, const T& divBy) requires ReginaInteger<T> {
-            for (T* x = this->data_[row]; x != this->data_[row] + cols_; ++x)
-                x->divByExact(divBy);
+            T* pos = data_ + row * cols_;
+            for (size_t i = 0; i < cols_; ++i)
+                (pos++)->divByExact(divBy);
         }
 
         /**
@@ -1568,8 +1596,9 @@ class Matrix : public Output<Matrix<T>> {
          * \param divBy the integer to divide each column element by.
          */
         void divColExact(size_t col, const T& divBy) requires ReginaInteger<T> {
-            for (T** row = this->data_; row != this->data_ + rows_; ++row)
-                (*row)[col].divByExact(divBy);
+            T* pos = data_ + col;
+            for (size_t i = 0; i < rows_; ++i, pos += cols_)
+                pos->divByExact(divBy);
         }
 
         /**
@@ -1582,11 +1611,10 @@ class Matrix : public Output<Matrix<T>> {
          * \return the greatest common divisor of all elements of this row.
          */
         T gcdRow(size_t row) requires ReginaInteger<T> {
-            T* x = this->data_[row];
-
-            T gcd = *x++;
-            while (x != this->data_[row] + cols_ && gcd != 1 && gcd != -1)
-                gcd = gcd.gcd(*x++);
+            T* pos = data_ + row * cols_;
+            T gcd = *pos;
+            for (size_t i = 1; i < cols_ && gcd != 1 && gcd != -1; ++i)
+                gcd = gcd.gcd(*++pos); // advance pos, _then_ read
 
             if (gcd < 0)
                 gcd.negate();
@@ -1603,11 +1631,10 @@ class Matrix : public Output<Matrix<T>> {
          * \return the greatest common divisor of all elements of this column.
          */
         T gcdCol(size_t col) requires ReginaInteger<T> {
-            T** row = this->data_;
-
-            T gcd = (*row++)[col];
-            while (row != this->data_ + rows_ && gcd != 1 && gcd != -1)
-                gcd = gcd.gcd((*row++)[col]);
+            T* pos = data_ + col;
+            T gcd = *pos;
+            for (size_t i = 1; i < rows_ && gcd != 1 && gcd != -1; ++i)
+                gcd = gcd.gcd(*(pos += cols_)); // advance pos, _then_ read
 
             if (gcd < 0)
                 gcd.negate();
@@ -1669,6 +1696,7 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t rowEchelonForm() requires ReginaInteger<T> {
             size_t i, j;
+            T* pos;
 
             // The current working row and column:
             // The entries to the left of currCol will not change, and
@@ -1679,8 +1707,9 @@ class Matrix : public Output<Matrix<T>> {
             // The algorithm works from left to right.
             while (currRow < rows_ && currCol < cols_) {
                 // Identify the first non-zero entry in currCol.
-                for (i = currRow; i < rows_; ++i)
-                    if (data_[i][currCol] != 0)
+                for (i = currRow, pos = data_ + currRow * cols_ + currCol;
+                        i < rows_; ++i, pos += cols_)
+                    if (*pos != 0)
                         break;
 
                 if (i == rows_) {
@@ -1695,32 +1724,27 @@ class Matrix : public Output<Matrix<T>> {
                 }
 
                 // Now our first non-zero entry is in currRow.
+                T* currPos = data_ + currRow * cols_ + currCol;
 
                 // Zero out all entries in currCol that appear *below* currRow.
-                for (i = currRow + 1; i < rows_; ++i)
-                    if (data_[i][currCol] != 0) {
-                        auto [gcd, u, v] = data_[currRow][currCol].
-                            gcdWithCoeffs(data_[i][currCol]);
-                        T a = data_[currRow][currCol].divExact(gcd);
-                        T b = data_[i][currCol].divExact(gcd);
-                        for (j = 0; j < cols_; ++j) {
-                            T tmp = u * data_[currRow][j] + v * data_[i][j];
-                            data_[i][j] = a * data_[i][j] -
-                                b * data_[currRow][j];
-                            data_[currRow][j] = tmp;
-                        }
+                for (i = currRow + 1, pos = currPos + cols_; i < rows_;
+                        ++i, pos += cols_) {
+                    // Now pos points to entry (i, currCol).
+                    if (*pos != 0) {
+                        auto [gcd, u, v] = currPos->gcdWithCoeffs(*pos);
+                        T a = currPos->divExact(gcd);
+                        T b = -(pos->divExact(gcd));
+                        combRows(currRow, i, u, v, b, a);
                     }
-
-                // Ensure that our leading coefficient (currRow, currCol)
-                // is positive.
-                if (data_[currRow][currCol] < 0) {
-                    multRow(currRow, -1);
                 }
 
-                // Finally, reduce the entries in currCol *above* currRow.
-                for (i = 0; i < currRow; ++i) {
-                    auto [d, r] = data_[i][currCol].divisionAlg(
-                        data_[currRow][currCol]);
+                // Ensure that our leading coefficient (currRow, currCol) is
+                // positive, and reduce the entries in currCol *above* currRow.
+                if (*currPos < 0)
+                    negateRow(currRow);
+                for (i = 0, pos = data_ + currCol; pos != currPos;
+                        ++i, pos += cols_) {
+                    auto [d, r] = pos->divisionAlg(*currPos);
                     if (d != 0)
                         addRow(currRow /* source */, i /* dest */, -d);
                 }
@@ -1757,6 +1781,7 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t columnEchelonForm() requires ReginaInteger<T> {
             size_t i, j;
+            T* pos;
 
             // The current working row and column:
             // The entries above currRow will not change, and to the left of
@@ -1767,8 +1792,9 @@ class Matrix : public Output<Matrix<T>> {
             // The algorithm works from top to bottom.
             while (currRow < rows_ && currCol < cols_) {
                 // Identify the first non-zero entry in currRow.
-                for (i = currCol; i < cols_; ++i)
-                    if (data_[currRow][i] != 0)
+                for (i = currCol, pos = data_ + currRow * cols_ + currCol;
+                        i < cols_; ++i, ++pos)
+                    if (*pos != 0)
                         break;
 
                 if (i == cols_) {
@@ -1783,32 +1809,27 @@ class Matrix : public Output<Matrix<T>> {
                 }
 
                 // Now our first non-zero entry is in currCol.
+                T* currPos = data_ + currRow * cols_ + currCol;
 
                 // Zero out all entries in currRow that appear right of currCol.
-                for (i = currCol + 1; i < cols_; ++i)
-                    if (data_[currRow][i] != 0) {
-                        auto [gcd, u, v] = data_[currRow][currCol].
-                            gcdWithCoeffs(data_[currRow][i]);
-                        T a = data_[currRow][currCol].divExact(gcd);
-                        T b = data_[currRow][i].divExact(gcd);
-                        for (j = 0; j < rows_; ++j) {
-                            T tmp = u * data_[j][currCol] + v * data_[j][i];
-                            data_[j][i] = a * data_[j][i] -
-                                b * data_[j][currCol];
-                            data_[j][currCol] = tmp;
-                        }
+                for (i = currCol + 1, pos = currPos + 1; i < cols_;
+                        ++i, ++pos) {
+                    // Now pos points to entry (currRow, i).
+                    if (*pos != 0) {
+                        auto [gcd, u, v] = currPos->gcdWithCoeffs(*pos);
+                        T a = currPos->divExact(gcd);
+                        T b = -(pos->divExact(gcd));
+                        combCols(currCol, i, u, v, b, a);
                     }
-
-                // Ensure that our leading coefficient (currRow, currCol)
-                // is positive.
-                if (data_[currRow][currCol] < 0) {
-                    multCol(currCol, -1);
                 }
 
-                // Finally, reduce the entries in currRow left of currCol.
-                for (i = 0; i < currCol; ++i) {
-                    auto [d, r] = data_[currRow][i].divisionAlg(
-                        data_[currRow][currCol]);
+                // Ensure that our leading coefficient (currRow, currCol) is
+                // positive, and reduce the entries in currRow left of currCol.
+                if (*currPos < 0)
+                    negateCol(currCol);
+                for (i = 0, pos = data_ + currRow * cols_;
+                        pos != currPos; ++i, ++pos) {
+                    auto [d, r] = pos->divisionAlg(*currPos);
                     if (d != 0)
                         addCol(currCol /* source */, i /* dest */, -d);
                 }
@@ -1881,13 +1902,39 @@ class Matrix : public Output<Matrix<T>> {
          * \return the trace of `lhs * rhs`.
          */
         static T trace(const Matrix& lhs, const Matrix& rhs) requires Ring<T> {
-            T ans = RingTraits<T>::zero;
-            for (size_t i = 0; i < lhs.rows_; ++i)
-                for (size_t j = 0; j < lhs.cols_; ++j)
+            T ans;
+            if constexpr (! RingTraits<T>::zeroInitialised)
+                ans = RingTraits<T>::zero;
+            const T* lhsPos = lhs.data_;
+            for (size_t i = 0; i < lhs.rows_; ++i) {
+                const T* rhsPos = rhs.data_ + i;
+                for (size_t j = 0; j < lhs.cols_; ++j, rhsPos += rhs.cols_)
                     if constexpr (HasAddProduct<T>)
-                        ans.addProduct(lhs.data_[i][j], rhs.data_[j][i]);
+                        ans.addProduct(*lhsPos++, *rhsPos);
                     else
-                        ans += lhs.data_[i][j] * rhs.data_[j][i];
+                        ans += *lhsPos++ * *rhsPos;
+            }
+            return ans;
+        }
+
+        /**
+         * Returns the inner product of two vectors, given by a pair of
+         * starting iterators and a vector length.
+         */
+        template <RandomAccessIteratorFor<T> Iterator1,
+            RandomAccessIteratorFor<T> Iterator2>
+        static T innerProduct(Iterator1 it1, Iterator2 it2, size_t len)
+                requires Ring<T> {
+            T ans;
+            if constexpr (! RingTraits<T>::zeroInitialised)
+                ans = RingTraits<T>::zero;
+
+            Iterator1 end1 = it1 + len;
+            while (it1 != end1)
+                if constexpr (HasAddProduct<T>)
+                    ans.addProduct(*it1++, *it2++);
+                else
+                    ans += *it1++ * *it2++;
             return ans;
         }
 };
