@@ -447,6 +447,22 @@ static void productBest(T* dest,
         // Enforce our minimum requirement on the Karatsuba threshold:
         static_assert(karatsubaThreshold<T> >= 2);
 
+        // Note: various tests for "too unbalanced" that we could use:
+        //   2 lhsLen <= rhsLen + 1  (the bare minimum requirement)
+        //   lhsLen <= q * rhsLen    (for any fixed q with 2/3 ≤ q < 1)
+        //   lhsLen < rhsLen         (detects any unbalance at all)
+        //
+        // If such a test passes, we are guaranteed lhsLen < rhsLen (i.e., we
+        // will know which of lhsLen/rhsLen is the min and which is the max).
+        //
+        // If such a test fails, we are guaranteed 2 * lhsLen > rhsLen + 1.
+        // This means that, if it fails in the other direction also - when
+        // switching lhsLen/rhsLen - then we have 2 * minLen > maxLen + 1,
+        // and so we satisfy the preconditions for productKaratsuba.
+        //
+        // Note: the deductions above rely on the knowledge that both lhsLen
+        // and rhsLen are at least the Karatsuba threshold, which is ≥ 2.
+
         // We need to decide if/how to use Karatsuba multiplication.
         if (lhsLen < karatsubaThreshold<T> ||
                 rhsLen < karatsubaThreshold<T>) {
@@ -460,13 +476,11 @@ static void productBest(T* dest,
             else
                 productClassic<T, operation>(dest, rhs, rhsLen, lhs, lhsLen);
             #endif
-        } else if ((lhsLen << 1) <= rhsLen + 1) {
-            // We have rhs much longer than lhs.
+        } else if ((lhsLen << 2) <= 3 * rhsLen) {
+            // We have rhs longer than lhs, and this is too unbalanced.
             // Break rhs into blocks of size lhsLen, and use Karatsuba
             // multiplication on each (except possibly the last).
-            // (Note that, since lhsLen and rhsLen are both positive,
-            // just the test above will guarantee lhsLen ≤ rhsLen.)
-            #if 1
+            #if 0
             productClassic<T, operation>(dest, lhs, lhsLen, rhs, rhsLen);
             #else
             if constexpr (operation == SetOrAdd::Set) {
@@ -486,10 +500,10 @@ static void productBest(T* dest,
                 productBest<T, SetOrAdd::Add, moveable>(dest, lhs, lhsLen,
                     rhs, rhsLen, scratch);
             #endif
-        } else if ((rhsLen << 1) <= lhsLen + 1) {
-            // We have lhs much longer than rhs.
+        } else if ((rhsLen << 2) <= 3 * lhsLen) {
+            // We have lhs longer than rhs, and this is too unbalanced.
             // Like above, but with LHS and RHS swapped.
-            #if 1
+            #if 0
             productClassic<T, operation>(dest, lhs, lhsLen, rhs, rhsLen);
             #else
             if constexpr (operation == SetOrAdd::Set) {
@@ -507,13 +521,8 @@ static void productBest(T* dest,
                     rhs, rhsLen, scratch);
             #endif
         } else {
-            // Let maxLen = max(lhsLen, rhsLen).
-            // Then we use a block size of ceil(maxLen / 2).
-            //
-            // To see why this works: WLOG, if lhsLen ≤ rhsLen then:
-            //   blockSize ≤ (rhsLen + 1) / 2
-            //             < lhsLen [from the tests above]
-            //             ≤ rhsLen ≤ 2 * blockSize.
+            // See the discussion above on balance as to why the preconditions
+            // on {lhsLen,rhsLen} for productKaratsuba() must now be satisfied.
             productKaratsuba<T, operation, moveable>(dest,
                 lhs, lhsLen, rhs, rhsLen, scratch);
         }
