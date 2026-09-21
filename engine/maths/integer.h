@@ -4088,7 +4088,7 @@ inline IntegerBase<withInfinity> IntegerBase<withInfinity>::operator -() && {
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
         if (rep_ == REP_INFINITE)
@@ -4147,7 +4147,7 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
         IntegerBase&& other) {
     if constexpr (withInfinity) {
         if (rep_ == REP_INFINITE)
@@ -4269,7 +4269,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator +=(
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         const IntegerBase& other) {
     if constexpr (withInfinity) {
         if (rep_ == REP_INFINITE)
@@ -4328,7 +4328,7 @@ inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
 }
 
 template <bool withInfinity>
-inline IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
+IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator -=(
         IntegerBase&& other) {
     if constexpr (withInfinity) {
         if (rep_ == REP_INFINITE)
@@ -4685,7 +4685,7 @@ IntegerBase<withInfinity>& IntegerBase<withInfinity>::operator %=(
 }
 
 template <bool withInfinity>
-inline void IntegerBase<withInfinity>::addProduct(
+void IntegerBase<withInfinity>::addProduct(
         const IntegerBase& x, const IntegerBase& y) {
     if constexpr (withInfinity) {
         if (rep_ == REP_INFINITE)
@@ -4719,10 +4719,38 @@ inline void IntegerBase<withInfinity>::addProduct(
                 mpz_submul_ui(d_.gmp_, y.d_.gmp_,
                     detail::negateToUnsignedType(x.d_.native_));
         } else {
-            *this += x * y;
+            // GMP += native * native
+            *this += x * y; // TODO: Do we want to do anything special here?
         }
     } else {
-        *this += x * y;
+        if (x.rep_ || y.rep_) {
+            // Native += { GMP * native | native * GMP | GMP * GMP }
+            *this += x * y; // TODO: Do we want to do anything special here?
+        } else {
+            // Native += native * native
+            // We can streamline the implementation a little here, since the
+            // result and its negation will both never overflow a DoubleLong.
+            DoubleLong ans = (static_cast<DoubleLong>(x.d_.native_) *
+                y.d_.native_) + d_.native_;
+            if (ans > LONG_MAX || ans < LONG_MIN) {
+                // Overflows a long.
+                rep_ = REP_GMP;
+                mpz_init(d_.gmp_);
+                if (ans >= 0) {
+                    mpz_import(d_.gmp_, 1 /* word count */, 1 /* word order */,
+                        sizeof(DoubleLong) /* word size */,
+                        0 /* native endianness */, 0 /* full words */, &ans);
+                } else {
+                    // mpz_import assumes an unsigned type.
+                    ans = -ans;
+                    mpz_import(d_.gmp_, 1 /* word count */, 1 /* word order */,
+                        sizeof(DoubleLong) /* word size */,
+                        0 /* native endianness */, 0 /* full words */, &ans);
+                    mpz_neg(d_.gmp_, d_.gmp_);
+                }
+            } else
+                d_.native_ = static_cast<long>(ans);
+        }
     }
 }
 
