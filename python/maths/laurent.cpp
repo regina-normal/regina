@@ -94,6 +94,10 @@ void addLaurent(pybind11::module_& m) {
             overload_cast<const Laurent<Integer>&, const Laurent<Integer>&>(
                 &Laurent<Integer>::addProduct),
             rdoc::addProduct)
+        .def("addProduct",
+            overload_cast<const Laurent<Integer>&, const Integer&>(
+                &Laurent<Integer>::addProduct),
+            rdoc::addProduct_2)
         .def("str", overload_cast<const char*>(
             &Laurent<Integer>::str, pybind11::const_), rdoc::str)
         .def("utf8", overload_cast<const char*>(

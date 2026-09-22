@@ -1890,6 +1890,65 @@ class Laurent :
         }
 
         /**
+         * Adds the product of the given polynomial with the given scalar
+         * to this.
+         *
+         * Calling `z.addProduct(x, scalar)` is equivalent to, but often faster
+         * than, calling `z += x * scalar`.
+         *
+         * \param x the polynomial in the product to add to this.
+         * \param scalar the scalar in the product to add to this.
+         */
+        void addProduct(const Laurent<T>& x, const T& scalar) {
+            if (x.isZero() || scalar.isZero()) {
+                return;
+            } else {
+                // The following line ensures that coeff_ becomes non-null.
+                reallocateForRange(x.minExp_, x.maxExp_);
+
+                for (long i = x.minExp_; i <= x.maxExp_; ++i)
+                    if constexpr (HasAddProduct<T>)
+                        coeff_[i - base_].addProduct(scalar,
+                            x.coeff_[i - x.base_]);
+                    else
+                        coeff_[i - base_] += scalar * x.coeff_[i - x.base_];
+
+                // We might have zeroed out some coefficients.
+                fixDegrees();
+            }
+        }
+
+        /**
+         * Adds the product of the given polynomial with the given scalar
+         * to this.
+         *
+         * Calling `z.addProduct(x, scalar)` is equivalent to, but often faster
+         * than, calling `z += x * scalar`.
+         *
+         * \param x the polynomial in the product to add to this.
+         * \param scalar the scalar in the product to add to this.
+         */
+        void addProduct(Laurent<T>&& x, const T& scalar) {
+            if (x.isZero() || scalar.isZero()) {
+                return;
+            } else {
+                // The following line ensures that coeff_ becomes non-null.
+                reallocateForRange(x.minExp_, x.maxExp_);
+
+                for (long i = x.minExp_; i <= x.maxExp_; ++i)
+                    if constexpr (HasAddProduct<T>)
+                        coeff_[i - base_].addProduct(scalar,
+                            std::move(x.coeff_[i - x.base_]));
+                    else
+                        coeff_[i - base_] += scalar *
+                            std::move(x.coeff_[i - x.base_]);
+
+                // We might have zeroed out some coefficients.
+                fixDegrees();
+            }
+        }
+
+        /**
          * Writes this polynomial to the given output stream, using the
          * given variable name instead of \c x.
          *

@@ -506,6 +506,20 @@ Parameter ``x``:
 Parameter ``y``:
     the second polynomial in the product to add to this.)doc";
 
+// Docstring regina::python::doc::Laurent::addProduct_2
+static constexpr const char addProduct_2[] =
+R"doc(Adds the product of the given polynomial with the given scalar to
+this.
+
+Calling ``z.addProduct(x, scalar)`` is equivalent to, but often faster
+than, calling ``z += x * scalar``.
+
+Parameter ``x``:
+    the polynomial in the product to add to this.
+
+Parameter ``scalar``:
+    the scalar in the product to add to this.)doc";
+
 // Docstring regina::python::doc::Laurent::allocation
 static constexpr const char allocation[] =
 R"doc(Indicates the range of exponents for which memory is currently
