@@ -1816,8 +1816,8 @@ class Laurent :
          * This is a common operation in (for example) inner products
          * and matrix multiplication.
          *
-         * Calling `x.addProduct(y, z)` is equivalent to, but often faster
-         * than, calling `x += y * z`.
+         * Calling `z.addProduct(x, y)` is equivalent to, but often faster
+         * than, calling `z += x * y`.
          *
          * \param x the first polynomial in the product to add to this.
          * \param y the second polynomial in the product to add to this.
@@ -1855,8 +1855,8 @@ class Laurent :
          * This is a common operation in (for example) inner products
          * and matrix multiplication.
          *
-         * Calling `x.addProduct(y, z)` is equivalent to, but often faster
-         * than, calling `x += y * z`.
+         * Calling `z.addProduct(x, y)` is equivalent to, but often faster
+         * than, calling `z += x * y`.
          *
          * \param x the first polynomial in the product to add to this.
          * \param y the second polynomial in the product to add to this.

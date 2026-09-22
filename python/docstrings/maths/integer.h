@@ -745,8 +745,8 @@ R"doc(Adds the product of the two given integers to this integer. This is a
 common operation in (for example) inner products and matrix
 multiplication.
 
-Calling ``x.addProduct(y, z)`` is equivalent to, but sometimes faster
-than, calling ``x += y * z``.
+Calling ``z.addProduct(x, y)`` is equivalent to, but sometimes faster
+than, calling ``z += x * y``.
 
 Parameter ``x``:
     the first integer in the product to add to this.

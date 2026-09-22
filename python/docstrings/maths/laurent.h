@@ -497,8 +497,8 @@ R"doc(Adds the product of the two given polynomials to this. This is a
 common operation in (for example) inner products and matrix
 multiplication.
 
-Calling ``x.addProduct(y, z)`` is equivalent to, but often faster
-than, calling ``x += y * z``.
+Calling ``z.addProduct(x, y)`` is equivalent to, but often faster
+than, calling ``z += x * y``.
 
 Parameter ``x``:
     the first polynomial in the product to add to this.

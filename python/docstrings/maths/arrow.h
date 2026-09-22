@@ -379,8 +379,8 @@ Returns:
 static constexpr const char addProduct[] =
 R"doc(Adds the product of the given arrow and Laurent polynomials to this.
 
-Calling ``x.addProduct(y, z)`` is equivalent to, but often faster
-than, calling ``x += y * z``.
+Calling ``z.addProduct(x, y)`` is equivalent to, but often faster
+than, calling ``z += x * y``.
 
 Parameter ``x``:
     the arrow polynomial in the product to add to this.
