@@ -115,9 +115,7 @@ namespace {
      * in \a x, whose coefficients are Laurent polynomials in \a y.
      */
     WorkingL2 T1T2(const Laurent<Integer>& p, const Laurent<Integer>& q) {
-        WorkingL2 ans(p.minExp(), p.begin(), p.end());
-        ans.transform([&q](Laurent<Integer>& term) { term *= q; });
-        return ans;
+        return WorkingL2(p.minExp(), p.begin(), p.end()) * q;
     }
 
     /**
