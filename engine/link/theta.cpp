@@ -119,6 +119,31 @@ namespace {
     }
 
     /**
+     * Converts a pair of single-variable polynomials `p(⋅)` and `r(⋅)` into
+     * the two-variable polynomial `p(x) * r(xy)`.
+     *
+     * The two-variable polynomial will be presented as a Laurent polynomial
+     * in \a x, whose coefficients are Laurent polynomials in \a y.
+     */
+    WorkingL2 T1T3(const Laurent<Integer>& p, const Laurent<Integer>& r) {
+        // From here we are guaranteed that p,q,r ≠ 0.
+        WorkingL2 ans;
+        long xMin = p.minExp() + r.minExp();
+        long xMax = p.maxExp() + r.maxExp();
+        ans.reserveRange(xMin, xMax);
+        for (long xExp = xMin; xExp <= xMax; ++xExp) {
+            Laurent<Integer> coeff;
+            long rFrom = std::max(r.minExp(), xExp - p.maxExp());
+            long rTo = std::min(r.maxExp(), xExp - p.minExp());
+            coeff.reserveRange(rFrom, rTo);
+            for (long yExp = rFrom; yExp <= rTo; ++yExp)
+                coeff.set(yExp, p[xExp - yExp] * r[yExp]);
+            ans.set(xExp, std::move(coeff));
+        }
+        return ans;
+    }
+
+    /**
      * Multiplies the given two-variable Laurent polynomial by `x^s y^t`.
      */
     WorkingL2 shifted(const WorkingL2& p, long s, long t) {
@@ -589,32 +614,24 @@ const Laurent2<Integer>& Link::theta() const {
             #else
             if (c0->sign() > 0) {
                 if (c1->sign() > 0) {
-                    sum2bits[0] += T1T2T3(
-                        p,
+                    sum2bits[0].addProduct(T1T3(p, q),
                         (adj.entry(i1, i0) - p).shifted(1) +
-                            adj.entry(j1, j0) - adj.entry(i1, j0),
-                        q);
+                            adj.entry(j1, j0) - adj.entry(i1, j0));
                 } else {
-                    sum2bits[1] += T1T2T3(
-                        p,
+                    sum2bits[1].addProduct(T1T3(p, q),
                         ((adj.entry(i1, i0) - p).shifted(1)
                             + adj.entry(j1, j0)
-                            - adj.entry(i1, j0)).shifted(1),
-                        q);
+                            - adj.entry(i1, j0)).shifted(1));
                 }
             } else {
                 if (c1->sign() > 0) {
-                    sum2bits[2] += T1T2T3(
-                        p,
+                    sum2bits[2].addProduct(T1T3(p, q),
                         (adj.entry(i1, i0) - p).shifted(-1)
-                            + adj.entry(j1, j0) - adj.entry(i1, j0),
-                        q);
+                            + adj.entry(j1, j0) - adj.entry(i1, j0));
                 } else {
-                    sum2bits[3] += T1T2T3(
-                        p,
+                    sum2bits[3].addProduct(T1T3(p, q),
                         (adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
-                            adj.entry(i1, i0) - p,
-                        q);
+                            adj.entry(i1, i0) - p);
                 }
             }
             #endif
