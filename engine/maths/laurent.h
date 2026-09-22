@@ -1900,7 +1900,7 @@ class Laurent :
          * \param scalar the scalar in the product to add to this.
          */
         void addProduct(const Laurent<T>& x, const T& scalar) {
-            if (x.isZero() || scalar.isZero()) {
+            if (x.isZero() || scalar == 0) {
                 return;
             } else {
                 // The following line ensures that coeff_ becomes non-null.
@@ -1929,7 +1929,7 @@ class Laurent :
          * \param scalar the scalar in the product to add to this.
          */
         void addProduct(Laurent<T>&& x, const T& scalar) {
-            if (x.isZero() || scalar.isZero()) {
+            if (x.isZero() || scalar == 0) {
                 return;
             } else {
                 // The following line ensures that coeff_ becomes non-null.

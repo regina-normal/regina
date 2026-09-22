@@ -1444,7 +1444,9 @@ static void verifyNativeQuotient(const L& poly, const Integer& scalar,
     }
 }
 
-static void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar) {
+template <typename Container>
+static void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar,
+        const Container& cases) {
     SCOPED_TRACE_REGINA(scalar);
 
     const L product = poly * scalar;
@@ -1556,6 +1558,28 @@ static void verifyScalarMultiplyDivide(const L& poly, const Integer& scalar) {
             #endif
         }
     }
+
+    // Verify the scalar version of addProduct() while we're here.
+    for (const L& c : cases) {
+        SCOPED_TRACE_REGINA(c);
+        {
+            L x(c);
+            x.addProduct(poly, scalar);
+            validate(x, c + product);
+        }
+        {
+            L x(c);
+            x.addProduct(L(poly), scalar);
+            validate(x, c + product);
+        }
+    }
+
+    // Finally, test the scalar addProduct() when operating upon one's self.
+    {
+        L x(poly);
+        x.addProduct(x, scalar);
+        validate(x, poly + product);
+    }
 }
 
 TEST_F(LaurentTest, scalarMultiplyDivide) {
@@ -1563,7 +1587,7 @@ TEST_F(LaurentTest, scalarMultiplyDivide) {
         SCOPED_TRACE_REGINA(c);
 
         for (int i = -3; i <= 3; ++i)
-            verifyScalarMultiplyDivide(c, i);
+            verifyScalarMultiplyDivide(c, i, cases);
 
         // Run through boundaries and "midpoints" for {8,16,32,64,128}-bit ints:
         Integer pow2 = 256; // 2^8
@@ -1574,12 +1598,12 @@ TEST_F(LaurentTest, scalarMultiplyDivide) {
             // halfPow2 = 2^(bits-1)
             // quarterPow2 = 2^(bits-2)
             for (int j = -1; j <= 1; ++j) {
-                verifyScalarMultiplyDivide(c, pow2 + j);
-                verifyScalarMultiplyDivide(c, -pow2 + j);
-                verifyScalarMultiplyDivide(c, halfPow2 + j);
-                verifyScalarMultiplyDivide(c, -halfPow2 + j);
-                verifyScalarMultiplyDivide(c, quarterPow2 + j);
-                verifyScalarMultiplyDivide(c, -quarterPow2 + j);
+                verifyScalarMultiplyDivide(c, pow2 + j, cases);
+                verifyScalarMultiplyDivide(c, -pow2 + j, cases);
+                verifyScalarMultiplyDivide(c, halfPow2 + j, cases);
+                verifyScalarMultiplyDivide(c, -halfPow2 + j, cases);
+                verifyScalarMultiplyDivide(c, quarterPow2 + j, cases);
+                verifyScalarMultiplyDivide(c, -quarterPow2 + j, cases);
             }
             // Double the number of bits in pow2:
             quarterPow2 *= pow2;
@@ -1587,8 +1611,8 @@ TEST_F(LaurentTest, scalarMultiplyDivide) {
             pow2 *= pow2;
         }
 
-        verifyScalarMultiplyDivide(c, bigInt);
-        verifyScalarMultiplyDivide(c, -bigInt);
+        verifyScalarMultiplyDivide(c, bigInt, cases);
+        verifyScalarMultiplyDivide(c, -bigInt, cases);
 
         // Test expected arithmetic properties:
         validateZero(c * 0);
@@ -1597,8 +1621,8 @@ TEST_F(LaurentTest, scalarMultiplyDivide) {
         validate(c * 2, c + c);
 
         if (! c.isZero()) {
-            verifyScalarMultiplyDivide(c, c[c.minExp()]);
-            verifyScalarMultiplyDivide(c, c[c.maxExp()]);
+            verifyScalarMultiplyDivide(c, c[c.minExp()], cases);
+            verifyScalarMultiplyDivide(c, c[c.maxExp()], cases);
 
             L c0 = c / c[c.minExp()];
             EXPECT_EQ(c0.minExp(), c.minExp());
