@@ -547,36 +547,77 @@ const Laurent2<Integer>& Link::theta() const {
         for (auto c1 : crossings_) {
             size_t i1 = arcOrder[c1->upper().prev().id()];
             size_t j1 = arcOrder[c1->lower().prev().id()];
+
+            const auto& p = adj.entry(j1, i0);
+            if (p.isZero())
+                continue;
+            const auto& q = adj.entry(j0, i1);
+            if (q.isZero())
+                continue;
+
+            #if 1
             if (c0->sign() > 0) {
                 if (c1->sign() > 0) {
                     sum2bits[0].addProduct(
-                        T1T2(adj.entry(j1, i0),
-                            (adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1) +
+                        T1T2(p,
+                            (adj.entry(i1, i0) - p).shifted(1) +
                                 adj.entry(j1, j0) - adj.entry(i1, j0)),
-                        T3(adj.entry(j0, i1)));
+                        T3(q));
                 } else {
                     sum2bits[1].addProduct(
-                        T1T2(adj.entry(j1, i0),
-                            ((adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(1)
+                        T1T2(p,
+                            ((adj.entry(i1, i0) - p).shifted(1)
                                 + adj.entry(j1, j0)
                                 - adj.entry(i1, j0)).shifted(1)),
-                        T3(adj.entry(j0, i1)));
+                        T3(q));
                 }
             } else {
                 if (c1->sign() > 0) {
                     sum2bits[2].addProduct(
-                        T1T2(adj.entry(j1, i0),
-                            (adj.entry(i1, i0) - adj.entry(j1, i0)).shifted(-1)
+                        T1T2(p,
+                            (adj.entry(i1, i0) - p).shifted(-1)
                                 + adj.entry(j1, j0) - adj.entry(i1, j0)),
-                        T3(adj.entry(j0, i1)));
+                        T3(q));
                 } else {
                     sum2bits[3].addProduct(
-                        T1T2(adj.entry(j1, i0),
+                        T1T2(p,
                             (adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
-                                adj.entry(i1, i0) - adj.entry(j1, i0)),
-                        T3(adj.entry(j0, i1)));
+                                adj.entry(i1, i0) - p),
+                        T3(q));
                 }
             }
+            #else
+            if (c0->sign() > 0) {
+                if (c1->sign() > 0) {
+                    sum2bits[0] += T1T2T3(
+                        p,
+                        (adj.entry(i1, i0) - p).shifted(1) +
+                            adj.entry(j1, j0) - adj.entry(i1, j0),
+                        q);
+                } else {
+                    sum2bits[1] += T1T2T3(
+                        p,
+                        ((adj.entry(i1, i0) - p).shifted(1)
+                            + adj.entry(j1, j0)
+                            - adj.entry(i1, j0)).shifted(1),
+                        q);
+                }
+            } else {
+                if (c1->sign() > 0) {
+                    sum2bits[2] += T1T2T3(
+                        p,
+                        (adj.entry(i1, i0) - p).shifted(-1)
+                            + adj.entry(j1, j0) - adj.entry(i1, j0),
+                        q);
+                } else {
+                    sum2bits[3] += T1T2T3(
+                        p,
+                        (adj.entry(j1, j0) - adj.entry(i1, j0)).shifted(1) +
+                            adj.entry(i1, i0) - p,
+                        q);
+                }
+            }
+            #endif
         }
     }
     WorkingL2 sum2 =
