@@ -121,10 +121,10 @@ highest degree, and may include zeroes at the endpoints.
 Regarding scratch space: this algorithm may or may not need scratch
 space (this depends on whether Karatsuba multiplication is used).
 However, it manages this perfectly well itself: if it ever discovers
-that scratch space is required then it will create a single block of
-scratch space for the entire multiplication process, and will pass
-this down through to any recursive calls to productKaratsuba() and
-productBest().
+that scratch space is required but none was provided, then it will
+create a single block of scratch space for the entire multiplication
+process, and will pass this down through to any recursive calls to
+productKaratsuba() and productBest().
 
 Precondition:
     Both *lhsLen* and *rhsLen* are strictly positive.

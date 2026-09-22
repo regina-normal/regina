@@ -1048,8 +1048,7 @@ Parameter ``other``:
 static constexpr const char swapCols[] =
 R"doc(Swaps the elements of the two given columns in the matrix.
 
-This operation is linear time (unlike swapping rows, which is constant
-time).
+Like swapRows(), this operation is linear time.
 
 If the optional argument *fromRow* is passed, then the operation will
 only be performed for the elements from that row down to the bottom of
@@ -1075,22 +1074,27 @@ Parameter ``fromRow``:
 static constexpr const char swapRows[] =
 R"doc(Swaps the elements of the two given rows in the matrix.
 
-This operation is constant time (unlike swapping columns, which is
-linear time).
+As of Regina 8.0, this operation is linear time (not constant time).
 
-Unlike swapCols(), this operation does not take a *fromCol* argument.
-This is because swapping rows is already as fast possible (internally,
-just a single pointer swap), and so iterating along only part of the
-row would slow the routine down considerably.
+If the optional argument *fromCol* is passed, then the operation will
+only be performed for the elements from that column to the rightmost
+end of each row (inclusive).
 
 Precondition:
     The two given rows are between 0 and rows()-1 inclusive.
+
+Precondition:
+    If passed, *fromCol* is between 0 and columns() -1 inclusive.
 
 Parameter ``first``:
     the first row to swap.
 
 Parameter ``second``:
-    the second row to swap.)doc";
+    the second row to swap.
+
+Parameter ``fromCol``:
+    the starting point in each row from which the operation will be
+    performed.)doc";
 
 // Docstring regina::python::doc::Matrix::trace
 static constexpr const char trace[] =

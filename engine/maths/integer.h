@@ -73,17 +73,29 @@ class python_int; // Represents a Python arbitrary-precision integer.
 namespace detail {
     /**
      * An empty type used to indicate that we are working with infinity.
+     *
+     * \nopython
+     *
+     * \ingroup detail
      */
     struct InfiniteTag {};
 
     /**
      * An empty type used to indicate that we are working with GMP large
      * integer representations.
+     *
+     * \nopython
+     *
+     * \ingroup detail
      */
     struct GMPTag {};
 
     /**
      * A compile-time constant equal to `|LONG_MIN|`.
+     *
+     * \nopython
+     *
+     * \ingroup detail
      */
     static constexpr unsigned long absLongMin =
         static_cast<unsigned long>(LONG_MAX) + 1;
@@ -97,6 +109,10 @@ namespace detail {
      * The only reason this IntegerData type is declared externally (as opposed
      * to being a private inner type within IntegerBase) is so that Integer and
      * LargeInteger can swap data (e.g., during move operations).
+     *
+     * \nopython
+     *
+     * \ingroup detail
      */
     union IntegerData {
         long native_;
