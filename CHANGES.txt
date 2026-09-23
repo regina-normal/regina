@@ -473,12 +473,17 @@ Version 8.0  [ TODO ]
             - The comparision operator <=> is now a global function (not a
               member function of Manifold), and is specific to 3-manifolds.
         Class Matrix<T>:
+            - This class now formally supports empty matrices.  Because of this,
+              the routine initialised() no longer makes sense and has been
+              removed completely.
             - New scalar multiplication operators * and *=.
             - New in-place addition and subtractions operators += and -=.
             - New routine negate().
             - New routines trace() and adjugate().
             - Routine det() now takes an optional algorithm argument.
             - Routine swapRows() now takes an optional from-column argument.
+            - Multiplying a matrix by a matrix or vector will now throw an
+              exception if the matrix/vector dimensions are incompatible.
             - Changed the underlying data storage method.  This should make
               many operations faster; however, swapRows() is now linear time
               instead of constant time.

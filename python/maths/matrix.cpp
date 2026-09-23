@@ -55,8 +55,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def(pybind11::init([](pybind11::list l) {
             size_t rows = l.size();
             if (rows == 0)
-                throw regina::InvalidArgument(
-                    "The number of rows must be strictly positive");
+                return new Matrix();
 
             Matrix* m = nullptr;
             size_t cols = 0; // zero is unnecessary but silences warnings
@@ -73,13 +72,13 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 if (i == 0) {
                     cols = row.size();
                     if (cols == 0)
-                        throw regina::InvalidArgument(
-                            "The number of columns must be strictly positive");
+                        throw regina::InvalidArgument("The matrix dimensions "
+                            "must be either both positive, or both zero");
                     m = new Matrix(rows, cols);
                 } else if (row.size() != cols) {
                     delete m;
                     throw regina::InvalidArgument(
-                        "All rows must be given as lists of the same size");
+                        "The matrix rows must all have the same length");
                 }
                 for (size_t j = 0; j < cols; ++j) {
                     try {
@@ -99,7 +98,6 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
         .def("swap", &Matrix::swap, rdoc::swap)
         .def("rows", &Matrix::rows, rdoc::rows)
         .def("columns", &Matrix::columns, rdoc::columns)
-        .def("initialised", &Matrix::initialised, rdoc::initialised)
         .def("set", [](Matrix& m, size_t row, size_t col, const Element& e) {
             m.entry(row, col) = e;
         }, rdoc::set)

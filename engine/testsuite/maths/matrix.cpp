@@ -32,27 +32,170 @@
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "maths/matrix.h"
+#include "maths/vector.h"
 #include "maths/polynomial.h"
 #include "maths/rational.h"
 
 #include "testhelper.h"
 
+using regina::AdjugateAlgorithm;
 using regina::Integer;
 using regina::Laurent;
 using regina::Laurent2;
 using regina::Matrix;
 using regina::Polynomial;
 using regina::Rational;
+using regina::Vector;
+
+template <regina::CommutativeRing T>
+void validateEmpty(const Matrix<T>& m) {
+    EXPECT_NO_THROW({ m.validate(); });
+    EXPECT_EQ(m.rows(), 0);
+    EXPECT_EQ(m.columns(), 0);
+    EXPECT_EQ(m, Matrix<T>());
+}
+
+TEST(MatrixTest, empty) {
+    // Test everything that we are allowed to do with an empty matrix.
+    validateEmpty(Matrix<Integer>());
+    validateEmpty(Matrix<Integer>(0));
+    validateEmpty(Matrix<Integer>(0, 0));
+    EXPECT_THROW({ Matrix<Integer>(0, 1); }, regina::InvalidArgument);
+    EXPECT_THROW({ Matrix<Integer>(1, 0); }, regina::InvalidArgument);
+    validateEmpty(Matrix<Integer>({}));
+    EXPECT_THROW({ Matrix<Integer>({ {}, {} }); }, regina::InvalidArgument);
+
+    Matrix<Integer> empty;
+    auto m = Matrix<Integer>::identity(3);
+    EXPECT_EQ(m.rows(), 3);
+    EXPECT_EQ(m.columns(), 3);
+
+    m = empty;
+    validateEmpty(m);
+    validateEmpty(Matrix<Integer>(m));
+    validateEmpty(Matrix<Integer>(std::move(m)));
+
+    m = Matrix<Integer>::identity(4); // assignment after move-out
+    EXPECT_NO_THROW({ m.validate(); });
+    EXPECT_EQ(m.rows(), 4);
+    EXPECT_EQ(m.columns(), 4);
+    EXPECT_TRUE(m.isIdentity());
+
+    m = std::move(empty);
+    validateEmpty(m);
+
+    {
+        auto tmp = Matrix<Integer>::identity(3);
+        EXPECT_NO_THROW({ tmp.validate(); });
+        EXPECT_EQ(tmp.rows(), 3);
+        EXPECT_EQ(tmp.columns(), 3);
+
+        m.swap(tmp);
+        validateEmpty(tmp);
+        EXPECT_NO_THROW({ m.validate(); });
+        EXPECT_EQ(m.rows(), 3);
+        EXPECT_EQ(m.columns(), 3);
+
+        swap(m, tmp);
+        validateEmpty(m);
+        EXPECT_NO_THROW({ tmp.validate(); });
+        EXPECT_EQ(tmp.rows(), 3);
+        EXPECT_EQ(tmp.columns(), 3);
+    }
+
+    m.fill(3);
+    validateEmpty(m);
+
+    EXPECT_EQ(m, Matrix<Integer>());
+    EXPECT_EQ(m, m);
+
+    validateEmpty(m.transpose());
+    EXPECT_EQ(m.str(), "[ ]");
+    EXPECT_EQ(m.detail(), "(empty matrix)\n");
+
+    validateEmpty(Matrix<Integer>::identity(0));
+    m.makeIdentity();
+    validateEmpty(m);
+    EXPECT_TRUE(m.isIdentity());
+    EXPECT_TRUE(m.isZero());
+
+    m += Matrix<Integer>();
+    validateEmpty(m);
+    m += m;
+    validateEmpty(m);
+    m -= Matrix<Integer>();
+    validateEmpty(m);
+    m -= m;
+    validateEmpty(m);
+    m *= 3;
+    validateEmpty(m);
+    m *= Integer(3);
+    validateEmpty(m);
+    validateEmpty(m * 3);
+    validateEmpty(Matrix<Integer>(m) * 3);
+    EXPECT_NO_THROW({
+        validateEmpty(m * Matrix<Integer>());
+        validateEmpty(m * m);
+    });
+    EXPECT_THROW({ m * Matrix<Integer>(3, 4); }, regina::InvalidArgument);
+    EXPECT_THROW({ Matrix<Integer>(3, 4) * m; }, regina::InvalidArgument);
+    {
+        auto ans = m * Vector<Integer>(0);
+        EXPECT_EQ(ans.size(), 0);
+    }
+    EXPECT_THROW({ m * Vector<Integer>(3); }, regina::InvalidArgument);
+    EXPECT_EQ(m.trace(), 0);
+    EXPECT_EQ(m.det(), 1);
+    EXPECT_EQ(m.det(AdjugateAlgorithm::Default), 1);
+    EXPECT_EQ(m.det(AdjugateAlgorithm::FaddeevLeverrier), 1);
+    EXPECT_EQ(m.det(AdjugateAlgorithm::PreparataSarwate), 1);
+    EXPECT_EQ(m.det(AdjugateAlgorithm::MahajanVinay), 1);
+    {
+        auto [adj, det] = m.adjugate(AdjugateAlgorithm::Default);
+        validateEmpty(adj);
+        EXPECT_EQ(det, 1);
+    }
+    {
+        auto [adj, det] = m.adjugate(AdjugateAlgorithm::FaddeevLeverrier);
+        validateEmpty(adj);
+        EXPECT_EQ(det, 1);
+    }
+    {
+        auto [adj, det] = m.adjugate(AdjugateAlgorithm::PreparataSarwate);
+        validateEmpty(adj);
+        EXPECT_EQ(det, 1);
+    }
+    {
+        // The empty matrix is special-cased here, and works even though
+        // Mahajan-Vinay cannot be used to compute adjugates in general.
+        auto [adj, det] = m.adjugate(AdjugateAlgorithm::MahajanVinay);
+        validateEmpty(adj);
+        EXPECT_EQ(det, 1);
+    }
+
+    m.negate();
+    validateEmpty(m);
+
+    EXPECT_EQ(m.rowEchelonForm(), 0);
+    validateEmpty(m);
+
+    EXPECT_EQ(m.columnEchelonForm(), 0);
+    validateEmpty(m);
+
+    EXPECT_EQ(m.rank(), 0);
+    EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
+
+}
 
 template <regina::CommutativeRing T>
 void verifyAdjugate(const Matrix<T>& m, const T& determinant,
-        regina::AdjugateAlgorithm alg) {
+        AdjugateAlgorithm alg) {
     // We have already verified that the matrix is square through the variant
     // of verifyAdjugate() that does not take an algorithm as input.
 
     EXPECT_EQ(m.det(alg), determinant);
 
-    if (m.rows() > 1 && alg == regina::AdjugateAlgorithm::MahajanVinay) {
+    if (m.rows() > 1 && alg == AdjugateAlgorithm::MahajanVinay) {
         EXPECT_THROW({ m.adjugate(alg); }, regina::InvalidArgument);
     } else {
         auto adj = m.adjugate(alg);
@@ -70,9 +213,9 @@ void verifyAdjugate(const Matrix<T>& m, const T& determinant) {
     // We use this if we already have an expcted value for the determinant.
     ASSERT_EQ(m.rows(), m.columns());
 
-    verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::FaddeevLeverrier);
-    verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::PreparataSarwate);
-    verifyAdjugate(m, determinant, regina::AdjugateAlgorithm::MahajanVinay);
+    verifyAdjugate(m, determinant, AdjugateAlgorithm::FaddeevLeverrier);
+    verifyAdjugate(m, determinant, AdjugateAlgorithm::PreparataSarwate);
+    verifyAdjugate(m, determinant, AdjugateAlgorithm::MahajanVinay);
 }
 
 template <regina::CommutativeRing T>
@@ -80,9 +223,9 @@ void verifyAdjugate(const Matrix<T>& m) {
     // We use this if we do not know the determinant in advance.
     ASSERT_EQ(m.rows(), m.columns());
 
-    auto det = m.det(regina::AdjugateAlgorithm::MahajanVinay);
-    verifyAdjugate(m, det, regina::AdjugateAlgorithm::FaddeevLeverrier);
-    verifyAdjugate(m, det, regina::AdjugateAlgorithm::PreparataSarwate);
+    auto det = m.det(AdjugateAlgorithm::MahajanVinay);
+    verifyAdjugate(m, det, AdjugateAlgorithm::FaddeevLeverrier);
+    verifyAdjugate(m, det, AdjugateAlgorithm::PreparataSarwate);
 }
 
 TEST(MatrixTest, determinantAdjugate) {

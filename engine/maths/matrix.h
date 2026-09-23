@@ -127,12 +127,15 @@ enum class AdjugateAlgorithm {
  * adheres to the Ring concept.  Nowadays you should always just use the type
  * `Matrix<T>`.
  *
+ * As of Regina 8.0, empty matrices (of size `0×0`) are explicitly supported.
+ *
  * The header maths/matrixops.h contains several additional algorithms that
  * work with the specific class Matrix<Integer>.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
- * even when passing or returning objects by value.
+ * even when passing or returning objects by value.  If a matrix is moved from,
+ * it can later be reused by assigning it a new value.
  *
  * \python The C++ types `Matrix<Integer>`, `Matrix<bool>` and `Matrix<double>`
  * are available using the Python names `MatrixInt`, `MatrixBool` and
@@ -151,31 +154,26 @@ class Matrix : public Output<Matrix<T>> {
 
     private:
         size_t rows_;
-            /**< The number of rows in the matrix.  For an uninitialised
-                 matrix (where \a data_ is `null`), this is ignored. */
+            /**< The number of rows in the matrix.
+                 For an empty matrix, this must be 0; for any other matrix
+                 it must be strictly positive. */
         size_t cols_;
-            /**< The number of columns in the matrix.  For an uninitialised
-                 matrix (where \a data_ is `null`), this is ignored. */
+            /**< The number of columns in the matrix.
+                 For an empty matrix, this must be 0; for any other matrix
+                 it must be strictly positive. */
         T* data_;
             /**< The actual entries in the matrix.
-                 The entry at position `(r, c)` is `data_[r * cols_ + c]`. */
+                 The entry at position `(r, c)` is `data_[r * cols_ + c]`.
+                 For an empty matrix, this must be `null`.
+                 For a matrix that has been moved out of and as in an invalid
+                 (but re-assignable) state, this may also be `null` regardless
+                 of the matrix dimensions; however, we still insist that if
+                 \a data_ is non-null then the array it points to has capacity
+                 at least `rows_ * cols_`. */
 
     public:
         /**
-         * Creates a new uninitialised matrix.
-         *
-         * You _must_ initialise this matrix using the assignment operator
-         * before you can use it for any purpose.  The only exceptions are:
-         *
-         * - you can safely destroy an uninitialised matrix;
-         *
-         * - you can safely assign an uninitialised matrix to another matrix
-         *   (either via an assignment operator or copy constructor), in which
-         *   case the other matrix will become uninitialised also and subject
-         *   to similar constraints;
-         *
-         * - you can safely call initialised() to test whether a matrix is
-         *   initialised or not.
+         * Creates a new empty matrix.  The size of this matrix will be `0×0`.
          *
          * \nopython This is because the C++ assignment operators are
          * not accessible to Python.
@@ -195,12 +193,10 @@ class Matrix : public Output<Matrix<T>> {
          * or \c long), then the matrix elements will not be initialised
          * to any particular value.
          *
-         * \pre The given size is strictly positive.
-         *
          * \param size the number of rows and columns in the new matrix.
          */
-        Matrix(size_t size) :
-                rows_(size), cols_(size), data_(new T[size * size]) {
+        Matrix(size_t size) : rows_(size), cols_(size),
+                data_(size ? new T[size * size] : nullptr) {
         }
         /**
          * Creates a new matrix of the given size.
@@ -214,13 +210,24 @@ class Matrix : public Output<Matrix<T>> {
          * or \c long), then the matrix elements will not be initialised
          * to any particular value.
          *
-         * \pre The given number of rows and columns are both strictly positive.
+         * \pre The given matrix dimensions are either both zero, or both
+         * positive.  (So, for example, you may create a `0×0` matrix,
+         * but not a `0×4` matrix or a `4×0` matrix.)
+         *
+         * \exception InvalidArgument One of the given matrix dimensions is
+         * positive and the other is zero.
          *
          * \param rows the number of rows in the new matrix.
          * \param cols the number of columns in the new matrix.
          */
-        Matrix(size_t rows, size_t cols) :
-                rows_(rows), cols_(cols), data_(new T[rows * cols]) {
+        Matrix(size_t rows, size_t cols) : rows_(rows), cols_(cols) {
+            if (rows && cols)
+                data_ = new T[rows * cols];
+            else if (rows || cols)
+                throw InvalidArgument("The matrix dimensions must be either "
+                    "both positive, or both zero");
+            else
+                data_ = nullptr;
         }
         /**
          * Creates a new matrix containing the given hard-coded entries.
@@ -230,33 +237,47 @@ class Matrix : public Output<Matrix<T>> {
          * Each element of the initialiser list \a data describes a single row
          * of the matrix.
          *
-         * \pre The list \a data is non-empty (i.e., the number of rows
-         * is positive), and each of its elements is non-empty (i.e., the
-         * number of columns is positive).
-         *
-         * \pre All elements of \a data (representing the rows of the matrix)
-         * are lists of the same size.
+         * \pre If the list \a data is non-empty (i.e., the number of rows is
+         * positive), then each of its elements is also non-empty (i.e., the
+         * number of columns is also positive), and all of its elements are
+         * lists of the same size.
          *
          * \python The argument \a data should be a Python list of
          * Python lists.
          *
+         * \exception InvalidArgument The number of rows in the given list is
+         * positive, but the individual rows are empty and/or have different
+         * sizes.
+         *
          * \param data the rows of the matrix, each given as a list of elements.
          */
         Matrix(std::initializer_list<std::initializer_list<T>> data) :
-                rows_(data.size()), cols_(data.begin()->size()),
-                data_(new T[rows_ * cols_]) {
-            T* pos = data_;
-            for (auto row : data)
-                for (auto elt : row)
-                    *pos++ = elt;
+                rows_(data.size()) {
+            if (rows_) {
+                cols_ = data.begin()->size();
+                if (! cols_)
+                    throw InvalidArgument("The matrix dimensions must be "
+                        "either both positive, or both zero");
+                data_ = new T[rows_ * cols_];
+                T* pos = data_;
+                for (auto row : data) {
+                    if (row.size() != cols_) {
+                        delete[] data_;
+                        throw InvalidArgument("The matrix rows must all "
+                            "have the same length");
+                    }
+                    for (auto elt : row)
+                        *pos++ = elt;
+                }
+            } else {
+                cols_ = 0;
+                data_ = nullptr;
+            }
         }
         /**
          * Creates a new matrix that is a clone of the given matrix.
          *
          * This constructor induces a deep copy of \a src.
-         *
-         * This routine is safe to call even if \a src is uninitialised
-         * (in which case this matrix will become uninitialised also).
          *
          * \param src the matrix to clone.
          */
@@ -275,9 +296,6 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This constructor induces a deep copy of \a src.
          *
-         * This routine is safe to call even if \a src is uninitialised
-         * (in which case this matrix will become uninitialised also).
-         *
          * This constructor is marked as explicit in the hope of avoiding
          * accidental (and unintentional) mixing of matrix classes.
          *
@@ -287,14 +305,11 @@ class Matrix : public Output<Matrix<T>> {
          */
         template <AssignableTo<T> U>
         explicit Matrix(const Matrix<U>& src) :
-                rows_(src.rows()), cols_(src.columns()) {
-            if (src.initialised()) {
-                data_ = new T[rows_ * cols_];
-                T* pos = data_;
-                // TODO: Iterate over src to avoid unnecessary arithmetic
-                for (size_t r = 0; r < rows_; ++r)
-                    for (size_t c = 0; c < cols_; ++c)
-                        *pos++ = src.entry(r, c);
+                rows_(src.rows_), cols_(src.cols_) {
+            if (src.data_) {
+                size_t size = src.rows_ * src.cols_;
+                data_ = new T[size];
+                std::copy(src.data_, src.data_ + size, data_);
             } else {
                 data_ = nullptr;
             }
@@ -305,19 +320,16 @@ class Matrix : public Output<Matrix<T>> {
          *
          * The matrix that is passed (\a src) will no longer be usable.
          *
-         * This routine is safe to call even if \a src is uninitialised
-         * (in which case this matrix will become uninitialised also).
-         *
          * \param src the matrix to move.
          */
         Matrix(Matrix&& src) noexcept :
                 rows_(src.rows_), cols_(src.cols_), data_(src.data_) {
+            // If this leaves src in an invalid state, it will be with positive
+            // size but null data (which makes is safe for re-assignment).
             src.data_ = nullptr;
         }
         /**
          * Destroys this matrix.
-         *
-         * This destructor is safe to call even if \a src is uninitialised.
          */
         ~Matrix() {
             delete[] data_;
@@ -330,9 +342,6 @@ class Matrix : public Output<Matrix<T>> {
          * sizes; if they do then this matrix will be resized as a result.
          *
          * This operator induces a deep copy of \a src.
-         *
-         * This routine is safe to call even if \a src is uninitialised
-         * (in which case this matrix will become uninitialised also).
          *
          * \param src the matrix to copy.
          * \return a reference to this matrix.
@@ -370,22 +379,24 @@ class Matrix : public Output<Matrix<T>> {
          *
          * The matrix that is passed (\a src) will no longer be usable.
          *
-         * This routine is safe to call even if \a src is uninitialised
-         * (in which case this matrix will become uninitialised also).
-         *
          * \param src the matrix to move.
          * \return a reference to this matrix.
          */
         Matrix& operator = (Matrix&& src) noexcept {
+            // If this leaves src in an invalid state, it will be with positive
+            // size but null data (which makes is safe for re-assignment).
+            // To ensure this, we must delete any previous data now (as
+            // opposed to handing it over to src for deletion later).
+            delete[] data_;
             rows_ = src.rows_;
             cols_ = src.cols_;
-            std::swap(data_, src.data_);
-            // Let src dispose of the original contents in its own destructor.
+            data_ = src.data_;
+            src.data_ = nullptr;
             return *this;
         }
 
         /**
-         * Sets every entry in the matrix to the given value.
+         * Sets every entry in this matrix to the given value.
          *
          * \param value the value to assign to each entry.
          */
@@ -393,7 +404,7 @@ class Matrix : public Output<Matrix<T>> {
             std::fill(data_, data_ + rows_ * cols_, value);
         }
         /**
-         * Deprecated function that sets every entry in the matrix to the
+         * Deprecated function that sets every entry in this matrix to the
          * given value.
          *
          * \deprecated This routine has been renamed to fill(), to make it
@@ -432,23 +443,6 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t columns() const {
             return cols_;
-        }
-        /**
-         * Determines whether this matrix is initialised or uninitialised.
-         *
-         * The only ways for a matrix to be _uninitialised_ are:
-         *
-         * - it was created using the default constructor, and has not yet been
-         *   initialised using the assignment operator;
-         *
-         * - it was the result of assignment or copy construction from some
-         *   other uninitialised matrix.
-         *
-         * \return \c true if this matrix is initialised, or \c false if it is
-         * uninitialised.
-         */
-        bool initialised() const {
-            return data_;
         }
 
         /**
@@ -612,17 +606,20 @@ class Matrix : public Output<Matrix<T>> {
          * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
-            out << '[';
-            const T* pos = data_;
-            for (size_t r = 0; r < rows_; ++r) {
-                if (r > 0)
-                    out << ' ';
+            if (data_) {
                 out << '[';
-                for (size_t c = 0; c < cols_; ++c)
-                    out << ' ' << *pos++;
-                out << " ]";
-            }
-            out << ']';
+                const T* pos = data_;
+                for (size_t r = 0; r < rows_; ++r) {
+                    if (r > 0)
+                        out << ' ';
+                    out << '[';
+                    for (size_t c = 0; c < cols_; ++c)
+                        out << ' ' << *pos++;
+                    out << " ]";
+                }
+                out << ']';
+            } else
+                out << "[ ]";
         }
         /**
          * Writes a detailed text representation of this object to the
@@ -633,14 +630,17 @@ class Matrix : public Output<Matrix<T>> {
          * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const {
-            const T* pos = data_;
-            for (size_t r = 0; r < rows_; r++) {
-                for (size_t c = 0; c < cols_; c++) {
-                    if (c > 0) out << ' ';
-                    out << *pos++;
+            if (data_) {
+                const T* pos = data_;
+                for (size_t r = 0; r < rows_; r++) {
+                    for (size_t c = 0; c < cols_; c++) {
+                        if (c > 0) out << ' ';
+                        out << *pos++;
+                    }
+                    out << '\n';
                 }
-                out << '\n';
-            }
+            } else
+                out << "(empty matrix)\n";
         }
 
         /**
@@ -1158,24 +1158,30 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
          *
-         * \param other the other matrix to multiply this matrix by.
-         * \return the product matrix `this * other`.
+         * \exception InvalidArgument The matrix dimensions are incompatible;
+         * that is, `columns() ≠ rhs.rows()`.
+         *
+         * \param rhs the other matrix to multiply this matrix by.
+         * \return the product matrix `this * rhs`.
          */
         template <typename U>
-        Matrix<decltype(T() * U())> operator * (const Matrix<U>& other) const
+        Matrix<decltype(T() * U())> operator * (const Matrix<U>& rhs) const
                 requires Ring<T> && Ring<U> && Ring<decltype(T() * U())> {
+            if (cols_ != rhs.rows_)
+                throw InvalidArgument("Incompatible matrix dimensions");
+
             using Ans = decltype(T() * U());
-            Matrix<Ans> ans(rows_, other.cols_);
+            Matrix<Ans> ans(rows_, rhs.cols_);
 
             T* dest = ans.data_;
             for (size_t row = 0; row < rows_; ++row)
-                for (size_t col = 0; col < other.cols_; ++col) {
+                for (size_t col = 0; col < rhs.cols_; ++col) {
                     if constexpr (! RingTraits<Ans>::zeroInitialised)
                         *dest = RingTraits<Ans>::zero;
                     const T* lhsPos = data_ + row * cols_;
-                    const T* rhsPos = other.data_ + col;
+                    const T* rhsPos = rhs.data_ + col;
                     for (size_t k = 0; k < cols_;
-                            ++k, ++lhsPos, rhsPos += other.cols_)
+                            ++k, ++lhsPos, rhsPos += rhs.cols_)
                         if constexpr (HasAddProduct<Ans>) {
                             dest->addProduct(*lhsPos, *rhsPos);
                         } else {
@@ -1203,13 +1209,19 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The length of the given vector is precisely the number of
          * columns in this matrix.
          *
-         * \param other the vector to multiply this matrix by.
-         * \return the product `this * other`, which will be a
+         * \exception InvalidArgument The matrix and vector dimensions are
+         * incompatible; that is, `columns() ≠ rhs.size()`.
+         *
+         * \param rhs the vector to multiply this matrix by.
+         * \return the product `this * rhs`, which will be a
          * vector whose length is the number of rows in this matrix.
          */
         template <typename U>
-        Vector<decltype(T() * U())> operator * (const Vector<U>& other) const
+        Vector<decltype(T() * U())> operator * (const Vector<U>& rhs) const
                 requires Ring<T> && Ring<U> && Ring<decltype(T() * U())> {
+            if (cols_ != rhs.size())
+                throw InvalidArgument("Incompatible matrix/vector dimensions");
+
             using Ans = decltype(T() * U());
             Vector<Ans> ans(rows_);
 
@@ -1217,13 +1229,13 @@ class Matrix : public Output<Matrix<T>> {
             for (auto& dest : ans) {
                 if constexpr (! RingTraits<Ans>::zeroInitialised)
                     dest = RingTraits<Ans>::zero;
-                for (const auto& rhs : other) {
+                for (const auto& rhsElt : rhs) {
                     if constexpr (HasAddProduct<Ans>) {
-                        dest.addProduct(*lhsPos++, rhs);
+                        dest.addProduct(*lhsPos++, rhsElt);
                     } else {
                         if (*lhsPos != RingTraits<T>::zero &&
-                                *other != RingTraits<U>::zero)
-                            dest += *lhsPos * rhs;
+                                rhsElt != RingTraits<U>::zero)
+                            dest += *lhsPos * rhsElt;
                         ++lhsPos;
                     }
                 }
@@ -1236,6 +1248,8 @@ class Matrix : public Output<Matrix<T>> {
          * Returns the trace of this matrix.  The trace is simply the sum of
          * the elements along the main diagonal.
          *
+         * The trace of an empty matrix (of size `0×0`) will be zero.
+         *
          * \pre This is a square matrix.
          *
          * \exception FailedPrecondition This matrix is not square.
@@ -1245,7 +1259,7 @@ class Matrix : public Output<Matrix<T>> {
         T trace() const requires Ring<T> {
             if (rows_ != cols_)
                 throw FailedPrecondition("The trace can only be computed for "
-                    "a square matrix.");
+                    "a square matrix");
 
             T ans;
             if constexpr (! RingTraits<T>::zeroInitialised)
@@ -1259,9 +1273,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Evaluates the determinant of the matrix.
          *
-         * Although the Matrix class does not formally support empty matrices,
-         * if this _is_ found to be a 0-by-0 matrix then the determinant
-         * returned will be 1.
+         * The determinant of an empty matrix (of size `0×0`) will be 1.
          *
          * \pre This is a square matrix.
          *
@@ -1282,7 +1294,7 @@ class Matrix : public Output<Matrix<T>> {
                 {
                     if (rows_ != cols_)
                         throw FailedPrecondition("Determinants can only be "
-                            "computed for square matrices.");
+                            "computed for square matrices");
                     if (rows_ == 0)
                         return RingTraits<T>::one;
 
@@ -1388,7 +1400,7 @@ class Matrix : public Output<Matrix<T>> {
                 requires IntegralDomain<T> {
             if (rows_ != cols_)
                 throw FailedPrecondition("The adjugate can only be "
-                    "computed for a square matrix.");
+                    "computed for a square matrix");
             if (rows_ == 0)
                 return { 0 /* empty matrix */, RingTraits<T>::one };
             if (rows_ == 1)
@@ -1508,7 +1520,7 @@ class Matrix : public Output<Matrix<T>> {
                 case AdjugateAlgorithm::MahajanVinay:
                     throw InvalidArgument("The Mahajan-Vinay algorithm can "
                         "only be used for computing determinants, not adjugate "
-                        "matrices.");
+                        "matrices");
             }
         }
 
@@ -1888,6 +1900,32 @@ class Matrix : public Output<Matrix<T>> {
             return rowEchelonForm();
         }
 
+        /**
+         * A diagnostic routine that ensures that the internal representation
+         * of this matrix is valid.
+         *
+         * If Regina is working correctly, this routine should do nothing.
+         * If the internal representation of this matrix is _not_ valid,
+         * this routine will throw an exception.
+         *
+         * This routine is provided for use within Regina's various test suites.
+         * End users should not need to call it at all.
+         *
+         * \exception ImpossibleScenario The internal state of this matrix is
+         * invalid.
+         */
+        void validate() const {
+            if (data_) {
+                if (rows_ == 0 || cols_ == 0)
+                    throw ImpossibleScenario("Matrix has zero size but a "
+                        "non-null array of elements");
+            } else {
+                if (rows_ > 0 || cols_ > 0)
+                    throw ImpossibleScenario("Matrix has no elements but "
+                        "one of its dimensions is positive");
+            }
+        }
+
     private:
         /**
          * Returns the trace of the matrix product `lhs * rhs`.
@@ -1937,6 +1975,11 @@ class Matrix : public Output<Matrix<T>> {
                     ans += *it1++ * *it2++;
             return ans;
         }
+
+    // Give internal access to Matrix<U> for conversion construction/assignment:
+    template <typename U>
+    requires std::default_initializable<U> && std::copyable<U> && Writeable<U>
+    friend class Matrix;
 };
 
 /**
