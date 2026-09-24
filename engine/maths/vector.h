@@ -798,6 +798,9 @@ class Vector : public ShortOutput<Vector<T>>, public TightEncodable<Vector<T>> {
          *
          * \return the integer by which this vector was divided (i.e.,
          * the gcd of its original elements).  This will be strictly positive.
+         * If all of the elements of this vector are zero and/or infinity
+         * (or if this vector has no elements at all), then this return value
+         * will be 1.
          */
         T scaleDown() requires ReginaInteger<T> {
             T gcd; // Initialised to 0.

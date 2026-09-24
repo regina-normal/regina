@@ -783,7 +783,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \return the integer by which the original surface was divided
          * (i.e., the gcd of all normal coordinates in the original surface).
-         * This will always be strictly positive.
+         * This will always be strictly positive.  If all of the normal
+         * coordinates are zero and/or infinity, then this return value will
+         * be 1.
          */
         LargeInteger scaleDown();
 
