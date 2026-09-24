@@ -473,9 +473,9 @@ Version 8.0  [ TODO ]
             - The comparision operator <=> is now a global function (not a
               member function of Manifold), and is specific to 3-manifolds.
         Class Matrix<T>:
-            - This class now formally supports empty matrices.  Because of this,
-              the routine initialised() no longer makes sense and has been
-              removed completely.
+            - This class now formally supports empty matrices (of size 0×k,
+              k×0, or 0×0).  Because of this, the routine initialised()
+              no longer makes sense and has been removed completely.
             - New scalar multiplication operators * and *=.
             - New in-place addition and subtractions operators += and -=.
             - New routine negate().

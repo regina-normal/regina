@@ -127,7 +127,8 @@ enum class AdjugateAlgorithm {
  * adheres to the Ring concept.  Nowadays you should always just use the type
  * `Matrix<T>`.
  *
- * As of Regina 8.0, empty matrices (of size `0×0`) are explicitly supported.
+ * As of Regina 8.0, empty matrices (where one or both of the matrix dimensions
+ * are zero) are explicitly supported.
  *
  * The header maths/matrixops.h contains several additional algorithms that
  * work with the specific class Matrix<Integer>.
@@ -154,17 +155,14 @@ class Matrix : public Output<Matrix<T>> {
 
     private:
         size_t rows_;
-            /**< The number of rows in the matrix.
-                 For an empty matrix, this must be 0; for any other matrix
-                 it must be strictly positive. */
+            /**< The number of rows in the matrix. */
         size_t cols_;
-            /**< The number of columns in the matrix.
-                 For an empty matrix, this must be 0; for any other matrix
-                 it must be strictly positive. */
+            /**< The number of columns in the matrix. */
         T* data_;
             /**< The actual entries in the matrix.
                  The entry at position `(r, c)` is `data_[r * cols_ + c]`.
-                 For an empty matrix, this must be `null`.
+                 For an empty matrix (where \a rows_ and/or \a cols_ is 0),
+                 this _may_ be `null` (but this is not required).
                  For a matrix that has been moved out of and as in an invalid
                  (but re-assignable) state, this may also be `null` regardless
                  of the matrix dimensions; however, we still insist that if
@@ -174,9 +172,6 @@ class Matrix : public Output<Matrix<T>> {
     public:
         /**
          * Creates a new empty matrix.  The size of this matrix will be `0×0`.
-         *
-         * \nopython This is because the C++ assignment operators are
-         * not accessible to Python.
          */
         Matrix() : rows_(0), cols_(0), data_(nullptr) {
         }
@@ -210,24 +205,11 @@ class Matrix : public Output<Matrix<T>> {
          * or \c long), then the matrix elements will not be initialised
          * to any particular value.
          *
-         * \pre The given matrix dimensions are either both zero, or both
-         * positive.  (So, for example, you may create a `0×0` matrix,
-         * but not a `0×4` matrix or a `4×0` matrix.)
-         *
-         * \exception InvalidArgument One of the given matrix dimensions is
-         * positive and the other is zero.
-         *
          * \param rows the number of rows in the new matrix.
          * \param cols the number of columns in the new matrix.
          */
-        Matrix(size_t rows, size_t cols) : rows_(rows), cols_(cols) {
-            if (rows && cols)
-                data_ = new T[rows * cols];
-            else if (rows || cols)
-                throw InvalidArgument("The matrix dimensions must be either "
-                    "both positive, or both zero");
-            else
-                data_ = nullptr;
+        Matrix(size_t rows, size_t cols) : rows_(rows), cols_(cols),
+                data_(rows && cols ? new T[rows * cols] : nullptr) {
         }
         /**
          * Creates a new matrix containing the given hard-coded entries.
@@ -237,10 +219,11 @@ class Matrix : public Output<Matrix<T>> {
          * Each element of the initialiser list \a data describes a single row
          * of the matrix.
          *
-         * \pre If the list \a data is non-empty (i.e., the number of rows is
-         * positive), then each of its elements is also non-empty (i.e., the
-         * number of columns is also positive), and all of its elements are
-         * lists of the same size.
+         * Note that you cannot create a `0×k` matrix using this constructor
+         * for positive \a k, but you can always use `Matrix(0, k)` instead.
+         *
+         * \pre All of the sub-lists within \a data have the same size (i.e.,
+         * each row has the same number of columns).
          *
          * \python The argument \a data should be a Python list of
          * Python lists.
@@ -255,20 +238,20 @@ class Matrix : public Output<Matrix<T>> {
                 rows_(data.size()) {
             if (rows_) {
                 cols_ = data.begin()->size();
-                if (! cols_)
-                    throw InvalidArgument("The matrix dimensions must be "
-                        "either both positive, or both zero");
-                data_ = new T[rows_ * cols_];
-                T* pos = data_;
-                for (auto row : data) {
-                    if (row.size() != cols_) {
-                        delete[] data_;
-                        throw InvalidArgument("The matrix rows must all "
-                            "have the same length");
+                if (cols_) {
+                    data_ = new T[rows_ * cols_];
+                    T* pos = data_;
+                    for (auto row : data) {
+                        if (row.size() != cols_) {
+                            delete[] data_;
+                            throw InvalidArgument("The matrix rows must all "
+                                "have the same length");
+                        }
+                        for (auto elt : row)
+                            *pos++ = elt;
                     }
-                    for (auto elt : row)
-                        *pos++ = elt;
-                }
+                } else
+                    data_ = nullptr;
             } else {
                 cols_ = 0;
                 data_ = nullptr;
@@ -282,8 +265,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param src the matrix to clone.
          */
         Matrix(const Matrix& src) : rows_(src.rows_), cols_(src.cols_) {
-            if (src.data_) {
-                size_t size = src.rows_ * src.cols_;
+            if (size_t size = src.rows_ * src.cols_) {
                 data_ = new T[size];
                 std::copy(src.data_, src.data_ + size, data_);
             } else {
@@ -306,8 +288,7 @@ class Matrix : public Output<Matrix<T>> {
         template <AssignableTo<T> U>
         explicit Matrix(const Matrix<U>& src) :
                 rows_(src.rows_), cols_(src.cols_) {
-            if (src.data_) {
-                size_t size = src.rows_ * src.cols_;
+            if (size_t size = src.rows_ * src.cols_) {
                 data_ = new T[size];
                 std::copy(src.data_, src.data_ + size, data_);
             } else {
@@ -325,7 +306,7 @@ class Matrix : public Output<Matrix<T>> {
         Matrix(Matrix&& src) noexcept :
                 rows_(src.rows_), cols_(src.cols_), data_(src.data_) {
             // If this leaves src in an invalid state, it will be with positive
-            // size but null data (which makes is safe for re-assignment).
+            // size but null data (which makes it safe for re-assignment).
             src.data_ = nullptr;
         }
         /**
@@ -351,23 +332,21 @@ class Matrix : public Output<Matrix<T>> {
             if (std::addressof(src) == this)
                 return *this;
 
-            if (src.data_) {
-                size_t size = src.rows_ * src.cols_;
+            if (size_t size = src.rows_ * src.cols_) {
                 // We could keep data_ if rows_ * cols_ is larger than we need.
                 // For now don't worry; we assume matrices won't change size
                 // very often.
                 if (rows_ != src.rows_ || cols_ != src.cols_ || ! data_) {
-                    rows_ = src.rows_;
-                    cols_ = src.cols_;
                     delete[] data_;
                     data_ = new T[size];
                 }
                 std::copy(src.data_, src.data_ + size, data_);
             } else {
                 delete[] data_;
-                rows_ = cols_ = 0;
                 data_ = nullptr;
             }
+            rows_ = src.rows_;
+            cols_ = src.cols_;
             return *this;
         }
         /**
@@ -458,9 +437,9 @@ class Matrix : public Output<Matrix<T>> {
          * you will need to call `matrix.set(r, c, value)`.
          *
          * \param row the row of the desired entry; this must be between
-         * 0 and rows()-1 inclusive.
+         * 0 and `rows()-1` inclusive.
          * \param column the column of the desired entry; this must be
-         * between 0 and columns()-1 inclusive.
+         * between 0 and `columns()-1` inclusive.
          * \return a reference to the entry in the given row and column.
          */
         T& entry(size_t row, size_t column) {
@@ -471,9 +450,9 @@ class Matrix : public Output<Matrix<T>> {
          * row and column.  Rows and columns are numbered beginning at zero.
          *
          * \param row the row of the desired entry; this must be between
-         * 0 and rows()-1 inclusive.
+         * 0 and `rows()-1` inclusive.
          * \param column the column of the desired entry; this must be
-         * between 0 and columns()-1 inclusive.
+         * between 0 and `columns()-1` inclusive.
          * \return a reference to the entry in the given row and column.
          */
         const T& entry(size_t row, size_t column) const {
@@ -495,9 +474,9 @@ class Matrix : public Output<Matrix<T>> {
          * will work, but `matrix.entry(r, c) = value` will not.
          *
          * \param row the row of the entry to set; this must be between
-         * 0 and rows()-1 inclusive.
+         * 0 and `rows()-1` inclusive.
          * \param column the column of the entry to set; this must be
-         * between 0 and columns()-1 inclusive.
+         * between 0 and `columns()-1` inclusive.
          * \param value the new entry to place in the given row and column.
          */
         void set(size_t row, size_t column, const T& value);
@@ -552,8 +531,8 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * column to the rightmost end of each row (inclusive).
          *
-         * \pre The two given rows are between 0 and rows()-1 inclusive.
-         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         * \pre The two given rows are between 0 and `rows()-1` inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() inclusive.
          *
          * \param first the first row to swap.
          * \param second the second row to swap.
@@ -576,8 +555,8 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * row down to the bottom of each column (inclusive).
          *
-         * \pre The two given columns are between 0 and columns()-1 inclusive.
-         * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
+         * \pre The two given columns are between 0 and `columns()-1` inclusive.
+         * \pre If passed, \a fromRow is between 0 and rows() inclusive.
          *
          * \param first the first column to swap.
          * \param second the second column to swap.
@@ -606,7 +585,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
-            if (data_) {
+            if (rows_ && cols_) {
                 out << '[';
                 const T* pos = data_;
                 for (size_t r = 0; r < rows_; ++r) {
@@ -619,7 +598,7 @@ class Matrix : public Output<Matrix<T>> {
                 }
                 out << ']';
             } else
-                out << "[ ]";
+                out << "(empty " << rows_ << 'x' << cols_ << " matrix)";
         }
         /**
          * Writes a detailed text representation of this object to the
@@ -630,7 +609,7 @@ class Matrix : public Output<Matrix<T>> {
          * \param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const {
-            if (data_) {
+            if (rows_ && cols_) {
                 const T* pos = data_;
                 for (size_t r = 0; r < rows_; r++) {
                     for (size_t c = 0; c < cols_; c++) {
@@ -640,7 +619,7 @@ class Matrix : public Output<Matrix<T>> {
                     out << '\n';
                 }
             } else
-                out << "(empty matrix)\n";
+                out << "(empty " << rows_ << 'x' << cols_ << " matrix)\n";
         }
 
         /**
@@ -720,7 +699,7 @@ class Matrix : public Output<Matrix<T>> {
          * Adds the given source row to the given destination row.
          *
          * \pre The two given rows are distinct and between 0 and
-         * rows()-1 inclusive.
+         * `rows()-1` inclusive.
          *
          * \warning If you only wish to add a portion of a row, be careful:
          * you cannot just pass the usual \a fromCol argument, since this will
@@ -745,8 +724,8 @@ class Matrix : public Output<Matrix<T>> {
          * to the rightmost end of the row (inclusive).
          *
          * \pre The two given rows are distinct and between 0 and
-         * rows()-1 inclusive.
-         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         * `rows()-1` inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() inclusive.
          *
          * \param source the row to add.
          * \param dest the row that will be added to.
@@ -772,8 +751,8 @@ class Matrix : public Output<Matrix<T>> {
          * column to the rightmost end of the row (inclusive).
          *
          * \pre The two given rows are distinct and between 0 and
-         * rows()-1 inclusive.
-         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         * `rows()-1` inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() inclusive.
          *
          * \param source the row to add.
          * \param dest the row that will be added to.
@@ -802,7 +781,7 @@ class Matrix : public Output<Matrix<T>> {
          * Instead you will need to call addColFrom().
          *
          * \pre The two given columns are distinct and between 0 and
-         * columns()-1 inclusive.
+         * `columns()-1` inclusive.
          *
          * \param source the columns to add.
          * \param dest the column that will be added to.
@@ -823,8 +802,8 @@ class Matrix : public Output<Matrix<T>> {
          * down to the bottom of the column (inclusive).
          *
          * \pre The two given columns are distinct and between 0 and
-         * columns()-1 inclusive.
-         * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
+         * `columns()-1` inclusive.
+         * \pre If passed, \a fromRow is between 0 and rows() inclusive.
          *
          * \param source the columns to add.
          * \param dest the column that will be added to.
@@ -851,8 +830,8 @@ class Matrix : public Output<Matrix<T>> {
          * row down to the bottom of the column (inclusive).
          *
          * \pre The two given columns are distinct and between 0 and
-         * columns()-1 inclusive.
-         * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
+         * `columns()-1` inclusive.
+         * \pre If passed, \a fromRow is between 0 and rows() inclusive.
          *
          * \param source the columns to add.
          * \param dest the column that will be added to.
@@ -882,8 +861,8 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * column to the rightmost end of the row (inclusive).
          *
-         * \pre The given row is between 0 and rows()-1 inclusive.
-         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         * \pre The given row is between 0 and `rows()-1` inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() inclusive.
          *
          * \param row the row to work with.
          * \param factor the factor by which to multiply the given row.
@@ -906,8 +885,8 @@ class Matrix : public Output<Matrix<T>> {
          * operation will only be performed for the elements from that
          * row down to the bottom of the column (inclusive).
          *
-         * \pre The given column is between 0 and columns()-1 inclusive.
-         * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
+         * \pre The given column is between 0 and `columns()-1` inclusive.
+         * \pre If passed, \a fromRow is between 0 and rows() inclusive.
          *
          * \param column the column to work with.
          * \param factor the factor by which to multiply the given column.
@@ -937,8 +916,8 @@ class Matrix : public Output<Matrix<T>> {
          * column to the rightmost end of each row (inclusive).
          *
          * \pre The two given rows are distinct and between 0 and
-         * rows()-1 inclusive.
-         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         * `rows()-1` inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() inclusive.
          *
          * \param row1 the first row to operate on.
          * \param row2 the second row to operate on.
@@ -980,8 +959,8 @@ class Matrix : public Output<Matrix<T>> {
          * column down to the bottom of each column (inclusive).
          *
          * \pre The two given columns are distinct and between 0 and
-         * columns()-1 inclusive.
-         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         * `columns()-1` inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() inclusive.
          *
          * \param col1 the first column to operate on.
          * \param col2 the second column to operate on.
@@ -1381,9 +1360,8 @@ class Matrix : public Output<Matrix<T>> {
          * matrix `M` satisfy the relation `M * adj = adj * M = det * I`,
          * where `I` is the identity matrix of the same size.
          *
-         * Although the Matrix class does not formally support empty matrices,
-         * if this _is_ found to be a 0-by-0 matrix then the adjugate returned
-         * will also be 0-by-0, and the determinant returned will be 1.
+         * For an empty matrix (of size `0×0`), the adjugate will likewise be
+         * empty, and the determinant will be 1.
          *
          * \pre This is a square matrix.
          *
@@ -1540,7 +1518,7 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Negates all elements in the given row.
          *
-         * \pre The given row number is between 0 and rows()-1 inclusive.
+         * \pre The given row number is between 0 and `rows()-1` inclusive.
          *
          * \param row the index of the row whose elements should be negated.
          */
@@ -1556,7 +1534,8 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Negates all elements in the given column.
          *
-         * \pre The given column number is between 0 and columns()-1 inclusive.
+         * \pre The given column number is between 0 and `columns()-1`
+         * inclusive.
          *
          * \param col the index of the column whose elements should be negated.
          */
@@ -1579,7 +1558,7 @@ class Matrix : public Output<Matrix<T>> {
          * none of the elements of the given row are infinity.
          * \pre The argument \a divBy divides exactly into every element
          * of the given row (i.e., it leaves no remainder).
-         * \pre The given row number is between 0 and rows()-1 inclusive.
+         * \pre The given row number is between 0 and `rows()-1` inclusive.
          *
          * \param row the index of the row whose elements should be
          * divided by \a divBy.
@@ -1601,7 +1580,8 @@ class Matrix : public Output<Matrix<T>> {
          * none of the elements of the given column are infinity.
          * \pre The argument \a divBy divides exactly into every element
          * of the given column (i.e., it leaves no remainder).
-         * \pre The given column number is between 0 and columns()-1 inclusive.
+         * \pre The given column number is between 0 and `columns()-1`
+         * inclusive.
          *
          * \param col the index of the column whose elements should be
          * divided by \a divBy.
@@ -1617,12 +1597,18 @@ class Matrix : public Output<Matrix<T>> {
          * Computes the greatest common divisor of all elements of the
          * given row.  The value returned is guaranteed to be non-negative.
          *
-         * \pre The given row number is between 0 and rows()-1 inclusive.
+         * If this is a `k×0` matrix (i.e., the given row is empty), then
+         * the return value will be zero.
+         *
+         * \pre The given row number is between 0 and `rows()-1` inclusive.
          *
          * \param row the index of the row whose gcd should be computed.
          * \return the greatest common divisor of all elements of this row.
          */
         T gcdRow(size_t row) requires ReginaInteger<T> {
+            if (cols_ == 0)
+                return {}; // zero
+
             T* pos = data_ + row * cols_;
             T gcd = *pos;
             for (size_t i = 1; i < cols_ && gcd != 1 && gcd != -1; ++i)
@@ -1637,12 +1623,19 @@ class Matrix : public Output<Matrix<T>> {
          * Computes the greatest common divisor of all elements of the
          * given column.  The value returned is guaranteed to be non-negative.
          *
-         * \pre The given column number is between 0 and columns()-1 inclusive.
+         * If this is a `0×k` matrix (i.e., the given column is empty), then
+         * the return value will be zero.
+         *
+         * \pre The given column number is between 0 and `columns()-1`
+         * inclusive.
          *
          * \param col the index of the column whose gcd should be computed.
          * \return the greatest common divisor of all elements of this column.
          */
         T gcdCol(size_t col) requires ReginaInteger<T> {
+            if (rows_ == 0)
+                return {}; // zero
+
             T* pos = data_ + col;
             T gcd = *pos;
             for (size_t i = 1; i < rows_ && gcd != 1 && gcd != -1; ++i)
@@ -1658,7 +1651,7 @@ class Matrix : public Output<Matrix<T>> {
          * greatest common divisor.  It is guaranteed that, if the row is
          * changed at all, it will be divided by a _positive_ integer.
          *
-         * \pre The given row number is between 0 and rows()-1 inclusive.
+         * \pre The given row number is between 0 and `rows()-1` inclusive.
          *
          * \param row the index of the row to reduce.
          */
@@ -1673,7 +1666,8 @@ class Matrix : public Output<Matrix<T>> {
          * greatest common divisor.  It is guaranteed that, if the column is
          * changed at all, it will be divided by a _positive_ integer.
          *
-         * \pre The given column number is between 0 and columns()-1 inclusive.
+         * \pre The given column number is between 0 and `columns()-1`
+         * inclusive.
          *
          * \param col the index of the column to reduce.
          */
@@ -1915,15 +1909,9 @@ class Matrix : public Output<Matrix<T>> {
          * invalid.
          */
         void validate() const {
-            if (data_) {
-                if (rows_ == 0 || cols_ == 0)
-                    throw ImpossibleScenario("Matrix has zero size but a "
-                        "non-null array of elements");
-            } else {
-                if (rows_ > 0 || cols_ > 0)
-                    throw ImpossibleScenario("Matrix has no elements but "
-                        "one of its dimensions is positive");
-            }
+            if (rows_ > 0 && cols_ > 0 && ! data_)
+                throw ImpossibleScenario("Matrix has positive dimensions "
+                    "but a null element array");
         }
 
     private:

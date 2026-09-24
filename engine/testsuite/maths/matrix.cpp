@@ -55,15 +55,28 @@ void validateEmpty(const Matrix<T>& m) {
     EXPECT_EQ(m, Matrix<T>());
 }
 
+template <regina::CommutativeRing T>
+void validateNoRows(const Matrix<T>& m, size_t columns) {
+    EXPECT_NO_THROW({ m.validate(); });
+    EXPECT_EQ(m.rows(), 0);
+    EXPECT_EQ(m.columns(), columns);
+    EXPECT_EQ(m, Matrix<T>(0, columns));
+}
+
+template <regina::CommutativeRing T>
+void validateNoColumns(const Matrix<T>& m, size_t rows) {
+    EXPECT_NO_THROW({ m.validate(); });
+    EXPECT_EQ(m.rows(), rows);
+    EXPECT_EQ(m.columns(), 0);
+    EXPECT_EQ(m, Matrix<T>(rows, 0));
+}
+
 TEST(MatrixTest, empty) {
     // Test everything that we are allowed to do with an empty matrix.
     validateEmpty(Matrix<Integer>());
     validateEmpty(Matrix<Integer>(0));
     validateEmpty(Matrix<Integer>(0, 0));
-    EXPECT_THROW({ Matrix<Integer>(0, 1); }, regina::InvalidArgument);
-    EXPECT_THROW({ Matrix<Integer>(1, 0); }, regina::InvalidArgument);
     validateEmpty(Matrix<Integer>({}));
-    EXPECT_THROW({ Matrix<Integer>({ {}, {} }); }, regina::InvalidArgument);
 
     Matrix<Integer> empty;
     auto m = Matrix<Integer>::identity(3);
@@ -110,8 +123,8 @@ TEST(MatrixTest, empty) {
     EXPECT_EQ(m, m);
 
     validateEmpty(m.transpose());
-    EXPECT_EQ(m.str(), "[ ]");
-    EXPECT_EQ(m.detail(), "(empty matrix)\n");
+    EXPECT_EQ(m.str(), "(empty 0x0 matrix)");
+    EXPECT_EQ(m.detail(), "(empty 0x0 matrix)\n");
 
     validateEmpty(Matrix<Integer>::identity(0));
     m.makeIdentity();
@@ -136,9 +149,13 @@ TEST(MatrixTest, empty) {
     EXPECT_NO_THROW({
         validateEmpty(m * Matrix<Integer>());
         validateEmpty(m * m);
+        validateNoRows(m * Matrix<Integer>(0, 4), 4);
+        validateNoColumns(Matrix<Integer>(3, 0) * m, 3);
     });
     EXPECT_THROW({ m * Matrix<Integer>(3, 4); }, regina::InvalidArgument);
     EXPECT_THROW({ Matrix<Integer>(3, 4) * m; }, regina::InvalidArgument);
+    EXPECT_THROW({ m * Matrix<Integer>(3, 0); }, regina::InvalidArgument);
+    EXPECT_THROW({ Matrix<Integer>(0, 4) * m; }, regina::InvalidArgument);
     {
         auto ans = m * Vector<Integer>(0);
         EXPECT_EQ(ans.size(), 0);

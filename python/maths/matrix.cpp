@@ -71,9 +71,6 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 }
                 if (i == 0) {
                     cols = row.size();
-                    if (cols == 0)
-                        throw regina::InvalidArgument("The matrix dimensions "
-                            "must be either both positive, or both zero");
                     m = new Matrix(rows, cols);
                 } else if (row.size() != cols) {
                     delete m;
