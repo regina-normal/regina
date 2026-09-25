@@ -86,12 +86,16 @@ instead the relevant functions are only enabled in scenarios where *T*
 adheres to the Ring concept. Nowadays you should always just use the
 type ``Matrix<T>``.
 
+As of Regina 8.0, empty matrices (where one or both of the matrix
+dimensions are zero) are explicitly supported.
+
 The header maths/matrixops.h contains several additional algorithms
 that work with the specific class Matrix<Integer>.
 
 This class implements C++ move semantics and adheres to the C++
 Swappable requirement. It is designed to avoid deep copies wherever
-possible, even when passing or returning objects by value.
+possible, even when passing or returning objects by value. If a matrix
+is moved from, it can later be reused by assigning it a new value.
 
 Python:
     The C++ types ``Matrix<Integer>``, ``Matrix<bool>`` and
@@ -104,11 +108,11 @@ R"doc(Creates a new matrix that is a clone of the given matrix.
 
 This constructor induces a deep copy of *src*.
 
-This routine is safe to call even if *src* is uninitialised (in which
-case this matrix will become uninitialised also).
-
 Parameter ``src``:
     the matrix to clone.)doc";
+
+// Docstring regina::python::doc::Matrix::__default
+static constexpr const char __default[] = R"doc(Creates a new empty matrix. The size of this matrix will be ``0×0``.)doc";
 
 // Docstring regina::python::doc::Matrix::__eq
 static constexpr const char __eq[] =
@@ -178,9 +182,6 @@ zero.
     then the matrix elements will not be initialised to any particular
     value.
 
-Precondition:
-    The given size is strictly positive.
-
 Parameter ``size``:
     the number of rows and columns in the new matrix.)doc";
 
@@ -198,9 +199,6 @@ zero.
     then the matrix elements will not be initialised to any particular
     value.
 
-Precondition:
-    The given number of rows and columns are both strictly positive.
-
 Parameter ``rows``:
     the number of rows in the new matrix.
 
@@ -216,17 +214,19 @@ directly in C++ code.
 Each element of the initialiser list *data* describes a single row of
 the matrix.
 
-Precondition:
-    The list *data* is non-empty (i.e., the number of rows is
-    positive), and each of its elements is non-empty (i.e., the number
-    of columns is positive).
+Note that you cannot create a ``0×k`` matrix using this constructor
+for positive *k*, but you can always use ``Matrix(0, k)`` instead.
 
 Precondition:
-    All elements of *data* (representing the rows of the matrix) are
-    lists of the same size.
+    All of the sub-lists within *data* have the same size (i.e., each
+    row has the same number of columns).
 
 Python:
     The argument *data* should be a Python list of Python lists.
+
+Exception ``InvalidArgument``:
+    The number of rows in the given list is positive, but the
+    individual rows are empty and/or have different sizes.
 
 Parameter ``data``:
     the rows of the matrix, each given as a list of elements.)doc";
@@ -287,11 +287,15 @@ Precondition:
     The number of columns in this matrix equals the number of rows in
     the given matrix.
 
-Parameter ``other``:
+Exception ``InvalidArgument``:
+    The matrix dimensions are incompatible; that is, ``columns() ≠
+    rhs.rows()``.
+
+Parameter ``rhs``:
     the other matrix to multiply this matrix by.
 
 Returns:
-    the product matrix ``this * other``.)doc";
+    the product matrix ``this * rhs``.)doc";
 
 // Docstring regina::python::doc::Matrix::__mul_3
 static constexpr const char __mul_3[] =
@@ -309,12 +313,16 @@ Precondition:
     The length of the given vector is precisely the number of columns
     in this matrix.
 
-Parameter ``other``:
+Exception ``InvalidArgument``:
+    The matrix and vector dimensions are incompatible; that is,
+    ``columns() ≠ rhs.size()``.
+
+Parameter ``rhs``:
     the vector to multiply this matrix by.
 
 Returns:
-    the product ``this * other``, which will be a vector whose length
-    is the number of rows in this matrix.)doc";
+    the product ``this * rhs``, which will be a vector whose length is
+    the number of rows in this matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::addCol
 static constexpr const char addCol[] =
@@ -328,8 +336,8 @@ R"doc(Adds the given source column to the given destination column.
     you will need to call addColFrom().
 
 Precondition:
-    The two given columns are distinct and between 0 and columns()-1
-    inclusive.
+    The two given columns are distinct and between 0 and
+    ``columns()-1`` inclusive.
 
 Parameter ``source``:
     the columns to add.
@@ -350,11 +358,11 @@ only be performed for the elements from that row down to the bottom of
 the column (inclusive).
 
 Precondition:
-    The two given columns are distinct and between 0 and columns()-1
-    inclusive.
+    The two given columns are distinct and between 0 and
+    ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromRow* is between 0 and rows() -1 inclusive.
+    If passed, *fromRow* is between 0 and rows() inclusive.
 
 Parameter ``source``:
     the columns to add.
@@ -379,11 +387,11 @@ performed for the elements from the row *fromRow* down to the bottom
 of the column (inclusive).
 
 Precondition:
-    The two given columns are distinct and between 0 and columns()-1
-    inclusive.
+    The two given columns are distinct and between 0 and
+    ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromRow* is between 0 and rows() -1 inclusive.
+    If passed, *fromRow* is between 0 and rows() inclusive.
 
 Parameter ``source``:
     the columns to add.
@@ -400,7 +408,7 @@ static constexpr const char addRow[] =
 R"doc(Adds the given source row to the given destination row.
 
 Precondition:
-    The two given rows are distinct and between 0 and rows()-1
+    The two given rows are distinct and between 0 and ``rows()-1``
     inclusive.
 
 .. warning::
@@ -429,11 +437,11 @@ only be performed for the elements from that column to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The two given rows are distinct and between 0 and rows()-1
+    The two given rows are distinct and between 0 and ``rows()-1``
     inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``source``:
     the row to add.
@@ -457,11 +465,11 @@ performed for the elements from the column *fromCol* to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The two given rows are distinct and between 0 and rows()-1
+    The two given rows are distinct and between 0 and ``rows()-1``
     inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``source``:
     the row to add.
@@ -480,9 +488,8 @@ The adjugate ``adj`` and the determinant ``det`` of a square matrix
 ``M`` satisfy the relation ``M * adj = adj * M = det * I``, where
 ``I`` is the identity matrix of the same size.
 
-Although the Matrix class does not formally support empty matrices, if
-this _is_ found to be a 0-by-0 matrix then the adjugate returned will
-also be 0-by-0, and the determinant returned will be 1.
+For an empty matrix (of size ``0×0``), the adjugate will likewise be
+empty, and the determinant will be 1.
 
 Precondition:
     This is a square matrix.
@@ -555,11 +562,11 @@ only be performed for the elements from that column down to the bottom
 of each column (inclusive).
 
 Precondition:
-    The two given columns are distinct and between 0 and columns()-1
-    inclusive.
+    The two given columns are distinct and between 0 and
+    ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``col1``:
     the first column to operate on.
@@ -606,11 +613,11 @@ only be performed for the elements from that column to the rightmost
 end of each row (inclusive).
 
 Precondition:
-    The two given rows are distinct and between 0 and rows()-1
+    The two given rows are distinct and between 0 and ``rows()-1``
     inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``row1``:
     the first row to operate on.
@@ -638,9 +645,7 @@ Parameter ``fromCol``:
 static constexpr const char det[] =
 R"doc(Evaluates the determinant of the matrix.
 
-Although the Matrix class does not formally support empty matrices, if
-this _is_ found to be a 0-by-0 matrix then the determinant returned
-will be 1.
+The determinant of an empty matrix (of size ``0×0``) will be 1.
 
 Precondition:
     This is a square matrix.
@@ -671,7 +676,8 @@ Precondition:
     given column (i.e., it leaves no remainder).
 
 Precondition:
-    The given column number is between 0 and columns()-1 inclusive.
+    The given column number is between 0 and ``columns()-1``
+    inclusive.
 
 Parameter ``col``:
     the index of the column whose elements should be divided by
@@ -696,7 +702,7 @@ Precondition:
     given row (i.e., it leaves no remainder).
 
 Precondition:
-    The given row number is between 0 and rows()-1 inclusive.
+    The given row number is between 0 and ``rows()-1`` inclusive.
 
 Parameter ``row``:
     the index of the row whose elements should be divided by *divBy*.
@@ -719,12 +725,12 @@ Python:
     call ``matrix.set(r, c, value)``.
 
 Parameter ``row``:
-    the row of the desired entry; this must be between 0 and rows()-1
-    inclusive.
+    the row of the desired entry; this must be between 0 and
+    ``rows()-1`` inclusive.
 
 Parameter ``column``:
     the column of the desired entry; this must be between 0 and
-    columns()-1 inclusive.
+    ``columns()-1`` inclusive.
 
 Returns:
     a reference to the entry in the given row and column.)doc";
@@ -735,19 +741,19 @@ R"doc(Returns a read-only reference to the entry at the given row and
 column. Rows and columns are numbered beginning at zero.
 
 Parameter ``row``:
-    the row of the desired entry; this must be between 0 and rows()-1
-    inclusive.
+    the row of the desired entry; this must be between 0 and
+    ``rows()-1`` inclusive.
 
 Parameter ``column``:
     the column of the desired entry; this must be between 0 and
-    columns()-1 inclusive.
+    ``columns()-1`` inclusive.
 
 Returns:
     a reference to the entry in the given row and column.)doc";
 
 // Docstring regina::python::doc::Matrix::fill
 static constexpr const char fill[] =
-R"doc(Sets every entry in the matrix to the given value.
+R"doc(Sets every entry in this matrix to the given value.
 
 Parameter ``value``:
     the value to assign to each entry.)doc";
@@ -757,8 +763,12 @@ static constexpr const char gcdCol[] =
 R"doc(Computes the greatest common divisor of all elements of the given
 column. The value returned is guaranteed to be non-negative.
 
+If this is a ``0×k`` matrix (i.e., the given column is empty), then
+the return value will be zero.
+
 Precondition:
-    The given column number is between 0 and columns()-1 inclusive.
+    The given column number is between 0 and ``columns()-1``
+    inclusive.
 
 Parameter ``col``:
     the index of the column whose gcd should be computed.
@@ -771,8 +781,11 @@ static constexpr const char gcdRow[] =
 R"doc(Computes the greatest common divisor of all elements of the given row.
 The value returned is guaranteed to be non-negative.
 
+If this is a ``k×0`` matrix (i.e., the given row is empty), then the
+return value will be zero.
+
 Precondition:
-    The given row number is between 0 and rows()-1 inclusive.
+    The given row number is between 0 and ``rows()-1`` inclusive.
 
 Parameter ``row``:
     the index of the row whose gcd should be computed.
@@ -806,7 +819,7 @@ Returns:
 
 // Docstring regina::python::doc::Matrix::initialise
 static constexpr const char initialise[] =
-R"doc(Deprecated function that sets every entry in the matrix to the given
+R"doc(Deprecated function that sets every entry in this matrix to the given
 value.
 
 .. deprecated::
@@ -815,22 +828,6 @@ value.
 
 Parameter ``value``:
     the value to assign to each entry.)doc";
-
-// Docstring regina::python::doc::Matrix::initialised
-static constexpr const char initialised[] =
-R"doc(Determines whether this matrix is initialised or uninitialised.
-
-The only ways for a matrix to be _uninitialised_ are:
-
-* it was created using the default constructor, and has not yet been
-  initialised using the assignment operator;
-
-* it was the result of assignment or copy construction from some other
-  uninitialised matrix.
-
-Returns:
-    ``True`` if this matrix is initialised, or ``False`` if it is
-    uninitialised.)doc";
 
 // Docstring regina::python::doc::Matrix::isIdentity
 static constexpr const char isIdentity[] =
@@ -871,10 +868,10 @@ only be performed for the elements from that row down to the bottom of
 the column (inclusive).
 
 Precondition:
-    The given column is between 0 and columns()-1 inclusive.
+    The given column is between 0 and ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromRow* is between 0 and rows() -1 inclusive.
+    If passed, *fromRow* is between 0 and rows() inclusive.
 
 Parameter ``column``:
     the column to work with.
@@ -898,10 +895,10 @@ only be performed for the elements from that column to the rightmost
 end of the row (inclusive).
 
 Precondition:
-    The given row is between 0 and rows()-1 inclusive.
+    The given row is between 0 and ``rows()-1`` inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``row``:
     the row to work with.
@@ -921,7 +918,8 @@ static constexpr const char negateCol[] =
 R"doc(Negates all elements in the given column.
 
 Precondition:
-    The given column number is between 0 and columns()-1 inclusive.
+    The given column number is between 0 and ``columns()-1``
+    inclusive.
 
 Parameter ``col``:
     the index of the column whose elements should be negated.)doc";
@@ -931,7 +929,7 @@ static constexpr const char negateRow[] =
 R"doc(Negates all elements in the given row.
 
 Precondition:
-    The given row number is between 0 and rows()-1 inclusive.
+    The given row number is between 0 and ``rows()-1`` inclusive.
 
 Parameter ``row``:
     the index of the row whose elements should be negated.)doc";
@@ -961,7 +959,8 @@ greatest common divisor. It is guaranteed that, if the column is
 changed at all, it will be divided by a _positive_ integer.
 
 Precondition:
-    The given column number is between 0 and columns()-1 inclusive.
+    The given column number is between 0 and ``columns()-1``
+    inclusive.
 
 Parameter ``col``:
     the index of the column to reduce.)doc";
@@ -973,7 +972,7 @@ common divisor. It is guaranteed that, if the row is changed at all,
 it will be divided by a _positive_ integer.
 
 Precondition:
-    The given row number is between 0 and rows()-1 inclusive.
+    The given row number is between 0 and ``rows()-1`` inclusive.
 
 Parameter ``row``:
     the index of the row to reduce.)doc";
@@ -1027,12 +1026,12 @@ Python:
     work, but ``matrix.entry(r, c) = value`` will not.
 
 Parameter ``row``:
-    the row of the entry to set; this must be between 0 and rows()-1
-    inclusive.
+    the row of the entry to set; this must be between 0 and
+    ``rows()-1`` inclusive.
 
 Parameter ``column``:
     the column of the entry to set; this must be between 0 and
-    columns()-1 inclusive.
+    ``columns()-1`` inclusive.
 
 Parameter ``value``:
     the new entry to place in the given row and column.)doc";
@@ -1055,10 +1054,10 @@ only be performed for the elements from that row down to the bottom of
 each column (inclusive).
 
 Precondition:
-    The two given columns are between 0 and columns()-1 inclusive.
+    The two given columns are between 0 and ``columns()-1`` inclusive.
 
 Precondition:
-    If passed, *fromRow* is between 0 and rows() -1 inclusive.
+    If passed, *fromRow* is between 0 and rows() inclusive.
 
 Parameter ``first``:
     the first column to swap.
@@ -1081,10 +1080,10 @@ only be performed for the elements from that column to the rightmost
 end of each row (inclusive).
 
 Precondition:
-    The two given rows are between 0 and rows()-1 inclusive.
+    The two given rows are between 0 and ``rows()-1`` inclusive.
 
 Precondition:
-    If passed, *fromCol* is between 0 and columns() -1 inclusive.
+    If passed, *fromCol* is between 0 and columns() inclusive.
 
 Parameter ``first``:
     the first row to swap.
@@ -1101,6 +1100,8 @@ static constexpr const char trace[] =
 R"doc(Returns the trace of this matrix. The trace is simply the sum of the
 elements along the main diagonal.
 
+The trace of an empty matrix (of size ``0×0``) will be zero.
+
 Precondition:
     This is a square matrix.
 
@@ -1116,6 +1117,21 @@ R"doc(Returns the transpose of this matrix. This matrix is not changed.
 
 Returns:
     the transpose.)doc";
+
+// Docstring regina::python::doc::Matrix::validate
+static constexpr const char validate[] =
+R"doc(A diagnostic routine that ensures that the internal representation of
+this matrix is valid.
+
+If Regina is working correctly, this routine should do nothing. If the
+internal representation of this matrix is _not_ valid, this routine
+will throw an exception.
+
+This routine is provided for use within Regina's various test suites.
+End users should not need to call it at all.
+
+Exception ``ImpossibleScenario``:
+    The internal state of this matrix is invalid.)doc";
 
 }; // struct Matrix
 

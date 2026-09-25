@@ -349,7 +349,9 @@ elements; such elements are simply ignored and left at infinity.
 
 Returns:
     the integer by which this vector was divided (i.e., the gcd of its
-    original elements). This will be strictly positive.)doc";
+    original elements). This will be strictly positive. If all of the
+    elements of this vector are zero and/or infinity (or if this
+    vector has no elements at all), then this return value will be 1.)doc";
 
 // Docstring regina::python::doc::Vector::size
 static constexpr const char size[] =

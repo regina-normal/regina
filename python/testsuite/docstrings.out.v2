@@ -428,8 +428,9 @@ __init__(...)
 
     Initialises this integer to the given value.
 
-    Precondition:
-        The given integer is not infinite.
+    Exception ``InvalidArgument``:
+        This class does not support infinity, but the given integer is
+        infinite.
 
     Parameter ``value``:
         the new value of this integer.
@@ -521,8 +522,9 @@ __init__(...)
 
     Initialises this integer to the given value.
 
-    Precondition:
-        The given integer is not infinite.
+    Exception ``InvalidArgument``:
+        This class does not support infinity, but the given integer is
+        infinite.
 
     Parameter ``value``:
         the new value of this integer.

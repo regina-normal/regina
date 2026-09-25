@@ -49,6 +49,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
     RDOC_SCOPE_BEGIN(Matrix)
 
     auto c = pybind11::class_<Matrix>(m, className, rdoc::__class)
+        .def(pybind11::init<>(), rdoc::__default)
         .def(pybind11::init<size_t>(), rdoc::__init)
         .def(pybind11::init<size_t, size_t>(), rdoc::__init_2)
         .def(pybind11::init<const Matrix&>(), rdoc::__copy)
@@ -107,6 +108,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             "first"_a, "second"_a, "fromCol"_a = 0, rdoc::swapRows)
         .def("swapCols", &Matrix::swapCols,
             "first"_a, "second"_a, "fromRow"_a = 0, rdoc::swapCols)
+        .def("validate", &Matrix::validate, rdoc::validate)
     ;
     if constexpr (regina::Ring<Element>) {
         c
