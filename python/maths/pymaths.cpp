@@ -35,7 +35,6 @@
 void add3D(pybind11::module_& m);
 void addArrow(pybind11::module_& m);
 void addBinom(pybind11::module_& m);
-void addMatrixOps(pybind11::module_& m);
 void addCyclotomic(pybind11::module_& m);
 void addInteger(pybind11::module_& m);
 void addKaratsuba(pybind11::module_& m);
@@ -69,7 +68,6 @@ void addMathsClasses(pybind11::module_& m) {
 
     add3D(m);
     addBinom(m);
-    addMatrixOps(m);
     addPrimes(m);
     addNumberTheory(m);
     addPerm2(m);
