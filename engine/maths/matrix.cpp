@@ -33,6 +33,8 @@
 
 namespace regina {
 
+// MARK: - Smith normal form algorithms
+
 template <>
 void Matrix<Integer>::smithNormalForm() {
     size_t currStage = 0;
@@ -255,6 +257,233 @@ std::array<Matrix<Integer>, 4> Matrix<Integer>::smithNormalFormCoB() {
 
     return cob;
 }
+
+bool metricFindPivot(size_t currStage, const MatrixInt &matrix,
+        size_t &pr, size_t &pc,
+        const std::vector<Integer> &rowNorm,
+        const std::vector<Integer> &colNorm,
+        const std::vector<Integer> &rowGCD) {
+    // find the smallest positive rowGCD
+    Integer minGCD; // zero
+    for (size_t i=currStage; i<matrix.rows(); i++)
+        if (rowGCD[i] != 0)
+            if (minGCD == 0 || minGCD > rowGCD[i].abs())
+                minGCD = rowGCD[i].abs();
+
+    bool pivotFound = false;
+    for (size_t i=currStage; i<matrix.rows(); i++)
+        if (rowGCD[i].abs() == minGCD)
+            for (size_t j=currStage; j<matrix.columns(); j++) {
+                if (matrix.entry(i,j) == 0)
+                    continue;
+
+                if (pivotFound == false) {
+                    pivotFound = true;
+                    pr = i;
+                    pc = j;
+                } else {
+                    // okay, so now we have a previous potential pivot and this
+                    // one.  Have to choose which one we prefer.
+                    // 1st step, compare the magnitudes...
+                    auto oldAbs = matrix.entry(pr,pc).abs();
+                    auto newAbs = matrix.entry(i,j).abs();
+                    if (newAbs < oldAbs) {
+                        pr = i;
+                        pc = j;
+                    } else if (newAbs == oldAbs) {
+                        if (newAbs == 1 ) {
+                            // Use relative weight comparison.
+                            if ((rowNorm[i] - newAbs) * (colNorm[j] - newAbs) <
+                                    (rowNorm[pr] - oldAbs) *
+                                    (colNorm[pc] - oldAbs)) {
+                                pr = i;
+                                pc = j;
+                            }
+                        } else {
+                            // Use the rowNorm comparison (or if the rows are
+                            // the same, the colNorm comparison).
+                            if (i == pr) {
+                                if (colNorm[j] < colNorm[pc]) {
+                                    pr = i;
+                                    pc = j;
+                                }
+                            } else {
+                                if (rowNorm[i] < rowNorm[pr]) {
+                                    pr = i;
+                                    pc = j;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+    return pivotFound;
+}
+
+// columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
+void metricColOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
+        const Integer& a, const Integer& b,
+        const Integer& c, const Integer& d,
+        MatrixInt& rowBasis, MatrixInt& rowBasisInv,
+        std::vector<Integer> &rowNorm,
+        std::vector<Integer> &colNorm) {
+    Integer t1, t2;
+    // smart rowMetric recomputation and transformation
+    colNorm[i] = 0; colNorm[j] = 0;
+    for (size_t k=currStage; k<matrix.rows(); k++)
+    {
+        t1 = a*matrix.entry(k, i) + c*matrix.entry(k, j);
+        t2 = b*matrix.entry(k, i) + d*matrix.entry(k, j);
+        rowNorm[k] += t1.abs() + t2.abs() - matrix.entry(k,i).abs()
+                                          - matrix.entry(k,j).abs();
+        matrix.entry(k, i) = t1;
+        matrix.entry(k, j) = t2;
+        colNorm[i] += t1.abs();
+        colNorm[j] += t2.abs();
+    }
+    rowBasis.combCols(i, j, a, c, b, d); // apply same column op to rowBasis
+    rowBasisInv.combRows(i, j, d, -b, -c, a); // apply inverse op to rowBasisInv
+}
+
+// row operation using 2x2-matrix [a b|c d] on rows i, j resp.
+void metricRowOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
+        const Integer& a, const Integer& b,
+        const Integer& c, const Integer& d,
+        MatrixInt& colBasis, MatrixInt& colBasisInv,
+        std::vector<Integer> &rowNorm, std::vector<Integer> &colNorm,
+        std::vector<Integer> &rowGCD) {
+    Integer t1, t2;
+    // smart norm recomputation and transformation
+    rowNorm[i] = rowNorm[j] = 0;
+    rowGCD[i] = rowGCD[j] = 0;
+    for (size_t k=currStage; k<matrix.columns(); k++) {
+        t1 = a*matrix.entry(i, k) + b*matrix.entry(j, k);
+        t2 = c*matrix.entry(i, k) + d*matrix.entry(j, k);
+        colNorm[k] += t1.abs() + t2.abs() - matrix.entry(i, k).abs()
+                                          - matrix.entry(j, k).abs();
+        matrix.entry(i, k) = t1;
+        matrix.entry(j, k) = t2;
+        rowNorm[i] += t1.abs();
+        rowNorm[j] += t2.abs();
+        rowGCD[i].gcdWith(t1);
+        rowGCD[j].gcdWith(t2);
+    }
+    colBasis.combRows(i, j, a, b, c, d); // apply same op to colBasis
+    colBasisInv.combCols(i, j, d, -c, -b, a); // apply inverse op to colBasisInv
+}
+
+template <>
+std::array<Matrix<Integer>, 4> Matrix<Integer>::metricalSmithNormalForm() {
+    // This routine uses a first-order technique to intelligently choose the
+    // pivot when computing the Smith Normal Form, attempting to keep the matrix
+    // sparse and its norm small throughout the reduction process.
+    // The technique is loosely based on the papers:
+    //
+    // - Havas, Holt, Rees. Recognizing badly Presented Z-modules.
+    //   Linear Algebra and its Applications. 192:137--163 (1993).
+    //
+    // - Markowitz. The elimination form of the inverse and its application
+    //   to linear programming. Management Sci. 3:255--269 (1957).
+
+    std::array<Matrix, 4> cob {
+        identity(cols_), identity(cols_),
+        identity(rows_), identity(rows_) };
+
+    // set up metrics (all vectors are initialised to zero by default).
+    std::vector<Integer> rowNorm(rows_);
+    std::vector<Integer> colNorm(cols_);
+    std::vector<Integer> rowGCD(rows_);
+
+    Integer* pos = data_;
+    for (size_t i=0; i<rows(); ++i)
+        for (size_t j=0; j<columns(); ++j) {
+            rowNorm[i] += pos->abs();
+            colNorm[j] += pos->abs();
+            rowGCD[i].gcdWith(*pos);
+            ++pos;
+        }
+
+    size_t currStage = 0;
+    size_t i, j;
+    while (metricFindPivot(currStage, *this, i, j, rowNorm, colNorm, rowGCD)) {
+        // entry i,j is now the pivot, so we move it to currStage, currStage.
+        if (i != currStage) {
+            rowNorm[currStage].swap(rowNorm[i]);
+            rowGCD[currStage].swap(rowGCD[i]);
+            cob[2].swapRows(currStage, i);
+            cob[3].swapCols(currStage, i);
+            swapRows(currStage, i, currStage);
+        }
+        if (j != currStage) {
+            colNorm[currStage].swap(colNorm[j]);
+            cob[0].swapCols(currStage, j);
+            cob[1].swapRows(currStage, j);
+            swapCols(currStage, j, currStage);
+        }
+        Integer g, u, v;
+rowMuckerLoop:
+        // we come back here if the column operations later on mess
+        // up row currStage first we do the col ops, eliminating
+        // entries to the right of currStage, currStage
+        for (j=currStage+1; j<columns(); j++)
+            if (entry(currStage, j) != 0) {
+                g = entry(currStage, currStage).gcdWithCoeffs(
+                     entry(currStage, j), u, v);
+                metricColOp(currStage, currStage, j, *this, u,
+                            -entry(currStage,j).divExact(g), v,
+                            entry(currStage, currStage).divExact(g),
+                            cob[0], cob[1], rowNorm, colNorm);
+            }
+        // then the row ops, eliminating entries below currStage, currStage
+        for (i=currStage+1; i<rows(); i++)
+            if (entry(i, currStage) != 0) {
+                g = entry(currStage, currStage).gcdWithCoeffs(
+                     entry(i, currStage), u, v);
+                metricRowOp(currStage, currStage, i, *this, u, v,
+                            -entry(i,currStage).divExact(g),
+                            entry(currStage,currStage).divExact(g),
+                            cob[2], cob[3], rowNorm, colNorm,
+                            rowGCD);
+            }
+        // scan row currStage, if it isn't zero, goto rowMuckerLoop
+        for (j=currStage+1; j<columns(); j++)
+            if (entry(currStage, j) != 0) goto rowMuckerLoop;
+        // ensure entry(currStage, currStage) is positive
+        if (entry(currStage, currStage)<0) {
+            // we'll make it a column operation
+            for (i=currStage; i<rows(); i++)
+                entry(i, currStage).negate();
+            cob[0].negateCol(currStage);
+            cob[1].negateRow(currStage);
+        }
+        // run through rows currStage+1 to bottom, check if divisible by
+        // entry(cs,cs). if not, record row and gcd(entry(cs,cs),
+        //  rowGCD[this row],  pick the row with the lowest of these gcds...
+        size_t rowT=currStage;
+        Integer bestGCD(entry(currStage, currStage).abs());
+        for (i=currStage+1; i<rows(); i++) {
+            g = entry(currStage, currStage).gcd(rowGCD[i]).abs();
+            if ( g < bestGCD ) {
+                rowT = i;
+                bestGCD = g;
+            }
+        }
+        if ( rowT > currStage ) {
+            metricRowOp(currStage, currStage, rowT, *this,
+                    Integer::one, Integer::one, Integer::zero, Integer::one,
+                    cob[2], cob[3], rowNorm, colNorm, rowGCD);
+            goto rowMuckerLoop;
+        }
+        // done
+        currStage++;
+    }
+    // no pivot found -- matrix down and to the right of currStage is zero.
+    // so we're done.
+    return cob;
+}
+
+// MARK: - Basis and echelon form algorithms
 
 size_t rowBasis(MatrixInt& matrix) {
     size_t n = matrix.columns();
@@ -504,6 +733,8 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
     }
 }
 
+// MARK: - Other algorithms
+
 MatrixInt preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& L) {
     if (L.size() != hom.rows())
@@ -617,7 +848,7 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
             // L[torList[CR]] == 0 if not, find smallest positive integer
             // s.t. when multiplied by it, above becomes true.
             gcd = tHom.entry(torList[CR], rowNZlist[0]).gcd( L[torList[CR]] );
-            d = L[torList[CR]].divExact(gcd); 
+            d = L[torList[CR]].divExact(gcd);
             // multiply column  rowNZlist[0] of tHom by d.
             for (auto pos : torList)
                 tHom.entry( pos, rowNZlist[0] ) *= d;
@@ -668,39 +899,39 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
     return tBasis;
 }
 
-// Lemma 1: [a b | c d] representing an element of End(Z_n x Z_{mn}) is in 
-//  Aut(Z_n x Z_{mn}) if and only if dA-bc is a unit of Z_{mn} for some lift 
+// Lemma 1: [a b | c d] representing an element of End(Z_n x Z_{mn}) is in
+//  Aut(Z_n x Z_{mn}) if and only if dA-bc is a unit of Z_{mn} for some lift
 //  A \in Z_{mn} of a \in Z_n
-//   
-//  You can get an explicit formula for the inverse, basically it boils down 
-//  to a comparison with the Z_n^2 case, and the observation that 
-//  Z_{mn} --> Z_n is surjective on units. 
+//
+//  You can get an explicit formula for the inverse, basically it boils down
+//  to a comparison with the Z_n^2 case, and the observation that
+//  Z_{mn} --> Z_n is surjective on units.
 
 // The algorithm:
 //
 //  Step 1: reduce all entries mod p_i where i is the row index.
-//  Step 2: Consider the bottom row of A.  Consider a group of columns for which 
-//          they all share the same p_i. standard Gaussian elimination works to 
-//          put zeros in all but one entry of this row.  Potential problem here 
+//  Step 2: Consider the bottom row of A.  Consider a group of columns for which
+//          they all share the same p_i. standard Gaussian elimination works to
+//          put zeros in all but one entry of this row.  Potential problem here
 //          the 1x1 case where the entry is a unit mod p_1
-//  Step 3: Now we are in the situation where in this row, any two non-zero 
-//          entries have distinct p_i's, where now i is the column index. 
-//          Let them be in columns i and n respectively.  
-//          Let l_1a_{ni} + l_2a_{nn} = gcd(a_{ni},a_{nn})=g, 
-//          consider matrix [ v_n l_1 | -v_i l_2 ] where 
+//  Step 3: Now we are in the situation where in this row, any two non-zero
+//          entries have distinct p_i's, where now i is the column index.
+//          Let them be in columns i and n respectively.
+//          Let l_1a_{ni} + l_2a_{nn} = gcd(a_{ni},a_{nn})=g,
+//          consider matrix [ v_n l_1 | -v_i l_2 ] where
 //          v_n = a_{nn}/g and v_i=a_{ni}/g.  This is a valid
-//          column operation by Lemma 1 and some congruence munching. 
-//          Apply, this reduces this bottom row to the point where it has only 
-//          one non-zero entry and it is a unit mod the relevant p_i, 
+//          column operation by Lemma 1 and some congruence munching.
+//          Apply, this reduces this bottom row to the point where it has only
+//          one non-zero entry and it is a unit mod the relevant p_i,
 //          so we can multiply by its inverse
-//  Step 4: repeat inductively to square submatrix above and to the left of the 
-//          nn entry.  This results in an upper diagonal matrix.  
+//  Step 4: repeat inductively to square submatrix above and to the left of the
+//          nn entry.  This results in an upper diagonal matrix.
 //          Reapply step 1 gives all 1's down diagonal.
-//  Step 5: row ops to convert to identity.  
-// *Step 6: keep track of all the corresponding matrices, put together to 
-//          assemble inverse. Notice it's all standard Gaussian elimination, 
+//  Step 5: row ops to convert to identity.
+// *Step 6: keep track of all the corresponding matrices, put together to
+//          assemble inverse. Notice it's all standard Gaussian elimination,
 //          just done in a funny order and with some modular arithmatic
-//          stuffed in there. 
+//          stuffed in there.
 MatrixInt torsionAutInverse(const MatrixInt& input,
         const std::vector<Integer> &invF) {
     if (input.rows() != input.columns())
@@ -717,14 +948,14 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
     size_t wRow = input.rows();
     while (wRow > 0) {
         wRow--;
-        // step 1 modular reduction on the current row. And find last non-zero 
+        // step 1 modular reduction on the current row. And find last non-zero
         // entry in this row up to wRow column
-        size_t pivCol=0; 
+        size_t pivCol=0;
         for (size_t i=0; i<=wRow; i++) {
             auto [Q, R] = workMat.entry(wRow, i).divisionAlg(invF[wRow]);
             workMat.entry(wRow, i) = R;
             if (R!=0) pivCol=i;
-        } // now pivCol is the last non-zero entry in the 0..wRow square smatrix 
+        } // now pivCol is the last non-zero entry in the 0..wRow square smatrix
 
         // Step 2: transpose pivCol and column wRow
         if (wRow != pivCol)
@@ -734,45 +965,45 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
             }
         pivCol = wRow;
 
-        // Step 3 Gauss eliminate whatever can be done. Start at rightmost 
-        //  column (pivCol) and work to the left 
+        // Step 3 Gauss eliminate whatever can be done. Start at rightmost
+        //  column (pivCol) and work to the left
         size_t wCol = pivCol;
         while (wCol > 0) {
             wCol--;
             Integer g, l1, l2;
-            g = workMat.entry( wRow, wCol ).gcdWithCoeffs( 
+            g = workMat.entry( wRow, wCol ).gcdWithCoeffs(
                                workMat.entry(wRow, pivCol), l1, l2 );
             Integer u1, u2;
-            u1 = workMat.entry(wRow, wCol).divExact(g); 
-            u2 = workMat.entry(wRow, pivCol).divExact(g); 
+            u1 = workMat.entry(wRow, wCol).divExact(g);
+            u2 = workMat.entry(wRow, pivCol).divExact(g);
             // u1 l1 + u2 l2 = 1
             // [ u2 l1 | -u1 l2 ] is column op matrix for wCol and pivCol
             for (size_t i=0; i<workMat.rows(); i++) {
                 // wCol -> u2 wCol - u1 pivCol, pivCol -> l1 wCol + l2 pivCol
                 Integer W(workMat.entry(i, wCol)), P(workMat.entry(i, pivCol));
-                workMat.entry(i, wCol) = u2*W - u1*P; 
+                workMat.entry(i, wCol) = u2*W - u1*P;
                 workMat.entry(i, pivCol) = l1*W + l2*P;
                 W = colOps.entry(i, wCol);
                 P = colOps.entry(i, pivCol);
-                colOps.entry(i, wCol) = u2*W - u1*P; 
-                colOps.entry(i, pivCol) = l1*W + l2*P; 
+                colOps.entry(i, wCol) = u2*W - u1*P;
+                colOps.entry(i, pivCol) = l1*W + l2*P;
             }
         }
-        // now workMat.entry(wRow, pivCol) is a unit mod invF[pivCol], 
+        // now workMat.entry(wRow, pivCol) is a unit mod invF[pivCol],
         //  so find its inverse
         Integer g, a1, a2;
         g= workMat.entry( wRow, pivCol ).gcdWithCoeffs( invF[pivCol], a1, a2 );
-        // a1 represents this multiplicative inverse so multiply column by it. 
+        // a1 represents this multiplicative inverse so multiply column by it.
         for (size_t i=0; i<workMat.rows(); i++) {
             colOps.entry( i, pivCol ) *= a1;
             workMat.entry( i, pivCol ) *= a1;
         }
 
-        // step 4 mod reduce the only entry left, 
-        //  recurse back to step 1 on the next row up. 
+        // step 4 mod reduce the only entry left,
+        //  recurse back to step 1 on the next row up.
         auto [Q, R] = workMat.entry(wRow, pivCol).divisionAlg(invF[wRow]);
         workMat.entry(wRow, pivCol) = R;
-        // so we should have 1's down the diagonal now as long 
+        // so we should have 1's down the diagonal now as long
         //  as I haven't screwed up.
     }
 
@@ -782,7 +1013,7 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
     // step 5 upper triang -> identity.  Use row i to kill i-th entry of row j.
     for (size_t i=1; i<workMat.columns(); i++)
         for (size_t j=0; j<i; j++) {
-            Integer X(workMat.entry(j, i)); 
+            Integer X(workMat.entry(j, i));
             // now subtract X times row i from row j in both
             // workMat and retval. I guess we could eventually
             // avoid the ops on workMat since it won't affect
@@ -806,231 +1037,6 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
 
     // done
     return retval;
-}
-
-bool metricFindPivot(size_t currStage, const MatrixInt &matrix,
-        size_t &pr, size_t &pc,
-        const std::vector<Integer> &rowNorm,
-        const std::vector<Integer> &colNorm,
-        const std::vector<Integer> &rowGCD) {
-    // find the smallest positive rowGCD
-    Integer minGCD; // zero
-    for (size_t i=currStage; i<matrix.rows(); i++)
-        if (rowGCD[i] != 0)
-            if (minGCD == 0 || minGCD > rowGCD[i].abs())
-                minGCD = rowGCD[i].abs();
-
-    bool pivotFound = false;
-    for (size_t i=currStage; i<matrix.rows(); i++)
-        if (rowGCD[i].abs() == minGCD)
-            for (size_t j=currStage; j<matrix.columns(); j++) {
-                if (matrix.entry(i,j) == 0)
-                    continue;
-
-                if (pivotFound == false) {
-                    pivotFound = true;
-                    pr = i;
-                    pc = j;
-                } else {
-                    // okay, so now we have a previous potential pivot and this
-                    // one.  Have to choose which one we prefer.
-                    // 1st step, compare the magnitudes...
-                    auto oldAbs = matrix.entry(pr,pc).abs();
-                    auto newAbs = matrix.entry(i,j).abs();
-                    if (newAbs < oldAbs) {
-                        pr = i;
-                        pc = j;
-                    } else if (newAbs == oldAbs) {
-                        if (newAbs == 1 ) {
-                            // Use relative weight comparison.
-                            if ((rowNorm[i] - newAbs) * (colNorm[j] - newAbs) <
-                                    (rowNorm[pr] - oldAbs) *
-                                    (colNorm[pc] - oldAbs)) {
-                                pr = i;
-                                pc = j;
-                            }
-                        } else {
-                            // Use the rowNorm comparison (or if the rows are
-                            // the same, the colNorm comparison).
-                            if (i == pr) {
-                                if (colNorm[j] < colNorm[pc]) {
-                                    pr = i;
-                                    pc = j;
-                                }
-                            } else {
-                                if (rowNorm[i] < rowNorm[pr]) {
-                                    pr = i;
-                                    pc = j;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-    return pivotFound;
-}
-
-// columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
-void metricColOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
-        const Integer& a, const Integer& b,
-        const Integer& c, const Integer& d,
-        MatrixInt& rowBasis, MatrixInt& rowBasisInv,
-        std::vector<Integer> &rowNorm,
-        std::vector<Integer> &colNorm) {
-    Integer t1, t2;
-    // smart rowMetric recomputation and transformation
-    colNorm[i] = 0; colNorm[j] = 0;
-    for (size_t k=currStage; k<matrix.rows(); k++)
-    {
-        t1 = a*matrix.entry(k, i) + c*matrix.entry(k, j);
-        t2 = b*matrix.entry(k, i) + d*matrix.entry(k, j);
-        rowNorm[k] += t1.abs() + t2.abs() - matrix.entry(k,i).abs() 
-                                          - matrix.entry(k,j).abs();
-        matrix.entry(k, i) = t1;
-        matrix.entry(k, j) = t2;
-        colNorm[i] += t1.abs();
-        colNorm[j] += t2.abs();
-    }
-    rowBasis.combCols(i, j, a, c, b, d); // apply same column op to rowBasis
-    rowBasisInv.combRows(i, j, d, -b, -c, a); // apply inverse op to rowBasisInv
-}
-
-// row operation using 2x2-matrix [a b|c d] on rows i, j resp.
-void metricRowOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
-        const Integer& a, const Integer& b,
-        const Integer& c, const Integer& d,
-        MatrixInt& colBasis, MatrixInt& colBasisInv,
-        std::vector<Integer> &rowNorm, std::vector<Integer> &colNorm,
-        std::vector<Integer> &rowGCD) {
-    Integer t1, t2;
-    // smart norm recomputation and transformation
-    rowNorm[i] = rowNorm[j] = 0;
-    rowGCD[i] = rowGCD[j] = 0;
-    for (size_t k=currStage; k<matrix.columns(); k++) {
-        t1 = a*matrix.entry(i, k) + b*matrix.entry(j, k);
-        t2 = c*matrix.entry(i, k) + d*matrix.entry(j, k);
-        colNorm[k] += t1.abs() + t2.abs() - matrix.entry(i, k).abs() 
-                                          - matrix.entry(j, k).abs();
-        matrix.entry(i, k) = t1;
-        matrix.entry(j, k) = t2;
-        rowNorm[i] += t1.abs();
-        rowNorm[j] += t2.abs();
-        rowGCD[i].gcdWith(t1);
-        rowGCD[j].gcdWith(t2);
-    }
-    colBasis.combRows(i, j, a, b, c, d); // apply same op to colBasis
-    colBasisInv.combCols(i, j, d, -c, -b, a); // apply inverse op to colBasisInv
-}
-
-template <>
-std::array<Matrix<Integer>, 4> Matrix<Integer>::metricalSmithNormalForm() {
-    // This routine uses a first-order technique to intelligently choose the
-    // pivot when computing the Smith Normal Form, attempting to keep the matrix
-    // sparse and its norm small throughout the reduction process.
-    // The technique is loosely based on the papers:
-    //
-    // - Havas, Holt, Rees. Recognizing badly Presented Z-modules.
-    //   Linear Algebra and its Applications. 192:137--163 (1993).
-    //
-    // - Markowitz. The elimination form of the inverse and its application
-    //   to linear programming. Management Sci. 3:255--269 (1957).
-
-    std::array<Matrix, 4> cob {
-        identity(cols_), identity(cols_),
-        identity(rows_), identity(rows_) };
-
-    // set up metrics (all vectors are initialised to zero by default).
-    std::vector<Integer> rowNorm(rows_);
-    std::vector<Integer> colNorm(cols_);
-    std::vector<Integer> rowGCD(rows_);
-
-    Integer* pos = data_;
-    for (size_t i=0; i<rows(); ++i)
-        for (size_t j=0; j<columns(); ++j) {
-            rowNorm[i] += pos->abs();
-            colNorm[j] += pos->abs();
-            rowGCD[i].gcdWith(*pos);
-            ++pos;
-        }
-
-    size_t currStage = 0;
-    size_t i, j;
-    while (metricFindPivot(currStage, *this, i, j, rowNorm, colNorm, rowGCD)) {
-        // entry i,j is now the pivot, so we move it to currStage, currStage.
-        if (i != currStage) {
-            rowNorm[currStage].swap(rowNorm[i]);
-            rowGCD[currStage].swap(rowGCD[i]);
-            cob[2].swapRows(currStage, i);
-            cob[3].swapCols(currStage, i);
-            swapRows(currStage, i, currStage);
-        }
-        if (j != currStage) {
-            colNorm[currStage].swap(colNorm[j]);
-            cob[0].swapCols(currStage, j);
-            cob[1].swapRows(currStage, j);
-            swapCols(currStage, j, currStage);
-        }
-        Integer g, u, v;
-rowMuckerLoop:
-        // we come back here if the column operations later on mess
-        // up row currStage first we do the col ops, eliminating
-        // entries to the right of currStage, currStage
-        for (j=currStage+1; j<columns(); j++)
-            if (entry(currStage, j) != 0) {
-                g = entry(currStage, currStage).gcdWithCoeffs(
-                     entry(currStage, j), u, v);
-                metricColOp(currStage, currStage, j, *this, u,
-                            -entry(currStage,j).divExact(g), v,
-                            entry(currStage, currStage).divExact(g),
-                            cob[0], cob[1], rowNorm, colNorm);
-            }
-        // then the row ops, eliminating entries below currStage, currStage
-        for (i=currStage+1; i<rows(); i++)
-            if (entry(i, currStage) != 0) {
-                g = entry(currStage, currStage).gcdWithCoeffs(
-                     entry(i, currStage), u, v);
-                metricRowOp(currStage, currStage, i, *this, u, v,
-                            -entry(i,currStage).divExact(g),
-                            entry(currStage,currStage).divExact(g),
-                            cob[2], cob[3], rowNorm, colNorm,
-                            rowGCD);
-            }
-        // scan row currStage, if it isn't zero, goto rowMuckerLoop
-        for (j=currStage+1; j<columns(); j++)
-            if (entry(currStage, j) != 0) goto rowMuckerLoop;
-        // ensure entry(currStage, currStage) is positive
-        if (entry(currStage, currStage)<0) {
-            // we'll make it a column operation
-            for (i=currStage; i<rows(); i++)
-                entry(i, currStage).negate();
-            cob[0].negateCol(currStage);
-            cob[1].negateRow(currStage);
-        }
-        // run through rows currStage+1 to bottom, check if divisible by
-        // entry(cs,cs). if not, record row and gcd(entry(cs,cs),
-        //  rowGCD[this row],  pick the row with the lowest of these gcds...
-        size_t rowT=currStage;
-        Integer bestGCD(entry(currStage, currStage).abs());
-        for (i=currStage+1; i<rows(); i++) {
-            g = entry(currStage, currStage).gcd(rowGCD[i]).abs();
-            if ( g < bestGCD ) {
-                rowT = i;
-                bestGCD = g;
-            }
-        }
-        if ( rowT > currStage ) {
-            metricRowOp(currStage, currStage, rowT, *this,
-                    Integer::one, Integer::one, Integer::zero, Integer::one,
-                    cob[2], cob[3], rowNorm, colNorm, rowGCD);
-            goto rowMuckerLoop;
-        }
-        // done
-        currStage++;
-    }
-    // no pivot found -- matrix down and to the right of currStage is zero.
-    // so we're done.
-    return cob;
 }
 
 } // namespace regina
