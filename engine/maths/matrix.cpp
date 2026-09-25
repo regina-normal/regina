@@ -872,13 +872,12 @@ bool metricFindPivot(size_t currStage, const MatrixInt &matrix,
 }
 
 // columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
-void metricColOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix, 
-        const Integer& a, const Integer& b, 
-        const Integer& c, const Integer& d, 
-        MatrixInt& rowBasis, MatrixInt& rowBasisInv, 
-        std::vector<Integer> &rowNorm, 
-        std::vector<Integer> &colNorm)
-{
+void metricColOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
+        const Integer& a, const Integer& b,
+        const Integer& c, const Integer& d,
+        MatrixInt& rowBasis, MatrixInt& rowBasisInv,
+        std::vector<Integer> &rowNorm,
+        std::vector<Integer> &colNorm) {
     Integer t1, t2;
     // smart rowMetric recomputation and transformation
     colNorm[i] = 0; colNorm[j] = 0;
@@ -892,30 +891,18 @@ void metricColOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
         matrix.entry(k, j) = t2;
         colNorm[i] += t1.abs();
         colNorm[j] += t2.abs();
-    } // now modify rowBasis and rowBasisInv
-    for (size_t k=0; k<matrix.columns(); k++) {
-        // apply same column op to rowBasis
-        t1 = a*rowBasis.entry(k, i) + c*rowBasis.entry(k, j);
-        t2 = b*rowBasis.entry(k, i) + d*rowBasis.entry(k, j);
-        rowBasis.entry(k, i) = t1;
-        rowBasis.entry(k, j) = t2;
     }
-    for (size_t k=0; k<matrix.columns(); k++) {
-        // apply inverse row op to rowBasisInv
-        t1 = d*rowBasisInv.entry(i, k) - b*rowBasisInv.entry(j, k);
-        t2 = -c*rowBasisInv.entry(i, k) + a*rowBasisInv.entry(j, k);
-        rowBasisInv.entry(i, k) = t1; rowBasisInv.entry(j, k) = t2;
-    }
+    rowBasis.combCols(i, j, a, c, b, d); // apply same column op to rowBasis
+    rowBasisInv.combRows(i, j, d, -b, -c, a); // apply inverse op to rowBasisInv
 }
 
 // row operation using 2x2-matrix [a b|c d] on rows i, j resp.
-void metricRowOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix, 
-    const Integer& a, const Integer& b, 
-    const Integer& c, const Integer& d, 
-    MatrixInt& colBasis, MatrixInt& colBasisInv, 
-    std::vector<Integer> &rowNorm, std::vector<Integer> &colNorm,
-    std::vector<Integer> &rowGCD)
-{
+void metricRowOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
+        const Integer& a, const Integer& b,
+        const Integer& c, const Integer& d,
+        MatrixInt& colBasis, MatrixInt& colBasisInv,
+        std::vector<Integer> &rowNorm, std::vector<Integer> &colNorm,
+        std::vector<Integer> &rowGCD) {
     Integer t1, t2;
     // smart norm recomputation and transformation
     rowNorm[i] = rowNorm[j] = 0;
@@ -926,25 +913,14 @@ void metricRowOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
         colNorm[k] += t1.abs() + t2.abs() - matrix.entry(i, k).abs() 
                                           - matrix.entry(j, k).abs();
         matrix.entry(i, k) = t1;
-        matrix.entry(j, k) = t2; 
+        matrix.entry(j, k) = t2;
         rowNorm[i] += t1.abs();
         rowNorm[j] += t2.abs();
-        rowGCD[i] = rowGCD[i].gcd(t1);
-        rowGCD[j] = rowGCD[j].gcd(t2);
-    } // now modify colBasis and colBasisInv
-    for (size_t k=0; k<matrix.rows(); k++) {
-        // apply same row op to colBasis
-        t1 = a*colBasis.entry(i, k) + b*colBasis.entry(j, k);
-        t2 = c*colBasis.entry(i, k) + d*colBasis.entry(j, k);
-        colBasis.entry(i, k) = t1;
-        colBasis.entry(j, k) = t2;
+        rowGCD[i].gcdWith(t1);
+        rowGCD[j].gcdWith(t2);
     }
-    for (size_t k=0; k<matrix.rows(); k++) {
-        // apply inverse column op to colBasisInv
-        t1 =  d*colBasisInv.entry(k, i) - c*colBasisInv.entry(k, j);
-        t2 = -b*colBasisInv.entry(k, i) + a*colBasisInv.entry(k, j);
-        colBasisInv.entry(k, i) = t1; colBasisInv.entry(k, j) = t2;
-    }
+    colBasis.combRows(i, j, a, b, c, d); // apply same op to colBasis
+    colBasisInv.combCols(i, j, d, -c, -b, a); // apply inverse op to colBasisInv
 }
 
 template <>
