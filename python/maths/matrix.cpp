@@ -30,6 +30,7 @@
 
 #include "regina-config.h" // for REGINA_PYBIND11_VERSION
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #if REGINA_PYBIND11_VERSION == 3
 #include <pybind11/native_enum.h>
 #endif
@@ -186,6 +187,16 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             }, rdoc::__mul_3)
         ;
     }
+    if constexpr (std::same_as<Element, regina::Integer>) {
+        c
+            .def("smithNormalForm", &Matrix::smithNormalForm,
+                rdoc::smithNormalForm)
+            .def("smithNormalFormCoB", &Matrix::smithNormalFormCoB,
+                rdoc::smithNormalFormCoB)
+            .def("metricalSmithNormalForm", &Matrix::metricalSmithNormalForm,
+                rdoc::metricalSmithNormalForm)
+        ;
+    }
     regina::python::add_output_rich(c);
     regina::python::add_eq_operators(c, rdoc::__eq);
     regina::python::add_global_swap<Matrix, rdoc>(m);
@@ -220,5 +231,31 @@ void addMatrix(pybind11::module_& m) {
     addMatrixOf<bool>(m, "MatrixBool");
     addMatrixOf<regina::Integer>(m, "MatrixInt");
     addMatrixOf<double>(m, "MatrixReal");
+
+    RDOC_SCOPE_BEGIN_MAIN
+
+    using regina::MatrixInt;
+    m.def("smithNormalForm", [](MatrixInt& m) { // deprecated
+        m.smithNormalForm();
+    }, rdoc::smithNormalForm);
+    m.def("smithNormalForm", [](MatrixInt& m, MatrixInt& r, MatrixInt& ri,
+            MatrixInt&c, MatrixInt& ci) { // deprecated
+        std::tie(r, ri, c, ci) = m.smithNormalFormCoB();
+    }, rdoc::smithNormalForm_2);
+    m.def("metricalSmithNormalForm", [](MatrixInt& m, // deprecated
+            MatrixInt& r, MatrixInt& ri, MatrixInt&c, MatrixInt& ci) {
+        std::tie(r, ri, c, ci) = m.metricalSmithNormalForm();
+    }, rdoc::metricalSmithNormalForm);
+    m.def("rowBasis", &regina::rowBasis, rdoc::rowBasis);
+    m.def("rowBasisAndOrthComp", &regina::rowBasisAndOrthComp,
+        rdoc::rowBasisAndOrthComp);
+    m.def("columnEchelonForm", &regina::columnEchelonForm,
+        rdoc::columnEchelonForm);
+    m.def("preImageOfLattice", &regina::preImageOfLattice,
+        rdoc::preImageOfLattice);
+    m.def("torsionAutInverse", &regina::torsionAutInverse,
+        rdoc::torsionAutInverse);
+
+    RDOC_SCOPE_END
 }
 

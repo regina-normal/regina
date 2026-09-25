@@ -28,15 +28,16 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/matrixops.h"
+#include "maths/matrix.h"
 #include "maths/numbertheory.h"
 
 namespace regina {
 
-void smithNormalForm(MatrixInt& matrix) {
+template <>
+void Matrix<Integer>::smithNormalForm() {
     size_t currStage = 0;
-    size_t nonEmptyRows = matrix.rows();
-    size_t nonEmptyCols = matrix.columns();
+    size_t nonEmptyRows = rows();
+    size_t nonEmptyCols = columns();
     bool flag;
     size_t i, j;
     size_t pivotRow, pivotCol;
@@ -51,7 +52,7 @@ void smithNormalForm(MatrixInt& matrix) {
         // TODO: Adjust nonEmptyRows and nonEmptyCols as we iterate here.
         for (i = currStage; i < nonEmptyRows; ++i)
             for (j = currStage; j < nonEmptyCols; ++j) {
-                Integer pivotVal = matrix.entry(i, j).abs();
+                Integer pivotVal = entry(i, j).abs();
                 if (pivotVal > 0)
                     if (tmp == 0 || pivotVal < tmp) {
                         tmp = pivotVal;
@@ -66,44 +67,44 @@ void smithNormalForm(MatrixInt& matrix) {
         }
 
         if (pivotRow != currStage)
-            matrix.swapRows(currStage, pivotRow);
+            swapRows(currStage, pivotRow);
         if (pivotCol != currStage)
-            matrix.swapCols(currStage, pivotCol, currStage);
+            swapCols(currStage, pivotCol, currStage);
 
         // Make zeros for the remainder of the current row.
         for (i=currStage+1; i<nonEmptyCols; i++) {
-            if (matrix.entry(currStage, i) == 0)
+            if (entry(currStage, i) == 0)
                 continue;
             // Put a zero in (currStage, i).
-            a = matrix.entry(currStage, currStage);
-            b = matrix.entry(currStage, i);
+            a = entry(currStage, currStage);
+            b = entry(currStage, i);
             d = a.gcdWithCoeffs(b, u, v);
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to columns currStage and i.
-            matrix.combCols(currStage, i, u, v, -b, a, currStage);
+            combCols(currStage, i, u, v, -b, a, currStage);
         }
 
         // Make zeros for the remainder of the current column.
         // Check to see if we change anything and thus muck up the row.
         flag = false;
         for (i=currStage+1; i<nonEmptyRows; i++) {
-            if (matrix.entry(i, currStage) == 0)
+            if (entry(i, currStage) == 0)
                 continue;
             // Put a zero in (i, currStage).
             flag = true;
-            a = matrix.entry(currStage, currStage);
-            b = matrix.entry(i, currStage);
+            a = entry(currStage, currStage);
+            b = entry(i, currStage);
             d = a.gcdWithCoeffs(b, u, v);
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to rows currStage and i.
-            matrix.combRows(currStage, i, u, v, -b, a, currStage);
+            combRows(currStage, i, u, v, -b, a, currStage);
         }
         if (flag) {
             flag = false;
             for (i=currStage+1; i<nonEmptyCols; i++)
-                if (matrix.entry(currStage, i) != 0) {
+                if (entry(currStage, i) != 0) {
                     flag = true;
                     break;
                 }
@@ -114,13 +115,13 @@ void smithNormalForm(MatrixInt& matrix) {
         }
 
         // Check that entry (currStage, currStage) divides everything else.
-        Integer& diag = matrix.entry(currStage, currStage);
+        Integer& diag = entry(currStage, currStage);
         for (i=currStage+1; i<nonEmptyRows; i++)
             for (j=currStage+1; j<nonEmptyCols; j++)
-                if ((matrix.entry(i, j) % diag) != 0) {
+                if ((entry(i, j) % diag) != 0) {
                     // Add row i to the current stage row and start this
                     // stage over.
-                    matrix.addRowFrom(i, currStage, currStage + 1);
+                    addRowFrom(i, currStage, currStage + 1);
                     goto loopStart;
                 }
 
@@ -132,22 +133,20 @@ void smithNormalForm(MatrixInt& matrix) {
     }
 }
 
-void smithNormalForm(MatrixInt& matrix,
-        MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
-        MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
+template <>
+std::array<Matrix<Integer>, 4> Matrix<Integer>::smithNormalFormCoB() {
     size_t currStage = 0;
-    size_t nonEmptyRows = matrix.rows();
-    size_t nonEmptyCols = matrix.columns();
+    size_t nonEmptyRows = rows();
+    size_t nonEmptyCols = columns();
     bool flag;
     size_t i, j;
     size_t pivotRow, pivotCol;
     Integer d, u, v, a, b;
     Integer tmp;
 
-    rowSpaceBasis = MatrixInt::identity(matrix.columns());
-    rowSpaceBasisInv = MatrixInt::identity(matrix.columns());
-    colSpaceBasis = MatrixInt::identity(matrix.rows());
-    colSpaceBasisInv = MatrixInt::identity(matrix.rows());
+    std::array<Matrix, 4> cob {
+        identity(cols_), identity(cols_),
+        identity(rows_), identity(rows_) };
 
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
         loopStart:
@@ -158,7 +157,7 @@ void smithNormalForm(MatrixInt& matrix,
         // TODO: Adjust nonEmptyRows and nonEmptyCols as we iterate here.
         for (i = currStage; i < nonEmptyRows; ++i)
             for (j = currStage; j < nonEmptyCols; ++j) {
-                Integer pivotVal = matrix.entry(i, j).abs();
+                Integer pivotVal = entry(i, j).abs();
                 if (pivotVal > 0)
                     if (tmp == 0 || pivotVal < tmp) {
                         tmp = pivotVal;
@@ -173,54 +172,54 @@ void smithNormalForm(MatrixInt& matrix,
         }
 
         if (pivotRow != currStage) {
-            matrix.swapRows(currStage, pivotRow);
-            colSpaceBasis.swapRows(currStage, pivotRow);
-            colSpaceBasisInv.swapCols(currStage, pivotRow);
+            swapRows(currStage, pivotRow);
+            cob[2].swapRows(currStage, pivotRow);
+            cob[3].swapCols(currStage, pivotRow);
         }
         if (pivotCol != currStage) {
-            matrix.swapCols(currStage, pivotCol, currStage);
-            rowSpaceBasis.swapCols(currStage, pivotCol);
-            rowSpaceBasisInv.swapRows(currStage, pivotCol);
+            swapCols(currStage, pivotCol, currStage);
+            cob[0].swapCols(currStage, pivotCol);
+            cob[1].swapRows(currStage, pivotCol);
         }
 
         // Make zeros for the remainder of the current row.
         for (i=currStage+1; i<nonEmptyCols; i++) {
-            if (matrix.entry(currStage, i) == 0)
+            if (entry(currStage, i) == 0)
                 continue;
             // Put a zero in (currStage, i).
-            a = matrix.entry(currStage, currStage);
-            b = matrix.entry(currStage, i);
+            a = entry(currStage, currStage);
+            b = entry(currStage, i);
             d = a.gcdWithCoeffs(b, u, v);
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to columns currStage and i.
-            matrix.combCols(currStage, i, u, v, -b, a, currStage);
-            rowSpaceBasis.combCols(currStage, i, u, v, -b, a);
-            rowSpaceBasisInv.combRows(currStage, i, a, b, -v, u);
+            combCols(currStage, i, u, v, -b, a, currStage);
+            cob[0].combCols(currStage, i, u, v, -b, a);
+            cob[1].combRows(currStage, i, a, b, -v, u);
         }
 
         // Make zeros for the remainder of the current column.
         // Check to see if we change anything and thus muck up the row.
         flag = false;
         for (i=currStage+1; i<nonEmptyRows; i++) {
-            if (matrix.entry(i, currStage) == 0)
+            if (entry(i, currStage) == 0)
                 continue;
             // Put a zero in (i, currStage).
             flag = true;
-            a = matrix.entry(currStage, currStage);
-            b = matrix.entry(i, currStage);
+            a = entry(currStage, currStage);
+            b = entry(i, currStage);
             d = a.gcdWithCoeffs(b, u, v);
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to rows currStage and i.
-            matrix.combRows(currStage, i, u, v, -b, a, currStage);
-            colSpaceBasis.combRows(currStage, i, u, v, -b, a);
-            colSpaceBasisInv.combCols(currStage, i, a, b, -v, u);
+            combRows(currStage, i, u, v, -b, a, currStage);
+            cob[2].combRows(currStage, i, u, v, -b, a);
+            cob[3].combCols(currStage, i, a, b, -v, u);
         }
         if (flag) {
             flag = false;
             for (i=currStage+1; i<nonEmptyCols; i++)
-                if (matrix.entry(currStage, i) != 0) {
+                if (entry(currStage, i) != 0) {
                     flag = true;
                     break;
                 }
@@ -231,15 +230,15 @@ void smithNormalForm(MatrixInt& matrix,
         }
 
         // Check that entry (currStage, currStage) divides everything else.
-        Integer& diag = matrix.entry(currStage, currStage);
+        Integer& diag = entry(currStage, currStage);
         for (i=currStage+1; i<nonEmptyRows; i++)
             for (j=currStage+1; j<nonEmptyCols; j++)
-                if ((matrix.entry(i, j) % diag) != 0) {
+                if ((entry(i, j) % diag) != 0) {
                     // Add row i to the current stage row and start this
                     // stage over.
-                    matrix.addRowFrom(i, currStage, currStage + 1);
-                    colSpaceBasis.addRow(i, currStage);
-                    colSpaceBasisInv.addCol(currStage, i, -1);
+                    addRowFrom(i, currStage, currStage + 1);
+                    cob[2].addRow(i, currStage);
+                    cob[3].addCol(currStage, i, -1);
                     goto loopStart;
                 }
 
@@ -248,11 +247,13 @@ void smithNormalForm(MatrixInt& matrix,
         if (diag < 0) {
             diag.negate();
             // we're thinking of this as a row op
-            colSpaceBasis.multRow(currStage, -1);
-            colSpaceBasisInv.multCol(currStage, -1);
+            cob[2].negateRow(currStage);
+            cob[3].negateCol(currStage);
         }
         ++currStage;
     }
+
+    return cob;
 }
 
 size_t rowBasis(MatrixInt& matrix) {
@@ -807,79 +808,67 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
     return retval;
 }
 
-
-bool metricFindPivot(size_t currStage, const MatrixInt &matrix, 
+bool metricFindPivot(size_t currStage, const MatrixInt &matrix,
         size_t &pr, size_t &pc,
         const std::vector<Integer> &rowNorm,
-        const std::vector<Integer> &colNorm, 
+        const std::vector<Integer> &colNorm,
         const std::vector<Integer> &rowGCD) {
-    bool pivotFound = false;
     // find the smallest positive rowGCD
-    Integer SProwGCD; // zero
-
+    Integer minGCD; // zero
     for (size_t i=currStage; i<matrix.rows(); i++)
-        if (rowGCD[i] != 0) {
-            if (SProwGCD == 0) SProwGCD = rowGCD[i].abs();
-            else if (SProwGCD > rowGCD[i].abs()) SProwGCD = rowGCD[i].abs();
-        }
+        if (rowGCD[i] != 0)
+            if (minGCD == 0 || minGCD > rowGCD[i].abs())
+                minGCD = rowGCD[i].abs();
 
+    bool pivotFound = false;
     for (size_t i=currStage; i<matrix.rows(); i++)
-     if (rowGCD[i].abs() == SProwGCD)
-      for (size_t j=currStage; j<matrix.columns(); j++)
-       {
-        if (matrix.entry(i,j) == 0) continue;
-        if (pivotFound == false) { pivotFound = true; pr = i; pc = j; }
-        else
-         {
-         // okay, so now we have a previous potential pivot and this one.
-         //  Have to choose which one we 
-         // prefer. 1st step, is the magnitude smaller? 
-         if ( matrix.entry(i,j).abs() < matrix.entry(pr,pc).abs() ) 
-          { pr = i; pc = j; }
-         else // if not, maybe they're the same magnitude...
-         if ( matrix.entry(i,j).abs() == matrix.entry(pr,pc).abs() )
-          { // if magnitude == 1 we use the relative weight comparison. 
-           if ( matrix.entry(i,j).abs() == 1 )
-            {
-            if ( (rowNorm[i] - matrix.entry(i,j).abs())*
-                 (colNorm[j] - matrix.entry(i,j).abs()) < 
-                 (rowNorm[pr] - matrix.entry(pr,pc).abs())*
-                 (colNorm[pc] - matrix.entry(pr,pc).abs()) ) { pr = i; pc = j; }
-            }   // if magnitude > 1 we use the rowNorm comparison.
-           else // if rows the same? use colNorm...
-            {
-             if (i == pr) { if ( colNorm[j] < colNorm[pc] ) { pr = i; pc =j; } }
-             else
-              { if ( rowNorm[i] < rowNorm[pr] ) { pr = i; pc = j; } }
+        if (rowGCD[i].abs() == minGCD)
+            for (size_t j=currStage; j<matrix.columns(); j++) {
+                if (matrix.entry(i,j) == 0)
+                    continue;
+
+                if (pivotFound == false) {
+                    pivotFound = true;
+                    pr = i;
+                    pc = j;
+                } else {
+                    // okay, so now we have a previous potential pivot and this
+                    // one.  Have to choose which one we prefer.
+                    // 1st step, compare the magnitudes...
+                    auto oldAbs = matrix.entry(pr,pc).abs();
+                    auto newAbs = matrix.entry(i,j).abs();
+                    if (newAbs < oldAbs) {
+                        pr = i;
+                        pc = j;
+                    } else if (newAbs == oldAbs) {
+                        if (newAbs == 1 ) {
+                            // Use relative weight comparison.
+                            if ((rowNorm[i] - newAbs) * (colNorm[j] - newAbs) <
+                                    (rowNorm[pr] - oldAbs) *
+                                    (colNorm[pc] - oldAbs)) {
+                                pr = i;
+                                pc = j;
+                            }
+                        } else {
+                            // Use the rowNorm comparison (or if the rows are
+                            // the same, the colNorm comparison).
+                            if (i == pr) {
+                                if (colNorm[j] < colNorm[pc]) {
+                                    pr = i;
+                                    pc = j;
+                                }
+                            } else {
+                                if (rowNorm[i] < rowNorm[pr]) {
+                                    pr = i;
+                                    pc = j;
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          }
-        }
-      } 
+
     return pivotFound;
-}
-
-// switch rows i and j in matrix.  Keep track of change-of-basis
-void metricSwitchRows(size_t currStage, size_t i, size_t j,
-        MatrixInt &matrix, MatrixInt& colBasis, MatrixInt& colBasisInv,
-        std::vector<Integer> &rowNorm, std::vector<Integer> &rowGCD)
-{
-    rowNorm[i].swap(rowNorm[j]); rowGCD[i].swap(rowGCD[j]);
-    colBasis.swapRows(i, j);
-    colBasisInv.swapCols(i, j);
-    for (size_t k=currStage; k<matrix.columns(); k++)
-        matrix.entry(i, k).swap(matrix.entry(j,k));
-}
-
-// switch columns i and j in matrix.  Keep track of change-of-basis matrix
-void metricSwitchCols(size_t currStage, size_t i, size_t j,
-        MatrixInt &matrix, MatrixInt& rowBasis, MatrixInt& rowBasisInv, 
-        std::vector<Integer> &colNorm)
-{
-    colNorm[i].swap(colNorm[j]);
-    rowBasis.swapCols(i, j);
-    rowBasisInv.swapRows(i, j);
-    for (size_t k=currStage; k<matrix.rows(); k++)
-        matrix.entry(k, i).swap(matrix.entry(k, j));
 }
 
 // columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
@@ -958,119 +947,106 @@ void metricRowOp(size_t currStage, size_t i, size_t j, MatrixInt &matrix,
     }
 }
 
-/**
- * This routine converts mxn matrix "matrix" into its Smith Normal Form.
- * It assumes rowSpaceBasis and rowSpaceBasisInv are pointers to MatrixInts, 
- * if alloceted, having dimension mxm, and colSpaceBasis and colSpaceBasisInv
- * has dimensions nxn.  These matrices record the row and columns operations
- * used to convert between "matrix" and its Smith Normal Form.  Specifically, 
- * if orig_matrix is "matrix" before metricalSmithNormalForm is called, and
- * after_matrix is "matrix" after metricalSmithNormalForm is called, then
- * we have the relations:
- *
- *    (*colSpaceBasis) * orig_matrix * (*rowSpaceBasis) == after_matrix
- *
- *    (*colSpaceBasisInv) * after_matrix * (*rowSpaceBasisInv) == orig_matrix
- *
- * If any of rowSpaceBasis, colSpaceBasis or rowSpaceBasisInv or
- * colSpaceBasisInv are \c null, this algorithm does not bother to
- * compute them (and is correspondingly faster).
- *
- * This routine uses a first-order technique to intelligently choose the
- * pivot when computing the Smith Normal Form, attempting to keep the matrix
- * sparse and its norm small throughout the reduction process.  The technique
- * is loosely based on the papers: 
- *
- * Havas, Holt, Rees. Recognizing badly Presented Z-modules. Linear Algebra
- * and its Applications. 192:137--163 (1993). 
- *
- * Markowitz. The elimination form of the inverse and its application to linear
- * programming. Management Sci. 3:255--269 (1957).
- */
-void metricalSmithNormalForm(MatrixInt& matrix,
-        MatrixInt &rowSpaceBasis, MatrixInt &rowSpaceBasisInv,
-        MatrixInt &colSpaceBasis, MatrixInt &colSpaceBasisInv) {
-    rowSpaceBasis = MatrixInt::identity(matrix.columns());
-    rowSpaceBasisInv = MatrixInt::identity(matrix.columns());
-    colSpaceBasis = MatrixInt::identity(matrix.rows());
-    colSpaceBasisInv = MatrixInt::identity(matrix.rows());
+template <>
+std::array<Matrix<Integer>, 4> Matrix<Integer>::metricalSmithNormalForm() {
+    // This routine uses a first-order technique to intelligently choose the
+    // pivot when computing the Smith Normal Form, attempting to keep the matrix
+    // sparse and its norm small throughout the reduction process.
+    // The technique is loosely based on the papers:
+    //
+    // - Havas, Holt, Rees. Recognizing badly Presented Z-modules.
+    //   Linear Algebra and its Applications. 192:137--163 (1993).
+    //
+    // - Markowitz. The elimination form of the inverse and its application
+    //   to linear programming. Management Sci. 3:255--269 (1957).
+
+    std::array<Matrix, 4> cob {
+        identity(cols_), identity(cols_),
+        identity(rows_), identity(rows_) };
 
     // set up metrics (all vectors are initialised to zero by default).
-    std::vector<Integer> rowNorm(matrix.rows());
-    std::vector<Integer> colNorm(matrix.columns());
-    std::vector<Integer> rowGCD(matrix.rows());
-    for (size_t i=0; i<matrix.rows(); i++)
-        for (size_t j=0; j<matrix.columns(); j++) {
-            rowNorm[i] += matrix.entry(i,j).abs();
-            colNorm[j] += matrix.entry(i,j).abs();
-            rowGCD[i]  = rowGCD[i].gcd(matrix.entry(i,j));
+    std::vector<Integer> rowNorm(rows_);
+    std::vector<Integer> colNorm(cols_);
+    std::vector<Integer> rowGCD(rows_);
+
+    Integer* pos = data_;
+    for (size_t i=0; i<rows(); ++i)
+        for (size_t j=0; j<columns(); ++j) {
+            rowNorm[i] += pos->abs();
+            colNorm[j] += pos->abs();
+            rowGCD[i].gcdWith(*pos);
+            ++pos;
         }
 
     size_t currStage = 0;
     size_t i, j;
-    while (metricFindPivot(currStage, matrix, i, j, rowNorm, colNorm, rowGCD)) {
+    while (metricFindPivot(currStage, *this, i, j, rowNorm, colNorm, rowGCD)) {
         // entry i,j is now the pivot, so we move it to currStage, currStage.
-        if (i != currStage)
-            metricSwitchRows(currStage, currStage, i, matrix, colSpaceBasis,
-                colSpaceBasisInv, rowNorm, rowGCD);
-        if (j != currStage)
-            metricSwitchCols(currStage, currStage, j, matrix, rowSpaceBasis,
-                rowSpaceBasisInv, colNorm);
+        if (i != currStage) {
+            rowNorm[currStage].swap(rowNorm[i]);
+            rowGCD[currStage].swap(rowGCD[i]);
+            cob[2].swapRows(currStage, i);
+            cob[3].swapCols(currStage, i);
+            swapRows(currStage, i, currStage);
+        }
+        if (j != currStage) {
+            colNorm[currStage].swap(colNorm[j]);
+            cob[0].swapCols(currStage, j);
+            cob[1].swapRows(currStage, j);
+            swapCols(currStage, j, currStage);
+        }
         Integer g, u, v;
 rowMuckerLoop:
         // we come back here if the column operations later on mess
         // up row currStage first we do the col ops, eliminating
         // entries to the right of currStage, currStage
-        for (j=currStage+1; j<matrix.columns(); j++)
-            if (matrix.entry(currStage, j) != 0) {
-                g = matrix.entry(currStage, currStage).gcdWithCoeffs(
-                     matrix.entry(currStage, j), u, v);
-                metricColOp(currStage, currStage, j, matrix, u,
-                            -matrix.entry(currStage,j).divExact(g), v,
-                            matrix.entry(currStage, currStage).divExact(g),
-                            rowSpaceBasis, rowSpaceBasisInv, rowNorm, colNorm);
+        for (j=currStage+1; j<columns(); j++)
+            if (entry(currStage, j) != 0) {
+                g = entry(currStage, currStage).gcdWithCoeffs(
+                     entry(currStage, j), u, v);
+                metricColOp(currStage, currStage, j, *this, u,
+                            -entry(currStage,j).divExact(g), v,
+                            entry(currStage, currStage).divExact(g),
+                            cob[0], cob[1], rowNorm, colNorm);
             }
         // then the row ops, eliminating entries below currStage, currStage
-        for (i=currStage+1; i<matrix.rows(); i++)
-            if (matrix.entry(i, currStage) != 0) {
-                g = matrix.entry(currStage, currStage).gcdWithCoeffs(
-                     matrix.entry(i, currStage), u, v);
-                metricRowOp(currStage, currStage, i, matrix, u, v,
-                            -matrix.entry(i,currStage).divExact(g),
-                            matrix.entry(currStage,currStage).divExact(g),
-                            colSpaceBasis, colSpaceBasisInv, rowNorm, colNorm,
+        for (i=currStage+1; i<rows(); i++)
+            if (entry(i, currStage) != 0) {
+                g = entry(currStage, currStage).gcdWithCoeffs(
+                     entry(i, currStage), u, v);
+                metricRowOp(currStage, currStage, i, *this, u, v,
+                            -entry(i,currStage).divExact(g),
+                            entry(currStage,currStage).divExact(g),
+                            cob[2], cob[3], rowNorm, colNorm,
                             rowGCD);
             }
         // scan row currStage, if it isn't zero, goto rowMuckerLoop
-        for (j=currStage+1; j<matrix.columns(); j++)
-            if (matrix.entry(currStage, j) != 0) goto rowMuckerLoop;
-        // ensure matrix.entry(currStage, currStage) is positive
-        if (matrix.entry(currStage, currStage)<0) {
+        for (j=currStage+1; j<columns(); j++)
+            if (entry(currStage, j) != 0) goto rowMuckerLoop;
+        // ensure entry(currStage, currStage) is positive
+        if (entry(currStage, currStage)<0) {
             // we'll make it a column operation
-            for (i=currStage; i<matrix.rows(); i++)
-                matrix.entry(i, currStage).negate();
-            for (i=0; i<matrix.columns(); i++)
-                rowSpaceBasis.entry( i, currStage ).negate();
-            for (i=0; i<matrix.columns(); i++)
-                rowSpaceBasisInv.entry( currStage, i ).negate();
+            for (i=currStage; i<rows(); i++)
+                entry(i, currStage).negate();
+            cob[0].negateCol(currStage);
+            cob[1].negateRow(currStage);
         }
         // run through rows currStage+1 to bottom, check if divisible by
-        // matrix.entry(cs,cs). if not, record row and gcd(matrix.entry(cs,cs),
+        // entry(cs,cs). if not, record row and gcd(entry(cs,cs),
         //  rowGCD[this row],  pick the row with the lowest of these gcds...
         size_t rowT=currStage;
-        Integer bestGCD(matrix.entry(currStage, currStage).abs());
-        for (i=currStage+1; i<matrix.rows(); i++) {
-            g = matrix.entry(currStage, currStage).gcd(rowGCD[i]).abs();
+        Integer bestGCD(entry(currStage, currStage).abs());
+        for (i=currStage+1; i<rows(); i++) {
+            g = entry(currStage, currStage).gcd(rowGCD[i]).abs();
             if ( g < bestGCD ) {
                 rowT = i;
                 bestGCD = g;
             }
         }
         if ( rowT > currStage ) {
-            metricRowOp(currStage, currStage, rowT, matrix,
-                    Integer::one, Integer::one,
-                    Integer::zero, Integer::one, colSpaceBasis,
-                    colSpaceBasisInv, rowNorm, colNorm, rowGCD);
+            metricRowOp(currStage, currStage, rowT, *this,
+                    Integer::one, Integer::one, Integer::zero, Integer::one,
+                    cob[2], cob[3], rowNorm, colNorm, rowGCD);
             goto rowMuckerLoop;
         }
         // done
@@ -1078,6 +1054,7 @@ rowMuckerLoop:
     }
     // no pivot found -- matrix down and to the right of currStage is zero.
     // so we're done.
+    return cob;
 }
 
 } // namespace regina

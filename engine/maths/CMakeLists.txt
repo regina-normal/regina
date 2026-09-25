@@ -7,8 +7,8 @@ SET ( FILES
   arrow.cpp
   cyclotomic.cpp
   integer.cpp
+  matrix.cpp
   matrix2.cpp
-  matrixops.cpp
   numbertheory.cpp
   perm.cpp
   permgroup.cpp

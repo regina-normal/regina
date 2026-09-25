@@ -28,7 +28,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/matrixops.h"
+#include "maths/matrix.h"
 #include "maths/primes.h"
 #include "triangulation/dim3/homologicaldata.h"
 #include <list>
@@ -1283,8 +1283,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     //           put its info in a matrix.
 
     MatrixInt ON(mHomology1_->n());
-    MatrixInt R, Ri, C, Ci;
-    smithNormalForm(ON, R, Ri, C, Ci);
+    auto [R, Ri, C, Ci] = ON.smithNormalFormCoB();
     // boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
     //                                             ---- stepa -----
     //                  ---------------- stepb ---

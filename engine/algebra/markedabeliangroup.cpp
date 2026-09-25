@@ -29,7 +29,7 @@
  **************************************************************************/
 
 #include "algebra/markedabeliangroup.h"
-#include "maths/matrixops.h"
+#include "maths/matrix.h"
 #include "utilities/stringutils.h"
 #include <iostream>
 
@@ -68,7 +68,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
 
     MatrixInt tM = M_;
     MatrixInt MC, MCi;
-    metricalSmithNormalForm(tM, MR_, MRi_, MC, MCi);
+    std::tie(MR_, MRi_, MC, MCi) = tM.metricalSmithNormalForm();
 
     for (size_t i=0; (i<tM.rows()) && (i<tM.columns()); i++)
         if (tM.entry(i,i) != 0)
@@ -87,7 +87,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     // now compute the rank and column indexes ...
 
     MatrixInt presRi;
-    metricalSmithNormalForm(pres, presR_, presRi, presC_, presCi_);
+    std::tie(presR_, presRi, presC_, presCi_) = pres.metricalSmithNormalForm();
 
     for (size_t i=0; ( (i<pres.rows()) && (i<pres.columns()) ); i++) {
         if (pres.entry(i,i)==1)
@@ -132,7 +132,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
     // find SNF(M).
     MatrixInt tM = M_;
     MatrixInt MC, MCi;
-    metricalSmithNormalForm(tM, MR_, MRi_, MC, MCi);
+    std::tie(MR_, MRi_, MC, MCi) = tM.metricalSmithNormalForm();
 
     for (size_t i=0; ( (i<tM.rows()) && (i<tM.columns()) ); i++)
         if (tM.entry(i,i) != 0) rankM_++;
@@ -161,8 +161,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
              tensorPres.entry(i, MRi_N.columns() + i) = coeff_;
 
         MatrixInt tensorRi;
-        metricalSmithNormalForm(tensorPres, tensorR_, tensorRi,
-            tensorC_, tensorCi_);
+        std::tie(tensorR_, tensorRi, tensorC_, tensorCi_) =
+            tensorPres.metricalSmithNormalForm();
 
         // this group is a direct sum of groups of the form Z_q where q =
         // gcd(p, TORVec_[i]), and groups Z_q where q is on the diagonal of
@@ -192,7 +192,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
         }
 
         MatrixInt presRi;
-        metricalSmithNormalForm(diagPres, presR_, presRi, presC_, presCi_);
+        std::tie(presR_, presRi, presC_, presCi_) =
+            diagPres.metricalSmithNormalForm();
         for (size_t i=0; i<diagPres.rows(); i++) {
             // should only have terms > 1 or == 0.
             if (diagPres.entry(i,i) > 1)
@@ -208,7 +209,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
                 tensorPres.entry(i,j) = MRi_N.entry(i+rankM_, j);
 
         MatrixInt presRi;
-        metricalSmithNormalForm(tensorPres, presR_, presRi, presC_, presCi_);
+        std::tie(presR_, presRi, presC_, presCi_) =
+            tensorPres.metricalSmithNormalForm();
 
         for (size_t i=0; i<tensorPres.rows() && i<tensorPres.columns();
                 ++i) {
@@ -892,9 +894,7 @@ void HomMarkedAbelianGroup::computeKernel() {
     if (!kernel_) {
         computeReducedKernelLattice();
         MatrixInt dcLpreimage( *reducedKernelLattice_ );
-
-        MatrixInt R, Ri, C, Ci;
-        metricalSmithNormalForm( dcLpreimage, R, Ri, C, Ci );
+        auto [R, Ri, C, Ci] = dcLpreimage.metricalSmithNormalForm();
 
         // the matrix representing the domain lattice in dcLpreimage
         // coordinates is given by domainLattice * R * (dcLpreimage inverse) * C
@@ -1148,7 +1148,7 @@ bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other)
 //computable.  So it all boils down to computing A'.  So we need a routine which
 //makes a matrix A representing an automorphism of Z_p1 + ... Z_pk and then
 // computes the matrix representing the inverse automorphism.
-// So to do this we'll need a new matrixops.cpp command -- call it
+// So to do this we'll need a new matrix.cpp command -- call it
 // torsionAutInverse.
 HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
     const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();

@@ -54,6 +54,7 @@ ENSURE_ESSENTIAL_REGINA_HEADERS
 namespace regina {
 
 class Rational;
+template <Ring T> requires Writeable<T> && IntegerCompatible<T> class Vector;
 
 /**
  * Represents different algorithms for computing adjugate matrices and
@@ -129,9 +130,6 @@ enum class AdjugateAlgorithm {
  *
  * As of Regina 8.0, empty matrices (where one or both of the matrix dimensions
  * are zero) are explicitly supported.
- *
- * The header maths/matrixops.h contains several additional algorithms that
- * work with the specific class Matrix<Integer>.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -1682,7 +1680,7 @@ class Matrix : public Output<Matrix<T>> {
          * will perform only row operations.
          *
          * This is simpler than the global routine regina::columnEchelonForm():
-         * it does not return the change of basis matrices, and it processes
+         * it does not return the change-of-basis matrices, and it processes
          * all columns in order from left to right (instead of passing a
          * custom column list).
          *
@@ -1767,7 +1765,7 @@ class Matrix : public Output<Matrix<T>> {
          * will perform only column operations.
          *
          * This is simpler than the global routine regina::columnEchelonForm():
-         * it does not return the change of basis matrices, and it processes
+         * it does not return the change-of-basis matrices, and it processes
          * all rows in order from left to right (instead of passing a
          * custom row list).
          *
@@ -1895,6 +1893,85 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Transforms this matrix into Smith normal form.
+         *
+         * Reading down the diagonal, the final Smith normal form will have a
+         * series of non-negative, non-decreasing invariant factors followed by
+         * zeroes.  "Invariant factor" refers to the convention that the
+         * <i>i</i>th term divides the (<i>i</i>+1)th term, and so they are
+         * unique.
+         *
+         * The algorithm used is due to Hafner and McCurley (1991).
+         * It does not use modular arithmetic to control the intermediate
+         * coefficient explosion.
+         *
+         * Note that this matrix need not be square and need not be of
+         * full rank.
+         */
+        void smithNormalForm() requires std::same_as<T, Integer>;
+
+        /**
+         * Transforms this matrix into Smith normal form and returns change of
+         * basis matrices.
+         *
+         * This follows the same algorithm as smithNormalForm(); however, it
+         * also computes and returns change-of-basis matrices describing all of
+         * the row and column operations that were performed.
+         *
+         * The change-of-basis matrices work as follows.  Let \a M denote the
+         * initial value of this matrix, let \a S denote its Smith normal form,
+         * and let the returned array be `(rowSpaceBasis, rowSpaceBasisInv,
+         * colSpaceBasis, colSpaceBasisInv)`.  Then:
+         *
+         * - this matrix will be converted from \a M into \a S;
+         * - \a colSpaceBasis will be square with side length `rows()`, and
+         *   \a colSpaceBasisInv will be its inverse matrix;
+         * - \a rowSpaceBasis will be square with side length `columns()`, and
+         *   \a rowSpaceBasisInv will be its inverse matrix;
+         * - `S = colSpaceBasis * M * rowSpaceBasis`; and
+         * - `M = colSpaceBasisInv * S * rowSpaceBasisInv`.
+         *
+         * Note that this matrix need not be square and need not be of
+         * full rank.
+         *
+         * \return the four change-of-basis matrices, as described above.
+         */
+        std::array<Matrix, 4> smithNormalFormCoB()
+                requires std::same_as<T, Integer>;
+
+        /**
+         * An alternative Smith normal form algorithm that may be preferable
+         * for extremely large matrices.  This uses a variant of Hafner-McCurley
+         * and Havas-Holt-Rees' description of pivoting methods.
+         *
+         * Like smithNormalFormCoB(), this routine transforms this matrix into
+         * Smith normal form, and also returns change-of-basis matrices
+         * describing all of the row and column operations that were performed.
+         *
+         * The change-of-basis matrices work as follows.  Let \a M denote the
+         * initial value of this matrix, let \a S denote its Smith normal form,
+         * and let the returned array be `(rowSpaceBasis, rowSpaceBasisInv,
+         * colSpaceBasis, colSpaceBasisInv)`.  Then:
+         *
+         * - this matrix will be converted from \a M into \a S;
+         * - \a colSpaceBasis will be square with side length `rows()`, and
+         *   \a colSpaceBasisInv will be its inverse matrix;
+         * - \a rowSpaceBasis will be square with side length `columns()`, and
+         *   \a rowSpaceBasisInv will be its inverse matrix;
+         * - `S = colSpaceBasis * M * rowSpaceBasis`; and
+         * - `M = colSpaceBasisInv * S * rowSpaceBasisInv`.
+         *
+         * Note that this matrix need not be square and need not be of
+         * full rank.
+         *
+         * \return the four change-of-basis matrices, as described above.
+         *
+         * \author Ryan Budney
+         */
+        std::array<Matrix, 4> metricalSmithNormalForm()
+                requires std::same_as<T, Integer>;
+
+        /**
          * A diagnostic routine that ensures that the internal representation
          * of this matrix is valid.
          *
@@ -2013,6 +2090,320 @@ using MatrixInt = Matrix<Integer>;
  * \ingroup maths
  */
 using MatrixBool = Matrix<bool>;
+
+// Indicate specialisations that are coming:
+
+/**
+ * \copydoc Matrix::smithNormalForm()
+ */
+template <>
+void Matrix<Integer>::smithNormalForm();
+
+/**
+ * \copydoc Matrix::smithNormalFormCoB()
+ */
+template <>
+std::array<Matrix<Integer>, 4> Matrix<Integer>::smithNormalFormCoB();
+
+/**
+ * \copydoc Matrix::metricalSmithNormalForm()
+ */
+template <>
+std::array<Matrix<Integer>, 4> Matrix<Integer>::metricalSmithNormalForm();
+
+/**
+ * Deprecated routine that transforms the given integer matrix into
+ * Smith normal form.
+ *
+ * This is identical to Matrix::smithNormalForm(); see that routine for
+ * further details.
+ *
+ * \deprecated You should now call `matrix.smithNormalForm()` instead.
+ *
+ * \param matrix the matrix to transform.
+ *
+ * \ingroup maths
+ */
+[[deprecated]] inline void smithNormalForm(MatrixInt& matrix) {
+    matrix.smithNormalForm();
+}
+
+/**
+ * Deprecated Smith normal form routine that also computes change-of-basis
+ * matrices.
+ *
+ * This is identical to Matrix::smithNormalFormCoB(); see that routine for
+ * further details.
+ *
+ * In this (deprecated) routine, the four change-of-basis matrices are given
+ * as input and refilled by this routine.  Upon input, they may be of any size
+ * (or may even be empty); upon return they will be square matrices of the
+ * appropriate size.
+ *
+ * \deprecated You should now call `matrix.smithNormalFormCoB()` instead, and
+ * collect the change-of-basis matrices from the return value of that function.
+ *
+ * \param matrix the matrix to transform into Smith normal form.
+ * \param rowSpaceBasis used to return the matrix of all row operations in the
+ * conversion from the original matrix into its Smith normal form.
+ * \param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
+ * \param colSpaceBasis used to return the matrix of all column operations in
+ * the conversion from the original matrix into its Smith normal form.
+ * \param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
+ *
+ * \ingroup maths
+ */
+[[deprecated]] inline void smithNormalForm(MatrixInt& matrix,
+        MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
+        MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
+    auto cob = matrix.smithNormalFormCoB();
+    rowSpaceBasis = std::move(cob[0]);
+    rowSpaceBasisInv = std::move(cob[1]);
+    colSpaceBasis = std::move(cob[2]);
+    colSpaceBasisInv = std::move(cob[3]);
+}
+
+/**
+ * Deprecated alternative Smith normal form routine that may be preferable for
+ * extremely large matrices.
+ *
+ * This is identical to Matrix::metricalSmithNormalForm(); see that routine for
+ * further details.
+ *
+ * In this (deprecated) routine, the four change-of-basis matrices are given
+ * as input and refilled by this routine.  Upon input, they may be of any size
+ * (or may even be empty); upon return they will be square matrices of the
+ * appropriate size.
+ *
+ * \deprecated You should now call `matrix.metricalSmithNormalForm()` instead,
+ * and collect the change-of-basis matrices from the return value of that
+ * function.
+ *
+ * \param matrix the matrix to transform into Smith normal form.
+ * \param rowSpaceBasis used to return the matrix of all row operations in the
+ * conversion from the original matrix into its Smith normal form.
+ * \param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
+ * \param colSpaceBasis used to return the matrix of all column operations in
+ * the conversion from the original matrix into its Smith normal form.
+ * \param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
+ *
+ * \author Ryan Budney
+ *
+ * \ingroup maths
+ */
+[[deprecated]] inline void metricalSmithNormalForm(MatrixInt& matrix,
+        MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
+        MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
+    auto cob = matrix.metricalSmithNormalForm();
+    rowSpaceBasis = std::move(cob[0]);
+    rowSpaceBasisInv = std::move(cob[1]);
+    colSpaceBasis = std::move(cob[2]);
+    colSpaceBasisInv = std::move(cob[3]);
+}
+
+/**
+ * Find a basis for the row space of the given matrix.
+ *
+ * This routine will rearrange the rows of the given matrix so that the
+ * first \a rank rows form a basis for the row space (where \a rank is
+ * the rank of the matrix).  The rank itself will be returned.  No other
+ * changes will be made to the matrix aside from swapping rows.
+ *
+ * Although this routine takes an integer matrix (and only uses integer
+ * operations), we consider the row space to be over the _rationals_.
+ * That is, although we never divide, we act as though we could if we
+ * wanted to.
+ *
+ * \param matrix the matrix to examine and rearrange.
+ * \return the rank of the given matrix.
+ *
+ * \ingroup maths
+ */
+size_t rowBasis(MatrixInt& matrix);
+
+/**
+ * Finds a basis for the row space of the given matrix, as well as an
+ * "incremental" basis for its orthogonal complement.
+ *
+ * This routine takes an (\a r by \a c) matrix \a input, as well as a
+ * square (\a c by \a c) matrix \a complement, and does the following:
+ *
+ * - The rows of \a input are rearranged so that the first \a rank rows form
+ *   a basis for the row space (where \a rank is the rank of the matrix).
+ *   No other changes are made to this matrix aside from swapping rows.
+ *
+ * - The matrix \a complement is re-filled (any previous contents are
+ *   thrown away) so that, for any \a i between 0 and \a rank-1 inclusive,
+ *   the final (\a c - \a i) rows of \a complement form a basis for the
+ *   orthogonal complement of the first \a i rows of the rearranged \a input.
+ *
+ * - The rank of the matrix \a input is returned from this routine.
+ *
+ * This routine can help with larger procedures that need to build up a row
+ * space and simultaneously cut down the complement one dimension at a time.
+ *
+ * Although this routine takes integer matrices (and only uses integer
+ * operations), we consider all bases to be over the _rationals_.
+ * That is, although we never divide, we act as though we could if we
+ * wanted to.
+ *
+ * \pre The matrix \a complement is a square matrix, whose size is equal
+ * to the number of columns in \a input.
+ *
+ * \exception InvalidArgument The matrix \a complement is not square with side
+ * length equal to `input.columns()`.
+ *
+ * \param input the input matrix whose row space we will describe; this
+ * matrix will be changed (though only by swapping rows).
+ * \param complement the square matrix that will be re-filled with the
+ * "incremental" basis for the orthogonal complement of \a input.
+ * \return the rank of the given matrix \a input.
+ *
+ * \ingroup maths
+ */
+size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
+
+/**
+ * Transforms a given matrix into column echelon form with respect to a
+ * collection of rows.  The transformation will perform only column operations.
+ *
+ * Given the matrix \a M and the list \a rowList of rows from \a M, this
+ * algorithm puts \a M in column echelon form with respect to the rows
+ * in \a rowList.  The only purpose of \a rowList is to clarify and/or
+ * weaken precisely what is meant by "column echelon form"; all rows of
+ * \a M are affected by the resulting column operations that take place.
+ *
+ * This routine also returns the corresponding change of coordinate
+ * matrices \a R and \a Ri:
+ *
+ * - The matrix \a R will have precisely the same column operations applied to
+ *   it as the matrix \a M.  The matrix \a Ri will have the inverse _row_
+ *   operations applied to it, thereby maintaining a constant value of the
+ *   product `R * Ri` as the algorithm runs.
+ *
+ * - In particular, if \a R and \a Ri are passed into this routine as
+ *   square identity matrices, then after the reduction is complete we will
+ *   have `original_M * R = final_M` and `final_M * Ri = original_M`.
+ *
+ * Our convention is that a matrix is in column echelon form if:
+ *
+ * - each column is either zero or there is a first non-zero entry which
+ *   is positive (but see the note regarding \a rowList below);
+ *
+ * - moving from the leftmost column to the rightmost column, the rows
+ *   containing the first non-zero entries for these columns have strictly
+ *   increasing indices in \a rowList;
+ *
+ * - given a first non-zero column entry, in that row all the elements to
+ *   the left are smaller and non-negative (all elements to the right are
+ *   already zero by the previous condition);
+ *
+ * - all the zero columns are on the right hand side of the matrix.
+ *
+ * By a "zero column" here we simply mean "zero for every row in \a
+ * rowList".  Likewise, by "first non-zero entry" we mean "first row in
+ * \a rowList with a non-zero entry".
+ *
+ * In a pinch, you can also use this routine to compute the inverse of an
+ * invertible square matrix.
+ *
+ * If you just wish to reduce the matrix, you do not care about the order of
+ * rows, and you do not want the change-of-basis matrices, then you should
+ * call MatrixInt::columnEchelonForm() instead, which is simpler but also more
+ * streamlined.
+ *
+ * \pre If \a n is the number of _columns_ in \a M, then \a R has precisely
+ * \a n columns also, and \a Ri has precisely \a n rows.
+ *
+ * \exception InvalidArgument Either `R.columns() ≠ M.columns()`, and/or
+ * `Ri.rows() ≠ M.columns()`.
+ *
+ * \param M the matrix to reduce.
+ * \param R used to return the row-reduction matrix, as described above.
+ * \param Ri used to return the inverse of \a R.
+ * \param rowList the rows to pay attention to.  This list must contain
+ * distinct integers, all between 0 and M.rows()-1 inclusive (though it
+ * need not contain _all_ of these integers).  The integers may appear in
+ * any order (though changing the order will change the resulting column
+ * echelon form).  For a "classical" column echelon form, this would be the
+ * list of all rows: `0,...,(M.rows()-1)`.
+ *
+ * \author Ryan Budney
+ *
+ * \ingroup maths
+ */
+void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
+        const std::vector<size_t> &rowList);
+
+/**
+ * Given a homomorphism from Z^n to Z^k and a sublattice of Z^k,
+ * compute the preimage of this sublattice under this homomorphism.
+ *
+ * The homomorphism from Z^n to Z^k is described by the given
+ * \a k by \a n matrix \a hom.  The sublattice is of the form
+ * `(p1 Z) * (p2 Z) * ... * (pk Z)`, where the non-negative integers
+ * \a p1, ..., \a pk are passed in the given list \a sublattice.
+ *
+ * An equivalent problem is to consider \a hom to be a homomorphism
+ * from Z^n to Z_p1 + ... + Z_pk; this routine then finds the kernel
+ * of this homomorphism.
+ *
+ * The preimage of the sublattice (equivalently, the kernel described
+ * above) is some rank \a n lattice in Z^n.  This algorithm finds and
+ * returns a basis for the lattice.
+ *
+ * \exception InvalidArgument The length of \a sublattice is different from
+ * the number of rows of \a hom.  Note that the _contents_ of \a sublattice
+ * (specifically, the signs of the integers it contains) are not checked.
+ *
+ * \param hom the matrix representing the homomorphism from Z^n to Z^k;
+ * this must be a \a k by \a n matrix.
+ * \param sublattice a list of length \a k describing the sublattice of Z^k;
+ * the elements of this list must be the non-negative integers
+ * \a p1, ..., \a pk as described above.
+ * \return a new matrix whose columns are a basis for the preimage lattice.
+ * This matrix will have precisely \a n rows.
+ *
+ * \author Ryan Budney
+ *
+ * \ingroup maths
+ */
+MatrixInt preImageOfLattice(const MatrixInt& hom,
+        const std::vector<Integer>& sublattice);
+
+/**
+ * Given an automorphism of an abelian group,
+ * this procedure computes the inverse automorphism.
+ *
+ * The abelian group is of the form `Z_p1 + Z_p2 + ... + Z_pn`.
+ * The input is an n-by-n matrix \a A which represents a lift of the
+ * automorphism to just some n-by-n matrix.  Specifically, you have a little
+ * commutative diagram with `Z^n --A--> Z^n` covering the automorphism
+ * of `Z_p1 + Z_p2 + ... + Z_pn`, where the maps down are the direct
+ * sum of the standard quotients `Z --> Z_pi`.  So if you want this
+ * procedure to give you meaningful output, \a A must be a lift of a genuine
+ * automorphism of `Z_p1 + ... + Z_pn`.
+ *
+ * \pre The list p1, p2, ..., pn is a list of invariant factors,
+ * which means that p1|p2, ..., p{n-1}|pn.
+ *
+ * \exception InvalidArgument Either \a input is not a square matrix, and/or
+ * the length of \a invF is different from the side length of \a input.
+ * Note that the _contents_ of \a invF (specifically, the divisibility
+ * property) are not checked.
+ *
+ * \param input the n-by-n matrix \a A, which must be a lift of a genuine
+ * automorphism as described above.
+ * \param invF the list p1, p2, ..., pn.
+ * \return the inverse automorphism, also described as an n-by-n matrix
+ * as per the discussion above.
+ *
+ * \author Ryan Budney
+ *
+ * \ingroup maths
+ */
+MatrixInt torsionAutInverse(const MatrixInt& input,
+    const std::vector<Integer> &invF);
 
 } // namespace regina
 

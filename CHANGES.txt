@@ -727,6 +727,10 @@ Version 8.0  [ TODO ]
         Function maxPermDegree():
             - New constexpr function that returns the largest supported degree
               of permutation.
+        Function metricalSmithNormalForm():
+            - Moved into the class Matrix<Integer> as the member function
+              metricalSmithNormalForm().  The old global function is kept but
+              deprecated.
         Function open():
             - Both versions of this function now throw an exception if the
               file is unreadable or if no usable Regina data could be found
@@ -743,6 +747,10 @@ Version 8.0  [ TODO ]
         Function readDehydrationList(), readOrb(), readSigList():
             - These functions now throw exceptions on error, instead of
               returning null.
+        Function smithNormalForm():
+            - Moved into the class Matrix<Integer> as the member functions
+              smithNormalForm() and smithNormalFormCoB().  The old global
+              functions are kept but deprecated.
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a
               precondition that the given value is not infinity.
@@ -856,6 +864,10 @@ Version 8.0  [ TODO ]
         Header foreign/isosig.h:
             - Renamed to foreign/siglist.h.  The old header is kept but
               deprecated.
+        Header maths/matrixops.h:
+            - Merged into maths/matrix.h, and moved its global functions into
+              member functions of Matrix<Integer>.  The old header and global
+              functions are kept but deprecated.
         Header triangulation/facetpairing3.h:
             - Merged into triangulation/facetpairing.h.  The old header is
               kept but deprecated.

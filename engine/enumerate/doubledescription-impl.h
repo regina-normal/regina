@@ -46,7 +46,7 @@
 #include "regina-core.h"
 #include "enumerate/doubledescription.h"
 #include "enumerate/validityconstraints.h"
-#include "maths/matrixops.h"
+#include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
 #include "utilities/fixedarray.h"

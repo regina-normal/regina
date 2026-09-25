@@ -112,7 +112,6 @@
 #include "../docstrings/maths/laurent2.h"
 #include "../docstrings/maths/matrix.h"
 #include "../docstrings/maths/matrix2.h"
-#include "../docstrings/maths/matrixops.h"
 #include "../docstrings/maths/numbertheory.h"
 #include "../docstrings/maths/perm.h"
 #include "../docstrings/maths/perm2.h"

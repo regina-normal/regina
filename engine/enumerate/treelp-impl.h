@@ -58,7 +58,7 @@
 
 #include "angle/anglestructures.h"
 #include "enumerate/treelp.h"
-#include "maths/matrixops.h"
+#include "maths/matrix.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/bitmask.h"

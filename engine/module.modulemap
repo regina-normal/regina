@@ -61,7 +61,6 @@ module ReginaEngine {
     header "maths/laurent2.h"
     header "maths/matrix.h"
     header "maths/matrix2.h"
-    header "maths/matrixops.h"
     header "maths/numbertheory.h"
     header "maths/perm.h"
     header "maths/permgroup.h"

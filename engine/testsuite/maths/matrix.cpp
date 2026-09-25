@@ -43,9 +43,45 @@ using regina::Integer;
 using regina::Laurent;
 using regina::Laurent2;
 using regina::Matrix;
+using regina::MatrixInt;
 using regina::Polynomial;
 using regina::Rational;
 using regina::Vector;
+
+class MatrixTest : public testing::Test {
+    protected:
+        const MatrixInt zero34 { 3, 4 };
+        const MatrixInt zero43 { 4, 3 };
+        const MatrixInt identity3 { MatrixInt::identity(3) };
+
+        // SNF diagonal: (2, 6, 12)
+        const MatrixInt square3 {{ 2, 4, 4 },
+                                 { -6, 6, 12 },
+                                 { 10, -4, -16 }};
+
+        // SNF diagonal: (1, 1, 6)
+        const MatrixInt rect34 {{ 4, -17, 0, 6 },
+                                { -2, 4, 9, 0 },
+                                { 6, -3, -2, 10 }};
+
+        // SNF diagonal: (1, 1, 12)
+        const MatrixInt rect43 {{ 4, -17, 0 },
+                                { 6, -2, 4 },
+                                { 9, 0, 6 },
+                                { -3, -2, 10 }};
+
+        // SNF diagonal: (1, 4, 0)
+        const MatrixInt redundant34 {{ 3, 8, 11, -5 },
+                                     { 1, 4, 5, -3 },
+                                     { 2, 8, 10, -6 }};
+        const MatrixInt redundant43 { redundant34.transpose() };
+
+        // SNF diagonal: (1, 1, 1); has a duplicate column
+        const MatrixInt duplicate34 {{ 1, 1, 1, 1 },
+                                     { 0, 0, 2, 3 },
+                                     { 0, 0, 3, 5 }};
+        const MatrixInt duplicate43 { duplicate34.transpose() };
+};
 
 template <regina::CommutativeRing T>
 void validateEmpty(const Matrix<T>& m) {
@@ -71,7 +107,7 @@ void validateNoColumns(const Matrix<T>& m, size_t rows) {
     EXPECT_EQ(m, Matrix<T>(rows, 0));
 }
 
-TEST(MatrixTest, empty) {
+TEST_F(MatrixTest, empty) {
     // Test everything that we are allowed to do with an empty matrix.
     validateEmpty(Matrix<Integer>());
     validateEmpty(Matrix<Integer>(0));
@@ -202,6 +238,95 @@ TEST(MatrixTest, empty) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
+    m.smithNormalForm();
+    validateEmpty(m);
+    {
+        auto [r, ri, c, ci] = m.smithNormalFormCoB();
+        validateEmpty(m);
+        validateEmpty(r);
+        validateEmpty(ri);
+        validateEmpty(c);
+        validateEmpty(ci);
+    }
+    {
+        auto [r, ri, c, ci] = m.metricalSmithNormalForm();
+        validateEmpty(m);
+        validateEmpty(r);
+        validateEmpty(ri);
+        validateEmpty(c);
+        validateEmpty(ci);
+    }
+}
+
+static void verifyEchelonForm(const MatrixInt& m) {
+    SCOPED_TRACE_REGINA(m);
+
+    MatrixInt m1 = m;
+    MatrixInt m2 = m.transpose();
+
+    size_t rankCol = m1.columnEchelonForm();
+    size_t rankRow = m2.rowEchelonForm();
+
+    EXPECT_EQ(rankCol, rankRow);
+    EXPECT_EQ(m2.transpose(), m1);
+
+    // Verify that m2 is actually in row echelon form.
+    {
+        size_t fromCol = 0;
+        for (size_t r = 0; r < m2.rows(); ++r) {
+            // The initial non-zero entry in this row must appear in
+            // column ≥ fromCol.
+            do {
+                // Whether or not m2[r, fromCol] is zero, the entire
+                // column beneath this position must be zero.
+                for (size_t i = r + 1; i < m2.rows(); ++i)
+                    EXPECT_EQ(m2.entry(i, fromCol), 0);
+
+                if (m2.entry(r, fromCol) != 0)
+                    break;
+                ++fromCol;
+            } while (fromCol < m2.columns());
+
+            if (fromCol == m2.columns())
+                break;
+
+            // The first non-zero entry in this row is m2[r, fromCol].
+            auto corner = m2.entry(r, fromCol);
+            EXPECT_GT(corner, 0);
+            for (size_t i = 0; i < r; ++i) {
+                EXPECT_GE(m2.entry(i, fromCol), 0);
+                EXPECT_LT(m2.entry(i, fromCol), corner);
+            }
+
+            ++fromCol;
+            if (fromCol == m2.columns())
+                break;
+        }
+    }
+
+    // Compare results with the more complex global columnEchelonForm().
+    MatrixInt copy(m);
+    auto r = MatrixInt::identity(copy.columns());
+    auto ri = MatrixInt::identity(copy.columns());
+    std::vector<size_t> rowList;
+    for (size_t i = 0; i < copy.rows(); ++i)
+        rowList.push_back(i);
+    regina::columnEchelonForm(copy, r, ri, rowList);
+
+    EXPECT_EQ(copy, m1);
+}
+
+TEST_F(MatrixTest, echelonForm) {
+    verifyEchelonForm(zero34);
+    verifyEchelonForm(zero43);
+    verifyEchelonForm(identity3);
+    verifyEchelonForm(square3);
+    verifyEchelonForm(rect34);
+    verifyEchelonForm(rect43);
+    verifyEchelonForm(redundant34);
+    verifyEchelonForm(redundant43);
+    verifyEchelonForm(duplicate34);
+    verifyEchelonForm(duplicate43);
 }
 
 template <regina::CommutativeRing T>
@@ -245,7 +370,7 @@ void verifyAdjugate(const Matrix<T>& m) {
     verifyAdjugate(m, det, AdjugateAlgorithm::PreparataSarwate);
 }
 
-TEST(MatrixTest, determinantAdjugate) {
+TEST_F(MatrixTest, determinantAdjugate) {
     // Some simple determinant tests, to verify that Matrix is working
     // correctly with non-native types.
 
@@ -333,5 +458,81 @@ TEST(MatrixTest, determinantAdjugate) {
             verifyAdjugate<Integer>(random);
         }
     }
+}
+
+static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
+    SCOPED_TRACE_REGINA(m);
+
+    MatrixInt snf(m);
+    snf.smithNormalForm();
+
+    ASSERT_EQ(snf.rows(), m.rows());
+    ASSERT_EQ(snf.columns(), m.columns());
+
+    for (size_t r = 0; r < snf.rows(); ++r)
+        for (size_t c = 0; c < snf.columns(); ++c) {
+            if (r != c || r >= diag.size())
+                EXPECT_EQ(snf.entry(r, c), 0);
+        }
+
+    size_t i = 0;
+    for (auto d : diag) {
+        EXPECT_EQ(snf.entry(i, i), d);
+        ++i;
+    }
+
+    {
+        MatrixInt snfAlt(m);
+        auto [R, invR, C, invC] = snfAlt.smithNormalFormCoB();
+
+        EXPECT_EQ(snf, snfAlt);
+
+        ASSERT_EQ(R.rows(), m.columns());
+        ASSERT_EQ(R.columns(), m.columns());
+        ASSERT_EQ(invR.rows(), m.columns());
+        ASSERT_EQ(invR.columns(), m.columns());
+        ASSERT_EQ(C.rows(), m.rows());
+        ASSERT_EQ(C.columns(), m.rows());
+        ASSERT_EQ(invC.rows(), m.rows());
+        ASSERT_EQ(invC.columns(), m.rows());
+
+        EXPECT_TRUE((R * invR).isIdentity());
+        EXPECT_TRUE((C * invC).isIdentity());
+        EXPECT_EQ((C * m * R), snfAlt);
+        EXPECT_EQ((invC * snfAlt * invR), m);
+    }
+    {
+        MatrixInt snfAlt(m);
+        auto [R, invR, C, invC] = snfAlt.metricalSmithNormalForm();
+
+        EXPECT_EQ(snf, snfAlt);
+
+        ASSERT_EQ(R.rows(), m.columns());
+        ASSERT_EQ(R.columns(), m.columns());
+        ASSERT_EQ(invR.rows(), m.columns());
+        ASSERT_EQ(invR.columns(), m.columns());
+        ASSERT_EQ(C.rows(), m.rows());
+        ASSERT_EQ(C.columns(), m.rows());
+        ASSERT_EQ(invC.rows(), m.rows());
+        ASSERT_EQ(invC.columns(), m.rows());
+
+        EXPECT_TRUE((R * invR).isIdentity());
+        EXPECT_TRUE((C * invC).isIdentity());
+        EXPECT_EQ((C * m * R), snfAlt);
+        EXPECT_EQ((invC * snfAlt * invR), m);
+    }
+}
+
+TEST_F(MatrixTest, smithNormalForm) {
+    verifySNF(zero34, { });
+    verifySNF(zero43, { });
+    verifySNF(identity3, { 1, 1, 1 });
+    verifySNF(square3, { 2, 6, 12 });
+    verifySNF(rect34, { 1, 1, 6 });
+    verifySNF(rect43, { 1, 1, 12 });
+    verifySNF(redundant34, { 1, 4 });
+    verifySNF(redundant43, { 1, 4 });
+    verifySNF(duplicate34, { 1, 1, 1 });
+    verifySNF(duplicate43, { 1, 1, 1 });
 }
 
