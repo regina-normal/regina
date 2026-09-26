@@ -34,6 +34,7 @@ if (${REGINA_INSTALL_DEV})
     laurent.h
     laurent2.h
     matrix.h
+    matrix-impl.h
     matrix2.h
     matrixops.h
     numbertheory.h

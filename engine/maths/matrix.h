@@ -136,6 +136,12 @@ enum class AdjugateAlgorithm {
  * even when passing or returning objects by value.  If a matrix is moved from,
  * it can later be reused by assigning it a new value.
  *
+ * \headers Some routines in this template class are implemented in a separate
+ * header (matrix-impl.h), which is not included automatically by this file.
+ * However, typical end users will not need this extra header, since Regina's
+ * calculation engine already includes explicit instantiations for
+ * `Matrix<Integer>`, which is where those routines are most commonly used.
+ *
  * \python The C++ types `Matrix<Integer>`, `Matrix<bool>` and `Matrix<double>`
  * are available using the Python names `MatrixInt`, `MatrixBool` and
  * `MatrixReal` respectively.
@@ -1695,6 +1701,8 @@ class Matrix : public Output<Matrix<T>> {
          *   already zero by the previous condition);
          * - all the zero rows are at the bottom of the matrix.
          *
+         * \pre All entries in this matrix are finite.
+         *
          * \return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
@@ -1780,6 +1788,8 @@ class Matrix : public Output<Matrix<T>> {
          *   right are already zero by the previous condition);
          * - all the zero columns are at the right hand end of the matrix.
          *
+         * \pre All entries in this matrix are finite.
+         *
          * \return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
          */
@@ -1859,6 +1869,8 @@ class Matrix : public Output<Matrix<T>> {
          * this routine, which will avoid the extra overhead of the deep copy.
          * To do this, replace `matrix.rank()` with `std::move(matrix).rank()`.
          *
+         * \pre All entries in this matrix are finite.
+         *
          * \return the rank of this matrix.
          */
         size_t rank() const& requires ReginaInteger<T> {
@@ -1882,6 +1894,8 @@ class Matrix : public Output<Matrix<T>> {
          * instead call the const version of this function, which you can
          * simply access as `matrix.rank()`.  The (minor) cost of this
          * constness will be the extra overhead of an internal deep copy.
+         *
+         * \pre All entries in this matrix are finite.
          *
          * \nopython Only the const version of rank() is available for Python
          * users.
@@ -1907,8 +1921,17 @@ class Matrix : public Output<Matrix<T>> {
          *
          * Note that this matrix need not be square and need not be of
          * full rank.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
          */
-        void smithNormalForm() requires std::same_as<T, Integer>;
+        void smithNormalForm() requires ReginaInteger<T>;
 
         /**
          * Transforms this matrix into Smith normal form and returns change of
@@ -1934,10 +1957,18 @@ class Matrix : public Output<Matrix<T>> {
          * Note that this matrix need not be square and need not be of
          * full rank.
          *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
          * \return the four change-of-basis matrices, as described above.
          */
-        std::array<Matrix, 4> smithNormalFormCoB()
-                requires std::same_as<T, Integer>;
+        std::array<Matrix, 4> smithNormalFormCoB() requires ReginaInteger<T>;
 
         /**
          * An alternative Smith normal form algorithm that may be preferable
@@ -1964,12 +1995,21 @@ class Matrix : public Output<Matrix<T>> {
          * Note that this matrix need not be square and need not be of
          * full rank.
          *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
          * \return the four change-of-basis matrices, as described above.
          *
          * \author Ryan Budney
          */
         std::array<Matrix, 4> metricalSmithNormalForm()
-                requires std::same_as<T, Integer>;
+                requires ReginaInteger<T>;
 
         /**
          * A diagnostic routine that ensures that the internal representation
@@ -2091,26 +2131,6 @@ using MatrixInt = Matrix<Integer>;
  */
 using MatrixBool = Matrix<bool>;
 
-// Indicate specialisations that are coming:
-
-/**
- * \copydoc Matrix::smithNormalForm()
- */
-template <>
-void Matrix<Integer>::smithNormalForm();
-
-/**
- * \copydoc Matrix::smithNormalFormCoB()
- */
-template <>
-std::array<Matrix<Integer>, 4> Matrix<Integer>::smithNormalFormCoB();
-
-/**
- * \copydoc Matrix::metricalSmithNormalForm()
- */
-template <>
-std::array<Matrix<Integer>, 4> Matrix<Integer>::metricalSmithNormalForm();
-
 /**
  * Deprecated routine that transforms the given integer matrix into
  * Smith normal form.
@@ -2119,6 +2139,8 @@ std::array<Matrix<Integer>, 4> Matrix<Integer>::metricalSmithNormalForm();
  * further details.
  *
  * \deprecated You should now call `matrix.smithNormalForm()` instead.
+ *
+ * \pre All entries in the given matrix are finite.
  *
  * \param matrix the matrix to transform.
  *
@@ -2142,6 +2164,8 @@ std::array<Matrix<Integer>, 4> Matrix<Integer>::metricalSmithNormalForm();
  *
  * \deprecated You should now call `matrix.smithNormalFormCoB()` instead, and
  * collect the change-of-basis matrices from the return value of that function.
+ *
+ * \pre All entries in the given input matrix are finite.
  *
  * \param matrix the matrix to transform into Smith normal form.
  * \param rowSpaceBasis used to return the matrix of all row operations in the
@@ -2186,6 +2210,8 @@ std::array<Matrix<Integer>, 4> Matrix<Integer>::metricalSmithNormalForm();
  * \param colSpaceBasis used to return the matrix of all column operations in
  * the conversion from the original matrix into its Smith normal form.
  * \param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
+ *
+ * \pre All entries in the given input matrix are finite.
  *
  * \author Ryan Budney
  *

@@ -1616,6 +1616,7 @@
 		05EE4AEC2D8BA962006D1495 /* katie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EE4AEB2D8BA962006D1495 /* katie.cpp */; };
 		05EED702306613CC003A2705 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EED701306613CC003A2705 /* matrix.cpp */; };
 		05EED703306613CC003A2705 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05EED701306613CC003A2705 /* matrix.cpp */; };
+		05EED70530674DFA003A2705 /* matrix-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05EED70430674DFA003A2705 /* matrix-impl.h */; };
 		05F09FBF1DBEF01800117BFC /* dim2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBC1DBEF01800117BFC /* dim2.h */; };
 		05F09FC01DBEF01800117BFC /* dim3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBD1DBEF01800117BFC /* dim3.h */; };
 		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
@@ -4416,6 +4417,7 @@
 		05EDF2FD2E1CDA220040F824 /* trisetcmp.filter */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = trisetcmp.filter; sourceTree = "<group>"; };
 		05EE4AEB2D8BA962006D1495 /* katie.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = katie.cpp; sourceTree = "<group>"; };
 		05EED701306613CC003A2705 /* matrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
+		05EED70430674DFA003A2705 /* matrix-impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "matrix-impl.h"; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
 		05F09FBD1DBEF01800117BFC /* dim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim3.h; sourceTree = "<group>"; };
 		05F09FBE1DBEF01800117BFC /* dim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4.h; sourceTree = "<group>"; };
@@ -6017,6 +6019,7 @@
 				05721EFD1F9715C600A83FFC /* laurent2.h */,
 				05EED701306613CC003A2705 /* matrix.cpp */,
 				052F9CE6180600FA00FAE4DF /* matrix.h */,
+				05EED70430674DFA003A2705 /* matrix-impl.h */,
 				052F9CE7180600FA00FAE4DF /* matrix2.cpp */,
 				052F9CE8180600FA00FAE4DF /* matrix2.h */,
 				052F9CE2180600FA00FAE4DF /* matrixops.h */,
@@ -8720,6 +8723,7 @@
 				05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */,
 				052F9F7E180600FB00FAE4DF /* dual_one_skeleton_curve.h in Headers */,
 				052FA083180600FB00FAE4DF /* base64.h in Headers */,
+				05EED70530674DFA003A2705 /* matrix-impl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
