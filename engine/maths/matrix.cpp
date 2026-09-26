@@ -751,10 +751,8 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
     // step (2) starts with another application of columnEchelonForm, but then
     // it finishes with a variation on it...
 
-    MatrixInt basis(hom.columns(), hom.columns() );
-    basis.makeIdentity();
-    MatrixInt basisi(hom.columns(), hom.columns() );
-    basisi.makeIdentity();
+    MatrixInt basis = MatrixInt::identity(hom.columns());
+    MatrixInt basisi = MatrixInt::identity(hom.columns());
     // and we proceed to modify it solely via column operations.
     // one for every column operation performed on homModL
     MatrixInt homModL(hom);
@@ -775,7 +773,7 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
 
     columnEchelonForm( homModL, basis, basisi, freeList );
 
-    std::vector<size_t> torCol(0);
+    std::vector<size_t> torCol;
     bool zeroCol;
 
     for (size_t i=0; i<homModL.columns(); i++) {
@@ -836,7 +834,7 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
         // okay, so now we have a list of non-zero entries.
         // case 1: rowNZlist.size()==0, increment CR, continue;
 
-        if (rowNZlist.size()==0) {
+        if (rowNZlist.empty()) {
             CR++;
             continue;
         }
@@ -1040,6 +1038,4 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
 }
 
 } // namespace regina
-
-
 
