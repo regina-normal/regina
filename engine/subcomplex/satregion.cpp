@@ -220,6 +220,9 @@ bool SatRegion::operator == (const SatRegion& other) const {
 }
 
 SFSpace SatRegion::createSFS(bool reflect) const {
+    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
+    //  Class/class_/baseClass()
+
     // Count boundary components.
     size_t untwisted, twisted;
     countBoundaries(untwisted, twisted);

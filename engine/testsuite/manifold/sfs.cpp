@@ -35,12 +35,12 @@
 using regina::SFSFibre;
 using regina::SFSpace;
 
-void verifyName(SFSpace::Class c, size_t genus,
+void verifyName(SFSpace::BundleType bundleType, size_t genus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted,
         std::initializer_list<SFSFibre> fibres,
         const char* expected) {
-    SFSpace s(c, genus, punctures, puncturesTwisted,
+    SFSpace s(bundleType, genus, punctures, puncturesTwisted,
         reflectors, reflectorsTwisted);
     for (const auto& f : fibres)
         s.insertFibre(f);
@@ -49,7 +49,7 @@ void verifyName(SFSpace::Class c, size_t genus,
 }
 
 TEST(SFSTest, construct) {
-    verifyName(SFSpace::Class::o1, 0, 0, 0, 0, 0, {}, "S2 x S1");
-    verifyName(SFSpace::Class::o1, 1, 0, 0, 0, 0, {}, "T x S1");
-    verifyName(SFSpace::Class::bo1, 0, 1, 0, 0, 0, {}, "D x S1");
+    verifyName(SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {}, "S2 x S1");
+    verifyName(SFSpace::BundleType::o1, 1, 0, 0, 0, 0, {}, "T x S1");
+    verifyName(SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {}, "D x S1");
 }

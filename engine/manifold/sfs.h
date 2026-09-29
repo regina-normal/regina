@@ -164,8 +164,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * - Each exceptional torus or Klein bottle (these correspond, respectively,
  *   to untwisted or twisted reflector boundaries in the base orbifold).
  * - If the obstruction \a b is nonzero, a single (1,b) fibre.
- * Throughout the documentation for this class, we refer to the base surface
- * of this canonical circle bundle as the *core surface* (this terminology is
+ * In the documentation for this class, we often refer to the base surface of
+ * this canonical circle bundle as the *core surface* (this terminology is
  * non-standard). The bundle type specifies whether the core surface is
  * orientable, and how many of its generators give fibre-reversing paths in
  * the 3-manifold.
@@ -225,6 +225,10 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  */
 class SFSpace : public Manifold<3> {
     public:
+        //TODO Still need to clarify how the bundle types interact with
+        //  twisted punctures/reflectors. This affects (for example) the
+        //  private conversion routines.
+
         /**
          * A list of the six bundle types \c o1, \c o2, \c n1, \c n2, \c n3,
          * \c n4 for the core surface of a Seifert fibred space.
@@ -444,8 +448,8 @@ class SFSpace : public Manifold<3> {
     //TODO Replace Class enumeration with BundleType
 
     private:
-        Class class_;
-            /**< Indicates which of the classes above this space belongs to. */
+        BundleType bundleType_;
+            /**< Indicates which of the bundle types this space belongs to. */
         size_t genus_;
             /**< The genus of the base orbifold.  For non-orientable
                  base orbifolds this is the non-orientable genus. */
@@ -488,8 +492,47 @@ class SFSpace : public Manifold<3> {
          */
         SFSpace();
         /**
-         * Creates a new Seifert fibred space of the given class with the
-         * given base orbifold and no exceptional fibres.
+         * Creates a new Seifert fibred space of the given bundle type with
+         * the given base orbifold and no exceptional fibres.
+         *
+         * \param bundleType indicates whether the base orbifold is
+         * orientable, and gives information about fibre-reversing paths in
+         * the 3-manifold. See the SFSpace class notes and the BundleType
+         * enumeration notes for details.
+         * \param genus the genus of the base orbifold (the
+         * number of tori or projective planes that it contains).
+         * Note that for non-orientable base surfaces, this is the
+         * non-orientable genus.
+         * \param punctures the number of untwisted ordinary boundary
+         * components of the base orbifold.  Here "ordinary" means that
+         * the puncture gives rise to a real 3-manifold boundary (i.e.,
+         * this is not a reflector boundary of the base orbifold).
+         * \param puncturesTwisted the number of twisted ordinary boundary
+         * components of the base orbifold.  Here "ordinary" means that
+         * the puncture gives rise to a real 3-manifold boundary (i.e.,
+         * this is not a reflector boundary of the base orbifold).
+         * \param reflectors the number of untwisted reflector boundary
+         * components of the base orbifold.  These are in addition to
+         * the ordinary boundary components described by \a punctures.
+         * \param reflectorsTwisted the number of twisted reflector boundary
+         * components of the base orbifold.  These are in addition to
+         * the ordinary boundary components described by \a puncturesTwisted.
+         */
+        SFSpace(BundleType bundleType, size_t genus,
+            size_t punctures = 0, size_t puncturesTwisted = 0,
+            size_t reflectors = 0, size_t reflectorsTwisted = 0);
+        /**
+         * Deprecated constructor that creates a new Seifert fibred space of
+         * the given class with the given base orbifold and no exceptional
+         * fibres.
+         *
+         * \deprecated This has been replaced by a constructor which uses the
+         * new BundleType instead of the old base Class. This constructor now
+         * attempts to convert \a baseClass to the new BundleType whenever
+         * possible. In cases where such a conversion is not well-defined
+         * (see below), this constructor now throws UnsolvedCase.
+         *
+         * \exception UnsolvedCase The \a baseClass is \c bn3.
          *
          * \pre If there are no punctures or reflector boundary components,
          * then \a baseClass is one of the six classes \c o1, \c o2, \c n1,
@@ -522,7 +565,7 @@ class SFSpace : public Manifold<3> {
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
-        SFSpace(Class baseClass, size_t genus,
+        [[deprecated]] SFSpace(Class baseClass, size_t genus,
             size_t punctures = 0, size_t puncturesTwisted = 0,
             size_t reflectors = 0, size_t reflectorsTwisted = 0);
         /**
@@ -558,11 +601,21 @@ class SFSpace : public Manifold<3> {
         void swap(SFSpace& other) noexcept;
 
         /**
-         * Returns which of the eleven predefined classes this space
-         * belongs to.  The specific class indicates whether the
-         * base orbifold has punctures and/or reflector boundaries,
-         * whether the base orbifold is orientable, and gives information
-         * on fibre-reversing paths.
+         * Returns which of the six bundle types this space belongs to.
+         *
+         * The specific bundle type indicates whether the base orbifold is
+         * orientable, and gives information on fibre-reversing paths.
+         *
+         * For more information on the six bundle types, see the SFSpace
+         * class notes or the BundleType enumeration notes.
+         *
+         * \return the particular bundle type to which this space belongs.
+         */
+        BundleType bundleType() const;
+
+        /**
+         * Deprecated routine which returns which of the eleven base orbifold
+         * classes this space belongs to.
          *
          * The class can be (indirectly) modified by calling
          * addHandle(), addCrosscap(), addPuncture() or addReflector().
@@ -570,9 +623,14 @@ class SFSpace : public Manifold<3> {
          * For more information on the eleven predefined classes, see the
          * SFSpace class notes or the Class enumeration notes.
          *
+         * \deprecated The role of the Class enumeration has been replaced by
+         * the BundleType enumeration, and hence this routine has been
+         * replaced by the bundleType() routine.
+         *
          * \return the particular class to which this space belongs.
          */
-        Class baseClass() const;
+        [[deprecated]] Class baseClass() const;
+
         /**
          * Returns the genus of the base orbifold.  All punctures and
          * reflector boundaries in the base orbifold are ignored (i.e.,
@@ -984,6 +1042,28 @@ class SFSpace : public Manifold<3> {
 
     private:
         /**
+         * Converts the old base orbifold Class to the new BundleType.
+         *
+         * This is only needed while the deprecated constructor which uses
+         * the old base Class still exists.
+         *
+         * \exception UnsolvedCase The given \a baseClass cannot be mapped to
+         * a unique BundleType. This occurs precisely for the class \c bn3,
+         * which overlaps with both of the bundle types \c n3 and \c n4.
+         */
+        [[deprecated]] static BundleType convertBaseClassToBundleType(
+                Class baseClass);
+
+        /**
+         * Converts the new BundleType to the old base orbifold Class.
+         *
+         * This is only needed while the deprecated baseClass() routine still
+         * exists.
+         */
+        [[deprecated]] Class convertBundleTypeToBaseClass(
+                BundleType bundleType) const;
+
+        /**
          * Replaces the fibre (\a alpha, \a beta) at the given iterator
          * with the fibre (\a alpha, \alpha - \a beta) instead.  The fibre
          * is also moved backwards through the list in order to maintain
@@ -1067,23 +1147,83 @@ inline constexpr SFSFibre::SFSFibre(long newAlpha, long newBeta) :
 
 // Inline functions for SFSpace
 
-inline SFSpace::SFSpace() : class_(Class::o1), genus_(0),
+inline SFSpace::SFSpace() : bundleType_(BundleType::o1), genus_(0),
         punctures_(0), puncturesTwisted_(0),
         reflectors_(0), reflectorsTwisted_(0),
+        nFibres_(0), b_(0) {
+}
+
+inline SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
+        size_t punctures, size_t puncturesTwisted,
+        size_t reflectors, size_t reflectorsTwisted) :
+        bundleType_(bundleType), genus_(genus),
+        punctures_(punctures), puncturesTwisted_(puncturesTwisted),
+        reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
         nFibres_(0), b_(0) {
 }
 
 inline SFSpace::SFSpace(SFSpace::Class baseClass, size_t genus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted) :
-        class_(baseClass), genus_(genus),
-        punctures_(punctures), puncturesTwisted_(puncturesTwisted),
-        reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
-        nFibres_(0), b_(0) {
+        SFSpace(convertBaseClassToBundleType(baseClass), genus,
+                punctures, puncturesTwisted, reflectors, reflectorsTwisted) {
+}
+
+inline SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
+        SFSpace::Class baseClass) {
+    switch (baseClass) {
+        case Class::o1:
+            [[fallthrough]];
+        case Class::bo1:
+            return BundleType::o1;
+        case Class::o2:
+            [[fallthrough]];
+        case Class::bo2:
+            return BundleType::o2;
+        case Class::n1:
+            [[fallthrough]];
+        case Class::bn1:
+            return BundleType::n1;
+        case Class::n2:
+            [[fallthrough]];
+        case Class::bn2:
+            return BundleType::n2;
+        case Class::n3:
+            return BundleType::n3;
+        case Class::n4:
+            return BundleType::n4;
+        case Class::bn3:
+            throw regina::UnsolvedCase(
+                    "No well-defined conversion of Class::bn3 to BundleType");
+        default:
+            throw regina::InvalidArgument("Unknown Class value");
+    }
+}
+
+inline SFSpace::Class SFSpace::convertBundleTypeToBaseClass(
+        SFSpace::BundleType bundleType) const {
+    bool b = ( punctures_ > 0 || puncturesTwisted_ > 0 ||
+            reflectors_ > 0 || reflectorsTwisted_ > 0 );
+    switch (bundleType) {
+        case BundleType::o1:
+            return b ? Class::bo1 : Class::o1;
+        case BundleType::o2:
+            return b ? Class::bo2 : Class::o2;
+        case BundleType::n1:
+            return b ? Class::bn1 : Class::n1;
+        case BundleType::n2:
+            return b ? Class::bn2 : Class::n2;
+        case BundleType::n3:
+            return b ? Class::bn3 : Class::n3;
+        case BundleType::n4:
+            return b ? Class::bn3 : Class::n4;
+        default:
+            throw regina::InvalidArgument("Unknown BundleType value");
+    }
 }
 
 inline void SFSpace::swap(SFSpace& other) noexcept {
-    std::swap(class_, other.class_);
+    std::swap(bundleType_, other.bundleType_);
     std::swap(genus_, other.genus_);
     std::swap(punctures_, other.punctures_);
     std::swap(puncturesTwisted_, other.puncturesTwisted_);
@@ -1094,8 +1234,12 @@ inline void SFSpace::swap(SFSpace& other) noexcept {
     std::swap(b_, other.b_);
 }
 
+inline SFSpace::BundleType SFSpace::bundleType() const {
+    return bundleType_;
+}
+
 inline SFSpace::Class SFSpace::baseClass() const {
-    return class_;
+    return convertBundleTypeToBaseClass(bundleType_);
 }
 
 inline size_t SFSpace::baseGenus() const {
@@ -1103,18 +1247,15 @@ inline size_t SFSpace::baseGenus() const {
 }
 
 inline bool SFSpace::baseOrientable() const {
-    return (class_ == Class::o1 || class_ == Class::o2 ||
-        class_ == Class::bo1 || class_ == Class::bo2);
+    return (bundleType_ == BundleType::o1 || bundleType_ == BundleType::o2);
 }
 
 inline bool SFSpace::fibreReversing() const {
-    return ! (class_ == Class::o1 || class_ == Class::n1 ||
-        class_ == Class::bo1 || class_ == Class::bn1);
+    return ! (bundleType_ == BundleType::o1 || bundleType_ == BundleType::n1);
 }
 
 inline bool SFSpace::fibreNegating() const {
-    return ! (class_ == Class::o1 || class_ == Class::n2 ||
-        class_ == Class::bo1 || class_ == Class::bn2);
+    return ! (bundleType_ == BundleType::o1 || bundleType_ == BundleType::n2);
 }
 
 inline size_t SFSpace::punctures() const {

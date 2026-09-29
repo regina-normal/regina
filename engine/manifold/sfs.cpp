@@ -64,6 +64,10 @@ SFSFibre SFSpace::fibre(size_t which) const {
 }
 
 void SFSpace::addHandle(bool fibreReversing) {
+    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
+    //  Class/class_/baseClass()
+    Class class_(baseClass());
+
     // First fix the class.
     // The transitions between classes have been worked out on paper
     // case by case (in particular, following how the generators of the
@@ -104,6 +108,10 @@ void SFSpace::addHandle(bool fibreReversing) {
 }
 
 void SFSpace::addCrosscap(bool fibreReversing) {
+    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
+    //  Class/class_/baseClass()
+    Class class_(baseClass());
+
     // We're making the base orbifold non-orientable.
     // Convert orientable genus to non-orientable genus if required.
     if (baseOrientable())
@@ -164,6 +172,10 @@ void SFSpace::addCrosscap(bool fibreReversing) {
 }
 
 void SFSpace::addPuncture(bool twisted, size_t nPunctures) {
+    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
+    //  Class/class_/baseClass()
+    Class class_(baseClass());
+
     if (twisted) {
         puncturesTwisted_ += nPunctures;
 
@@ -194,6 +206,10 @@ void SFSpace::addPuncture(bool twisted, size_t nPunctures) {
 }
 
 void SFSpace::addReflector(bool twisted, size_t nReflectors) {
+    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
+    //  Class/class_/baseClass()
+    Class class_(baseClass());
+
     if (twisted) {
         reflectorsTwisted_ += nReflectors;
 
@@ -562,7 +578,7 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
         return std::nullopt;
     }
 
-    if (genus_ == 0 && class_ == Class::o1) {
+    if (genus_ == 0 && bundleType_ == BundleType::o1) {
         // Base orbifold is the sphere.
         if (fibres_.empty())
             return LensSpace(b_ >= 0 ? b_ : -b_, 1);
@@ -595,7 +611,7 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
 
         // Not a lens space.
         return std::nullopt;
-    } else if (genus_ == 1 && class_ == Class::n2) {
+    } else if (genus_ == 1 && bundleType_ == BundleType::n2) {
         // Base orbifold is the projective plane.
         if (nFibres_ == 1) {
             // We have precisely one exceptional fibre.
@@ -614,7 +630,7 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
 }
 
 bool SFSpace::operator == (const SFSpace& compare) const {
-    if (class_ != compare.class_)
+    if (bundleType_ != compare.bundleType_)
         return false;
     if (genus_ != compare.genus_)
         return false;
@@ -662,9 +678,9 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // If we reach this point, we must have adjGenus1 == adjGenus2.
     // Down to more mundane comparisons.
 
-    // Comparing class will catch orientability also (placing orientable
+    // Comparing bundle type will catch orientability also (placing orientable
     // before non-orientable).
-    if (auto c = class_ <=> rhs.class_; c != 0)
+    if (auto c = bundleType_ <=> rhs.bundleType_; c != 0)
         return c;
     if (auto c = reflectorsTwisted_ <=> rhs.reflectorsTwisted_; c != 0)
         return c;
@@ -693,7 +709,7 @@ Triangulation<3> SFSpace::construct() const {
         return lens->construct();
 
     // Currently we work over the 2-sphere only.
-    if (genus_ != 0 || class_ != Class::o1)
+    if (genus_ != 0 || bundleType_ != BundleType::o1 || punctures_ != 0)
         throw NotImplemented("SFSpace::construct() is currently not "
             "implemented for spaces whose base orbifold is not the 2-sphere");
 
@@ -863,6 +879,10 @@ void SFSpace::writeBaseExtraCount(std::ostream& out, size_t count,
 }
 
 std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
+    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
+    //  Class/class_/baseClass()
+    Class class_(baseClass());
+
     bool named = false;
 
     // IMPORTANT: We do not allow spaces with > 2 reflector boundary
@@ -995,6 +1015,10 @@ std::ostream& SFSpace::writeCommonStructure(std::ostream& out, bool tex)
 }
 
 std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
+    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
+    //  Class/class_/baseClass()
+    Class class_(baseClass());
+
     // Things we don't deal with just yet.
     if (fibreNegating())
         return writeStructure(out);

@@ -64,7 +64,7 @@ SFSAlt::SFSAlt(const SFSpace& original) :
      * D_basis = [ 1 0 ] [  0 -1 ] M_basis = [ 0 -1 ] M_basis.
      *           [ 1 1 ] [  1  0 ]           [ 1 -1 ]
      */
-    if (alt_.baseClass() == SFSpace::Class::bn2 &&
+    if (alt_.bundleType() == SFSpace::BundleType::n2 &&
             alt_.baseGenus() == 1 &&
             (! alt_.baseOrientable()) &&
             alt_.punctures(false) == 1 &&
@@ -72,7 +72,7 @@ SFSAlt::SFSAlt(const SFSpace& original) :
             alt_.reflectors() == 0 &&
             alt_.fibreCount() == 0 &&
             alt_.obstruction() == 0) {
-        alt_ = SFSpace(SFSpace::Class::bo1, 0 /* genus */,
+        alt_ = SFSpace(SFSpace::BundleType::o1, 0 /* genus */,
             1 /* punctures */, 0 /* twisted */,
             0 /* reflectors */, 0 /* twisted */);
         alt_.insertFibre(2, 1);
