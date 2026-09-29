@@ -157,9 +157,14 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * complexity of non-orientable Seifert fibre spaces", A. Cattabriga,
  * S. Matveev, M. Mulazzani, and T. Nasybullov, Indiana University
  * Mathematics Journal, 69(2):pp. 421-451, 2020. These bundle types describe
- * whether the base orbifold is orientable, as well as how many generators of
- * the complement of the cone points give fibre-reversing paths in the
- * 3-manifold.
+ * how the Seifert fibre structure restricts to a circle bundle structure
+ * over the *core surface* (this is non-standard terminology which we use
+ * throughout the documentation for this class), which is a certain canonical
+ * subsurface of the base orbifold. Roughly, the core surface is obtained
+ * from the base orbifold by removing a small neighbourhood of all the
+ * singular points (cone points, and points in the reflector boundaries). The
+ * bundle type then specifies whether the core surface is orientable, and how
+ * how many of its generators give fibre-reversing paths in the 3-manifold.
  *
  * When describing punctures and reflector boundaries, a _twisted_
  * boundary is one that gives a fibre-reversing path, and an _untwisted_
@@ -220,43 +225,37 @@ class SFSpace : public Manifold<3> {
          * A list of the six bundle types \c o1, \c o2, \c n1, \c n2, \c n3,
          * \c n4 for a Seifert fibre space.
          */
-         enum class BundleType {
+        enum class BundleType {
             /**
-             * Indicates that the base orbifold is orientable, and that in the
-             * surface given by the complement of the cone points, none of the
-             * generators give fibre-reversing paths.
+             * Indicates that the core surface is orientable, and that none
+             * of its generators give fibre-reversing paths.
              */
             o1 = 101,
             /**
-             * Indicates that the base orbifold is orientable, and that in the
-             * surface given by the complement of the cone points, all of the
-             * generators give fibre-reversing paths.
+             * Indicates that the core surface is orientable, and that all of
+             * its generators give fibre-reversing paths.
              */
             o2 = 102,
             /**
-             * Indicates that the base orbifold is non-orientable, and that in
-             * the surface given by the complement of the cone points, none of
-             * the generators give fibre-reversing paths.
+             * Indicates that the core surface is non-orientable, and that
+             * none of its generators give fibre-reversing paths.
              */
             n1 = 201,
             /**
-             * Indicates that the base orbifold is non-orientable, and that in
-             * the surface given by the complement of the cone points, all of
-             * the generators give fibre-reversing paths.
+             * Indicates that the core surface is non-orientable, and that
+             * all of its generators give fibre-reversing paths.
              */
             n2 = 202,
             /**
-             * Indicates that the base orbifold is non-orientable, that it has
-             * non-orientable genus at least two, and that in the surface given
-             * by the complement of the cone points, precisely one of the
-             * generators gives a fibre-reversing path.
+             * Indicates that the core surface is non-orientable, that it has
+             * non-orientable genus at least two, and that precisely one of
+             * its generators gives a fibre-reversing path.
              */
             n3 = 203,
             /**
-             * Indicates that the base orbifold is non-orientable, that it has
-             * non-orientable genus at least three, and that in the surface
-             * given by the complement of the cone points, precisely two of
-             * the generators give fibre-reversing paths.
+             * Indicates that the core surface is non-orientable, that it has
+             * non-orientable genus at least three, and that precisely two of
+             * its generators give fibre-reversing paths.
              */
             n4 = 204,
         };
@@ -267,7 +266,7 @@ class SFSpace : public Manifold<3> {
          * five classes \c bo1, \c b02, \c bn1, \c bn2, \c bn3 for base
          * orbifolds with boundaries.
          */
-         enum class [[deprecated]] Class {
+        enum class [[deprecated]] Class {
             /**
              * Indicates that the base orbifold is orientable with
              * no punctures or reflector boundaries, and that none
