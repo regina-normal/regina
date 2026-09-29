@@ -157,14 +157,18 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * complexity of non-orientable Seifert fibre spaces", A. Cattabriga,
  * S. Matveev, M. Mulazzani, and T. Nasybullov, Indiana University
  * Mathematics Journal, 69(2):pp. 421-451, 2020. These bundle types describe
- * how the Seifert fibre structure restricts to a circle bundle structure
- * over the *core surface* (this is non-standard terminology which we use
- * throughout the documentation for this class), which is a certain canonical
- * subsurface of the base orbifold. Roughly, the core surface is obtained
- * from the base orbifold by removing a small neighbourhood of all the
- * singular points (cone points, and points in the reflector boundaries). The
- * bundle type then specifies whether the core surface is orientable, and how
- * how many of its generators give fibre-reversing paths in the 3-manifold.
+ * a canonical circle bundle associated to the Seifert fibred space, obtained
+ * by deleting small regular neighbourhoods of the following:
+ * - Each exceptional fibre (these correspond to cone points in the base
+ *   orbifold).
+ * - Each exceptional torus or Klein bottle (these correspond, respectively,
+ *   to untwisted or twisted reflector boundaries in the base orbifold).
+ * - If the obstruction \a b is nonzero, a single (1,b) fibre.
+ * Throughout the documentation for this class, we refer to the base surface
+ * of this canonical circle bundle as the *core surface* (this terminology is
+ * non-standard). The bundle type specifies whether the core surface is
+ * orientable, and how many of its generators give fibre-reversing paths in
+ * the 3-manifold.
  *
  * When describing punctures and reflector boundaries, a _twisted_
  * boundary is one that gives a fibre-reversing path, and an _untwisted_
@@ -223,7 +227,7 @@ class SFSpace : public Manifold<3> {
     public:
         /**
          * A list of the six bundle types \c o1, \c o2, \c n1, \c n2, \c n3,
-         * \c n4 for a Seifert fibre space.
+         * \c n4 for the core surface of a Seifert fibred space.
          */
         enum class BundleType {
             /**
