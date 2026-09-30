@@ -144,9 +144,11 @@ struct SFSFibre {
  */
 std::ostream& operator << (std::ostream& out, const SFSFibre& f);
 
+//TODO Consider using the terms "handle generators"/"crosscap generators"
+//  instead of "genus generators"
 /**
  * Represents a general Seifert fibred space, which may be orientable or
- * non-orientable.  Punctures and reflector boundaries in the base orbifold
+ * non-orientable.  Punctures and reflector circles in the base orbifold
  * are supported.
  *
  * At present, reflector arcs in the base orbifold are not supported, but
@@ -162,17 +164,21 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * - Each exceptional fibre (these correspond to cone points in the base
  *   orbifold).
  * - Each exceptional torus or Klein bottle (these correspond, respectively,
- *   to untwisted or twisted reflector boundaries in the base orbifold).
+ *   to untwisted or twisted reflector circles in the base orbifold).
  * - If the obstruction \a b is nonzero, a single (1,b) fibre.
- * In the documentation for this class, we often refer to the base surface of
- * this canonical circle bundle as the *core surface* (this terminology is
- * non-standard). The bundle type specifies whether the core surface is
- * orientable, and how many of its generators give fibre-reversing paths in
- * the 3-manifold.
+ * For brevity, the documentation for this class often uses the following
+ * non-standard terminology:
+ * - We refer to the base surface of the canonical circle bundle as the *core
+ *   surface*.
+ * - If the core surface has `n` boundary components and Euler characteristic
+ *   `2 - k - n`, then we fix `n + k` standard generators for the first
+ *   homology, with `n` *boundary generators* and `k` *genus generators*.
+ * The bundle type specifies whether the core surface is orientable, and how
+ * many of its genus generators give fibre-reversing paths in the 3-manifold.
  *
- * When describing punctures and reflector boundaries, a _twisted_
- * boundary is one that gives a fibre-reversing path, and an _untwisted_
- * boundary is one around which the direction of fibres is preserved.
+ * When describing punctures and reflector circles, a _twisted_ boundary is
+ * one that gives a fibre-reversing path, and an _untwisted_ boundary is one
+ * around which the direction of fibres is preserved.
  *
  * Exceptional fibres are sorted first by \a alpha (the index) and then
  * by \a beta.  The obstruction constant \a b is stored separately,
@@ -187,7 +193,7 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * implemented in some cases: homology() is implemented if and only if the
  * base orbifold has no punctures, and construct() is implemented only for
  * lens spaces and Seifert fibred spaces over the 2-sphere without punctures
- * or reflector boundaries.
+ * or reflector circles.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -198,12 +204,12 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * \warning In Regina 7.4.1 and earlier, instead of the six bundle types
  * described above, Seifert fibred spaces were placed into one of eleven
  * classes as follows:
- * - If the base orbifold had no punctures or reflector boundaries, then the
+ * - If the base orbifold had no punctures or reflector circles, then the
  *   Seifert fibred space was placed into one of the six classes \c o1, \c o2,
  *   \c n1, \c n2, \c n3 and \c n4, as detailed on page 88 of "Seifert
  *   Manifolds", Peter Orlik, Springer-Verlag, 1972. These old classes are
  *   essentially equivalent to the corresponding new bundle types.
- * - If the base orbifold had punctures and/or reflector boundaries, then the
+ * - If the base orbifold had punctures and/or reflector circles, then the
  *   Seifert fibred space was placed into one of five simplified classes
  *   \c bo1, \c bo2, \c bn1, \c bn2 and \c bn3. These classes were not
  *   standard terminology (i.e., they were created explicitly for Regina), and
@@ -225,9 +231,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  */
 class SFSpace : public Manifold<3> {
     public:
-        //TODO Still need to clarify how the bundle types interact with
-        //  twisted punctures/reflectors. This affects (for example) the
-        //  private conversion routines.
+        //TODO Update the private conversion routines, documentation, etc to
+        //  account for the bundle types o and n which have twisted boundary.
 
         /**
          * A list of the six bundle types \c o1, \c o2, \c n1, \c n2, \c n3,
@@ -235,35 +240,87 @@ class SFSpace : public Manifold<3> {
          */
         enum class BundleType {
             /**
-             * Indicates that the core surface is orientable, and that none
-             * of its generators give fibre-reversing paths.
+             * Indicates that the core surface is orientable, and that at
+             * least one of its boundary generators gives a fibre-reversing
+             * path.
+             *
+             * Each fibre-reversing path arising from a boundary generator
+             * corresponds to either a twisted puncture, a twisted reflector
+             * circle, or (if supported in a future version of Regina) a
+             * twisted boundary with reflector arcs.
+             */
+            o = 100,
+            /**
+             * Indicates that the core surface is orientable, that none of
+             * its genus generators give fibre-reversing paths, and also that
+             * none of its boundary generators give fibre-reversing paths.
+             *
+             * The condition on the boundary generators means that the base
+             * orbifold cannot have any twisted punctures or twisted
+             * reflector circles.
              */
             o1 = 101,
             /**
-             * Indicates that the core surface is orientable, and that all of
-             * its generators give fibre-reversing paths.
+             * Indicates that the core surface is orientable, that all of its
+             * genus generators give fibre-reversing paths, but that none of
+             * its boundary generators give fibre-reversing paths.
+             *
+             * The condition on the boundary generators means that the base
+             * orbifold cannot have any twisted punctures or twisted
+             * reflector circles.
              */
             o2 = 102,
             /**
-             * Indicates that the core surface is non-orientable, and that
-             * none of its generators give fibre-reversing paths.
+             * Indicates that the core surface is non-orientable, and that at
+             * least one of its boundary generators gives a fibre-reversing
+             * path.
+             *
+             * Each fibre-reversing path arising from a boundary generator
+             * corresponds to either a twisted puncture, a twisted reflector
+             * circle, or (if supported in a future version of Regina) a
+             * twisted boundary with reflector arcs.
+             */
+            n = 200,
+            /**
+             * Indicates that the core surface is non-orientable, that none of
+             * its genus generators give fibre-reversing paths, and also that
+             * none of its boundary generators give fibre-reversing paths.
+             *
+             * The condition on the boundary generators means that the base
+             * orbifold cannot have any twisted punctures or twisted
+             * reflector circles.
              */
             n1 = 201,
             /**
-             * Indicates that the core surface is non-orientable, and that
-             * all of its generators give fibre-reversing paths.
+             * Indicates that the core surface is non-orientable, that all of
+             * its genus generators give fibre-reversing paths, but that none
+             * of its boundary generators give fibre-reversing paths.
+             *
+             * The condition on the boundary generators means that the base
+             * orbifold cannot have any twisted punctures or twisted
+             * reflector circles.
              */
             n2 = 202,
             /**
              * Indicates that the core surface is non-orientable, that it has
-             * non-orientable genus at least two, and that precisely one of
-             * its generators gives a fibre-reversing path.
+             * non-orientable genus at least two, that precisely one of its
+             * genus generators gives a fibre-reversing path, and that none
+             * of its boundary generators give fibre-reversing paths.
+             *
+             * The condition on the boundary generators means that the base
+             * orbifold cannot have any twisted punctures or twisted
+             * reflector circles.
              */
             n3 = 203,
             /**
              * Indicates that the core surface is non-orientable, that it has
-             * non-orientable genus at least three, and that precisely two of
-             * its generators give fibre-reversing paths.
+             * non-orientable genus at least three, that precisely two of its
+             * genus generators give fibre-reversing paths, and that none of
+             * its boundary generators give fibre-reversing paths.
+             *
+             * The condition on the boundary generators means that the base
+             * orbifold cannot have any twisted punctures or twisted
+             * reflector circles.
              */
             n4 = 204,
         };
