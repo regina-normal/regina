@@ -144,8 +144,6 @@ struct SFSFibre {
  */
 std::ostream& operator << (std::ostream& out, const SFSFibre& f);
 
-//TODO Consider using the terms "handle generators"/"crosscap generators"
-//  instead of "genus generators"
 /**
  * Represents a general Seifert fibred space, which may be orientable or
  * non-orientable.  Punctures and reflector circles in the base orbifold
@@ -154,9 +152,9 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * At present, reflector arcs in the base orbifold are not supported, but
  * this may be introduced in future.
  *
- * Any Seifert fibred space can be placed into one of the six bundle types
- * \c o1, \c o2, \c n1, \c n2, \c n3 and \c n4, as detailed in "On the
- * complexity of non-orientable Seifert fibre spaces", A. Cattabriga,
+ * Any Seifert fibred space can be placed into one of the eight bundle types
+ * \c o, \c o1, \c o2, \c n, \c n1, \c n2, \c n3 and \c n4, as detailed in
+ * "On the complexity of non-orientable Seifert fibre spaces", A. Cattabriga,
  * S. Matveev, M. Mulazzani, and T. Nasybullov, Indiana University
  * Mathematics Journal, 69(2):pp. 421-451, 2020. These bundle types describe
  * a canonical circle bundle associated to the Seifert fibred space, obtained
@@ -167,14 +165,17 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  *   to untwisted or twisted reflector circles in the base orbifold).
  * - If the obstruction \a b is nonzero, a single (1,b) fibre.
  * For brevity, the documentation for this class often uses the following
- * non-standard terminology:
+ * non-standard terminology when discussing these bundle types:
  * - We refer to the base surface of the canonical circle bundle as the *core
  *   surface*.
- * - If the core surface has `n` boundary components and Euler characteristic
- *   `2 - k - n`, then we fix `n + k` standard generators for the first
- *   homology, with `n` *boundary generators* and `k` *genus generators*.
+ * - If the core surface is orientable with `g` handles and `n` boundary
+ *   components, then we fix `2g + n` standard generators for the first
+ *   homology, with `2g` *handle generators* and `n` *boundary generators*.
+ * - If the core surface is non-orientable with `g` crosscaps and `n` boundary
+ *   components, then we fix `g + n` standard generators for the first
+ *   homology, with `g` *crosscap generators* and `n` *boundary generators*.
  * The bundle type specifies whether the core surface is orientable, and how
- * many of its genus generators give fibre-reversing paths in the 3-manifold.
+ * many of its generators give fibre-reversing paths in the 3-manifold.
  *
  * When describing punctures and reflector circles, a _twisted_ boundary is
  * one that gives a fibre-reversing path, and an _untwisted_ boundary is one
@@ -201,7 +202,7 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * SFSpace still requires a non-trivial (but constant sized) amount of data to
  * be copied even in a move operation.
  *
- * \warning In Regina 7.4.1 and earlier, instead of the six bundle types
+ * \warning In Regina 7.4.1 and earlier, instead of the eight bundle types
  * described above, Seifert fibred spaces were placed into one of eleven
  * classes as follows:
  * - If the base orbifold had no punctures or reflector circles, then the
@@ -231,12 +232,9 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  */
 class SFSpace : public Manifold<3> {
     public:
-        //TODO Update the private conversion routines, documentation, etc to
-        //  account for the bundle types o and n which have twisted boundary.
-
         /**
-         * A list of the six bundle types \c o1, \c o2, \c n1, \c n2, \c n3,
-         * \c n4 for the core surface of a Seifert fibred space.
+         * A list of the eight bundle types \c o, \c o1, \c o2, \c n, \c n1,
+         * \c n2, \c n3, \c n4 for a Seifert fibred space.
          */
         enum class BundleType {
             /**
@@ -252,7 +250,7 @@ class SFSpace : public Manifold<3> {
             o = 100,
             /**
              * Indicates that the core surface is orientable, that none of
-             * its genus generators give fibre-reversing paths, and also that
+             * its handle generators give fibre-reversing paths, and also that
              * none of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
@@ -262,7 +260,7 @@ class SFSpace : public Manifold<3> {
             o1 = 101,
             /**
              * Indicates that the core surface is orientable, that all of its
-             * genus generators give fibre-reversing paths, but that none of
+             * handle generators give fibre-reversing paths, but that none of
              * its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
@@ -283,8 +281,8 @@ class SFSpace : public Manifold<3> {
             n = 200,
             /**
              * Indicates that the core surface is non-orientable, that none of
-             * its genus generators give fibre-reversing paths, and also that
-             * none of its boundary generators give fibre-reversing paths.
+             * its crosscap generators give fibre-reversing paths, and also
+             * that none of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
              * orbifold cannot have any twisted punctures or twisted
@@ -293,8 +291,8 @@ class SFSpace : public Manifold<3> {
             n1 = 201,
             /**
              * Indicates that the core surface is non-orientable, that all of
-             * its genus generators give fibre-reversing paths, but that none
-             * of its boundary generators give fibre-reversing paths.
+             * its crosscap generators give fibre-reversing paths, but that
+             * none of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
              * orbifold cannot have any twisted punctures or twisted
@@ -304,8 +302,8 @@ class SFSpace : public Manifold<3> {
             /**
              * Indicates that the core surface is non-orientable, that it has
              * non-orientable genus at least two, that precisely one of its
-             * genus generators gives a fibre-reversing path, and that none
-             * of its boundary generators give fibre-reversing paths.
+             * crosscap generators gives a fibre-reversing path, and that
+             * none of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
              * orbifold cannot have any twisted punctures or twisted
@@ -315,8 +313,8 @@ class SFSpace : public Manifold<3> {
             /**
              * Indicates that the core surface is non-orientable, that it has
              * non-orientable genus at least three, that precisely two of its
-             * genus generators give fibre-reversing paths, and that none of
-             * its boundary generators give fibre-reversing paths.
+             * crosscap generators give fibre-reversing paths, and that none
+             * of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
              * orbifold cannot have any twisted punctures or twisted
@@ -334,38 +332,38 @@ class SFSpace : public Manifold<3> {
         enum class [[deprecated]] Class {
             /**
              * Indicates that the base orbifold is orientable with
-             * no punctures or reflector boundaries, and that none
+             * no punctures or reflector circles, and that none
              * of its generators give fibre-reversing paths.
              */
             o1 = 101,
             /**
              * Indicates that the base orbifold is orientable with
-             * no punctures or reflector boundaries, and that all
+             * no punctures or reflector circles, and that all
              * of its generators give fibre-reversing paths.
              */
             o2 = 102,
             /**
              * Indicates that the base orbifold is non-orientable with
-             * no punctures or reflector boundaries, and that none
+             * no punctures or reflector circles, and that none
              * of its generators give fibre-reversing paths.
              */
             n1 = 201,
             /**
              * Indicates that the base orbifold is non-orientable with
-             * no punctures or reflector boundaries, and that all of
+             * no punctures or reflector circles, and that all of
              * its generators give fibre-reversing paths.
              */
             n2 = 202,
             /**
              * Indicates that the base orbifold is non-orientable with
-             * no punctures or reflector boundaries, that it has
+             * no punctures or reflector circles, that it has
              * non-orientable genus at least two, and that precisely
              * one of its generators gives a fibre-reversing path.
              */
             n3 = 203,
             /**
              * Indicates that the base orbifold is non-orientable with
-             * no punctures or reflector boundaries, that it has
+             * no punctures or reflector circles, that it has
              * non-orientable genus at least three, and that precisely
              * two of its generators give fibre-reversing paths.
              */
@@ -373,32 +371,32 @@ class SFSpace : public Manifold<3> {
 
             /**
              * Indicates that the base orbifold contains punctures
-             * and/or reflector boundaries, that it is orientable,
+             * and/or reflector circles, that it is orientable,
              * and that it contains no fibre-reversing paths.
              */
             bo1 = 301,
             /**
              * Indicates that the base orbifold contains punctures
-             * and/or reflector boundaries, that it is orientable,
+             * and/or reflector circles, that it is orientable,
              * and that it contains at least one fibre-reversing path.
              */
             bo2 = 302,
             /**
              * Indicates that the base orbifold contains punctures
-             * and/or reflector boundaries, that it is non-orientable,
+             * and/or reflector circles, that it is non-orientable,
              * and that it contains no fibre-reversing paths.
              */
             bn1 = 401,
             /**
              * Indicates that the base orbifold contains punctures
-             * and/or reflector boundaries, that it is non-orientable,
+             * and/or reflector circles, that it is non-orientable,
              * and that its fibre-reversing paths correspond precisely
              * to its orientation-reversing paths.
              */
             bn2 = 402,
             /**
              * Indicates that the base orbifold contains punctures
-             * and/or reflector boundaries, that it is non-orientable,
+             * and/or reflector circles, that it is non-orientable,
              * that it contains at least one fibre-reversing path,
              * and that its fibre-reversing paths do not correspond
              * precisely to its orientation-reversing paths.
@@ -502,8 +500,6 @@ class SFSpace : public Manifold<3> {
          */
         [[deprecated]] inline static constexpr Class bn3 = Class::bn3;
 
-    //TODO Replace Class enumeration with BundleType
-
     private:
         BundleType bundleType_;
             /**< Indicates which of the bundle types this space belongs to. */
@@ -513,21 +509,19 @@ class SFSpace : public Manifold<3> {
         size_t punctures_;
             /**< The number of punctures in the base orbifold whose
                  boundaries are fibre-preserving.  This only counts
-                 ordinary boundary components, not reflector boundary
-                 components. */
+                 ordinary boundary components, not reflector circles. */
         size_t puncturesTwisted_;
             /**< The number of punctures in the base orbifold whose
                  boundaries are fibre-reversing.  This only counts
-                 ordinary boundary components, not reflector boundary
-                 components. */
+                 ordinary boundary components, not reflector circles. */
         size_t reflectors_;
-            /**< The number of reflector boundary components in the
-                 base orbifold whose boundaries are fibre-preserving.
+            /**< The number of reflector circles in the base orbifold whose
+                 whose boundaries are fibre-preserving.
                  These are in addition to the regular boundary components
                  described by \a punctures_. */
         size_t reflectorsTwisted_;
-            /**< The number of reflector boundary components in the
-                 base orbifold whose boundaries are fibre-reversing.
+            /**< The number of reflector circles in the base orbifold whose
+                 boundaries are fibre-reversing.
                  These are in addition to the regular boundary components
                  described by \a puncturesTwisted_. */
 
@@ -548,9 +542,16 @@ class SFSpace : public Manifold<3> {
          * 2-sphere and no exceptional fibres.
          */
         SFSpace();
+
+        //TODO Check that we have listed all the preconditions.
         /**
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold and no exceptional fibres.
+         *
+         * \pre If there are any twisted punctures or twisted reflector
+         * circles, then \a bundleType is either \c o or \c n. Otherwise,
+         * \a bundleType is either \c o1, \c o2, \c n1, \c n2, \c n3, or
+         * \c n4.
          *
          * \param bundleType indicates whether the base orbifold is
          * orientable, and gives information about fibre-reversing paths in
@@ -563,17 +564,17 @@ class SFSpace : public Manifold<3> {
          * \param punctures the number of untwisted ordinary boundary
          * components of the base orbifold.  Here "ordinary" means that
          * the puncture gives rise to a real 3-manifold boundary (i.e.,
-         * this is not a reflector boundary of the base orbifold).
+         * this is not a reflector circle of the base orbifold).
          * \param puncturesTwisted the number of twisted ordinary boundary
          * components of the base orbifold.  Here "ordinary" means that
          * the puncture gives rise to a real 3-manifold boundary (i.e.,
-         * this is not a reflector boundary of the base orbifold).
-         * \param reflectors the number of untwisted reflector boundary
-         * components of the base orbifold.  These are in addition to
-         * the ordinary boundary components described by \a punctures.
-         * \param reflectorsTwisted the number of twisted reflector boundary
-         * components of the base orbifold.  These are in addition to
-         * the ordinary boundary components described by \a puncturesTwisted.
+         * this is not a reflector circle of the base orbifold).
+         * \param reflectors the number of untwisted reflector circles of the
+         * base orbifold.  These are in addition to the ordinary boundary
+         * components described by \a punctures.
+         * \param reflectorsTwisted the number of twisted reflector circles
+         * of the base orbifold.  These are in addition to the ordinary
+         * boundary components described by \a puncturesTwisted.
          */
         SFSpace(BundleType bundleType, size_t genus,
             size_t punctures = 0, size_t puncturesTwisted = 0,
@@ -589,15 +590,19 @@ class SFSpace : public Manifold<3> {
          * possible. In cases where such a conversion is not well-defined
          * (see below), this constructor now throws UnsolvedCase.
          *
-         * \exception UnsolvedCase The \a baseClass is \c bn3.
+         * \exception FailedPrecondition There are twisted punctures and/or
+         * twisted reflector circles, but \a baseClass is not either \c bo2
+         * or \c bn3.
+         * \exception UnsolvedCase There are no twisted punctures and no
+         * twisted reflector circles, and \a baseClass is \c bn3.
          *
-         * \pre If there are no punctures or reflector boundary components,
-         * then \a baseClass is one of the six classes \c o1, \c o2, \c n1,
-         * \c n2, \c n3 or \c n4.  Likewise, if there are punctures and/or
-         * reflector boundary components, then \a baseClass is one of the
-         * five classes \c bo1, \c bo2, \c bn1, \c bn2 or \c bn3.
-         * \pre If there are any twisted punctures or reflector boundary
-         * components, then \a baseClass is either \c bo2 or \c bn3.
+         * \pre If there are no punctures or reflector circles, then
+         * \a baseClass is one of the six classes \c o1, \c o2, \c n1, \c n2,
+         * \c n3 or \c n4.  Likewise, if there are punctures and/or reflector
+         * circles, then \a baseClass is one of the five classes \c bo1,
+         * \c bo2, \c bn1, \c bn2 or \c bn3.
+         * \pre If there are any twisted punctures or reflector circles, then
+         * \a baseClass is either \c bo2 or \c bn3.
          *
          * \param baseClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
@@ -610,17 +615,17 @@ class SFSpace : public Manifold<3> {
          * \param punctures the number of untwisted ordinary boundary
          * components of the base orbifold.  Here "ordinary" means that
          * the puncture gives rise to a real 3-manifold boundary (i.e.,
-         * this is not a reflector boundary of the base orbifold).
+         * this is not a reflector circle of the base orbifold).
          * \param puncturesTwisted the number of twisted ordinary boundary
          * components of the base orbifold.  Here "ordinary" means that
          * the puncture gives rise to a real 3-manifold boundary (i.e.,
-         * this is not a reflector boundary of the base orbifold).
-         * \param reflectors the number of untwisted reflector boundary
-         * components of the base orbifold.  These are in addition to
-         * the ordinary boundary components described by \a punctures.
-         * \param reflectorsTwisted the number of twisted reflector boundary
-         * components of the base orbifold.  These are in addition to
-         * the ordinary boundary components described by \a puncturesTwisted.
+         * this is not a reflector circle of the base orbifold).
+         * \param reflectors the number of untwisted reflector circles of the
+         * base orbifold.  These are in addition to the ordinary boundary
+         * components described by \a punctures.
+         * \param reflectorsTwisted the number of twisted reflector circles
+         * of the base orbifold.  These are in addition to the ordinary
+         * boundary components described by \a puncturesTwisted.
          */
         [[deprecated]] SFSpace(Class baseClass, size_t genus,
             size_t punctures = 0, size_t puncturesTwisted = 0,
@@ -657,13 +662,17 @@ class SFSpace : public Manifold<3> {
          */
         void swap(SFSpace& other) noexcept;
 
+        //TODO Check when the BundleType can be modified.
         /**
-         * Returns which of the six bundle types this space belongs to.
+         * Returns which of the eight bundle types this space belongs to.
          *
          * The specific bundle type indicates whether the base orbifold is
          * orientable, and gives information on fibre-reversing paths.
          *
-         * For more information on the six bundle types, see the SFSpace
+         * The bundleType can be (indirectly) modified by calling
+         * addHandle(), addCrosscap(), addPuncture() or addReflector().
+         *
+         * For more information on the eight bundle types, see the SFSpace
          * class notes or the BundleType enumeration notes.
          *
          * \return the particular bundle type to which this space belongs.
@@ -690,9 +699,9 @@ class SFSpace : public Manifold<3> {
 
         /**
          * Returns the genus of the base orbifold.  All punctures and
-         * reflector boundaries in the base orbifold are ignored (i.e.,
-         * they are treated as though they had been replaced with ordinary
-         * filled discs).
+         * reflector circles in the base orbifold are ignored (i.e., they are
+         * treated as though they had been replaced with ordinary filled
+         * discs).
          *
          * The genus is the number of tori or projective planes that the
          * base surface is formed from.  In particular, if the base
@@ -703,8 +712,7 @@ class SFSpace : public Manifold<3> {
         size_t baseGenus() const;
         /**
          * Returns whether or not the base surface is orientable.
-         * Reflector boundary components of the base orbifold are not
-         * considered here.
+         * Reflector circles of the base orbifold are not considered here.
          *
          * The orientability of the base surface can be (indirectly)
          * modified by calling addCrosscap().
@@ -732,9 +740,9 @@ class SFSpace : public Manifold<3> {
          * - the base orbifold has an orientation-preserving loop that
          *   does reverse fibres in the 3-manifold.
          *
-         * Note that reflector boundary components, whilst making the
-         * overall 3-manifold non-orientable, have no bearing on the
-         * outcome of this routine.
+         * Note that reflector circles, whilst making the overall 3-manifold
+         * 3-manifold non-orientable, have no bearing on the outcome of this
+         * routine.
          *
          * \return \c true if and only an exceptional fibre can be
          * reflected as described above.
@@ -746,9 +754,9 @@ class SFSpace : public Manifold<3> {
          * torus or Klein bottle boundary components in the overall
          * 3-manifold.
          *
-         * Note that reflector boundaries on the base orbifold are _not_
-         * counted here; only the ordinary boundary components that give rise
-         * to real 3-manifold boundaries are included.
+         * Note that reflector circles on the base orbifold are _not_ counted
+         * here; only the ordinary boundary components that give rise to real
+         * 3-manifold boundaries are included.
          *
          * Both untwisted and twisted punctures (giving rise to torus
          * and Klein bottle boundaries respectively in the 3-manifold)
@@ -767,9 +775,9 @@ class SFSpace : public Manifold<3> {
          * rise to Klein bottle boundaries), or only untwisted punctures
          * (which give rise to torus boundaries).
          *
-         * Either way, reflector boundaries on the base orbifold are
-         * _not_ counted here; only ordinary boundary components that
-         * give rise to real 3-manifold boundaries are considered.
+         * Either way, reflector circles on the base orbifold are _not_
+         * counted here; only ordinary boundary components that give rise to
+         * to real 3-manifold boundaries are considered.
          *
          * \param twisted \c true if only twisted punctures should be
          * counted (those that give fibre-reversing paths and Klein
@@ -780,22 +788,21 @@ class SFSpace : public Manifold<3> {
          */
         size_t punctures(bool twisted) const;
         /**
-         * Returns the total number of reflector boundary components of the
-         * base orbifold.  This includes both twisted and untwisted
-         * reflector boundaries.
+         * Returns the total number of reflector circles of the base orbifold.
+         * This includes both twisted and untwisted reflector circles.
          *
-         * \return the total number of reflector boundary components.
+         * \return the total number of reflector circles.
          */
         size_t reflectors() const;
         /**
-         * Returns the number of reflector boundary components of the
-         * given type in the base orbifold.  This either counts only twisted
-         * reflector boundaries, or only untwisted reflector boundaries.
+         * Returns the number of reflector circles of the given type in the
+         * base orbifold.  This either counts only twisted reflector circles,
+         * or only untwisted reflector circles.
          *
-         * \param twisted \c true if only twisted reflector boundaries
-         * should be counted (those that give fibre-reversing paths), or
-         * \c false if only untwisted reflector boundaries should be counted.
-         * \return the number of reflector boundaries of the given type.
+         * \param twisted \c true if only twisted reflector circles should be
+         * counted (those that give fibre-reversing paths), or \c false if
+         * only untwisted reflector circles should be counted.
+         * \return the number of reflector circles of the given type.
          */
         size_t reflectors(bool twisted) const;
 
@@ -923,13 +930,12 @@ class SFSpace : public Manifold<3> {
          */
         void addPuncture(bool twisted = false, size_t nPunctures = 1);
         /**
-         * Adds one or more new reflector boundary components to the base
-         * orbifold.  The new reflector boundaries may be twisted or
-         * untwisted.
+         * Adds one or more new reflector circles to the base orbifold.
+         * The new reflector circles may be twisted or untwisted.
          *
-         * Each addition of a reflector boundary component is equivalent to
-         * removing a disc from the base orbifold and replacing it with an
-         * annulus with one reflector boundary.
+         * Each addition of a reflector circle is equivalent to removing a
+         * disc from the base orbifold and replacing it with an annulus with
+         * one reflector boundary.
          *
          * In the untwisted case, it has the effect of removing a trivially
          * fibred solid torus from the overall 3-manifold and replacing it
@@ -938,10 +944,10 @@ class SFSpace : public Manifold<3> {
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
          *
-         * \param twisted \c true if the new reflector boundaries should be
+         * \param twisted \c true if the new reflector circles should be
          * twisted (i.e., the boundaries should be fibre-reversing), or
-         * \c false if the new reflector boundaries should be untwisted.
-         * \param nReflectors the number of new reflector boundaries to add.
+         * \c false if the new reflector circles should be untwisted.
+         * \param nReflectors the number of new reflector circles to add.
          */
         void addReflector(bool twisted = false, size_t nReflectors = 1);
 
@@ -1104,21 +1110,19 @@ class SFSpace : public Manifold<3> {
          * This is only needed while the deprecated constructor which uses
          * the old base Class still exists.
          *
+         * \pre If \a hasTwistedBdry is \c true (meaning that there is at
+         * least one twisted puncture and/or reflector circle, then
+         * \a baseClass is either \c bo2 or \c bn3.
+         *
+         * \exception FailedPrecondition \a hasTwistedBdry is \c true, but
+         * \a baseClass is not either \c bo2 or \c bn3.
          * \exception UnsolvedCase The given \a baseClass cannot be mapped to
-         * a unique BundleType. This occurs precisely for the class \c bn3,
-         * which overlaps with both of the bundle types \c n3 and \c n4.
+         * a unique BundleType. This occurs precisely when \a baseClass is
+         * \c bn3 and \a hasTwistedBdry is \c false, since in this case we
+         * cannot distinguish between the two bundle types \c n3 and \c n4.
          */
         [[deprecated]] static BundleType convertBaseClassToBundleType(
-                Class baseClass);
-
-        /**
-         * Converts the new BundleType to the old base orbifold Class.
-         *
-         * This is only needed while the deprecated baseClass() routine still
-         * exists.
-         */
-        [[deprecated]] Class convertBundleTypeToBaseClass(
-                BundleType bundleType) const;
+                Class baseClass, bool hasTwistedBdry );
 
         /**
          * Replaces the fibre (\a alpha, \a beta) at the given iterator
@@ -1222,60 +1226,76 @@ inline SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
 inline SFSpace::SFSpace(SFSpace::Class baseClass, size_t genus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted) :
-        SFSpace(convertBaseClassToBundleType(baseClass), genus,
-                punctures, puncturesTwisted, reflectors, reflectorsTwisted) {
+        SFSpace(convertBaseClassToBundleType(
+                    baseClass, (puncturesTwisted + reflectorsTwisted > 0)),
+                genus, punctures, puncturesTwisted,
+                reflectors, reflectorsTwisted) {
 }
 
 inline SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
-        SFSpace::Class baseClass) {
+        SFSpace::Class baseClass, bool hasTwistedBdry) {
+    if (hasTwistedBdry) {
+        // Precondition specifies that baseClass is either \c bo2 or \c bn3.
+        switch (baseClass) {
+            case Class::bo2:
+                return BundleType::o;
+            case Class::bn3:
+                return BundleType::n;
+            default:
+                throw regina::FailedPrecondition(
+                        "With twisted punctures and/or reflector circles, "
+                        "baseClass must be either bo2 or bn3");
+        }
+    }
+
+    // We have no twisted punctures and no twisted reflector circles. Thus,
+    // fibre-reversing paths can only arise from handle/crosscap generators.
     switch (baseClass) {
+        // BundleType::o1
+        //  --> Orientable
+        //  --> No handle generator gives a fibre-reversing path
         case Class::o1:
             [[fallthrough]];
         case Class::bo1:
             return BundleType::o1;
+        // BundleType::o2
+        //  --> Orientable
+        //  --> Every handle generator gives a fibre-reversing path
         case Class::o2:
             [[fallthrough]];
         case Class::bo2:
             return BundleType::o2;
+        // BundleType::n1
+        //  --> Non-orientable
+        //  --> No crosscap generator gives a fibre-reversing path
         case Class::n1:
             [[fallthrough]];
         case Class::bn1:
             return BundleType::n1;
+        // BundleType::n2
+        //  --> Non-orientable
+        //  --> Every crosscap generator gives a fibre-reversing path
         case Class::n2:
             [[fallthrough]];
         case Class::bn2:
             return BundleType::n2;
+        // BundleType::n3
+        //  --> Non-orientable, with at least 2 crosscaps
+        //  --> Exactly 1 crosscap generator gives a fibre-reversing path
         case Class::n3:
             return BundleType::n3;
+        // BundleType::n4
+        //  --> Non-orientable, with at least 3 crosscaps
+        //  --> Exactly 2 crosscap generators give fibre-reversing paths
         case Class::n4:
             return BundleType::n4;
+        // For the remaining Class::bn3, we cannot distinguish between
+        // BundleType::n3 and BundleType::n4
         case Class::bn3:
             throw regina::UnsolvedCase(
                     "No well-defined conversion of Class::bn3 to BundleType");
         default:
             throw regina::InvalidArgument("Unknown Class value");
-    }
-}
-
-inline SFSpace::Class SFSpace::convertBundleTypeToBaseClass(
-        SFSpace::BundleType bundleType) const {
-    bool b = ( punctures_ > 0 || puncturesTwisted_ > 0 ||
-            reflectors_ > 0 || reflectorsTwisted_ > 0 );
-    switch (bundleType) {
-        case BundleType::o1:
-            return b ? Class::bo1 : Class::o1;
-        case BundleType::o2:
-            return b ? Class::bo2 : Class::o2;
-        case BundleType::n1:
-            return b ? Class::bn1 : Class::n1;
-        case BundleType::n2:
-            return b ? Class::bn2 : Class::n2;
-        case BundleType::n3:
-            return b ? Class::bn3 : Class::n3;
-        case BundleType::n4:
-            return b ? Class::bn3 : Class::n4;
-        default:
-            throw regina::InvalidArgument("Unknown BundleType value");
     }
 }
 
@@ -1296,7 +1316,24 @@ inline SFSpace::BundleType SFSpace::bundleType() const {
 }
 
 inline SFSpace::Class SFSpace::baseClass() const {
-    return convertBundleTypeToBaseClass(bundleType_);
+    bool b = ( punctures_ > 0 || puncturesTwisted_ > 0 ||
+            reflectors_ > 0 || reflectorsTwisted_ > 0 );
+    switch (bundleType) {
+        case BundleType::o1:
+            return b ? Class::bo1 : Class::o1;
+        case BundleType::o2:
+            return b ? Class::bo2 : Class::o2;
+        case BundleType::n1:
+            return b ? Class::bn1 : Class::n1;
+        case BundleType::n2:
+            return b ? Class::bn2 : Class::n2;
+        case BundleType::n3:
+            return b ? Class::bn3 : Class::n3;
+        case BundleType::n4:
+            return b ? Class::bn3 : Class::n4;
+        default:
+            throw regina::InvalidArgument("Unknown BundleType");
+    }
 }
 
 inline size_t SFSpace::baseGenus() const {
