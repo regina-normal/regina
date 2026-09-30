@@ -543,15 +543,21 @@ class SFSpace : public Manifold<3> {
          */
         SFSpace();
 
-        //TODO Check that we have listed all the preconditions.
+        //TODO Implementation should check the preconditions, and throw
+        //  FailedPrecondition if they aren't satisfied.
         /**
          * Creates a new Seifert fibred space of the given bundle type with
-         * the given base orbifold and no exceptional fibres.
+         * the given base orbifold, no exceptional fibres, and obstruction
+         * constant 0.
          *
-         * \pre If there are any twisted punctures or twisted reflector
-         * circles, then \a bundleType is either \c o or \c n. Otherwise,
-         * \a bundleType is either \c o1, \c o2, \c n1, \c n2, \c n3, or
-         * \c n4.
+         * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
+         * `genus >= 1`.
+         * \pre If \a bundleType is \c n3, then `genus >= 2`.
+         * \pre If \a bundleType is \c n4, then `genus >= 3`.
+         * \pre `puncturesTwisted + reflectorsTwisted` is even.
+         * \pre If `puncturesTwisted + reflectorsTwisted > 0`, then
+         * \a bundleType is either \c o or \c n. Otherwise, \a bundleType
+         * is either \c o1, \c o2, \c n1, \c n2, \c n3, or \c n4.
          *
          * \param bundleType indicates whether the base orbifold is
          * orientable, and gives information about fibre-reversing paths in
@@ -579,10 +585,13 @@ class SFSpace : public Manifold<3> {
         SFSpace(BundleType bundleType, size_t genus,
             size_t punctures = 0, size_t puncturesTwisted = 0,
             size_t reflectors = 0, size_t reflectorsTwisted = 0);
+
+        //TODO The new constructor adds extra preconditions, so we need to
+        //  document how this affects this deprecated constructor.
         /**
          * Deprecated constructor that creates a new Seifert fibred space of
-         * the given class with the given base orbifold and no exceptional
-         * fibres.
+         * the given class with the given base orbifold, no exceptional
+         * fibres, and obstruction constant 0.
          *
          * \deprecated This has been replaced by a constructor which uses the
          * new BundleType instead of the old base Class. This constructor now
@@ -669,7 +678,7 @@ class SFSpace : public Manifold<3> {
          * The specific bundle type indicates whether the base orbifold is
          * orientable, and gives information on fibre-reversing paths.
          *
-         * The bundleType can be (indirectly) modified by calling
+         * The bundle type can be (indirectly) modified by calling
          * addHandle(), addCrosscap(), addPuncture() or addReflector().
          *
          * For more information on the eight bundle types, see the SFSpace
@@ -1318,7 +1327,7 @@ inline SFSpace::BundleType SFSpace::bundleType() const {
 inline SFSpace::Class SFSpace::baseClass() const {
     bool b = ( punctures_ > 0 || puncturesTwisted_ > 0 ||
             reflectors_ > 0 || reflectorsTwisted_ > 0 );
-    switch (bundleType) {
+    switch (bundleType_) {
         case BundleType::o1:
             return b ? Class::bo1 : Class::o1;
         case BundleType::o2:
