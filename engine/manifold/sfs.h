@@ -543,8 +543,6 @@ class SFSpace : public Manifold<3> {
          */
         SFSpace();
 
-        //TODO Implementation should check the preconditions, and throw
-        //  FailedPrecondition if they aren't satisfied.
         /**
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold, no exceptional fibres, and obstruction
@@ -594,14 +592,15 @@ class SFSpace : public Manifold<3> {
          * fibres, and obstruction constant 0.
          *
          * \deprecated This has been replaced by a constructor which uses the
-         * new BundleType instead of the old base Class. This constructor now
-         * attempts to convert \a baseClass to the new BundleType whenever
-         * possible. In cases where such a conversion is not well-defined
-         * (see below), this constructor now throws UnsolvedCase.
+         * new BundleType instead of the old base Class, and which strictly
+         * enforces preconditions. This constructor now attempts to convert
+         * \a baseClass to the new BundleType where possible, and throws
+         * UnsolvedCase where such a conversion is not well-defined (see
+         * below). Moreover, this constructor now enforces preconditions
+         * which were not previously enforced (see below).
          *
-         * \exception FailedPrecondition There are twisted punctures and/or
-         * twisted reflector circles, but \a baseClass is not either \c bo2
-         * or \c bn3.
+         * \exception FailedPrecondition A precondition (see below) is not
+         * satisfied.
          * \exception UnsolvedCase There are no twisted punctures and no
          * twisted reflector circles, and \a baseClass is \c bn3.
          *
@@ -612,6 +611,11 @@ class SFSpace : public Manifold<3> {
          * \c bo2, \c bn1, \c bn2 or \c bn3.
          * \pre If there are any twisted punctures or reflector circles, then
          * \a baseClass is either \c bo2 or \c bn3.
+         * \pre `puncturesTwisted + reflectorsTwisted` is even.
+         * \pre If \a baseClass is \c o2, \c n1, \c n2, \c bo2, \c bn1,
+         * \c bn2 or \c bn3, then `genus >= 1`.
+         * \pre If \a baseClass is \c n3, then `genus >= 2`.
+         * \pre If \a baseClass is \c n4, then `genus >= 3`.
          *
          * \param baseClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
@@ -671,7 +675,7 @@ class SFSpace : public Manifold<3> {
          */
         void swap(SFSpace& other) noexcept;
 
-        //TODO Check when the BundleType can be modified.
+        //TODO Check which routines can modify bundleType_.
         /**
          * Returns which of the eight bundle types this space belongs to.
          *
@@ -700,7 +704,8 @@ class SFSpace : public Manifold<3> {
          *
          * \deprecated The role of the Class enumeration has been replaced by
          * the BundleType enumeration, and hence this routine has been
-         * replaced by the bundleType() routine.
+         * replaced by the bundleType() routine. This routine now simply
+         * converts the BundleType into the corresponding Class.
          *
          * \return the particular class to which this space belongs.
          */
@@ -880,6 +885,8 @@ class SFSpace : public Manifold<3> {
          */
         long obstruction() const;
 
+        //TODO Check which routines can modify bundleType_.
+
         /**
          * Inserts a new handle into the base orbifold.
          *
@@ -888,8 +895,8 @@ class SFSpace : public Manifold<3> {
          * removing a disc from the base orbifold and replacing it with
          * a punctured torus.
          *
-         * Note that this operation may alter which of the classes
-         * described by Class this space belongs to.
+         * Note that this operation may alter which of the bundle types
+         * described by BundleType this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -908,8 +915,8 @@ class SFSpace : public Manifold<3> {
          * removing a disc from the base orbifold and replacing it with
          * a Mobius band.
          *
-         * Note that this operation may alter which of the classes
-         * described by Class this space belongs to.
+         * Note that this operation may alter which of the bundle types
+         * described by BundleType this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -920,6 +927,13 @@ class SFSpace : public Manifold<3> {
          * preserve the directions of the fibres.
          */
         void addCrosscap(bool fibreReversing = false);
+
+        //TODO Make addPuncture()/addReflector() throw if both twisted is
+        //  true, and nPunctures/nReflectors, respectively, is odd. Then need
+        //  to add a new routine which allows for adding an odd number of
+        //  twisted punctures together with an odd number of twisted
+        //  reflectors.
+
         /**
          * Inserts one or more new punctures into the base orbifold.
          * The punctures may be twisted or untwisted.
@@ -1230,6 +1244,62 @@ inline SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
         punctures_(punctures), puncturesTwisted_(puncturesTwisted),
         reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
         nFibres_(0), b_(0) {
+    // Enforce preconditions on genus.
+    switch (bundleType) {
+        // Bundle types o2, n, n1 and n2 require genus >= 1.
+        case BundleType::o2:
+            [[fallthrough]];
+        case BundleType::n:
+            [[fallthrough]];
+        case BundleType::n1:
+            [[fallthrough]];
+        case BundleType::n2:
+            if (genus < 1) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 1 for the "
+                        "given bundleType");
+            }
+            break;
+        // Bundle type n3 requires genus >= 2.
+        case BundleType::n3:
+            if (genus < 2) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 2 for "
+                        "BundleType::n3");
+            }
+            break;
+        // Bundle type n4 requires genus >= 3.
+        case BundleType::n4:
+            if (genus < 3) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 3 for "
+                        "BundleType::n4");
+            }
+            break;
+    }
+
+    // Enforce preconditions on twisted punctures and twisted reflectors.
+    size_t totalTwisted = puncturesTwisted + reflectorsTwisted;
+    if (totalTwisted % 2 != 0) {
+        throw regina::FailedPrecondition(
+                "SFSpace::SFSpace() requires puncturesTwisted + "
+                "reflectorsTwisted to be even");
+    }
+    if (totalTwisted == 0) {
+        if (bundleType == BundleType::o || bundleType == BundleType::n) {
+            throw regina::FailedPrecondition(
+                    "SFSpace::SFSpace() requires that bundleType is not "
+                    "BundleType::o or BundleType::n if there are no twisted "
+                    "punctures and no twisted reflectors");
+        }
+    } else {
+        if (! (bundleType == BundleType::o || bundleType == BundleType::n)) {
+            throw regina::FailedPrecondition(
+                    "SFSpace::SFSpace() requires that bundleType is "
+                    "BundleType::o or BundleType::n if there are any twisted "
+                    "punctures and/or twisted reflectors");
+        }
+    }
 }
 
 inline SFSpace::SFSpace(SFSpace::Class baseClass, size_t genus,
@@ -1252,13 +1322,15 @@ inline SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
                 return BundleType::n;
             default:
                 throw regina::FailedPrecondition(
-                        "With twisted punctures and/or reflector circles, "
-                        "baseClass must be either bo2 or bn3");
+                        "SFSpace::SFSpace() requires baseClass to be either "
+                        "bo2 or bn3 if there are any twisted punctures "
+                        "and/or twisted reflectors");
         }
     }
 
     // We have no twisted punctures and no twisted reflector circles. Thus,
     // fibre-reversing paths can only arise from handle/crosscap generators.
+    //TODO Enforce precondition that bo1, etc have boundary.
     switch (baseClass) {
         // BundleType::o1
         //  --> Orientable
@@ -1302,9 +1374,11 @@ inline SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
         // BundleType::n3 and BundleType::n4
         case Class::bn3:
             throw regina::UnsolvedCase(
-                    "No well-defined conversion of Class::bn3 to BundleType");
+                    "SFSpace::SFSpace() could not convert Class::bn3 to a "
+                    "well-defined BundleType");
         default:
-            throw regina::InvalidArgument("Unknown Class value");
+            throw regina::InvalidArgument(
+                    "SFSpace::SFSpace() encountered an unknown Class value");
     }
 }
 
@@ -1341,7 +1415,8 @@ inline SFSpace::Class SFSpace::baseClass() const {
         case BundleType::n4:
             return b ? Class::bn3 : Class::n4;
         default:
-            throw regina::InvalidArgument("Unknown BundleType");
+            throw regina::InvalidArgument(
+                    "SFSpace::baseClass() encountered an unknown BundleType");
     }
 }
 
