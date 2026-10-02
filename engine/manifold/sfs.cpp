@@ -193,35 +193,35 @@ SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
 }
 
 void SFSpace::addHandle(bool fibreReversing) {
-    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
-    //  Class/class_/baseClass()
-    Class class_(baseClass());
-
-    // First fix the class.
-    // The transitions between classes have been worked out on paper
-    // case by case (in particular, following how the generators of the
-    // handle relate to the new crosscap generators in the non-orientable
-    // case).
-    // Recall also that in the orientable case we can convert +/- to -/-,
-    // and in the non-orientable case we can convert +/+/+/- to +/-/-/-
-    // (where + and - correspond to fibre-preserving and fibre-reversing
-    // generators respectively).  See Orlik [1972], p89 for details.
+    // First fix the bundle type.
+    //
+    // Page 89 of Orlik [1972] goes through some useful details for this.
     if (fibreReversing) {
-        // Fibre-reversing.
-        switch (class_) {
-            case Class::o1:
-                class_ = Class::o2; break;
-            case Class::n1:
-                class_ = (genus_ % 2 == 0 ? Class::n4 : Class::n3); break;
-            case Class::n2:
-                class_ = Class::n4; break;
-            case Class::bo1:
-                class_ = Class::bo2; break;
-            case Class::bn1:
-            case Class::bn2:
-                class_ = Class::bn3; break;
+        switch (bundleType_) {
+            // For orientable base orbifold, if we have any fibre-reversing
+            // handle generators at all, then we can choose new generators so
+            // that *all* handle generators are fibre-reversing.
+            case BundleType::o1:
+                bundleType_ = BundleType::o2;
+                break;
+            // For non-orientable base orbifold, let R denote the number of
+            // fibre-reversing crosscap generators. Adding a handle preserves
+            // the parity of R. Moreover, whenever we have +/-/-/-, there is
+            // a change of basis which replaces this with +/+/+/-; thus, if
+            // the bundle type is not n1 or n2, then applying this change of
+            // basis repeatedly gets us down to either R == 1 (bundle type
+            // n3) or R == 2 (bundle type n4).
+            case BundleType::n1:
+                bundleType_ = (genus_ % 2 == 0 ?
+                        BundleType::n4 :
+                        BundleType::n3);
+                break;
+            case BundleType::n2:
+                //TODO Need to check this
+                bundleType_ = BundleType::n4;
+                break;
+            // No change to bundle types o, o2, n, n3 and n4.
             default:
-                // No change.
                 break;
         }
     } else {
