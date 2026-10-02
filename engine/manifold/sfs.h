@@ -208,7 +208,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * - If the base orbifold had no punctures or reflector circles, then the
  *   Seifert fibred space was placed into one of the six classes \c o1, \c o2,
  *   \c n1, \c n2, \c n3 and \c n4, as detailed on page 88 of "Seifert
- *   Manifolds", Peter Orlik, Springer-Verlag, 1972. These old classes are
+ *   Manifolds", Peter Orlik, Springer-Verlag, 1972 (but see the related
+ *   warning in the Class enumeration notes). These old classes are
  *   essentially equivalent to the corresponding new bundle types.
  * - If the base orbifold had punctures and/or reflector circles, then the
  *   Seifert fibred space was placed into one of five simplified classes
@@ -301,9 +302,9 @@ class SFSpace : public Manifold<3> {
             n2 = 202,
             /**
              * Indicates that the core surface is non-orientable, that it has
-             * non-orientable genus at least two, that precisely one of its
-             * crosscap generators gives a fibre-reversing path, and that
-             * none of its boundary generators give fibre-reversing paths.
+             * non-orientable genus at least two, that all but one of its
+             * crosscap generators give fibre-reversing paths, and that none
+             * of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
              * orbifold cannot have any twisted punctures or twisted
@@ -312,7 +313,7 @@ class SFSpace : public Manifold<3> {
             n3 = 203,
             /**
              * Indicates that the core surface is non-orientable, that it has
-             * non-orientable genus at least three, that precisely two of its
+             * non-orientable genus at least three, that all but two of its
              * crosscap generators give fibre-reversing paths, and that none
              * of its boundary generators give fibre-reversing paths.
              *
@@ -328,6 +329,21 @@ class SFSpace : public Manifold<3> {
          * \c n2, \c n3, \c n4 for base orbifolds without boundaries, plus
          * five classes \c bo1, \c b02, \c bn1, \c bn2, \c bn3 for base
          * orbifolds with boundaries.
+         *
+         * \warning In Regina 7.4.1 and earlier, although the implementation
+         * correctly followed the conventions of Orlik [1972], some of the
+         * documentation incorrectly described conventions which were
+         * inconsistent both with Orlik and with what was actually
+         * implemented. In detail:
+         * - It was previously stated that for a base orbifold of class
+         *   \c n3, "precisely one of its generators gives a fibre-reversing
+         *   path". This should instead have said "all but one of its
+         *   generators give fibre-reversing paths".
+         * - It was previously stated that for a base orbifold of class
+         *   \c n4, "precisely two of its generators gives a fibre-reversing
+         *   path". This should instead have said "all but two of its
+         *   generators give fibre-reversing paths".
+         * These inconsistencies in the documentation have now been fixed.
          */
         enum class [[deprecated]] Class {
             /**
@@ -356,16 +372,16 @@ class SFSpace : public Manifold<3> {
             n2 = 202,
             /**
              * Indicates that the base orbifold is non-orientable with
-             * no punctures or reflector circles, that it has
-             * non-orientable genus at least two, and that precisely
-             * one of its generators gives a fibre-reversing path.
+             * no punctures or reflector circles, that it has non-orientable
+             * genus at least two, and that all but one of its generators
+             * give fibre-reversing paths.
              */
             n3 = 203,
             /**
              * Indicates that the base orbifold is non-orientable with
-             * no punctures or reflector circles, that it has
-             * non-orientable genus at least three, and that precisely
-             * two of its generators give fibre-reversing paths.
+             * no punctures or reflector circles, that it has non-orientable
+             * genus at least three, and that all but two of its generators
+             * give fibre-reversing paths.
              */
             n4 = 204,
 

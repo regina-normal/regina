@@ -195,7 +195,8 @@ SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
 void SFSpace::addHandle(bool fibreReversing) {
     // First fix the bundle type.
     //
-    // Page 89 of Orlik [1972] goes through some useful details for this.
+    // Page 89 of Orlik [1972] includes additional details on some of the
+    // reasoning below.
     if (fibreReversing) {
         switch (bundleType_) {
             // For orientable base orbifold, if we have any fibre-reversing
@@ -204,20 +205,25 @@ void SFSpace::addHandle(bool fibreReversing) {
             case BundleType::o1:
                 bundleType_ = BundleType::o2;
                 break;
-            // For non-orientable base orbifold, let R denote the number of
-            // fibre-reversing crosscap generators. Adding a handle preserves
-            // the parity of R. Moreover, whenever we have +/-/-/-, there is
-            // a change of basis which replaces this with +/+/+/-; thus, if
-            // the bundle type is not n1 or n2, then applying this change of
-            // basis repeatedly gets us down to either R == 1 (bundle type
-            // n3) or R == 2 (bundle type n4).
+            // For non-orientable base orbifold, let P denote the number of
+            // fibre-preserving crosscap generators. After adding a handle,
+            // we can always choose crosscap generators so that:
+            // - The parity of P is preserved.
+            // - There is at least one fibre-preserving crosscap generator,
+            //   and also at least one fibre-reversing crosscap generator.
+            // Moreover, whenever we have +/+/+/-, there is a change of basis
+            // which replaces this with +/-/-/-. It follows that after adding
+            // a handle, the bundle type becomes:
+            // - n3, if P was odd.
+            // - n4, if P was even.
             case BundleType::n1:
+                // P is equal to the non-orientable genus.
                 bundleType_ = (genus_ % 2 == 0 ?
                         BundleType::n4 :
                         BundleType::n3);
                 break;
             case BundleType::n2:
-                //TODO Need to check this
+                // P is zero.
                 bundleType_ = BundleType::n4;
                 break;
             // No change to bundle types o, o2, n, n3 and n4.
@@ -231,7 +237,7 @@ void SFSpace::addHandle(bool fibreReversing) {
 
     // Finally increment the genus (either orientable or non-orientable).
     if (baseOrientable())
-        genus_++;
+        ++genus_;
     else
         genus_ += 2;
 }
