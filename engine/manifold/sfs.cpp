@@ -63,6 +63,135 @@ SFSFibre SFSpace::fibre(size_t which) const {
     return *pos;
 }
 
+SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
+        size_t punctures, size_t puncturesTwisted,
+        size_t reflectors, size_t reflectorsTwisted) :
+        bundleType_(bundleType), genus_(genus),
+        punctures_(punctures), puncturesTwisted_(puncturesTwisted),
+        reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
+        nFibres_(0), b_(0) {
+    // Enforce preconditions on genus.
+    switch (bundleType) {
+        // Bundle types o2, n, n1 and n2 require genus >= 1.
+        case BundleType::o2:
+            [[fallthrough]];
+        case BundleType::n:
+            [[fallthrough]];
+        case BundleType::n1:
+            [[fallthrough]];
+        case BundleType::n2:
+            if (genus < 1) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 1 for the "
+                        "given bundleType");
+            }
+            break;
+        // Bundle type n3 requires genus >= 2.
+        case BundleType::n3:
+            if (genus < 2) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 2 for "
+                        "BundleType::n3");
+            }
+            break;
+        // Bundle type n4 requires genus >= 3.
+        case BundleType::n4:
+            if (genus < 3) {
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires genus >= 3 for "
+                        "BundleType::n4");
+            }
+            break;
+    }
+
+    // Enforce preconditions on twisted punctures and twisted reflectors.
+    size_t totalTwisted = puncturesTwisted + reflectorsTwisted;
+    if (totalTwisted % 2 != 0) {
+        throw regina::FailedPrecondition(
+                "SFSpace::SFSpace() requires puncturesTwisted + "
+                "reflectorsTwisted to be even");
+    }
+    if (totalTwisted == 0) {
+        if (bundleType == BundleType::o || bundleType == BundleType::n) {
+            throw regina::FailedPrecondition(
+                    "SFSpace::SFSpace() requires that bundleType is not "
+                    "BundleType::o or BundleType::n if there are no twisted "
+                    "punctures and no twisted reflectors");
+        }
+    } else {
+        if (! (bundleType == BundleType::o || bundleType == BundleType::n)) {
+            throw regina::FailedPrecondition(
+                    "SFSpace::SFSpace() requires that bundleType is "
+                    "BundleType::o or BundleType::n if there are any twisted "
+                    "punctures and/or twisted reflectors");
+        }
+    }
+}
+
+SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
+        SFSpace::Class baseClass, bool hasUntwistedBdry, bool hasTwistedBdry) {
+    if (hasTwistedBdry) {
+        // Precondition specifies that baseClass is either \c bo2 or \c bn3.
+        switch (baseClass) {
+            case Class::bo2:
+                return BundleType::o;
+            case Class::bn3:
+                return BundleType::n;
+            default:
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires baseClass to be either "
+                        "bo2 or bn3 if there are any twisted punctures "
+                        "and/or twisted reflectors");
+        }
+    }
+
+    // We have no twisted punctures and no twisted reflector circles. Thus,
+    // fibre-reversing paths can only arise from handle/crosscap generators.
+    if (hasUntwistedBdry) {
+        switch (baseClass) {
+            case Class::bo1:
+                return BundleType::o1;
+            case Class::bo2:
+                return BundleType::o2;
+            case Class::bn1:
+                return BundleType::n1;
+            case Class::bn2:
+                return BundleType::n2;
+            case Class::bn3:
+                // In this case, we cannot distinguish between BundleType::n3
+                // and BundleType::n4.
+                throw regina::UnsolvedCase(
+                        "SFSpace::SFSpace() could not convert Class::bn3 to a "
+                        "well-defined BundleType");
+            default:
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires baseClass to be bo1, "
+                        "bo2, bn1, bn2 or bn3 if there are any punctures "
+                        "and/or reflectors");
+        }
+    } else {
+        switch (baseClass) {
+            case Class::o1:
+                return BundleType::o1;
+            case Class::o2:
+                return BundleType::o2;
+            case Class::n1:
+                return BundleType::n1;
+            case Class::n2:
+                return BundleType::n2;
+            case Class::n3:
+                return BundleType::n3;
+            case Class::n4:
+                return BundleType::n4;
+            default:
+                throw regina::FailedPrecondition(
+                        "SFSpace::SFSpace() requires baseClass to be o1, "
+                        "o2, n1, n2, n3 or n4 if there are no punctures "
+                        "and no reflectors");
+        }
+    }
+}
+
 void SFSpace::addHandle(bool fibreReversing) {
     //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
     //  Class/class_/baseClass()
