@@ -1026,10 +1026,6 @@ void SFSpace::writeBaseExtraCount(std::ostream& out, size_t count,
 }
 
 std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
-    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
-    //  Class/class_/baseClass()
-    Class class_(baseClass());
-
     bool named = false;
 
     // IMPORTANT: We do not allow spaces with > 2 reflector boundary
@@ -1112,14 +1108,20 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
                 "twisted reflector", tex);
     }
 
-    if (class_ == Class::o2 || class_ == Class::bo2)
-        out << (tex ? "/o_2" : "/o2");
-    else if (class_ == Class::n2 || class_ == Class::bn2)
-        out << (tex ? "/n_2" : "/n2");
-    else if (class_ == Class::n3 || class_ == Class::bn3)
-        out << (tex ? "/n_3" : "/n3");
-    else if (class_ == Class::n4)
-        out << (tex ? "/n_4" : "/n4");
+    switch (bundleType_) {
+        case BundleType::o:
+            out << "/o"; break;
+        case BundleType::n:
+            out << "/n"; break;
+        case BundleType::o2:
+            out << (tex ? "/o_2" : "/o2"); break;
+        case BundleType::n2:
+            out << (tex ? "/n_2" : "/n2"); break;
+        case BundleType::n3:
+            out << (tex ? "/n_3" : "/n3"); break;
+        case BundleType::n4:
+            out << (tex ? "/n_4" : "/n4"); break;
+    }
 
     return out;
 }
@@ -1162,10 +1164,6 @@ std::ostream& SFSpace::writeCommonStructure(std::ostream& out, bool tex)
 }
 
 std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
-    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
-    //  Class/class_/baseClass()
-    Class class_(baseClass());
-
     // Things we don't deal with just yet.
     if (fibreNegating())
         return writeStructure(out);
@@ -1199,7 +1197,8 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // TODO: The four non-orientable flat manifolds are on Orlik p140.
 
     // SFS over the 2-sphere:
-    if (genus_ == 0 && class_ == Class::o1) {
+    if (genus_ == 0 && bundleType_ == BundleType::o1 &&
+            punctures() == 0 && reflectors() == 0) {
         if (nFibres_ == 4 && fibre[0] == two && fibre[1] == two &&
                 fibre[2] == two && fibre[3] == two && b_ == -2) {
             // [ S2 : (2,1), (2,1), (2,-1), (2,-1) ]
@@ -1365,7 +1364,8 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     }
 
     // SFS over the real projective plane:
-    if (genus_ == 1 && class_ == Class::n2) {
+    if (genus_ == 1 && bundleType_ == BundleType::n2 &&
+            punctures() == 0 && reflectors() == 0) {
         if (nFibres_ == 0) {
             // No exceptional fibres.
             if (b_ == 0) {
