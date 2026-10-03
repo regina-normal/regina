@@ -691,7 +691,6 @@ class SFSpace : public Manifold<3> {
          */
         void swap(SFSpace& other) noexcept;
 
-        //TODO Check which routines can modify bundleType_.
         /**
          * Returns which of the eight bundle types this space belongs to.
          *
@@ -901,8 +900,6 @@ class SFSpace : public Manifold<3> {
          */
         long obstruction() const;
 
-        //TODO Check which routines can modify bundleType_.
-
         /**
          * Inserts a new handle into the base orbifold.
          *
@@ -944,11 +941,12 @@ class SFSpace : public Manifold<3> {
          */
         void addCrosscap(bool fibreReversing = false);
 
-        //TODO Make addPuncture()/addReflector() throw if both twisted is
-        //  true, and nPunctures/nReflectors, respectively, is odd. Then need
-        //  to add a new routine which allows for adding an odd number of
-        //  twisted punctures together with an odd number of twisted
-        //  reflectors.
+        //TODO Consider adding a new routine which allows for adding an odd
+        //  number of twisted punctures together with an odd number of
+        //  twisted reflectors. But perhaps an easier option would just be to
+        //  add sentences to addPuncture() and addReflector() advising users
+        //  that if they want odd numbers, they should ensure that this is
+        //  the case when they initially construct the SFSpace.
 
         /**
          * Inserts one or more new punctures into the base orbifold.
@@ -959,8 +957,18 @@ class SFSpace : public Manifold<3> {
          * new torus boundary for the 3-manifold, and in the twisted
          * case it results in a new Klein bottle boundary.
          *
+         * Also, in the twisted case, the total number of added punctures
+         * must be even.
+         *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
+         *
+         * \warning In Regina 7.4.1 and earlier, this routine did not impose
+         * the requirement that if \a twisted is \c true then \a nPunctures
+         * is even.
+         *
+         * \exception InvalidArgument \a twisted is \c true but \a nPunctures
+         * is odd.
          *
          * \param twisted \c true if the new punctures should be twisted
          * (i.e., their boundaries should be fibre-reversing), or \c false
@@ -980,8 +988,18 @@ class SFSpace : public Manifold<3> {
          * fibred solid torus from the overall 3-manifold and replacing it
          * with an appropriately fibred twisted I-bundle over the torus.
          *
+         * Also, in the twisted case, the total number of added reflectors
+         * must be even.
+         *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
+         *
+         * \warning In Regina 7.4.1 and earlier, this routine did not impose
+         * the requirement that if \a twisted is \c true then \a nReflectors
+         * is even.
+         *
+         * \exception InvalidArgument \a twisted is \c true but \a nReflectors
+         * is odd.
          *
          * \param twisted \c true if the new reflector circles should be
          * twisted (i.e., the boundaries should be fibre-reversing), or

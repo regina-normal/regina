@@ -339,70 +339,50 @@ void SFSpace::addCrosscap(bool fibreReversing) {
 }
 
 void SFSpace::addPuncture(bool twisted, size_t nPunctures) {
-    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
-    //  Class/class_/baseClass()
-    Class class_(baseClass());
-
     if (twisted) {
+        // The total number of twisted punctures and twisted reflectors
+        // should always remain even.
+        if (nPunctures % 2 != 0) {
+            throw InvalidArgument(
+                    "SFSpace::addPuncture() requires that if twisted is "
+                    "true, then nPunctures is even");
+        }
         puncturesTwisted_ += nPunctures;
 
-        if (baseOrientable())
-            class_ = Class::bo2;
-        else
-            class_ = Class::bn3;
+        // Adding a twisted puncture forces the bundle type to be either
+        // o or n.
+        if (baseOrientable()) {
+            bundleType_ = BundleType::o;
+        } else {
+            bundleType_ = BundleType::n;
+        }
     } else {
         punctures_ += nPunctures;
-
-        switch(class_) {
-            case Class::o1:
-                class_ = Class::bo1; break;
-            case Class::o2:
-                class_ = Class::bo2; break;
-            case Class::n1:
-                class_ = Class::bn1; break;
-            case Class::n2:
-                class_ = Class::bn2; break;
-            case Class::n3:
-            case Class::n4:
-                class_ = Class::bn3; break;
-            default:
-                // No change.
-                break;
-        }
+        // Adding an untwisted puncture never changes the bundle type.
     }
 }
 
 void SFSpace::addReflector(bool twisted, size_t nReflectors) {
-    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
-    //  Class/class_/baseClass()
-    Class class_(baseClass());
-
     if (twisted) {
+        // The total number of twisted punctures and twisted reflectors
+        // should always remain even.
+        if (nReflectors % 2 != 0) {
+            throw InvalidArgument(
+                    "SFSpace::addReflector() requires that if twisted is "
+                    "true, then nReflectors is even");
+        }
         reflectorsTwisted_ += nReflectors;
 
-        if (baseOrientable())
-            class_ = Class::bo2;
-        else
-            class_ = Class::bn3;
+        // Adding a twisted reflector forces the bundle type to be either
+        // o or n.
+        if (baseOrientable()) {
+            bundleType_ = BundleType::o;
+        } else {
+            bundleType_ = BundleType::n;
+        }
     } else {
         reflectors_ += nReflectors;
-
-        switch(class_) {
-            case Class::o1:
-                class_ = Class::bo1; break;
-            case Class::o2:
-                class_ = Class::bo2; break;
-            case Class::n1:
-                class_ = Class::bn1; break;
-            case Class::n2:
-                class_ = Class::bn2; break;
-            case Class::n3:
-            case Class::n4:
-                class_ = Class::bn3; break;
-            default:
-                // No change.
-                break;
-        }
+        // Adding an untwisted reflector never changes the bundle type.
     }
 }
 
