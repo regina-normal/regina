@@ -74,11 +74,8 @@ SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
     switch (bundleType) {
         // Bundle types o2, n, n1 and n2 require genus >= 1.
         case BundleType::o2:
-            [[fallthrough]];
         case BundleType::n:
-            [[fallthrough]];
         case BundleType::n1:
-            [[fallthrough]];
         case BundleType::n2:
             if (genus < 1) {
                 throw regina::FailedPrecondition(
@@ -198,6 +195,7 @@ void SFSpace::addHandle(bool fibreReversing) {
     // Page 89 of Orlik [1972] includes additional details on some of the
     // reasoning below.
     if (fibreReversing) {
+        // Fibre-reversing.
         switch (bundleType_) {
             // For orientable base orbifold, if we have any fibre-reversing
             // handle generators at all, then we can choose new generators so
@@ -206,8 +204,9 @@ void SFSpace::addHandle(bool fibreReversing) {
                 bundleType_ = BundleType::o2;
                 break;
             // For non-orientable base orbifold, let P denote the number of
-            // fibre-preserving crosscap generators. After adding a handle,
-            // we can always choose crosscap generators so that:
+            // fibre-preserving crosscap generators. After adding a handle
+            // with either one or both generators being fibre-reversing, we
+            // can always choose crosscap generators so that:
             // - The parity of P is preserved.
             // - There is at least one fibre-preserving crosscap generator,
             //   and also at least one fibre-reversing crosscap generator.
@@ -243,60 +242,93 @@ void SFSpace::addHandle(bool fibreReversing) {
 }
 
 void SFSpace::addCrosscap(bool fibreReversing) {
-    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
-    //  Class/class_/baseClass()
-    Class class_(baseClass());
-
     // We're making the base orbifold non-orientable.
     // Convert orientable genus to non-orientable genus if required.
     if (baseOrientable())
         genus_ *= 2;
-
-    // Now fix the class.
-    // The transitions between classes have been worked out on paper
-    // case by case (in particular, following how the generators of the
-    // original handles relate to the reformulated crosscap generators in
-    // the orientable case).
-    // Recall also that in the orientable case we can convert +/- to -/-,
-    // and in the non-orientable case we can convert +/+/+/- to +/-/-/-
-    // (where + and - correspond to fibre-preserving and fibre-reversing
-    // generators respectively).  See Orlik [1972], p89 for details.
+    
+    // Now fix the bundle type.
+    //
+    // Page 89 of Orlik [1972] includes additional details on some of the
+    // reasoning below.
+    //
+    // If the base orbifold was orientable, it will of course become
+    // non-orientable now. After a change of basis replacing all the handle
+    // generators with new crosscap generators, we have the following:
+    // - If no handle generator was fibre-reversing, then the new crosscap
+    //   generators will all have the same fibre-reversing/fibre-preserving
+    //   behaviour as the crosscap generator added by this routine.
+    // - On the other hand, if even one handle generator at all was
+    //   fibre-reversing, then no matter what type of crosscap we are adding,
+    //   the new crosscap generators will consist of a mix of fibre-reversing
+    //   and fibre-preserving ones. Moreover, the changes of basis for
+    //   replacing handle generators with crosscap generators, and for
+    //   replacing +/+/+/- with +/-/-/-, always preserve the parity of the
+    //   number of fibre-preserving crosscap generators.
     if (fibreReversing) {
         // Fibre-reversing.
-        switch(class_) {
-            case Class::o1:
-                class_ = Class::n2; break;
-            case Class::o2:
-                class_ = Class::n4; break;
-            case Class::n1:
-                class_ = (genus_ % 2 == 0 ? Class::n4 : Class::n3); break;
-            case Class::bo1:
-                class_ = Class::bn2; break;
-            case Class::bo2:
-            case Class::bn1:
-                class_ = Class::bn3; break;
+        switch (bundleType_) {
+            case BundleType::o:
+                // If we already had a fibre-reversing *boundary* generator,
+                // then adding a crosscap doesn't change that.
+                bundleType_ = BundleType::n;
+                break;
+            case BundleType::o1:
+                // All crosscap generators end up being fibre-reversing.
+                bundleType_ = BundleType::n2;
+                break;
+            case BundleType::o2:
+                // We end up with a mix of fibre-reversing and
+                // fibre-preserving crosscap generators and the total number
+                // of fibre-preserving crosscap generators is even.
+                bundleType_ = BundleType::n4;
+                break;
+            case BundleType::n1:
+                // In this case, genus_ counts the number of old crosscaps,
+                // all of which are fibre-preserving, so the parity of genus_
+                // tells us what the new bundle type will be.
+                bundleType_ = (genus_ % 2 == 0 ?
+                        BundleType::n4 :
+                        BundleType::n3);
+                break;
+            // No change to bundle types n, n2, n3 and n4.
             default:
-                // No change.
                 break;
         }
     } else {
         // Fibre-preserving.
-        switch(class_) {
-            case Class::o1:
-                class_ = Class::n1; break;
-            case Class::o2:
-            case Class::n2:
-            case Class::n4:
-                class_ = Class::n3; break;
-            case Class::n3:
-                class_ = Class::n4; break;
-            case Class::bo1:
-                class_ = Class::bn1; break;
-            case Class::bo2:
-            case Class::bn2:
-                class_ = Class::bn3; break;
+        switch (bundleType_) {
+            case BundleType::o:
+                // If we already had a fibre-reversing *boundary* generator,
+                // then adding a crosscap doesn't change that.
+                bundleType_ = BundleType::n;
+                break;
+            case BundleType::o1:
+                // All crosscap generators end up being fibre-preserving.
+                bundleType_ = BundleType::n1;
+                break;
+            // Now we have various ways to end up with a mix of
+            // fibre-reversing and fibre-preserving crosscap generators.
+            // This includes several possibilities where the total number P
+            // of fibre-preserving crosscaps generators ends up being odd.
+            // - For bundle type o2, converting all the handle generators to
+            //   crosscap generators preserves the parity of P.
+            // - For bundle type n2, the crosscap generator that we are
+            //   adding now becomes the unique fibre-preserving one.
+            // - For bundle type n4, the crosscap generator that we are
+            //   adding now changes P from even to odd.
+            case BundleType::o2:
+            case BundleType::n2:
+            case BundleType::n4:
+                bundleType_ = BundleType::n3;
+                break;
+            // For bundle type n3, the crosscap generator that we are adding
+            // now changes P from odd to even.
+            case BundleType::n3:
+                bundleType_ = BundleType::n4;
+                break;
+            // No change for bundle types n and n1.
             default:
-                // No change.
                 break;
         }
     }
