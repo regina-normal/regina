@@ -941,13 +941,6 @@ class SFSpace : public Manifold<3> {
          */
         void addCrosscap(bool fibreReversing = false);
 
-        //TODO Consider adding a new routine which allows for adding an odd
-        //  number of twisted punctures together with an odd number of
-        //  twisted reflectors. But perhaps an easier option would just be to
-        //  add sentences to addPuncture() and addReflector() advising users
-        //  that if they want odd numbers, they should ensure that this is
-        //  the case when they initially construct the SFSpace.
-
         /**
          * Inserts one or more new punctures into the base orbifold.
          * The punctures may be twisted or untwisted.
@@ -1007,6 +1000,43 @@ class SFSpace : public Manifold<3> {
          * \param nReflectors the number of new reflector circles to add.
          */
         void addReflector(bool twisted = false, size_t nReflectors = 1);
+
+        /**
+         * Adds new boundaries of the given types into the base orbifold.
+         * The new boundaries may be twisted or untwisted.
+         *
+         * Each puncture insertion is equivalent to removing a disc from
+         * the base orbifold.  In the untwisted case this results in a
+         * new torus boundary for the 3-manifold, and in the twisted
+         * case it results in a new Klein bottle boundary.
+         *
+         * Each addition of a reflector circle is equivalent to removing a
+         * disc from the base orbifold and replacing it with an annulus with
+         * one reflector boundary. In the untwisted case, it has the effect
+         * of removing a trivially fibred solid torus from the overall
+         * 3-manifold and replacing it with an appropriately fibred twisted
+         * I-bundle over the torus.
+         *
+         * Also, in the twisted case, the total number of added punctures and
+         * reflector circles must be even. This routine provides more
+         * flexibility than is available from using only addPuncture() and
+         * addReflector(), since this routine allows an odd number of new
+         * punctures provided the number of new reflectors is also odd.
+         *
+         * The exceptional fibres and the obstruction constant \a b are
+         * not modified by this routine.
+         *
+         * \exception InvalidArgument \a twisted is \c true but `nPunctures +
+         * nReflectors` is odd.
+         *
+         * \param twisted \c true if all of the new boundaries should be
+         * twisted (i.e., they should be fibre-reversing), or \c false if all
+         * of the new boundaries should be untwisted.
+         * \param nPunctures the number of new punctures to add.
+         * \param nReflectors the number of new reflector circles to add.
+         */
+        void addOrbifoldBoundary(bool twisted = false, size_t nPunctures = 1,
+                size_t nReflectors = 0);
 
         /**
          * Adds the given fibre to this Seifert fibred space.
@@ -1375,6 +1405,14 @@ inline auto SFSpace::fibres() const {
 
 inline long SFSpace::obstruction() const {
     return b_;
+}
+
+inline void SFSpace::addPuncture(bool twisted, size_t nPunctures) {
+    addOrbifoldBoundary(twisted, nPunctures, 0 /* nReflectors */);
+}
+
+inline void SFSpace::addReflector(bool twisted, size_t nReflectors) {
+    addOrbifoldBoundary(twisted, 0 /* nPunctures */, nReflectors);
 }
 
 inline void SFSpace::insertFibre(const SFSFibre& fibre) {

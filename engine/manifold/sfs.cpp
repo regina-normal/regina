@@ -338,19 +338,24 @@ void SFSpace::addCrosscap(bool fibreReversing) {
     genus_++;
 }
 
-void SFSpace::addPuncture(bool twisted, size_t nPunctures) {
+void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors) {
+    if (nPunctures == 0 && nReflectors == 0) {
+        // If we aren't actually adding any new boundaries, then exit right
+        // away to ensure that we don't inadvertently change the bundle type.
+        return;
+    }
     if (twisted) {
-        // The total number of twisted punctures and twisted reflectors
-        // should always remain even.
-        if (nPunctures % 2 != 0) {
+        if ((nPunctures + nReflectors) % 2 != 0) {
             throw InvalidArgument(
-                    "SFSpace::addPuncture() requires that if twisted is "
-                    "true, then nPunctures is even");
+                    "SFSpace requires that the total number of twisted "
+                    "punctures and twisted reflectors always remains even");
         }
         puncturesTwisted_ += nPunctures;
+        reflectorsTwisted_ += nReflectors;
 
-        // Adding a twisted puncture forces the bundle type to be either
-        // o or n.
+        // Adding twisted boundaries to the base orbifold forces the bundle
+        // type to be either o or n.
         if (baseOrientable()) {
             bundleType_ = BundleType::o;
         } else {
@@ -358,31 +363,9 @@ void SFSpace::addPuncture(bool twisted, size_t nPunctures) {
         }
     } else {
         punctures_ += nPunctures;
-        // Adding an untwisted puncture never changes the bundle type.
-    }
-}
-
-void SFSpace::addReflector(bool twisted, size_t nReflectors) {
-    if (twisted) {
-        // The total number of twisted punctures and twisted reflectors
-        // should always remain even.
-        if (nReflectors % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace::addReflector() requires that if twisted is "
-                    "true, then nReflectors is even");
-        }
-        reflectorsTwisted_ += nReflectors;
-
-        // Adding a twisted reflector forces the bundle type to be either
-        // o or n.
-        if (baseOrientable()) {
-            bundleType_ = BundleType::o;
-        } else {
-            bundleType_ = BundleType::n;
-        }
-    } else {
         reflectors_ += nReflectors;
-        // Adding an untwisted reflector never changes the bundle type.
+        // Adding untwisted boundaries to the base orbifold never changes the
+        // bundle type.
     }
 }
 
