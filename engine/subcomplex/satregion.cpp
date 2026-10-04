@@ -220,32 +220,37 @@ bool SatRegion::operator == (const SatRegion& other) const {
 }
 
 SFSpace SatRegion::createSFS(bool reflect) const {
-    //TODO Rewrite using BundleType/bundleType_/bundleType() instead of
-    //  Class/class_/baseClass()
-
     // Count boundary components.
     size_t untwisted, twisted;
     countBoundaries(untwisted, twisted);
 
     // Go ahead and build the Seifert fibred space.
-    SFSpace::Class baseClass;
+    SFSpace::BundleType bundleType;
 
-    bool bdry = (twisted || untwisted || twistedBlocks_);
+    bool twistedBdry = (twisted || twistedBlocks_);
     if (baseOrbl_) {
-        if (hasTwist_)
-            baseClass = (bdry ? SFSpace::Class::bo2 : SFSpace::Class::o2);
-        else
-            baseClass = (bdry ? SFSpace::Class::bo1 : SFSpace::Class::o1);
-    } else if (! hasTwist_)
-        baseClass = (bdry ? SFSpace::Class::bn1 : SFSpace::Class::n1);
-    else if (twistsMatchOrientation_)
-        baseClass = (bdry ? SFSpace::Class::bn2 : SFSpace::Class::n2);
-    else {
-        // In the no-boundary case, we might not be able to distinguish
-        // between n3 and n4.  Just call it n3 for now, and if we discover
-        // it might have been n4 instead then we call it off and throw
-        // an exception.
-        baseClass = (bdry ? SFSpace::Class::bn3 : SFSpace::Class::n3);
+        if (twistedBdry) {
+            bundleType = SFSpace::BundleType::o;
+        } else {
+            // With twistedBlocks_ == 0, hasTwist_ should be true if and only
+            // if we have a fibre-reversing handle generator.
+            bundleType = (hasTwist_ ?
+                    SFSpace::BundleType::o2 :
+                    SFSpace::BundleType::o1);
+        }
+    } else {
+        if (twistedBdry) {
+            bundleType = SFSpace::BundleType::n;
+        } else if (! hasTwist_) {
+            bundleType = SFSpace::BundleType::n1;
+        } else if (twistsMatchOrientation_) {
+            bundleType = SFSpace::BundleType::n2;
+        } else {
+            // We might not be able to distinguish between n3 and n4. Just
+            // call it n3 for now, and if we discover it might have been n4
+            // instead then we call if off and throw an exception.
+            bundleType = SFSpace::BundleType::n3;
+        }
     }
 
     // Recall that baseEuler_ assumes that each block contributes a plain
@@ -254,7 +259,7 @@ SFSpace SatRegion::createSFS(bool reflect) const {
     // calculate genus just by looking at baseEuler_, orientability and
     // the number of punctures.
 
-    SFSpace sfs(baseClass,
+    SFSpace sfs(bundleType,
         (baseOrbl_ ? ((2 - baseEuler_) - twisted - untwisted) / 2 :
             ((2 - baseEuler_) - twisted - untwisted)),
         untwisted /* untwisted punctures */, twisted /* twisted punctures */,
@@ -268,13 +273,13 @@ SFSpace SatRegion::createSFS(bool reflect) const {
         sfs.insertFibre(1, reflect ? -shiftedAnnuli_ : shiftedAnnuli_);
 
     if ((sfs.baseGenus() >= 3) &&
-            (sfs.baseClass() == SFSpace::Class::n3 ||
-             sfs.baseClass() == SFSpace::Class::n4)) {
+            (sfs.bundleType() == SFSpace::BundleType::n3 ||
+             sfs.bundleType() == SFSpace::BundleType::n4)) {
         // Could still be either n3 or n4.
         // Shrug, give up.
         throw NotImplemented("SatRegion::createSFS() cannot yet "
-            "distinguish between the closed non-orientable classes n3 and n4 "
-            "for large base orbifold genus");
+            "distinguish between the bundle types n3 and n4 for "
+            "large base orbifold genus");
     }
 
     return sfs;
