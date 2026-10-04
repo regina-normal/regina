@@ -1342,9 +1342,14 @@ inline SFSpace::BundleType SFSpace::bundleType() const {
 }
 
 inline SFSpace::Class SFSpace::baseClass() const {
-    bool b = ( punctures_ > 0 || puncturesTwisted_ > 0 ||
-            reflectors_ > 0 || reflectorsTwisted_ > 0 );
+    bool b = ( punctures_ > 0 || reflectors_ > 0 );
     switch (bundleType_) {
+        // Cases with twisted punctures and/or twisted reflectors.
+        case BundleType::o:
+            return Class::bo2;
+        case BundleType::n:
+            return Class::bn3;
+        // Cases with no twisted punctures and no twisted reflectors.
         case BundleType::o1:
             return b ? Class::bo1 : Class::o1;
         case BundleType::o2:
@@ -1368,7 +1373,8 @@ inline size_t SFSpace::baseGenus() const {
 }
 
 inline bool SFSpace::baseOrientable() const {
-    return (bundleType_ == BundleType::o1 || bundleType_ == BundleType::o2);
+    return (bundleType_ == BundleType::o || bundleType_ == BundleType::o1 ||
+            bundleType_ == BundleType::o2);
 }
 
 inline bool SFSpace::fibreReversing() const {
