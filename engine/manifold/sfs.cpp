@@ -231,7 +231,7 @@ void SFSpace::addHandle(bool fibreReversing) {
         }
     } else {
         // Fibre-preserving.
-        // Never changes the class.
+        // Never changes the bundle type.
     }
 
     // Finally increment the genus (either orientable or non-orientable).
