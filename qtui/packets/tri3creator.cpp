@@ -541,28 +541,21 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
     } else if ( (typeId == TRI_SFS_SPHERE) ||
             (typeId == TRI_SFS_ORIENTABLE) ) {
         // Base surface.
-        auto baseClass = regina::SFSpace::Class::o1;
+        auto bundleType = regina::SFSpace::BundleType::o1;
         unsigned long genus = 0;
         unsigned long punctures = 0;
         if (typeId == TRI_SFS_ORIENTABLE) {
             genus = sfsBaseGenus->text().toULong();
             punctures = sfsBasePunctures->text().toULong();
-            if (sfsBaseWhich->currentIndex() == 0) {
-                if (punctures > 0) {
-                    baseClass = regina::SFSpace::Class::bo1;
-                }
-            } else {
+            if (sfsBaseWhich->currentIndex() == 1) {
+                // Non-orientable base.
                 if (genus == 0) {
                     ReginaSupport::sorry(parentWidget,
                         QObject::tr("For non-orientable base surface, the genus "
                         "must be a positive integer."));
                     return nullptr;
                 }
-                if (punctures == 0) {
-                    baseClass = regina::SFSpace::Class::n2;
-                } else {
-                    baseClass = regina::SFSpace::Class::bn2;
-                }
+                bundleType = regina::SFSpace::BundleType::n2;
             }
         }
 
@@ -601,7 +594,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         }
 
         // Build the Seifert fibred space.
-        regina::SFSpace sfs(baseClass, genus, punctures);
+        regina::SFSpace sfs(bundleType, genus, punctures);
         long a, b;
         long whichPair = 1;
 
