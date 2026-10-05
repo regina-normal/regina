@@ -78,7 +78,7 @@ TEST(SFSTest, lens) {
             buildSFS(SFSpace::BundleType::o1, 0, 0, 0, 1, 0, {}),
             false );
     verifyLens(
-            buildSFS(SFSpace::BundleType::o2, 0, 0, 0, 0, 0, {}),
+            buildSFS(SFSpace::BundleType::o2, 1, 0, 0, 0, 0, {}),
             false );
     verifyLens(
             buildSFS(SFSpace::BundleType::n2, 2, 0, 0, 0, 0, {}),
