@@ -708,6 +708,8 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
         return std::nullopt;
     }
 
+    // Having already ruled out boundary in the base orbifold, we just need
+    // to check the genus and bundle type.
     if (genus_ == 0 && bundleType_ == BundleType::o1) {
         // Base orbifold is the sphere.
         if (fibres_.empty())
@@ -839,7 +841,9 @@ Triangulation<3> SFSpace::construct() const {
         return lens->construct();
 
     // Currently we work over the 2-sphere only.
-    if (genus_ != 0 || bundleType_ != BundleType::o1 || punctures_ != 0)
+    // Since we already ruled out boundary in the base orbifold, we just need
+    // to check the genus and bundle type.
+    if (genus_ != 0 || bundleType_ != BundleType::o1)
         throw NotImplemented("SFSpace::construct() is currently not "
             "implemented for spaces whose base orbifold is not the 2-sphere");
 
