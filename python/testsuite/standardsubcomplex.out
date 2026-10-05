@@ -5563,7 +5563,7 @@ gLALQbccfeffrrhwhwa:
   Spiral: 3/1302 5/1302 4/3021
 gLALQbccfeffrrbwbwa:
   NeoSig: gtCRT-euIzCmp
-  Standard: Blocked SFS [Ref~(1), Ref~(1)] = A=/o2 x~ S1
+  Standard: Blocked SFS [Ref~(1), Ref~(1)] = A=/o x~ S1
   Blocked SFS
     Region:
       Block 0: Ref~(1) <-X->
@@ -6641,7 +6641,7 @@ hLAwMkbccdfgggrrhrrwar:
   Spiral: 4/1302 5/0213 6/2130
 hLAwMkbccdfgggrrbrqwar:
   NeoSig: hlsZ1+XghXefwre
-  Standard: Blocked SFS [Ref~(1), Ref~(1), Layer] = A=/o2 x~ S1
+  Standard: Blocked SFS [Ref~(1), Ref~(1), Layer] = A=/o x~ S1
   Blocked SFS
     Region:
       Block 0: Ref~(1) <-X->
@@ -11287,7 +11287,7 @@ iLAMLPcbccdeghhhrrhrxjjqj:
   Spiral: 5/0321 6/0321 7/1032
 iLAMLPcbccdeghhhrrbrhxrwa:
   NeoSig: ilezi7U7rBCeZ5cjKl
-  Standard: Blocked SFS [Ref~(1), Ref~(1), Layer, Layer] = A=/o2 x~ S1
+  Standard: Blocked SFS [Ref~(1), Ref~(1), Layer, Layer] = A=/o x~ S1
   Blocked SFS
     Region:
       Block 0: Ref~(1) <-X->
