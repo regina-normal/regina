@@ -66,16 +66,24 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
     auto s = pybind11::class_<SFSpace, regina::Manifold<3>>(m, "SFSpace",
             rdoc::__class)
         .def(pybind11::init<>(), rdoc::__default)
+        .def(pybind11::init<SFSpace::BundleType, unsigned long,
+            unsigned long, unsigned long,
+            unsigned long, unsigned long>(),
+            "bundleType"_a, "genus"_a,
+            "punctures"_a = 0, "puncturesTwisted"_a = 0,
+            "reflectors"_a = 0, "reflectorsTwisted"_a = 0,
+            rdoc::__init)
         .def(pybind11::init<SFSpace::Class, unsigned long,
             unsigned long, unsigned long,
             unsigned long, unsigned long>(),
             "baseClass"_a, "genus"_a,
             "punctures"_a = 0, "puncturesTwisted"_a = 0,
             "reflectors"_a = 0, "reflectorsTwisted"_a = 0,
-            rdoc::__init)
+            rdoc::__init_2) // deprecated constructor
         .def(pybind11::init<const SFSpace&>(), rdoc::__copy)
         .def("swap", &SFSpace::swap, rdoc::swap)
-        .def("baseClass", &SFSpace::baseClass, rdoc::baseClass)
+        .def("bundleType", &SFSpace::bundleType, rdoc::bundleType)
+        .def("baseClass", &SFSpace::baseClass, rdoc::baseClass) // deprecated
         .def("baseGenus", &SFSpace::baseGenus, rdoc::baseGenus)
         .def("baseOrientable", &SFSpace::baseOrientable, rdoc::baseOrientable)
         .def("fibreReversing", &SFSpace::fibreReversing, rdoc::fibreReversing)
@@ -105,6 +113,9 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
             "twisted"_a = false, "nPunctures"_a = 1, rdoc::addPuncture)
         .def("addReflector", &SFSpace::addReflector,
             "twisted"_a = false, "nReflectors"_a = 1, rdoc::addReflector)
+        .def("addOrbifoldBoundary", &SFSpace::addOrbifoldBoundary,
+            "twisted"_a = false, "nPunctures"_a = 1, "nReflectors"_a = 0,
+            rdoc::addOrbifoldBoundary)
         .def("insertFibre",
             overload_cast<const SFSFibre&>(&SFSpace::insertFibre),
             rdoc::insertFibre)

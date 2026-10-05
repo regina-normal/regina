@@ -197,8 +197,12 @@ Returns:
     ``True`` if and only if this and the given object contain
     identical presentations of the same Seifert fibred space.)doc";
 
-// Docstring regina::python::doc::SFSpace::__init
+//TODO This placeholder should eventually be overwritten by gendoc.sh
 static constexpr const char __init[] =
+R"doc()doc";
+
+// Docstring regina::python::doc::SFSpace::__init_2
+static constexpr const char __init_2[] =
 R"doc(Creates a new Seifert fibred space of the given class with the given
 base orbifold and no exceptional fibres.
 
@@ -285,6 +289,10 @@ Parameter ``fibreReversing``:
     (the default) if both generators should preserve the directions of
     the fibres.)doc";
 
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char addOrbifoldBoundary[] =
+R"doc()doc";
+
 // Docstring regina::python::doc::SFSpace::addPuncture
 static constexpr const char addPuncture[] =
 R"doc(Inserts one or more new punctures into the base orbifold. The
@@ -369,6 +377,10 @@ calling addCrosscap().
 
 Returns:
     ``True`` if and only if the base surface is orientable.)doc";
+
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char bundleType[] =
+R"doc()doc";
 
 // Docstring regina::python::doc::SFSpace::complementAllFibres
 static constexpr const char complementAllFibres[] =
