@@ -663,6 +663,38 @@ R"doc(Swaps the contents of this and the given Seifert fibred space.
 Parameter ``other``:
     the space whose contents should be swapped with this.)doc";
 
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+struct BundleType {
+
+static constexpr const char __class[] =
+R"doc()doc";
+
+static constexpr const char n[] =
+R"doc()doc";
+
+static constexpr const char n1[] =
+R"doc()doc";
+
+static constexpr const char n2[] =
+R"doc()doc";
+
+static constexpr const char n3[] =
+R"doc()doc";
+
+static constexpr const char n4[] =
+R"doc()doc";
+
+static constexpr const char o[] =
+R"doc()doc";
+
+static constexpr const char o1[] =
+R"doc()doc";
+
+static constexpr const char o2[] =
+R"doc()doc";
+
+}; // struct BundleType
+
 struct Class {
 
 // Docstring regina::python::doc::SFSpace::Class::__class

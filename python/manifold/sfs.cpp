@@ -136,6 +136,28 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
     regina::python::add_global_swap<SFSpace, rdoc>(m);
 
 #if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<SFSpace::BundleType>(s, "BundleType", "enum.Enum",
+            rdoc::BundleType::__class)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<SFSpace::BundleType>(s, "BundleType", rdoc::BundleType::__class)
+#else
+    #error "Unsupported pybind11 version"
+#endif
+        .value("o", SFSpace::BundleType::o, rdoc::BundleType::o)
+        .value("o1", SFSpace::BundleType::o1, rdoc::BundleType::o1)
+        .value("o2", SFSpace::BundleType::o2, rdoc::BundleType::o2)
+        .value("n", SFSpace::BundleType::n, rdoc::BundleType::n)
+        .value("n1", SFSpace::BundleType::n1, rdoc::BundleType::n1)
+        .value("n2", SFSpace::BundleType::n2, rdoc::BundleType::n2)
+        .value("n3", SFSpace::BundleType::n3, rdoc::BundleType::n3)
+        .value("n4", SFSpace::BundleType::n4, rdoc::BundleType::n4)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
+        ;
+
+    // Deprecated:
+#if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<SFSpace::Class>(s, "Class", "enum.Enum",
             rdoc::Class::__class)
 #elif REGINA_PYBIND11_VERSION == 2
