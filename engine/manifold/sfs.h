@@ -1120,6 +1120,11 @@ class SFSpace : public Manifold<3> {
          * and the base orbifold on any boundary components (i.e.,
          * boundaries caused by punctures in the base orbifold).
          *
+         * \warning The behaviour of this routine has changed as of
+         * Regina 8.0. Specifically, this routine now reduces the obstruction
+         * constant to zero whenever the base orbifold has at least one
+         * puncture (whether twisted or untwisted).
+         *
          * \warning If \a mayReflect is \c true then the entire 3-manifold
          * might be replaced with its mirror image, in which case any
          * subsequent modifications (such as inserting additional fibres
