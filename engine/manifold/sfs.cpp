@@ -62,6 +62,12 @@ std::ostream& operator << (std::ostream& out, const SFSPartialReflector& p) {
             p.reflectorArcs << ')');
 }
 
+SFSPartialReflector SFSpace::partialReflector(size_t which) const {
+    auto pos = partialReflectors_.begin();
+    advance(pos, which);
+    return *pos;
+}
+
 SFSFibre SFSpace::fibre(size_t which) const {
     auto pos = fibres_.begin();
     advance(pos, which);
@@ -74,6 +80,7 @@ SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
         bundleType_(bundleType), genus_(genus),
         punctures_(punctures), puncturesTwisted_(puncturesTwisted),
         reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
+        nPartialReflectors_(0), nPartialReflectorsTwisted_(0),
         nFibres_(0), b_(0) {
     // Enforce preconditions on genus.
     switch (bundleType) {
@@ -106,30 +113,34 @@ SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
             break;
     }
 
-    // Enforce preconditions on twisted punctures and twisted reflectors.
-    size_t totalTwisted = puncturesTwisted + reflectorsTwisted;
+    // Enforce preconditions on twisted punctures, twisted reflector circles,
+    // and twisted partial reflectors.
+    size_t totalTwisted = (puncturesTwisted_ + reflectorsTwisted_ +
+            nPartialReflectorsTwisted_);
     if (totalTwisted % 2 != 0) {
         throw regina::FailedPrecondition(
-                "SFSpace::SFSpace() requires puncturesTwisted + "
-                "reflectorsTwisted to be even");
+                "SFSpace::SFSpace() requires the total number of twisted "
+                "boundaries in the base orbifold to be even");
     }
     if (totalTwisted == 0) {
         if (bundleType == BundleType::o || bundleType == BundleType::n) {
             throw regina::FailedPrecondition(
                     "SFSpace::SFSpace() requires that bundleType is not "
-                    "BundleType::o or BundleType::n if there are no twisted "
-                    "punctures and no twisted reflectors");
+                    "BundleType::o or BundleType::n if the base orbifold "
+                    "has no twisted boundaries");
         }
     } else {
         if (! (bundleType == BundleType::o || bundleType == BundleType::n)) {
             throw regina::FailedPrecondition(
                     "SFSpace::SFSpace() requires that bundleType is "
-                    "BundleType::o or BundleType::n if there are any twisted "
-                    "punctures and/or twisted reflectors");
+                    "BundleType::o or BundleType::n if the base orbifold "
+                    "has any twisted boundaries");
         }
     }
 }
 
+//TODO Conversion will need to be overhauled to account for partial
+//  reflectors.
 SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
         SFSpace::Class baseClass, bool hasUntwistedBdry, bool hasTwistedBdry) {
     if (hasTwistedBdry) {
@@ -141,9 +152,9 @@ SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
                 return BundleType::n;
             default:
                 throw regina::FailedPrecondition(
-                        "SFSpace::SFSpace() requires baseClass to be either "
-                        "bo2 or bn3 if there are any twisted punctures "
-                        "and/or twisted reflectors");
+                        "SFSpace::SFSpace() requires baseClass to be "
+                        "either bo2 or bn3 if the base orbifold has any "
+                        "twisted boundaries");
         }
     }
 
@@ -791,6 +802,12 @@ bool SFSpace::operator == (const SFSpace& compare) const {
         return false;
     if (reflectorsTwisted_ != compare.reflectorsTwisted_)
         return false;
+    if (nPartialReflectors_ != compare.nPartialReflectors_)
+        return false;
+    if (nPartialReflectorsTwisted_ != compare.nPartialReflectorsTwisted_)
+        return false;
+    if (! (partialReflectors_ == compare.partialReflectors_))
+        return false;
     if (nFibres_ != compare.nFibres_)
         return false;
     if (! (fibres_ == compare.fibres_))
@@ -802,6 +819,7 @@ bool SFSpace::operator == (const SFSpace& compare) const {
     return true;
 }
 
+//TODO Update ordering to account for partial reflectors.
 std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // Double the genus if it's orientable, so that we can line up tori
     // with Klein bottles, etc.
@@ -848,10 +866,13 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
 
 Triangulation<3> SFSpace::construct() const {
     // Things that we don't deal with just yet.
-    if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
+    if (punctures_ || puncturesTwisted_ ||
+            reflectors_ || reflectorsTwisted_ ||
+            nPartialReflectors_ || nPartialReflectorsTwisted_) {
         throw NotImplemented("SFSpace::construct() is currently not "
-            "implemented for spaces whose base orbifolds have punctures "
-            "or reflector boundaries");
+            "implemented for spaces whose base orbifolds have punctures, "
+            "reflector circles, or reflector arcs");
+    }
 
     // We already know how to construct lens spaces.
     if (auto lens = isLensSpace())
@@ -919,10 +940,12 @@ Triangulation<3> SFSpace::construct() const {
 }
 
 AbelianGroup SFSpace::homology() const {
-    if (punctures_ || puncturesTwisted_) {
+    if (punctures_ || puncturesTwisted_ ||
+            nPartialReflectors_ || nPartialReflectorsTwisted_) {
         // Not just now.
         throw NotImplemented("SFSpace::homology() is currently not "
-            "implemented for spaces whose base orbifolds have punctures");
+            "implemented for spaces whose base orbifolds have punctures "
+            "or reflector arcs");
     }
 
     // Construct the presentation of the fundamental group and
@@ -1019,6 +1042,8 @@ AbelianGroup SFSpace::homology() const {
         return AbelianGroup(std::move(pres));
     }
 }
+
+//TODO Update write...() routines to account for partial reflectors.
 
 void SFSpace::writeBaseExtraCount(std::ostream& out, size_t count,
         const char* object, bool tex) {

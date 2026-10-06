@@ -247,11 +247,10 @@ std::ostream& operator << (std::ostream& out, const SFSPartialReflector& p);
 
 /**
  * Represents a general Seifert fibred space, which may be orientable or
- * non-orientable.  Punctures and reflector circles in the base orbifold
- * are supported.
+ * non-orientable.
  *
- * At present, reflector arcs in the base orbifold are not supported, but
- * this may be introduced in future.
+ * Punctures, reflector circles, and partial reflectors (that is, boundary
+ * components with reflector arcs) in the base orbifold are all supported.
  *
  * Any Seifert fibred space can be placed into one of the eight bundle types
  * \c o, \c o1, \c o2, \c n, \c n1, \c n2, \c n3 and \c n4, as detailed in
@@ -264,38 +263,44 @@ std::ostream& operator << (std::ostream& out, const SFSPartialReflector& p);
  *   orbifold).
  * - Each exceptional torus or Klein bottle (these correspond, respectively,
  *   to untwisted or twisted reflector circles in the base orbifold).
+ * - Each exceptional annulus (these correspond to reflector arcs in the base
+ *   orbifold).
  * - If the obstruction \a b is nonzero, a single (1,b) fibre.
  * For brevity, the documentation for this class often uses the following
  * non-standard terminology when discussing these bundle types:
- * - We refer to the base surface of the canonical circle bundle as the *core
- *   surface*.
+ * - We refer to the base surface of the canonical circle bundle as the _core
+ *   surface_.
  * - If the core surface is orientable with `g` handles and `n` boundary
  *   components, then we fix `2g + n` standard generators for the first
- *   homology, with `2g` *handle generators* and `n` *boundary generators*.
+ *   homology, with `2g` _handle generators_ and `n` _boundary generators_.
  * - If the core surface is non-orientable with `g` crosscaps and `n` boundary
  *   components, then we fix `g + n` standard generators for the first
- *   homology, with `g` *crosscap generators* and `n` *boundary generators*.
+ *   homology, with `g` _crosscap generators_ and `n` _boundary generators_.
  * The bundle type specifies whether the core surface is orientable, and how
  * many of its generators give fibre-reversing paths in the 3-manifold.
  *
- * When describing punctures and reflector circles, a _twisted_ boundary is
- * one that gives a fibre-reversing path, and an _untwisted_ boundary is one
- * around which the direction of fibres is preserved.
+ * When describing punctures, reflector circles, and partial reflectors, a
+ * _twisted_ boundary is one that gives a fibre-reversing path, and an
+ * _untwisted_ boundary is one around which the direction of fibres is
+ * preserved.
  *
  * Exceptional fibres are sorted first by \a alpha (the index) and then
- * by \a beta.  The obstruction constant \a b is stored separately,
- * though in output routines such as name() and structure() it is
- * merged in with the exceptional fibres.  Specifically, it is merged in
+ * by \a beta. Partial reflectors are sorted first by whether they are
+ * twisted (with the untwisted ones ordered before the twisted ones), and
+ * then by the number of reflector arcs. The obstruction constant \a b is
+ * stored separately, though in output routines such as name() and structure()
+ * it is merged in with the exceptional fibres.  Specifically, it is merged in
  * with the \a beta of the final exceptional fibre (replacing it with
- * `beta + b.alpha`), or if there are no exceptional fibres then
- * it is presented as a single (1,b) fibre.
+ * `beta + b.alpha`), or if there are no exceptional fibres then it is
+ * presented as a single (1,b) fibre.
  *
  * The optional Manifold<3> routine isHyperbolic() is implemented always for
  * this class.  The optional routines homology() and construct() are only
  * implemented in some cases: homology() is implemented if and only if the
- * base orbifold has no punctures, and construct() is implemented only for
- * lens spaces and Seifert fibred spaces over the 2-sphere without punctures
- * or reflector circles.
+ * base orbifold has no punctures and no reflector arcs (but reflector circles
+ * are allowed), and construct() is implemented only for lens spaces and
+ * Seifert fibred spaces over the 2-sphere without punctures, reflector
+ * circles or reflector arcs.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -642,6 +647,17 @@ class SFSpace : public Manifold<3> {
                  These are in addition to the regular boundary components
                  described by \a puncturesTwisted_. */
 
+        std::list<SFSPartialReflector> partialReflectors_;
+            /**< The partial reflectors.  This list will be sorted, and will
+                 only contain partial reflectors with a strictly positive
+                 number of reflector arcs. */
+        size_t nPartialReflectors_;
+            /**< The number of fibre-preserving partial reflectors in the
+                 base orbifold . */
+        size_t nPartialReflectorsTwisted_;
+            /**< The number of fibre-reversing partial reflectors in the
+                 base orbifold. */
+
         std::list<SFSFibre> fibres_;
             /**< The exceptional fibres.  This list will be sorted, and will
                  only contain fibres for which \a alpha and \a beta are
@@ -654,6 +670,11 @@ class SFSpace : public Manifold<3> {
                  additional (1,b) fibre. */
 
     public:
+        //TODO Constructors which allow partial reflectors and/or exceptional
+        //  fibres to be included right away. Probably want both iterator
+        //  begin/end and std::initializer_list options (see AbelianGroup or
+        //  Cyclotomic for classes which already provide something similar).
+
         /**
          * Creates a new Seifert fibred space with base orbifold the
          * 2-sphere and no exceptional fibres.
@@ -937,6 +958,72 @@ class SFSpace : public Manifold<3> {
         size_t reflectors(bool twisted) const;
 
         /**
+         * Returns the total number of partial reflector boundaries of the
+         * base orbifold.
+         *
+         * This includes both twisted and untwisted partial reflectors.
+         *
+         * \return the total number of partial reflectors.
+         */
+        size_t partialReflectorCount() const;
+        /**
+         * Returns the number of partial reflector boundaries of the given
+         * type in the base orbifold.
+         *
+         * This either counts only twisted partial reflectors, or only
+         * untwisted partial reflectors.
+         *
+         * \param twisted \c true if only twisted partial reflectors should
+         * be counted (those that give fibre-reversing paths), or \c false if
+         * only untwisted partial reflectors should be counted.
+         * \return the number of partial reflectors of the given type.
+         */
+        size_t partialReflectorCount(bool twisted) const;
+        /**
+         * Returns the requested partial reflector boundary.
+         *
+         * Partial reflectors are stored in sorted order, first by whether
+         * they are twisted (with the untwisted ones ordered before the
+         * twisted ones), and then by the number of reflector arcs. See the
+         * SFSpace and SFSPartialReflector class notes for details.
+         *
+         * \warning This routine takes linear time (specifically, linear in
+         * the argument \a which). If you need to iterate through all partial
+         * reflectors, use partialReflectors() instead.
+         *
+         * \param which determines which partial reflector to return; this
+         * must be between 0 and partialReflectorCount()-1 inclusive.
+         * \return the requested partial reflector.
+         */
+        SFSPartialReflector partialReflector(size_t which) const;
+        /**
+         * Returns an object that allows iteration through (but _not_ random
+         * access to) all partial reflector boundaries.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value. The C++ type of the object is subject to change,
+         * so C++ users should use `auto` (just like this declaration does).
+         *
+         * The returned object is guaranteed to be a lightweight view type
+         * from the `std::ranges` library, which means it supports range-based
+         * `for` loops.  For example:
+         *
+         * \code{.cpp}
+         * for (const SFSPartialReflector& p : sfs.partialReflectors()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as this Seifert fibred space exists: even as partial
+         * reflectors are added and/or removed, it will always reflect the
+         * partial reflectors that are currently in the space. Nevertheless,
+         * it is recommended to treat this object as temporary only, and to
+         * call partialReflectors() again each time you need it.
+         *
+         * \return access to the list of all partial reflectors.
+         */
+        auto partialReflectors() const;
+
+        /**
          * Returns the number of exceptional fibres in this Seifert fibred
          * space.
          *
@@ -956,7 +1043,7 @@ class SFSpace : public Manifold<3> {
          * all fibres, use fibres() instead.
          *
          * \param which determines which fibre to return; this must be between
-         * 0 and getFibreCount()-1 inclusive.
+         * 0 and fibreCount()-1 inclusive.
          * \return the requested fibre.
          */
         SFSFibre fibre(size_t which) const;
@@ -1101,6 +1188,10 @@ class SFSpace : public Manifold<3> {
          * \param nReflectors the number of new reflector circles to add.
          */
         void addReflector(bool twisted = false, size_t nReflectors = 1);
+
+        //TODO Extend addOrbifoldBoundary() to support partial reflectors.
+        //  Similar to the constructors, probably want both iterator
+        //  begin/end and std::initializer_list options.
 
         /**
          * Adds new boundaries of the given types into the base orbifold.
@@ -1262,6 +1353,8 @@ class SFSpace : public Manifold<3> {
          */
         bool operator == (const SFSpace& compare) const;
 
+        //TODO Update ordering to account for partial reflectors.
+
         /**
          * Compares representations of two Seifert fibred spaces according to
          * an aesthetic ordering.
@@ -1297,6 +1390,9 @@ class SFSpace : public Manifold<3> {
         std::ostream& writeStructure(std::ostream& out) const override;
 
     private:
+        //TODO Conversion will need to be overhauled to account for partial
+        //  reflectors.
+
         /**
          * Converts the old base orbifold Class to the new BundleType.
          *
@@ -1425,6 +1521,7 @@ inline constexpr SFSPartialReflector::SFSPartialReflector(
 inline SFSpace::SFSpace() : bundleType_(BundleType::o1), genus_(0),
         punctures_(0), puncturesTwisted_(0),
         reflectors_(0), reflectorsTwisted_(0),
+        nPartialReflectors_(0), nPartialReflectorsTwisted_(0),
         nFibres_(0), b_(0) {
 }
 
@@ -1445,6 +1542,9 @@ inline void SFSpace::swap(SFSpace& other) noexcept {
     std::swap(puncturesTwisted_, other.puncturesTwisted_);
     std::swap(reflectors_, other.reflectors_);
     std::swap(reflectorsTwisted_, other.reflectorsTwisted_);
+    partialReflectors_.swap(other.partialReflectors_);
+    std::swap(nPartialReflectors_, other.nPartialReflectors_);
+    std::swap(nPartialReflectorsTwisted_, other.nPartialReflectorsTwisted_);
     fibres_.swap(other.fibres_);
     std::swap(nFibres_, other.nFibres_);
     std::swap(b_, other.b_);
@@ -1457,12 +1557,14 @@ inline SFSpace::BundleType SFSpace::bundleType() const {
 inline SFSpace::Class SFSpace::baseClass() const {
     bool b = ( punctures_ > 0 || reflectors_ > 0 );
     switch (bundleType_) {
-        // Cases with twisted punctures and/or twisted reflectors.
+        // Cases with twisted punctures, twisted reflector circles, and/or
+        // twisted partial reflectors.
         case BundleType::o:
             return Class::bo2;
         case BundleType::n:
             return Class::bn3;
-        // Cases with no twisted punctures and no twisted reflectors.
+        // Cases with no twisted punctures, no twisted reflector circles, and
+        // no twisted partial reflectors.
         case BundleType::o1:
             return b ? Class::bo1 : Class::o1;
         case BundleType::o2:
@@ -1512,6 +1614,18 @@ inline size_t SFSpace::reflectors() const {
 
 inline size_t SFSpace::reflectors(bool twisted) const {
     return (twisted ? reflectorsTwisted_ : reflectors_);
+}
+
+inline size_t SFSpace::partialReflectorCount() const {
+    return nPartialReflectors_ + nPartialReflectorsTwisted_;
+}
+
+inline size_t SFSpace::partialReflectorCount(bool twisted) const {
+    return (twisted ? nPartialReflectorsTwisted_ : nPartialReflectors_);
+}
+
+inline auto SFSpace::partialReflectors() const {
+    return std::views::all(partialReflectors_);
 }
 
 inline size_t SFSpace::fibreCount() const {
