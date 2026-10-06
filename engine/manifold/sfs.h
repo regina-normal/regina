@@ -133,6 +133,91 @@ struct SFSFibre {
 };
 
 /**
+ * Represents a partial reflector boundary in the base orbifold of a Seifert
+ * fibred space.
+ *
+ * In other words, this is a boundary component of the base orbifold which
+ * contains some number of reflector arcs, interspersed with ordinary
+ * boundary arcs.
+ *
+ * For flexibility, we allow the number of reflector arcs to be zero, which
+ * just corresponds to an ordinary puncture in the base orbifold.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup manifold
+ */
+struct SFSPartialReflector {
+    bool twisted = false;
+        /**< Is this boundary component with reflector arc twisted?
+             It is untwisted by default. */
+    size_t reflectorArcs = 1;
+        /**< The number of reflector arcs.
+             There is 1 reflector arc by default. */
+
+    /**
+     * Creates a new default initialised partial reflector boundary.
+     */
+    constexpr SFSPartialReflector() = default;
+
+    /**
+     * Creates a new partial reflector boundary with the given properties.
+     *
+     * \param twisted \c true if the partial reflector boundary should be
+     * twisted, or \c false if it should be untwisted.
+     * \param reflectorArcs the number of reflector arcs in the partial
+     * reflector boundary.
+     */
+    constexpr SFSPartialReflector(bool twisted, size_t reflectorArcs);
+
+    /**
+     * Creates a new partial reflector boundary that is a clone of the given
+     * partial reflector.
+     */
+    constexpr SFSPartialReflector(const SFSPartialReflector&) = default;
+
+    /**
+     * Makes this partial reflector boundary a clone of the given partial
+     * reflector.
+     */
+    constexpr SFSPartialReflector& operator = (
+            const SFSPartialReflector& ) = default;
+
+    /**
+     * Determines if this and the given partial reflector boundary are
+     * identical.
+     *
+     * This requires that this partial reflector is twisted if and only if
+     * the given one is twisted, and also that the two partial reflectors
+     * have the same numbers of reflector arcs.
+     *
+     * \return \c true if and only if this and the given partial reflector
+     * boundary are identical.
+     */
+    constexpr bool operator == (const SFSPartialReflector&) const = default;
+
+    /**
+     * Compares two partial reflector boundaries.
+     *
+     * Partial reflectors are ordered first by whether they are twisted, with
+     * untwisted partial reflectors ordered before twisted ones, and then by
+     * the number of reflector arcs.
+     *
+     * This generates all of the usual comparison operators, including
+     * `<`, `<=`, `>`, and `>=`.
+     *
+     * \python This spaceship operator `x <=> y` is not available, but the
+     * other comparison operators that it generates _are_ available.
+     *
+     * \return the result of the comparison between this and the given
+     * partial reflector.
+     */
+    constexpr std::strong_ordering operator <=> (
+            const SFSPartialReflector& ) const = default;
+};
+
+/**
  * Writes the given fibre in human-readable format to the given output stream.
  * The fibre will be written in the format `(alpha,beta)` with no newline.
  *
@@ -143,6 +228,22 @@ struct SFSFibre {
  * \ingroup manifold
  */
 std::ostream& operator << (std::ostream& out, const SFSFibre& f);
+
+/**
+ * Writes the given partial reflector boundary in human-readable format to
+ * the given output stream.
+ *
+ * An untwisted partial reflector will be written in the format
+ * `(+,reflectorArcs)` with no newline. Similarly a twisted partial reflector
+ * will be written in the format `(-,reflectorArcs)` with no newline.
+ *
+ * \param out the output stream to which to write.
+ * \param p the partial reflector to write.
+ * \return the output stream \a out.
+ *
+ * \ingroup manifold
+ */
+std::ostream& operator << (std::ostream& out, const SFSPartialReflector& p);
 
 /**
  * Represents a general Seifert fibred space, which may be orientable or
@@ -1310,6 +1411,13 @@ void swap(SFSpace& a, SFSpace& b) noexcept;
 
 inline constexpr SFSFibre::SFSFibre(long newAlpha, long newBeta) :
         alpha(newAlpha), beta(newBeta) {
+}
+
+// Inline functions for SFSPartialReflector
+
+inline constexpr SFSPartialReflector::SFSPartialReflector(
+        bool twisted, size_t reflectorArcs ) :
+        twisted(twisted), reflectorArcs(reflectorArcs) {
 }
 
 // Inline functions for SFSpace

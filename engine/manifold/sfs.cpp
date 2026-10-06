@@ -57,6 +57,11 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f) {
     return (out << '(' << f.alpha << ',' << f.beta << ')');
 }
 
+std::ostream& operator << (std::ostream& out, const SFSPartialReflector& p) {
+    return (out << '(' << (p.twisted ? '-' : '+') << ',' <<
+            p.reflectorArcs << ')');
+}
+
 SFSFibre SFSpace::fibre(size_t which) const {
     auto pos = fibres_.begin();
     advance(pos, which);
