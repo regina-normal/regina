@@ -713,6 +713,7 @@ isTriangulation : function
 isqrt : function
 lcm : function
 makeAngleEquations : function
+makeBoundaryNullAngleEquations : function
 makeEmbeddedConstraints : function
 makeMatchingEquations : function
 makePacket : function

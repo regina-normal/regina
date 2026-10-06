@@ -445,6 +445,13 @@ void addTriangulation3(pybind11::module_& m, pybind11::module_& internal) {
         .def("hasGeneralAngleStructure",
             &Triangulation<3>::hasGeneralAngleStructure,
             rdoc::hasGeneralAngleStructure)
+        .def("boundaryNullAngleStructure",
+            &Triangulation<3>::boundaryNullAngleStructure,
+            pybind11::return_value_policy::reference_internal,
+            rdoc::boundaryNullAngleStructure)
+        .def("hasBoundaryNullAngleStructure",
+            &Triangulation<3>::hasBoundaryNullAngleStructure,
+            rdoc::hasBoundaryNullAngleStructure)
         .def("maximalForestInBoundary",
             &Triangulation<3>::maximalForestInBoundary,
             pybind11::return_value_policy::reference_internal,
