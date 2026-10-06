@@ -408,9 +408,11 @@ void SFSpace::reduce(bool mayReflect) {
     // Also, if the base orbifold has any punctures at all (whether twisted
     // or untwisted), regardless of whether the SFS is orientable or
     // non-orientable, then we can likewise get rid of b completely.
+    bool canShiftObstructionIntoBoundary(false);
     if (reflectors_ || reflectorsTwisted_ ||
             punctures_ || puncturesTwisted_) {
         // (1,1) == (1,0).
+        canShiftObstructionIntoBoundary = true;
         b_ = 0;
     } else if (fibreNegating() && b_) {
         // (p,q) == (p,-q), and so (1,2) == (1,0).
@@ -589,7 +591,8 @@ void SFSpace::reduce(bool mayReflect) {
             if (b_ < (-b_ - static_cast<long>(nFibres_))) {
                 b_ = -b_ - static_cast<long>(nFibres_);
                 complementAllFibres();
-            } else if (b_ == (-b_ - static_cast<long>(nFibres_))) {
+            } else if ((canShiftObstructionIntoBoundary) ||
+                    (b_ == (-b_ - static_cast<long>(nFibres_)))) {
                 // Reflecting won't change b, but it will complement all
                 // fibres.  See whether this is worthwhile.
                 bool shouldReflect = false;
@@ -631,8 +634,12 @@ void SFSpace::reduce(bool mayReflect) {
                     it = next;
                 }
 
-                if (shouldReflect)
+                if (shouldReflect) {
                     complementAllFibres();
+                    if (canShiftObstructionIntoBoundary) {
+                        b_ = 0;
+                    }
+                }
             }
         }
     }
