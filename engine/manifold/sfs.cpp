@@ -404,7 +404,12 @@ void SFSpace::reduce(bool mayReflect) {
 
     // If the SFS is non-orientable, we can get rid of b completely and
     // convert most (if not all) exceptional fibres to beta <= alpha / 2.
-    if (reflectors_ || reflectorsTwisted_) {
+    //
+    // Also, if the base orbifold has any punctures at all (whether twisted
+    // or untwisted), regardless of whether the SFS is orientable or
+    // non-orientable, then we can likewise get rid of b completely.
+    if (reflectors_ || reflectorsTwisted_ ||
+            punctures_ || puncturesTwisted_) {
         // (1,1) == (1,0).
         b_ = 0;
     } else if (fibreNegating() && b_) {

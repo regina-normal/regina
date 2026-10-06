@@ -8471,7 +8471,7 @@ iLALMMcbcceffghhrrhuestqw:
   Spiral: 7/0213
 iLAwLQcbccdfgghhrrhrntxnk:
   NeoSig: ilezkZU7fBCK0PDFPe
-  Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1)] U/m M x S1, m = [ 5,2 | 2,1 ]
+  Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1)] U/m M x S1, m = [ 1,2 | 1,1 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -8503,7 +8503,7 @@ iLAwLQcbccdfgghhrrhrntxnk:
   Spiral: 7/0231
 iLAwMMcbccdfgghhrrhwwlukr:
   NeoSig: ilezkZU7dBCKumvITf
-  Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1)] U/m M x S1, m = [ 2,1 | 3,1 ]
+  Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1)] U/m M x S1, m = [ 1,1 | 1,0 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -8645,7 +8645,7 @@ iLAwMMcbccdfgghhrrhrriarr:
   Spiral: 7/0312
 iLAwLQcbccdfgghhrrhrntxkk:
   NeoSig: ilezkZU7fBCK0PDFZe
-  Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,1)] U/m M x S1, m = [ -1,2 | -1,1 ]
+  Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,1)] U/m M x S1, m = [ 1,2 | 1,1 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -8677,7 +8677,7 @@ iLAwLQcbccdfgghhrrhrntxkk:
   Spiral: 7/1023
 iLAwMMcbccdfgghhrrhwwlucw:
   NeoSig: ilezkZU7dBCKumvIRf
-  Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,1)] U/m M x S1, m = [ -1,1 | 0,1 ]
+  Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,2)] U/m M x S1, m = [ 1,1 | 1,0 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -8819,7 +8819,7 @@ iLAwMMcbccdfgghhrrhrriaww:
   Spiral: 7/0213
 iLAwLQcbccdfgghhrrhrntxkr:
   NeoSig: ilezkZU7fBCK0PDFZf
-  Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,2)] U/m M x S1, m = [ -1,2 | -1,1 ]
+  Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,2)] U/m M x S1, m = [ 1,2 | 1,1 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -8851,7 +8851,7 @@ iLAwLQcbccdfgghhrrhrntxkr:
   Spiral: 7/1203
 iLAwMMcbccdfgghhrrhwwlucs:
   NeoSig: ilezkZU7dBCKumvIRi
-  Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,2)] U/m M x S1, m = [ -1,1 | 0,1 ]
+  Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (3,1)] U/m M x S1, m = [ 1,1 | 1,0 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -8993,7 +8993,7 @@ iLAwMMcbccdfgghhrrhrriaws:
   Spiral: 7/0123
 iLAwLQcbccdfgghhrrhrntxnj:
   NeoSig: ilezkZU7fBCK0PDFPl
-  Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 1,2 | 0,1 ]
+  Standard: Blocked SFS Pair [Tri | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 1,2 | 1,1 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -9025,7 +9025,7 @@ iLAwLQcbccdfgghhrrhrntxnj:
   Spiral: 7/0321
 iLAwMMcbccdfgghhrrhwwlukn:
   NeoSig: ilezkZU7dBCKumvITe
-  Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 0,1 | 1,1 ]
+  Standard: Blocked SFS Pair [Tri, Layer | Tri, LST(1, 2, 3), Mob(v)] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 1,1 | 1,0 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -10885,7 +10885,7 @@ iLLALQcadddhhghgjsajsaqjw:
   Spiral: 6/1302
 iLAMLPcbccdeghhhemkehwrwa:
   NeoSig: ilezi7U7rBCK05UwRl
-  Standard: Blocked SFS Pair [Tri | Ref(1)] = SFS [D: (2,1) (2,1)] U/m A_ x S1, m = [ 0,1 | 1,1 ]
+  Standard: Blocked SFS Pair [Tri | Ref(1)] = SFS [D: (2,1) (2,1)] U/m A_ x S1, m = [ 2,1 | 3,1 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -10905,7 +10905,7 @@ iLAMLPcbccdeghhhemkehwrwa:
   Spiral: 5/0312 6/1203 7/2031
 iLAMLPcbccdeghhhrrhwqjpqp:
   NeoSig: ilezi7U7rBCK0joNZi
-  Standard: Blocked SFS Pair [Tri, Layer, Layer | Tri] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 0,1 | 1,1 ]
+  Standard: Blocked SFS Pair [Tri, Layer, Layer | Tri] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 1,0 | 2,1 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -11027,7 +11027,7 @@ iLAMLPcbccdeghhhemkexjjqj:
   Spiral: 5/0321 6/0321 7/1032
 iLAMLPcbccdeghhhemkihrwar:
   NeoSig: ilezi7U7rBCK05UgJl
-  Standard: Blocked SFS Pair [Tri, Layer | Ref(1)] = SFS [D: (2,1) (2,1)] U/m A_ x S1, m = [ 0,1 | -1,2 ]
+  Standard: Blocked SFS Pair [Tri, Layer | Ref(1)] = SFS [D: (2,1) (2,1)] U/m A_ x S1, m = [ 0,1 | 1,0 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -11051,7 +11051,7 @@ iLAMLPcbccdeghhhemkihrwar:
   Spiral: 5/1302 6/0213 7/2130
 iLAMLPcbccdeghhhlpklqwrwa:
   NeoSig: ilezi7U7rBCK0joFVi
-  Standard: Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 0,1 | -1,2 ]
+  Standard: Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 1,1 | 1,2 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -11307,7 +11307,7 @@ iLAMLPcbccdeghhhrrbrhxrwa:
   Spiral: 3/0312 4/3120
 iLAwLQcbccdfhghhrrhrnhxnv:
   NeoSig: ilezk7U7fBCK0PDJVe
-  Standard: Blocked SFS Pair [Tri | Tri, Layer] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ -1,3 | 0,1 ]
+  Standard: Blocked SFS Pair [Tri | Tri, Layer] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 3,1 | 2,1 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -11375,7 +11375,7 @@ iLAwLQcbccdfhghhrrhrnahvn:
   Spiral: 6/0123 7/1203
 iLAwwQcbccdfghhhrrhrrxhgw:
   NeoSig: ilezQZU7dBCKumfITk
-  Standard: Blocked SFS Pair [Tri | Tri, Layer] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ -1,3 | -1,2 ]
+  Standard: Blocked SFS Pair [Tri | Tri, Layer] = SFS [D: (2,1) (2,1)] U/m M x S1, m = [ 3,1 | 2,1 ]
   Blocked SFS Pair
     Region 0:
       Block 0: Tri <-X->
@@ -11987,7 +11987,7 @@ iLvMQPcbefgfehhhjaaaaaaas:
   Spiral: 3/1032 5/0321 7/3210 4/2103
 jLALMLQbcceffhiiiemkbtilubc:
   NeoSig: jpeHQ6qeVoAOKY504a
-  Standard: Blocked SFS Triple [Tri | Tri, Mob(v) | Tri] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,0 ], n = [ 0,1 | 1,0 ]
+  Standard: Blocked SFS Triple [Tri | Tri, Mob(v) | Tri] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 1,0 | -2,1 ], n = [ 1,0 | 2,1 ]
   Blocked SFS Triple
     Central region:
       Block 0: Tri <-X->
@@ -12019,7 +12019,7 @@ jLALMLQbcceffhiiiemkbtilubc:
   Spiral: 6/2103 7/3102 8/2013
 jLALALQbccfefihiilpkusudego:
   NeoSig: jxcHQ6qeVoAKJY5u7q
-  Standard: Blocked SFS Triple [Tri, Mob(v), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v)] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,0 ], n = [ 1,1 | 1,0 ]
+  Standard: Blocked SFS Triple [Tri, Mob(v), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v)] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 0,1 | 1,-1 ], n = [ 1,1 | 1,0 ]
   Blocked SFS Triple
     Central region:
       Block 0: Tri <-X->
@@ -12063,7 +12063,7 @@ jLALALQbccfefihiilpkusudego:
   Spiral: 6/1302 8/1032 7/1320
 jLALALQbccfefihiilpkusuuero:
   NeoSig: jpeHQ6qeVoAOKY5u7q
-  Standard: Blocked SFS Triple [Tri | Tri, Mob(v) | Tri, Mob(v), Mob(v)] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 0,-1 | 1,0 ], n = [ 0,1 | 1,0 ]
+  Standard: Blocked SFS Triple [Tri | Tri, Mob(v) | Tri, Mob(v), Mob(v)] = SFS [D: (2,1) (2,1)] U/m SFS [A: (2,1)] U/n SFS [D: (2,1) (2,1)], m = [ 1,0 | -1,1 ], n = [ 2,1 | 1,0 ]
   Blocked SFS Triple
     Central region:
       Block 0: Tri <-X->
