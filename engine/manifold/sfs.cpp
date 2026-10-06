@@ -32,6 +32,7 @@
 #include <iterator>
 #include <numeric> // for std::gcd()
 #include <sstream>
+#include <vector>
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
 #include "manifold/sfs.h"
@@ -39,6 +40,8 @@
 #include "maths/numbertheory.h"
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example2.h" // for constructing base surfaces
+#include "triangulation/example3.h" // for small cases in SFSpace::construct()
 #include "utilities/exception.h"
 
 namespace regina {
@@ -681,74 +684,729 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     return std::strong_ordering::equal;
 }
 
+// ------------------------------------------------------------------------
+// Supporting classes for construct()
+// ------------------------------------------------------------------------
+namespace {
+
+    /**
+     * An oriented solid torus built from a triangular prism within a
+     * triangulation.
+     *                                                                           
+     * The vertical boundary of such a triangular prism consists of three
+     * squares. For s in {0,1,2}, square number s is the one that is opposite
+     * tetrahedron s of the triangulation.
+     *                                                                           
+     * Each boundary square is triangulated by a pair of triangles. The choice
+     * of direction for the diagonal edge separating the two triangles is
+     * specified by a slope: either +1 or -1. Within each square, the triangles
+     * are numbered either 0 (left triangle in the diagrams below) or 1 (right
+     * triangle in the diagrams below).
+     *                                                                           
+     *                     Slope +1        Slope -1
+     *                      •----•          •----•
+     *                      |0 2/|          |\2 0|
+     *                      |  /1|          |1\  |
+     *                      |1/  |          |  \1|
+     *                      |/2 0|          |0 2\|
+     *                      •----•          •----•
+     *                                                                           
+     * Details about boundary square number s can be accessed via the following
+     * three pieces of data:
+     * --> squareSlope(s) gives the slope of the diagonal of square s.
+     * --> squareTet( s, t ) gives the tetrahedron that provides triangle t of
+     *     square s.
+     * --> squareRoles( s, t ) gives a permutation that specifies the roles
+     *     played by the vertices of squareTet( s, t ) with respect to the
+     *     boundary square. In detail:
+     *     --- For v in {0,1,2}, squareRoles( s, t )[v] gives the vertex
+     *         labelled v in the above diagrams.
+     *     --- squareRoles( s, t )[3] gives the vertex that is opposite the
+     *         triangle.
+     * For each s in {0,1,2} and t in {0,1}, it is guaranteed that
+     *     squareSlope(s) * squareRoles( s, t ).sign() == -1.
+     *                                                                           
+     * As shown in the above diagram, for triangle t of square s, the role of
+     * each edge is determined by its endpoints:
+     * --> If the endpoints play roles 0 and 1, then the edge is vertical.
+     * --> If the endpoints play roles 0 and 2, then the edge is horizontal.
+     * --> If the endpoints play roles 1 and 2, then the edge is diagonal.
+     * We number the vertical edges by 0, 1 or 2 depending on which tetrahedron
+     * they are incident to. Thus, for each i in {0,1,2}, vertical edge i is
+     * opposite boundary square i.
+     *                                                                           
+     * This class provides the flipSlope(s) method, which flips the slope of
+     * boundary square s by either adding a tetrahedron (via layering) or
+     * removing a tetrahedron (if the slope was already previously flipped via
+     * layering). The outputs for squareTet() and squareRoles() are
+     * automatically adjusted to account for any such layerings.
+     */
+    class TriSolidTorus {
+        private:
+            std::array<Tetrahedron<3>*, 3> coreTet_;
+                /**
+                 * The three core tetrahedra that form the triangular prism.
+                 */
+            std::array<Tetrahedron<3>*, 3> layerTet_ = {};
+                /**
+                 * The tetrahedra layered onto the boundary squares to flip
+                 * their slopes.
+                 *
+                 * Initially these are all null, to indicate that there are no
+                 * such layered tetrahedra.
+                 */
+            bool isSquareGlued_[3] = { false, false, false };
+                /**
+                 * Tracks whether each boundary square is glued to some other
+                 * triangular solid torus.
+                 *
+                 * This is only used for sanity checking, and isn't strictly
+                 * necessary for the implementation.
+                 */
+            static constexpr Perm<4> layerRoles_[3][2] = {
+                { Perm<4>(0, 2, 3, 1), Perm<4>(1, 3, 2, 0) },
+                { Perm<4>(0, 3, 2, 1), Perm<4>(1, 2, 3, 0) },
+                { Perm<4>(0, 2, 3, 1), Perm<4>(1, 3, 2, 0) }
+            };
+                /**
+                 * Permutations specifying the roles played by the vertices of
+                 * the layered tetrahedra (if any).
+                 *
+                 * Comments in the implementation of flipSlope() explain how
+                 * layered tetrahedra are labelled, and hence explain these
+                 * roles permutations.
+                 *
+                 * The value of layerRoles_[s][t] is only meaningful when
+                 * layerTet_[s][t] is not nullptr.
+                 */
+            static constexpr int squareOrigSlope_[3] = {1, -1, 1};
+                /**
+                 * The original slopes of the squares, when no layering has
+                 * been done.
+                 */
+            static constexpr size_t squareOrigTetIndex_[3][2] = {
+                {2, 1},
+                {0, 2},
+                {1, 0}
+            };
+                /**
+                 * Indices of the core tetrahedra which originally (prior to
+                 * any layerings) provide the triangles of the boundary
+                 * squares.
+                 */
+            static constexpr Perm<4> squareOrigRoles_[3][2] = {
+                { Perm<4>(2, 3, 1, 0), Perm<4>(3, 1, 2, 0) },
+                { Perm<4>(1, 0, 3, 2), Perm<4>(2, 3, 0, 1) },
+                { Perm<4>(1, 3, 0, 2), Perm<4>(1, 0, 2, 3) }
+            };
+                /**
+                 * Permutations specifying the roles played by the core
+                 * tetrahedra when they are not covered by a layering.
+                 */
+
+        public:
+            /**
+             * Constructs a solid torus built from a triangular prism, and
+             * inserts it into the given 3-manifold triangulation.
+             */
+            TriSolidTorus(Triangulation<3>& tri);
+
+        private:
+            /**
+             * Returns the current slope of the diagonal edge of boundary
+             * square s of this triangular solid torus.
+             */
+            int squareSlope(unsigned s);
+
+            /**
+             * Returns the tetrahedron that provides triangle t of boundary
+             * square s of this triangular solid torus.
+             */
+            Tetrahedron<3>* squareTet(unsigned s, unsigned t);
+
+            /**
+             * Returns the permutation describing the roles of the vertices of
+             * squareTet(s, t).
+             *
+             * See the class notes for details.
+             */
+            Perm<4> squareRoles(unsigned s, unsigned t);
+
+            /**
+             * Flips the sign of the slope of the given square's diagonal edge.
+             *                                                                    
+             * This routine returns the new slope that results from performing
+             * the flip.
+             *
+             * \pre isSquareGlued_[square] is false
+             */
+            int flipSlope(unsigned square);
+
+            /**
+             * Ensures that the slope of the given square is positive,
+             * performing a flip if necessary to achieve this.
+             *
+             * \pre isSquareGlued_[square] is false
+             */
+            void ensurePositiveSlope(unsigned square);
+
+            /**
+             * Joins boundary square s of this triangular solid torus to some
+             * boundary square of another triangular solid torus in the same
+             * triangulation.
+             *
+             * You may join two distinct boundary squares of this triangular
+             * solid torus (i.e., other is allowed to be this triangular solid
+             * torus), but you cannot join a boundary square to itself.
+             *
+             * If the triangulation is currently oriented, then the requested
+             * gluing will preserve this orientation.
+             *
+             * The rationale for this routine is that if we associate a
+             * collection of prisms to the triangles of a 2-manifold
+             * triangulation S, then joining all the prisms together using the
+             * same gluing permutations as in S will produce an oriented
+             * 3-manifold triangulation of the orientable circle bundle over S.
+             *
+             * Precondition
+             * --> This and other both belong to the same triangulation.
+             * --> Boundary square s of this triangular solid torus is not
+             *     currently glued to anything.
+             * --> The corresponding boundary square of other (i.e., boundary
+             *     square gluing[s] of other) is likewise not currently glued
+             *     to anything.
+             * --> We are not attempting to glue a boundary square to itself
+             *     (i.e., we do not have both this == other and
+             *     gluing[s] == s).
+             *
+             * Parameters:
+             * --> s        The boundary square of this triangular solid torus
+             *              that will be glued to other; s must be in {0,1,2}.
+             * --> other    The other triangular solid torus that will be glued
+             *              to boundary square s of this.
+             * --> gluing   A permutation that describes how the vertical edges
+             *              of this triangular solid torus will map to the
+             *              vertical edges of other across the new gluing.
+             */
+            void orientedJoin(
+                    unsigned s, TriSolidTorus& other, Perm<3> gluing );
+
+        friend class OrientableCircleBundle;
+        friend class regina::SFSpace;
+    };  // class TriSolidTorus
+
+    /**
+     * An oriented triangulation of an (orientable) circle bundle over a
+     * surface.
+     *
+     * For base surface with nonempty boundary, this class constructs the
+     * unique such bundle. For closed base surface, this class constructs the
+     * bundle with Euler number 0.
+     *
+     * The 3-manifold triangulation T of the bundle is constructed from a
+     * 2-manifold triangulation S by assigning a triangular solid torus (see
+     * the TriSolidTorus class) to each triangle of S, and gluing these solid
+     * tori together accordingly. For triangle i of S, the associated
+     * triangular solid torus can be accessed using
+     *      OrientableCircleBundle.triSolidTorus[i].
+     * Moreover, edge e of triangle i corresponds to boundary square number e
+     * of the associated triangular solid torus.
+     */
+    class OrientableCircleBundle {
+        private:
+            Triangulation<3> tri_;
+                /**
+                 * The underlying triangulation of this bundle.
+                 */
+            std::vector<TriSolidTorus> triSolidTorus;
+                /**
+                 * The triangular solid tori that make up this bundle
+                 * triangulation.
+                 */
+
+        private:
+            /**
+             * Constructs an oriented triangulation of an (orientable) circle
+             * bundle over the given base surface.
+             */
+            OrientableCircleBundle(const Triangulation<2>& baseSurface);
+
+        friend class regina::SFSpace;
+    };  // class OrientableCircleBundle
+
+    OrientableCircleBundle::OrientableCircleBundle(
+            const Triangulation<2>& baseSurface ) {
+        // Create triangular solid tori that give orientable circle bundles
+        // over each triangle in the baseSurface. We can build the full circle
+        // bundle by simply translating the gluings of baseSurface into gluings
+        // of the triangular solid tori.
+        triSolidTorus.reserve( baseSurface.size() );
+        for (unsigned i = 0; i < baseSurface.size(); ++i) {
+            triSolidTorus.emplace_back(tri_);
+        }
+        for ( Edge<2>* edge : baseSurface.edges() ) {
+            if ( edge->isBoundary() ) {
+                continue;
+            }
+
+            // Translate the gluing across this internal edge to a gluing of
+            // two boundary squares of the triangular solid tori.
+            unsigned frontEdgeNum = edge->front().edge();
+            triSolidTorus[ edge->front().triangle()->index() ].orientedJoin(
+                    frontEdgeNum,
+                    triSolidTorus[ edge->back().triangle()->index() ],
+                    edge->front().triangle()->adjacentGluing(frontEdgeNum) );
+        }
+    }
+
+    TriSolidTorus::TriSolidTorus(Triangulation<3>& tri) :
+            coreTet_( tri.newTetrahedra<3>() ) {
+        // Glue the three core tetrahedra together to form a triangular prism.
+        coreTet_[0]->join( 1, coreTet_[1], Perm<4>(2,3) );
+        coreTet_[1]->join( 3, coreTet_[2], Perm<4>(2,3) );
+
+        // Glue top to bottom to form a solid torus.
+        //
+        // NOTE:    This implementation is easily adapted to build an
+        //          orientable I-bundle (instead of a circle bundle) by
+        //          simply skipping this last gluing.
+        coreTet_[2]->join( 3, coreTet_[0], Perm<4>(1,2,3,0) );
+    }
+
+    int TriSolidTorus::squareSlope(unsigned s) {
+        if ( layerTet_[s] == nullptr ) {
+            return squareOrigSlope_[s];
+        }
+        return -squareOrigSlope_[s];
+    }
+
+    Tetrahedron<3>* TriSolidTorus::squareTet(unsigned s, unsigned t) {
+        if ( layerTet_[s] == nullptr ) {
+            return coreTet_[ squareOrigTetIndex_[s][t] ];
+        }
+        return layerTet_[s];
+    }
+
+    Perm<4> TriSolidTorus::squareRoles(unsigned s, unsigned t) {
+        if ( not layerTet_[s] ) {
+            return squareOrigRoles_[s][t];
+        }
+        return layerRoles_[s][t];
+    }
+
+    void TriSolidTorus::ensurePositiveSlope(unsigned square) {
+        if ( squareSlope(square) == -1 ) {
+            flipSlope(square);
+        }
+    }
+
+    int TriSolidTorus::flipSlope(unsigned square) {
+        Triangulation<3>& tri = coreTet_[0]->triangulation();
+        if ( layerTet_[square] ) {
+            // This is the easy case: we can flip the slope by simply removing
+            // the previously layered tetrahedron.
+            tri.removeTetrahedron( layerTet_[square] );
+            layerTet_[square] = nullptr;
+
+            // We have reverted to the original slope.
+            return squareOrigSlope_[square];
+        }
+
+        // No previous layering, so we need to introduce such a layering.
+        //
+        //               Slope +1          Slope -1
+        //             Roles sign -1     Roles sign +1
+        //                •----•            •----•
+        //                |0 2/|            |\2 0|
+        //                |  /1|            |1\  |
+        //                |1/  |            |  \1|
+        //                |/2 0|            |0 2\|
+        //                •----•            •----•
+        //
+        // We will flip the diagonal by layering a tetrahedron. The following
+        // vertex labelling ensures that the layering preserves orientation:
+        //
+        //               2•----•1          0•----•2
+        //                |\   |            |   /|
+        //                | \  |            |  / |
+        //                |  \ |            | /  |
+        //                |   \|            |/   |
+        //               0•----•3          3•----•1
+        //
+        std::array<Perm<4>, 2> relativeGluing;
+        if ( squareOrigSlope_[square] == 1 ) {
+            // Sanity check: roles sign is already -1, so the signs of our
+            // relative gluing permutations should be +1 (as they indeed are).
+            relativeGluing = { Perm<4>(2, 0, 1, 3), Perm<4>(3, 1, 0, 2) };
+        } else {
+            // Sanity check: roles sign is +1, so the signs of our relative
+            // gluing permutations should be -1 (as they indeed are).
+            relativeGluing = { Perm<4>(3, 0, 1, 2), Perm<4>(2, 1, 0, 3) };
+        }
+
+        // OK, actually perform the layering.
+        layerTet_[square] = tri.newTetrahedron();
+        Perm<4> origRoles;
+        for (unsigned t : {0, 1}) {
+            origRoles = squareOrigRoles_[square][t];
+            coreTet_[ squareOrigTetIndex_[square][t] ]->join(
+                    origRoles[3],
+                    layerTet_[square],
+                    relativeGluing[t] * origRoles.inverse() );
+        }
+        return -squareOrigSlope_[square];
+    }
+
+    void TriSolidTorus::orientedJoin(
+            unsigned s, TriSolidTorus& other, Perm<3> gluing ) {
+        // Check some of the preconditions.
+        unsigned sOther = gluing[s];
+        if ( isSquareGlued_[s] or other.isSquareGlued_[sOther] ) {
+            throw InvalidArgument(
+                    "Can only glue squares that are currently unglued." );
+        }
+
+        // We need the two squares on either side of the gluing to have
+        // opposite slopes.
+        if ( squareSlope(s) == other.squareSlope(sOther) ) {
+            // Flip slope by removing tetrahedra whenever possible.
+            if ( layerTet_[s] or ( not other.layerTet_[sOther] ) ) {
+                flipSlope(s);
+            } else {
+                other.flipSlope(sOther);
+            }
+        }
+
+        // Recall that the boundary squares are labelled as follows:
+        //
+        //               Slope +1          Slope -1
+        //             Roles sign -1     Roles sign +1
+        //                •----•            •----•
+        //                |0 2/|            |\2 0|
+        //                |  /1|            |1\  |
+        //                |1/  |            |  \1|
+        //                |/2 0|            |0 2\|
+        //                •----•            •----•
+        //
+        unsigned tOther;
+        for (unsigned t : {0, 1}) {
+            if ( gluing.sign() == 1 ) {
+                // Gluing swaps top and bottom, not left and right.
+                tOther = t;
+            } else {
+                // Gluing swaps left and right.
+                tOther = 1 - t;
+            }
+
+            // Perform the gluing on triangle t of square s of this prism.
+            // Opposite slopes implies that roles and rolesOther have opposite
+            // signs, so our choice of gluing permutation between the two
+            // tetrahedra does indeed have sign -1.
+            Perm<4> roles = squareRoles(s, t);
+            Perm<4> rolesOther = other.squareRoles(sOther, tOther);
+            squareTet(s, t)->join(
+                    roles[3],
+                    other.squareTet(sOther, tOther),
+                    rolesOther * roles.inverse() );
+        }
+
+        // All that remains is to record that the two joined boundary squares
+        // are now glued to something (namely, each other).
+        isSquareGlued_[s] = true;
+        other.isSquareGlued_[sOther] = true;
+    }
+
+}   // anonymous namespace
+
+// ------------------------------------------------------------------------
+// Implementation of construct()
+// ------------------------------------------------------------------------
 Triangulation<3> SFSpace::construct() const {
+    //TODO For orientable SFS (which is all we work with at the moment), it
+    //      probably wouldn't be too much work to make sure that we always
+    //      construct an oriented triangulation.
+
     // Things that we don't deal with just yet.
-    if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
+    if (puncturesTwisted_ || reflectors_ || reflectorsTwisted_) {
         throw NotImplemented("SFSpace::construct() is currently not "
-            "implemented for spaces whose base orbifolds have punctures "
-            "or reflector boundaries");
+            "implemented for spaces whose base orbifolds have twisted "
+            "punctures or reflector boundaries");
+    }
+
+    // Currently we only work with orientable total space.
+    if ( class_ != Class::o1 and class_ != Class::bo1 and
+            class_ != Class::n2 and class_ != Class::bn2 ) {
+        throw NotImplemented("SFSpace::construct() is currently not "
+            "implemented for non-orientable spaces");
+    }
 
     // We already know how to construct lens spaces.
-    if (auto lens = isLensSpace())
+    if (auto lens = isLensSpace()) {
         return lens->construct();
+    }
 
-    // Currently we work over the 2-sphere only.
-    if (genus_ != 0 || class_ != Class::o1)
-        throw NotImplemented("SFSpace::construct() is currently not "
-            "implemented for spaces whose base orbifold is not the 2-sphere");
+    // For 2-sphere base, we keep the longstanding construction.
+    // For more general base, we use the new construction further down.
+    if (genus_ == 0 and class_ == Class::o1) {
+        // Since we've already dealt with lens spaces, we must have at least
+        // three exceptional fibres.  Build a blocked structure.
+        Triangulation<3> ans;
+        Tetrahedron<3> *a, *b, *c;
 
-    // Since we've already dealt with lens spaces, we must have at least
-    // three exceptional fibres.  Build a blocked structure.
-    Triangulation<3> ans;
-    Tetrahedron<3> *a, *b, *c;
-
-    // Begin with the first triangular solid torus.
-    a = ans.newTetrahedron();
-    b = ans.newTetrahedron();
-    c = ans.newTetrahedron();
-    a->join(1, b, Perm<4>());
-    b->join(2, c, Perm<4>());
-    c->join(3, a, Perm<4>(1, 2, 3, 0));
-
-    auto fit = fibres_.begin();
-    SatAnnulus::attachLST(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3),
-        fit->alpha, fit->beta);
-    fit++;
-    SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
-        fit->alpha, fit->beta);
-    fit++;
-
-    // Run through the rest of the fibres, one at a time.  Each extra
-    // fibre (aside from the third) will require another triangular
-    // solid torus.
-    Tetrahedron<3>* prevA = a;
-    Tetrahedron<3>* prevC = c;
-
-    SFSFibre nextFibre = *fit++;
-    while (fit != fibres_.end()) {
+        // Begin with the first triangular solid torus.
         a = ans.newTetrahedron();
         b = ans.newTetrahedron();
         c = ans.newTetrahedron();
-        a->join(3, prevA, Perm<4>(2, 3));
-        b->join(3, prevC, Perm<4>(0, 2, 3, 1));
         a->join(1, b, Perm<4>());
         b->join(2, c, Perm<4>());
         c->join(3, a, Perm<4>(1, 2, 3, 0));
 
+        auto fit = fibres_.begin();
+        SatAnnulus::attachLST(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3),
+            fit->alpha, fit->beta);
+        fit++;
         SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
-            nextFibre.alpha, nextFibre.beta);
+            fit->alpha, fit->beta);
+        fit++;
 
-        prevA = a;
-        prevC = c;
-        nextFibre = *fit++;
+        // Run through the rest of the fibres, one at a time.  Each extra
+        // fibre (aside from the third) will require another triangular
+        // solid torus.
+        Tetrahedron<3>* prevA = a;
+        Tetrahedron<3>* prevC = c;
+
+        SFSFibre nextFibre = *fit++;
+        while (fit != fibres_.end()) {
+            a = ans.newTetrahedron();
+            b = ans.newTetrahedron();
+            c = ans.newTetrahedron();
+            a->join(3, prevA, Perm<4>(2, 3));
+            b->join(3, prevC, Perm<4>(0, 2, 3, 1));
+            a->join(1, b, Perm<4>());
+            b->join(2, c, Perm<4>());
+            c->join(3, a, Perm<4>(1, 2, 3, 0));
+
+            SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
+                nextFibre.alpha, nextFibre.beta);
+
+            prevA = a;
+            prevC = c;
+            nextFibre = *fit++;
+        }
+
+        // We have one remaining fibre.  Fill in the final annulus of the
+        // last triangular solid torus.
+        SatAnnulus::attachLST(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1),
+            nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
+
+        return ans;
+    }   // End of construction for 2-sphere base.
+
+    // For the new, more general construction, we start with the
+    // OrientableCircleBundle over a suitable surface with nonempty boundary,
+    // and fill in the exceptional fibres. This is similar in spirit to the
+    // above construction for 2-sphere base, but the trade-off for getting a
+    // manageable implementation at this generality is that the result is
+    // slightly less optimised (in terms of number of tetrahedra).
+
+    // If necessary, adjust the fibres that we will fill in to incorporate the
+    // obstruction constant.
+    std::list<SFSFibre> fibresToFill(fibres_);
+    size_t numFibresToFill = nFibres_;
+    if ( punctures_ == 0 and b_ != 0 ) {
+        long alpha, beta;
+        if ( numFibresToFill == 0 ) {
+            alpha = 1;
+            beta = 0;
+            numFibresToFill = 1;
+        } else {
+            SFSFibre fibreToReplace( fibresToFill.back() );
+            fibresToFill.pop_back();
+            alpha = fibreToReplace.alpha;
+            beta = fibreToReplace.beta;
+        }
+        fibresToFill.emplace_back( alpha, beta + (alpha * b_) );
     }
 
-    // We have one remaining fibre.  Fill in the final annulus of the
-    // last triangular solid torus.
-    SatAnnulus::attachLST(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1),
-        nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
+    // If there are no fibres to fill at all, then the requested SFS is just
+    // the orientable circle bundle (with Euler number 0, if the base surface
+    // has no punctures) over the base surface.
+    if ( numFibresToFill == 0 ) {
+        // For the simplest cases, we just use the constructions that are
+        // already implemented elsewhere. For all remaining cases, we simply
+        // construct a baseSurface which we then pass to our generic circle
+        // bundle construction.
+        Triangulation<2> baseSurface;
+        if ( class_ == Class::o1 ) {
+            // We already handled genus_ == 0 above, so genus_ >= 1.
+            if ( genus_ == 1 ) {
+                return Example<3>::threeTorus();
+            } else {
+                baseSurface = Example<2>::orientable( genus_, 0 );
+            }
+        } else if ( class_ == Class::bo1 ) {
+            if ( genus_ == 0 and punctures_ == 1 ) {
+                // One-tetrahedron, so trivially oriented.
+                return Example<3>::ballBundle();
+            } else {
+                baseSurface = Example<2>::orientable( genus_, punctures_ );
+            }
+        } else if ( class_ == Class::n2 ) {
+            if ( genus_ == 1 ) {
+                return Example<3>::rp3rp3();
+            } else {
+                baseSurface = Example<2>::nonOrientable( genus_, 0 );
+            }
+        } else {    // class == Class:bn2
+            baseSurface = Example<2>::nonOrientable( genus_, punctures_ );
+        }
+        OrientableCircleBundle bundle(baseSurface);
+        return bundle.tri_;
+    }
 
-    return ans;
+    // For the comments throughout the rest of this implementation, we use the
+    // following notation:
+    //  --- Let k >= 0 be
+    //      --> 2*genus_ if the base surface is orientable, and
+    //      --> genus_ if the base surface is non-orientable.
+    //  --- Let p = punctures_ >= 0.
+    //  --- Let n = numFibresToFill >= 1.
+    // Because we've already handled all the possibilities with 2-sphere base,
+    // we know that if k == 0, then p >= 1.
+    //
+    // As mentioned above (in less detail), we construct the SFS as follows:
+    //  (1) Build the OrientableCircleBundle over a suitable base
+    //      triangulation, and mark n boundary squares of this bundle.
+    //  (2) Fill in the n exceptional fibres by attaching a layered solid torus
+    //      (with suitable parameters) to each marked boundary square.
+    //
+    // An obvious choice of base triangulation would just be the surface of
+    // the requested genus, with (p+n) boundary components. However, the
+    // implementation below does slightly better than this (in terms of number
+    // of tetrahedra) by exploiting the fact that the n marked boundary squares
+    // need not all belong to disjoint boundary components of the bundle.
+    Triangulation<2> baseSurface;
+    FixedArray<size_t> markedTriSolidTorusIndex(numFibresToFill);
+    FixedArray<size_t> markedSquareIndex(numFibresToFill);
+    if ( genus_ == 0 and punctures_ == 1 ) {
+        // Base surface is a disc.
+        if (numFibresToFill == 1) {
+            // With just one exceptional fibre, the specific Seifert fibration
+            // doesn't matter: up to homeomorphism, we just have a solid torus.
+            return Example<3>::ballBundle();
+        }
+
+        // We have n >= 2. For the base triangulation, we use an (n+1)-sided
+        // polygonal disc, constructed from n-1 triangles. The bundle over this
+        // polygon will then have n+1 boundary squares; one of these will form
+        // the boundary of the SFS, and we fill in the other n squares to
+        // obtain the exceptional fibres.
+        baseSurface.insertTriangulation(
+                Example<2>::polygon( numFibresToFill + 1 ) );
+
+        // Record the locations of the marked boundary squares.
+        for (size_t i = 0; i < numFibresToFill; ++i) {
+            if ( i == numFibresToFill - 1 ) {
+                // Because of the labellings used by Example<2>::polygon(), the
+                // very last marked square needs to be handled differently from
+                // the others.
+                markedTriSolidTorusIndex[i] = i - 1;
+                markedSquareIndex[i] = 1;
+            } else {
+                markedTriSolidTorusIndex[i] = i;
+                markedSquareIndex[i] = 0;
+            }
+        }
+    } else {
+        // Base surface has either:
+        //  --- k == 0 and p >= 2; or
+        //  --- k >= 1.
+        // In either case, we will start with a base surface that has one
+        // extra boundary component. The extra boundary is where we will fill
+        // in all the fibres, so if necessary we will adjust that boundary to
+        // have exactly one edge per fibre.
+        if ( class_ == SFSpace::Class::o1 or class_ == SFSpace::Class::bo1 ) {
+            baseSurface.insertTriangulation(
+                    Example<2>::orientable( genus_, punctures_ + 1 ) );
+        } else {
+            baseSurface.insertTriangulation(
+                    Example<2>::nonOrientable( genus_, punctures_ + 1 ) );
+        }
+        size_t initSize = baseSurface.size();
+        size_t baseBdryEdgeIndex;
+        for ( Edge<2>* baseEdge : baseSurface.edges() ) {
+            if ( baseEdge->isBoundary() ) {
+                // Found a suitable boundary edge at which we can fill in all
+                // the exceptional fibres.
+                baseBdryEdgeIndex = baseEdge->index();
+                break;
+            }
+        }
+        auto baseBdryEdgeEmb = baseSurface.edge(baseBdryEdgeIndex)->front();
+        if ( numFibresToFill == 1 ) {
+            // We can simply fill along the square corresponding to the
+            // boundary edge that we just found.
+            markedTriSolidTorusIndex[0] = baseBdryEdgeEmb.triangle()->index();
+            markedSquareIndex[0] = baseBdryEdgeEmb.edge();
+        } else {
+            // Add extra boundary edges by attaching an (n+1)-sided polygon,
+            // constructed from n-1 triangles.
+            baseSurface.insertTriangulation(
+                    Example<2>::polygon( numFibresToFill + 1 ) );
+            if ( baseBdryEdgeEmb.vertices().sign() == -1 ) {
+                baseSurface.triangle(initSize)->join(
+                        2,
+                        baseBdryEdgeEmb.triangle(),
+                        baseBdryEdgeEmb.vertices() );
+            } else {
+                baseSurface.triangle(initSize)->join(
+                        2,
+                        baseBdryEdgeEmb.triangle(),
+                        baseBdryEdgeEmb.vertices() * Perm<3>(0, 1) );
+            }
+
+            // We will fill along the squares corresponding to the boundary
+            // edges of the polygon that we just attached.
+            for (size_t i = 0; i < numFibresToFill; ++i) {
+                if ( i == numFibresToFill - 1 ) {
+                    // As above, the very last marked square needs to be
+                    // handled differently from the others.
+                    markedTriSolidTorusIndex[i] =
+                        initSize + numFibresToFill - 2;
+                    markedSquareIndex[i] = 1;
+                } else {
+                    markedTriSolidTorusIndex[i] = initSize + i;
+                    markedSquareIndex[i] = 0;
+                }
+            }
+        }
+    }
+
+    // Build the OrientableCircleBundle over the baseSurface that we just
+    // constructed, and perform the fillings on the marked boundary squares.
+    OrientableCircleBundle bundleToFill(baseSurface);
+    auto fibreIt = fibresToFill.begin();
+    for (size_t i = 0; i < numFibresToFill; ++i) {
+        TriSolidTorus& triSolidTorus = bundleToFill.triSolidTorus[
+            markedTriSolidTorusIndex[i] ];
+
+        // To get consistent signs on all the fillings, we need the filled
+        // squares to have positive slope.
+        triSolidTorus.ensurePositiveSlope( markedSquareIndex[i] );
+        SatAnnulus::attachLST(
+                triSolidTorus.squareTet( markedSquareIndex[i], 0 ),
+                triSolidTorus.squareRoles( markedSquareIndex[i], 0 ),
+                triSolidTorus.squareTet( markedSquareIndex[i], 1 ),
+                triSolidTorus.squareRoles( markedSquareIndex[i], 1 ),
+                fibreIt->alpha,
+                fibreIt->beta );
+        ++fibreIt;
+    }
+
+    // Because of all the fillings we just did, the bundleToFill's
+    // triangulation no longer triangulates the original bundle, but rather
+    // triangulates precisely the SFS that we wanted to construct.
+    return bundleToFill.tri_;
 }
 
 AbelianGroup SFSpace::homology() const {
