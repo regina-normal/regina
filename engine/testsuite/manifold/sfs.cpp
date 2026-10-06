@@ -89,30 +89,6 @@ void verifyName(const SFSpace& sfs, const char* expected) {
     EXPECT_EQ(sfs.name(), expected);
 }
 
-bool hasSameFibres( const SFSpace& reference, const SFSpace& compare,
-        bool allowReflect=true){
-    if ( reference.fibreCount() != compare.fibreCount() ) {
-        return false;
-    }
-    if (allowReflect) {
-        if ( hasSameFibres( reference, compare, false ) ) {
-            return true;
-        }
-
-        // Try the reflection instead.
-        SFSpace reflected(compare);
-        reflected.reflect();
-        return hasSameFibres( reference, reflected, false );
-    }
-    size_t iFibre;
-    for ( iFibre = 0; iFibre < reference.fibreCount(); ++iFibre ) {
-        if ( reference.fibre(iFibre) != compare.fibre(iFibre) ) {
-            return false;
-        }
-    }
-    return true;
-}
-
 void verifyStructureOrientable(const SFSpace& sfs) {
     // This test is designed for orientable SFS only. We therefore assume the
     // following:
@@ -133,7 +109,7 @@ void verifyStructureOrientable(const SFSpace& sfs) {
     // The upshot is that it should be safe to use this test as long as the
     // given sfs is sufficiently generic.
     SFSpace reduced(sfs);
-    reduced.reduce();
+    reduced.reduce(false);
     SCOPED_TRACE( reduced.name() );
 
     ASSERT_NO_THROW( sfs.construct() );
@@ -142,30 +118,13 @@ void verifyStructureOrientable(const SFSpace& sfs) {
     auto blockedManifold = blockedSFS->manifold();
     ASSERT_TRUE(blockedManifold);
     SFSpace compare = dynamic_cast<SFSpace&>(*blockedManifold);
-    compare.reduce();
-    if (reduced.punctures()) {
-        // Orientable SFS with non-empty boundary, so the obstruction constant
-        // has no bearing on the isomorphism type, and we just need to compare
-        // the base surface and the (reduced) fibres.
-        EXPECT_EQ( reduced.bundleType(), compare.bundleType() );
-        EXPECT_EQ( reduced.baseGenus(), compare.baseGenus() );
-        EXPECT_EQ( reduced.punctures(), compare.punctures() );
 
-        // For comparing the fibres, we need to allow reflections, because the
-        // current implementation of SFSpace::reduce() doesn't fully reduce b_
-        // for orientable SFS with non-empty boundary.
-        //
-        //TODO Improve SFSpace::reduce() to address this. The obstacle to
-        //      making such an improvement is that there are tests for
-        //      StandardTriangulation (and possibly also other parts of the
-        //      codebase) which rely on the current implementation.
-        EXPECT_TRUE( hasSameFibres( reduced, compare ) );
-    } else {
-        // Closed orientable SFS, so the isomorphism class is determined not
-        // only by the base surface and the (reduced) fibres, but also by the
-        // obstruction constant.
-        EXPECT_EQ( reduced, compare );
-    }
+    // Now that SFSpace::reduce() promises to reduce the obstruction constant
+    // to zero whenever we have punctures, we can check for
+    // (orientation-preserving) isomorphism by simply checking whether the
+    // reduced parameters are equal.
+    compare.reduce(false);
+    EXPECT_EQ( reduced, compare );
 }
 
 TEST(SFSTest, construct) {
