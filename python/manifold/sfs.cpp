@@ -113,9 +113,14 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
             "twisted"_a = false, "nPunctures"_a = 1, rdoc::addPuncture)
         .def("addReflector", &SFSpace::addReflector,
             "twisted"_a = false, "nReflectors"_a = 1, rdoc::addReflector)
-        .def("addOrbifoldBoundary", &SFSpace::addOrbifoldBoundary,
-            "twisted"_a = false, "nPunctures"_a = 1, "nReflectors"_a = 0,
-            rdoc::addOrbifoldBoundary)
+        .def("addOrbifoldBoundary",
+                [](SFSpace& sfs, bool twisted, size_t nPunctures,
+                    size_t nReflectors) {
+                    return sfs.addOrbifoldBoundary(
+                            twisted, nPunctures, nReflectors);
+                },
+                "twisted"_a = false, "nPunctures"_a = 1,
+                "nReflectors"_a = 0, rdoc::addOrbifoldBoundary)
         .def("insertFibre",
             overload_cast<const SFSFibre&>(&SFSpace::insertFibre),
             rdoc::insertFibre)

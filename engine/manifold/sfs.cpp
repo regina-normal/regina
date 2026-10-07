@@ -356,7 +356,7 @@ void SFSpace::addCrosscap(bool fibreReversing) {
     genus_++;
 }
 
-void SFSpace::addOrbifoldBoundary(
+void SFSpace::addOrbifoldBoundaryInternal(
         bool twisted, size_t nPunctures, size_t nReflectors) {
     if (nPunctures == 0 && nReflectors == 0) {
         // If we aren't actually adding any new boundaries, then exit right
@@ -364,11 +364,6 @@ void SFSpace::addOrbifoldBoundary(
         return;
     }
     if (twisted) {
-        if ((nPunctures + nReflectors) % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace requires that the total number of twisted "
-                    "punctures and twisted reflectors always remains even");
-        }
         puncturesTwisted_ += nPunctures;
         reflectorsTwisted_ += nReflectors;
 
@@ -384,6 +379,109 @@ void SFSpace::addOrbifoldBoundary(
         reflectors_ += nReflectors;
         // Adding untwisted boundaries to the base orbifold never changes the
         // bundle type.
+    }
+}
+
+void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors) {
+    // Enforce the condition which isn't checked by the internal routine.
+    if (twisted) {
+        if ((nPunctures + nReflectors) % 2 != 0) {
+            throw InvalidArgument(
+                    "SFSpace requires that the total number of twisted "
+                    "boundaries in the base orbifold always remains even");
+        }
+    }
+    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
+}
+
+void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors,
+        std::initializer_list<SFSPartialReflector> partialReflectors ) {
+    // Enforce the condition which isn't checked by the internal routines.
+    if (twisted) {
+        size_t twistedCount(nPunctures + nReflectors);
+        for (const auto& p : partialReflectors) {
+            if (p.twisted) {
+                ++twistedCount;
+            }
+        }
+        if (twistedCount % 2 != 0) {
+            throw InvalidArgument(
+                    "SFSpace requires that the total number of twisted "
+                    "boundaries in the base orbifold always remains even");
+        }
+    }
+    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
+    for (const auto& p : partialReflectors) {
+        insertPartialReflectorInternal( p.twisted, p.reflectorArcs );
+    }
+}
+
+template <ForwardIteratorFor<SFSPartialReflector> Iterator>
+void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors,
+        Iterator beginPartialReflectors, Iterator endPartialReflectors ) {
+    // Enforce the condition which isn't checked by the internal routines.
+    if (twisted) {
+        size_t twistedCount(nPunctures + nReflectors);
+        for (auto it = beginPartialReflectors;
+                it != endPartialReflectors; ++it) {
+            if (it->twisted) {
+                ++twistedCount;
+            }
+        }
+        if (twistedCount % 2 != 0) {
+            throw InvalidArgument(
+                    "SFSpace requires that the total number of twisted "
+                    "boundaries in the base orbifold always remains even");
+        }
+    }
+    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
+    for (auto it = beginPartialReflectors; it != endPartialReflectors; ++it) {
+        insertPartialReflectorInternal( it->twisted, it->reflectorArcs );
+    }
+}
+
+template <UnsignedCppInteger UInt>
+void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors,
+        std::initializer_list<UInt> reflectorArcCounts ) {
+    // Enforce the condition which isn't checked by the internal routines.
+    if (twisted) {
+        if ((nPunctures + nReflectors + reflectorArcCounts.size()) % 2 != 0) {
+            throw InvalidArgument(
+                    "SFSpace requires that the total number of twisted "
+                    "boundaries in the base orbifold always remains even");
+        }
+    }
+    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
+    for (const auto& refArcCount : reflectorArcCounts) {
+        insertPartialReflectorInternal( twisted, refArcCount );
+    }
+}
+
+template <UnsignedCppInteger UInt, ForwardIteratorFor<UInt> Iterator>
+void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors,
+        Iterator beginReflectorArcCounts, Iterator endReflectorArcCounts ) {
+    // Enforce the condition which isn't checked by the internal routines.
+    if (twisted) {
+        size_t twistedCount(nPunctures + nReflectors);
+        for (auto it = beginReflectorArcCounts;
+                it != endReflectorArcCounts; ++it) {
+            ++twistedCount;
+        }
+        if (twistedCount % 2 != 0) {
+            throw InvalidArgument(
+                    "SFSpace requires that the total number of twisted "
+                    "boundaries in the base orbifold always remains even");
+        }
+    }
+    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
+    for (auto it = beginReflectorArcCounts;
+            it != endReflectorArcCounts; ++it) {
+        insertPartialReflectorInternal( twisted, *it );
     }
 }
 
@@ -415,6 +513,41 @@ void SFSpace::insertFibre(long alpha, long beta) {
     fibres_.insert(lower_bound(fibres_.begin(), fibres_.end(), f), f);
 
     // We're done!
+}
+
+template <UnsignedCppInteger UInt>
+void SFSpace::insertPartialReflectorInternal(
+        bool twisted, UInt reflectorArcs ) {
+    // First handle the case where this is just a puncture with no reflector
+    // arcs.
+    if (reflectorArcs == 0) {
+        if (twisted) {
+            ++puncturesTwisted_;
+        } else {
+            ++punctures_;
+        }
+        return;
+    }
+
+    // OK, now we know that we have a proper partial reflector.
+    SFSPartialReflector partialReflector(twisted, reflectorArcs);
+    if (twisted) {
+        ++nPartialReflectorsTwisted_;
+        partialReflectorsTwisted_.insert(
+                lower_bound(
+                    partialReflectorsTwisted_.begin(),
+                    partialReflectorsTwisted_.end(),
+                    partialReflector ),
+                partialReflector );
+    } else {
+        ++nPartialReflectors_;
+        partialReflectors_.insert(
+                lower_bound(
+                    partialReflectors_.begin(),
+                    partialReflectors_.end(),
+                    partialReflector ),
+                partialReflector );
+    }
 }
 
 void SFSpace::reduce(bool mayReflect) {

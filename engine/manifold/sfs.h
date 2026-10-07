@@ -1207,10 +1207,6 @@ class SFSpace : public Manifold<3> {
          */
         void addReflector(bool twisted = false, size_t nReflectors = 1);
 
-        //TODO Extend addOrbifoldBoundary() to support partial reflectors.
-        //  Similar to the constructors, probably want both iterator
-        //  begin/end and std::initializer_list options.
-
         /**
          * Adds new boundaries of the given types into the base orbifold.
          * The new boundaries may be twisted or untwisted.
@@ -1247,6 +1243,254 @@ class SFSpace : public Manifold<3> {
          */
         void addOrbifoldBoundary(bool twisted = false, size_t nPunctures = 1,
                 size_t nReflectors = 0);
+        /**
+         * Adds new boundaries of the given types into the base orbifold.
+         * The new boundaries may be twisted or untwisted.
+         *
+         * Each puncture insertion is equivalent to removing a disc from
+         * the base orbifold.  In the untwisted case this results in a
+         * new torus boundary for the 3-manifold, and in the twisted
+         * case it results in a new Klein bottle boundary.
+         *
+         * Each addition of a reflector circle is equivalent to removing a
+         * disc from the base orbifold and replacing it with an annulus with
+         * one reflector boundary. In the untwisted case, it has the effect
+         * of removing a trivially fibred solid torus from the overall
+         * 3-manifold and replacing it with an appropriately fibred twisted
+         * I-bundle over the torus.
+         *
+         * Each addition of a partial reflector with `k` reflector arcs, with
+         * `k > 0`, is equivalent to removing a disc from the base orbifold,
+         * and replacing it with an annulus with one boundary consisting of
+         * `k` reflector arcs interspersed with `k` ordinary boundary arcs.
+         * In the untwisted case, it has the effect of removing a trivially
+         * fibred solid torus from the overall 3-manifold, choosing `k`
+         * disjoint fibred annuli in the new resulting torus boundary
+         * component, and attaching `k` product I-bundles over the Möbius
+         * band along these `k` fibred annuli. In both the twisted and
+         * untwisted cases, this results in `k` new Klein bottle boundary
+         * components in the overall 3-manifold.
+         *
+         * The new punctures and reflector circles will either all be twisted
+         * (if \a twisted is \c true), or all untwisted (if \a twisted is
+         * \c false). Each partial reflector may be either twisted or
+         * untwisted, entirely independent of each other, and independent of
+         * whether \a twisted is \c true or \c false. However, the total
+         * number of twisted boundaries (including punctures, reflector
+         * circles, and partial reflectors) must be even.
+         *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * routine will automatically reassign these as punctures of the base
+         * orbifold.
+         *
+         * The exceptional fibres and the obstruction constant \a b are
+         * not modified by this routine.
+         *
+         * \exception InvalidArgument The total number of twisted boundaries
+         * to be added to the base orbifold is odd.
+         *
+         * \nopython Instead use the version of addOrbifoldBoundary() that
+         * takes the partial reflectors as a Python list (which need not be
+         * constant).
+         *
+         * \param twisted \c true if all the new punctures and reflector
+         * circles should be twisted (i.e., they should be fibre-reversing),
+         * or \c false if they should all be untwisted.
+         * \param nPunctures the number of new punctures to add.
+         * \param nReflectors the number of new reflector circles to add.
+         * \param partialReflectors the list of partial reflectors to add.
+         */
+        void addOrbifoldBoundary(
+                bool twisted, size_t nPunctures, size_t nReflectors,
+                std::initializer_list<SFSPartialReflector> partialReflectors );
+        /**
+         * Adds new boundaries of the given types into the base orbifold.
+         * The new boundaries may be twisted or untwisted.
+         *
+         * Each puncture insertion is equivalent to removing a disc from
+         * the base orbifold.  In the untwisted case this results in a
+         * new torus boundary for the 3-manifold, and in the twisted
+         * case it results in a new Klein bottle boundary.
+         *
+         * Each addition of a reflector circle is equivalent to removing a
+         * disc from the base orbifold and replacing it with an annulus with
+         * one reflector boundary. In the untwisted case, it has the effect
+         * of removing a trivially fibred solid torus from the overall
+         * 3-manifold and replacing it with an appropriately fibred twisted
+         * I-bundle over the torus.
+         *
+         * Each addition of a partial reflector with `k` reflector arcs, with
+         * `k > 0`, is equivalent to removing a disc from the base orbifold,
+         * and replacing it with an annulus with one boundary consisting of
+         * `k` reflector arcs interspersed with `k` ordinary boundary arcs.
+         * In the untwisted case, it has the effect of removing a trivially
+         * fibred solid torus from the overall 3-manifold, choosing `k`
+         * disjoint fibred annuli in the new resulting torus boundary
+         * component, and attaching `k` product I-bundles over the Möbius
+         * band along these `k` fibred annuli. In both the twisted and
+         * untwisted cases, this results in `k` new Klein bottle boundary
+         * components in the overall 3-manifold.
+         *
+         * The new punctures and reflector circles will either all be twisted
+         * (if \a twisted is \c true), or all untwisted (if \a twisted is
+         * \c false). Each partial reflector may be either twisted or
+         * untwisted, entirely independent of each other, and independent of
+         * whether \a twisted is \c true or \c false. However, the total
+         * number of twisted boundaries (including punctures, reflector
+         * circles, and partial reflectors) must be even.
+         *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * routine will automatically reassign these as punctures of the base
+         * orbifold.
+         *
+         * The exceptional fibres and the obstruction constant \a b are
+         * not modified by this routine.
+         *
+         * \exception InvalidArgument The total number of twisted boundaries
+         * to be added to the base orbifold is odd.
+         *
+         * \python Instead of using a pair of iterators, you should pass the
+         * partial reflectors using a Python list.
+         *
+         * \param twisted \c true if all the new punctures and reflector
+         * circles should be twisted (i.e., they should be fibre-reversing),
+         * or \c false if they should all be untwisted.
+         * \param nPunctures the number of new punctures to add.
+         * \param nReflectors the number of new reflector circles to add.
+         * \param beginPartialReflectors an iterator pointing to the
+         * beginning of the list of partial reflectors.
+         * \param endPartialReflectors an iterator pointing past the end of
+         * the list of partial reflectors.
+         */
+        template <ForwardIteratorFor<SFSPartialReflector> Iterator>
+        void addOrbifoldBoundary(
+                bool twisted, size_t nPunctures, size_t nReflectors,
+                Iterator beginPartialReflectors,
+                Iterator endPartialReflectors );
+        /**
+         * Adds new boundaries of the given types into the base orbifold.
+         * The new boundaries may be twisted or untwisted.
+         *
+         * Each puncture insertion is equivalent to removing a disc from
+         * the base orbifold.  In the untwisted case this results in a
+         * new torus boundary for the 3-manifold, and in the twisted
+         * case it results in a new Klein bottle boundary.
+         *
+         * Each addition of a reflector circle is equivalent to removing a
+         * disc from the base orbifold and replacing it with an annulus with
+         * one reflector boundary. In the untwisted case, it has the effect
+         * of removing a trivially fibred solid torus from the overall
+         * 3-manifold and replacing it with an appropriately fibred twisted
+         * I-bundle over the torus.
+         *
+         * Each addition of a partial reflector with `k` reflector arcs, with
+         * `k > 0`, is equivalent to removing a disc from the base orbifold,
+         * and replacing it with an annulus with one boundary consisting of
+         * `k` reflector arcs interspersed with `k` ordinary boundary arcs.
+         * In the untwisted case, it has the effect of removing a trivially
+         * fibred solid torus from the overall 3-manifold, choosing `k`
+         * disjoint fibred annuli in the new resulting torus boundary
+         * component, and attaching `k` product I-bundles over the Möbius
+         * band along these `k` fibred annuli. In both the twisted and
+         * untwisted cases, this results in `k` new Klein bottle boundary
+         * components in the overall 3-manifold.
+         *
+         * The new boundaries (punctures, reflector circles and partial
+         * reflectors) will either all be twisted (if \a twisted is \c true),
+         * or all untwisted (is \a twisted is \c false). In the twisted case,
+         * the total number of added boundaries must be even.
+         *
+         * The partial reflectors should be given as a sequence of
+         * non-negative integers, each of which counts the number of reflector
+         * arcs in one of the new partial reflectors. Partial reflectors with
+         * zero reflector arcs are allowed, but this routine will
+         * automatically reassign these as punctures of the base orbifold.
+         *
+         * The exceptional fibres and the obstruction constant \a b are
+         * not modified by this routine.
+         *
+         * \exception InvalidArgument \a twisted is \c true but the total
+         * number of boundaries to be added to the base orbifold is odd.
+         *
+         * \nopython Instead use the version of addOrbifoldBoundary() that
+         * takes the reflector arc counts as a Python list (which need not be
+         * constant).
+         *
+         * \param twisted \c true if all the new boundaries should be twisted
+         * (i.e., they should be fibre-reversing), or \c false if they should
+         * all be untwisted.
+         * \param nPunctures the number of new punctures to add.
+         * \param nReflectors the number of new reflector circles to add.
+         * \param reflectorArcCounts the list of reflector arc counts in the
+         * partial reflectors to add.
+         */
+        template <UnsignedCppInteger UInt>
+        void addOrbifoldBoundary(
+                bool twisted, size_t nPunctures, size_t nReflectors,
+                std::initializer_list<UInt> reflectorArcCounts );
+        /**
+         * Adds new boundaries of the given types into the base orbifold.
+         * The new boundaries may be twisted or untwisted.
+         *
+         * Each puncture insertion is equivalent to removing a disc from
+         * the base orbifold.  In the untwisted case this results in a
+         * new torus boundary for the 3-manifold, and in the twisted
+         * case it results in a new Klein bottle boundary.
+         *
+         * Each addition of a reflector circle is equivalent to removing a
+         * disc from the base orbifold and replacing it with an annulus with
+         * one reflector boundary. In the untwisted case, it has the effect
+         * of removing a trivially fibred solid torus from the overall
+         * 3-manifold and replacing it with an appropriately fibred twisted
+         * I-bundle over the torus.
+         *
+         * Each addition of a partial reflector with `k` reflector arcs, with
+         * `k > 0`, is equivalent to removing a disc from the base orbifold,
+         * and replacing it with an annulus with one boundary consisting of
+         * `k` reflector arcs interspersed with `k` ordinary boundary arcs.
+         * In the untwisted case, it has the effect of removing a trivially
+         * fibred solid torus from the overall 3-manifold, choosing `k`
+         * disjoint fibred annuli in the new resulting torus boundary
+         * component, and attaching `k` product I-bundles over the Möbius
+         * band along these `k` fibred annuli. In both the twisted and
+         * untwisted cases, this results in `k` new Klein bottle boundary
+         * components in the overall 3-manifold.
+         *
+         * The new boundaries (punctures, reflector circles and partial
+         * reflectors) will either all be twisted (if \a twisted is \c true),
+         * or all untwisted (is \a twisted is \c false). In the twisted case,
+         * the total number of added boundaries must be even.
+         *
+         * The partial reflectors should be given as a sequence of
+         * non-negative integers, each of which counts the number of reflector
+         * arcs in one of the new partial reflectors. Partial reflectors with
+         * zero reflector arcs are allowed, but this routine will
+         * automatically reassign these as punctures of the base orbifold.
+         *
+         * The exceptional fibres and the obstruction constant \a b are
+         * not modified by this routine.
+         *
+         * \exception InvalidArgument \a twisted is \c true but the total
+         * number of boundaries to be added to the base orbifold is odd.
+         *
+         * \python Instead of using a pair of iterators, you should pass the
+         * reflector arc counts as a Python list of native integers.
+         *
+         * \param twisted \c true if all the new boundaries should be twisted
+         * (i.e., they should be fibre-reversing), or \c false if they should
+         * all be untwisted.
+         * \param nPunctures the number of new punctures to add.
+         * \param nReflectors the number of new reflector circles to add.
+         * \param beginReflectorArcCounts an iterator pointing to the
+         * beginning of the list of reflector arc counts.
+         * \param endReflectorArcCounts an iterator pointing past the end of
+         * the list of reflector arc counts.
+         */
+        template <UnsignedCppInteger UInt, ForwardIteratorFor<UInt> Iterator>
+        void addOrbifoldBoundary(
+                bool twisted, size_t nPunctures, size_t nReflectors,
+                Iterator beginReflectorArcCounts,
+                Iterator endReflectorArcCounts );
 
         /**
          * Adds the given fibre to this Seifert fibred space.
@@ -1444,6 +1688,42 @@ class SFSpace : public Manifold<3> {
          */
         [[deprecated]] static BundleType convertBaseClassToBundleType(
                 Class baseClass, bool hasUntwistedBdry, bool hasTwistedBdry );
+
+        /**
+         * Internal implementation of addOrbifoldBoundary() which does not
+         * enforce the condition that the total number of twisted punctures
+         * must be even.
+         *
+         * \param twisted \c true if all of the new boundaries should be
+         * twisted (i.e., they should be fibre-reversing), or \c false if all
+         * of the new boundaries should be untwisted.
+         * \param nPunctures the number of new punctures to add.
+         * \param nReflectors the number of new reflector circles to add.
+         */
+        void addOrbifoldBoundaryInternal(bool twisted = false,
+                size_t nPunctures = 1, size_t nReflectors = 0);
+
+        /**
+         * Internal routine for adding a single partial reflector boundary to
+         * this Seifert fibred space.
+         *
+         * If \a twisted is \c true, then this routine will of course change
+         * the parity of the number of twisted boundaries in the base
+         * orbifold. Since this number is always supposed to remain even,
+         * calling this routine may leave this Seifert fibred space in an
+         * invalid state.
+         *
+         * It is allowed for \a reflectorArcs to be zero, but in such a case
+         * this routine will automatically reassign the partial reflector as
+         * a puncture of the base orbifold.
+         *
+         * \param twisted \c true if the partial reflector boundary should be
+         * twisted, or \c false if it should be untwisted.
+         * \param reflectorArcs the number of reflector arcs in the partial
+         * reflector boundary.
+         */
+        template <UnsignedCppInteger UInt>
+        void insertPartialReflectorInternal(bool twisted, UInt reflectorArcs);
 
         /**
          * Replaces the fibre (\a alpha, \a beta) at the given iterator
