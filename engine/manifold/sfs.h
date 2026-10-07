@@ -648,15 +648,25 @@ class SFSpace : public Manifold<3> {
                  described by \a puncturesTwisted_. */
 
         std::list<SFSPartialReflector> partialReflectors_;
-            /**< The partial reflectors.  This list will be sorted, and will
-                 only contain partial reflectors with a strictly positive
-                 number of reflector arcs. */
+            /**< The fibre-preserving partial reflectors.  This list will be
+                 sorted by the number of reflector arcs, and will only
+                 contain partial reflectors for which this number is strictly
+                 positive. */
         size_t nPartialReflectors_;
             /**< The number of fibre-preserving partial reflectors in the
-                 base orbifold . */
+                 base orbifold.
+                 This is used to avoid calling the linear time
+                 nPartialReflectors_.size(). */
+        std::list<SFSPartialReflector> partialReflectorsTwisted_;
+            /**< The fibre-reversing partial reflectors.  This list will be
+                 sorted by the number of reflector arcs, and will only
+                 contain partial reflectors for which this number is strictly
+                 positive. */
         size_t nPartialReflectorsTwisted_;
             /**< The number of fibre-reversing partial reflectors in the
-                 base orbifold. */
+                 base orbifold.
+                 This is used to avoid calling the linear time
+                 nPartialReflectorsTwisted_.size(). */
 
         std::list<SFSFibre> fibres_;
             /**< The exceptional fibres.  This list will be sorted, and will
@@ -980,25 +990,30 @@ class SFSpace : public Manifold<3> {
          */
         size_t partialReflectorCount(bool twisted) const;
         /**
-         * Returns the requested partial reflector boundary.
+         * Returns the requested partial reflector boundary of the given type.
          *
-         * Partial reflectors are stored in sorted order, first by whether
-         * they are twisted (with the untwisted ones ordered before the
-         * twisted ones), and then by the number of reflector arcs. See the
-         * SFSpace and SFSPartialReflector class notes for details.
+         * This either accesses the list of twisted partial reflectors, or the
+         * list of untwisted partial reflectors. Within each of these lists,
+         * partial reflectors are stored in sorted order by the number of
+         * reflector arcs. See the SFSpace and SFSPartialReflector class
+         * notes for details.
          *
          * \warning This routine takes linear time (specifically, linear in
          * the argument \a which). If you need to iterate through all partial
-         * reflectors, use partialReflectors() instead.
+         * reflectors of the given type, use partialReflectors() instead.
          *
+         * \param twisted \c true if the partial reflector should be twisted
+         * (that is, gives a fibre-reversing path), or \c false if it should
+         * be untwisted.
          * \param which determines which partial reflector to return; this
-         * must be between 0 and partialReflectorCount()-1 inclusive.
+         * must be between 0 and `partialReflectorCount(twisted) - 1`
+         * inclusive.
          * \return the requested partial reflector.
          */
-        SFSPartialReflector partialReflector(size_t which) const;
+        SFSPartialReflector partialReflector(bool twisted, size_t which) const;
         /**
          * Returns an object that allows iteration through (but _not_ random
-         * access to) all partial reflector boundaries.
+         * access to) all partial reflector boundaries of the given type.
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value. The C++ type of the object is subject to change,
@@ -1009,7 +1024,9 @@ class SFSpace : public Manifold<3> {
          * `for` loops.  For example:
          *
          * \code{.cpp}
-         * for (const SFSPartialReflector& p : sfs.partialReflectors()) { ... }
+         * for (const SFSPartialReflector& p : sfs.partialReflectors(twisted)) {
+         *     ...
+         * }
          * \endcode
          *
          * The object that is returned will remain up-to-date and valid for as
@@ -1019,9 +1036,10 @@ class SFSpace : public Manifold<3> {
          * it is recommended to treat this object as temporary only, and to
          * call partialReflectors() again each time you need it.
          *
-         * \return access to the list of all partial reflectors.
+         * \return access to the list of all partial reflectors of the given
+         * type.
          */
-        auto partialReflectors() const;
+        auto partialReflectors(bool twisted) const;
 
         /**
          * Returns the number of exceptional fibres in this Seifert fibred
@@ -1544,6 +1562,7 @@ inline void SFSpace::swap(SFSpace& other) noexcept {
     std::swap(reflectorsTwisted_, other.reflectorsTwisted_);
     partialReflectors_.swap(other.partialReflectors_);
     std::swap(nPartialReflectors_, other.nPartialReflectors_);
+    partialReflectorsTwisted_.swap(other.partialReflectorsTwisted_);
     std::swap(nPartialReflectorsTwisted_, other.nPartialReflectorsTwisted_);
     fibres_.swap(other.fibres_);
     std::swap(nFibres_, other.nFibres_);
@@ -1624,8 +1643,9 @@ inline size_t SFSpace::partialReflectorCount(bool twisted) const {
     return (twisted ? nPartialReflectorsTwisted_ : nPartialReflectors_);
 }
 
-inline auto SFSpace::partialReflectors() const {
-    return std::views::all(partialReflectors_);
+inline auto SFSpace::partialReflectors(bool twisted) const {
+    return ( twisted ? std::views::all(partialReflectorsTwisted_) :
+                std::views::all(partialReflectors_) );
 }
 
 inline size_t SFSpace::fibreCount() const {

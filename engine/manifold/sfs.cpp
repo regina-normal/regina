@@ -62,8 +62,10 @@ std::ostream& operator << (std::ostream& out, const SFSPartialReflector& p) {
             p.reflectorArcs << ')');
 }
 
-SFSPartialReflector SFSpace::partialReflector(size_t which) const {
-    auto pos = partialReflectors_.begin();
+SFSPartialReflector SFSpace::partialReflector(
+        bool twisted, size_t which ) const {
+    auto pos = ( twisted ? partialReflectorsTwisted_.begin() :
+            partialReflectors_.begin() );
     advance(pos, which);
     return *pos;
 }
@@ -807,6 +809,8 @@ bool SFSpace::operator == (const SFSpace& compare) const {
     if (nPartialReflectorsTwisted_ != compare.nPartialReflectorsTwisted_)
         return false;
     if (! (partialReflectors_ == compare.partialReflectors_))
+        return false;
+    if (! (partialReflectorsTwisted_ == compare.partialReflectorsTwisted_))
         return false;
     if (nFibres_ != compare.nFibres_)
         return false;
