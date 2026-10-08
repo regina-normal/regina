@@ -76,30 +76,23 @@ SFSFibre SFSpace::fibre(size_t which) const {
     return *pos;
 }
 
-SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
-        size_t punctures, size_t puncturesTwisted,
-        size_t reflectors, size_t reflectorsTwisted) :
-        bundleType_(bundleType), genus_(genus),
-        punctures_(punctures), puncturesTwisted_(puncturesTwisted),
-        reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
-        nPartialReflectors_(0), nPartialReflectorsTwisted_(0),
-        nFibres_(0), b_(0) {
+void SFSpace::checkPreconditionsAfterInitialisation() {
     // Enforce preconditions on genus.
-    switch (bundleType) {
+    switch (bundleType_) {
         // Bundle types o2, n, n1 and n2 require genus >= 1.
         case BundleType::o2:
         case BundleType::n:
         case BundleType::n1:
         case BundleType::n2:
-            if (genus < 1) {
+            if (genus_ < 1) {
                 throw regina::FailedPrecondition(
                         "SFSpace::SFSpace() requires genus >= 1 for the "
-                        "given bundleType");
+                        "given bundle type");
             }
             break;
         // Bundle type n3 requires genus >= 2.
         case BundleType::n3:
-            if (genus < 2) {
+            if (genus_ < 2) {
                 throw regina::FailedPrecondition(
                         "SFSpace::SFSpace() requires genus >= 2 for "
                         "BundleType::n3");
@@ -107,7 +100,7 @@ SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
             break;
         // Bundle type n4 requires genus >= 3.
         case BundleType::n4:
-            if (genus < 3) {
+            if (genus_ < 3) {
                 throw regina::FailedPrecondition(
                         "SFSpace::SFSpace() requires genus >= 3 for "
                         "BundleType::n4");
@@ -125,16 +118,16 @@ SFSpace::SFSpace(SFSpace::BundleType bundleType, size_t genus,
                 "boundaries in the base orbifold to be even");
     }
     if (totalTwisted == 0) {
-        if (bundleType == BundleType::o || bundleType == BundleType::n) {
+        if (bundleType_ == BundleType::o || bundleType_ == BundleType::n) {
             throw regina::FailedPrecondition(
-                    "SFSpace::SFSpace() requires that bundleType is not "
-                    "BundleType::o or BundleType::n if the base orbifold "
-                    "has no twisted boundaries");
+                    "SFSpace::SFSpace() requires that the bundle type is not "
+                    "BundleType::o or BundleType::n if the base orbifold has "
+                    "no twisted boundaries");
         }
     } else {
-        if (! (bundleType == BundleType::o || bundleType == BundleType::n)) {
+        if (! (bundleType_ == BundleType::o || bundleType_ == BundleType::n)) {
             throw regina::FailedPrecondition(
-                    "SFSpace::SFSpace() requires that bundleType is "
+                    "SFSpace::SFSpace() requires that the bundle type is "
                     "BundleType::o or BundleType::n if the base orbifold "
                     "has any twisted boundaries");
         }
@@ -413,20 +406,18 @@ void SFSpace::addOrbifoldBoundary(
         }
     }
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
-    for (const auto& p : partialReflectors) {
-        insertPartialReflectorInternal( p.twisted, p.reflectorArcs );
-    }
+    insertPartialReflectors(
+            partialReflectors.begin(), partialReflectors.end() );
 }
 
-template <ForwardIteratorFor<SFSPartialReflector> Iterator>
+template <ForwardIteratorFor<SFSPartialReflector> ParRefIterator>
 void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
-        Iterator beginPartialReflectors, Iterator endPartialReflectors ) {
+        ParRefIterator beginParRefs, ParRefIterator endParRefs ) {
     // Enforce the condition which isn't checked by the internal routines.
     if (twisted) {
         size_t twistedCount(nPunctures + nReflectors);
-        for (auto it = beginPartialReflectors;
-                it != endPartialReflectors; ++it) {
+        for (auto it = beginParRefs; it != endParRefs; ++it) {
             if (it->twisted) {
                 ++twistedCount;
             }
@@ -438,9 +429,7 @@ void SFSpace::addOrbifoldBoundary(
         }
     }
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
-    for (auto it = beginPartialReflectors; it != endPartialReflectors; ++it) {
-        insertPartialReflectorInternal( it->twisted, it->reflectorArcs );
-    }
+    insertPartialReflectors(beginParRefs, endParRefs);
 }
 
 template <UnsignedCppInteger UInt>
@@ -457,7 +446,7 @@ void SFSpace::addOrbifoldBoundary(
     }
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
     for (const auto& refArcCount : reflectorArcCounts) {
-        insertPartialReflectorInternal( twisted, refArcCount );
+        insertPartialReflector( twisted, refArcCount );
     }
 }
 
@@ -481,7 +470,7 @@ void SFSpace::addOrbifoldBoundary(
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
     for (auto it = beginReflectorArcCounts;
             it != endReflectorArcCounts; ++it) {
-        insertPartialReflectorInternal( twisted, *it );
+        insertPartialReflector( twisted, *it );
     }
 }
 
@@ -516,7 +505,7 @@ void SFSpace::insertFibre(long alpha, long beta) {
 }
 
 template <UnsignedCppInteger UInt>
-void SFSpace::insertPartialReflectorInternal(
+void SFSpace::insertPartialReflector(
         bool twisted, UInt reflectorArcs ) {
     // First handle the case where this is just a puncture with no reflector
     // arcs.
