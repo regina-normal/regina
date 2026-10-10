@@ -351,8 +351,7 @@ class SFSpace : public Manifold<3> {
              *
              * Each fibre-reversing path arising from a boundary generator
              * corresponds to either a twisted puncture, a twisted reflector
-             * circle, or (if supported in a future version of Regina) a
-             * twisted boundary with reflector arcs.
+             * circle, or a twisted partial reflector.
              */
             o = 100,
             /**
@@ -361,8 +360,8 @@ class SFSpace : public Manifold<3> {
              * none of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
-             * orbifold cannot have any twisted punctures or twisted
-             * reflector circles.
+             * orbifold cannot have any twisted punctures, twisted reflector
+             * circles, or twisted partial reflectors.
              */
             o1 = 101,
             /**
@@ -371,8 +370,8 @@ class SFSpace : public Manifold<3> {
              * its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
-             * orbifold cannot have any twisted punctures or twisted
-             * reflector circles.
+             * orbifold cannot have any twisted punctures, twisted reflector
+             * circles, or twisted partial reflectors.
              */
             o2 = 102,
             /**
@@ -382,8 +381,7 @@ class SFSpace : public Manifold<3> {
              *
              * Each fibre-reversing path arising from a boundary generator
              * corresponds to either a twisted puncture, a twisted reflector
-             * circle, or (if supported in a future version of Regina) a
-             * twisted boundary with reflector arcs.
+             * circle, or a twisted partial reflector.
              */
             n = 200,
             /**
@@ -392,8 +390,8 @@ class SFSpace : public Manifold<3> {
              * that none of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
-             * orbifold cannot have any twisted punctures or twisted
-             * reflector circles.
+             * orbifold cannot have any twisted punctures, twisted reflector
+             * circles, or twisted partial reflectors.
              */
             n1 = 201,
             /**
@@ -402,8 +400,8 @@ class SFSpace : public Manifold<3> {
              * none of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
-             * orbifold cannot have any twisted punctures or twisted
-             * reflector circles.
+             * orbifold cannot have any twisted punctures, twisted reflector
+             * circles, or twisted partial reflectors.
              */
             n2 = 202,
             /**
@@ -413,8 +411,8 @@ class SFSpace : public Manifold<3> {
              * of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
-             * orbifold cannot have any twisted punctures or twisted
-             * reflector circles.
+             * orbifold cannot have any twisted punctures, twisted reflector
+             * circles, or twisted partial reflectors.
              */
             n3 = 203,
             /**
@@ -424,8 +422,8 @@ class SFSpace : public Manifold<3> {
              * of its boundary generators give fibre-reversing paths.
              *
              * The condition on the boundary generators means that the base
-             * orbifold cannot have any twisted punctures or twisted
-             * reflector circles.
+             * orbifold cannot have any twisted punctures, twisted reflector
+             * circles, or twisted partial reflectors.
              */
             n4 = 204,
         };

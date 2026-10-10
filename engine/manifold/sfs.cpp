@@ -1281,9 +1281,9 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
             writeBaseExtraCount(out, reflectorsTwisted_,
                 "twisted reflector", tex);
 
-        if (totParRefs) {
+        if (totParRef) {
             out << " + partial reflector";
-            if (totParRefs != 1) {
+            if (totParRef != 1) {
                 out << 's';
             }
             out << ' ';
