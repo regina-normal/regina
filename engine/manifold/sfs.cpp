@@ -448,7 +448,7 @@ void SFSpace::addOrbifoldBoundary(
     }
 }
 
-template <UnsignedCppInteger UInt, ForwardIteratorFor<UInt> Iterator>
+template <ForwardIteratorFor<UnsignedCppInteger> Iterator>
 void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
         Iterator beginReflectorArcCounts, Iterator endReflectorArcCounts ) {

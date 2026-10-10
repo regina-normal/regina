@@ -743,6 +743,9 @@ class SFSpace : public Manifold<3> {
          * \a bundleType is either \c o or \c n. Otherwise, \a bundleType
          * is either \c o1, \c o2, \c n1, \c n2, \c n3, or \c n4.
          *
+         * \nopython Instead use the constructor that takes the partial
+         * reflectors as a Python list (which need not be constant).
+         *
          * \param bundleType indicates whether the base orbifold is
          * orientable, and gives information about fibre-reversing paths in
          * the 3-manifold. See the SFSpace class notes and the BundleType
@@ -787,6 +790,9 @@ class SFSpace : public Manifold<3> {
          * \pre If the base orbifold has any twisted boundaries at all, then
          * \a bundleType is either \c o or \c n. Otherwise, \a bundleType
          * is either \c o1, \c o2, \c n1, \c n2, \c n3, or \c n4.
+         *
+         * \python Instead of using a pair of iterators, you should pass the
+         * partial reflectors using a Python list.
          *
          * \param bundleType indicates whether the base orbifold is
          * orientable, and gives information about fibre-reversing paths in
@@ -840,6 +846,9 @@ class SFSpace : public Manifold<3> {
          * \a bundleType is either \c o or \c n. Otherwise, \a bundleType
          * is either \c o1, \c o2, \c n1, \c n2, \c n3, or \c n4.
          *
+         * \nopython Instead use the constructor that takes the partial
+         * reflectors and fibres as Python lists (which need not be constant).
+         *
          * \param bundleType indicates whether the base orbifold is
          * orientable, and gives information about fibre-reversing paths in
          * the 3-manifold. See the SFSpace class notes and the BundleType
@@ -890,6 +899,9 @@ class SFSpace : public Manifold<3> {
          * \pre If the base orbifold has any twisted boundaries at all, then
          * \a bundleType is either \c o or \c n. Otherwise, \a bundleType
          * is either \c o1, \c o2, \c n1, \c n2, \c n3, or \c n4.
+         *
+         * \python Instead of using pairs of iterators, you should pass the
+         * partial reflectors and the fibres using Python lists.
          *
          * \param bundleType indicates whether the base orbifold is
          * orientable, and gives information about fibre-reversing paths in
@@ -1683,7 +1695,7 @@ class SFSpace : public Manifold<3> {
          * \param endReflectorArcCounts an iterator pointing past the end of
          * the list of reflector arc counts.
          */
-        template <UnsignedCppInteger UInt, ForwardIteratorFor<UInt> Iterator>
+        template <ForwardIteratorFor<UnsignedCppInteger> Iterator>
         void addOrbifoldBoundary(
                 bool twisted, size_t nPunctures, size_t nReflectors,
                 Iterator beginReflectorArcCounts,
@@ -1751,6 +1763,9 @@ class SFSpace : public Manifold<3> {
          * \exception InvalidArgument There is some fibre for which \a alpha
          * is zero.
          *
+         * \nopython Instead use the version of insertFibres() that takes the
+         * fibres as a Python list (which need not be constant).
+         *
          * \param fibres the list of fibres to insert. For each fibre, the
          * first parameter (i.e., its index) must be strictly positive, and
          * the two parameters must be coprime.
@@ -1776,6 +1791,9 @@ class SFSpace : public Manifold<3> {
          *
          * \exception InvalidArgument There is some fibre for which \a alpha
          * is zero.
+         *
+         * \python Instead of using a pair of iterators, you should pass the
+         * fibres as a Python list.
          *
          * \param beginFibres an iterator pointing to the beginning of the
          * list of fibres to insert.
