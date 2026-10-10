@@ -1186,8 +1186,6 @@ AbelianGroup SFSpace::homology() const {
     }
 }
 
-//TODO Update write...() routines to account for partial reflectors.
-
 void SFSpace::writeBaseExtraCount(std::ostream& out, size_t count,
         const char* object, bool tex) {
     out << " + " << count << (tex ? "\\ \\mbox{" : " ") << object;
@@ -1204,9 +1202,13 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
     // components to be named.  Otherwise this messes up the reflector
     // boundary output.
     size_t totRef = reflectors_ + reflectorsTwisted_;
-    size_t totBdries = totRef + punctures_ + puncturesTwisted_;
+    size_t totParRef = nPartialReflectors_ + nPartialReflectorsTwisted_;
+    size_t totBdries = totRef + totParRef + punctures_ + puncturesTwisted_;
 
-    if (baseOrientable()) {
+    if (totParRef > 0) {
+        // At least for now, we do not allow spaces with partial reflectors
+        // (i.e., boundaries with one or more reflector arcs) to be named.
+    } else if (baseOrientable()) {
         // Orientable base surface.
         if (genus_ == 0 && totBdries == 0) {
             out << (tex ? "S^2" : "S2");
@@ -1278,6 +1280,22 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
         if (reflectorsTwisted_)
             writeBaseExtraCount(out, reflectorsTwisted_,
                 "twisted reflector", tex);
+
+        if (totParRefs) {
+            out << " + partial reflector";
+            if (totParRefs != 1) {
+                out << 's';
+            }
+            out << ' ';
+
+            // Now write all the partial reflectors, making sure not to include an
+            // extra space at the end.
+            copy(partialReflectors_.begin(), partialReflectors_.end(),
+                std::ostream_iterator<SFSPartialReflector>(out, " "));
+            copy(partialReflectorsTwisted_.begin(), --partialReflectorsTwisted_.end(),
+                std::ostream_iterator<SFSPartialReflector>(out, " "));
+            out << partialReflectorsTwisted_.back();
+        }
     }
 
     switch (bundleType_) {
@@ -1339,12 +1357,15 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // Things we don't deal with just yet.
     if (fibreNegating())
         return writeStructure(out);
-    if (reflectors_ || reflectorsTwisted_ || punctures_ || puncturesTwisted_)
+    if (reflectors_ || reflectorsTwisted_ ||
+            punctures_ || puncturesTwisted_ ||
+            nPartialReflectors_ || nPartialReflectorsTwisted_) {
         return writeStructure(out);
+    }
 
     // We're looking at an orientable SFS (with either orientable or
     // non-orientable base orbifold), where the base orbifold has no
-    // punctures or reflector boundaries.
+    // punctures, no reflector circles, and no reflector arcs.
 
     // Take out the lens spaces first.
     if (auto lens = isLensSpace()) {
