@@ -683,11 +683,6 @@ class SFSpace : public Manifold<3> {
             /**< Dummy tag for calling the private constructor. */
 
     public:
-        //TODO Constructors which allow partial reflectors and/or exceptional
-        //  fibres to be included right away. Probably want both iterator
-        //  begin/end and std::initializer_list options (see AbelianGroup or
-        //  Cyclotomic for classes which already provide something similar).
-
         /**
          * Creates a new Seifert fibred space with base orbifold the
          * 2-sphere and no exceptional fibres.
@@ -1870,8 +1865,6 @@ class SFSpace : public Manifold<3> {
          */
         bool operator == (const SFSpace& compare) const;
 
-        //TODO Update ordering to account for partial reflectors.
-
         /**
          * Compares representations of two Seifert fibred spaces according to
          * an aesthetic ordering.
@@ -1944,9 +1937,6 @@ class SFSpace : public Manifold<3> {
         SFSpace(Dummy_ dummy_, BundleType bundleType, size_t genus,
             size_t punctures = 0, size_t puncturesTwisted = 0,
             size_t reflectors = 0, size_t reflectorsTwisted = 0);
-
-        //TODO Conversion will need to be overhauled to account for partial
-        //  reflectors.
 
         /**
          * Converts the old base orbifold Class to the new BundleType.

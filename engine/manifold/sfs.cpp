@@ -134,8 +134,6 @@ void SFSpace::checkPreconditionsAfterInitialisation() {
     }
 }
 
-//TODO Conversion will need to be overhauled to account for partial
-//  reflectors.
 SFSpace::BundleType SFSpace::convertBaseClassToBundleType(
         SFSpace::Class baseClass, bool hasUntwistedBdry, bool hasTwistedBdry) {
     if (hasTwistedBdry) {
@@ -945,12 +943,31 @@ bool SFSpace::operator == (const SFSpace& compare) const {
     return true;
 }
 
-//TODO Update ordering to account for partial reflectors.
 std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // Double the genus if it's orientable, so that we can line up tori
     // with Klein bottles, etc.
     size_t adjGenus1 = (baseOrientable() ? genus_ * 2 : genus_);
     size_t adjGenus2 = (rhs.baseOrientable() ? rhs.genus_ * 2 : rhs.genus_);
+
+    // At least for now, we will sort first according to the partial
+    // reflectors. If these are the same, then we proceed according to the
+    // ordering that was used before SFSpace supported partial reflectors.
+    if (auto c = nPartialReflectors_ + nPartialReflectorsTwisted_ <=>
+            rhs.nPartialReflectors_ + rhs.nPartialReflectorsTwisted_;
+            c != 0) {
+        return c;
+    }
+    if (auto c = nPartialReflectorsTwisted_ <=>
+            rhs.nPartialReflectorsTwisted_; c != 0) {
+        return c;
+    }
+    if (auto c = partialReflectorsTwisted_ <=> rhs.partialReflectorsTwisted_;
+            c != 0) {
+        return c;
+    }
+    if (auto c = partialReflectors_ <=> rhs.partialReflectors_; c != 0) {
+        return c;
+    }
 
     // Too many punctures is worse than anything.
     if (auto c = punctures_ + puncturesTwisted_ <=>
