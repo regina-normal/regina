@@ -38,19 +38,6 @@ using regina::SFSFibre;
 using regina::SFSpace;
 using regina::BlockedSFS;
 
-SFSpace buildSFS(SFSpace::BundleType bundleType, size_t genus,
-        size_t punctures, size_t puncturesTwisted,
-        size_t reflectors, size_t reflectorsTwisted,
-        std::initializer_list<SFSFibre> fibres) {
-    SFSpace sfs( bundleType, genus,
-            punctures, puncturesTwisted,
-            reflectors, reflectorsTwisted );
-    for (const auto& f : fibres) {
-        sfs.insertFibre(f);
-    }
-    return sfs;
-}
-
 void verifyLens( const SFSpace& sfs, bool expectedHasValue ) {
     EXPECT_EQ( sfs.isLensSpace().has_value(), expectedHasValue );
 }
@@ -58,7 +45,7 @@ void verifyLens( const SFSpace& sfs, bool expectedHasValue ) {
 TEST(SFSTest, lens) {
     // Lens spaces usually have bundle type o1 over the 2-sphere (genus 0,
     // and no punctures or reflectors), with at most two exceptional fibres.
-    SFSpace sfsOverS2 = buildSFS(SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {});
+    SFSpace sfsOverS2{};
     verifyLens( sfsOverS2, true );
     sfsOverS2.insertFibre(5, 2);
     verifyLens( sfsOverS2, true );
@@ -69,19 +56,19 @@ TEST(SFSTest, lens) {
 
     // Verify some cases which are obviously not lens spaces.
     verifyLens(
-            buildSFS(SFSpace::BundleType::o1, 1, 0, 0, 0, 0, {}),
+            SFSpace(SFSpace::BundleType::o1, 1),
             false );
     verifyLens(
-            buildSFS(SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {}),
+            SFSpace(SFSpace::BundleType::o1, 0, 1),
             false );
     verifyLens(
-            buildSFS(SFSpace::BundleType::o1, 0, 0, 0, 1, 0, {}),
+            SFSpace(SFSpace::BundleType::o1, 0, 0, 0, 1),
             false );
     verifyLens(
-            buildSFS(SFSpace::BundleType::o2, 1, 0, 0, 0, 0, {}),
+            SFSpace(SFSpace::BundleType::o2, 1),
             false );
     verifyLens(
-            buildSFS(SFSpace::BundleType::n2, 2, 0, 0, 0, 0, {}),
+            SFSpace(SFSpace::BundleType::n2, 2),
             false );
 }
 
@@ -129,38 +116,38 @@ void verifyStructureOrientable(const SFSpace& sfs) {
 
 TEST(SFSTest, construct) {
     verifyName(
-            buildSFS(SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {}),
+            SFSpace(),
             "S2 x S1");
     verifyName(
-            buildSFS(SFSpace::BundleType::o1, 1, 0, 0, 0, 0, {}),
+            SFSpace(SFSpace::BundleType::o1, 1),
             "T x S1");
     verifyName(
-            buildSFS(SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {}),
+            SFSpace(SFSpace::BundleType::o1, 0, 1),
             "D x S1");
 
     {
         SCOPED_TRACE("Orientable SFS over S^2 with >= 3 exceptional fibres");
 
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
                     SFSFibre(2, 3) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
                     SFSFibre(7, -3) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
                     SFSFibre(2, 3), SFSFibre(8, 3) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
                     SFSFibre(7, -3), SFSFibre(5, -2), SFSFibre(5, 8) } ) );
     }
@@ -169,41 +156,41 @@ TEST(SFSTest, construct) {
         SCOPED_TRACE("Orientable circle bundles with Euler number 0");
 
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 2, 0, 0, 0, 0, {} ) );
+                SFSpace( SFSpace::BundleType::o1, 2 ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 2, 0, 0, 0, {} ) );
+                SFSpace( SFSpace::BundleType::o1, 0, 2 ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 1, 1, 0, 0, 0, {} ) );
+                SFSpace( SFSpace::BundleType::o1, 1, 1 ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::n2, 2, 0, 0, 0, 0, {} ) );
+                SFSpace( SFSpace::BundleType::n2, 2 ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::n2, 1, 2, 0, 0, 0, {} ) );
+                SFSpace( SFSpace::BundleType::n2, 1, 2 ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::n2, 2, 1, 0, 0, 0, {} ) );
+                SFSpace( SFSpace::BundleType::n2, 2, 1 ) );
     }
 
     {
         SCOPED_TRACE("Orientable SFS over D^2 with >= 2 exceptional fibres");
 
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(5, 1), SFSFibre(5, -2) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(5, 1), SFSFibre(5, -2), SFSFibre(2, 3) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
                     SFSFibre(7, -3) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(2, 1), SFSFibre(5, 1), SFSFibre(5, -2),
                     SFSFibre(2, 3), SFSFibre(8, 3) } ) );
         verifyStructureOrientable(
-                buildSFS( SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
+                SFSpace( SFSpace::BundleType::o1, 0, 1, 0, 0, 0, {},
                     { SFSFibre(3, 1), SFSFibre(7, -2), SFSFibre(7, 2),
                     SFSFibre(7, -3), SFSFibre(5, -2), SFSFibre(5, 8) } ) );
     }
@@ -236,27 +223,27 @@ TEST(SFSTest, construct) {
                     // To avoid lens spaces, only do this test when the base
                     // isn't a projective plane.
                     verifyStructureOrientable(
-                            buildSFS( bundleType, genus, punctures, 0, 0, 0,
-                                { SFSFibre(3, 1) } ) );
+                            SFSpace( bundleType, genus, punctures, 0, 0, 0,
+                                {}, { SFSFibre(3, 1) } ) );
                 }
                 verifyStructureOrientable(
-                        buildSFS( bundleType, genus, punctures, 0, 0, 0,
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(5, 1), SFSFibre(5, -2) } ) );
                 verifyStructureOrientable(
-                        buildSFS( bundleType, genus, punctures, 0, 0, 0,
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(3, 1), SFSFibre(7, -2),
                             SFSFibre(7, 2) } ) );
                 verifyStructureOrientable(
-                        buildSFS( bundleType, genus, punctures, 0, 0, 0,
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(3, 1), SFSFibre(7, -2),
                             SFSFibre(7, 2), SFSFibre(7, -3) } ) );
                 verifyStructureOrientable(
-                        buildSFS( bundleType, genus, punctures, 0, 0, 0,
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(2, 1), SFSFibre(5, 1),
                             SFSFibre(5, -2), SFSFibre(2, 3),
                             SFSFibre(8, 3) } ) );
                 verifyStructureOrientable(
-                        buildSFS( bundleType, genus, punctures, 0, 0, 0,
+                        SFSpace( bundleType, genus, punctures, 0, 0, 0, {},
                             { SFSFibre(3, 1), SFSFibre(7, -2),
                             SFSFibre(7, 2), SFSFibre(7, -3),
                             SFSFibre(5, -2), SFSFibre(5, 8) } ) );
