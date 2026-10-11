@@ -151,14 +151,12 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
             "twisted"_a = false, "nPunctures"_a = 1, rdoc::addPuncture)
         .def("addReflector", &SFSpace::addReflector,
             "twisted"_a = false, "nReflectors"_a = 1, rdoc::addReflector)
+        // For some reason overload_cast fails here.
         .def("addOrbifoldBoundary",
-                [](SFSpace& sfs,
-                    bool twisted, size_t nPunctures, size_t nReflectors) {
-                    sfs.addOrbifoldBoundary(
-                            twisted, nPunctures, nReflectors );
-                },
-                "twisted"_a = false, "nPunctures"_a = 1,
-                "nReflectors"_a = 0, rdoc::addOrbifoldBoundary)
+            static_cast<void (SFSpace::*)(bool, size_t, size_t)>(
+                &SFSpace::addOrbifoldBoundary),
+            "twisted"_a = false, "nPunctures"_a = 1, "nReflectors"_a = 0,
+            rdoc::addOrbifoldBoundary)
         .def("addOrbifoldBoundary",
                 [](SFSpace& sfs,
                     bool twisted, size_t nPunctures, size_t nReflectors,
@@ -169,17 +167,16 @@ void addSFSpace(pybind11::module_& m, pybind11::module_& internal) {
                 },
                 "twisted"_a, "nPunctures"_a, "nReflectors"_a,
                 "partialReflectors"_a, rdoc::addOrbifoldBoundary_2)
-        //TODO Figure out why this won't compile.
-//        .def("addOrbifoldBoundary",
-//                [](SFSpace& sfs,
-//                    bool twisted, size_t nPunctures, size_t nReflectors,
-//                    std::vector<unsigned> refArcCounts) {
-//                    return sfs.addOrbifoldBoundary(
-//                            twisted, nPunctures, nReflectors,
-//                            refArcCounts.begin(), refArcCounts.end() );
-//                },
-//                "twisted"_a, "nPunctures"_a, "nReflectors"_a,
-//                "reflectorArcCounts"_a, rdoc::addOrbifoldBoundary_3)
+        .def("addOrbifoldBoundary",
+                [](SFSpace& sfs,
+                    bool twisted, size_t nPunctures, size_t nReflectors,
+                    std::vector<unsigned> refArcCounts) {
+                    sfs.addOrbifoldBoundary(
+                            twisted, nPunctures, nReflectors,
+                            refArcCounts.begin(), refArcCounts.end() );
+                },
+                "twisted"_a, "nPunctures"_a, "nReflectors"_a,
+                "reflectorArcCounts"_a, rdoc::addOrbifoldBoundary_3)
         .def("insertFibre",
             overload_cast<const SFSFibre&>(&SFSpace::insertFibre),
             rdoc::insertFibre)

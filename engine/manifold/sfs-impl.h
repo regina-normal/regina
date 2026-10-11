@@ -84,7 +84,9 @@ void SFSpace::addOrbifoldBoundary(
     }
 }
 
-template <ForwardIteratorFor<UnsignedCppInteger> Iterator>
+template <typename Iterator>
+requires ForwardIteratorFor<Iterator, std::iter_value_t<Iterator>> &&
+         UnsignedCppInteger<std::iter_value_t<Iterator>>
 void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
         Iterator beginReflectorArcCounts, Iterator endReflectorArcCounts ) {
