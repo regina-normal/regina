@@ -83,6 +83,30 @@ Parameter ``newBeta``:
 
 }; // struct SFSFibre
 
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+struct SFSPartialReflector {
+
+static constexpr const char __class[] =
+R"doc()doc";
+
+static constexpr const char __cmp[] =
+R"doc()doc";
+
+static constexpr const char __copy[] = R"doc()doc";
+
+// Docstring regina::python::doc::SFSFibre::__default
+static constexpr const char __default[] = R"doc()doc";
+
+// Docstring regina::python::doc::SFSFibre::__eq
+static constexpr const char __eq[] =
+R"doc()doc";
+
+// Docstring regina::python::doc::SFSFibre::__init
+static constexpr const char __init[] =
+R"doc()doc";
+
+}; // struct SFSFibre
+
 struct SFSpace {
 
 // Docstring regina::python::doc::SFSpace::__class
@@ -201,8 +225,16 @@ Returns:
 static constexpr const char __init[] =
 R"doc()doc";
 
-// Docstring regina::python::doc::SFSpace::__init_2
+//TODO This placeholder should eventually be overwritten by gendoc.sh
 static constexpr const char __init_2[] =
+R"doc()doc";
+
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char __init_3[] =
+R"doc()doc";
+
+// Docstring regina::python::doc::SFSpace::__init_4
+static constexpr const char __init_4[] =
 R"doc(Creates a new Seifert fibred space of the given class with the given
 base orbifold and no exceptional fibres.
 
@@ -291,6 +323,14 @@ Parameter ``fibreReversing``:
 
 //TODO This placeholder should eventually be overwritten by gendoc.sh
 static constexpr const char addOrbifoldBoundary[] =
+R"doc()doc";
+
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char addOrbifoldBoundary_2[] =
+R"doc()doc";
+
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char addOrbifoldBoundary_3[] =
 R"doc()doc";
 
 // Docstring regina::python::doc::SFSpace::addPuncture
@@ -530,6 +570,10 @@ Parameter ``beta``:
     the second parameter of the fibre to insert; this must have no
     common factors with the first parameter *alpha*.)doc";
 
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char insertFibres[] =
+R"doc()doc";
+
 // Docstring regina::python::doc::SFSpace::isLensSpace
 static constexpr const char isLensSpace[] =
 R"doc(Determines if this Seifert fibred space is a Lens space.
@@ -551,6 +595,22 @@ since each exceptional fibre must be stored in standard form (0 ≤
 
 Returns:
     the obstruction constant *b*.)doc";
+
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char partialReflector[] =
+R"doc()doc";
+
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char partialReflectorCount[] =
+R"doc()doc";
+
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char partialReflectorCount_2[] =
+R"doc()doc";
+
+//TODO This placeholder should eventually be overwritten by gendoc.sh
+static constexpr const char partialReflectors[] =
+R"doc()doc";
 
 // Docstring regina::python::doc::SFSpace::punctures
 static constexpr const char punctures[] =
