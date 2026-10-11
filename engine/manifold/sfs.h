@@ -2408,5 +2408,7 @@ inline void swap(SFSpace& a, SFSpace& b) noexcept {
 
 } // namespace regina
 
+#include "manifold/sfs-impl.h"
+
 #endif
 
