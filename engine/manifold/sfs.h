@@ -683,7 +683,9 @@ class SFSpace : public Manifold<3> {
     public:
         /**
          * Creates a new Seifert fibred space with base orbifold the
-         * 2-sphere and no exceptional fibres.
+         * 2-sphere, no exceptional fibres, and obstruction constant 0.
+         *
+         * In other words, the manifold will be `S2 x S1`.
          */
         SFSpace();
 
@@ -691,6 +693,9 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold, no exceptional fibres, and obstruction
          * constant 0.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -732,6 +737,9 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold, no exceptional fibres, and obstruction
          * constant 0.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -780,6 +788,9 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold, no exceptional fibres, and obstruction
          * constant 0.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -836,6 +847,9 @@ class SFSpace : public Manifold<3> {
          * obstruction constant \a b will be adjusted according to the value
          * of \a beta.
          *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
+         *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
          * \pre If \a bundleType is \c n3, then `genus >= 2`.
@@ -889,6 +903,9 @@ class SFSpace : public Manifold<3> {
          * regular fibre (\a alpha = 1). If it is a regular fibre, the
          * obstruction constant \a b will be adjusted according to the value
          * of \a beta.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -957,8 +974,8 @@ class SFSpace : public Manifold<3> {
          * existed previously but were not strictly enforced, while others
          * are entirely new.
          *
-         * \exception FailedPrecondition A precondition (see below) is not
-         * satisfied.
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          * \exception UnsolvedCase There are no twisted punctures and no
          * twisted reflector circles, and \a baseClass is \c bn3.
          *
