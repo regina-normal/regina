@@ -389,7 +389,8 @@ TEST(SFSTest, addBoundary) {
     SFSpace sfs{};
 
     // Make sure we throw InvalidArgument (and leave sfs untouched) if we try
-    // to add an odd number of twisted boundaries to the base orbifold.
+    // to add an odd number of twisted boundaries to the base orbifold, or if
+    // we try to add a negative number of reflector arcs.
     EXPECT_THROW( sfs.addPuncture(true), InvalidArgument );
     EXPECT_THROW( sfs.addPuncture(true, 3), InvalidArgument );
     EXPECT_THROW( sfs.addReflector(true), InvalidArgument );
@@ -406,6 +407,14 @@ TEST(SFSTest, addBoundary) {
     EXPECT_THROW(
             sfs.addOrbifoldBoundary(true, 1, 1, {1}), InvalidArgument );
     EXPECT_THROW(
+            sfs.addOrbifoldBoundary(false, 0, 0, {-1}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 0, {-1}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(false, 0, 0, {1, -2}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 0, 0, {1, -2}), InvalidArgument );
+    EXPECT_THROW(
             sfs.addOrbifoldBoundary(false, 1, 0,
                 { SFSPartialReflector(true, 1) }), InvalidArgument );
     EXPECT_THROW(
@@ -416,6 +425,81 @@ TEST(SFSTest, addBoundary) {
                 { SFSPartialReflector(true, 1) }), InvalidArgument );
     EXPECT_EQ( sfs, SFSpace() );
 
-    //
-    //TODO
+    // Now add a bunch of punctures, reflector circles and partial reflectors,
+    // and check that things are updated correctly.
+
+    sfs.addPuncture();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o1 );
+    EXPECT_EQ( sfs.punctures(), 1 );
+    EXPECT_EQ( sfs.punctures(false), 1 );
+    sfs.addPuncture(false);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o1 );
+    EXPECT_EQ( sfs.punctures(), 2 );
+    EXPECT_EQ( sfs.punctures(false), 2 );
+    sfs.addPuncture(false, 2);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o1 );
+    EXPECT_EQ( sfs.punctures(), 4 );
+    EXPECT_EQ( sfs.punctures(false), 4 );
+    sfs.addPuncture(true, 2);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.punctures(), 6 );
+    EXPECT_EQ( sfs.punctures(true), 2 );
+
+    sfs.addReflector();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.reflectors(), 1 );
+    EXPECT_EQ( sfs.reflectors(false), 1 );
+    sfs.addReflector(false);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.reflectors(), 2 );
+    EXPECT_EQ( sfs.reflectors(false), 2 );
+    sfs.addReflector(false, 2);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.reflectors(), 4 );
+    EXPECT_EQ( sfs.reflectors(false), 4 );
+    sfs.addReflector(true, 2);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.reflectors(), 6 );
+    EXPECT_EQ( sfs.reflectors(true), 2 );
+
+    sfs.addOrbifoldBoundary();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.punctures(), 7 );
+    EXPECT_EQ( sfs.punctures(false), 5 );
+    sfs.addOrbifoldBoundary(false);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.punctures(), 8 );
+    EXPECT_EQ( sfs.punctures(false), 6 );
+    sfs.addOrbifoldBoundary(false, 2);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.punctures(), 10 );
+    EXPECT_EQ( sfs.punctures(false), 8 );
+    sfs.addOrbifoldBoundary(false, 0, 1);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.reflectors(), 7 );
+    EXPECT_EQ( sfs.reflectors(false), 5 );
+
+    sfs.addOrbifoldBoundary(true, 2);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.punctures(), 12 );
+    EXPECT_EQ( sfs.punctures(true), 4 );
+    sfs.addOrbifoldBoundary(true, 0, 2);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.reflectors(), 9 );
+    EXPECT_EQ( sfs.reflectors(true), 4 );
+
+    sfs.addOrbifoldBoundary(false, 1, 1);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.punctures(), 13 );
+    EXPECT_EQ( sfs.punctures(false), 9 );
+    EXPECT_EQ( sfs.reflectors(), 10 );
+    EXPECT_EQ( sfs.reflectors(false), 6 );
+    sfs.addOrbifoldBoundary(true, 1, 1);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
+    EXPECT_EQ( sfs.punctures(), 14 );
+    EXPECT_EQ( sfs.punctures(true), 5 );
+    EXPECT_EQ( sfs.reflectors(), 11 );
+    EXPECT_EQ( sfs.reflectors(true), 5 );
+
+    //TODO Add partial reflectors (using both variants of the routine).
 }

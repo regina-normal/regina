@@ -70,25 +70,25 @@ requires ForwardIteratorFor<Iterator, std::iter_value_t<Iterator>> &&
 void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
         Iterator beginReflectorArcCounts, Iterator endReflectorArcCounts ) {
-    // Enforce the condition which isn't checked by the internal routines.
-    if (twisted) {
-        size_t twistedCount(nPunctures + nReflectors);
-        for (auto it = beginReflectorArcCounts;
-                it != endReflectorArcCounts; ++it) {
-            if constexpr (std::is_signed_v<std::iter_value_t<Iterator>>) {
-                if (*it < 0) {
-                    throw InvalidArgument(
-                            "SFSpace::addOrbifoldBoundary() requires each "
-                            "reflector arc count to be non-negative");
-                }
+    // Enforce the conditions which aren't checked by the internal routines.
+    size_t twistedCount = (twisted ? (nPunctures + nReflectors) : 0);
+    for (auto it = beginReflectorArcCounts;
+            it != endReflectorArcCounts; ++it) {
+        if constexpr (std::is_signed_v<std::iter_value_t<Iterator>>) {
+            if (*it < 0) {
+                throw InvalidArgument(
+                        "SFSpace::addOrbifoldBoundary() requires each "
+                        "reflector arc count to be non-negative");
             }
+        }
+        if (twisted) {
             ++twistedCount;
         }
-        if (twistedCount % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace requires that the total number of twisted "
-                    "boundaries in the base orbifold always remains even");
-        }
+    }
+    if (twistedCount % 2 != 0) {
+        throw InvalidArgument(
+                "SFSpace requires that the total number of twisted "
+                "boundaries in the base orbifold always remains even");
     }
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
     for (auto it = beginReflectorArcCounts;
