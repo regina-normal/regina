@@ -1653,6 +1653,8 @@ class SFSpace : public Manifold<3> {
          *
          * \exception InvalidArgument \a twisted is \c true but the total
          * number of boundaries to be added to the base orbifold is odd.
+         * \exception InvalidArgument \a T is a signed integer type, and
+         * one or more of the given \a reflectorArcCounts is negative.
          *
          * \nopython Instead use the version of addOrbifoldBoundary() that
          * takes the reflector arc counts as a Python list (which need not be
@@ -1666,10 +1668,10 @@ class SFSpace : public Manifold<3> {
          * \param reflectorArcCounts the list of reflector arc counts in the
          * partial reflectors to add.
          */
-        template <UnsignedCppInteger UInt>
+        template <StandardCppInteger T>
         void addOrbifoldBoundary(
                 bool twisted, size_t nPunctures, size_t nReflectors,
-                std::initializer_list<UInt> reflectorArcCounts );
+                std::initializer_list<T> reflectorArcCounts );
         /**
          * Adds new boundaries of the given types into the base orbifold.
          * The new boundaries may be twisted or untwisted.
@@ -1714,6 +1716,9 @@ class SFSpace : public Manifold<3> {
          *
          * \exception InvalidArgument \a twisted is \c true but the total
          * number of boundaries to be added to the base orbifold is odd.
+         * \exception InvalidArgument the list of reflector arc counts
+         * contains signed integers, and one of more of these counts is
+         * negative.
          *
          * \python Instead of using a pair of iterators, you should pass the
          * reflector arc counts as a Python list of native integers.
@@ -1730,7 +1735,7 @@ class SFSpace : public Manifold<3> {
          */
         template <typename Iterator>
         requires ForwardIteratorFor<Iterator, std::iter_value_t<Iterator>> &&
-                 UnsignedCppInteger<std::iter_value_t<Iterator>>
+                 StandardCppInteger<std::iter_value_t<Iterator>>
         void addOrbifoldBoundary(
                 bool twisted, size_t nPunctures, size_t nReflectors,
                 Iterator beginReflectorArcCounts,
@@ -2070,13 +2075,17 @@ class SFSpace : public Manifold<3> {
          * this routine will automatically reassign the partial reflector as
          * a puncture of the base orbifold.
          *
+         * \warning In the case where \a T is a signed integer type, this
+         * internal routine does not check that \a reflectorArcs is
+         * non-negative.
+         *
          * \param twisted \c true if the partial reflector boundary should be
          * twisted, or \c false if it should be untwisted.
          * \param reflectorArcs the number of reflector arcs in the partial
          * reflector boundary.
          */
-        template <UnsignedCppInteger UInt>
-        void insertPartialReflector(bool twisted, UInt reflectorArcs);
+        template <StandardCppInteger T>
+        void insertPartialReflector(bool twisted, T reflectorArcs);
 
         /**
          * Internal routine for adding a sequence of partial reflector
@@ -2393,10 +2402,10 @@ inline void SFSpace::addOrbifoldBoundary(
             partialReflectors.begin(), partialReflectors.end() );
 }
 
-template <UnsignedCppInteger UInt>
+template <StandardCppInteger T>
 inline void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
-        std::initializer_list<UInt> reflectorArcCounts ) {
+        std::initializer_list<T> reflectorArcCounts ) {
     addOrbifoldBoundary( twisted, nPunctures, nReflectors,
             reflectorArcCounts.begin(), reflectorArcCounts.end() );
 }

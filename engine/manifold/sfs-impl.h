@@ -66,7 +66,7 @@ void SFSpace::addOrbifoldBoundary(
 
 template <typename Iterator>
 requires ForwardIteratorFor<Iterator, std::iter_value_t<Iterator>> &&
-         UnsignedCppInteger<std::iter_value_t<Iterator>>
+         StandardCppInteger<std::iter_value_t<Iterator>>
 void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
         Iterator beginReflectorArcCounts, Iterator endReflectorArcCounts ) {
@@ -75,6 +75,13 @@ void SFSpace::addOrbifoldBoundary(
         size_t twistedCount(nPunctures + nReflectors);
         for (auto it = beginReflectorArcCounts;
                 it != endReflectorArcCounts; ++it) {
+            if constexpr (std::is_signed_v<std::iter_value_t<Iterator>>) {
+                if (*it < 0) {
+                    throw InvalidArgument(
+                            "SFSpace::addOrbifoldBoundary() requires each "
+                            "reflector arc count to be non-negative");
+                }
+            }
             ++twistedCount;
         }
         if (twistedCount % 2 != 0) {
@@ -90,9 +97,9 @@ void SFSpace::addOrbifoldBoundary(
     }
 }
 
-template <UnsignedCppInteger UInt>
+template <StandardCppInteger T>
 void SFSpace::insertPartialReflector(
-        bool twisted, UInt reflectorArcs ) {
+        bool twisted, T reflectorArcs ) {
     // First handle the case where this is just a puncture with no reflector
     // arcs.
     if (reflectorArcs == 0) {
