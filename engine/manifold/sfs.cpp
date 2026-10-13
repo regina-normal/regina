@@ -386,28 +386,6 @@ void SFSpace::addOrbifoldBoundary(
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
 }
 
-void SFSpace::addOrbifoldBoundary(
-        bool twisted, size_t nPunctures, size_t nReflectors,
-        std::initializer_list<SFSPartialReflector> partialReflectors ) {
-    // Enforce the condition which isn't checked by the internal routines.
-    if (twisted) {
-        size_t twistedCount(nPunctures + nReflectors);
-        for (const auto& p : partialReflectors) {
-            if (p.twisted) {
-                ++twistedCount;
-            }
-        }
-        if (twistedCount % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace requires that the total number of twisted "
-                    "boundaries in the base orbifold always remains even");
-        }
-    }
-    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
-    insertPartialReflectors(
-            partialReflectors.begin(), partialReflectors.end() );
-}
-
 void SFSpace::insertFibre(long alpha, long beta) {
     // We are assuming that the parameters of this fibre are coprime and
     // that alpha is strictly positive.

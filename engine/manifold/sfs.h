@@ -2204,11 +2204,9 @@ inline SFSpace::SFSpace(BundleType bundleType, size_t genus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted,
         std::initializer_list<SFSPartialReflector> partialReflectors) :
-    SFSpace( Dummy_{}, bundleType, genus, punctures, puncturesTwisted,
-            reflectors, reflectorsTwisted ) {
-    insertPartialReflectors(
-            partialReflectors.begin(), partialReflectors.end() );
-    checkPreconditionsAfterInitialisation();
+    SFSpace( bundleType, genus, punctures, puncturesTwisted,
+            reflectors, reflectorsTwisted,
+            partialReflectors.begin(), partialReflectors.end() ) {
 }
 
 template <InputIteratorFor<SFSPartialReflector> ParRefIterator>
@@ -2227,12 +2225,10 @@ inline SFSpace::SFSpace(BundleType bundleType, size_t genus,
         size_t reflectors, size_t reflectorsTwisted,
         std::initializer_list<SFSPartialReflector> partialReflectors,
         std::initializer_list<SFSFibre> fibres) :
-    SFSpace( Dummy_{}, bundleType, genus, punctures, puncturesTwisted,
-            reflectors, reflectorsTwisted ) {
-    insertPartialReflectors(
-            partialReflectors.begin(), partialReflectors.end() );
-    insertFibres( fibres.begin(), fibres.end() );
-    checkPreconditionsAfterInitialisation();
+    SFSpace( bundleType, genus, punctures, puncturesTwisted,
+            reflectors, reflectorsTwisted,
+            partialReflectors.begin(), partialReflectors.end(),
+            fibres.begin(), fibres.end() ) {
 }
 
 template <InputIteratorFor<SFSPartialReflector> ParRefIterator,
@@ -2374,14 +2370,27 @@ inline void SFSpace::addReflector(bool twisted, size_t nReflectors) {
     addOrbifoldBoundary(twisted, 0 /* nPunctures */, nReflectors);
 }
 
+inline void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors,
+        std::initializer_list<SFSPartialReflector> partialReflectors ) {
+    addOrbifoldBoundary( twisted, nPunctures, nReflectors,
+            partialReflectors.begin(), partialReflectors.end() );
+}
+
+template <UnsignedCppInteger UInt>
+inline void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors,
+        std::initializer_list<UInt> reflectorArcCounts ) {
+    addOrbifoldBoundary( twisted, nPunctures, nReflectors,
+            reflectorArcCounts.begin(), reflectorArcCounts.end() );
+}
+
 inline void SFSpace::insertFibre(const SFSFibre& fibre) {
     insertFibre(fibre.alpha, fibre.beta);
 }
 
 inline void SFSpace::insertFibres(std::initializer_list<SFSFibre> fibres) {
-    for (const auto& f: fibres) {
-        insertFibre(f);
-    }
+    insertFibres( fibres.begin(), fibres.end() );
 }
 
 template <InputIteratorFor<SFSFibre> FibreIterator>

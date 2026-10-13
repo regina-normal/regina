@@ -49,39 +49,19 @@ void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
         ParRefIterator beginParRefs, ParRefIterator endParRefs ) {
     // Enforce the condition which isn't checked by the internal routines.
-    if (twisted) {
-        size_t twistedCount(nPunctures + nReflectors);
-        for (auto it = beginParRefs; it != endParRefs; ++it) {
-            if (it->twisted) {
-                ++twistedCount;
-            }
+    size_t twistedCount = (twisted ? (nPunctures + nReflectors) : 0);
+    for (auto it = beginParRefs; it != endParRefs; ++it) {
+        if (it->twisted) {
+            ++twistedCount;
         }
-        if (twistedCount % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace requires that the total number of twisted "
-                    "boundaries in the base orbifold always remains even");
-        }
+    }
+    if (twistedCount % 2 != 0) {
+        throw InvalidArgument(
+                "SFSpace requires that the total number of twisted "
+                "boundaries in the base orbifold always remains even");
     }
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
     insertPartialReflectors(beginParRefs, endParRefs);
-}
-
-template <UnsignedCppInteger UInt>
-void SFSpace::addOrbifoldBoundary(
-        bool twisted, size_t nPunctures, size_t nReflectors,
-        std::initializer_list<UInt> reflectorArcCounts ) {
-    // Enforce the condition which isn't checked by the internal routines.
-    if (twisted) {
-        if ((nPunctures + nReflectors + reflectorArcCounts.size()) % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace requires that the total number of twisted "
-                    "boundaries in the base orbifold always remains even");
-        }
-    }
-    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
-    for (const auto& refArcCount : reflectorArcCounts) {
-        insertPartialReflector( twisted, refArcCount );
-    }
 }
 
 template <typename Iterator>
