@@ -41,7 +41,7 @@ void verifyName(const SFSpace& sfs, const char* expected) {
     EXPECT_EQ( sfs.name(), expected );
 }
 
-void verifyReducedStructure( const SFSpace& sfs, bool verifyReflection,
+void verifyReducedStructure( const SFSpace& sfs, bool expectReflectionEqual,
         SFSpace::BundleType bundleType, size_t baseGenus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted,
@@ -51,15 +51,6 @@ void verifyReducedStructure( const SFSpace& sfs, bool verifyReflection,
         std::initializer_list<SFSFibre> sortedFibres) {
     SFSpace reduced(sfs);
     reduced.reduce();
-    if (verifyReflection) {
-        SFSpace mirror(reduced);
-        mirror.reflect();
-
-        // Reduce *without* allowing reflections, and verify that the result
-        // is different.
-        mirror.reduce(false);
-        EXPECT_NE( reduced, mirror );
-    }
     EXPECT_EQ( reduced.bundleType(), bundleType );
     EXPECT_EQ( reduced.baseGenus(), baseGenus );
     EXPECT_EQ( reduced.punctures(), punctures + puncturesTwisted );
@@ -75,37 +66,147 @@ void verifyReducedStructure( const SFSpace& sfs, bool verifyReflection,
                 reduced.partialReflectors(true), sortedParRefsTwisted ) );
     EXPECT_TRUE( std::ranges::equal(
                 reduced.fibres(), sortedFibres ) );
+
+    // Verify reflection.
+    SFSpace mirror(reduced);
+    mirror.reflect();
+    mirror.reduce(false); // Reduce without undoing the reflection.
+    if (expectReflectionEqual) {
+        EXPECT_EQ( reduced, mirror );
+    } else {
+        EXPECT_NE( reduced, mirror );
+    }
 }
 
 TEST(SFSTest, structure) {
+    const SFSpace sphereBundle{};
+    const SFSpace torusBundle( SFSpace::BundleType::o1, 1 );
+    const SFSpace discBundle( SFSpace::BundleType::o1, 0, 1 );
+
     {
         SCOPED_TRACE("Common names");
 
-        // Verify some Seifert fibred spaces with common names.
-        verifyName( SFSpace(), "S2 x S1" );
-        verifyName( SFSpace( SFSpace::BundleType::o1, 1 ), "T x S1" );
-        verifyName( SFSpace( SFSpace::BundleType::o1, 0, 1 ), "D x S1" );
+        verifyName( sphereBundle, "S2 x S1" );
+        verifyName( torusBundle, "T x S1" );
+        verifyName( discBundle, "D x S1" );
+    }
+
+    // For the structure tests below, we include some tests which ensure that
+    // the constructors correctly convert degenerate parameters, such as:
+    // - Removing (1,b) fibres by adjusting the obstruction constant.
+    // - Reassigning partial reflectors with zero reflector arcs as punctures.
+
+    {
+        SCOPED_TRACE("Circle bundles");
+
+        // Basic examples.
+        verifyReducedStructure(
+                sphereBundle, true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                torusBundle, true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 0, 0, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                discBundle, true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+
+        // With twisted punctures and/or reflector circles.
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o, 0, 1, 2 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 1, 2, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o, 0, 1, 2, 3 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 1, 2, 3, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o, 0, 1, 2, 3, 4 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 1, 2, 3, 4,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::n, 1, 0, 1, 0, 1 ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::n, 1, 0, 1, 0, 1,
+                0 /* obstruction */, {}, {}, {} );
+
+        // With partial reflectors.
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                    { SFSPartialReflector( false, 0 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 0, 1 /* punctures */, 0, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+                    { SFSPartialReflector( false, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 0, 0 /* punctures */, 0, 0, 0,
+                0 /* obstruction */,
+                { SFSPartialReflector( false, 1 ) }, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o,
+                    0, 0, 1 /* puncturesTwisted */, 0, 0,
+                    { SFSPartialReflector( true, 0 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 0, 2 /* puncturesTwisted */, 0, 0,
+                0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o,
+                    0, 0, 1 /* puncturesTwisted */, 0, 0,
+                    { SFSPartialReflector( true, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o, 0, 0, 1 /* puncturesTwisted */, 0, 0,
+                0 /* obstruction */,
+                {}, { SFSPartialReflector( true, 1 ) }, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::n,
+                    1, 0, 0, 0, 2 /* reflectorsTwisted */,
+                    { SFSPartialReflector( false, 2 ),
+                    SFSPartialReflector( false, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::n, 1, 0, 0, 0, 2 /* reflectorsTwisted */,
+                0 /* obstruction */, { SFSPartialReflector( false, 1 ),
+                SFSPartialReflector( false, 2 ) }, {}, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::n,
+                    1, 0, 0, 0, 0 /* reflectorsTwisted */,
+                    { SFSPartialReflector( true, 2 ),
+                    SFSPartialReflector( true, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::n, 1, 0, 0, 0, 0 /* reflectorsTwisted */,
+                0 /* obstruction */, {}, { SFSPartialReflector( true, 1 ),
+                SFSPartialReflector( true, 2 ) }, {} );
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::n,
+                    1, 0, 0, 0, 1 /* reflectorsTwisted */,
+                    { SFSPartialReflector( true, 2 ),
+                    SFSPartialReflector( false, 1 ) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::n, 1, 0, 0, 0, 1 /* reflectorsTwisted */,
+                0 /* obstruction */, { SFSPartialReflector( false, 1 ) },
+                { SFSPartialReflector( true, 2 ) }, {} );
     }
 
     {
-        SCOPED_TRACE("Reduced structure");
+        SCOPED_TRACE("SFS with exceptional fibres");
 
-        // Verify structure of some more general Seifert fibred spaces. This
-        // includes some tests which ensure that the constructor(s) correctly
-        // convert degenerate parameters, such as:
-        // - Removing (1,b) fibres by adjusting the obstruction constant.
-        // - Reassigning partial reflectors with zero reflector arcs as punctures.
         //TODO
         verifyReducedStructure(
                 SFSpace( SFSpace::BundleType::o1, 1, 0 /* punctures */,
                     0, 0, 0, {}, { SFSFibre(3, 5) } ),
-                true /* verifyReflection */,
+                false /* expectReflectionEqual */,
                 SFSpace::BundleType::o1, 1, 0 /* punctures */,
                 0, 0, 0, 1 /* obstruction */, {}, {}, { SFSFibre(3, 2) } );
         verifyReducedStructure(
                 SFSpace( SFSpace::BundleType::o1, 1, 1 /* punctures */,
                     0, 0, 0, {}, { SFSFibre(3, 5) } ),
-                true /* verifyReflection */,
+                false /* expectReflectionEqual */,
                 SFSpace::BundleType::o1, 1, 1 /* punctures */,
                 0, 0, 0, 0 /* obstruction */, {}, {}, { SFSFibre(3, 1) } );
         //TODO
