@@ -33,6 +33,7 @@
 #include "gtest/gtest.h"
 
 using regina::FailedPrecondition;
+using regina::InvalidArgument;
 using regina::SFSFibre;
 using regina::SFSPartialReflector;
 using regina::SFSpace;
@@ -59,13 +60,19 @@ void verifyReducedStructure( const SFSpace& sfs, bool expectReflectionEqual,
     EXPECT_EQ( reduced.reflectors(), reflectors + reflectorsTwisted );
     EXPECT_EQ( reduced.reflectors(false), reflectors );
     EXPECT_EQ( reduced.reflectors(true), reflectorsTwisted );
-    EXPECT_EQ( reduced.obstruction(), obstruction );
+    EXPECT_EQ( reduced.partialReflectorCount(),
+            sortedParRefs.size() + sortedParRefsTwisted.size() );
+    EXPECT_EQ( reduced.partialReflectorCount(false), sortedParRefs.size() );
+    EXPECT_EQ( reduced.partialReflectorCount(true),
+            sortedParRefsTwisted.size() );
     EXPECT_TRUE( std::ranges::equal(
                 reduced.partialReflectors(false), sortedParRefs ) );
     EXPECT_TRUE( std::ranges::equal(
                 reduced.partialReflectors(true), sortedParRefsTwisted ) );
+    EXPECT_EQ( reduced.fibreCount(), sortedFibres.size() );
     EXPECT_TRUE( std::ranges::equal(
                 reduced.fibres(), sortedFibres ) );
+    EXPECT_EQ( reduced.obstruction(), obstruction );
 
     // Verify reflection.
     SFSpace mirror(reduced);
@@ -97,9 +104,8 @@ TEST(SFSTest, structure) {
     // - Reassigning partial reflectors with zero reflector arcs as punctures.
 
     {
-        SCOPED_TRACE("Circle bundles");
+        SCOPED_TRACE("Basic circle bundles");
 
-        // Basic examples.
         verifyReducedStructure(
                 sphereBundle, true /* expectReflectionEqual */,
                 SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
@@ -112,8 +118,11 @@ TEST(SFSTest, structure) {
                 discBundle, true /* expectReflectionEqual */,
                 SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
                 0 /* obstruction */, {}, {}, {} );
+    }
 
-        // With twisted punctures and/or reflector circles.
+    {
+        SCOPED_TRACE("With twisted punctures and/or reflector circles");
+
         verifyReducedStructure(
                 SFSpace( SFSpace::BundleType::o, 0, 1, 2 ),
                 true /* expectReflectionEqual */,
@@ -134,8 +143,11 @@ TEST(SFSTest, structure) {
                 true /* expectReflectionEqual */,
                 SFSpace::BundleType::n, 1, 0, 1, 0, 1,
                 0 /* obstruction */, {}, {}, {} );
+    }
 
-        // With partial reflectors.
+    {
+        SCOPED_TRACE("With reflector arcs");
+
         verifyReducedStructure(
                 SFSpace( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
                     { SFSPartialReflector( false, 0 ) } ),
@@ -194,9 +206,14 @@ TEST(SFSTest, structure) {
     }
 
     {
-        SCOPED_TRACE("SFS with exceptional fibres");
+        SCOPED_TRACE("Closed with exceptional fibres");
 
-        //TODO
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(1, -2) } ),
+                false /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                0, 0, 0, 2 /* obstruction */, {}, {}, {} );
         verifyReducedStructure(
                 SFSpace( SFSpace::BundleType::o1, 1, 0 /* punctures */,
                     0, 0, 0, {}, { SFSFibre(3, 5) } ),
@@ -204,12 +221,38 @@ TEST(SFSTest, structure) {
                 SFSpace::BundleType::o1, 1, 0 /* punctures */,
                 0, 0, 0, 1 /* obstruction */, {}, {}, { SFSFibre(3, 2) } );
         verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(4, 1), SFSFibre(3, 5) } ),
+                false /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 0 /* punctures */,
+                0, 0, 0, 1 /* obstruction */, {}, {},
+                { SFSFibre(3, 2), SFSFibre(4, 1) } );
+    }
+
+    {
+        SCOPED_TRACE("Bounded with exceptional fibres");
+
+        // With non-empty boundary, SFSpace::reduce() now always reduces the
+        // obstruction constant to zero.
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(1, -2) } ),
+                true /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                0, 0, 0, 0 /* obstruction */, {}, {}, {} );
+        verifyReducedStructure(
                 SFSpace( SFSpace::BundleType::o1, 1, 1 /* punctures */,
                     0, 0, 0, {}, { SFSFibre(3, 5) } ),
                 false /* expectReflectionEqual */,
                 SFSpace::BundleType::o1, 1, 1 /* punctures */,
                 0, 0, 0, 0 /* obstruction */, {}, {}, { SFSFibre(3, 1) } );
-        //TODO
+        verifyReducedStructure(
+                SFSpace( SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                    0, 0, 0, {}, { SFSFibre(4, 1), SFSFibre(3, 5) } ),
+                false /* expectReflectionEqual */,
+                SFSpace::BundleType::o1, 1, 1 /* punctures */,
+                0, 0, 0, 0 /* obstruction */, {}, {},
+                { SFSFibre(3, 1), SFSFibre(4, 3) } );
     }
 
     {
@@ -306,4 +349,73 @@ TEST(SFSTest, structure) {
                     FailedPrecondition );
         }
     }
+}
+
+TEST(SFSTest, addGenus) {
+    SFSpace sfs{};
+
+    // Add handles/crosscaps which preserve orientability of the SFS.
+    sfs.addHandle();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o1 );
+    EXPECT_EQ( sfs.baseGenus(), 1 );
+    sfs.addCrosscap(true);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n2 );
+    EXPECT_EQ( sfs.baseGenus(), 3 );
+    sfs.addCrosscap(true);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n2 );
+    EXPECT_EQ( sfs.baseGenus(), 4 );
+    sfs.addHandle();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n2 );
+    EXPECT_EQ( sfs.baseGenus(), 6 );
+
+    // Now add handles/crosscaps which don't preserve orientability.
+    sfs.addCrosscap();
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n3 );
+    EXPECT_EQ( sfs.baseGenus(), 7 );
+    sfs.addHandle(true);
+    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::n3 );
+    EXPECT_EQ( sfs.baseGenus(), 9 );
+
+    // To be safe, check that adding handles and crosscaps didn't change any
+    // of the other properties.
+    EXPECT_EQ( sfs.punctures(), 0 );
+    EXPECT_EQ( sfs.reflectors(), 0 );
+    EXPECT_EQ( sfs.partialReflectorCount(), 0 );
+    EXPECT_EQ( sfs.fibreCount(), 0 );
+    EXPECT_EQ( sfs.obstruction(), 0 );
+}
+
+TEST(SFSTest, addBoundary) {
+    SFSpace sfs{};
+
+    // Make sure we throw InvalidArgument (and leave sfs untouched) if we try
+    // to add an odd number of twisted boundaries to the base orbifold.
+    EXPECT_THROW( sfs.addPuncture(true), InvalidArgument );
+    EXPECT_THROW( sfs.addPuncture(true, 3), InvalidArgument );
+    EXPECT_THROW( sfs.addReflector(true), InvalidArgument );
+    EXPECT_THROW( sfs.addReflector(true, 3), InvalidArgument );
+    EXPECT_THROW( sfs.addOrbifoldBoundary(true), InvalidArgument );
+    EXPECT_THROW( sfs.addOrbifoldBoundary(true, 3), InvalidArgument );
+    EXPECT_THROW( sfs.addOrbifoldBoundary(true, 0, 1), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 0, 0, {1}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 0, {1, 2}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 0, 1, {1, 2}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 1, {1}), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(false, 1, 0,
+                { SFSPartialReflector(true, 1) }), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 0,
+                { SFSPartialReflector(false, 1) }), InvalidArgument );
+    EXPECT_THROW(
+            sfs.addOrbifoldBoundary(true, 1, 1,
+                { SFSPartialReflector(true, 1) }), InvalidArgument );
+    EXPECT_EQ( sfs, SFSpace() );
+
+    //
+    //TODO
 }

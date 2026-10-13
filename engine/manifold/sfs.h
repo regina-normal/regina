@@ -738,6 +738,10 @@ class SFSpace : public Manifold<3> {
          * the given base orbifold, no exceptional fibres, and obstruction
          * constant 0.
          *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * constructor will automatically reassign these as punctures of the
+         * base orbifold.
+         *
          * \exception FailedPrecondition One of the listed preconditions is
          * not satisfied.
          *
@@ -788,6 +792,10 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold, no exceptional fibres, and obstruction
          * constant 0.
+         *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * constructor will automatically reassign these as punctures of the
+         * base orbifold.
          *
          * \exception FailedPrecondition One of the listed preconditions is
          * not satisfied.
@@ -841,6 +849,10 @@ class SFSpace : public Manifold<3> {
         /**
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold and fibres.
+         *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * constructor will automatically reassign these as punctures of the
+         * base orbifold.
          *
          * Each fibre may either be an exceptional fibre (\a alpha > 1) or a
          * regular fibre (\a alpha = 1). If it is a regular fibre, the
@@ -898,6 +910,10 @@ class SFSpace : public Manifold<3> {
         /**
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold and fibres.
+         *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * constructor will automatically reassign these as punctures of the
+         * base orbifold.
          *
          * Each fibre may either be an exceptional fibre (\a alpha > 1) or a
          * regular fibre (\a alpha = 1). If it is a regular fibre, the
