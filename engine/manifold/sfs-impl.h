@@ -49,59 +49,46 @@ void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
         ParRefIterator beginParRefs, ParRefIterator endParRefs ) {
     // Enforce the condition which isn't checked by the internal routines.
-    if (twisted) {
-        size_t twistedCount(nPunctures + nReflectors);
-        for (auto it = beginParRefs; it != endParRefs; ++it) {
-            if (it->twisted) {
-                ++twistedCount;
-            }
+    size_t twistedCount = (twisted ? (nPunctures + nReflectors) : 0);
+    for (auto it = beginParRefs; it != endParRefs; ++it) {
+        if (it->twisted) {
+            ++twistedCount;
         }
-        if (twistedCount % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace requires that the total number of twisted "
-                    "boundaries in the base orbifold always remains even");
-        }
+    }
+    if (twistedCount % 2 != 0) {
+        throw InvalidArgument(
+                "SFSpace requires that the total number of twisted "
+                "boundaries in the base orbifold always remains even");
     }
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
     insertPartialReflectors(beginParRefs, endParRefs);
 }
 
-template <UnsignedCppInteger UInt>
-void SFSpace::addOrbifoldBoundary(
-        bool twisted, size_t nPunctures, size_t nReflectors,
-        std::initializer_list<UInt> reflectorArcCounts ) {
-    // Enforce the condition which isn't checked by the internal routines.
-    if (twisted) {
-        if ((nPunctures + nReflectors + reflectorArcCounts.size()) % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace requires that the total number of twisted "
-                    "boundaries in the base orbifold always remains even");
-        }
-    }
-    addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
-    for (const auto& refArcCount : reflectorArcCounts) {
-        insertPartialReflector( twisted, refArcCount );
-    }
-}
-
 template <typename Iterator>
 requires ForwardIteratorFor<Iterator, std::iter_value_t<Iterator>> &&
-         UnsignedCppInteger<std::iter_value_t<Iterator>>
+         StandardCppInteger<std::iter_value_t<Iterator>>
 void SFSpace::addOrbifoldBoundary(
         bool twisted, size_t nPunctures, size_t nReflectors,
         Iterator beginReflectorArcCounts, Iterator endReflectorArcCounts ) {
-    // Enforce the condition which isn't checked by the internal routines.
-    if (twisted) {
-        size_t twistedCount(nPunctures + nReflectors);
-        for (auto it = beginReflectorArcCounts;
-                it != endReflectorArcCounts; ++it) {
+    // Enforce the conditions which aren't checked by the internal routines.
+    size_t twistedCount = (twisted ? (nPunctures + nReflectors) : 0);
+    for (auto it = beginReflectorArcCounts;
+            it != endReflectorArcCounts; ++it) {
+        if constexpr (std::is_signed_v<std::iter_value_t<Iterator>>) {
+            if (*it < 0) {
+                throw InvalidArgument(
+                        "SFSpace::addOrbifoldBoundary() requires each "
+                        "reflector arc count to be non-negative");
+            }
+        }
+        if (twisted) {
             ++twistedCount;
         }
-        if (twistedCount % 2 != 0) {
-            throw InvalidArgument(
-                    "SFSpace requires that the total number of twisted "
-                    "boundaries in the base orbifold always remains even");
-        }
+    }
+    if (twistedCount % 2 != 0) {
+        throw InvalidArgument(
+                "SFSpace requires that the total number of twisted "
+                "boundaries in the base orbifold always remains even");
     }
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
     for (auto it = beginReflectorArcCounts;
@@ -110,9 +97,9 @@ void SFSpace::addOrbifoldBoundary(
     }
 }
 
-template <UnsignedCppInteger UInt>
+template <StandardCppInteger T>
 void SFSpace::insertPartialReflector(
-        bool twisted, UInt reflectorArcs ) {
+        bool twisted, T reflectorArcs ) {
     // First handle the case where this is just a puncture with no reflector
     // arcs.
     if (reflectorArcs == 0) {

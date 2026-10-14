@@ -682,7 +682,9 @@ class SFSpace : public Manifold<3> {
     public:
         /**
          * Creates a new Seifert fibred space with base orbifold the
-         * 2-sphere and no exceptional fibres.
+         * 2-sphere, no exceptional fibres, and obstruction constant 0.
+         *
+         * In other words, the manifold will be `S2 x S1`.
          */
         SFSpace();
 
@@ -690,6 +692,9 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold, no exceptional fibres, and obstruction
          * constant 0.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -731,6 +736,13 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold, no exceptional fibres, and obstruction
          * constant 0.
+         *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * constructor will automatically reassign these as punctures of the
+         * base orbifold.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -779,6 +791,13 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold, no exceptional fibres, and obstruction
          * constant 0.
+         *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * constructor will automatically reassign these as punctures of the
+         * base orbifold.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -830,10 +849,17 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold and fibres.
          *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * constructor will automatically reassign these as punctures of the
+         * base orbifold.
+         *
          * Each fibre may either be an exceptional fibre (\a alpha > 1) or a
          * regular fibre (\a alpha = 1). If it is a regular fibre, the
          * obstruction constant \a b will be adjusted according to the value
          * of \a beta.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -884,10 +910,17 @@ class SFSpace : public Manifold<3> {
          * Creates a new Seifert fibred space of the given bundle type with
          * the given base orbifold and fibres.
          *
+         * Partial reflectors with zero reflector arcs are allowed, but this
+         * constructor will automatically reassign these as punctures of the
+         * base orbifold.
+         *
          * Each fibre may either be an exceptional fibre (\a alpha > 1) or a
          * regular fibre (\a alpha = 1). If it is a regular fibre, the
          * obstruction constant \a b will be adjusted according to the value
          * of \a beta.
+         *
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          *
          * \pre If \a bundleType is \c o2, \c n, \c n1, or \c n2, then
          * `genus >= 1`.
@@ -956,8 +989,8 @@ class SFSpace : public Manifold<3> {
          * existed previously but were not strictly enforced, while others
          * are entirely new.
          *
-         * \exception FailedPrecondition A precondition (see below) is not
-         * satisfied.
+         * \exception FailedPrecondition One of the listed preconditions is
+         * not satisfied.
          * \exception UnsolvedCase There are no twisted punctures and no
          * twisted reflector circles, and \a baseClass is \c bn3.
          *
@@ -1619,6 +1652,8 @@ class SFSpace : public Manifold<3> {
          *
          * \exception InvalidArgument \a twisted is \c true but the total
          * number of boundaries to be added to the base orbifold is odd.
+         * \exception InvalidArgument \a T is a signed integer type, and
+         * one or more of the given \a reflectorArcCounts is negative.
          *
          * \nopython Instead use the version of addOrbifoldBoundary() that
          * takes the reflector arc counts as a Python list (which need not be
@@ -1632,10 +1667,10 @@ class SFSpace : public Manifold<3> {
          * \param reflectorArcCounts the list of reflector arc counts in the
          * partial reflectors to add.
          */
-        template <UnsignedCppInteger UInt>
+        template <StandardCppInteger T>
         void addOrbifoldBoundary(
                 bool twisted, size_t nPunctures, size_t nReflectors,
-                std::initializer_list<UInt> reflectorArcCounts );
+                std::initializer_list<T> reflectorArcCounts );
         /**
          * Adds new boundaries of the given types into the base orbifold.
          * The new boundaries may be twisted or untwisted.
@@ -1680,6 +1715,9 @@ class SFSpace : public Manifold<3> {
          *
          * \exception InvalidArgument \a twisted is \c true but the total
          * number of boundaries to be added to the base orbifold is odd.
+         * \exception InvalidArgument the list of reflector arc counts
+         * contains signed integers, and one of more of these counts is
+         * negative.
          *
          * \python Instead of using a pair of iterators, you should pass the
          * reflector arc counts as a Python list of native integers.
@@ -1696,7 +1734,7 @@ class SFSpace : public Manifold<3> {
          */
         template <typename Iterator>
         requires ForwardIteratorFor<Iterator, std::iter_value_t<Iterator>> &&
-                 UnsignedCppInteger<std::iter_value_t<Iterator>>
+                 StandardCppInteger<std::iter_value_t<Iterator>>
         void addOrbifoldBoundary(
                 bool twisted, size_t nPunctures, size_t nReflectors,
                 Iterator beginReflectorArcCounts,
@@ -2036,13 +2074,17 @@ class SFSpace : public Manifold<3> {
          * this routine will automatically reassign the partial reflector as
          * a puncture of the base orbifold.
          *
+         * \warning In the case where \a T is a signed integer type, this
+         * internal routine does not check that \a reflectorArcs is
+         * non-negative.
+         *
          * \param twisted \c true if the partial reflector boundary should be
          * twisted, or \c false if it should be untwisted.
          * \param reflectorArcs the number of reflector arcs in the partial
          * reflector boundary.
          */
-        template <UnsignedCppInteger UInt>
-        void insertPartialReflector(bool twisted, UInt reflectorArcs);
+        template <StandardCppInteger T>
+        void insertPartialReflector(bool twisted, T reflectorArcs);
 
         /**
          * Internal routine for adding a sequence of partial reflector
@@ -2186,11 +2228,9 @@ inline SFSpace::SFSpace(BundleType bundleType, size_t genus,
         size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted,
         std::initializer_list<SFSPartialReflector> partialReflectors) :
-    SFSpace( Dummy_{}, bundleType, genus, punctures, puncturesTwisted,
-            reflectors, reflectorsTwisted ) {
-    insertPartialReflectors(
-            partialReflectors.begin(), partialReflectors.end() );
-    checkPreconditionsAfterInitialisation();
+    SFSpace( bundleType, genus, punctures, puncturesTwisted,
+            reflectors, reflectorsTwisted,
+            partialReflectors.begin(), partialReflectors.end() ) {
 }
 
 template <InputIteratorFor<SFSPartialReflector> ParRefIterator>
@@ -2209,12 +2249,10 @@ inline SFSpace::SFSpace(BundleType bundleType, size_t genus,
         size_t reflectors, size_t reflectorsTwisted,
         std::initializer_list<SFSPartialReflector> partialReflectors,
         std::initializer_list<SFSFibre> fibres) :
-    SFSpace( Dummy_{}, bundleType, genus, punctures, puncturesTwisted,
-            reflectors, reflectorsTwisted ) {
-    insertPartialReflectors(
-            partialReflectors.begin(), partialReflectors.end() );
-    insertFibres( fibres.begin(), fibres.end() );
-    checkPreconditionsAfterInitialisation();
+    SFSpace( bundleType, genus, punctures, puncturesTwisted,
+            reflectors, reflectorsTwisted,
+            partialReflectors.begin(), partialReflectors.end(),
+            fibres.begin(), fibres.end() ) {
 }
 
 template <InputIteratorFor<SFSPartialReflector> ParRefIterator,
@@ -2356,14 +2394,27 @@ inline void SFSpace::addReflector(bool twisted, size_t nReflectors) {
     addOrbifoldBoundary(twisted, 0 /* nPunctures */, nReflectors);
 }
 
+inline void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors,
+        std::initializer_list<SFSPartialReflector> partialReflectors ) {
+    addOrbifoldBoundary( twisted, nPunctures, nReflectors,
+            partialReflectors.begin(), partialReflectors.end() );
+}
+
+template <StandardCppInteger T>
+inline void SFSpace::addOrbifoldBoundary(
+        bool twisted, size_t nPunctures, size_t nReflectors,
+        std::initializer_list<T> reflectorArcCounts ) {
+    addOrbifoldBoundary( twisted, nPunctures, nReflectors,
+            reflectorArcCounts.begin(), reflectorArcCounts.end() );
+}
+
 inline void SFSpace::insertFibre(const SFSFibre& fibre) {
     insertFibre(fibre.alpha, fibre.beta);
 }
 
 inline void SFSpace::insertFibres(std::initializer_list<SFSFibre> fibres) {
-    for (const auto& f: fibres) {
-        insertFibre(f);
-    }
+    insertFibres( fibres.begin(), fibres.end() );
 }
 
 template <InputIteratorFor<SFSFibre> FibreIterator>

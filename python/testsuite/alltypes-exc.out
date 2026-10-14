@@ -530,6 +530,7 @@ RingLike : concept
 Rotation3D : class -> EqualityType.ByValue
 SFSAlt : class -> EqualityType.ByValue
 SFSFibre : class -> EqualityType.ByValue
+SFSPartialReflector : class -> EqualityType.ByValue
 SFSpace : class -> EqualityType.ByValue
 SatAnnulus : class -> EqualityType.ByValue
 SatBlock : class -> EqualityType.ByValue
