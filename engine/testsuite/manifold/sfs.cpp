@@ -42,6 +42,30 @@ void verifyName(const SFSpace& sfs, const char* expected) {
     EXPECT_EQ( sfs.name(), expected );
 }
 
+void verifyBaseOrbifold( const SFSpace& sfs, SFSpace::BundleType bundleType,
+        size_t baseGenus, size_t punctures, size_t puncturesTwisted,
+        size_t reflectors, size_t reflectorsTwisted,
+        std::initializer_list<SFSPartialReflector> sortedParRefs,
+        std::initializer_list<SFSPartialReflector> sortedParRefsTwisted ) {
+    EXPECT_EQ( sfs.bundleType(), bundleType );
+    EXPECT_EQ( sfs.baseGenus(), baseGenus );
+    EXPECT_EQ( sfs.punctures(), punctures + puncturesTwisted );
+    EXPECT_EQ( sfs.punctures(false), punctures );
+    EXPECT_EQ( sfs.punctures(true), puncturesTwisted );
+    EXPECT_EQ( sfs.reflectors(), reflectors + reflectorsTwisted );
+    EXPECT_EQ( sfs.reflectors(false), reflectors );
+    EXPECT_EQ( sfs.reflectors(true), reflectorsTwisted );
+    EXPECT_EQ( sfs.partialReflectorCount(),
+            sortedParRefs.size() + sortedParRefsTwisted.size() );
+    EXPECT_EQ( sfs.partialReflectorCount(false), sortedParRefs.size() );
+    EXPECT_EQ( sfs.partialReflectorCount(true),
+            sortedParRefsTwisted.size() );
+    EXPECT_TRUE( std::ranges::equal(
+                sfs.partialReflectors(false), sortedParRefs ) );
+    EXPECT_TRUE( std::ranges::equal(
+                sfs.partialReflectors(true), sortedParRefsTwisted ) );
+}
+
 void verifyReducedStructure( const SFSpace& sfs, bool expectReflectionEqual,
         SFSpace::BundleType bundleType, size_t baseGenus,
         size_t punctures, size_t puncturesTwisted,
@@ -52,23 +76,9 @@ void verifyReducedStructure( const SFSpace& sfs, bool expectReflectionEqual,
         std::initializer_list<SFSFibre> sortedFibres) {
     SFSpace reduced(sfs);
     reduced.reduce();
-    EXPECT_EQ( reduced.bundleType(), bundleType );
-    EXPECT_EQ( reduced.baseGenus(), baseGenus );
-    EXPECT_EQ( reduced.punctures(), punctures + puncturesTwisted );
-    EXPECT_EQ( reduced.punctures(false), punctures );
-    EXPECT_EQ( reduced.punctures(true), puncturesTwisted );
-    EXPECT_EQ( reduced.reflectors(), reflectors + reflectorsTwisted );
-    EXPECT_EQ( reduced.reflectors(false), reflectors );
-    EXPECT_EQ( reduced.reflectors(true), reflectorsTwisted );
-    EXPECT_EQ( reduced.partialReflectorCount(),
-            sortedParRefs.size() + sortedParRefsTwisted.size() );
-    EXPECT_EQ( reduced.partialReflectorCount(false), sortedParRefs.size() );
-    EXPECT_EQ( reduced.partialReflectorCount(true),
-            sortedParRefsTwisted.size() );
-    EXPECT_TRUE( std::ranges::equal(
-                reduced.partialReflectors(false), sortedParRefs ) );
-    EXPECT_TRUE( std::ranges::equal(
-                reduced.partialReflectors(true), sortedParRefsTwisted ) );
+    verifyBaseOrbifold( reduced, bundleType, baseGenus,
+            punctures, puncturesTwisted, reflectors, reflectorsTwisted,
+            sortedParRefs, sortedParRefsTwisted );
     EXPECT_EQ( reduced.fibreCount(), sortedFibres.size() );
     EXPECT_TRUE( std::ranges::equal(
                 reduced.fibres(), sortedFibres ) );
@@ -429,77 +439,127 @@ TEST(SFSTest, addBoundary) {
     // and check that things are updated correctly.
 
     sfs.addPuncture();
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o1 );
-    EXPECT_EQ( sfs.punctures(), 1 );
-    EXPECT_EQ( sfs.punctures(false), 1 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o1, 0,
+            1 /* punctures */, 0 /* puncturesTwisted */,
+            0 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addPuncture(false);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o1 );
-    EXPECT_EQ( sfs.punctures(), 2 );
-    EXPECT_EQ( sfs.punctures(false), 2 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o1, 0,
+            2 /* punctures */, 0 /* puncturesTwisted */,
+            0 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addPuncture(false, 2);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o1 );
-    EXPECT_EQ( sfs.punctures(), 4 );
-    EXPECT_EQ( sfs.punctures(false), 4 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o1, 0,
+            4 /* punctures */, 0 /* puncturesTwisted */,
+            0 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addPuncture(true, 2);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.punctures(), 6 );
-    EXPECT_EQ( sfs.punctures(true), 2 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            0 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
 
     sfs.addReflector();
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.reflectors(), 1 );
-    EXPECT_EQ( sfs.reflectors(false), 1 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            1 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addReflector(false);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.reflectors(), 2 );
-    EXPECT_EQ( sfs.reflectors(false), 2 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            2 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addReflector(false, 2);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.reflectors(), 4 );
-    EXPECT_EQ( sfs.reflectors(false), 4 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 0 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addReflector(true, 2);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.reflectors(), 6 );
-    EXPECT_EQ( sfs.reflectors(true), 2 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            4 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
 
     sfs.addOrbifoldBoundary();
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.punctures(), 7 );
-    EXPECT_EQ( sfs.punctures(false), 5 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            5 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addOrbifoldBoundary(false);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.punctures(), 8 );
-    EXPECT_EQ( sfs.punctures(false), 6 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            6 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addOrbifoldBoundary(false, 2);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.punctures(), 10 );
-    EXPECT_EQ( sfs.punctures(false), 8 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            8 /* punctures */, 2 /* puncturesTwisted */,
+            4 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addOrbifoldBoundary(false, 0, 1);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.reflectors(), 7 );
-    EXPECT_EQ( sfs.reflectors(false), 5 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            8 /* punctures */, 2 /* puncturesTwisted */,
+            5 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
 
     sfs.addOrbifoldBoundary(true, 2);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.punctures(), 12 );
-    EXPECT_EQ( sfs.punctures(true), 4 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            8 /* punctures */, 4 /* puncturesTwisted */,
+            5 /* reflectors */, 2 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addOrbifoldBoundary(true, 0, 2);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.reflectors(), 9 );
-    EXPECT_EQ( sfs.reflectors(true), 4 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            8 /* punctures */, 4 /* puncturesTwisted */,
+            5 /* reflectors */, 4 /* reflectorsTwisted */,
+            {}, {} );
 
     sfs.addOrbifoldBoundary(false, 1, 1);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.punctures(), 13 );
-    EXPECT_EQ( sfs.punctures(false), 9 );
-    EXPECT_EQ( sfs.reflectors(), 10 );
-    EXPECT_EQ( sfs.reflectors(false), 6 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 4 /* puncturesTwisted */,
+            6 /* reflectors */, 4 /* reflectorsTwisted */,
+            {}, {} );
     sfs.addOrbifoldBoundary(true, 1, 1);
-    EXPECT_EQ( sfs.bundleType(), SFSpace::BundleType::o );
-    EXPECT_EQ( sfs.punctures(), 14 );
-    EXPECT_EQ( sfs.punctures(true), 5 );
-    EXPECT_EQ( sfs.reflectors(), 11 );
-    EXPECT_EQ( sfs.reflectors(true), 5 );
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 5 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            {}, {} );
 
-    //TODO Add partial reflectors (using both variants of the routine).
+    sfs.addOrbifoldBoundary(false, 0, 0, {2});
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 5 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 2) }, {} );
+    sfs.addOrbifoldBoundary(true, 1, 0, {2});
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 6 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 2) },
+            { SFSPartialReflector(true, 2) } );
+    sfs.addOrbifoldBoundary(false, 0, 0, {3, 1});
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 6 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 1), SFSPartialReflector(false, 2),
+            SFSPartialReflector(false, 3) },
+            { SFSPartialReflector(true, 2) } );
+    sfs.addOrbifoldBoundary(true, 0, 0, {3, 1});
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 6 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 1), SFSPartialReflector(false, 2),
+            SFSPartialReflector(false, 3) },
+            { SFSPartialReflector(true, 1), SFSPartialReflector(true, 2),
+            SFSPartialReflector(true, 3) } );
+    sfs.addOrbifoldBoundary(true, 1, 0,
+            { SFSPartialReflector(true, 1), SFSPartialReflector(false, 2) });
+    verifyBaseOrbifold( sfs, SFSpace::BundleType::o, 0,
+            9 /* punctures */, 7 /* puncturesTwisted */,
+            6 /* reflectors */, 5 /* reflectorsTwisted */,
+            { SFSPartialReflector(false, 1), SFSPartialReflector(false, 2),
+            SFSPartialReflector(false, 2), SFSPartialReflector(false, 3) },
+            { SFSPartialReflector(true, 1), SFSPartialReflector(true, 1),
+            SFSPartialReflector(true, 2), SFSPartialReflector(true, 3) } );
+
+    // To be safe, check that we didn't change the fibres and obstruction.
+    EXPECT_EQ( sfs.fibreCount(), 0 );
+    EXPECT_EQ( sfs.obstruction(), 0 );
 }
