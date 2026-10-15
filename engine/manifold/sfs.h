@@ -1092,6 +1092,15 @@ class SFSpace : public Manifold<3> {
          * For more information on the eleven predefined classes, see the
          * SFSpace class notes or the Class enumeration notes.
          *
+         * \warning Because the Class enumeration was originally defined
+         * only in the context where the Seifert fibred space has no partial
+         * reflectors (and hence no reflector arcs), this routine now throws
+         * NotImplemented whenever it is called on a space with one or more
+         * partial reflectors.
+         *
+         * \exception NotImplemented This Seifert fibred space has one or
+         * more partial reflectors.
+         *
          * \deprecated The role of the Class enumeration has been replaced by
          * the BundleType enumeration, and hence this routine has been
          * replaced by the bundleType() routine. This routine now simply
@@ -2301,16 +2310,18 @@ inline SFSpace::BundleType SFSpace::bundleType() const {
 }
 
 inline SFSpace::Class SFSpace::baseClass() const {
+    if ( nPartialReflectors_ > 0 || nPartialReflectorsTwisted_ > 0 ) {
+        throw regina::NotImplemented(
+                "SFSpace::baseClass() does not support partial reflectors");
+    }
     bool b = ( punctures_ > 0 || reflectors_ > 0 );
     switch (bundleType_) {
-        // Cases with twisted punctures, twisted reflector circles, and/or
-        // twisted partial reflectors.
+        // Cases with twisted punctures and/or twisted reflector circles.
         case BundleType::o:
             return Class::bo2;
         case BundleType::n:
             return Class::bn3;
-        // Cases with no twisted punctures, no twisted reflector circles, and
-        // no twisted partial reflectors.
+        // Cases with no twisted punctures and no twisted reflector circles.
         case BundleType::o1:
             return b ? Class::bo1 : Class::o1;
         case BundleType::o2:

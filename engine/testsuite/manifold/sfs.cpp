@@ -38,6 +38,20 @@ using regina::SFSFibre;
 using regina::SFSPartialReflector;
 using regina::SFSpace;
 
+TEST(SFSTest, deprecated) {
+    // Some temporary tests to make sure that deprecated routines have been
+    // refactored correctly.
+    SFSpace withUntwistedParRef( SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
+            { SFSPartialReflector(false, 1) } );
+    EXPECT_THROW( withUntwistedParRef.baseClass(), regina::NotImplemented );
+    SFSpace withTwistedParRef( SFSpace::BundleType::o, 0, 0, 1, 0, 0,
+            { SFSPartialReflector(true, 1) } );
+    EXPECT_THROW( withTwistedParRef.baseClass(), regina::NotImplemented );
+    SFSpace withMixedParRefs( SFSpace::BundleType::o, 0, 0, 1, 0, 0,
+            { SFSPartialReflector(false, 2), SFSPartialReflector(true, 1) } );
+    EXPECT_THROW( withMixedParRefs.baseClass(), regina::NotImplemented );
+}
+
 void verifyName(const SFSpace& sfs, const char* expected) {
     EXPECT_EQ( sfs.name(), expected );
 }
