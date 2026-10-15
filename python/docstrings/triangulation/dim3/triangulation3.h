@@ -3856,6 +3856,69 @@ Returns:
     ``True`` if and only if it determines that it is capable of
     performing such a change.)doc";
 
+// Docstring regina::python::doc::Triangulation3::simplifyUpDown
+static constexpr const char simplifyUpDown[] =
+R"doc(Attempts to simplify this triangulation by making increasingly long
+sequences of random 2-3 moves, and then simplifying back down.
+
+This is a well-climbing heuristic that can be used when ``simplify()``
+fails. It is partly inspired by techniques used in both the
+``Triangulation<4>::simplifyUpDown()`` routine (which predates this
+routine), as well as SnapPea's ``randomize_triangulation()`` routine.
+
+If this triangulation is currently oriented, then this operation will
+preserve the orientation.
+
+If any tetrahedra and/or triangles are locked, these locks will be
+respected: that is, this routine will avoid any moves that would
+violate these locks (and in particular, no LockViolation exceptions
+should be thrown). Of course, however, having locks may make the
+simplification less effective in reducing the number of tetrahedra.
+
+This routine might take a little time for larger triangulations and/or
+larger values of ``max23``, so you can pass a progress tracker to this
+routine. This routine will notify the tracker each time it starts a
+new stage of the procedure, where each stage consists of a sequence of
+consecutive random 2-3 moves followed by an attempted simplification.
+At each stage, the value of the tracker's objective will be set to the
+size of the triangulation reached at the end of the previous completed
+stage.
+
+.. warning::
+    The specific behaviour of this routine is likely to change between
+    releases.
+
+Python:
+    The global interpreter lock will be released while this function
+    runs, so you can run it as a background computation without
+    blocking the main Python thread.
+
+Parameter ``max23``:
+    the maximum number of consecutive random 2-3 moves to perform in a
+    single "up" sequence. Note that this routine will usually attempt
+    several "up" sequences of differing lengths, and in particular may
+    eventually pass through triangulations with more than ``size() +
+    max23`` tetrahedra. If this is -1, then a sensible default will be
+    chosen.
+
+Parameter ``alwaysModify``:
+    ``True`` if this triangulation should always be modified after
+    this operation, even if the final endpoint has _more_ tetrahedra
+    than the triangulation began with, or ``False`` if this
+    triangulation should only be modified if this operation succeeded
+    in strictly reducing the total number of tetrahedra.
+
+Parameter ``tracker``:
+    a progress tracker through which progress will be reported, or
+    ``None`` if no progress reporting is required.
+
+Returns:
+    ``True`` if and only if the number of tetrahedra was strictly
+    reduced.
+
+Author:
+    Alex He)doc";
+
 // Docstring regina::python::doc::Triangulation3::snapPea
 static constexpr const char snapPea[] =
 R"doc(Returns a string containing the full contents of a SnapPea data file
