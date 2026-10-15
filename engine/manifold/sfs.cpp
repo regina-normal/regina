@@ -1165,15 +1165,14 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
             if (totParRef != 1) {
                 out << 's';
             }
-            out << ' ';
 
-            // Now write all the partial reflectors, making sure not to include an
-            // extra space at the end.
-            copy(partialReflectors_.begin(), partialReflectors_.end(),
-                std::ostream_iterator<SFSPartialReflector>(out, " "));
-            copy(partialReflectorsTwisted_.begin(), --partialReflectorsTwisted_.end(),
-                std::ostream_iterator<SFSPartialReflector>(out, " "));
-            out << partialReflectorsTwisted_.back();
+            // Now write all the partial reflectors.
+            for (const auto& parRef : partialReflectors_) {
+                out << ' ' << parRef;
+            }
+            for (const auto& parRef : partialReflectorsTwisted_) {
+                out << ' ' << parRef;
+            }
         }
     }
 

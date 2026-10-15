@@ -52,10 +52,6 @@ TEST(SFSTest, deprecated) {
     EXPECT_THROW( withMixedParRefs.baseClass(), regina::NotImplemented );
 }
 
-void verifyName(const SFSpace& sfs, const char* expected) {
-    EXPECT_EQ( sfs.name(), expected );
-}
-
 void verifyBaseOrbifold( const SFSpace& sfs, SFSpace::BundleType bundleType,
         size_t baseGenus, size_t punctures, size_t puncturesTwisted,
         size_t reflectors, size_t reflectorsTwisted,
@@ -110,20 +106,8 @@ void verifyReducedStructure( const SFSpace& sfs, bool expectReflectionEqual,
 }
 
 TEST(SFSTest, structure) {
-    const SFSpace sphereBundle{};
-    const SFSpace torusBundle( SFSpace::BundleType::o1, 1 );
-    const SFSpace discBundle( SFSpace::BundleType::o1, 0, 1 );
-
-    {
-        SCOPED_TRACE("Common names");
-
-        verifyName( sphereBundle, "S2 x S1" );
-        verifyName( torusBundle, "T x S1" );
-        verifyName( discBundle, "D x S1" );
-    }
-
-    // For the structure tests below, we include some tests which ensure that
-    // the constructors correctly convert degenerate parameters, such as:
+    // We include some tests which ensure that the constructors correctly
+    // convert degenerate parameters, such as:
     // - Removing (1,b) fibres by adjusting the obstruction constant.
     // - Reassigning partial reflectors with zero reflector arcs as punctures.
 
@@ -131,15 +115,17 @@ TEST(SFSTest, structure) {
         SCOPED_TRACE("Basic circle bundles");
 
         verifyReducedStructure(
-                sphereBundle, true /* expectReflectionEqual */,
+                SFSpace(), true /* expectReflectionEqual */,
                 SFSpace::BundleType::o1, 0, 0, 0, 0, 0,
                 0 /* obstruction */, {}, {}, {} );
         verifyReducedStructure(
-                torusBundle, true /* expectReflectionEqual */,
+                SFSpace( SFSpace::BundleType::o1, 1 ),
+                true /* expectReflectionEqual */,
                 SFSpace::BundleType::o1, 1, 0, 0, 0, 0,
                 0 /* obstruction */, {}, {}, {} );
         verifyReducedStructure(
-                discBundle, true /* expectReflectionEqual */,
+                SFSpace( SFSpace::BundleType::o1, 0, 1 ),
+                true /* expectReflectionEqual */,
                 SFSpace::BundleType::o1, 0, 1, 0, 0, 0,
                 0 /* obstruction */, {}, {}, {} );
     }
@@ -576,4 +562,91 @@ TEST(SFSTest, addBoundary) {
     // To be safe, check that we didn't change the fibres and obstruction.
     EXPECT_EQ( sfs.fibreCount(), 0 );
     EXPECT_EQ( sfs.obstruction(), 0 );
+}
+
+void verifyName(const SFSpace& sfs, const char* expected) {
+    EXPECT_EQ( sfs.name(), expected );
+}
+
+void verifyStructureString(const SFSpace& sfs, const char* expected) {
+    EXPECT_EQ( sfs.structure(), expected );
+}
+
+TEST(SFSTest, structureString) {
+    {
+        SCOPED_TRACE("Circle bundles");
+
+        verifyName( SFSpace(), "S2 x S1" );
+        verifyName( SFSpace( SFSpace::BundleType::o1, 1 ), "T x S1" );
+        verifyName( SFSpace( SFSpace::BundleType::o1, 0, 1 ), "D x S1" );
+
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3 ),
+                "Or, g=3 x S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o2, 3 ),
+                "Or, g=3/o2 x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n1, 3 ),
+                "Non-or, g=3 x S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n2, 3 ),
+                "Non-or, g=3/n2 x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n3, 3 ),
+                "Non-or, g=3/n3 x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n4, 3 ),
+                "Non-or, g=3/n4 x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o, 3, 0, 2 ),
+                "Or, g=3 + 2 twisted punctures/o x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::n, 3, 0, 1, 0, 1 ),
+                "Non-or, g=3 + 1 twisted puncture + "
+                "1 twisted reflector/n x~ S1" );
+    }
+
+    {
+        SCOPED_TRACE("Without reflector arcs");
+
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3, 0, 0, 0, 0, {},
+                    { SFSFibre(1, 4) } ),
+                "SFS [Or, g=3: (1,4)]" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3, 0, 0, 0, 0, {},
+                    { SFSFibre(3, 1), SFSFibre(2, 3) } ),
+                "SFS [Or, g=3: (2,1) (3,4)]" );
+    }
+
+    {
+        SCOPED_TRACE("With reflector arcs");
+
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3, 0, 0, 0, 0,
+                    { SFSPartialReflector(false, 1) } ),
+                "Or, g=3 + partial reflector (+,1) x S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o1, 3, 0, 0, 0, 0,
+                    { SFSPartialReflector(false, 2),
+                    SFSPartialReflector(false, 1) } ),
+                "Or, g=3 + partial reflectors (+,1) (+,2) x S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o, 3, 0, 1, 0, 0,
+                    { SFSPartialReflector(true, 1) } ),
+                "Or, g=3 + 1 twisted puncture + "
+                "partial reflector (-,1)/o x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o, 3, 0, 0, 0, 0,
+                    { SFSPartialReflector(true, 2),
+                    SFSPartialReflector(true, 1) } ),
+                "Or, g=3 + partial reflectors (-,1) (-,2)/o x~ S1" );
+        verifyStructureString(
+                SFSpace( SFSpace::BundleType::o, 3, 0, 1, 0, 0,
+                    { SFSPartialReflector(true, 1),
+                    SFSPartialReflector(false, 2) } ),
+                "Or, g=3 + 1 twisted puncture + "
+                "partial reflectors (+,2) (-,1)/o x~ S1" );
+    }
 }
