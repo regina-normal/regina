@@ -649,29 +649,16 @@ class SFSpace : public Manifold<3> {
                  sorted by the number of reflector arcs, and will only
                  contain partial reflectors for which this number is strictly
                  positive. */
-        size_t nPartialReflectors_;
-            /**< The number of fibre-preserving partial reflectors in the
-                 base orbifold.
-                 This is used to avoid calling the linear time
-                 nPartialReflectors_.size(). */
         std::list<SFSPartialReflector> partialReflectorsTwisted_;
             /**< The fibre-reversing partial reflectors.  This list will be
                  sorted by the number of reflector arcs, and will only
                  contain partial reflectors for which this number is strictly
                  positive. */
-        size_t nPartialReflectorsTwisted_;
-            /**< The number of fibre-reversing partial reflectors in the
-                 base orbifold.
-                 This is used to avoid calling the linear time
-                 nPartialReflectorsTwisted_.size(). */
 
         std::list<SFSFibre> fibres_;
             /**< The exceptional fibres.  This list will be sorted, and will
                  only contain fibres for which \a alpha and \a beta are
                  coprime and 0 ≤ \a beta < \a alpha > 1. */
-        size_t nFibres_;
-            /**< The size of the \a fibres_ list, used to avoid calling
-                 the linear time fibres_.size(). */
         long b_;
             /**< The obstruction parameter \a b, which corresponds to an
                  additional (1,b) fibre. */
@@ -1090,6 +1077,15 @@ class SFSpace : public Manifold<3> {
          *
          * For more information on the eleven predefined classes, see the
          * SFSpace class notes or the Class enumeration notes.
+         *
+         * \warning Because the Class enumeration was originally defined
+         * only in the context where the Seifert fibred space has no partial
+         * reflectors (and hence no reflector arcs), this routine now throws
+         * NotImplemented whenever it is called on a space with one or more
+         * partial reflectors.
+         *
+         * \exception NotImplemented This Seifert fibred space has one or
+         * more partial reflectors.
          *
          * \deprecated The role of the Class enumeration has been replaced by
          * the BundleType enumeration, and hence this routine has been
@@ -1716,7 +1712,7 @@ class SFSpace : public Manifold<3> {
          * \exception InvalidArgument \a twisted is \c true but the total
          * number of boundaries to be added to the base orbifold is odd.
          * \exception InvalidArgument the list of reflector arc counts
-         * contains signed integers, and one of more of these counts is
+         * contains signed integers, and one or more of these counts is
          * negative.
          *
          * \python Instead of using a pair of iterators, you should pass the
@@ -2074,17 +2070,12 @@ class SFSpace : public Manifold<3> {
          * this routine will automatically reassign the partial reflector as
          * a puncture of the base orbifold.
          *
-         * \warning In the case where \a T is a signed integer type, this
-         * internal routine does not check that \a reflectorArcs is
-         * non-negative.
-         *
          * \param twisted \c true if the partial reflector boundary should be
          * twisted, or \c false if it should be untwisted.
          * \param reflectorArcs the number of reflector arcs in the partial
          * reflector boundary.
          */
-        template <StandardCppInteger T>
-        void insertPartialReflector(bool twisted, T reflectorArcs);
+        void insertPartialReflector(bool twisted, size_t reflectorArcs);
 
         /**
          * Internal routine for adding a sequence of partial reflector
@@ -2206,8 +2197,7 @@ inline SFSpace::SFSpace(SFSpace::Dummy_ dummy_,
         bundleType_(bundleType), genus_(genus),
         punctures_(punctures), puncturesTwisted_(puncturesTwisted),
         reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
-        nPartialReflectors_(0), nPartialReflectorsTwisted_(0),
-        nFibres_(0), b_(0) {
+        b_(0) {
 }
 
 inline SFSpace::SFSpace() :
@@ -2287,11 +2277,8 @@ inline void SFSpace::swap(SFSpace& other) noexcept {
     std::swap(reflectors_, other.reflectors_);
     std::swap(reflectorsTwisted_, other.reflectorsTwisted_);
     partialReflectors_.swap(other.partialReflectors_);
-    std::swap(nPartialReflectors_, other.nPartialReflectors_);
     partialReflectorsTwisted_.swap(other.partialReflectorsTwisted_);
-    std::swap(nPartialReflectorsTwisted_, other.nPartialReflectorsTwisted_);
     fibres_.swap(other.fibres_);
-    std::swap(nFibres_, other.nFibres_);
     std::swap(b_, other.b_);
 }
 
@@ -2300,16 +2287,18 @@ inline SFSpace::BundleType SFSpace::bundleType() const {
 }
 
 inline SFSpace::Class SFSpace::baseClass() const {
+    if ( partialReflectorCount() > 0 ) {
+        throw regina::NotImplemented(
+                "SFSpace::baseClass() does not support partial reflectors");
+    }
     bool b = ( punctures_ > 0 || reflectors_ > 0 );
     switch (bundleType_) {
-        // Cases with twisted punctures, twisted reflector circles, and/or
-        // twisted partial reflectors.
+        // Cases with twisted punctures and/or twisted reflector circles.
         case BundleType::o:
             return Class::bo2;
         case BundleType::n:
             return Class::bn3;
-        // Cases with no twisted punctures, no twisted reflector circles, and
-        // no twisted partial reflectors.
+        // Cases with no twisted punctures and no twisted reflector circles.
         case BundleType::o1:
             return b ? Class::bo1 : Class::o1;
         case BundleType::o2:
@@ -2362,11 +2351,12 @@ inline size_t SFSpace::reflectors(bool twisted) const {
 }
 
 inline size_t SFSpace::partialReflectorCount() const {
-    return nPartialReflectors_ + nPartialReflectorsTwisted_;
+    return partialReflectors_.size() + partialReflectorsTwisted_.size();
 }
 
 inline size_t SFSpace::partialReflectorCount(bool twisted) const {
-    return (twisted ? nPartialReflectorsTwisted_ : nPartialReflectors_);
+    return (twisted ? partialReflectorsTwisted_.size() :
+            partialReflectors_.size());
 }
 
 inline auto SFSpace::partialReflectors(bool twisted) const {
@@ -2375,7 +2365,7 @@ inline auto SFSpace::partialReflectors(bool twisted) const {
 }
 
 inline size_t SFSpace::fibreCount() const {
-    return nFibres_;
+    return fibres_.size();
 }
 
 inline auto SFSpace::fibres() const {
@@ -2435,7 +2425,7 @@ inline void SFSpace::insertPartialReflectors(
 
 inline void SFSpace::reflect() {
     complementAllFibres();
-    b_ = -b_ - static_cast<long>(nFibres_);
+    b_ = -b_ - static_cast<long>(fibreCount());
 }
 
 inline bool SFSpace::isHyperbolic() const {
