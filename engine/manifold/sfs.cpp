@@ -1436,26 +1436,24 @@ Triangulation<3> SFSpace::construct() const {
     // If necessary, adjust the fibres that we will fill in to incorporate the
     // obstruction constant.
     std::list<SFSFibre> fibresToFill(fibres_);
-    size_t numFibresToFill = nFibres_;
-    if ( punctures_ == 0 and b_ != 0 ) {
+    if (punctures_ == 0 && b_ != 0) {
         long alpha, beta;
-        if ( numFibresToFill == 0 ) {
+        if (fibresToFill.empty()) {
             alpha = 1;
             beta = 0;
-            numFibresToFill = 1;
         } else {
-            SFSFibre fibreToReplace( fibresToFill.back() );
+            SFSFibre fibreToReplace(fibresToFill.back());
             fibresToFill.pop_back();
             alpha = fibreToReplace.alpha;
             beta = fibreToReplace.beta;
         }
-        fibresToFill.emplace_back( alpha, beta + (alpha * b_) );
+        fibresToFill.emplace_back(alpha, beta + (alpha * b_));
     }
 
     // If there are no fibres to fill at all, then the requested SFS is just
     // the orientable circle bundle (with Euler number 0, if the base surface
     // has no punctures) over the base surface.
-    if ( numFibresToFill == 0 ) {
+    if (fibresToFill.empty()) {
         // For the simplest cases, we just use the constructions that are
         // already implemented elsewhere. For all remaining cases, we simply
         // construct a baseSurface which we then pass to our generic circle
@@ -1480,6 +1478,8 @@ Triangulation<3> SFSpace::construct() const {
         OrientableCircleBundle bundle(baseSurface);
         return bundle.tri_;
     }
+
+    const size_t numFibresToFill{fibresToFill.size()};
 
     // For the comments throughout the rest of this implementation, we use the
     // following notation:
