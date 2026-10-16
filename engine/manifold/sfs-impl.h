@@ -114,7 +114,6 @@ void SFSpace::insertPartialReflector(
     // OK, now we know that we have a proper partial reflector.
     SFSPartialReflector partialReflector(twisted, reflectorArcs);
     if (twisted) {
-        ++nPartialReflectorsTwisted_;
         partialReflectorsTwisted_.insert(
                 lower_bound(
                     partialReflectorsTwisted_.begin(),
@@ -122,7 +121,6 @@ void SFSpace::insertPartialReflector(
                     partialReflector ),
                 partialReflector );
     } else {
-        ++nPartialReflectors_;
         partialReflectors_.insert(
                 lower_bound(
                     partialReflectors_.begin(),

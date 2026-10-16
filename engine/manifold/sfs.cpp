@@ -111,7 +111,7 @@ void SFSpace::checkPreconditionsAfterInitialisation() {
     // Enforce preconditions on twisted punctures, twisted reflector circles,
     // and twisted partial reflectors.
     size_t totalTwisted = (puncturesTwisted_ + reflectorsTwisted_ +
-            nPartialReflectorsTwisted_);
+            partialReflectorsTwisted_.size());
     if (totalTwisted % 2 != 0) {
         throw regina::FailedPrecondition(
                 "SFSpace::SFSpace() requires the total number of twisted "
@@ -409,7 +409,6 @@ void SFSpace::insertFibre(long alpha, long beta) {
     }
 
     // Now we have 0 <= beta < alpha and alpha >= 2.
-    nFibres_++;
     SFSFibre f(alpha, beta);
     fibres_.insert(lower_bound(fibres_.begin(), fibres_.end(), f), f);
 
@@ -434,7 +433,7 @@ void SFSpace::reduce(bool mayReflect) {
     } else if (fibreNegating() && b_) {
         // (p,q) == (p,-q), and so (1,2) == (1,0).
         b_ = b_ % 2;
-        if (b_ && nFibres_) {
+        if (b_ && fibreCount()) {
             // We have b == ±1.
             // Merge this into the first exceptional fibre instead.
             // Instead of modifying the fibre directly, delete and reinsert
@@ -456,7 +455,7 @@ void SFSpace::reduce(bool mayReflect) {
     }
 
     // Completely finish off the case with no exceptional fibres.
-    if (! nFibres_) {
+    if (! fibreCount()) {
         // Not much more we can do.
         // Just reflect if it helps.
         if (mayReflect && b_ < 0)
@@ -605,11 +604,11 @@ void SFSpace::reduce(bool mayReflect) {
         // negative.
 
         if (mayReflect) {
-            if (b_ < (-b_ - static_cast<long>(nFibres_))) {
-                b_ = -b_ - static_cast<long>(nFibres_);
+            if (b_ < (-b_ - static_cast<long>(fibreCount()))) {
+                b_ = -b_ - static_cast<long>(fibreCount());
                 complementAllFibres();
             } else if ((canShiftObstructionIntoBoundary) ||
-                    (b_ == (-b_ - static_cast<long>(nFibres_)))) {
+                    (b_ == (-b_ - static_cast<long>(fibreCount())))) {
                 // Reflecting won't change b, but it will complement all
                 // fibres.  See whether this is worthwhile.
                 bool shouldReflect = false;
@@ -743,13 +742,13 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
         // Base orbifold is the sphere.
         if (fibres_.empty())
             return LensSpace(b_ >= 0 ? b_ : -b_, 1);
-        else if (nFibres_ == 1) {
+        else if (fibreCount() == 1) {
             long q = fibres_.front().alpha;
             long p = fibres_.front().beta + (b_ * q);
 
             // We have SFS [S2 : (q,p)].
             return LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
-        } else if (nFibres_ == 2) {
+        } else if (fibreCount() == 2) {
             // Precisely two fibres.
             long q = fibres_.back().alpha;
             long p = fibres_.back().beta + (b_ * q);
@@ -774,7 +773,7 @@ std::optional<LensSpace> SFSpace::isLensSpace() const {
         return std::nullopt;
     } else if (genus_ == 1 && bundleType_ == BundleType::n2) {
         // Base orbifold is the projective plane.
-        if (nFibres_ == 1) {
+        if (fibreCount() == 1) {
             // We have precisely one exceptional fibre.
             long a = fibres_.front().alpha;
             long n = b_ * a + fibres_.front().beta;
@@ -803,15 +802,9 @@ bool SFSpace::operator == (const SFSpace& compare) const {
         return false;
     if (reflectorsTwisted_ != compare.reflectorsTwisted_)
         return false;
-    if (nPartialReflectors_ != compare.nPartialReflectors_)
-        return false;
-    if (nPartialReflectorsTwisted_ != compare.nPartialReflectorsTwisted_)
-        return false;
     if (! (partialReflectors_ == compare.partialReflectors_))
         return false;
     if (! (partialReflectorsTwisted_ == compare.partialReflectorsTwisted_))
-        return false;
-    if (nFibres_ != compare.nFibres_)
         return false;
     if (! (fibres_ == compare.fibres_))
         return false;
@@ -831,13 +824,12 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
     // At least for now, we will sort first according to the partial
     // reflectors. If these are the same, then we proceed according to the
     // ordering that was used before SFSpace supported partial reflectors.
-    if (auto c = nPartialReflectors_ + nPartialReflectorsTwisted_ <=>
-            rhs.nPartialReflectors_ + rhs.nPartialReflectorsTwisted_;
+    if (auto c = partialReflectorCount() <=> rhs.partialReflectorCount();
             c != 0) {
         return c;
     }
-    if (auto c = nPartialReflectorsTwisted_ <=>
-            rhs.nPartialReflectorsTwisted_; c != 0) {
+    if (auto c = partialReflectorsTwisted_.size() <=>
+            rhs.partialReflectorsTwisted_.size(); c != 0) {
         return c;
     }
     if (auto c = partialReflectorsTwisted_ <=> rhs.partialReflectorsTwisted_;
@@ -875,8 +867,6 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
         return c;
     if (auto c = puncturesTwisted_ <=> rhs.puncturesTwisted_; c != 0)
         return c;
-    if (auto c = nFibres_ <=> rhs.nFibres_; c != 0)
-        return c;
     if (auto c = fibres_ <=> rhs.fibres_; c != 0)
         return c;
     if (auto c = b_ <=> rhs.b_; c != 0)
@@ -889,8 +879,7 @@ std::strong_ordering SFSpace::operator <=> (const SFSpace& rhs) const {
 Triangulation<3> SFSpace::construct() const {
     // Things that we don't deal with just yet.
     if (punctures_ || puncturesTwisted_ ||
-            reflectors_ || reflectorsTwisted_ ||
-            nPartialReflectors_ || nPartialReflectorsTwisted_) {
+            reflectors_ || reflectorsTwisted_ || partialReflectorCount()) {
         throw NotImplemented("SFSpace::construct() is currently not "
             "implemented for spaces whose base orbifolds have punctures, "
             "reflector circles, or reflector arcs");
@@ -962,8 +951,7 @@ Triangulation<3> SFSpace::construct() const {
 }
 
 AbelianGroup SFSpace::homology() const {
-    if (punctures_ || puncturesTwisted_ ||
-            nPartialReflectors_ || nPartialReflectorsTwisted_) {
+    if (punctures_ || puncturesTwisted_ || partialReflectorCount()) {
         // Not just now.
         throw NotImplemented("SFSpace::homology() is currently not "
             "implemented for spaces whose base orbifolds have punctures "
@@ -990,14 +978,14 @@ AbelianGroup SFSpace::homology() const {
         // We ignore a_i and b_i, and just add extra rank 2g at the end.
         // Generators in the matrix are q_1, ..., q_r, h, z_1, ..., z_t,
         //                              y_1, ..., y_t.
-        MatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
-            nFibres_ + 1 + 2 * nRef);
+        MatrixInt pres(fibreCount() + nRef + (twisted ? 2 : 1),
+            fibreCount() + 1 + 2 * nRef);
 
         size_t which = 0;
         for (const auto& f : fibres_) {
-            pres.entry(nFibres_ + nRef, which) = 1;
+            pres.entry(fibreCount() + nRef, which) = 1;
 
-            pres.entry(which, nFibres_) = f.beta;
+            pres.entry(which, fibreCount()) = f.beta;
             pres.entry(which, which) = f.alpha;
 
             ++which;
@@ -1005,17 +993,17 @@ AbelianGroup SFSpace::homology() const {
 
         size_t ref;
         for (ref = 0; ref < nRef; ref++) {
-            pres.entry(nFibres_ + ref, nFibres_) = -1;
-            pres.entry(nFibres_ + ref, nFibres_ + 1 + ref) = 2;
-            pres.entry(nFibres_ + nRef, nFibres_ + 1 + nRef + ref) = 1;
+            pres.entry(fibreCount() + ref, fibreCount()) = -1;
+            pres.entry(fibreCount() + ref, fibreCount() + 1 + ref) = 2;
+            pres.entry(fibreCount() + nRef, fibreCount() + 1 + nRef + ref) = 1;
         }
 
-        pres.entry(nFibres_ + nRef, nFibres_) = -b_;
+        pres.entry(fibreCount() + nRef, fibreCount()) = -b_;
 
         if (reflectorsTwisted_)
-            pres.entry(nFibres_ + nRef + 1, nFibres_) = 1;
+            pres.entry(fibreCount() + nRef + 1, fibreCount()) = 1;
         else if (twisted)
-            pres.entry(nFibres_ + nRef + 1, nFibres_) = 2;
+            pres.entry(fibreCount() + nRef + 1, fibreCount()) = 2;
 
         AbelianGroup ans(std::move(pres));
         ans.addRank(2 * genus_);
@@ -1032,14 +1020,14 @@ AbelianGroup SFSpace::homology() const {
         //
         // Generators in the matrix are q_1, ..., q_r, v_1, ..., v_g, h,
         //                              z_1, ..., z_t, y_1, ..., y_t.
-        MatrixInt pres(nFibres_ + nRef + (twisted ? 2 : 1),
-            nFibres_ + genus_ + 1 + 2 * nRef);
+        MatrixInt pres(fibreCount() + nRef + (twisted ? 2 : 1),
+            fibreCount() + genus_ + 1 + 2 * nRef);
 
         size_t which = 0;
         for (const auto& f : fibres_) {
-            pres.entry(nFibres_ + nRef, which) = 1;
+            pres.entry(fibreCount() + nRef, which) = 1;
 
-            pres.entry(which, nFibres_ + genus_) = f.beta;
+            pres.entry(which, fibreCount() + genus_) = f.beta;
             pres.entry(which, which) = f.alpha;
 
             ++which;
@@ -1047,19 +1035,19 @@ AbelianGroup SFSpace::homology() const {
 
         size_t ref;
         for (ref = 0; ref < nRef; ref++) {
-            pres.entry(nFibres_ + ref, nFibres_ + genus_) = -1;
-            pres.entry(nFibres_ + ref, nFibres_ + genus_ + 1 + ref) = 2;
-            pres.entry(nFibres_ + nRef, nFibres_ + genus_ + 1 + nRef + ref) = 1;
+            pres.entry(fibreCount() + ref, fibreCount() + genus_) = -1;
+            pres.entry(fibreCount() + ref, fibreCount() + genus_ + 1 + ref) = 2;
+            pres.entry(fibreCount() + nRef, fibreCount() + genus_ + 1 + nRef + ref) = 1;
         }
 
         for (which = 0; which < genus_; which++)
-            pres.entry(nFibres_ + nRef, nFibres_ + which) = 2;
-        pres.entry(nFibres_ + nRef, nFibres_ + genus_) = -b_;
+            pres.entry(fibreCount() + nRef, fibreCount() + which) = 2;
+        pres.entry(fibreCount() + nRef, fibreCount() + genus_) = -b_;
 
         if (reflectorsTwisted_)
-            pres.entry(nFibres_ + nRef + 1, nFibres_ + genus_) = 1;
+            pres.entry(fibreCount() + nRef + 1, fibreCount() + genus_) = 1;
         else if (twisted)
-            pres.entry(nFibres_ + nRef + 1, nFibres_ + genus_) = 2;
+            pres.entry(fibreCount() + nRef + 1, fibreCount() + genus_) = 2;
 
         return AbelianGroup(std::move(pres));
     }
@@ -1081,7 +1069,7 @@ std::ostream& SFSpace::writeCommonBase(std::ostream& out, bool tex) const {
     // components to be named.  Otherwise this messes up the reflector
     // boundary output.
     size_t totRef = reflectors_ + reflectorsTwisted_;
-    size_t totParRef = nPartialReflectors_ + nPartialReflectorsTwisted_;
+    size_t totParRef = partialReflectorCount();
     size_t totBdries = totRef + totParRef + punctures_ + puncturesTwisted_;
 
     if (totParRef > 0) {
@@ -1236,8 +1224,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     if (fibreNegating())
         return writeStructure(out);
     if (reflectors_ || reflectorsTwisted_ ||
-            punctures_ || puncturesTwisted_ ||
-            nPartialReflectors_ || nPartialReflectorsTwisted_) {
+            punctures_ || puncturesTwisted_ || partialReflectorCount()) {
         return writeStructure(out);
     }
 
@@ -1256,7 +1243,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
 
     // Pull off the number of fibres we're capable of dealing with.
     // At this moment this is four.
-    if (nFibres_ > 4)
+    if (fibreCount() > 4)
         return writeStructure(out);
 
     SFSFibre fibre[4];
@@ -1270,12 +1257,12 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // SFS over the 2-sphere:
     if (genus_ == 0 && bundleType_ == BundleType::o1 &&
             punctures() == 0 && reflectors() == 0) {
-        if (nFibres_ == 4 && fibre[0] == two && fibre[1] == two &&
+        if (fibreCount() == 4 && fibre[0] == two && fibre[1] == two &&
                 fibre[2] == two && fibre[3] == two && b_ == -2) {
             // [ S2 : (2,1), (2,1), (2,-1), (2,-1) ]
             // Orlik, p138, case M2.
             return out << (tex ? "K^2/n2 \\twisted S^1" : "KB/n2 x~ S1");
-        } else if (nFibres_ == 3 && fibre[0] == two &&
+        } else if (fibreCount() == 3 && fibre[0] == two &&
                 std::gcd(fibre[2].alpha, fibre[2].beta) == 1 && b_ >= -1) {
             // [ S2 : (2,1), (...), (...) ]
 
@@ -1423,7 +1410,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 else
                     return out << "T x I / [ 0,1 | -1,0 ]";
             }
-        } else if (nFibres_ == 3 && fibre[0] == three && fibre[1] == three
+        } else if (fibreCount() == 3 && fibre[0] == three && fibre[1] == three
                 && fibre[2] == three && b_ == -1) {
             // [ S2 : (3,1), (3,1), (3,-2) ]
             // Orlik, p138, case M3.
@@ -1437,7 +1424,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // SFS over the real projective plane:
     if (genus_ == 1 && bundleType_ == BundleType::n2 &&
             punctures() == 0 && reflectors() == 0) {
-        if (nFibres_ == 0) {
+        if (fibreCount() == 0) {
             // No exceptional fibres.
             if (b_ == 0) {
                 // [ RP2 ]
@@ -1449,7 +1436,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
                 // Is this Orlik, p112, case (vi)?  What is this?
                 // ans << "S3/Q" << (4 * (b > 0 ? b : -b));
             }
-        } else if (nFibres_ == 1 && fibre[0].alpha > 1) {
+        } else if (fibreCount() == 1 && fibre[0].alpha > 1) {
             // Just one exceptional fibre.
             long a = fibre[0].alpha;
             long n = b_ * a + fibre[0].beta;
