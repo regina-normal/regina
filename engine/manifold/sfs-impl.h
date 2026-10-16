@@ -97,39 +97,6 @@ void SFSpace::addOrbifoldBoundary(
     }
 }
 
-template <StandardCppInteger T>
-void SFSpace::insertPartialReflector(
-        bool twisted, T reflectorArcs ) {
-    // First handle the case where this is just a puncture with no reflector
-    // arcs.
-    if (reflectorArcs == 0) {
-        if (twisted) {
-            ++puncturesTwisted_;
-        } else {
-            ++punctures_;
-        }
-        return;
-    }
-
-    // OK, now we know that we have a proper partial reflector.
-    SFSPartialReflector partialReflector(twisted, reflectorArcs);
-    if (twisted) {
-        partialReflectorsTwisted_.insert(
-                lower_bound(
-                    partialReflectorsTwisted_.begin(),
-                    partialReflectorsTwisted_.end(),
-                    partialReflector ),
-                partialReflector );
-    } else {
-        partialReflectors_.insert(
-                lower_bound(
-                    partialReflectors_.begin(),
-                    partialReflectors_.end(),
-                    partialReflector ),
-                partialReflector );
-    }
-}
-
 } // namespace regina
 
 #endif

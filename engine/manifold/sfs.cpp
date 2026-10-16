@@ -386,6 +386,31 @@ void SFSpace::addOrbifoldBoundary(
     addOrbifoldBoundaryInternal(twisted, nPunctures, nReflectors);
 }
 
+void SFSpace::insertPartialReflector(bool twisted, size_t reflectorArcs) {
+    // First handle the case where this is just a puncture with no reflector
+    // arcs.
+    if (reflectorArcs == 0) {
+        if (twisted) {
+            ++puncturesTwisted_;
+        } else {
+            ++punctures_;
+        }
+        return;
+    }
+
+    // OK, now we know that we have a proper partial reflector.
+    SFSPartialReflector parRef(twisted, reflectorArcs);
+    if (twisted) {
+        partialReflectorsTwisted_.insert(
+                std::ranges::lower_bound(partialReflectorsTwisted_, parRef),
+                parRef);
+    } else {
+        partialReflectors_.insert(
+                std::ranges::lower_bound(partialReflectors_, parRef),
+                parRef);
+    }
+}
+
 void SFSpace::insertFibre(long alpha, long beta) {
     // We are assuming that the parameters of this fibre are coprime and
     // that alpha is strictly positive.
@@ -410,7 +435,7 @@ void SFSpace::insertFibre(long alpha, long beta) {
 
     // Now we have 0 <= beta < alpha and alpha >= 2.
     SFSFibre f(alpha, beta);
-    fibres_.insert(lower_bound(fibres_.begin(), fibres_.end(), f), f);
+    fibres_.insert(std::ranges::lower_bound(fibres_, f), f);
 
     // We're done!
 }

@@ -1713,7 +1713,7 @@ class SFSpace : public Manifold<3> {
          * \exception InvalidArgument \a twisted is \c true but the total
          * number of boundaries to be added to the base orbifold is odd.
          * \exception InvalidArgument the list of reflector arc counts
-         * contains signed integers, and one of more of these counts is
+         * contains signed integers, and one or more of these counts is
          * negative.
          *
          * \python Instead of using a pair of iterators, you should pass the
@@ -2071,17 +2071,12 @@ class SFSpace : public Manifold<3> {
          * this routine will automatically reassign the partial reflector as
          * a puncture of the base orbifold.
          *
-         * \warning In the case where \a T is a signed integer type, this
-         * internal routine does not check that \a reflectorArcs is
-         * non-negative.
-         *
          * \param twisted \c true if the partial reflector boundary should be
          * twisted, or \c false if it should be untwisted.
          * \param reflectorArcs the number of reflector arcs in the partial
          * reflector boundary.
          */
-        template <StandardCppInteger T>
-        void insertPartialReflector(bool twisted, T reflectorArcs);
+        void insertPartialReflector(bool twisted, size_t reflectorArcs);
 
         /**
          * Internal routine for adding a sequence of partial reflector
