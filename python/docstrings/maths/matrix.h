@@ -96,8 +96,8 @@ inline constexpr const char metricalSmithNormalForm[] =
 R"doc(Deprecated alternative Smith normal form routine that may be
 preferable for extremely large matrices.
 
-This is identical to Matrix::metricalSmithNormalForm(); see that
-routine for further details.
+This simply calls ``Matrix::makeSNFCoB(SNFAlgorithm::Metrical)``; see
+that routine for further details.
 
 In this (deprecated) routine, the four change-of-basis matrices are
 given as input and refilled by this routine. Upon input, they may be
@@ -125,6 +125,9 @@ Parameter ``colSpaceBasis``:
 
 Parameter ``colSpaceBasisInv``:
     used to return the inverse of *colSpaceBasis*.
+
+Precondition:
+    All entries in the given input matrix are finite.
 
 Author:
     Ryan Budney)doc";
@@ -242,11 +245,14 @@ inline constexpr const char smithNormalForm[] =
 R"doc(Deprecated routine that transforms the given integer matrix into Smith
 normal form.
 
-This is identical to Matrix::smithNormalForm(); see that routine for
-further details.
+This simply calls Matrix::makeSNF(); see that routine for further
+details.
 
 .. deprecated::
     You should now call ``matrix.smithNormalForm()`` instead.
+
+Precondition:
+    All entries in the given matrix are finite.
 
 Parameter ``matrix``:
     the matrix to transform.)doc";
@@ -256,8 +262,8 @@ inline constexpr const char smithNormalForm_2[] =
 R"doc(Deprecated Smith normal form routine that also computes change-of-
 basis matrices.
 
-This is identical to Matrix::smithNormalFormCoB(); see that routine
-for further details.
+This simply calls Matrix::makeSNFCoB(); see that routine for further
+details.
 
 In this (deprecated) routine, the four change-of-basis matrices are
 given as input and refilled by this routine. Upon input, they may be
@@ -268,6 +274,9 @@ matrices of the appropriate size.
     You should now call ``matrix.smithNormalFormCoB()`` instead, and
     collect the change-of-basis matrices from the return value of that
     function.
+
+Precondition:
+    All entries in the given input matrix are finite.
 
 Parameter ``matrix``:
     the matrix to transform into Smith normal form.
@@ -842,6 +851,9 @@ Our convention is that a matrix is in column echelon form if:
 
 * all the zero columns are at the right hand end of the matrix.
 
+Precondition:
+    All entries in this matrix are finite.
+
 Returns:
     the rank of this matrix, i.e., the number of non-zero columns
     remaining.)doc";
@@ -1166,15 +1178,40 @@ R"doc(Turns this matrix into an identity matrix. This matrix need not be
 square; after this routine it will have ``entry(r,c)`` equal to 1 if
 ``r == c`` and 0 otherwise.)doc";
 
-// Docstring regina::python::doc::Matrix::metricalSmithNormalForm
-static constexpr const char metricalSmithNormalForm[] =
-R"doc(An alternative Smith normal form algorithm that may be preferable for
-extremely large matrices. This uses a variant of Hafner-McCurley and
-Havas-Holt-Rees' description of pivoting methods.
+// Docstring regina::python::doc::Matrix::makeSNF
+static constexpr const char makeSNF[] =
+R"doc(Transforms this matrix into Smith normal form.
 
-Like smithNormalFormCoB(), this routine transforms this matrix into
-Smith normal form, and also returns change-of-basis matrices
-describing all of the row and column operations that were performed.
+Reading down the main diagonal, the final Smith normal form will have
+a series of non-negative, non-decreasing invariant factors followed by
+zeroes. "Invariant factor" refers to the convention that the ``i``th
+term divides the (``i+1``)th term, and so these invariant factors are
+unique.
+
+This routine will use Regina's default Smith normal form algorithm. If
+you wish to use a different algorithm, you will need to call
+makeSNFCoB() instead.
+
+This matrix need not be square and need not be of full rank.
+
+Precondition:
+    All entries in this matrix are finite.)doc";
+
+// Docstring regina::python::doc::Matrix::makeSNFCoB
+static constexpr const char makeSNFCoB[] =
+R"doc(Transforms this matrix into Smith normal form and returns change-of-
+basis matrices.
+
+This routine is similar to makeSNF(); however, it allows you to
+specify a custom algorithm, and it also computes and returns change-
+of-basis matrices describing all of the row and column operations that
+were performed.
+
+As with makeSNF(), the final Smith normal form will have a main
+diagonal consisting of a series of non-negative, non-decreasing
+invariant factors followed by zeroes. "Invariant factor" refers to the
+convention that the ``i``th term divides the (``i+1``)th term, and so
+these invariant factors are unique.
 
 The change-of-basis matrices work as follows. Let *M* denote the
 initial value of this matrix, let *S* denote its Smith normal form,
@@ -1193,13 +1230,22 @@ colSpaceBasis, colSpaceBasisInv)``. Then:
 
 * ``M = colSpaceBasisInv * S * rowSpaceBasisInv``.
 
-Note that this matrix need not be square and need not be of full rank.
+This matrix need not be square and need not be of full rank.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Parameter ``alg``:
+    the algorithm to use for this computation. If you do not specify
+    an algorithm, Regina will choose a sensible default.
 
 Returns:
-    the four change-of-basis matrices, as described above.
+    the four change-of-basis matrices ``(rowSpaceBasis,
+    rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv)``, as described
+    above.
 
 Author:
-    Ryan Budney)doc";
+    B.B. and Ryan Budney)doc";
 
 // Docstring regina::python::doc::Matrix::multCol
 static constexpr const char multCol[] =
@@ -1294,6 +1340,9 @@ again), then it is faster to use the rvalue reference version of this
 routine, which will avoid the extra overhead of the deep copy. To do
 this, replace ``matrix.rank()`` with ``std::move(matrix).rank()``.
 
+Precondition:
+    All entries in this matrix are finite.
+
 Returns:
     the rank of this matrix.)doc";
 
@@ -1346,6 +1395,9 @@ Our convention is that a matrix is in row echelon form if:
 
 * all the zero rows are at the bottom of the matrix.
 
+Precondition:
+    All entries in this matrix are finite.
+
 Returns:
     the rank of this matrix, i.e., the number of non-zero rows
     remaining.)doc";
@@ -1381,36 +1433,56 @@ Parameter ``column``:
 Parameter ``value``:
     the new entry to place in the given row and column.)doc";
 
-// Docstring regina::python::doc::Matrix::smithNormalForm
-static constexpr const char smithNormalForm[] =
-R"doc(Transforms this matrix into Smith normal form.
+// Docstring regina::python::doc::Matrix::snf
+static constexpr const char snf[] =
+R"doc(Returns the Smith normal form of this matrix. This matrix itself will
+not be changed.
 
-Reading down the diagonal, the final Smith normal form will have a
-series of non-negative, non-decreasing invariant factors followed by
-zeroes. "Invariant factor" refers to the convention that the *i*th
-term divides the (*i*+1)th term, and so they are unique.
+Reading down the main diagonal, the final Smith normal form will have
+a series of non-negative, non-decreasing invariant factors followed by
+zeroes. "Invariant factor" refers to the convention that the ``i``th
+term divides the (``i+1``)th term, and so these invariant factors are
+unique.
 
-The algorithm used is due to Hafner and McCurley (1991). It does not
-use modular arithmetic to control the intermediate coefficient
-explosion.
+This routine will use Regina's default Smith normal form algorithm. If
+you wish to use a different algorithm, you will need to call snfCoB()
+instead.
 
-Note that this matrix need not be square and need not be of full rank.)doc";
+This matrix need not be square and need not be of full rank.
 
-// Docstring regina::python::doc::Matrix::smithNormalFormCoB
-static constexpr const char smithNormalFormCoB[] =
-R"doc(Transforms this matrix into Smith normal form and returns change of
-basis matrices.
+If your matrix is disposable (i.e., you will never need to use it
+again), then it is faster to use the rvalue reference version of this
+routine, which will avoid the extra overhead of a deep copy. To do
+this, replace ``matrix.snf()`` with ``std::move(matrix).snf()``.
 
-This follows the same algorithm as smithNormalForm(); however, it also
-computes and returns change-of-basis matrices describing all of the
-row and column operations that were performed.
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    the Smith normal form of this matrix.)doc";
+
+// Docstring regina::python::doc::Matrix::snfCoB
+static constexpr const char snfCoB[] =
+R"doc(Returns the Smith normal form of this matrix along with change-of-
+basis matrices. This matrix itself will not be changed.
+
+This routine is similar to snf(); however, it allows you to specify a
+custom algorithm, and it also computes and returns change-of-basis
+matrices describing all of the row and column operations that were
+performed.
+
+As with snf(), the final Smith normal form will have a main diagonal
+consisting of a series of non-negative, non-decreasing invariant
+factors followed by zeroes. "Invariant factor" refers to the
+convention that the ``i``th term divides the (``i+1``)th term, and so
+these invariant factors are unique.
 
 The change-of-basis matrices work as follows. Let *M* denote the
-initial value of this matrix, let *S* denote its Smith normal form,
-and let the returned array be ``(rowSpaceBasis, rowSpaceBasisInv,
-colSpaceBasis, colSpaceBasisInv)``. Then:
+initial value of this matrix, and let the returned array be ``(S,
+rowSpaceBasis, rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv)``.
+Then:
 
-* this matrix will be converted from *M* into *S*;
+* *S* will be the Smith normal form of the original matrix *M*;
 
 * *colSpaceBasis* will be square with side length ``rows()``, and
   *colSpaceBasisInv* will be its inverse matrix;
@@ -1422,10 +1494,25 @@ colSpaceBasis, colSpaceBasisInv)``. Then:
 
 * ``M = colSpaceBasisInv * S * rowSpaceBasisInv``.
 
-Note that this matrix need not be square and need not be of full rank.
+This matrix need not be square and need not be of full rank.
+
+If your matrix is disposable (i.e., you will never need to use it
+again), then it is faster to use the rvalue reference version of this
+routine, which will avoid the extra overhead of a deep copy of the
+original matrix. To do this, replace ``matrix.snfCoB()`` with
+``std::move(matrix).snfCoB()``.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Parameter ``alg``:
+    the algorithm to use for this computation. If you do not specify
+    an algorithm, Regina will choose a sensible default.
 
 Returns:
-    the four change-of-basis matrices, as described above.)doc";
+    the Smith normal form and the four change-of-basis matrices; that
+    is, the tuple ``(S, rowSpaceBasis, rowSpaceBasisInv,
+    colSpaceBasis, colSpaceBasisInv)``, as described above.)doc";
 
 // Docstring regina::python::doc::Matrix::swap
 static constexpr const char swap[] =
@@ -1525,6 +1612,45 @@ Exception ``ImpossibleScenario``:
     The internal state of this matrix is invalid.)doc";
 
 }; // struct Matrix
+
+struct SNFAlgorithm {
+
+// Docstring regina::python::doc::SNFAlgorithm::Default
+static constexpr const char Default[] = R"doc(Allow Regina to choose a sensible default.)doc";
+
+// Docstring regina::python::doc::SNFAlgorithm::HafnerMcCurley
+static constexpr const char HafnerMcCurley[] =
+R"doc(The Hafner-McCurley algorithm.
+
+This has historically been Regina's default Smith normal form
+algorithm. It follows James L. Hafner and Kevin S. McCurley,
+"Asymptotically fast triangularization of matrices over rings", SIAM
+J. Comput. 20 (1991), no. 6, 1068–1083.
+
+This algorithm does not use modular arithmetic to control the
+intermediate coefficient explosion.)doc";
+
+// Docstring regina::python::doc::SNFAlgorithm::Metrical
+static constexpr const char Metrical[] =
+R"doc(An alternative Smith normal form algorithm that may be preferable for
+extremely large matrices.
+
+This uses a variant of the Hafner-McCurley algorithm and Havas-Holt-
+Rees' description of pivoting methods. See James L. Hafner and Kevin
+S. McCurley, "Asymptotically fast triangularization of matrices over
+rings", SIAM J. Comput. 20 (1991), no. 6, 1068–1083, and George Havas,
+Derek F. Holt and Sarah Rees, "Recognizing badly presented Z-modules",
+Linear Algebra Appl. 192 (1993), 137–163.
+
+This algorithm does not use modular arithmetic to control the
+intermediate coefficient explosion.)doc";
+
+// Docstring regina::python::doc::SNFAlgorithm::__class
+static constexpr const char __class[] =
+R"doc(Represents different algorithms for computing Smith normal forms of
+matrices.)doc";
+
+}; // struct SNFAlgorithm
 
 } // namespace regina::python::doc
 

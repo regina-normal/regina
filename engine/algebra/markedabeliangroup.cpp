@@ -68,7 +68,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
 
     MatrixInt tM = M_;
     MatrixInt MC, MCi;
-    std::tie(MR_, MRi_, MC, MCi) = tM.metricalSmithNormalForm();
+    std::tie(MR_, MRi_, MC, MCi) = tM.makeSNFCoB(SNFAlgorithm::Metrical);
 
     for (size_t i=0; (i<tM.rows()) && (i<tM.columns()); i++)
         if (tM.entry(i,i) != 0)
@@ -87,7 +87,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     // now compute the rank and column indexes ...
 
     MatrixInt presRi;
-    std::tie(presR_, presRi, presC_, presCi_) = pres.metricalSmithNormalForm();
+    std::tie(presR_, presRi, presC_, presCi_) =
+        pres.makeSNFCoB(SNFAlgorithm::Metrical);
 
     for (size_t i=0; ( (i<pres.rows()) && (i<pres.columns()) ); i++) {
         if (pres.entry(i,i)==1)
@@ -132,7 +133,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
     // find SNF(M).
     MatrixInt tM = M_;
     MatrixInt MC, MCi;
-    std::tie(MR_, MRi_, MC, MCi) = tM.metricalSmithNormalForm();
+    std::tie(MR_, MRi_, MC, MCi) = tM.makeSNFCoB(SNFAlgorithm::Metrical);
 
     for (size_t i=0; ( (i<tM.rows()) && (i<tM.columns()) ); i++)
         if (tM.entry(i,i) != 0) rankM_++;
@@ -162,7 +163,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
 
         MatrixInt tensorRi;
         std::tie(tensorR_, tensorRi, tensorC_, tensorCi_) =
-            tensorPres.metricalSmithNormalForm();
+            tensorPres.makeSNFCoB(SNFAlgorithm::Metrical);
 
         // this group is a direct sum of groups of the form Z_q where q =
         // gcd(p, TORVec_[i]), and groups Z_q where q is on the diagonal of
@@ -193,7 +194,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
 
         MatrixInt presRi;
         std::tie(presR_, presRi, presC_, presCi_) =
-            diagPres.metricalSmithNormalForm();
+            diagPres.makeSNFCoB(SNFAlgorithm::Metrical);
         for (size_t i=0; i<diagPres.rows(); i++) {
             // should only have terms > 1 or == 0.
             if (diagPres.entry(i,i) > 1)
@@ -210,7 +211,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
 
         MatrixInt presRi;
         std::tie(presR_, presRi, presC_, presCi_) =
-            tensorPres.metricalSmithNormalForm();
+            tensorPres.makeSNFCoB(SNFAlgorithm::Metrical);
 
         for (size_t i=0; i<tensorPres.rows() && i<tensorPres.columns();
                 ++i) {
@@ -893,8 +894,8 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
 void HomMarkedAbelianGroup::computeKernel() {
     if (!kernel_) {
         computeReducedKernelLattice();
-        MatrixInt dcLpreimage( *reducedKernelLattice_ );
-        auto [R, Ri, C, Ci] = dcLpreimage.metricalSmithNormalForm();
+        auto [dcLpreimage, R, Ri, C, Ci] =
+            reducedKernelLattice_->snfCoB(SNFAlgorithm::Metrical);
 
         // the matrix representing the domain lattice in dcLpreimage
         // coordinates is given by domainLattice * R * (dcLpreimage inverse) * C

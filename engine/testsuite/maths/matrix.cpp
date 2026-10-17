@@ -46,6 +46,7 @@ using regina::Matrix;
 using regina::MatrixInt;
 using regina::Polynomial;
 using regina::Rational;
+using regina::SNFAlgorithm;
 using regina::Vector;
 
 class MatrixTest : public testing::Test {
@@ -246,10 +247,10 @@ TEST_F(MatrixTest, empty) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.smithNormalForm();
+    m.makeSNF();
     validateEmpty(m);
     {
-        auto [r, ri, c, ci] = m.smithNormalFormCoB();
+        auto [r, ri, c, ci] = m.makeSNFCoB();
         validateEmpty(m);
         validateEmpty(r);
         validateEmpty(ri);
@@ -257,7 +258,7 @@ TEST_F(MatrixTest, empty) {
         validateEmpty(ci);
     }
     {
-        auto [r, ri, c, ci] = m.metricalSmithNormalForm();
+        auto [r, ri, c, ci] = m.makeSNFCoB(SNFAlgorithm::Metrical);
         validateEmpty(m);
         validateEmpty(r);
         validateEmpty(ri);
@@ -443,10 +444,10 @@ TEST_F(MatrixTest, noRows) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.smithNormalForm();
+    m.makeSNF();
     validateNoRows(m, 3);
     {
-        auto [r, ri, c, ci] = m.smithNormalFormCoB();
+        auto [r, ri, c, ci] = m.makeSNFCoB();
         validateNoRows(m, 3);
         validateIdentity(r, 3);
         validateIdentity(ri, 3);
@@ -454,7 +455,7 @@ TEST_F(MatrixTest, noRows) {
         validateEmpty(ci);
     }
     {
-        auto [r, ri, c, ci] = m.metricalSmithNormalForm();
+        auto [r, ri, c, ci] = m.makeSNFCoB(SNFAlgorithm::Metrical);
         validateNoRows(m, 3);
         validateIdentity(r, 3);
         validateIdentity(ri, 3);
@@ -645,10 +646,10 @@ TEST_F(MatrixTest, noColumns) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.smithNormalForm();
+    m.makeSNF();
     validateNoColumns(m, 3);
     {
-        auto [r, ri, c, ci] = m.smithNormalFormCoB();
+        auto [r, ri, c, ci] = m.makeSNFCoB();
         validateNoColumns(m, 3);
         validateEmpty(r);
         validateEmpty(ri);
@@ -656,7 +657,7 @@ TEST_F(MatrixTest, noColumns) {
         validateIdentity(ci, 3);
     }
     {
-        auto [r, ri, c, ci] = m.metricalSmithNormalForm();
+        auto [r, ri, c, ci] = m.makeSNFCoB(SNFAlgorithm::Metrical);
         validateNoColumns(m, 3);
         validateEmpty(r);
         validateEmpty(ri);
@@ -874,8 +875,7 @@ TEST_F(MatrixTest, determinantAdjugate) {
 static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
     SCOPED_TRACE_REGINA(m);
 
-    MatrixInt snf(m);
-    snf.smithNormalForm();
+    MatrixInt snf = m.snf();
 
     ASSERT_EQ(snf.rows(), m.rows());
     ASSERT_EQ(snf.columns(), m.columns());
@@ -893,8 +893,7 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
     }
 
     {
-        MatrixInt snfAlt(m);
-        auto [R, invR, C, invC] = snfAlt.smithNormalFormCoB();
+        auto [snfAlt, R, invR, C, invC] = m.snfCoB();
 
         EXPECT_EQ(snf, snfAlt);
 
@@ -913,8 +912,7 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
         EXPECT_EQ((invC * snfAlt * invR), m);
     }
     {
-        MatrixInt snfAlt(m);
-        auto [R, invR, C, invC] = snfAlt.metricalSmithNormalForm();
+        auto [snfAlt, R, invR, C, invC] = m.snfCoB(SNFAlgorithm::Metrical);
 
         EXPECT_EQ(snf, snfAlt);
 

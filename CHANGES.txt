@@ -589,6 +589,8 @@ Version 8.0  [ TODO ]
               or failure).
             - Routine unfill() now throws an exception when called on a null
               SnapPea triangulation (previously it silently did nothing).
+        Enum SNFAlgorithm:
+            - New enumeration for use with Matrix::snf() and Matrix::makeSNF().
         Class SpatialLink:
             - New inner type NodeIterator, and new member functions
               beginNodes() and endNodes().

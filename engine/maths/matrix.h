@@ -57,6 +57,45 @@ class Rational;
 template <Ring T> requires Writeable<T> && IntegerCompatible<T> class Vector;
 
 /**
+ * Represents different algorithms for computing Smith normal forms of matrices.
+ *
+ * \ingroup maths
+ */
+enum class SNFAlgorithm {
+    /**
+     * Allow Regina to choose a sensible default.
+     */
+    Default = 0,
+    /**
+     * The Hafner-McCurley algorithm.
+     *
+     * This has historically been Regina's default Smith normal form algorithm.
+     * It follows James L. Hafner and Kevin S. McCurley, "Asymptotically fast
+     * triangularization of matrices over rings", SIAM J. Comput. 20 (1991),
+     * no. 6, 1068–1083.
+     *
+     * This algorithm does not use modular arithmetic to control the
+     * intermediate coefficient explosion.
+     */
+    HafnerMcCurley = 10,
+    /**
+     * An alternative Smith normal form algorithm that may be preferable
+     * for extremely large matrices.
+     *
+     * This uses a variant of the Hafner-McCurley algorithm and Havas-Holt-Rees'
+     * description of pivoting methods.  See James L. Hafner and
+     * Kevin S. McCurley, "Asymptotically fast triangularization of matrices
+     * over rings", SIAM J. Comput. 20 (1991), no. 6, 1068–1083, and
+     * George Havas, Derek F. Holt and Sarah Rees, "Recognizing badly presented
+     * Z-modules", Linear Algebra Appl. 192 (1993), 137–163.
+     *
+     * This algorithm does not use modular arithmetic to control the
+     * intermediate coefficient explosion.
+     */
+    Metrical = 11,
+};
+
+/**
  * Represents different algorithms for computing adjugate matrices and
  * determinants.
  *
@@ -1909,18 +1948,17 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Transforms this matrix into Smith normal form.
          *
-         * Reading down the diagonal, the final Smith normal form will have a
-         * series of non-negative, non-decreasing invariant factors followed by
-         * zeroes.  "Invariant factor" refers to the convention that the
-         * <i>i</i>th term divides the (<i>i</i>+1)th term, and so they are
-         * unique.
+         * Reading down the main diagonal, the final Smith normal form will
+         * have a series of non-negative, non-decreasing invariant factors
+         * followed by zeroes.  "Invariant factor" refers to the convention
+         * that the `i`th term divides the (`i+1`)th term, and so these
+         * invariant factors are unique.
          *
-         * The algorithm used is due to Hafner and McCurley (1991).
-         * It does not use modular arithmetic to control the intermediate
-         * coefficient explosion.
+         * This routine will use Regina's default Smith normal form algorithm.
+         * If you wish to use a different algorithm, you will need to call
+         * makeSNFCoB() instead.
          *
-         * Note that this matrix need not be square and need not be of
-         * full rank.
+         * This matrix need not be square and need not be of full rank.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -1931,15 +1969,96 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          */
-        void smithNormalForm() requires ReginaInteger<T>;
+        void makeSNF() requires ReginaInteger<T>;
 
         /**
-         * Transforms this matrix into Smith normal form and returns change of
-         * basis matrices.
+         * Returns the Smith normal form of this matrix.  This matrix itself
+         * will not be changed.
          *
-         * This follows the same algorithm as smithNormalForm(); however, it
-         * also computes and returns change-of-basis matrices describing all of
-         * the row and column operations that were performed.
+         * Reading down the main diagonal, the final Smith normal form will
+         * have a series of non-negative, non-decreasing invariant factors
+         * followed by zeroes.  "Invariant factor" refers to the convention
+         * that the `i`th term divides the (`i+1`)th term, and so these
+         * invariant factors are unique.
+         *
+         * This routine will use Regina's default Smith normal form algorithm.
+         * If you wish to use a different algorithm, you will need to call
+         * snfCoB() instead.
+         *
+         * This matrix need not be square and need not be of full rank.
+         *
+         * If your matrix is disposable (i.e., you will never need to use it
+         * again), then it is faster to use the rvalue reference version of
+         * this routine, which will avoid the extra overhead of a deep copy.
+         * To do this, replace `matrix.snf()` with `std::move(matrix).snf()`.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the Smith normal form of this matrix.
+         */
+        Matrix snf() const& requires ReginaInteger<T> {
+            Matrix ans(*this);
+            ans.makeSNF();
+            return ans;
+        }
+
+        /**
+         * A destructive routine that returns the Smith normal form of this
+         * matrix.
+         *
+         * Here "destructive" means that this routine modifies the matrix
+         * directly as it performs the computation.  For this reason, it is
+         * declared as an rvalue reference member function: it should only be
+         * used if you do not care about the contents of the matrix afterwards.
+         *
+         * To use this destructive Smith normal form computation, you can call
+         * `std::move(matrix).snf()`.
+         *
+         * If you need to preserve the contents of the matrix, you should
+         * instead call the const version of this function, which you can
+         * simply access as `matrix.snf()`.  The (minor) cost of this
+         * constness will be the extra overhead of an internal deep copy.
+         *
+         * See the const version of this function for further information on
+         * Smith normal forms.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the Smith normal form of this matrix.
+         */
+        Matrix snf() && requires ReginaInteger<T> {
+            makeSNF();
+            return std::move(*this);
+        }
+
+        /**
+         * Transforms this matrix into Smith normal form and returns
+         * change-of-basis matrices.
+         *
+         * This routine is similar to makeSNF(); however, it allows you to
+         * specify a custom algorithm, and it also computes and returns
+         * change-of-basis matrices describing all of the row and column
+         * operations that were performed.
+         *
+         * As with makeSNF(), the final Smith normal form will have a main
+         * diagonal consisting of a series of non-negative, non-decreasing
+         * invariant factors followed by zeroes.  "Invariant factor" refers to
+         * the convention that the `i`th term divides the (`i+1`)th term,
+         * and so these invariant factors are unique.
          *
          * The change-of-basis matrices work as follows.  Let \a M denote the
          * initial value of this matrix, let \a S denote its Smith normal form,
@@ -1954,8 +2073,7 @@ class Matrix : public Output<Matrix<T>> {
          * - `S = colSpaceBasis * M * rowSpaceBasis`; and
          * - `M = colSpaceBasisInv * S * rowSpaceBasisInv`.
          *
-         * Note that this matrix need not be square and need not be of
-         * full rank.
+         * This matrix need not be square and need not be of full rank.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -1966,25 +2084,47 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return the four change-of-basis matrices, as described above.
+         * \param alg the algorithm to use for this computation.  If you do
+         * not specify an algorithm, Regina will choose a sensible default.
+         * \return the four change-of-basis matrices `(rowSpaceBasis,
+         * rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv)`, as described
+         * above.
+         *
+         * \author B.B. and Ryan Budney
          */
-        std::array<Matrix, 4> smithNormalFormCoB() requires ReginaInteger<T>;
+        std::array<Matrix, 4> makeSNFCoB(
+                SNFAlgorithm alg = SNFAlgorithm::Default)
+                requires ReginaInteger<T> {
+            switch (alg) {
+                case SNFAlgorithm::Default:
+                case SNFAlgorithm::HafnerMcCurley:
+                    return makeSNFCoBHafnerMcCurley();
+                case SNFAlgorithm::Metrical:
+                    return makeSNFCoBMetrical();
+            }
+        }
 
         /**
-         * An alternative Smith normal form algorithm that may be preferable
-         * for extremely large matrices.  This uses a variant of Hafner-McCurley
-         * and Havas-Holt-Rees' description of pivoting methods.
+         * Returns the Smith normal form of this matrix along with
+         * change-of-basis matrices.  This matrix itself will not be changed.
          *
-         * Like smithNormalFormCoB(), this routine transforms this matrix into
-         * Smith normal form, and also returns change-of-basis matrices
-         * describing all of the row and column operations that were performed.
+         * This routine is similar to snf(); however, it allows you to
+         * specify a custom algorithm, and it also computes and returns
+         * change-of-basis matrices describing all of the row and column
+         * operations that were performed.
+         *
+         * As with snf(), the final Smith normal form will have a main
+         * diagonal consisting of a series of non-negative, non-decreasing
+         * invariant factors followed by zeroes.  "Invariant factor" refers to
+         * the convention that the `i`th term divides the (`i+1`)th term,
+         * and so these invariant factors are unique.
          *
          * The change-of-basis matrices work as follows.  Let \a M denote the
-         * initial value of this matrix, let \a S denote its Smith normal form,
-         * and let the returned array be `(rowSpaceBasis, rowSpaceBasisInv,
-         * colSpaceBasis, colSpaceBasisInv)`.  Then:
+         * initial value of this matrix, and let the returned array be
+         * `(S, rowSpaceBasis, rowSpaceBasisInv, colSpaceBasis,
+         * colSpaceBasisInv)`.  Then:
          *
-         * - this matrix will be converted from \a M into \a S;
+         * - \a S will be the Smith normal form of the original matrix \a M;
          * - \a colSpaceBasis will be square with side length `rows()`, and
          *   \a colSpaceBasisInv will be its inverse matrix;
          * - \a rowSpaceBasis will be square with side length `columns()`, and
@@ -1992,8 +2132,13 @@ class Matrix : public Output<Matrix<T>> {
          * - `S = colSpaceBasis * M * rowSpaceBasis`; and
          * - `M = colSpaceBasisInv * S * rowSpaceBasisInv`.
          *
-         * Note that this matrix need not be square and need not be of
-         * full rank.
+         * This matrix need not be square and need not be of full rank.
+         *
+         * If your matrix is disposable (i.e., you will never need to use it
+         * again), then it is faster to use the rvalue reference version of
+         * this routine, which will avoid the extra overhead of a deep copy
+         * of the original matrix.  To do this, replace `matrix.snfCoB()` with
+         * `std::move(matrix).snfCoB()`.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -2004,12 +2149,61 @@ class Matrix : public Output<Matrix<T>> {
          * for `Matrix<Integer>`, which is where this routine is most commonly
          * used.
          *
-         * \return the four change-of-basis matrices, as described above.
-         *
-         * \author Ryan Budney
+         * \param alg the algorithm to use for this computation.  If you do
+         * not specify an algorithm, Regina will choose a sensible default.
+         * \return the Smith normal form and the four change-of-basis matrices;
+         * that is, the tuple `(S, rowSpaceBasis, rowSpaceBasisInv,
+         * colSpaceBasis, colSpaceBasisInv)`, as described above.
          */
-        std::array<Matrix, 4> metricalSmithNormalForm()
-                requires ReginaInteger<T>;
+        std::array<Matrix, 5> snfCoB(SNFAlgorithm alg = SNFAlgorithm::Default)
+                const& requires ReginaInteger<T> {
+            Matrix ans(*this);
+            auto cob = ans.makeSNFCoB(alg);
+            return { std::move(ans), std::move(cob[0]), std::move(cob[1]),
+                std::move(cob[2]), std::move(cob[3]) };
+        }
+
+        /**
+         * A destructive routine that returns the Smith normal form of this
+         * matrix along with change-of-basis matrices.
+         *
+         * Here "destructive" means that this routine modifies the matrix
+         * directly as it performs the computation.  For this reason, it is
+         * declared as an rvalue reference member function: it should only be
+         * used if you do not care about the contents of the matrix afterwards.
+         *
+         * To use this destructive Smith normal form computation, you can call
+         * `std::move(matrix).snfCoB()`.
+         *
+         * If you need to preserve the contents of the matrix, you should
+         * instead call the const version of this function, which you can
+         * simply access as `matrix.snfCoB()`.  The (minor) cost of this
+         * constness will be the extra overhead of an internal deep copy.
+         *
+         * See the const version of this function for further information on
+         * Smith normal forms and change-of-basis matrices.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \param alg the algorithm to use for this computation.  If you do
+         * not specify an algorithm, Regina will choose a sensible default.
+         * \return the Smith normal form \a S and the four change-of-basis
+         * matrices; that is, the tuple `(S, rowSpaceBasis, rowSpaceBasisInv,
+         * colSpaceBasis, colSpaceBasisInv)`.
+         */
+        std::array<Matrix, 5> snfCoB(SNFAlgorithm alg = SNFAlgorithm::Default)
+                && requires ReginaInteger<T> {
+            auto cob = makeSNFCoB(alg);
+            return { std::move(*this), std::move(cob[0]), std::move(cob[1]),
+                std::move(cob[2]), std::move(cob[3]) };
+        }
 
         /**
          * A diagnostic routine that ensures that the internal representation
@@ -2081,6 +2275,29 @@ class Matrix : public Output<Matrix<T>> {
             return ans;
         }
 
+        /**
+         * Implements makeSNFCoB() for the case where the algorithm argument is
+         * SNFAlgorithm::HafnerMcCurley.  See makeSNFCoB() for more details.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \return the four change-of-basis matrices.
+         */
+        std::array<Matrix, 4> makeSNFCoBHafnerMcCurley()
+            requires ReginaInteger<T>;
+
+        /**
+         * Implements makeSNFCoB() for the case where the algorithm argument is
+         * SNFAlgorithm::Metrical.  See makeSNFCoB() for more details.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \return the four change-of-basis matrices.
+         *
+         * \author Ryan Budney
+         */
+        std::array<Matrix, 4> makeSNFCoBMetrical() requires ReginaInteger<T>;
+
     // Give internal access to Matrix<U> for conversion construction/assignment:
     template <typename U>
     requires std::default_initializable<U> && std::copyable<U> && Writeable<U>
@@ -2135,8 +2352,7 @@ using MatrixBool = Matrix<bool>;
  * Deprecated routine that transforms the given integer matrix into
  * Smith normal form.
  *
- * This is identical to Matrix::smithNormalForm(); see that routine for
- * further details.
+ * This simply calls Matrix::makeSNF(); see that routine for further details.
  *
  * \deprecated You should now call `matrix.smithNormalForm()` instead.
  *
@@ -2147,15 +2363,14 @@ using MatrixBool = Matrix<bool>;
  * \ingroup maths
  */
 [[deprecated]] inline void smithNormalForm(MatrixInt& matrix) {
-    matrix.smithNormalForm();
+    matrix.makeSNF();
 }
 
 /**
  * Deprecated Smith normal form routine that also computes change-of-basis
  * matrices.
  *
- * This is identical to Matrix::smithNormalFormCoB(); see that routine for
- * further details.
+ * This simply calls Matrix::makeSNFCoB(); see that routine for further details.
  *
  * In this (deprecated) routine, the four change-of-basis matrices are given
  * as input and refilled by this routine.  Upon input, they may be of any size
@@ -2180,19 +2395,16 @@ using MatrixBool = Matrix<bool>;
 [[deprecated]] inline void smithNormalForm(MatrixInt& matrix,
         MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
         MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
-    auto cob = matrix.smithNormalFormCoB();
-    rowSpaceBasis = std::move(cob[0]);
-    rowSpaceBasisInv = std::move(cob[1]);
-    colSpaceBasis = std::move(cob[2]);
-    colSpaceBasisInv = std::move(cob[3]);
+    std::tie(rowSpaceBasis, rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv) =
+        matrix.makeSNFCoB();
 }
 
 /**
  * Deprecated alternative Smith normal form routine that may be preferable for
  * extremely large matrices.
  *
- * This is identical to Matrix::metricalSmithNormalForm(); see that routine for
- * further details.
+ * This simply calls `Matrix::makeSNFCoB(SNFAlgorithm::Metrical)`; see that
+ * routine for further details.
  *
  * In this (deprecated) routine, the four change-of-basis matrices are given
  * as input and refilled by this routine.  Upon input, they may be of any size
@@ -2220,11 +2432,8 @@ using MatrixBool = Matrix<bool>;
 [[deprecated]] inline void metricalSmithNormalForm(MatrixInt& matrix,
         MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
         MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
-    auto cob = matrix.metricalSmithNormalForm();
-    rowSpaceBasis = std::move(cob[0]);
-    rowSpaceBasisInv = std::move(cob[1]);
-    colSpaceBasis = std::move(cob[2]);
-    colSpaceBasisInv = std::move(cob[3]);
+    std::tie(rowSpaceBasis, rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv) =
+        matrix.makeSNFCoB(SNFAlgorithm::Metrical);
 }
 
 /**

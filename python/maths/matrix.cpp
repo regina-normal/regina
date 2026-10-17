@@ -185,16 +185,16 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("__mul__", [](const Matrix& m, const regina::VectorLarge& v){
                 return m * v;
             }, rdoc::__mul_3)
-        ;
-    }
-    if constexpr (std::same_as<Element, regina::Integer>) {
-        c
-            .def("smithNormalForm", &Matrix::smithNormalForm,
-                rdoc::smithNormalForm)
-            .def("smithNormalFormCoB", &Matrix::smithNormalFormCoB,
-                rdoc::smithNormalFormCoB)
-            .def("metricalSmithNormalForm", &Matrix::metricalSmithNormalForm,
-                rdoc::metricalSmithNormalForm)
+            .def("makeSNF", &Matrix::makeSNF, rdoc::makeSNF)
+            .def("makeSNFCoB", &Matrix::makeSNFCoB,
+                "alg"_a = regina::SNFAlgorithm::Default, rdoc::makeSNFCoB)
+            .def("snf",
+                static_cast<Matrix (Matrix::*)() const&>(&Matrix::snf),
+                rdoc::snf)
+            .def("snfCoB",
+                static_cast<std::array<Matrix, 5>
+                    (Matrix::*)(regina::SNFAlgorithm) const&>(&Matrix::snfCoB),
+                "alg"_a = regina::SNFAlgorithm::Default, rdoc::snfCoB)
         ;
     }
     regina::python::add_output_rich(c);
@@ -205,7 +205,24 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
 }
 
 void addMatrix(pybind11::module_& m) {
-    RDOC_SCOPE_BEGIN(AdjugateAlgorithm)
+    RDOC_SCOPE_BEGIN(SNFAlgorithm)
+
+#if REGINA_PYBIND11_VERSION == 3
+    pybind11::native_enum<regina::SNFAlgorithm>(m, "SNFAlgorithm",
+            "enum.Enum", rdoc::__class)
+#elif REGINA_PYBIND11_VERSION == 2
+    pybind11::enum_<regina::SNFAlgorithm>(m, "SNFAlgorithm", rdoc::__class)
+#endif
+        .value("Default", regina::SNFAlgorithm::Default, rdoc::Default)
+        .value("HafnerMcCurley", regina::SNFAlgorithm::HafnerMcCurley,
+            rdoc::HafnerMcCurley)
+        .value("Metrical", regina::SNFAlgorithm::Metrical, rdoc::Metrical)
+#if REGINA_PYBIND11_VERSION == 3
+        .finalize()
+#endif
+        ;
+
+    RDOC_SCOPE_SWITCH(AdjugateAlgorithm)
 
 #if REGINA_PYBIND11_VERSION == 3
     pybind11::native_enum<regina::AdjugateAlgorithm>(m, "AdjugateAlgorithm",
@@ -236,15 +253,15 @@ void addMatrix(pybind11::module_& m) {
 
     using regina::MatrixInt;
     m.def("smithNormalForm", [](MatrixInt& m) { // deprecated
-        m.smithNormalForm();
+        m.makeSNF();
     }, rdoc::smithNormalForm);
     m.def("smithNormalForm", [](MatrixInt& m, MatrixInt& r, MatrixInt& ri,
             MatrixInt&c, MatrixInt& ci) { // deprecated
-        std::tie(r, ri, c, ci) = m.smithNormalFormCoB();
+        std::tie(r, ri, c, ci) = m.makeSNFCoB();
     }, rdoc::smithNormalForm_2);
     m.def("metricalSmithNormalForm", [](MatrixInt& m, // deprecated
             MatrixInt& r, MatrixInt& ri, MatrixInt&c, MatrixInt& ci) {
-        std::tie(r, ri, c, ci) = m.metricalSmithNormalForm();
+        std::tie(r, ri, c, ci) = m.makeSNFCoB(regina::SNFAlgorithm::Metrical);
     }, rdoc::metricalSmithNormalForm);
     m.def("rowBasis", &regina::rowBasis, rdoc::rowBasis);
     m.def("rowBasisAndOrthComp", &regina::rowBasisAndOrthComp,

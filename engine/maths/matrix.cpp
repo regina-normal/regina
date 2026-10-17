@@ -35,10 +35,11 @@ namespace regina {
 
 // MARK: - Template instantiations
 
-template void Matrix<Integer>::smithNormalForm();
-template std::array<Matrix<Integer>, 4> Matrix<Integer>::smithNormalFormCoB();
+template void Matrix<Integer>::makeSNF();
 template std::array<Matrix<Integer>, 4>
-    Matrix<Integer>::metricalSmithNormalForm();
+    Matrix<Integer>::makeSNFCoBHafnerMcCurley();
+template std::array<Matrix<Integer>, 4>
+    Matrix<Integer>::makeSNFCoBMetrical();
 
 // MARK: - Basis and echelon form algorithms
 

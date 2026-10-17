@@ -52,7 +52,7 @@ namespace regina {
 
 template <typename T>
 requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
-void Matrix<T>::smithNormalForm() requires ReginaInteger<T> {
+void Matrix<T>::makeSNF() requires ReginaInteger<T> {
     size_t currStage = 0;
     size_t nonEmptyRows = rows();
     size_t nonEmptyCols = columns();
@@ -153,7 +153,7 @@ void Matrix<T>::smithNormalForm() requires ReginaInteger<T> {
 
 template <typename T>
 requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
-std::array<Matrix<T>, 4> Matrix<T>::smithNormalFormCoB()
+std::array<Matrix<T>, 4> Matrix<T>::makeSNFCoBHafnerMcCurley()
         requires ReginaInteger<T> {
     size_t currStage = 0;
     size_t nonEmptyRows = rows();
@@ -279,7 +279,7 @@ std::array<Matrix<T>, 4> Matrix<T>::smithNormalFormCoB()
 namespace detail {
 
 /**
- * Internal to `Matrix<T>::metricalSmithNormalForm()`.
+ * Internal to `Matrix<T>::makeSNFCoBMetrical()`.
  */
 template <ReginaInteger T>
 bool metricFindPivot(size_t currStage, const Matrix<T>& matrix,
@@ -346,7 +346,7 @@ bool metricFindPivot(size_t currStage, const Matrix<T>& matrix,
 }
 
 /**
- * Internal to `Matrix<T>::metricalSmithNormalForm()`.
+ * Internal to `Matrix<T>::makeSNFCoBMetrical()`.
  *
  * This routine performs a pair of column operations using the 2x2 matrix
  * `[a b|c d]` on columns \a i and \a j respectively.
@@ -375,7 +375,7 @@ void metricColOp(size_t currStage, size_t i, size_t j, Matrix<T>& matrix,
 }
 
 /**
- * Internal to `Matrix<T>::metricalSmithNormalForm()`.
+ * Internal to `Matrix<T>::makeSNFCoBMetrical()`.
  *
  * This routine performs a pair of row operations using the 2x2 matrix
  * `[a b|c d]` on rows \a i and \a j respectively.
@@ -410,7 +410,7 @@ void metricRowOp(size_t currStage, size_t i, size_t j, Matrix<T>& matrix,
 
 template <typename T>
 requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
-std::array<Matrix<T>, 4> Matrix<T>::metricalSmithNormalForm()
+std::array<Matrix<T>, 4> Matrix<T>::makeSNFCoBMetrical()
         requires ReginaInteger<T> {
     // This routine uses a first-order technique to intelligently choose the
     // pivot when computing the Smith Normal Form, attempting to keep the matrix
