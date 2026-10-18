@@ -534,6 +534,7 @@ Rotation3D : class -> EqualityType.ByValue
 SFSAlt : class -> EqualityType.ByValue
 SFSFibre : class -> EqualityType.ByValue
 SFSpace : class -> EqualityType.ByValue
+SNFAlgorithm : enum
 SatAnnulus : class -> EqualityType.ByValue
 SatBlock : class -> EqualityType.ByValue
 SatBlockModel : class -> EqualityType.ByValue
