@@ -67,8 +67,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
             "M.columns() == N.rows()");
 
     MatrixInt tM = M_;
-    MatrixInt MC, MCi;
-    std::tie(MR_, MRi_, MC, MCi) = tM.makeSmithCoB(SNFAlgorithm::Metrical);
+    std::tie(MR_, MRi_, std::ignore, std::ignore) =
+        tM.makeSmithCoB(SNFAlgorithm::Metrical);
 
     for (size_t i=0; (i<tM.rows()) && (i<tM.columns()); i++)
         if (tM.entry(i,i) != 0)
@@ -86,8 +86,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     // build the list of invariant factors and their row indexes
     // now compute the rank and column indexes ...
 
-    MatrixInt presRi;
-    std::tie(presR_, presRi, presC_, presCi_) =
+    std::tie(presR_, std::ignore, presC_, presCi_) =
         pres.makeSmithCoB(SNFAlgorithm::Metrical);
 
     for (size_t i=0; ( (i<pres.rows()) && (i<pres.columns()) ); i++) {
@@ -132,8 +131,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
 
     // find SNF(M).
     MatrixInt tM = M_;
-    MatrixInt MC, MCi;
-    std::tie(MR_, MRi_, MC, MCi) = tM.makeSmithCoB(SNFAlgorithm::Metrical);
+    std::tie(MR_, MRi_, std::ignore, std::ignore) =
+        tM.makeSmithCoB(SNFAlgorithm::Metrical);
 
     for (size_t i=0; ( (i<tM.rows()) && (i<tM.columns()) ); i++)
         if (tM.entry(i,i) != 0) rankM_++;
@@ -161,8 +160,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
         for (size_t i=0; i< MRi_N.rows() - rankM_; i++)
              tensorPres.entry(i, MRi_N.columns() + i) = coeff_;
 
-        MatrixInt tensorRi;
-        std::tie(tensorR_, tensorRi, tensorC_, tensorCi_) =
+        std::tie(tensorR_, std::ignore, tensorC_, tensorCi_) =
             tensorPres.makeSmithCoB(SNFAlgorithm::Metrical);
 
         // this group is a direct sum of groups of the form Z_q where q =
@@ -192,8 +190,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
                     i - TORVec_.size() + tensorIfLoc_);
         }
 
-        MatrixInt presRi;
-        std::tie(presR_, presRi, presC_, presCi_) =
+        std::tie(presR_, std::ignore, presC_, presCi_) =
             diagPres.makeSmithCoB(SNFAlgorithm::Metrical);
         for (size_t i=0; i<diagPres.rows(); i++) {
             // should only have terms > 1 or == 0.
@@ -209,8 +206,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
             for (size_t j=0; j<MRi_N.columns(); j++)
                 tensorPres.entry(i,j) = MRi_N.entry(i+rankM_, j);
 
-        MatrixInt presRi;
-        std::tie(presR_, presRi, presC_, presCi_) =
+        std::tie(presR_, std::ignore, presC_, presCi_) =
             tensorPres.makeSmithCoB(SNFAlgorithm::Metrical);
 
         for (size_t i=0; i<tensorPres.rows() && i<tensorPres.columns();
