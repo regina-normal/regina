@@ -132,12 +132,12 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
 
     // We want *any* solution to the homogeneous angle structure equations
     // where the final coordinate (representing the scaling factor) is non-zero.
-    // The MatrixInt::rowEchelonForm() routine is enough for this: if there is
-    // any solution where the final coordinate is non-zero, then the final
-    // column will not appear as a leading coefficient in row echelon form.
+    // We can use row echelon form for this: if there is any solution where the
+    // final coordinate is non-zero, then the final column will not appear as a
+    // leading coefficient in row echelon form.
 
     MatrixInt eqns = regina::makeAngleEquations(*this);
-    size_t rank = eqns.rowEchelonForm();
+    size_t rank = eqns.makeRowEchelon();
 
     // Note: the rank is always positive, since the triangulation is
     // non-empty and so we always have tetrahedron equations present.

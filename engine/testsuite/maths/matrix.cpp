@@ -238,10 +238,10 @@ TEST_F(MatrixTest, empty) {
     m.negate();
     validateEmpty(m);
 
-    EXPECT_EQ(m.rowEchelonForm(), 0);
+    EXPECT_EQ(m.makeRowEchelon(), 0);
     validateEmpty(m);
 
-    EXPECT_EQ(m.columnEchelonForm(), 0);
+    EXPECT_EQ(m.makeColumnEchelon(), 0);
     validateEmpty(m);
 
     EXPECT_EQ(m.rank(), 0);
@@ -436,9 +436,9 @@ TEST_F(MatrixTest, noRows) {
     m.reduceCol(m.columns() - 1);
     validateNoRows(m, 3);
 
-    EXPECT_EQ(m.rowEchelonForm(), 0);
+    EXPECT_EQ(m.makeRowEchelon(), 0);
     validateNoRows(m, 3);
-    EXPECT_EQ(m.columnEchelonForm(), 0);
+    EXPECT_EQ(m.makeColumnEchelon(), 0);
     validateNoRows(m, 3);
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
@@ -637,9 +637,9 @@ TEST_F(MatrixTest, noColumns) {
     m.reduceRow(m.rows() - 1);
     validateNoColumns(m, 3);
 
-    EXPECT_EQ(m.rowEchelonForm(), 0);
+    EXPECT_EQ(m.makeRowEchelon(), 0);
     validateNoColumns(m, 3);
-    EXPECT_EQ(m.columnEchelonForm(), 0);
+    EXPECT_EQ(m.makeColumnEchelon(), 0);
     validateNoColumns(m, 3);
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
@@ -676,8 +676,8 @@ static void verifyEchelonForm(const MatrixInt& m) {
     MatrixInt m1 = m;
     MatrixInt m2 = m.transpose();
 
-    size_t rankCol = m1.columnEchelonForm();
-    size_t rankRow = m2.rowEchelonForm();
+    size_t rankCol = m1.makeColumnEchelon();
+    size_t rankRow = m2.makeRowEchelon();
 
     EXPECT_EQ(rankCol, rankRow);
     EXPECT_EQ(m2.transpose(), m1);
@@ -889,27 +889,8 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
         ++i;
     }
 
-    {
-        auto [snfAlt, R, invR, C, invC] = m.smithCoB();
-
-        EXPECT_EQ(snf, snfAlt);
-
-        ASSERT_EQ(R.rows(), m.columns());
-        ASSERT_EQ(R.columns(), m.columns());
-        ASSERT_EQ(invR.rows(), m.columns());
-        ASSERT_EQ(invR.columns(), m.columns());
-        ASSERT_EQ(C.rows(), m.rows());
-        ASSERT_EQ(C.columns(), m.rows());
-        ASSERT_EQ(invC.rows(), m.rows());
-        ASSERT_EQ(invC.columns(), m.rows());
-
-        EXPECT_TRUE((R * invR).isIdentity());
-        EXPECT_TRUE((C * invC).isIdentity());
-        EXPECT_EQ((C * m * R), snfAlt);
-        EXPECT_EQ((invC * snfAlt * invR), m);
-    }
-    {
-        auto [snfAlt, R, invR, C, invC] = m.smithCoB(SNFAlgorithm::Metrical);
+    for (auto alg : { SNFAlgorithm::HafnerMcCurley, SNFAlgorithm::Metrical }) {
+        auto [snfAlt, R, invR, C, invC] = m.smithCoB(alg);
 
         EXPECT_EQ(snf, snfAlt);
 

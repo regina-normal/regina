@@ -483,6 +483,10 @@ Version 8.0  [ TODO ]
             - New routines smith(), smithCoB(), makeSmith() and makeSmithCoB(),
               which replace the deprecated global functions smithNormalForm()
               and metricalSmithNormalForm().
+            - Renamed rowEchelonForm() and columnEchelonForm() to
+              makeRowEchelon() and makeColumnEchelon(), to better indicate
+              that these routines modify the matrix in-place.  The old names
+              have been removed completely.
             - Routine det() now takes an optional algorithm argument.
             - Routine swapRows() now takes an optional from-column argument.
             - Multiplying a matrix by a matrix or vector will now throw an

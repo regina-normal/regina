@@ -2373,7 +2373,7 @@ class TriangulationTest : public testing::Test {
                     // Test whether the column space for dualBoundariesAsPrimal
                     // lives within the column space for boundaryMap<k + 1>.
                     auto b = tri.template boundaryMap<k + 1>();
-                    auto rank = b.columnEchelonForm();
+                    auto rank = b.makeColumnEchelon();
 
                     regina::MatrixInt comb(b.rows(),
                         b.columns() + dualBoundariesAsPrimal.columns());

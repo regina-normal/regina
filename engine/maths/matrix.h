@@ -1724,10 +1724,8 @@ class Matrix : public Output<Matrix<T>> {
          * Transforms this matrix into row echelon form.  The transformation
          * will perform only row operations.
          *
-         * This is simpler than the global routine regina::columnEchelonForm():
-         * it does not return the change-of-basis matrices, and it processes
-         * all columns in order from left to right (instead of passing a
-         * custom column list).
+         * This matrix will be modified directly, and its size will not change
+         * (even if the rank is less than the number of rows).
          *
          * Our convention is that a matrix is in row echelon form if:
          *
@@ -1745,7 +1743,7 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
-        size_t rowEchelonForm() requires ReginaInteger<T> {
+        size_t makeRowEchelon() requires ReginaInteger<T> {
             size_t i, j;
             T* pos;
 
@@ -1811,10 +1809,8 @@ class Matrix : public Output<Matrix<T>> {
          * Transforms this matrix into column echelon form.  The transformation
          * will perform only column operations.
          *
-         * This is simpler than the global routine regina::columnEchelonForm():
-         * it does not return the change-of-basis matrices, and it processes
-         * all rows in order from left to right (instead of passing a
-         * custom row list).
+         * This matrix will be modified directly, and its size will not change
+         * (even if the rank is less than the number of columns).
          *
          * Our convention is that a matrix is in column echelon form if:
          *
@@ -1832,7 +1828,7 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
          */
-        size_t columnEchelonForm() requires ReginaInteger<T> {
+        size_t makeColumnEchelon() requires ReginaInteger<T> {
             size_t i, j;
             T* pos;
 
@@ -1914,7 +1910,7 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t rank() const& requires ReginaInteger<T> {
             // Make a deep copy, which we can modify as we compute rank.
-            return Matrix(*this).rowEchelonForm();
+            return Matrix(*this).makeRowEchelon();
         }
 
         /**
@@ -1942,7 +1938,7 @@ class Matrix : public Output<Matrix<T>> {
          * \return the rank of this matrix.
          */
         size_t rank() && requires ReginaInteger<T> {
-            return rowEchelonForm();
+            return makeRowEchelon();
         }
 
         /**
@@ -2547,7 +2543,7 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  *
  * If you just wish to reduce the matrix, you do not care about the order of
  * rows, and you do not want the change-of-basis matrices, then you should
- * call MatrixInt::columnEchelonForm() instead, which is simpler but also more
+ * call MatrixInt::makeColumnEchelon() instead, which is simpler but also more
  * streamlined.
  *
  * \pre If \a n is the number of _columns_ in \a M, then \a R has precisely
