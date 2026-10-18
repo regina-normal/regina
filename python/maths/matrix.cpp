@@ -177,6 +177,14 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 rdoc::makeRowEchelon)
             .def("makeColumnEchelon", &Matrix::makeColumnEchelon,
                 rdoc::makeColumnEchelon)
+            .def("rowEchelon",
+                static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
+                    &Matrix::rowEchelon),
+                rdoc::rowEchelon)
+            .def("columnEchelon",
+                static_cast<std::pair<Matrix, size_t> (Matrix::*)() const&>(
+                    &Matrix::columnEchelon),
+                rdoc::columnEchelon)
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
             .def("__mul__", [](const Matrix& m, const regina::VectorInt& v){

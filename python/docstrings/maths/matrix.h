@@ -820,6 +820,36 @@ Parameter ``alg``:
 Returns:
     a pair containing the adjugate matrix and the determinant.)doc";
 
+// Docstring regina::python::doc::Matrix::columnEchelon
+static constexpr const char columnEchelon[] =
+R"doc(Returns the column echelon form of this matrix along with the rank.
+This matrix itself will not be changed.
+
+The column echelon form will have the same dimensions as this matrix,
+and will be obtained from this matrix by performing only column
+operations.
+
+Our convention is that a matrix is in column echelon form if:
+
+* each column is either zero or there is a first non-zero entry which
+  is positive;
+
+* moving from the left column to the right, these first non-zero
+  entries have strictly increasing row indices;
+
+* for each first non-zero column entry, in that row all the elements
+  to the left are smaller and non-negative (and all elements to the
+  right are already zero by the previous condition);
+
+* all the zero columns are at the right hand end of the matrix.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    a pair consisting of the column echelon form *E*, and the rank of
+    this matrix (i.e., the number of non-zero columns in *E*).)doc";
+
 // Docstring regina::python::doc::Matrix::columns
 static constexpr const char columns[] =
 R"doc(Returns the number of columns in this matrix.
@@ -1379,6 +1409,35 @@ Precondition:
 
 Parameter ``row``:
     the index of the row to reduce.)doc";
+
+// Docstring regina::python::doc::Matrix::rowEchelon
+static constexpr const char rowEchelon[] =
+R"doc(Returns the row echelon form of this matrix along with the rank. This
+matrix itself will not be changed.
+
+The row echelon form will have the same dimensions as this matrix, and
+will be obtained from this matrix by performing only row operations.
+
+Our convention is that a matrix is in row echelon form if:
+
+* each row is either zero or there is a first non-zero entry which is
+  positive;
+
+* moving from the top row to the bottom, these first non-zero entries
+  have strictly increasing column indices;
+
+* for each first non-zero row entry, in that column all the elements
+  above are smaller and non-negative (and all elements below are
+  already zero by the previous condition);
+
+* all the zero rows are at the bottom of the matrix.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    a pair consisting of the row echelon form *E*, and the rank of
+    this matrix (i.e., the number of non-zero rows in *E*).)doc";
 
 // Docstring regina::python::doc::Matrix::rows
 static constexpr const char rows[] =

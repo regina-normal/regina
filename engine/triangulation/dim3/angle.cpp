@@ -137,8 +137,7 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
     // final coordinate is non-zero, then the final column will not appear as a
     // leading coefficient in row echelon form.
 
-    MatrixInt eqns = regina::makeAngleEquations(*this);
-    size_t rank = eqns.makeRowEchelon();
+    auto [eqns, rank] = regina::makeAngleEquations(*this).rowEchelon();
 
     // Note: the rank is always positive, since the triangulation is
     // non-empty and so we always have tetrahedron equations present.

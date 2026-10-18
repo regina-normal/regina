@@ -1865,6 +1865,108 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Returns the row echelon form of this matrix along with the rank.
+         * This matrix itself will not be changed.
+         *
+         * The row echelon form will have the same dimensions as this matrix,
+         * and will be obtained from this matrix by performing only row
+         * operations.
+         *
+         * Our convention is that a matrix is in row echelon form if:
+         *
+         * - each row is either zero or there is a first non-zero entry which
+         *   is positive;
+         * - moving from the top row to the bottom, these first non-zero
+         *   entries have strictly increasing column indices;
+         * - for each first non-zero row entry, in that column all the elements
+         *   above are smaller and non-negative (and all elements below are
+         *   already zero by the previous condition);
+         * - all the zero rows are at the bottom of the matrix.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \return a pair consisting of the row echelon form \a E, and the
+         * rank of this matrix (i.e., the number of non-zero rows in \a E).
+         */
+        std::pair<Matrix, size_t> rowEchelon() const&
+                requires ReginaInteger<T> {
+            Matrix ans(*this);
+            size_t rank = ans.makeRowEchelon();
+            return { std::move(ans), rank };
+        }
+
+        /**
+         * Returns the row echelon form of this matrix along with the rank.
+         *
+         * This rvalue variant of rowEchelon() is faster than the const
+         * variant, because it reduces this matrix directly instead of
+         * working on a temporary copy.
+         *
+         * See the const version of rowEchelon() for further information on
+         * row echelon form.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \return a pair consisting of the row echelon form \a E, and the
+         * rank of this matrix (i.e., the number of non-zero rows in \a E).
+         */
+        std::pair<Matrix, size_t> rowEchelon() && requires ReginaInteger<T> {
+            size_t rank = makeRowEchelon();
+            return { std::move(*this), rank };
+        }
+
+        /**
+         * Returns the column echelon form of this matrix along with the rank.
+         * This matrix itself will not be changed.
+         *
+         * The column echelon form will have the same dimensions as this matrix,
+         * and will be obtained from this matrix by performing only column
+         * operations.
+         *
+         * Our convention is that a matrix is in column echelon form if:
+         *
+         * - each column is either zero or there is a first non-zero entry
+         *   which is positive;
+         * - moving from the left column to the right, these first non-zero
+         *   entries have strictly increasing row indices;
+         * - for each first non-zero column entry, in that row all the elements
+         *   to the left are smaller and non-negative (and all elements to the
+         *   right are already zero by the previous condition);
+         * - all the zero columns are at the right hand end of the matrix.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \return a pair consisting of the column echelon form \a E, and the
+         * rank of this matrix (i.e., the number of non-zero columns in \a E).
+         */
+        std::pair<Matrix, size_t> columnEchelon() const&
+                requires ReginaInteger<T> {
+            Matrix ans(*this);
+            size_t rank = ans.makeColumnEchelon();
+            return { std::move(ans), rank };
+        }
+
+        /**
+         * Returns the column echelon form of this matrix along with the rank.
+         *
+         * This rvalue variant of columnEchelon() is faster than the const
+         * variant, because it reduces this matrix directly instead of
+         * working on a temporary copy.
+         *
+         * See the const version of columnEchelon() for further information on
+         * column echelon form.
+         *
+         * \pre All entries in this matrix are finite.
+         *
+         * \return a pair consisting of the column echelon form \a E, and the
+         * rank of this matrix (i.e., the number of non-zero columns in \a E).
+         */
+        std::pair<Matrix, size_t> columnEchelon() && requires ReginaInteger<T> {
+            size_t rank = makeColumnEchelon();
+            return { std::move(*this), rank };
+        }
+
+        /**
          * Returns the rank of this matrix.
          *
          * \pre All entries in this matrix are finite.
