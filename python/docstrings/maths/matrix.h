@@ -60,7 +60,7 @@ invertible square matrix.
 
 If you just wish to reduce the matrix, you do not care about the order
 of rows, and you do not want the change-of-basis matrices, then you
-should call MatrixInt::columnEchelonForm() instead, which is simpler
+should call MatrixInt::makeColumnEchelon() instead, which is simpler
 but also more streamlined.
 
 Precondition:
@@ -827,37 +827,6 @@ Parameter ``alg``:
 Returns:
     a pair containing the adjugate matrix and the determinant.)doc";
 
-// Docstring regina::python::doc::Matrix::columnEchelonForm
-static constexpr const char columnEchelonForm[] =
-R"doc(Transforms this matrix into column echelon form. The transformation
-will perform only column operations.
-
-This is simpler than the global routine regina::columnEchelonForm():
-it does not return the change-of-basis matrices, and it processes all
-rows in order from left to right (instead of passing a custom row
-list).
-
-Our convention is that a matrix is in column echelon form if:
-
-* each column is either zero or there is a first non-zero entry which
-  is positive;
-
-* moving from the left column to the right, these first non-zero
-  entries have strictly increasing row indices;
-
-* for each first non-zero column entry, in that row all the elements
-  to the left are smaller and non-negative (and all elements to the
-  right are already zero by the previous condition);
-
-* all the zero columns are at the right hand end of the matrix.
-
-Precondition:
-    All entries in this matrix are finite.
-
-Returns:
-    the rank of this matrix, i.e., the number of non-zero columns
-    remaining.)doc";
-
 // Docstring regina::python::doc::Matrix::columns
 static constexpr const char columns[] =
 R"doc(Returns the number of columns in this matrix.
@@ -1172,11 +1141,69 @@ R"doc(Determines whether this is the zero matrix.
 Returns:
     ``True`` if and only if all entries in the matrix are zero.)doc";
 
+// Docstring regina::python::doc::Matrix::makeColumnEchelon
+static constexpr const char makeColumnEchelon[] =
+R"doc(Transforms this matrix into column echelon form. The transformation
+will perform only column operations.
+
+This matrix will be modified directly, and its size will not change
+(even if the rank is less than the number of columns).
+
+Our convention is that a matrix is in column echelon form if:
+
+* each column is either zero or there is a first non-zero entry which
+  is positive;
+
+* moving from the left column to the right, these first non-zero
+  entries have strictly increasing row indices;
+
+* for each first non-zero column entry, in that row all the elements
+  to the left are smaller and non-negative (and all elements to the
+  right are already zero by the previous condition);
+
+* all the zero columns are at the right hand end of the matrix.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    the rank of this matrix, i.e., the number of non-zero columns
+    remaining.)doc";
+
 // Docstring regina::python::doc::Matrix::makeIdentity
 static constexpr const char makeIdentity[] =
 R"doc(Turns this matrix into an identity matrix. This matrix need not be
 square; after this routine it will have ``entry(r,c)`` equal to 1 if
 ``r == c`` and 0 otherwise.)doc";
+
+// Docstring regina::python::doc::Matrix::makeRowEchelon
+static constexpr const char makeRowEchelon[] =
+R"doc(Transforms this matrix into row echelon form. The transformation will
+perform only row operations.
+
+This matrix will be modified directly, and its size will not change
+(even if the rank is less than the number of rows).
+
+Our convention is that a matrix is in row echelon form if:
+
+* each row is either zero or there is a first non-zero entry which is
+  positive;
+
+* moving from the top row to the bottom, these first non-zero entries
+  have strictly increasing column indices;
+
+* for each first non-zero row entry, in that column all the elements
+  above are smaller and non-negative (and all elements below are
+  already zero by the previous condition);
+
+* all the zero rows are at the bottom of the matrix.
+
+Precondition:
+    All entries in this matrix are finite.
+
+Returns:
+    the rank of this matrix, i.e., the number of non-zero rows
+    remaining.)doc";
 
 // Docstring regina::python::doc::Matrix::makeSmith
 static constexpr const char makeSmith[] =
@@ -1370,37 +1397,6 @@ Precondition:
 
 Parameter ``row``:
     the index of the row to reduce.)doc";
-
-// Docstring regina::python::doc::Matrix::rowEchelonForm
-static constexpr const char rowEchelonForm[] =
-R"doc(Transforms this matrix into row echelon form. The transformation will
-perform only row operations.
-
-This is simpler than the global routine regina::columnEchelonForm():
-it does not return the change-of-basis matrices, and it processes all
-columns in order from left to right (instead of passing a custom
-column list).
-
-Our convention is that a matrix is in row echelon form if:
-
-* each row is either zero or there is a first non-zero entry which is
-  positive;
-
-* moving from the top row to the bottom, these first non-zero entries
-  have strictly increasing column indices;
-
-* for each first non-zero row entry, in that column all the elements
-  above are smaller and non-negative (and all elements below are
-  already zero by the previous condition);
-
-* all the zero rows are at the bottom of the matrix.
-
-Precondition:
-    All entries in this matrix are finite.
-
-Returns:
-    the rank of this matrix, i.e., the number of non-zero rows
-    remaining.)doc";
 
 // Docstring regina::python::doc::Matrix::rows
 static constexpr const char rows[] =
