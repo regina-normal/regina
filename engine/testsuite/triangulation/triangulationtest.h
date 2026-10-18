@@ -2376,13 +2376,13 @@ class TriangulationTest : public testing::Test {
                     auto rank = b.makeColumnEchelon();
 
                     regina::MatrixInt comb(b.rows(),
-                        b.columns() + dualBoundariesAsPrimal.columns());
+                        rank + dualBoundariesAsPrimal.columns());
                     for (size_t row = 0; row < b.rows(); ++row) {
-                        for (size_t col = 0; col < b.columns(); ++col)
+                        for (size_t col = 0; col < rank; ++col)
                             comb.entry(row, col) = b.entry(row, col);
                         for (size_t col = 0;
                                 col < dualBoundariesAsPrimal.columns(); ++col)
-                            comb.entry(row, b.columns() + col) =
+                            comb.entry(row, rank + col) =
                                 dualBoundariesAsPrimal.entry(row, col);
                     }
 
