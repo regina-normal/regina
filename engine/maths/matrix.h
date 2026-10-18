@@ -1065,8 +1065,7 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * A non-destructive routine that multiplies this matrix by the given
-         * scalar and returns the result.  This matrix is not changed.
+         * Multiplies this matrix by the given scalar and returns the result.
          *
          * This matrix and the given scalar may use different underlying types
          * (e.g., you can multiply a matrix of LargeInteger objects by a
@@ -1074,12 +1073,6 @@ class Matrix : public Output<Matrix<T>> {
          * resulting matrix will be deduced accordingly (specifically, it will
          * be the type obtained by multiplying objects of types \a T and \a U
          * in that order using the binary multiplication operator).
-         *
-         * If your matrix is disposable (i.e., you will never need to use it
-         * again), then it is faster to use the rvalue reference version of
-         * this operator, which avoids the extra overhead of allocating a new
-         * matrix to store the result.  To do this, replace `matrix * scalar`
-         * with `std::move(matrix) * scalar`.
          *
          * \python It is assumed that type \a U is the same as \a T.
          *
@@ -1099,23 +1092,7 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * A destructive routine that multiplies this matrix by the given
-         * scalar and returns the result.
-         *
-         * Here "destructive" means that this routine uses in-place
-         * multiplication (as opposed to allocating a new matrix to store the
-         * result).  For this reason, it is declared as an rvalue reference
-         * member function: it should only be used if you do not care about
-         * the contents of the original matrix afterwards.
-         *
-         * To use this destructive operator, you can call
-         * `std::move(matrix) * scalar`.
-         *
-         * If you need to preserve the contents of the matrix, you should
-         * instead call the const version of this operator, which you can
-         * access in the usual way as `matrix * scalar`.  The cost of this
-         * constness will be the extra overhead of creating a new matrix to
-         * store the result.
+         * Multiplies this matrix by the given scalar and returns the result.
          *
          * This matrix and the given scalar may use different underlying types.
          * However, be aware that (unlike the const version of this operator)
@@ -1123,9 +1100,6 @@ class Matrix : public Output<Matrix<T>> {
          * example, that it is fine to multiply a matrix of LargeInteger
          * objects by a native C++ integer, but you should not try to multiply
          * a matrix of native C++ integers by a LargeInteger.
-         *
-         * \nopython Only the const version of this operator is available for
-         * Python users.
          *
          * \param scalar the scalar to multiply this matrix by.
          * \return the matrix `this * scalar`.
@@ -1891,18 +1865,7 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * A non-destructive routine that returns the rank of this matrix
-         * whilst preserving the contents of the matrix.
-         *
-         * Normally, a rank computation would involve modifying the matrix
-         * directly (e.g., by converting it to row echelon form).  In contrast,
-         * this routine will leave the matrix unchanged.  The cost is an extra
-         * deep copy in the implementation.
-         *
-         * If your matrix is disposable (i.e., you will never need to use it
-         * again), then it is faster to use the rvalue reference version of
-         * this routine, which will avoid the extra overhead of the deep copy.
-         * To do this, replace `matrix.rank()` with `std::move(matrix).rank()`.
+         * Returns the rank of this matrix.
          *
          * \pre All entries in this matrix are finite.
          *
@@ -1914,26 +1877,14 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * A destructive routine that returns the rank of this matrix.
+         * Returns the rank of this matrix.
          *
-         * Here "destructive" means that this routine modifies the matrix
-         * directly as it performs the rank computation.  For this reason,
-         * it is declared as an rvalue reference member function: it should
-         * only be used if you do not care about the contents of the matrix
-         * afterwards.
-         *
-         * To use this destructive rank computation, you can call
-         * `std::move(matrix).rank()`.
-         *
-         * If you need to preserve the contents of the matrix, you should
-         * instead call the const version of this function, which you can
-         * simply access as `matrix.rank()`.  The (minor) cost of this
-         * constness will be the extra overhead of an internal deep copy.
+         * A typical rank computation involves modifying the matrix (e.g., by
+         * converting it to row echelon form).  This rvalue variant of rank()
+         * is faster than the const variant, because it modifies this matrix
+         * directly instead of working on a temporary copy.
          *
          * \pre All entries in this matrix are finite.
-         *
-         * \nopython Only the const version of rank() is available for Python
-         * users.
          *
          * \return the rank of this matrix.
          */
@@ -1983,12 +1934,6 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This matrix need not be square and need not be of full rank.
          *
-         * If your matrix is disposable (i.e., you will never need to use it
-         * again), then it is faster to use the rvalue reference version of
-         * this routine, which will avoid the extra overhead of a deep copy.
-         * To do this, replace `matrix.smith()` with
-         * `std::move(matrix).smith()`.
-         *
          * \pre All entries in this matrix are finite.
          *
          * \headers This routine is implemented in a separate header
@@ -2007,23 +1952,13 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * A destructive routine that returns the Smith normal form of this
-         * matrix.
+         * Returns the Smith normal form of this matrix.
          *
-         * Here "destructive" means that this routine modifies the matrix
-         * directly as it performs the computation.  For this reason, it is
-         * declared as an rvalue reference member function: it should only be
-         * used if you do not care about the contents of the matrix afterwards.
+         * This rvalue variant of smith() is faster than the const variant,
+         * because it reduces this matrix directly instead of working on a
+         * temporary copy.
          *
-         * To use this destructive Smith normal form computation, you can call
-         * `std::move(matrix).smith()`.
-         *
-         * If you need to preserve the contents of the matrix, you should
-         * instead call the const version of this function, which you can
-         * simply access as `matrix.smith()`.  The (minor) cost of this
-         * constness will be the extra overhead of an internal deep copy.
-         *
-         * See the const version of this function for further information on
+         * See the const version of smith() for further information on
          * Smith normal forms.
          *
          * \pre All entries in this matrix are finite.
@@ -2131,12 +2066,6 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This matrix need not be square and need not be of full rank.
          *
-         * If your matrix is disposable (i.e., you will never need to use it
-         * again), then it is faster to use the rvalue reference version of
-         * this routine, which will avoid the extra overhead of a deep copy
-         * of the original matrix.  To do this, replace `matrix.smithCoB()` with
-         * `std::move(matrix).smithCoB()`.
-         *
          * \pre All entries in this matrix are finite.
          *
          * \headers This routine is implemented in a separate header
@@ -2161,23 +2090,14 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * A destructive routine that returns the Smith normal form of this
-         * matrix along with change-of-basis matrices.
+         * Returns the Smith normal form of this matrix along with
+         * change-of-basis matrices.
          *
-         * Here "destructive" means that this routine modifies the matrix
-         * directly as it performs the computation.  For this reason, it is
-         * declared as an rvalue reference member function: it should only be
-         * used if you do not care about the contents of the matrix afterwards.
+         * This rvalue variant of smithCoB() is faster than the const variant,
+         * because it reduces this matrix directly instead of working on a
+         * temporary copy.
          *
-         * To use this destructive Smith normal form computation, you can call
-         * `std::move(matrix).smithCoB()`.
-         *
-         * If you need to preserve the contents of the matrix, you should
-         * instead call the const version of this function, which you can
-         * simply access as `matrix.smithCoB()`.  The (minor) cost of this
-         * constness will be the extra overhead of an internal deep copy.
-         *
-         * See the const version of this function for further information on
+         * See the const version of smithCoB() for further information on
          * Smith normal forms and change-of-basis matrices.
          *
          * \pre All entries in this matrix are finite.

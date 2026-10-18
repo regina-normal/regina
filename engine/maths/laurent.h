@@ -1109,15 +1109,12 @@ class Laurent :
         }
 
         /**
-         * A non-destructive routine that returns the product of this polynomial
-         * with `x^s` for some integer \a s.  This polynomial is not changed.
+         * Returns the product of this polynomial with `x^s` for some integer
+         * \a s.  This polynomial is not changed.
          *
-         * If your polynomial is disposable (i.e., you will never need to use it
-         * again), then it is must faster to use the rvalue reference version of
-         * this function, which runs in small constant time (since it does not
-         * need to create a deep copy of this polynomial to store the result).
-         * To do this, replace `poly.shifted(s)` with
-         * `std::move(poly).shifted(s)`.
+         * Be aware that the rvalue variant of shifted() is _much_ faster than
+         * this const version (the rvalue variant runs in small constant time,
+         * whereas this const variant has the extra cost of a deep copy).
          *
          * \param s the power of \a x to multiply by.
          * \return the product of this with `x^s`.
@@ -1129,28 +1126,11 @@ class Laurent :
         }
 
         /**
-         * A destructive routine that returns the product of this polynomial
-         * with `x^s` for some integer \a s.
+         * Returns the product of this polynomial with `x^s` for some integer
+         * \a s.
          *
-         * Here "destructive" means that this routine edits the polynomial
-         * in-place (as opposed to allocating a new polynomial to store the
-         * result).  For this reason, it is declared as an rvalue reference
-         * member function: it should only be used if you do not care about
-         * the contents of the original polynomial afterwards.
-         *
-         * This operation is very fast (it runs in small constant time).
-         *
-         * To use this destructive function, you can call
-         * `std::move(poly).shifted(s)`.
-         *
-         * If you need to preserve the contents of this polynomial, you should
-         * instead call the const version of this function, which you can
-         * access in the usual way as `poly.shifted(s)`.  The cost of this
-         * constness will be the linear-time overhead of creating a deep copy
-         * of this polynomial to store the result.
-         *
-         * \nopython Only the const version of this function is available for
-         * Python users.
+         * This rvalue variant of shifted() is very fast (it runs in small
+         * constant time).
          *
          * \param s the power of \a x to multiply by.
          * \return the product of this with `x^s`.

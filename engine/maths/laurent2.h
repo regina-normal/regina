@@ -834,14 +834,8 @@ class Laurent2 :
         }
 
         /**
-         * A non-destructive routine that returns the product of this
-         * polynomial with `x^s y^t` for some integers \a s and \a t.
-         * This polynomial will not be changed.
-         *
-         * If your polynomial is disposable (i.e., you will never need to use it
-         * again), then it is faster to use the rvalue reference version of this
-         * function.  To do this, replace `poly.shifted(s, t)` with
-         * `std::move(poly).shifted(s, t)`.
+         * Returns the product of this polynomial with `x^s y^t` for some
+         * integers \a s and \a t.  This polynomial will not be changed.
          *
          * \param s the power of \a x to multiply by.
          * \param t the power of \a y to multiply by.
@@ -856,22 +850,8 @@ class Laurent2 :
         }
 
         /**
-         * A destructive routine that returns the product of this
-         * polynomial with `x^s y^t` for some integers \a s and \a t.
-         *
-         * Here "destructive" means that this routine moves the coefficients
-         * out of the original polynomial.  After calling this routine, the
-         * original polynomial will be unusable.
-         *
-         * To use this destructive function, you can call
-         * `std::move(poly).shifted(s, t)`.
-         *
-         * If you need to preserve the contents of this polynomial, you should
-         * instead call the const version of this function, which you can
-         * access in the usual way as `poly.shifted(s, t)`.
-         *
-         * \nopython Only the const version of this function is available for
-         * Python users.
+         * Returns the product of this polynomial with `x^s y^t` for some
+         * integers \a s and \a t.
          *
          * \param s the power of \a x to multiply by.
          * \param t the power of \a y to multiply by.

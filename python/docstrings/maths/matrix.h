@@ -565,8 +565,7 @@ Returns:
 
 // Docstring regina::python::doc::Matrix::__mul
 static constexpr const char __mul[] =
-R"doc(A non-destructive routine that multiplies this matrix by the given
-scalar and returns the result. This matrix is not changed.
+R"doc(Multiplies this matrix by the given scalar and returns the result.
 
 This matrix and the given scalar may use different underlying types
 (e.g., you can multiply a matrix of LargeInteger objects by a native
@@ -574,12 +573,6 @@ C++ integer). The type of object that is stored in the resulting
 matrix will be deduced accordingly (specifically, it will be the type
 obtained by multiplying objects of types *T* and *U* in that order
 using the binary multiplication operator).
-
-If your matrix is disposable (i.e., you will never need to use it
-again), then it is faster to use the rvalue reference version of this
-operator, which avoids the extra overhead of allocating a new matrix
-to store the result. To do this, replace ``matrix * scalar`` with
-``std::move(matrix) * scalar``.
 
 Python:
     It is assumed that type *U* is the same as *T*.
@@ -1354,18 +1347,7 @@ Parameter ``row``:
 
 // Docstring regina::python::doc::Matrix::rank
 static constexpr const char rank[] =
-R"doc(A non-destructive routine that returns the rank of this matrix whilst
-preserving the contents of the matrix.
-
-Normally, a rank computation would involve modifying the matrix
-directly (e.g., by converting it to row echelon form). In contrast,
-this routine will leave the matrix unchanged. The cost is an extra
-deep copy in the implementation.
-
-If your matrix is disposable (i.e., you will never need to use it
-again), then it is faster to use the rvalue reference version of this
-routine, which will avoid the extra overhead of the deep copy. To do
-this, replace ``matrix.rank()`` with ``std::move(matrix).rank()``.
+R"doc(Returns the rank of this matrix.
 
 Precondition:
     All entries in this matrix are finite.
@@ -1446,11 +1428,6 @@ smithCoB() instead.
 
 This matrix need not be square and need not be of full rank.
 
-If your matrix is disposable (i.e., you will never need to use it
-again), then it is faster to use the rvalue reference version of this
-routine, which will avoid the extra overhead of a deep copy. To do
-this, replace ``matrix.smith()`` with ``std::move(matrix).smith()``.
-
 Precondition:
     All entries in this matrix are finite.
 
@@ -1491,12 +1468,6 @@ Then:
 * ``M = colSpaceBasisInv * S * rowSpaceBasisInv``.
 
 This matrix need not be square and need not be of full rank.
-
-If your matrix is disposable (i.e., you will never need to use it
-again), then it is faster to use the rvalue reference version of this
-routine, which will avoid the extra overhead of a deep copy of the
-original matrix. To do this, replace ``matrix.smithCoB()`` with
-``std::move(matrix).smithCoB()``.
 
 Precondition:
     All entries in this matrix are finite.

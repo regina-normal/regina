@@ -708,15 +708,12 @@ Parameter ``s``:
 
 // Docstring regina::python::doc::Laurent::shifted
 static constexpr const char shifted[] =
-R"doc(A non-destructive routine that returns the product of this polynomial
-with ``x^s`` for some integer *s*. This polynomial is not changed.
+R"doc(Returns the product of this polynomial with ``x^s`` for some integer
+*s*. This polynomial is not changed.
 
-If your polynomial is disposable (i.e., you will never need to use it
-again), then it is must faster to use the rvalue reference version of
-this function, which runs in small constant time (since it does not
-need to create a deep copy of this polynomial to store the result). To
-do this, replace ``poly.shifted(s)`` with
-``std::move(poly).shifted(s)``.
+Be aware that the rvalue variant of shifted() is _much_ faster than
+this const version (the rvalue variant runs in small constant time,
+whereas this const variant has the extra cost of a deep copy).
 
 Parameter ``s``:
     the power of *x* to multiply by.
