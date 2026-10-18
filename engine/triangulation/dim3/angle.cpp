@@ -32,6 +32,7 @@
 #include "enumerate/treeconstraint.h"
 #include "enumerate/treelp.h"
 #include "triangulation/dim3.h"
+#include "utilities/fixedarray.h"
 
 namespace regina {
 
@@ -144,7 +145,7 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
 
     // Go down through the matrix from top-left to bottom-right and work
     // out where the leading coefficients of each row appear.
-    auto* leading = new size_t[rank];
+    FixedArray<size_t> leading(rank);
     size_t row = 0;
     size_t col = 0;
 
@@ -158,7 +159,6 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
 
     if (leading[rank - 1] + 1 == eqns.columns()) {
         // The final column appears as a leading coefficient.
-        delete[] leading;
         generalAngleStructure_ = true; // confirmed: no solution
         return false;
     }
@@ -205,7 +205,6 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
         }
     }
 
-    delete[] leading;
     generalAngleStructure_ = AngleStructure(*this, std::move(v));
     return true;
 }
