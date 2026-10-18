@@ -247,19 +247,18 @@ TEST_F(MatrixTest, empty) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.makeSmith();
-    validateEmpty(m);
+    validateEmpty(m.smith());
     {
-        auto [r, ri, c, ci] = m.makeSmithCoB();
-        validateEmpty(m);
+        auto [s, r, ri, c, ci] = m.smithCoB();
+        validateEmpty(s);
         validateEmpty(r);
         validateEmpty(ri);
         validateEmpty(c);
         validateEmpty(ci);
     }
     {
-        auto [r, ri, c, ci] = m.makeSmithCoB(SNFAlgorithm::Metrical);
-        validateEmpty(m);
+        auto [s, r, ri, c, ci] = m.smithCoB(SNFAlgorithm::Metrical);
+        validateEmpty(s);
         validateEmpty(r);
         validateEmpty(ri);
         validateEmpty(c);
@@ -444,19 +443,18 @@ TEST_F(MatrixTest, noRows) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.makeSmith();
-    validateNoRows(m, 3);
+    validateNoRows(m.smith(), 3);
     {
-        auto [r, ri, c, ci] = m.makeSmithCoB();
-        validateNoRows(m, 3);
+        auto [s, r, ri, c, ci] = m.smithCoB();
+        validateNoRows(s, 3);
         validateIdentity(r, 3);
         validateIdentity(ri, 3);
         validateEmpty(c);
         validateEmpty(ci);
     }
     {
-        auto [r, ri, c, ci] = m.makeSmithCoB(SNFAlgorithm::Metrical);
-        validateNoRows(m, 3);
+        auto [s, r, ri, c, ci] = m.smithCoB(SNFAlgorithm::Metrical);
+        validateNoRows(s, 3);
         validateIdentity(r, 3);
         validateIdentity(ri, 3);
         validateEmpty(c);
@@ -646,19 +644,18 @@ TEST_F(MatrixTest, noColumns) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.makeSmith();
-    validateNoColumns(m, 3);
+    validateNoColumns(m.smith(), 3);
     {
-        auto [r, ri, c, ci] = m.makeSmithCoB();
-        validateNoColumns(m, 3);
+        auto [s, r, ri, c, ci] = m.smithCoB();
+        validateNoColumns(s, 3);
         validateEmpty(r);
         validateEmpty(ri);
         validateIdentity(c, 3);
         validateIdentity(ci, 3);
     }
     {
-        auto [r, ri, c, ci] = m.makeSmithCoB(SNFAlgorithm::Metrical);
-        validateNoColumns(m, 3);
+        auto [s, r, ri, c, ci] = m.smithCoB(SNFAlgorithm::Metrical);
+        validateNoColumns(s, 3);
         validateEmpty(r);
         validateEmpty(ri);
         validateIdentity(c, 3);
