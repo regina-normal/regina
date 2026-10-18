@@ -1282,7 +1282,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     //           ppList[j] bounds, so find a chain with that boundary and
     //           put its info in a matrix.
 
-    auto [ON, R, Ri, C, Ci] = mHomology1_->n().snfCoB();
+    auto [ON, R, Ri, C, Ci] = mHomology1_->n().smithCoB();
     // boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
     //                                             ---- stepa -----
     //                  ---------------- stepb ---

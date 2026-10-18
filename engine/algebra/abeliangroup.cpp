@@ -36,7 +36,7 @@
 namespace regina {
 
 AbelianGroup::AbelianGroup(MatrixInt presentation) {
-    presentation.makeSNF();
+    presentation.makeSmith();
 
     // Run up the diagonal until we hit 1.
     // Hopefully this will be faster than running down the diagonal
@@ -89,7 +89,7 @@ void AbelianGroup::addTorsion(Integer degree) {
 }
 
 void AbelianGroup::addGroup(MatrixInt presentation) {
-    presentation.makeSNF();
+    presentation.makeSmith();
 
     // Run up the diagonal until we hit 1.
     // Hopefully this will be faster than running down the diagonal
@@ -214,7 +214,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) {
         throw InvalidArgument("The chain complex constructor requires "
             "M.columns() == N.rows()");
 
-    N.makeSNF();
+    N.makeSmith();
 
     // Note: the rank comes from the zero *rows* of N.
 
@@ -259,7 +259,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
 
     Integer cof = p.abs();
 
-    N.makeSNF();
+    N.makeSmith();
     size_t lim = (N.rows() < N.columns() ? N.rows() : N.columns() );
 
     if (cof == 0) {
@@ -279,7 +279,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
             }
     }
 
-    M.makeSNF();
+    M.makeSmith();
     lim = (M.rows() < M.columns() ? M.rows() : M.columns() );
     for (size_t i=0; i<lim; i++) {
         if (M.entry(i,i) != 0) {

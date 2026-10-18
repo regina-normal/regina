@@ -247,10 +247,10 @@ TEST_F(MatrixTest, empty) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.makeSNF();
+    m.makeSmith();
     validateEmpty(m);
     {
-        auto [r, ri, c, ci] = m.makeSNFCoB();
+        auto [r, ri, c, ci] = m.makeSmithCoB();
         validateEmpty(m);
         validateEmpty(r);
         validateEmpty(ri);
@@ -258,7 +258,7 @@ TEST_F(MatrixTest, empty) {
         validateEmpty(ci);
     }
     {
-        auto [r, ri, c, ci] = m.makeSNFCoB(SNFAlgorithm::Metrical);
+        auto [r, ri, c, ci] = m.makeSmithCoB(SNFAlgorithm::Metrical);
         validateEmpty(m);
         validateEmpty(r);
         validateEmpty(ri);
@@ -444,10 +444,10 @@ TEST_F(MatrixTest, noRows) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.makeSNF();
+    m.makeSmith();
     validateNoRows(m, 3);
     {
-        auto [r, ri, c, ci] = m.makeSNFCoB();
+        auto [r, ri, c, ci] = m.makeSmithCoB();
         validateNoRows(m, 3);
         validateIdentity(r, 3);
         validateIdentity(ri, 3);
@@ -455,7 +455,7 @@ TEST_F(MatrixTest, noRows) {
         validateEmpty(ci);
     }
     {
-        auto [r, ri, c, ci] = m.makeSNFCoB(SNFAlgorithm::Metrical);
+        auto [r, ri, c, ci] = m.makeSmithCoB(SNFAlgorithm::Metrical);
         validateNoRows(m, 3);
         validateIdentity(r, 3);
         validateIdentity(ri, 3);
@@ -646,10 +646,10 @@ TEST_F(MatrixTest, noColumns) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
-    m.makeSNF();
+    m.makeSmith();
     validateNoColumns(m, 3);
     {
-        auto [r, ri, c, ci] = m.makeSNFCoB();
+        auto [r, ri, c, ci] = m.makeSmithCoB();
         validateNoColumns(m, 3);
         validateEmpty(r);
         validateEmpty(ri);
@@ -657,7 +657,7 @@ TEST_F(MatrixTest, noColumns) {
         validateIdentity(ci, 3);
     }
     {
-        auto [r, ri, c, ci] = m.makeSNFCoB(SNFAlgorithm::Metrical);
+        auto [r, ri, c, ci] = m.makeSmithCoB(SNFAlgorithm::Metrical);
         validateNoColumns(m, 3);
         validateEmpty(r);
         validateEmpty(ri);
@@ -875,7 +875,7 @@ TEST_F(MatrixTest, determinantAdjugate) {
 static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
     SCOPED_TRACE_REGINA(m);
 
-    MatrixInt snf = m.snf();
+    MatrixInt snf = m.smith();
 
     ASSERT_EQ(snf.rows(), m.rows());
     ASSERT_EQ(snf.columns(), m.columns());
@@ -893,7 +893,7 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
     }
 
     {
-        auto [snfAlt, R, invR, C, invC] = m.snfCoB();
+        auto [snfAlt, R, invR, C, invC] = m.smithCoB();
 
         EXPECT_EQ(snf, snfAlt);
 
@@ -912,7 +912,7 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
         EXPECT_EQ((invC * snfAlt * invR), m);
     }
     {
-        auto [snfAlt, R, invR, C, invC] = m.snfCoB(SNFAlgorithm::Metrical);
+        auto [snfAlt, R, invR, C, invC] = m.smithCoB(SNFAlgorithm::Metrical);
 
         EXPECT_EQ(snf, snfAlt);
 

@@ -480,6 +480,9 @@ Version 8.0  [ TODO ]
             - New in-place addition and subtractions operators += and -=.
             - New routine negate().
             - New routines trace() and adjugate().
+            - New routines smith(), smithCoB(), makeSmith() and makeSmithCoB(),
+              which replace the deprecated global functions smithNormalForm()
+              and metricalSmithNormalForm().
             - Routine det() now takes an optional algorithm argument.
             - Routine swapRows() now takes an optional from-column argument.
             - Multiplying a matrix by a matrix or vector will now throw an
@@ -590,7 +593,8 @@ Version 8.0  [ TODO ]
             - Routine unfill() now throws an exception when called on a null
               SnapPea triangulation (previously it silently did nothing).
         Enum SNFAlgorithm:
-            - New enumeration for use with Matrix::snf() and Matrix::makeSNF().
+            - New enumeration for use with Matrix::smithCoB() and
+              Matrix::makeSmithCoB().
         Class SpatialLink:
             - New inner type NodeIterator, and new member functions
               beginNodes() and endNodes().
@@ -731,8 +735,8 @@ Version 8.0  [ TODO ]
               of permutation.
         Function metricalSmithNormalForm():
             - Moved into the class Matrix<Integer> as the member function
-              metricalSmithNormalForm().  The old global function is kept but
-              deprecated.
+              makeSmithCoB(SNFAlgorithm::Metrical).  The old global function is
+              kept but deprecated.
         Function open():
             - Both versions of this function now throw an exception if the
               file is unreadable or if no usable Regina data could be found
@@ -750,9 +754,9 @@ Version 8.0  [ TODO ]
             - These functions now throw exceptions on error, instead of
               returning null.
         Function smithNormalForm():
-            - Moved into the class Matrix<Integer> as the member functions
-              smithNormalForm() and smithNormalFormCoB().  The old global
-              functions are kept but deprecated.
+            - The two variants of this routine have been moved into the class
+              Matrix<Integer> as the member functions makeSmith() and
+              makeSmithCoB().  The old global functions are kept but deprecated.
         Function subscript(), superscript():
             - When passing one of Regina's integer types, there is now a
               precondition that the given value is not infinity.

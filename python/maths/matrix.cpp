@@ -185,16 +185,17 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("__mul__", [](const Matrix& m, const regina::VectorLarge& v){
                 return m * v;
             }, rdoc::__mul_3)
-            .def("makeSNF", &Matrix::makeSNF, rdoc::makeSNF)
-            .def("makeSNFCoB", &Matrix::makeSNFCoB,
-                "alg"_a = regina::SNFAlgorithm::Default, rdoc::makeSNFCoB)
-            .def("snf",
-                static_cast<Matrix (Matrix::*)() const&>(&Matrix::snf),
-                rdoc::snf)
-            .def("snfCoB",
+            .def("makeSmith", &Matrix::makeSmith, rdoc::makeSmith)
+            .def("makeSmithCoB", &Matrix::makeSmithCoB,
+                "alg"_a = regina::SNFAlgorithm::Default, rdoc::makeSmithCoB)
+            .def("smith",
+                static_cast<Matrix (Matrix::*)() const&>(&Matrix::smith),
+                rdoc::smith)
+            .def("smithCoB",
                 static_cast<std::array<Matrix, 5>
-                    (Matrix::*)(regina::SNFAlgorithm) const&>(&Matrix::snfCoB),
-                "alg"_a = regina::SNFAlgorithm::Default, rdoc::snfCoB)
+                    (Matrix::*)(regina::SNFAlgorithm) const&>(
+                    &Matrix::smithCoB),
+                "alg"_a = regina::SNFAlgorithm::Default, rdoc::smithCoB)
         ;
     }
     regina::python::add_output_rich(c);
@@ -253,15 +254,15 @@ void addMatrix(pybind11::module_& m) {
 
     using regina::MatrixInt;
     m.def("smithNormalForm", [](MatrixInt& m) { // deprecated
-        m.makeSNF();
+        m.makeSmith();
     }, rdoc::smithNormalForm);
     m.def("smithNormalForm", [](MatrixInt& m, MatrixInt& r, MatrixInt& ri,
             MatrixInt&c, MatrixInt& ci) { // deprecated
-        std::tie(r, ri, c, ci) = m.makeSNFCoB();
+        std::tie(r, ri, c, ci) = m.makeSmithCoB();
     }, rdoc::smithNormalForm_2);
     m.def("metricalSmithNormalForm", [](MatrixInt& m, // deprecated
             MatrixInt& r, MatrixInt& ri, MatrixInt&c, MatrixInt& ci) {
-        std::tie(r, ri, c, ci) = m.makeSNFCoB(regina::SNFAlgorithm::Metrical);
+        std::tie(r, ri, c, ci) = m.makeSmithCoB(regina::SNFAlgorithm::Metrical);
     }, rdoc::metricalSmithNormalForm);
     m.def("rowBasis", &regina::rowBasis, rdoc::rowBasis);
     m.def("rowBasisAndOrthComp", &regina::rowBasisAndOrthComp,

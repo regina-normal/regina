@@ -96,8 +96,8 @@ inline constexpr const char metricalSmithNormalForm[] =
 R"doc(Deprecated alternative Smith normal form routine that may be
 preferable for extremely large matrices.
 
-This simply calls ``Matrix::makeSNFCoB(SNFAlgorithm::Metrical)``; see
-that routine for further details.
+This simply calls ``Matrix::makeSmithCoB(SNFAlgorithm::Metrical)``;
+see that routine for further details.
 
 In this (deprecated) routine, the four change-of-basis matrices are
 given as input and refilled by this routine. Upon input, they may be
@@ -245,7 +245,7 @@ inline constexpr const char smithNormalForm[] =
 R"doc(Deprecated routine that transforms the given integer matrix into Smith
 normal form.
 
-This simply calls Matrix::makeSNF(); see that routine for further
+This simply calls Matrix::makeSmith(); see that routine for further
 details.
 
 .. deprecated::
@@ -262,7 +262,7 @@ inline constexpr const char smithNormalForm_2[] =
 R"doc(Deprecated Smith normal form routine that also computes change-of-
 basis matrices.
 
-This simply calls Matrix::makeSNFCoB(); see that routine for further
+This simply calls Matrix::makeSmithCoB(); see that routine for further
 details.
 
 In this (deprecated) routine, the four change-of-basis matrices are
@@ -1178,8 +1178,8 @@ R"doc(Turns this matrix into an identity matrix. This matrix need not be
 square; after this routine it will have ``entry(r,c)`` equal to 1 if
 ``r == c`` and 0 otherwise.)doc";
 
-// Docstring regina::python::doc::Matrix::makeSNF
-static constexpr const char makeSNF[] =
+// Docstring regina::python::doc::Matrix::makeSmith
+static constexpr const char makeSmith[] =
 R"doc(Transforms this matrix into Smith normal form.
 
 Reading down the main diagonal, the final Smith normal form will have
@@ -1190,24 +1190,24 @@ unique.
 
 This routine will use Regina's default Smith normal form algorithm. If
 you wish to use a different algorithm, you will need to call
-makeSNFCoB() instead.
+makeSmithCoB() instead.
 
 This matrix need not be square and need not be of full rank.
 
 Precondition:
     All entries in this matrix are finite.)doc";
 
-// Docstring regina::python::doc::Matrix::makeSNFCoB
-static constexpr const char makeSNFCoB[] =
+// Docstring regina::python::doc::Matrix::makeSmithCoB
+static constexpr const char makeSmithCoB[] =
 R"doc(Transforms this matrix into Smith normal form and returns change-of-
 basis matrices.
 
-This routine is similar to makeSNF(); however, it allows you to
+This routine is similar to makeSmith(); however, it allows you to
 specify a custom algorithm, and it also computes and returns change-
 of-basis matrices describing all of the row and column operations that
 were performed.
 
-As with makeSNF(), the final Smith normal form will have a main
+As with makeSmith(), the final Smith normal form will have a main
 diagonal consisting of a series of non-negative, non-decreasing
 invariant factors followed by zeroes. "Invariant factor" refers to the
 convention that the ``i``th term divides the (``i+1``)th term, and so
@@ -1433,8 +1433,8 @@ Parameter ``column``:
 Parameter ``value``:
     the new entry to place in the given row and column.)doc";
 
-// Docstring regina::python::doc::Matrix::snf
-static constexpr const char snf[] =
+// Docstring regina::python::doc::Matrix::smith
+static constexpr const char smith[] =
 R"doc(Returns the Smith normal form of this matrix. This matrix itself will
 not be changed.
 
@@ -1445,15 +1445,15 @@ term divides the (``i+1``)th term, and so these invariant factors are
 unique.
 
 This routine will use Regina's default Smith normal form algorithm. If
-you wish to use a different algorithm, you will need to call snfCoB()
-instead.
+you wish to use a different algorithm, you will need to call
+smithCoB() instead.
 
 This matrix need not be square and need not be of full rank.
 
 If your matrix is disposable (i.e., you will never need to use it
 again), then it is faster to use the rvalue reference version of this
 routine, which will avoid the extra overhead of a deep copy. To do
-this, replace ``matrix.snf()`` with ``std::move(matrix).snf()``.
+this, replace ``matrix.smith()`` with ``std::move(matrix).smith()``.
 
 Precondition:
     All entries in this matrix are finite.
@@ -1461,17 +1461,17 @@ Precondition:
 Returns:
     the Smith normal form of this matrix.)doc";
 
-// Docstring regina::python::doc::Matrix::snfCoB
-static constexpr const char snfCoB[] =
+// Docstring regina::python::doc::Matrix::smithCoB
+static constexpr const char smithCoB[] =
 R"doc(Returns the Smith normal form of this matrix along with change-of-
 basis matrices. This matrix itself will not be changed.
 
-This routine is similar to snf(); however, it allows you to specify a
-custom algorithm, and it also computes and returns change-of-basis
+This routine is similar to smith(); however, it allows you to specify
+a custom algorithm, and it also computes and returns change-of-basis
 matrices describing all of the row and column operations that were
 performed.
 
-As with snf(), the final Smith normal form will have a main diagonal
+As with smith(), the final Smith normal form will have a main diagonal
 consisting of a series of non-negative, non-decreasing invariant
 factors followed by zeroes. "Invariant factor" refers to the
 convention that the ``i``th term divides the (``i+1``)th term, and so
@@ -1499,8 +1499,8 @@ This matrix need not be square and need not be of full rank.
 If your matrix is disposable (i.e., you will never need to use it
 again), then it is faster to use the rvalue reference version of this
 routine, which will avoid the extra overhead of a deep copy of the
-original matrix. To do this, replace ``matrix.snfCoB()`` with
-``std::move(matrix).snfCoB()``.
+original matrix. To do this, replace ``matrix.smithCoB()`` with
+``std::move(matrix).smithCoB()``.
 
 Precondition:
     All entries in this matrix are finite.
