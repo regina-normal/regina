@@ -54,6 +54,8 @@ class MatrixTest : public testing::Test {
         // Several test cases for working with integers:
         const MatrixInt zero34 { 3, 4 };
         const MatrixInt identity3 { MatrixInt::identity(3) };
+        const MatrixInt shear2 {{ 1, 5 },
+                                { 0, 1 }};
         const MatrixInt square3 {{ 2, 4, 4 },
                                  { -6, 6, 12 },
                                  { 10, -4, -16 }};
@@ -70,6 +72,26 @@ class MatrixTest : public testing::Test {
         const MatrixInt duplicate34 {{ 1, 1, 1, 1 },
                                      { 0, 0, 2, 3 },
                                      { 0, 0, 3, 5 }};
+        const MatrixInt perm4 {{ 0, 1, 0, 0 },
+                               { 0, 0, 0, 1 },
+                               { 1, 0, 0, 0 },
+                               { 0, 0, 1, 0 }};
+
+        // Some cases with determinant 1 from problem F28 in Richard K. Guy,
+        // "Unsolved Problems in Number Theory", 3rd ed., Springer, 2004.
+        const MatrixInt fib1 {{ 1167, 2, 5 },
+                              { 1698, 3, 8 },
+                              { 2866, 5, 13 }};
+        const MatrixInt fib2 {{ 610, 5, 13 },
+                              { 1054, 8, 21 },
+                              { 1665, 13, 34 }};
+
+        const std::array<std::reference_wrapper<const MatrixInt>, 11> cases {
+            std::cref(zero34), std::cref(identity3), std::cref(shear2),
+            std::cref(square3), std::cref(rect34), std::cref(rect43),
+            std::cref(redundant34), std::cref(duplicate34), std::cref(perm4),
+            std::cref(fib1), std::cref(fib2)
+        };
 };
 
 template <regina::CommutativeRing T>
@@ -935,10 +957,44 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
 TEST_F(MatrixTest, smithNormalForm) {
     verifySNF(zero34, { });
     verifySNF(identity3, { 1, 1, 1 });
+    verifySNF(shear2, { 1, 1 });
     verifySNF(square3, { 2, 6, 12 });
     verifySNF(rect34, { 1, 1, 6 });
     verifySNF(rect43, { 1, 1, 12 });
     verifySNF(redundant34, { 1, 4 });
     verifySNF(duplicate34, { 1, 1, 1 });
+    verifySNF(perm4, { 1, 1, 1, 1 });
+    verifySNF(fib1, { 1, 1, 1 });
+    verifySNF(fib2, { 1, 1, 1 });
+}
+
+static void verifyInverse(const MatrixInt& m) {
+    SCOPED_TRACE_REGINA(m);
+
+    if (m.rows() != m.columns()) {
+        EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
+        return;
+    }
+
+    auto det = m.det();
+    if (det != 1 && det != -1) {
+        EXPECT_THROW({ m.inverse(); }, regina::NoSolution);
+        return;
+    }
+
+    MatrixInt inv;
+    EXPECT_NO_THROW({ inv = m.inverse(); });
+    EXPECT_NO_THROW({ EXPECT_EQ(MatrixInt(m).inverse(), inv); });
+    EXPECT_EQ(inv.rows(), m.rows());
+    EXPECT_EQ(inv.columns(), m.rows());
+    EXPECT_TRUE((m * inv).isIdentity());
+    EXPECT_TRUE((inv * m).isIdentity());
+}
+
+TEST_F(MatrixTest, inverse) {
+    for (const MatrixInt& m : cases) {
+        verifyInverse(m);
+        verifyInverse(m.transpose());
+    }
 }
 
