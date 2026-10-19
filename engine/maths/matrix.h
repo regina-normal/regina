@@ -1995,7 +1995,8 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Computes the inverse of this matrix.
+         * Computes the inverse of this matrix, if this exists as an integer
+         * matrix.
          *
          * Currently this is only implemented for integer matrices.  If this
          * matrix does not have an inverse, or if the inverse is not an integer
@@ -2008,7 +2009,8 @@ class Matrix : public Output<Matrix<T>> {
          * \pre This is a square matrix.
          *
          * \exception FailedPrecondition This matrix is not square.
-         * \exception NoSolution This matrix is not invertible over the integers.
+         * \exception NoSolution This matrix is not invertible over the
+         * integers.
          *
          * \return the inverse matrix.
          */
@@ -2019,7 +2021,8 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Computes the inverse of this matrix.
+         * Computes the inverse of this matrix, if this exists as an integer
+         * matrix.
          *
          * Currently this is only implemented for integer matrices.  If this
          * matrix does not have an inverse, or if the inverse is not an integer
@@ -2037,7 +2040,8 @@ class Matrix : public Output<Matrix<T>> {
          * \pre This is a square matrix.
          *
          * \exception FailedPrecondition This matrix is not square.
-         * \exception NoSolution This matrix is not invertible over the integers.
+         * \exception NoSolution This matrix is not invertible over the
+         * integers.
          *
          * \return the inverse matrix.
          */
