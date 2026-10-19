@@ -54,6 +54,10 @@ class MatrixTest : public testing::Test {
         // Several test cases for working with integers:
         const MatrixInt zero34 { 3, 4 };
         const MatrixInt identity3 { MatrixInt::identity(3) };
+        const MatrixInt one {{ 1 }};
+        const MatrixInt minusOne {{ -1 }};
+        const MatrixInt two {{ 2 }};
+        const MatrixInt vector {{ 12, -8, 18 }};
         const MatrixInt shear2 {{ 1, 5 },
                                 { 0, 1 }};
         const MatrixInt square3 {{ 2, 4, 4 },
@@ -86,11 +90,13 @@ class MatrixTest : public testing::Test {
                               { 1054, 8, 21 },
                               { 1665, 13, 34 }};
 
-        const std::array<std::reference_wrapper<const MatrixInt>, 11> cases {
-            std::cref(zero34), std::cref(identity3), std::cref(shear2),
-            std::cref(square3), std::cref(rect34), std::cref(rect43),
-            std::cref(redundant34), std::cref(duplicate34), std::cref(perm4),
-            std::cref(fib1), std::cref(fib2)
+        const std::array<std::reference_wrapper<const MatrixInt>, 15> cases {
+            std::cref(zero34), std::cref(identity3),
+            std::cref(one), std::cref(minusOne), std::cref(two),
+            std::cref(vector), std::cref(shear2), std::cref(square3),
+            std::cref(rect34), std::cref(rect43),
+            std::cref(redundant34), std::cref(duplicate34),
+            std::cref(perm4), std::cref(fib1), std::cref(fib2)
         };
 };
 
@@ -270,23 +276,18 @@ TEST_F(MatrixTest, empty) {
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
     EXPECT_NO_THROW({ validateEmpty(m.inverse()); });
+    EXPECT_NO_THROW({ validateEmpty(Matrix<Integer>(m).inverse()); });
 
     validateEmpty(m.smith());
+    validateEmpty(Matrix<Integer>(m).smith());
     {
-        auto [s, r, ri, c, ci] = m.smithCoB();
-        validateEmpty(s);
-        validateEmpty(r);
-        validateEmpty(ri);
-        validateEmpty(c);
-        validateEmpty(ci);
-    }
-    {
-        auto [s, r, ri, c, ci] = m.smithCoB(SNFAlgorithm::Metrical);
-        validateEmpty(s);
-        validateEmpty(r);
-        validateEmpty(ri);
-        validateEmpty(c);
-        validateEmpty(ci);
+        auto res = m.smithCoB();
+        EXPECT_EQ(Matrix<Integer>(m).smithCoB(), res);
+        EXPECT_EQ(m.smithCoB(SNFAlgorithm::Metrical), res);
+        EXPECT_EQ(Matrix<Integer>(m).smithCoB(SNFAlgorithm::Metrical), res);
+
+        for (const auto& bit : res)
+            validateEmpty(bit);
     }
 
     validateEmpty(regina::preImageOfLattice(m, {}));
@@ -468,23 +469,21 @@ TEST_F(MatrixTest, noRows) {
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
     EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
+    EXPECT_THROW({ Matrix<Integer>(m).inverse(); }, regina::FailedPrecondition);
 
     validateNoRows(m.smith(), 3);
+    validateNoRows(Matrix<Integer>(m).smith(), 3);
     {
-        auto [s, r, ri, c, ci] = m.smithCoB();
-        validateNoRows(s, 3);
-        validateIdentity(r, 3);
-        validateIdentity(ri, 3);
-        validateEmpty(c);
-        validateEmpty(ci);
-    }
-    {
-        auto [s, r, ri, c, ci] = m.smithCoB(SNFAlgorithm::Metrical);
-        validateNoRows(s, 3);
-        validateIdentity(r, 3);
-        validateIdentity(ri, 3);
-        validateEmpty(c);
-        validateEmpty(ci);
+        auto res = m.smithCoB();
+        EXPECT_EQ(Matrix<Integer>(m).smithCoB(), res);
+        EXPECT_EQ(m.smithCoB(SNFAlgorithm::Metrical), res);
+        EXPECT_EQ(Matrix<Integer>(m).smithCoB(SNFAlgorithm::Metrical), res);
+
+        validateNoRows(res[0], 3);
+        validateIdentity(res[1], 3);
+        validateIdentity(res[2], 3);
+        validateEmpty(res[3]);
+        validateEmpty(res[4]);
     }
 
     validateIdentity(regina::preImageOfLattice(m, {}), 3);
@@ -671,23 +670,21 @@ TEST_F(MatrixTest, noColumns) {
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
     EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
+    EXPECT_THROW({ Matrix<Integer>(m).inverse(); }, regina::FailedPrecondition);
 
     validateNoColumns(m.smith(), 3);
+    validateNoColumns(Matrix<Integer>(m).smith(), 3);
     {
-        auto [s, r, ri, c, ci] = m.smithCoB();
-        validateNoColumns(s, 3);
-        validateEmpty(r);
-        validateEmpty(ri);
-        validateIdentity(c, 3);
-        validateIdentity(ci, 3);
-    }
-    {
-        auto [s, r, ri, c, ci] = m.smithCoB(SNFAlgorithm::Metrical);
-        validateNoColumns(s, 3);
-        validateEmpty(r);
-        validateEmpty(ri);
-        validateIdentity(c, 3);
-        validateIdentity(ci, 3);
+        auto res = m.smithCoB();
+        EXPECT_EQ(Matrix<Integer>(m).smithCoB(), res);
+        EXPECT_EQ(m.smithCoB(SNFAlgorithm::Metrical), res);
+        EXPECT_EQ(Matrix<Integer>(m).smithCoB(SNFAlgorithm::Metrical), res);
+
+        validateNoColumns(res[0], 3);
+        validateEmpty(res[1]);
+        validateEmpty(res[2]);
+        validateIdentity(res[3], 3);
+        validateIdentity(res[4], 3);
     }
 
     validateEmpty(regina::preImageOfLattice(m, { 2, 3, 5 }));
@@ -701,57 +698,83 @@ TEST_F(MatrixTest, noColumns) {
 static void verifyEchelonForm(const MatrixInt& m) {
     SCOPED_TRACE_REGINA(m);
 
-    MatrixInt m1 = m;
-    MatrixInt m2 = m.transpose();
+    MatrixInt trans = m.transpose();
 
-    size_t rankCol = m1.makeColumnEchelon();
-    size_t rankRow = m2.makeRowEchelon();
+    // We test row echelon form of m, and column echelon form of trans.
+    // The assumption is that verifyEchelonForm() will be called on both m and
+    // m.transpose(), thereby leading to the testing of all four variants.
 
-    EXPECT_EQ(rankCol, rankRow);
-    EXPECT_EQ(m2.transpose(), m1);
+    auto res = m.rowEchelon();
+    auto resTrans = trans.columnEchelon();
+    EXPECT_EQ(MatrixInt(m).rowEchelon(), res); // rvalue variant
+    EXPECT_EQ(MatrixInt(trans).columnEchelon(), resTrans); // rvalue variant
 
-    // Verify that m2 is actually in row echelon form.
+    EXPECT_EQ(res.first, resTrans.first.transpose()); // compare matrices
+    EXPECT_EQ(res.second, resTrans.second); // compare ranks
+
+    EXPECT_EQ(m.rank(), res.second);
+    EXPECT_EQ(MatrixInt(m).rank(), res.second); // rvalue variant
+
+    EXPECT_EQ(res.first.rows(), m.rows());
+    EXPECT_EQ(res.first.columns(), m.columns());
+
+    // Verify that res.first is actually in row echelon form.
     {
         size_t fromCol = 0;
-        for (size_t r = 0; r < m2.rows(); ++r) {
+        for (size_t r = 0; r < m.rows(); ++r) {
             // The initial non-zero entry in this row must appear in
             // column ≥ fromCol.
             do {
-                // Whether or not m2[r, fromCol] is zero, the entire
+                // Whether or not res.first[r, fromCol] is zero, the entire
                 // column beneath this position must be zero.
-                for (size_t i = r + 1; i < m2.rows(); ++i)
-                    EXPECT_EQ(m2.entry(i, fromCol), 0);
+                for (size_t i = r + 1; i < m.rows(); ++i)
+                    EXPECT_EQ(res.first.entry(i, fromCol), 0);
 
-                if (m2.entry(r, fromCol) != 0)
+                if (res.first.entry(r, fromCol) != 0)
                     break;
                 ++fromCol;
-            } while (fromCol < m2.columns());
+            } while (fromCol < m.columns());
 
-            if (fromCol == m2.columns())
+            if (fromCol == m.columns())
                 break;
 
-            // The first non-zero entry in this row is m2[r, fromCol].
-            auto corner = m2.entry(r, fromCol);
+            // The first non-zero entry in this row is res.first[r, fromCol].
+            auto corner = res.first.entry(r, fromCol);
             EXPECT_GT(corner, 0);
             for (size_t i = 0; i < r; ++i) {
-                EXPECT_GE(m2.entry(i, fromCol), 0);
-                EXPECT_LT(m2.entry(i, fromCol), corner);
+                EXPECT_GE(res.first.entry(i, fromCol), 0);
+                EXPECT_LT(res.first.entry(i, fromCol), corner);
             }
 
             ++fromCol;
-            if (fromCol == m2.columns())
+            if (fromCol == m.columns())
                 break;
         }
+    }
+
+    if (m.rows() == m.columns())
+        EXPECT_EQ(res.first.det(), m.det().abs());
+
+    // Ensure that res.first spans the same row space as m.
+    {
+        MatrixInt comb(2 * m.rows(), m.columns());
+        for (size_t i = 0; i < m.rows(); ++i)
+            for (size_t j = 0; j < m.columns(); ++j)
+                comb.entry(i, j) = m.entry(i, j);
+        for (size_t i = 0; i < m.rows(); ++i)
+            for (size_t j = 0; j < m.columns(); ++j)
+                comb.entry(m.rows() + i, j) = res.first.entry(i, j);
+        EXPECT_EQ(comb.rank(), res.second);
     }
 
     // Compare results with the more complex global columnEchelonForm() (which
     // is now deprecated, and will eventually be removed).
     {
-        MatrixInt copy(m);
-        auto r = MatrixInt::identity(copy.columns());
-        auto ri = MatrixInt::identity(copy.columns());
+        MatrixInt copy(trans);
+        auto r = MatrixInt::identity(trans.columns());
+        auto ri = MatrixInt::identity(trans.columns());
         std::vector<size_t> rowList;
-        for (size_t i = 0; i < copy.rows(); ++i)
+        for (size_t i = 0; i < trans.rows(); ++i)
             rowList.push_back(i);
 
         #if defined(__GNUC__)
@@ -768,18 +791,24 @@ static void verifyEchelonForm(const MatrixInt& m) {
         #pragma GCC diagnostic pop
         #endif
 
-        EXPECT_EQ(copy, m1);
+        EXPECT_EQ(copy, resTrans.first);
+
+        EXPECT_EQ(r.rows(), trans.columns());
+        EXPECT_EQ(r.columns(), trans.columns());
+        EXPECT_EQ(ri.rows(), trans.columns());
+        EXPECT_EQ(ri.columns(), trans.columns());
+        EXPECT_EQ(trans * r, copy);
+        EXPECT_EQ(copy * ri, trans);
+        EXPECT_TRUE((r * ri).isIdentity());
+        EXPECT_TRUE((ri * r).isIdentity());
     }
 }
 
 TEST_F(MatrixTest, echelonForm) {
-    verifyEchelonForm(zero34);
-    verifyEchelonForm(identity3);
-    verifyEchelonForm(square3);
-    verifyEchelonForm(rect34);
-    verifyEchelonForm(rect43);
-    verifyEchelonForm(redundant34);
-    verifyEchelonForm(duplicate34);
+    for (const MatrixInt& m : cases) {
+        verifyEchelonForm(m);
+        verifyEchelonForm(m.transpose());
+    }
 }
 
 template <regina::CommutativeRing T>
@@ -824,14 +853,13 @@ void verifyAdjugate(const Matrix<T>& m) {
 }
 
 TEST_F(MatrixTest, determinantAdjugate) {
-    // Some simple determinant tests, to verify that Matrix is working
-    // correctly with non-native types.
-
+    // We include here several simple tests with different (non-integer)
+    // element types.
     using P = Polynomial<Integer>;
     using L = Laurent<Integer>;
     using L2 = Laurent2<Integer>;
 
-    // Empty matrices (which are technically not supported by Regina):
+    // Empty matrices:
     verifyAdjugate<Integer>({0}, 1);
     verifyAdjugate<Rational>({0}, 1);
 
@@ -853,28 +881,22 @@ TEST_F(MatrixTest, determinantAdjugate) {
     verifyAdjugate<Laurent2<Integer>>({ { {{-3,2,5}} } }, {{-3,2,5}});
 
     // Some ad-hoc 2x2 cases:
-
     // [ 1, 2, -3, 4 ] -> 10
     verifyAdjugate<Integer>({ { 1, 2 }, { -3, 4 } }, 10);
-
     // [ 1, 1/4 | 2, -1 ] -> -3/2
     verifyAdjugate<Rational>({ { 1, {1,4} }, { 2, -1 } }, {-3, 2});
-
     // [ 1, x | -x, 1 ] -> x^2 + 1
     verifyAdjugate<Polynomial<Integer>>(
         { { {1}, {0,1} }, { {0,-1}, {1} } },
         {1,0,1});
-
     // [ 1, x | x^-1, 1 ] -> 0
     verifyAdjugate<Laurent<Integer>>(
         { { {0, {1}}, {1, {1}} }, { {-1, {1}}, {0, {1}} } },
         {});
-
     // [ 1, x + x^-1 | x - x^-1, -1 ] -> x^-2 - 1 - x^2
     verifyAdjugate<Laurent<Integer>>(
         { { {0, {1}}, {-1, {1,0,1}} }, { {-1, {-1,0,1}}, {0, {-1}} } },
         {-2, {1,0,-1,0,-1}});
-
     // [ xy, y^-1 | -y^2x, x^-1 ] -> y + xy
     verifyAdjugate<Laurent2<Integer>>(
         { { {{1,1,1}}, {{0,-1,1}} }, { {{1,2,-1}}, {{-1,0,1}} } },
@@ -911,12 +933,70 @@ TEST_F(MatrixTest, determinantAdjugate) {
             verifyAdjugate<Integer>(random);
         }
     }
+
+    // Work through all of our usual square Matrix cases, and just a couple of
+    // our usual non-square cases.
+    using Alg = AdjugateAlgorithm;
+    for (auto alg : { Alg::Default, Alg::FaddeevLeverrier,
+            Alg::PreparataSarwate, Alg::MahajanVinay }) {
+        EXPECT_THROW({ rect34.det(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ rect43.det(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ rect34.adjugate(alg); }, regina::FailedPrecondition);
+        EXPECT_THROW({ rect43.adjugate(alg); }, regina::FailedPrecondition);
+    }
+    verifyAdjugate<Integer>(identity3, 1); // self-transpose
+    verifyAdjugate<Integer>(one, 1); // self-transpose
+    verifyAdjugate<Integer>(minusOne, -1); // self-transpose
+    verifyAdjugate<Integer>(two, 2); // self-transpose
+    verifyAdjugate<Integer>(shear2, 1);
+    verifyAdjugate<Integer>(shear2.transpose(), 1);
+    verifyAdjugate<Integer>(square3, -144);
+    verifyAdjugate<Integer>(square3.transpose(), -144);
+    verifyAdjugate<Integer>(perm4, -1);
+    verifyAdjugate<Integer>(perm4.transpose(), -1);
+    verifyAdjugate<Integer>(fib1, 1);
+    verifyAdjugate<Integer>(fib1.transpose(), 1);
+    verifyAdjugate<Integer>(fib2, 1);
+    verifyAdjugate<Integer>(fib2.transpose(), 1);
 }
 
-static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
+static void verifyInverse(const MatrixInt& m) {
+    SCOPED_TRACE_REGINA(m);
+
+    if (m.rows() != m.columns()) {
+        EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
+        EXPECT_THROW({ MatrixInt(m).inverse(); }, regina::FailedPrecondition);
+        return;
+    }
+
+    auto det = m.det();
+    if (det != 1 && det != -1) {
+        EXPECT_THROW({ m.inverse(); }, regina::NoSolution);
+        EXPECT_THROW({ MatrixInt(m).inverse(); }, regina::NoSolution);
+        return;
+    }
+
+    MatrixInt inv;
+    EXPECT_NO_THROW({ inv = m.inverse(); });
+    EXPECT_NO_THROW({ EXPECT_EQ(MatrixInt(m).inverse(), inv); }); // rvalue
+    EXPECT_EQ(inv.rows(), m.rows());
+    EXPECT_EQ(inv.columns(), m.rows());
+    EXPECT_TRUE((m * inv).isIdentity());
+    EXPECT_TRUE((inv * m).isIdentity());
+}
+
+TEST_F(MatrixTest, inverse) {
+    for (const MatrixInt& m : cases) {
+        verifyInverse(m);
+        verifyInverse(m.transpose());
+    }
+}
+
+static void verifySmith(const MatrixInt& m, std::initializer_list<long> diag) {
     SCOPED_TRACE_REGINA(m);
 
     MatrixInt snf = m.smith();
+    ASSERT_EQ(MatrixInt(m).smith(), snf); // rvalue variant
 
     ASSERT_EQ(snf.rows(), m.rows());
     ASSERT_EQ(snf.columns(), m.columns());
@@ -934,8 +1014,13 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
     }
 
     for (auto alg : { SNFAlgorithm::HafnerMcCurley, SNFAlgorithm::Metrical }) {
-        auto [snfAlt, R, invR, C, invC] = m.smithCoB(alg);
+        auto cobResult = m.smithCoB(alg);
+        EXPECT_EQ(MatrixInt(m).smithCoB(alg), cobResult); // rvalue variant
 
+        auto [snfAlt, R, invR, C, invC] = std::move(cobResult);
+
+        // Note: different algorithms could use different row/column moves and
+        // thereby give different change-of-basis matrices.
         EXPECT_EQ(snf, snfAlt);
 
         ASSERT_EQ(R.rows(), m.columns());
@@ -954,47 +1039,27 @@ static void verifySNF(const MatrixInt& m, std::initializer_list<long> diag) {
     }
 }
 
-TEST_F(MatrixTest, smithNormalForm) {
-    verifySNF(zero34, { });
-    verifySNF(identity3, { 1, 1, 1 });
-    verifySNF(shear2, { 1, 1 });
-    verifySNF(square3, { 2, 6, 12 });
-    verifySNF(rect34, { 1, 1, 6 });
-    verifySNF(rect43, { 1, 1, 12 });
-    verifySNF(redundant34, { 1, 4 });
-    verifySNF(duplicate34, { 1, 1, 1 });
-    verifySNF(perm4, { 1, 1, 1, 1 });
-    verifySNF(fib1, { 1, 1, 1 });
-    verifySNF(fib2, { 1, 1, 1 });
+static void verifySmithWithTranspose(const MatrixInt& m,
+        std::initializer_list<long> diag) {
+    verifySmith(m, diag);
+    verifySmith(m.transpose(), diag);
 }
 
-static void verifyInverse(const MatrixInt& m) {
-    SCOPED_TRACE_REGINA(m);
-
-    if (m.rows() != m.columns()) {
-        EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
-        return;
-    }
-
-    auto det = m.det();
-    if (det != 1 && det != -1) {
-        EXPECT_THROW({ m.inverse(); }, regina::NoSolution);
-        return;
-    }
-
-    MatrixInt inv;
-    EXPECT_NO_THROW({ inv = m.inverse(); });
-    EXPECT_NO_THROW({ EXPECT_EQ(MatrixInt(m).inverse(), inv); });
-    EXPECT_EQ(inv.rows(), m.rows());
-    EXPECT_EQ(inv.columns(), m.rows());
-    EXPECT_TRUE((m * inv).isIdentity());
-    EXPECT_TRUE((inv * m).isIdentity());
-}
-
-TEST_F(MatrixTest, inverse) {
-    for (const MatrixInt& m : cases) {
-        verifyInverse(m);
-        verifyInverse(m.transpose());
-    }
+TEST_F(MatrixTest, smith) {
+    verifySmithWithTranspose(zero34, { });
+    verifySmithWithTranspose(identity3, { 1, 1, 1 });
+    verifySmithWithTranspose(one, { 1 });
+    verifySmithWithTranspose(minusOne, { 1 });
+    verifySmithWithTranspose(two, { 2 });
+    verifySmithWithTranspose(vector, { 2 });
+    verifySmithWithTranspose(shear2, { 1, 1 });
+    verifySmithWithTranspose(square3, { 2, 6, 12 });
+    verifySmithWithTranspose(rect34, { 1, 1, 6 });
+    verifySmithWithTranspose(rect43, { 1, 1, 12 });
+    verifySmithWithTranspose(redundant34, { 1, 4 });
+    verifySmithWithTranspose(duplicate34, { 1, 1, 1 });
+    verifySmithWithTranspose(perm4, { 1, 1, 1, 1 });
+    verifySmithWithTranspose(fib1, { 1, 1, 1 });
+    verifySmithWithTranspose(fib2, { 1, 1, 1 });
 }
 
