@@ -13,9 +13,9 @@ namespace regina::python::doc {
 
 // Docstring regina::python::doc::columnEchelonForm
 inline constexpr const char columnEchelonForm[] =
-R"doc(Transforms a given matrix into column echelon form with respect to a
-collection of rows. The transformation will perform only column
-operations.
+R"doc(Deprecated routine that transforms a given matrix into column echelon
+form with respect to a collection of rows. The transformation will
+perform only column operations.
 
 Given the matrix *M* and the list *rowList* of rows from *M*, this
 algorithm puts *M* in column echelon form with respect to the rows in
@@ -55,13 +55,16 @@ By a "zero column" here we simply mean "zero for every row in
 *rowList*". Likewise, by "first non-zero entry" we mean "first row in
 *rowList* with a non-zero entry".
 
-In a pinch, you can also use this routine to compute the inverse of an
-invertible square matrix.
-
 If you just wish to reduce the matrix, you do not care about the order
 of rows, and you do not want the change-of-basis matrices, then you
 should call MatrixInt::makeColumnEchelon() instead, which is simpler
 but also more streamlined.
+
+.. deprecated::
+    This routine was only being used to compute matrix inverses (and
+    only with a trivial *rowList* consisting of all rows). It has
+    therefore been replaced with the simpler routine
+    ``Matrix::inverse()``.
 
 Precondition:
     If *n* is the number of _columns_ in *M*, then *R* has precisely
@@ -1142,6 +1145,30 @@ value.
 
 Parameter ``value``:
     the value to assign to each entry.)doc";
+
+// Docstring regina::python::doc::Matrix::inverse
+static constexpr const char inverse[] =
+R"doc(Computes the inverse of this matrix.
+
+Currently this is only implemented for integer matrices. If this
+matrix does not have an inverse, or if the inverse is not an integer
+matrix, then this routine will throw an exception.
+
+If your matrix might not have an integer inverse, or if you are
+working over some other ring or field, you might wish to consider
+calling adjugate() instead.
+
+Precondition:
+    This is a square matrix.
+
+Exception ``FailedPrecondition``:
+    This matrix is not square.
+
+Exception ``NoSolution``:
+    This matrix is not invertible over the integers.
+
+Returns:
+    the inverse matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::isIdentity
 static constexpr const char isIdentity[] =

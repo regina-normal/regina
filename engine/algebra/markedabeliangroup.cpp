@@ -1127,7 +1127,6 @@ bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other)
     return true;
 }
 
-
 // Start with the reduced matrix which is a 2x2 block matrix:
 //
 //  [A|B]
@@ -1152,6 +1151,7 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
     MatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );
     if (!isIsomorphism())
         return HomMarkedAbelianGroup( std::move(invMat), codomain_, domain_ );
+
     // get A, B, D from reducedMatrix
     // A must be square with domain/codomain_.countInvariantFactors() columns
     // D must be square with domain/codomain_.rank() columns
@@ -1170,18 +1170,9 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
     for (size_t i=0; i<D.rows(); i++)
         for (size_t j=0; j<D.columns(); j++)
             D.entry(i,j) = reducedMatrix_->entry(i + A.rows(), j + A.columns());
+
     // compute A', B', D'
-    // use void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
-    // const std::vector<size_t> &rowList);
-    //  from matrixOps to compute the inverse of D.
-    MatrixInt Di(D.rows(), D.columns()); Di.makeIdentity();
-    MatrixInt Dold(D.rows(), D.columns()); Dold.makeIdentity();
-    std::vector<size_t> rowList(D.rows());
-    for (size_t i=0; i<rowList.size(); i++)
-        rowList[i]=i;
-    columnEchelonForm(D, Di, Dold, rowList);
-    // now Di is the inverse of the old D, and D is the identity,
-    // and Dold is the old D.
+    MatrixInt Di = std::move(D).inverse();
     std::vector<Integer> invF(domain_.countInvariantFactors());
     for (size_t i=0; i<invF.size(); i++)
         invF[i] = domain_.invariantFactor(i);
@@ -1212,6 +1203,7 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
                 Bi.entry(i,j) += domain_.invariantFactor(i);
         }
     }
+
     // compute the coefficients of invMat.  We're in the funny situation where
     // we know invMat's reduced matrix, not its chain-complex level defining
     // matrix.  So we use the alternative HomMarkedAbelianGroup constructor

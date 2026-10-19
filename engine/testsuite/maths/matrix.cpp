@@ -247,6 +247,8 @@ TEST_F(MatrixTest, empty) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
+    EXPECT_NO_THROW({ validateEmpty(m.inverse()); });
+
     validateEmpty(m.smith());
     {
         auto [s, r, ri, c, ci] = m.smithCoB();
@@ -442,6 +444,8 @@ TEST_F(MatrixTest, noRows) {
     validateNoRows(m, 3);
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
+
+    EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
 
     validateNoRows(m.smith(), 3);
     {
@@ -644,6 +648,8 @@ TEST_F(MatrixTest, noColumns) {
     EXPECT_EQ(m.rank(), 0);
     EXPECT_EQ(Matrix<Integer>(m).rank(), 0);
 
+    EXPECT_THROW({ m.inverse(); }, regina::FailedPrecondition);
+
     validateNoColumns(m.smith(), 3);
     {
         auto [s, r, ri, c, ci] = m.smithCoB();
@@ -716,16 +722,32 @@ static void verifyEchelonForm(const MatrixInt& m) {
         }
     }
 
-    // Compare results with the more complex global columnEchelonForm().
-    MatrixInt copy(m);
-    auto r = MatrixInt::identity(copy.columns());
-    auto ri = MatrixInt::identity(copy.columns());
-    std::vector<size_t> rowList;
-    for (size_t i = 0; i < copy.rows(); ++i)
-        rowList.push_back(i);
-    regina::columnEchelonForm(copy, r, ri, rowList);
+    // Compare results with the more complex global columnEchelonForm() (which
+    // is now deprecated, and will eventually be removed).
+    {
+        MatrixInt copy(m);
+        auto r = MatrixInt::identity(copy.columns());
+        auto ri = MatrixInt::identity(copy.columns());
+        std::vector<size_t> rowList;
+        for (size_t i = 0; i < copy.rows(); ++i)
+            rowList.push_back(i);
 
-    EXPECT_EQ(copy, m1);
+        #if defined(__GNUC__)
+        // Silence the deprecation warning.
+        #pragma GCC diagnostic push
+        #if defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wdeprecated"
+        #else
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        #endif
+        #endif
+        regina::columnEchelonForm(copy, r, ri, rowList);
+        #if defined(__GNUC__)
+        #pragma GCC diagnostic pop
+        #endif
+
+        EXPECT_EQ(copy, m1);
+    }
 }
 
 TEST_F(MatrixTest, echelonForm) {

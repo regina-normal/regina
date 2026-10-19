@@ -479,7 +479,7 @@ Version 8.0  [ TODO ]
             - New scalar multiplication operators * and *=.
             - New in-place addition and subtractions operators += and -=.
             - New routine negate().
-            - New routines trace() and adjugate().
+            - New routines trace(), adjugate() and inverse().
             - New routines smith(), smithCoB(), makeSmith() and makeSmithCoB(),
               which replace the deprecated global functions smithNormalForm()
               and metricalSmithNormalForm().
@@ -727,6 +727,11 @@ Version 8.0  [ TODO ]
               the iterator type be random access is now a hard requirement.
         Class Vector3D<Real>:
             - New assignment operator that takes a std::array<Real, 3>.
+        Function columnEchelonForm():
+            - Deprecated with no direct replacement.  However, if you are using
+              this to compute inverses of integer matrices (which is the only
+              thing Regina used this function for), you can use the new routine
+              Matrix<Integer>::inverse() instead.
         Functions forall_constexpr():
             - New routine to support tests over a compile-time range of
               integers (like for_constexpr(), but with a boolean return value).

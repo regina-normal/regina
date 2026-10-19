@@ -1718,7 +1718,7 @@ class Matrix : public Output<Matrix<T>> {
          * remaining.
          */
         size_t makeRowEchelon() requires ReginaInteger<T> {
-            size_t i, j;
+            size_t i;
             T* pos;
 
             // The current working row and column:
@@ -1736,7 +1736,7 @@ class Matrix : public Output<Matrix<T>> {
                         break;
 
                 if (i == rows_) {
-                    // The column is entirely zero.  Nothing to do.
+                    // We found no non-zero entry.  Nothing to do.
                     ++currCol;
                     continue;
                 }
@@ -1803,7 +1803,7 @@ class Matrix : public Output<Matrix<T>> {
          * columns remaining.
          */
         size_t makeColumnEchelon() requires ReginaInteger<T> {
-            size_t i, j;
+            size_t i;
             T* pos;
 
             // The current working row and column:
@@ -1821,7 +1821,7 @@ class Matrix : public Output<Matrix<T>> {
                         break;
 
                 if (i == cols_) {
-                    // The row is entirely zero.  Nothing to do.
+                    // We found no non-zero entry.  Nothing to do.
                     ++currRow;
                     continue;
                 }
@@ -1992,6 +1992,123 @@ class Matrix : public Output<Matrix<T>> {
          */
         size_t rank() && requires ReginaInteger<T> {
             return makeRowEchelon();
+        }
+
+        /**
+         * Computes the inverse of this matrix.
+         *
+         * Currently this is only implemented for integer matrices.  If this
+         * matrix does not have an inverse, or if the inverse is not an integer
+         * matrix, then this routine will throw an exception.
+         *
+         * If your matrix might not have an integer inverse, or if you are
+         * working over some other ring or field, you might wish to consider
+         * calling adjugate() instead.
+         *
+         * \pre This is a square matrix.
+         *
+         * \exception FailedPrecondition This matrix is not square.
+         * \exception NoSolution This matrix is not invertible over the integers.
+         *
+         * \return the inverse matrix.
+         */
+        Matrix inverse() const& requires ReginaInteger<T> {
+            // Create a temporary copy and use the rvalue variant of inverse(),
+            // which will reduce that copy in-place.
+            return Matrix(*this).inverse();
+        }
+
+        /**
+         * Computes the inverse of this matrix.
+         *
+         * Currently this is only implemented for integer matrices.  If this
+         * matrix does not have an inverse, or if the inverse is not an integer
+         * matrix, then this routine will throw an exception.
+         *
+         * If your matrix might not have an integer inverse, or if you are
+         * working over some other ring or field, you might wish to consider
+         * calling adjugate() instead.
+         *
+         * A typical inverse computation involves modifying the matrix (e.g., by
+         * converting it to row/column echelon form).  This rvalue variant of
+         * inverse() is faster than the const variant, because it modifies this
+         * matrix directly instead of working on a temporary copy.
+         *
+         * \pre This is a square matrix.
+         *
+         * \exception FailedPrecondition This matrix is not square.
+         * \exception NoSolution This matrix is not invertible over the integers.
+         *
+         * \return the inverse matrix.
+         */
+        Matrix inverse() && requires ReginaInteger<T> {
+            if (rows_ != cols_)
+                throw FailedPrecondition("Inverses can only be "
+                    "computed for square matrices");
+            if (rows_ == 0)
+                return {};
+
+            // We reduce this matrix to row echelon form, and keep track of
+            // the row operations that were performed.  What follows is a
+            // variant of the code in makeRowEchelon().
+            Matrix inv = identity(rows_);
+
+            size_t i;
+            T* pos;
+
+            // The algorithm works its way down the main diagonal.
+            for (size_t curr = 0; curr < rows_; ++curr) {
+                // Attempt to fix the diagonal element (curr, curr).
+                // The entries to the left of column #curr will not change, and
+                // above row #curr all that can happen is some reduction.
+
+                // Identify the first non-zero entry in column #curr, starting
+                // the search on the diagonal.
+                T* diagPos = data_ + curr * (rows_ + 1);
+                for (i = curr, pos = diagPos; i < rows_; ++i, pos += rows_)
+                    if (*pos != 0)
+                        break;
+
+                if (i == rows_)
+                    throw NoSolution(); // column is entirely zero
+
+                // Ensure that this first non-zero entry appears on the diagonal
+                // (i.e., at position diagPos).
+                if (i > curr) {
+                    swapRows(curr, i);
+                    inv.swapRows(curr, i);
+                }
+
+                // Zero out all entries in column #curr below the diagonal.
+                for (i = curr + 1, pos = diagPos + rows_; i < rows_;
+                        ++i, pos += rows_) {
+                    // Now pos points to entry (i, curr).
+                    if (*pos != 0) {
+                        auto [gcd, u, v] = diagPos->gcdWithCoeffs(*pos);
+                        T a = diagPos->divExact(gcd);
+                        T b = -(pos->divExact(gcd));
+                        combRows(curr, i, u, v, b, a);
+                        inv.combRows(curr, i, u, v, b, a);
+                    }
+                }
+
+                // Ensure that our entry on the diagonal is exactly 1.
+                if (*diagPos != 1) {
+                    if (*diagPos == -1) {
+                        negateRow(curr);
+                        inv.negateRow(curr);
+                    } else
+                        throw NoSolution(); // the inverse is non-integer.
+                }
+
+                // Zero out all entries in column #curr above the diagonal.
+                for (i = 0, pos = data_ + curr; pos != diagPos;
+                        ++i, pos += rows_)
+                    if (*pos != 0)
+                        addRow(curr /* source */, i /* dest */, -*pos);
+            }
+
+            return inv;
         }
 
         /**
@@ -2520,8 +2637,9 @@ size_t rowBasis(MatrixInt& matrix);
 size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
 
 /**
- * Transforms a given matrix into column echelon form with respect to a
- * collection of rows.  The transformation will perform only column operations.
+ * Deprecated routine that transforms a given matrix into column echelon form
+ * with respect to a collection of rows.  The transformation will perform only
+ * column operations.
  *
  * Given the matrix \a M and the list \a rowList of rows from \a M, this
  * algorithm puts \a M in column echelon form with respect to the rows
@@ -2560,13 +2678,14 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * rowList".  Likewise, by "first non-zero entry" we mean "first row in
  * \a rowList with a non-zero entry".
  *
- * In a pinch, you can also use this routine to compute the inverse of an
- * invertible square matrix.
- *
  * If you just wish to reduce the matrix, you do not care about the order of
  * rows, and you do not want the change-of-basis matrices, then you should
  * call MatrixInt::makeColumnEchelon() instead, which is simpler but also more
  * streamlined.
+ *
+ * \deprecated This routine was only being used to compute matrix inverses (and
+ * only with a trivial \a rowList consisting of all rows).  It has therefore been
+ * replaced with the simpler routine `Matrix::inverse()`.
  *
  * \pre If \a n is the number of _columns_ in \a M, then \a R has precisely
  * \a n columns also, and \a Ri has precisely \a n rows.
@@ -2588,7 +2707,7 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  *
  * \ingroup maths
  */
-void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
+[[deprecated]] void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<size_t> &rowList);
 
 /**
