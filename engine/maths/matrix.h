@@ -2104,8 +2104,12 @@ class Matrix : public Output<Matrix<T>> {
                 // Zero out all entries in column #curr above the diagonal.
                 for (i = 0, pos = data_ + curr; pos != diagPos;
                         ++i, pos += rows_)
-                    if (*pos != 0)
-                        addRow(curr /* source */, i /* dest */, -*pos);
+                    if (*pos != 0) {
+                        // Handle inv first, because when we adjust this matrix
+                        // we will modify *pos.
+                        inv.addRow(curr, i, -*pos);
+                        addRow(curr, i, -*pos);
+                    }
             }
 
             return inv;
