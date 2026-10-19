@@ -120,7 +120,6 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // More or less a stripped-down copy of rowBasisAndOrthComp() from here.
     // See rowBasisAndOrthComp() for further details on how this works.
     size_t done = 0;
-    IntegerType coeff1, coeff2, common;
     while (done < rows) {
         // Find the first non-zero entry in row done.
         for (i = done; i < cols; ++i)
@@ -140,13 +139,13 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
             std::swap(lead[done], lead[i]);
 
             // Make all other entries in column lead[done] equal to zero.
-            coeff1 = m[done * cols + lead[done]];
+            IntegerType coeff1 = m[done * cols + lead[done]];
             for (i = 0; i < rows; ++i) {
                 if (i == done)
                     continue;
 
-                coeff2 = m[i * cols + lead[done]];
-                common = 0;
+                IntegerType coeff2 = m[i * cols + lead[done]];
+                IntegerType common = 0;
                 if (coeff2 != 0) {
                     for (j = 0; j < cols; ++j) {
                         m[i * cols + j] = m[i * cols + j] * coeff1
@@ -169,7 +168,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // know this because we know that our solution must be one-dimensional).
     //
     // Form a solution!
-    common = 1;
+    IntegerType common = 1;
     for (i = 0; i < rows; ++i)
         common = common.lcm(m[i * cols + lead[i]]);
     if (common < 0)

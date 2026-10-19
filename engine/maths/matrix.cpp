@@ -51,12 +51,11 @@ size_t rowBasis(MatrixInt& matrix) {
     size_t doneRows = 0;
     size_t rank = echelon.rows();
 
-    auto* lead = new size_t[n];
-    size_t r, c;
+    FixedArray<size_t> lead(n);
+    size_t c;
     for (c = 0; c < n; ++c)
         lead[c] = c;
 
-    Integer coeff1, coeff2;
     while (doneRows < rank) {
         // INV: For i < doneRows, echelon[i, lead[i]] is non-zero, and
         // every other entry echelon[j, lead[i]] is zero for j > i.
@@ -82,10 +81,10 @@ size_t rowBasis(MatrixInt& matrix) {
             // Do this with only integer arithmetic.  This could lead to
             // some very large matrix entries, though we're using Integer
             // so the worst that can happen is that things get slow.
-            coeff1 = echelon.entry(doneRows, lead[doneRows]);
+            Integer coeff1 = echelon.entry(doneRows, lead[doneRows]);
 
-            for (r = doneRows + 1; r < rank; ++r) {
-                coeff2 = echelon.entry(r, lead[doneRows]);
+            for (size_t r = doneRows + 1; r < rank; ++r) {
+                Integer coeff2 = echelon.entry(r, lead[doneRows]);
                 if (coeff2 != 0) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
@@ -99,7 +98,6 @@ size_t rowBasis(MatrixInt& matrix) {
     }
 
     // All done!
-    delete[] lead;
     return rank;
 }
 
@@ -116,12 +114,11 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     size_t doneRows = 0;
     size_t rank = echelon.rows();
 
-    auto* lead = new size_t[n];
-    size_t r, c;
+    FixedArray<size_t> lead(n);
+    size_t c;
     for (c = 0; c < n; ++c)
         lead[c] = c;
 
-    Integer coeff1, coeff2;
     while (doneRows < rank) {
         // INV: For i < doneRows, echelon[i, lead[i]] is non-zero, and
         // every other entry echelon[j, lead[i]] is zero for j > i.
@@ -147,10 +144,10 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
             // Do this with only integer arithmetic.  This could lead to
             // some very large matrix entries, though we're using Integer
             // so the worst that can happen is that things get slow.
-            coeff1 = echelon.entry(doneRows, lead[doneRows]);
+            Integer coeff1 = echelon.entry(doneRows, lead[doneRows]);
 
-            for (r = doneRows + 1; r < rank; ++r) {
-                coeff2 = echelon.entry(r, lead[doneRows]);
+            for (size_t r = doneRows + 1; r < rank; ++r) {
+                Integer coeff2 = echelon.entry(r, lead[doneRows]);
                 if (coeff2 != 0) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
@@ -167,7 +164,7 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     complement.fill(0);
 
     Integer lcmLead = 1;
-    for (r = 0; r < n; ++r) {
+    for (size_t r = 0; r < n; ++r) {
         complement.entry(r, lead[r]) = lcmLead;
         complement.entry(r, lead[r]).negate();
 
@@ -179,11 +176,11 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
         complement.reduceRow(r);
 
         if (r < rank) {
-            coeff1 = echelon.entry(r, lead[r]);
+            Integer coeff1 = echelon.entry(r, lead[r]);
             lcmLead = lcmLead.lcm(coeff1);
 
             for (size_t tmp = 0; tmp < r; ++tmp) {
-                coeff2 = echelon.entry(tmp, lead[r]);
+                Integer coeff2 = echelon.entry(tmp, lead[r]);
                 if (coeff2 != 0) {
                     echelon.multRow(tmp, coeff1);
                     echelon.addRow(r, tmp, -coeff2);
@@ -198,7 +195,6 @@ size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     }
 
     // All done!
-    delete[] lead;
     return rank;
 }
 
