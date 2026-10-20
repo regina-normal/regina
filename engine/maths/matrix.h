@@ -2036,23 +2036,23 @@ class Matrix : public Output<Matrix<T>> {
                         break;
 
                 if (c == cols_) {
-                    // We have a zero row.
-                    if (currRow == rows_ - 1) {
-                        // This zero row was the last remaining row.
-                        --rows_;
+                    // We have a zero row.  We need to truncate.
+                    --rows_;
+                    if (currRow == rows_) {
+                        // That zero row was the last remaining row.
                         return;
                     } else {
                         // The current row is redundant.  Move the lowest
-                        // surviving row up into its place and truncate.
+                        // surviving row (which is now beyond the end of our
+                        // recently-truncated matrix) into its place.
                         std::move(
-                            data_ + (rows_ - 1) * cols_,
                             data_ + rows_ * cols_,
+                            data_ + (rows_ + 1) * cols_,
                             data_ + currRow * cols_);
                         std::move(
-                            echelon.data_ + (rows_ - 1) * cols_,
                             echelon.data_ + rows_ * cols_,
+                            echelon.data_ + (rows_ + 1) * cols_,
                             echelon.data_ + currRow * cols_);
-                        --rows_;
                     }
                 } else {
                     // This row is independent from the others.

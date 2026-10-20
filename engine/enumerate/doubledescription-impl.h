@@ -110,46 +110,49 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         for (j = 0; j < cols; ++j)
             m[i * cols + j] = subspace.entry(i, use[j]);
 
-    // Put this submatrix in echelon form; moreover, for the leading
-    // entry in each row, set all other entries in the corresponding
+    // What follows is a variant of Matrix::makeRowBasis().
+    //
+    // In brief, we put our submatrix in row echelon form; moreover, for the
+    // leading entry in each row, we set all other entries in the corresponding
     // column to zero.
+    //
+    // See Matrix::makeRowBasis() for further details on how this works.
     FixedArray<size_t> lead(cols);
     for (i = 0; i < cols; ++i)
         lead[i] = i;
 
-    // More or less a stripped-down copy of rowBasisAndOrthComp() from here.
-    // See rowBasisAndOrthComp() for further details on how this works.
-    size_t done = 0;
-    while (done < rows) {
-        // Find the first non-zero entry in row done.
-        for (i = done; i < cols; ++i)
-            if (m[done * cols + lead[i]] != 0)
+    size_t currRow = 0;
+    while (currRow < rows) {
+        // Find the first non-zero entry in row currRow.
+        for (i = currRow; i < cols; ++i)
+            if (m[currRow * cols + lead[i]] != 0)
                 break;
 
         if (i == cols) {
             // We have a zero row.  Trash it and replace it with something else.
             --rows;
-            if (done < rows) {
-                for (j = 0; j < cols; ++j)
-                    m[done * cols + j] = m[rows * cols + j];
-            }
+            if (currRow < rows)
+                std::move(
+                    m.begin() + rows * cols,
+                    m.begin() + (rows + 1) * cols,
+                    m.begin() + currRow * cols);
         } else {
-            // We have a non-zero row.
+            // This row is independent from the others.
             // Save the column in which we found our non-zero entry.
-            std::swap(lead[done], lead[i]);
+            std::swap(lead[currRow], lead[i]);
 
-            // Make all other entries in column lead[done] equal to zero.
-            IntegerType coeff1 = m[done * cols + lead[done]];
+            // Make all other entries in column lead[currRow] equal to zero.
+            const IntegerType& coeff1 = m[currRow * cols + lead[currRow]];
             for (i = 0; i < rows; ++i) {
-                if (i == done)
+                if (i == currRow)
                     continue;
 
-                IntegerType coeff2 = m[i * cols + lead[done]];
+                IntegerType coeff2 = m[i * cols + lead[currRow]];
                 IntegerType common = 0;
                 if (coeff2 != 0) {
                     for (j = 0; j < cols; ++j) {
                         m[i * cols + j] = m[i * cols + j] * coeff1
-                            - m[done * cols + j] * coeff2;
+                            - m[currRow * cols + j] * coeff2;
                         common = common.gcd(m[i * cols + j]);
                     }
                 }
@@ -159,7 +162,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
                     for (j = 0; j < cols; ++j)
                         m[i * cols + j].divByExact(common);
             }
-            ++done;
+            ++currRow;
         }
     }
 
