@@ -1995,6 +1995,88 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Rearranges and/or deletes rows of this matrix so that whatever rows
+         * remain form a basis of the original row space.  The main purpose of
+         * this routine is to provide a way to remove redundant equations from
+         * a system of linear equations.
+         *
+         * This routine may reorder rows and/or remove rows, but will perform no
+         * other operations.  As a result, this routine _could_ change the
+         * dimensions of the matrix.  After this routine returns, the rows of
+         * this matrix will be linearly independent, and will together form a
+         * basis (over the rationals) of the row space of the original matrix.
+         */
+        void makeRowBasis() requires ReginaInteger<T> {
+            // Make a copy of this matrix to reduce to row echelon form.
+            Matrix echelon(*this);
+
+            // Here our row echelon form is not with respect to columns 0,1,...;
+            // rather it is with respect to columns lead[0],lead[1],... .
+            FixedArray<size_t> lead(cols_);
+            size_t c;
+            for (c = 0; c < cols_; ++c)
+                lead[c] = c;
+
+            // We will truncate redundant rows from the bottom of this matrix
+            // as we go.  We do this by reducing rows_ (which leaves spare
+            // capacity in the data_ array, but this is harmless).
+            // We will treat echelon as though it were likewise truncated,
+            // though we do not bother to adjust echelon.rows_ as well.
+
+            size_t currRow = 0;
+            while (currRow < rows_) {
+                // INV: For all i < currRow:
+                // - echelon[i, lead[i]] != 0;
+                // - all entries in the column below echelon[i, lead[i]] are 0.
+
+                // Determine a good value for lead[currRow].
+                // The candidates are lead[currRow,...,(cols_-1)].
+                for (c = currRow; c < cols_; ++c)
+                    if (echelon.entry(currRow, lead[c]) != 0)
+                        break;
+
+                if (c == cols_) {
+                    // We have a zero row.
+                    if (currRow == rows_ - 1) {
+                        // This zero row was the last remaining row.
+                        --rows_;
+                        return;
+                    } else {
+                        // The current row is redundant.  Move the lowest
+                        // surviving row up into its place and truncate.
+                        std::move(
+                            data_ + (rows_ - 1) * cols_,
+                            data_ + rows_ * cols_,
+                            data_ + currRow * cols_);
+                        std::move(
+                            echelon.data_ + (rows_ - 1) * cols_,
+                            echelon.data_ + rows_ * cols_,
+                            echelon.data_ + currRow * cols_);
+                        --rows_;
+                    }
+                } else {
+                    // This row is independent from the others.
+                    // Save the column in which we found our non-zero entry.
+                    std::swap(lead[currRow], lead[c]);
+
+                    // Zero out all lower entries in column lead[currRow], using
+                    // only integer arithmetic.
+                    const T& coeff1 = echelon.entry(currRow, lead[currRow]);
+                    for (size_t r = currRow + 1; r < rows_; ++r) {
+                        // Make coeff2 a copy, because row r is about to change.
+                        T coeff2 = echelon.entry(r, lead[currRow]);
+                        if (coeff2 != 0) {
+                            echelon.multRow(r, coeff1);
+                            echelon.addRow(currRow, r, -coeff2);
+                            echelon.reduceRow(r);
+                        }
+                    }
+                    ++currRow;
+                }
+            }
+        }
+
+        /**
          * Computes the inverse of this matrix, if this exists as an integer
          * matrix.
          *
@@ -2583,24 +2665,23 @@ using MatrixBool = Matrix<bool>;
 }
 
 /**
- * Find a basis for the row space of the given matrix.
+ * Deprecated routine that finds a basis for the row space of the given matrix.
  *
- * This routine will rearrange the rows of the given matrix so that the
- * first \a rank rows form a basis for the row space (where \a rank is
- * the rank of the matrix).  The rank itself will be returned.  No other
- * changes will be made to the matrix aside from swapping rows.
+ * This routine will rearrange the rows of the given matrix so that the first
+ * \a rank rows form a basis (over the rationals) for the row space, where
+ * \a rank is the rank of the matrix.  The rank itself will be returned.
+ * No other changes will be made to the matrix aside from swapping rows.
  *
- * Although this routine takes an integer matrix (and only uses integer
- * operations), we consider the row space to be over the _rationals_.
- * That is, although we never divide, we act as though we could if we
- * wanted to.
+ * \deprecated You should now call Matrix::makeRowBasis() instead.  However,
+ * be aware that (unlike this routine) Matrix::makeRowBasis() will delete
+ * redundant rows entirely instead of moving them to the bottom of the matrix.
  *
  * \param matrix the matrix to examine and rearrange.
  * \return the rank of the given matrix.
  *
  * \ingroup maths
  */
-size_t rowBasis(MatrixInt& matrix);
+[[deprecated]] size_t rowBasis(MatrixInt& matrix);
 
 /**
  * Finds a basis for the row space of the given matrix, as well as an

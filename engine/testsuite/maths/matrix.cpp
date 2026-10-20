@@ -811,6 +811,82 @@ TEST_F(MatrixTest, echelonForm) {
     }
 }
 
+static void verifyRowBasis(const MatrixInt& m) {
+    SCOPED_TRACE_REGINA(m);
+
+    MatrixInt copy(m);
+    copy.makeRowBasis();
+
+    size_t rank = m.rank();
+    EXPECT_EQ(copy.rows(), rank);
+    EXPECT_EQ(copy.columns(), m.columns());
+    EXPECT_EQ(copy.rank(), rank);
+
+    // Ensure that copy spans the same row space as m.
+    {
+        MatrixInt comb(m.rows() + copy.rows(), m.columns());
+        for (size_t i = 0; i < m.rows(); ++i)
+            for (size_t j = 0; j < m.columns(); ++j)
+                comb.entry(i, j) = m.entry(i, j);
+        for (size_t i = 0; i < copy.rows(); ++i)
+            for (size_t j = 0; j < m.columns(); ++j)
+                comb.entry(m.rows() + i, j) = copy.entry(i, j);
+        EXPECT_EQ(comb.rank(), rank);
+    }
+
+    // Ensure that every row of copy matches some row of m.
+    // (There are faster ways of doing this, but our tests are not large.)
+    for (size_t i = 0; i < copy.rows(); ++i) {
+        bool found = false;
+        for (size_t j = 0; j < m.rows(); ++j) {
+            bool equal = true;
+            for (size_t c = 0; c < m.columns(); ++c)
+                if (copy.entry(i, c) != m.entry(j, c)) {
+                    equal = false;
+                    break;
+                }
+            if (equal) {
+                found = true;
+                break;
+            }
+        }
+        EXPECT_TRUE(found);
+    }
+}
+
+TEST_F(MatrixTest, rowBasis) {
+    for (const MatrixInt& m : cases) {
+        verifyRowBasis(m);
+        verifyRowBasis(m.transpose());
+    }
+
+    // Some more hand-crafted tests:
+    verifyRowBasis({
+        { 1, 2, 3 },
+        { 5, 0, 2 },
+        { 6, 2, 5 }, // redundant via rows 0,1
+        { 8, 3, 1 }
+    });
+    verifyRowBasis({
+        { 1, 2, 3 },
+        { 5, 0, 2 },
+        { 6, 2, 5 }, // redundant via rows 0,1
+        { 11, 2, 7 } // redundant via rows 0,1
+    });
+    verifyRowBasis({
+        { 1, 2, 3 },
+        { 2, 4, 6 }, // redundant via row 0
+        { 3, 6, 9 }, // redundant via row 0
+        { 5, 0, 2 }
+    });
+    verifyRowBasis({
+        { 1, 2, 3 },
+        { 2, 4, 6 }, // redundant via row 0
+        { 5, 0, 2 },
+        { 3, 6, 9 }  // redundant via row 0
+    });
+}
+
 template <regina::CommutativeRing T>
 void verifyAdjugate(const Matrix<T>& m, const T& determinant,
         AdjugateAlgorithm alg) {

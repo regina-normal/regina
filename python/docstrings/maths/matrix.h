@@ -176,17 +176,20 @@ Author:
 
 // Docstring regina::python::doc::rowBasis
 inline constexpr const char rowBasis[] =
-R"doc(Find a basis for the row space of the given matrix.
+R"doc(Deprecated routine that finds a basis for the row space of the given
+matrix.
 
 This routine will rearrange the rows of the given matrix so that the
-first *rank* rows form a basis for the row space (where *rank* is the
-rank of the matrix). The rank itself will be returned. No other
-changes will be made to the matrix aside from swapping rows.
+first *rank* rows form a basis (over the rationals) for the row space,
+where *rank* is the rank of the matrix. The rank itself will be
+returned. No other changes will be made to the matrix aside from
+swapping rows.
 
-Although this routine takes an integer matrix (and only uses integer
-operations), we consider the row space to be over the _rationals_.
-That is, although we never divide, we act as though we could if we
-wanted to.
+.. deprecated::
+    You should now call Matrix::makeRowBasis() instead. However, be
+    aware that (unlike this routine) Matrix::makeRowBasis() will
+    delete redundant rows entirely instead of moving them to the
+    bottom of the matrix.
 
 Parameter ``matrix``:
     the matrix to examine and rearrange.
@@ -1148,7 +1151,8 @@ Parameter ``value``:
 
 // Docstring regina::python::doc::Matrix::inverse
 static constexpr const char inverse[] =
-R"doc(Computes the inverse of this matrix.
+R"doc(Computes the inverse of this matrix, if this exists as an integer
+matrix.
 
 Currently this is only implemented for integer matrices. If this
 matrix does not have an inverse, or if the inverse is not an integer
@@ -1225,6 +1229,19 @@ static constexpr const char makeIdentity[] =
 R"doc(Turns this matrix into an identity matrix. This matrix need not be
 square; after this routine it will have ``entry(r,c)`` equal to 1 if
 ``r == c`` and 0 otherwise.)doc";
+
+// Docstring regina::python::doc::Matrix::makeRowBasis
+static constexpr const char makeRowBasis[] =
+R"doc(Rearranges and/or deletes rows of this matrix so that whatever rows
+remain form a basis of the original row space. The main purpose of
+this routine is to provide a way to remove redundant equations from a
+system of linear equations.
+
+This routine may swap rows and/or remove rows, but will perform no
+other operations. As a result, this routine _could_ change the
+dimensions of the matrix. After this routine returns, the rows of this
+matrix will be linearly independent, and will together form a basis
+(over the rationals) of the row space of the original matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::makeRowEchelon
 static constexpr const char makeRowEchelon[] =

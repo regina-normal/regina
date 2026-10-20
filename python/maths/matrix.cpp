@@ -187,6 +187,7 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
                 rdoc::columnEchelon)
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
+            .def("makeRowBasis", &Matrix::makeRowBasis, rdoc::makeRowBasis)
             .def("inverse",
                 static_cast<Matrix (Matrix::*)() const&>(&Matrix::inverse),
                 rdoc::inverse)
@@ -275,7 +276,6 @@ void addMatrix(pybind11::module_& m) {
             MatrixInt& r, MatrixInt& ri, MatrixInt&c, MatrixInt& ci) {
         std::tie(r, ri, c, ci) = m.makeSmithCoB(regina::SNFAlgorithm::Metrical);
     }, rdoc::metricalSmithNormalForm);
-    m.def("rowBasis", &regina::rowBasis, rdoc::rowBasis);
     m.def("rowBasisAndOrthComp", &regina::rowBasisAndOrthComp,
         rdoc::rowBasisAndOrthComp);
     m.def("preImageOfLattice", &regina::preImageOfLattice,
@@ -296,6 +296,7 @@ void addMatrix(pybind11::module_& m) {
     #endif
     m.def("columnEchelonForm", &regina::columnEchelonForm,
         rdoc::columnEchelonForm); // deprecated
+    m.def("rowBasis", &regina::rowBasis, rdoc::rowBasis);
     #if defined(__GNUC__)
     #pragma GCC diagnostic pop
     #endif

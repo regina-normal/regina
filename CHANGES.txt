@@ -479,7 +479,7 @@ Version 8.0  [ TODO ]
             - New scalar multiplication operators * and *=.
             - New in-place addition and subtractions operators += and -=.
             - New routine negate().
-            - New routines trace(), adjugate() and inverse().
+            - New routines trace(), makeRowBasis(), adjugate() and inverse().
             - New routines smith(), smithCoB(), makeSmith() and makeSmithCoB(),
               which replace the deprecated global functions smithNormalForm()
               and metricalSmithNormalForm().
@@ -763,6 +763,10 @@ Version 8.0  [ TODO ]
         Function readDehydrationList(), readOrb(), readSigList():
             - These functions now throw exceptions on error, instead of
               returning null.
+        Function rowBasis():
+            - Deprecated in favour of the new Matrix::makeRowBasis().  Note
+              however that the new function behaves differently (it removes
+              redundant rows from the matrix instead of returning the rank).
         Function smithNormalForm():
             - The two variants of this routine have been moved into the class
               Matrix<Integer> as the member functions makeSmith() and
