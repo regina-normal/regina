@@ -1900,7 +1900,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This rvalue variant of rowEchelon() is faster than the const
          * variant, because it reduces this matrix directly instead of
-         * working on a temporary copy.
+         * working on a deep copy.
          *
          * See the const version of rowEchelon() for further information on
          * row echelon form.
@@ -1951,7 +1951,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This rvalue variant of columnEchelon() is faster than the const
          * variant, because it reduces this matrix directly instead of
-         * working on a temporary copy.
+         * working on a deep copy.
          *
          * See the const version of columnEchelon() for further information on
          * column echelon form.
@@ -2074,6 +2074,47 @@ class Matrix : public Output<Matrix<T>> {
                     ++currRow;
                 }
             }
+        }
+
+        /**
+         * Returns a subset of rows of this matrix which together form a basis
+         * of the row space of this matrix.  The main purpose of this routine is
+         * to provide a way to remove redundant equations from a system of
+         * linear equations.
+         *
+         * Specifically: let \a R be the matrix that is returned.  Then the
+         * rows of \a R will be a subset of the rows of this matrix, and may
+         * possibly appear in a different order.  In particular, \a R might have
+         * fewer rows than this matrix.  The rows of \a R will be linearly
+         * independent, and will together form a basis (over the rationals) of
+         * the row space of this matrix.
+         *
+         * \return a basis of the row space of this matrix.
+         */
+        Matrix rowBasis() const& requires ReginaInteger<T> {
+            Matrix ans(*this);
+            ans.makeRowBasis();
+            return ans;
+        }
+
+        /**
+         * Returns a subset of rows of this matrix which together form a basis
+         * of the row space of this matrix.  The main purpose of this routine is
+         * to provide a way to remove redundant equations from a system of
+         * linear equations.
+         *
+         * This rvalue variant of rowBasis() is faster than the const variant,
+         * because it operates on this matrix directly instead of working on a
+         * deep copy.
+         *
+         * See the const version of rowBasis() for further information on row
+         * bases.
+         *
+         * \return a basis of the row space of this matrix.
+         */
+        Matrix rowBasis() && requires ReginaInteger<T> {
+            makeRowBasis();
+            return std::move(*this);
         }
 
         /**
@@ -2265,7 +2306,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This rvalue variant of smith() is faster than the const variant,
          * because it reduces this matrix directly instead of working on a
-         * temporary copy.
+         * deep copy.
          *
          * See the const version of smith() for further information on
          * Smith normal forms.
@@ -2404,7 +2445,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This rvalue variant of smithCoB() is faster than the const variant,
          * because it reduces this matrix directly instead of working on a
-         * temporary copy.
+         * deep copy.
          *
          * See the const version of smithCoB() for further information on
          * Smith normal forms and change-of-basis matrices.

@@ -816,6 +816,8 @@ static void verifyRowBasis(const MatrixInt& m) {
 
     MatrixInt copy(m);
     copy.makeRowBasis();
+    EXPECT_EQ(m.rowBasis(), copy);
+    EXPECT_EQ(MatrixInt(m).rowBasis(), copy); // rvalue variant
 
     size_t rank = m.rank();
     EXPECT_EQ(copy.rows(), rank);

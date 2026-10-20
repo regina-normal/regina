@@ -188,6 +188,9 @@ void addMatrixOf(pybind11::module_& m, const char* className) {
             .def("rank", static_cast<size_t (Matrix::*)() const&>(
                 &Matrix::rank), rdoc::rank)
             .def("makeRowBasis", &Matrix::makeRowBasis, rdoc::makeRowBasis)
+            .def("rowBasis",
+                static_cast<Matrix (Matrix::*)() const&>(&Matrix::rowBasis),
+                rdoc::rowBasis)
             .def("inverse",
                 static_cast<Matrix (Matrix::*)() const&>(&Matrix::inverse),
                 rdoc::inverse)

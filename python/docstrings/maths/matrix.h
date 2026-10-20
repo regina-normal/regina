@@ -1237,7 +1237,7 @@ remain form a basis of the original row space. The main purpose of
 this routine is to provide a way to remove redundant equations from a
 system of linear equations.
 
-This routine may swap rows and/or remove rows, but will perform no
+This routine may reorder rows and/or remove rows, but will perform no
 other operations. As a result, this routine _could_ change the
 dimensions of the matrix. After this routine returns, the rows of this
 matrix will be linearly independent, and will together form a basis
@@ -1453,6 +1453,23 @@ Precondition:
 
 Parameter ``row``:
     the index of the row to reduce.)doc";
+
+// Docstring regina::python::doc::Matrix::rowBasis
+static constexpr const char rowBasis[] =
+R"doc(Returns a subset of rows of this matrix which together form a basis of
+the row space of this matrix. The main purpose of this routine is to
+provide a way to remove redundant equations from a system of linear
+equations.
+
+Specifically: let *R* be the matrix that is returned. Then the rows of
+*R* will be a subset of the rows of this matrix, and may possibly
+appear in a different order. In particular, *R* might have fewer rows
+than this matrix. The rows of *R* will be linearly independent, and
+will together form a basis (over the rationals) of the row space of
+this matrix.
+
+Returns:
+    a basis of the row space of this matrix.)doc";
 
 // Docstring regina::python::doc::Matrix::rowEchelon
 static constexpr const char rowEchelon[] =
