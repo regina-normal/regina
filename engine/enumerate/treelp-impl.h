@@ -172,9 +172,8 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(const Triangulation<3>& tri,
         }
     }
 
-    // Compute the rank of the matrix, and reorder its rows so
-    // the first \a rank_ rows are full rank.
-    rank_ = regina::rowBasis(eqns_);
+    // Remove any redundant matching equations.
+    eqns_.makeRowBasis();
 
     // Reorder the columns using a good heuristic.
     cols_ = eqns_.columns() + Constraint::constraints.size();
@@ -184,7 +183,7 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(const Triangulation<3>& tri,
     // Create and fill the sparse columns.
     col_ = FixedArray<Col>(cols_);
     for (c = 0; c < eqns_.columns() - (scaling_ ? 1 : 0); ++c)
-        for (r = 0; r < rank_; ++r)
+        for (r = 0; r < eqns_.rows(); ++r)
             if (eqns_.entry(r, c) != 0) {
                 // Each entry should have absolute value <= 4, so
                 // unsafeValue() is safe to use here.
@@ -193,7 +192,7 @@ LPInitialTableaux<Constraint>::LPInitialTableaux(const Triangulation<3>& tri,
 
     // Add in the final row(s) for any additional constraints.
     Constraint::addRows(col_.begin(), *tri_, columnPerm_.begin());
-    rank_ += Constraint::constraints.size();
+    rank_ = eqns_.rows() + Constraint::constraints.size();
 }
 
 #ifdef REGINA_NOOPT_REORDER_COLUMNS
@@ -301,22 +300,22 @@ void LPInitialTableaux<Constraint>::reorder(bool enumeration) {
         // from the last column to the first.
 
         // Track which rows have been processed so far.
-        FixedArray<bool> used(rank_, false);
+        FixedArray<bool> used(eqns_.rows(), false);
 
         // Also track which tetrahedra have been used so far.
         FixedArray<bool> touched(n, false);
         size_t nTouched = 0;
 
         // Off we go, one row at a time.
-        for (size_t i = 0; i < rank_; ++i) {
+        for (size_t i = 0; i < eqns_.rows(); ++i) {
             // Seek out the ith row to process.
-            // Because the first rank_ rows of the matrix are full rank,
-            // we are guaranteed that this row will be non-zero.
+            // Because the matrix is full rank, we are guaranteed that this
+            // row will be non-zero.
 
             size_t best = n + 1; // No row touches more than n tetrahedra.
             size_t bestRow;
 
-            for (size_t j = 0; j < rank_; ++j) {
+            for (size_t j = 0; j < eqns_.rows(); ++j) {
                 if (used[j])
                     continue;
                 size_t curr = 0;

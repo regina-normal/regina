@@ -1168,10 +1168,14 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
         MatrixInt eqns_;
             /**< The adjusted matching equation matrix, in dense form.
                  The precise adjustments that we make are described in the
-                 LPInitialTableaux class notes. */
+                 LPInitialTableaux class notes.
+                 This matrix must be full rank (i.e., it must not have any
+                 redundant equations). */
         size_t rank_;
             /**< The rank of this tableaux, taking into account any additional
-                 constraints from the template parameter Constraint. */
+                 constraints from the template parameter Constraint.
+                 Depending on the Constraint parameter, this could be strictly
+                 larger than `eqns_.rows()`. */
         size_t cols_;
             /**< The number of columns in this tableaux, taking into account
                  any additional constraints from the template parameter
@@ -1509,11 +1513,16 @@ class LPInitialTableaux : public Output<LPInitialTableaux<Constraint>> {
          * columnPerm_; see the columnPerm() notes for more information
          * on the constraints that this reordering is required to satisfy.
          *
-         * This routine is called before any additional constraints are
-         * added from the \a Constraint template parameter; that is, the
-         * rows of the matrix are just the matching equations.  However,
-         * we do already have the extra placeholder columns for the new
-         * variables that correspond to these extra constraint(s).
+         * This routine is only ever called from the class constructor.
+         * At the point where it is called:
+         *
+         * - eqns_ must be full rank;
+         * - we do not require rank_ to have been initialised at all;
+         * - any additional constraints from the \a Constraint template
+         *   parameter must _not_ have been added yet (i.e., the rows of
+         *   the matrix are just the matching equations);
+         * - we must however already have the extra placeholder _columns_ for
+         *   the new variables that correspond to these extra constraint(s).
          *
          * \param enumeration \c true if we should optimise the ordering
          * for a full enumeration of vertex surfaces or taut angle structures,
