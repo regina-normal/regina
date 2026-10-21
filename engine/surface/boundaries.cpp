@@ -41,11 +41,11 @@ void NormalSurface::calculateBoundaries() const try {
     into a collection of "interval isometries", and counting the number of
     orbits of these isometries.
 
-    This is based on the algorithm given by Agol, Hass and Thurston (2006) for
-    counting connected components of normal curves and normal surfaces. However,
-    since this routine works only with boundary curves, which are necessarily
-    closed, this implementation is dramatically simpler than the much more
-    general algorithm originally given by Agol, Hass and Thurston.
+    Although the terminology is drawn from the setup for the orbit-counting
+    algorithm given by Agol, Hass and Thurston (2006), at present the
+    implementation does *not* actually use the Agol-Hass-Thurston algorithm.
+    Instead, we simply use the much more naive (but easier to implement)
+    method of explicitly traversing all the orbits.
 
     Be aware that the Integer-to-size_t conversions in this routine could throw
     an IntegerOverflow exception, which is caught at the end of this
@@ -105,9 +105,7 @@ void NormalSurface::calculateBoundaries() const try {
 
     // Since the boundary curves of surf are all closed curves, we can count the
     // orbits in the interval isometries by simply traversing the orbits, and
-    // "marking" points which have already been visited. This is dramatically
-    // simpler than the much more general algorithm given by Agol, Hass and
-    // Thurston (2006).
+    // "marking" points which have already been visited.
     FixedArray<bool> marked(totalWeight, false);
 
     size_t orbits = 0;
@@ -141,6 +139,37 @@ void NormalSurface::calculateBoundaries() const try {
 } catch (const IntegerOverflow&) {
     throw UnsolvedCase("This surface has too many boundary arcs "
         "for this computation to proceed");
+}
+
+void NormalSurface::calculateSpunBoundaries() const {
+    Matrix<Integer> bdryIntersections;
+    try {
+        bdryIntersections = boundaryIntersectionsInternal();
+    } catch (const FailedPrecondition&) {
+        // Assuming the surface is indeed non-compact, the preconditions for
+        // boundaryIntersectionsInternal() are equivalent to the preconditions
+        // for countBoundaries(), so we can just rethrow.
+        throw;
+    } catch (const ReginaException&) {
+        // At present, regardless of whether this is SnapPeaIsNull or
+        // UnsolvedCase, countBoundaries() promises to throw its own
+        // UnsolvedCase.
+        throw UnsolvedCase("SnapPea failed to construct data needed to "
+                "count boundaries for spun-normal surface");
+    }
+
+    // Sum up the number of boundary curves contributed by each cusp.
+    Integer total = 0;
+    for (size_t r = 0; r < bdryIntersections.rows(); ++r) {
+        total += bdryIntersections.entry(r, 0).gcd(
+                bdryIntersections.entry(r, 1) );
+    }
+    try {
+        boundaries_ = total.safeValue<size_t>();
+    } catch (const IntegerOverflow&) {
+        throw UnsolvedCase(
+                "This spun-normal surface has too many boundary curves");
+    }
 }
 
 } // namespace regina

@@ -199,6 +199,10 @@ Returns:
 See also:
     turaevViro)doc";
 
+//TODO  This will be automatically overwritten by gendocs.sh
+static constexpr const char boundaryNullAngleStructure[] =
+R"doc()doc";
+
 // Docstring regina::python::doc::Triangulation3::closeBook
 static constexpr const char closeBook[] =
 R"doc(If possible, performs a book closing move about the given edge. This
@@ -914,6 +918,10 @@ Exception ``UnsolvedCase``:
 Returns:
     ``True`` if the underlying 3-manifold contains a compressing disc,
     or ``False`` if it does not.)doc";
+
+//TODO  This will be automatically overwritten by gendocs.sh
+static constexpr const char hasBoundaryNullAngleStructure[] =
+R"doc()doc";
 
 // Docstring regina::python::doc::Triangulation3::hasGeneralAngleStructure
 static constexpr const char hasGeneralAngleStructure[] =
