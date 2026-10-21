@@ -2532,8 +2532,11 @@ using MatrixBool = Matrix<bool>;
 [[deprecated]] inline void smithNormalForm(MatrixInt& matrix,
         MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
         MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
-    std::tie(rowSpaceBasis, rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv) =
-        matrix.makeSmithCoB();
+    auto cob = matrix.makeSmithCoB();
+    rowSpaceBasis = std::move(cob[0]);
+    rowSpaceBasisInv = std::move(cob[1]);
+    colSpaceBasis = std::move(cob[2]);
+    colSpaceBasisInv = std::move(cob[3]);
 }
 
 /**
@@ -2569,8 +2572,11 @@ using MatrixBool = Matrix<bool>;
 [[deprecated]] inline void metricalSmithNormalForm(MatrixInt& matrix,
         MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
         MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
-    std::tie(rowSpaceBasis, rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv) =
-        matrix.makeSmithCoB(SNFAlgorithm::Metrical);
+    auto cob = matrix.makeSmithCoB(SNFAlgorithm::Metrical);
+    rowSpaceBasis = std::move(cob[0]);
+    rowSpaceBasisInv = std::move(cob[1]);
+    colSpaceBasis = std::move(cob[2]);
+    colSpaceBasisInv = std::move(cob[3]);
 }
 
 /**

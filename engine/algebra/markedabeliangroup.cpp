@@ -66,13 +66,14 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
         throw InvalidArgument("The chain complex constructor requires "
             "M.columns() == N.rows()");
 
-    MatrixInt tM = M_;
-    std::tie(MR_, MRi_, std::ignore, std::ignore) =
-        tM.makeSmithCoB(SNFAlgorithm::Metrical);
-
-    for (size_t i=0; (i<tM.rows()) && (i<tM.columns()); i++)
-        if (tM.entry(i,i) != 0)
-            ++rankM_;
+    {
+        auto result = M_.smithCoB(SNFAlgorithm::Metrical);
+        MR_ = std::move(result[1]);
+        MRi_ = std::move(result[2]);
+        for (size_t i=0; i<M_.rows() && i<M_.columns(); ++i)
+            if (result[0].entry(i,i) != 0)
+                ++rankM_;
+    }
 
     // construct the internal presentation matrix.
     MatrixInt prod = MRi_ * N_;
@@ -86,8 +87,12 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     // build the list of invariant factors and their row indexes
     // now compute the rank and column indexes ...
 
-    std::tie(presR_, std::ignore, presC_, presCi_) =
-        pres.makeSmithCoB(SNFAlgorithm::Metrical);
+    {
+        auto cob = pres.makeSmithCoB(SNFAlgorithm::Metrical);
+        presR_ = std::move(cob[0]);
+        presC_ = std::move(cob[2]);
+        presCi_ = std::move(cob[3]);
+    }
 
     for (size_t i=0; ( (i<pres.rows()) && (i<pres.columns()) ); i++) {
         if (pres.entry(i,i)==1)
@@ -130,19 +135,21 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
             "M.columns() == N.rows()");
 
     // find SNF(M).
-    MatrixInt tM = M_;
-    std::tie(MR_, MRi_, std::ignore, std::ignore) =
-        tM.makeSmithCoB(SNFAlgorithm::Metrical);
+    {
+        auto result = M_.smithCoB(SNFAlgorithm::Metrical);
+        MR_ = std::move(result[1]);
+        MRi_ = std::move(result[2]);
 
-    for (size_t i=0; ( (i<tM.rows()) && (i<tM.columns()) ); i++)
-        if (tM.entry(i,i) != 0) rankM_++;
+        for (size_t i=0; i<M_.rows() && i<M_.columns(); ++i)
+            if (result[0].entry(i,i) != 0)
+                ++rankM_;
 
-    // in the case coeff_ > 0 we need to consider the TOR part of homology.
-
-    if (coeff_ > 0)
-        for (size_t i=0; i<rankM_; i++)
-            if (tM.entry(i,i).gcd(coeff_) > 1)
-                TORVec_.push_back(tM.entry(i,i));
+        // in the case coeff_ > 0 we need to consider the TOR part of homology.
+        if (coeff_ > 0)
+            for (size_t i=0; i<rankM_; ++i)
+                if (result[0].entry(i,i).gcd(coeff_) > 1)
+                    TORVec_.push_back(std::move(result[0].entry(i,i)));
+    }
 
     // okay, lets get a presentation matrix for H_*(M;Z) \otimes Z_p
     // starting by computing the trunc[MRi_*N] matrix and padding with
@@ -160,8 +167,12 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
         for (size_t i=0; i< MRi_N.rows() - rankM_; i++)
              tensorPres.entry(i, MRi_N.columns() + i) = coeff_;
 
-        std::tie(tensorR_, std::ignore, tensorC_, tensorCi_) =
-            tensorPres.makeSmithCoB(SNFAlgorithm::Metrical);
+        {
+            auto cob = tensorPres.makeSmithCoB(SNFAlgorithm::Metrical);
+            tensorR_ = std::move(cob[0]);
+            tensorC_ = std::move(cob[2]);
+            tensorCi_ = std::move(cob[3]);
+        }
 
         // this group is a direct sum of groups of the form Z_q where q =
         // gcd(p, TORVec_[i]), and groups Z_q where q is on the diagonal of
@@ -190,8 +201,13 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
                     i - TORVec_.size() + tensorIfLoc_);
         }
 
-        std::tie(presR_, std::ignore, presC_, presCi_) =
-            diagPres.makeSmithCoB(SNFAlgorithm::Metrical);
+        {
+            auto cob = diagPres.makeSmithCoB(SNFAlgorithm::Metrical);
+            presR_ = std::move(cob[0]);
+            presC_ = std::move(cob[2]);
+            presCi_ = std::move(cob[3]);
+        }
+
         for (size_t i=0; i<diagPres.rows(); i++) {
             // should only have terms > 1 or == 0.
             if (diagPres.entry(i,i) > 1)
@@ -206,8 +222,12 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
             for (size_t j=0; j<MRi_N.columns(); j++)
                 tensorPres.entry(i,j) = MRi_N.entry(i+rankM_, j);
 
-        std::tie(presR_, std::ignore, presC_, presCi_) =
-            tensorPres.makeSmithCoB(SNFAlgorithm::Metrical);
+        {
+            auto cob = tensorPres.makeSmithCoB(SNFAlgorithm::Metrical);
+            presR_ = std::move(cob[0]);
+            presC_ = std::move(cob[2]);
+            presCi_ = std::move(cob[3]);
+        }
 
         for (size_t i=0; i<tensorPres.rows() && i<tensorPres.columns();
                 ++i) {
@@ -511,11 +531,12 @@ Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
     } else {
         size_t TORLoc = rankM_ - TORVec_.size();
 
-        // the first TORLoc-1 terms of tM were units mod p so we need only
-        // check divisibility by p for temp[i] the remaining terms of tM were
-        // given by TORVec_[i-TORLoc] and share a common factor with p==coeff_.
-        // for element to be in ker(M), we need
-        // temp[i]*TORVec_[i-TORLoc] % p == 0
+        // The entries on the SNF diagonal before TORLoc were units mod p so we
+        // need only check divisibility by p for temp[i].
+        // The entries on the diagonal were given by TORVec_[i-TORLoc] and
+        // share a common factor with p==coeff_.
+        // For element to be in ker(M) we need
+        // temp[i]*TORVec_[i-TORLoc] % p == 0.
         for (size_t i=0; i<rankM_; i++) {
             if (i<TORLoc) {
                 if (temp[i] % coeff_ != 0)
