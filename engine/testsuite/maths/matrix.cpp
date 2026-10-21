@@ -127,8 +127,8 @@ void validateNoColumns(const Matrix<T>& m, size_t rows) {
 template <regina::CommutativeRing T>
 void validateIdentity(const Matrix<T>& m, size_t size) {
     EXPECT_NO_THROW({ m.validate(); });
-    EXPECT_EQ(m.rows(), size);
-    EXPECT_EQ(m.columns(), size);
+    ASSERT_EQ(m.rows(), size);
+    ASSERT_EQ(m.columns(), size);
     for (size_t i = 0; i < size; ++i)
         for (size_t j = 0; j < size; ++j)
             EXPECT_EQ(m.entry(i, j), i == j ? 1 : 0);
@@ -137,8 +137,8 @@ void validateIdentity(const Matrix<T>& m, size_t size) {
 template <regina::CommutativeRing T>
 void validateZero(const Matrix<T>& m, size_t rows, size_t columns) {
     EXPECT_NO_THROW({ m.validate(); });
-    EXPECT_EQ(m.rows(), rows);
-    EXPECT_EQ(m.columns(), columns);
+    ASSERT_EQ(m.rows(), rows);
+    ASSERT_EQ(m.columns(), columns);
     for (size_t i = 0; i < rows; ++i)
         for (size_t j = 0; j < columns; ++j)
             EXPECT_EQ(m.entry(i, j), 0);
@@ -820,8 +820,8 @@ static void verifyRowBasis(const MatrixInt& m) {
     EXPECT_EQ(MatrixInt(m).rowBasis(), copy); // rvalue variant
 
     size_t rank = m.rank();
-    EXPECT_EQ(copy.rows(), rank);
-    EXPECT_EQ(copy.columns(), m.columns());
+    ASSERT_EQ(copy.rows(), rank);
+    ASSERT_EQ(copy.columns(), m.columns());
     EXPECT_EQ(copy.rank(), rank);
 
     // Ensure that copy spans the same row space as m.
@@ -853,6 +853,22 @@ static void verifyRowBasis(const MatrixInt& m) {
             }
         }
         EXPECT_TRUE(found);
+    }
+
+    // Now verify the incremental basis for the orthogonal complement.
+    auto [basis, comp] = m.rowBasisAndOrthComp();
+    EXPECT_EQ(basis, copy);
+    ASSERT_EQ(comp.rows(), m.columns());
+    ASSERT_EQ(comp.columns(), m.columns());
+    EXPECT_EQ(comp.rank(), m.columns());
+    for (size_t i = 0; i < basis.rows(); ++i) {
+        // Row i of basis should be orthogonal to all rows > i of comp.
+        for (size_t j = i + 1; j < comp.rows(); ++j) {
+            Integer sum;
+            for (size_t k = 0; k < m.columns(); ++k)
+                sum.addProduct(basis.entry(i, k), comp.entry(j, k));
+            EXPECT_EQ(sum, 0);
+        }
     }
 }
 

@@ -733,8 +733,6 @@ readOrb : function
 readSigList : function
 reducedMod : function
 resUsage : function
-rowBasis : function
-rowBasisAndOrthComp : function
 simpler : function
 simplerThreeWay : function
 smithNormalForm : function

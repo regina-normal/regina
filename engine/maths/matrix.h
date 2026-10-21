@@ -1957,10 +1957,10 @@ class Matrix : public Output<Matrix<T>> {
          * to provide a way to remove redundant equations from a system of
          * linear equations.
          *
-         * Specifically: let \a R be the matrix that is returned.  Then the
-         * rows of \a R will be a subset of the rows of this matrix, and may
-         * possibly appear in a different order.  In particular, \a R might have
-         * fewer rows than this matrix.  The rows of \a R will be linearly
+         * Specifically: let \a B be the matrix that is returned.  Then the
+         * rows of \a B will be a subset of the rows of this matrix, and may
+         * possibly appear in a different order.  In particular, \a B might have
+         * fewer rows than this matrix.  The rows of \a B will be linearly
          * independent, and will together form a basis (over the rationals) of
          * the row space of this matrix.
          *
@@ -2005,6 +2005,42 @@ class Matrix : public Output<Matrix<T>> {
             makeRowBasis();
             return std::move(*this);
         }
+
+        /**
+         * Returns a subset of rows of this matrix which together form a basis
+         * of its row space, along with an "incremental" basis for its
+         * orthogonal complement.  This routine can help with larger procedures
+         * that need to build up a row space and simultaneously cut down the
+         * complement one dimension at a time.
+         *
+         * Specifically, this routine returns two matrices `(B, C)` as follows:
+         *
+         * - The matrix \a B will have dimensions `rank() × columns()`, and
+         *   the matrix \a C will have dimensions `columns() × columns()`.
+         *
+         * - The rows of \a B will be a subset of the rows of this matrix, and
+         *   may possibly appear in a different order.  In particular, \a B might
+         *   have fewer rows than this matrix.
+         *
+         * - The rows of \a B will be linearly independent, and will together
+         *   form a basis (over the rationals) of the row space of this matrix.
+         *
+         * - For each \a i between 0 and `rank()` inclusive, the final
+         *   `(columns() - i)` rows of \a C will form a basis for the orthogonal
+         *   complement of the first \a i rows of \a B.
+         *
+         * \headers This routine is implemented in a separate header
+         * (matrix-impl.h), which is not included automatically by this file.
+         * However, typical end users will not need this extra header, since
+         * Regina's calculation engine already includes explicit instantiations
+         * for `Matrix<Integer>`, which is where this routine is most commonly
+         * used.
+         *
+         * \return the basis of the row space and the "incremental" basis for
+         * its orthogonal complement, as described above.
+         */
+        std::pair<Matrix, Matrix> rowBasisAndOrthComp() const
+                requires ReginaInteger<T>;
 
         /**
          * Computes the inverse of this matrix, if this exists as an integer
@@ -2535,67 +2571,6 @@ using MatrixBool = Matrix<bool>;
     std::tie(rowSpaceBasis, rowSpaceBasisInv, colSpaceBasis, colSpaceBasisInv) =
         matrix.makeSmithCoB(SNFAlgorithm::Metrical);
 }
-
-/**
- * Deprecated routine that finds a basis for the row space of the given matrix.
- *
- * This routine will rearrange the rows of the given matrix so that the first
- * \a rank rows form a basis (over the rationals) for the row space, where
- * \a rank is the rank of the matrix.  The rank itself will be returned.
- * No other changes will be made to the matrix aside from swapping rows.
- *
- * \deprecated You should now call Matrix::makeRowBasis() instead.  However,
- * be aware that (unlike this routine) Matrix::makeRowBasis() will delete
- * redundant rows entirely instead of moving them to the bottom of the matrix.
- *
- * \param matrix the matrix to examine and rearrange.
- * \return the rank of the given matrix.
- *
- * \ingroup maths
- */
-[[deprecated]] size_t rowBasis(MatrixInt& matrix);
-
-/**
- * Finds a basis for the row space of the given matrix, as well as an
- * "incremental" basis for its orthogonal complement.
- *
- * This routine takes an (\a r by \a c) matrix \a input, as well as a
- * square (\a c by \a c) matrix \a complement, and does the following:
- *
- * - The rows of \a input are rearranged so that the first \a rank rows form
- *   a basis for the row space (where \a rank is the rank of the matrix).
- *   No other changes are made to this matrix aside from swapping rows.
- *
- * - The matrix \a complement is re-filled (any previous contents are
- *   thrown away) so that, for any \a i between 0 and \a rank-1 inclusive,
- *   the final (\a c - \a i) rows of \a complement form a basis for the
- *   orthogonal complement of the first \a i rows of the rearranged \a input.
- *
- * - The rank of the matrix \a input is returned from this routine.
- *
- * This routine can help with larger procedures that need to build up a row
- * space and simultaneously cut down the complement one dimension at a time.
- *
- * Although this routine takes integer matrices (and only uses integer
- * operations), we consider all bases to be over the _rationals_.
- * That is, although we never divide, we act as though we could if we
- * wanted to.
- *
- * \pre The matrix \a complement is a square matrix, whose size is equal
- * to the number of columns in \a input.
- *
- * \exception InvalidArgument The matrix \a complement is not square with side
- * length equal to `input.columns()`.
- *
- * \param input the input matrix whose row space we will describe; this
- * matrix will be changed (though only by swapping rows).
- * \param complement the square matrix that will be re-filled with the
- * "incremental" basis for the orthogonal complement of \a input.
- * \return the rank of the given matrix \a input.
- *
- * \ingroup maths
- */
-size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
 
 /**
  * Deprecated routine that transforms a given matrix into column echelon form

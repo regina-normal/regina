@@ -174,78 +174,6 @@ Returns:
 Author:
     Ryan Budney)doc";
 
-// Docstring regina::python::doc::rowBasis
-inline constexpr const char rowBasis[] =
-R"doc(Deprecated routine that finds a basis for the row space of the given
-matrix.
-
-This routine will rearrange the rows of the given matrix so that the
-first *rank* rows form a basis (over the rationals) for the row space,
-where *rank* is the rank of the matrix. The rank itself will be
-returned. No other changes will be made to the matrix aside from
-swapping rows.
-
-.. deprecated::
-    You should now call Matrix::makeRowBasis() instead. However, be
-    aware that (unlike this routine) Matrix::makeRowBasis() will
-    delete redundant rows entirely instead of moving them to the
-    bottom of the matrix.
-
-Parameter ``matrix``:
-    the matrix to examine and rearrange.
-
-Returns:
-    the rank of the given matrix.)doc";
-
-// Docstring regina::python::doc::rowBasisAndOrthComp
-inline constexpr const char rowBasisAndOrthComp[] =
-R"doc(Finds a basis for the row space of the given matrix, as well as an
-"incremental" basis for its orthogonal complement.
-
-This routine takes an (*r* by *c*) matrix *input*, as well as a square
-(*c* by *c*) matrix *complement*, and does the following:
-
-* The rows of *input* are rearranged so that the first *rank* rows
-  form a basis for the row space (where *rank* is the rank of the
-  matrix). No other changes are made to this matrix aside from
-  swapping rows.
-
-* The matrix *complement* is re-filled (any previous contents are
-  thrown away) so that, for any *i* between 0 and *rank*-1 inclusive,
-  the final (*c* - *i*) rows of *complement* form a basis for the
-  orthogonal complement of the first *i* rows of the rearranged
-  *input*.
-
-* The rank of the matrix *input* is returned from this routine.
-
-This routine can help with larger procedures that need to build up a
-row space and simultaneously cut down the complement one dimension at
-a time.
-
-Although this routine takes integer matrices (and only uses integer
-operations), we consider all bases to be over the _rationals_. That
-is, although we never divide, we act as though we could if we wanted
-to.
-
-Precondition:
-    The matrix *complement* is a square matrix, whose size is equal to
-    the number of columns in *input*.
-
-Exception ``InvalidArgument``:
-    The matrix *complement* is not square with side length equal to
-    ``input.columns()``.
-
-Parameter ``input``:
-    the input matrix whose row space we will describe; this matrix
-    will be changed (though only by swapping rows).
-
-Parameter ``complement``:
-    the square matrix that will be re-filled with the "incremental"
-    basis for the orthogonal complement of *input*.
-
-Returns:
-    the rank of the given matrix *input*.)doc";
-
 // Docstring regina::python::doc::smithNormalForm
 inline constexpr const char smithNormalForm[] =
 R"doc(Deprecated routine that transforms the given integer matrix into Smith
@@ -1461,15 +1389,43 @@ the row space of this matrix. The main purpose of this routine is to
 provide a way to remove redundant equations from a system of linear
 equations.
 
-Specifically: let *R* be the matrix that is returned. Then the rows of
-*R* will be a subset of the rows of this matrix, and may possibly
-appear in a different order. In particular, *R* might have fewer rows
-than this matrix. The rows of *R* will be linearly independent, and
+Specifically: let *B* be the matrix that is returned. Then the rows of
+*B* will be a subset of the rows of this matrix, and may possibly
+appear in a different order. In particular, *B* might have fewer rows
+than this matrix. The rows of *B* will be linearly independent, and
 will together form a basis (over the rationals) of the row space of
 this matrix.
 
 Returns:
     a basis of the row space of this matrix.)doc";
+
+// Docstring regina::python::doc::Matrix::rowBasisAndOrthComp
+static constexpr const char rowBasisAndOrthComp[] =
+R"doc(Returns a subset of rows of this matrix which together form a basis of
+its row space, along with an "incremental" basis for its orthogonal
+complement. This routine can help with larger procedures that need to
+build up a row space and simultaneously cut down the complement one
+dimension at a time.
+
+Specifically, this routine returns two matrices ``(B, C)`` as follows:
+
+* The matrix *B* will have dimensions ``rank() × columns()``, and the
+  matrix *C* will have dimensions ``columns() × columns()``.
+
+* The rows of *B* will be a subset of the rows of this matrix, and may
+  possibly appear in a different order. In particular, *B* might have
+  fewer rows than this matrix.
+
+* The rows of *B* will be linearly independent, and will together form
+  a basis (over the rationals) of the row space of this matrix.
+
+* For each *i* between 0 and ``rank()`` inclusive, the final
+  ``(columns() - i)`` rows of *C* will form a basis for the orthogonal
+  complement of the first *i* rows of *B*.
+
+Returns:
+    the basis of the row space and the "incremental" basis for its
+    orthogonal complement, as described above.)doc";
 
 // Docstring regina::python::doc::Matrix::rowEchelon
 static constexpr const char rowEchelon[] =

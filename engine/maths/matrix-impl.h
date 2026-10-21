@@ -249,6 +249,94 @@ void Matrix<T>::makeRowBasis() requires ReginaInteger<T> {
 
 template <typename T>
 requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
+std::pair<Matrix<T>, Matrix<T>> Matrix<T>::rowBasisAndOrthComp() const
+        requires ReginaInteger<T> {
+    std::pair<Matrix<T>, Matrix<T>> ans(*this, cols_);
+
+    // We begin by following the logic for makeRowBasis() (see above for
+    // full explanations).  We then hang on to the row echelon form and the
+    // array of leading non-zero entries, and use these to construct the
+    // incremental basis for the orthogonal complement.
+    Matrix echelon(*this);
+
+    FixedArray<size_t> lead(cols_);
+    size_t c;
+    for (c = 0; c < cols_; ++c)
+        lead[c] = c;
+
+    size_t currRow = 0;
+    while (currRow < ans.first.rows_) {
+        for (c = currRow; c < cols_; ++c)
+            if (echelon.entry(currRow, lead[c]) != 0)
+                break;
+
+        if (c == cols_) {
+            --ans.first.rows_;
+            if (currRow == ans.first.rows_) {
+                break;
+            } else {
+                std::move(
+                    ans.first.data_ + ans.first.rows_ * cols_,
+                    ans.first.data_ + (ans.first.rows_ + 1) * cols_,
+                    ans.first.data_ + currRow * cols_);
+                std::move(
+                    echelon.data_ + ans.first.rows_ * cols_,
+                    echelon.data_ + (ans.first.rows_ + 1) * cols_,
+                    echelon.data_ + currRow * cols_);
+            }
+        } else {
+            std::swap(lead[currRow], lead[c]);
+
+            const T& coeff1 = echelon.entry(currRow, lead[currRow]);
+            for (size_t r = currRow + 1; r < ans.first.rows_; ++r) {
+                T coeff2 = echelon.entry(r, lead[currRow]);
+                if (coeff2 != 0) {
+                    echelon.multRow(r, coeff1);
+                    echelon.addRow(currRow, r, -coeff2);
+                    echelon.reduceRow(r);
+                }
+            }
+            ++currRow;
+        }
+    }
+
+    // Now we have the row basis in ans.first.
+    // Fill ans.second with the incremental basis for the orthogonal complement.
+    // Currently ans.second has size cols_ x cols_, and is initialised to zero.
+
+    T lcmLead = 1;
+    for (size_t r = 0; r < cols_; ++r) {
+        ans.second.entry(r, lead[r]) = -lcmLead;
+        for (c = 0; c < r && c < ans.first.rows_; ++c) {
+            ans.second.entry(r, lead[c]) =
+                (echelon.entry(c, lead[r]) * lcmLead).
+                divExact(echelon.entry(c, lead[c]));
+        }
+        ans.second.reduceRow(r);
+
+        if (r < ans.first.rows_) {
+            const T& coeff1 = echelon.entry(r, lead[r]);
+            lcmLead.lcmWith(coeff1);
+
+            for (size_t tmp = 0; tmp < r; ++tmp) {
+                T coeff2 = echelon.entry(tmp, lead[r]);
+                if (coeff2 != 0) {
+                    echelon.multRow(tmp, coeff1);
+                    echelon.addRow(r, tmp, -coeff2);
+                    echelon.reduceRow(tmp);
+                }
+                // TODO: Is this actually necessary?
+                lcmLead.lcmWith(echelon.entry(tmp, lead[tmp]));
+            }
+        }
+    }
+
+    // All done!
+    return ans;
+}
+
+template <typename T>
+requires std::default_initializable<T> && std::copyable<T> && Writeable<T>
 Matrix<T> Matrix<T>::inverse() && requires ReginaInteger<T> {
     if (rows_ != cols_)
         throw FailedPrecondition("Inverses can only be "
