@@ -127,7 +127,7 @@ static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc
 static constexpr const char __div[] =
 R"doc(Divides the given polynomial by the given scalar constant.
 
-This uses the division operator /= for the coefficient type *T*.
+This uses the division operator ``/=`` for the coefficient type *T*.
 
 The scalar is simply of type *T*; we use the identical type
 Laurent2<T>::Coefficient here to assist with C++ template type
@@ -135,6 +135,31 @@ matching.
 
 Precondition:
     The argument *scalar* is non-zero.
+
+Parameter ``poly``:
+    the polynomial to divide by the given scalar.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    the quotient of the given polynomial by the given scalar.)doc";
+
+// Docstring regina::python::doc::Laurent2::__div_2
+static constexpr const char __div_2[] =
+R"doc(Divides the given polynomial by the given scalar constant.
+
+This uses the division operator ``/=`` for the coefficient type *T*.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``poly``:
     the polynomial to divide by the given scalar.
@@ -155,6 +180,35 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
 
+// Docstring regina::python::doc::Laurent2::__eq_2
+static constexpr const char __eq_2[] =
+R"doc(Tests whether this polynomial is equal to the given constant.
+
+Parameter ``constant``:
+    the value to compare this polynomial against.
+
+Returns:
+    ``True`` if and only if this polynomial is equal to the given
+    constant.)doc";
+
+// Docstring regina::python::doc::Laurent2::__eq_3
+static constexpr const char __eq_3[] =
+R"doc(Tests whether this polynomial is equal to the given integer constant.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``constant``:
+    the integer to compare this polynomial against.
+
+Returns:
+    ``True`` if and only if this polynomial is equal to the given
+    integer constant.)doc";
+
 // Docstring regina::python::doc::Laurent2::__iadd
 static constexpr const char __iadd[] =
 R"doc(Adds the given polynomial to this.
@@ -172,10 +226,32 @@ Returns:
 static constexpr const char __idiv[] =
 R"doc(Divides this polynomial by the given constant.
 
-This uses the division operator /= for the coefficient type *T*.
+This uses the division operator ``/=`` for the coefficient type *T*.
 
 Precondition:
     The argument *scalar* is non-zero.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__idiv_2
+static constexpr const char __idiv_2[] =
+R"doc(Divides this polynomial by the given integer constant.
+
+This uses the division operator ``/=`` for the coefficient type *T*.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
 
 Parameter ``scalar``:
     the scalar factor to divide by.
@@ -195,6 +271,23 @@ Returns:
 
 // Docstring regina::python::doc::Laurent2::__imul_2
 static constexpr const char __imul_2[] =
+R"doc(Multiplies this polynomial by the given integer constant.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``scalar``:
+    the scalar factor to multiply by.
+
+Returns:
+    a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__imul_3
+static constexpr const char __imul_3[] =
 R"doc(Multiplies this by the given polynomial.
 
 This and the given polynomial need not have the same range of non-zero
@@ -208,10 +301,12 @@ Returns:
 
 // Docstring regina::python::doc::Laurent2::__init
 static constexpr const char __init[] =
-R"doc(Creates a copy of the given polynomial with all terms multiplied by
-``x^d y^e`` for some integers *d* and *e*.
+R"doc(Deprecated constructor that creates a copy of the given polynomial
+with all terms multiplied by ``x^d y^e`` for some given integers *d*
+and *e*.
 
-This constructor induces a deep (and modified) copy of *value*.
+.. deprecated::
+    Use ``toShift.shifted(xShift, yShift)`` instead.
 
 Parameter ``toShift``:
     the polynomial to clone and shift.
@@ -249,6 +344,65 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the set of
     coefficients.)doc";
 
+// Docstring regina::python::doc::Laurent2::__init_3
+static constexpr const char __init_3[] =
+R"doc(Creates a new polynomial with a single constant term, equal to the
+given value.
+
+There is no problem if the given value is zero.
+
+Parameter ``constant``:
+    the value of this new constant polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__init_4
+static constexpr const char __init_4[] =
+R"doc(Creates a new polynomial with a single integer constant term.
+
+There is no problem if the given constant is zero (though you can also
+construct the zero polynomial by passing no arguments at all).
+
+The extent to which this constructor can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``constant``:
+    the value of this new polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__init_5
+static constexpr const char __init_5[] =
+R"doc(Creates a new two-variable Laurent polynomial from a one-variable
+Laurent polynomial.
+
+Specifically, this will become the two-variable polynomial
+``poly(x^xExp y^yExp)``.
+
+Parameter ``poly``:
+    the one-variable polynomial into which we substitute ``x^xExp
+    y^yExp``.
+
+Parameter ``xExp``:
+    the power of *x* to substitute into *poly*.
+
+Parameter ``yExp``:
+    the power of *y* to substitute into *poly*.)doc";
+
+// Docstring regina::python::doc::Laurent2::__init_6
+static constexpr const char __init_6[] =
+R"doc(Creates a new two-variable Laurent polynomial as a product of two one-
+variable Laurent polynomials.
+
+Specifically, this will become the two-variable polynomial ``xPoly(x)
+* yPoly(y)``.
+
+Parameter ``xPoly``:
+    the factor that is a polynomial in ``x``.
+
+Parameter ``yPoly``:
+    the factor that is a polynomial in ``y``.)doc";
+
 // Docstring regina::python::doc::Laurent2::__isub
 static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
@@ -261,6 +415,39 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Laurent2::__iter__
+static constexpr const char __iter__[] =
+R"doc(Returns a Python iterator that provides read-only access to all non-
+zero coefficients and their corresponding exponent pairs. If this is
+the zero polynomial then this iterator range will be empty.
+
+To enforce read-only access, Python iterators will return coefficients
+and exponents by value, not by reference. If you wish to modify
+coefficients or exponents then you will need to call different
+routines, such as set().
+
+Iterators in Laurent2 work differently from single-variable polynomial
+classes such as Polynomial and Laurent:
+
+* they run through only the _non-zero_ coefficients of the polynomial,
+  ignoring any zero coefficients;
+
+* each value returned by an iterator includes not only a coefficent,
+  but also its corresponding exponent pair.
+
+Specifically, each value returned by an iterator will be of the form
+``((s, t), c)``, where round brackets indicate pairs (stored via
+Python tuples). This value describes a single term in the polynomial
+of the form ``c x^s y^t``.
+
+The order of iteration will be lexicographic in the pair ``(s, t)``
+above; that is, by increasing *x* exponent and then (in the case of
+ties) by increasing *y* exponent.
+
+Returns:
+    an iterator over all coefficients and their corresponding exponent
+    pairs.)doc";
 
 // Docstring regina::python::doc::Laurent2::__mul
 static constexpr const char __mul[] =
@@ -283,6 +470,26 @@ Returns:
 static constexpr const char __mul_2[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.
 
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Laurent2::__mul_3
+static constexpr const char __mul_3[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
 The scalar is simply of type *T*; we use the identical type
 Laurent2<T>::Coefficient here to assist with C++ template type
 matching.
@@ -296,8 +503,28 @@ Parameter ``poly``:
 Returns:
     the product of the given polynomial and scalar.)doc";
 
-// Docstring regina::python::doc::Laurent2::__mul_3
-static constexpr const char __mul_3[] =
+// Docstring regina::python::doc::Laurent2::__mul_4
+static constexpr const char __mul_4[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Laurent2::__mul_5
+static constexpr const char __mul_5[] =
 R"doc(Multiplies the two given polynomials.
 
 The two polynomials need not have the same range of non-zero
@@ -337,6 +564,21 @@ Parameter ``rhs``:
 
 Returns:
     the first polynomial minus the second.)doc";
+
+// Docstring regina::python::doc::Laurent2::addProduct
+static constexpr const char addProduct[] =
+R"doc(Adds the product of the two given polynomials to this. This is a
+common operation in (for example) inner products and matrix
+multiplication.
+
+Calling ``z.addProduct(x, y)`` is equivalent to, but often faster
+than, calling ``z += x * y``.
+
+Parameter ``x``:
+    the first polynomial in the product to add to this.
+
+Parameter ``y``:
+    the second polynomial in the product to add to this.)doc";
 
 // Docstring regina::python::doc::Laurent2::global_swap
 static constexpr const char global_swap[] =
@@ -407,6 +649,31 @@ Parameter ``yExp``:
 
 Parameter ``value``:
     the new value of the corresponding coefficient.)doc";
+
+// Docstring regina::python::doc::Laurent2::shift
+static constexpr const char shift[] =
+R"doc(Multiplies this polynomial by ``x^s y^t`` for some integers *s* and
+*t*. This polynomial will be changed directly.
+
+Parameter ``s``:
+    the power of *x* to multiply by.
+
+Parameter ``t``:
+    the power of *y* to multiply by.)doc";
+
+// Docstring regina::python::doc::Laurent2::shifted
+static constexpr const char shifted[] =
+R"doc(Returns the product of this polynomial with ``x^s y^t`` for some
+integers *s* and *t*. This polynomial will not be changed.
+
+Parameter ``s``:
+    the power of *x* to multiply by.
+
+Parameter ``t``:
+    the power of *y* to multiply by.
+
+Returns:
+    the product of this with ``x^s y^t``.)doc";
 
 // Docstring regina::python::doc::Laurent2::str
 static constexpr const char str[] =

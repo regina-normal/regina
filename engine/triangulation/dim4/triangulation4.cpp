@@ -133,6 +133,8 @@ IntersectionForm Triangulation<4>::intersectionForm() const {
         throw FailedPrecondition("Computing intersection form "
             "requires a closed triangulation.");
 
+    // Being closed and non-empty means that dualBoundaryMap() and
+    // dualToPrimal() will return non-empty matrices.
     MarkedAbelianGroup h2(dualBoundaryMap<2>(), dualBoundaryMap<3>());
     MatrixInt map = dualToPrimal<2>();
 

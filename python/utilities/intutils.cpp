@@ -40,6 +40,7 @@ void addIntUtils(pybind11::module_& m) {
     m.def("nextPowerOfTwo", regina::nextPowerOfTwo<long>, rdoc::nextPowerOfTwo);
     m.def("supportsNativeIntegerSize", regina::supportsNativeIntegerSize,
         rdoc::supportsNativeIntegerSize);
+    m.def("isqrt", regina::isqrt<long>, rdoc::isqrt);
 
     regina::python::add_concept<rdoc::ArbitraryPrecisionInteger>(m,
         "ArbitraryPrecisionInteger");

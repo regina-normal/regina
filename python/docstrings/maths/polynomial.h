@@ -93,7 +93,7 @@ static constexpr const char __default[] = R"doc(Creates the zero polynomial.)doc
 static constexpr const char __div[] =
 R"doc(Divides the given polynomial by the given scalar constant.
 
-This uses the division operator /= for the coefficient type *T*.
+This uses the division operator ``/=`` for the coefficient type *T*.
 
 The scalar is simply of type *T*; we use the identical type
 Polynomial<T>::Coefficient here to assist with C++ template type
@@ -113,6 +113,31 @@ Returns:
 
 // Docstring regina::python::doc::Polynomial::__div_2
 static constexpr const char __div_2[] =
+R"doc(Divides the given polynomial by the given scalar constant.
+
+This uses the division operator ``/=`` for the coefficient type *T*.
+
+The extent to which this constructor can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Parameter ``poly``:
+    the polynomial to divide by the given scalar.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    the quotient of the given polynomial by the given scalar.)doc";
+
+// Docstring regina::python::doc::Polynomial::__div_3
+static constexpr const char __div_3[] =
 R"doc(Divides the two given polynomials.
 
 More precisely: suppose there exist polynomials *q* and *r* with
@@ -124,7 +149,7 @@ This routine returns the quotient *q*, and discards the remainder. If
 you need to keep the remainder also, then call
 Polynomial::divisionAlg() instead.
 
-Coefficients are divided using the operator /= on type *T*.
+Coefficients are divided using the operator ``/=`` on type *T*.
 
 If your coefficient type *T* is not a field (e.g., if *T* is Integer),
 you must be sure to know in advance that the quotient exists (see the
@@ -159,6 +184,35 @@ Parameter ``rhs``:
 Returns:
     ``True`` if and only if this and the given polynomial are equal.)doc";
 
+// Docstring regina::python::doc::Polynomial::__eq_2
+static constexpr const char __eq_2[] =
+R"doc(Tests whether this polynomial is equal to the given constant.
+
+Parameter ``constant``:
+    the value to compare this polynomial against.
+
+Returns:
+    ``True`` if and only if this polynomial is equal to the given
+    constant.)doc";
+
+// Docstring regina::python::doc::Polynomial::__eq_3
+static constexpr const char __eq_3[] =
+R"doc(Tests whether this polynomial is equal to the given integer constant.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``constant``:
+    the integer to compare this polynomial against.
+
+Returns:
+    ``True`` if and only if this polynomial is equal to the given
+    integer constant.)doc";
+
 // Docstring regina::python::doc::Polynomial::__iadd
 static constexpr const char __iadd[] =
 R"doc(Adds the given polynomial to this.
@@ -183,7 +237,7 @@ Returns:
 static constexpr const char __idiv[] =
 R"doc(Divides this polynomial by the given constant.
 
-This uses the division operator /= for the coefficient type *T*.
+This uses the division operator ``/=`` for the coefficient type *T*.
 
 Precondition:
     The argument *scalar* is non-zero.
@@ -196,6 +250,28 @@ Returns:
 
 // Docstring regina::python::doc::Polynomial::__idiv_2
 static constexpr const char __idiv_2[] =
+R"doc(Divides this polynomial by the given integer constant.
+
+This uses the division operator ``/=`` for the coefficient type *T*.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Precondition:
+    The argument *scalar* is non-zero.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``scalar``:
+    the scalar factor to divide by.
+
+Returns:
+    a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial::__idiv_3
+static constexpr const char __idiv_3[] =
 R"doc(Divides this by the given polynomial.
 
 More precisely: suppose there exist polynomials *q* and *r* with
@@ -207,7 +283,7 @@ This routine replaces this polynomial with the quotient *q*, and
 discards the remainder. If you need to keep the remainder also, then
 call divisionAlg() instead.
 
-Coefficients are divided using the operator /= on type *T*.
+Coefficients are divided using the operator ``/=`` on type *T*.
 
 If your coefficient type *T* is not a field (e.g., if *T* is Integer),
 you must be sure to know in advance that the quotient exists (see the
@@ -241,6 +317,23 @@ Returns:
 
 // Docstring regina::python::doc::Polynomial::__imul_2
 static constexpr const char __imul_2[] =
+R"doc(Multiplies this polynomial by the given integer constant.
+
+The extent to which this operator can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``scalar``:
+    the scalar factor to multiply by.
+
+Returns:
+    a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial::__imul_3
+static constexpr const char __imul_3[] =
 R"doc(Multiplies this by the given polynomial.
 
 Parameter ``other``:
@@ -275,6 +368,33 @@ Parameter ``end``:
     a past-the-end iterator indicating the end of the sequence of
     coefficients.)doc";
 
+// Docstring regina::python::doc::Polynomial::__init_2
+static constexpr const char __init_2[] =
+R"doc(Creates a new polynomial with a single constant term, equal to the
+given value.
+
+There is no problem if the given value is zero.
+
+Parameter ``constant``:
+    the value of this new constant polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial::__init_3
+static constexpr const char __init_3[] =
+R"doc(Creates a new polynomial with a single integer constant term.
+
+There is no problem if the given constant is zero (though you can also
+construct the zero polynomial by passing no arguments at all).
+
+The extent to which this constructor can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``constant``:
+    the value of this new polynomial.)doc";
+
 // Docstring regina::python::doc::Polynomial::__isub
 static constexpr const char __isub[] =
 R"doc(Subtracts the given polynomial from this.
@@ -288,6 +408,23 @@ Parameter ``other``:
 
 Returns:
     a reference to this polynomial.)doc";
+
+// Docstring regina::python::doc::Polynomial::__iter__
+static constexpr const char __iter__[] =
+R"doc(Returns a Python iterator that provides read-only access to all
+coefficients of this polynomial.
+
+The iterator range runs through all coefficients of this polynomial,
+including zeroes, in order from the constant coefficient to the
+leading coefficient. If this is the zero polynomial then the iterator
+range will be empty.
+
+To enforce read-only access, Python iterators will return coefficients
+by value, not by reference. If you wish to modify coefficients then
+you will need to call different routines, such as set().
+
+Returns:
+    an iterator over all coefficients of this polynomial.)doc";
 
 // Docstring regina::python::doc::Polynomial::__mul
 static constexpr const char __mul[] =
@@ -310,6 +447,26 @@ Returns:
 static constexpr const char __mul_2[] =
 R"doc(Multiplies the given polynomial by the given scalar constant.
 
+The extent to which this constructor can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Polynomial::__mul_3
+static constexpr const char __mul_3[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
 The scalar is simply of type *T*; we use the identical type
 Polynomial<T>::Coefficient here to assist with C++ template type
 matching.
@@ -323,8 +480,28 @@ Parameter ``poly``:
 Returns:
     the product of the given polynomial and scalar.)doc";
 
-// Docstring regina::python::doc::Polynomial::__mul_3
-static constexpr const char __mul_3[] =
+// Docstring regina::python::doc::Polynomial::__mul_4
+static constexpr const char __mul_4[] =
+R"doc(Multiplies the given polynomial by the given scalar constant.
+
+The extent to which this constructor can handle large native integer
+types without overflow will depend on how well such integer types are
+supported by the coefficient type *T*.
+
+Python:
+    It is assumed that the type *IntType* is ``long``.
+
+Parameter ``scalar``:
+    the scalar to multiply by.
+
+Parameter ``poly``:
+    the polynomial to multiply by.
+
+Returns:
+    the product of the given polynomial and scalar.)doc";
+
+// Docstring regina::python::doc::Polynomial::__mul_5
+static constexpr const char __mul_5[] =
 R"doc(Multiplies the two given polynomials.
 
 Parameter ``lhs``:
@@ -385,14 +562,14 @@ pair (*q*, *r*); that is, the _quotient_ and the _remainder_.
 
 If you do not need the remainder (e.g., if you know in advance that
 *divisor* divides into this polynomial exactly), then you can use the
-division operator /= instead, which will be a little faster.
+division operator ``/=`` instead, which will be a little faster.
 
 If your coefficient type *T* is not a field (e.g., if *T* is Integer),
 you must be sure to know in advance that the quotient exists (see the
 precondition below). Otherwise the behaviour of this routine is
 undefined.
 
-Coefficients are divided using the operator /= on type *T*.
+Coefficients are divided using the operator ``/=`` on type *T*.
 
 Precondition:
     The given divisor is not the zero polynomial.
@@ -452,32 +629,6 @@ Parameter ``b``:
 
 // Docstring regina::python::doc::Polynomial::init
 static constexpr const char init[] = R"doc(Sets this to become the zero polynomial.)doc";
-
-// Docstring regina::python::doc::Polynomial::init_2
-static constexpr const char init_2[] =
-R"doc(Sets this to become the polynomial described by the given sequence of
-coefficients. The coefficients should appear in order from the
-constant coefficient to the leading coefficient.
-
-There is no problem if the leading coefficient (i.e., the last
-coefficient in the sequence) is zero. An empty sequence will be
-treated as the zero polynomial.
-
-This routine induces a deep copy of the given range.
-
-The iterator type must be random access because this allows the
-implementation to compute the sequence length in constant time.
-
-Python:
-    Instead of a pair of iterators, this routine takes a Python list
-    of coefficients.
-
-Parameter ``begin``:
-    the beginning of the sequence of coefficients.
-
-Parameter ``end``:
-    a past-the-end iterator indicating the end of the sequence of
-    coefficients.)doc";
 
 // Docstring regina::python::doc::Polynomial::initExp
 static constexpr const char initExp[] =
@@ -542,7 +693,7 @@ Parameter ``value``:
 // Docstring regina::python::doc::Polynomial::shift
 static constexpr const char shift[] =
 R"doc(Multiplies this polynomial by ``x^s`` for some integer *s*. This
-polynomial is changed directly.
+polynomial will be changed directly.
 
 If *s* is negative and this polynomial has lower-degree terms of the
 form ``x^k`` where ``k < |s|``, then these lower-degree terms will
@@ -550,6 +701,21 @@ simply disappear.
 
 Parameter ``s``:
     the power of *x* to multiply by.)doc";
+
+// Docstring regina::python::doc::Polynomial::shifted
+static constexpr const char shifted[] =
+R"doc(Returns the product of this polynomial with ``x^s`` for some integer
+*s*. This polynomial will not be changed.
+
+If *s* is negative and this polynomial has lower-degree terms of the
+form ``x^k`` where ``k < |s|``, then these lower-degree terms will
+simply be omitted from the result.
+
+Parameter ``s``:
+    the power of *x* to multiply by.
+
+Returns:
+    the product of this with ``x^s``.)doc";
 
 // Docstring regina::python::doc::Polynomial::str
 static constexpr const char str[] =

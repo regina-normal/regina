@@ -115,12 +115,14 @@ void addArrow(pybind11::module_& m) {
         }, rdoc::set)
         .def("swap", &Arrow::swap, rdoc::swap)
         .def("shift", &Arrow::shift, rdoc::shift)
+        .def("shifted", &Arrow::shifted, rdoc::shifted)
         .def("scaleUp", &Arrow::scaleUp, rdoc::scaleUp)
         .def("scaleDown", &Arrow::scaleDown, rdoc::scaleDown)
         .def("negate", &Arrow::negate, rdoc::negate)
         .def("invertA", &Arrow::invertA, rdoc::invertA)
         .def("multDiagram", &Arrow::multDiagram, rdoc::multDiagram)
         .def("sumLaurent", &Arrow::sumLaurent, rdoc::sumLaurent)
+        .def("addProduct", &Arrow::addProduct, rdoc::addProduct)
         .def("__getitem__", [](const Arrow& arrow, pybind11::list arg) {
             return arrow[sequenceArg(arg, arg.size())];
         }, pybind11::return_value_policy::copy, // to enforce constness
@@ -133,6 +135,7 @@ void addArrow(pybind11::module_& m) {
         .def(pybind11::self == Laurent<Integer>(), rdoc::__eq_2)
         .def(pybind11::self *= Integer(), rdoc::__imul)
         .def(pybind11::self *= Laurent<Integer>(), rdoc::__imul_2)
+        .def(pybind11::self /= Integer(), rdoc::__idiv)
         .def(pybind11::self += pybind11::self, rdoc::__iadd)
         .def(pybind11::self -= pybind11::self, rdoc::__isub)
         .def(pybind11::self *= pybind11::self, rdoc::__imul_3)
@@ -140,6 +143,7 @@ void addArrow(pybind11::module_& m) {
         .def(Integer() * pybind11::self, rdoc::__mul_2)
         .def(pybind11::self * Laurent<Integer>(), rdoc::__mul_3)
         .def(Laurent<Integer>() * pybind11::self, rdoc::__mul_4)
+        .def(pybind11::self / Integer(), rdoc::__div)
         .def(pybind11::self + pybind11::self, rdoc::__add)
         .def(pybind11::self - pybind11::self, rdoc::__sub_2)
         .def(pybind11::self * pybind11::self, rdoc::__mul_5)

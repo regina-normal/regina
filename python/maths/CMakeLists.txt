@@ -7,7 +7,6 @@ SET ( FILES
   binom.cpp
   laurent.cpp
   laurent2.cpp
-  matrixops.cpp
   cyclotomic.cpp
   integer.cpp
   matrix2.cpp
@@ -23,6 +22,7 @@ SET ( FILES
   permgroup.cpp
   permsn.cpp
   polynomial.cpp
+  polyops.cpp
   primes.cpp
   pymaths.cpp
   rational.cpp
